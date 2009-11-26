@@ -1,0 +1,21 @@
+package org.biopax.paxtools.model.level3;
+
+/**
+ * User: root Date: Aug 1, 2006 Time: 5:37:34 PM_DOT
+ */
+public enum ControlType
+{
+	ACTIVATION,
+	INHIBITION,
+	// todo : check if there is a way to express same as
+	ACTIVATION_UNKMECH, //LEVEL 1 workarounds
+	INHIBITION_UNKMECH, //LEVEL 1 workarounds
+	INHIBITION_ALLOSTERIC,
+	INHIBITION_COMPETITIVE,
+	INHIBITION_IRREVERSIBLE,
+	INHIBITION_NONCOMPETITIVE,
+	INHIBITION_OTHER,
+	INHIBITION_UNCOMPETITIVE,
+	ACTIVATION_NONALLOSTERIC,
+	ACTIVATION_ALLOSTERIC
+}

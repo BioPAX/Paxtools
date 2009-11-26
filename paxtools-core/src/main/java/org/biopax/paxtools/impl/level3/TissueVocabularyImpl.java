@@ -1,0 +1,15 @@
+package org.biopax.paxtools.impl.level3;
+
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.TissueVocabulary;
+
+/**
+ */
+public class TissueVocabularyImpl extends ControlledVocabularyImpl
+	implements TissueVocabulary
+{
+    @Override
+    public Class<? extends TissueVocabulary> getModelInterface() {
+        return TissueVocabulary.class;
+    }
+}

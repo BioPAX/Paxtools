@@ -1,0 +1,463 @@
+\documentclass[10pt]{article}
+\title{Paxtools User's Guide}
+\author{Emek Demir, B. Arman Aksoy}
+
+\newenvironment{mylisting}
+{\begin{list}{}{\setlength{\leftmargin}{2em}}\item\small\bfseries}
+{\end{list}}
+
+% These are for the highlighting of the code%
+\usepackage{color}
+\usepackage{alltt}
+\usepackage[latin1]{inputenc}
+% highlight end %
+
+\usepackage{caption}
+\usepackage{calc}
+\usepackage{savefnmark}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{times}
+
+\captionsetup{font=small,labelfont=bf}
+\lstset{language=Java}
+
+\begin{document}
+
+
+\maketitle
+%\tableofcontents
+%\newpage
+
+\section{Introduction}
+\href{http://www.biopax.org}{\textbf{BioPAX}} is a collaborative effort to create a data exchange format for biological pathway data.
+
+\href{http://www.biopax.org/paxtools}{\textbf{Paxtools}} is a library for accessing and manipulating \href{http://www.biopax.org}{BioPAX}. Software tools that use BioPAX, such as exporters, importers, analysis algorithms or editors can use Paxtools as their core BioPAX API. Paxtools supports \textbf{BioPAX Level 2} \cite{biopax2}, and can automatically convert \textbf{Level 1} \cite{biopax1} models to \textbf{Level 2}. The latest release candidate for \textbf{BioPAX Level 3} is fully supported, but it is still in beta as BioPAX Level 3 is not finalized \cite{biopax3}.
+
+Using Paxtools, a user can read a BioPAX model from a file or create a new model in memory. A model is a container for BioPAX elements, and has methods for querying and retrieving its contents. In a BioPAX model, elements are represented as plain java beans, with getter and setter methods for their BioPAX properties. A user can create and add new BioPAX elements to the model, remove existing elements or modify their properties. It is also possible for users to traverse the corresponding BioPAX graph to retrieve interesting subgraphs.
+
+Paxtools provides a domain object model (DOM) with strong typing for domains and ranges of the properties. It checks whether cardinality constraints are observed. Rules that were documented but could not be represented formally in \href{http://www.biopax.org/release/biopax-level2.owl}{BioPAX OWL} are also validated against. Paxtools is fail-fast, it immediately reports rule violations either with an exception or logging a warning. Additionally, Paxtools checks for \href{http://www.biopaxwiki.org/cgi-bin/moin.cgi/best\_practices}{best practices} documented in the BioPAX documentation (\href{http://www.biopax.org/release/biopax-level2-documentation.pdf}{L2} and \href{http://www.biopax.org/release/biopax-level3-documentation.pdf}{L3} and logs potentially problemmatic usages.
+
+Paxtools comes with a persistence and searching layer using Java Persistence API (JPA) and Lucene. This enables storing and querying particularly large models and concurrent editing of the same model by multiple users. Lucene allows efficient fulltext querying.
+
+Paxtools has an experimental support for integrating two pathways from different sources by identifying interactions that are similar. It is often difficult to make
+an exact matching between entities in several cases- for example the same state of the protein can be represented as the \emph{active} state in one pathway database and \emph{doubly phosphorylated} in another one. An iterative two-step process-- fuzzy-matching entities followed by finding interactions that have similar participants-- however provides quite reasonable pathway alignments. This facility can be used for cross-validating pathways from different sources or as a first step for integrating overlapping pathways.
+
+%
+% Not ready yet.
+%
+%Paxtools has a simple command line BioPAX editor with tab completion, undo support, and command history. This is especially useful for making modifications to existing BioPAX models. The same command structure can be reused for building more advanced editors.
+
+Paxtools has also several other useful functionalities such as reflection based access, traversal methods, and programmatic access to \href{http://www.pathwaycommons.org}{Pathway Commons} \cite{pathwaycommons} web service API.
+
+
+\section{Usage notes}
+
+\subsection{Paxtools API}
+\subsubsection{Reading a model}
+\label{usage:io}
+Paxtools is very straightforward to use. For example, in order to read an OWL model from an \textit{inputStream} using \textit{jenaIOHandler} you need to:
+
+\begin{mylisting}
+\begin{verbatim}
+ JenaIOHandler jenaIOHandler = new JenaIOHandler();
+ Model model = jenaIOHandler.convertFromOWL(inputStream);
+\end{verbatim}
+\end{mylisting}
+
+or you can fetch a model directly from Pathway Commons Database \cite{pathwaycommons} if you have its CPATH id\footnote{Please see Section~\ref{appendix:pc} for further information}:
+\begin{mylisting}
+\begin{verbatim}
+ String id = "1";
+ PathwayCommonsIOHandler pcIOHandler 
+     = new PathwayCommonsIOHandler();
+ Model model = pcIOHandler.retrieveById(id);
+\end{verbatim}
+\end{mylisting}
+
+\subsubsection{Access to contents of a model}
+You can retrieve \textit{model}'s contents by
+
+\begin{mylisting}
+\begin{verbatim}
+ model.getObjects();
+\end{verbatim}
+\end{mylisting}
+
+or you can use the filtering feature in order to get only interactions:
+
+\begin{mylisting}
+\begin{verbatim}
+ model.getObjects(interaction.class);
+\end{verbatim}
+\end{mylisting}
+
+When you have an interaction, getting its participants is as easy as:
+
+\begin{mylisting}
+\begin{verbatim}
+ Set<InteractionParticipant> participants 
+     = anInteraction.getPARTICIPANTS();
+\end{verbatim}
+\end{mylisting}
+
+In order to create an object, you can use a factory through the default \textit{BioPAXLevel} of the model:
+
+\begin{mylisting}
+\begin{verbatim}
+ BioPAXFactory factory = model.getLevel.getDefaultFactory();
+ biochemicalReaction rxn1 
+     = (biochemicalReaction) factory.reflectivelyCreate(biochemicalReaction.class);
+\end{verbatim}
+\end{mylisting}
+
+or you can ask model to create one for you :
+
+\begin{mylisting}
+\begin{verbatim}
+ biochemicalReaction rxn1 
+     = model.addNew(biochemicalReaction.class, "http://mydomain.org/rxn1");
+\end{verbatim}
+\end{mylisting}
+
+The first parameter is the class of the object and the latter is the RDF id. The latter method also adds the newly created object to the model.
+
+A \textit{Model} object contains multiple BioPAX elements. Each element within a model has to have a unique id. A model can have multiple namespaces and these namespaces can be obtained as a map in which \textit{key} is the prefix and \textit{value} is the namespace:
+
+\begin{mylisting}
+\begin{verbatim}
+ Map<String, String> nspMap = model.getNameSpacePrefixMap();
+\end{verbatim}
+\end{mylisting}
+
+The namespace with empty (``'') tag is used as the XML base when writing out the model as an OWL file.
+
+\subsubsection{Modifying the contents of a model}
+Having a new biochemical reaction (\textit{rxn1}), now you can define the reaction's \textit{LEFT} and \textit{RIGHT}:
+
+\begin{mylisting}
+\begin{verbatim}
+ rxn1.addLEFT(aSubstrate);
+ rxn1.addRIGHT(aProduct);
+\end{verbatim}
+\end{mylisting}
+
+For functional properties (one-to-one or many-to-one properties) there are two methods: \textit{getX} and \textit{setX}, where \textit{X} is the name of the property. For other properties (one-to-many or many-to-many) there are four methods: \textit{getX}, \textit{setX}, \textit{addX}, and \textit{removeX}. Regular users are strongly recommended to use \textit{addX} and \textit{removeX} methods for modifying the latter properties, and should not directly modify the list returned by the get methods, because Paxtools maintain super-properties automatically without a need for an extra effort for the user.
+
+So in the above example if we get the set containing participants by the following method
+
+\begin{mylisting}
+\begin{verbatim}
+ rxn1.getPARTICIPANTS()
+\end{verbatim}
+\end{mylisting}
+
+it will contain both \textit{aSubstrate} and \textit{aProduct}.
+
+Additionally there are methods in the form of \textit{isXOf} for the properties between major elements. These methods allow you to traverse the graph bidirectionally and are automatically maintained by Paxtools. So the following will evaluate to true:
+
+\begin{mylisting}
+\begin{verbatim}
+ Set<Process> participating = aSubstrate.isPARTICIPANTSOf();
+ participating.contains(rxn1);
+\end{verbatim}
+\end{mylisting}
+
+\subsubsection{Exporting a model}
+%
+% Watch out! We run out of (sub)s. We're using enumerate instead
+%
+\begin{enumerate}
+\item \textbf{OWL file:}
+Once you are done with your model you can write it out using one of the writers in the IO package. For example, in order to output the model as an OWL file, you need to:
+
+\begin{mylisting}
+\begin{verbatim}
+ SimpleExporter exporter = new SimpleExporter();
+ exporter.convertToOwl(model, anOutputStream);
+\end{verbatim}
+\end{mylisting}
+
+\item \textbf{SIF file:}
+You can also export your \textit{model} in simple interaction format (SIF) with the interaction rules you specify:
+
+\begin{mylisting}
+\begin{verbatim}
+ SimpleInteractionConverter converter
+     = new SimpleInteractionConverter(
+         new ParticipantRule(),
+         new ConsecutiveCatalysisRule() );
+ converter.writeInteractionsInSIF(model, anOutputStream);
+\end{verbatim}
+\end{mylisting}
+ 
+In the example above, only \textit{Participant} and \textit{ConsecutiveCatalysisRule} were requested, but user can give a different list of rules. These rules are defined in package \textit{org.biopax.paxtools.io.sif.level2}. Here is another example using different rules:
+
+\begin{mylisting}
+\begin{verbatim}
+ SimpleInteractionConverter converter
+     = new SimpleInteractionConverter(
+         new ControlRule(),
+         new ParticipantRule(),
+         new ComponentRule() );
+ converter.writeInteractionsInSIF(model, anOutputStream);
+\end{verbatim}
+\end{mylisting}
+
+\end{enumerate}
+%
+% End of "Exporting a model" enumeration!
+%
+
+\subsubsection{Merging models}
+If you want to merge two or more models, you can initiate the \textit{Merger} as the following:
+\begin{mylisting}
+\begin{verbatim}
+ JenaEditorMap editorMap = new JenaEditorMap();
+ Merger merger = new Merger(editorMap);
+\end{verbatim}
+\end{mylisting}
+
+Assuming you want to merge two models (\textit{targetModel} and \textit{sourceModel1}), in order to merge \textit{sourceModel1} into \textit{targetModel}, you need to:
+
+\begin{mylisting}
+\begin{verbatim}
+ merger.merge(targetModel, sourceModel1);
+\end{verbatim}
+\end{mylisting}
+
+or if you want to merge more than two models, you can use:
+
+\begin{mylisting}
+\begin{verbatim}
+ merger.merge(targetModel, sourceModel1, sourceModel2, 
+                            sourceModel3, sourceModel4);
+\end{verbatim}
+\end{mylisting}
+
+Note that in the end of a successful merging, \textit{targetModel} will be the merged model.
+
+\subsubsection{Putting it all together}
+In Section~\ref{appendix:example}, you can find a complete example in which some common methods--along with those mentioned above--are put together.
+
+\subsubsection{Exceptions}
+If at any point a BioPAX invariant is violated Paxtools will throw an \textit{IllegalBioPAXArgument} exception without modifying the model.
+
+\subsection{Paxtools Command Line Tool}
+Paxtools has a command line accessible tool in order to enable users to perform basic operations. You can access the main class via \emph{PaxtoolsMain} under \emph{org.biopax.paxtools} package. It is also manifested as the standard main class, therefore the following usage will also invoke this command tool\footnote{Assuming you have the final JAR release of Paxtools under \textbf{/path/to/Paxtools.jar}.}:
+
+\begin{mylisting}
+\begin{verbatim}
+ $ java -jar /path/to/Paxtools.jar
+
+ Avaliable operations:
+ --merge file1 file2 output     merges file2 into file1 and writes 
+                                it into output
+ --to-sif file1 output          converts model to simple interaction 
+                                format
+ --validate file1               validates BioPAX model file1
+
+ --help                         prints this screen and exits 
+\end{verbatim}
+\end{mylisting}
+
+where the dolar sign ({\$}) indicates the command line prompt. There are three basic functionalities that come with the comand line tool (CLT): validation, merging, and conversion to SIF. To validate a BioPAX OWL, you can use the following command:
+\begin{mylisting}
+\begin{verbatim}
+ $ java -jar /path/to/Paxtools.jar \
+     --validate /another/path/to/biopax.owl
+
+ Model is valid
+\end{verbatim}
+\end{mylisting}
+
+There are two possibilites for \textit{validation}: First one is shown above, and the second is in the following format:
+\begin{mylisting}
+\begin{verbatim}
+ $ java -jar /path/to/Paxtools.jar \
+     --validate /another/path/to/biopax.owl
+
+ Model is invalid:
+ Exception : Description
+\end{verbatim}
+\end{mylisting}
+
+where \emph{Exception} is the thrown exception type while reading the model, and \emph{Description} is the relavent information regarding to the problem. Problem(s) may include but not limited to: RDF syntax errors or semantics of model.
+
+If you want to merge two BioPAX OWL models, \emph{model1.owl} and \emph{model2.owl}), and want to write it as \emph{merged\_model.owl}, you need to:
+\begin{mylisting}
+\begin{verbatim}
+ $ java -jar /path/to/Paxtools.jar \
+     --merge model1.owl model2.owl merged_model.owl
+\end{verbatim}
+\end{mylisting}
+
+or you may want to convert an OWL model, \emph{model.owl} into a SIF\footnote{Please see Section~\ref{appendix:sif} for further information}, \emph{converted\_model.sif}, you can use:
+\begin{mylisting}
+\begin{verbatim}
+ $ java -jar /path/to/Paxtools.jar \
+     --to-sif model.owl converted_model.sif
+\end{verbatim}
+\end{mylisting}
+
+Programmers who are going to use this CLT as a part of their program or script should note that \textit{PaxtoolsMain} returns $0$ in success, and a \textit{non-zero} integer in case of error:
+
+\begin{mylisting}
+\begin{verbatim}
+ $ java -jar /path/to/Paxtools.jar \
+     --validate /another/path/to/biopax.owl
+
+ Model is valid
+ $ echo $?
+ 0
+
+ $ java -jar /path/to/Paxtools.jar \
+     --validate /another/path/to/biopax.owl
+
+ Model is invalid
+ Exception : Description
+ $ echo $?
+ 255
+\end{verbatim}
+\end{mylisting}
+
+Users who want to alter parameters or require a more dedicated usage of these basic methods are suggested to use \textit{Paxtools API}.
+
+\section{Package Structure}
+\subsection{org.biopax.paxtools.util}
+This package contains several utility classes that are used throughout the project, including exceptions and special collection classes.
+
+\subsection{org.biopax.paxtools.model}
+\emph{Model} package contains the interfaces for BioPAX objects. Software applications using paxtools should code to these interfaces. Actual implementations are initialized through factories decoupling the applications from the actual implementations.
+
+\subsection{org.biopax.paxtools.impl}
+This is the default implementation of \emph{model} package. It contains most of the domain logic as well as validation functionality.
+
+\subsection{org.biopax.paxtools.proxy}
+This is the implementation layer used for persistence. Proxy pattern is used to redirect all domain and validation logic to an underlying model layer, while handling persistence related issues.
+
+\subsection{org.biopax.paxtools.controller}
+This package contains classes used for manipulating model objects: \emph{PropertyEditors} for reflection based access and modification of model
+objects, a \emph{traverser} and a \emph{visitor} for generic graph traversal, and a \emph{merger} for merging two biopax models based on graph identity. There is
+also an experimental semantic integration class for comparing two models and finding similar interactions.
+
+\subsection{org.biopax.paxtools.io}
+This package contains classes used for reading and writing BioPAX models in different formats.
+
+\subsection{org.biopax.paxtools.commander}
+This package contains classes for editing BioPAX models. It has commands for several edit operations, undo/redo stack, and command line code completion facility.
+
+\subsection{org.biopax.paxtools.examples}
+This package contains several examples that uses Paxtools.
+
+\section{Dependencies}
+\subsection{Production}
+\subsubsection{General}
+\begin{itemize}
+   \item collections-generic-4.01.jar
+   \item commons-logging.jar
+   \item xercesImpl.jar\footnote{included in jvm 1.5 or higher}
+   \item xml-apis.jar\footnote{included in jvm 1.5 or higher}
+\end{itemize}
+
+\subsubsection{jena}
+Only required if \textit{JenaIOHandler} is used.
+\begin{itemize}
+   \item concurrent.jar
+   \item icu4j\_3\_4.jar
+   \item iri.jar
+   \item jakarta-oro.jar
+   \item jena.jar
+\end{itemize}
+
+\subsubsection{Persistence}
+Only required if database persistence is used.
+\begin{itemize}
+   \item antlr-2.7.6.jar
+   \item asm.jar
+   \item cglib-2.1.3.jar
+   \item commons-collections-2.1.1.jar
+   \item dom4j-1.6.1.jar
+   \item ehcache-1.2.3.jar
+   \item ejb3-persistence.jar
+   \item hibernate-annotations.jar
+   \item hibernate-commons-annotations.jar
+   \item hibernate-entitymanager.jar
+   \item hibernate-search.jar
+   \item hibernate3.jar
+   \item javassist.jar
+   \item jboss-archive-browsing.jar
+   \item jdbc2\_0-stdext.jar
+   \item jta.jar
+   \item lucene-core-2.1.0.jar
+\end{itemize}
+
+\subsubsection{DBMS driver}
+\begin{itemize}
+   \item mysql-connector-java-5.0.7-bin.jar\footnote{In case MySQL is used for the persistence}
+   \item postgresql-8.2-504.jdbc3.jar\footnote{In case PostgreSQL is used for the persistence}
+\end{itemize}
+
+\subsection{Development}
+Not required on run-time.
+\begin{itemize}
+   \item junit-4.1.jar
+   \item log4j-1.2.12.jar
+\end{itemize}
+
+%
+% Has to be double checked
+%
+%\subsubsection{Persistence}
+%The following are used for Persistence related library (mentioned above) by the development.
+%\begin{itemize}
+%   \item Hibernate 3.2.3
+%   \item Hibernate Annotations 3.3.0 GA
+%   \item Hibernate EntityManager 3.3.1 GA
+%   \item Hibernate Search 3.0.0 Beta1
+%\end{itemize}
+
+\section{Appendices}
+\subsection{Pathway Commons Integration}
+\label{appendix:pc}
+Users can access the following Pathway Commons web service API commands via the corresponding methods under \textit{org.biopax.paxtools.io} package: \textit{get\_record\_by\_cpath\_id} via 
+\textit{retrieveByID}\footnote{\href{http://www.pathwaycommons.org/pc/webservice.do?cmd=help\#get\_by\_cpath\_id}{http://www.pathwaycommons.org/pc/webservice.do?cmd=help\#get\_by\_cpath\_id}}, \textit{get\_neighbors} via \textit{getNeighbors}\footnote{\href{http://www.pathwaycommons.org/pc/webservice.do?cmd=help\#get\_neighbors}{http://www.pathwaycommons.org/pc/webservice.do?cmd=help\#get\_neighbors}}, and \textit{get\_pathways} via \textit{getPathways}\footnote{\href{http://www.pathwaycommons.org/pc/webservice.do?cmd=help\#get\_pathways}{http://www.pathwaycommons.org/pc/webservice.do?cmd=help\#get\_pathways}}.
+
+As documented in the help of the web service \cite{pchelp}, some commands support multiple IDs: ``a comma separated list of internal or external identifiers (IDs), used to identify the physical entities of interest. For example, look up two distinct proteins by their UniProt IDs using the following query: O14763, P55957. To prevent system overload, clients are currently restricted to a maximum of 25 IDs.'' Therefore, like the use in Section~\ref{usage:io} the following use of the method is also valid:
+
+\begin{mylisting}
+\begin{verbatim}
+ String id = "1,2,3,4,5,6,7,8,9";
+ PathwayCommonsIOHandler pcIOHandler 
+     = new PathwayCommonsIOHandler();
+ Model model = pcIOHandler.retrieveById(id);
+\end{verbatim}
+\end{mylisting}
+
+Moreover, Pathway Commons interface supports different ID types which can be indicated by \textit{setInputIdType} method before fetching the model from the database.
+
+\subsection{Simple Interaction Format (SIF)}
+\label{appendix:sif}
+A SIF file can be defined as:
+
+``\textit{\ldots a simple text file that lists all the interactions in the following simple interaction format: \textbf{physical\_entity\_id $<$relationship type$>$ physical\_entity\_id}, where physical\_entity\_id is a valid CPATH\_ID\ldots}'' \cite{pchelp}
+
+where \textbf{$<$relationship type$>$} is one of the followings: {\small COMPONENT\_OF, COMPONENT\_IN\_SAME, CO\_CONTROL\_DEPENDENT\_SIMILAR, CO\_CONTROL\_DEPENDENT\_ANTI, CO\_CONTROL\_INDEPENDENT\_SIMILAR, CO\_CONTROL\_INDEPENDENT\_ANTI, SEQUENTIAL\_CATALYSIS, CONTROLS\_METABOLIC\_CHANGE, CONTROLS\_STATE\_CHANGE, PARTICIPATES\_CONVERSION}, or {\small PARTICIPATES\_INTERACTION}. 
+
+SIF files are also recognized by \textbf{Cytoscape} \cite{cytoscape}, and along with other network types a detailed SIF description can also be found \href{http://www.cytoscape.org/cgi-bin/moin.cgi/Cytoscape\_User\_Manual/Network\_Formats}{Cytoscape User Manual}.
+
+% This is the sample code having its self \subsection
+\include{GOUnificationXREFtoRelationshipXREFConverter}
+% end of example code %
+
+\begin{thebibliography}{99}
+ \bibitem{biopax1} BioPAX - Biological Pathways Exchange Language \textit{Level 1} (\href{http://www.biopax.org/release/biopax-level1-documentation.pdf}{http://www.biopax.org/release/biopax-level1-documentation.pdf})
+ \bibitem{biopax2} BioPAX - Biological Pathways Exchange Language \textit{Level 2} (\href{http://www.biopax.org/release/biopax-level2-documentation.pdf}{http://www.biopax.org/release/biopax-level2-documentation.pdf})
+ \bibitem{biopax3} BioPAX - Biological Pathways Exchange Language \textit{Level 3} (\href{http://www.biopax.org/release/biopax-level3-documentation.pdf}{http://www.biopax.org/release/biopax-level3-documentation.pdf})
+ \bibitem{pathwaycommons} Pathway Commons (\href{http://www.pathwaycommons.org/}{http://www.pathwaycommons.org/})
+ \bibitem{pchelp} Pathway Commons Web Service Help (\href{http://www.pathwaycommons.org/pc/webservice.do?cmd=help}{http://www.pathwaycommons.org/pc/webservice.do?cmd=help})
+ \bibitem{cytoscape} Cytoscape (\href{http://www.cytoscape.org}{http://www.cytoscape.org})
+\end{thebibliography}
+
+\end{document}

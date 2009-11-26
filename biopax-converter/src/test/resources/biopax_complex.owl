@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF 
+xmlns="http://cbio.mskcc.org/cpath#"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+xmlns:xs="http://www.w3.org/2001/XMLSchema#"
+xmlns:bp="http://www.biopax.org/release/biopax-level2.owl#" 
+xmlns:owl="http://www.w3.org/2002/07/owl#"
+xml:base="http://cbio.mskcc.org/cpath#">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level2.owl" />
+  </owl:Ontology>
+  
+  <bp:bioSource rdf:ID="CPATH-LOCAL-1154">
+      <bp:NAME rdf:datatype="xs:string">Homo sapiens</bp:NAME>
+      <bp:TAXON-XREF>
+        <bp:unificationXref rdf:ID="CPATH-LOCAL-1155">
+          <bp:DB rdf:datatype="xs:string">NCBI_taxonomy</bp:DB>
+          <bp:ID rdf:datatype="xs:string">9606</bp:ID>
+        </bp:unificationXref>          
+      </bp:TAXON-XREF>
+  </bp:bioSource>            
+  <bp:complex rdf:ID="CPATH-126">
+    <bp:COMPONENTS>
+      <bp:sequenceParticipant rdf:ID="CPATH-LOCAL-1160">
+        <bp:CELLULAR-LOCATION>
+          <bp:openControlledVocabulary rdf:ID="CPATH-LOCAL-1161">
+            <bp:TERM rdf:datatype="xs:string">plasma membrane</bp:TERM>
+            <bp:XREF>
+              <bp:unificationXref rdf:ID="CPATH-LOCAL-1162">
+                <bp:DB rdf:datatype="xs:string">GO</bp:DB>
+                <bp:ID rdf:datatype="xs:string">0005886</bp:ID>
+              </bp:unificationXref>
+            </bp:XREF>
+          </bp:openControlledVocabulary>
+        </bp:CELLULAR-LOCATION>
+        <bp:PHYSICAL-ENTITY rdf:resource="#CPATH-124" />
+      </bp:sequenceParticipant>
+    </bp:COMPONENTS>
+    <bp:COMPONENTS>
+      <bp:sequenceParticipant rdf:ID="CPATH-LOCAL-1163">
+        <bp:CELLULAR-LOCATION rdf:resource="#CPATH-LOCAL-1161" />
+        <bp:PHYSICAL-ENTITY rdf:resource="#CPATH-125" />
+      </bp:sequenceParticipant>
+    </bp:COMPONENTS>
+    <bp:ORGANISM rdf:resource="#CPATH-LOCAL-1154"/>
+    <bp:NAME rdf:datatype="xs:string">TNF-alpha:TNF-R1 complex [plasma membrane]</bp:NAME>
+    <bp:SHORT-NAME rdf:datatype="xs:string">TNF-alpha:TNF-R1 complex</bp:SHORT-NAME>
+  </bp:complex>
+  <bp:protein rdf:ID="CPATH-124">
+    <bp:ORGANISM rdf:resource="#CPATH-LOCAL-1154" />
+    <bp:NAME rdf:datatype="xs:string">UniProt:P01375 Tumor necrosis factor precursor (TNF-alpha) (Tumor necrosis factor ligand superfamily member 2) (TNF-a) (Cachectin)</bp:NAME>
+    <bp:SHORT-NAME rdf:datatype="xs:string">TNF</bp:SHORT-NAME>
+    <bp:SYNONYMS rdf:datatype="xs:string">TNF</bp:SYNONYMS>
+    <bp:SYNONYMS rdf:datatype="xs:string">TNFA</bp:SYNONYMS>
+    <bp:SYNONYMS rdf:datatype="xs:string">TNFSF2</bp:SYNONYMS>
+    <bp:XREF>
+        <bp:unificationXref rdf:ID="CPATH-LOCAL-1156">
+          <bp:DB rdf:datatype="xs:string">UniProt</bp:DB>
+          <bp:ID rdf:datatype="xs:string">P01375</bp:ID>
+        </bp:unificationXref>
+    </bp:XREF>
+    <bp:XREF>
+        <bp:relationshipXref rdf:ID="induction_of_apoptosis_by_extracellular_signals">
+          <bp:DB rdf:datatype="xs:string">GO</bp:DB>
+          <bp:ID rdf:datatype="xs:string">0008624</bp:ID>
+        </bp:relationshipXref>
+	</bp:XREF>
+	<bp:XREF>
+        <bp:relationshipXref rdf:ID="caspase_activation">
+          <bp:DB rdf:datatype="xs:string">GO</bp:DB>
+          <bp:ID rdf:datatype="xs:string">0006919</bp:ID>
+        </bp:relationshipXref>
+	</bp:XREF>
+	<bp:XREF>
+        <bp:publicationXref rdf:ID="Pubmed_7530336">
+            <bp:ID rdf:datatype="xs:string">7530336</bp:ID>
+            <bp:DB rdf:datatype="xs:string">Pubmed</bp:DB>
+            <bp:YEAR rdf:datatype="xs:int">1995</bp:YEAR>
+            <bp:TITLE rdf:datatype="xs:string">Cell-autonomous Fas (CD95)/Fas-ligand interaction mediates activation-induced apoptosis in T-cell hybridomas</bp:TITLE>
+            <bp:AUTHORS rdf:datatype="xs:string">Brunner, T</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Mogil, RJ</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">LaFace, D</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Yoo, NJ</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Mahboubi, A</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Echeverri, F</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Martin, SJ</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Force, WR</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Lynch, DH</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Ware, CF</bp:AUTHORS>
+            <bp:SOURCE rdf:datatype="xs:string">Nature 373:441-4</bp:SOURCE>
+        </bp:publicationXref>
+	</bp:XREF>
+	<bp:XREF> 
+        <bp:publicationXref rdf:ID="Pubmed_8521815">
+            <bp:ID rdf:datatype="xs:string">8521815</bp:ID>
+            <bp:DB rdf:datatype="xs:string">Pubmed</bp:DB>
+            <bp:YEAR rdf:datatype="xs:int">1995</bp:YEAR>
+            <bp:TITLE rdf:datatype="xs:string">Cytotoxicity-dependent APO-1 (Fas/CD95)-associated proteins form a death-inducing signaling complex (DISC) with the receptor</bp:TITLE>
+            <bp:AUTHORS rdf:datatype="xs:string">Kischkel, FC</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Hellbardt, S</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Behrmann, I</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Germer, M</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Pawlita, M</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Krammer, PH</bp:AUTHORS>
+            <bp:AUTHORS rdf:datatype="xs:string">Peter, ME</bp:AUTHORS>
+            <bp:SOURCE rdf:datatype="xs:string">EMBO J 14:5579-88</bp:SOURCE>
+        </bp:publicationXref>
+    </bp:XREF>
+    <bp:COMMENT rdf:datatype="xs:string">FUNCTION: Cytokine that binds to TNFRSF1A/TNFR1 and TNFRSF1B/TNFBR. It is mainly secreted by macrophages and can induce cell death of certain tumor cell lines. It is potent pyrogen causing fever by direct action or by stimulation of interleukin 1 secretion and is implicated in the induction of cachexia, Under certain conditions it can stimulate cell proliferation and induce cell differentiation. SUBUNIT: Homotrimer. SUBCELLULAR LOCATION: Type II membrane protein. Also exists as an extracellular soluble form. PTM: The soluble form derives from the membrane form by proteolytic processing. PTM: The membrane form, but not the soluble form, is phosphorylated on serine residues. Dephosphorylation of the membrane form ocurrs by binding to soluble TNFRSF1A/TNFR1. DISEASE: Cachexia accompanies a variety of diseases, including cancer and infection, and is characterized by general ill health and malnutrition. SIMILARITY: Belongs to the tumor necrosis factor family. CAUTION: Ref.8 sequence differs from that shown due to erroneous gene model prediction. CAUTION: Ref.15 sequence differs from that shown due to frameshifts in positions 91 and 157.</bp:COMMENT>
+      <bp:AVAILABILITY
+          rdf:datatype="xs:string">see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+      <bp:DATA-SOURCE>
+          <bp:dataSource rdf:ID="dataSource14">
+              <bp:NAME rdf:datatype="xs:string">aMAZE</bp:NAME>
+              <bp:COMMENT
+                  rdf:datatype="xs:string">This
+                  example is meant to provide an illustration of how
+                  various BioPAX slots should be filled; it is not
+                  intended to provide useful (or even accurate)
+                  biological information</bp:COMMENT>
+          </bp:dataSource>
+      </bp:DATA-SOURCE>
+  </bp:protein>
+  <bp:protein rdf:ID="CPATH-125">
+    <bp:ORGANISM rdf:resource="#CPATH-LOCAL-1154"/>
+    <bp:NAME rdf:datatype="xs:string">UniProt:P19438 Tumor necrosis factor receptor superfamily member 1A precursor (p60) (TNF-R1) (TNF-RI) (p55) (CD120a) [Contains: Tumor necrosis factor binding protein 1 (TBPI)]</bp:NAME>
+    <bp:SYNONYMS rdf:datatype="xs:string">TNFRSF1A</bp:SYNONYMS>
+    <bp:SYNONYMS rdf:datatype="xs:string">TNFR1</bp:SYNONYMS>
+    <bp:SYNONYMS rdf:datatype="xs:string">TNFAR</bp:SYNONYMS>
+    <bp:XREF>
+      <bp:unificationXref rdf:ID="CPATH-LOCAL-1159">
+        <bp:DB rdf:datatype="xs:string">UniProt</bp:DB>
+        <bp:ID rdf:datatype="xs:string">P19438</bp:ID>
+      </bp:unificationXref>
+    </bp:XREF>
+    <bp:COMMENT rdf:datatype="xs:string">FUNCTION: Receptor for TNFSF2/TNF-alpha and homotrimeric TNFSF1/lymphotoxin-alpha. The adaptor molecule FADD recruits caspase-8 to the activated receptor. The resulting death-inducing signaling complex (DISC) performs caspase-8 proteolytic activation which initiates the subsequent cascade of caspases (aspartate- specific cysteine proteases) mediating apoptosis. Contributes to the induction of noncytocidal TNF effects including anti-viral state and activation of the acid sphingomyelinase. SUBUNIT: Binding of TNF to the extracellular domain leads to homotrimerization. The aggregated death domains provide a novel molecular interface that interacts specifically with the death domain of TRADD. Various TRADD-interacting proteins such as TRAFS, RIP and possibly FADD, are recruited to the complex by their association with TRADD. This complex activates at least two distinct signaling cascades, apoptosis and NF-kappa-B signaling. Binds BAG4. Constitutively associated with TRPC4AP (By similarity). SUBCELLULAR LOCATION: Type I membrane protein and secreted. DOMAIN: The domain that induces A-SMASE is probably identical to the death domain. The N-SMASE activation domain (NSD) is both necessary and sufficient for activation of N-SMASE. DOMAIN: Both the cytoplasmic membrane-proximal region and the C- terminal region containing the death domain are involved in the interaction with TRPC4AP (By similarity). PTM: The soluble form is produced from the membrane form by proteolytic processing. DISEASE: Defects in TNFRSF1A are a cause of autosomal dominant familial hibernian fever (FHF) [MIM:142680]; also known as tumour necrosis factor receptor-associated periodic syndrome (TRAPS). FHF is a disease characterized by recurrent fever, abdominal pain, localized tender skin lesions and myalgia. SIMILARITY: Contains 1 death domain. SIMILARITY: Contains 4 TNFR-Cys repeats. DATABASE: NAME=PROW; NOTE=CD guide CD120a entry; WWW="http://www.ncbi.nlm.nih.gov/prow/cd/cd120a.htm".</bp:COMMENT>
+  </bp:protein>
+</rdf:RDF>
+
+

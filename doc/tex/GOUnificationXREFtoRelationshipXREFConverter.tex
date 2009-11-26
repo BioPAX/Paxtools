@@ -1,0 +1,198 @@
+% Highlighting theme definition:
+
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0,0,0}{#1}}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.16,0.16,1}{#1}}
+\newcommand{\hlesc}[1]{\textcolor[rgb]{1,0,1}{#1}}
+\newcommand{\hlstr}[1]{\textcolor[rgb]{1,0,0}{#1}}
+\newcommand{\hldstr}[1]{\textcolor[rgb]{0.51,0.51,0}{#1}}
+\newcommand{\hlslc}[1]{\textcolor[rgb]{0.51,0.51,0.51}{\it{#1}}}
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.51,0.51,0.51}{\it{#1}}}
+\newcommand{\hldir}[1]{\textcolor[rgb]{0,0.51,0}{#1}}
+\newcommand{\hlsym}[1]{\textcolor[rgb]{0,0,0}{#1}}
+\newcommand{\hlline}[1]{\textcolor[rgb]{0.33,0.33,0.33}{#1}}
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0,0,0}{\bf{#1}}}
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.51,0,0}{#1}}
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0,0}{\bf{#1}}}
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0,0,0.51}{#1}}
+%\definecolor{bgcolor}{rgb}{1,1,1}
+
+{\oddsidemargin -3mm
+\textwidth 165,2truemm
+\topmargin 0truept
+\headheight 0truept
+\headsep 0truept
+\textheight 230truemm
+
+\subsection{A case study: {\it Converting GO Unification XREFs to Relationship XREFs}}
+\label{appendix:example}
+
+\noindent
+\ttfamily
+\hlstd{}\hlkwa{package }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{examples}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hspace*{\fill}\\
+\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{apache}\hlsym{.}\hlstd{commons}\hlsym{.}\hlstd{logging}\hlsym{.}\hlstd{Log}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{apache}\hlsym{.}\hlstd{commons}\hlsym{.}\hlstd{logging}\hlsym{.}\hlstd{LogFactory}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{impl}\hlsym{.}\hlstd{level2}\hlsym{.}\hlstd{Level2FactoryImpl}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{io}\hlsym{.}\hlstd{jena}\hlsym{.}\hlstd{JenaIOHandler}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{model}\hlsym{.}\hlstd{BioPAXLevel}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{model}\hlsym{.}\hlstd{Model}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{model}\hlsym{.}\hlstd{level2}\hlsym{.}\hlstd{Level2Factory}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{model}\hlsym{.}\hlstd{level2}\hlsym{.}\hlstd{XReferrable}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{model}\hlsym{.}\hlstd{level2}\hlsym{.}\hlstd{relationshipXref}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{org}\hlsym{.}\hlstd{biopax}\hlsym{.}\hlstd{paxtools}\hlsym{.}\hlstd{model}\hlsym{.}\hlstd{level2}\hlsym{.}\hlstd{unificationXref}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hspace*{\fill}\\
+\hlkwa{import }\hlstd{java}\hlsym{.}\hlstd{io}\hlsym{.}\hlstd{}\hlkwc{File}\hlstd{}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{java}\hlsym{.}\hlstd{io}\hlsym{.}\hlstd{}\hlkwc{FileInputStream}\hlstd{}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{java}\hlsym{.}\hlstd{io}\hlsym{.}\hlstd{}\hlkwc{FileNotFoundException}\hlstd{}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{java}\hlsym{.}\hlstd{io}\hlsym{.}\hlstd{}\hlkwc{FileOutputStream}\hlstd{}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{java}\hlsym{.}\hlstd{lang}\hlsym{.}\hlstd{reflect}\hlsym{.}\hlstd{}\hlkwc{InvocationTargetException}\hlstd{}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{java}\hlsym{.}\hlstd{util}\hlsym{.}\hlstd{}\hlkwc{HashSet}\hlstd{}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hlkwa{import }\hlstd{java}\hlsym{.}\hlstd{util}\hlsym{.}\hlstd{}\hlkwc{Set}\hlstd{}\hlsym{;}\hspace*{\fill}\\
+\hlstd{}\hspace*{\fill}\\
+\hlcom{/{*}{*}}\hspace*{\fill}\\
+\hlcom{ {*} User: Emek Demir Date: Jan 18, 2007 Time: 4:56:53 PM}\hspace*{\fill}\\
+\hlcom{ {*}}\hspace*{\fill}\\
+\hlcom{ {*} In this example we get all the unification xrefs in the model}\hspace*{\fill}\\
+\hlcom{ {*} and check if they point to the Gene Ontology. If this is the case}\hspace*{\fill}\\
+\hlcom{ {*} we convert them to relationship xrefs.}\hspace*{\fill}\\
+\hlcom{ {*}/}\hlstd{}\hspace*{\fill}\\
+\hlkwa{public class }\hlstd{GOUnificationXREFtoRelationshipXREFConverter}\hspace*{\fill}\\
+\hlsym{\{}\hspace*{\fill}\\
+\hlstd{	}\hlkwa{private static }\hlstd{Log log }\hlsym{= }\hlstd{LogFactory}\hlsym{.}\hlstd{}\hlkwd{getLog}\hlstd{}\hlsym{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{GOUnificationXREFtoRelationshipXREFConverter}\hlsym{.}\hlstd{}\hlkwa{class}\hlstd{}\hlsym{);}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{static }\hlstd{Level2Factory factory }\hlsym{= }\hlstd{}\hlkwa{new }\hlstd{}\hlkwd{Level2FactoryImpl}\hlstd{}\hlsym{();}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+	}\hlkwa{static }\hlstd{JenaIOHandler jenaIOHandler }\hlsym{=}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{new }\hlstd{}\hlkwd{JenaIOHandler}\hlstd{}\hlsym{(}\hlstd{factory}\hlsym{, }\hlstd{BioPAXLevel}\hlsym{.}\hlstd{L2}\hlsym{);}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlcom{/{*}{*}}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*}}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @param args a space seperated list of owl files to be processed}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @throws IllegalAccessException}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @throws InvocationTargetException}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*}/}\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public static }\hlstd{}\hlkwb{void }\hlstd{}\hlkwd{main}\hlstd{}\hlsym{(}\hlstd{}\hlkwc{String}\hlstd{}\hlsym{{[}{]} }\hlstd{args}\hlsym{)}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{throws }\hlstd{}\hlkwc{IllegalAccessException}\hlstd{}\hlsym{, }\hlstd{}\hlkwc{InvocationTargetException}\hspace*{\fill}\\
+\hlstd{	}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{// Process all the args}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{for }\hlstd{}\hlsym{(}\hlstd{}\hlkwc{String }\hlstd{arg }\hlsym{: }\hlstd{args}\hlsym{)}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{log}\hlsym{.}\hlstd{}\hlkwd{info}\hlstd{}\hlsym{(}\hlstd{arg}\hlsym{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if }\hlstd{}\hlsym{(}\hlstd{arg}\hlsym{.}\hlstd{}\hlkwd{toLowerCase}\hlstd{}\hlsym{().}\hlstd{}\hlkwd{endsWith}\hlstd{}\hlsym{(}\hlstd{}\hlstr{"owl"}\hlstd{}\hlsym{))}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{try}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{processXrefs}\hlstd{}\hlsym{(}\hlstd{arg}\hlsym{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{catch }\hlstd{}\hlsym{(}\hlstd{}\hlkwc{FileNotFoundException }\hlstd{e}\hlsym{)}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{e}\hlsym{.}\hlstd{}\hlkwd{printStackTrace}\hlstd{}\hlsym{();}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{	}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlcom{/{*}{*}}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} Main conversion method. Demonstrates how to read and write a BioPAX}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} model and accessing its objects.}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @param arg file name to be processed}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @throws FileNotFoundException}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @throws IllegalAccessException}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @throws InvocationTargetException}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*}/}\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{private static }\hlstd{}\hlkwb{void }\hlstd{}\hlkwd{processXrefs}\hlstd{}\hlsym{(}\hlstd{}\hlkwc{String }\hlstd{arg}\hlsym{) }\hlstd{}\hlkwa{throws}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{FileNotFoundException}\hlstd{}\hlsym{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{IllegalAccessException}\hlstd{}\hlsym{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{InvocationTargetException}\hspace*{\fill}\\
+\hlstd{	}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlslc{//Read in the model}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{FileInputStream }\hlstd{in }\hlsym{=}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{new }\hlstd{}\hlkwc{FileInputStream}\hlstd{}\hlsym{(}\hlstd{}\hlkwa{new }\hlstd{}\hlkwc{File}\hlstd{}\hlsym{(}\hlstd{arg}\hlsym{));}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{Model level2 }\hlsym{=}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{jenaIOHandler}\hlsym{.}\hlstd{}\hlkwd{convertFromOWL}\hlstd{}\hlsym{(}\hlstd{in}\hlsym{);}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Get all unification xrefs.}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{Set}\hlstd{}\hlsym{$<$}\hlstd{unificationXref}\hlsym{$>$ }\hlstd{unis }\hlsym{=}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{level2}\hlsym{.}\hlstd{}\hlkwd{getObjects}\hlstd{}\hlsym{(}\hlstd{unificationXref}\hlsym{.}\hlstd{}\hlkwa{class}\hlstd{}\hlsym{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlslc{//Create another set for avoiding concurrent modifications}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{Set}\hlstd{}\hlsym{$<$}\hlstd{unificationXref}\hlsym{$>$ }\hlstd{gos }\hlsym{= }\hlstd{}\hlkwa{new }\hlstd{}\hlkwc{HashSet}\hlstd{}\hlsym{$<$}\hlstd{unificationXref}\hlsym{$>$();}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Process all uni. refs}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{for }\hlstd{}\hlsym{(}\hlstd{unificationXref uni }\hlsym{: }\hlstd{unis}\hlsym{)}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{log}\hlsym{.}\hlstd{}\hlkwd{trace}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getDB}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlslc{//Assuming DB is represented as "GO"}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if }\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getDB}\hlstd{}\hlsym{().}\hlstd{}\hlkwd{equalsIgnoreCase}\hlstd{}\hlsym{(}\hlstd{}\hlstr{"GO"}\hlstd{}\hlsym{))}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlslc{//this it to avoid concurrent modification.}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{log}\hlsym{.}\hlstd{}\hlkwd{info}\hlstd{}\hlsym{(}\hlstd{}\hlstr{"scheduling "}\hlstd{ }\hlsym{+ }\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getRDFId}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{gos}\hlsym{.}\hlstd{}\hlkwd{add}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{);}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Now we have a list of xrefs to be converted. Let's do it.}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{for }\hlstd{}\hlsym{(}\hlstd{unificationXref go }\hlsym{: }\hlstd{gos}\hlsym{)}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwd{convert}\hlstd{}\hlsym{(}\hlstd{go}\hlsym{, }\hlstd{level2}\hlsym{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlslc{//And finally write out the file. We are done !}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{jenaIOHandler}\hlsym{.}\hlstd{}\hlkwd{convertToOWL}\hlstd{}\hlsym{(}\hlstd{level2}\hlsym{, }\hlstd{}\hlkwa{new }\hlstd{}\hlkwc{FileOutputStream}\hlstd{}\hlsym{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{arg}\hlsym{.}\hlstd{}\hlkwd{substring}\hlstd{}\hlsym{(}\hlstd{}\hlnum{0}\hlstd{}\hlsym{, }\hlstd{arg}\hlsym{.}\hlstd{}\hlkwd{lastIndexOf}\hlstd{}\hlsym{(}\hlstd{}\hlstr{'.'}\hlstd{}\hlsym{)) +}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{"{-}converted.owl"}\hlstd{}\hlsym{));}\hspace*{\fill}\\
+\hlstd{	}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlcom{/{*}{*}}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} This method converts the given unification xref to a relationship xref}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @param uni xref to be converted}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*} @param level2 model containing the xref}\hspace*{\fill}\\
+\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*}/}\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{private static }\hlstd{}\hlkwb{void }\hlstd{}\hlkwd{convert}\hlstd{}\hlsym{(}\hlstd{unificationXref uni}\hlsym{, }\hlstd{Model level2}\hlsym{)}\hspace*{\fill}\\
+\hlstd{	}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlslc{//We can not simply convert a class, so we need to remove the}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//uni and insert a new relationship xref}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//First get all the objects that refers to this uni}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{Set}\hlstd{}\hlsym{$<$}\hlstd{XReferrable}\hlsym{$>$ }\hlstd{referrables }\hlsym{=}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{new }\hlstd{}\hlkwc{HashSet}\hlstd{}\hlsym{$<$}\hlstd{XReferrable}\hlsym{$>$(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{isXREFof}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Create the new relationship xref.}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{relationshipXref relationshipXref }\hlsym{=}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{factory}\hlsym{.}\hlstd{}\hlkwd{createRelationshipXref}\hlstd{}\hlsym{();}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Copy the fields from uni}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setRDFId}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getRDFId}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setCOMMENT}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getCOMMENT}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setDB}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getDB}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setDB\textunderscore VERSION}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getDB\textunderscore VERSION}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setID}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getID}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setID\textunderscore VERSION}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getID\textunderscore VERSION}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setRELATIONSHIP\textunderscore TYPE}\hlstd{}\hlsym{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{"http://www.biopax.org/paxtools/convertedGOUnificationXREF"}\hlstd{}\hlsym{);}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Add it to the model.}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{level2}\hlsym{.}\hlstd{}\hlkwd{add}\hlstd{}\hlsym{(}\hlstd{relationshipXref}\hlsym{);}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Create a link to the new xref from all the owners.}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{for }\hlstd{}\hlsym{(}\hlstd{XReferrable referrable }\hlsym{: }\hlstd{referrables}\hlsym{)}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ }\hlstd{referrable}\hlsym{.}\hlstd{}\hlkwd{addXREF}\hlstd{}\hlsym{(}\hlstd{relationshipXref}\hlsym{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Remove the references to the old uni}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{for }\hlstd{}\hlsym{(}\hlstd{XReferrable referrable }\hlsym{: }\hlstd{referrables}\hlsym{)}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{referrable}\hlsym{.}\hlstd{}\hlkwd{removeXREF}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Now remove it from the model.}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{level2}\hlsym{.}\hlstd{}\hlkwd{remove}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{);}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//We are done!}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{}\hlsym{\}}\hspace*{\fill}\\
+\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+% (* LaTeX generated by highlight 2.4.8, http://www.andre-simon.de/ *)
+}

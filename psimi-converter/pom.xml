@@ -1,0 +1,82 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.biopax.paxtools</groupId>
+        <artifactId>paxtools</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>psimi-converter</artifactId>
+  <name>PSI-MI Converter</name>
+  <version>1.0-SNAPSHOT</version>
+  <description>Converts PSI-MI v2.5 (compact) files to BioPAX Level 2 or 3</description>
+  <dependencies>
+   	<dependency>
+    	<groupId>org.biopax.paxtools</groupId>
+    	<artifactId>paxtools-core</artifactId>
+    	<version>2.0-SNAPSHOT</version>
+    </dependency>
+  	<dependency>
+    	<groupId>org.biopax.paxtools</groupId>
+    	<artifactId>paxtools-simple-io</artifactId>
+    	<version>2.0-SNAPSHOT</version>
+    </dependency> 
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>2.1.3</version>
+    </dependency>
+ </dependencies>
+  <build>
+    <finalName>psi-mi-converter</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+ 	    <phase>generate-sources</phase>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <clearOutputDir>false</clearOutputDir>
+          <packageName>generated.psimil2</packageName>
+          <schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
+        </configuration>
+        <dependencies>
+        <!-- this is a woraround a bug in the m2eclipse plugin-->
+          <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.8.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+<!--
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main/java/generated</directory>
+              <includes>
+                <include>**/</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+-->
+    </plugins>
+  </build>
+</project>

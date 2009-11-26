@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.biopax.paxtools</groupId>
+    <artifactId>paxtools</artifactId>
+    <version>2.0-SNAPSHOT</version>
+
+    <name>Paxtools (multi-module project)</name>
+    <packaging>pom</packaging>
+    <url>http://sourceforge.net/projects/biopax/</url>
+
+    <modules>
+        <module>paxtools-core</module>
+        <module>validator-client</module>
+        <module>paxtools-jena-io</module>
+        <module>paxtools-simple-io</module>
+        <module>sif-converter</module>
+        <module>biopax-persistence</module>
+        <module>pathwaycommons-client</module>
+        <module>biopax-converter</module>
+        <module>psimi-converter</module>
+        <module>paxtools-main</module>
+    </modules>
+
+	<developers>
+		<developer>
+			<id>rodche</id>
+			<name>Igor Rodchenkov</name>
+			<organization>University of Toronto</organization>
+			<roles><role>developer</role></roles>
+		</developer>
+		<developer>
+			<id>edemir</id>
+			<name>Emek Demir</name>
+			<organization>CBIO MSKCC</organization>
+			<roles><role>developer</role></roles>
+		</developer>
+	</developers>
+
+
+	<profiles>
+		<profile>
+			<id>rodche</id>
+			<properties>
+				<scm.username>rodche</scm.username>
+			</properties>
+		</profile>
+		<profile>
+			<id>edemir</id>
+			<properties>
+				<scm.username>edemir</scm.username>
+			</properties>
+		</profile>
+	</profiles>
+    
+    
+    <scm>
+    	<connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
+    	<developerConnection>scm:hg:ssh://${scm.username},biopax@biopax.hg.sourceforge.net/hgroot/biopax/paxtools</developerConnection>
+    	<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
+    </scm>
+    
+    
+    <organization>
+    	<name>BioPAX</name>
+    	<url>http://www.biopax.org</url>
+    </organization>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.5</source>
+						<target>1.5</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+    </dependencies>
+</project>
+
