@@ -65,13 +65,18 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>biopax-converter</artifactId>
+      <artifactId>validator-client</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>validator-client</artifactId>
-      <version>1.0-SNAPSHOT</version>
+    	<groupId>org.biopax.paxtools</groupId>
+    	<artifactId>biopax-persistence</artifactId>
+    	<version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.biopax.paxtools</groupId>
+    	<artifactId>paxtools-jena-io</artifactId>
+    	<version>2.0-SNAPSHOT</version>
     </dependency>
     <!-- with jena and persistence the jar will be ~20Mb -->
     <!-- 

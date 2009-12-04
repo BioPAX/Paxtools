@@ -6,12 +6,19 @@ package org.biopax.paxtools.io.simpleIO;
  * Time: 12:11:27 PM
  */
 
+import static org.junit.Assert.fail;
 import junit.framework.TestCase;
+
+import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.Level3Factory;
+import org.biopax.paxtools.model.level3.Protein;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -93,4 +100,36 @@ public class SimpleExporterTest extends TestCase
 		        System.exit(1);
 		    }
 	}
+	
+    @Test
+    public void testDuplicateNamesByExporter() throws IOException {
+    	Level3Factory level3 = new Level3FactoryImpl();
+    	Protein p = level3.createProtein();
+    	String name = "aDisplayName";
+    	p.setRDFId("myProtein");
+    	p.setDisplayName(name);
+    	p.addComment("Display Name should not be repeated again in the Name property!");
+    	Model m = level3.createModel();
+    	m.add(p);
+    	
+	    FileOutputStream out =
+            new FileOutputStream(
+            	getClass().getResource("").getFile() + "/testDuplicateNamesByExporter.xml"
+            	);
+		SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L3);
+		simpleExporter.convertToOWL(m, out);
+		out.close();
+    	
+		// read
+    	BufferedReader in = new BufferedReader(
+    		new FileReader(
+    			getClass().getResource("testDuplicateNamesByExporter.xml").getFile()));
+    	char[] buf = new char[1000];
+    	in.read(buf);
+    	String xml = new String(buf);
+    	if(xml.indexOf(name) != xml.lastIndexOf(name)) {
+    		fail("displayName gets duplicated by the SimpleExporter!");
+    	}
+    	
+    }
 }

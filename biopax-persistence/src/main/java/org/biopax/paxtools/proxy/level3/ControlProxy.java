@@ -21,7 +21,7 @@ import java.util.Set;
  */
 @Entity(name="l3control")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ControlProxy extends InteractionProxy implements Control, Serializable {
+public class ControlProxy extends RestrictedInteractionAdapterProxy implements Control, Serializable {
 	public ControlProxy() {
 	}
 

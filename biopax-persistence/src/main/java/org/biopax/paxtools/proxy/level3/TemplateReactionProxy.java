@@ -21,7 +21,7 @@ import java.util.Set;
  */
 @Entity(name="l3templatereaction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class TemplateReactionProxy extends InteractionProxy implements
+public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy implements
 	TemplateReaction, Serializable {
 	public TemplateReactionProxy() {
 	}

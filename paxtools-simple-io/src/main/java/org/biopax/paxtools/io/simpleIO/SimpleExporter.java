@@ -1,5 +1,6 @@
 package org.biopax.paxtools.io.simpleIO;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.EditorMap;
@@ -7,6 +8,7 @@ import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.Named;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -113,6 +115,18 @@ public class SimpleExporter
             throws IOException
     {
         assert (bean != null && editor != null);
+        
+        //fix (for L3 only): skip 'name' if it's present in the displayName, etc..
+        if(editor.getProperty().equalsIgnoreCase("name") 
+        		&& bean instanceof Named) { // the latter maybe not necessary...
+        	Named named = (Named) bean;
+        	if(value != null && 
+        		(value.equals(named.getDisplayName())
+        				|| value.equals(named.getStandardName()))) {
+        		return;
+        	}
+        }
+        
         String prop = bp + ":" + editor.getProperty();
         out.write("\n <" + prop);
 
@@ -129,20 +143,12 @@ public class SimpleExporter
         else
         {
             String type = findLiteralType(editor);
-            String valString = escapeXml(value.toString());
+            String valString = StringEscapeUtils.escapeXml(value.toString());
             out.write(" rdf:datatype = \"xsd:" + type + "\">" + valString +
                       "</" + prop + ">");
         }
     }
 
-     private String escapeXml(String str) {
-        str = str.replace("&","&amp;");
-        str = str.replace("<","&lt;");
-        str = str.replace(">","&gt;");
-        str = str.replace("\"","&quot;");
-        str = str.replace("'","&apos;");
-        return str;
-    }
     private String findLiteralType(PropertyEditor editor)
     {
         Class range = editor.getRange();

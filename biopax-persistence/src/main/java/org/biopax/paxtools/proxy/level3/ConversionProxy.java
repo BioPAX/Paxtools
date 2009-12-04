@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Entity(name="l3conversion")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ConversionProxy extends InteractionProxy implements
+public class ConversionProxy extends RestrictedInteractionAdapterProxy implements
 	Conversion, Serializable {
 	public ConversionProxy() {
 	}
@@ -35,16 +35,6 @@ public class ConversionProxy extends InteractionProxy implements
 
 	// Property LEFT
 
-	// JoinTableなしだと、同じ型への接続だということなのか、一つの接続用テーブルにleftとrightがまとめられてしまう。
-	// しかしそれではDB上の規約違反となり実質使えない。
-	// leftを保存しようとするとrightがnullであるとか言われる。多分Hibernateのbug。
-	// なので、JoinTableを記述して、オブジェクトの接続のテーブルを独立に用意する。
-	// 2007.04.26 Takeshi Yoneki
-	// IllegalBioPAXArgumentException("Illegal attempt to reuse a PEP!")で禁止されたsetterなので、
-	// とりあえず対象外にする。
-	// 2007.05.17 Takeshi Yoneki
-	// 直接のsetterを使わない別メソッドで表現することにした。
-	// 2007.09.05
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class, fetch=FetchType.EAGER)
 	@JoinTable(name="l3conversion_left_x")
@@ -56,8 +46,6 @@ public class ConversionProxy extends InteractionProxy implements
 
 	public void setLeft_x(Set<PhysicalEntity> LEFT) {
 		try {
-			// 古いものを削除しなくてはいけないのではないか？
-			// 2008.05.26 Takeshi Yoneki
 			Set<PhysicalEntity> oldLEFT = getLeft();
 			for (PhysicalEntity opep: oldLEFT)
 				removeLeft(opep);
@@ -91,11 +79,6 @@ public class ConversionProxy extends InteractionProxy implements
 
 	// Property RIGHT
 
-	// とりあえず対象外にする。
-	// 2007.05.17 Takeshi Yoneki
-	// 直接のsetterを使わない別メソッドで表現することにした。
-	// 2007.09.05
-
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class, fetch=FetchType.EAGER)
 	@JoinTable(name="l3conversion_right_x")
 	public Set<PhysicalEntity> getRight_x() {
@@ -106,8 +89,6 @@ public class ConversionProxy extends InteractionProxy implements
 
 	public void setRight_x(Set<PhysicalEntity> RIGHT) {
 		try {
-			// 古いものを削除しなくてはいけないのではないか？
-			// 2008.05.26 Takeshi Yoneki
 			Set<PhysicalEntity> oldRIGHT = getRight();
 			for (PhysicalEntity opep: oldRIGHT)
 				removeRight(opep);

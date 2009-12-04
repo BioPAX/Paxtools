@@ -8,7 +8,6 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.persistence.SearchFileName;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -42,29 +41,18 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable 
 	 * key ID
 	 */
 	long proxyId = 0;
+	public final static String SEARCH_FIELD_SOURCE_NAME = "source_name";
 	public final static String SEARCH_INDEX_NAME = "paxtools";
-	public final static String SEARCH_FIELD_KEYWORD =
-			SearchFileName.SEARCH_FIELD_KEYWORD;
-	public final static String SEARCH_FIELD_NAME =
-			SearchFileName.SEARCH_FIELD_NAME;
-	public final static String SEARCH_FIELD_SYNONYMS =
-			SearchFileName.SEARCH_FIELD_SYNONYMS;
-	public final static String SEARCH_FIELD_TERM =
-			SearchFileName.SEARCH_FIELD_TERM;
-	public final static String SEARCH_FIELD_EC_NUMBER =
-			SearchFileName.SEARCH_FIELD_EC_NUMBER;
-	public final static String SEARCH_FIELD_SEQUENCE =
-			SearchFileName.SEARCH_FIELD_SEQUENCE;
-	public final static String SEARCH_FIELD_XREF_DB =
-			SearchFileName.SEARCH_FIELD_XREF_DB;
-	public final static String SEARCH_FIELD_XREF_ID =
-			SearchFileName.SEARCH_FIELD_XREF_ID;
-	public final static String SEARCH_FIELD_AVAILABILITY =
-			SearchFileName.SEARCH_FIELD_AVAILABILITY;
-	public final static String SEARCH_FIELD_COMMENT =
-			SearchFileName.SEARCH_FIELD_COMMENT;
-	public final static String SEARCH_FIELD_SOURCE_NAME =
-			SearchFileName.SEARCH_FIELD_SOURCE_NAME;
+	public final static String SEARCH_FIELD_KEYWORD ="keyword";
+	public final static String SEARCH_FIELD_NAME = "name";
+	public final static String SEARCH_FIELD_SYNONYMS = "synonyms";
+	public final static String SEARCH_FIELD_TERM = "term";
+	public final static String SEARCH_FIELD_EC_NUMBER = "ec_number";
+	public final static String SEARCH_FIELD_SEQUENCE = "sequence";
+	public final static String SEARCH_FIELD_XREF_DB = "xref_db";
+	public final static String SEARCH_FIELD_XREF_ID = "xref_id";
+	public final static String SEARCH_FIELD_AVAILABILITY = "availability";
+	public final static String SEARCH_FIELD_COMMENT = "comment";
 
 	protected BioPAXElementProxy() {
 		this.object = BioPAXLevel.L3.getDefaultFactory().reflectivelyCreate(

@@ -10,7 +10,6 @@ package org.biopax.paxtools.proxy.level2;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 //import org.biopax.paxtools.model.level2.Level2Element;
-import org.biopax.paxtools.persistence.SearchFileName;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -45,28 +44,18 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable
 	 * key ID
 	 */
 	long proxyId = 0;
-
+	public final static String SEARCH_FIELD_SOURCE_NAME = "source_name";
 	public final static String SEARCH_INDEX_NAME = "paxtools";
-	public final static String SEARCH_FIELD_KEYWORD =
-		SearchFileName.SEARCH_FIELD_KEYWORD;
-	public final static String SEARCH_FIELD_NAME =
-		SearchFileName.SEARCH_FIELD_NAME;
-	public final static String SEARCH_FIELD_SYNONYMS =
-		SearchFileName.SEARCH_FIELD_SYNONYMS;
-	public final static String SEARCH_FIELD_TERM =
-		SearchFileName.SEARCH_FIELD_TERM;
-	public final static String SEARCH_FIELD_EC_NUMBER =
-		SearchFileName.SEARCH_FIELD_EC_NUMBER;
-	public final static String SEARCH_FIELD_SEQUENCE =
-		SearchFileName.SEARCH_FIELD_SEQUENCE;
-	public final static String SEARCH_FIELD_XREF_DB =
-		SearchFileName.SEARCH_FIELD_XREF_DB;
-	public final static String SEARCH_FIELD_XREF_ID =
-		SearchFileName.SEARCH_FIELD_XREF_ID;
-	public final static String SEARCH_FIELD_AVAILABILITY =
-		SearchFileName.SEARCH_FIELD_AVAILABILITY;
-	public final static String SEARCH_FIELD_COMMENT =
-		SearchFileName.SEARCH_FIELD_COMMENT;
+	public final static String SEARCH_FIELD_KEYWORD ="keyword";
+	public final static String SEARCH_FIELD_NAME = "name";
+	public final static String SEARCH_FIELD_SYNONYMS = "synonyms";
+	public final static String SEARCH_FIELD_TERM = "term";
+	public final static String SEARCH_FIELD_EC_NUMBER = "ec_number";
+	public final static String SEARCH_FIELD_SEQUENCE = "sequence";
+	public final static String SEARCH_FIELD_XREF_DB = "xref_db";
+	public final static String SEARCH_FIELD_XREF_ID = "xref_id";
+	public final static String SEARCH_FIELD_AVAILABILITY = "availability";
+	public final static String SEARCH_FIELD_COMMENT = "comment";
 
 	protected BioPAXElementProxy()
 	{
@@ -86,11 +75,6 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable
 		return object.hashCode();
 	}
 
-	// Implの実装において、一部パラメタとしてProxyを渡すと正常に動作できない部分があるため
-	// Implを得るための機能を用意する。
-	// 2007.04.26 Takeshi Yoneki
-	// 不要になった。
-	// 2007.05.16
 /*	
 	public BioPAXElement implObject(BioPAXElement o) {
 		try {
@@ -108,9 +92,6 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable
 	}
 */
 
-	// このIDはDB全体でユニークな数値である必要がある。
-	// ProxyIdInfoクラスを使って生成されたIDを利用する。
-	// 2007.09.04
 	@Id
 	@DocumentId
 	public long getProxyId()
@@ -123,15 +104,7 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable
 		proxyId = value;
 	}
 
-	// MySQLは長さが決まっていないテキストをキーにできない。
-	// また、Hibernateは2つの1つのテーブルにキーを2つ定義し、かつMySQLは合計500文字までしか
-	// 扱えないため、長さはその半分までとなる。
-	// 2007.08.31
-	//@Column(columnDefinition="varchar(250)")
-	//@Column(columnDefinition="text")
-	//@DocumentId
-	// IDを別に設けることにする。
-	// 2007.09.04
+
 	@Basic
 	@Column(columnDefinition = "text")
 	public String getRDFId()
@@ -160,10 +133,6 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable
 		return object.isEquivalent(element);
 	}
 
-	///////////////////////////////////
-	// MySQLのdoubleのNaN問題対処
-	// 2007.09.04
-	///////////////////////////////////
 
 	protected String doubleToString(Double d)
 	{
