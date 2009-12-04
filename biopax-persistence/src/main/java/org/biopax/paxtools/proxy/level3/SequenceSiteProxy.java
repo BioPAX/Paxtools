@@ -12,14 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for sequenceSite
  */
 @Entity(name="l3sequencesite")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SequenceSiteProxy extends SequenceLocationProxy implements SequenceSite, Serializable {
+public class SequenceSiteProxy extends SequenceLocationProxy 
+	implements SequenceSite
+{
 	public SequenceSiteProxy() {
 	}
 

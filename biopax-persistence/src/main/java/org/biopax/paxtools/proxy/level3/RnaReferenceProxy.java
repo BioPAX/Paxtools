@@ -12,14 +12,13 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for RnaReference
  */
 @Entity(name="l3rnareference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class RnaReferenceProxy extends SequenceEntityReferenceProxy implements RnaReference, Serializable {
+public class RnaReferenceProxy extends SequenceEntityReferenceProxy implements RnaReference {
 	public RnaReferenceProxy() {
 	}
 

@@ -12,15 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for TemplateReactionRegulation
  */
 @Entity(name="l3templatereactionregulation")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class TemplateReactionRegulationProxy extends ControlProxy implements
-	TemplateReactionRegulation, Serializable {
+public class TemplateReactionRegulationProxy extends ControlProxy 
+	implements TemplateReactionRegulation 
+{
 	public TemplateReactionRegulationProxy() {
 	}
 

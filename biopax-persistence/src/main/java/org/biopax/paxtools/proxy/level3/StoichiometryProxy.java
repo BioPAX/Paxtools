@@ -12,14 +12,15 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for Stoichiometry
  */
 @Entity(name="l3stoichiometry")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class StoichiometryProxy extends UtilityClassProxy implements Stoichiometry, Serializable {
+public class StoichiometryProxy extends Level3ElementProxy 
+	implements Stoichiometry 
+{
 	public StoichiometryProxy() {
 	}
 

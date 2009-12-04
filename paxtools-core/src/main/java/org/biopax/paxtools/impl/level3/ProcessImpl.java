@@ -40,7 +40,6 @@ abstract class ProcessImpl extends EntityImpl implements Process
 
 // --------------------- Interface process ---------------------
 
-//TODO evidence
 	public Set<PathwayStep> getStepInteractionsOf()
 	{
 		return stepInteractionsOf;

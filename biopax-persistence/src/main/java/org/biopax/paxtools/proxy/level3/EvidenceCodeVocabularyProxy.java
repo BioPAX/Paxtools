@@ -12,14 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for evidenceCodeVocabulary
  */
 @Entity(name="l3evidencecodevocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class EvidenceCodeVocabularyProxy extends ControlledVocabularyProxy implements EvidenceCodeVocabulary, Serializable {
+public class EvidenceCodeVocabularyProxy extends ControlledVocabularyProxy 
+	implements EvidenceCodeVocabulary 
+{
 	public EvidenceCodeVocabularyProxy() {
 	}
 

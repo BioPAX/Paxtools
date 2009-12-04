@@ -12,14 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for SequenceModificationVocabulary
  */
 @Entity(name="l3sequencemodificationvocab")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SequenceModificationVocabularyProxy extends ControlledVocabularyProxy implements SequenceModificationVocabulary, Serializable {
+public class SequenceModificationVocabularyProxy extends ControlledVocabularyProxy 
+	implements SequenceModificationVocabulary
+{
 	public SequenceModificationVocabularyProxy() {
 	}
 

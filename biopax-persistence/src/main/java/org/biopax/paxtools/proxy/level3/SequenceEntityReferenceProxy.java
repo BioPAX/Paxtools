@@ -11,20 +11,16 @@ import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Proxy for SequenceEntityReference
  */
 @Entity(name="l3sequenceentityreference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SequenceEntityReferenceProxy extends EntityReferenceProxy implements SequenceEntityReference, Serializable {
+public abstract class SequenceEntityReferenceProxy extends EntityReferenceProxy 
+	implements SequenceEntityReference 
+{
 	public SequenceEntityReferenceProxy() {
 	}
 

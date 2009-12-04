@@ -12,14 +12,13 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for kPrime
  */
 @Entity(name="l3kprime")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class KPrimeProxy extends UtilityClassProxy implements KPrime, Serializable {
+public class KPrimeProxy extends Level3ElementProxy implements KPrime {
 	public KPrimeProxy() {
 	}
 
@@ -125,7 +124,7 @@ public class KPrimeProxy extends UtilityClassProxy implements KPrime, Serializab
 	}
 
 	public void setTemperature(float TEMPERATURE) {
-		setTemperature_x(floatToString(TEMPERATURE));
+		((KPrime)object).setTemperature(TEMPERATURE);
 	}
 }
 

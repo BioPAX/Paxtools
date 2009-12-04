@@ -10,18 +10,14 @@ import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Proxy for covalentFeature
  */
 @Entity(name = "l3modificationfeature")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ModificationFeatureProxy extends EntityFeatureProxy implements ModificationFeature, Serializable {
+public class ModificationFeatureProxy extends EntityFeatureProxy implements ModificationFeature {
 	public ModificationFeatureProxy() {
 	}
 

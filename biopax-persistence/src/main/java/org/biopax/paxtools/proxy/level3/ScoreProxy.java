@@ -12,7 +12,6 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -20,7 +19,8 @@ import java.util.Set;
  */
 @Entity(name="l3score")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ScoreProxy extends UtilityClassProxy implements Score, Serializable {
+public class ScoreProxy extends Level3ElementProxy implements Score 
+{
 	public ScoreProxy() {
 	}
 

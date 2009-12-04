@@ -12,14 +12,14 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for rna
  */
 @Entity(name="l3rna")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class RnaProxy extends NucleicAcidProxy implements Rna, Serializable {
+public class RnaProxy extends SimplePhysicalEntityProxy implements Rna 
+{
 	public RnaProxy() {
 	}
 
@@ -28,9 +28,4 @@ public class RnaProxy extends NucleicAcidProxy implements Rna, Serializable {
 		return Rna.class;
 	}
 
-	@Transient
-    public Class<? extends PhysicalEntity> getPhysicalEntityClass() {
-        return Rna.class;
-
-    }
 }

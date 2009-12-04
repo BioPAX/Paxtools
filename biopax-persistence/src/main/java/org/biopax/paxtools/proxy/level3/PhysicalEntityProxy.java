@@ -11,21 +11,16 @@ import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
+import javax.persistence.*;
+
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 /**
  * Proxy for physicalEntity
  */
 @Entity(name="l3physicalentity")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class PhysicalEntityProxy extends EntityProxy implements PhysicalEntity, Serializable {
+public class PhysicalEntityProxy extends EntityProxy implements PhysicalEntity {
 	protected PhysicalEntityProxy() {
 	}
 
@@ -34,118 +29,10 @@ public class PhysicalEntityProxy extends EntityProxy implements PhysicalEntity, 
 		return PhysicalEntity.class;
 	}
 
-// Named
-
-/*
-	@CollectionOfElements @Column(name="name_x", columnDefinition="text")
-	@FieldBridge(impl=StringSetBridge.class)
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
-	public Set<String> getName() {
-		return ((PhysicalEntity)object).getName();
-	}
-
-	public void addName(String NAME_TEXT) {
-		((PhysicalEntity)object).addName(NAME_TEXT);
-	}
-
-	public void removeName(String NAME_TEXT) {
-		((PhysicalEntity)object).removeName(NAME_TEXT);
-	}
-
-	public void setName(Set<String> newNAME) {
-		((PhysicalEntity)object).setName(newNAME);
-	}
-	
-	@Basic @Column(name="display_name_x", columnDefinition="text")
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
-	public String getDisplayName() {
-		return ((PhysicalEntity)object).getDisplayName();
-	}
-
-	public void setDisplayName(String newDISPLAY_NAME) {
-		((PhysicalEntity)object).setDisplayName(newDISPLAY_NAME);
-	}
-
-	@Basic @Column(name="standard_name_x", columnDefinition="text")
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
-	public String getStandardName() {
-		return ((PhysicalEntity)object).getStandardName();
-	}
-
-	public void setStandardName(String newSTANDARD_NAME) {
-		((PhysicalEntity)object).setStandardName(newSTANDARD_NAME);
-	}
-*/
-
-// Observable
-
-/*
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = EvidenceProxy.class)
-	@JoinTable(name="l3physicalentity_evidence")
-	public Set<Evidence> getEvidence() {
-		return ((PhysicalEntity)object).getEvidence();
-	}
-
-	public void addEVIDENCE(Evidence newEvidence) {
-		((PhysicalEntity)object).addEVIDENCE(newEvidence);
-	}
-
-	public void removeEVIDENCE(Evidence oldEvidence) {
-		((PhysicalEntity)object).removeEVIDENCE(oldEvidence);
-	}
-
-	public void setEvidence(Set<Evidence> newEvidence) {
-		((PhysicalEntity)object).setEvidence(newEvidence);
-	}
-*/
-
-// physicalEntity
-
-	// Property BINDS-TO
-/*
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class)
-	@JoinTable(name="l3physicalentity_binds_to")
-	public Set<PhysicalEntity> getBoundTo() {
-		return ((PhysicalEntity)object).getBoundTo();
-	}
-
-	public void addBoundTo(PhysicalEntity newBINDS_TO) {
-		((PhysicalEntity)object).addBoundTo(newBINDS_TO);
-	}
-
-	public void removeBoundTo(PhysicalEntity oldBINDS_TO) {
-		((PhysicalEntity)object).removeBoundTo(oldBINDS_TO);
-	}
-
-	public void setBoundTo(Set<PhysicalEntity> newBINDS_TO) {
-		((PhysicalEntity)object).setBoundTo(newBINDS_TO);
-	}
-*/
-
-	// Inverse of COMPONENT
-
-//	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = ComplexProxy.class)
-//	@JoinColumn(name="component_of_x")
-//	public Complex getComponentOf() {
-//		return ((PhysicalEntity)object).getComponentOf();
-//	}
-
 	@Transient
 	public Set<Complex> getComponentOf() {
 		return ((PhysicalEntity)object).getComponentOf();
 	}
-/*
- @ManyToOne(cascade = {CascadeType.ALL}, targetEntity = ComplexProxy.class)
-	@JoinColumn(name="component_of_x")
-	public Complex isComponentOf() {
-		return ((PhysicalEntity)object).isComponentOf();
-		//return getComponentOf();
-	}
-
-	public void setComponentOf(Complex newComplex) {
-		((PhysicalEntity)object).setComponentOf(newComplex);
-	}
-*/
 
 	// Property CELLULAR-LOCATION
 
@@ -221,8 +108,8 @@ public class PhysicalEntityProxy extends EntityProxy implements PhysicalEntity, 
 
 	@Transient
     public Class<? extends PhysicalEntity> getPhysicalEntityClass() {
-        return PhysicalEntity.class;
-
+        return (Class<? extends PhysicalEntity>) 
+        	((PhysicalEntity)object).getModelInterface();
     }
 
 	public boolean hasEquivalentCellularLocation(PhysicalEntity that) {
@@ -233,18 +120,5 @@ public class PhysicalEntityProxy extends EntityProxy implements PhysicalEntity, 
 		return ((PhysicalEntity)object).hasEquivalentFeatures(that);
 	}
 
-/*
-	// Property REFERENCE-ENTITY
-
-	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = EntityReferenceProxy.class)
-	@JoinColumn(name="entity_reference_x")
-	public EntityReference getEntityReference() {
-		return ((PhysicalEntity)object).getEntityReference();
-	}
-
-	public void setEntityReference(EntityReference newReference_ENTITY) {
-		((PhysicalEntity)object).setEntityReference(newReference_ENTITY);
-	}
-*/
 }
 

@@ -12,7 +12,6 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -20,7 +19,7 @@ import java.util.Set;
  */
 @Entity(name="l3catalysis")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class CatalysisProxy extends ControlProxy implements Catalysis, Serializable {
+public class CatalysisProxy extends ControlProxy implements Catalysis {
 	public CatalysisProxy() {
 	}
 

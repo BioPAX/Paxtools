@@ -12,8 +12,6 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -21,8 +19,9 @@ import java.util.Set;
  */
 @Entity(name="l3templatereaction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy implements
-	TemplateReaction, Serializable {
+public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy 
+	implements TemplateReaction 
+{
 	public TemplateReactionProxy() {
 	}
 
@@ -53,7 +52,7 @@ public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy imp
 
 	// Property RegulatoryElement
 
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= NucleicAcidProxy.class)
+	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= SimplePhysicalEntityProxy.class)
 	@JoinTable(name="l3tempreact_regulatory_element")
 	public Set<NucleicAcid> getInitiationRegion() {
 		return ((TemplateReaction)object).getInitiationRegion();
@@ -73,7 +72,7 @@ public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy imp
 
 	// Property template
 
-	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = NucleicAcidProxy.class)
+	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SimplePhysicalEntityProxy.class)
 	@JoinColumn(name="template_x")
 	public NucleicAcid getTemplate() {
 		return ((TemplateReaction)object).getTemplate();
@@ -82,7 +81,6 @@ public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy imp
 	public void setTemplate(NucleicAcid template) {
 		((TemplateReaction)object).setTemplate(template);
 	}
-
 
     // Property direction
 

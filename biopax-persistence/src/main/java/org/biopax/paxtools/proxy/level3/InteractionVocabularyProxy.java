@@ -12,14 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for interactionVocabulary
  */
 @Entity(name="l3interactionVocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class InteractionVocabularyProxy extends ControlledVocabularyProxy implements InteractionVocabulary, Serializable {
+public class InteractionVocabularyProxy extends ControlledVocabularyProxy 
+	implements InteractionVocabulary 
+{
 	public InteractionVocabularyProxy() {
 	}
 

@@ -12,7 +12,6 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +21,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity(name="l3dnareference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DnaReferenceProxy extends SequenceEntityReferenceProxy implements DnaReference, Serializable {
+public class DnaReferenceProxy extends SequenceEntityReferenceProxy implements DnaReference {
 	public DnaReferenceProxy() {
 	}
 

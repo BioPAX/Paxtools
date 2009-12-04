@@ -12,14 +12,13 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for relationshipXref
  */
 @Entity(name="l3relationshipxref")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class RelationshipXrefProxy extends XrefProxy implements RelationshipXref, Serializable {
+public class RelationshipXrefProxy extends XrefProxy implements RelationshipXref {
 	public RelationshipXrefProxy() {
 	}
 

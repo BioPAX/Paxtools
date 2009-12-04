@@ -12,15 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for sequenceInterval
  */
 @Entity(name="l3sequenceinterval")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SequenceIntervalProxy extends SequenceLocationProxy implements
-	SequenceInterval, Serializable {
+public class SequenceIntervalProxy extends SequenceLocationProxy 
+	implements SequenceInterval 
+{
 	public SequenceIntervalProxy() {
 	}
 

@@ -11,20 +11,15 @@ import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+
 
 /**
  * Proxy for Gene
  */
 @Entity(name="l3gene")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class GeneProxy extends EntityProxy implements Gene, Serializable {
+public class GeneProxy extends EntityProxy implements Gene {
 	public GeneProxy() {
 	}
 

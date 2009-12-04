@@ -12,14 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for unificationXref
  */
 @Entity(name="l3unificationxref")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class UnificationXrefProxy extends XrefProxy implements UnificationXref, Serializable {
+public class UnificationXrefProxy extends XrefProxy 
+	implements UnificationXref 
+{
 	public UnificationXrefProxy() {
 	}
 

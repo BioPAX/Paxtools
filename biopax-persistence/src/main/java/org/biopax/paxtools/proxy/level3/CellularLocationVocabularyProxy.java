@@ -12,15 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for cellularLocationVocabulary
  */
 @Entity(name="l3cellularlocationvocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class CellularLocationVocabularyProxy extends ControlledVocabularyProxy implements
-	CellularLocationVocabulary, Serializable {
+public class CellularLocationVocabularyProxy extends ControlledVocabularyProxy 
+	implements CellularLocationVocabulary 
+{
 	public CellularLocationVocabularyProxy() {
 	}
 

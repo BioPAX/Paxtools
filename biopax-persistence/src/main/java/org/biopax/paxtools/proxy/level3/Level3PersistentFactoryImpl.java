@@ -14,8 +14,6 @@ public class Level3PersistentFactoryImpl extends BioPAXFactoryImpl implements Le
 
 // --------------------- Interface BioPAXFactory ---------------------
 
-
-
 	public BioPAXLevel getLevel()
 	{
 		return BioPAXLevel.L3;
@@ -331,6 +329,5 @@ public class Level3PersistentFactoryImpl extends BioPAXFactoryImpl implements Le
 	public RnaRegionReference createRnaRegionReference() {
 		return new RnaRegionReferenceProxy();
 	}
-
 
 }

@@ -11,21 +11,16 @@ import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Proxy for SmallMoleculeReference
  */
 @Entity(name="l3smallmoleculereference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SmallMoleculeReferenceProxy extends EntityReferenceProxy implements
-	SmallMoleculeReference, Serializable {
+public class SmallMoleculeReferenceProxy extends EntityReferenceProxy 
+	implements SmallMoleculeReference 
+{
 	public SmallMoleculeReferenceProxy() {
 	}
 

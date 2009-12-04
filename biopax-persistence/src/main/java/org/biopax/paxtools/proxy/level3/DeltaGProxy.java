@@ -12,14 +12,13 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for deltaG
  */
 @Entity(name="l3deltag")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DeltaGProxy extends UtilityClassProxy implements DeltaG, Serializable {
+public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
 	public DeltaGProxy() {
 	}
 

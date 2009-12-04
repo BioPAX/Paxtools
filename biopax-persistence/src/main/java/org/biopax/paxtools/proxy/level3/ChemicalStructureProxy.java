@@ -12,15 +12,14 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for chemicalStructure
  */
 @Entity(name="l3chemicalstructure")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ChemicalStructureProxy extends UtilityClassProxy implements
-	ChemicalStructure, Serializable {
+public class ChemicalStructureProxy extends Level3ElementProxy implements
+	ChemicalStructure {
 	public ChemicalStructureProxy() {
 	}
 

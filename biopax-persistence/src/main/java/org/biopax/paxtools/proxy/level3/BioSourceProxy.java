@@ -12,7 +12,6 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 import org.biopax.paxtools.proxy.StringSetBridge;
 import org.hibernate.annotations.CollectionOfElements;
@@ -22,7 +21,7 @@ import org.hibernate.annotations.CollectionOfElements;
  */
 @Entity(name="l3biosource")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class BioSourceProxy extends UtilityClassProxy implements BioSource, Serializable {
+public class BioSourceProxy extends Level3ElementProxy implements BioSource {
 	public BioSourceProxy() {
 	}
 	

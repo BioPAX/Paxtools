@@ -12,14 +12,13 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for Degradation
  */
 @Entity(name="l3degradation")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DegradationProxy extends ConversionProxy implements Degradation, Serializable {
+public class DegradationProxy extends ConversionProxy implements Degradation {
 	public DegradationProxy() {
 	}
 

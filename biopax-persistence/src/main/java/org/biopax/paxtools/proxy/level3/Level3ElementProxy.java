@@ -12,13 +12,14 @@ import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
 @javax.persistence.Entity(name = "l3level3element")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class Level3ElementProxy extends BioPAXElementProxy implements Level3Element, Serializable {
+public abstract class Level3ElementProxy extends BioPAXElementProxy 
+	implements Level3Element 
+{
 	protected Level3ElementProxy() {
 		// not get object. because this object has not factory.
 	}
@@ -42,7 +43,6 @@ public abstract class Level3ElementProxy extends BioPAXElementProxy implements L
 	{
 		((Level3Element)object).removeComment(COMMENT);
 	}
-
 
 	public void setComment(Set<String> COMMENT)
 	{

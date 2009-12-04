@@ -12,7 +12,6 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
@@ -21,8 +20,9 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  */
 @Entity(name = "l3controlledvocabulary")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ControlledVocabularyProxy extends UtilityClassProxy implements ControlledVocabulary, Serializable {
-
+public class ControlledVocabularyProxy extends Level3ElementProxy 
+	implements ControlledVocabulary 
+{
 	public ControlledVocabularyProxy() {
 	}
 

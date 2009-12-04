@@ -13,7 +13,6 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -21,32 +20,9 @@ import java.util.Set;
  */
 @Entity(name="l3process")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class ProcessProxy extends EntityProxy implements Process, Serializable {
+public abstract class ProcessProxy extends EntityProxy implements Process {
 	protected ProcessProxy() {
 	}
-
-// Observable
-/*
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= EvidenceProxy.class)
-	@JoinTable(name="l3process_evidence")
-	public Set<Evidence> getEvidence() {
-		return ((Process)object).getEvidence();
-	}
-
-	public void addEVIDENCE(Evidence EVIDENCE) {
-		((Process)object).addEVIDENCE(EVIDENCE);
-	}
-
-	public void removeEVIDENCE(Evidence EVIDENCE) {
-		((Process)object).removeEVIDENCE(EVIDENCE);
-	}
-
-	public void setEvidence(Set<Evidence> EVIDENCE) {
-		((Process)object).setEvidence(EVIDENCE);
-	}
-*/
-
-// Process
 
 	@Transient
 	public Set<Control> getControlledOf() {

@@ -12,7 +12,6 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -20,8 +19,8 @@ import java.util.Set;
  */
 @Entity(name="l3experimentalform")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ExperimentalFormProxy extends UtilityClassProxy implements
-	ExperimentalForm, Serializable {
+public class ExperimentalFormProxy extends Level3ElementProxy implements
+	ExperimentalForm {
 	public ExperimentalFormProxy() {
 	}
 

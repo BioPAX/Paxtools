@@ -13,14 +13,13 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for dna
  */
 @Entity(name="l3dna")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DnaProxy extends SimplePhysicalEntityProxy implements Dna, Serializable {
+public class DnaProxy extends SimplePhysicalEntityProxy implements Dna {
 	public DnaProxy() {
 	}
 
@@ -29,9 +28,4 @@ public class DnaProxy extends SimplePhysicalEntityProxy implements Dna, Serializ
 		return Dna.class;
 	}
 
-	@Transient
-    public Class<? extends PhysicalEntity> getPhysicalEntityClass() {
-        return Dna.class;
-
-    }
 }

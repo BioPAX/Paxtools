@@ -12,14 +12,15 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for PhenotypeVocabulary
  */
 @Entity(name="l3phenotypevocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class PhenotypeVocabularyProxy extends ControlledVocabularyProxy implements PhenotypeVocabulary, Serializable {
+public class PhenotypeVocabularyProxy extends ControlledVocabularyProxy 
+	implements PhenotypeVocabulary 
+{
 	public PhenotypeVocabularyProxy() {
 	}
 

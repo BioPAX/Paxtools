@@ -12,14 +12,13 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Proxy for physicalInteraction
  */
 @Entity(name="l3physicalinteraction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class MolecularInteractionProxy extends InteractionProxy implements MolecularInteraction, Serializable {
+public class MolecularInteractionProxy extends InteractionProxy implements MolecularInteraction {
 	public MolecularInteractionProxy() {
 	}
 

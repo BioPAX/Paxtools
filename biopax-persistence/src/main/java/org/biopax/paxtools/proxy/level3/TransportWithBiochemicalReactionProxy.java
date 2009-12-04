@@ -12,15 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for transportWithBiochemicalReaction
  */
 @Entity(name="l3transportwithbioreact")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class TransportWithBiochemicalReactionProxy extends BiochemicalReactionProxy implements
-	TransportWithBiochemicalReaction, Serializable {
+public class TransportWithBiochemicalReactionProxy extends BiochemicalReactionProxy 
+	implements	TransportWithBiochemicalReaction 
+{
 	public TransportWithBiochemicalReactionProxy() {
 	}
 

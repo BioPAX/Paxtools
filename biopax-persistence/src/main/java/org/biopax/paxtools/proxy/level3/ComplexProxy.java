@@ -11,7 +11,6 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -19,7 +18,7 @@ import java.util.Set;
  */
 @Entity(name = "l3complex")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ComplexProxy extends PhysicalEntityProxy implements Complex, Serializable {
+public class ComplexProxy extends PhysicalEntityProxy implements Complex {
 
 	public ComplexProxy() {
 	}
@@ -30,12 +29,6 @@ public class ComplexProxy extends PhysicalEntityProxy implements Complex, Serial
 	}
 
 	// Property COMPONENTS
-
-	// 単純にCOMPONENTSを永続化対象外にして良いかどうかは不明。
-	// 下記のように実装に対象インスタンスの問題があるので当面対象外とする。
-	// 2007.04.26 Takeshi Yoneki
-	// equals()とhashCode()を実装することでcontainsでProxyも扱えるようにする。
-	// 2007.05.16
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class)
 	@JoinTable(name = "l3complex_components")
 	public Set<PhysicalEntity> getComponent() {
@@ -43,11 +36,6 @@ public class ComplexProxy extends PhysicalEntityProxy implements Complex, Serial
 	}
 
 	public void addComponent(PhysicalEntity component) {
-		// ImplのaddCOMPONENTSにおいて、相互参照のためにthisを登録する記述があり、それはImplであり、proxyでないため、
-		// ここでImplをパラメタとして渡すことにする。
-		// 2007.04.26 Takeshi Yoneki
-		// equals()とhashCode()を実装することでcontainsでProxyも扱えるようにする。
-		// 2007.05.16
 		((Complex)object).addComponent(component);
 	}
 
@@ -79,8 +67,4 @@ public class ComplexProxy extends PhysicalEntityProxy implements Complex, Serial
 		((Complex)object).setComponentStoichiometry(stoichiometry);
 	}
 
-	@Transient
-    public Class<? extends PhysicalEntity> getPhysicalEntityClass() {
-        return Complex.class;
-    }
 }

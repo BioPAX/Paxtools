@@ -10,20 +10,17 @@ package org.biopax.paxtools.proxy.level3;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
+
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 
 /**
  * Proxy for entityFeature
  */
 @Entity(name="l3entityfeature")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class EntityFeatureProxy extends UtilityClassProxy implements EntityFeature, Serializable {
+public class EntityFeatureProxy extends Level3ElementProxy implements EntityFeature {
 	public EntityFeatureProxy() {
 	}
 
@@ -51,20 +48,6 @@ public class EntityFeatureProxy extends UtilityClassProxy implements EntityFeatu
 	public void setEvidence(Set<Evidence> newEvidence) {
 		((EntityFeature)object).setEvidence(newEvidence);
 	}
-
-// entityFeature
-
-	// Property FEATURE-TYPE
-
-//	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = OpenControlledVocabularyProxy.class)
-//	@JoinColumn(name="feature_type_x")
-//	public OpenControlledVocabulary getFeatureType() {
-//		return ((EntityFeature)object).getFeatureType();
-//	}
-//
-//	public void setFeatureType(OpenControlledVocabulary newFEATURE_TYPE) {
-//		((EntityFeature)object).setFeatureType(newFEATURE_TYPE);
-//	}
 
 	// Property FEATURE-LOCATION
 

@@ -1,23 +1,19 @@
 
 package org.biopax.paxtools.proxy.level3;
 
-import java.io.Serializable;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.DnaRegionReference;
 import org.hibernate.search.annotations.Indexed;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
+import javax.persistence.*;
+
 /**
  *
  * @author IgorRodchenkov
  */
 @Entity(name="l3dnaregionreference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DnaRegionReferenceProxy extends SequenceEntityReferenceProxy implements DnaRegionReference, Serializable {
+public class DnaRegionReferenceProxy extends SequenceEntityReferenceProxy implements DnaRegionReference {
 
     public DnaRegionReferenceProxy() {
     }

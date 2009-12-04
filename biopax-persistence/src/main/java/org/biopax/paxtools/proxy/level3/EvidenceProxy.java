@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Entity(name="l3evidence")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class EvidenceProxy extends UtilityClassProxy implements Evidence, Serializable {
+public class EvidenceProxy extends Level3ElementProxy implements Evidence, Serializable {
 	public EvidenceProxy() {
 	}
 

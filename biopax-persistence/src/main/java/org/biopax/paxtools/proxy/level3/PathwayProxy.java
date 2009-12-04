@@ -13,17 +13,14 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
-import org.biopax.paxtools.proxy.StringSetBridge;
-import org.hibernate.annotations.CollectionOfElements;
 
 /**
  * Proxy for pathway
  */
 @Entity(name="l3pathway")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class PathwayProxy extends ProcessProxy implements Pathway, Serializable {
+public class PathwayProxy extends ProcessProxy implements Pathway {
 	public PathwayProxy() {
 	}
 
@@ -32,48 +29,6 @@ public class PathwayProxy extends ProcessProxy implements Pathway, Serializable 
 	{
 		return Pathway.class;
 	}
-
-// Named
-/*
-	@CollectionOfElements @Column(name="name_x", columnDefinition="text")
-	@FieldBridge(impl=StringSetBridge.class)
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
-	public Set<String> getName() {
-		return ((Pathway)object).getName();
-	}
-
-	public void addName(String NAME_TEXT) {
-		((Pathway)object).addName(NAME_TEXT);
-	}
-
-	public void removeName(String NAME_TEXT) {
-		((Pathway)object).removeName(NAME_TEXT);
-	}
-
-	public void setName(Set<String> newNAME) {
-		((Pathway)object).setName(newNAME);
-	}
-	
-	@Basic @Column(name="display_name_x", columnDefinition="text")
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
-	public String getDisplayName() {
-		return ((Pathway)object).getDisplayName();
-	}
-
-	public void setDisplayName(String newDISPLAY_NAME) {
-		((Pathway)object).setDisplayName(newDISPLAY_NAME);
-	}
-
-	@Basic @Column(name="standard_name_x", columnDefinition="text")
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
-	public String getStandardName() {
-		return ((Pathway)object).getStandardName();
-	}
-
-	public void setStandardName(String newSTANDARD_NAME) {
-		((Pathway)object).setStandardName(newSTANDARD_NAME);
-	}
-*/
 
 // pathway
 

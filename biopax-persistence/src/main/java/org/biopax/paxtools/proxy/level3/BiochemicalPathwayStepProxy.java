@@ -11,14 +11,8 @@ import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+
 
 /**
  * Proxy for biochemicalPathwayStep
@@ -26,7 +20,7 @@ import javax.persistence.ManyToOne;
 @Entity(name="l3biochemicalpathwaystep")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class BiochemicalPathwayStepProxy extends PathwayStepProxy implements
-	BiochemicalPathwayStep, Serializable {
+	BiochemicalPathwayStep {
 	public BiochemicalPathwayStepProxy() {
 	}
 

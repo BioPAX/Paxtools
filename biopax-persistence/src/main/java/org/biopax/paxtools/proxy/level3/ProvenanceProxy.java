@@ -14,7 +14,6 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -22,7 +21,7 @@ import java.util.Set;
  */
 @Entity(name="l3provenance")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ProvenanceProxy extends UtilityClassProxy implements Provenance, Serializable {
+public class ProvenanceProxy extends Level3ElementProxy implements Provenance {
 	protected ProvenanceProxy() {
 	}
 
@@ -30,18 +29,6 @@ public class ProvenanceProxy extends UtilityClassProxy implements Provenance, Se
 	public Class getModelInterface() {
 		return Provenance.class;
 	}
-
-/*
-	@Basic @Column(name="source_name_x", columnDefinition="text")
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_SOURCE_NAME, index=Index.TOKENIZED)
-	public String getSourceName() {
-		return ((Provenance)object).getSourceName();
-	}
-
-	public void setSourceName(String sourceName) {
-		((Provenance)object).setSourceName(sourceName);
-	}
-*/
 
 // XReferrable
 

@@ -12,14 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for referenceEntity
  */
 @Entity(name="l3sequencelocationgroup")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SequenceLocationGroupProxy extends SequenceLocationProxy implements SequenceLocationGroup, Serializable {
+public class SequenceLocationGroupProxy extends SequenceLocationProxy 
+	implements SequenceLocationGroup 
+{
 	public SequenceLocationGroupProxy() {
 	}
 
@@ -28,5 +29,4 @@ public class SequenceLocationGroupProxy extends SequenceLocationProxy implements
 		return SequenceLocationGroup.class;
 	}
 
-	// Property MEMBER-LOCATION
 }

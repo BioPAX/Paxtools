@@ -12,15 +12,15 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for experimentalFormVocabulary
  */
 @Entity(name="l3experimentalformvocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ExperimentalFormVocabularyProxy extends ControlledVocabularyProxy implements
-	ExperimentalFormVocabulary, Serializable {
+public class ExperimentalFormVocabularyProxy extends ControlledVocabularyProxy 
+	implements ExperimentalFormVocabulary 
+{
 	public ExperimentalFormVocabularyProxy() {
 	}
 

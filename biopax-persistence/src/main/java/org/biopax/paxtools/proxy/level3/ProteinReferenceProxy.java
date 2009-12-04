@@ -12,14 +12,13 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for ProteinReference
  */
 @Entity(name="l3proteinreference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ProteinReferenceProxy extends SequenceEntityReferenceProxy implements ProteinReference, Serializable {
+public class ProteinReferenceProxy extends SequenceEntityReferenceProxy implements ProteinReference {
 	public ProteinReferenceProxy() {
 	}
 

@@ -13,7 +13,6 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -21,7 +20,7 @@ import java.util.Set;
  */
 @Entity(name="l3pathwaystep")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class PathwayStepProxy extends UtilityClassProxy implements PathwayStep, Serializable {
+public class PathwayStepProxy extends Level3ElementProxy implements PathwayStep {
 	public PathwayStepProxy() {
 	}
 

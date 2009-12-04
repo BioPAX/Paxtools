@@ -12,19 +12,13 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.Serializable;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 /**
  * Proxy for BindingFeature
  */
 @Entity(name="l3bindingfeature")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class BindingFeatureProxy extends EntityFeatureProxy implements
-	BindingFeature, Serializable {
+public class BindingFeatureProxy extends EntityFeatureProxy implements BindingFeature {
 	public BindingFeatureProxy() {
 	}
 

@@ -13,7 +13,6 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Set;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
@@ -22,7 +21,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  */
 @Entity(name="l3publicationxref")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class PublicationXrefProxy extends XrefProxy implements PublicationXref, Serializable {
+public class PublicationXrefProxy extends XrefProxy implements PublicationXref {
 	public PublicationXrefProxy() {
 	}
 

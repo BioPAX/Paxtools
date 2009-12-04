@@ -12,7 +12,6 @@ import org.biopax.paxtools.model.level3.Entity;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -20,7 +19,7 @@ import java.util.Set;
  */
 @javax.persistence.Entity(name="l3interaction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class InteractionProxy extends ProcessProxy implements Interaction, Serializable {
+public class InteractionProxy extends ProcessProxy implements Interaction {
 	public InteractionProxy() {
 	}
 
