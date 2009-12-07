@@ -18,10 +18,14 @@ import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.model.level3.CellularLocationVocabulary;
 import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.DnaRegion;
+import org.biopax.paxtools.model.level3.DnaRegionReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Protein;
+import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.model.level3.RnaRegion;
+import org.biopax.paxtools.model.level3.RnaRegionReference;
 import org.biopax.paxtools.model.level3.SmallMolecule;
+import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 import org.biopax.paxtools.model.level3.Stoichiometry;
 
 public final class Upgrader {
@@ -155,7 +159,7 @@ public final class Upgrader {
 	private BioPAXElement convertPep(physicalEntityParticipant value, BioPAXElement parent, Model model3) {
 		PhysicalEntity pe3 = null;
 		
-		// 1. get PhysicalEntity (now can be found by ID - because it's mapped earlier); 
+		// 1. get PhysicalEntity (now can be found by ID because it's mapped earlier); 
 		physicalEntity pe2 = value.getPHYSICAL_ENTITY();
 		pe3 = (PhysicalEntity) model3.getByID(pe2.getRDFId());
 		if(pe3 == null) {
@@ -166,26 +170,26 @@ public final class Upgrader {
 		
 		//set location and other props
 		String cvId = value.getCELLULAR_LOCATION().getRDFId();
+		// the CellularLocationVocabulary is already mapped and has the same ID:
 		pe3.setCellularLocation((CellularLocationVocabulary) model3.getByID(cvId));
-		
 		pe3.setComment(value.getCOMMENT());
 		
 		//traverse(bpe, model); // continue with properties
-		
-		
+			
 		// 1. create the corresponding EtityReference and set (if any) sequence, xrefs, etc.
 		if(pe3 instanceof Protein) {
+			ProteinReference pref = factory.reflectivelyCreate(ProteinReference.class);
 			
 		} else if(pe3 instanceof DnaRegion) {
-			
+			DnaRegionReference dref = factory.reflectivelyCreate(DnaRegionReference.class);
 		} else if (pe3 instanceof RnaRegion) {
-			
+			RnaRegionReference rref = factory.reflectivelyCreate(RnaRegionReference.class);
 		} else if (pe3 instanceof SmallMolecule) {
-			
+			SmallMoleculeReference smolref = factory.reflectivelyCreate(SmallMoleculeReference.class);
 		} else if (pe3 instanceof Complex) {
-			
+			// no complex references exist
 		} else {
-			//oops?
+			//oops... 
 		}
 		
 		
