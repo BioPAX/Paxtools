@@ -4,7 +4,7 @@ import java.util.Set;
 
 /**
  */
-public interface TemplateReaction extends Interaction
+public interface TemplateReaction extends RestrictedInteraction
 {
 	// Property Product
 

@@ -21,8 +21,9 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  */
 @Entity(name="l3biochemicalreaction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class BiochemicalReactionProxy extends ConversionProxy implements
-	BiochemicalReaction {
+public class BiochemicalReactionProxy extends ConversionProxy 
+	implements BiochemicalReaction 
+{
 	public BiochemicalReactionProxy() {
 	}
 

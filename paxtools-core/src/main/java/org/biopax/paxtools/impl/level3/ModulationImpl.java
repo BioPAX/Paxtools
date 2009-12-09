@@ -3,7 +3,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.Catalysis;
 import org.biopax.paxtools.model.level3.Modulation;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.model.BioPAXElement;
 
 /**
  */

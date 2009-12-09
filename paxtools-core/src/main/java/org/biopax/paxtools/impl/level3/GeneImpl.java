@@ -2,7 +2,6 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.Gene;
-import org.biopax.paxtools.model.BioPAXElement;
 
 /**
  * Created by IntelliJ IDEA.

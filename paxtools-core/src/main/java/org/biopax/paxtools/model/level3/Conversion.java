@@ -3,9 +3,8 @@ package org.biopax.paxtools.model.level3;
 import java.util.Set;
 
 
-public interface Conversion extends Interaction
+public interface Conversion extends RestrictedInteraction
 {
-
 	// Property LEFT
 
 	public Set<PhysicalEntity> getLeft();

@@ -1,7 +1,6 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.impl.BioPAXFactoryImpl;
-import org.biopax.paxtools.impl.level2.*;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level2.*;
 

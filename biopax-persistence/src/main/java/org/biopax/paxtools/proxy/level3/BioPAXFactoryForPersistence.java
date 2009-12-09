@@ -23,7 +23,6 @@ public class BioPAXFactoryForPersistence implements BioPAXFactory, Level3Factory
 
 	public Model createModel() {
 		return new ModelForPersistence(this);
-		//return new ModelImpl(this);
 	}
 
 	public BioPAXElement reflectivelyCreate(String name) {

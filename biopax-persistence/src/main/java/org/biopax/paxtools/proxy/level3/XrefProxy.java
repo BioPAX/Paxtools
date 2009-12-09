@@ -1,5 +1,5 @@
 /*
- * XrefProxy.java
+/ * XrefProxy.java
  *
  * 2007.11.30 Takeshi Yoneki
  * INOH project - http://www.inoh.org
@@ -18,7 +18,7 @@ import java.util.Set;
  * Proxy for xref
  */
 @Entity(name="l3xref")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
+//@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public abstract class XrefProxy extends Level3ElementProxy 
 	implements Xref 
 {

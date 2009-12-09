@@ -1,14 +1,12 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.Entity;
-import org.biopax.paxtools.model.level3.Interaction;
+import org.biopax.paxtools.model.level3.RestrictedInteraction;
 
 import java.util.Set;
 
-/**
- */
 abstract class RestrictedInteractionAdapter extends InteractionImpl
-        implements Interaction {
+        implements RestrictedInteraction {
 
     @Override
     public void addParticipant(Entity participants) {

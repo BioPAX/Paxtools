@@ -8,10 +8,8 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
-import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,20 +25,13 @@ import java.util.Set;
 //  JOINED: not tested
 //  SINGLE_TABLE: ok
 @javax.persistence.Entity(name = "l3biopaxelement")
-//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-//@Inheritance(strategy=InheritanceType.JOINED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class BioPAXElementProxy implements BioPAXElement, Serializable {
-
+public abstract class BioPAXElementProxy implements BioPAXElement {
 	/**
 	 * target object
 	 */
 	BioPAXElement object = null;
-	/**
-	 * key ID
-	 */
-	long proxyId = 0;
+
 	public final static String SEARCH_FIELD_SOURCE_NAME = "source_name";
 	public final static String SEARCH_INDEX_NAME = "paxtools";
 	public final static String SEARCH_FIELD_KEYWORD ="keyword";
@@ -55,8 +46,9 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable 
 	public final static String SEARCH_FIELD_COMMENT = "comment";
 
 	protected BioPAXElementProxy() {
-		this.object = BioPAXLevel.L3.getDefaultFactory().reflectivelyCreate(
-				this.getModelInterface());
+		this.object = 
+			BioPAXLevel.L3.getDefaultFactory()
+				.reflectivelyCreate(this.getModelInterface());
 	}
 
 	// 2007.05.16
@@ -66,17 +58,6 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable 
 
 	public int hashCode() {
 		return object.hashCode();
-	}
-
-	// 2007.09.04
-	//@Id
-	//@DocumentId
-	public long getProxyId() {
-		return proxyId;
-	}
-
-	public void setProxyId(long value) {
-		proxyId = value;
 	}
 
 	// 2007.08.31
@@ -175,5 +156,5 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable 
 		}
 		return result;
 	}
-	
+		
 }

@@ -9,7 +9,6 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -19,7 +18,6 @@ import java.util.Set;
  * Proxy for process
  */
 @Entity(name="l3process")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public abstract class ProcessProxy extends EntityProxy implements Process {
 	protected ProcessProxy() {
 	}

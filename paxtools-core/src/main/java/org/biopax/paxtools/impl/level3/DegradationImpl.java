@@ -1,7 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.Degradation;
-import org.biopax.paxtools.model.BioPAXElement;
 
 /**
  * Created by IntelliJ IDEA.

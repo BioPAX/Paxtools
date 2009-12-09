@@ -56,7 +56,11 @@ class ConversionImpl extends RestrictedInteractionAdapter
 		{
 			right = new HashSet<PhysicalEntity>();
 		}
-		this.right = right;
+		//this.right = right;
+		// bug fix: due to the above line, they weren't added to 'participants' (unlike the addRight)!
+		for(PhysicalEntity pe : right) {
+			addRight(pe);
+		}
 	}
 
 	public Boolean getSpontaneous()
@@ -93,7 +97,10 @@ class ConversionImpl extends RestrictedInteractionAdapter
 			left = new HashSet<PhysicalEntity>();
 		}
 
-		this.left = left;
+		//this.left = left;
+		for(PhysicalEntity pe : left) {
+			addLeft(pe);
+		}
 	}
 
 	public void addLeft(PhysicalEntity left)
@@ -162,8 +169,7 @@ class ConversionImpl extends RestrictedInteractionAdapter
 	public int equivalenceCode()
 	{
 		//todo
-		return super
-				.equivalenceCode();    //To change body of overridden methods use File | Settings | File Templates.
+		return super.equivalenceCode();    //To change body of overridden methods use File | Settings | File Templates.
 	}
 
 }

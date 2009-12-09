@@ -2,7 +2,7 @@ package org.biopax.paxtools.model.level3;
 
 import java.util.Set;
 
-public interface Control extends Interaction
+public interface Control extends RestrictedInteraction
 {
 
 	// Property Controlled

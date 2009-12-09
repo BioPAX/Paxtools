@@ -13,12 +13,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.*;
+
 /**
  * Main container class to access BioPAX objects.
  */
+@Entity(name="model")
 public class ModelForPersistence implements Model
 {
 // ------------------------------ FIELDS ------------------------------
+	private static final long serialVersionUID = -3701438841490642931L;
 
 	private Map<String, BioPAXElement> idMap;
 	private Set<BioPAXElement> objectSet;
@@ -31,6 +35,10 @@ public class ModelForPersistence implements Model
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
+    public ModelForPersistence() {
+    	this(new org.biopax.paxtools.proxy.level3.BioPAXFactoryForPersistence());
+	}
+    
 	public ModelForPersistence(BioPAXFactory factory)
 	{
 		idMap = new HashMap<String, BioPAXElement>();
@@ -48,11 +56,13 @@ public class ModelForPersistence implements Model
     /**
      * @deprecated 
      */
+	@Transient
     public Map<String, BioPAXElement> getIdMap()
 	{
         return exposedIdMap;
 	}
 
+	@Transient
     public BioPAXElement getByID(String id) {
         return this.idMap.get(id);
     }
@@ -73,11 +83,15 @@ public class ModelForPersistence implements Model
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
+    //TODO BioPAXElementProxy must be shared for L2 and L3
+    //@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = BioPAXElementProxy.class)
+	//@JoinColumn(name="objects_x")
 	public Set<BioPAXElement> getObjects()
 	{
 		return exposedObjectSet;
 	}
 
+    @Transient
 	public <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy)
 	{
 		return new ClassFilterSet<T>(objectSet, filterBy);
@@ -145,7 +159,7 @@ public class ModelForPersistence implements Model
         }
 	}
 
-
+	@Basic
     public BioPAXLevel getLevel()
 	{
 		return level;

@@ -20,7 +20,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  * Proxy for entity
  */
 @javax.persistence.Entity(name="l3entity")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
+//@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public abstract class EntityProxy extends Level3ElementProxy implements Entity {
 	
 	protected EntityProxy() {

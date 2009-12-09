@@ -4,7 +4,6 @@ import org.biopax.paxtools.model.level3.TemplateReaction;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.NucleicAcid;
 import org.biopax.paxtools.model.level3.TemplateDirectionType;
-import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.Set;
 import java.util.HashSet;

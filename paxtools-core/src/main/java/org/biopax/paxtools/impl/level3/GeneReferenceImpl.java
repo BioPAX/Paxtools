@@ -1,7 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.GeneReference;
-import org.biopax.paxtools.model.BioPAXElement;
 
 class GeneReferenceImpl extends EntityReferenceImpl
         implements GeneReference

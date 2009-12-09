@@ -2,7 +2,6 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.HashSet;
 import java.util.Set;

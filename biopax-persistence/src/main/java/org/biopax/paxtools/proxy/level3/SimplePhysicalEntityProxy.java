@@ -17,7 +17,7 @@ import javax.persistence.Entity;
  * Proxy for SimplePhysicalEntityProxy
  */
 @Entity(name="l3simplephysicalentity")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
+//@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public abstract class SimplePhysicalEntityProxy extends PhysicalEntityProxy 
 	implements SimplePhysicalEntity 
 {

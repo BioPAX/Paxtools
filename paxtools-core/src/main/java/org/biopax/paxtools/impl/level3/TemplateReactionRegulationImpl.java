@@ -1,8 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.TemplateReactionRegulation;
-import org.biopax.paxtools.model.level3.Control;
-import org.biopax.paxtools.model.BioPAXElement;
+
 /**
  * TODO:Class description
  * User: demir

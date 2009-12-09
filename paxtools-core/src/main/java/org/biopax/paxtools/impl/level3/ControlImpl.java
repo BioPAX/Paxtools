@@ -4,7 +4,6 @@ import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.ControlType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.HashSet;
@@ -58,7 +57,10 @@ class ControlImpl extends RestrictedInteractionAdapter
 
     public void setControlled(Set<Process> controlled)
     {
-            this.controlled = controlled;
+    	//this.controlled = controlled;
+    	for(Process pe : controlled) {
+    		addControlled(pe);
+    	}
     }
 
     public void addControlled(Process controlled)
@@ -87,7 +89,10 @@ class ControlImpl extends RestrictedInteractionAdapter
 
     public void setController(Set<PhysicalEntity> controller)
     {
-        this.controller = controller;
+        //this.controller = controller;
+    	for(PhysicalEntity pe : controller) {
+    		addController(pe);
+    	}
     }
 
     public void addController(PhysicalEntity controller)
