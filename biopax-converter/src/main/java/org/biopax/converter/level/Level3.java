@@ -1,5 +1,6 @@
-package org.biopax.converter.upgrader;
+package org.biopax.converter.level;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -9,6 +10,8 @@ import org.biopax.paxtools.controller.AbstractTraverser;
 import org.biopax.paxtools.controller.EditorMap;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
+import org.biopax.paxtools.io.simpleIO.SimpleExporter;
+import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -28,8 +31,8 @@ import org.biopax.paxtools.model.level3.SmallMolecule;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 import org.biopax.paxtools.model.level3.Stoichiometry;
 
-public final class Upgrader {
-	private static final Log log = LogFactory.getLog(Upgrader.class);
+public final class Level3 {
+	private static final Log log = LogFactory.getLog(Level3.class);
 	
 	public EditorMap editorMap2;
 	public EditorMap editorMap3;
@@ -37,7 +40,7 @@ public final class Upgrader {
 	private Properties classesmap;
 	private Properties propsmap;
 	
-	public Upgrader() throws IOException {
+	public Level3() throws IOException {
 		editorMap2 = new SimpleEditorMap(BioPAXLevel.L2);
 		editorMap3 = new SimpleEditorMap(BioPAXLevel.L3);
 		factory = BioPAXLevel.L3.getDefaultFactory();
@@ -48,14 +51,34 @@ public final class Upgrader {
 	}
 	
 	/**
-	 * Converts a BioPAX Level 2 Model to the Level 3.
+	 * @param args biopax file names to convert
+	 * @throws IOException 
+	 */
+	public static void main(String[] args) throws IOException {
+		for (String filename : args) {
+			SimpleReader reader = new SimpleReader();
+			Model model = reader.convertFromOWL(new FileInputStream(filename));
+			Level3 level3 = new Level3();
+			//convert
+			model = level3.convert(model);
+			if (model != null) {
+				SimpleExporter exporter = new SimpleExporter(model.getLevel());
+				exporter.convertToOWL(model, System.out);
+			}
+		}
+	}
+	
+	/**
+	 * Converts a BioPAX Model, Level 1 or 2, to the Level 3.
 	 *
-	 * @param model2
+	 * @param model
 	 * @return
 	 */
 	public Model convert(Model model) {
-		if(model == null || model.getLevel() == BioPAXLevel.L3) 
+		if(model == null || model.getLevel() != BioPAXLevel.L2) 
 		{
+			if(model != null) 
+				log.info("Model is " + model.getLevel());
 			return model; // nothing to do
 		}
 		
@@ -178,8 +201,7 @@ public final class Upgrader {
 			
 		// 1. create the corresponding EtityReference and set (if any) sequence, xrefs, etc.
 		if(pe3 instanceof Protein) {
-			ProteinReference pref = factory.reflectivelyCreate(ProteinReference.class);
-			
+			ProteinReference pref = factory.reflectivelyCreate(ProteinReference.class);	
 		} else if(pe3 instanceof DnaRegion) {
 			DnaRegionReference dref = factory.reflectivelyCreate(DnaRegionReference.class);
 		} else if (pe3 instanceof RnaRegion) {
