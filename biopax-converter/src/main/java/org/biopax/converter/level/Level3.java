@@ -179,6 +179,9 @@ public final class Level3 {
 		return newElement;
 	}
 
+	/**
+	 * this should be called after all the mapClass(bpe, model3) have been called
+	 **/
 	private BioPAXElement convertPep(physicalEntityParticipant value, BioPAXElement parent, Model model3) {
 		PhysicalEntity pe3 = null;
 		
@@ -196,8 +199,6 @@ public final class Level3 {
 		// the CellularLocationVocabulary is already mapped and has the same ID:
 		pe3.setCellularLocation((CellularLocationVocabulary) model3.getByID(cvId));
 		pe3.setComment(value.getCOMMENT());
-		
-		//traverse(bpe, model); // continue with properties
 			
 		// 1. create the corresponding EtityReference and set (if any) sequence, xrefs, etc.
 		if(pe3 instanceof Protein) {
@@ -213,7 +214,6 @@ public final class Level3 {
 		} else {
 			//oops... 
 		}
-		
 		
 		// 3. create Stoichiometry element; populate with the PE and coefficient, and add to the parent (interaction)
 		double coeff = value.getSTOICHIOMETRIC_COEFFICIENT();
