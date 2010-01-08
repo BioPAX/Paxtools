@@ -34,7 +34,7 @@
     </dependency>
  </dependencies>
   <build>
-    <finalName>psi-mi-converter</finalName>
+    <!-- <finalName>psi-mi-converter</finalName> -->
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -53,7 +53,7 @@
           <schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
         </configuration>
         <dependencies>
-        <!-- this is a woraround a bug in the m2eclipse plugin-->
+        <!-- this is a workaround a bug in the m2eclipse plugin-->
           <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>

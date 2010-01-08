@@ -1,11 +1,9 @@
 package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.level3.Entity;
-import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.RestrictedInteraction;
 
 import java.util.Set;
-import javax.persistence.*;
 
 @javax.persistence.Entity(name="l3restrictedinteraction")
 public abstract class RestrictedInteractionAdapterProxy extends InteractionProxy

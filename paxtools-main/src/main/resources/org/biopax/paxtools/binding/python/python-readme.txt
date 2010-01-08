@@ -30,10 +30,11 @@ Set this up by copying all jar files in paxtools/lib and the paxtools.jar file
 itself to your own convenient lib directory
 
 Update: with new paxtools2 - you only need one 'fat' JAR (but can also use individual modules):
-http://downloads.sourceforge.net/project/biopax/paxtools/Paxtools%202%20SNAPSHOTs/paxtools-main-2.0-SNAPSHOT-jar-with-dependencies.jar?use_mirror=iweb
+get either the "paxtools-lite.jar" (smaller, uses simpleIO) or "paxtools-full.jar" (with jenaIO)
+from http://downloads.sourceforge.net/project/biopax/paxtools/
 
-Set the class path appropriately for your OS and lib location - use
-absolute paths to all jars
+(If you get the snapshot JARs without dependencies, set the class path appropriately for your OS 
+and lib location - use absolute paths to all jars)
 
 See pythonPaxtoolsExample.py for some example code that creates
 a BioPAX Level 3 OWL file with a few simple objects. The resulting
