@@ -103,9 +103,7 @@ public abstract class AbstractTraverser {
 				}
 			}
 		} catch (NullPointerException e) {
-			if (log.isWarnEnabled()) {
-				log.warn("no editors? ", e);
-			}
+			log.error("no editors? ", e);
 		}
 	}
 
