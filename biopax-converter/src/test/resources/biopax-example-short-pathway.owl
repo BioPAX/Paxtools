@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rdf:RDF
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema#"
+  xmlns:bp="http://www.biopax.org/release/biopax-level2.owl#"
+  xmlns="http://www.biopax.org/examples/simple-demo-pathway#"
+  xml:base="http://www.biopax.org/examples/simple-demo-pathway"
+>
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level2.owl"/>
+  </owl:Ontology>
+  <bp:bioSource rdf:ID="bioSource33">
+    <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Escherichia coli</bp:NAME>
+    <bp:TAXON-XREF>
+      <bp:unificationXref rdf:ID="unificationXref34">
+        <bp:ID>562</bp:ID>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >taxon</bp:DB>
+      </bp:unificationXref>
+    </bp:TAXON-XREF>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+  </bp:bioSource>
+  <bp:unificationXref rdf:ID="unificationXref29">
+    <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >aMAZESpecificCompound0000000638</bp:ID>
+    <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >aMAZE</bp:DB>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+  </bp:unificationXref>
+  <bp:unificationXref rdf:ID="unificationXref7">
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >R01786</bp:ID>
+    <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >KEGG</bp:DB>
+  </bp:unificationXref>
+  <bp:chemicalStructure rdf:ID="chemicalStructure12">
+    <bp:STRUCTURE-FORMAT>SMILES</bp:STRUCTURE-FORMAT>
+    <bp:STRUCTURE-DATA>C1(C(O)C(O)C(O)C(O1)CO)(O)</bp:STRUCTURE-DATA>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+  </bp:chemicalStructure>
+  <bp:unificationXref rdf:ID="unificationXref41">
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >C05345</bp:ID>
+    <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >KEGG</bp:DB>
+  </bp:unificationXref>
+  <bp:physicalEntityParticipant rdf:ID="physicalEntityParticipant9">
+    <bp:STOICHIOMETRIC-COEFFICIENT>1.0</bp:STOICHIOMETRIC-COEFFICIENT>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:PHYSICAL-ENTITY>
+      <bp:smallMolecule rdf:ID="smallMolecule10">
+        <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >&lt;FONT FACE="Symbol">a&lt;/FONT>-D-glucose</bp:SYNONYMS>
+        <bp:XREF>
+          <bp:unificationXref rdf:ID="unificationXref11">
+            <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >C00267</bp:ID>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >KEGG</bp:DB>
+          </bp:unificationXref>
+        </bp:XREF>
+        <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >a-D-glu</bp:SHORT-NAME>
+        <bp:DATA-SOURCE>
+          <bp:dataSource rdf:ID="KB_439584_Individual_47">
+            <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >KEGG</bp:NAME>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+          </bp:dataSource>
+        </bp:DATA-SOURCE>
+        <bp:XREF>
+          <bp:unificationXref rdf:ID="unificationXref13">
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >aMAZE</bp:DB>
+            <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >aMAZESpecificCompound0000000263</bp:ID>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+          </bp:unificationXref>
+        </bp:XREF>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+        <bp:DATA-SOURCE>
+          <bp:dataSource rdf:ID="dataSource14">
+            <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >aMAZE</bp:NAME>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+          </bp:dataSource>
+        </bp:DATA-SOURCE>
+        <bp:STRUCTURE rdf:resource="#chemicalStructure12"/>
+        <bp:CHEMICAL-FORMULA rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >C6H12O6</bp:CHEMICAL-FORMULA>
+        <bp:MOLECULAR-WEIGHT>180.16</bp:MOLECULAR-WEIGHT>
+        <bp:NAME>alpha-D-glucose</bp:NAME>
+      </bp:smallMolecule>
+    </bp:PHYSICAL-ENTITY>
+    <bp:CELLULAR-LOCATION>
+      <bp:openControlledVocabulary rdf:ID="openControlledVocabulary15">
+        <bp:XREF>
+          <bp:unificationXref rdf:ID="unificationXref16">
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+            <bp:DB>Gene Ontology</bp:DB>
+            <bp:ID>GO:0005737</bp:ID>
+          </bp:unificationXref>
+        </bp:XREF>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:TERM>cytoplasm</bp:TERM>
+      </bp:openControlledVocabulary>
+    </bp:CELLULAR-LOCATION>
+  </bp:physicalEntityParticipant>
+  <bp:unificationXref rdf:ID="unificationXref35">
+    <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >P46880</bp:ID>
+    <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Swiss-Prot/TrEMBL</bp:DB>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+  </bp:unificationXref>
+  <bp:smallMolecule rdf:ID="smallMolecule18">
+    <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Adenosine 5'-diphosphate</bp:NAME>
+    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >adenosine diphosphate</bp:SYNONYMS>
+    <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+    <bp:XREF>
+      <bp:unificationXref rdf:ID="unificationXref20">
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >aMAZE</bp:DB>
+        <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >aMAZESpecificCompound0000000008</bp:ID>
+      </bp:unificationXref>
+    </bp:XREF>
+    <bp:MOLECULAR-WEIGHT>427.2</bp:MOLECULAR-WEIGHT>
+    <bp:SHORT-NAME>ADP</bp:SHORT-NAME>
+    <bp:STRUCTURE>
+      <bp:chemicalStructure rdf:ID="chemicalStructure21">
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:STRUCTURE-DATA>c12(n(cnc(c(N)ncn1)2)[CH]3(O[CH]([CH](O)[CH](O)3)COP(=O)(O)OP(O)(=O)O))</bp:STRUCTURE-DATA>
+        <bp:STRUCTURE-FORMAT>SMILES</bp:STRUCTURE-FORMAT>
+      </bp:chemicalStructure>
+    </bp:STRUCTURE>
+    <bp:CHEMICAL-FORMULA rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >C10H15N5O10P2</bp:CHEMICAL-FORMULA>
+    <bp:XREF>
+      <bp:unificationXref rdf:ID="unificationXref19">
+        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >KEGG</bp:DB>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >C00008</bp:ID>
+      </bp:unificationXref>
+    </bp:XREF>
+    <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+  </bp:smallMolecule>
+  <bp:unificationXref rdf:ID="unificationXref42">
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >aMAZESpecificCompound0000004507</bp:ID>
+    <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >aMAZE</bp:DB>
+  </bp:unificationXref>
+  <bp:biochemicalReaction rdf:ID="biochemicalReaction37">
+    <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+    <bp:LEFT>
+      <bp:physicalEntityParticipant rdf:ID="physicalEntityParticipant26">
+        <bp:STOICHIOMETRIC-COEFFICIENT>1.0</bp:STOICHIOMETRIC-COEFFICIENT>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:PHYSICAL-ENTITY>
+          <bp:smallMolecule rdf:ID="smallMolecule27">
+            <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >a-D-glu-6-p</bp:SHORT-NAME>
+            <bp:CHEMICAL-FORMULA rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >C6H13O9P</bp:CHEMICAL-FORMULA>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >&lt;FONT FACE="Symbol">a&lt;/FONT>-D-glucose-6-phoshate</bp:SYNONYMS>
+            <bp:XREF>
+              <bp:unificationXref rdf:ID="unificationXref30">
+                <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >C00668</bp:ID>
+                <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >KEGG</bp:DB>
+                <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+              </bp:unificationXref>
+            </bp:XREF>
+            <bp:XREF rdf:resource="#unificationXref29"/>
+            <bp:MOLECULAR-WEIGHT>260.14</bp:MOLECULAR-WEIGHT>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+            <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >glucose-6-P</bp:SYNONYMS>
+            <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >alpha-D-glucose-6-p</bp:SYNONYMS>
+            <bp:STRUCTURE>
+              <bp:chemicalStructure rdf:ID="chemicalStructure28">
+                <bp:STRUCTURE-FORMAT>SMILES</bp:STRUCTURE-FORMAT>
+                <bp:STRUCTURE-DATA>C(OP(=O)(O)O)[CH]1([CH](O)[CH](O)[CH](O)[CH](O)O1)</bp:STRUCTURE-DATA>
+                <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+              </bp:chemicalStructure>
+            </bp:STRUCTURE>
+            <bp:NAME>alpha-D-glucose 6-phosphate</bp:NAME>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >alpha-D-glucose-6-phosphate</bp:SYNONYMS>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            > D-glucose-6-P</bp:SYNONYMS>
+            <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+          </bp:smallMolecule>
+        </bp:PHYSICAL-ENTITY>
+        <bp:CELLULAR-LOCATION rdf:resource="#openControlledVocabulary15"/>
+      </bp:physicalEntityParticipant>
+    </bp:LEFT>
+    <bp:DELTA-G>
+        <bp:deltaGprimeO rdf:ID="deltaG-0.4">
+	    <bp:DELTA-G-PRIME-O>0.4</bp:DELTA-G-PRIME-O>
+        </bp:deltaGprimeO>
+    </bp:DELTA-G>
+    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >alpha-D-Glucose 6-phosphate &lt;=> beta-D-Fructose 6-phosphate </bp:SYNONYMS>
+    <bp:RIGHT>
+      <bp:physicalEntityParticipant rdf:ID="physicalEntityParticipant38">
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:CELLULAR-LOCATION rdf:resource="#openControlledVocabulary15"/>
+        <bp:PHYSICAL-ENTITY>
+          <bp:smallMolecule rdf:ID="smallMolecule39">
+            <bp:CHEMICAL-FORMULA rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >C6H13O9P</bp:CHEMICAL-FORMULA>
+            <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+            <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >&lt;FONT FACE="Symbol">b&lt;/FONT>-D-fructose-6-phosphate</bp:SYNONYMS>
+            <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >b-D-fru-6-p</bp:SHORT-NAME>
+            <bp:XREF rdf:resource="#unificationXref42"/>
+            <bp:STRUCTURE>
+              <bp:chemicalStructure rdf:ID="chemicalStructure40">
+                <bp:STRUCTURE-DATA>C(OP(O)(O)=O)[CH]1([CH](O)[CH](O)C(O)(O1)CO)</bp:STRUCTURE-DATA>
+                <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+                <bp:STRUCTURE-FORMAT>SMILES</bp:STRUCTURE-FORMAT>
+              </bp:chemicalStructure>
+            </bp:STRUCTURE>
+            <bp:MOLECULAR-WEIGHT>260.14</bp:MOLECULAR-WEIGHT>
+            <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >beta-D-fructose 6-phosphate</bp:NAME>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >beta-D-fructose-6-phosphate</bp:SYNONYMS>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+            <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+            <bp:XREF rdf:resource="#unificationXref41"/>
+          </bp:smallMolecule>
+        </bp:PHYSICAL-ENTITY>
+        <bp:STOICHIOMETRIC-COEFFICIENT>1.0</bp:STOICHIOMETRIC-COEFFICIENT>
+      </bp:physicalEntityParticipant>
+    </bp:RIGHT>
+    <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >a-D-glu-6-p &lt;=> b-D-fru-6-p</bp:SHORT-NAME>
+    <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+    <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+    <bp:EC-NUMBER>5.3.1.9</bp:EC-NUMBER>
+    <bp:XREF>
+      <bp:unificationXref rdf:ID="unificationXref1">
+        <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >R02740</bp:ID>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >KEGG</bp:DB>
+      </bp:unificationXref>
+    </bp:XREF>
+    <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >alpha-D-glu-6-p &lt;=> beta-D-fru-6-p</bp:NAME>
+    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >alpha-D-Glucose 6-phosphate ketol-isomerase</bp:SYNONYMS>
+    <bp:XREF>
+      <bp:unificationXref rdf:ID="unificationXref3">
+        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >aMAZE</bp:DB>
+        <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >aMAZEReaction0000002504</bp:ID>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+      </bp:unificationXref>
+    </bp:XREF>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+  </bp:biochemicalReaction>
+  <bp:physicalEntityParticipant rdf:ID="physicalEntityParticipant17">
+    <bp:CELLULAR-LOCATION rdf:resource="#openControlledVocabulary15"/>
+    <bp:STOICHIOMETRIC-COEFFICIENT>1.0</bp:STOICHIOMETRIC-COEFFICIENT>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:PHYSICAL-ENTITY rdf:resource="#smallMolecule18"/>
+  </bp:physicalEntityParticipant>
+  <bp:smallMolecule rdf:ID="smallMolecule23">
+    <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+    <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+    <bp:XREF>
+      <bp:unificationXref rdf:ID="unificationXref24">
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >aMAZESpecificCompound0000000002</bp:ID>
+        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >aMAZE</bp:DB>
+      </bp:unificationXref>
+    </bp:XREF>
+    <bp:STRUCTURE>
+      <bp:chemicalStructure rdf:ID="chemicalStructure25">
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:STRUCTURE-DATA>[CH]3(n1(c2(c(nc1)c(N)ncn2)))(O[CH]([CH](O)[CH](O)3)COP(=O)(O)OP(O)(=O)OP(O)(=O)O)</bp:STRUCTURE-DATA>
+        <bp:STRUCTURE-FORMAT>SMILES</bp:STRUCTURE-FORMAT>
+      </bp:chemicalStructure>
+    </bp:STRUCTURE>
+    <bp:MOLECULAR-WEIGHT>507.18</bp:MOLECULAR-WEIGHT>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:CHEMICAL-FORMULA rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >C10H16N5O13P3</bp:CHEMICAL-FORMULA>
+    <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >adenosine triphosphate</bp:SYNONYMS>
+    <bp:XREF>
+      <bp:unificationXref rdf:ID="unificationXref2">
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >KEGG</bp:DB>
+        <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >C00002</bp:ID>
+      </bp:unificationXref>
+    </bp:XREF>
+    <bp:SHORT-NAME>ATP</bp:SHORT-NAME>
+    <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Adenosine 5'-triphosphate</bp:NAME>
+  </bp:smallMolecule>
+  <bp:unificationXref rdf:ID="unificationXref8">
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >aMAZEReaction0000001619</bp:ID>
+    <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >aMAZE</bp:DB>
+  </bp:unificationXref>
+  <bp:catalysis rdf:ID="catalysis5">
+    <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The source of this data did not store catalyses of reactions as separate objects, so there are no unification x-refs pointing to the source of these BioPAX instances.</bp:COMMENT>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:DIRECTION rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >PHYSIOL-LEFT-TO-RIGHT</bp:DIRECTION>
+    <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+    <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+    <bp:CONTROLLER>
+      <bp:physicalEntityParticipant rdf:ID="physicalEntityParticipant31">
+        <bp:PHYSICAL-ENTITY>
+          <bp:protein rdf:ID="protein32">
+            <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >GLK</bp:SHORT-NAME>
+            <bp:DATA-SOURCE>
+              <bp:dataSource rdf:ID="KB_439584_Individual_48">
+                <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >Swiss-Prot/TrEMBL</bp:NAME>
+                <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+              </bp:dataSource>
+            </bp:DATA-SOURCE>
+            <bp:SEQUENCE rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >MTKYALVGDVGGTNARLALCDIASGEISQAKTYSGLDYPSLEAVIRVYLEEHKVEVKDGCIAIACPITGDWVAMTNHTWAFSIAEMKKNLGFSHLEIINDFTAVSMAIPMLKKEHLIQFGGAEPVEGKPIAVYGAGTGLGVAHLVHVDKRWVSLPGEGGHVDFAPNSEEEAIILEILRAEIGHVSAERVLSGPGLVNLYRAIVKADNRLPENLKPKDITERALADSCTDCRRALSLFCVIMGRFGGNLALNLGTFGGVFIAGGIVPRFLEFFKASGFRAAFEDKGRFKEYVHDIPVYLIVHDNPGLLGSGAHLRQTLGHIL</bp:SEQUENCE>
+            <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+            <bp:XREF rdf:resource="#unificationXref35"/>
+            <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+            <bp:ORGANISM rdf:resource="#bioSource33"/>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Glucose kinase</bp:SYNONYMS>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+            <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >GLK_ECOLI</bp:SYNONYMS>
+            <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >glucokinase</bp:NAME>
+          </bp:protein>
+        </bp:PHYSICAL-ENTITY>
+        <bp:CELLULAR-LOCATION rdf:resource="#openControlledVocabulary15"/>
+        <bp:STOICHIOMETRIC-COEFFICIENT rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+        >1.0</bp:STOICHIOMETRIC-COEFFICIENT>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+      </bp:physicalEntityParticipant>
+    </bp:CONTROLLER>
+    <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >GLK -> (a-D-glu &lt;=> a-D-glu-6-p)</bp:SHORT-NAME>
+    <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >catalysis of (alpha-D-glu &lt;=> alpha-D-glu-6-p)</bp:NAME>
+    <bp:CONTROLLED>
+      <bp:biochemicalReaction rdf:ID="biochemicalReaction6">
+        <bp:XREF rdf:resource="#unificationXref8"/>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >ATP:D-glucose 6-phosphotransferase</bp:SYNONYMS>
+        <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >alpha-D-glu + ATP &lt;=> alpha-D-glu-6-p + ADP</bp:NAME>
+        <bp:LEFT rdf:resource="#physicalEntityParticipant9"/>
+        <bp:EC-NUMBER rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >2.7.1.2</bp:EC-NUMBER>
+        <bp:LEFT>
+          <bp:physicalEntityParticipant rdf:ID="physicalEntityParticipant22">
+            <bp:STOICHIOMETRIC-COEFFICIENT>1.0</bp:STOICHIOMETRIC-COEFFICIENT>
+            <bp:CELLULAR-LOCATION rdf:resource="#openControlledVocabulary15"/>
+            <bp:PHYSICAL-ENTITY rdf:resource="#smallMolecule23"/>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+          </bp:physicalEntityParticipant>
+        </bp:LEFT>
+        <bp:RIGHT rdf:resource="#physicalEntityParticipant17"/>
+        <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >Note: The PARTICIPANTS slot should NOT be used (in conversion interactions); there are LEFT and RIGHT slots.</bp:COMMENT>
+        <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >glucose ATP phosphotransferase</bp:SYNONYMS>
+        <bp:XREF rdf:resource="#unificationXref7"/>
+        <bp:RIGHT rdf:resource="#physicalEntityParticipant26"/>
+        <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+        <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+        <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >a-D-glu &lt;=> a-D-glu-6-p</bp:SHORT-NAME>
+        <bp:EC-NUMBER rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >2.7.1.1</bp:EC-NUMBER>
+      </bp:biochemicalReaction>
+    </bp:CONTROLLED>
+  </bp:catalysis>
+  <bp:unificationXref rdf:ID="unificationXref48">
+    <bp:ID>aMAZEProcess0000000027</bp:ID>
+    <bp:DB>aMAZE</bp:DB>
+    <rdfs:comment>This is the source of this data.</rdfs:comment>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+  </bp:unificationXref>
+  <bp:pathway rdf:ID="pathway50">
+    <bp:PATHWAY-COMPONENTS>
+      <bp:pathwayStep rdf:ID="pathwayStep36">
+        <bp:STEP-INTERACTIONS>
+          <bp:catalysis rdf:ID="catalysis43">
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >The source of this data did not store catalyses of reactions as separate objects, so there are no unification x-refs pointing to the source of these BioPAX instances.</bp:COMMENT>
+            <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+            <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+            <bp:DIRECTION>PHYSIOL-LEFT-TO-RIGHT</bp:DIRECTION>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+            <bp:CONTROLLED rdf:resource="#biochemicalReaction37"/>
+            <bp:CONTROLLER>
+              <bp:physicalEntityParticipant rdf:ID="physicalEntityParticipant44">
+                <bp:CELLULAR-LOCATION rdf:resource="#openControlledVocabulary15"/>
+                <bp:STOICHIOMETRIC-COEFFICIENT>1.0</bp:STOICHIOMETRIC-COEFFICIENT>
+                <bp:PHYSICAL-ENTITY>
+                  <bp:protein rdf:ID="protein45">
+                    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >PHI</bp:SYNONYMS>
+                    <bp:XREF>
+                      <bp:unificationXref rdf:ID="unificationXref47">
+                        <bp:ID>Q9KH85</bp:ID>
+                        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >Swiss-Prot/TrEMBL</bp:DB>
+                        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+                      </bp:unificationXref>
+                    </bp:XREF>
+                    <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >PGI</bp:SHORT-NAME>
+                    <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+                    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >GPI</bp:SYNONYMS>
+                    <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+                    <bp:XREF>
+                      <bp:unificationXref rdf:ID="unificationXref46">
+                        <bp:ID>aMAZEPolypeptide0000050740</bp:ID>
+                        <bp:DB>aMAZE</bp:DB>
+                        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+                      </bp:unificationXref>
+                    </bp:XREF>
+                    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >Phosphohexose isomerase</bp:SYNONYMS>
+                    <bp:NAME>phosphoglucose isomerase</bp:NAME>
+                    <bp:SEQUENCE rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >KTFSEAIISGEWKGYTGKAITDVVNIGIGGSDLGPYMVTEALRPYKNHLNMHFVSNVDGTHIAEVLKKVNPETTLFLVASKTFTTQETMTNAHSARDWFLKAAGDEKHVAKHFAALSTNAKAVGEFGIDTANMFEFWDWVGGRYSLWSAIGLSIVLSIGFDNFVELLSGAHAMDKHFSTTPAEKNLPVLLALIGIWYNNFFGAETEAILPYDQYMHRFAAYFQQGNMESNGKYVDRNGNVVDYQTGPIIWGEPGTNGQHAFYQLIHQGTKMVPCDFIAPAITHNPLFDHHQKLLSKFFAQTEALAFGKSREVVEQEYRDQGKDPAT</bp:SEQUENCE>
+                    <bp:ORGANISM rdf:resource="#bioSource33"/>
+                    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+                    <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_48"/>
+                    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >Glucose-6-phosphate isomerase</bp:SYNONYMS>
+                  </bp:protein>
+                </bp:PHYSICAL-ENTITY>
+                <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+              </bp:physicalEntityParticipant>
+            </bp:CONTROLLER>
+            <bp:SHORT-NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >PGI -> (a-D-glu-6-p &lt;=> b-D-fru-6-p)</bp:SHORT-NAME>
+            <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >catalysis of (alpha-D-glu-6-p &lt;=> beta-D-fru-6-p)</bp:NAME>
+            <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >Note: PARTICIPANTS slot should NOT be used (for control interactions); there are CONTROLLED and CONTROLLER slots instead.</bp:COMMENT>
+            <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+            >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+          </bp:catalysis>
+        </bp:STEP-INTERACTIONS>
+        <bp:STEP-INTERACTIONS rdf:resource="#biochemicalReaction37"/>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+      </bp:pathwayStep>
+    </bp:PATHWAY-COMPONENTS>
+    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >glucose degradation</bp:SYNONYMS>
+    <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+    <bp:XREF rdf:resource="#unificationXref48"/>
+    <bp:XREF>
+      <bp:publicationXref rdf:ID="publicationXref49">
+        <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >PubMed</bp:DB>
+        <bp:ID>2549346</bp:ID>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+      </bp:publicationXref>
+    </bp:XREF>
+    <bp:DATA-SOURCE rdf:resource="#KB_439584_Individual_47"/>
+    <bp:DATA-SOURCE rdf:resource="#dataSource14"/>
+    <bp:PATHWAY-COMPONENTS>
+      <bp:pathwayStep rdf:ID="pathwayStep4">
+        <bp:STEP-INTERACTIONS rdf:resource="#biochemicalReaction6"/>
+        <bp:COMMENT rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:COMMENT>
+        <bp:STEP-INTERACTIONS rdf:resource="#catalysis5"/>
+        <bp:NEXT-STEP rdf:resource="#pathwayStep36"/>
+      </bp:pathwayStep>
+    </bp:PATHWAY-COMPONENTS>
+    <bp:ORGANISM rdf:resource="#bioSource33"/>
+    <bp:SYNONYMS rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Embden-Meyerhof pathway</bp:SYNONYMS>
+    <bp:NAME>Glycolysis Pathway</bp:NAME>
+    <bp:SHORT-NAME>glycolysis</bp:SHORT-NAME>
+    <bp:AVAILABILITY rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >see http://www.amaze.ulb.ac.be/</bp:AVAILABILITY>
+  </bp:pathway>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 1.1, Build 135)  http://protege.stanford.edu -->

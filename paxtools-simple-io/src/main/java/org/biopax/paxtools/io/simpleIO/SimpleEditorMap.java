@@ -3,16 +3,12 @@ package org.biopax.paxtools.io.simpleIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.EditorMapAdapter;
-import org.biopax.paxtools.controller.PropertyEditor;
-import org.biopax.paxtools.controller.ObjectPropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 /**

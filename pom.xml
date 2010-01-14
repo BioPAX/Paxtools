@@ -8,9 +8,9 @@
     <artifactId>paxtools</artifactId>
     <version>2.0-SNAPSHOT</version>
 
-    <name>Paxtools (multi-module project)</name>
+    <name>BioPAX PaxTools (multi-module project)</name>
     <packaging>pom</packaging>
-    <url>http://sourceforge.net/projects/biopax/</url>
+    <url>http://www.biopax.org/paxtools</url>
 
     <modules>
         <module>paxtools-core</module>
@@ -36,7 +36,7 @@
 			<id>edemir</id>
 			<name>Emek Demir</name>
 			<organization>CBIO MSKCC</organization>
-			<roles><role>developer</role></roles>
+			<roles><role>architect</role><role>developer</role></roles>
 		</developer>
 	</developers>
 
@@ -44,25 +44,41 @@
 	<profiles>
 		<profile>
 			<id>rodche</id>
+			<distributionManagement>
+				<repository>
+					<id>biopax.snapshots</id>
+					<name>Local BioPAX Snapshots Repository</name>
+					<url>file:///Volumes/Work/m2repo-biopax/snapshots</url>
+				</repository>
+				<!-- 
+				<repository>
+					<id>biopax.releases</id>
+					<name>Local BioPAX Repository</name>
+					<url>file:///Volumes/Work/m2repo-biopax/releases</url>
+				</repository>
+				-->
+			</distributionManagement>
 			<properties>
 				<scm.username>rodche</scm.username>
 			</properties>
 		</profile>
 		<profile>
 			<id>edemir</id>
+			<distributionManagement>
+				<repository>
+				</repository>
+			</distributionManagement>
 			<properties>
 				<scm.username>edemir</scm.username>
 			</properties>
 		</profile>
-	</profiles>
-    
+	</profiles>  
     
     <scm>
     	<connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
     	<developerConnection>scm:hg:ssh://${scm.username},biopax@biopax.hg.sourceforge.net/hgroot/biopax/paxtools</developerConnection>
     	<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
     </scm>
-    
     
     <organization>
     	<name>BioPAX</name>

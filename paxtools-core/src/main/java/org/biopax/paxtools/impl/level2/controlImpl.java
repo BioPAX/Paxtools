@@ -126,27 +126,6 @@ class controlImpl extends physicalInteractionAdapter
 	}
 
 
-// --------------------- Interface interaction ---------------------
-
-
-	public void setPARTICIPANTS(Set<InteractionParticipant> PARTICIPANTS)
-	{
-		throw new UnsupportedOperationException(
-			"Directly setting participants are not allowed !");
-	}
-
-	public void addPARTICIPANTS(InteractionParticipant aParticipant)
-	{
-		throw new UnsupportedOperationException(
-			"Directly setting participants are not allowed !");
-	}
-
-	public void removePARTICIPANTS(InteractionParticipant aParticipant)
-	{
-		throw new UnsupportedOperationException(
-			"Directly setting participants are not allowed !");
-	}
-
 // -------------------------- OTHER METHODS --------------------------
 	protected boolean checkCONTROLLED(process controlled)
 	{

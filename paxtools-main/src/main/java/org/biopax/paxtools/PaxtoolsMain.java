@@ -9,10 +9,15 @@ import org.biopax.paxtools.io.sif.level2.*;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 import org.biopax.paxtools.controller.Merger;
 import org.biopax.paxtools.controller.Integrator;
+import org.biopax.paxtools.converter.OneTwoThree;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
+import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
@@ -108,6 +113,69 @@ public class PaxtoolsMain {
                     System.exit(-1);
                 }
 
+            } else if( argv[count].equals("--to-level3") ) {
+                if( argv.length <= count+2 )
+                    showHelp();
+				SimpleReader reader = new SimpleReader();
+				Model model = reader.convertFromOWL(new FileInputStream(
+						argv[count+1]));
+				model = (new OneTwoThree()).filter(model);
+				if (model != null) {
+					SimpleExporter exporter = new SimpleExporter(model
+							.getLevel());
+					exporter.convertToOWL(model, new FileOutputStream(argv[count+2]));
+				}
+            } else if( argv[count].equals("--psimi-to")) {
+        		// some utility info
+        		System.err.println("PSI-MI to BioPAX Conversion Tool v2.0");
+        		System.err.println("Supports PSI-MI Level 2.5 (compact) model and BioPAX Level 2 or 3.");
+
+                if( argv.length <= count+3 )
+                    showHelp();
+
+        		// check args - proper bp level
+        		Integer bpLevelArg = null;
+        		try {
+        			bpLevelArg = Integer.valueOf(argv[count+1]);
+        			if (bpLevelArg != 2 && bpLevelArg != 3) {
+        				throw new NumberFormatException();
+        			}
+        		}
+        		catch (NumberFormatException e) {
+        			System.err.println("Incorrect BioPAX level specified: " + argv[count+1] + " .  Please select level 2 or 3.");
+        			System.exit(0);
+        		}
+
+        		// set strings vars
+        		String inputFile = argv[count+2];
+        		String outputFile = argv[count+3];
+
+        		// check args - input file exists
+        		if (!((File)(new File(inputFile))).exists()) {
+        			System.err.println("input filename: " +inputFile + " does not exist!");
+        			System.exit(0);
+        		}
+
+        		// create converter and convert file
+        		try {
+        			// set bp level
+        			BioPAXLevel bpLevel = (bpLevelArg == 2) ? BioPAXLevel.L2 : BioPAXLevel.L3;
+
+        			// create input/output streams
+        			FileInputStream fis = new FileInputStream(inputFile);
+        			FileOutputStream fos = new FileOutputStream(outputFile);
+
+        			// create converter
+        			PSIMIBioPAXConverterDriver.checkPSILevel(inputFile);
+        			PSIMIBioPAXConverter converter = new PSIMIBioPAXConverter(bpLevel);
+
+        			// note streams will be closed by converter
+        			converter.convert(fis, fos);
+        		}
+        		catch (Exception e) {
+        			e.printStackTrace();
+        			System.exit(0);
+        		}
             }
         }
 
@@ -124,6 +192,8 @@ public class PaxtoolsMain {
                 +   "--to-sif file1 output" +      "\t\t\t" + "converts model to simple interaction format\n"
                 +   "--validate file1" +         "\t\t\t\t" + "validates BioPAX model file1\n"
                 +   "--integrate file1 file2 output" + "\t" + "integrates file2 into file1 and writes it into output (experimental)\n"
+                +   "--to-level3 file1 output"	+ 	"\t\t" + "converts level 1 or 2 to the level 3 file\n"
+                +	"--psimi-to level file1 output" + "\t" + "converts PSI-MI Level 2.5 to biopax level 2 or 3 file\n"
                 +   "\n"
                 +   "--help" +               "\t\t\t\t\t\t" + "prints this screen and exits"
             );

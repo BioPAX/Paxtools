@@ -120,27 +120,6 @@ class conversionImpl extends physicalInteractionAdapter
 		this.SPONTANEOUS = SpontanousType;
 	}
 
-// --------------------- Interface interaction ---------------------
-
-
-	public void setPARTICIPANTS(Set<InteractionParticipant> PARTICIPANTS)
-	{
-		throw new UnsupportedOperationException(
-			"Directly setting participants are not allowed !");
-	}
-
-	public void addPARTICIPANTS(InteractionParticipant aParticipant)
-	{
-		throw new UnsupportedOperationException(
-			"Directly setting participants are not allowed !");
-	}
-
-	public void removePARTICIPANTS(InteractionParticipant aParticipant)
-	{
-		throw new UnsupportedOperationException(
-			"Directly setting participants are not allowed !");
-	}
-
     private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException
     {

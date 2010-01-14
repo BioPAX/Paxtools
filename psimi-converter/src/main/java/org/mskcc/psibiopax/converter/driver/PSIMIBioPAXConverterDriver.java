@@ -28,19 +28,11 @@
  **/
 package org.mskcc.psibiopax.converter.driver;
 
-// imports
-import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
-
-import org.biopax.paxtools.model.BioPAXLevel;
-
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 /**
  * Driver class for PSI-MI to BioPax converter.
@@ -49,73 +41,13 @@ import java.io.FileOutputStream;
  */
 public class PSIMIBioPAXConverterDriver {
 
-	/** 
-	 * The big deal main.
-	 */
-	public static void main(String[] args) {
-
-		// some utility info
-		System.err.println("PSI-MI to BioPAX Conversion Tool v2.0");
-		System.err.println("Supports PSI-MI Level 2.5 (compact) model and BioPAX Level 2 or 3.");
-
-		// check args
-		if (args.length != 3) {
-			System.err.println("Usage java PSIMIBioPAXConverterDriver <biopax level (2 or 3)> <input filename> <output filename>");
-			System.exit(0);
-		}
-
-		// check args - proper bp level
-		Integer bpLevelArg = null;
-		try {
-			bpLevelArg = Integer.valueOf(args[0]);
-			if (bpLevelArg != 2 && bpLevelArg != 3) {
-				throw new NumberFormatException();
-			}
-		}
-		catch (NumberFormatException e) {
-			System.err.println("Incorrect BioPAX level specified: " + args[0] + " .  Please select level 2 or 3.");
-			System.exit(0);
-		}
-
-		// set strings vars
-		String inputFile = args[1];
-		String outputFile = args[2];
-
-		// check args - input file exists
-		if (!((File)(new File(args[1]))).exists()) {
-			System.err.println("input filename: " + args[1] + " does not exist!");
-			System.exit(0);
-		}
-
-		// create converter and convert file
-		try {
-			// set bp level
-			BioPAXLevel bpLevel = (bpLevelArg == 2) ? BioPAXLevel.L2 : BioPAXLevel.L3;
-
-			// create input/output streams
-			FileInputStream fis = new FileInputStream(inputFile);
-			FileOutputStream fos = new FileOutputStream(outputFile);
-
-			// create converter
-			checkPSILevel(inputFile);
-			PSIMIBioPAXConverter converter = new PSIMIBioPAXConverter(bpLevel);
-
-			// note streams will be closed by converter
-			converter.convert(fis, fos);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
-
 	/**
 	 * Method to determine PSI level.
 	 *
 	 * @param inputFile String
 	 * @throws Exception
 	 */
-	static private void checkPSILevel(String inputFile) throws Exception {
+	static public void checkPSILevel(String inputFile) throws Exception {
 
 		// create file input stream
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile));

@@ -9,7 +9,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>psimi-converter</artifactId>
   <name>PSI-MI Converter</name>
-  <version>1.0-SNAPSHOT</version>
   <description>Converts PSI-MI v2.5 (compact) files to BioPAX Level 2 or 3</description>
   <dependencies>
    	<dependency>
