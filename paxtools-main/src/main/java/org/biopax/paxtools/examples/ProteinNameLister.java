@@ -6,8 +6,7 @@ import org.biopax.paxtools.controller.Fetcher;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.Traverser;
 import org.biopax.paxtools.controller.Visitor;
-import org.biopax.paxtools.io.jena.JenaEditorMap;
-import org.biopax.paxtools.io.jena.JenaIOHandler;
+import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -26,26 +25,55 @@ import java.util.Set;
 
 
 /**
+ * This example class processes all the Level2 BioPAX OWL   
+ * files in the input directory to find all the protein names
+ * 
+ * Notes:
+ * 
+ * - recent fix: it doesn't traverse into the NEXT-STEP property,
+ * as it may lead beyond the boundaries of the pathway of interest!
+ * 
+ * - one may prefer using the Paxtools' jenaIO instead of the simpleIO:
+ * 
+ * import org.biopax.paxtools.io.jena.JenaIOHandler;
+ * JenaIOHandler reader = new JenaIOHandler(null, BioPAXLevel.L2);
+ * 
  */
 public class ProteinNameLister
 {
 // ------------------------------ FIELDS ------------------------------
 
     private static Log log = LogFactory.getLog(ProteinNameLister.class);
-
-    //private static BioPAXFactory factory = new BioPAXFactoryImpl();
     private static Fetcher fetcher;
 
 // --------------------------- main() method ---------------------------
 
     public static void main(String[] args)
     {
-        JenaIOHandler jenaIOHandler = new JenaIOHandler(null, BioPAXLevel.L2);
-        String pathname = "testfiles";
+		if(args.length != 1) {
+			System.out.println("\nUse Parameter: path (to biopax OWL files)\n");
+			System.exit(-1);
+		}
+    	
+    	SimpleReader reader = new SimpleReader(BioPAXLevel.L2);
+        final String pathname = args[0];
         File testDir = new File(pathname);
-        fetcher =
-                new Fetcher(new JenaEditorMap(BioPAXLevel.L2));
-
+        
+        /*
+         * Customized Fetcher is to fix the issue with Level2 
+         * - when NEXT-STEP leads out of the pathway...
+         * (do not worry - those pathway steps that are part of 
+         * the pathway must be in the PATHWAY-COMPONENTS set)
+         */
+		fetcher = new Fetcher(new SimpleEditorMap(BioPAXLevel.L2)) {
+			public void visit(BioPAXElement bpe, Model model,
+					PropertyEditor editor) {
+				if(!editor.getProperty().equals("NEXT-STEP")) {
+					super.visit(bpe, model, editor);
+				}
+			}
+		};
+        
         FilenameFilter filter = new FilenameFilter()
         {
             public boolean accept(File dir, String name)
@@ -58,7 +86,7 @@ public class ProteinNameLister
         {
             try
             {
-                process(pathname, s, jenaIOHandler);
+                process(pathname, s, reader);
             }
             catch (Exception e)
             {
@@ -68,7 +96,7 @@ public class ProteinNameLister
     }
 
     private static void process(String pathname, String name,
-                                JenaIOHandler jenaIOHandler)
+                                SimpleReader jenaIOHandler)
             throws FileNotFoundException
     {
         System.out.println("--------------" + name + "---------");
@@ -78,6 +106,7 @@ public class ProteinNameLister
                                 new FileInputStream(pathname + "/" + name));
         listProteinUnificationXrefsPerPathway(model);
     }
+
 
     public static void listProteinUnificationXrefsPerPathway(Model model)
     {
@@ -114,7 +143,8 @@ public class ProteinNameLister
     }
 
     /**
-     * Here is a more elegant way of doing the previous method.
+     * Here is a more elegant way of doing the previous method!
+     * 
      * @param model
      */
     public static void listUnificationXrefsPerPathway(Model model)
@@ -137,10 +167,12 @@ public class ProteinNameLister
                         System.out.println("pe.getNAME() = " + pe.getNAME());
                         System.out.println("uni = " + uni.getID());
                     }
-                }
+                } 
             }
         };
+        
         Traverser traverser = new Traverser(new SimpleEditorMap(BioPAXLevel.L2), visitor);
+        
         Set<pathway> pathways = model.getObjects(pathway.class);
         for (pathway pathway : pathways)
         {

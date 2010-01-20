@@ -27,23 +27,21 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * A command line accessible utility for basic Paxtools functionalities.
  *
+ *  Usage: CLASS_NAME [options]
+ *  Avaliable operations:
+ *      --merge file1 file2 output		merges file2 into file1 and writes it into output\n"
+ *      --to-sif file1 output			converts model to simple interaction format\n"
+ *      --validate file1				validates BioPAX model file1\n"
+ *      --integrate file1 file2 output	integrates file2 into file1 and writes it into output (experimental)\n"
+ *      --to-level3 file1 output		converts level 1 or 2 to the level 3 file\n"
+ *      --psimi-to level file1 output	converts PSI-MI Level 2.5 to biopax level 2 or 3 file\n"
+ *      --help							prints this screen and exits"
+ *
  */
 public class PaxtoolsMain {
 
     public static Log log = LogFactory.getLog(PaxtoolsMain.class);
     private final static String CLASS_NAME = "PaxtoolsMain";
-
-    // Default
-    private static BioPAXIOHandler ioHandler;
-
-    private static BioPAXIOHandler io()
-    {
-       if(ioHandler == null)
-       {
-           ioHandler = new SimpleReader();
-       }
-       return ioHandler;
-    }
 
     public static void main(String[] argv) throws IOException, InvocationTargetException, IllegalAccessException {
 
@@ -52,6 +50,8 @@ public class PaxtoolsMain {
             showHelp();
         }
 
+        BioPAXIOHandler io = new SimpleReader();
+        
         for(int count = 0; count < argv.length; count++) {
             if( argv[count].equals("--help") ) {
                 showHelp();
@@ -59,8 +59,8 @@ public class PaxtoolsMain {
                 if( argv.length <= count+3 )
                     showHelp();
                 
-                Model model1 = getModel(io(), argv[count+1]);
-                Model model2 = getModel(io(), argv[count+2]);
+                Model model1 = getModel(io, argv[count+1]);
+                Model model2 = getModel(io, argv[count+2]);
 
                 Merger merger = new Merger(new SimpleEditorMap());
                 merger.merge(model1, model2);
@@ -72,8 +72,8 @@ public class PaxtoolsMain {
                 if( argv.length <= count+3 )
                     showHelp();
                 
-                Model model1 = getModel(io(), argv[count+1]);
-                Model model2 = getModel(io(), argv[count+2]);
+                Model model1 = getModel(io, argv[count+1]);
+                Model model2 = getModel(io, argv[count+2]);
 
                 Integrator integrator = 
                 	new Integrator(new SimpleEditorMap(), model1, model2);
@@ -86,7 +86,7 @@ public class PaxtoolsMain {
                 if( argv.length <= count+2 )
                     showHelp();
 
-                Model model = getModel(io(), argv[count+1]);
+                Model model = getModel(io, argv[count+1]);
 
                 SimpleInteractionConverter sic
                         = new SimpleInteractionConverter(
@@ -101,7 +101,7 @@ public class PaxtoolsMain {
 
             } else if( argv[count].equals("--validate") ) {
                 try {
-                    Model m = getModel(io(), argv[count+1]);
+                    Model m = getModel(io, argv[count+1]);
                     System.out.println("Model that contains " 
                     		+ m.getObjects().size()
                     		+ " elements is created (check the log messages)");

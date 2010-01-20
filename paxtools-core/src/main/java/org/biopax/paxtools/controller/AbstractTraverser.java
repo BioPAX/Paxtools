@@ -12,11 +12,15 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 
 /**
- * This is another (perhaps, advanced)
- * "traverser" that visits both 
- * 'object' and 'data' properties, and also 
- * keeps track of its path through the model.
+ * This is another (advanced) "traverser" that "visits" both 
+ * 'object' and 'data' properties and also keeps track of its path 
+ * through the model.
  * 
+ * There are tasks where this class might be very useful, and 
+ * where it replaces the Fetcher, giving much more control 
+ * over actions, elements, and properties.
+ * 
+ * @see Fetcher
  * @see Traverser
  * @see Visitor
  * 
@@ -46,6 +50,16 @@ public abstract class AbstractTraverser {
 	protected abstract void visitValue(Object value, BioPAXElement parent, Model model, PropertyEditor editor);
 		
 
+	/**
+	 * Saves/restores the current "path" of the value in the model and 
+	 * calls the protected abstract method visitValue that is to be 
+	 * implemented in subclasses of this abstract class.
+	 * 
+	 * @param val property value (can be BioPAX element, primitive, enum, string)
+	 * @param parent BioPAX Element
+	 * @param model 
+	 * @param editor parent's property PropertyEditor
+	 */
 	public void visit(Object val, BioPAXElement parent, Model model, PropertyEditor editor) {
 			String oldPath = path; // save the current path
 			path += "." + editor.getProperty() + "=" + val;
@@ -84,26 +98,22 @@ public abstract class AbstractTraverser {
 		if (element == null) {
 			return;
 		}
-		try {
-			Set<PropertyEditor> editors = editorMap.getEditorsOf(element);
-			if(editors == null) {
-				log.warn("No editors for : " + element.getModelInterface());
-				return;
-			}
+		Set<PropertyEditor> editors = editorMap.getEditorsOf(element);
+		if(editors == null) {
+			log.warn("No editors for : " + element.getModelInterface());
+			return;
+		}
 			
-			for (PropertyEditor editor : editors) {
-				if (editor.isMultipleCardinality()) {
-					for (Object value : 
-							(Collection) editor.getValueFromBean(element)) {
-						visitValue(value, element, model, editor);
-					}
-				} else {
-					Object value = editor.getValueFromBean(element);
+		for (PropertyEditor editor : editors) {
+			if (editor.isMultipleCardinality()) {
+				for (Object value : 
+						(Collection) editor.getValueFromBean(element)) {
 					visitValue(value, element, model, editor);
 				}
+			} else {
+				Object value = editor.getValueFromBean(element);
+				visitValue(value, element, model, editor);
 			}
-		} catch (NullPointerException e) {
-			log.error("no editors? ", e);
 		}
 	}
 

@@ -16,10 +16,19 @@ public class Fetcher implements Visitor
 {
 // ------------------------------ FIELDS ------------------------------
 
-	Traverser traverser;
+	protected Traverser traverser;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
+	
+	/**
+	 * Constructor
+	 * 
+	 * Build-in Traverser is going to use this class as the Visitor 
+	 * implementation (designed to recursively collect child BioPAX elements)
+	 *
+	 * @param map EditorMap
+	 */
 	public Fetcher(EditorMap map)
 	{
 		traverser = new Traverser(map, this);
@@ -36,7 +45,7 @@ public class Fetcher implements Visitor
      *
      * @param bpe the BioPAX element to be added into the model
      * @param model model into which the element will be added
-     * @param editor editor that is going to be used for traversing functionallity
+     * @param editor editor that is going to be used for traversing functionality
      *
      * @see org.biopax.paxtools.controller.Traverser
      * 

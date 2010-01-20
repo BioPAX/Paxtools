@@ -2,7 +2,7 @@ package org.biopax.paxtools.examples;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.io.jena.JenaIOHandler;
+import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntity;
@@ -23,8 +23,7 @@ public class UnificationIDtoRDFIDLister
 	private static Log log = LogFactory.getLog(
 		UnificationIDtoRDFIDLister.class);
 
-	static JenaIOHandler jenaIOHandler =
-		new JenaIOHandler(null, BioPAXLevel.L2);
+	static SimpleReader reader = new SimpleReader(BioPAXLevel.L2);
 
 	public static void main(String[] args)
 		throws IllegalAccessException, InvocationTargetException
@@ -55,8 +54,7 @@ public class UnificationIDtoRDFIDLister
 	{
 		FileInputStream in =
 			new FileInputStream(new File(arg));
-		Model level2 =
-			jenaIOHandler.convertFromOWL(in);
+		Model level2 = reader.convertFromOWL(in);
 
 		Set<unificationXref> unis =
 			level2.getObjects(unificationXref.class);

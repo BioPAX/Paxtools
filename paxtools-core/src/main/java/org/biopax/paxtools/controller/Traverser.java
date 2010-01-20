@@ -27,14 +27,15 @@ public class Traverser
         this.visitor = visitor;
     }
 
- 
-
 // -------------------------- OTHER METHODS --------------------------
 
     /**
-     * Provides {@link Visitor} functionallity regarding the editors'
+     * Provides {@link Visitor} functionality regarding the editors'
      * cardinality features. While using all the editors whose domain
      * contains the BioPAX <em>element</em>.
+     * 
+     * It "visits" all the object properties of the element, but
+     * does not go deeper into the element's property values' properties!
      *  
      * @param element BioPAX element to be traversed
      * @param model model into which <em>element</em> will be traversed

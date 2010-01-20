@@ -1,6 +1,6 @@
 package org.biopax.paxtools.examples;
 
-import org.biopax.paxtools.io.jena.JenaIOHandler;
+import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -35,9 +35,9 @@ public class ReactomeEntitySetUnificationXrefFix
 
 	public static void fixReactome(InputStream in, OutputStream out) throws IOException
 	{
-		JenaIOHandler jenaIOHandler = new JenaIOHandler();
+		SimpleReader reader = new SimpleReader();
 		Level2Factory l2f = (Level2Factory) BioPAXLevel.L2.getDefaultFactory();
-		Model level2 = jenaIOHandler.convertFromOWL(in);
+		Model level2 = reader.convertFromOWL(in);
 		Set<physicalEntity> physicalEntitySet = new HashSet<physicalEntity>();
 		physicalEntitySet.addAll(level2.getObjects(physicalEntity.class));
 		for (physicalEntity pe : physicalEntitySet)
@@ -87,7 +87,7 @@ public class ReactomeEntitySetUnificationXrefFix
 
 		}
 
-		jenaIOHandler.convertToOWL(level2, out);
+		reader.convertToOWL(level2, out);
 		out.close();
 	}
 }

@@ -3,7 +3,7 @@ package org.biopax.paxtools.examples;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.level2.Level2FactoryImpl;
-import org.biopax.paxtools.io.jena.JenaIOHandler;
+import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.Level2Factory;
@@ -32,9 +32,8 @@ public class GOUnificationXREFtoRelationshipXREFConverter
 		GOUnificationXREFtoRelationshipXREFConverter.class);
 
     static Level2Factory factory = new Level2FactoryImpl();
-
-	static JenaIOHandler jenaIOHandler =
-		new JenaIOHandler(factory, BioPAXLevel.L2);
+    
+	static SimpleReader reader = new SimpleReader(factory, BioPAXLevel.L2);
 
     /**
      *
@@ -81,7 +80,7 @@ public class GOUnificationXREFtoRelationshipXREFConverter
         FileInputStream in =
 			new FileInputStream(new File(arg));
 		Model level2 =
-			jenaIOHandler.convertFromOWL(in);
+			reader.convertFromOWL(in);
 
         //Get all unification xrefs.
         Set<unificationXref> unis =
@@ -108,7 +107,7 @@ public class GOUnificationXREFtoRelationshipXREFConverter
 			convert(go, level2);
 		}
 		//And finally write out the file. We are done !
-        jenaIOHandler.convertToOWL(level2, new FileOutputStream(
+        reader.convertToOWL(level2, new FileOutputStream(
 			arg.substring(0, arg.lastIndexOf('.')) +
 				"-converted.owl"));
 	}

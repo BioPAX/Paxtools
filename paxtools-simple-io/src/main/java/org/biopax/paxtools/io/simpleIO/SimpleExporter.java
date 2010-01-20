@@ -73,6 +73,7 @@ public class SimpleExporter
     }
 
     public void writeObject(Writer out, BioPAXElement bean) throws IOException {
+    	if(bp == null) bp = "bp";
 		String name = bp + ":" + bean.getModelInterface().getSimpleName();
 		writeIDLine(out, bean, name);
 		
