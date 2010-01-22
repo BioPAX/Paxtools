@@ -7,69 +7,80 @@ import java.util.HashSet;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.multipart.*;
 import org.apache.commons.httpclient.methods.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+/**
+ * Simple BioPAX Validator client 
+ * to upload and check BioPAX OWL files.
+ * 
+ * @author rodch
+ *
+ */
 public class BiopaxValidatorClient {
-    private String url = "http://www.biopax.org/biopax-validator/validator/checkFile.html";
+	private static final Log log = LogFactory.getLog(BiopaxValidatorClient.class);
+	
+	/**
+	 * Default BioPAX Validator's URL
+	 */
+	public static final String 
+		DEFAULT_VALIDATOR_URL = "http://www.biopax.org/biopax-validator/validator/checkFile.html";
+	
+	private static HttpClient httpClient = new HttpClient();
+	private String url;
     private boolean asHtml;
-    private static HttpClient httpClient = new HttpClient();
     
+    /**
+     * Main Constructor
+     * 
+     * It configures for the validator's URL
+     * (defined by DEFAULT_VALIDATOR_URL constant)
+     * and result format ().
+     * 
+     * @param url - validator's file-upload form address
+     * @param asHtml - return HTML or XML result (true/false)
+     */
     public BiopaxValidatorClient(String url, boolean asHtml) {
-		if(url != null) this.url = url;
+		this.url = (url != null) ? url : DEFAULT_VALIDATOR_URL;
 		this.asHtml = asHtml;
 	}
     
+    /**
+     * The Second Constructor
+     * 
+     * It configures for the default validator
+     * (defined by DEFAULT_VALIDATOR_URL constant)
+     * to return XML result.
+     */
     public BiopaxValidatorClient(String url) {
     	this(url, false);
 	}
     
+    /**
+     * Default Constructor
+     * 
+     * It configures for the default validator
+     * (defined by DEFAULT_VALIDATOR_URL constant)
+     * to return XML result.
+     */
     public BiopaxValidatorClient() {
     	this(null);
 	}
-    
-    public static void main(String[] args) throws IOException {  
-    	if(args.length == 0) {
-    		System.out.println("\nAt least one argument, a directory or " +
-    				"BioPAX file name, has to be provided.\n");
-    		System.exit(0);
-    	}
-
-        Collection<File> files = new HashSet<File>();
-		for (String name : args) {
-			File fileOrDir = new File(name);
-			if (!fileOrDir.canRead()) {
-				System.out.println("Cannot read " + name);
-				continue;
-			}
-			if (fileOrDir.isDirectory()) {
-				// validate all the OWL files in the folder
-				FilenameFilter filter = new FilenameFilter() {
-					public boolean accept(File dir, String name) {
-						return (name.endsWith(".owl"));
-					}
-				};
-				for (String s : fileOrDir.list(filter)) {
-					files.add(new File(fileOrDir.getCanonicalPath() 
-							+ File.separator + s));
-				}
-			} else {
-				files.add(fileOrDir);
-			} 
-		}
-		
-		if(!files.isEmpty()) {
-			BiopaxValidatorClient val = new BiopaxValidatorClient(null, true);
-			val.validate(files.toArray(new File[]{}), System.out);
-		} else {
-			System.out.println("Nothing to do.");
-		}
-    }
-    
-    
+       
+    /**
+     * Checks several BioPAX OWL files using the 
+     * remote BioPAX validator and prints the 
+     * results.
+     * 
+     * @param biopaxFiles files (File[]) to check  
+     * @param out validation results output stream
+     * @throws IOException
+     */
     public void validate(File[] biopaxFiles, OutputStream out) throws IOException {
         Collection<Part> parts = new HashSet<Part>();
         
         // set result type either to HTML or XML
-        StringPart resultTypePart = (asHtml) 
+        StringPart resultTypePart = (asHtml == true) 
         	? new StringPart("retDesired", "html") 
         	: new StringPart("retDesired", "xml");
         parts.add(resultTypePart);
@@ -86,7 +97,10 @@ public class BiopaxValidatorClient {
         			)
         		);
         int status = httpClient.executeMethod(post);
-		System.out.println("HTTP Status Text>>>"	+ HttpStatus.getStatusText(status));
+		
+        if(log.isInfoEnabled()) log.info("HTTP Status Text>>>" 
+				+ HttpStatus.getStatusText(status));
+		
 		BufferedReader res = new BufferedReader(
 				new InputStreamReader(post.getResponseBodyAsStream())
 			);

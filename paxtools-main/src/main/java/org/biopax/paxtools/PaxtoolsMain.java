@@ -12,6 +12,7 @@ import org.biopax.paxtools.controller.Integrator;
 import org.biopax.paxtools.converter.OneTwoThree;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.validator.BiopaxValidatorClient;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
 import org.apache.commons.logging.LogFactory;
@@ -21,8 +22,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * A command line accessible utility for basic Paxtools functionalities.
@@ -31,7 +36,7 @@ import java.lang.reflect.InvocationTargetException;
  *  Avaliable operations:
  *      --merge file1 file2 output		merges file2 into file1 and writes it into output\n"
  *      --to-sif file1 output			converts model to simple interaction format\n"
- *      --validate file1				validates BioPAX model file1\n"
+ *      --validate path out xml|html	validates BioPAX model file (or all the files in the directory), outputs xml or html\n"
  *      --integrate file1 file2 output	integrates file2 into file1 and writes it into output (experimental)\n"
  *      --to-level3 file1 output		converts level 1 or 2 to the level 3 file\n"
  *      --psimi-to level file1 output	converts PSI-MI Level 2.5 to biopax level 2 or 3 file\n"
@@ -96,22 +101,84 @@ public class PaxtoolsMain {
                                 new ControlsTogetherRule(),
                                 new ParticipatesRule()
                         );
-
                 sic.writeInteractionsInSIF(model, new FileOutputStream(argv[count+2]));
 
             } else if( argv[count].equals("--validate") ) {
-                try {
-                    Model m = getModel(io, argv[count+1]);
-                    System.out.println("Model that contains " 
-                    		+ m.getObjects().size()
-                    		+ " elements is created (check the log messages)");
-                } catch(Exception e)
-                {
-                    System.err.println("Error during validation" + e);
-                    e.printStackTrace();
-                    log.error("Error during validation", e);
-                    System.exit(-1);
-                }
+              	if(argv.length <= count+3) 
+              		showHelp(); // and exit
+            	
+                String name = argv[count + 1];
+				String out = argv[count + 2];
+				boolean isGetHtml;
+				if("html".equalsIgnoreCase(argv[count + 3])) 
+				{
+					isGetHtml = true;
+					out += ".htm";
+					
+				} else {
+					isGetHtml = false;
+					out += ".xml";
+				}
+                
+                Collection<File> files = new HashSet<File>();
+				File fileOrDir = new File(name);
+				if (!fileOrDir.canRead()) {
+					System.out.println("Cannot read " + name);
+					System.exit(-1);
+				}
+				
+				// collect files
+				if (fileOrDir.isDirectory()) {
+					// validate all the OWL files in the folder
+					FilenameFilter filter = new FilenameFilter() {
+						public boolean accept(File dir, String name) {
+							return (name.endsWith(".owl"));
+						}
+					};
+					for (String s : fileOrDir.list(filter)) {
+						files.add(new File(fileOrDir.getCanonicalPath()
+								+ File.separator + s));
+					}
+				} else {
+					files.add(fileOrDir);
+				}
+				
+				// upload and validate using the default URL:
+				// http://www.biopax.org/biopax-validator/validator/fileUpload.html
+				OutputStream os = new FileOutputStream(out);
+				try {
+					if (!files.isEmpty()) {
+        				BiopaxValidatorClient val = 
+        					new BiopaxValidatorClient(null, isGetHtml);
+        				val.validate(files.toArray(new File[]{}), os);
+        			} 
+				} catch (Exception ex) {
+					// fall-back: not using the remote validator; trying to read files
+					String msg = "Faild to Validate Using the Remote Service.\n " +
+					"Now Trying To Read Each File and Build The Model\n" +
+					"Watch Log Messages...\n";
+					System.err.println(msg);
+					os.write(msg.getBytes());
+					
+					for(File f : files) {
+						Model m = null;
+						msg ="";
+		                try {
+		                    m = io.convertFromOWL(new FileInputStream(f));
+		                    msg = "Model that contains " 
+		                		+ m.getObjects().size()
+		                		+ " elements is created (check the log messages)\n";
+		                    os.write(msg.getBytes());
+		                } catch(Exception e)
+		                {
+		                	msg = "Error during validation" + e + "\n";
+		                    os.write(msg.getBytes());
+		                    e.printStackTrace();
+		                    log.error(msg);
+		                }
+		                os.flush();
+					}
+				}
 
             } else if( argv[count].equals("--to-level3") ) {
                 if( argv.length <= count+2 )
@@ -188,14 +255,14 @@ public class PaxtoolsMain {
                     "Invalid usage: " + CLASS_NAME + "\n"
                 +   "\n"
                 +   "Avaliable operations:\n"
-                +   "--merge file1 file2 output" +   "\t\t" + "merges file2 into file1 and writes it into output\n"
-                +   "--to-sif file1 output" +      "\t\t\t" + "converts model to simple interaction format\n"
-                +   "--validate file1" +         "\t\t\t\t" + "validates BioPAX model file1\n"
-                +   "--integrate file1 file2 output" + "\t" + "integrates file2 into file1 and writes it into output (experimental)\n"
-                +   "--to-level3 file1 output"	+ 	"\t\t" + "converts level 1 or 2 to the level 3 file\n"
-                +	"--psimi-to level file1 output" + "\t" + "converts PSI-MI Level 2.5 to biopax level 2 or 3 file\n"
+                +   "--merge file1 file2 output" +			"\t\tmerges file2 into file1 and writes it into output\n"
+                +   "--to-sif file1 output" +				"\t\t\tconverts model to simple interaction format\n"
+                +   "--validate path out xml|html" +		"\t\tvalidates the BioPAX file (or all the files in the directory), outputs xml or html\n"
+                +   "--integrate file1 file2 output" +		"\t\tintegrates file2 into file1 and writes it into output (experimental)\n"
+                +   "--to-level3 file1 output"	+			"\t\tconverts level 1 or 2 to the level 3 file\n"
+                +	"--psimi-to level file1 output" +		"\t\tconverts PSI-MI Level 2.5 to biopax level 2 or 3 file\n"
                 +   "\n"
-                +   "--help" +               "\t\t\t\t\t\t" + "prints this screen and exits"
+                +   "--help" +								"\t\t\t\t\t\tprints this screen and exits"
             );
 
         System.exit(-1);

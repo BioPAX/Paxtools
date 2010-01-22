@@ -57,11 +57,6 @@
 					<artifactId>paxtools-jena-io</artifactId>
 					<version>${project.version}</version>
 				</dependency>
-				<dependency>
-					<groupId>${project.groupId}</groupId>
-					<artifactId>validator-client</artifactId>
-					<version>${project.version}</version>
-				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
@@ -87,15 +82,20 @@
       <artifactId>sif-converter</artifactId>
       <version>${project.version}</version>
     </dependency>
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>biopax-converter</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>psimi-converter</artifactId>
-		<version>${project.version}</version>
-	</dependency>
+    <dependency>
+	<groupId>${project.groupId}</groupId>
+	<artifactId>biopax-converter</artifactId>
+	<version>${project.version}</version>
+    </dependency>
+    <dependency>
+	<groupId>${project.groupId}</groupId>
+	<artifactId>psimi-converter</artifactId>
+	<version>${project.version}</version>
+    </dependency>
+    <dependency>
+	<groupId>${project.groupId}</groupId>
+	<artifactId>validator-client</artifactId>
+	<version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
