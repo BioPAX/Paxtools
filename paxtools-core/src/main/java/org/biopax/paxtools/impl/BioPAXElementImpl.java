@@ -1,7 +1,6 @@
 package org.biopax.paxtools.impl;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.Model;
 
 /**
  */
@@ -11,8 +10,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
 	private static final long serialVersionUID = -4176374334987351368L;
 	private String id;
-	private Model m_model;
-
 
     public int hashCode()
     {
