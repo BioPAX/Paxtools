@@ -12,13 +12,14 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
  *
  * @see org.biopax.paxtools.controller.PropertyEditor
  */
-public class EnumeratedPropertyEditor extends PropertyEditor
+public class EnumeratedPropertyEditor<D extends BioPAXElement, R extends Enum>
+		extends PropertyEditor<D, R>
 {
 // --------------------------- CONSTRUCTORS ---------------------------
 
     public EnumeratedPropertyEditor(String property, Method getMethod,
-                                    Class<? extends BioPAXElement> domain,
-                                    Class range,
+                                    Class<D> domain,
+                                    Class<R> range,
                                     boolean multipleCardinality)
     {
         super(property,
@@ -33,7 +34,7 @@ public class EnumeratedPropertyEditor extends PropertyEditor
     @Override
     protected void invokeMethod(Method toInvoke, Object bean, Object o)
     {
-        if (o.getClass().equals(range))
+        if (o.getClass().equals(this.getRange()))
         {
             super.invokeMethod(toInvoke, bean, o);
         }
@@ -44,8 +45,8 @@ public class EnumeratedPropertyEditor extends PropertyEditor
             try
             {
                 toInvoke
-                        .invoke(domain.cast(bean),
-                                Enum.valueOf(range, value));
+                        .invoke(this.getDomain().cast(bean),
+                                Enum.valueOf(this.getRange(), value));
             }
             catch (IllegalAccessException e) {
                 throw new IllegalBioPAXArgumentException("Failed to convert literal " +

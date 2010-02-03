@@ -14,7 +14,8 @@ import java.util.Set;
  *
  * @see org.biopax.paxtools.controller.PropertyEditor
  */
-public class ObjectPropertyEditor extends PropertyEditor
+public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXElement>
+		extends PropertyEditor<D, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -41,8 +42,8 @@ public class ObjectPropertyEditor extends PropertyEditor
 //	}
 
 	public ObjectPropertyEditor(String property, Method getMethod,
-	                            Class<? extends BioPAXElement> domain,
-	                            Class range,
+	                            Class<D> domain,
+	                            Class<R> range,
 	                            boolean multipleCardinality)
 	{
 		super(property,
@@ -70,7 +71,7 @@ public class ObjectPropertyEditor extends PropertyEditor
 	protected void checkRestrictions(Object bean, Object value)
 	{
 		super.checkRestrictions(bean, value);
-		Set<Class> classes = getRestrictedRangesFor(((BioPAXElement) bean).getModelInterface());
+		Set<Class> classes = getRestrictedRangesFor((Class<? extends D>) ((BioPAXElement) bean).getModelInterface());
 		if (classes != null && !isInstanceOfAtLeastOne(classes, value))
 		{
 			throw new IllegalBioPAXArgumentException(
@@ -79,13 +80,13 @@ public class ObjectPropertyEditor extends PropertyEditor
 		}
 	}
 
-	public Set<Class> getRestrictedRangesFor(Class restrictedDomain)
+	public Set<Class> getRestrictedRangesFor(Class<? extends D> restrictedDomain)
 	{
 		Set<Class> classes = this.restrictedRanges.get(restrictedDomain);
 		if (classes == null)
 		{
 			classes = new HashSet<Class>();
-			classes.add(range);
+			classes.add(this.getRange());
 		}
 		return classes;
 	}

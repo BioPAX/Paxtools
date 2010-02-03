@@ -18,7 +18,7 @@ import java.util.Set;
  * This is the base class for all property editors. Each property controller is responsible for
  * manipulating a certain property for a given class of objects (domain).
  */
-public abstract class PropertyEditor
+public abstract class PropertyEditor<D extends BioPAXElement, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -53,19 +53,20 @@ public abstract class PropertyEditor
 	protected Method removeMethod;
 
 	/**
+	 * Local OWL name of the property
+	 */
+	protected final String property;
+
+	/**
 	 * This is the Class representing the domain of the property.
 	 */
-	protected final Class<? extends BioPAXElement> domain;
+	private Class<D> domain;
 
 	/**
 	 * This is the Class representing the range of the property. It is by default an object.
 	 */
-	protected Class range = Object.class;
+	private Class<R> range;
 
-	/**
-	 * Local OWL name of the property
-	 */
-	protected final String property;
 
 	/**
 	 * This is false if there is a cardinality restriction of one on the property.
@@ -78,6 +79,28 @@ public abstract class PropertyEditor
 	private final Map<Class, Integer> maxCardinalities =
 			new HashMap<Class, Integer>();
 
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public PropertyEditor(String property, Method getMethod, Class<D> domain,
+	                      Class<R> range, boolean multipleCardinality)
+	{
+		this.domain = domain;
+		this.range = range;
+		this.multipleCardinality = multipleCardinality;
+		this.getMethod = getMethod;
+		this.property = property;
+
+		try
+		{
+			detectMethods();
+		}
+		catch (NoSuchMethodException e)
+		{
+			log.error("Failed at reflection, no method: " + e.getMessage());
+		}
+	}
+
+
 // -------------------------- STATIC METHODS --------------------------
 
 	@Override
@@ -88,7 +111,7 @@ public abstract class PropertyEditor
 		for (Class aClass : maxCardinalities.keySet())
 		{
 			Integer cardinality = maxCardinalities.get(aClass);
-			def+=" C:"+aClass.getSimpleName()+":"+cardinality;
+			def += " C:" + aClass.getSimpleName() + ":" + cardinality;
 		}
 		return def;
 	}
@@ -235,27 +258,6 @@ public abstract class PropertyEditor
 		return range;
 	}
 
-// --------------------------- CONSTRUCTORS ---------------------------
-
-	public PropertyEditor(String property, Method getMethod,
-	                      Class<? extends BioPAXElement> domain,
-	                      Class range, boolean multipleCardinality)
-	{
-		this.multipleCardinality = multipleCardinality;
-		this.range = range;
-		this.getMethod = getMethod;
-		this.domain = domain;
-		this.property = property;
-
-		try
-		{
-			detectMethods();
-		}
-		catch (NoSuchMethodException e)
-		{
-			log.error("Failed at reflection, no method: " + e.getMessage());
-		}
-	}
 
 	/**
 	 * Detects and sets the default methods for the property to which editor is associated. If property
@@ -286,6 +288,7 @@ public abstract class PropertyEditor
 	}
 
 	// --------------------- GETTER / SETTER METHODS ---------------------
+
 	/**
 	 * Returns the {@link #addMethod}.
 	 *
@@ -301,7 +304,7 @@ public abstract class PropertyEditor
 	 *
 	 * @return the domain of the editor
 	 */
-	public Class<? extends BioPAXElement> getDomain()
+	public Class<D> getDomain()
 	{
 		return domain;
 	}
@@ -331,7 +334,7 @@ public abstract class PropertyEditor
 	 *
 	 * @return a class
 	 */
-	public Class getRange()
+	public Class<R> getRange()
 	{
 		return range;
 	}
@@ -377,9 +380,8 @@ public abstract class PropertyEditor
 	 * @param max    cardinality
 	 * @see #isMultipleCardinality()
 	 */
-	public void addMaxCardinalityRestriction(Class domain, int max)
+	public void addMaxCardinalityRestriction(Class<? extends D> domain, int max)
 	{
-		assert this.domain.isAssignableFrom(domain);
 		if (multipleCardinality)
 		{
 			this.maxCardinalities.put(domain, max);
@@ -412,7 +414,7 @@ public abstract class PropertyEditor
 	 * @param restrictedDomain domain to be checked for the cardinality
 	 * @return an integer indicating the maximum cardinality
 	 */
-	public Integer getMaxCardinality(Class restrictedDomain)
+	public Integer getMaxCardinality(Class<? extends D> restrictedDomain)
 	{
 		return this.maxCardinalities.get(restrictedDomain);
 	}
@@ -458,7 +460,7 @@ public abstract class PropertyEditor
 	 * @param value to be removed from the bean
 	 * @param bean  bean from which the value is going to be removed
 	 */
-	public void removePropertyFromBean(Object value, Object bean)
+	public void removePropertyFromBean(BioPAXElement value, BioPAXElement bean)
 	{
 		try
 		{
@@ -532,7 +534,7 @@ public abstract class PropertyEditor
 	 * @param bean  to which the <em>value</em> is to be set
 	 * @param value to be set to the <em>bean</em>
 	 */
-	public void setPropertyToBean(Object bean, Object value)
+	public void setPropertyToBean(BioPAXElement bean, Object value)
 	{
 		if (log.isTraceEnabled())
 		{
@@ -591,11 +593,11 @@ public abstract class PropertyEditor
 	 * @param bean the object whose property is requested
 	 * @return an object as the value
 	 */
-	public Object getValueFromBean(Object bean) throws IllegalBioPAXArgumentException
+	public R getValueFromBean(Object bean) throws IllegalBioPAXArgumentException
 	{
 		try
 		{
-			return this.getMethod.invoke(bean);
+			return (R) this.getMethod.invoke(bean);
 		}
 		catch (IllegalAccessException e)
 		{

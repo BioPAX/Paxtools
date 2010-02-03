@@ -11,7 +11,8 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
  *
  * @see org.biopax.paxtools.controller.PropertyEditor
  */
-public class PrimitivePropertyEditor extends PropertyEditor
+public class PrimitivePropertyEditor<D extends BioPAXElement, R>
+		extends PropertyEditor<D, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -20,8 +21,8 @@ public class PrimitivePropertyEditor extends PropertyEditor
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public PrimitivePropertyEditor(String property, Method getMethod,
-	                               Class<? extends BioPAXElement> domain,
-                                   Class range,
+	                               Class<D> domain,
+                                   Class<R> range,
 	                               boolean multipleCardinality)
 	{
 		super(property,
@@ -30,17 +31,17 @@ public class PrimitivePropertyEditor extends PropertyEditor
 			range,
 			multipleCardinality);
 
-		assert(this.range == Boolean.class || this.range.isPrimitive());
+		assert(range == Boolean.class || range.isPrimitive());
 
-		if (this.range.equals(double.class))
+		if (range.equals(double.class))
 		{
 			unknownValue = BioPAXElement.UNKNOWN_DOUBLE;
 		}
-		else if (this.range.equals(float.class))
+		else if (range.equals(float.class))
 		{
 			unknownValue = BioPAXElement.UNKNOWN_FLOAT;
 		}
-		else if (this.range.equals(int.class))
+		else if (range.equals(int.class))
 		{
 			unknownValue = BioPAXElement.UNKNOWN_INT;
 		}
@@ -52,6 +53,7 @@ public class PrimitivePropertyEditor extends PropertyEditor
     @Override
 	protected void invokeMethod(Method toInvoke, Object bean, Object o)
 	{
+		Class<R> range = this.getRange();
 		if (o.getClass().equals(range))
 		{
 			super.invokeMethod(toInvoke, bean, o);
@@ -61,19 +63,19 @@ public class PrimitivePropertyEditor extends PropertyEditor
 			String s = (String) o;
 			try
 			{
-				if (this.range.equals(double.class))
+				if (range.equals(double.class))
 				{
 					super.invokeMethod(toInvoke, bean, Double.valueOf(s));
 				}
-				else if (this.range.equals(float.class))
+				else if (range.equals(float.class))
 				{
 					super.invokeMethod(toInvoke, bean, Float.valueOf(s));
 				}
-				else if (this.range.equals(int.class))
+				else if (range.equals(int.class))
 				{
 					super.invokeMethod(toInvoke, bean, Integer.valueOf(s));
 				}
-                else if (this.range.equals(Boolean.class))
+                else if (range.equals(Boolean.class))
 				{
 					super.invokeMethod(toInvoke, bean, Boolean.valueOf(s));
 				}
