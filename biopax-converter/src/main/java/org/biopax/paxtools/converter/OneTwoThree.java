@@ -62,7 +62,6 @@ public final class OneTwoThree implements ModelFilter {
 	}
 	
 	
-	
 	/**
 	 * Default Constructor 
 	 * (it also loads 'classesmap' and 'propsmap' from property files)

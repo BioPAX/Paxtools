@@ -137,9 +137,10 @@ public class SimpleExporter
             assert id!=null;
             if (base!=null && id.startsWith(base))
             {
-                id = id.substring(id.lastIndexOf('#'));
+                //id = id.substring(id.lastIndexOf('#'));
+            	id = id.substring(base.length());
             }
-            out.write(" rdf:resource=\"" + id + "\" />");
+            out.write(" rdf:resource=\"#" + id + "\" />");
         }
         else
         {
@@ -178,14 +179,11 @@ public class SimpleExporter
             throws IOException
     {
 
-        out.write("\n\n<" + name +
-                  " ");
+        out.write("\n\n<" + name + " ");
         String s = bpe.getRDFId();
-        int index = s.lastIndexOf('#') + 1;
-
-        if (s.substring(0, index).equals(base))
+        if (base != null && s.startsWith(base))
         {
-            String id = s.substring(index);
+            String id = s.substring(base.length());
             out.write(RDF_ID + id + close);
         }
         else
