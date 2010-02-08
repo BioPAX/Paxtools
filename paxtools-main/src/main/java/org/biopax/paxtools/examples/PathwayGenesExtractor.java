@@ -95,28 +95,30 @@ public class PathwayGenesExtractor implements Visitor {
 		out.close();
 	}
 	
-	public void visit(BioPAXElement bpe, Model model, PropertyEditor editor) {
+	public void visit(BioPAXElement domain1, Object range, Model model, PropertyEditor editor) {
 		
 		// do not traverse the NEXT-STEP
 		if(editor.getProperty().equals("NEXT-STEP")) {
 			return;
 		}
 		
-		if (bpe != null && !visited.contains(bpe)) {
+		if (range != null && range instanceof  BioPAXElement && !visited.contains(range))
+		{
+			BioPAXElement bpe = (BioPAXElement) range;
 			path += getIdent(bpe);
 			System.out.print(path + editor.getProperty() + "=" 
 					+ getLocalId(bpe) + " " + bpe.getModelInterface().getSimpleName());
-			if(bpe instanceof entity && ((entity)bpe).getNAME() != null) {
+			if(bpe instanceof entity && ((entity) bpe).getNAME() != null) {
 				System.out.print(" {"
-						+ ((entity)bpe).getNAME()
+						+ ((entity) bpe).getNAME()
 						.replace("(name copied from entity in Homo sapiens)", "(name from human)")
 						+ "}");
 			}
 
 			if(bpe instanceof pathway) {
-				subpathways.add((pathway)bpe);
+				subpathways.add((pathway) bpe);
 			} else if(bpe instanceof interaction) {
-				interactions.add((interaction)bpe);
+				interactions.add((interaction) bpe);
 			}
 			
 			if (bpe instanceof protein) {

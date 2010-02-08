@@ -43,17 +43,17 @@ public class Fetcher implements Visitor
      * Adds the BioPAX element into the model and traverses the element
      * for its dependent elements.
      *
-     * @param bpe the BioPAX element to be added into the model
+     * @param domain
+     *@param range
      * @param model model into which the element will be added
-     * @param editor editor that is going to be used for traversing functionality
-     *
-     * @see org.biopax.paxtools.controller.Traverser
+     * @param editor editor that is going to be used for traversing functionality   @see org.biopax.paxtools.controller.Traverser
      * 
      */
-    public void visit(BioPAXElement bpe, Model model, PropertyEditor editor)
+    public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-		if (bpe != null && !model.getObjects().contains(bpe))
+		if (range != null && range instanceof BioPAXElement && !model.getObjects().contains(range))
 		{
+			BioPAXElement bpe = (BioPAXElement) range;
 			model.add(bpe);
 			traverser.traverse(bpe, model);
 		}
