@@ -66,10 +66,10 @@ public abstract class AbstractTraverser {
 			visitValue(val, parent, model, editor); // does the job!
 			path = oldPath; // reset the previous path
 	}
-		
+
 	/**
 	 * Starts default traversing/visiting
-	 * 
+	 *
 	 * @param model
 	 * @return can be overridden or ignored
 	 */
@@ -85,7 +85,7 @@ public abstract class AbstractTraverser {
 		}
 		return true;
 	}
-	
+
     /**
 	 * Provides {@link Visitor} functionality regarding the editors'
 	 * cardinality features using all the property editors of 

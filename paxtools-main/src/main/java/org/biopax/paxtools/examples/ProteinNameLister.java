@@ -65,11 +65,12 @@ public class ProteinNameLister
          * (do not worry - those pathway steps that are part of 
          * the pathway must be in the PATHWAY-COMPONENTS set)
          */
+	    //TODO
 		fetcher = new Fetcher(new SimpleEditorMap(BioPAXLevel.L2)) {
-			public void visit(BioPAXElement bpe, Model model,
-					PropertyEditor editor) {
+			public void visit(BioPAXElement domain, Object range, Model model,
+			                  PropertyEditor editor) {
 				if(!editor.getProperty().equals("NEXT-STEP")) {
-					super.visit(bpe, model, editor);
+					super.visit(domain, range, model, editor);
 				}
 			}
 		};
@@ -152,13 +153,13 @@ public class ProteinNameLister
         // This is a visitor for elements in a pathway - direct and indirect
         Visitor visitor = new Visitor()
         {
-            public void visit(BioPAXElement bpe, Model model,
+            public void visit(BioPAXElement domain, Object range, Model model,
                               PropertyEditor editor)
             {
-                if (bpe instanceof physicalEntity)
+                if (range instanceof physicalEntity)
                 {
                     // Do whatever you want with the pe and xref here
-                    physicalEntity pe = (physicalEntity) bpe;
+                    physicalEntity pe = (physicalEntity) range;
                     ClassFilterSet<unificationXref> unis=
                     new ClassFilterSet<unificationXref>(pe.getXREF(),
                                                         unificationXref.class);

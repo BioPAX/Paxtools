@@ -18,9 +18,10 @@ public interface Visitor
      * updating an element that is equivalent to the given BioPAX element
      * using the latter's/former's values.
      *
-     * @param bpe BioPAX element to be used for the operation on <em>model</em>
-     * @param model model on which the visitting operation will be done
-     * @param editor editor for accessing the properties/values of the BioPAX element
+     * @param domain BioPAXElement which is the domain of this property
+     * @param range  Object which is the range of this property
+     * @param model model on which the visiting operation will be done
+     * @param editor editor
      */
-    public void visit(BioPAXElement bpe, Model model, PropertyEditor editor);
+    public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor);
 }

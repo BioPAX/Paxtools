@@ -24,11 +24,5 @@ public interface DnaRegionReference extends SequenceEntityReference
 //
 //		// Property Initiation Region
 //
-//	public Set<NucleicAcid> getInitiationRegion();
-//
-//	void addInitiationRegion(NucleicAcid initiationRegion);
-//
-//	void removeInitiationRegion(NucleicAcid initiationRegion);
-//
-//	public void setInitiationRegion(Set<NucleicAcid> initiationRegion);
+
 }
