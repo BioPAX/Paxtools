@@ -12,28 +12,26 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 
-/**
- * TODO:Class description User: demir Date: Jul 2, 2009 Time: 1:49:09 PM
- */
 public class SimpleReaderTest extends TestCase
 {
 	@Test
 	public void testSimpleReaderL2() throws URISyntaxException
 	{
-		testDirectory(new SimpleReader(), "/samples/L2");
-	}
+		testDirectory(new SimpleReader(), BioPAXLevel.L2); //resources dir
+	}		
 
-	
 	@Test
 	public void testSimpleReaderL3() throws URISyntaxException
 	{
-		testDirectory(new SimpleReader(), "/samples/L3");
-	}		
+		testDirectory(new SimpleReader(), BioPAXLevel.L3); 
+	}
 	
-	private void testDirectory(SimpleReader simpleReader, String pathname) throws URISyntaxException
+	private void testDirectory(SimpleReader simpleReader, BioPAXLevel level) throws URISyntaxException
 	{
+		String pathname = level.name();
 		System.out.println("pathname = " + pathname);
-		File testDir = new File(getClass().getResource(pathname).toURI()); 
+		File testDir = new File(getClass()
+				.getClassLoader().getResource(pathname).toURI()); 
 		FilenameFilter filter = new FilenameFilter()
 		{
 		    public boolean accept(File dir, String name)
@@ -48,7 +46,8 @@ public class SimpleReaderTest extends TestCase
 		    try
 		    {
 			    System.out.println("starting "+s);
-			     InputStream in = getClass().getResourceAsStream(pathname + "/" + s);
+			     InputStream in = getClass().getClassLoader() // - at the root classpath
+			     	.getResourceAsStream(pathname + File.separator + s);
 				Model model =   simpleReader.convertFromOWL(in);
 				assertNotNull(model);
 				assertFalse(model.getObjects().isEmpty());

@@ -2,6 +2,7 @@ package org.biopax.paxtools.converter;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,22 +17,30 @@ public class OneTwoThreeTest {
 	@Test
 	public final void testFilter() throws IOException {
 		SimpleReader reader = new SimpleReader();
-		Model model = reader.convertFromOWL(getClass().getResourceAsStream("/biopax-example-short-pathway.owl"));
+		Model model = reader.convertFromOWL(
+			getClass().getClassLoader()
+				.getResourceAsStream("biopax-example-short-pathway.owl"));
 		model = (new OneTwoThree()).filter(model);
 		if (model != null) {
 			SimpleExporter exporter = new SimpleExporter(model.getLevel());
-			exporter.convertToOWL(model, new FileOutputStream("target/converted.owl"));
+			exporter.convertToOWL(model, new FileOutputStream(
+					getClass().getClassLoader().getResource("").getFile() 
+	        		+ File.separator + "converted.owl"));
 		}
 	}
 
 	@Test
 	public final void testFilterBigger() throws IOException {
 		SimpleReader reader = new SimpleReader();
-		Model model = reader.convertFromOWL(getClass().getResourceAsStream("/biopax-example-ecocyc-glycolysis.owl"));
+		Model model = reader.convertFromOWL(
+			getClass().getClassLoader()
+				.getResourceAsStream("biopax-example-ecocyc-glycolysis.owl"));
 		model = (new OneTwoThree()).filter(model);
 		if (model != null) {
 			SimpleExporter exporter = new SimpleExporter(model.getLevel());
-			exporter.convertToOWL(model, new FileOutputStream("target/converted-big.owl"));
+			exporter.convertToOWL(model, new FileOutputStream(
+					getClass().getClassLoader().getResource("").getFile() 
+	        		+ File.separator + "converted-big.owl"));
 		}
 	}
 	

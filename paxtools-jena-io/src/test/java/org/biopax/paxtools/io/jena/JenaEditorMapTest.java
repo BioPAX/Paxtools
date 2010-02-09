@@ -3,6 +3,7 @@ package org.biopax.paxtools.io.jena;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -19,11 +20,11 @@ public class JenaEditorMapTest
     {
         for (BioPAXLevel level : BioPAXLevel.values())
         {
-            //TODO
             JenaEditorMap editorMap = new JenaEditorMap(level);
             FileOutputStream outputStream =
-                    new FileOutputStream(
-                            "target/Level" + level.getValue() + "Editor.properties");
+                    new FileOutputStream( // to 'target' dir ;)
+                    	getClass().getResource("").getFile() + File.separator +
+                        "Level" + level.getValue() + "Editor.properties");
 	        editorMap.writeSimpleEditorMapProperties(outputStream);
             outputStream.close();
 

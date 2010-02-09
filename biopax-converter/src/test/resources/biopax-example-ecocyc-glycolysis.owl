@@ -759,7 +759,7 @@
 							</bp:physicalEntityParticipant>
 						</bp:LEFT>
 						<bp:NAME rdf:datatype="xs:string">6PFRUCTPHOS-RXN</bp:NAME>
-						<bp:DELTA-G>-3.4</bp:DELTA-G>
+						<bp:DELTA-G><bp:deltaGprimeO rdf:ID="deltaG-minus-3.4"><bp:DELTA-G-PRIME-O>-3.4</bp:DELTA-G-PRIME-O></bp:deltaGprimeO></bp:DELTA-G>
 					</bp:biochemicalReaction>
 				</bp:CONTROLLED>
 				<bp:CONTROLLER>
@@ -1043,7 +1043,7 @@
 						<bp:SYNONYMS rdf:datatype="xs:string">PHOSPHOGLYCERATE
 							PHOSPHOMUTASE</bp:SYNONYMS>
 						<bp:EC-NUMBER rdf:datatype="xs:string">5.4.2.1</bp:EC-NUMBER>
-						<bp:DELTA-G>1.1</bp:DELTA-G>
+						<bp:DELTA-G><bp:deltaGprimeO rdf:ID="deltaG-1.1"><bp:DELTA-G-PRIME-O>1.1</bp:DELTA-G-PRIME-O></bp:deltaGprimeO></bp:DELTA-G>
 						<bp:SYNONYMS rdf:datatype="xs:string">PHOSPHOGLYCEROMUTASE
 						</bp:SYNONYMS>
 						<bp:NAME rdf:datatype="xs:string">3PGAREARR-RXN</bp:NAME>
@@ -1459,7 +1459,7 @@
 								<bp:LEFT rdf:resource="#physicalEntityParticipant61" />
 								<bp:NAME rdf:datatype="xs:string">2-phosphoglycerate dehydration
 								</bp:NAME>
-								<bp:DELTA-G>0.4</bp:DELTA-G>
+								<bp:DELTA-G><bp:deltaGprimeO rdf:ID="deltaG-0.4"><bp:DELTA-G-PRIME-O>0.4</bp:DELTA-G-PRIME-O></bp:deltaGprimeO></bp:DELTA-G>
 								<bp:EC-NUMBER rdf:datatype="xs:string">4.2.1.11</bp:EC-NUMBER>
 							</bp:biochemicalReaction>
 						</bp:CONTROLLED>
@@ -2874,7 +2874,7 @@
 				<bp:EC-NUMBER rdf:datatype="xs:string">1.2.1.12</bp:EC-NUMBER>
 				<bp:SYNONYMS rdf:datatype="xs:string">GAPDH</bp:SYNONYMS>
 				<bp:XREF rdf:resource="#publicationXref14" />
-				<bp:DELTA-G>1.5</bp:DELTA-G>
+				<bp:DELTA-G><bp:deltaGprimeO rdf:ID="deltaG-1.5"><bp:DELTA-G-PRIME-O>1.5</bp:DELTA-G-PRIME-O></bp:deltaGprimeO></bp:DELTA-G>
 				<bp:LEFT>
 					<bp:physicalEntityParticipant rdf:ID="physicalEntityParticipant184">
 						<bp:CELLULAR-LOCATION rdf:resource="#openControlledVocabulary17" />
@@ -4026,7 +4026,7 @@
 		<bp:SYNONYMS rdf:datatype="xs:string">PHOSPHOHEXOMUTASE</bp:SYNONYMS>
 		<bp:SYNONYMS rdf:datatype="xs:string">PHOSPHOHEXOISOMERASE
 		</bp:SYNONYMS>
-		<bp:DELTA-G>0.4</bp:DELTA-G>
+		<bp:DELTA-G rdf:resource="#deltaG-0.4"></bp:DELTA-G>
 		<bp:RIGHT rdf:resource="#physicalEntityParticipant22" />
 		<bp:SYNONYMS rdf:datatype="xs:string">HEXOSEPHOSPHATE ISOMERASE
 		</bp:SYNONYMS>
@@ -4400,7 +4400,7 @@
 					the putative class I aldolase is only synthesized during growth on
 					C3 compounds and not on glucose, implying that a class I aldolase
 					is preferred for gluconeogenesis |CITS:[73229139]|</bp:COMMENT>
-				<bp:DELTA-G>5.7</bp:DELTA-G>
+				<bp:DELTA-G><bp:deltaGprimeO rdf:ID="deltaG-5.7"><bp:DELTA-G-PRIME-O>5.7</bp:DELTA-G-PRIME-O></bp:deltaGprimeO></bp:DELTA-G>
 				<bp:EC-NUMBER rdf:datatype="xs:string">4.1.2.13</bp:EC-NUMBER>
 				<bp:SYNONYMS rdf:datatype="xs:string">ALDOLASE</bp:SYNONYMS>
 				<bp:LEFT rdf:resource="#physicalEntityParticipant29" />

@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,19 +18,22 @@ public class BiopaxValidatorClientTest {
 	public void testClientHtml() throws IOException {
 		BiopaxValidatorClient client = new BiopaxValidatorClient(null, true);
 		File[] files = new File[] {
-				new File(getClass().getResource("data/biopax3-short-metabolic-pathway.owl").getFile()),
-				new File(getClass().getResource("data/testBiopaxElementIdRule.owl").getFile())
+				new File(getClass().getResource(File.separator 
+						+ "testBiopaxElementIdRule.owl").getFile())
 		};
-		client.validate(files, new FileOutputStream("target/result.html"));
+		client.validate(files, new FileOutputStream("target"
+				+ File.separator + "result.html"));
     }
 	
 	@Test
 	public void testClientXml() throws IOException {
 		BiopaxValidatorClient client = new BiopaxValidatorClient();
 		File[] files = new File[] {
-				new File(getClass().getResource("data/testBiopaxElementIdRule.owl").getFile())
+				new File(getClass().getResource(File.separator 
+						+ "testBiopaxElementIdRule.owl").getFile())
 		};
-		client.validate(files, new FileOutputStream("target/result.xml"));
+		client.validate(files, new FileOutputStream("target" 
+				+ File.separator + "result.xml"));
     }
 	
 }

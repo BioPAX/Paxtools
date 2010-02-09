@@ -138,9 +138,9 @@ public class SimpleExporter
             if (base!=null && id.startsWith(base))
             {
                 //id = id.substring(id.lastIndexOf('#'));
-            	id = id.substring(base.length());
+            	id = '#' + id.substring(base.length());
             }
-            out.write(" rdf:resource=\"#" + id + "\" />");
+            out.write(" rdf:resource=\"" + id + "\" />");
         }
         else
         {

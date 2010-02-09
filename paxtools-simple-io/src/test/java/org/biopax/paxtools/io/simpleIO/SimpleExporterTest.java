@@ -6,7 +6,6 @@ package org.biopax.paxtools.io.simpleIO;
  * Time: 12:11:27 PM
  */
 
-import static org.junit.Assert.fail;
 import junit.framework.TestCase;
 
 import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
@@ -17,6 +16,7 @@ import org.biopax.paxtools.model.level3.Protein;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -33,7 +33,8 @@ public class SimpleExporterTest extends TestCase
     	SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L2);
         Model model = BioPAXLevel.L2.getDefaultFactory().createModel();
         FileOutputStream out = new FileOutputStream(
-        		getClass().getResource("").getFile() + "/simple.owl"
+        		getClass().getResource("").getFile() 
+        		+ File.separator + "simple.owl"
         	);
         simpleExporter.convertToOWL(model, out);
         out.close();
@@ -43,14 +44,15 @@ public class SimpleExporterTest extends TestCase
 	@Test
 	public void testReadWriteL2()
 	{
-		String s = "/samples/L2/biopax_id_557861_mTor_signaling.owl";
+		String s = "L2" + File.separator 
+			+ "biopax_id_557861_mTor_signaling.owl";
 		SimpleReader simpleReader = new SimpleReader();
 		
 		System.out.println("file = " + s);
 		    try
 		    {
 			    System.out.println("starting "+s);
-			    InputStream in = getClass().getResourceAsStream(s);
+			    InputStream in = getClass().getClassLoader().getResourceAsStream(s);
 			    assertNotNull(in);
 				Model model =   simpleReader.convertFromOWL(in);
 				assertNotNull(model);
@@ -58,7 +60,8 @@ public class SimpleExporterTest extends TestCase
 			    System.out.println("Model has "+model.getObjects().size()+" objects)");
 			    FileOutputStream out =
 	                new FileOutputStream(
-	                	getClass().getResource("").getFile() + "/simpleReadWrite.owl"
+	                	getClass().getResource("").getFile() 
+	                	+ File.separator + "simpleReadWrite.owl"
 	                	);
 				SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L2);
 				simpleExporter.convertToOWL(model, out);
@@ -74,21 +77,22 @@ public class SimpleExporterTest extends TestCase
 	@Test
 	public void testReadWriteL3()
 	{
-		String s = "/samples/L3/biopax3-short-metabolic-pathway.owl";
+		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
 		SimpleReader simpleReader = new SimpleReader(BioPAXLevel.L3);
 		
 		System.out.println("file = " + s);
 		    try
 		    {
 			    System.out.println("starting "+s);
-			    InputStream in =  getClass().getResourceAsStream(s);
+			    InputStream in =  getClass().getClassLoader().getResourceAsStream(s);
 				Model model =   simpleReader.convertFromOWL(in);
 				assertNotNull(model);
 				assertFalse(model.getObjects().isEmpty());
 			    System.out.println("Model has "+model.getObjects().size()+" objects)");
 			    FileOutputStream out =
 	                new FileOutputStream(
-	                	getClass().getResource("").getFile() + "/simpleReadWrite.owl"
+	                	getClass().getResource("").getFile() 
+	                	+ File.separator + "simpleReadWrite.owl"
 	                	);
 				SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L3);
 				simpleExporter.convertToOWL(model, out);
@@ -113,8 +117,9 @@ public class SimpleExporterTest extends TestCase
     	m.add(p);
     	
 	    FileOutputStream out =
-            new FileOutputStream(
-            	getClass().getResource("").getFile() + "/testDuplicateNamesByExporter.xml"
+            new FileOutputStream( // to the target test dir
+            	getClass().getResource("").getFile() 
+            		+ File.separator + "testDuplicateNamesByExporter.xml"
             	);
 		SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L3);
 		simpleExporter.convertToOWL(m, out);
@@ -122,8 +127,8 @@ public class SimpleExporterTest extends TestCase
     	
 		// read
     	BufferedReader in = new BufferedReader(
-    		new FileReader(
-    			getClass().getResource("testDuplicateNamesByExporter.xml").getFile()));
+    		new FileReader(getClass().getResource("").getFile() 
+            		+ File.separator + "testDuplicateNamesByExporter.xml"));
     	char[] buf = new char[1000];
     	in.read(buf);
     	String xml = new String(buf);

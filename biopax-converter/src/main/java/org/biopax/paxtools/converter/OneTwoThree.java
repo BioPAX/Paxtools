@@ -44,6 +44,11 @@ import org.biopax.paxtools.model.level3.Stoichiometry;
 /**
  * Converts BioPAX L1 and L2 to Level 3.
  * 
+ * Notes:
+ * - it does not fix existing BioPAX errors (TODO add validation/normalization in the future, maybe)
+ * - most but not all things are converted (e.g., complex.ORGANISM property cannot...)
+ * - phy. entities "clones" - because, during L1 or L2 data read, all re-used pEPs are duplicated... (TODO filter after the conversion)
+ * 
  * @author rodch
  *
  */
@@ -60,7 +65,6 @@ public final class OneTwoThree implements ModelFilter {
 		editorMap2 = new SimpleEditorMap(BioPAXLevel.L2);
 		editorMap3 = new SimpleEditorMap(BioPAXLevel.L3);
 	}
-	
 	
 	/**
 	 * Default Constructor 
@@ -105,6 +109,7 @@ public final class OneTwoThree implements ModelFilter {
 		}
 		
 		final Model newModel = factory.createModel();
+		newModel.getNameSpacePrefixMap().putAll(model.getNameSpacePrefixMap());
 		
 		// facilitate the conversion
 		normalize(model);
@@ -183,8 +188,9 @@ public final class OneTwoThree implements ModelFilter {
 			}
 		}
 		
-		//TODO add step processes to the pathway components (L3)
+		// TODO add step processes to the pathway components (L3)
 		
+		// TODO remove clones
 		
 	}
 
@@ -325,7 +331,7 @@ public final class OneTwoThree implements ModelFilter {
 					
 			if(value instanceof Level2Element) // not a String, Enum, or primitive type
 			{ 
-				// when pEP - add its stoichiometry
+				// when pEP - add its stoichiometry, 
 				if(value instanceof physicalEntityParticipant) 
 				{
 					physicalEntityParticipant pep = (physicalEntityParticipant) value;
@@ -338,9 +344,9 @@ public final class OneTwoThree implements ModelFilter {
 						stoichiometry.setRDFId(pe3.getRDFId() + "-stoichiometry");
 						stoichiometry.setStoichiometricCoefficient(coeff);
 						stoichiometry.setPhysicalEntity(pe3);
-						newModel.add(stoichiometry);
 						Conversion conv = (Conversion) newModel.getByID(parent.getRDFId());
 						conv.addParticipantStoichiometry(stoichiometry);
+						newModel.add(stoichiometry);
 					} else if (coeff != BioPAXElement.UNKNOWN_FLOAT) {
 						if (log.isDebugEnabled())
 							log.debug(pep + " STOICHIOMETRIC_COEFFICIENT is "
@@ -376,11 +382,32 @@ public final class OneTwoThree implements ModelFilter {
 			if (newParent != null && newProp != null) {
 				PropertyEditor newEditor = 
 					editorMap3.getEditorForProperty(newProp, newParent.getModelInterface());
-				if(newEditor != null){
-					if(newEditor instanceof PrimitivePropertyEditor) {
-						newValue = newValue.toString();
+				if (newEditor != null){
+					setNewProperty(newParent, newValue, newEditor);
+				} else // Special mapping for 'AVAILABILITY' and 'DATA-SOURCE'!
+				if(parent instanceof physicalEntity) {
+					// find parent pEP(s)
+					Set<physicalEntityParticipant> ppeps = ((physicalEntity)parent).isPHYSICAL_ENTITYof();
+					// if several pEPs use the same phy.entity, we get this property/value cloned...
+					for(physicalEntityParticipant pep: ppeps) {
+						//find proper L3 physical entity
+						newParent = getMappedPep(pep, newModel);
+						if(newParent != null) {
+							newEditor = 
+								editorMap3.getEditorForProperty(
+										newProp, newParent.getModelInterface());
+							setNewProperty(newParent, newValue, newEditor);
+						} else { // bug!
+							log.error("Cannot find converted PE to map the property " 
+								+ editor.getProperty() 
+								+ " of physicalEntity " 
+								+ parent + " (" + parentType + ")");
+						}
 					}
-					newEditor.setPropertyToBean(newParent, newValue);
+				} else {
+					log.warn("Skipping property " 
+						+ editor.getProperty() 
+						+ " of " + parent + " (" + parentType + ")");
 				}
 			} else if(newProp == null){
 				log.warn("No mapping defined for property: " 
@@ -394,6 +421,15 @@ public final class OneTwoThree implements ModelFilter {
 			}
 		}
 
+
+	private void setNewProperty(BioPAXElement newParent, Object newValue, PropertyEditor newEditor) {
+		if(newEditor != null){
+			if(newEditor instanceof PrimitivePropertyEditor) {
+				newValue = newValue.toString();
+			}
+			newEditor.setPropertyToBean(newParent, newValue);
+		}		
+	}
 
 	/*
 	 * pEP->PE; pE->ER class mapping was done for "simple" entities;

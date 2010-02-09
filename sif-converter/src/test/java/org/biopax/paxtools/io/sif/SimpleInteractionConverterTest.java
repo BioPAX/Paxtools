@@ -32,7 +32,7 @@ public class SimpleInteractionConverterTest
 
 		BioPAXIOHandler handler =  new SimpleReader(null, BioPAXLevel.L2);
 
-		String pathname = "/samples/L2";
+		String pathname = File.separator + "L2";
 		File testDir = new File(getClass().getResource(pathname).toURI());
 		FilenameFilter filter = new FilenameFilter()
 		{
@@ -45,10 +45,11 @@ public class SimpleInteractionConverterTest
 		for (String s : testDir.list(filter))
 
 		{
-			InputStream in = getClass().getResourceAsStream(pathname + "/" + s);
+			InputStream in = getClass().getResourceAsStream(pathname + 
+					File.separator + s);
 			Model level2 = handler.convertFromOWL(in);
 			FileOutputStream out =
-				new FileOutputStream("target/" + s + ".sif");
+				new FileOutputStream("target" + File.separator + s + ".sif");
 			converter.writeInteractionsInSIF(level2,out);
 			in.close();
 			out.close();
@@ -66,7 +67,7 @@ public class SimpleInteractionConverterTest
                 options, new ControlRule(), new ParticipatesRule());
 
 		BioPAXIOHandler handler =  new SimpleReader(null, BioPAXLevel.L2);
-		String pathname = "/samples/L2";
+		String pathname = File.separator + "L2";
 		File testDir = new File(getClass().getResource(pathname).toURI());
 		FilenameFilter filter = new FilenameFilter()
 		{
@@ -79,14 +80,16 @@ public class SimpleInteractionConverterTest
 		for (String s : testDir.list(filter))
 
 		{
-			InputStream in = getClass().getResourceAsStream(pathname + "/" + s);
+			InputStream in = getClass().getResourceAsStream(pathname + 
+					File.separator + s);
 			Model level2 = handler.convertFromOWL(in);
 			FileOutputStream edges =
-				new FileOutputStream("target/" + s + ".sifx");
+				new FileOutputStream(getClass().getResource("").getFile() 
+		        		+ File.separator + s + ".sifx");
 			FileOutputStream nodes =
-				new FileOutputStream("target/" +s + ".sifnx");
+				new FileOutputStream(getClass().getResource("").getFile() 
+		        		+ File.separator + s + ".sifnx");
 			converter.writeInteractionsInSIFNX(level2,edges,nodes,true, handler.getEditorMap(),"NAME","XREF");
-            //todo
 			in.close();
 			edges.close();
 			nodes.close();

@@ -14,45 +14,21 @@ import java.util.Set;
  */
 public class EquivalenceTest
 {
+	
 	@Test
-	public void loadAndCheckForEquivalentPEPs() throws URISyntaxException
+	public void loadAndCheckForEquivalentPEPs() throws URISyntaxException, IOException
 	{
 		JenaIOHandler jenaIOHandler = new JenaIOHandler(null, BioPAXLevel.L2);
-//		Model merged = jenaIOHandler.factory.createModel();
-//		Merger merger = new Merger(jenaIOHandler.editorMap);
-		String pathname = "/samples/L2";
-		File testDir = new File(getClass().getResource(pathname).toURI());
-		FilenameFilter filter = new FilenameFilter()
-		{
-			public boolean accept(File dir, String name)
-			{
-				return (name.endsWith(".owl"));
-			}
-		};
-
-		for (String s : testDir.list(filter))
-		{
-			try
-			{
-				readAndCheckEquivalents(pathname, s, jenaIOHandler);
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-
-		}
-
-
+		String pathname =  File.separator + "biopax_id_557861_mTor_signaling.owl";
+		readAndCheckEquivalents(pathname, pathname, jenaIOHandler);
 	}
 
 	private void readAndCheckEquivalents(String pathname, String s,
 	                                     JenaIOHandler jenaIOHandler)
 		throws IOException
 	{
-		InputStream in = getClass().getResourceAsStream(pathname + "/" + s);
-		Model level2 =
-			jenaIOHandler.convertFromOWL(in);
+		InputStream in = getClass().getResourceAsStream(s);
+		Model level2 = jenaIOHandler.convertFromOWL(in);
 
 		Set<physicalEntity> bpeSet =
 			level2.getObjects(physicalEntity.class);
