@@ -278,15 +278,11 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 * and adds to the new model
 	 */
 	private ControlledVocabulary convertAndAddVocabulary(openControlledVocabulary value,
-			Level2Element parent, Model newModel, String newProp) {
+			Level2Element parent, Model newModel, PropertyEditor newEditor) {
 		ControlledVocabulary cv = null;
 		String id = ((BioPAXElement) value).getRDFId();
 		
 		if (!newModel.containsID(id)) {
-			BioPAXElement newParent = newModel.getByID(parent.getRDFId());
-			// map oCVs to the OneTwoThree CVs using the property context
-			PropertyEditor newEditor = editorMap3.getEditorForProperty(
-					newProp, newParent.getModelInterface());
 			if (newEditor != null) {
 				cv = (ControlledVocabulary) 
 					factory.reflectivelyCreate(newEditor.getRange());
@@ -296,7 +292,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 				traverse(value, newModel);
 			} else {
 				log.warn("Cannot Convert CV: " + value
-					+ " (for prop.: " + newProp + ")");
+					+ " (for prop.: " + newEditor + ")");
 			}
 		} else {
 			cv = (ControlledVocabulary) newModel.getByID(id);
@@ -386,7 +382,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 				{
 					// create the proper type ControlledVocabulary instance	
 					newValue = convertAndAddVocabulary((openControlledVocabulary)value, 
-						(Level2Element)parent, newModel, newProp);
+						(Level2Element)parent, newModel, newEditor);
 				}
 				else
 				{
