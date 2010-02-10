@@ -1,22 +1,25 @@
 package org.biopax.paxtools.converter;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.controller.AbstractTraverser;
 import org.biopax.paxtools.controller.EditorMap;
 import org.biopax.paxtools.controller.ModelFilter;
 import org.biopax.paxtools.controller.PrimitivePropertyEditor;
 import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.controller.PropertyFilter;
 import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.InteractionParticipant;
 import org.biopax.paxtools.model.level2.Level2Element;
+import org.biopax.paxtools.model.level2.complex;
 import org.biopax.paxtools.model.level2.control;
 import org.biopax.paxtools.model.level2.conversion;
 import org.biopax.paxtools.model.level2.dna;
@@ -27,8 +30,10 @@ import org.biopax.paxtools.model.level2.pathwayStep;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.model.level2.protein;
+import org.biopax.paxtools.model.level2.relationshipXref;
 import org.biopax.paxtools.model.level2.rna;
 import org.biopax.paxtools.model.level2.smallMolecule;
+import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.DnaRegion;
@@ -36,6 +41,7 @@ import org.biopax.paxtools.model.level3.Level3Element;
 import org.biopax.paxtools.model.level3.Level3Factory;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Protein;
+import org.biopax.paxtools.model.level3.RelationshipTypeVocabulary;
 import org.biopax.paxtools.model.level3.RnaRegion;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.model.level3.SmallMolecule;
@@ -52,25 +58,39 @@ import org.biopax.paxtools.model.level3.Stoichiometry;
  * @author rodch
  *
  */
-public final class OneTwoThree implements ModelFilter {
+public final class OneTwoThree extends AbstractTraverser implements ModelFilter {
 	private static final Log log = LogFactory.getLog(OneTwoThree.class);
 	private Level3Factory factory;
 	private Properties classesmap;
 	private Properties propsmap;
 	
-	public static EditorMap editorMap2;
-	public static EditorMap editorMap3;
-	
-	static {
-		editorMap2 = new SimpleEditorMap(BioPAXLevel.L2);
-		editorMap3 = new SimpleEditorMap(BioPAXLevel.L3);
-	}
+	public static EditorMap editorMap2 = new SimpleEditorMap(BioPAXLevel.L2);
+	public static EditorMap editorMap3 = new SimpleEditorMap(BioPAXLevel.L3);
 	
 	/**
 	 * Default Constructor 
-	 * (it also loads 'classesmap' and 'propsmap' from property files)
+	 * that also loads 'classesmap' and 'propsmap' 
+	 * from the properties files.
 	 */
 	public OneTwoThree() {
+		super(editorMap2, new PropertyFilter() {
+			public boolean filter(PropertyEditor editor) {
+				return !editor.getProperty().equals("STOICHIOMETRIC-COEFFICIENT"); 
+				// will be set manually (pEPs special case)
+			}
+		  },
+		  new PropertyFilter() {
+			public boolean filter(PropertyEditor editor) {
+				return 
+					!( 
+						editor.getProperty().equals("ORGANISM")
+						&& complex.class.isAssignableFrom(editor.getDomain())
+					); 
+				// L3 Complex has no 'organism' property
+			}
+		  }
+		);
+		
 		factory = (Level3Factory) BioPAXLevel.L3.getDefaultFactory();
 		// load L2-L3 classes map
 		classesmap = new Properties();
@@ -135,6 +155,8 @@ public final class OneTwoThree implements ModelFilter {
 				|| e instanceof openControlledVocabulary) {
 				continue;
 			}
+			
+			// map properties
 			traverse((Level2Element) e, newModel);
 		}
 
@@ -282,80 +304,83 @@ public final class OneTwoThree implements ModelFilter {
 		
 		return cv;
 	}
-
-	private void traverse(Level2Element element, Model newModel) {
-		if (element == null) {
-			return;
-		}
-		
-		Set<PropertyEditor> editors = editorMap2.getEditorsOf(element);
-		if(editors == null || editors.isEmpty()) {
-			if(log.isWarnEnabled())
-				log.warn("No editors for : " + element.getModelInterface());
-			return;
-		}
-			
-		for (PropertyEditor editor : editors) {
-			if (editor.isMultipleCardinality()) {
-				for (Object value : (Collection) editor.getValueFromBean(element)) {
-					processValue(value, element, newModel, editor);
-				}
-			} else {
-				Object value = editor.getValueFromBean(element);
-				processValue(value, element, newModel, editor);
-			}
-		}
-	}
 	
-	private void processValue(Object value, BioPAXElement parent, Model newModel, PropertyEditor editor) 
+	// parent class's abstract method implementation
+	protected void visit(Object value, BioPAXElement parent, 
+			Model newModel, PropertyEditor editor) 
 	{
 			if(editor != null && editor.isUnknown(value)) {
 				return;
 			}
 
+			String parentType = parent.getModelInterface().getSimpleName();
 			BioPAXElement newParent = null;
 			Object newValue = value;
-			
 			String newProp = propsmap.getProperty(editor.getProperty());
+			
 			// special case (PATHWAY-COMPONENTS maps to pathwayComponent or pathwayOrder)
 			if(parent instanceof pathway && value instanceof pathwayStep
 					&& editor.getProperty().equals("PATHWAY-COMPONENTS")) {
 				newProp = "pathwayOrder";
 			}
 			
+			// for pEPs, getting the corresponding simple PE or Complex is different
 			if(parent instanceof physicalEntityParticipant) {
 				newParent = getMappedPep((physicalEntityParticipant) parent, newModel);
 			} else {
 				newParent = newModel.getByID(parent.getRDFId());
 			}
-					
-			if(value instanceof Level2Element) // not a String, Enum, or primitive type
+			
+			// bug check!
+			if(newParent == null) {
+				throw new IllegalAccessError("Of " + value + 
+					", parent " + parentType + " : " + parent +
+					" is not yet in the new model: ");
+			}
+			
+			PropertyEditor newEditor = 
+				editorMap3.getEditorForProperty(newProp, newParent.getModelInterface());
+			
+			if(value instanceof Level2Element) 
+			// not a String, Enum, or primitive type
 			{ 
-				// when pEP - add its stoichiometry, 
+				// when pEP, create/add stoichiometry! 
 				if(value instanceof physicalEntityParticipant) 
 				{
 					physicalEntityParticipant pep = (physicalEntityParticipant) value;
 					newValue = getMappedPep(pep, newModel);
-					PhysicalEntity pe3 = (PhysicalEntity) newValue;
+					
 					float coeff = (float) pep.getSTOICHIOMETRIC_COEFFICIENT();
-					if (coeff != BioPAXElement.UNKNOWN_DOUBLE
-						&& parent instanceof conversion) {
+					if (coeff > 1 ) { //!= BioPAXElement.UNKNOWN_DOUBLE) {
+					  if(parent instanceof conversion || parent instanceof complex) { 
+						PhysicalEntity pe3 = (PhysicalEntity) newValue;
 						Stoichiometry stoichiometry = factory.reflectivelyCreate(Stoichiometry.class);
 						stoichiometry.setRDFId(pe3.getRDFId() + "-stoichiometry");
 						stoichiometry.setStoichiometricCoefficient(coeff);
 						stoichiometry.setPhysicalEntity(pe3);
-						Conversion conv = (Conversion) newModel.getByID(parent.getRDFId());
-						conv.addParticipantStoichiometry(stoichiometry);
+						System.out.println("parent=" + parent + "; phy.ent.=" + pep + "; coeff=" + coeff);
+						if (parent instanceof conversion) {
+							// (pep) value participates in the conversion interaction
+							Conversion conv = (Conversion) newModel
+								.getByID(parent.getRDFId());
+							conv.addParticipantStoichiometry(stoichiometry);	
+						} else {
+							// this (pep) value is component of the complex
+							Complex cplx = (Complex) newModel.getByID(parent.getRDFId());
+							cplx.addComponentStoichiometry(stoichiometry);
+						} 
+						
 						newModel.add(stoichiometry);
-					} else if (coeff != BioPAXElement.UNKNOWN_FLOAT) {
+						
+					  } else {
 						if (log.isDebugEnabled())
 							log.debug(pep + " STOICHIOMETRIC_COEFFICIENT is "
-								+ coeff	+ ", but the pEP's parent is not a conversion - "
-								+ parent);
+							+ coeff	+ ", but the pEP's parent is not " +
+							"a conversion or complex - " + parent);
+					  }
 					}
 					
 					traverse(pep, newModel);
-					
 				}
 				else if(value instanceof openControlledVocabulary) 
 				{
@@ -368,6 +393,21 @@ public final class OneTwoThree implements ModelFilter {
 					String id = ((Level2Element) value).getRDFId();
 					newValue = newModel.getByID(id);
 				}
+			} else {
+				// relationshipXref.RELATIONSHIP-TYPE range changed (String -> RelationshipTypeVocabulaty)
+				if(parent instanceof relationshipXref && editor.getProperty().equals("RELATIONSHIP-TYPE")) {
+					String id = URLEncoder.encode(value.toString());
+					if(!newModel.containsID(id)) {
+						RelationshipTypeVocabulary cv = (RelationshipTypeVocabulary) 
+							factory.reflectivelyCreate(newEditor.getRange());
+						cv.setRDFId(id);
+						cv.addTerm(value.toString().toLowerCase()); // TODO later, normalize, add xref, check term...
+						newModel.add(cv);
+						newValue = cv;
+					} else {
+						newValue = newModel.getByID(id);
+					}
+				}
 			}
 			
 			if(newValue == null) {
@@ -377,15 +417,11 @@ public final class OneTwoThree implements ModelFilter {
 				return;
 			}
 			
-			String parentType = parent.getModelInterface().getSimpleName();
-			
-			if (newParent != null && newProp != null) {
-				PropertyEditor newEditor = 
-					editorMap3.getEditorForProperty(newProp, newParent.getModelInterface());
+			if (newProp != null) {
 				if (newEditor != null){
 					setNewProperty(newParent, newValue, newEditor);
 				} else // Special mapping for 'AVAILABILITY' and 'DATA-SOURCE'!
-				if(parent instanceof physicalEntity) {
+				  if(parent instanceof physicalEntity) {
 					// find parent pEP(s)
 					Set<physicalEntityParticipant> ppeps = ((physicalEntity)parent).isPHYSICAL_ENTITYof();
 					// if several pEPs use the same phy.entity, we get this property/value cloned...
@@ -405,20 +441,17 @@ public final class OneTwoThree implements ModelFilter {
 						}
 					}
 				} else {
-					log.warn("Skipping property " 
+					log.info("Skipping property " 
 						+ editor.getProperty() 
-						+ " of " + parent + " (" + parentType + ")");
+						+ " in " + parentType + " to " +
+						newParent.getModelInterface().getSimpleName() 
+						+ " convertion (" + parent + ")");
 				}
-			} else if(newProp == null){
+			} else {
 				log.warn("No mapping defined for property: " 
 						+ parentType + "."
 						+ editor.getProperty());
-			} else {
-				throw new IllegalAccessError("Of " + value + 
-						", parent " + parentType + 
-						" : " + parent +
-						" is not yet in the new model: ");
-			}
+			} 
 		}
 
 
@@ -439,15 +472,15 @@ public final class OneTwoThree implements ModelFilter {
 	private PhysicalEntity getMappedPep(physicalEntityParticipant pep, Model newModel) {
 		String id = pep.getRDFId();
 		BioPAXElement pe = newModel.getByID(id);
-		physicalEntity pe2 = pep.getPHYSICAL_ENTITY();
+		physicalEntity pe2er = pep.getPHYSICAL_ENTITY();
 		
 		String inf = "pEP " + pep + " that contains " 
-		+ pe2.getModelInterface().getSimpleName();
-		if(!isSimplePhysicalEntity(pe2)) {
+		+ pe2er.getModelInterface().getSimpleName();
+		if(!isSimplePhysicalEntity(pe2er)) {
 			if(pe == null) {
 				if(log.isDebugEnabled())
-					log.debug(inf + " gets new ID: " + pe2.getRDFId());
-				pe = newModel.getByID(pe2.getRDFId());
+					log.debug(inf + " gets new ID: " + pe2er.getRDFId());
+				pe = newModel.getByID(pe2er.getRDFId());
 			} else { // error: complex and basic p.entity's pEP 
 				throw new IllegalAccessError("Illegal conversion of pEP: " + inf); 
 			}
@@ -477,4 +510,5 @@ public final class OneTwoThree implements ModelFilter {
 		String id = bpe.getRDFId();
 		return (id != null) ? id.replaceFirst("^.+#", "") : null;
 	}
+
 }

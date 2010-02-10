@@ -40,8 +40,8 @@ public class ReusedPEPHelper
     {
         if (duplicated(pep, bpe))
         {
-
-            log.warn(pep.getRDFId() +
+        	if(log.isWarnEnabled())
+        		log.warn(pep.getRDFId() +
                      " is reused, duplicating it to fix");
 
             physicalEntityParticipant duplicated =
