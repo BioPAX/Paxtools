@@ -358,7 +358,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 						stoichiometry.setRDFId(pe3.getRDFId() + "-stoichiometry");
 						stoichiometry.setStoichiometricCoefficient(coeff);
 						stoichiometry.setPhysicalEntity(pe3);
-						System.out.println("parent=" + parent + "; phy.ent.=" + pep + "; coeff=" + coeff);
+						//System.out.println("parent=" + parent + "; phy.ent.=" + pep + "; coeff=" + coeff);
 						if (parent instanceof conversion) {
 							// (pep) value participates in the conversion interaction
 							Conversion conv = (Conversion) newModel
