@@ -19,7 +19,7 @@ public class Traverser
 // ------------------------------ FIELDS ------------------------------
 
 	private final EditorMap editorMap;
-	private final Visitor visitor;
+	private Visitor visitor;
 	private PropertyFilter[] filters;
 	protected final Log log = LogFactory.getLog(Traverser.class);
 
@@ -33,6 +33,16 @@ public class Traverser
 		this.filters = filters;
 	}
 
+// -------------------------- SETTERS/GETTERS ------------------------
+	
+	public void setVisitor(Visitor visitor) {
+		this.visitor = visitor;
+	}
+	
+	public Visitor getVisitor() {
+		return visitor;
+	}
+	
 // -------------------------- OTHER METHODS --------------------------
 
 	/**
@@ -54,7 +64,8 @@ public class Traverser
 
 		if(editors == null)
 		{
-			log.warn("No editors for : " + element.getModelInterface());
+			if(log.isWarnEnabled())
+				log.warn("No editors for : " + element.getModelInterface());
 			return;
 		}
 		for (PropertyEditor editor : editors)

@@ -44,9 +44,10 @@ public class Fetcher implements Visitor
      * for its dependent elements.
      *
      * @param domain
-     *@param range
+     * @param range
      * @param model model into which the element will be added
-     * @param editor editor that is going to be used for traversing functionality   @see org.biopax.paxtools.controller.Traverser
+     * @param editor editor that is going to be used for traversing functionality   
+     * @see org.biopax.paxtools.controller.Traverser
      * 
      */
     public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
