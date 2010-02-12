@@ -63,11 +63,13 @@ public abstract class AbstractTraverser extends Traverser
 		
 			if(range instanceof BioPAXElement) {
 				if(path.contains(range)) {
-					log.error("Cyclic inclusion of " 
-							+ ((BioPAXElement)range).getRDFId() 
-							+ " : " + path.toString());
+				    if(log.isWarnEnabled())
+					log.warn("Cyclic inclusion of " 
+						+ ((BioPAXElement)range).getRDFId() 
+						+ " : " + path.toString());
 					return;
-				} 
+				}
+ 
 				path.add((BioPAXElement) range);
 				
 				if(log.isTraceEnabled())

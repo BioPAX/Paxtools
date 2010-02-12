@@ -8,6 +8,8 @@ import org.biopax.paxtools.model.Model;
  * its dependent elements) and to add this element into a model
  * using the visitor and traverse functionalities.
  *
+ * FIXME may fail (StackOverFlow) when there is a cycle (@see  org.biopax.paxtools.controller.AbstractTraverser)
+ * 
  * @see org.biopax.paxtools.controller.Visitor
  * @see org.biopax.paxtools.controller.Traverser
  *
@@ -32,6 +34,15 @@ public class Fetcher implements Visitor
 	public Fetcher(EditorMap map)
 	{
 		traverser = new Traverser(map, this);
+	}
+
+	/**
+	* Constructor that uses property filters
+	*
+	*/
+	public Fetcher(EditorMap map, PropertyFilter... filters)
+	{
+		traverser = new Traverser(map, this, filters);
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

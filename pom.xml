@@ -45,18 +45,16 @@
 		<profile>
 			<id>rodche</id>
 			<distributionManagement>
-				<repository>
+				<snapshotRepository>
 					<id>biopax.snapshots</id>
 					<name>Local BioPAX Snapshots Repository</name>
 					<url>file:///Volumes/Work/m2repo-biopax/snapshots</url>
-				</repository>
-				<!-- 
+				</snapshotRepository>
 				<repository>
 					<id>biopax.releases</id>
 					<name>Local BioPAX Repository</name>
 					<url>file:///Volumes/Work/m2repo-biopax/releases</url>
 				</repository>
-				-->
 			</distributionManagement>
 			<properties>
 				<scm.username>rodche</scm.username>
