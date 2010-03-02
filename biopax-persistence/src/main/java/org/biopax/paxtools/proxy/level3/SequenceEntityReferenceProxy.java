@@ -24,11 +24,6 @@ public abstract class SequenceEntityReferenceProxy extends EntityReferenceProxy
 	public SequenceEntityReferenceProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return SequenceEntityReference.class;
-	}
-
 	// Property ORGANISM
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= BioSourceProxy.class)

@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -20,11 +21,6 @@ import javax.persistence.Entity;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class GeneticInteractionProxy extends InteractionProxy implements GeneticInteraction {
 	public GeneticInteractionProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return GeneticInteraction.class;
 	}
 
 // GeneticInteraction
@@ -48,5 +44,10 @@ public class GeneticInteractionProxy extends InteractionProxy implements Genetic
 
     public void setInteractionScore(Score interactionScore) {
 		((GeneticInteraction)object).setInteractionScore(interactionScore);
+    }
+    
+    @Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+    	return GeneticInteraction.class;
     }
 }

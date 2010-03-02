@@ -7,25 +7,24 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import javax.persistence.Transient;
+
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
-
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 /**
  * Proxy for rna
  */
-@Entity(name="l3rna")
+@javax.persistence.Entity(name="l3rna")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class RnaProxy extends SimplePhysicalEntityProxy implements Rna 
 {
 	public RnaProxy() {
 	}
-
+	
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return Rna.class;
 	}
-
 }

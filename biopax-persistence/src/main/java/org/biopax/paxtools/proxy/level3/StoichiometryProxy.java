@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
@@ -22,11 +23,6 @@ public class StoichiometryProxy extends Level3ElementProxy
 	implements Stoichiometry 
 {
 	public StoichiometryProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return Stoichiometry.class;
 	}
 
 	// Property PHYSICAL-ENTITY
@@ -59,6 +55,11 @@ public class StoichiometryProxy extends Level3ElementProxy
 
 	public void setStoichiometricCoefficient(float newSTOICHIOMETRIC_COEFFICIENT) {
 		setStoichiometricCoefficient_x(floatToString(newSTOICHIOMETRIC_COEFFICIENT));
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Stoichiometry.class;
 	}
 }
 

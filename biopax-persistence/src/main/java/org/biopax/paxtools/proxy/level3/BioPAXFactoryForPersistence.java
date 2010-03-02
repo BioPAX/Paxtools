@@ -45,9 +45,6 @@ public class BioPAXFactoryForPersistence implements BioPAXFactory, Level3Factory
 		}
 	}
 
-//	public BioPAXElement reflectivelyCreate(Class<? extends BioPAXElement> c) {
-//		return reflectivelyCreate(c.getSimpleName());
-//	}
 
 	public <T extends BioPAXElement> T reflectivelyCreate(Class<T> c) {
 		return (T)reflectivelyCreate(c.getSimpleName());
@@ -329,4 +326,8 @@ public class BioPAXFactoryForPersistence implements BioPAXFactory, Level3Factory
     	return new CovalentBindingFeatureProxy();
 	}
 
+    public GeneticInteraction createGeneticInteraction() {
+    	return new GeneticInteractionProxy();
+    }
+	
 }

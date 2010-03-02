@@ -7,11 +7,12 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * Proxy for SequenceModificationVocabulary
@@ -23,9 +24,9 @@ public class SequenceModificationVocabularyProxy extends ControlledVocabularyPro
 {
 	public SequenceModificationVocabularyProxy() {
 	}
-
+	
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return SequenceModificationVocabulary.class;
 	}
 }

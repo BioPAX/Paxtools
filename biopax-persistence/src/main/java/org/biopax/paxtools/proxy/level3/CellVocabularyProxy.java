@@ -7,16 +7,16 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import javax.persistence.Transient;
+
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
-
-import javax.persistence.*;
-import javax.persistence.Entity;
 
 /**
  * Proxy for cellVocabulary
  */
-@Entity(name="l3cellvocabulary")
+@javax.persistence.Entity(name="l3cellvocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class CellVocabularyProxy extends ControlledVocabularyProxy 
 	implements CellVocabulary 
@@ -25,7 +25,7 @@ public class CellVocabularyProxy extends ControlledVocabularyProxy
 	}
 
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return CellVocabulary.class;
 	}
 }

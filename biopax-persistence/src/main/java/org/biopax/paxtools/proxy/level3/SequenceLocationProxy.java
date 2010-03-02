@@ -7,10 +7,13 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import java.util.Set;
 import javax.persistence.*;
 
@@ -23,11 +26,6 @@ public class SequenceLocationProxy extends Level3ElementProxy
 	implements SequenceLocation 
 {
 	public SequenceLocationProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return SequenceLocation.class;
 	}
 
 	// Property LOCATION-TYPE
@@ -48,5 +46,10 @@ public class SequenceLocationProxy extends Level3ElementProxy
 
 	public void setRegionType(Set<SequenceRegionVocabulary> regionType) {
 		((SequenceLocation)object).setRegionType(regionType);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return SequenceLocation.class;
 	}
 }

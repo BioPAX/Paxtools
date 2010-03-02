@@ -3,6 +3,7 @@ package org.biopax.paxtools.proxy.level3;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.FragmentFeature;
 import org.hibernate.search.annotations.Indexed;
 
@@ -18,9 +19,7 @@ public class FragmentFeatureProxy extends EntityFeatureProxy
 	implements FragmentFeature
 {
 	@Transient
-	@Override
-	public Class<? extends FragmentFeature> getModelInterface()
-	{
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return FragmentFeature.class;
 	}
 }

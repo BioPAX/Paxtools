@@ -8,13 +8,15 @@
 package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.model.level3.Entity;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
 
-import javax.persistence.*;
 import java.util.Set;
+
+import javax.persistence.*;
+
 import org.biopax.paxtools.proxy.StringSetBridge;
+import org.biopax.paxtools.model.level3.Entity;
 
 /**
  * Proxy for entity
@@ -157,5 +159,6 @@ public abstract class EntityProxy extends Level3ElementProxy implements Entity {
 	public Set<Interaction> getParticipantsOf() {
 		return ((Entity)object).getParticipantsOf();
 	}
+	
 }
 

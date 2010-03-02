@@ -6,6 +6,7 @@
  */
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
@@ -24,11 +25,6 @@ public class ControlledVocabularyProxy extends Level3ElementProxy
 	implements ControlledVocabulary 
 {
 	public ControlledVocabularyProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return ControlledVocabulary.class;
 	}
 
 // XReferrable
@@ -71,6 +67,11 @@ public class ControlledVocabularyProxy extends Level3ElementProxy
 
 	public void setTerm(Set<String> TERM) {
 		((ControlledVocabulary) object).setTerm(TERM);
+	}
+
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return CellVocabulary.class;
 	}
 }
 

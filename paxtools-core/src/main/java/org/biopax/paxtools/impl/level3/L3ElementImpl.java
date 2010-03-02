@@ -2,7 +2,6 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Level3Element;
-import org.biopax.paxtools.model.level3.Xref;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -44,9 +43,4 @@ abstract class L3ElementImpl extends BioPAXElementImpl
         this.comment.remove(COMMENT);
     }
 
-
-	public Class<? extends Level3Element> getModelInterface()
-	{
-		return Xref.class;
-	}
 }

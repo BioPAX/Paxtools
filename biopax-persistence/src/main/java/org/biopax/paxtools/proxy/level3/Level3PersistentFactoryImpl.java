@@ -330,4 +330,8 @@ public class Level3PersistentFactoryImpl extends BioPAXFactoryImpl implements Le
 		return new RnaRegionReferenceProxy();
 	}
 
+    public GeneticInteraction createGeneticInteraction() {
+    	return new GeneticInteractionProxy();
+    }
+    
 }

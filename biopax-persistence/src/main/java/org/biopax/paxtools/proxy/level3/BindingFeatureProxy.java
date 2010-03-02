@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -20,11 +21,6 @@ import javax.persistence.Entity;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class BindingFeatureProxy extends EntityFeatureProxy implements BindingFeature {
 	public BindingFeatureProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return BindingFeature.class;
 	}
 
     // Property BOUND-TO
@@ -49,6 +45,11 @@ public class BindingFeatureProxy extends EntityFeatureProxy implements BindingFe
 
 	public void setIntraMolecular(Boolean intramolecular) {
 		((BindingFeature)object).setIntraMolecular(intramolecular);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return BindingFeature.class;
 	}
 
 }

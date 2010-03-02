@@ -14,7 +14,6 @@ class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @Override
 	public Class<? extends RelationshipXref> getModelInterface()
 	{
 		return RelationshipXref.class;

@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 import javax.persistence.Entity;
@@ -22,9 +23,9 @@ public class RelationshipTypeVocabularyProxy extends ControlledVocabularyProxy
 {
     protected RelationshipTypeVocabularyProxy() {
 	}
-
+    
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return RelationshipTypeVocabulary.class;
 	}
 }

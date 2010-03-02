@@ -29,7 +29,6 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @Override
 	public Class<? extends PublicationXref> getModelInterface()
 	{
 		return PublicationXref.class;

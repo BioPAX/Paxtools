@@ -7,12 +7,14 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
@@ -27,10 +29,6 @@ public class BiochemicalReactionProxy extends ConversionProxy
 	public BiochemicalReactionProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return BiochemicalReaction.class;
-	}
 
     // Property DELTA-G
 
@@ -147,5 +145,10 @@ public class BiochemicalReactionProxy extends ConversionProxy
 
 	public void setKEQ(Set<KPrime> KEQ) {
 		((BiochemicalReaction)object).setKEQ(KEQ);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return BiochemicalReaction.class;
 	}
 }

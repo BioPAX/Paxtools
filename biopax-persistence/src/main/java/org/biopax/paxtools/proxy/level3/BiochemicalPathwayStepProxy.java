@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -22,11 +23,6 @@ import javax.persistence.*;
 public class BiochemicalPathwayStepProxy extends PathwayStepProxy implements
 	BiochemicalPathwayStep {
 	public BiochemicalPathwayStepProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return BiochemicalPathwayStep.class;
 	}
 
 	// Property STEP-CONVERSION
@@ -50,6 +46,11 @@ public class BiochemicalPathwayStepProxy extends PathwayStepProxy implements
 
 	public void setStepDirection(StepDirection newSTEP_DIRECTION) {
 		((BiochemicalPathwayStep)object).setStepDirection(newSTEP_DIRECTION);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return BiochemicalPathwayStep.class;
 	}
 }
 

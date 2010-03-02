@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -21,9 +22,9 @@ import javax.persistence.Transient;
 public class ProteinReferenceProxy extends SequenceEntityReferenceProxy implements ProteinReference {
 	public ProteinReferenceProxy() {
 	}
-
+	
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return ProteinReference.class;
 	}
 }

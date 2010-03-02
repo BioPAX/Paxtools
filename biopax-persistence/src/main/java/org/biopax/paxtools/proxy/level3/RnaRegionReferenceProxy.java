@@ -1,10 +1,10 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.RnaRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.hibernate.search.annotations.Indexed;
-import javax.persistence.Entity;
 import javax.persistence.*;
 
 /**
@@ -19,12 +19,6 @@ public class RnaRegionReferenceProxy extends SequenceEntityReferenceProxy
 
     public RnaRegionReferenceProxy() {
     }
-
-    @Transient
-    @Override
-	public Class getModelInterface() {
-		return RnaRegionReference.class;
-	}
 
    	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = RnaRegionReferenceProxy.class)
 	@JoinColumn(name="sub_region_x")
@@ -46,4 +40,9 @@ public class RnaRegionReferenceProxy extends SequenceEntityReferenceProxy
 		((RnaRegionReference)object).setAbsoluteRegion(sequenceLocation);
 	}
 
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return RnaRegionReference.class;
+	}
 }

@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -22,11 +23,6 @@ public class SequenceSiteProxy extends SequenceLocationProxy
 	implements SequenceSite
 {
 	public SequenceSiteProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return SequenceSite.class;
 	}
 
 	// Property POSITION-STATUS
@@ -49,5 +45,10 @@ public class SequenceSiteProxy extends SequenceLocationProxy
 
 	public void setSequencePosition(int SEQUENCE_POSITION) {
 		((SequenceSite)object).setSequencePosition(SEQUENCE_POSITION);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return SequenceSite.class;
 	}
 }

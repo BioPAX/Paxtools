@@ -7,16 +7,16 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import javax.persistence.Transient;
+
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
-
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 /**
  * Proxy for complexAssembly
  */
-@Entity(name="l3complexassembly")
+@javax.persistence.Entity(name="l3complexassembly")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class ComplexAssemblyProxy extends ConversionProxy implements
 	ComplexAssembly {
@@ -24,8 +24,7 @@ public class ComplexAssemblyProxy extends ConversionProxy implements
 	}
 
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return ComplexAssembly.class;
 	}
-
 }

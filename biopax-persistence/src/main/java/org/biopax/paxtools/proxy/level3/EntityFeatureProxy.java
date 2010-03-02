@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -22,11 +23,6 @@ import java.util.Set;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class EntityFeatureProxy extends Level3ElementProxy implements EntityFeature {
 	public EntityFeatureProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return EntityFeature.class;
 	}
 
 // Observable
@@ -129,5 +125,10 @@ public class EntityFeatureProxy extends Level3ElementProxy implements EntityFeat
 
 	public boolean atEquivalentLocation(EntityFeature that) {
 		return ((EntityFeature)object).atEquivalentLocation(that);
+	}
+
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return EntityFeature.class;
 	}
 }

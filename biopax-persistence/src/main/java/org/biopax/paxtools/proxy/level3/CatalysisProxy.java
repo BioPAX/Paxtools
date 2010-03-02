@@ -7,11 +7,13 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 
 /**
@@ -23,10 +25,6 @@ public class CatalysisProxy extends ControlProxy implements Catalysis {
 	public CatalysisProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return Catalysis.class;
-	}
 
 	// Property COFACTOR
 
@@ -57,5 +55,10 @@ public class CatalysisProxy extends ControlProxy implements Catalysis {
 
 	public void setCatalysisDirection(CatalysisDirectionType DIRECTION) {
 		((Catalysis)object).setCatalysisDirection(DIRECTION);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Catalysis.class;
 	}
 }

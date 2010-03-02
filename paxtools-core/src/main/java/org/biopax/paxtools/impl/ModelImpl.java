@@ -250,4 +250,24 @@ public class ModelImpl implements Model
 			throw new UnsupportedOperationException();
 		}
 	}
+
+	public synchronized void updateID(String oldID, String newID) {
+		if (this.containsID(oldID)) {
+			BioPAXElement bpe = getByID(oldID);
+			this.idMap.remove(oldID);
+			try {
+				setIdAndAdd(bpe, newID);
+			} catch (IllegalBioPAXArgumentException e) {
+				// roolback and fail
+				setIdAndAdd(bpe, oldID); 
+				throw new IllegalBioPAXArgumentException(
+					"Updating ID failed (model is unchanged): " +
+					"cannot use new ID: " + newID, e);
+			}
+			
+		} else {
+			throw new IllegalBioPAXArgumentException(
+					"I do not have an object with the ID: " + oldID);
+		}
+	}
 }

@@ -7,11 +7,13 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 
 /**
@@ -22,11 +24,6 @@ import java.util.Set;
 public class ExperimentalFormProxy extends Level3ElementProxy implements
 	ExperimentalForm {
 	public ExperimentalFormProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return ExperimentalForm.class;
 	}
 
 	// Property EXPERIMENTAL-FORM-TYPE
@@ -89,6 +86,11 @@ public class ExperimentalFormProxy extends Level3ElementProxy implements
 
 	public void removeExperimentalFeature(EntityFeature experimentalFeature) {
 		((ExperimentalForm)object).removeExperimentalFeature(experimentalFeature);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return ExperimentalForm.class;
 	}
 
 }

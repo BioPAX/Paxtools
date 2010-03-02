@@ -112,14 +112,14 @@ public interface Model extends Serializable
      * @param factory this model will use for creating
      * BioPAX objects.
      */
-    public void setFactory(BioPAXFactory factory);
+    void setFactory(BioPAXFactory factory);
 
    /**
      * This method returns the level of the objects that are
      * contained within this model.
      * @return level of the objects within this model.
      */
-   public BioPAXLevel getLevel();
+    BioPAXLevel getLevel();
 
     /**
      * When set to false, the model will not check for the dependent
@@ -129,7 +129,7 @@ public interface Model extends Serializable
      *
      * @param value defining the dependency adding behaviour
      */
-    public void setAddDependencies(boolean value);
+    void setAddDependencies(boolean value);
 
     /**
      * When addDependencies is false, the model will not check for the dependent
@@ -139,8 +139,17 @@ public interface Model extends Serializable
      *
      * @return whether adding dependencies.
      */
-    public boolean isAddDependencies();
+    boolean isAddDependencies();
 
 
+    /**
+     * Updates BioPAX element's ID
+     * and the model's internal id map.
+     * 
+     * @param oldID
+     * @param newID
+     */
+    void updateID(String oldID, String newID);
+    
 
 }

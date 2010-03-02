@@ -7,11 +7,13 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 
 /**
@@ -23,11 +25,6 @@ public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy
 	implements TemplateReaction 
 {
 	public TemplateReactionProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return TemplateReaction.class;
 	}
 
 	// Property Product
@@ -91,5 +88,10 @@ public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy
 
 	public void setTemplateDirection(TemplateDirectionType templateDirectionType) {
 		((TemplateReaction)object).setTemplateDirection(templateDirectionType);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return TemplateReaction.class;
 	}
 }

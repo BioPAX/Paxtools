@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Collection;
 
 /**
- * TODO:Class description
+ * TODO:Class description (or remove this class...)
  * User: demir
  * Date: Sep 23, 2008
  * Time: 7:28:35 PM
@@ -183,8 +183,16 @@ public class PersistentModelImpl implements Model
         }
     }
 
+    // id, supposed to RDFId, can be different from the PK
 	public boolean containsID(String id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	
+	public void updateID(String oldID, String newID) {
+		throw new UnsupportedOperationException();
+	}
+	
+
 }

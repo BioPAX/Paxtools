@@ -8,7 +8,6 @@ public class UnificationXrefImpl extends XrefImpl implements UnificationXref {
     // BioPAXElement interface implementation
     //
     ////////////////////////////////////////////////////////////////////////////
-    @Override
     public Class<? extends UnificationXref> getModelInterface() {
         return UnificationXref.class;
     }

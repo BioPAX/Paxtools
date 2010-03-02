@@ -7,11 +7,13 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -22,11 +24,6 @@ import java.util.Set;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class EvidenceProxy extends Level3ElementProxy implements Evidence, Serializable {
 	public EvidenceProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return Evidence.class;
 	}
 
 // XReferrable
@@ -109,6 +106,11 @@ public class EvidenceProxy extends Level3ElementProxy implements Evidence, Seria
 
 	public void setExperimentalForm(Set<ExperimentalForm> EXPERIMENTAL_FORM) {
 		((Evidence)object).setExperimentalForm(EXPERIMENTAL_FORM);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Evidence.class;
 	}
 }
 

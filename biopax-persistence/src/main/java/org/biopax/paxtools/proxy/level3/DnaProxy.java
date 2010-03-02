@@ -7,8 +7,8 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Dna;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -24,8 +24,7 @@ public class DnaProxy extends SimplePhysicalEntityProxy implements Dna {
 	}
 
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return Dna.class;
 	}
-
 }

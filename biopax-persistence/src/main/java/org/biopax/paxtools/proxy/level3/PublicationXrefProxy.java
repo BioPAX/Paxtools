@@ -7,12 +7,14 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
@@ -25,12 +27,7 @@ public class PublicationXrefProxy extends XrefProxy implements PublicationXref {
 	public PublicationXrefProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return PublicationXref.class;
-	}
-
-    // Property AUTHORS
+	// Property AUTHORS
 
 	@CollectionOfElements @Column(name="author_x", columnDefinition="text")
 	@FieldBridge(impl=StringSetBridge.class)
@@ -114,6 +111,11 @@ public class PublicationXrefProxy extends XrefProxy implements PublicationXref {
 
 	public void setYear(int YEAR) {
 		((PublicationXref)object).setYear(YEAR);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return PublicationXref.class;
 	}
 }
 

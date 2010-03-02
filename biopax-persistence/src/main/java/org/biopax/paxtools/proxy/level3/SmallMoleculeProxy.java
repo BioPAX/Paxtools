@@ -7,11 +7,12 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * Proxy for smallMolecule
@@ -23,10 +24,9 @@ public class SmallMoleculeProxy extends SimplePhysicalEntityProxy
 {
 	public SmallMoleculeProxy() {
 	}
-
+	
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return SmallMolecule.class;
 	}
-
 }

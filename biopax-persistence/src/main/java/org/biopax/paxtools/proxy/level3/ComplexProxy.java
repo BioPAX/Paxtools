@@ -6,26 +6,25 @@
  */
 package org.biopax.paxtools.proxy.level3;
 
-import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.*; // there is Entity class (and next javax.persistence.* would hide it)
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 
 /**
  * Proxy for complex
  */
-@Entity(name = "l3complex")
+@javax.persistence.Entity(name = "l3complex")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class ComplexProxy extends PhysicalEntityProxy implements Complex {
 
 	public ComplexProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return Complex.class;
 	}
 
 	// Property COMPONENTS
@@ -67,4 +66,9 @@ public class ComplexProxy extends PhysicalEntityProxy implements Complex {
 		((Complex)object).setComponentStoichiometry(stoichiometry);
 	}
 
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Complex.class;
+	}
 }

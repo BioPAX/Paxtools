@@ -7,24 +7,19 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 
 /**
  * Proxy for kPrime
  */
-@Entity(name="l3kprime")
+@javax.persistence.Entity(name="l3kprime")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class KPrimeProxy extends Level3ElementProxy implements KPrime {
 	public KPrimeProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return KPrime.class;
 	}
 
 	// Property IONIC-STRENGTH
@@ -125,6 +120,11 @@ public class KPrimeProxy extends Level3ElementProxy implements KPrime {
 
 	public void setTemperature(float TEMPERATURE) {
 		((KPrime)object).setTemperature(TEMPERATURE);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return KPrime.class;
 	}
 }
 

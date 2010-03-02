@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
@@ -22,11 +23,6 @@ public class SmallMoleculeReferenceProxy extends EntityReferenceProxy
 	implements SmallMoleculeReference 
 {
 	public SmallMoleculeReferenceProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return SmallMoleculeReference.class;
 	}
 
     // Property CHEMICAL-FORMULA
@@ -71,5 +67,10 @@ public class SmallMoleculeReferenceProxy extends EntityReferenceProxy
 
 	public void setStructure(ChemicalStructure newSTRUCTURE) {
 		((SmallMoleculeReference)object).setStructure(newSTRUCTURE);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return SmallMoleculeReference.class;
 	}
 }

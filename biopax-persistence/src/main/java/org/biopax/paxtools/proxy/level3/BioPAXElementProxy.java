@@ -10,6 +10,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +27,10 @@ import java.util.Set;
 //  SINGLE_TABLE: ok
 @javax.persistence.Entity(name = "l3biopaxelement")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@NamedQueries({
+	@NamedQuery(name="org.biopax.paxtools.proxy.level3.elementByRdfId",
+		query="from org.biopax.paxtools.proxy.level3.BioPAXElementProxy as l3element where upper(l3element.RDFId) = upper(:rdfid)")
+})
 public abstract class BioPAXElementProxy implements BioPAXElement {
 	/**
 	 * target object
@@ -51,6 +56,29 @@ public abstract class BioPAXElementProxy implements BioPAXElement {
 				.reflectivelyCreate(this.getModelInterface());
 	}
 
+	//2010.02.25 - having back the proxyID
+	Long proxyId = 0L;
+	
+	@Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="proxy_id")
+	public Long getProxyId() {
+		return proxyId;
+	}
+
+	public void setProxyId(Long value) {
+		proxyId = value;
+	}
+	
+	@Column(name="rdfid", length = 500, nullable=false, unique=true)
+	public String getRDFId() {
+		return object.getRDFId();
+	}
+
+	public void setRDFId(String id) {
+		object.setRDFId(id);
+	}
+	
 	// 2007.05.16
 	public boolean equals(Object o) {
 		return object.equals(o);
@@ -59,29 +87,7 @@ public abstract class BioPAXElementProxy implements BioPAXElement {
 	public int hashCode() {
 		return object.hashCode();
 	}
-
-	// 2007.08.31
-	//@Column(columnDefinition="varchar(250)")
-	//@Column(columnDefinition="text")
-	//@DocumentId
-	// 2007.09.04
-	//@Basic
-	//@Column(columnDefinition = "text")
-	@Id
-	@Column(length = 500)
-	public String getRDFId() {
-		return object.getRDFId();
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return object.getModelInterface();
-	}
-
-	public void setRDFId(String id) {
-		object.setRDFId(id);
-	}
-
+	
 	public int equivalenceCode() {
 		return object.equivalenceCode();
 	}
@@ -156,5 +162,5 @@ public abstract class BioPAXElementProxy implements BioPAXElement {
 		}
 		return result;
 	}
-		
+	
 }

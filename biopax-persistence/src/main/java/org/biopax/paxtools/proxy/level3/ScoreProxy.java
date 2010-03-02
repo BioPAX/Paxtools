@@ -7,11 +7,13 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 
 /**
@@ -22,11 +24,6 @@ import java.util.Set;
 public class ScoreProxy extends Level3ElementProxy implements Score 
 {
 	public ScoreProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return Score.class;
 	}
 
 // XReferrable
@@ -51,10 +48,6 @@ public class ScoreProxy extends Level3ElementProxy implements Score
 		((Score)object).setXref(XREF);
 	}
 
-// Score
-
-	// Property value
-
 	@Basic @Column(name="value_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     public String getValue() {
@@ -76,4 +69,9 @@ public class ScoreProxy extends Level3ElementProxy implements Score
     public void setScoreSource(Provenance scoreSource) {
 		((Score)object).setScoreSource(scoreSource);
     }
+    
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Score.class;
+	}
 }

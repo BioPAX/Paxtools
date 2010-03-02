@@ -7,10 +7,12 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Entity;
 
 import javax.persistence.*;
+
 import java.util.Set;
 
 /**
@@ -19,11 +21,6 @@ import java.util.Set;
 @javax.persistence.Entity(name="l3interaction")
 public class InteractionProxy extends ProcessProxy implements Interaction {
 	public InteractionProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return Interaction.class;
 	}
 
 	// Property INTERACTION-TYPE
@@ -66,4 +63,8 @@ public class InteractionProxy extends ProcessProxy implements Interaction {
 		((Interaction)object).setParticipant(PARTICIPANTS);
 	}
 
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Interaction.class;
+	}
 }

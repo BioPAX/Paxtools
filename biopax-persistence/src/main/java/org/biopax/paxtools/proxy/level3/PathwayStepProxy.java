@@ -7,12 +7,14 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 
 /**
@@ -22,12 +24,6 @@ import java.util.Set;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class PathwayStepProxy extends Level3ElementProxy implements PathwayStep {
 	public PathwayStepProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface()
-	{
-		return PathwayStep.class;
 	}
 
 // utilityClass
@@ -104,5 +100,10 @@ public class PathwayStepProxy extends Level3ElementProxy implements PathwayStep 
 	@Transient
 	public Set<Pathway> getPathwayOrdersOf() {
 		return ((PathwayStep)object).getPathwayOrdersOf();
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return PathwayStep.class;
 	}
 }

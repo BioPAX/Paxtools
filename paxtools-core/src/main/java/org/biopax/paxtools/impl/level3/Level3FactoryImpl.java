@@ -328,4 +328,8 @@ public class Level3FactoryImpl extends BioPAXFactoryImpl implements Level3Factor
     public CovalentBindingFeature createCovalentBindingFeature() {
         return new CovalentBindingFeatureImpl();
     }
+    
+    public GeneticInteraction createGeneticInteraction() {
+    	return new GeneticInteractionImpl();
+    }
 }

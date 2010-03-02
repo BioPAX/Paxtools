@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -26,15 +27,15 @@ public class ProteinProxy extends SimplePhysicalEntityProxy implements Protein {
 	}
 
 	@Transient
-	public Class getModelInterface() {
-		return Protein.class;
-	}
-
-	@Transient
     public Class<? extends PhysicalEntity> getPhysicalEntityClass() {
         return Protein.class;
 
     }
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Protein.class;
+	}
 }
 
 

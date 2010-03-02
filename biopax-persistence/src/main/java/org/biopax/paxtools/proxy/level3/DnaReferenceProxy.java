@@ -7,14 +7,15 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 /**
  * Proxy for DnaReference
@@ -25,11 +26,6 @@ public class DnaReferenceProxy extends SequenceEntityReferenceProxy implements D
 	public DnaReferenceProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return DnaReference.class;
-	}
-
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SequenceIntervalProxy.class)
 	@JoinColumn(name="genomic_region_x")
 	public SequenceInterval getGenomicRegion() {
@@ -38,5 +34,10 @@ public class DnaReferenceProxy extends SequenceEntityReferenceProxy implements D
 
 	public void setGenomicRegion(SequenceInterval genomicRegion) {
 		((DnaReference)object).setGenomicRegion(genomicRegion);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return DnaReference.class;
 	}
 }

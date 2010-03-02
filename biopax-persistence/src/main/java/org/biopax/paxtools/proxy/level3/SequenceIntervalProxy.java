@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -24,12 +25,7 @@ public class SequenceIntervalProxy extends SequenceLocationProxy
 	public SequenceIntervalProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return SequenceInterval.class;
-	}
-
-    // Property SEQUENCE-INTERVAL-BEGIN
+	// Property SEQUENCE-INTERVAL-BEGIN
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= SequenceSiteProxy.class)
 	@JoinColumn(name="sequence_interval_begin_x")
@@ -51,5 +47,10 @@ public class SequenceIntervalProxy extends SequenceLocationProxy
 
 	public void setSequenceIntervalEnd(SequenceSite SEQUENCE_INTERVAL_END) {
 		((SequenceInterval)object).setSequenceIntervalEnd(SEQUENCE_INTERVAL_END);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return SequenceInterval.class;
 	}
 }

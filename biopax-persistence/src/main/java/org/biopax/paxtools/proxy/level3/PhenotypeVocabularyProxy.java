@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
@@ -24,11 +25,6 @@ public class PhenotypeVocabularyProxy extends ControlledVocabularyProxy
 	public PhenotypeVocabularyProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return PhenotypeVocabulary.class;
-	}
-
 	// PatoData
 
 	@Basic @Column(name="pato_data_x", columnDefinition="text")
@@ -39,5 +35,10 @@ public class PhenotypeVocabularyProxy extends ControlledVocabularyProxy
 
 	public void setPatoData(String patoData) {
 		((PhenotypeVocabulary)object).setPatoData(patoData);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return PhenotypeVocabulary.class;
 	}
 }

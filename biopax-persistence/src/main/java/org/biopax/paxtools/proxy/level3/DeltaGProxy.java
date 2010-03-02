@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -20,11 +21,6 @@ import javax.persistence.Entity;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
 	public DeltaGProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return DeltaG.class;
 	}
 
 	// Property DELTA-G-PRIME-O
@@ -125,6 +121,11 @@ public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
 
 	public void setTemperature(float TEMPERATURE) {
 		setTemperature_x(floatToString(TEMPERATURE));
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return DeltaG.class;
 	}
 }
 

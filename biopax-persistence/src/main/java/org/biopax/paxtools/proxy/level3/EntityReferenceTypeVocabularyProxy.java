@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -23,9 +24,9 @@ public class EntityReferenceTypeVocabularyProxy extends ControlledVocabularyProx
 {
 	public EntityReferenceTypeVocabularyProxy() {
 	}
-
+	
 	@Transient
-	public Class getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface() {
 		return EntityReferenceTypeVocabulary.class;
 	}
 }

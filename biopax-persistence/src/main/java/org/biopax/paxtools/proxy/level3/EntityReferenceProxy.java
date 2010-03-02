@@ -7,11 +7,13 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
+
 import java.util.Set;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
@@ -24,10 +26,6 @@ public class EntityReferenceProxy extends Level3ElementProxy implements EntityRe
 	protected EntityReferenceProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return EntityReference.class;
-	}
 
 // Observable
 
@@ -179,5 +177,10 @@ public class EntityReferenceProxy extends Level3ElementProxy implements EntityRe
 	public void setMemberEntityReference(Set<EntityReference> entity) {
 		((EntityReference)object).setMemberEntityReference(entity);
     }
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return EntityReference.class;
+	}
 }
 

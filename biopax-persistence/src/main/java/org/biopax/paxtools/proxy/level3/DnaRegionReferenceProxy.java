@@ -1,6 +1,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.DnaRegionReference;
 import org.hibernate.search.annotations.Indexed;
@@ -17,12 +18,6 @@ public class DnaRegionReferenceProxy extends SequenceEntityReferenceProxy implem
 
     public DnaRegionReferenceProxy() {
     }
-
-    @Transient
-    @Override
-	public Class getModelInterface() {
-		return DnaRegionReference.class;
-	}
 
    	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = DnaRegionReferenceProxy.class)
 	@JoinColumn(name="sub_region_x")
@@ -44,4 +39,8 @@ public class DnaRegionReferenceProxy extends SequenceEntityReferenceProxy implem
         ((DnaRegionReferenceProxy)object).setAbsoluteRegion(sequenceLocation);
     }
 
+    @Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+    	return DnaRegionReference.class;
+    }
 }

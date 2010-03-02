@@ -7,12 +7,14 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 
 /**
@@ -22,12 +24,6 @@ import java.util.Set;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class PathwayProxy extends ProcessProxy implements Pathway {
 	public PathwayProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface()
-	{
-		return Pathway.class;
 	}
 
 // pathway
@@ -82,5 +78,10 @@ public class PathwayProxy extends ProcessProxy implements Pathway {
 
 	public void setOrganism(BioSource ORGANISM) {
 		((Pathway)object).setOrganism(ORGANISM);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Pathway.class;
 	}
 }

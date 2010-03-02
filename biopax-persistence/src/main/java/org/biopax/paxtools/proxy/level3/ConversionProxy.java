@@ -7,11 +7,13 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 
 /**
@@ -24,11 +26,6 @@ public class ConversionProxy extends RestrictedInteractionAdapterProxy
 {
 	
 	public ConversionProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return Conversion.class;
 	}
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class, fetch=FetchType.EAGER)
@@ -111,5 +108,10 @@ public class ConversionProxy extends RestrictedInteractionAdapterProxy
 
 	public void setConversionDirection(ConversionDirectionType conversionDirection) {
 		((Conversion)object).setConversionDirection(conversionDirection);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Conversion.class;
 	}
 }

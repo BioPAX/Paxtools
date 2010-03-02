@@ -6,6 +6,7 @@
  */
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -21,11 +22,6 @@ public class ModificationFeatureProxy extends EntityFeatureProxy implements Modi
 	public ModificationFeatureProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return ModificationFeature.class;
-	}
-
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SequenceModificationVocabularyProxy.class)
 	@JoinColumn(name = "modification_type_x")
 	public SequenceModificationVocabulary getModificationType() {
@@ -34,5 +30,10 @@ public class ModificationFeatureProxy extends EntityFeatureProxy implements Modi
 
 	public void setModificationType(SequenceModificationVocabulary featureType) {
 		((ModificationFeature) object).setModificationType(featureType);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return ModificationFeature.class;
 	}
 }

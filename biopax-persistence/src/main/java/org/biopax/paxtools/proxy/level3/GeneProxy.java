@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
@@ -23,11 +24,6 @@ public class GeneProxy extends EntityProxy implements Gene {
 	public GeneProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return Gene.class;
-	}
-
 	// Property ORGANISM
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= BioSourceProxy.class)
@@ -38,5 +34,10 @@ public class GeneProxy extends EntityProxy implements Gene {
 
 	public void setOrganism(BioSource ORGANISM) {
 		((Gene)object).setOrganism(ORGANISM);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Gene.class;
 	}
 }

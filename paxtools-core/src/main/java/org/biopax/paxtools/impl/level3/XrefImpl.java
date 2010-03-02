@@ -123,8 +123,9 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 	@Override
 	public String toString() {
 		return super.toString() + " [" 
-		+ getDb() + ((getDbVersion()==null)?"":"." + getDbVersion()) 
-		+ getId() + ((getIdVersion()==null)?"":"." + getIdVersion()) 
+		+ getDb() + " " + ((getDbVersion()==null)? "" : "." + getDbVersion()) 
+		+ getId() + ((getIdVersion()==null)? "" : "." + getIdVersion()) 
 		+ "]";
 	}
+	
 }

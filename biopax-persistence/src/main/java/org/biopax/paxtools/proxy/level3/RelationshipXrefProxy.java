@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
@@ -22,12 +23,6 @@ public class RelationshipXrefProxy extends XrefProxy implements RelationshipXref
 	public RelationshipXrefProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface()
-	{
-		return RelationshipXref.class;
-	}
-
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = RelationshipTypeVocabularyProxy.class)
 	@JoinColumn(name="relationship_type_x")
 	public RelationshipTypeVocabulary getRelationshipType() {
@@ -36,6 +31,11 @@ public class RelationshipXrefProxy extends XrefProxy implements RelationshipXref
 
 	public void setRelationshipType(RelationshipTypeVocabulary RELATIONSHIP_TYPE) {
 		((RelationshipXref)object).setRelationshipType(RELATIONSHIP_TYPE);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return RelationshipXref.class;
 	}
 }
 

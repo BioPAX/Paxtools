@@ -7,25 +7,22 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Transient;
+
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
-
-import javax.persistence.*;
-import javax.persistence.Entity;
 
 /**
  * Proxy for chemicalStructure
  */
-@Entity(name="l3chemicalstructure")
+@javax.persistence.Entity(name="l3chemicalstructure")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class ChemicalStructureProxy extends Level3ElementProxy implements
 	ChemicalStructure {
 	public ChemicalStructureProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return ChemicalStructure.class;
 	}
 
 	// Property STRUCTURE-DATA
@@ -50,6 +47,11 @@ public class ChemicalStructureProxy extends Level3ElementProxy implements
 
 	public void setStructureFormat(String STRUCTURE_FORMAT) {
 		((ChemicalStructure)object).setStructureFormat(STRUCTURE_FORMAT);
+	}
+
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return ChemicalStructure.class;
 	}
 }
 

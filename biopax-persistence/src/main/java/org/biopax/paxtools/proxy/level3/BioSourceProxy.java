@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
@@ -25,11 +26,7 @@ public class BioSourceProxy extends Level3ElementProxy implements BioSource {
 	public BioSourceProxy() {
 	}
 	
-	@Transient
-	public Class getModelInterface() {
-		return BioSource.class;
-	}
-	
+
 // Named
 	
 	@CollectionOfElements @Column(name="name_x", columnDefinition="text")
@@ -107,6 +104,11 @@ public class BioSourceProxy extends Level3ElementProxy implements BioSource {
 	
 	public void setTissue(TissueVocabulary TISSUE) {
 		((BioSource)object).setTissue(TISSUE);
+	}
+
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return BioSource.class;
 	}
 }
 

@@ -7,12 +7,14 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
 
 /**
@@ -22,11 +24,6 @@ import java.util.Set;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class ControlProxy extends RestrictedInteractionAdapterProxy implements Control {
 	public ControlProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return Control.class;
 	}
 
 	// Property CONTROLLED
@@ -78,5 +75,10 @@ public class ControlProxy extends RestrictedInteractionAdapterProxy implements C
 
 	public void setControlType(ControlType CONTROL_TYPE) {
 		((Control)object).setControlType(CONTROL_TYPE);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Control.class;
 	}
 }

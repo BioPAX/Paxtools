@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 
@@ -22,11 +23,6 @@ import java.util.Set;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class PhysicalEntityProxy extends EntityProxy implements PhysicalEntity {
 	protected PhysicalEntityProxy() {
-	}
-
-	@Transient
-	public Class getModelInterface() {
-		return PhysicalEntity.class;
 	}
 
 	@Transient
@@ -118,6 +114,11 @@ public class PhysicalEntityProxy extends EntityProxy implements PhysicalEntity {
 
 	public boolean hasEquivalentFeatures(PhysicalEntity that) {
 		return ((PhysicalEntity)object).hasEquivalentFeatures(that);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return PhysicalEntity.class;
 	}
 
 }

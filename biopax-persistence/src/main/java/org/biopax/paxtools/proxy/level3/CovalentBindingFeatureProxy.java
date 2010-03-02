@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -22,11 +23,6 @@ public class CovalentBindingFeatureProxy extends BindingFeatureProxy implements 
 	public CovalentBindingFeatureProxy() {
 	}
 
-	@Transient
-	public Class getModelInterface() {
-		return CovalentBindingFeature.class;
-	}
-
 	// ModificationFeature Property
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SequenceModificationVocabularyProxy.class)
@@ -37,5 +33,10 @@ public class CovalentBindingFeatureProxy extends BindingFeatureProxy implements 
 
 	public void setModificationType(SequenceModificationVocabulary featureType) {
 		((ModificationFeature) object).setModificationType(featureType);
+	}
+	
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return CovalentBindingFeature.class;
 	}
 }
