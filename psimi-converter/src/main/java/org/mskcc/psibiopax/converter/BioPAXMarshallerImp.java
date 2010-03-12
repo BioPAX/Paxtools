@@ -37,7 +37,7 @@ import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 /**
  * This class waits for each EntryProcessor thread to finish.
@@ -71,7 +71,7 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 	/**
 	 * Ref to file output stream.
 	 */
-	private FileOutputStream fileOutputStream;
+	private OutputStream outputStream;
 
 	/**
 	 * Our list of BioPAXContainers.
@@ -81,16 +81,16 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 	/*
 	 * Constructor.
 	 *
-	 * @param fileOutputStream FileOutputStream - will be closed by this class
+	 * @param outputStream OutputStream - will be closed by this class
 	 * @param numEntries int
 	 */
-	public BioPAXMarshallerImp(BioPAXLevel bpLevel, FileOutputStream fileOutputStream, int numEntries) {
+	public BioPAXMarshallerImp(BioPAXLevel bpLevel, OutputStream outputStream, int numEntries) {
 
 		this.bpLevel = bpLevel;
 		this.numEntries = numEntries;
 		this.synObj = new Object();
 		this.bpModelList = new ArrayList<Model>();
-		this.fileOutputStream = fileOutputStream;
+		this.outputStream = outputStream;
 	}
 
 	/**
@@ -163,8 +163,8 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 		// write out the file
 		try {
 			SimpleExporter simpleExporter = new SimpleExporter(bpLevel);
-			simpleExporter.convertToOWL(completeModel, fileOutputStream);
-			fileOutputStream.close();
+			simpleExporter.convertToOWL(completeModel, outputStream);
+			outputStream.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();

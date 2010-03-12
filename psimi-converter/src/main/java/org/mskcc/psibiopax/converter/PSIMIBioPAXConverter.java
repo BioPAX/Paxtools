@@ -35,8 +35,8 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import java.util.List;
 
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -83,30 +83,29 @@ public class PSIMIBioPAXConverter {
 	}
 
 	/**
-	 * Converts the psi data in fileInputStream and places into fileOutputStream.
+	 * Converts the psi data in inputStream and places into outputStream.
 	 * Streams will be closed by the converter.
 	 *
 	 * @throws IOException
 	 * @throws JAXBException
 	 * @throws IllegalArgumentException
 	 */
-	public boolean convert(FileInputStream fileInputStream, FileOutputStream fileOutputStream) throws IOException,
-																									  JAXBException,
-																									  IllegalArgumentException {
+	public boolean convert(InputStream inputStream, OutputStream outputStream)
+		throws IOException, JAXBException, IllegalArgumentException {
 
 		// check args
-		if (fileInputStream == null || fileOutputStream == null) {
+		if (inputStream == null || outputStream == null) {
 			throw new IllegalArgumentException("One or more null arguments to PSIMIBioPAXConverter.convert()");
 		}
 
 		// unmarshall the data, close the stream
-		EntrySet es = (EntrySet)unmarshaller.unmarshal(fileInputStream);
+		EntrySet es = (EntrySet)unmarshaller.unmarshal(inputStream);
 
 		// get entry list
 		List<EntrySet.Entry> entries =  es.getEntry();
 
 		// create, start a marshaller
-		BioPAXMarshallerImp biopaxMarshaller = new BioPAXMarshallerImp(bpLevel, fileOutputStream, entries.size());
+		BioPAXMarshallerImp biopaxMarshaller = new BioPAXMarshallerImp(bpLevel, outputStream, entries.size());
 		biopaxMarshaller.start();
 
 		// iterate through the list
@@ -121,7 +120,7 @@ public class PSIMIBioPAXConverter {
 		}
 
 		// outta here
-		fileInputStream.close();
+		inputStream.close();
 		return true;
 	}
 }
