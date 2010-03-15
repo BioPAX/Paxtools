@@ -48,6 +48,11 @@ import java.io.OutputStream;
  */
 public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 
+    /**
+	 * Ref to PSIMIBioPAXConverter.
+	 */
+	private PSIMIBioPAXConverter converter;
+
 	/**
 	 * Ref to biopax level.
 	 */
@@ -81,11 +86,14 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 	/*
 	 * Constructor.
 	 *
+	 * @param converter PSIMIBioPAXConverter
+	 * @parma bpLevel BioPAXLevel 
 	 * @param outputStream OutputStream - will be closed by this class
 	 * @param numEntries int
 	 */
-	public BioPAXMarshallerImp(BioPAXLevel bpLevel, OutputStream outputStream, int numEntries) {
+	public BioPAXMarshallerImp(PSIMIBioPAXConverter converter, BioPAXLevel bpLevel, OutputStream outputStream, int numEntries) {
 
+		this.converter = converter;
 		this.bpLevel = bpLevel;
 		this.numEntries = numEntries;
 		this.synObj = new Object();
@@ -165,6 +173,7 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 			SimpleExporter simpleExporter = new SimpleExporter(bpLevel);
 			simpleExporter.convertToOWL(completeModel, outputStream);
 			outputStream.close();
+			this.converter.conversionIsComplete = true;
 		}
 		catch(Exception e) {
 			e.printStackTrace();

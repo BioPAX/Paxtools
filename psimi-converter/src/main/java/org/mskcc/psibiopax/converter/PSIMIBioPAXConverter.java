@@ -68,6 +68,11 @@ public class PSIMIBioPAXConverter {
 	private Unmarshaller unmarshaller;
 
 	/**
+	 * Ref to boolean which indicates conversion is complete.
+	 */
+	protected boolean conversionIsComplete;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param bpLevel BioPAXLevel
@@ -78,6 +83,7 @@ public class PSIMIBioPAXConverter {
 
 		// set member vars
 		this.bpLevel = bpLevel;
+		this.conversionIsComplete = false;
 		JAXBContext context = JAXBContext.newInstance(PSI_MI_L2_GENERATED_PACKAGE);
 		unmarshaller = context.createUnmarshaller();
 	}
@@ -105,7 +111,7 @@ public class PSIMIBioPAXConverter {
 		List<EntrySet.Entry> entries =  es.getEntry();
 
 		// create, start a marshaller
-		BioPAXMarshallerImp biopaxMarshaller = new BioPAXMarshallerImp(bpLevel, outputStream, entries.size());
+		BioPAXMarshallerImp biopaxMarshaller = new BioPAXMarshallerImp(this, bpLevel, outputStream, entries.size());
 		biopaxMarshaller.start();
 
 		// iterate through the list
@@ -122,5 +128,14 @@ public class PSIMIBioPAXConverter {
 		// outta here
 		inputStream.close();
 		return true;
+	}
+
+	/**
+	 * Method used to determine if conversion is complete.
+	 * 
+	 * @return boolean
+	 */
+	public boolean conversionIsComplete() {
+		return conversionIsComplete;
 	}
 }
