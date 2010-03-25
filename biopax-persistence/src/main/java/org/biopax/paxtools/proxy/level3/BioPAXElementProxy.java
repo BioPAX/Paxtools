@@ -79,6 +79,13 @@ public abstract class BioPAXElementProxy implements BioPAXElement {
 		object.setRDFId(id);
 	}
 	
+	
+	@Override
+	// 2010.03.25
+	public String toString() {
+		return object.toString();
+	}
+	
 	// 2007.05.16
 	public boolean equals(Object o) {
 		return object.equals(o);
@@ -162,5 +169,5 @@ public abstract class BioPAXElementProxy implements BioPAXElement {
 		}
 		return result;
 	}
-	
+
 }

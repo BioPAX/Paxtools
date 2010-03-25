@@ -4,6 +4,6 @@ import org.biopax.paxtools.model.Model;
 
 public interface ModelFilter {
 
-	Model filter(Model model);
+	Model filter(final Model model);
 	
 }

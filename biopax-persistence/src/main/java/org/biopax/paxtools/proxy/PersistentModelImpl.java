@@ -15,10 +15,12 @@ import java.util.Iterator;
 import java.util.Collection;
 
 /**
- * TODO:Class description (or remove this class...)
+ * TODO: check, implement, describe (or remove this class...)
  * User: demir
  * Date: Sep 23, 2008
  * Time: 7:28:35 PM
+ * 
+ * @deprecated use ModelForPersistence instead [rodche, Mar 25, 2010]
  */
 public class PersistentModelImpl implements Model
 {

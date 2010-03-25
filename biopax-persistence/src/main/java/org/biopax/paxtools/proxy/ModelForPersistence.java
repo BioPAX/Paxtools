@@ -181,7 +181,7 @@ public class ModelForPersistence implements Model
 	public synchronized void updateID(String oldID, String newID) {
 		if (this.containsID(oldID)) {
 			BioPAXElement bpe = getByID(oldID);
-			this.idMap.remove(oldID);
+			remove(bpe);
 			try {
 				setIdAndAdd(bpe, newID);
 			} catch (IllegalBioPAXArgumentException e) {

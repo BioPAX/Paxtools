@@ -96,6 +96,7 @@ public abstract class BioPAXFactoryImpl implements BioPAXFactory
 			}
 		}
 	}
+	
 	public Model createModel()
 	{
 		return new ModelImpl(this);

@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.Fetcher;
 import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.controller.PropertyFilter;
 import org.biopax.paxtools.controller.Traverser;
 import org.biopax.paxtools.controller.Visitor;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
@@ -65,15 +66,13 @@ public class ProteinNameLister
          * (do not worry - those pathway steps that are part of 
          * the pathway must be in the PATHWAY-COMPONENTS set)
          */
-	    //TODO
-		fetcher = new Fetcher(new SimpleEditorMap(BioPAXLevel.L2)) {
-			public void visit(BioPAXElement domain, Object range, Model model,
-			                  PropertyEditor editor) {
-				if(!editor.getProperty().equals("NEXT-STEP")) {
-					super.visit(domain, range, model, editor);
-				}
+        PropertyFilter nextStepPropertyFilter = new PropertyFilter() {
+			public boolean filter(PropertyEditor editor) {
+				return !editor.getProperty().equals("NEXT-STEP");
 			}
 		};
+		fetcher = new Fetcher(
+			new SimpleEditorMap(BioPAXLevel.L2), nextStepPropertyFilter);
         
         FilenameFilter filter = new FilenameFilter()
         {
@@ -97,14 +96,12 @@ public class ProteinNameLister
     }
 
     private static void process(String pathname, String name,
-                                SimpleReader jenaIOHandler)
+                                SimpleReader reader)
             throws FileNotFoundException
     {
         System.out.println("--------------" + name + "---------");
         Model model =
-                jenaIOHandler
-                        .convertFromOWL(
-                                new FileInputStream(pathname + "/" + name));
+        	reader.convertFromOWL(new FileInputStream(pathname + "/" + name));
         listProteinUnificationXrefsPerPathway(model);
     }
 
