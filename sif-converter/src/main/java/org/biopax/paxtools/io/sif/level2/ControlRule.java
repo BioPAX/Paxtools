@@ -1,14 +1,14 @@
 package org.biopax.paxtools.io.sif.level2;
 
-import org.biopax.paxtools.io.sif.InteractionRule;
-import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
-import static org.biopax.paxtools.io.sif.BinaryInteractionType.METABOLIC_CATALYSIS;
-import static org.biopax.paxtools.io.sif.BinaryInteractionType.STATE_CHANGE;
+import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
 
 import java.util.*;
+
+import static org.biopax.paxtools.io.sif.BinaryInteractionType.METABOLIC_CATALYSIS;
+import static org.biopax.paxtools.io.sif.BinaryInteractionType.STATE_CHANGE;
 
 /**
  * A controls a conversion which B is at left or right or both. -
@@ -17,8 +17,15 @@ import java.util.*;
  *
  * @author Ozgun Babur Date: Dec 29, 2007 Time: 1:27:55 AM
  */
-public class ControlRule implements InteractionRule
+public class ControlRule implements InteractionRuleL2
 {
+	public void inferInteractions(Set<SimpleInteraction> interactionSet,
+		Object entity,
+		Model model, Map options)
+	{
+		inferInteractions(interactionSet, ((physicalEntity) entity), model, options);
+	}
+
 	/**
 	 * When options map is null, then all rules are generated. Otherwise only rules
 	 * that are contained in the options map as a key are generated.

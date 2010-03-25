@@ -89,6 +89,38 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 		this.componentStoichiometry = ComponentStoichiometry;
 	}
 
+	public Set<SimplePhysicalEntity> getSimpleMembers()
+	{
+		return getSimpleMembers(new HashSet<SimplePhysicalEntity>());
+	}
+
+	protected Set<SimplePhysicalEntity> getSimpleMembers(Set<SimplePhysicalEntity> set)
+	{
+		for (PhysicalEntity pe : this.getComponent())
+		{
+			if (pe instanceof SimplePhysicalEntity)
+			{
+				set.add((SimplePhysicalEntity) pe);
+			}
+			else if (pe instanceof ComplexImpl)
+			{
+				((ComplexImpl) pe).getSimpleMembers(set);
+			}
+		}
+		return set;
+	}
+
+	public Set<EntityReference> getMemberReferences()
+	{
+		Set<EntityReference> set = new HashSet<EntityReference>();
+
+		for (SimplePhysicalEntity spe : getSimpleMembers())
+		{
+			set.add(spe.getEntityReference());
+		}
+		return set;
+	}
+
 	public Class<? extends PhysicalEntity> getPhysicalEntityClass()
 	{
 		return Complex.class;

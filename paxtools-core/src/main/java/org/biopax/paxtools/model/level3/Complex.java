@@ -93,5 +93,19 @@ public interface Complex extends PhysicalEntity
 	 */
 	void setComponentStoichiometry(Set<Stoichiometry> stoichiometry);
 
+	/**
+	 * Gets the member physical entities which are not complex. When the complex is nested, members
+	 * of inner complexes are added to the returned set recursively.
+	 *
+	 * @return non-complex member physical entities
+	 */
+	Set<SimplePhysicalEntity> getSimpleMembers();
+
+	/**
+	 * Gets the <code>EntityReference</code>s of the member simple physical entities. When the
+	 * complex is nested, contents of the member complexes are retrieved recursively.
+	 * @return
+	 */
+	Set<EntityReference> getMemberReferences();
 
 }

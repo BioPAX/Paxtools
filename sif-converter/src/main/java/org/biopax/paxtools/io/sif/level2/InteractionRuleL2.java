@@ -1,6 +1,8 @@
-package org.biopax.paxtools.io.sif;
+package org.biopax.paxtools.io.sif.level2;
 
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.InteractionRule;
+import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntity;
 
@@ -9,29 +11,25 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This interface defines a rule which can be run on BioPAX model to derive
- * simple interactions. All new rules should implement this interface.  
- * User: demir Date: Dec 28, 2007 Time: 3:49:46 PM
+ * This interface defines a rule which can be run on BioPAX model L2 to derive
+ * simple interactions. All new rules should implement this interface.
+ *
+ * @author Emek Demir
+ * @author Ozgun Babur
  */
-public interface InteractionRule
+public interface InteractionRuleL2 extends InteractionRule
 {
 	/**
 	 * This method populates the interactionSet with simple interactions that can
 	 * be derived from the model based on this rule.
 	 * @param interactionSet to be populated
-	 * @param entity this must be a physicalEntity for L2, and EntityReference for L3
+	 * @param pe first physicalEntity
 	 * @param model BioPAX model
 	 * @param options
 	 */
 	public void inferInteractions(
 		Set<SimpleInteraction> interactionSet,
-		Object entity,
+		physicalEntity pe,
 		Model model,
 		Map options);
-
-	/**
-	 * Gets a list of the rule types that this class implements.
-	 * @return supported rules
-	 */
-	public List<BinaryInteractionType> getRuleTypes();
 }

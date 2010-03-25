@@ -1,27 +1,36 @@
 package org.biopax.paxtools.io.sif.level2;
 
-import org.biopax.paxtools.io.sif.InteractionRule;
-import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
-import static org.biopax.paxtools.io.sif.BinaryInteractionType.IN_SAME_COMPONENT;
-import static org.biopax.paxtools.io.sif.BinaryInteractionType.COMPONENT_OF;
+import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.*;
-import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.model.level2.complex;
+import org.biopax.paxtools.model.level2.physicalEntity;
+import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.biopax.paxtools.io.sif.BinaryInteractionType.COMPONENT_OF;
+import static org.biopax.paxtools.io.sif.BinaryInteractionType.IN_SAME_COMPONENT;
+
 /**
  * Component.InSame: A and B are components of same flattened complex structure,
  * A and B are simple. Component.Of: A is component of B, B is complex, A may be
  * nested multiple levels in B.
  *
- * @author Ozgun Babur Date: Dec 28, 2007 Time: 6:06:29 PM
+ * @author Ozgun Babur
  */
-public class ComponentRule implements InteractionRule {
+public class ComponentRule implements InteractionRuleL2
+{
+	public void inferInteractions(Set<SimpleInteraction> interactionSet,
+		Object entity,
+		Model model, Map options)
+	{
+		inferInteractions(interactionSet, ((physicalEntity) entity), model, options);
+	}
+
     public void inferInteractions(Set<SimpleInteraction> interactionSet,
                                   physicalEntity A,
                                   Model model, Map options) {

@@ -2,6 +2,10 @@ package org.biopax.paxtools.io.sif;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.model.level3.Entity;
+import org.biopax.paxtools.model.level3.Evidence;
+import org.biopax.paxtools.model.level3.Interaction;
+import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
@@ -37,7 +41,7 @@ public class SimpleInteraction
 	 */
 	private BinaryInteractionType type;
 
-	private Set<publicationXref> pubs;
+	private Set<String> pubs;
 
 	Log log = LogFactory.getLog(SimpleInteraction.class);
 
@@ -47,7 +51,7 @@ public class SimpleInteraction
 		this.source = source;
 		this.target = target;
 		this.type = type;
-		this.pubs = new HashSet<publicationXref>();
+		this.pubs = new HashSet<String>();
 	}
 
 	public BioPAXElement getSource()
@@ -169,7 +173,6 @@ public class SimpleInteraction
 
 	private void recursivelyReduce(BioPAXElement bpe, Set<physicalEntity> reduced)
 	{
-
 		if (bpe instanceof physicalEntityParticipant)
 		{
 			recursivelyReduce(((physicalEntityParticipant) bpe).getPHYSICAL_ENTITY(), reduced);
@@ -191,39 +194,59 @@ public class SimpleInteraction
 				reduced.add((physicalEntity) bpe);
 			}
 		}
-
-
 	}
 
 
-	public Set<publicationXref> getPubs()
+	public Set<String> getPubs()
 	{
 		return pubs;
 	}
 
 	public void extractPublications(entity anEntity)
 	{
-
 		log.trace("extracting pubs from " + anEntity.getNAME() + "(" + anEntity.getRDFId() + ")");
 		log.trace(pubs.size());
-		getPubs().addAll(
-				new ClassFilterSet<publicationXref>(
-						anEntity.getXREF(),
-						publicationXref.class));
+		for (publicationXref xref : new ClassFilterSet<publicationXref>(
+			anEntity.getXREF(), publicationXref.class))
+		{
+			getPubs().add(xref.toString());
+		}
 
 		if (anEntity instanceof interaction)
 		{
 			Set<evidence> evidenceSet = ((interaction) anEntity).getEVIDENCE();
 			for (evidence evidence : evidenceSet)
 			{
-				getPubs().addAll(
-						new ClassFilterSet<publicationXref>(
-								evidence.getXREF(),
-								publicationXref.class));
+				for (publicationXref xref : new ClassFilterSet<publicationXref>(
+					evidence.getXREF(), publicationXref.class))
+				{
+					getPubs().add(xref.toString());
+				}
 			}
 
 		}
 		log.trace(pubs.size());
 	}
 
+	public void extractPublications(Entity anEntity)
+	{
+		log.trace("extracting pubs from " + anEntity.getStandardName() + "(" +
+			anEntity.getRDFId() + ")");
+		log.trace(pubs.size());
+
+		for (Xref xref : new ClassFilterSet<Xref>(anEntity.getXref(), Xref.class))
+		{
+			getPubs().add(xref.toString());
+		}
+
+		Set<Evidence> evidenceSet = anEntity.getEvidence();
+		for (Evidence evidence : evidenceSet)
+		{
+			for (Xref xref : new ClassFilterSet<Xref>(evidence.getXref(), Xref.class))
+			{
+				getPubs().add(xref.toString());
+			}
+		}
+		log.trace(pubs.size());
+	}
 }
