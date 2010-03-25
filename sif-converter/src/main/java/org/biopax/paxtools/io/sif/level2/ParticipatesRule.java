@@ -1,6 +1,5 @@
 package org.biopax.paxtools.io.sif.level2;
 
-import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
@@ -16,8 +15,15 @@ import java.util.Set;
 /**
  * User: demir Date: Dec 28, 2007 Time: 5:52:06 PM
  */
-public class ParticipatesRule implements InteractionRule
+public class ParticipatesRule implements InteractionRuleL2
 {
+	public void inferInteractions(Set<SimpleInteraction> interactionSet,
+		Object entity,
+		Model model, Map options)
+	{
+		inferInteractions(interactionSet, ((physicalEntity) entity), model, options);
+	}
+
 	public void inferInteractions(Set<SimpleInteraction> interactionSet,
 	                              physicalEntity pe, Model model,
 	                              Map options)

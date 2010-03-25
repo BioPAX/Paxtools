@@ -15,7 +15,7 @@ import static org.biopax.paxtools.io.sif.SimpleInteractionConverter.REDUCE_COMPL
 
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.junit.Test;
+
 
 import java.io.*;
 import java.util.Map;
@@ -57,7 +57,7 @@ public class SimpleInteractionConverterTest
 	}
 
 
-     @Test
+     
      public void testWriteInteractionsInSIFNX() throws Exception
 	{
         Map options = new HashMap();
