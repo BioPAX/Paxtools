@@ -66,11 +66,13 @@ public class ComplexProxy extends PhysicalEntityProxy implements Complex {
 		((Complex)object).setComponentStoichiometry(stoichiometry);
 	}
 
+	@Transient
 	public Set<SimplePhysicalEntity> getSimpleMembers()
 	{
 		return ((Complex) object).getSimpleMembers();
 	}
 
+	@Transient
 	public Set<EntityReference> getMemberReferences()
 	{
 		return ((Complex) object).getMemberReferences();

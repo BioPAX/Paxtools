@@ -15,6 +15,7 @@ import static org.biopax.paxtools.io.sif.SimpleInteractionConverter.REDUCE_COMPL
 
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.junit.Test;
 
 
 import java.io.*;
@@ -25,6 +26,7 @@ public class SimpleInteractionConverterTest
 {
 	SimpleInteractionConverter simpleInteractionConverter;
 
+	@Test
 	public void testWriteInteractionsInSIF() throws Exception
 	{
 		SimpleInteractionConverter converter = new SimpleInteractionConverter(
@@ -57,8 +59,8 @@ public class SimpleInteractionConverterTest
 	}
 
 
-     
-     public void testWriteInteractionsInSIFNX() throws Exception
+    @Test 
+    public void testWriteInteractionsInSIFNX() throws Exception
 	{
         Map options = new HashMap();
         options.put(REDUCE_COMPLEXES, "");
