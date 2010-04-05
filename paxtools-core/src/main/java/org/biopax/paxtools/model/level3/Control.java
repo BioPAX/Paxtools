@@ -17,13 +17,13 @@ public interface Control extends RestrictedInteraction
 
 
 	// Property Controller
-	public Set<PhysicalEntity> getController();
+	public Set<Controller> getController();
 
-	public void addController(PhysicalEntity controller);
+	public void addController(Controller controller);
 
-	public void removeController(PhysicalEntity controller);
+	public void removeController(Controller controller);
 
-	public void setController(Set<PhysicalEntity> controller);
+	public void setController(Set<Controller> controller);
 
 
 	// Property CONTROL-TYPE

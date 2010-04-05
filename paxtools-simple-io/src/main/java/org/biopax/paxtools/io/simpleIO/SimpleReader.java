@@ -12,7 +12,9 @@ import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import javax.xml.stream.XMLInputFactory;
+
 import static javax.xml.stream.XMLStreamConstants.*;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
@@ -35,60 +37,63 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	private String base = "";
 	private List<Triple> triples;
 
-    // --------------------------- CONSTRUCTORS ---------------------------
-    public SimpleReader()
-    {
-        this(null, null);
-    }
+	// --------------------------- CONSTRUCTORS ---------------------------
 
-    public SimpleReader(BioPAXLevel level)
-    {
-        this(level.getDefaultFactory(), level);
-    }
+	public SimpleReader()
+	{
+		this(null, null);
+	}
 
-    public SimpleReader(BioPAXFactory factory, BioPAXLevel level)
-    {
-        super(factory, level);
-	    resetEditorMap();
-    }
+	public SimpleReader(BioPAXLevel level)
+	{
+		this(level.getDefaultFactory(), level);
+	}
+
+	public SimpleReader(BioPAXFactory factory, BioPAXLevel level)
+	{
+		super(factory, level);
+		resetEditorMap();
+	}
 
 	// -------------------------- OTHER METHODS --------------------------	
-	
+
 	@Override
-	final protected void resetEditorMap() {
+	final protected void resetEditorMap()
+	{
 		setEditorMap(new SimpleEditorMap(this.getLevel())); // was 'level' - bug!
 	}
-    
-    /**
-     * This may be required for external applications to 
-     * access the specific information (e.g., location) 
-     * when reporting XML exceptions. 
-     * 
-     * @return
-     */
-    public String getXmlStreamInfo() {
-    	StringBuffer sb = new StringBuffer();
-    	
-    	int event = r.getEventType();
-    	if(event == START_ELEMENT
-    		|| event == END_ELEMENT
-    			|| event == ENTITY_REFERENCE) 
-    	{
-    		sb.append(r.getLocalName());
-    	}  	
-    	
-    	if(r.getLocation() != null) {
-    		sb.append(" line ");
-    		sb.append(r.getLocation().getLineNumber());
-    		sb.append(" column ");
-    		sb.append(r.getLocation().getColumnNumber());
-    	}
-    	
-    	return sb.toString();
+
+	/**
+	 * This may be required for external applications to access the specific information (e.g.,
+	 * location) when reporting XML exceptions.
+	 *
+	 * @return
+	 */
+	public String getXmlStreamInfo()
+	{
+		StringBuffer sb = new StringBuffer();
+
+		int event = r.getEventType();
+		if (event == START_ELEMENT
+		    || event == END_ELEMENT
+		    || event == ENTITY_REFERENCE)
+		{
+			sb.append(r.getLocalName());
+		}
+
+		if (r.getLocation() != null)
+		{
+			sb.append(" line ");
+			sb.append(r.getLocation().getLineNumber());
+			sb.append(" column ");
+			sb.append(r.getLocation().getColumnNumber());
+		}
+
+		return sb.toString();
 	}
-    
-    
-    protected void init(InputStream in)
+
+
+	protected void init(InputStream in)
 	{
 		try
 		{
@@ -100,8 +105,8 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		{
 			//e.printStackTrace();
 			throw new BioPaxIOException(
-					e.getClass().getSimpleName() 
-					+ " " + e.getMessage() 
+					e.getClass().getSimpleName()
+					+ " " + e.getMessage()
 					+ "; " + e.getLocation());
 		}
 
@@ -152,8 +157,8 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		catch (XMLStreamException e)
 		{
 			throw new BioPaxIOException(
-					e.getClass().getSimpleName() 
-					+ " " + e.getMessage() 
+					e.getClass().getSimpleName()
+					+ " " + e.getMessage()
 					+ "; " + e.getLocation());
 		}
 		return ns;
@@ -164,9 +169,10 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	{
 		try
 		{
-			while (r.getEventType() != END_DOCUMENT)
+			int type;
+			while ((type= r.getEventType()) != END_DOCUMENT)
 			{
-				switch (r.getEventType())
+				switch (type)
 				{
 					case START_ELEMENT:
 						if (BioPAXLevel.isInBioPAXNameSpace(r.getName().getNamespaceURI()))
@@ -174,25 +180,35 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 							if (this.getFactory().canInstantiate(r.getLocalName()))
 							{
 								processIndividual(model);
-							} else {
+							}
+							else
+							{
 								if (log.isTraceEnabled())
+								{
 									log.trace("Ignoring element: " + r.getLocalName());
+								}
 								skip();
 							}
-							break;
-						}
+
+						}  break;
 					case CHARACTERS:
 						if (log.isTraceEnabled())
-						{	
+						{
 							StringBuffer sb = new StringBuffer("Ignoring text ");
 							sb.append(r.getLocalName());
-							if (r.hasText()) sb.append(r.getText());
+							if (r.hasText())
+							{
+								sb.append(r.getText());
+							}
 							log.trace(sb.toString());
-						}
+						} break;
 					case END_ELEMENT:
-						if (log.isTraceEnabled()) {
+						if (log.isTraceEnabled())
+						{
 							log.trace(r);
-						}
+						} break;
+					default:
+						if(log.isTraceEnabled()) log.trace("Test this!:"+type);  //TODO
 				}
 				r.next();
 
@@ -202,16 +218,19 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		catch (XMLStreamException e)
 		{
 			throw new BioPaxIOException(
-					e.getClass().getSimpleName() 
-					+ " " + e.getMessage() 
+					e.getClass().getSimpleName()
+					+ " " + e.getMessage()
 					+ "; " + e.getLocation());
 		}
 
 		for (Triple triple : triples)
 		{
-			try {
+			try
+			{
 				bindValue(triple, model);
-			} catch (IllegalBioPAXArgumentException e) {
+			}
+			catch (IllegalBioPAXArgumentException e)
+			{
 				log.warn("Binding " + e);
 			}
 		}
@@ -220,27 +239,28 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 
 	/**
 	 * Binds property.
-	 * 
-	 * This method also throws related 
-	 * to the binding exceptions.
-	 * 
+	 * <p/>
+	 * This method also throws related to the binding exceptions.
+	 *
 	 * @param triple
 	 * @param model
 	 */
-	private void bindValue(Triple triple, Model model) {
+	private void bindValue(Triple triple, Model model)
+	{
 		BioPAXElement domain = model.getByID(triple.domain);
 		PropertyEditor editor =
-			this.getEditorMap().getEditorForProperty(triple.property, domain.getClass());
+				this.getEditorMap().getEditorForProperty(triple.property, domain.getClass());
 
 		/* Check for NULL now, and raise the exception; otherwise, the next call (bindValue)
 		 * will throw the NullPointerException, anyway, which is difficult to interpret
 		 * (e.g. in the Validator).
 		 */
-		if (editor == null) {
+		if (editor == null)
+		{
 			throw new IllegalBioPAXArgumentException("'" +
-	            triple.property + "' is not property of '" +
-                domain.getModelInterface().getSimpleName() +
-                "' (" + triple.domain + ")");
+			                                         triple.property + "' is not property of '" +
+			                                         domain.getModelInterface().getSimpleName() +
+			                                         "' (" + triple.domain + ")");
 		}
 
 		bindValue(triple.range, editor, domain, model);
@@ -251,9 +271,12 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	{
 		String s = r.getLocalName();
 		String id = null;
-		try	{
+		try
+		{
 			id = getId();
-		} catch (NullPointerException e) {
+		}
+		catch (NullPointerException e)
+		{
 			throw new BioPaxIOException(
 					"Error processing individual "
 					+ s + ". rdf:ID or rdf:about not found!", e);
@@ -302,9 +325,11 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 			switch (r.getEventType())
 			{
 				case START_ELEMENT:
-					depth++; break;
+					depth++;
+					break;
 				case END_ELEMENT:
-					depth--; break;
+					depth--;
+					break;
 			}
 		}
 	}
@@ -366,12 +391,15 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 					if (!found && r.getEventType() == CHARACTERS)
 					{
 						String text = r.getText();
-						if(resource!=null) { 
+						if (resource != null)
+						{
 							resource += text;
-						} else {
+						}
+						else
+						{
 							resource = text;
 						}
-						
+
 						if (log.isTraceEnabled())
 						{
 							log.trace("text=" + text);
@@ -385,10 +413,14 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 					}
 					r.next();
 				}
-				resource = (!found && resource!=null) ? resource.replaceAll("[\n\r\t ]+", " ") : resource;
-				if(resource != null) resource= resource.trim();
+				resource = (!found && resource != null) ? resource.replaceAll("[\n\r\t ]+", " ") :
+				           resource;
+				if (resource != null)
+				{
+					resource = resource.trim();
+				}
 			}
-			
+
 			log.trace("setting = " + resource);
 			triples.add(new Triple(ownerID, resource, property));
 			propertyContext = false;
@@ -421,7 +453,8 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		}
 
 		@Override
-		public String toString() {
+		public String toString()
+		{
 			StringBuffer sb = new StringBuffer();
 			sb.append("domain: ");
 			sb.append(domain);

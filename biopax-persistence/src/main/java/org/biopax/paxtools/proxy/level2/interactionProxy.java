@@ -32,9 +32,9 @@ public class interactionProxy extends processProxy implements interaction, Seria
 
 	Set<InteractionParticipant> proxyPARTICIPANTS = null;
 
-	// interactinを継承したクラスで直接のsettertを禁止しているので、このプロパティのBeansを永続化対象としない。
+	// interactin setter Beans
 	// 2007.04.26 Takeshi Yoneki
-	// 直接のsetterを使わない別メソッドで表現することにした。
+	// setter
 	// 2007.09.05
 	@Transient
 	public Set<InteractionParticipant> getPARTICIPANTS() {
@@ -45,7 +45,7 @@ public class interactionProxy extends processProxy implements interaction, Seria
 		((interaction)object).setPARTICIPANTS(PARTICIPANTS);
 	}
 
-// 当面永続化対象外にする。
+//
 // 2008.05.28 Takeshi Yoneki
 //	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity=InteractionParticipantProxy.class, fetch=FetchType.EAGER)
 //	@JoinTable(name="l2interaction_participants_x")
@@ -62,7 +62,7 @@ public class interactionProxy extends processProxy implements interaction, Seria
 
 	protected void call_setPARTICIPANTS_x(Set<InteractionParticipant> PARTICIPANTS) {
 		try {
-			// 古いものを削除しなくてはいけないのではないか？
+			// 
 			// 2008.05.26 Takeshi Yoneki
 			Set<InteractionParticipant> olsIPs = getPARTICIPANTS();
 			for (InteractionParticipant oip: olsIPs)

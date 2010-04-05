@@ -29,10 +29,9 @@ public class complexProxy extends physicalEntityProxy implements complex, Serial
 		return complex.class;
 	}
 
-	// 単純にCOMPONENTSを永続化対象外にして良いかどうかは不明。
-	// 下記のように実装に対象インスタンスの問題があるので当面対象外とする。
+	// COMPONENTS
 	// 2007.04.26 Takeshi Yoneki
-	// equals()とhashCode()を実装することでcontainsでProxyも扱えるようにする。
+	// equals() hashCode() contains Proxy
 	// 2007.05.16
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity=physicalEntityParticipantProxy.class)
 	@JoinTable(name="l2complex_components")
@@ -45,10 +44,10 @@ public class complexProxy extends physicalEntityProxy implements complex, Serial
 	}
 
 	public void addCOMPONENTS(physicalEntityParticipant COMPONENTS) {
-		// ImplのaddCOMPONENTSにおいて、相互参照のためにthisを登録する記述があり、それはImplであり、proxyでないため、
-		// ここでImplをパラメタとして渡すことにする。
+		// Impl addCOMPONENTS this Implproxy
+		// Impl
 		// 2007.04.26 Takeshi Yoneki
-		// equals()とhashCode()を実装することでcontainsでProxyも扱えるようにする。
+		// equals()hashCode() contains Proxy
 		// 2007.05.16
 		((complex)object).addCOMPONENTS(COMPONENTS);
 	}

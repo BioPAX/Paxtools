@@ -111,11 +111,12 @@ public class SimpleExporter
         }
     }
 
-    private void writeStatementFor(BioPAXElement bean, PropertyEditor editor,
+
+	private void writeStatementFor(BioPAXElement bean, PropertyEditor editor,
                                    Object value, Writer out)
             throws IOException
     {
-        assert (bean != null && editor != null);
+        assert (bean != null && editor != null && value!=null);
         
         //fix (for L3 only): skip 'name' if it's present in the displayName, etc..
         if(editor.getProperty().equalsIgnoreCase("name") 

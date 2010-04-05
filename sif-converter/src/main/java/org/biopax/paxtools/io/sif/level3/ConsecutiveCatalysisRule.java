@@ -12,26 +12,25 @@ import java.util.*;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.SEQUENTIAL_CATALYSIS;
 
 /**
- * This class creates an interaction between two entities if they are catalyzing
- * consecutive conversions. Conversions are considered consecutive if one of the
- * RIGHT participants of one reaction is the LEFT of the other and if the
- * directions of catalysis and control matches. User: demir Date: Dec 28, 2007
- * Time: 10:40:01 PM
+ * This class creates an interaction between two entities if they are catalyzing consecutive
+ * conversions. Conversions are considered consecutive if one of the RIGHT participants of one
+ * reaction is the LEFT of the other and if the directions of catalysis and control matches. User:
+ * demir Date: Dec 28, 2007 Time: 10:40:01 PM
  */
 public class ConsecutiveCatalysisRule implements InteractionRuleL3
 {
 	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity,
-		Model model, Map options)
+	                              Model model, Map options)
 	{
 		inferInteractions(interactionSet, ((EntityReference) entity), model, options);
 	}
 
 	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference A,
-		Model model, Map options)
+	                              Model model, Map options)
 	{
 		// Stop if options don't let to continue
 		if (options.containsKey(SEQUENTIAL_CATALYSIS) &&
-			options.get(SEQUENTIAL_CATALYSIS).equals(false))
+		    options.get(SEQUENTIAL_CATALYSIS).equals(false))
 		{
 			return;
 		}
@@ -43,7 +42,8 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 		}
 	}
 
-	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A, PhysicalEntity pe)
+	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A,
+	                                   PhysicalEntity pe)
 	{
 		for (Interaction inter : pe.getParticipantsOf())
 		{
@@ -59,15 +59,15 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 	}
 
 	private void processCatalysis(Set<SimpleInteraction> interactionSet,
-		EntityReference A,
-		Catalysis aCatalysis)
+	                              EntityReference A,
+	                              Catalysis aCatalysis)
 	{
 		//We have to consider two direction statements
 		//Catalysis.direction and Conversion.spontaneous
 		//This method maps the former to the compatible latter
 		//null means reversible or unknown, both are treated in the same way.
 		ConversionDirectionType catalysisDirection =
-			mapDirectionToConversion(aCatalysis.getCatalysisDirection());
+				mapDirectionToConversion(aCatalysis.getCatalysisDirection());
 
 		//get the conversions and process them.
 		Set<Process> controlled = aCatalysis.getControlled();
@@ -79,7 +79,7 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 
 			//let's find the direction that is compatible with catalysis direction
 			ConversionDirectionType dirA = findConsensusDirection(catalysisDirection,
-				aConversion.getConversionDirection());
+					aConversion.getConversionDirection());
 
 			assert dirA != null;
 
@@ -96,8 +96,8 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 	 * @return
 	 */
 	private ConversionDirectionType findConsensusDirection(
-		ConversionDirectionType direction1,
-		ConversionDirectionType direction2)
+			ConversionDirectionType direction1,
+			ConversionDirectionType direction2)
 	{
 		ConversionDirectionType consensus;
 		boolean first = isReversible(direction1);
@@ -137,10 +137,10 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 	}
 
 	private void createInteractions(Conversion centerConversion,
-		ConversionDirectionType dirA,
-		EntityReference A,
-		Catalysis aCatalysis,
-		Set<SimpleInteraction> interactionSet)
+	                                ConversionDirectionType dirA,
+	                                EntityReference A,
+	                                Catalysis aCatalysis,
+	                                Set<SimpleInteraction> interactionSet)
 	{
 		//get the pes at the correct side of the conversion.
 		Set<PhysicalEntity> pes = getOutputPEs(dirA, centerConversion);
@@ -153,27 +153,35 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 				{
 					Conversion neighConv = (Conversion) inter;
 
-					if (centerConversion == neighConv) continue;
+					if (centerConversion == neighConv)
+					{
+						continue;
+					}
 
 					Set<Control> controls = neighConv.getControlledOf();
 
 					for (Catalysis consequentCatalysis : new ClassFilterSet<Catalysis>(
-						controls, Catalysis.class))
+							controls, Catalysis.class))
 					{
 						ConversionDirectionType dirB = findConsensusDirection(
-							neighConv.getConversionDirection(),
-							mapDirectionToConversion(consequentCatalysis.getCatalysisDirection()));
+								neighConv.getConversionDirection(),
+								mapDirectionToConversion(
+										consequentCatalysis.getCatalysisDirection()));
 
 						// Ensure intermediate molecule (pe) is input to the neighbor conversion
 						if ((dirB == ConversionDirectionType.LEFT_TO_RIGHT &&
-							neighConv.getLeft().contains(pe)) ||
-							(dirB == ConversionDirectionType.RIGHT_TO_LEFT &&
-							neighConv.getRight().contains(pe)))
+						     neighConv.getLeft().contains(pe)) ||
+						    (dirB == ConversionDirectionType.RIGHT_TO_LEFT &&
+						     neighConv.getRight().contains(pe)))
 						{
-							for (PhysicalEntity controller : consequentCatalysis.getController())
+							for (Controller controller : consequentCatalysis.getController())
 							{
-								createSimpleInteraction(A, interactionSet, controller, aCatalysis,
-									consequentCatalysis);
+								if (controller instanceof PhysicalEntity)
+								{
+									createSimpleInteraction(A, interactionSet,
+											(PhysicalEntity) controller, aCatalysis,
+											consequentCatalysis);
+								}
 							}
 						}
 					}
@@ -183,13 +191,14 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 	}
 
 	private void createSimpleInteraction(EntityReference A, Set<SimpleInteraction> interactionSet,
-		PhysicalEntity controller, Catalysis firstCatalysis, Catalysis consequentCatalysis)
+	                                     PhysicalEntity controller, Catalysis firstCatalysis,
+	                                     Catalysis consequentCatalysis)
 	{
 		if (controller instanceof SimplePhysicalEntity)
 		{
 			//create interactions and add to set
 			SimpleInteraction si = new SimpleInteraction(A,
-				((SimplePhysicalEntity) controller).getEntityReference(), SEQUENTIAL_CATALYSIS);
+					((SimplePhysicalEntity) controller).getEntityReference(), SEQUENTIAL_CATALYSIS);
 			interactionSet.add(si);
 		}
 		else if (controller instanceof Complex)
@@ -213,8 +222,8 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 	 * @return
 	 */
 	private Set<PhysicalEntity> getOutputPEs(
-		ConversionDirectionType direction,
-		Conversion aConversion)
+			ConversionDirectionType direction,
+			Conversion aConversion)
 	{
 		switch (direction)
 		{

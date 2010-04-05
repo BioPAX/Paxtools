@@ -32,16 +32,7 @@ public class conversionProxy extends physicalInteractionProxy implements convers
 	Set<physicalEntityParticipant> proxyLEFT = null;
 	Set<physicalEntityParticipant> proxyRIGHT = null;
 
-	// JoinTableなしだと、同じ型への接続だということなのか、一つの接続用テーブルにleftとrightがまとめられてしまう。
-	// しかしそれではDB上の規約違反となり実質使えない。
-	// leftを保存しようとするとrightがnullであるとか言われる。多分Hibernateのbug。
-	// なので、JoinTableを記述して、オブジェクトの接続のテーブルを独立に用意する。
-	// 2007.04.26 Takeshi Yoneki
-	// IllegalBioPAXArgumentException("Illegal attempt to reuse a PEP!")で禁止されたsetterなので、
-	// とりあえず対象外にする。
-	// 2007.05.17 Takeshi Yoneki
-	// 直接のsetterを使わない別メソッドで表現することにした。
-	// 2007.09.05
+
 	@Transient
 	public Set<physicalEntityParticipant> getLEFT() {
 		return ((conversion)object).getLEFT();
@@ -61,7 +52,7 @@ public class conversionProxy extends physicalInteractionProxy implements convers
 
 	public void setLEFT_x(Set<physicalEntityParticipant> LEFT) {
 		try {
-			// 古いものを削除しなくてはいけないのではないか？
+
 			// 2008.05.26 Takeshi Yoneki
 			Set<physicalEntityParticipant> oldLEFT = getLEFT();
 			for (physicalEntityParticipant opep: oldLEFT)
@@ -85,10 +76,7 @@ public class conversionProxy extends physicalInteractionProxy implements convers
 		proxyLEFT = null;
 	}
 
-	// とりあえず対象外にする。
-	// 2007.05.17 Takeshi Yoneki
-	// 直接のsetterを使わない別メソッドで表現することにした。
-	// 2007.09.05
+	
 	@Transient
 	public Set<physicalEntityParticipant> getRIGHT() {
 		return ((conversion)object).getRIGHT();
@@ -108,7 +96,7 @@ public class conversionProxy extends physicalInteractionProxy implements convers
 
 	public void setRIGHT_x(Set<physicalEntityParticipant> RIGHT) {
 		try {
-			// 古いものを削除しなくてはいけないのではないか？
+			
 			// 2008.05.26 Takeshi Yoneki
 			Set<physicalEntityParticipant> oldRIGHT = getRIGHT();
 			for (physicalEntityParticipant opep: oldRIGHT)

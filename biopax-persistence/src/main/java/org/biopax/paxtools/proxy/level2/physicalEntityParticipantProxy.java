@@ -17,10 +17,6 @@ import java.util.Set;
 /**
  * Proxy for physicalEntityParticipant
  */
-// physicalEntityParticipantはutilityClassとInteractionParticipantを継承しているが、
-// Javaでは実装の多重継承は表現できない。
-// そこでphysicalEntityParticipant向けにInteractionParticipantProxyを
-// 継承したutilityClassのProxyを用意。
 // 2007.09.10
 @Entity(name = "l2physicalentityparticipant")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)

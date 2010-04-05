@@ -50,19 +50,19 @@ public class ControlProxy extends RestrictedInteractionAdapterProxy implements C
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= PhysicalEntityProxy.class)
 	@JoinTable(name="l3control_controller")
-	public Set<PhysicalEntity> getController() {
+	public Set<Controller> getController() {
 		return ((Control)object).getController();
 	}
 
-	public void addController(PhysicalEntity CONTROLLER) {
+	public void addController(Controller CONTROLLER) {
 		((Control)object).addController(CONTROLLER);
 	}
 
-	public void removeController(PhysicalEntity CONTROLLER) {
+	public void removeController(Controller CONTROLLER) {
 		((Control)object).removeController(CONTROLLER);
 	}
 
-	public void setController(Set<PhysicalEntity> CONTROLLER) {
+	public void setController(Set<Controller> CONTROLLER) {
 		((Control)object).setController(CONTROLLER);
 	}
 

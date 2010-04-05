@@ -47,7 +47,7 @@ public class physicalInteractionProxy extends interactionProxy implements physic
 		((physicalInteraction)object).setINTERACTION_TYPE(INTERACTION_TYPE);
 	}
 
-	// �����ς��邽�߂Ƀ��\�b�h��Ē�`
+	
 	protected void call_setPARTICIPANTS_x(Set<InteractionParticipant> PARTICIPANTS) {
 		proxyPARTICIPANTS = PARTICIPANTS;
 	}

@@ -1,8 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.Control;
-import org.biopax.paxtools.model.level3.ControlType;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -17,14 +15,14 @@ class ControlImpl extends RestrictedInteractionAdapter
 // ------------------------------ FIELDS ------------------------------
 
     private ControlType controlType;
-    private Set<PhysicalEntity> controller;
+    private Set<Controller> controller;
     private Set<Process> controlled;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
     public ControlImpl()
     {
-        this.controller = new HashSet<PhysicalEntity>();
+        this.controller = new HashSet<Controller>();
         this.controlled = new HashSet<Process>();
 
     }
@@ -71,6 +69,7 @@ class ControlImpl extends RestrictedInteractionAdapter
                     "Illegal argument. Attempting to set " +
                     controlled.getRDFId() +
                     " to " + this.getRDFId());
+	        
         }
         this.controlled.add(controlled);
         addSubParticipant(controlled);
@@ -82,32 +81,35 @@ class ControlImpl extends RestrictedInteractionAdapter
         this.controlled.remove(controlled);
     }
 
-    public Set<PhysicalEntity> getController()
+    public Set<Controller> getController()
     {
         return controller;
     }
 
-    public void setController(Set<PhysicalEntity> controller)
+    public void setController(Set<Controller> controllers)
     {
         //this.controller = controller;
-    	for(PhysicalEntity pe : controller) {
-    		addController(pe);
+    	for(Controller controller : controllers) {
+    		addController(controller);
     	}
     }
 
-    public void addController(PhysicalEntity controller)
+	public void addController(Controller controller)
     {
         this.controller.add(controller);
+	    controller.getControllerOf().add(this);
         addSubParticipant(controller);
     }
 
-    public void removeController(PhysicalEntity controller)
+    public void removeController(Controller controller)
     {
         removeSubParticipant(controller);
+	    controller.getControllerOf().remove(this);
         this.controller.remove(controller);
     }
 
-    // -------------------------- OTHER METHODS --------------------------
+
+	// -------------------------- OTHER METHODS --------------------------
     protected boolean checkControlled(Process Controlled)
     {
         return true;

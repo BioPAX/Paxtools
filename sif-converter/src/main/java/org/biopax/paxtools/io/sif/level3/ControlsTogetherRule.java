@@ -157,7 +157,7 @@ public class ControlsTogetherRule implements InteractionRuleL3
 	private void iterateControllers(Control ctrl, EntityReference A,
 		Set<SimpleInteraction> interactionSet)
 	{
-		for (PhysicalEntity pe : ctrl.getController())
+		for (Controller pe : ctrl.getController())
 		{
 			if (pe instanceof SimplePhysicalEntity)
 			{

@@ -3,7 +3,7 @@ package org.biopax.paxtools.model.level3;
 import java.util.Set;
 
 
-public interface PhysicalEntity extends Entity
+public interface PhysicalEntity extends Entity, Controller
 {
 
 

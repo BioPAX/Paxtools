@@ -25,77 +25,87 @@
         <module>paxtools-main</module>
     </modules>
 
-	<developers>
-		<developer>
-			<id>rodche</id>
-			<name>Igor Rodchenkov</name>
-			<organization>University of Toronto</organization>
-			<roles><role>developer</role></roles>
-		</developer>
-		<developer>
-			<id>edemir</id>
-			<name>Emek Demir</name>
-			<organization>CBIO MSKCC</organization>
-			<roles><role>architect</role><role>developer</role></roles>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>rodche</id>
+            <name>Igor Rodchenkov</name>
+            <organization>University of Toronto</organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>emekdemir</id>
+            <name>Emek Demir</name>
+            <organization>CBIO MSKCC</organization>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
 
 
-	<profiles>
-		<profile>
-			<id>rodche</id>
-			<distributionManagement>
-				<snapshotRepository>
-					<id>biopax.snapshots</id>
-					<name>Local BioPAX Snapshots Repository</name>
-					<url>file:///Volumes/Work/m2repo-biopax/snapshots</url>
-				</snapshotRepository>
-				<repository>
-					<id>biopax.releases</id>
-					<name>Local BioPAX Repository</name>
-					<url>file:///Volumes/Work/m2repo-biopax/releases</url>
-				</repository>
-			</distributionManagement>
-			<properties>
-				<scm.username>rodche</scm.username>
-			</properties>
-		</profile>
-		<profile>
-			<id>edemir</id>
-			<distributionManagement>
-				<repository>
-				</repository>
-			</distributionManagement>
-			<properties>
-				<scm.username>edemir</scm.username>
-			</properties>
-		</profile>
-	</profiles>  
-    
+    <profiles>
+        <profile>
+            <id>rodche</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>biopax.snapshots</id>
+                    <name>Local BioPAX Snapshots Repository</name>
+                    <url>file:///Volumes/Work/m2repo-biopax/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>biopax.releases</id>
+                    <name>Local BioPAX Repository</name>
+                    <url>file:///Volumes/Work/m2repo-biopax/releases</url>
+                </repository>
+            </distributionManagement>
+            <properties>
+                <scm.username>rodche</scm.username>
+            </properties>
+        </profile>
+        <profile>
+            <id>emekdemir</id>
+            <distributionManagement>
+                <site>
+                    <id>sourceforge.net</id>
+                    <name>BioPAX Sourceforge site</name>
+                    <url>scp://emekdemir@shell.sourceforge.net/home/groups/b/bi/biopax/htdocs/paxtools</url>
+                </site>
+            </distributionManagement>
+            <properties>
+                <scm.username>emekdemir</scm.username>
+            </properties>
+        </profile>
+    </profiles>
+
     <scm>
-    	<connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
-    	<developerConnection>scm:hg:ssh://${scm.username},biopax@biopax.hg.sourceforge.net/hgroot/biopax/paxtools</developerConnection>
-    	<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
+        <connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
+        <developerConnection>
+            scm:hg:ssh://${scm.username},biopax@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
+        </developerConnection>
+        <url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
     </scm>
-    
+
     <organization>
-    	<name>BioPAX</name>
-    	<url>http://www.biopax.org</url>
+        <name>BioPAX</name>
+        <url>http://www.biopax.org</url>
     </organization>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.5</source>
-						<target>1.5</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.5</source>
+                        <target>1.5</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -109,12 +119,13 @@
             <version>1.1.1</version>
         </dependency>
         <dependency>
-        	<groupId>log4j</groupId>
-        	<artifactId>log4j</artifactId>
-        	<version>1.2.13</version>
-        	<scope>runtime</scope>
-        	<optional>true</optional>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.13</version>
+            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
+
 </project>
 

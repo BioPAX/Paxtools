@@ -1,8 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.BioSource;
-import org.biopax.paxtools.model.level3.Pathway;
-import org.biopax.paxtools.model.level3.PathwayStep;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 
 import java.util.HashSet;
@@ -18,6 +16,7 @@ class PathwayImpl extends ProcessImpl implements Pathway
 	private Set<Process> pathwayComponent;
 	private Set<PathwayStep> pathwayOrder;
 	private BioSource organism;
+	private Set<Control> controllerOf;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -25,6 +24,7 @@ class PathwayImpl extends ProcessImpl implements Pathway
 	{
 		this.pathwayComponent = new HashSet<Process>();
 		this.pathwayOrder = new HashSet<PathwayStep>();
+		this.controllerOf = new HashSet<Control>();
 
 	}
 
@@ -104,5 +104,9 @@ class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-
+	@Override
+	public Set<Control> getControllerOf()
+	{
+		return controllerOf;
+	}
 }

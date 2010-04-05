@@ -19,9 +19,8 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 /**
  * Proxy for entity
  */
-// InteractionParticipantProxyはinteraction.PARTICIPANTSの型であるにもかかわらず、
-// どこからも継承されず扱えていなかった。
-// entityProxyでInteractionParticipantProxyを継承するよう変更。
+// InteractionParticipantProxy interaction.PARTICIPANTS
+// entityProxy InteractionParticipantProxy
 // 2007.09.05
 @Entity(name="l2entity")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)

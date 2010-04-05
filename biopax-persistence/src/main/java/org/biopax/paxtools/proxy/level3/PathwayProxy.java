@@ -84,4 +84,10 @@ public class PathwayProxy extends ProcessProxy implements Pathway {
 	public Class<? extends BioPAXElement> getModelInterface() {
 		return Pathway.class;
 	}
+
+	@Transient
+	public Set<Control> getControllerOf()
+	{
+		return ((Pathway)object).getControllerOf();
+	}
 }

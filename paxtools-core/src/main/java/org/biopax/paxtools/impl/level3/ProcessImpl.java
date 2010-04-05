@@ -50,16 +50,4 @@ abstract class ProcessImpl extends EntityImpl implements Process
 		return controlledOf;
 	}
 
-// -------------------------- OTHER METHODS --------------------------
-
-	public void addControlledOf(Control control)
-	{
-		this.controlledOf.add(control);
-	}
-
-	public void addStepInteractionsOf(PathwayStep aPathwayStep)
-	{
-		assert aPathwayStep.getStepProcess().contains(this);
-		this.stepInteractionsOf.add(aPathwayStep);
-	}
 }

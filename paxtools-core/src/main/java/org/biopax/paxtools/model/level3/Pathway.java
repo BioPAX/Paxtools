@@ -3,7 +3,7 @@ package org.biopax.paxtools.model.level3;
 import java.util.Set;
 
 
-public interface Pathway extends Process
+public interface Pathway extends Process,Controller
 {
 // -------------------------- OTHER METHODS --------------------------
 

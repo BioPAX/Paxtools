@@ -63,8 +63,7 @@ public abstract class BioPAXElementProxy implements BioPAXElement, Serializable
 			this.getModelInterface());
 	}
 
-	// CollectionのメソッドでImplと比較されることがあるためequals()とhashCode()を用意する。
-	// 2007.05.16
+	
 	public boolean equals(Object o)
 	{
 		return object.equals(o);

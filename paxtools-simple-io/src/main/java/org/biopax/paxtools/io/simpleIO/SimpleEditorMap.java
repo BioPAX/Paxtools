@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
@@ -29,9 +30,10 @@ public class SimpleEditorMap extends EditorMapAdapter
 
 	{
 		super(level);
+		InputStream stream = this.getClass().getResourceAsStream(
+				"Level" + this.getLevel().getValue() + "Editor.properties");
 		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(this.getClass().getResourceAsStream(
-						"Level" + this.getLevel().getValue() + "Editor.properties")));
+				new InputStreamReader(stream));
 		try
 		{
 			String line = reader.readLine();
@@ -57,8 +59,13 @@ public class SimpleEditorMap extends EditorMapAdapter
 			log.error("Could not initialize " +
 			          "Editor Map", e);
 		}
-
-
+		finally
+		{
+			      try { stream.close(); } catch (IOException ignore) {
+				      log.error("Could not close stream! Exiting");
+				      System.exit(1);
+			      }
+		}
 	}
 
 

@@ -18,6 +18,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	private Set<Complex> ownerComplex;
 	private Set<EntityFeature> feature;
 	private Set<EntityFeature> noFeature;
+	private	Set<Control> controllerOf;
 
 	private final Log log = LogFactory.getLog(PhysicalEntityImpl.class);
 
@@ -25,6 +26,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	{
 		feature = new HashSet<EntityFeature>();
 		noFeature = new HashSet<EntityFeature>();
+		controllerOf = new HashSet<Control>();
 		ownerComplex = new HashSet<Complex>();
 		this.memberPhysicalEntity = new HashSet<PhysicalEntity>();
 	}
@@ -201,4 +203,9 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
+	@Override
+	public Set<Control> getControllerOf()
+	{
+		return controllerOf;
+	}
 }

@@ -121,5 +121,9 @@ public class PhysicalEntityProxy extends EntityProxy implements PhysicalEntity {
 		return PhysicalEntity.class;
 	}
 
-}
+@Transient
+	public Set<Control> getControllerOf()
+	{
+		return ((PhysicalEntity)object).getControllerOf();
+	}}
 
