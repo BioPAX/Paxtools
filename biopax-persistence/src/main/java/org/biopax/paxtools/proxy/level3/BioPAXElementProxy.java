@@ -29,7 +29,10 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NamedQueries({
 	@NamedQuery(name="org.biopax.paxtools.proxy.level3.elementByRdfId",
-		query="from org.biopax.paxtools.proxy.level3.BioPAXElementProxy as l3element where upper(l3element.RDFId) = upper(:rdfid)")
+				query="from org.biopax.paxtools.proxy.level3.BioPAXElementProxy as l3element where upper(l3element.RDFId) = upper(:rdfid)"),
+	@NamedQuery(name="org.biopax.paxtools.proxy.level3.elementByRdfIdEager",
+				query="from org.biopax.paxtools.proxy.level3.BioPAXElementProxy as l3element fetch all properties where upper(l3element.RDFId) = upper(:rdfid)")
+
 })
 public abstract class BioPAXElementProxy implements BioPAXElement {
 	/**
