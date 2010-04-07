@@ -8,7 +8,7 @@ import org.biopax.paxtools.model.Model;
 import java.util.*;
 
 /**
- * Utility class to merge multiple biopax models into one. Note that this merger does not preserve
+ * Utility class to merge two already normalized biopax models into one. Note that this merger does not preserve
  * the integrity of the passed models. Target will be a merged model and source will become
  * unusable.
  */
@@ -85,20 +85,20 @@ public class SimpleMerger
 					Set<BioPAXElement> values = (Set<BioPAXElement>) editor.getValueFromBean(update);
 					for (BioPAXElement value : values)
 					{
-						migrateToPC(update, target, editor, value);
+						migrateToTarget(update, target, editor, value);
 					}
 				}
 				else
 				{
 				BioPAXElement value = (BioPAXElement) editor.getValueFromBean(update);
-					migrateToPC(update, target, editor, value);
+					migrateToTarget(update, target, editor, value);
 				}
 			}
 		}
 
 	}
 
-	private void migrateToPC(BioPAXElement update, Model target, PropertyEditor editor,
+	private void migrateToTarget(BioPAXElement update, Model target, PropertyEditor editor,
 	                         BioPAXElement value)
 	{
 		if (!target.contains(value))
