@@ -7,7 +7,7 @@ import org.biopax.paxtools.model.level2.*;
 /**
  * User: root Date: Apr 26, 2006 Time: 3:06:08 PM_DOT
  * 
- * @deprecated use org.biopax.paxtools.proxy.level2.BioPAXFactoryForPersistence instead [rodche, Mar 25, 2010]
+ * @deprecated try org.biopax.paxtools.proxy.level2.BioPAXFactoryForPersistence instead [rodche, Mar 25, 2010]
  */
 public class Level2PersistentFactoryImpl extends BioPAXFactoryImpl implements Level2Factory
 {

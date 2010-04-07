@@ -7,6 +7,7 @@ import javax.persistence.Transient;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.DnaRegion;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 
 /**
  *
@@ -15,9 +16,6 @@ import org.biopax.paxtools.model.level3.DnaRegion;
 @Entity(name="l3dnaregion")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class DnaRegionProxy extends SimplePhysicalEntityProxy implements DnaRegion{
-
-    public DnaRegionProxy() {
-    }
 
     @Transient
 	public Class<? extends BioPAXElement> getModelInterface() {

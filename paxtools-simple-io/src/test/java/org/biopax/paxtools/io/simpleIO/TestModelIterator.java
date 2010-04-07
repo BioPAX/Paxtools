@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -15,6 +16,7 @@ import java.util.Iterator;
 /**
  * TODO:Class description User: demir Date: Mar 25, 2010 Time: 2:31:16 PM
  */
+@Ignore
 public class TestModelIterator implements Iterator<Model>
 {
 	private Log log = LogFactory.getLog(TestModelIterator.class);

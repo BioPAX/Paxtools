@@ -11,6 +11,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.*;
 import org.hibernate.annotations.CollectionOfElements;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
 import javax.persistence.*;
@@ -24,8 +25,6 @@ import java.util.Set;
 @Entity(name="l3provenance")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class ProvenanceProxy extends Level3ElementProxy implements Provenance {
-	protected ProvenanceProxy() {
-	}
 
 // XReferrable
 

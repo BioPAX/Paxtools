@@ -20,9 +20,6 @@ import javax.persistence.Entity;
 public abstract class SimplePhysicalEntityProxy extends PhysicalEntityProxy 
 	implements SimplePhysicalEntity 
 {
-	SimplePhysicalEntityProxy() {
-	}
-
 	// Property REFERENCE-ENTITY
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = EntityReferenceProxy.class)

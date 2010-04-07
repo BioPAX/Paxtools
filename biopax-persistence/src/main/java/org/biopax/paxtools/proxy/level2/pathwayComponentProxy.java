@@ -9,11 +9,11 @@ package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.pathway;
 import org.biopax.paxtools.model.level2.pathwayComponent;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -21,7 +21,7 @@ import java.util.Set;
  */
 @Entity(name="l2pathwaycomponent")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class pathwayComponentProxy extends Level2ElementProxy implements pathwayComponent, Serializable {
+public abstract class pathwayComponentProxy extends Level2ElementProxy implements pathwayComponent {
 	protected pathwayComponentProxy() {
 	}
 

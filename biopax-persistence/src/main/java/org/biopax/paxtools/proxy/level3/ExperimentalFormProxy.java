@@ -9,6 +9,7 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -23,8 +24,6 @@ import java.util.Set;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class ExperimentalFormProxy extends Level3ElementProxy implements
 	ExperimentalForm {
-	public ExperimentalFormProxy() {
-	}
 
 	// Property EXPERIMENTAL-FORM-TYPE
 

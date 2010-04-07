@@ -4,6 +4,7 @@ package org.biopax.paxtools.proxy.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.DnaRegionReference;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -15,9 +16,6 @@ import javax.persistence.*;
 @Entity(name="l3dnaregionreference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class DnaRegionReferenceProxy extends SequenceEntityReferenceProxy implements DnaRegionReference {
-
-    public DnaRegionReferenceProxy() {
-    }
 
    	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = DnaRegionReferenceProxy.class)
 	@JoinColumn(name="sub_region_x")

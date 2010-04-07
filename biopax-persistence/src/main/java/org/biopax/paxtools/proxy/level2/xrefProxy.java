@@ -9,18 +9,17 @@ package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.XReferrable;
 import org.biopax.paxtools.model.level2.xref;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Proxy for xref
  */
 @Entity(name="l2xref")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class xrefProxy extends externalReferenceUtilityClassProxy implements xref, Serializable {
+public abstract class xrefProxy extends externalReferenceUtilityClassProxy implements xref {
 	public xrefProxy() {
 		// not get object. because this object has not factory.
 	}

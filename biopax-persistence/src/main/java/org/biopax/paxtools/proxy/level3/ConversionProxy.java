@@ -9,6 +9,7 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -25,8 +26,6 @@ public class ConversionProxy extends RestrictedInteractionAdapterProxy
 	implements Conversion 
 {
 	
-	public ConversionProxy() {
-	}
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class, fetch=FetchType.EAGER)
 	@JoinTable(name="l3conversion_left_x")

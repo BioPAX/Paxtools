@@ -7,8 +7,6 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.*;
 
 /**
@@ -35,7 +33,7 @@ public class ModelImpl implements Model
 	   this(level.getDefaultFactory());
 	}
 
-	protected ModelImpl(BioPAXFactory factory)
+	public ModelImpl(BioPAXFactory factory)
 	{
 		idMap = new HashMap<String, BioPAXElement>();
         nameSpacePrefixMap = new HashMap<String, String>();
@@ -163,12 +161,6 @@ public class ModelImpl implements Model
         this.addDependencies = value;
     }
 
-    private void readObject(ObjectInputStream in)
-	throws IOException, ClassNotFoundException
-    {
-        in.defaultReadObject();
-        this.factory = this.level.getDefaultFactory();
-    }
 
     public boolean isAddDependencies() {
         return addDependencies;

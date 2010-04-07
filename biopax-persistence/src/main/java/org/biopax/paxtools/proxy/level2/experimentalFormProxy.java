@@ -8,10 +8,10 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -19,7 +19,7 @@ import java.util.Set;
  */
 @Entity(name="l2experimentalform")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class experimentalFormProxy extends utilityClassProxy implements experimentalForm, Serializable {
+public class experimentalFormProxy extends utilityClassProxy implements experimentalForm {
 	public experimentalFormProxy() {
 	}
 

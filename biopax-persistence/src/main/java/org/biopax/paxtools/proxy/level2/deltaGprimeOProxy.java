@@ -8,17 +8,17 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.deltaGprimeO;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Proxy for deltaGprimeO
  */
 @Entity(name="l2deltagprimeo")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class deltaGprimeOProxy extends utilityClassProxy implements deltaGprimeO, Serializable {
+public class deltaGprimeOProxy extends utilityClassProxy implements deltaGprimeO {
 	public deltaGprimeOProxy() {
 	}
 

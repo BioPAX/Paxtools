@@ -6,6 +6,7 @@ import javax.persistence.Transient;
 import org.hibernate.search.annotations.Indexed;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.RnaRegion;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 
 /**
  *
@@ -14,9 +15,6 @@ import org.biopax.paxtools.model.level3.RnaRegion;
 @javax.persistence.Entity(name="l3rnaregion")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class RnaRegionProxy extends SimplePhysicalEntityProxy implements RnaRegion{
-
-    public RnaRegionProxy() {
-    }
     
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {

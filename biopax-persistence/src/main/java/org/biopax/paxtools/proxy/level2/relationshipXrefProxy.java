@@ -8,17 +8,17 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.relationshipXref;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Proxy for relationshipXref
  */
 @Entity(name="l2relationshipxref")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class relationshipXrefProxy extends xrefProxy implements relationshipXref, Serializable {
+public class relationshipXrefProxy extends xrefProxy implements relationshipXref {
 	public relationshipXrefProxy() {
 	}
 

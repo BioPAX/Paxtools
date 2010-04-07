@@ -8,11 +8,11 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -21,7 +21,7 @@ import java.util.Set;
 @Entity(name = "l2physicalentity")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class physicalEntityProxy extends entityProxy
-	implements physicalEntity, Serializable
+	implements physicalEntity
 {
 	protected physicalEntityProxy()
 	{

@@ -16,6 +16,8 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 
 import java.util.Set;
+
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
 /**
@@ -26,9 +28,6 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 public class BiochemicalReactionProxy extends ConversionProxy 
 	implements BiochemicalReaction 
 {
-	public BiochemicalReactionProxy() {
-	}
-
 
     // Property DELTA-G
 

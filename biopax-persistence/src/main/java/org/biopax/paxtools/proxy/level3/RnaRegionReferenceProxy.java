@@ -4,6 +4,7 @@ package org.biopax.paxtools.proxy.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.RnaRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 import javax.persistence.*;
 
@@ -16,9 +17,6 @@ import javax.persistence.*;
 public class RnaRegionReferenceProxy extends SequenceEntityReferenceProxy 
 	implements RnaRegionReference 
 {
-
-    public RnaRegionReferenceProxy() {
-    }
 
    	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = RnaRegionReferenceProxy.class)
 	@JoinColumn(name="sub_region_x")

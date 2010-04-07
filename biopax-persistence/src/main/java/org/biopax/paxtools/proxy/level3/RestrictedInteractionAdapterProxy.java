@@ -5,7 +5,7 @@ import org.biopax.paxtools.model.level3.RestrictedInteraction;
 
 import java.util.Set;
 
-@javax.persistence.Entity(name="l3restrictedinteraction")
+//@javax.persistence.Entity(name="l3restrictedinteraction")
 public abstract class RestrictedInteractionAdapterProxy extends InteractionProxy
         implements RestrictedInteraction {
 

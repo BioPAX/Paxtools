@@ -9,17 +9,17 @@ package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.sequenceInterval;
 import org.biopax.paxtools.model.level2.sequenceSite;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Proxy for sequenceInterval
  */
 @Entity(name="l2sequenceinterval")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class sequenceIntervalProxy extends sequenceLocationProxy implements sequenceInterval, Serializable {
+public class sequenceIntervalProxy extends sequenceLocationProxy implements sequenceInterval {
 	public sequenceIntervalProxy() {
 	}
 

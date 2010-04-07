@@ -9,17 +9,17 @@ package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.bioSource;
 import org.biopax.paxtools.model.level2.sequenceEntity;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Proxy for sequenceEntity
  */
 @Entity(name="l2sequenceentity")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class sequenceEntityProxy extends physicalEntityProxy implements sequenceEntity, Serializable {
+public abstract class sequenceEntityProxy extends physicalEntityProxy implements sequenceEntity {
 	protected sequenceEntityProxy() {
 		// not get object. because this object has not factory.
 	}

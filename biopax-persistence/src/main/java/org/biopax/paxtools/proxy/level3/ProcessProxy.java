@@ -19,9 +19,6 @@ import java.util.Set;
  */
 @Entity(name="l3process")
 public abstract class ProcessProxy extends EntityProxy implements Process {
-	protected ProcessProxy() {
-	}
-
 	@Transient
 	public Set<Control> getControlledOf() {
 		return ((Process)object).getControlledOf();

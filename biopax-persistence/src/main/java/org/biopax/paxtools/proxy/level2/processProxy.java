@@ -8,18 +8,15 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.*;
-import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Proxy for process
  */
 @Entity(name="l2process")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class processProxy extends entityProxy implements process, Serializable {
+public abstract class processProxy extends entityProxy implements process {
 
 	protected processProxy() {
 	}

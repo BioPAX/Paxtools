@@ -8,17 +8,17 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.kPrime;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Proxy for kPrime
  */
 @Entity(name="l2kprime")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class kPrimeProxy extends utilityClassProxy implements kPrime, Serializable {
+public class kPrimeProxy extends utilityClassProxy implements kPrime {
 	public kPrimeProxy() {
 	}
 	@Transient

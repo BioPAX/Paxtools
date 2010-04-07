@@ -9,6 +9,7 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -23,9 +24,6 @@ import java.util.Set;
 @Entity(name="l3evidence")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class EvidenceProxy extends Level3ElementProxy implements Evidence, Serializable {
-	public EvidenceProxy() {
-	}
-
 // XReferrable
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)

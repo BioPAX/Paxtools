@@ -8,17 +8,17 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Proxy for bioSource
  */
 @Entity(name="l2biosource")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class bioSourceProxy extends externalReferenceUtilityClassProxy implements bioSource, Serializable {
+public class bioSourceProxy extends externalReferenceUtilityClassProxy implements bioSource {
 	public bioSourceProxy() {
 	}
 

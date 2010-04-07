@@ -8,34 +8,64 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level2.Level2Element;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import java.io.Serializable;
+import javax.persistence.*;
+
 import java.util.Set;
 
-@Entity(name = "l2level2element")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class Level2ElementProxy extends BioPAXElementProxy implements Level2Element, Serializable {
+@javax.persistence.Entity(name = "l2element")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@NamedQueries({
+@NamedQuery(name="org.biopax.paxtools.proxy.level2.elementByRdfId",
+			query="from org.biopax.paxtools.proxy.level2.Level2ElementProxy as l2el where upper(l2el.RDFId) = upper(:rdfid)"),
+@NamedQuery(name="org.biopax.paxtools.proxy.level2.elementByRdfIdEager",
+			query="from org.biopax.paxtools.proxy.level2.Level2ElementProxy as l2el fetch all properties where upper(l2el.RDFId) = upper(:rdfid)")
+
+})
+public abstract class Level2ElementProxy extends BioPAXElementProxy
+	implements Level2Element 
+{
 	protected Level2ElementProxy() {
-		// not get object. because this object has not factory.
+		this.object = BioPAXLevel.L2.getDefaultFactory()
+				.reflectivelyCreate(this.getModelInterface());
+	}
+
+	private Long proxyId = 0L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "proxy_id")
+	public Long getProxyId() {
+		return proxyId;
+	}
+
+	public void setProxyId(Long value) {
+		proxyId = value;
+	}
+
+	@Column(name = "rdfid", length = 500, nullable = false, unique = true)
+	public String getRDFId() {
+		return object.getRDFId();
+	}
+
+	public void setRDFId(String id) {
+		object.setRDFId(id);
 	}
 
 	@CollectionOfElements
 	@Column(name = "comment_x", columnDefinition = "text")
 	@FieldBridge(impl = StringSetBridge.class)
-	@Field(name = BioPAXElementProxy.SEARCH_FIELD_COMMENT,
-		index = Index.TOKENIZED)
-	public Set<String> getCOMMENT()
-	{
-		return ((Level2Element)object).getCOMMENT();
+	@Field(name = BioPAXElementProxy.SEARCH_FIELD_COMMENT, index = Index.TOKENIZED)
+	public Set<String> getCOMMENT() {
+		return ((Level2Element) object).getCOMMENT();
 	}
 
     public boolean isEquivalent(BioPAXElement element)

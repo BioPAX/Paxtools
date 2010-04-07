@@ -7,8 +7,10 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -18,14 +20,9 @@ import java.util.Set;
  * Proxy for xref
  */
 @Entity(name="l3xref")
-//@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public abstract class XrefProxy extends Level3ElementProxy 
 	implements Xref 
 {
-	public XrefProxy() {
-		// not get object. because this object has not factory.
-	}
-
    // Property DB
 
 	@Basic @Column(name="db_x", columnDefinition="text")
@@ -81,5 +78,9 @@ public abstract class XrefProxy extends Level3ElementProxy
 		return ((Xref)object).getXrefOf();
 	}
 
+	@Transient
+	public Class<? extends BioPAXElement> getModelInterface() {
+		return Xref.class;
+	}
 }
 
