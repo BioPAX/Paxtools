@@ -7,6 +7,7 @@
 
 package org.biopax.paxtools.proxy.level3;
 
+import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level3.Level3Element;
 import org.hibernate.annotations.CollectionOfElements;
@@ -36,15 +37,20 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 			query="from org.biopax.paxtools.proxy.level3.Level3ElementProxy as l3el fetch all properties where upper(l3el.RDFId) = upper(:rdfid)")
 
 })
-public abstract class Level3ElementProxy extends BioPAXElementProxy 
+public abstract class Level3ElementProxy<T extends Level3Element> extends BioPAXElementProxy<T>
 	implements Level3Element 
 {
 
 	private static final long serialVersionUID = 3515758244193005906L;
 
-	protected Level3ElementProxy() {
-		this.object = BioPAXLevel.L3.getDefaultFactory()
-			.reflectivelyCreate(this.getModelInterface());
+	public Level3ElementProxy()
+	{
+		this(BioPAXLevel.L3.getDefaultFactory());
+	}
+
+	protected Level3ElementProxy(BioPAXFactory factory)
+	{
+		super(factory);
 	}
 
 	private Long proxyId = 0L;
@@ -76,22 +82,22 @@ public abstract class Level3ElementProxy extends BioPAXElementProxy
 		index = Index.TOKENIZED)
 	public Set<String> getComment()
 	{
-		return ((Level3Element)object).getComment();
+		return object.getComment();
 	}
 
 	public void addComment(String COMMENT)
 	{
-		((Level3Element)object).addComment(COMMENT);
+		object.addComment(COMMENT);
 	}
 
 	public void removeComment(String COMMENT)
 	{
-		((Level3Element)object).removeComment(COMMENT);
+		object.removeComment(COMMENT);
 	}
 
 	public void setComment(Set<String> COMMENT)
 	{
-		((Level3Element)object).setComment(COMMENT);
+		object.setComment(COMMENT);
 	}
 }
 

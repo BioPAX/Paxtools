@@ -19,8 +19,4 @@ class DnaRegionImpl extends SimplePhysicalEntityImpl implements DnaRegion
 		return DnaRegion.class;
 	}
 
-    @Override
-    public Class<? extends PhysicalEntity> getPhysicalEntityClass() {
-        return DnaRegion.class;
-    }
 }

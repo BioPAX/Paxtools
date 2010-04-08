@@ -9,6 +9,7 @@
 package org.biopax.paxtools.proxy;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,11 +17,11 @@ import java.util.Set;
 /**
  * Base Proxy for persistent BioPAX Elements
  */
-public abstract class BioPAXElementProxy implements BioPAXElement {
+public abstract class BioPAXElementProxy<proxy extends BioPAXElement> implements BioPAXElement {
 	/**
 	 * target object
 	 */
-	protected BioPAXElement object = null;
+	protected proxy object = null;
 
 	public final static String SEARCH_FIELD_SOURCE_NAME = "source_name";
 	public final static String SEARCH_INDEX_NAME = "paxtools";
@@ -34,7 +35,14 @@ public abstract class BioPAXElementProxy implements BioPAXElement {
 	public final static String SEARCH_FIELD_XREF_ID = "xref_id";
 	public final static String SEARCH_FIELD_AVAILABILITY = "availability";
 	public final static String SEARCH_FIELD_COMMENT = "comment";
-	
+
+	protected BioPAXElementProxy(BioPAXFactory factory)
+	{
+		this.object= (proxy) factory.reflectivelyCreate(this.getModelInterface());
+	}
+
+
+
 	public String toString() {
 		return object.toString();
 	}

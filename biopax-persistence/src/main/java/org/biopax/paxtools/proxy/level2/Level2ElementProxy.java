@@ -30,10 +30,11 @@ import java.util.Set;
 			query="from org.biopax.paxtools.proxy.level2.Level2ElementProxy as l2el fetch all properties where upper(l2el.RDFId) = upper(:rdfid)")
 
 })
-public abstract class Level2ElementProxy extends BioPAXElementProxy
+public abstract class Level2ElementProxy<T extends Level2Element> extends BioPAXElementProxy<T>
 	implements Level2Element 
 {
-	protected Level2ElementProxy() {
+	protected Level2ElementProxy()
+	{
 		this.object = BioPAXLevel.L2.getDefaultFactory()
 				.reflectivelyCreate(this.getModelInterface());
 	}

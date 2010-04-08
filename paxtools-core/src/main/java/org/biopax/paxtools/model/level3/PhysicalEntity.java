@@ -1,5 +1,7 @@
 package org.biopax.paxtools.model.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
+
 import java.util.Set;
 
 
@@ -76,5 +78,15 @@ public interface PhysicalEntity extends Entity, Controller
 
 	void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntitys);
 
+
+	//Inverse of property memberPhysicalEntity
+	Set<PhysicalEntity> getMemberPhysicalEntityOf();
+
+
+	@Override
+	/**
+	 * Overridden to provide better downcasting
+	*/
+	Class<? extends PhysicalEntity> getModelInterface();
 }
 	
