@@ -32,16 +32,15 @@ package org.mskcc.psibiopax.converter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.*;
 
-import generated.psimil2.*;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
+import psidev.psi.mi.xml.model.Entry;
+import psidev.psi.mi.xml.model.EntrySet;
+import psidev.psi.mi.xml.PsimiXmlReader;
 
 import java.io.InputStream;
 
 import java.util.Set;
-import java.util.List;
 import java.util.Iterator;
+import java.util.Collection;
 
 import junit.framework.Assert;
 import junit.framework.Test;
@@ -54,11 +53,6 @@ import junit.framework.TestSuite;
  * @author Benjamin Gross
  */
 public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
-
-	/**
-	 * psi-mi generated package
-	 */
-	private static final String PSI_MI_GENERATED_PACKAGE = "generated.psimil2";
 
 	/**
 	 * psi-mi test file
@@ -106,15 +100,12 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 		// open file
 		try {
 
-			// setup jaxb 
-			JAXBContext context = JAXBContext.newInstance(PSI_MI_GENERATED_PACKAGE);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-
 			// unmarshall the data, close the stream
+			PsimiXmlReader reader = new PsimiXmlReader();
             InputStream is = getClass().getClassLoader().getResourceAsStream(PSI_MI_TEST_FILE);
-			EntrySet es = (EntrySet)unmarshaller.unmarshal(is);
+			EntrySet es = reader.read(is);
 			is.close();
-			List entries =  es.getEntry();
+			Collection<Entry> entries =  es.getEntries();
 			
 			// we should only have 1 entry
             Assert.assertEquals(entries.size(), 1);
@@ -124,7 +115,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 			bpMapper.setNamespace(EntryMapper.RDF_ID_PREFIX);
 
 			// get entry
-			EntrySet.Entry entry = (EntrySet.Entry)entries.iterator().next();
+			Entry entry = (Entry)entries.iterator().next();
 			EntryMapper mapper = new EntryMapper(bpMapper, this, entry, 1970);
 			mapper.start();
 		}
