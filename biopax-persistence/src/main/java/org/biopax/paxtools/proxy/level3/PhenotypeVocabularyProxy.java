@@ -20,7 +20,7 @@ import javax.persistence.Entity;
  */
 @Entity(name="l3phenotypevocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class PhenotypeVocabularyProxy extends ControlledVocabularyProxy 
+public class PhenotypeVocabularyProxy extends ControlledVocabularyProxy<PhenotypeVocabulary>
 	implements PhenotypeVocabulary 
 {
 

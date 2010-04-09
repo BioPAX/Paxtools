@@ -20,7 +20,7 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3degradation")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DegradationProxy extends ConversionProxy implements Degradation {
+public class DegradationProxy extends ConversionProxy<Degradation> implements Degradation {
 
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {

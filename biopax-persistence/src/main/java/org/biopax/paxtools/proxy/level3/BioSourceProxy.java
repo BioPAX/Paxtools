@@ -24,7 +24,7 @@ import org.hibernate.annotations.CollectionOfElements;
  */
 @Entity(name="l3biosource")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class BioSourceProxy extends Level3ElementProxy implements BioSource {
+public class BioSourceProxy extends Level3ElementProxy<BioSource> implements BioSource {
 
 // Named
 	
@@ -32,39 +32,39 @@ public class BioSourceProxy extends Level3ElementProxy implements BioSource {
 	@FieldBridge(impl=StringSetBridge.class)
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
 	public Set<String> getName() {
-		return ((BioSource)object).getName();
+		return object.getName();
 	}
 	
 	public void addName(String NAME_TEXT) {
-		((BioSource)object).addName(NAME_TEXT);
+		object.addName(NAME_TEXT);
 	}
 	
 	public void removeName(String NAME_TEXT) {
-		((BioSource)object).removeName(NAME_TEXT);
+		object.removeName(NAME_TEXT);
 	}
 	
 	public void setName(Set<String> newNAME) {
-		((BioSource)object).setName(newNAME);
+		object.setName(newNAME);
 	}
 	
 	@Basic @Column(name="display_name_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public String getDisplayName() {
-		return ((BioSource)object).getDisplayName();
+		return object.getDisplayName();
 	}
 	
 	public void setDisplayName(String newDISPLAY_NAME) {
-		((BioSource)object).setDisplayName(newDISPLAY_NAME);
+		object.setDisplayName(newDISPLAY_NAME);
 	}
 	
 	@Basic @Column(name="standard_name_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public String getStandardName() {
-		return ((BioSource)object).getStandardName();
+		return object.getStandardName();
 	}
 	
 	public void setStandardName(String newSTANDARD_NAME) {
-		((BioSource)object).setStandardName(newSTANDARD_NAME);
+		object.setStandardName(newSTANDARD_NAME);
 	}
 	
 // bioSource
@@ -74,11 +74,11 @@ public class BioSourceProxy extends Level3ElementProxy implements BioSource {
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = CellVocabularyProxy.class)
 	@JoinColumn(name="cell_type_x")
 	public CellVocabulary getCellType() {
-		return ((BioSource)object).getCellType();
+		return object.getCellType();
 	}
 	
 	public void setCellType(CellVocabulary CELLTYPE) {
-		((BioSource)object).setCellType(CELLTYPE);
+		object.setCellType(CELLTYPE);
 	}
 	
 	// Property TAXON-XREF
@@ -86,11 +86,11 @@ public class BioSourceProxy extends Level3ElementProxy implements BioSource {
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = UnificationXrefProxy.class)
 	@JoinColumn(name="taxon_xref_x")
 	public UnificationXref getTaxonXref() {
-		return ((BioSource)object).getTaxonXref();
+		return object.getTaxonXref();
 	}
 	
 	public void setTaxonXref(UnificationXref TAXON_XREF) {
-		((BioSource)object).setTaxonXref(TAXON_XREF);
+		object.setTaxonXref(TAXON_XREF);
 	}
 	
 	// Property TISSUE
@@ -98,11 +98,11 @@ public class BioSourceProxy extends Level3ElementProxy implements BioSource {
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = TissueVocabularyProxy.class)
 	@JoinColumn(name="tissue_x")
 	public TissueVocabulary getTissue() {
-		return ((BioSource)object).getTissue();
+		return object.getTissue();
 	}
 	
 	public void setTissue(TissueVocabulary TISSUE) {
-		((BioSource)object).setTissue(TISSUE);
+		object.setTissue(TISSUE);
 	}
 
 	@Transient

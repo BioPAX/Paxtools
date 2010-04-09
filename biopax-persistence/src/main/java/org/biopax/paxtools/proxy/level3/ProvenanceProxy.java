@@ -24,26 +24,26 @@ import java.util.Set;
  */
 @Entity(name="l3provenance")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ProvenanceProxy extends Level3ElementProxy implements Provenance {
+public class ProvenanceProxy extends Level3ElementProxy<Provenance> implements Provenance {
 
 // XReferrable
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)
 	@JoinTable(name="l3entity_xref")
 	public Set<Xref> getXref() {
-		return ((Provenance)object).getXref();
+		return object.getXref();
 	}
 
 	public void addXref(Xref XREF) {
-		((Provenance)object).addXref(XREF);
+		object.addXref(XREF);
 	}
 
 	public void removeXref(Xref XREF) {
-		((Provenance)object).removeXref(XREF);
+		object.removeXref(XREF);
 	}
 
 	public void setXref(Set<Xref> XREF) {
-		((Provenance)object).setXref(XREF);
+		object.setXref(XREF);
 	}
 
 // Named
@@ -52,42 +52,41 @@ public class ProvenanceProxy extends Level3ElementProxy implements Provenance {
 	@FieldBridge(impl=StringSetBridge.class)
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
 	public Set<String> getName() {
-		return ((Provenance)object).getName();
+		return object.getName();
 	}
 	
 	public void addName(String NAME_TEXT) {
-		((Provenance)object).addName(NAME_TEXT);
+		object.addName(NAME_TEXT);
 	}
 	
 	public void removeName(String NAME_TEXT) {
-		((Provenance)object).removeName(NAME_TEXT);
+		object.removeName(NAME_TEXT);
 	}
 	
 	public void setName(Set<String> newNAME) {
-		((Provenance)object).setName(newNAME);
+		object.setName(newNAME);
 	}
 	
 	@Basic @Column(name="display_name_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public String getDisplayName() {
-		return ((Provenance)object).getDisplayName();
+		return object.getDisplayName();
 	}
 	
 	public void setDisplayName(String newDISPLAY_NAME) {
-		((Provenance)object).setDisplayName(newDISPLAY_NAME);
+		object.setDisplayName(newDISPLAY_NAME);
 	}
 	
 	@Basic @Column(name="standard_name_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public String getStandardName() {
-		return ((Provenance)object).getStandardName();
+		return object.getStandardName();
 	}
 	
 	public void setStandardName(String newSTANDARD_NAME) {
-		((Provenance)object).setStandardName(newSTANDARD_NAME);
+		object.setStandardName(newSTANDARD_NAME);
 	}
-	
-	
+
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {
 		return Provenance.class;

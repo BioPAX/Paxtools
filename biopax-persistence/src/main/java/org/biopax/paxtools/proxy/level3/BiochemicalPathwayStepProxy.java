@@ -21,7 +21,7 @@ import javax.persistence.*;
  */
 @Entity(name="l3biochemicalpathwaystep")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class BiochemicalPathwayStepProxy extends PathwayStepProxy implements
+public class BiochemicalPathwayStepProxy extends PathwayStepProxy<BiochemicalPathwayStep> implements
 	BiochemicalPathwayStep {
 
 	// Property STEP-CONVERSION
@@ -29,22 +29,22 @@ public class BiochemicalPathwayStepProxy extends PathwayStepProxy implements
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= ConversionProxy.class)
 	@JoinColumn(name="step_conversion_x")
 	public Conversion getStepConversion() {
-		return ((BiochemicalPathwayStep)object).getStepConversion();
+		return object.getStepConversion();
 	}
 
     public void setStepConversion(Conversion newSTEP_CONVERSION) {
-		((BiochemicalPathwayStep)object).setStepConversion(newSTEP_CONVERSION);
+		object.setStepConversion(newSTEP_CONVERSION);
     }
 
 	// Property STEP-DIRECTION
 
 	@Basic @Enumerated @Column(name="step_direction_x")
 	public StepDirection getStepDirection() {
-		return ((BiochemicalPathwayStep)object).getStepDirection();
+		return object.getStepDirection();
 	}
 
 	public void setStepDirection(StepDirection newSTEP_DIRECTION) {
-		((BiochemicalPathwayStep)object).setStepDirection(newSTEP_DIRECTION);
+		object.setStepDirection(newSTEP_DIRECTION);
 	}
 	
 	@Transient

@@ -6,7 +6,6 @@
  */
 package org.biopax.paxtools.proxy.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*; // there is Entity class (and next javax.persistence.* would hide it)
 import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
@@ -23,25 +22,25 @@ import javax.persistence.Transient;
  */
 @javax.persistence.Entity(name = "l3complex")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ComplexProxy extends PhysicalEntityProxy implements Complex {
+public class ComplexProxy extends PhysicalEntityProxy<Complex> implements Complex {
 
 	// Property COMPONENTS
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class)
 	@JoinTable(name = "l3complex_components")
 	public Set<PhysicalEntity> getComponent() {
-		return ((Complex)object).getComponent();
+		return object.getComponent();
 	}
 
 	public void addComponent(PhysicalEntity component) {
-		((Complex)object).addComponent(component);
+		object.addComponent(component);
 	}
 
 	public void removeComponent(PhysicalEntity component) {
-		((Complex)object).removeComponent(component);
+		object.removeComponent(component);
 	}
 
 	public void setComponent(Set<PhysicalEntity> component) {
-		((Complex)object).setComponent(component);
+		object.setComponent(component);
 	}
 
 	// Property Component-STOICHIOMETRY
@@ -49,35 +48,35 @@ public class ComplexProxy extends PhysicalEntityProxy implements Complex {
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = StoichiometryProxy.class)
 	@JoinTable(name = "l3complex_compo_stoichiom")
 	public Set<Stoichiometry> getComponentStoichiometry() {
-		return ((Complex)object).getComponentStoichiometry();
+		return object.getComponentStoichiometry();
 	}
 
 	public void addComponentStoichiometry(Stoichiometry stoichiometry) {
-		((Complex)object).addComponentStoichiometry(stoichiometry);
+		object.addComponentStoichiometry(stoichiometry);
 	}
 
 	public void removeComponentStoichiometry(Stoichiometry stoichiometry) {
-		((Complex)object).removeComponentStoichiometry(stoichiometry);
+		object.removeComponentStoichiometry(stoichiometry);
 	}
 
 	public void setComponentStoichiometry(Set<Stoichiometry> stoichiometry) {
-		((Complex)object).setComponentStoichiometry(stoichiometry);
+		object.setComponentStoichiometry(stoichiometry);
 	}
 
 	@Transient
 	public Set<SimplePhysicalEntity> getSimpleMembers()
 	{
-		return ((Complex) object).getSimpleMembers();
+		return object.getSimpleMembers();
 	}
 
 	@Transient
 	public Set<EntityReference> getMemberReferences()
 	{
-		return ((Complex) object).getMemberReferences();
+		return object.getMemberReferences();
 	}
 
 	@Transient
-	public Class<? extends BioPAXElement> getModelInterface() {
+	public Class<? extends PhysicalEntity> getModelInterface() {
 		return Complex.class;
 	}
 }

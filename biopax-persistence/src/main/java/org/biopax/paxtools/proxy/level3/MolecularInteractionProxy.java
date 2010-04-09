@@ -20,7 +20,7 @@ import org.hibernate.search.annotations.Indexed;
  */
 @javax.persistence.Entity(name="l3physicalinteraction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class MolecularInteractionProxy extends InteractionProxy implements MolecularInteraction {
+public class MolecularInteractionProxy extends InteractionProxy<MolecularInteraction> implements MolecularInteraction {
 	
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {

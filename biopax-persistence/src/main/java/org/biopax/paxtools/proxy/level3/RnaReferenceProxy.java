@@ -19,10 +19,12 @@ import org.hibernate.search.annotations.Indexed;
  */
 @javax.persistence.Entity(name="l3rnareference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class RnaReferenceProxy extends SequenceEntityReferenceProxy implements RnaReference {
+public class RnaReferenceProxy extends SequenceEntityReferenceProxy<RnaReference> implements RnaReference {
 	
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {
 		return RnaReference.class;
 	}
+
+    //TODO  ?
 }

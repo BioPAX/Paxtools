@@ -25,7 +25,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  */
 @Entity(name="l3publicationxref")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class PublicationXrefProxy extends XrefProxy implements PublicationXref {
+public class PublicationXrefProxy extends XrefProxy<PublicationXref> implements PublicationXref {
 
 	// Property AUTHORS
 
@@ -33,19 +33,19 @@ public class PublicationXrefProxy extends XrefProxy implements PublicationXref {
 	@FieldBridge(impl=StringSetBridge.class)
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public Set<String> getAuthor() {
-		return ((PublicationXref)object).getAuthor();
+		return object.getAuthor();
 	}
 
 	public void addAuthor(String AUTHORS) {
-		((PublicationXref)object).addAuthor(AUTHORS);
+		object.addAuthor(AUTHORS);
 	}
 
 	public void removeAuthor(String AUTHORS) {
-		((PublicationXref)object).removeAuthor(AUTHORS);
+		object.removeAuthor(AUTHORS);
 	}
 
 	public void setAuthor(Set<String> AUTHORS) {
-		((PublicationXref)object).setAuthor(AUTHORS);
+		object.setAuthor(AUTHORS);
 	}
 
     // Property SOURCE
@@ -54,19 +54,19 @@ public class PublicationXrefProxy extends XrefProxy implements PublicationXref {
 	@FieldBridge(impl=StringSetBridge.class)
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public Set<String> getSource() {
-		return ((PublicationXref)object).getSource();
+		return object.getSource();
 	}
 
 	public void addSource(String SOURCE) {
-		((PublicationXref)object).addSource(SOURCE);
+		object.addSource(SOURCE);
 	}
 
 	public void removeSource(String SOURCE) {
-		((PublicationXref)object).removeSource(SOURCE);
+		object.removeSource(SOURCE);
 	}
 
 	public void setSource(Set<String> SOURCE) {
-		((PublicationXref)object).setSource(SOURCE);
+		object.setSource(SOURCE);
 	}
 
     // Property TITLE
@@ -74,11 +74,11 @@ public class PublicationXrefProxy extends XrefProxy implements PublicationXref {
 	@Basic @Column(name="title_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getTitle() {
-		return ((PublicationXref)object).getTitle();
+		return object.getTitle();
 	}
 
 	public void setTitle(String TITLE) {
-		((PublicationXref)object).setTitle(TITLE);
+		object.setTitle(TITLE);
 	}
 
     // Property URL
@@ -87,30 +87,30 @@ public class PublicationXrefProxy extends XrefProxy implements PublicationXref {
 	@FieldBridge(impl=StringSetBridge.class)
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public Set<String> getUrl() {
-		return ((PublicationXref)object).getUrl();
+		return object.getUrl();
 	}
 
 	public void addUrl(String URL) {
-		((PublicationXref)object).addUrl(URL);
+		object.addUrl(URL);
 	}
 
 	public void removeUrl(String URL) {
-		((PublicationXref)object).removeUrl(URL);
+		object.removeUrl(URL);
 	}
 
 	public void setUrl(Set<String> URL) {
-		((PublicationXref)object).setUrl(URL);
+		object.setUrl(URL);
 	}
 
     // Property YEAR
 
 	@Basic @Column(name="year_x")
 	public int getYear() {
-		return ((PublicationXref)object).getYear();
+		return object.getYear();
 	}
 
 	public void setYear(int YEAR) {
-		((PublicationXref)object).setYear(YEAR);
+		object.setYear(YEAR);
 	}
 	
 	@Transient

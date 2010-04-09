@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Entity(name="l3experimentalform")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ExperimentalFormProxy extends Level3ElementProxy implements
+public class ExperimentalFormProxy extends Level3ElementProxy<ExperimentalForm> implements
 	ExperimentalForm {
 
 	// Property EXPERIMENTAL-FORM-TYPE
@@ -30,19 +30,19 @@ public class ExperimentalFormProxy extends Level3ElementProxy implements
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = ExperimentalFormVocabularyProxy.class)
 	@JoinTable(name="l3expform_exp_form_desc")
 	public Set<ExperimentalFormVocabulary> getExperimentalFormDescription() {
-		return ((ExperimentalForm)object).getExperimentalFormDescription();
+		return object.getExperimentalFormDescription();
 	}
 
 	public void addExperimentalFormDescription(ExperimentalFormVocabulary EXPERIMENTAL_FORM_TYPE) {
-		((ExperimentalForm)object).addExperimentalFormDescription(EXPERIMENTAL_FORM_TYPE);
+		object.addExperimentalFormDescription(EXPERIMENTAL_FORM_TYPE);
 	}
 
 	public void removeExperimentalFormDescription(ExperimentalFormVocabulary EXPERIMENTAL_FORM_TYPE) {
-		((ExperimentalForm)object).removeExperimentalFormDescription(EXPERIMENTAL_FORM_TYPE);
+		object.removeExperimentalFormDescription(EXPERIMENTAL_FORM_TYPE);
 	}
 
 	public void setExperimentalFormDescription(Set<ExperimentalFormVocabulary> EXPERIMENTAL_FORM_TYPE) {
-		((ExperimentalForm)object).setExperimentalFormDescription(EXPERIMENTAL_FORM_TYPE);
+		object.setExperimentalFormDescription(EXPERIMENTAL_FORM_TYPE);
 	}
 
 	// Property PARTICIPANT
@@ -50,21 +50,21 @@ public class ExperimentalFormProxy extends Level3ElementProxy implements
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class)
 	@JoinColumn(name="experimental_form_entity_x")
 	public org.biopax.paxtools.model.level3.Entity getExperimentalFormEntity() {
-		return ((ExperimentalForm)object).getExperimentalFormEntity();
+		return object.getExperimentalFormEntity();
 	}
 
     /*
 	public void setExperimentalFormEntity(PhysicalEntity newPARTICIPANT) {
-		((ExperimentalForm)object).setExperimentalFormEntity(newPARTICIPANT);
+		object.setExperimentalFormEntity(newPARTICIPANT);
 	}
 
     public void setExperimentalFormEntity(Gene newPARTICIPANT) {
-		((ExperimentalForm)object).setExperimentalFormEntity(newPARTICIPANT);
+		object.setExperimentalFormEntity(newPARTICIPANT);
 	}
     */
 
     public void setExperimentalFormEntity(org.biopax.paxtools.model.level3.Entity newPARTICIPANT) {
-        ((ExperimentalForm)object).setExperimentalFormEntity(newPARTICIPANT);
+        object.setExperimentalFormEntity(newPARTICIPANT);
     }
     
 	// Property ExperimentalFeature
@@ -72,19 +72,19 @@ public class ExperimentalFormProxy extends Level3ElementProxy implements
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = EntityFeatureProxy.class)
 	@JoinTable(name="l3expform_exp_feture")
 	public Set<EntityFeature> getExperimentalFeature() {
-		return ((ExperimentalForm)object).getExperimentalFeature();
+		return object.getExperimentalFeature();
 	}
 
 	public void setExperimentalFeature(Set<EntityFeature> experimentalFeature) {
-		((ExperimentalForm)object).setExperimentalFeature(experimentalFeature);
+		object.setExperimentalFeature(experimentalFeature);
 	}
 
 	public void addExperimentalFeature(EntityFeature experimentalFeature) {
-		((ExperimentalForm)object).addExperimentalFeature(experimentalFeature);
+		object.addExperimentalFeature(experimentalFeature);
 	}
 
 	public void removeExperimentalFeature(EntityFeature experimentalFeature) {
-		((ExperimentalForm)object).removeExperimentalFeature(experimentalFeature);
+		object.removeExperimentalFeature(experimentalFeature);
 	}
 	
 	@Transient

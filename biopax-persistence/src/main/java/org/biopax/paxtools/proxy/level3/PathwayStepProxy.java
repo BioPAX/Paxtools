@@ -23,7 +23,7 @@ import java.util.Set;
  */
 @Entity(name="l3pathwaystep")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class PathwayStepProxy extends Level3ElementProxy implements PathwayStep {
+public class PathwayStepProxy<T extends PathwayStep> extends Level3ElementProxy<T> implements PathwayStep {
 
 // utilityClass
 
@@ -32,19 +32,19 @@ public class PathwayStepProxy extends Level3ElementProxy implements PathwayStep 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= EvidenceProxy.class)
 	@JoinTable(name="l3pathwaystep_evidence")
 	public Set<Evidence> getEvidence() {
-		return ((PathwayStep)object).getEvidence();
+		return object.getEvidence();
 	}
 
 	public void addEvidence(Evidence newEvidence) {
-		((PathwayStep)object).addEvidence(newEvidence);
+		object.addEvidence(newEvidence);
 	}
 
 	public void removeEvidence(Evidence oldEvidence) {
-		((PathwayStep)object).removeEvidence(oldEvidence);
+		object.removeEvidence(oldEvidence);
 	}
 
 	public void setEvidence(Set<Evidence> newEvidence) {
-		((PathwayStep)object).setEvidence(newEvidence);
+		object.setEvidence(newEvidence);
 	}
 
 // pathwayStep
@@ -54,26 +54,26 @@ public class PathwayStepProxy extends Level3ElementProxy implements PathwayStep 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= PathwayStepProxy.class)
 	@JoinTable(name="l3pathwaystep_next_step")
 	public Set<PathwayStep> getNextStep() {
-		return ((PathwayStep)object).getNextStep();
+		return object.getNextStep();
 	}
 
 	public void addNextStep(PathwayStep NEXT_STEP) {
-		((PathwayStep)object).addNextStep(NEXT_STEP);
+		object.addNextStep(NEXT_STEP);
 	}
 
 	public void removeNextStep(PathwayStep NEXT_STEP) {
-		((PathwayStep)object).removeNextStep(NEXT_STEP);
+		object.removeNextStep(NEXT_STEP);
 	}
 
 	public void setNextStep(Set<PathwayStep> NEXT_STEP) {
-		((PathwayStep)object).setNextStep(NEXT_STEP);
+		object.setNextStep(NEXT_STEP);
 	}
 
 	// Inverse of Property NEXT-STEP
 
 	@Transient
 	public Set<PathwayStep> getNextStepOf() {
-		return ((PathwayStep)object).getNextStepOf();
+		return object.getNextStepOf();
 	}
 
     // Property STEP-INTERACTION
@@ -81,24 +81,24 @@ public class PathwayStepProxy extends Level3ElementProxy implements PathwayStep 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity=ProcessProxy.class)
 	@JoinTable(name="l3pathwaystep_step_process")
 	public Set<Process> getStepProcess() {
-		return ((PathwayStep)object).getStepProcess();
+		return object.getStepProcess();
 	}
 
 	public void addStepProcess(Process newSTEP_INTERACTIONS) {
-		((PathwayStep)object).addStepProcess(newSTEP_INTERACTIONS);
+		object.addStepProcess(newSTEP_INTERACTIONS);
 	}
 
 	public void removeStepProcess(Process oldSTEP_INTERACTIONS) {
-		((PathwayStep)object).removeStepProcess(oldSTEP_INTERACTIONS);
+		object.removeStepProcess(oldSTEP_INTERACTIONS);
 	}
 
 	public void setStepProcess(Set<Process> newSTEP_INTERACTIONS) {
-		((PathwayStep)object).setStepProcess(newSTEP_INTERACTIONS);
+		object.setStepProcess(newSTEP_INTERACTIONS);
 	}
 
 	@Transient
 	public Set<Pathway> getPathwayOrdersOf() {
-		return ((PathwayStep)object).getPathwayOrdersOf();
+		return object.getPathwayOrdersOf();
 	}
 	
 	@Transient

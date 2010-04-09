@@ -20,29 +20,29 @@ import javax.persistence.Entity;
  */
 @Entity(name="l3sequencesite")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SequenceSiteProxy extends SequenceLocationProxy 
+public class SequenceSiteProxy extends SequenceLocationProxy<SequenceSite> 
 	implements SequenceSite
 {
 	// Property POSITION-STATUS
 
 	@Basic @Enumerated @Column(name="position_status_x")
 	public PositionStatusType getPositionStatus() {
-		return ((SequenceSite)object).getPositionStatus();
+		return object.getPositionStatus();
 	}
 
 	public void setPositionStatus(PositionStatusType POSITION_STATUS) {
-		((SequenceSite)object).setPositionStatus(POSITION_STATUS);
+		object.setPositionStatus(POSITION_STATUS);
 	}
 
     // Property SEQUENCE-POSITION
 
 	@Basic @Column(name="sequence_position_x")
 	public int getSequencePosition() {
-		return ((SequenceSite)object).getSequencePosition();
+		return object.getSequencePosition();
 	}
 
 	public void setSequencePosition(int SEQUENCE_POSITION) {
-		((SequenceSite)object).setSequencePosition(SEQUENCE_POSITION);
+		object.setSequencePosition(SEQUENCE_POSITION);
 	}
 	
 	@Transient

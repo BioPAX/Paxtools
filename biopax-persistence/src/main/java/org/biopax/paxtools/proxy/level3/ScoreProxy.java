@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Entity(name="l3score")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ScoreProxy extends Level3ElementProxy implements Score 
+public class ScoreProxy extends Level3ElementProxy<Score> implements Score 
 {
 // XReferrable
 
@@ -31,29 +31,29 @@ public class ScoreProxy extends Level3ElementProxy implements Score
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)
 	@JoinTable(name="l3score_xref")
 	public Set<Xref> getXref() {
-		return ((Score)object).getXref();
+		return object.getXref();
 	}
 
 	public void addXref(Xref XREF) {
-		((Score)object).addXref(XREF);
+		object.addXref(XREF);
 	}
 
 	public void removeXref(Xref XREF) {
-		((Score)object).removeXref(XREF);
+		object.removeXref(XREF);
 	}
 
 	public void setXref(Set<Xref> XREF) {
-		((Score)object).setXref(XREF);
+		object.setXref(XREF);
 	}
 
 	@Basic @Column(name="value_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     public String getValue() {
-		return ((Score)object).getValue();
+		return object.getValue();
     }
 
     public void setValue(String value) {
-		((Score)object).setValue(value);
+		object.setValue(value);
     }
 
 	// Property ScoreSource
@@ -61,11 +61,11 @@ public class ScoreProxy extends Level3ElementProxy implements Score
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = ProvenanceProxy.class)
 	@JoinColumn(name="score_source_x")
     public Provenance getScoreSource() {
-		return ((Score)object).getScoreSource();
+		return object.getScoreSource();
     }
 
     public void setScoreSource(Provenance scoreSource) {
-		((Score)object).setScoreSource(scoreSource);
+		object.setScoreSource(scoreSource);
     }
     
 	@Transient

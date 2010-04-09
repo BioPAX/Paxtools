@@ -7,7 +7,6 @@
 
 package org.biopax.paxtools.proxy.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
@@ -20,12 +19,12 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3smallmolecule")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SmallMoleculeProxy extends SimplePhysicalEntityProxy 
+public class SmallMoleculeProxy extends SimplePhysicalEntityProxy<SmallMolecule> 
 	implements SmallMolecule 
 {
 	
 	@Transient
-	public Class<? extends BioPAXElement> getModelInterface() {
+	public Class<? extends PhysicalEntity> getModelInterface() {
 		return SmallMolecule.class;
 	}
 }

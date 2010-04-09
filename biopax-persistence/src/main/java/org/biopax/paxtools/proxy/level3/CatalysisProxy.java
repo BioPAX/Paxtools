@@ -22,36 +22,36 @@ import java.util.Set;
  */
 @Entity(name="l3catalysis")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class CatalysisProxy extends ControlProxy implements Catalysis {
+public class CatalysisProxy extends ControlProxy<Catalysis> implements Catalysis {
 	// Property COFACTOR
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= PhysicalEntityProxy.class)
 	@JoinTable(name="l3catalysis_cofactor")
 	public Set<PhysicalEntity> getCofactor() {
-		return ((Catalysis)object).getCofactor();
+		return object.getCofactor();
 	}
 
 	public void addCofactor(PhysicalEntity COFACTOR) {
-		((Catalysis)object).addCofactor(COFACTOR);
+		object.addCofactor(COFACTOR);
 	}
 
 	public void removeCofactor(PhysicalEntity COFACTOR) {
-		((Catalysis)object).removeCofactor(COFACTOR);
+		object.removeCofactor(COFACTOR);
 	}
 
 	public void setCofactor(Set<PhysicalEntity> COFACTOR) {
-		((Catalysis)object).setCofactor(COFACTOR);
+		object.setCofactor(COFACTOR);
 	}
 
 	// Property DIRECTION
 
 	@Basic @Enumerated @Column(name="direction_x")
 	public CatalysisDirectionType getCatalysisDirection() {
-		return ((Catalysis)object).getCatalysisDirection();
+		return object.getCatalysisDirection();
 	}
 
 	public void setCatalysisDirection(CatalysisDirectionType DIRECTION) {
-		((Catalysis)object).setCatalysisDirection(DIRECTION);
+		object.setCatalysisDirection(DIRECTION);
 	}
 	
 	@Transient

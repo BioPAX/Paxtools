@@ -20,7 +20,7 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3modulation")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ModulationProxy extends ControlProxy implements Modulation {
+public class ModulationProxy extends ControlProxy<Modulation> implements Modulation {
 	
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {

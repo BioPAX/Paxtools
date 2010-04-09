@@ -23,7 +23,7 @@ import javax.persistence.*;
  */
 @Entity(name="l3sequencelocation")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SequenceLocationProxy extends Level3ElementProxy 
+public class SequenceLocationProxy<T extends SequenceLocation> extends Level3ElementProxy<T> 
 	implements SequenceLocation 
 {
 
@@ -32,19 +32,19 @@ public class SequenceLocationProxy extends Level3ElementProxy
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = SequenceRegionVocabularyProxy.class)
 	@JoinTable(name="l3seqloc_region_type")
 	public Set<SequenceRegionVocabulary> getRegionType() {
-		return ((SequenceLocation)object).getRegionType();
+		return object.getRegionType();
 	}
 
 	public void addRegionType(SequenceRegionVocabulary regionType) {
-		((SequenceLocation)object).addRegionType(regionType);
+		object.addRegionType(regionType);
 	}
 
 	public void removeRegionType(SequenceRegionVocabulary regionType) {
-		((SequenceLocation)object).removeRegionType(regionType);
+		object.removeRegionType(regionType);
 	}
 
 	public void setRegionType(Set<SequenceRegionVocabulary> regionType) {
-		((SequenceLocation)object).setRegionType(regionType);
+		object.setRegionType(regionType);
 	}
 	
 	@Transient

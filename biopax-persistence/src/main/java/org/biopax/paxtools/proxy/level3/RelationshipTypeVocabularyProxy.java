@@ -19,7 +19,7 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3relationshiptypevocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class RelationshipTypeVocabularyProxy extends ControlledVocabularyProxy 
+public class RelationshipTypeVocabularyProxy extends ControlledVocabularyProxy<RelationshipTypeVocabulary> 
 	implements RelationshipTypeVocabulary 
 {
     

@@ -8,6 +8,7 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level2.Level2Element;
 import org.biopax.paxtools.proxy.BioPAXElementProxy;
@@ -33,11 +34,16 @@ import java.util.Set;
 public abstract class Level2ElementProxy<T extends Level2Element> extends BioPAXElementProxy<T>
 	implements Level2Element 
 {
-	protected Level2ElementProxy()
-	{
-		this.object = BioPAXLevel.L2.getDefaultFactory()
-				.reflectivelyCreate(this.getModelInterface());
-	}
+    public Level2ElementProxy()
+    {
+        this(BioPAXLevel.L2.getDefaultFactory());
+    }
+
+    protected Level2ElementProxy(BioPAXFactory factory)
+    {
+        super(factory);
+    }
+
 
 	private Long proxyId = 0L;
 
@@ -66,7 +72,7 @@ public abstract class Level2ElementProxy<T extends Level2Element> extends BioPAX
 	@FieldBridge(impl = StringSetBridge.class)
 	@Field(name = BioPAXElementProxy.SEARCH_FIELD_COMMENT, index = Index.TOKENIZED)
 	public Set<String> getCOMMENT() {
-		return ((Level2Element) object).getCOMMENT();
+		return object.getCOMMENT();
 	}
 
     public boolean isEquivalent(BioPAXElement element)
@@ -76,18 +82,18 @@ public abstract class Level2ElementProxy<T extends Level2Element> extends BioPAX
 
     public void addCOMMENT(String COMMENT)
 	{
-		((Level2Element)object).addCOMMENT(COMMENT);
+		object.addCOMMENT(COMMENT);
 	}
 
 	public void removeCOMMENT(String COMMENT)
 	{
-		((Level2Element)object).removeCOMMENT(COMMENT);
+		object.removeCOMMENT(COMMENT);
 	}
 
 
 	public void setCOMMENT(Set<String> COMMENT)
 	{
-		((Level2Element)object).setCOMMENT(COMMENT);
+		object.setCOMMENT(COMMENT);
 	}
 }
 

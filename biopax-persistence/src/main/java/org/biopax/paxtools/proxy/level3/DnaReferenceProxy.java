@@ -23,16 +23,16 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3dnareference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DnaReferenceProxy extends SequenceEntityReferenceProxy implements DnaReference {
+public class DnaReferenceProxy extends SequenceEntityReferenceProxy<DnaReference> implements DnaReference {
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SequenceIntervalProxy.class)
 	@JoinColumn(name="genomic_region_x")
 	public SequenceInterval getGenomicRegion() {
-		return ((DnaReference)object).getGenomicRegion();
+		return object.getGenomicRegion();
 	}
 
 	public void setGenomicRegion(SequenceInterval genomicRegion) {
-		((DnaReference)object).setGenomicRegion(genomicRegion);
+		object.setGenomicRegion(genomicRegion);
 	}
 	
 	@Transient

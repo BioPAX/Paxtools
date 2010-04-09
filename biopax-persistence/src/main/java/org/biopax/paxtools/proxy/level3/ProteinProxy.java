@@ -7,7 +7,6 @@
 
 package org.biopax.paxtools.proxy.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
@@ -23,16 +22,10 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 @Entity(name="l3protein")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ProteinProxy extends SimplePhysicalEntityProxy implements Protein {
-
-	@Transient
-    public Class<? extends PhysicalEntity> getPhysicalEntityClass() {
-        return Protein.class;
-
-    }
+public class ProteinProxy extends SimplePhysicalEntityProxy<Protein> implements Protein {
 	
 	@Transient
-	public Class<? extends BioPAXElement> getModelInterface() {
+	public Class<? extends PhysicalEntity> getModelInterface() {
 		return Protein.class;
 	}
 }

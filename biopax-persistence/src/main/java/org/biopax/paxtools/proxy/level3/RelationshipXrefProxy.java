@@ -20,16 +20,16 @@ import javax.persistence.Entity;
  */
 @Entity(name="l3relationshipxref")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class RelationshipXrefProxy extends XrefProxy implements RelationshipXref {
+public class RelationshipXrefProxy extends XrefProxy<RelationshipXref> implements RelationshipXref {
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = RelationshipTypeVocabularyProxy.class)
 	@JoinColumn(name="relationship_type_x")
 	public RelationshipTypeVocabulary getRelationshipType() {
-		return ((RelationshipXref)object).getRelationshipType();
+		return object.getRelationshipType();
 	}
 
 	public void setRelationshipType(RelationshipTypeVocabulary RELATIONSHIP_TYPE) {
-		((RelationshipXref)object).setRelationshipType(RELATIONSHIP_TYPE);
+		object.setRelationshipType(RELATIONSHIP_TYPE);
 	}
 	
 	@Transient

@@ -20,7 +20,7 @@ import javax.persistence.*;
  */
 @Entity(name="l3smallmoleculereference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SmallMoleculeReferenceProxy extends EntityReferenceProxy 
+public class SmallMoleculeReferenceProxy extends EntityReferenceProxy<SmallMoleculeReference> 
 	implements SmallMoleculeReference 
 {
 
@@ -29,22 +29,22 @@ public class SmallMoleculeReferenceProxy extends EntityReferenceProxy
 	@Basic @Column(name="chemical_formula_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getChemicalFormula() {
-		return ((SmallMoleculeReference)object).getChemicalFormula();
+		return object.getChemicalFormula();
 	}
 
 	public void setChemicalFormula(String CHEMICAL_FORMULA) {
-		((SmallMoleculeReference)object).setChemicalFormula(CHEMICAL_FORMULA);
+		object.setChemicalFormula(CHEMICAL_FORMULA);
 	}
 
     // Property MOLECULAR-WEIGHT
 
 	@Basic @Column(name="molecular_weight_x", columnDefinition="text")
 	protected String getMolecularWeight_x() {
-		return floatToString(((SmallMoleculeReference)object).getMolecularWeight());
+		return floatToString(object.getMolecularWeight());
 	}
 
 	protected void setMolecularWeight_x(String s) {
-		((SmallMoleculeReference)object).setMolecularWeight(stringToFloat(s));
+		object.setMolecularWeight(stringToFloat(s));
 	}
 
 	@Transient
@@ -61,11 +61,11 @@ public class SmallMoleculeReferenceProxy extends EntityReferenceProxy
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= ChemicalStructureProxy.class)
 	@JoinColumn(name="structure_x")
 	public ChemicalStructure getStructure() {
-		return ((SmallMoleculeReference)object).getStructure();
+		return object.getStructure();
 	}
 
 	public void setStructure(ChemicalStructure newSTRUCTURE) {
-		((SmallMoleculeReference)object).setStructure(newSTRUCTURE);
+		object.setStructure(newSTRUCTURE);
 	}
 	
 	@Transient

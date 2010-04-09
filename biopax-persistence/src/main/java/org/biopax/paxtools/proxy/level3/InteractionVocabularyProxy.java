@@ -20,7 +20,7 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3interactionVocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class InteractionVocabularyProxy extends ControlledVocabularyProxy 
+public class InteractionVocabularyProxy extends ControlledVocabularyProxy<InteractionVocabulary>
 	implements InteractionVocabulary 
 {
 	@Transient

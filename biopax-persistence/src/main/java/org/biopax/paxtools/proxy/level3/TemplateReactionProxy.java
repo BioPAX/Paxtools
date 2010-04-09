@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Entity(name="l3templatereaction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy 
+public class TemplateReactionProxy extends InteractionProxy<TemplateReaction> 
 	implements TemplateReaction 
 {
 
@@ -31,19 +31,19 @@ public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= PhysicalEntityProxy.class)
 	@JoinTable(name="l3tempreact_product")
 	public Set<PhysicalEntity> getProduct() {
-		return ((TemplateReaction)object).getProduct();
+		return object.getProduct();
 	}
 
 	public void addProduct(PhysicalEntity product) {
-		((TemplateReaction)object).addProduct(product);
+		object.addProduct(product);
 	}
 
 	public void removeProduct(PhysicalEntity product) {
-		((TemplateReaction)object).removeProduct(product);
+		object.removeProduct(product);
 	}
 
 	public void setProduct(Set<PhysicalEntity> product) {
-		((TemplateReaction)object).setProduct(product);
+		object.setProduct(product);
 	}
 
 	// Property RegulatoryElement
@@ -51,19 +51,19 @@ public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= SimplePhysicalEntityProxy.class)
 	@JoinTable(name="l3tempreact_regulatory_element")
 	public Set<NucleicAcid> getInitiationRegion() {
-		return ((TemplateReaction)object).getInitiationRegion();
+		return object.getInitiationRegion();
 	}
 
 	public void addInitiationRegion(NucleicAcid initiationRegion) {
-		((TemplateReaction)object).addInitiationRegion(initiationRegion);
+		object.addInitiationRegion(initiationRegion);
 	}
 
 	public void removeInitiationRegion(NucleicAcid initiationRegion) {
-		((TemplateReaction)object).removeInitiationRegion(initiationRegion);
+		object.removeInitiationRegion(initiationRegion);
 	}
 
 	public void setInitiationRegion(Set<NucleicAcid> initiationRegion) {
-		((TemplateReaction)object).setInitiationRegion(initiationRegion);
+		object.setInitiationRegion(initiationRegion);
 	}
 
 	// Property template
@@ -71,22 +71,22 @@ public class TemplateReactionProxy extends RestrictedInteractionAdapterProxy
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SimplePhysicalEntityProxy.class)
 	@JoinColumn(name="template_x")
 	public NucleicAcid getTemplate() {
-		return ((TemplateReaction)object).getTemplate();
+		return object.getTemplate();
 	}
 
 	public void setTemplate(NucleicAcid template) {
-		((TemplateReaction)object).setTemplate(template);
+		object.setTemplate(template);
 	}
 
     // Property direction
 
 	@Basic @Enumerated @Column(name="direction_x")
 	public TemplateDirectionType getTemplateDirection() {
-		return ((TemplateReaction)object).getTemplateDirection();
+		return object.getTemplateDirection();
 	}
 
 	public void setTemplateDirection(TemplateDirectionType templateDirectionType) {
-		((TemplateReaction)object).setTemplateDirection(templateDirectionType);
+		object.setTemplateDirection(templateDirectionType);
 	}
 	
 	@Transient

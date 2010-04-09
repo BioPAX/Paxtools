@@ -17,7 +17,7 @@ import javax.persistence.Entity;
  */
 @Entity(name="l3simplephysicalentity")
 //@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class SimplePhysicalEntityProxy extends PhysicalEntityProxy 
+public abstract class SimplePhysicalEntityProxy<T extends SimplePhysicalEntity> extends PhysicalEntityProxy<T>
 	implements SimplePhysicalEntity 
 {
 	// Property REFERENCE-ENTITY
@@ -25,10 +25,10 @@ public abstract class SimplePhysicalEntityProxy extends PhysicalEntityProxy
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = EntityReferenceProxy.class)
 	@JoinColumn(name="entity_reference_x")
 	public EntityReference getEntityReference() {
-		return ((SimplePhysicalEntity)object).getEntityReference();
+        return object.getEntityReference();
 	}
 
 	public void setEntityReference(EntityReference entityReference) {
-		((SimplePhysicalEntity)object).setEntityReference(entityReference);
+		object.setEntityReference(entityReference);
 	}
 }

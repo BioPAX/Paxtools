@@ -20,7 +20,7 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3templatereactionregulation")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class TemplateReactionRegulationProxy extends ControlProxy 
+public class TemplateReactionRegulationProxy extends ControlProxy<TemplateReactionRegulation>
 	implements TemplateReactionRegulation 
 {
 	

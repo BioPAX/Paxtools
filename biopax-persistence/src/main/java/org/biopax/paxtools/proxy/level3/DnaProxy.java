@@ -7,8 +7,8 @@
 
 package org.biopax.paxtools.proxy.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Dna;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
@@ -20,10 +20,10 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3dna")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DnaProxy extends SimplePhysicalEntityProxy implements Dna {
+public class DnaProxy extends SimplePhysicalEntityProxy<Dna> implements Dna {
 
 	@Transient
-	public Class<? extends BioPAXElement> getModelInterface() {
+	public Class<? extends PhysicalEntity> getModelInterface() {
 		return Dna.class;
 	}
 }

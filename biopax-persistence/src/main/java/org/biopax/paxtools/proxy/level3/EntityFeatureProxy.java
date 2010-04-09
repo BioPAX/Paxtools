@@ -22,26 +22,26 @@ import java.util.Set;
  */
 @Entity(name="l3entityfeature")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class EntityFeatureProxy extends Level3ElementProxy implements EntityFeature {
+public class EntityFeatureProxy<T extends EntityFeature> extends Level3ElementProxy<T> implements EntityFeature {
 
 // Observable
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = EvidenceProxy.class)
 	@JoinTable(name="l3entityfeature_evidence")
 	public Set<Evidence> getEvidence() {
-		return ((EntityFeature)object).getEvidence();
+		return object.getEvidence();
 	}
 
 	public void addEvidence(Evidence newEvidence) {
-		((EntityFeature)object).addEvidence(newEvidence);
+		object.addEvidence(newEvidence);
 	}
 
 	public void removeEvidence(Evidence oldEvidence) {
-		((EntityFeature)object).removeEvidence(oldEvidence);
+		object.removeEvidence(oldEvidence);
 	}
 
 	public void setEvidence(Set<Evidence> newEvidence) {
-		((EntityFeature)object).setEvidence(newEvidence);
+		object.setEvidence(newEvidence);
 	}
 
 	// Property FEATURE-LOCATION
@@ -49,19 +49,19 @@ public class EntityFeatureProxy extends Level3ElementProxy implements EntityFeat
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = SequenceLocationProxy.class)
 	@JoinTable(name="l3entityfeature_feature_loc")
 	public Set<SequenceLocation> getFeatureLocation() {
-		return ((EntityFeature)object).getFeatureLocation();
+		return object.getFeatureLocation();
 	}
 
 	public void addFeatureLocation(SequenceLocation newFEATURE_LOCATION) {
-		((EntityFeature)object).addFeatureLocation(newFEATURE_LOCATION);
+		object.addFeatureLocation(newFEATURE_LOCATION);
 	}
 
 	public void removeFeatureLocation(SequenceLocation oldFEATURE_LOCATION) {
-		((EntityFeature)object).removeFeatureLocation(oldFEATURE_LOCATION);
+		object.removeFeatureLocation(oldFEATURE_LOCATION);
 	}
 
 	public void setFeatureLocation(Set<SequenceLocation> newFEATURE_LOCATION) {
-		((EntityFeature)object).setFeatureLocation(newFEATURE_LOCATION);
+		object.setFeatureLocation(newFEATURE_LOCATION);
 	}
 
 	// Property FEATURE-LOCATION-TYPE
@@ -69,37 +69,37 @@ public class EntityFeatureProxy extends Level3ElementProxy implements EntityFeat
 	@JoinTable(name="l3entityfeature_feature_loc_type")
 	public void setFeatureLocationType(SequenceRegionVocabulary regionVocabulary)
 	{
-		((EntityFeature)object).setFeatureLocationType(regionVocabulary);
+		object.setFeatureLocationType(regionVocabulary);
 	}
 
 	public SequenceRegionVocabulary getFeatureLocationType()
 	{
-		return ((EntityFeature)object).getFeatureLocationType();
+		return object.getFeatureLocationType();
 	}
 	
 	// Inverse of Property ENTITY-FEATURE
 
 	@Transient
 	public EntityReference getEntityFeatureOf() {
-		return ((EntityFeature)object).getEntityFeatureOf();
+		return object.getEntityFeatureOf();
 	}
 
 	public void setEntityFeatureOf(EntityReference newReferenceEntity) {
-		((EntityFeature)object).setEntityFeatureOf(newReferenceEntity);
+		object.setEntityFeatureOf(newReferenceEntity);
 	}
 
 	// Inverse of Property MODIFIED_AT
 
 	@Transient
 	public Set<PhysicalEntity> getFeatureOf() {
-		return ((EntityFeature)object).getFeatureOf();
+		return object.getFeatureOf();
 	}
 
 	// Inverse of Property NOT_MODIFIED_AT
 
 	@Transient
 	public Set<PhysicalEntity> getNoFeatureOf() {
-		return ((EntityFeature)object).getNoFeatureOf();
+		return object.getNoFeatureOf();
 	}
 
 	// MemberFeature
@@ -107,23 +107,23 @@ public class EntityFeatureProxy extends Level3ElementProxy implements EntityFeat
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = EntityFeatureProxy.class)
 	@JoinTable(name="l3entityfeature_member_feature")
 	public Set<EntityFeature> getMemberFeature() {
-		return ((EntityFeature)object).getMemberFeature();
+		return object.getMemberFeature();
 	}
 
 	public void addMemberFeature(EntityFeature entityFeature) {
-		((EntityFeature)object).addMemberFeature(entityFeature);
+		object.addMemberFeature(entityFeature);
 	}
 
 	public void removeMemberFeature(EntityFeature entityFeature) {
-		((EntityFeature)object).removeMemberFeature(entityFeature);
+		object.removeMemberFeature(entityFeature);
 	}
 
 	public void setMemberFeature(Set<EntityFeature> entityFeature) {
-		((EntityFeature)object).setMemberFeature(entityFeature);
+		object.setMemberFeature(entityFeature);
 	}
 
 	public boolean atEquivalentLocation(EntityFeature that) {
-		return ((EntityFeature)object).atEquivalentLocation(that);
+		return object.atEquivalentLocation(that);
 	}
 
 	@Transient

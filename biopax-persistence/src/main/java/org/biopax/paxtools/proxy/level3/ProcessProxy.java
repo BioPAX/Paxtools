@@ -18,20 +18,20 @@ import java.util.Set;
  * Proxy for process
  */
 @Entity(name="l3process")
-public abstract class ProcessProxy extends EntityProxy implements Process {
+public abstract class ProcessProxy<T extends Process> extends EntityProxy<T> implements Process {
 	@Transient
 	public Set<Control> getControlledOf() {
-		return ((Process)object).getControlledOf();
+		return object.getControlledOf();
 	}
 
 	@Transient
 	public Set<Pathway> getPathwayComponentsOf() {
-		return ((Process)object).getPathwayComponentsOf();
+		return object.getPathwayComponentsOf();
 	}
 
 	@Transient
 	public Set<PathwayStep> getStepInteractionsOf() {
-		return ((Process)object).getStepInteractionsOf();
+		return object.getStepInteractionsOf();
 	}
 
 }

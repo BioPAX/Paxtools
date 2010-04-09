@@ -21,18 +21,18 @@ import org.hibernate.search.annotations.*;
  */
 @javax.persistence.Entity(name="l3chemicalstructure")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ChemicalStructureProxy extends Level3ElementProxy implements
+public class ChemicalStructureProxy extends Level3ElementProxy<ChemicalStructure> implements
 	ChemicalStructure {
 	// Property STRUCTURE-DATA
 
 	@Basic @Column(name="structure_data_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getStructureData() {
-		return ((ChemicalStructure)object).getStructureData();
+		return object.getStructureData();
 	}
 
 	public void setStructureData(String STRUCTURE_DATA) {
-		((ChemicalStructure)object).setStructureData(STRUCTURE_DATA);
+		object.setStructureData(STRUCTURE_DATA);
 	}
 
 	// Property STRUCTURE-FORMAT
@@ -40,11 +40,11 @@ public class ChemicalStructureProxy extends Level3ElementProxy implements
 	@Basic @Column(name="structure_format_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getStructureFormat() {
-		return ((ChemicalStructure)object).getStructureFormat();
+		return object.getStructureFormat();
 	}
 
 	public void setStructureFormat(String STRUCTURE_FORMAT) {
-		((ChemicalStructure)object).setStructureFormat(STRUCTURE_FORMAT);
+		object.setStructureFormat(STRUCTURE_FORMAT);
 	}
 
 	@Transient

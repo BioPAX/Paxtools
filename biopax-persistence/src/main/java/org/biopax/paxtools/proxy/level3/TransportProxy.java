@@ -20,7 +20,7 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3transport")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class TransportProxy extends ConversionProxy 
+public class TransportProxy extends ConversionProxy<Transport> 
 	implements Transport 
 {
 

@@ -23,7 +23,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  */
 @Entity(name = "l3controlledvocabulary")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ControlledVocabularyProxy extends Level3ElementProxy 
+public class ControlledVocabularyProxy<T extends ControlledVocabulary> extends Level3ElementProxy<T> 
 	implements ControlledVocabulary 
 {
 
@@ -31,19 +31,19 @@ public class ControlledVocabularyProxy extends Level3ElementProxy
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)
 	@JoinTable(name = "l3controlledvocabulary_xref")
 	public Set<Xref> getXref() {
-		return ((ControlledVocabulary) object).getXref();
+		return object.getXref();
 	}
 
 	public void addXref(Xref XREF) {
-		((ControlledVocabulary) object).addXref(XREF);
+		object.addXref(XREF);
 	}
 
 	public void removeXref(Xref XREF) {
-		((ControlledVocabulary) object).removeXref(XREF);
+		object.removeXref(XREF);
 	}
 
 	public void setXref(Set<Xref> XREF) {
-		((ControlledVocabulary) object).setXref(XREF);
+		object.setXref(XREF);
 	}
 
 // ControlledVocabulary
@@ -54,19 +54,19 @@ public class ControlledVocabularyProxy extends Level3ElementProxy
 	@FieldBridge(impl = StringSetBridge.class)
 	@Field(name = BioPAXElementProxy.SEARCH_FIELD_TERM, index = Index.TOKENIZED)
 	public Set<String> getTerm() {
-		return ((ControlledVocabulary) object).getTerm();
+		return object.getTerm();
 	}
 
 	public void addTerm(String TERM) {
-		((ControlledVocabulary) object).addTerm(TERM);
+		object.addTerm(TERM);
 	}
 
 	public void removeTerm(String TERM) {
-		((ControlledVocabulary) object).removeTerm(TERM);
+		object.removeTerm(TERM);
 	}
 
 	public void setTerm(Set<String> TERM) {
-		((ControlledVocabulary) object).setTerm(TERM);
+		object.setTerm(TERM);
 	}
 
 	@Transient

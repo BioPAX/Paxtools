@@ -20,7 +20,7 @@ import javax.persistence.Entity;
  */
 @Entity(name="l3sequenceinterval")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class SequenceIntervalProxy extends SequenceLocationProxy 
+public class SequenceIntervalProxy extends SequenceLocationProxy<SequenceInterval> 
 	implements SequenceInterval 
 {
 	// Property SEQUENCE-INTERVAL-BEGIN
@@ -28,11 +28,11 @@ public class SequenceIntervalProxy extends SequenceLocationProxy
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= SequenceSiteProxy.class)
 	@JoinColumn(name="sequence_interval_begin_x")
 	public SequenceSite getSequenceIntervalBegin() {
-		return ((SequenceInterval)object).getSequenceIntervalBegin();
+		return object.getSequenceIntervalBegin();
 	}
 
 	public void setSequenceIntervalBegin(SequenceSite SEQUENCE_INTERVAL_BEGIN) {
-		((SequenceInterval)object).setSequenceIntervalBegin(SEQUENCE_INTERVAL_BEGIN);
+		object.setSequenceIntervalBegin(SEQUENCE_INTERVAL_BEGIN);
 	}
 
     // Property SEQUENCE-INTERVAL-END
@@ -40,11 +40,11 @@ public class SequenceIntervalProxy extends SequenceLocationProxy
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= SequenceSiteProxy.class)
 	@JoinColumn(name="sequence_interval_end_x")
 	public SequenceSite getSequenceIntervalEnd() {
-		return ((SequenceInterval)object).getSequenceIntervalEnd();
+		return object.getSequenceIntervalEnd();
 	}
 
 	public void setSequenceIntervalEnd(SequenceSite SEQUENCE_INTERVAL_END) {
-		((SequenceInterval)object).setSequenceIntervalEnd(SEQUENCE_INTERVAL_END);
+		object.setSequenceIntervalEnd(SEQUENCE_INTERVAL_END);
 	}
 	
 	@Transient

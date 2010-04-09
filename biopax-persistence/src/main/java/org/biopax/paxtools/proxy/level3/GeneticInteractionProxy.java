@@ -20,28 +20,28 @@ import javax.persistence.Entity;
  */
 @Entity(name="l3geneticinteraction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class GeneticInteractionProxy extends InteractionProxy implements GeneticInteraction {
+public class GeneticInteractionProxy extends InteractionProxy<GeneticInteraction> implements GeneticInteraction {
 // GeneticInteraction
 
  	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = PhenotypeVocabularyProxy.class)
 	@JoinColumn(name="phenotype_x")
 	public PhenotypeVocabulary getPhenotype() {
-		return ((GeneticInteraction)object).getPhenotype();
+		return object.getPhenotype();
 	}
 
     public void setPhenotype(PhenotypeVocabulary phenotype) {
-		((GeneticInteraction)object).setPhenotype(phenotype);
+		object.setPhenotype(phenotype);
     }
 
 
  	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = ScoreProxy.class)
 	@JoinColumn(name="interaction_score_x")
     public Score getInteractionScore() {
-		return ((GeneticInteraction)object).getInteractionScore();
+		return object.getInteractionScore();
     }
 
     public void setInteractionScore(Score interactionScore) {
-		((GeneticInteraction)object).setInteractionScore(interactionScore);
+		object.setInteractionScore(interactionScore);
     }
     
     @Transient

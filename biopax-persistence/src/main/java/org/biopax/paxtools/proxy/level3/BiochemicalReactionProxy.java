@@ -25,7 +25,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  */
 @Entity(name="l3biochemicalreaction")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class BiochemicalReactionProxy extends ConversionProxy 
+public class BiochemicalReactionProxy extends ConversionProxy<BiochemicalReaction> 
 	implements BiochemicalReaction 
 {
 
@@ -34,30 +34,30 @@ public class BiochemicalReactionProxy extends ConversionProxy
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= DeltaGProxy.class)
 	@JoinTable(name="l3biochemreact_delta_g")
 	public Set<DeltaG> getDeltaG() {
-		return ((BiochemicalReaction)object).getDeltaG();
+		return object.getDeltaG();
 	}
 
 	public void addDeltaG(DeltaG delta_G) {
-		((BiochemicalReaction)object).addDeltaG(delta_G);
+		object.addDeltaG(delta_G);
 	}
 
 	public void removeDeltaG(DeltaG delta_G) {
-		((BiochemicalReaction)object).removeDeltaG(delta_G);
+		object.removeDeltaG(delta_G);
 	}
 
 	public void setDeltaG(Set<DeltaG> delta_G) {
-		((BiochemicalReaction)object).setDeltaG(delta_G);
+		object.setDeltaG(delta_G);
 	}
 
     // Property DELTA-H
 
 	@CollectionOfElements @Column(name="delta_h_x", columnDefinition="text")
 	protected Set<String> getDeltaH_x() {
-		return floatSetToStringSet(((BiochemicalReaction)object).getDeltaH());
+		return floatSetToStringSet(object.getDeltaH());
 	}
 
 	protected void setDeltaH_x(Set<String> ss) {
-		((BiochemicalReaction)object).setDeltaH(stringSetToFloatSet(ss));
+		object.setDeltaH(stringSetToFloatSet(ss));
 	}
 
 	@Transient
@@ -66,11 +66,11 @@ public class BiochemicalReactionProxy extends ConversionProxy
 	}
 
 	public void addDeltaH(float DELTA_H) {
-		((BiochemicalReaction)object).addDeltaH(DELTA_H);
+		object.addDeltaH(DELTA_H);
 	}
 
 	public void removeDeltaH(float DELTA_H) {
-		((BiochemicalReaction)object).removeDeltaH(DELTA_H);
+		object.removeDeltaH(DELTA_H);
 	}
 
 	public void setDeltaH(Set<Float> DELTA_H) {
@@ -81,11 +81,11 @@ public class BiochemicalReactionProxy extends ConversionProxy
 
 	@CollectionOfElements @Column(name="delta_s_x", columnDefinition="text")
 	public Set<String> getDeltaS_x() {
-		return floatSetToStringSet(((BiochemicalReaction)object).getDeltaS());
+		return floatSetToStringSet(object.getDeltaS());
 	}
 
 	public void setDeltaS_x(Set<String> ss) {
-		((BiochemicalReaction)object).setDeltaS(stringSetToFloatSet(ss));
+		object.setDeltaS(stringSetToFloatSet(ss));
 	}
 
 	@Transient
@@ -94,11 +94,11 @@ public class BiochemicalReactionProxy extends ConversionProxy
 	}
 
 	public void addDeltaS(float DELTA_S) {
-		((BiochemicalReaction)object).addDeltaS(DELTA_S);
+		object.addDeltaS(DELTA_S);
 	}
 
 	public void removeDeltaS(float DELTA_S) {
-		((BiochemicalReaction)object).removeDeltaS(DELTA_S);
+		object.removeDeltaS(DELTA_S);
 	}
 
 	public void setDeltaS(Set<Float> DELTA_S) {
@@ -111,19 +111,19 @@ public class BiochemicalReactionProxy extends ConversionProxy
 	@FieldBridge(impl=StringSetBridge.class)
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_EC_NUMBER, index=Index.TOKENIZED)
 	public Set<String> getECNumber() {
-		return ((BiochemicalReaction)object).getECNumber();
+		return object.getECNumber();
 	}
 
 	public void addECNumber(String EC_NUMBER) {
-		((BiochemicalReaction)object).addECNumber(EC_NUMBER);
+		object.addECNumber(EC_NUMBER);
 	}
 
 	public void removeECNumber(String EC_NUMBER) {
-		((BiochemicalReaction)object).removeECNumber(EC_NUMBER);
+		object.removeECNumber(EC_NUMBER);
 	}
 
 	public void setECNumber(Set<String> EC_NUMBER) {
-		((BiochemicalReaction)object).setECNumber(EC_NUMBER);
+		object.setECNumber(EC_NUMBER);
 	}
 
     // Property KEQ
@@ -131,19 +131,19 @@ public class BiochemicalReactionProxy extends ConversionProxy
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= KPrimeProxy.class)
 	@JoinTable(name="l3biochemreact_keq")
 	public Set<KPrime> getKEQ() {
-		return ((BiochemicalReaction)object).getKEQ();
+		return object.getKEQ();
 	}
 
 	public void addKEQ(KPrime KEQ) {
-		((BiochemicalReaction)object).addKEQ(KEQ);
+		object.addKEQ(KEQ);
 	}
 
 	public void removeKEQ(KPrime KEQ) {
-		((BiochemicalReaction)object).removeKEQ(KEQ);
+		object.removeKEQ(KEQ);
 	}
 
 	public void setKEQ(Set<KPrime> KEQ) {
-		((BiochemicalReaction)object).setKEQ(KEQ);
+		object.setKEQ(KEQ);
 	}
 	
 	@Transient

@@ -20,7 +20,7 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3unificationxref")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class UnificationXrefProxy extends XrefProxy 
+public class UnificationXrefProxy extends XrefProxy<UnificationXref>
 	implements UnificationXref 
 {
 	

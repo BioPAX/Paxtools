@@ -20,17 +20,17 @@ import javax.persistence.Entity;
  */
 @Entity(name="l3deltag")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
+public class DeltaGProxy extends Level3ElementProxy<DeltaG> implements DeltaG {
 
 	// Property DELTA-G-PRIME-O
 
 	@Basic @Column(name="delta_g_prime_o_x", columnDefinition="text")
 	protected String getDeltaGPrime0_x() {
-		return floatToString(((DeltaG)object).getDeltaGPrime0());
+		return floatToString(object.getDeltaGPrime0());
 	}
 
 	protected void setDeltaGPrime0_x(String s) {
-		((DeltaG)object).setDeltaGPrime0(stringToFloat(s));
+		object.setDeltaGPrime0(stringToFloat(s));
 	}
 
 	@Transient
@@ -46,11 +46,11 @@ public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
 
 	@Basic @Column(name="ionic_strength_x", columnDefinition="text")
 	protected String getIonicStrength_x() {
-		return floatToString(((DeltaG)object).getIonicStrength());
+		return floatToString(object.getIonicStrength());
 	}
 
 	protected void setIonicStrength_x(String IONIC_STRENGTH) {
-		((DeltaG)object).setIonicStrength(stringToFloat(IONIC_STRENGTH));
+		object.setIonicStrength(stringToFloat(IONIC_STRENGTH));
 	}
 
 	@Transient
@@ -66,11 +66,11 @@ public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
 
 	@Basic @Column(name="ph_x", columnDefinition="text")
 	protected String getPh_x() {
-		return floatToString(((DeltaG)object).getPh());
+		return floatToString(object.getPh());
 	}
 
 	protected void setPh_x(String PH) {
-		((DeltaG)object).setPh(stringToFloat(PH));
+		object.setPh(stringToFloat(PH));
 	}
 
 	@Transient
@@ -86,11 +86,11 @@ public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
 
 	@Basic @Column(name="pmg_x", columnDefinition="text")
 	protected String getPMg_x() {
-		return floatToString(((DeltaG)object).getPMg());
+		return floatToString(object.getPMg());
 	}
 
 	protected void setPMg_x(String s) {
-		((DeltaG)object).setPMg(stringToFloat(s));
+		object.setPMg(stringToFloat(s));
 	}
 
 	@Transient
@@ -106,11 +106,11 @@ public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
 
 	@Basic @Column(name="temperature_x", columnDefinition="text")
 	protected String getTemperature_x() {
-		return floatToString(((DeltaG)object).getTemperature());
+		return floatToString(object.getTemperature());
 	}
 
 	protected void setTemperature_x(String s) {
-		((DeltaG)object).setTemperature(stringToFloat(s));
+		object.setTemperature(stringToFloat(s));
 	}
 
 	@Transient

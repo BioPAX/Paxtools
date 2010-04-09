@@ -101,7 +101,7 @@ public class PhysicalEntityProxy<T extends PhysicalEntity> extends EntityProxy<T
 		object.setMemberPhysicalEntity(memberPhysicalEntity);
 	}
 
-	@Override
+
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 		return object.getMemberPhysicalEntityOf();
@@ -117,7 +117,7 @@ public class PhysicalEntityProxy<T extends PhysicalEntity> extends EntityProxy<T
 	}
 	
 	@Transient
-	public Class<? extends BioPAXElement> getModelInterface() {
+	public Class<? extends PhysicalEntity> getModelInterface() {
 		return PhysicalEntity.class;
 	}
 

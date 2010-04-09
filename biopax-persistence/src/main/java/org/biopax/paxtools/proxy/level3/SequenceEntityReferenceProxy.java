@@ -19,7 +19,7 @@ import javax.persistence.*;
  */
 @Entity(name="l3sequenceentityreference")
 //@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class SequenceEntityReferenceProxy extends EntityReferenceProxy 
+public abstract class SequenceEntityReferenceProxy<T extends SequenceEntityReference> extends EntityReferenceProxy<T> 
 	implements SequenceEntityReference 
 {
 	// Property ORGANISM
@@ -27,11 +27,11 @@ public abstract class SequenceEntityReferenceProxy extends EntityReferenceProxy
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= BioSourceProxy.class)
 	@JoinColumn(name="organism_x")
 	public BioSource getOrganism() {
-		return ((SequenceEntityReference)object).getOrganism();
+		return object.getOrganism();
 	}
 
 	public void setOrganism(BioSource ORGANISM) {
-		((SequenceEntityReference)object).setOrganism(ORGANISM);
+		object.setOrganism(ORGANISM);
 	}
 
 	// Property SEQUENCE
@@ -39,10 +39,10 @@ public abstract class SequenceEntityReferenceProxy extends EntityReferenceProxy
 	@Basic @Column(name="sequence_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_SEQUENCE, index=Index.TOKENIZED)
 	public String getSequence() {
-		return ((SequenceEntityReference)object).getSequence();
+		return object.getSequence();
 	}
 
 	public void setSequence(String SEQUENCE) {
-		((SequenceEntityReference)object).setSequence(SEQUENCE);
+		object.setSequence(SEQUENCE);
 	}
 }

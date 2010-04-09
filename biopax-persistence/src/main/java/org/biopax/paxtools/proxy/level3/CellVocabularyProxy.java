@@ -19,7 +19,7 @@ import org.hibernate.search.annotations.Indexed;
  */
 @javax.persistence.Entity(name="l3cellvocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class CellVocabularyProxy extends ControlledVocabularyProxy 
+public class CellVocabularyProxy extends ControlledVocabularyProxy<CellVocabulary>
 	implements CellVocabulary 
 {
 	@Transient

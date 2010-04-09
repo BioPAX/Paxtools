@@ -20,7 +20,7 @@ import javax.persistence.Transient;
  */
 @Entity(name="l3proteinreference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ProteinReferenceProxy extends SequenceEntityReferenceProxy implements ProteinReference {
+public class ProteinReferenceProxy extends SequenceEntityReferenceProxy<ProteinReference> implements ProteinReference {
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {
 		return ProteinReference.class;

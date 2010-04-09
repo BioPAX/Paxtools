@@ -20,7 +20,7 @@ import javax.persistence.Entity;
  */
 @Entity(name="l3stoichiometry")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class StoichiometryProxy extends Level3ElementProxy 
+public class StoichiometryProxy extends Level3ElementProxy<Stoichiometry> 
 	implements Stoichiometry 
 {
 
@@ -29,22 +29,22 @@ public class StoichiometryProxy extends Level3ElementProxy
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = PhysicalEntityProxy.class)
 	@JoinColumn(name="physical_entity_x")
 	public PhysicalEntity getPhysicalEntity() {
-		return ((Stoichiometry)object).getPhysicalEntity();
+		return object.getPhysicalEntity();
 	}
 
 	public void setPhysicalEntity(PhysicalEntity newPhysical_ENTITY) {
-		((Stoichiometry)object).setPhysicalEntity(newPhysical_ENTITY);
+		object.setPhysicalEntity(newPhysical_ENTITY);
 	}
 
 	// Property STOICHIOMETRIC-COEFFICIENT
 
 	@Basic @Column(name="stoichiometric_coefficient_x", columnDefinition="text")
 	protected String getStoichiometricCoefficient_x() {
-		return floatToString(((Stoichiometry)object).getStoichiometricCoefficient());
+		return floatToString(object.getStoichiometricCoefficient());
 	}
 
 	protected void setStoichiometricCoefficient_x(String newSTOICHIOMETRIC_COEFFICIENT) {
-		((Stoichiometry)object).setStoichiometricCoefficient(stringToFloat(newSTOICHIOMETRIC_COEFFICIENT));
+		object.setStoichiometricCoefficient(stringToFloat(newSTOICHIOMETRIC_COEFFICIENT));
 	}
 
 	@Transient

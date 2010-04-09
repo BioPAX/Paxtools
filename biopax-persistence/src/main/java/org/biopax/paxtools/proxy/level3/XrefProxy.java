@@ -20,7 +20,7 @@ import java.util.Set;
  * Proxy for xref
  */
 @Entity(name="l3xref")
-public abstract class XrefProxy extends Level3ElementProxy 
+public abstract class XrefProxy<T extends Xref> extends Level3ElementProxy<T>
 	implements Xref 
 {
    // Property DB
@@ -32,7 +32,7 @@ public abstract class XrefProxy extends Level3ElementProxy
 	}
 
 	public void setDb(String DB) {
-		((Xref)object).setDb(DB);
+		object.setDb(DB);
 	}
 
     // Property DB-VERSION
@@ -40,11 +40,11 @@ public abstract class XrefProxy extends Level3ElementProxy
 	@Basic @Column(name="db_version_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getDbVersion() {
-		return ((Xref)object).getDbVersion();
+		return object.getDbVersion();
 	}
 
 	public void setDbVersion(String DB_VERSION) {
-		((Xref)object).setDbVersion(DB_VERSION);
+		object.setDbVersion(DB_VERSION);
 	}
 
     // Property ID
@@ -52,11 +52,11 @@ public abstract class XrefProxy extends Level3ElementProxy
 	@Basic @Column(name="id_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_XREF_ID, index=Index.TOKENIZED)
 	public String getId() {
-		return ((Xref)object).getId();
+		return object.getId();
 	}
 
 	public void setId(String ID) {
-		((Xref)object).setId(ID);
+		object.setId(ID);
 	}
 
     // Property ID-VERSION
@@ -64,18 +64,18 @@ public abstract class XrefProxy extends Level3ElementProxy
 	@Basic @Column(name="id_version_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getIdVersion() {
-		return ((Xref)object).getIdVersion();
+		return object.getIdVersion();
 	}
 
 	public void setIdVersion(String ID_VERSION) {
-		((Xref)object).setIdVersion(ID_VERSION);
+		object.setIdVersion(ID_VERSION);
 	}
 
 	// Inverse of property XREF
 
 	@Transient
 	public Set<XReferrable> getXrefOf() {
-		return ((Xref)object).getXrefOf();
+		return object.getXrefOf();
 	}
 
 	@Transient

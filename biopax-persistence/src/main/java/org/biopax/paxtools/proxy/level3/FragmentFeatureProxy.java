@@ -16,7 +16,7 @@ import org.hibernate.search.annotations.Indexed;
  */
 @Entity(name="l3fragmentfeature")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class FragmentFeatureProxy extends EntityFeatureProxy 
+public class FragmentFeatureProxy extends EntityFeatureProxy<FragmentFeature> 
 	implements FragmentFeature
 {
 	@Transient

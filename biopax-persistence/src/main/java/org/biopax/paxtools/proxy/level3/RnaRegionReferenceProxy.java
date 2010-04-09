@@ -14,28 +14,28 @@ import javax.persistence.*;
  */
 @Entity(name="l3rnaregionreference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class RnaRegionReferenceProxy extends SequenceEntityReferenceProxy 
+public class RnaRegionReferenceProxy extends SequenceEntityReferenceProxy<RnaRegionReference> 
 	implements RnaRegionReference 
 {
 
    	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = RnaRegionReferenceProxy.class)
 	@JoinColumn(name="sub_region_x")
     public RnaRegionReference getSubRegion() {
-        return ((RnaRegionReference)object).getSubRegion();
+        return object.getSubRegion();
     }
 
     public void setSubRegion(RnaRegionReference rnaRegionReference) {
-        ((RnaRegionReference)object).setSubRegion(rnaRegionReference);
+        object.setSubRegion(rnaRegionReference);
     }
 
    	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SequenceLocationProxy.class)
 	@JoinColumn(name="sequencelocation_x")
 	public SequenceLocation getAbsoluteRegion() {
-		return ((RnaRegionReference)object).getAbsoluteRegion();
+		return object.getAbsoluteRegion();
 	}
 
 	public void setAbsoluteRegion(SequenceLocation sequenceLocation) {
-		((RnaRegionReference)object).setAbsoluteRegion(sequenceLocation);
+		object.setAbsoluteRegion(sequenceLocation);
 	}
 
 	

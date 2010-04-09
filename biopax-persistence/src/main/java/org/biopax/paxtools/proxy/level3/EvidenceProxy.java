@@ -23,25 +23,25 @@ import java.util.Set;
  */
 @Entity(name="l3evidence")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class EvidenceProxy extends Level3ElementProxy implements Evidence, Serializable {
+public class EvidenceProxy extends Level3ElementProxy<Evidence> implements Evidence, Serializable {
 // XReferrable
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)
 	@JoinTable(name="l3evidence_xref")
 	public Set<Xref> getXref() {
-		return ((Evidence)object).getXref();
+		return object.getXref();
 	}
 
 	public void addXref(Xref XREF) {
-		((Evidence)object).addXref(XREF);
+		object.addXref(XREF);
 	}
 
 	public void removeXref(Xref XREF) {
-		((Evidence)object).removeXref(XREF);
+		object.removeXref(XREF);
 	}
 
 	public void setXref(Set<Xref> XREF) {
-		((Evidence)object).setXref(XREF);
+		object.setXref(XREF);
 	}
 
 // evidence
@@ -51,19 +51,19 @@ public class EvidenceProxy extends Level3ElementProxy implements Evidence, Seria
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = ScoreProxy.class)
 	@JoinTable(name="l3evidence_confidence")
 	public Set<Score> getConfidence() {
-		return ((Evidence)object).getConfidence();
+		return object.getConfidence();
 	}
 
 	public void addConfidence(Score CONFIDENCE) {
-		((Evidence)object).addConfidence(CONFIDENCE);
+		object.addConfidence(CONFIDENCE);
 	}
 
 	public void removeConfidence(Score CONFIDENCE) {
-		((Evidence)object).removeConfidence(CONFIDENCE);
+		object.removeConfidence(CONFIDENCE);
 	}
 
 	public void setConfidence(Set<Score> CONFIDENCE) {
-		((Evidence)object).setConfidence(CONFIDENCE);
+		object.setConfidence(CONFIDENCE);
 	}
 
 	// Property EVIDENCE-CODE
@@ -71,19 +71,19 @@ public class EvidenceProxy extends Level3ElementProxy implements Evidence, Seria
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = EvidenceCodeVocabularyProxy.class)
 	@JoinTable(name="l3evidence_evidence_code")
 	public Set<EvidenceCodeVocabulary> getEvidenceCode() {
-		return ((Evidence)object).getEvidenceCode();
+		return object.getEvidenceCode();
 	}
 
 	public void addEvidenceCode(EvidenceCodeVocabulary EVIDENCE_CODE) {
-		((Evidence)object).addEvidenceCode(EVIDENCE_CODE);
+		object.addEvidenceCode(EVIDENCE_CODE);
 	}
 
 	public void removeEvidenceCode(EvidenceCodeVocabulary EVIDENCE_CODE) {
-		((Evidence)object).removeEvidenceCode(EVIDENCE_CODE);
+		object.removeEvidenceCode(EVIDENCE_CODE);
 	}
 
 	public void setEvidenceCode(Set<EvidenceCodeVocabulary> EVIDENCE_CODE) {
-		((Evidence)object).setEvidenceCode(EVIDENCE_CODE);
+		object.setEvidenceCode(EVIDENCE_CODE);
 	}
 
 	// Property EXPERIMENTAL-FORM
@@ -91,19 +91,19 @@ public class EvidenceProxy extends Level3ElementProxy implements Evidence, Seria
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = ExperimentalFormProxy.class)
 	@JoinTable(name="l3evidence_experimental_form")
 	public Set<ExperimentalForm> getExperimentalForm() {
-		return ((Evidence)object).getExperimentalForm();
+		return object.getExperimentalForm();
 	}
 
 	public void addExperimentalForm(ExperimentalForm EXPERIMENTAL_FORM) {
-		((Evidence)object).addExperimentalForm(EXPERIMENTAL_FORM);
+		object.addExperimentalForm(EXPERIMENTAL_FORM);
 	}
 
 	public void removeExperimentalForm(ExperimentalForm EXPERIMENTAL_FORM) {
-		((Evidence)object).removeExperimentalForm(EXPERIMENTAL_FORM);
+		object.removeExperimentalForm(EXPERIMENTAL_FORM);
 	}
 
 	public void setExperimentalForm(Set<ExperimentalForm> EXPERIMENTAL_FORM) {
-		((Evidence)object).setExperimentalForm(EXPERIMENTAL_FORM);
+		object.setExperimentalForm(EXPERIMENTAL_FORM);
 	}
 	
 	@Transient

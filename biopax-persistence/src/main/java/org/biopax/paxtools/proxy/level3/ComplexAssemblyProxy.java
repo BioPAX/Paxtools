@@ -19,7 +19,7 @@ import org.hibernate.search.annotations.Indexed;
  */
 @javax.persistence.Entity(name="l3complexassembly")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ComplexAssemblyProxy extends ConversionProxy implements
+public class ComplexAssemblyProxy extends ConversionProxy<ComplexAssembly> implements
 	ComplexAssembly {
 
 	@Transient

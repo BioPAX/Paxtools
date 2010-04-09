@@ -19,16 +19,16 @@ import javax.persistence.*;
  */
 @Entity(name = "l3modificationfeature")
 @Indexed(index = BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ModificationFeatureProxy extends EntityFeatureProxy implements ModificationFeature {
+public class ModificationFeatureProxy extends EntityFeatureProxy<ModificationFeature> implements ModificationFeature {
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SequenceModificationVocabularyProxy.class)
 	@JoinColumn(name = "modification_type_x")
 	public SequenceModificationVocabulary getModificationType() {
-		return ((ModificationFeature) object).getModificationType();
+		return object.getModificationType();
 	}
 
 	public void setModificationType(SequenceModificationVocabulary featureType) {
-		((ModificationFeature) object).setModificationType(featureType);
+		object.setModificationType(featureType);
 	}
 	
 	@Transient
