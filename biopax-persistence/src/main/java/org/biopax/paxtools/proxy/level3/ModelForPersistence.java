@@ -1,4 +1,4 @@
-package org.biopax.paxtools.proxy;
+package org.biopax.paxtools.proxy.level3;
 
 import java.util.Collections;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -17,8 +17,12 @@ import javax.persistence.*;
 
 /**
  * Main container class to access BioPAX objects.
+ * 
+ * @deprecated requires re-factoring; alternatively, use ModelProxy or persist only individual elements and use the core ModelImp...
+ * 
+ * TODO why 'objectSet' is used in Collections.unmodifiableSet(objectSet) and not, e.g., using idMap.values()?
  */
-@Entity(name="model")
+//@Entity(name="model")
 public class ModelForPersistence implements Model
 {
 // ------------------------------ FIELDS ------------------------------
@@ -48,7 +52,6 @@ public class ModelForPersistence implements Model
 		this.level = factory.getLevel();
         this.exposedIdMap = Collections.unmodifiableMap(idMap);
         this.exposedObjectSet = Collections.unmodifiableSet(objectSet);
-
 	}
 
 // --------------------- GETTER / SETTER METHODS ---------------------
@@ -77,13 +80,7 @@ public class ModelForPersistence implements Model
 		this.factory = factory;
 	}
 
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface Model ---------------------
-
-// --------------------- ACCESORS and MUTATORS---------------------
-
-    //TODO BioPAXElementProxy must be shared for L2 and L3
+    //TODO BioPAXElementProxy must be shared for L2 and L3 - see also ModelProxy!
     //@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = BioPAXElementProxy.class)
 	//@JoinColumn(name="objects_x")
 	public Set<BioPAXElement> getObjects()

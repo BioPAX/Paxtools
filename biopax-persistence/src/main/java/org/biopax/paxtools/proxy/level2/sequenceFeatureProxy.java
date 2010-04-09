@@ -12,9 +12,9 @@ import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
+
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
 /**
@@ -22,7 +22,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  */
 @Entity(name="l2sequencefeature")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class sequenceFeatureProxy extends utilityClassProxy implements sequenceFeature, Serializable {
+public class sequenceFeatureProxy extends utilityClassProxy implements sequenceFeature {
 	public sequenceFeatureProxy() {
 	}
 	@Transient

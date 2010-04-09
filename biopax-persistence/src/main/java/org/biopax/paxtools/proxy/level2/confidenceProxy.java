@@ -8,10 +8,10 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Entity(name="l2confidence")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class confidenceProxy extends utilityClassProxy implements confidence, Serializable {
+public class confidenceProxy extends utilityClassProxy implements confidence {
 	public confidenceProxy() {
 	}
 

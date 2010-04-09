@@ -15,6 +15,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 import org.biopax.paxtools.model.level3.Entity;
 
@@ -22,13 +23,8 @@ import org.biopax.paxtools.model.level3.Entity;
  * Proxy for entity
  */
 @javax.persistence.Entity(name="l3entity")
-//@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public abstract class EntityProxy extends Level3ElementProxy implements Entity {
 	
-	protected EntityProxy() {
-		// not get object. because this object has not factory.
-	}
-
 // XReferrable
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)

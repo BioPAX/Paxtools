@@ -20,8 +20,6 @@ import java.util.Set;
  */
 @javax.persistence.Entity(name="l3interaction")
 public class InteractionProxy extends ProcessProxy implements Interaction {
-	public InteractionProxy() {
-	}
 
 	// Property INTERACTION-TYPE
 

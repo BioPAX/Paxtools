@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 /**
@@ -19,8 +20,6 @@ import org.hibernate.search.annotations.Indexed;
 @javax.persistence.Entity(name="l3rnareference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class RnaReferenceProxy extends SequenceEntityReferenceProxy implements RnaReference {
-	public RnaReferenceProxy() {
-	}
 	
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {

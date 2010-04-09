@@ -8,18 +8,18 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.complexAssembly;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * Proxy for complexAssembly
  */
 @Entity(name="l2complexassembly")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class complexAssemblyProxy extends conversionProxy implements complexAssembly, Serializable {
+public class complexAssemblyProxy extends conversionProxy implements complexAssembly {
 	public complexAssemblyProxy() {
 	}
 	@Transient

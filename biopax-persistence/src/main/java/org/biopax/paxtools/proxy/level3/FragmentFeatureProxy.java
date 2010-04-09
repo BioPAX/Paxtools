@@ -5,6 +5,7 @@ import javax.persistence.Transient;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.FragmentFeature;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 /**

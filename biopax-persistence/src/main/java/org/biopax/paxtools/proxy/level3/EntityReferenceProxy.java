@@ -15,6 +15,8 @@ import org.hibernate.search.annotations.*;
 import javax.persistence.*;
 
 import java.util.Set;
+
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
 /**
@@ -23,9 +25,6 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 @javax.persistence.Entity(name="l3entityreference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class EntityReferenceProxy extends Level3ElementProxy implements EntityReference {
-	protected EntityReferenceProxy() {
-	}
-
 
 // Observable
 
@@ -47,11 +46,9 @@ public class EntityReferenceProxy extends Level3ElementProxy implements EntityRe
 		((EntityReference)object).setEvidence(newEvidence);
 	}
 
-// Named
-	
 	@CollectionOfElements @Column(name="name_x", columnDefinition="text")
 	@FieldBridge(impl=StringSetBridge.class)
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
+	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public Set<String> getName() {
 		return ((EntityReference)object).getName();
 	}

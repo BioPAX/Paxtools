@@ -9,17 +9,17 @@ package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.PositionStatusType;
 import org.biopax.paxtools.model.level2.sequenceSite;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Proxy for sequenceSite
  */
 @Entity(name="l2sequencesite")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class sequenceSiteProxy extends sequenceLocationProxy implements sequenceSite, Serializable {
+public class sequenceSiteProxy extends sequenceLocationProxy implements sequenceSite {
 	public sequenceSiteProxy() {
 	}
 

@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 /**
@@ -22,9 +23,6 @@ import org.hibernate.search.annotations.*;
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class ChemicalStructureProxy extends Level3ElementProxy implements
 	ChemicalStructure {
-	public ChemicalStructureProxy() {
-	}
-
 	// Property STRUCTURE-DATA
 
 	@Basic @Column(name="structure_data_x", columnDefinition="text")

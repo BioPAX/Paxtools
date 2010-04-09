@@ -12,8 +12,9 @@ import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
+
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
 /**
@@ -23,8 +24,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 // entityProxy InteractionParticipantProxy
 // 2007.09.05
 @Entity(name="l2entity")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-abstract public class entityProxy extends InteractionParticipantProxy implements entity, Serializable {
+abstract public class entityProxy extends InteractionParticipantProxy implements entity {
 	
 	protected entityProxy() {
 		// not get object. because this object has not factory.

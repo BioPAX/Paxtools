@@ -9,19 +9,16 @@ package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.InteractionParticipant;
 import org.biopax.paxtools.model.level2.interaction;
-import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Proxy for InteractionParticipant
  */
 @Entity(name="l2interactionparticipant")
-@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public abstract class InteractionParticipantProxy extends Level2ElementProxy implements InteractionParticipant, Serializable {
+public abstract class InteractionParticipantProxy extends Level2ElementProxy implements InteractionParticipant {
 	protected InteractionParticipantProxy() {
 	}
 

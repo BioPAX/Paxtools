@@ -9,6 +9,7 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -23,8 +24,6 @@ import javax.persistence.Transient;
 @Entity(name="l3dnareference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class DnaReferenceProxy extends SequenceEntityReferenceProxy implements DnaReference {
-	public DnaReferenceProxy() {
-	}
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = SequenceIntervalProxy.class)
 	@JoinColumn(name="genomic_region_x")

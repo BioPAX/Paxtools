@@ -9,10 +9,10 @@ package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.chemicalStructure;
 import org.biopax.paxtools.model.level2.smallMolecule;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Entity(name="l2smallmolecule")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class smallMoleculeProxy extends physicalEntityProxy implements smallMolecule, Serializable {
+public class smallMoleculeProxy extends physicalEntityProxy implements smallMolecule {
 	public smallMoleculeProxy() {
 	}
 

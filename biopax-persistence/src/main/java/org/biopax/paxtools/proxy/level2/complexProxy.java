@@ -8,10 +8,10 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -19,7 +19,7 @@ import java.util.Set;
  */
 @Entity(name="l2complex")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class complexProxy extends physicalEntityProxy implements complex, Serializable {
+public class complexProxy extends physicalEntityProxy implements complex {
 	public complexProxy() {
 	}
 

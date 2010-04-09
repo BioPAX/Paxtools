@@ -9,6 +9,7 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -22,8 +23,6 @@ import javax.persistence.Entity;
 public class PhenotypeVocabularyProxy extends ControlledVocabularyProxy 
 	implements PhenotypeVocabulary 
 {
-	public PhenotypeVocabularyProxy() {
-	}
 
 	// PatoData
 

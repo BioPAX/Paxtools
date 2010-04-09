@@ -9,6 +9,7 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -22,9 +23,6 @@ import javax.persistence.Entity;
 public class SequenceIntervalProxy extends SequenceLocationProxy 
 	implements SequenceInterval 
 {
-	public SequenceIntervalProxy() {
-	}
-
 	// Property SEQUENCE-INTERVAL-BEGIN
 
 	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity= SequenceSiteProxy.class)

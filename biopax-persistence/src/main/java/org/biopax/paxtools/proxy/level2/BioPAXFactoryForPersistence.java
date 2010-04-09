@@ -1,32 +1,26 @@
 package org.biopax.paxtools.proxy.level2;
 
 import java.lang.reflect.Method;
-//import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.biopax.paxtools.proxy.ModelForPersistence;
 
 /**
+ * L2 BioPAX Factory For Persistence
+ * 
  * User: root Date: Apr 26, 2006 Time: 3:06:08 PM_DOT
  */
-public class BioPAXFactoryForPersistence /*extends BioPAXFactoryImpl*/ implements BioPAXFactory, Level2Factory 
+public class BioPAXFactoryForPersistence implements Level2Factory 
 {
-// ------------------------ INTERFACE METHODS ------------------------
-
-
-// --------------------- Interface BioPAXFactory ---------------------
 	
 	public BioPAXLevel getLevel() {
 		return BioPAXLevel.L2;
 	}
 
 	public Model createModel() {
-		return new ModelForPersistence(this);
-		//return new ModelImpl(this);
+		return new ModelProxy(this);
 	}
 
 	public BioPAXElement reflectivelyCreate(String name) {

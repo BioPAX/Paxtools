@@ -8,17 +8,17 @@
 package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.chemicalStructure;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Proxy for chemicalStructure
  */
 @Entity(name="l2chemicalstructure")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class chemicalStructureProxy extends utilityClassProxy implements chemicalStructure, Serializable {
+public class chemicalStructureProxy extends utilityClassProxy implements chemicalStructure {
 	public chemicalStructureProxy() {
 	}
 

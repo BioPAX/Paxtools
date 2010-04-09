@@ -14,6 +14,8 @@ import org.hibernate.search.annotations.*;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.Set;
+
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
 /**
@@ -24,8 +26,6 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 public class ControlledVocabularyProxy extends Level3ElementProxy 
 	implements ControlledVocabulary 
 {
-	public ControlledVocabularyProxy() {
-	}
 
 // XReferrable
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)

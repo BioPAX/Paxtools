@@ -9,10 +9,10 @@ package org.biopax.paxtools.proxy.level2;
 
 import org.biopax.paxtools.model.level2.pathwayStep;
 import org.biopax.paxtools.model.level2.process;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Entity(name="l2pathwaystep")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class pathwayStepProxy extends pathwayComponentProxy implements pathwayStep, Serializable {
+public class pathwayStepProxy extends pathwayComponentProxy implements pathwayStep {
 	public pathwayStepProxy() {
 	}
 

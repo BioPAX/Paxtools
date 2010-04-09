@@ -104,7 +104,6 @@ class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-	@Override
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

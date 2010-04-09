@@ -3,42 +3,24 @@
  *
  * 2007.03.15 Takeshi Yoneki
  * INOH project - http://www.inoh.org
+ * 
+ * [moved, re-factored by Igor Rodchenkov, 04/2010]
  */
-package org.biopax.paxtools.proxy.level3;
+package org.biopax.paxtools.proxy;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.BioPAXLevel;
-
-import javax.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Proxy for BioPAXElement
+ * Base Proxy for persistent BioPAX Elements
  */
-// MySQL
-//  TABLE_PER_CLASS: syntax error on EntityManager.find()
-//  JOINED: too many JOIN (over 31) error on EntityManager.find()
-//  SINGLE_TABLE: ok
-// PostgreSQL
-//  TABLE_PER_CLASS: ok
-//  JOINED: not tested
-//  SINGLE_TABLE: ok
-@javax.persistence.Entity(name = "l3biopaxelement")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@NamedQueries({
-	@NamedQuery(name="org.biopax.paxtools.proxy.level3.elementByRdfId",
-				query="from org.biopax.paxtools.proxy.level3.BioPAXElementProxy as l3element where upper(l3element.RDFId) = upper(:rdfid)"),
-	@NamedQuery(name="org.biopax.paxtools.proxy.level3.elementByRdfIdEager",
-				query="from org.biopax.paxtools.proxy.level3.BioPAXElementProxy as l3element fetch all properties where upper(l3element.RDFId) = upper(:rdfid)")
-
-})
 public abstract class BioPAXElementProxy implements BioPAXElement {
 	/**
 	 * target object
 	 */
-	BioPAXElement object = null;
+	protected BioPAXElement object = null;
 
 	public final static String SEARCH_FIELD_SOURCE_NAME = "source_name";
 	public final static String SEARCH_INDEX_NAME = "paxtools";
@@ -52,44 +34,11 @@ public abstract class BioPAXElementProxy implements BioPAXElement {
 	public final static String SEARCH_FIELD_XREF_ID = "xref_id";
 	public final static String SEARCH_FIELD_AVAILABILITY = "availability";
 	public final static String SEARCH_FIELD_COMMENT = "comment";
-
-	protected BioPAXElementProxy() {
-		this.object = 
-			BioPAXLevel.L3.getDefaultFactory()
-				.reflectivelyCreate(this.getModelInterface());
-	}
-
-	//2010.02.25 - having back the proxyID
-	Long proxyId = 0L;
 	
-	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="proxy_id")
-	public Long getProxyId() {
-		return proxyId;
-	}
-
-	public void setProxyId(Long value) {
-		proxyId = value;
-	}
-	
-	@Column(name="rdfid", length = 500, nullable=false, unique=true)
-	public String getRDFId() {
-		return object.getRDFId();
-	}
-
-	public void setRDFId(String id) {
-		object.setRDFId(id);
-	}
-	
-	
-	@Override
-	// 2010.03.25
 	public String toString() {
 		return object.toString();
 	}
 	
-	// 2007.05.16
 	public boolean equals(Object o) {
 		return object.equals(o);
 	}
@@ -106,9 +55,6 @@ public abstract class BioPAXElementProxy implements BioPAXElement {
 		return object.isEquivalent(element);
 	}
 
-	///////////////////////////////////
-	// 2007.09.04
-	///////////////////////////////////
 	protected String doubleToString(Double d) {
 		try {
 			return d.toString();

@@ -9,6 +9,7 @@ package org.biopax.paxtools.proxy.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -20,8 +21,6 @@ import javax.persistence.Entity;
 @Entity(name="l3deltag")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class DeltaGProxy extends Level3ElementProxy implements DeltaG {
-	public DeltaGProxy() {
-	}
 
 	// Property DELTA-G-PRIME-O
 

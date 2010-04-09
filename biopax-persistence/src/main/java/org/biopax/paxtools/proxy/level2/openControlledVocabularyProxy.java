@@ -12,8 +12,9 @@ import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
+
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.biopax.paxtools.proxy.StringSetBridge;
 
 /**
@@ -21,7 +22,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
  */
 @Entity(name="l2opencontrolledvocabulary")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class openControlledVocabularyProxy extends externalReferenceUtilityClassProxy implements openControlledVocabulary, Serializable {
+public class openControlledVocabularyProxy extends externalReferenceUtilityClassProxy implements openControlledVocabulary {
 	public openControlledVocabularyProxy() {
 	}
 

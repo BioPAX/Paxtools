@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.Indexed;
 
 /**
@@ -21,9 +22,6 @@ import org.hibernate.search.annotations.Indexed;
 public class CellVocabularyProxy extends ControlledVocabularyProxy 
 	implements CellVocabulary 
 {
-	public CellVocabularyProxy() {
-	}
-
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {
 		return CellVocabulary.class;
