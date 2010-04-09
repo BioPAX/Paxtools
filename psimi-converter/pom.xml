@@ -10,6 +10,30 @@
   <artifactId>psimi-converter</artifactId>
   <name>PSI-MI Converter</name>
   <description>Converts PSI-MI v2.5 (compact) files to BioPAX Level 2 or 3</description>
+  <repositories>
+	<repository>
+	  <id>ebi-repo</id>
+	  <name>The EBI internal repository</name>
+	  <url>http://www.ebi.ac.uk/~maven/m2repo</url>
+	  <releases>
+		<enabled>true</enabled>
+	  </releases>
+	  <snapshots>
+		<enabled>false</enabled>
+	  </snapshots>
+	</repository>
+	<repository>
+	  <id>ebi-repo-snapshots</id>
+	  <name>The EBI internal repository</name>
+	  <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
+	  <releases>
+		<enabled>false</enabled>
+	  </releases>
+	  <snapshots>
+		<enabled>true</enabled>
+	  </snapshots>
+	</repository>
+	</repositories>
   <dependencies>
    	<dependency>
     	<groupId>org.biopax.paxtools</groupId>
@@ -31,35 +55,10 @@
       <artifactId>jaxb-impl</artifactId>
       <version>2.1.3</version>
     </dependency>
+	<dependency>
+	  <groupId>psidev.psi.mi</groupId>
+      <artifactId>psi25-xml</artifactId>
+      <version>1.7.7</version>
+	</dependency>
  </dependencies>
-  <build>
-    <!-- <finalName>psi-mi-converter</finalName> -->
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jaxb2-maven-plugin</artifactId>
-        <executions>
-          <execution>
- 	    <phase>generate-sources</phase>
-            <goals>
-              <goal>xjc</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <clearOutputDir>false</clearOutputDir>
-          <packageName>generated.psimil2</packageName>
-          <schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
-        </configuration>
-        <dependencies>
-        <!-- this is a workaround a bug in the m2eclipse plugin-->
-          <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.8.1</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
 </project>

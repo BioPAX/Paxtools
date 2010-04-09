@@ -685,38 +685,34 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * @param seqLocationID String
 	 * @param beginSeqSiteID String
 	 * @param endSeqSiteID String
-	 * @param beginSequenceInterval
-	 * @param endSequenceInterval
+	 * @param beginSequenceInterval long
+	 * @param endSequenceInterval long
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getSequenceLocation(String seqLocationID,
 														   String beginSeqSiteID, String endSeqSiteID,
-														   BigInteger beginSequenceInterval,
-														   BigInteger endSequenceInterval) {
+														   long beginSequenceInterval,
+														   long endSequenceInterval) {
 
 		if (bpLevel == BioPAXLevel.L2) {
 			sequenceInterval toReturn = (sequenceInterval)bpModel.addNew(sequenceInterval.class, seqLocationID);
 			sequenceSite bpSequenceSiteBegin = (sequenceSite)bpModel.addNew(sequenceSite.class, beginSeqSiteID);
-			bpSequenceSiteBegin.setSEQUENCE_POSITION(beginSequenceInterval.intValue());
+			bpSequenceSiteBegin.setSEQUENCE_POSITION((int)beginSequenceInterval);
 			toReturn.setSEQUENCE_INTERVAL_BEGIN(bpSequenceSiteBegin);
-			if (endSequenceInterval != null) {
-				sequenceSite bpSequenceSiteEnd = (sequenceSite)bpModel.addNew(sequenceSite.class, endSeqSiteID);
-				bpSequenceSiteEnd.setSEQUENCE_POSITION(endSequenceInterval.intValue());
-				toReturn.setSEQUENCE_INTERVAL_END(bpSequenceSiteEnd);
-			}
+			sequenceSite bpSequenceSiteEnd = (sequenceSite)bpModel.addNew(sequenceSite.class, endSeqSiteID);
+			bpSequenceSiteEnd.setSEQUENCE_POSITION((int)endSequenceInterval);
+			toReturn.setSEQUENCE_INTERVAL_END(bpSequenceSiteEnd);
 			return (T)toReturn;
 			
 		}
 		else if (bpLevel == BioPAXLevel.L3) {
 			SequenceInterval toReturn = (SequenceInterval)bpModel.addNew(SequenceInterval.class, seqLocationID);
 			SequenceSite bpSequenceSiteBegin = (SequenceSite)bpModel.addNew(SequenceSite.class, beginSeqSiteID);
-			bpSequenceSiteBegin.setSequencePosition(beginSequenceInterval.intValue());
+			bpSequenceSiteBegin.setSequencePosition((int)beginSequenceInterval);
 			toReturn.setSequenceIntervalBegin(bpSequenceSiteBegin);
-			if (endSequenceInterval != null) {
-				SequenceSite bpSequenceSiteEnd = (SequenceSite)bpModel.addNew(SequenceSite.class, endSeqSiteID);
-				bpSequenceSiteEnd.setSequencePosition(endSequenceInterval.intValue());
-				toReturn.setSequenceIntervalEnd(bpSequenceSiteEnd);
-			}
+			SequenceSite bpSequenceSiteEnd = (SequenceSite)bpModel.addNew(SequenceSite.class, endSeqSiteID);
+			bpSequenceSiteEnd.setSequencePosition((int)endSequenceInterval);
+			toReturn.setSequenceIntervalEnd(bpSequenceSiteEnd);
 			return (T)toReturn;
 		}
 
