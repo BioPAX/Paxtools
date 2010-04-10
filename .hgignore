@@ -1,0 +1,5 @@
+syntax:regexp
+?\.iml
+?\.class
+/target/
+\.idea/
