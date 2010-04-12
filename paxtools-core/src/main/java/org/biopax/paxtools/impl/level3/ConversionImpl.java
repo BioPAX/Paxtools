@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  */
-class ConversionImpl extends RestrictedInteractionAdapter
+class ConversionImpl extends InteractionImpl
 		implements Conversion
 {
 // ------------------------------ FIELDS ------------------------------
@@ -76,12 +76,12 @@ class ConversionImpl extends RestrictedInteractionAdapter
 	public void addRight(PhysicalEntity right)
 	{
 		this.right.add(right);
-		addSubParticipant(right);
+		super.addParticipant(right);
 	}
 
 	public void removeRight(PhysicalEntity right)
 	{
-		removeSubParticipant(right);
+		super.removeParticipant(right);
 		this.right.remove(right);
 	}
 
@@ -106,12 +106,12 @@ class ConversionImpl extends RestrictedInteractionAdapter
 	public void addLeft(PhysicalEntity left)
 	{
 		this.left.add(left);
-		addSubParticipant(left);
+		super.addParticipant(left);
 	}
 
 	public void removeLeft(PhysicalEntity left)
 	{
-		removeSubParticipant(left);
+		super.removeParticipant(left);
 		this.left.remove(left);
 	}
 

@@ -3,3 +3,4 @@ syntax:regexp
 ?\.class
 /target/
 \.idea/
+\cpath-dao/

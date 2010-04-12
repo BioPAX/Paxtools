@@ -101,12 +101,17 @@ public class PhysicalEntityProxy<T extends PhysicalEntity> extends EntityProxy<T
 		object.setMemberPhysicalEntity(memberPhysicalEntity);
 	}
 
-
-	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
+    @ManyToMany(targetEntity = PhysicalEntityProxy.class, mappedBy="memberPhysicalEntity")
+    public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 		return object.getMemberPhysicalEntityOf();
 	}
 
+    public void setMemberPhysicalEntityOf(Set<PhysicalEntity> newSet)
+	{
+		object.getMemberPhysicalEntityOf().clear();
+        object.getMemberPhysicalEntityOf().addAll(newSet);
+	}
 
 	public boolean hasEquivalentCellularLocation(PhysicalEntity that) {
 		return object.hasEquivalentCellularLocation(that);

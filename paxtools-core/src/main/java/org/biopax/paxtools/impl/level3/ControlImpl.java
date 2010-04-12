@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  */
-class ControlImpl extends RestrictedInteractionAdapter
+class ControlImpl extends InteractionImpl
         implements Control
 {
 // ------------------------------ FIELDS ------------------------------
@@ -72,12 +72,12 @@ class ControlImpl extends RestrictedInteractionAdapter
 	        
         }
         this.controlled.add(controlled);
-        addSubParticipant(controlled);
+        super.addParticipant(controlled);
     }
 
     public void removeControlled(Process controlled)
     {
-        removeSubParticipant(controlled);
+        super.removeParticipant(controlled);
         this.controlled.remove(controlled);
     }
 
@@ -98,12 +98,12 @@ class ControlImpl extends RestrictedInteractionAdapter
     {
         this.controller.add(controller);
 	    controller.getControllerOf().add(this);
-        addSubParticipant(controller);
+        super.addParticipant(controller);
     }
 
     public void removeController(Controller controller)
     {
-        removeSubParticipant(controller);
+        super.removeParticipant(controller);
 	    controller.getControllerOf().remove(this);
         this.controller.remove(controller);
     }

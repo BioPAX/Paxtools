@@ -1,9 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.TemplateReaction;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
-import org.biopax.paxtools.model.level3.NucleicAcid;
-import org.biopax.paxtools.model.level3.TemplateDirectionType;
+import org.biopax.paxtools.model.level3.*;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -14,7 +11,7 @@ import java.util.HashSet;
  * Date: Aug 14, 2008
  * Time: 7:54:51 PM
  */
-public class TemplateReactionImpl extends RestrictedInteractionAdapter implements TemplateReaction {
+public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
     private Set<NucleicAcid> initiationRegion;
     private NucleicAcid template;
@@ -47,12 +44,12 @@ public class TemplateReactionImpl extends RestrictedInteractionAdapter implement
     public void addProduct(PhysicalEntity product)
     {
         this.product.add(product);
-        addSubParticipant(product);
+        super.addParticipant(product);
     }
 
     public void removeProduct(PhysicalEntity product)
     {
-        removeSubParticipant(product);
+        super.removeParticipant(product);
         this.product.remove(product);
     }
 
@@ -73,12 +70,12 @@ public class TemplateReactionImpl extends RestrictedInteractionAdapter implement
     public void addInitiationRegion(NucleicAcid initiationRegion)
     {
         this.initiationRegion.add(initiationRegion);
-        addSubParticipant(initiationRegion);
+        super.addParticipant(initiationRegion);
     }
 
     public void removeInitiationRegion(NucleicAcid initiationRegion)
     {
-        removeSubParticipant(initiationRegion);
+        super.removeParticipant(initiationRegion);
         this.initiationRegion.remove(initiationRegion);
     }
 
@@ -91,10 +88,10 @@ public class TemplateReactionImpl extends RestrictedInteractionAdapter implement
      {
          if(this.template!= null)
          {
-            removeSubParticipant(this.template);
+            super.removeParticipant(this.template);
          }
          this.template=template;
-         addSubParticipant(template);
+         super.addParticipant(template);
      }
 
 	public TemplateDirectionType getTemplateDirection()

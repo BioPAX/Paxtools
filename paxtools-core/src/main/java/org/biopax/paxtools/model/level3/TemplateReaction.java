@@ -4,8 +4,7 @@ import java.util.Set;
 
 /**
  */
-public interface TemplateReaction extends RestrictedInteraction
-{
+public interface TemplateReaction extends Interaction {
 	// Property Product
 
 	public Set<PhysicalEntity> getProduct();
