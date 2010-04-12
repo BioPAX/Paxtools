@@ -3,8 +3,9 @@ package org.biopax.paxtools.proxy;
 import org.biopax.paxtools.proxy.level3.PhysicalEntityProxy;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.junit.Ignore;
 
-
+@Ignore
 public class TestSchema
 {
     static

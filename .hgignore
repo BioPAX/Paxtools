@@ -4,3 +4,6 @@ syntax:regexp
 /target/
 \.idea/
 \cpath-dao/
+?\.project
+?\.DS_Store
+?\.settings
