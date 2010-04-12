@@ -1,6 +1,7 @@
 syntax:regexp
 ?\.iml
-?\.class
-/target/
-\.idea/
-\cpath-dao/
+?\.log
+/target$
+^target$
+^.idea/
+^cpath-dao/
