@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-abstract class EntityImpl extends L3ElementImpl implements Entity {
+abstract class EntityImpl extends XReferrableImpl implements Entity {
 // ------------------------------ FIELDS ------------------------------
 
     private HashSet<Interaction> participantOf;
@@ -24,10 +24,6 @@ abstract class EntityImpl extends L3ElementImpl implements Entity {
      */
     private Set<Provenance> dataSource;
 
-    /**
-     * This Set keeps optional Xrefs
-     */
-    private ReferenceHelper referenceHelper;
 
     /**
      * This Set keeps evidence related to this entity
@@ -47,7 +43,6 @@ abstract class EntityImpl extends L3ElementImpl implements Entity {
     public EntityImpl() {
         this.availability = new HashSet<String>();
         this.dataSource = new HashSet<Provenance>();
-        this.referenceHelper = new ReferenceHelper(this);
         this.participantOf = new HashSet<Interaction>();
         this.evidence = new HashSet<Evidence>();
         this.nameHelper = new NameHelper();
@@ -56,26 +51,7 @@ abstract class EntityImpl extends L3ElementImpl implements Entity {
 
 // ------------------------ INTERFACE METHODS ------------------------
 
-// --------------------- Interface Xreferrable ---------------------
 
-
-    public Set<Xref> getXref() {
-        return referenceHelper.getXref();
-    }
-
-    public void setXref(Set<Xref> Xref) {
-        referenceHelper.setXref(Xref);
-    }
-
-    public void addXref(Xref Xref) {
-        referenceHelper.addXref(Xref);
-    }
-
-    public void removeXref(Xref Xref) {
-        referenceHelper.removeXref(Xref);
-    }
-
-// --------------------- Interface entity ---------------------
 
 // --------------------- ACCESORS and MUTATORS---------------------
 

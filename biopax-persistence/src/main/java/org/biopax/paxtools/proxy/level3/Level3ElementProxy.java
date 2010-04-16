@@ -66,7 +66,7 @@ public abstract class Level3ElementProxy<T extends Level3Element> extends BioPAX
 		proxyId = value;
 	}
 	
-	@Column(name="rdfid", length = 500, nullable=false, unique=true)
+	@Column(name="rdfid", nullable=false, unique=true)
 	public String getRDFId() {
 		return object.getRDFId();
 	}
@@ -98,6 +98,24 @@ public abstract class Level3ElementProxy<T extends Level3Element> extends BioPAX
 	public void setComment(Set<String> COMMENT)
 	{
 		object.setComment(COMMENT);
+	}
+
+	protected <T> void updateSet(Set<T> source, Set<T> target)
+	{
+		for (T t : source)
+		{
+			if(!target.contains(t))
+			{
+				target.add(t);
+			}
+		}
+		for (T t : target)
+		{
+			if(!source.contains(t))
+			{
+				target.remove(t);
+			}
+		}
 	}
 }
 

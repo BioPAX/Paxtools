@@ -25,7 +25,7 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 @javax.persistence.Entity(name="l3entityreference")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class EntityReferenceProxy<T extends EntityReference>
-        extends Level3ElementProxy<T> implements EntityReference {
+        extends XReferrableProxy<T> implements EntityReference {
 
 // Observable
 
@@ -86,32 +86,12 @@ public class EntityReferenceProxy<T extends EntityReference>
 		object.setStandardName(newSTANDARD_NAME);
 	}
 
-// XReferrable
-
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)
-	@JoinTable(name="l3entityref_xref")
-	public Set<Xref> getXref() {
-		return object.getXref();
-	}
-
-	public void addXref(Xref XREF) {
-		object.addXref(XREF);
-	}
-
-	public void removeXref(Xref XREF) {
-		object.removeXref(XREF);
-	}
-
-	public void setXref(Set<Xref> XREF) {
-		object.setXref(XREF);
-	}
 
 // EntityReference
 
  	// Property EntityFeature
 
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = EntityFeatureProxy.class)
-	@JoinTable(name="l3entityref_entity_feature")
+	@OneToMany(cascade = {CascadeType.ALL}, targetEntity = EntityFeatureProxy.class)
 	public Set<EntityFeature> getEntityFeature() {
 		return object.getEntityFeature();
 	}

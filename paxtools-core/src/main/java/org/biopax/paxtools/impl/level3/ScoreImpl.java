@@ -6,16 +6,14 @@ import org.biopax.paxtools.model.level3.Xref;
 
 import java.util.Set;
 
-class ScoreImpl extends L3ElementImpl implements Score
+class ScoreImpl extends XReferrableImpl implements Score
 {
 
 	private String value;
     private Provenance scoreSource;
-    private final ReferenceHelper referenceHelper;
 
     public ScoreImpl()
     {
-        this.referenceHelper = new ReferenceHelper(this);
     }
 
     //
@@ -56,25 +54,6 @@ class ScoreImpl extends L3ElementImpl implements Score
     }
 
 // ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface Xreferrable ---------------------
-
-
-    public Set<Xref> getXref() {
-        return referenceHelper.getXref();
-    }
-
-    public void setXref(Set<Xref> Xref) {
-        referenceHelper.setXref(Xref);
-    }
-
-    public void addXref(Xref Xref) {
-        referenceHelper.addXref(Xref);
-    }
-
-    public void removeXref(Xref Xref) {
-        referenceHelper.removeXref(Xref);
-    }
 
 
 }

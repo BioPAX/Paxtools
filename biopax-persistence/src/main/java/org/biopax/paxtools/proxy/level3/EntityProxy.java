@@ -23,27 +23,10 @@ import org.biopax.paxtools.model.level3.Entity;
  * Proxy for entity
  */
 @javax.persistence.Entity(name="l3entity")
-public abstract class EntityProxy<T extends Entity> extends Level3ElementProxy<T> implements Entity {
+public abstract class EntityProxy<T extends Entity> extends XReferrableProxy<T> implements Entity {
 	
 // XReferrable
 
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)
-	@JoinTable(name="l3entity_xref")
-	public Set<Xref> getXref() {
-		return object.getXref();
-	}
-
-	public void addXref(Xref XREF) {
-		object.addXref(XREF);
-	}
-
-	public void removeXref(Xref XREF) {
-		object.removeXref(XREF);
-	}
-
-	public void setXref(Set<Xref> XREF) {
-		object.setXref(XREF);
-	}
 
 // Observable
 

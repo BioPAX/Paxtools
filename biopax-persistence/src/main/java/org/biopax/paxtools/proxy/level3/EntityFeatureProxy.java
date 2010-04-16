@@ -79,7 +79,8 @@ public class EntityFeatureProxy<T extends EntityFeature> extends Level3ElementPr
 	
 	// Inverse of Property ENTITY-FEATURE
 
-	@Transient
+	@Transient //todo map inverse dep..
+	//@ManyToOne(targetEntity = EntityReferenceProxy.class)
 	public EntityReference getEntityFeatureOf() {
 		return object.getEntityFeatureOf();
 	}

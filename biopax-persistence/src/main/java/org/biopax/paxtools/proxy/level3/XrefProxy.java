@@ -14,6 +14,8 @@ import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -73,13 +75,19 @@ public abstract class XrefProxy<T extends Xref> extends Level3ElementProxy<T>
 
 	// Inverse of property XREF
 
-	@Transient
+	@ManyToMany(targetEntity = XReferrableProxy.class, mappedBy="xref")
 	public Set<XReferrable> getXrefOf() {
 		return object.getXrefOf();
 	}
 
+	private void setXrefOf(Set<XReferrable> set)
+	{
+ 	  updateSet(object.getXrefOf(),set);
+	}
+
 	@Transient
-	public Class<? extends BioPAXElement> getModelInterface() {
+	public Class<? extends BioPAXElement> getModelInterface()
+	{
 		return Xref.class;
 	}
 }

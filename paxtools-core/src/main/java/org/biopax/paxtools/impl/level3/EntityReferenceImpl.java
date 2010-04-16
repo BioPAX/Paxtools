@@ -9,7 +9,7 @@ import org.biopax.paxtools.util.ClassFilterSet;
 import java.util.HashSet;
 import java.util.Set;
 
-class EntityReferenceImpl extends L3ElementImpl
+class EntityReferenceImpl extends XReferrableImpl
         implements EntityReference {
 
     private final NameHelper nameHelper;
@@ -18,7 +18,6 @@ class EntityReferenceImpl extends L3ElementImpl
     private Set<Evidence> evidence;
     Set<EntityReferenceTypeVocabulary> entityReferenceType;
     Set<EntityReference> memberEntity;
-    private final ReferenceHelper referenceHelper;
 
     /**
      * Constructor.
@@ -30,7 +29,6 @@ class EntityReferenceImpl extends L3ElementImpl
         this.evidence = new HashSet<Evidence>();
         this.entityReferenceType = new HashSet<EntityReferenceTypeVocabulary>();
         this.memberEntity = new HashSet<EntityReference>();
-        this.referenceHelper = new ReferenceHelper(this);
     }
 
     //
@@ -185,21 +183,7 @@ class EntityReferenceImpl extends L3ElementImpl
         nameHelper.setStandardName(standardName);
     }
 
-    public Set<Xref> getXref() {
-        return referenceHelper.getXref();
-    }
 
-    public void setXref(Set<Xref> Xref) {
-        referenceHelper.setXref(Xref);
-    }
-
-    public void addXref(Xref Xref) {
-        referenceHelper.addXref(Xref);
-    }
-
-    public void removeXref(Xref Xref) {
-        referenceHelper.removeXref(Xref);
-    }
     
     @Override
     protected boolean semanticallyEquivalent(BioPAXElement element) {

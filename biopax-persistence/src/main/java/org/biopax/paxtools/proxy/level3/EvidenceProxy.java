@@ -23,26 +23,9 @@ import java.util.Set;
  */
 @Entity(name="l3evidence")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class EvidenceProxy extends Level3ElementProxy<Evidence> implements Evidence, Serializable {
-// XReferrable
+public class EvidenceProxy extends XReferrableProxy<Evidence> implements Evidence, Serializable {
 
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)
-	@JoinTable(name="l3evidence_xref")
-	public Set<Xref> getXref() {
-		return object.getXref();
-	}
 
-	public void addXref(Xref XREF) {
-		object.addXref(XREF);
-	}
-
-	public void removeXref(Xref XREF) {
-		object.removeXref(XREF);
-	}
-
-	public void setXref(Set<Xref> XREF) {
-		object.setXref(XREF);
-	}
 
 // evidence
 

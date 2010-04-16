@@ -72,13 +72,16 @@ class ControlImpl extends InteractionImpl
 	        
         }
         this.controlled.add(controlled);
+	    controlled.getControlledOf().add(this);
         super.addParticipant(controlled);
     }
 
     public void removeControlled(Process controlled)
     {
         super.removeParticipant(controlled);
-        this.controlled.remove(controlled);
+        controlled.getControlledOf().remove(this);
+	    this.controlled.remove(controlled);
+
     }
 
     public Set<Controller> getController()
@@ -88,7 +91,6 @@ class ControlImpl extends InteractionImpl
 
     public void setController(Set<Controller> controllers)
     {
-        //this.controller = controller;
     	for(Controller controller : controllers) {
     		addController(controller);
     	}

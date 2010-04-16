@@ -107,10 +107,9 @@ public class PhysicalEntityProxy<T extends PhysicalEntity> extends EntityProxy<T
 		return object.getMemberPhysicalEntityOf();
 	}
 
-    public void setMemberPhysicalEntityOf(Set<PhysicalEntity> newSet)
+    private void setMemberPhysicalEntityOf(Set<PhysicalEntity> newSet)
 	{
-		object.getMemberPhysicalEntityOf().clear();
-        object.getMemberPhysicalEntityOf().addAll(newSet);
+		updateSet(object.getMemberPhysicalEntityOf(),newSet);
 	}
 
 	public boolean hasEquivalentCellularLocation(PhysicalEntity that) {

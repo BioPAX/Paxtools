@@ -10,12 +10,11 @@ import org.biopax.paxtools.util.ClassFilterSet;
 import java.util.HashSet;
 import java.util.Set;
 
-class ControlledVocabularyImpl extends L3ElementImpl implements
+class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {
 
 	private Set<String> term;
-	private ReferenceHelper referenceHelper;
 
 	/**
 	 * Constructor.
@@ -23,7 +22,6 @@ class ControlledVocabularyImpl extends L3ElementImpl implements
 	public ControlledVocabularyImpl()
 	{
 		this.term = new HashSet<String>();
-		this.referenceHelper = new ReferenceHelper(this);
 	}
 
 	//
@@ -37,26 +35,7 @@ class ControlledVocabularyImpl extends L3ElementImpl implements
 	}
 
 
-	public Set<Xref> getXref()
-	{
-		return referenceHelper.getXref();
-	}
-
-	public void setXref(Set<Xref> Xref)
-	{
-		referenceHelper.setXref(Xref);
-	}
-
-	public void addXref(Xref Xref)
-	{
-		referenceHelper.addXref(Xref);
-	}
-
-	public void removeXref(Xref Xref)
-	{
-		referenceHelper.removeXref(Xref);
-	}
-
+	
 	//
 	// ControlledVocabulary interface implementation
 	//

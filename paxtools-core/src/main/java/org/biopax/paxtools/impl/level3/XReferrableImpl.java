@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 
@@ -12,11 +13,9 @@ import java.util.Set;
  *
  * @author Emek Demir
  */
-class ReferenceHelper implements Serializable
+public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
 // ------------------------------ FIELDS ------------------------------
-
-	private final XReferrable owner;
 
 	/**
 	 * This variable stores the external references to the owner object.
@@ -28,36 +27,35 @@ class ReferenceHelper implements Serializable
 	/**
 	 * Default constructor.
 	 *
-	 * @param owner object which this referenceHelper belongs
 	 */
-	ReferenceHelper(XReferrable owner)
+	public XReferrableImpl()
 	{
-		this.owner = owner;
 		this.xref = new HashSet<Xref>();
 	}
 
 // -------------------------- OTHER METHODS --------------------------
 
-	void addXref(Xref xref)
+	public void addXref(Xref xref)
 	{
 		this.xref.add(xref);
 
-		xref.getXrefOf().add(owner);
+		xref.getXrefOf().add(this);
 	}
 
-	Set<Xref> getXref()
+	public Set<Xref> getXref()
 	{
 		return xref;
 	}
 
-	void removeXref(Xref xref)
+	public void removeXref(Xref xref)
 	{
 		this.xref.remove(xref);
-		xref.getXrefOf().remove(owner);
+		xref.getXrefOf().remove(this);
 	}
 
-	void setXref(Set<Xref> xref)
+	public void setXref(Set<Xref> xref)
 	{
         this.xref = xref;
     }
+
 }

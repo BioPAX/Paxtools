@@ -7,13 +7,12 @@ import java.util.Set;
 
 /**
  */
-class EvidenceImpl extends L3ElementImpl implements Evidence
+class EvidenceImpl extends XReferrableImpl implements Evidence
 {
 
 	private Set<ExperimentalForm> experimentalForm;
 	private Set<Score> confidence;
 	private Set<EvidenceCodeVocabulary> evidenceCode;
-	private final ReferenceHelper referenceHelper;
 
 	/**
 	 * Constructor.
@@ -23,7 +22,6 @@ class EvidenceImpl extends L3ElementImpl implements Evidence
 		this.confidence = new HashSet<Score>();
 		this.evidenceCode = new HashSet<EvidenceCodeVocabulary>();
 		this.experimentalForm = new HashSet<ExperimentalForm>();
-		this.referenceHelper = new ReferenceHelper(this);
 	}
 
 	//
@@ -163,28 +161,6 @@ class EvidenceImpl extends L3ElementImpl implements Evidence
 
 // ------------------------ INTERFACE METHODS ------------------------
 
-// --------------------- Interface Xreferrable ---------------------
-
-
-	public Set<Xref> getXref()
-	{
-		return referenceHelper.getXref();
-	}
-
-	public void setXref(Set<Xref> Xref)
-	{
-		referenceHelper.setXref(Xref);
-	}
-
-	public void addXref(Xref Xref)
-	{
-		referenceHelper.addXref(Xref);
-	}
-
-	public void removeXref(Xref Xref)
-	{
-		referenceHelper.removeXref(Xref);
-	}
 
 
 }

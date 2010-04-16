@@ -5,10 +5,9 @@ import org.biopax.paxtools.model.level3.Xref;
 
 import java.util.Set;
 
-class ProvenanceImpl extends L3ElementImpl implements Provenance
+class ProvenanceImpl extends XReferrableImpl implements Provenance
 {
 
-	private final ReferenceHelper referenceHelper;
 	private final NameHelper nameHelper;
 
 	/**
@@ -16,7 +15,6 @@ class ProvenanceImpl extends L3ElementImpl implements Provenance
 	 */
 	public ProvenanceImpl()
 	{
-		this.referenceHelper = new ReferenceHelper(this);
 		this.nameHelper = new NameHelper();
 	}
 
@@ -33,24 +31,6 @@ class ProvenanceImpl extends L3ElementImpl implements Provenance
 
 // ------------------------ INTERFACE METHODS ------------------------
 
-// --------------------- Interface Xreferrable ---------------------
-
-
-    public Set<Xref> getXref() {
-        return referenceHelper.getXref();
-    }
-
-    public void setXref(Set<Xref> Xref) {
-        referenceHelper.setXref(Xref);
-    }
-
-    public void addXref(Xref Xref) {
-        referenceHelper.addXref(Xref);
-    }
-
-    public void removeXref(Xref Xref) {
-        referenceHelper.removeXref(Xref);
-    }
 
 
 //

@@ -24,27 +24,8 @@ import java.util.Set;
  */
 @Entity(name="l3provenance")
 @Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
-public class ProvenanceProxy extends Level3ElementProxy<Provenance> implements Provenance {
+public class ProvenanceProxy extends XReferrableProxy<Provenance> implements Provenance {
 
-// XReferrable
-
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = XrefProxy.class)
-	@JoinTable(name="l3entity_xref")
-	public Set<Xref> getXref() {
-		return object.getXref();
-	}
-
-	public void addXref(Xref XREF) {
-		object.addXref(XREF);
-	}
-
-	public void removeXref(Xref XREF) {
-		object.removeXref(XREF);
-	}
-
-	public void setXref(Set<Xref> XREF) {
-		object.setXref(XREF);
-	}
 
 // Named
 	
