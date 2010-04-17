@@ -6,9 +6,15 @@ import java.util.Set;
 import javax.persistence.*;
 
 import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.proxy.BioPAXElementProxy;
+import org.biopax.paxtools.proxy.StringMapBridge;
 import org.biopax.paxtools.proxy.level3.Level3ElementProxy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CollectionOfElements;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 
 /**
  * L3 Paxtools BioPAX Persistent Model
@@ -17,6 +23,7 @@ import org.hibernate.annotations.CollectionOfElements;
  *
  */
 @Entity(name="l3model")
+@Indexed(index= BioPAXElementProxy.SEARCH_INDEX_NAME)
 public class ModelProxy implements Model {
 
 	private static final long serialVersionUID = 4518987441913019971L;
@@ -90,6 +97,8 @@ public class ModelProxy implements Model {
 	@Cascade(value = org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	@org.hibernate.annotations.MapKey( columns = { @Column( name="ns" ) } )
 	@Column(name="namespace")
+	@FieldBridge(impl=StringMapBridge.class)
+	@Field(name = "NS", index = Index.TOKENIZED)
 	public Map<String, String> getNameSpacePrefixMap() {
 		return model.getNameSpacePrefixMap();
 	}
@@ -106,11 +115,13 @@ public class ModelProxy implements Model {
 	}
 
     public void setObjects(Set<BioPAXElement> objects) {
-    	for(BioPAXElement bpe : model.getObjects()) 
-    		model.remove(bpe);
+    	//for(BioPAXElement bpe : model.getObjects()) 
+    	//	model.remove(bpe);
     	
-    	for(BioPAXElement bpe : objects)
-    		model.add(bpe);
+    	for(BioPAXElement bpe : objects) {
+    		if(!model.containsID(bpe.getRDFId()))
+    			model.add(bpe);
+    	}
     }
     
 	public <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy) {

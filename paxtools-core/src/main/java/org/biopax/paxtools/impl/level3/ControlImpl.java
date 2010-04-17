@@ -55,9 +55,11 @@ class ControlImpl extends InteractionImpl
 
     public void setControlled(Set<Process> controlled)
     {
+    	/*
     	for(Process pe : this.controlled) {
     		removeControlled(pe);
     	}
+    	*/
     	for(Process pe : controlled) {
     		addControlled(pe);
     	}
@@ -93,9 +95,11 @@ class ControlImpl extends InteractionImpl
 
     public void setController(Set<Controller> controllers)
     {
+    	/*
     	for(Controller controller : this.controller) {
     		removeController(controller);
-    	}    	
+    	} 
+    	*/   	
     	for(Controller controller : controllers) {
     		addController(controller);
     	}

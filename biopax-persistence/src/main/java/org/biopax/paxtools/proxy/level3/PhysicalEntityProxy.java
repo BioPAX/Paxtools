@@ -7,7 +7,6 @@
 
 package org.biopax.paxtools.proxy.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
@@ -109,7 +108,7 @@ public class PhysicalEntityProxy<T extends PhysicalEntity> extends EntityProxy<T
 
     private void setMemberPhysicalEntityOf(Set<PhysicalEntity> newSet)
 	{
-		updateSet(object.getMemberPhysicalEntityOf(),newSet);
+		updateSet(newSet, object.getMemberPhysicalEntityOf());
 	}
 
 	public boolean hasEquivalentCellularLocation(PhysicalEntity that) {

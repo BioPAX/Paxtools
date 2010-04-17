@@ -52,9 +52,11 @@ class ConversionImpl extends InteractionImpl
 
 	public void setRight(Set<PhysicalEntity> right)
 	{
-		for (PhysicalEntity pe : this.right) {
+		/*
+		for (PhysicalEntity pe : getRight()) {
 			removeRight(pe);
 		}
+		*/
 		for (PhysicalEntity pe : right) {
 			addRight(pe);
 		}
@@ -89,9 +91,11 @@ class ConversionImpl extends InteractionImpl
 
 	public void setLeft(Set<PhysicalEntity> left)
 	{
-		for (PhysicalEntity pe : this.left) {
+		/*
+		for (PhysicalEntity pe : getLeft()) {
 				removeLeft(pe);
 		}
+		*/
 		for (PhysicalEntity pe : left) {
 			addLeft(pe);
 		}
