@@ -1,10 +1,10 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +13,7 @@ import java.util.Set;
  *
  * @author Emek Demir
  */
+@Entity
 public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
 // ------------------------------ FIELDS ------------------------------
@@ -28,13 +29,15 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	 * Default constructor.
 	 *
 	 */
-	public XReferrableImpl()
+
+	protected XReferrableImpl()
 	{
 		this.xref = new HashSet<Xref>();
 	}
 
 // -------------------------- OTHER METHODS --------------------------
 
+	@ManyToMany(targetEntity = XrefImpl.class)
 	public void addXref(Xref xref)
 	{
 		this.xref.add(xref);
@@ -53,7 +56,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 		xref.getXrefOf().remove(this);
 	}
 
-	public void setXref(Set<Xref> xref)
+	private void setXref(Set<Xref> xref)
 	{
         this.xref = xref;
     }

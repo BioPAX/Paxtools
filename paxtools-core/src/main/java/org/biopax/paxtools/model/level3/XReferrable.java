@@ -15,5 +15,4 @@ public interface XReferrable extends Level3Element
 
 	void removeXref(Xref xref);
 
-	void setXref(Set<Xref> xref);
 }

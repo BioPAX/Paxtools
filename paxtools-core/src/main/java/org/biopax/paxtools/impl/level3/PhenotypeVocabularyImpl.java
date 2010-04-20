@@ -2,8 +2,12 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+
 /**
  */
+@Entity
 public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
 	implements PhenotypeVocabulary
 {
@@ -14,6 +18,7 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
         return PhenotypeVocabulary.class;
     }
 
+	@Basic
 	public String getPatoData()
 	{
 		return patoData;

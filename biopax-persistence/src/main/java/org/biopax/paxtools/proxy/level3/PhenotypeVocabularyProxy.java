@@ -29,11 +29,11 @@ public class PhenotypeVocabularyProxy extends ControlledVocabularyProxy<Phenotyp
 	@Basic @Column(name="pato_data_x", columnDefinition="text")
 	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getPatoData() {
-		return ((PhenotypeVocabulary)object).getPatoData();
+		return object.getPatoData();
 	}
 
 	public void setPatoData(String patoData) {
-		((PhenotypeVocabulary)object).setPatoData(patoData);
+		object.setPatoData(patoData);
 	}
 	
 	@Transient

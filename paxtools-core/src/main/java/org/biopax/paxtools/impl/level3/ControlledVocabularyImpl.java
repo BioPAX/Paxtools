@@ -2,19 +2,24 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
-import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.util.ClassFilterSet;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
-class ControlledVocabularyImpl extends XReferrableImpl implements
+@Entity
+public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {
 
 	private Set<String> term;
+	private static final Pattern PATTERN =
+			Pattern.compile("\\]|\\[");
 
 	/**
 	 * Constructor.
@@ -43,6 +48,7 @@ class ControlledVocabularyImpl extends XReferrableImpl implements
 
 	// Property term
 
+	@ElementCollection
 	public Set<String> getTerm()
 	{
 		return term;
@@ -71,9 +77,10 @@ class ControlledVocabularyImpl extends XReferrableImpl implements
 		Set<String> terms = new HashSet<String>(term.size());
 		terms.addAll(term);
 		terms.retainAll(that.getTerm());
+
 		
 		return getModelInterface().equals(that.getModelInterface()) 
-				&& ( (getTerm().isEmpty() && that.getTerm().isEmpty()) || !terms.isEmpty() )
+				&& (term.isEmpty() && that.getTerm().isEmpty() || !terms.isEmpty() )
 				&& SetEquivalanceChecker.isEquivalentIntersection(
 						new ClassFilterSet<UnificationXref>(getXref(), UnificationXref.class),
 						new ClassFilterSet<UnificationXref>(that.getXref(), UnificationXref.class)
@@ -81,7 +88,8 @@ class ControlledVocabularyImpl extends XReferrableImpl implements
 	}
 	
 	@Override
-	public String toString() {
-		return getTerm().toString().replaceAll("\\]|\\[", "");
+	public String toString()
+	{
+		return PATTERN.matcher(term.toString()).replaceAll("");
 	}
 }

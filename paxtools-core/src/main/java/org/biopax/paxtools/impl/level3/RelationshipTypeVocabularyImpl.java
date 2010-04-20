@@ -2,12 +2,12 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.RelationshipTypeVocabulary;
 
+import javax.persistence.Entity;
+
 /**
- * TODO:Class description
- * User: demir
- * Date: Aug 14, 2008
- * Time: 7:31:03 PM
+
  */
+@Entity
 public class RelationshipTypeVocabularyImpl extends ControlledVocabularyImpl
         implements RelationshipTypeVocabulary {
 
