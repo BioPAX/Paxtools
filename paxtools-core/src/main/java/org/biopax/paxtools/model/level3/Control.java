@@ -12,7 +12,7 @@ public interface Control extends Interaction {
 
 	public void removeControlled(Process controlled);
 
-	public void setControlled(Set<Process> controlled);
+
 
 
 	// Property Controller
@@ -22,7 +22,7 @@ public interface Control extends Interaction {
 
 	public void removeController(Controller controller);
 
-	public void setController(Set<Controller> controller);
+
 
 
 	// Property CONTROL-TYPE

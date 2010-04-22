@@ -15,7 +15,5 @@ public interface ControlledVocabulary
 
     void removeTerm(String oldTERM);
 
-    void setTerm(Set<String> newTERM);
-
 	
 }

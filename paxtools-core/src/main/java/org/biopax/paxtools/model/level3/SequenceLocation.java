@@ -13,7 +13,6 @@ public interface SequenceLocation extends UtilityClass
 
 	 void removeRegionType(SequenceRegionVocabulary regionType);
 
-	 void setRegionType(Set<SequenceRegionVocabulary> regionType);
 
  
 }

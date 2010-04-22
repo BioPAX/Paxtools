@@ -14,20 +14,14 @@ public interface ExperimentalForm extends UtilityClass
     void removeExperimentalFormDescription(
             ExperimentalFormVocabulary experimentalFormType);
 
-    void setExperimentalFormDescription(
-            Set<ExperimentalFormVocabulary> experimentalFormType);
 
-	// Property PARTICIPANT
-    //@Range({PhysicalEntity.class, Gene.class})
+
     Entity getExperimentalFormEntity();
 
     void setExperimentalFormEntity(Entity newPARTICIPANT);
-    //void setExperimentalFormEntity(PhysicalEntity newPARTICIPANT);
-    //void setExperimentalFormEntity(Gene newPARTICIPANT);
+
 
     Set<EntityFeature> getExperimentalFeature();
-
-    void setExperimentalFeature(Set<EntityFeature> experimentalFeature);
 
     void addExperimentalFeature(EntityFeature experimentalFeature);
 

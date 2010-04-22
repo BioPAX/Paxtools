@@ -1,13 +1,22 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.*;
+
+import org.biopax.paxtools.model.level3.Catalysis;
+import org.biopax.paxtools.model.level3.Conversion;
+import org.biopax.paxtools.model.level3.CatalysisDirectionType;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Process;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  */
+@Entity
 class CatalysisImpl extends ControlImpl implements Catalysis
 {
 // ------------------------------ FIELDS ------------------------------
@@ -38,6 +47,7 @@ class CatalysisImpl extends ControlImpl implements Catalysis
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
+	@Enumerated
 	public CatalysisDirectionType getCatalysisDirection()
 	{
 		return catalysisDirection;
@@ -48,17 +58,14 @@ class CatalysisImpl extends ControlImpl implements Catalysis
 		this.catalysisDirection = catalysisDirection;
 	}
 
+	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= PhysicalEntityImpl.class)
 	public Set<PhysicalEntity> getCofactor()
 	{
 		return cofactor;
 	}
 
-	public void setCofactor(Set<PhysicalEntity> cofactor)
+	private void setCofactor(Set<PhysicalEntity> cofactor)
 	{
-		if (cofactor == null)
-		{
-			cofactor = new HashSet<PhysicalEntity>();
-		}
 		this.cofactor = cofactor;
 	}
 

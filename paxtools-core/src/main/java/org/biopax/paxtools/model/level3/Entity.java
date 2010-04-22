@@ -11,7 +11,7 @@ import java.util.Set;
  * object, bioentity.
  */
 public interface Entity
-	extends Level3Element, XReferrable, Observable, Named
+	extends Level3Element, Observable, Named
 {
 	// --------------------- ACCESORS and MUTATORS---------------------
 
@@ -26,14 +26,6 @@ public interface Entity
 	 */
 	public Set<String> getAvailability();
 
-	/**
-	 * This method overrides existing set with the new set. If you want to append
-	 * to the existing set, use {@link #addAvailability} instead.
-	 *
-	 * @param availability a set of strings describing the availability of
-	 *                          this data (e.g. a copyright statement).
-	 */
-	public void setAvailability(Set<String> availability);
 
 	/**
 	 * This method adds the given text to the avaialability set.
@@ -72,15 +64,6 @@ public interface Entity
 	 *         database or person name.
 	 */
 	public Set<Provenance> getDataSource();
-
-	/**
-	 * This method overrides existing set with the new set. If you want to append
-	 * to the existing set, use {@link #addDataSource} instead.
-	 *
-	 * @param dataSource a set of free text descriptions of the source of this
-	 *                    data, e.g. a database or person name.
-	 */
-	public void setDataSource(Set<Provenance> dataSource);
 
 
 	/**

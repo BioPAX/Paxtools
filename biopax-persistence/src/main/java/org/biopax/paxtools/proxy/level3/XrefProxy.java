@@ -82,7 +82,7 @@ public abstract class XrefProxy<T extends Xref> extends Level3ElementProxy<T>
 
 	private void setXrefOf(Set<XReferrable> set)
 	{
- 	  updateSet(object.getXrefOf(),set);
+ 	  updateSet(set, object.getXrefOf());
 	}
 
 	@Transient

@@ -15,7 +15,6 @@ public interface EntityFeature extends UtilityClass, Observable
 
 	EntityReference getEntityFeatureOf();
 
-	void setEntityFeatureOf(EntityReference newReferenceEntity);
 
 	// Inverse of Property MODIFIED_AT
 
@@ -33,7 +32,7 @@ public interface EntityFeature extends UtilityClass, Observable
 
 	void removeFeatureLocation(SequenceLocation featureLocation);
 
-	void setFeatureLocation(Set<SequenceLocation> featureLocation);
+
 
 
 	SequenceRegionVocabulary getFeatureLocationType();
@@ -47,7 +46,6 @@ public interface EntityFeature extends UtilityClass, Observable
 
 	void removeMemberFeature(EntityFeature entityFeature);
 
-	void setMemberFeature(Set<EntityFeature> entityFeature);
 
 	boolean atEquivalentLocation(EntityFeature that);
 }

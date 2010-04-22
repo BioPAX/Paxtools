@@ -15,8 +15,6 @@ public interface Level3Element extends BioPAXElement
 {
     public Set<String> getComment();
 
-    public void setComment(Set<String> comment);
-
     public void addComment(String comment);
 
     public void removeComment(String comment);

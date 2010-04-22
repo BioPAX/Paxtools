@@ -42,6 +42,7 @@ public class BindingFeatureProxy<T extends BindingFeature> extends EntityFeature
 		return object.getIntraMolecular();
 	}
 
+
 	public void setIntraMolecular(Boolean intramolecular) {
 		object.setIntraMolecular(intramolecular);
 	}

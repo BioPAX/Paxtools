@@ -12,7 +12,7 @@ public interface Conversion extends Interaction {
 
 	void removeLeft(PhysicalEntity left);
 
-	public void setLeft(Set<PhysicalEntity> left);
+
 
 	// Property PARTICIPANT-STOICHIOMETRY
 
@@ -22,7 +22,6 @@ public interface Conversion extends Interaction {
 
 	void removeParticipantStoichiometry(Stoichiometry stoichiometry);
 
-	void setParticipantStoichiometry(Set<Stoichiometry> stoichiometry);
 
 	// Property RIGHT
 
@@ -32,7 +31,7 @@ public interface Conversion extends Interaction {
 
 	void removeRight(PhysicalEntity right);
 
-	public void setRight(Set<PhysicalEntity> right);
+
 
 	// Property SPONTANEOUS
 

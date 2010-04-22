@@ -12,8 +12,8 @@ public interface ChemicalStructure extends UtilityClass
 
 	// Property STRUCTURE-FORMAT
 
-	String getStructureFormat();
+	StructureFormatType getStructureFormat();
 
-	void setStructureFormat(String structureFormat);
+	void setStructureFormat(StructureFormatType structureFormat);
 
 }

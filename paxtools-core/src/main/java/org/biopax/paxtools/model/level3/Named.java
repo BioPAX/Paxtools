@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * User: demir Date: Aug 17, 2007 Time: 5:19:13 PM
  */
-public interface Named
+public interface Named extends XReferrable
 {
 	/**
 	 * The contents of this set can be modified but semantic consistency is not
@@ -17,13 +17,6 @@ public interface Named
 	 */
 	public Set<String> getName();
 
-	/**
-	 * This method overrides existing set with the new set. If you want to append
-	 * to the existing set, use {@link #addName} instead.
-	 *
-	 * @param NAME a set of names for this entity.
-	 */
-	public void setName(Set<String> NAME);
 
 	/**
 	 * This method adds the given value to the NAME set.
@@ -62,12 +55,7 @@ public interface Named
 	 */
 	String getStandardName();
 
-	/**
-	 * This method sets the standard name for this entity to the given value.
-	 *
-	 * @param newSTANDARD_NAME The preferred full name for this entity.
-	 */
-	void setStandardName(String newSTANDARD_NAME);
+
 
 
 }

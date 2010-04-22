@@ -1,12 +1,17 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.util.ClassFilterSet;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.biopax.paxtools.model.SetEquivalanceChecker.isEquivalentIntersection;
 
 /**
  * This class helps with managing the bidirectional xref links.
@@ -27,7 +32,6 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	/**
 	 * Default constructor.
-	 *
 	 */
 
 	protected XReferrableImpl()
@@ -58,7 +62,31 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	private void setXref(Set<Xref> xref)
 	{
-        this.xref = xref;
-    }
+		this.xref = xref;
+	}
 
+	@Override
+	protected boolean semanticallyEquivalent(BioPAXElement element)
+	{
+		boolean equivalence = false;
+		if (element!=null && element instanceof XReferrable)
+		{
+			equivalence = hasCommonUnificationXref((XReferrable) element);
+		}
+		return equivalence;
+	}
+
+	@Override
+	public int equivalenceCode()
+	{
+		return 1;
+	}
+
+	protected boolean hasCommonUnificationXref(XReferrable xReferrable)
+	{
+		return isEquivalentIntersection(
+				new ClassFilterSet<UnificationXref>(xref, UnificationXref.class),
+				new ClassFilterSet<UnificationXref>(xReferrable.getXref(), UnificationXref.class)
+		);
+	}
 }

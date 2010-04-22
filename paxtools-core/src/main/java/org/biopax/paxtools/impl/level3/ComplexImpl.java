@@ -4,11 +4,11 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.SetEquivalanceChecker;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- */
+@javax.persistence.Entity
 class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
 // ------------------------------ FIELDS ------------------------------
@@ -39,6 +39,7 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;

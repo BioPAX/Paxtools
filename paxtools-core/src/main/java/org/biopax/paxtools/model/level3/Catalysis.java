@@ -14,7 +14,7 @@ public interface Catalysis extends Control
 
 	void removeCofactor(PhysicalEntity cofactor);
 
-	void setCofactor(Set<PhysicalEntity> cofactor);
+
 
 	// Property DIRECTION
 

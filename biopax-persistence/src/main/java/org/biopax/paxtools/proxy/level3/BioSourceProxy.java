@@ -81,17 +81,6 @@ public class BioSourceProxy extends Level3ElementProxy<BioSource> implements Bio
 		object.setCellType(CELLTYPE);
 	}
 	
-	// Property TAXON-XREF
-	
-	@ManyToOne(cascade = {CascadeType.ALL}, targetEntity = UnificationXrefProxy.class)
-	@JoinColumn(name="taxon_xref_x")
-	public UnificationXref getTaxonXref() {
-		return object.getTaxonXref();
-	}
-	
-	public void setTaxonXref(UnificationXref TAXON_XREF) {
-		object.setTaxonXref(TAXON_XREF);
-	}
 	
 	// Property TISSUE
 	
@@ -108,6 +97,21 @@ public class BioSourceProxy extends Level3ElementProxy<BioSource> implements Bio
 	@Transient
 	public Class<? extends BioPAXElement> getModelInterface() {
 		return BioSource.class;
+	}
+
+	public Set<Xref> getXref()
+	{
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	public void addXref(Xref xref)
+	{
+		//To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	public void removeXref(Xref xref)
+	{
+		//To change body of implemented methods use File | Settings | File Templates.
 	}
 }
 

@@ -17,7 +17,6 @@ public interface PathwayStep extends UtilityClass,Observable
 
     void removeNextStep(PathwayStep oldNEXT_STEP);
 
-    void setNextStep(Set<PathwayStep> newNEXT_STEP);
 
 	// Inverse of Property NEXT-STEP
 
@@ -30,8 +29,6 @@ public interface PathwayStep extends UtilityClass,Observable
     void addStepProcess(Process newSTEP_INTERACTIONS);
 
     void removeStepProcess(Process oldSTEP_INTERACTIONS);
-
-    void setStepProcess(Set<Process> newSTEP_INTERACTIONS);
     
     
     Set<Pathway> getPathwayOrdersOf();

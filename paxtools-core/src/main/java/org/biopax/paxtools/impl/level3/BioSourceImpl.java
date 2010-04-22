@@ -4,21 +4,16 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.TissueVocabulary;
-import org.biopax.paxtools.model.level3.UnificationXref;
 
-import java.util.Set;
-
-class BioSourceImpl extends L3ElementImpl implements BioSource
+class BioSourceImpl extends NamedImpl implements BioSource
 {
 
-	private final NameHelper nameHelper;
-	private UnificationXref taxonXref;
+
 	private CellVocabulary celltype;
 	private TissueVocabulary tissue;
 
 	public BioSourceImpl()
 	{
-		nameHelper = new NameHelper();
 	}
 
 	//
@@ -40,10 +35,6 @@ class BioSourceImpl extends L3ElementImpl implements BioSource
 				celltype.isEquivalent(bioSource.getCellType()) :
 				bioSource.getCellType() == null)
 				&&
-				(taxonXref != null ?
-					taxonXref.isEquivalent(bioSource.getTaxonXref()) :
-					bioSource.getTaxonXref() == null)
-				&&
 				(tissue != null ?
 					!tissue.isEquivalent(bioSource.getTissue()) :
 					bioSource.getTissue() == null);
@@ -53,8 +44,7 @@ class BioSourceImpl extends L3ElementImpl implements BioSource
 
 	public int equivalenceCode()
 	{
-		int result = 29 + (taxonXref != null ? taxonXref.hashCode() : 0);
-		result = 29 * result + (celltype != null ? celltype.hashCode() : 0);
+		int result = 29 *super.equivalenceCode() + (celltype != null ? celltype.hashCode() : 0);
 		result = 29 * result + (tissue != null ? tissue.hashCode() : 0);
 		return result;
 	}
@@ -76,18 +66,6 @@ class BioSourceImpl extends L3ElementImpl implements BioSource
 		this.celltype = celltype;
 	}
 
-    // Property TAXON-Xref
-
-	public UnificationXref getTaxonXref()
-	{
-		return taxonXref;
-	}
-
-	public void setTaxonXref(UnificationXref taxonXref)
-	{
-		this.taxonXref = taxonXref;
-	}
-
     // Property tissue
 
 	public TissueVocabulary getTissue()
@@ -100,50 +78,6 @@ class BioSourceImpl extends L3ElementImpl implements BioSource
 		this.tissue = tissue;
 	}
 
-	//
-	// named interface implementation
-	//
-	/////////////////////////////////////////////////////////////////////////////
-
-	public Set<String> getName()
-	{
-		return nameHelper.getName();
-	}
-
-	public void setName(Set<String> name)
-	{
-		nameHelper.setName(name);
-	}
-
-	public void addName(String name)
-	{
-		nameHelper.addName(name);
-	}
-
-	public void removeName(String name)
-	{
-		nameHelper.removeName(name);
-	}
-
-	public String getDisplayName()
-	{
-		return nameHelper.getDisplayName();
-	}
-
-	public void setDisplayName(String displayName)
-	{
-		nameHelper.setDisplayName(displayName);
-	}
-
-	public String getStandardName()
-	{
-		return nameHelper.getStandardName();
-	}
-
-	public void setStandardName(String standardName)
-	{
-		nameHelper.setStandardName(standardName);
-	}
 
 	@Override
 	public String toString() {

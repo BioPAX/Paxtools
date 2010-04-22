@@ -11,10 +11,9 @@ import org.biopax.paxtools.io.sif.level2.ControlRule;
 import org.biopax.paxtools.io.sif.level2.ParticipatesRule;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
 
-import static org.biopax.paxtools.io.sif.SimpleInteractionConverter.REDUCE_COMPLEXES;
-
-import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 
@@ -22,20 +21,36 @@ import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * TODO write tests that actually check the SIF output is correct (not just that no exceptions happend...)
+ * 
+ * @author rodche
+ *
+ */
 public class SimpleInteractionConverterTest
 {
 	SimpleInteractionConverter simpleInteractionConverter;
-
+	static BioPAXIOHandler handler =  new SimpleReader();
+	static final String outFile = "target" + File.separator + "simpleInteractionConverterTest.out.txt";
+	PrintStream out = null;
+	
+	@Before
+	public void setupTest() throws IOException {
+		out = new PrintStream(new FileOutputStream(outFile, true));
+	}
+	
+	@After
+	public void finishTest() throws IOException {
+		out.flush();
+		out.close();
+	}
+	
 	@Test
 	public void testWriteInteractionsInSIF() throws Exception
 	{
 		SimpleInteractionConverter converter = new SimpleInteractionConverter(
 					new ControlRule());
-
-		BioPAXIOHandler handler =  new SimpleReader(null, BioPAXLevel.L2);
-
-		String pathname = File.separator + "L2";
-		File testDir = new File(getClass().getResource(pathname).toURI());
+		File testDir = new File(getClass().getResource("/L2").getFile());
 		FilenameFilter filter = new FilenameFilter()
 		{
 			public boolean accept(File dir, String name)
@@ -44,17 +59,13 @@ public class SimpleInteractionConverterTest
 			}
 		};
 
+		out.println("testWriteInteractionsInSIF (L2)");
 		for (String s : testDir.list(filter))
-
 		{
-			InputStream in = getClass().getResourceAsStream(pathname + 
-					File.separator + s);
+			InputStream in = getClass().getResourceAsStream("/L2/"+s); // this is classpath - no need to use a "separator"
 			Model level2 = handler.convertFromOWL(in);
-			FileOutputStream out =
-				new FileOutputStream("target" + File.separator + s + ".sif");
-			converter.writeInteractionsInSIF(level2,out);
+			converter.writeInteractionsInSIF(level2, out);
 			in.close();
-			out.close();
 		}
 	}
 
@@ -63,14 +74,12 @@ public class SimpleInteractionConverterTest
     public void testWriteInteractionsInSIFNX() throws Exception
 	{
         Map options = new HashMap();
-        options.put(REDUCE_COMPLEXES, "");
+        options.put(SimpleInteractionConverter.REDUCE_COMPLEXES, "");
 
         SimpleInteractionConverter converter = new SimpleInteractionConverter(
                 options, new ControlRule(), new ParticipatesRule());
 
-		BioPAXIOHandler handler =  new SimpleReader(null, BioPAXLevel.L2);
-		String pathname = File.separator + "L2";
-		File testDir = new File(getClass().getResource(pathname).toURI());
+		File testDir = new File(getClass().getResource("/L2").getFile());
 		FilenameFilter filter = new FilenameFilter()
 		{
 			public boolean accept(File dir, String name)
@@ -79,22 +88,77 @@ public class SimpleInteractionConverterTest
 			}
 		};
 
+		out.println("testWriteInteractionsInSIFNX (L2) ");
 		for (String s : testDir.list(filter))
-
 		{
-			InputStream in = getClass().getResourceAsStream(pathname + 
-					File.separator + s);
+			InputStream in = getClass().getResourceAsStream("/L2/" + s);
 			Model level2 = handler.convertFromOWL(in);
-			FileOutputStream edges =
-				new FileOutputStream(getClass().getResource("").getFile() 
-		        		+ File.separator + s + ".sifx");
-			FileOutputStream nodes =
-				new FileOutputStream(getClass().getResource("").getFile() 
-		        		+ File.separator + s + ".sifnx");
-			converter.writeInteractionsInSIFNX(level2,edges,nodes,true, handler.getEditorMap(),"NAME","XREF");
+			converter.writeInteractionsInSIFNX(level2, out, out, true, 
+					 handler.getEditorMap(),"NAME","XREF");
 			in.close();
-			edges.close();
-			nodes.close();
+		}
+	}
+    
+	@Test
+	public void testWriteInteractionsInSIFl3() throws Exception
+	{
+		SimpleInteractionConverter converter = new SimpleInteractionConverter(
+					new org.biopax.paxtools.io.sif.level3.ControlRule(),
+					new org.biopax.paxtools.io.sif.level3.ParticipatesRule(),
+					new org.biopax.paxtools.io.sif.level3.ComponentRule(),
+					new org.biopax.paxtools.io.sif.level3.ConsecutiveCatalysisRule(),
+					new org.biopax.paxtools.io.sif.level3.ControlsTogetherRule());
+
+		File testDir = new File(getClass().getResource("/L3").getFile());
+		FilenameFilter filter = new FilenameFilter()
+		{
+			public boolean accept(File dir, String name)
+			{
+				return (name.endsWith("owl"));
+			}
+		};
+
+		out.println("testWriteInteractionsInSIF (L3)");
+		for (String s : testDir.list(filter))
+		{
+			InputStream in = getClass().getResourceAsStream("/L3/" + s);
+			Model model = handler.convertFromOWL(in);
+			converter.writeInteractionsInSIF(model,out);
+			in.close();
+		}
+	}
+
+
+    @Test 
+    public void testWriteInteractionsInSIFNXl3() throws Exception
+	{
+        Map options = new HashMap();
+        options.put(SimpleInteractionConverter.REDUCE_COMPLEXES, "");
+
+        SimpleInteractionConverter converter = new SimpleInteractionConverter(
+                options, new org.biopax.paxtools.io.sif.level3.ControlRule(),
+				new org.biopax.paxtools.io.sif.level3.ParticipatesRule(),
+				new org.biopax.paxtools.io.sif.level3.ComponentRule(),
+				new org.biopax.paxtools.io.sif.level3.ConsecutiveCatalysisRule(),
+				new org.biopax.paxtools.io.sif.level3.ControlsTogetherRule());
+
+		File testDir = new File(getClass().getResource("/L3").getFile());
+		FilenameFilter filter = new FilenameFilter()
+		{
+			public boolean accept(File dir, String name)
+			{
+				return (name.endsWith("owl"));
+			}
+		};
+
+		out.println("testWriteInteractionsInSIFNX (L3)");
+		for (String s : testDir.list(filter))
+		{
+			InputStream in = getClass().getResourceAsStream("/L3/" + s);
+			Model m = handler.convertFromOWL(in);
+			converter.writeInteractionsInSIFNX(m,
+					out,out,true,handler.getEditorMap(),"name","xref");
+			in.close();
 		}
 	}
 }

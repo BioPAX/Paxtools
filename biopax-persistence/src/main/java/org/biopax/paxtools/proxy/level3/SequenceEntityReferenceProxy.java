@@ -18,7 +18,6 @@ import javax.persistence.*;
  * Proxy for SequenceEntityReference
  */
 @Entity(name="l3sequenceentityreference")
-//@Indexed(index=BioPAXElementProxy.SEARCH_INDEX_NAME)
 public abstract class SequenceEntityReferenceProxy<T extends SequenceEntityReference> extends EntityReferenceProxy<T> 
 	implements SequenceEntityReference 
 {

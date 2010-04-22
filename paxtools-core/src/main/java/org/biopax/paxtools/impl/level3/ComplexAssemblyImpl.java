@@ -2,9 +2,9 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.ComplexAssembly;
 
-/**
- * User: root Date: Apr 13, 2006 Time: 2:22:39 PM_DOT
- */
+import javax.persistence.Entity;
+
+@Entity
 class ComplexAssemblyImpl extends ConversionImpl
 	implements ComplexAssembly
 {

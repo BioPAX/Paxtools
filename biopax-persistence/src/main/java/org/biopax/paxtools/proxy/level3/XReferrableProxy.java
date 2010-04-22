@@ -27,8 +27,5 @@ public abstract class XReferrableProxy<T extends XReferrable>
 		object.removeXref(XREF);
 	}
 
-	public void setXref(Set<Xref> XREF) {
-		object.setXref(XREF);
-	}
 
 }

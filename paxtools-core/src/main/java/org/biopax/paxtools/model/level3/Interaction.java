@@ -13,7 +13,6 @@ public interface Interaction extends Process
 
 	void removeInteractionType(ControlledVocabulary oldINTERACTION_TYPE);
 
-	void setInteractionType(Set<ControlledVocabulary> newINTERACTION_TYPE);
 
 	// Property PARTICIPANT
 
@@ -23,6 +22,6 @@ public interface Interaction extends Process
 
 	void removeParticipant(Entity participant);
 
-	void setParticipant(Set<Entity> participant);
+
 
 }

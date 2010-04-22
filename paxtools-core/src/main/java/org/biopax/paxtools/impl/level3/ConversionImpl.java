@@ -52,13 +52,12 @@ class ConversionImpl extends InteractionImpl
 
 	public void setRight(Set<PhysicalEntity> right)
 	{
-		if (right == null)
-		{
-			right = new HashSet<PhysicalEntity>();
+		/*
+		for (PhysicalEntity pe : getRight()) {
+			removeRight(pe);
 		}
-		//this.right = right;
-		// bug fix: due to the above line, they weren't added to 'participants' (unlike the addRight)!
-		for(PhysicalEntity pe : right) {
+		*/
+		for (PhysicalEntity pe : right) {
 			addRight(pe);
 		}
 	}
@@ -92,13 +91,12 @@ class ConversionImpl extends InteractionImpl
 
 	public void setLeft(Set<PhysicalEntity> left)
 	{
-		if (left == null)
-		{
-			left = new HashSet<PhysicalEntity>();
+		/*
+		for (PhysicalEntity pe : getLeft()) {
+				removeLeft(pe);
 		}
-
-		//this.left = left;
-		for(PhysicalEntity pe : left) {
+		*/
+		for (PhysicalEntity pe : left) {
 			addLeft(pe);
 		}
 	}

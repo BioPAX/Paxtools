@@ -57,18 +57,6 @@ public interface BiochemicalReaction extends Conversion
 	 */
 	void removeDeltaG(DeltaG deltaG);
 
-	/**
-	 * Standard transformed Gibbs energy change for a reaction written in terms of biochemical
-	 * reactants (sums of species), delta-G'<sup>o</sup>.
-	 * <p/>
-	 * Since Delta-G can change based on multiple factors including ionic strength and temperature a
-	 * reaction can have multiple DeltaG values.
-	 *
-	 *
-	 * @return a set of DeltaG to be added.
-	 */
-	void setDeltaG(Set<DeltaG> deltaG);
-
 
 
 	Set<Float> getDeltaH();
@@ -77,7 +65,7 @@ public interface BiochemicalReaction extends Conversion
 
 	void removeDeltaH(float delta_h);
 
-	void setDeltaH(Set<Float> delta_h);
+
 
 	// Property DELTA-S
 
@@ -87,7 +75,7 @@ public interface BiochemicalReaction extends Conversion
 
 	void removeDeltaS(float delta_s);
 
-	void setDeltaS(Set<Float> delta_s);
+
 
 	// Property EC-NUMBER
 
@@ -97,7 +85,7 @@ public interface BiochemicalReaction extends Conversion
 
 	void removeECNumber(String ec_number);
 
-	void setECNumber(Set<String> ec_number);
+
 
 	// Property KEQ
 
@@ -107,5 +95,5 @@ public interface BiochemicalReaction extends Conversion
 
 	void removeKEQ(KPrime keq);
 
-	void setKEQ(Set<KPrime> keq);
+
 }

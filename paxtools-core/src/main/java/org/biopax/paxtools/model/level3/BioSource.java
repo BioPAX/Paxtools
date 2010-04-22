@@ -28,11 +28,6 @@ public interface BioSource extends UtilityClass, Named
 	 */
 	void setCellType(CellVocabulary cellType);
 
-	// Property TAXON-XREF
-
-	UnificationXref getTaxonXref();
-
-	void setTaxonXref(UnificationXref taxonXref);
 
 	// Property TISSUE
 

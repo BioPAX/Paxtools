@@ -36,17 +36,6 @@ public interface EntityReference extends UtilityClass, Named, Observable, XRefer
 	 */
 	void removeEntityFeature(EntityFeature feature);
 
-	/**
-	 * Variable features that are observed for the entities of this entityReference - such as known PTM
-	 * or methylation sites and non-covalent bonds. Note that this is an aggregate list of all known
-	 * features and it does not represent a state itself.
-	 *
-	 * This method does not maintain bidirectional links and model consistency. Use add/remove
-	 * feature instead.
-	 *
-	 * @param feature : A set of features to be set.
-	 */
-	void setEntityFeature(Set<EntityFeature> feature);
 
 	/**
 	 * Inverse of {@link SimplePhysicalEntity#getEntityReference()}
@@ -62,7 +51,6 @@ public interface EntityReference extends UtilityClass, Named, Observable, XRefer
 
 	void removeEntityReferenceType(EntityReferenceTypeVocabulary type);
 
-	void setEntityReferenceType(Set<EntityReferenceTypeVocabulary> type);
 
 
 	Set<EntityReference> getMemberEntityReference();
@@ -71,5 +59,4 @@ public interface EntityReference extends UtilityClass, Named, Observable, XRefer
 
 	void removeMemberEntityReference(EntityReference entity);
 
-	void setMemberEntityReference(Set<EntityReference> entity);
 }

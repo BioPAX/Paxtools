@@ -50,22 +50,6 @@ public interface Complex extends PhysicalEntity
 	 */
 	void removeComponent(PhysicalEntity component);
 
-	/**
-	 * Subunits of this complex. This property can contain other complexes and physical entities.
-	 * Complex nesting should NOT be used for representing assembly order. This is best captured by
-	 * complexAssembly interactions. Nesting however can be used for organizational abstractions (
-	 * small and large units of ribosome) or for representing so called "black-box" complexes,
-	 * complexes whose components are unknown/unspecified. Unlike BioPAX level 2, component physical
-	 * entities do not change their state when in a complex  ( although they do when they have a
-	 * binding feature) and can be reused in other reactions and complexes.
-	 * <p/>
-	 * WARNING: This method should only be used for batch operations and with care. For regular
-	 * manipulation use add/remove instead
-	 *
-	 * @param component new list of components for this complex
-	 */
-
-	void setComponent(Set<PhysicalEntity> component);
 
 // Property Component-STOICHIOMETRY
 

@@ -4,6 +4,9 @@ import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.StepDirection;
 
+import javax.persistence.*;
+
+@Entity
 class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
 	Conversion stepConversion;
@@ -25,7 +28,7 @@ class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalP
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property STEP-CONVERSION
-
+	@ManyToOne(targetEntity = ControlImpl.class)
     public Conversion getStepConversion()
 	{
 		return stepConversion;
@@ -38,6 +41,7 @@ class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalP
 
     // Property STEP-DIRECTION
 
+	@Enumerated(EnumType.STRING)
     public StepDirection getStepDirection()
 	{
 		return stepDirection;

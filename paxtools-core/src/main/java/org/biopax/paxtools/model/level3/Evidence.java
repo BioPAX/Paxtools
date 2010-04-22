@@ -28,15 +28,6 @@ public interface Evidence extends UtilityClass, XReferrable
 	 */
 	void removeConfidence(Score confidence);
 
-	/**
-	 * Confidence in the containing instance.  Usually a statistical measure.
-	 * <p/>
-	 * WARNING: This method should only be used for batch operations and with care. For regular
-	 * manipulation use add/remove instead.
-	 *
-	 * @param confidence a set of scores representing confidence
-	 */
-	void setConfidence(Set<Score> confidence);
 
 
 	/**
@@ -66,17 +57,6 @@ public interface Evidence extends UtilityClass, XReferrable
 	 */
 	void removeEvidenceCode(EvidenceCodeVocabulary evidenceCode);
 
-	/**
-	 * A pointer to a term in an external controlled vocabulary, such as the GO, PSI-MI or BioCyc
-	 * evidence codes, that describes the nature of the support, such as 'traceable author statement'
-	 * or 'yeast two-hybrid'.
-	 * <p/>
-	 * WARNING: This method should only be used for batch operations and with care. For regular
-	 * manipulation use add/remove instead.
-	 *
-	 * @param evidenceCode a new set of evidence codes  for this evidence type.
-	 */
-	void setEvidenceCode(Set<EvidenceCodeVocabulary> evidenceCode);
 
 
 	// Property EXPERIMENTAL-FORM
@@ -86,7 +66,5 @@ public interface Evidence extends UtilityClass, XReferrable
 	void addExperimentalForm(ExperimentalForm experimentalForm);
 
 	void removeExperimentalForm(ExperimentalForm experimentalForm);
-
-	void setExperimentalForm(Set<ExperimentalForm> experimentalForm);
 
 }

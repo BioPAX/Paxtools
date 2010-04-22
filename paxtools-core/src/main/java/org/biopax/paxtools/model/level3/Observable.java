@@ -8,14 +8,9 @@ import java.util.Set;
 public interface Observable
 {
 
-
-
 	  Set<Evidence> getEvidence();
 
 	  void addEvidence(Evidence newEvidence);
 
 	  void removeEvidence(Evidence oldEvidence);
-
-	  void setEvidence(Set<Evidence> newEvidence);
-	
 }

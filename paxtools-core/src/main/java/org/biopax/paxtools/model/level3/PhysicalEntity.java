@@ -54,7 +54,6 @@ public interface PhysicalEntity extends Entity, Controller
 
 	void removeFeature(EntityFeature feature);
 
-	void setFeature(Set<EntityFeature> features);
 
 
 	// Property NOT-MODIFIED-AT
@@ -65,7 +64,6 @@ public interface PhysicalEntity extends Entity, Controller
 
 	void removeNotFeature(EntityFeature feature);
 
-	void setNotFeature(Set<EntityFeature> features);
 
 
 	//Property memberPhysicalEntity
@@ -76,14 +74,13 @@ public interface PhysicalEntity extends Entity, Controller
 
 	void removeMemberPhysicalEntity(PhysicalEntity memberPhysicalEntity);
 
-	void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntitys);
 
 
 	//Inverse of property memberPhysicalEntity
 	Set<PhysicalEntity> getMemberPhysicalEntityOf();
 
 
-	@Override
+
 	/**
 	 * Overridden to provide better downcasting
 	*/

@@ -1,175 +1,159 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
 
+
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.biopax.paxtools.model.SetEquivalanceChecker.*;
 
-abstract class EntityImpl extends XReferrableImpl implements Entity {
+
+@javax.persistence.Entity
+abstract class EntityImpl extends NamedImpl implements Entity
+{
 // ------------------------------ FIELDS ------------------------------
 
-    private HashSet<Interaction> participantOf;
-    /**
-     * This Set keeps statements describing the availability of this data (e.g. a
-     * copyright statement).
-     */
-    private Set<String> availability;
+	private HashSet<Interaction> participantOf;
+	/**
+	 * This Set keeps statements describing the availability of this data (e.g. a copyright
+	 * statement).
+	 */
+	private Set<String> availability;
 
-    /**
-     * This Set keeps statements describing the data sources for this data.
-     */
-    private Set<Provenance> dataSource;
+	/**
+	 * This Set keeps statements describing the data sources for this data.
+	 */
+	private Set<Provenance> dataSource;
 
 
-    /**
-     * This Set keeps evidence related to this entity
-     */
+	/**
+	 * This Set keeps evidence related to this entity
+	 */
 
-    private Set<Evidence> evidence;
+	private Set<Evidence> evidence;
 
-    /**
-     * Helper object for managing names
-     */
+	/**
+	 * Helper object for managing names
+	 */
 
-    private final NameHelper nameHelper;
 
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public EntityImpl() {
-        this.availability = new HashSet<String>();
-        this.dataSource = new HashSet<Provenance>();
-        this.participantOf = new HashSet<Interaction>();
-        this.evidence = new HashSet<Evidence>();
-        this.nameHelper = new NameHelper();
+	public EntityImpl()
+	{
+		this.availability = new HashSet<String>();
+		this.dataSource = new HashSet<Provenance>();
+		this.participantOf = new HashSet<Interaction>();
+		this.evidence = new HashSet<Evidence>();
+	
 
-    }
+	}
 
 // ------------------------ INTERFACE METHODS ------------------------
 
 
-
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    public Set<String> getAvailability() {
-        return availability;
-    }
+	@ElementCollection
+	public Set<String> getAvailability()
+	{
+		return availability;
+	}
 
-    public void setAvailability(Set<String> availability) {
-        this.availability = availability;
-    }
+	public void setAvailability(Set<String> availability)
+	{
+		this.availability = availability;
+	}
 
-    public void addAvailability(String availability_text) {
-        availability.add(availability_text);
-    }
+	public void addAvailability(String availability_text)
+	{
+		availability.add(availability_text);
+	}
 
-    public void removeAvailability(String availability_text) {
-        this.availability.remove(availability_text);
-    }
+	public void removeAvailability(String availability_text)
+	{
+		this.availability.remove(availability_text);
+	}
 
-    public Set<Provenance> getDataSource() {
-        return dataSource;
-    }
+	@ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = ProvenanceImpl.class)
+	public Set<Provenance> getDataSource()
+	{
+		return dataSource;
+	}
 
-    public void setDataSource(Set<Provenance> dataSource) {
-        this.dataSource = dataSource;
-    }
+	public void setDataSource(Set<Provenance> dataSource)
+	{
+		this.dataSource = dataSource;
+	}
 
-    public void addDataSource(Provenance dataSource) {
-        this.dataSource.add(dataSource);
-    }
+	public void addDataSource(Provenance dataSource)
+	{
+		this.dataSource.add(dataSource);
+	}
 
-    public void removeDataSource(Provenance dataSource) {
-        this.dataSource.remove(dataSource);
-    }
+	public void removeDataSource(Provenance dataSource)
+	{
+		this.dataSource.remove(dataSource);
+	}
 
 // --------------------- Interface entity ---------------------
 
+	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = participants)
+	public Set<Interaction> getParticipantsOf()
+	{
+		return participantOf;
+	}
 
-    public Set<Interaction> getParticipantsOf() {
-        return participantOf;
-    }
-
-    //
-    // observable interface implementation
-    //
-    /////////////////////////////////////////////////////////////////////////////
-
-    public Set<Evidence> getEvidence() {
-        return evidence;
-    }
-
-    public void addEvidence(Evidence evidence) {
-        this.evidence.add(evidence);
-    }
-
-    public void removeEvidence(Evidence evidence) {
-        this.evidence.remove(evidence);
-    }
-
-    public void setEvidence(Set<Evidence> evidence) {
-        this.evidence = evidence;
-    }
-
-    	//
-	// named interface implementation
+	//
+	// observable interface implementation
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
-	public Set<String> getName()
+	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = EvidenceImpl.class)
+	public Set<Evidence> getEvidence()
 	{
-		return nameHelper.getName();
+		return evidence;
 	}
 
-	public void setName(Set<String> name)
+	public void addEvidence(Evidence newEvidence)
 	{
-		nameHelper.setName(name);
+		this.evidence.add(newEvidence);
 	}
 
-	public void addName(String name)
+	public void removeEvidence(Evidence oldEvidence)
 	{
-		nameHelper.addName(name);
+		this.evidence.remove(oldEvidence);
 	}
 
-	public void removeName(String name)
+	private void setEvidence(Set<Evidence> newEvidence)
 	{
-		nameHelper.removeName(name);
+		this.evidence = newEvidence;
 	}
 
-	public String getDisplayName()
-	{
-		return nameHelper.getDisplayName();
-	}
-
-	public void setDisplayName(String displayName)
-	{
-		nameHelper.setDisplayName(displayName);
-	}
-
-	public String getStandardName()
-	{
-		return nameHelper.getStandardName();
-	}
-
-	public void setStandardName(String standardName)
-	{
-		nameHelper.setStandardName(standardName);
-	}
 
 	@Override
-	protected boolean semanticallyEquivalent(BioPAXElement element) {
-		if(!(element instanceof Entity)) return false;
-		Entity that = (Entity) element;
-		
-		return SetEquivalanceChecker.isEquivalentIntersection(getDataSource(), that.getDataSource())
-			&& SetEquivalanceChecker.isEquivalentIntersection(
-					new ClassFilterSet<UnificationXref>(getXref(), UnificationXref.class), 
-    				new ClassFilterSet<UnificationXref>(that.getXref(), UnificationXref.class)
-    				)
-    		&& SetEquivalanceChecker.isEquivalentIntersection(getEvidence(), that.getEvidence());
+	protected boolean semanticallyEquivalent(BioPAXElement element)
+	{
+		boolean equivalance = false;
+		if (element instanceof Entity)
+		{
+			Entity otherEntity = (Entity) element;
+
+			equivalance = isEquivalentIntersection(
+					dataSource, otherEntity.getDataSource())
+			              && isEquivalentIntersection(
+					new ClassFilterSet<UnificationXref>(getXref(), UnificationXref.class),
+					new ClassFilterSet<UnificationXref>(otherEntity.getXref(),
+							UnificationXref.class))
+			              && isEquivalentIntersection(evidence, otherEntity.getEvidence());
+		}
+		return equivalance;
 	}
 }

@@ -15,7 +15,6 @@ public interface Pathway extends Process,Controller
 
 	void removePathwayComponent(Process components);
 
-	void setPathwayComponent(Set<Process> components);
 
 
 	// Property PATHWAY-ORDER
@@ -26,7 +25,7 @@ public interface Pathway extends Process,Controller
 
 	void removePathwayOrder(PathwayStep order);
 
-	void setPathwayOrder(Set<PathwayStep> order);
+	
 
 	/**
 	 * An organism, e.g. 'Homo sapiens'. This is the organism that the entity is found in. Pathways may

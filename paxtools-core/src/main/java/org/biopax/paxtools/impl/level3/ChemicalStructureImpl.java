@@ -2,12 +2,17 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ChemicalStructure;
+import org.biopax.paxtools.model.level3.StructureFormatType;
 
-/**
- */
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.Lob;
+
+@Entity
 class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 {
-	private String structureFormat;
+	private StructureFormatType structureFormat;
 	private String structureData;
 
 	/**
@@ -16,11 +21,6 @@ class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 	public ChemicalStructureImpl()
 	{
 	}
-
-	//
-	// BioPAXElement interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
 
 	public Class<? extends ChemicalStructure> getModelInterface()
 	{
@@ -56,6 +56,7 @@ class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
+	@Basic //TODO:@Lob?
 	public String getStructureData()
 	{
 		return structureData;
@@ -66,12 +67,13 @@ class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 		this.structureData = structureData;
 	}
 
-	public String getStructureFormat()
+	@Enumerated
+	public StructureFormatType getStructureFormat()
 	{
 		return structureFormat;
 	}
 
-	public void setStructureFormat(String structureFormat)
+	public void setStructureFormat(StructureFormatType structureFormat)
 	{
 		this.structureFormat = structureFormat;
 	}

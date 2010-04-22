@@ -13,7 +13,7 @@ public interface PublicationXref extends Xref
 
     void removeAuthor(String author);
 
-    void setAuthor(Set<String> author);
+
 
 
     // Property SOURCE
@@ -24,7 +24,6 @@ public interface PublicationXref extends Xref
 
     void removeSource(String source);
 
-    void setSource(Set<String> source);
 
 
     // Property TITLE
@@ -42,7 +41,7 @@ public interface PublicationXref extends Xref
 
     void removeUrl(String url);
 
-    void setUrl(Set<String> url);
+  
 
 
     // Property YEAR

@@ -6,15 +6,22 @@ import java.util.*;
 /**
  * @author Rex Dwyer
  */
-class NameHelper implements Serializable
+abstract class NamedImpl extends XReferrableImpl
 {
 
 	/**
 	 * Fields **
 	 */
-	private String standardName = null;
-	private String displayName = null;
-	private Set<String> allNames = new HashSet<String>();
+	private String standardName;
+	private String displayName;
+	private Set<String> allNames;
+
+	NamedImpl()
+	{
+		allNames = new HashSet<String>();
+		displayName = null;
+		standardName = null;
+	}
 
 	/**
 	 * Getters **

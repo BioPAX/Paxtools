@@ -3,6 +3,10 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.*;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,6 +52,18 @@ class BiochemicalReactionImpl extends ConversionImpl
 // --------------------- Interface BiochemicalReaction ---------------------
 
 
+
+	@OneToMany(targetEntity = DeltaGImpl.class, cascade = {CascadeType.ALL})
+	public Set<DeltaG> getDeltaG()
+	{
+		return deltaG;
+	}
+
+	private void setDeltaG(Set<DeltaG> deltaG)
+	{
+		this.deltaG = deltaG;
+	}
+
 	public void addDeltaG(DeltaG deltaG)
 	{
 		this.deltaG.add(deltaG);
@@ -58,14 +74,16 @@ class BiochemicalReactionImpl extends ConversionImpl
 		this.deltaG.remove(deltaG);
 	}
 
-	public void setDeltaG(Set<DeltaG> deltaG)
+
+	@ElementCollection
+	public Set<Float> getDeltaH()
 	{
-		this.deltaG = deltaG;
+		return deltaH;
 	}
 
-	public Set<DeltaG> getDeltaG()
+	private void setDeltaH(Set<Float> deltaH)
 	{
-		return deltaG;
+		this.deltaH = deltaH;
 	}
 
 	public void addDeltaH(float deltaH)
@@ -78,22 +96,14 @@ class BiochemicalReactionImpl extends ConversionImpl
 		this.deltaH.remove(deltaH);
 	}
 
-	public void setDeltaH(Set<Float> deltaH)
-	{
-		this.deltaH = deltaH;
-	}
 
-	public Set<Float> getDeltaH()
-	{
-		return deltaH;
-	}
-
+	@ElementCollection
 	public Set<Float> getDeltaS()
 	{
 		return deltaS;
 	}
 
-	public void setDeltaS(Set<Float> deltaS)
+	private void setDeltaS(Set<Float> deltaS)
 	{
 		this.deltaS = deltaS;
 	}
@@ -108,6 +118,17 @@ class BiochemicalReactionImpl extends ConversionImpl
 		this.deltaS.remove(new Float(deltaS));
 	}
 
+	@ElementCollection
+	public Set<String> getECNumber()
+	{
+		return eCNumber;
+	}
+
+	public void setECNumber(Set<String> eCNumber)
+	{
+		this.eCNumber = eCNumber;
+	}
+
 	public void addECNumber(String eCNumber)
 	{
 		this.eCNumber.add(eCNumber);
@@ -118,14 +139,15 @@ class BiochemicalReactionImpl extends ConversionImpl
 		this.eCNumber.remove(eCNumber);
 	}
 
-	public Set<String> getECNumber()
+	@OneToMany(targetEntity = KPrimeImpl.class, cascade = {CascadeType.ALL})
+	public Set<KPrime> getKEQ()
 	{
-		return eCNumber;
+		return kEQ;
 	}
 
-	public void setECNumber(Set<String> eCNumber)
+	public void setKEQ(Set<KPrime> kEQ)
 	{
-		this.eCNumber = eCNumber;
+		this.kEQ = kEQ;
 	}
 
 	public void addKEQ(KPrime kEQ)
@@ -138,13 +160,4 @@ class BiochemicalReactionImpl extends ConversionImpl
 		this.kEQ.remove(kEQ);
 	}
 
-	public Set<KPrime> getKEQ()
-	{
-		return kEQ;
-	}
-
-	public void setKEQ(Set<KPrime> kEQ)
-	{
-		this.kEQ = kEQ;
-	}
 }
