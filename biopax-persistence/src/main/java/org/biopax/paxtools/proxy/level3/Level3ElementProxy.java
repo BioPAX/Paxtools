@@ -32,9 +32,9 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NamedQueries({
 @NamedQuery(name="org.biopax.paxtools.proxy.level3.elementByRdfId",
-			query="from org.biopax.paxtools.proxy.level3.Level3ElementProxy as l3el where upper(l3el.RDFId) = upper(:rdfid)"),
+			query="from org.biopax.paxtools.model.BioPAXElement as l3el where upper(l3el.RDFId) = upper(:rdfid)"),
 @NamedQuery(name="org.biopax.paxtools.proxy.level3.elementByRdfIdEager",
-			query="from org.biopax.paxtools.proxy.level3.Level3ElementProxy as l3el fetch all properties where upper(l3el.RDFId) = upper(:rdfid)")
+			query="from org.biopax.paxtools.model.BioPAXElement as l3el fetch all properties where upper(l3el.RDFId) = upper(:rdfid)")
 
 })
 public abstract class Level3ElementProxy<T extends Level3Element> extends BioPAXElementProxy<T>
