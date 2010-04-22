@@ -1,7 +1,10 @@
 syntax:regexp
 ?\.iml
-?\.log
-/target$
-^target$
-^.idea/
-^cpath-dao/
+?\.class
+/target/
+\.idea/
+\cpath-dao/
+?\.project
+?\.DS_Store
+?\.settings
+
