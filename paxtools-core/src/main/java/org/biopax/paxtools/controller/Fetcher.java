@@ -26,7 +26,7 @@ public class Fetcher implements Visitor
 	/**
 	 * Constructor
 	 * 
-	 * Build-in Traverser is going to use this class as the Visitor 
+	 * Built-in Traverser is going to use this class as the Visitor
 	 * implementation (designed to recursively collect child BioPAX elements)
 	 *
 	 * @param map EditorMap

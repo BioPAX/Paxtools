@@ -18,7 +18,7 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-	public ComplexImpl()
+	ComplexImpl()
 	{
 		this.component = new HashSet<PhysicalEntity>();
 		this.componentStoichiometry = new HashSet<Stoichiometry>();
@@ -66,35 +66,38 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 		}
 	}
 
+	@OneToMany(targetEntity = StoichiometryImpl.class)
 	public Set<Stoichiometry> getComponentStoichiometry()
 	{
 		return componentStoichiometry;
 	}
 
 	public void addComponentStoichiometry(
-			Stoichiometry ComponentStoichiometry)
+			Stoichiometry stoichiometry)
 	{
 
-		this.componentStoichiometry.add(ComponentStoichiometry);
+		this.componentStoichiometry.add(stoichiometry);
 	}
 
 	public void removeComponentStoichiometry(
-			Stoichiometry ComponentStoichiometry)
+			Stoichiometry stoichiometry)
 	{
-		this.componentStoichiometry.remove(ComponentStoichiometry);
+		this.componentStoichiometry.remove(stoichiometry);
 	}
 
-	public void setComponentStoichiometry(
-			Set<Stoichiometry> ComponentStoichiometry)
+	protected void setComponentStoichiometry(
+			Set<Stoichiometry> stoichiometry)
 	{
-		this.componentStoichiometry = ComponentStoichiometry;
+		this.componentStoichiometry = stoichiometry;
 	}
 
+	@Transient
 	public Set<SimplePhysicalEntity> getSimpleMembers()
 	{
 		return getSimpleMembers(new HashSet<SimplePhysicalEntity>());
 	}
 
+	@Transient
 	protected Set<SimplePhysicalEntity> getSimpleMembers(Set<SimplePhysicalEntity> set)
 	{
 		for (PhysicalEntity pe : this.getComponent())
@@ -111,6 +114,7 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 		return set;
 	}
 
+	@Transient
 	public Set<EntityReference> getMemberReferences()
 	{
 		Set<EntityReference> set = new HashSet<EntityReference>();
@@ -122,6 +126,7 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 		return set;
 	}
 
+	@Transient
 	public Class<? extends PhysicalEntity> getPhysicalEntityClass()
 	{
 		return Complex.class;

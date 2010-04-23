@@ -7,8 +7,7 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- */
+
 class ControlImpl extends InteractionImpl
         implements Control
 {

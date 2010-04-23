@@ -4,9 +4,11 @@ import org.biopax.paxtools.model.level3.CovalentBindingFeature;
 import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
 import org.biopax.paxtools.model.BioPAXElement;
 
-/**
- * User: demir Date: Aug 14, 2008 Time: 7:45:27 PM
- */
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements CovalentBindingFeature
 {
 	private SequenceModificationVocabulary modificationType;
@@ -17,6 +19,7 @@ public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements Co
 		return CovalentBindingFeature.class;
 	}
 
+	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return this.modificationType;

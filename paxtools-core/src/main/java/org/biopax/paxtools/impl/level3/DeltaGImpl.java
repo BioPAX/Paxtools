@@ -3,15 +3,18 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.DeltaG;
 
-class DeltaGImpl extends L3ElementImpl implements
-        org.biopax.paxtools.model.level3.DeltaG
+import javax.persistence.Basic;
+
+import static java.lang.Float.compare;
+
+class DeltaGImpl extends L3ElementImpl implements DeltaG
 {
 
-	private float deltaGPrime0 = BioPAXElement.UNKNOWN_FLOAT;
-	private float temperature = BioPAXElement.UNKNOWN_FLOAT;
-	private float ionicStrength = BioPAXElement.UNKNOWN_FLOAT;
-	private float ph = BioPAXElement.UNKNOWN_FLOAT;
-	private float pMg = BioPAXElement.UNKNOWN_FLOAT;
+	private float deltaGPrime0 = UNKNOWN_FLOAT;
+	private float temperature = UNKNOWN_FLOAT;
+	private float ionicStrength = UNKNOWN_FLOAT;
+	private float ph = UNKNOWN_FLOAT;
+	private float pMg = UNKNOWN_FLOAT;
 
 	//
 	// BioPAXElement interface implementation
@@ -28,11 +31,11 @@ class DeltaGImpl extends L3ElementImpl implements
 		final DeltaG that = (DeltaG) element;
 
 		return
-			(Float.compare(that.getDeltaGPrime0(), deltaGPrime0) == 0)
-				&& (Float.compare(that.getIonicStrength(), ionicStrength) == 0)
-				&& (Float.compare(that.getPh(), ph) == 0)
-				&& (Float.compare(that.getPMg(), pMg) == 0)
-				&& (Float.compare(that.getTemperature(), temperature) == 0);
+			compare(that.getDeltaGPrime0(), deltaGPrime0) == 0
+				&& (compare(that.getIonicStrength(), ionicStrength) == 0)
+				&& (compare(that.getPh(), ph) == 0)
+				&& (compare(that.getPMg(), pMg) == 0)
+				&& (compare(that.getTemperature(), temperature) == 0);
 	}
 
 	public int equivalenceCode()
@@ -48,13 +51,8 @@ class DeltaGImpl extends L3ElementImpl implements
 		return result;
 	}
 
-	//
-	// deltaGprimeO interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
 
-	// Property DELTA-G-PRIME-O
-
+	@Basic
 	public float getDeltaGPrime0()
 	{
 		return deltaGPrime0;
@@ -65,8 +63,7 @@ class DeltaGImpl extends L3ElementImpl implements
 		this.deltaGPrime0 = deltaGPrime0;
 	}
 
-	// Property IONIC-STRENGTH
-
+	@Basic
 	public float getIonicStrength()
 	{
 		return ionicStrength;
@@ -77,8 +74,7 @@ class DeltaGImpl extends L3ElementImpl implements
 		this.ionicStrength = ionicStrength;
 	}
 
-	// Property ph
-
+	@Basic
 	public float getPh()
 	{
 		return ph;
@@ -89,8 +85,7 @@ class DeltaGImpl extends L3ElementImpl implements
 		this.ph = ph;
 	}
 
-	// Property pMg
-
+	@Basic
 	public float getPMg()
 	{
 		return pMg;
@@ -101,8 +96,7 @@ class DeltaGImpl extends L3ElementImpl implements
 		this.pMg = pmg;
 	}
 
-	// Property temperature
-
+	@Basic
 	public float getTemperature()
 	{
 		return temperature;

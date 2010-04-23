@@ -7,7 +7,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMoleculeReference
 {
 	private String chemicalFormula;
-	private float molecularWeight;
+	private float molecularWeight = UNKNOWN_FLOAT;
 	private ChemicalStructure structure;
 
 

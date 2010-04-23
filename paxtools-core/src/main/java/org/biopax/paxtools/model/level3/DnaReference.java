@@ -13,7 +13,5 @@ package org.biopax.paxtools.model.level3;
 
 public interface DnaReference extends SequenceEntityReference
 {
-	SequenceInterval getGenomicRegion();
 
-	void setGenomicRegion(SequenceInterval genomicRegion);
 }

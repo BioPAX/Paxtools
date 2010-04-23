@@ -8,11 +8,11 @@ import org.biopax.paxtools.model.level3.KPrime;
 class KPrimeImpl extends L3ElementImpl implements KPrime
 {
 
-	private float ionicStrength = BioPAXElement.UNKNOWN_FLOAT;
-	private float kPrime = BioPAXElement.UNKNOWN_FLOAT;
-	private float ph = BioPAXElement.UNKNOWN_FLOAT;
-	private float pMg = BioPAXElement.UNKNOWN_FLOAT;
-	private float temperature = BioPAXElement.UNKNOWN_FLOAT;
+	private float ionicStrength = UNKNOWN_FLOAT;
+	private float kPrime = UNKNOWN_FLOAT;
+	private float ph = UNKNOWN_FLOAT;
+	private float pMg = UNKNOWN_FLOAT;
+	private float temperature = UNKNOWN_FLOAT;
 
 	//
 	// bioPAXElement interface implementation

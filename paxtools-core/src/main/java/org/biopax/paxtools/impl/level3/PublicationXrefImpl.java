@@ -12,7 +12,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	private Set<String> url;
 	private Set<String> source;
 	private Set<String> author;
-	private int year = BioPAXElement.UNKNOWN_INT;
+	private int year = UNKNOWN_INT;
 
 	/**
 	 * Constructor.

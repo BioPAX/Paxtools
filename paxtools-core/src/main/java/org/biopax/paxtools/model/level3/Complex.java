@@ -69,13 +69,6 @@ public interface Complex extends PhysicalEntity
 
 	void removeComponentStoichiometry(Stoichiometry stoichiometry);
 
-	/**
-	 * * WARNING: This method should only be used for batch operations and with care. For regular
-	 * manipulation use add/remove instead
-	 *
-	 * @param stoichiometry
-	 */
-	void setComponentStoichiometry(Set<Stoichiometry> stoichiometry);
 
 	/**
 	 * Gets the member physical entities which are not complex. When the complex is nested, members

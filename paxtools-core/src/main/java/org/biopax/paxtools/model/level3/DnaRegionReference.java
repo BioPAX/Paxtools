@@ -6,23 +6,11 @@ import java.util.Set;
  * A DNA region reference
  */
 
-public interface DnaRegionReference extends SequenceEntityReference
+public interface DnaRegionReference extends NucleicAcidRegionReference<DnaRegionReference>
 {
-    DnaRegionReference getSubRegion();
-
-    void setSubRegion(DnaRegionReference dnaRegionReference);
-    
-    SequenceLocation getAbsoluteRegion();
-    
-    void setAbsoluteRegion(SequenceLocation sequenceLocation);
-
-
-
-//	DnaRegionReference getRegionOf();
-//
-//	void setRegionOf(DnaRegionReference dnaRegionReference);
-//
-//		// Property Initiation Region
-//
+   
 
 }
+
+
+

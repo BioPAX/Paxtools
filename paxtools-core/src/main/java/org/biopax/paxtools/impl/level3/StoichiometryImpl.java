@@ -6,7 +6,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 
 class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 {
-	private float stoichiometricCoefficient;
+	private float stoichiometricCoefficient = UNKNOWN_FLOAT;
 	private PhysicalEntity physicalEntity;
 
 

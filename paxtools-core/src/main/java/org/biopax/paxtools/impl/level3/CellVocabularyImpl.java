@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 /**
  */
 @Entity
-public class CellVocabularyImpl extends ControlledVocabularyImpl
+class CellVocabularyImpl extends ControlledVocabularyImpl
 	implements CellVocabulary
 {
     @Override

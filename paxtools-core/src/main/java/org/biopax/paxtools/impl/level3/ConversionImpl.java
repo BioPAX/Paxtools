@@ -6,11 +6,11 @@ import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- */
+@Entity
 class ConversionImpl extends InteractionImpl
 		implements Conversion
 {
@@ -45,31 +45,15 @@ class ConversionImpl extends InteractionImpl
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, fetch= FetchType.EAGER)
 	public Set<PhysicalEntity> getRight()
 	{
 		return right;
 	}
 
-	public void setRight(Set<PhysicalEntity> right)
+	protected void setRight(Set<PhysicalEntity> right)
 	{
-		/*
-		for (PhysicalEntity pe : getRight()) {
-			removeRight(pe);
-		}
-		*/
-		for (PhysicalEntity pe : right) {
-			addRight(pe);
-		}
-	}
-
-	public Boolean getSpontaneous()
-	{
-		return spontaneous;
-	}
-
-	public void setSpontaneous(Boolean spontaneous)
-	{
-		this.spontaneous = spontaneous;
+		this.right= right;
 	}
 
 	public void addRight(PhysicalEntity right)
@@ -84,21 +68,15 @@ class ConversionImpl extends InteractionImpl
 		this.right.remove(right);
 	}
 
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, fetch= FetchType.EAGER)
 	public Set<PhysicalEntity> getLeft()
 	{
 		return left;
 	}
 
-	public void setLeft(Set<PhysicalEntity> left)
+	protected void setLeft(Set<PhysicalEntity> left)
 	{
-		/*
-		for (PhysicalEntity pe : getLeft()) {
-				removeLeft(pe);
-		}
-		*/
-		for (PhysicalEntity pe : left) {
-			addLeft(pe);
-		}
+		this.left = left;
 	}
 
 	public void addLeft(PhysicalEntity left)
@@ -113,6 +91,18 @@ class ConversionImpl extends InteractionImpl
 		this.left.remove(left);
 	}
 
+	@Basic
+	public Boolean getSpontaneous()
+	{
+		return spontaneous;
+	}
+
+	public void setSpontaneous(Boolean spontaneous)
+	{
+		this.spontaneous = spontaneous;
+	}
+
+	@OneToMany(targetEntity = StoichiometryImpl.class, fetch=FetchType.LAZY)
 	public Set<Stoichiometry> getParticipantStoichiometry()
 	{
 		return participantStoichiometry;
@@ -130,13 +120,14 @@ class ConversionImpl extends InteractionImpl
 		this.participantStoichiometry.remove(participantStoichiometry);
 	}
 
-	public void setParticipantStoichiometry(
+	protected void setParticipantStoichiometry(
 			Set<Stoichiometry> participantStoichiometry)
 	{
 		this.participantStoichiometry = participantStoichiometry;
 	}
 
 
+	@Enumerated
 	public ConversionDirectionType getConversionDirection()
 	{
 		return conversionDirection;
@@ -167,7 +158,7 @@ class ConversionImpl extends InteractionImpl
 	public int equivalenceCode()
 	{
 		//todo
-		return super.equivalenceCode();    //To change body of overridden methods use File | Settings | File Templates.
+		return super.equivalenceCode();
 	}
 
 }

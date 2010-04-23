@@ -10,7 +10,7 @@ class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
 {
 
 	private PositionStatusType positionStatus;
-	private int sequencePosition = BioPAXElement.UNKNOWN_INT;
+	private int sequencePosition = UNKNOWN_INT;
 
 	//
 	// utilityClass (BioPAXElement) interface implementation
