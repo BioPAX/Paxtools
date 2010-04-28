@@ -12,6 +12,7 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @javax.persistence.Entity
 class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
@@ -35,6 +36,7 @@ class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
 	//
 	////////////////////////////////////////////////////////////////////////////
 
+	@Transient
 	public Class<? extends ExperimentalForm> getModelInterface()
 	{
 		return ExperimentalForm.class;

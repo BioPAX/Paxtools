@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	private Set<EntityFeature> memberFeatureOf;
 
 
-	@javax.persistence.Entity
+	@Entity
 	public EntityFeatureImpl()
 	{
 		evidence = new HashSet<Evidence>();

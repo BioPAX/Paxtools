@@ -4,10 +4,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ChemicalStructure;
 import org.biopax.paxtools.model.level3.StructureFormatType;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Lob;
+import javax.persistence.*;
 
 @Entity
 class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
@@ -22,6 +19,7 @@ class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 	{
 	}
 
+	@Transient
 	public Class<? extends ChemicalStructure> getModelInterface()
 	{
 		return ChemicalStructure.class;

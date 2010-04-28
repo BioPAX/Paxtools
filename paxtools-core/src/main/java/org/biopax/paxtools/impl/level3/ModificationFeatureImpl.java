@@ -4,12 +4,17 @@ import org.biopax.paxtools.model.level3.ModificationFeature;
 import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
 import org.biopax.paxtools.model.BioPAXElement;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 /**
- * Created by IntelliJ IDEA. User: Emek Date: Feb 13, 2008 Time: 4:40:42 AM
  */
+@Entity
 class ModificationFeatureImpl extends EntityFeatureImpl
 		implements ModificationFeature
 {
+	@Transient
 	public Class<? extends ModificationFeature> getModelInterface()
 	{
 		return ModificationFeature.class;
@@ -17,8 +22,8 @@ class ModificationFeatureImpl extends EntityFeatureImpl
 
 	private SequenceModificationVocabulary modificationType;
 
-	// Property FEATURE-TYPE
 
+	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return modificationType;
@@ -29,8 +34,7 @@ class ModificationFeatureImpl extends EntityFeatureImpl
 		this.modificationType = featureType;
 	}
 
-
-		@Override
+	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
 		ModificationFeature that = (ModificationFeature) element;

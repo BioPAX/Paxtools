@@ -4,9 +4,12 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.DeltaG;
 
 import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 import static java.lang.Float.compare;
 
+@Entity
 class DeltaGImpl extends L3ElementImpl implements DeltaG
 {
 
@@ -20,7 +23,7 @@ class DeltaGImpl extends L3ElementImpl implements DeltaG
 	// BioPAXElement interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-
+	@Transient
 	public Class<? extends DeltaG> getModelInterface()
 	{
 		return DeltaG.class;

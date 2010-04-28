@@ -8,6 +8,7 @@ import org.biopax.paxtools.util.ClassFilterSet;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -34,6 +35,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	//
 	////////////////////////////////////////////////////////////////////////////
 
+	@Transient
 	public Class<? extends ControlledVocabulary> getModelInterface()
 	{
 		return ControlledVocabulary.class;

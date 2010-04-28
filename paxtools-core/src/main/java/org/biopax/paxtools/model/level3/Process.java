@@ -11,8 +11,8 @@ public interface Process extends Entity
 {
 	public Set<Control> getControlledOf();
     	
-	public Set<Pathway> getPathwayComponentsOf();
+	public Set<Pathway> getPathwayComponentOf();
 
-	public Set<PathwayStep> getStepInteractionsOf();
+	public Set<PathwayStep> getStepProcessOf();
 
 }

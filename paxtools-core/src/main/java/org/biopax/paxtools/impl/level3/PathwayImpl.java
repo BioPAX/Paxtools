@@ -3,12 +3,12 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 
-/**
- */
+@javax.persistence.Entity
 class PathwayImpl extends ProcessImpl implements Pathway
 {
 // ------------------------------ FIELDS ------------------------------
@@ -35,7 +35,7 @@ class PathwayImpl extends ProcessImpl implements Pathway
 
 
 
-
+	@Transient
 	public Class<? extends Pathway> getModelInterface()
 	{
 		return Pathway.class;
@@ -46,15 +46,39 @@ class PathwayImpl extends ProcessImpl implements Pathway
 // --------------------- ACCESORS and MUTATORS---------------------
 
 
+	@ManyToMany(targetEntity = ProcessImpl.class)
 	public Set<Process> getPathwayComponent()
 	{
 		return this.pathwayComponent;
 	}
 
-	public void setPathwayComponent(Set<Process> pathwayComponent)
+	protected void setPathwayComponent(Set<Process> pathwayComponent)
 	{
         this.pathwayComponent = pathwayComponent;
     }
+
+	public void addPathwayComponent(Process component)
+	{
+		this.pathwayComponent.add(component);
+		component.getPathwayComponentOf().add(this);
+	}
+
+	public void removePathwayComponent(Process component)
+	{
+		this.pathwayComponent.remove(component);
+		component.getPathwayComponentOf().remove(this);
+	}
+
+	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayComponentsOf")
+	public Set<PathwayStep> getPathwayOrder()
+	{
+		return pathwayOrder;
+	}
+
+	protected void setPathwayOrder(Set<PathwayStep> pathwayOrder)
+	{
+		this.pathwayOrder = pathwayOrder;
+	}
 
 	public void addPathwayOrder(PathwayStep pathwayOrder)
 	{
@@ -70,29 +94,10 @@ class PathwayImpl extends ProcessImpl implements Pathway
 		
 	}
 
-	public Set<PathwayStep> getPathwayOrder()
-	{
-		return pathwayOrder;
-	}
-
-	public void setPathwayOrder(Set<PathwayStep> pathwayOrder)
-	{
-		this.pathwayOrder = pathwayOrder;
-	}
-
-	public void addPathwayComponent(Process component)
-	{
-		this.pathwayComponent.add(component);
-		component.getPathwayComponentsOf().add(this);
-	}
-
-	public void removePathwayComponent(Process component)
-	{
-		this.pathwayComponent.remove(component);
-		component.getPathwayComponentsOf().remove(this);
-	}
 
 
+
+	@ManyToOne(targetEntity = BioSourceImpl.class)
 	public BioSource getOrganism()
 	{
 		return organism;

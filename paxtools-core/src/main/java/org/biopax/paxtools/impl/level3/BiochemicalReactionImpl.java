@@ -3,16 +3,15 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  *
  */
+@Entity
 class BiochemicalReactionImpl extends ConversionImpl
 	implements BiochemicalReaction
 {
@@ -43,7 +42,7 @@ class BiochemicalReactionImpl extends ConversionImpl
 
 // --------------------- Interface BioPAXElement ---------------------
 
-
+	@Transient
 	public Class<? extends BiochemicalReaction> getModelInterface()
 	{
 		return BiochemicalReaction.class;

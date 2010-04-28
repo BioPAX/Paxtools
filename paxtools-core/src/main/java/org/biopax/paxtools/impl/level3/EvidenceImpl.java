@@ -9,6 +9,7 @@ import org.biopax.paxtools.model.level3.Score;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +36,7 @@ class EvidenceImpl extends XReferrableImpl implements Evidence
 	//
 	////////////////////////////////////////////////////////////////////////////
 
+	@Transient
 	public Class<? extends Evidence> getModelInterface()
 	{
 		return Evidence.class;

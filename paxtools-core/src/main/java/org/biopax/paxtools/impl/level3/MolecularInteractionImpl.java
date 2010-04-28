@@ -7,6 +7,7 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
  */
+@javax.persistence.Entity
 class MolecularInteractionImpl extends InteractionImpl
         implements MolecularInteraction
 {

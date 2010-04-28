@@ -58,7 +58,7 @@ class CatalysisImpl extends ControlImpl implements Catalysis
 		this.catalysisDirection = catalysisDirection;
 	}
 
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity= PhysicalEntityImpl.class)
+	@ManyToMany(targetEntity= PhysicalEntityImpl.class)
 	public Set<PhysicalEntity> getCofactor()
 	{
 		return cofactor;

@@ -1,17 +1,16 @@
 package org.biopax.paxtools.impl.level3;
 
-import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
 import java.util.*;
 
 /**
- * @author Rex Dwyer
  */
+@Entity
 abstract class NamedImpl extends XReferrableImpl
 {
 
-	/**
-	 * Fields **
-	 */
 	private String standardName;
 	private String displayName;
 	private Set<String> allNames;
@@ -23,35 +22,32 @@ abstract class NamedImpl extends XReferrableImpl
 		standardName = null;
 	}
 
-	/**
-	 * Getters **
-	 */
+	@Basic
 	public String getStandardName()
 	{
 		return standardName;
 	}
 
-	public String getDisplayName()
-	{
-		return displayName;
-	}
-
-	public Set<String> getName()
-	{
-		return allNames;
-	}
-
-	/**
-	 * Setters **
-	 */
 	public void setStandardName(String name)
 	{
 		addName(standardName = name);
 	}
 
+	@Basic
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+
 	public void setDisplayName(String name)
 	{
 		addName(displayName = name);
+	}
+
+	@ElementCollection
+	public Set<String> getName()
+	{
+		return allNames;
 	}
 
 	public void setName(Set<String> names)
@@ -67,9 +63,6 @@ abstract class NamedImpl extends XReferrableImpl
 		}
 	}
 
-	/**
-	 * Add/Remove Names **
-	 */
 	public void addName(String name)
 	{
 		allNames.add(name);

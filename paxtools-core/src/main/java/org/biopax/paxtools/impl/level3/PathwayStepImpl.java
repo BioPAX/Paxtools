@@ -5,11 +5,13 @@ import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- */
+@Entity
 class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 {
 
@@ -31,34 +33,15 @@ class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = new HashSet<Evidence>();
 	}
 
-	//
-	// BioPAXElement interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
-
+	@Transient
 	public Class<? extends PathwayStep> getModelInterface()
 	{
 		return PathwayStep.class;
 	}
 
 
-	//
-	// PathwayComponent interface implementation (?)
-	//
-	////////////////////////////////////////////////////////////////////////////
 
-	public Set<Pathway> isPathwayComponentOf()
-	{
-		return pathwayOrdersOf;
-	}
-
-	//
-	// PathwayStep interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
-
-    // Property NEXT-STEP
-
+	@ManyToMany(targetEntity = PathwayStepImpl.class)
 	public Set<PathwayStep> getNextStep()
 	{
 		return nextStep;
@@ -76,32 +59,24 @@ class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStep.remove(nextStep);
 	}
 
-	public void setNextStep(Set<PathwayStep> nextStep)
+	protected void setNextStep(Set<PathwayStep> nextStep)
 	{
-		if (this.nextStep != null)
-		{
-			for (PathwayStep PathwayStep : this.nextStep)
-			{
-				PathwayStep.getNextStepOf().remove(this);
-			}
-		}
 		this.nextStep = nextStep;
-		if (this.nextStep != null)
-		{
-			for (PathwayStep PathwayStep : nextStep)
-			{
-				PathwayStep.getNextStepOf().add(this);
-			}
-		}
 	}
 
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;
 	}
 
-    // Property STEP-INTERACTIONS (STEP-PROCESS)
+	protected void setNextStepOf(Set<PathwayStep> nextStepOf)
+	{
+		this.nextStepOf = nextStepOf;
+	}
 
+
+	@ManyToMany(targetEntity = ProcessImpl.class)
 	public Set<Process> getStepProcess()
 	{
 		return stepProcess;
@@ -110,38 +85,20 @@ class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	public void addStepProcess(Process processStep)
 	{
 		this.stepProcess.add(processStep);
-		processStep.getStepInteractionsOf().add(this);
+		processStep.getStepProcessOf().add(this);
 	}
 
 	public void removeStepProcess(Process processStep)
 	{
-		processStep.getStepInteractionsOf().remove(this);
+		processStep.getStepProcessOf().remove(this);
 		this.stepProcess.remove(processStep);
 	}
 
 	public void setStepProcess(Set<Process> stepProcess)
 	{
-		if (this.stepProcess != null)
-		{
-			for (Process process : stepProcess)
-			{
-				process.getStepInteractionsOf().remove(this);
-			}
-		}
 		this.stepProcess = stepProcess;
-		if (this.stepProcess != null)
-		{
-			for (Process process : stepProcess)
-			{
-				process.getStepInteractionsOf().add(this);
-			}
-		}
 	}
 
-	//
-	// observable interface implementation
-	//
-	/////////////////////////////////////////////////////////////////////////////
 
 	public Set<Evidence> getEvidence()
 	{

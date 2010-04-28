@@ -5,10 +5,11 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.SetEquivalanceChecker;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
-@javax.persistence.Entity
+@Entity
 class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
 // ------------------------------ FIELDS ------------------------------
@@ -30,6 +31,7 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 // --------------------- Interface BioPAXElement ---------------------
 
 
+	@Transient
 	public Class<? extends Complex> getModelInterface()
 	{
 		return Complex.class;

@@ -35,7 +35,7 @@ class ConversionImpl extends InteractionImpl
 
 // --------------------- Interface BioPAXElement ---------------------
 
-	@Override
+	@Override @Transient
 	public Class<? extends Conversion> getModelInterface()
 	{
 		return Conversion.class;

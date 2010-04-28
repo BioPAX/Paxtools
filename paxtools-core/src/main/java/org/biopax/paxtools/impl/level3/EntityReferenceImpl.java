@@ -7,7 +7,7 @@ import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import java.lang.annotation.Target;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,6 +36,7 @@ abstract class EntityReferenceImpl extends NamedImpl
 		this.ownerEntityReference= new HashSet<EntityReference>();
 	}
 
+	@Transient
 	public Class<? extends EntityReference> getModelInterface()
 	{
 		return EntityReference.class;

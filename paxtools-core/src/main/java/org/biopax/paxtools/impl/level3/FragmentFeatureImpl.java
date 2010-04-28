@@ -4,11 +4,12 @@ import org.biopax.paxtools.model.level3.FragmentFeature;
 import org.biopax.paxtools.model.BioPAXElement;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @Entity
 public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFeature
 {
-	@Override
+	@Override @Transient
 	public Class<? extends FragmentFeature> getModelInterface()
 	{
 		return FragmentFeature.class;

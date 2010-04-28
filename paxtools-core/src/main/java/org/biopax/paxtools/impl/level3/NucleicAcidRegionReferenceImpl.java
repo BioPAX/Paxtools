@@ -19,9 +19,7 @@ abstract class NucleicAcidRegionReferenceImpl<T extends NucleicAcidRegionReferen
 	private NucleicAcidReference containerEntityReference;
 	private Set<T> subRegionOf;
 
-	NucleicAcidRegionReferenceImpl()
-	{
-	}
+	
 
 	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class)
 	public Set<T> getSubRegion()

@@ -7,13 +7,14 @@ import org.biopax.paxtools.model.BioPAXElement;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements CovalentBindingFeature
 {
 	private SequenceModificationVocabulary modificationType;
 
-	@Override
+	@Override @Transient
 	public Class<? extends CovalentBindingFeature> getModelInterface()
 	{
 		return CovalentBindingFeature.class;

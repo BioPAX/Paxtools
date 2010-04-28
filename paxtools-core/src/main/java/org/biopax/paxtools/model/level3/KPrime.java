@@ -7,29 +7,29 @@ public interface KPrime extends UtilityClass
 
 	float getIonicStrength();
 
-	void setIonicStrength(float newIONIC_STRENGTH);
+	void setIonicStrength(float ionicStrength);
 
 	// Property K-PRIME
 
 	float getKPrime();
 
-	void setKPrime(float newK_PRIME);
+	void setKPrime(float kPrime);
 
 	// Property PH
 
 	float getPh();
 
-	void setPh(float newPH);
+	void setPh(float ph);
 
 	// Property PMG
 
 	float getPMg();
 
-	void setPMg(float newPMG);
+	void setPMg(float pMg);
 
 	// Property TEMPERATURE
 
 	float getTemperature();
 
-	void setTemperature(float newTEMPERATURE);
+	void setTemperature(float temperature);
 }

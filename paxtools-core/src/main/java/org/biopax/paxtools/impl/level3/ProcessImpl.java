@@ -5,26 +5,27 @@ import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- */
+@Entity
 abstract class ProcessImpl extends EntityImpl implements Process
 {
 // ------------------------------ FIELDS ------------------------------
 
 	private Set<Control> controlledOf;
-	private Set<PathwayStep> stepInteractionsOf;
-	private Set<Pathway> pathwayComponentsOf;
+	private Set<PathwayStep> stepProcessOf;
+	private Set<Pathway> pathwayComponentOf;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	ProcessImpl()
 	{
 		this.controlledOf = new HashSet<Control>();
-		this.stepInteractionsOf = new HashSet<PathwayStep>();
-		this.pathwayComponentsOf = new HashSet<Pathway>();
+		this.stepProcessOf = new HashSet<PathwayStep>();
+		this.pathwayComponentOf = new HashSet<Pathway>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -33,18 +34,21 @@ abstract class ProcessImpl extends EntityImpl implements Process
 // --------------------- Interface PathwayComponent ---------------------
 
 
-	public Set<Pathway> getPathwayComponentsOf()
+	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent")
+	public Set<Pathway> getPathwayComponentOf()
 	{
-		return pathwayComponentsOf;
+		return pathwayComponentOf;
 	}
 
 // --------------------- Interface process ---------------------
 
-	public Set<PathwayStep> getStepInteractionsOf()
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess")
+	public Set<PathwayStep> getStepProcessOf()
 	{
-		return stepInteractionsOf;
+		return stepProcessOf;
 	}
 
+	@ManyToMany (targetEntity = ControlImpl.class, mappedBy = "controlled")
 	public Set<Control> getControlledOf()
 	{
 		return controlledOf;

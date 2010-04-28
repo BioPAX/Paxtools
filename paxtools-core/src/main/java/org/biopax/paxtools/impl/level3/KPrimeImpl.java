@@ -3,8 +3,16 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.KPrime;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
+import static java.lang.Float.compare;
+import static java.lang.Float.floatToIntBits;
+
 /**
  */
+@Entity
 class KPrimeImpl extends L3ElementImpl implements KPrime
 {
 
@@ -19,6 +27,7 @@ class KPrimeImpl extends L3ElementImpl implements KPrime
 	//
 	////////////////////////////////////////////////////////////////////////////
 
+	@Transient
 	public Class<? extends KPrime> getModelInterface()
 	{
 		return KPrime.class;
@@ -28,22 +37,22 @@ class KPrimeImpl extends L3ElementImpl implements KPrime
 	{
 		final KPrime aKPrime = (KPrime) element;
 		return
-			(Float.compare(aKPrime.getIonicStrength(), ionicStrength) == 0) &&
-				(Float.compare(aKPrime.getKPrime(), kPrime) == 0) &&
-				(Float.compare(aKPrime.getPh(), ph) == 0) &&
-				(Float.compare(aKPrime.getPMg(), pMg) == 0) &&
-				(Float.compare(aKPrime.getTemperature(), temperature) == 0);
+			compare(aKPrime.getIonicStrength(), ionicStrength) == 0 &&
+			compare(aKPrime.getKPrime(), kPrime) == 0 &&
+			compare(aKPrime.getPh(), ph) == 0 &&
+			compare(aKPrime.getPMg(), pMg) == 0 &&
+			compare(aKPrime.getTemperature(), temperature) == 0;
 	}
 
 	public int equivalenceCode()
 	{
-		int result = 29 + kPrime != +0.0f ? Float.floatToIntBits(kPrime) : 0;
+		int result = 29 + kPrime != +0.0f ? floatToIntBits(kPrime) : 0;
 		result = 29 * result + temperature != +0.0f ?
-			Float.floatToIntBits(temperature) : 0;
+			floatToIntBits(temperature) : 0;
 		result = 29 * result + ionicStrength != +0.0f ?
-			Float.floatToIntBits(ionicStrength) : 0;
-		result = 29 * result + ph != +0.0f ? Float.floatToIntBits(ph) : 0;
-		result = 29 * result + pMg != +0.0f ? Float.floatToIntBits(pMg) : 0;
+			floatToIntBits(ionicStrength) : 0;
+		result = 29 * result + ph != +0.0f ? floatToIntBits(ph) : 0;
+		result = 29 * result + pMg != +0.0f ? floatToIntBits(pMg) : 0;
 		return result;
 	}
 
@@ -52,8 +61,7 @@ class KPrimeImpl extends L3ElementImpl implements KPrime
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	// Property IONIC-STRENGTH
-
+	@Basic
 	public float getIonicStrength()
 	{
 		return ionicStrength;
@@ -64,8 +72,7 @@ class KPrimeImpl extends L3ElementImpl implements KPrime
 		this.ionicStrength = ionicStrength;
 	}
 
-	// Property K-PRIME
-
+	@Basic
 	public float getKPrime()
 	{
 		return kPrime;
@@ -76,8 +83,7 @@ class KPrimeImpl extends L3ElementImpl implements KPrime
 		this.kPrime = prime;
 	}
 
-	// Property ph
-
+	@Basic
 	public float getPh()
 	{
 		return ph;
@@ -88,8 +94,7 @@ class KPrimeImpl extends L3ElementImpl implements KPrime
 		this.ph = ph;
 	}
 
-	// Property pMg
-
+	@Basic
 	public float getPMg()
 	{
 		return pMg;
@@ -100,8 +105,7 @@ class KPrimeImpl extends L3ElementImpl implements KPrime
 		this.pMg = pMg;
 	}
 
-	// Property temperature
-
+	@Basic
 	public float getTemperature()
 	{
 		return temperature;

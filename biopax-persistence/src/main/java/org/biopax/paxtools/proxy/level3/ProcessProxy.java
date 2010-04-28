@@ -25,8 +25,8 @@ public abstract class ProcessProxy<T extends Process> extends EntityProxy<T> imp
 	}
 
 	@Transient
-	public Set<Pathway> getPathwayComponentsOf() {
-		return object.getPathwayComponentsOf();
+	public Set<Pathway> getPathwayComponentOf() {
+		return object.getPathwayComponentOf();
 	}
 
 	@Transient

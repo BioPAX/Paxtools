@@ -5,12 +5,18 @@ import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.TissueVocabulary;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+@Entity
 class BioSourceImpl extends NamedImpl implements BioSource
 {
 
 
 	private CellVocabulary celltype;
 	private TissueVocabulary tissue;
+
 
 	public BioSourceImpl()
 	{
@@ -21,6 +27,7 @@ class BioSourceImpl extends NamedImpl implements BioSource
 	//
 	////////////////////////////////////////////////////////////////////////////
 
+	@Transient
 	public Class<? extends BioSource> getModelInterface()
 	{
 		return BioSource.class;
@@ -54,8 +61,7 @@ class BioSourceImpl extends NamedImpl implements BioSource
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    // Property celltype
-
+    @ManyToOne(targetEntity = CellVocabularyImpl.class)
 	public CellVocabulary getCellType()
 	{
 		return celltype;
@@ -66,8 +72,7 @@ class BioSourceImpl extends NamedImpl implements BioSource
 		this.celltype = celltype;
 	}
 
-    // Property tissue
-
+	@ManyToOne(targetEntity = TissueVocabularyImpl.class)
 	public TissueVocabulary getTissue()
 	{
 		return tissue;

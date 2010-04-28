@@ -14,9 +14,7 @@ class DnaReferenceImpl extends NucleicAcidReferenceImpl implements
 		DnaReference
 {
 	
-	DnaReferenceImpl()
-	{
-	}
+
 
 
 	@Override @Transient
