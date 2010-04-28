@@ -48,7 +48,7 @@ public class EntityFeatureProxy<T extends EntityFeature> extends Level3ElementPr
 
 	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = SequenceLocationProxy.class)
 	@JoinTable(name="l3entityfeature_feature_loc")
-	public Set<SequenceLocation> getFeatureLocation() {
+	public SequenceLocation getFeatureLocation() {
 		return object.getFeatureLocation();
 	}
 

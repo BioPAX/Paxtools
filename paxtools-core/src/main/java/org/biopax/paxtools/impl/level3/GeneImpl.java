@@ -3,20 +3,22 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.Gene;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Emek
- * Date: Feb 22, 2008
- * Time: 1:07:24 AM
- */
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+@Entity
 class GeneImpl extends EntityImpl implements Gene
 {
     private BioSource organism;
 
+	@Transient
     public Class<? extends Gene> getModelInterface()
     {
         return Gene.class;
     }
+
+	@ManyToOne(targetEntity = BioSourceImpl.class)
     public BioSource getOrganism()
     {
         return organism;

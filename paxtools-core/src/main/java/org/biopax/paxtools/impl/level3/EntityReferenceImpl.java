@@ -1,12 +1,18 @@
 package org.biopax.paxtools.impl.level3;
 
+
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import java.lang.annotation.Target;
 import java.util.HashSet;
 import java.util.Set;
 
-class EntityReferenceImpl extends NamedImpl
+@Entity
+abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
 {
 
@@ -15,17 +21,19 @@ class EntityReferenceImpl extends NamedImpl
 	private Set<Evidence> evidence;
 	Set<EntityReferenceTypeVocabulary> entityReferenceType;
 	Set<EntityReference> memberEntity;
+	private Set<EntityReference> ownerEntityReference;
 
 	/**
 	 * Constructor.
 	 */
-	public EntityReferenceImpl()
+	EntityReferenceImpl()
 	{
 		this.entityFeature = new HashSet<EntityFeature>();
 		this.simplePhysicalEntity = new HashSet<SimplePhysicalEntity>();
 		this.evidence = new HashSet<Evidence>();
 		this.entityReferenceType = new HashSet<EntityReferenceTypeVocabulary>();
 		this.memberEntity = new HashSet<EntityReference>();
+		this.ownerEntityReference= new HashSet<EntityReference>();
 	}
 
 	public Class<? extends EntityReference> getModelInterface()
@@ -39,6 +47,7 @@ class EntityReferenceImpl extends NamedImpl
 	 *
 	 * @return A set of entity features for the reference entity.
 	 */
+	@OneToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "entityFeatureOf")
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
@@ -59,11 +68,12 @@ class EntityReferenceImpl extends NamedImpl
 			}
 			else
 			{
-				entityFeature.setEntityFeatureOf(this); //todo
+				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this); //todo
 			}
 			this.entityFeature.add(entityFeature);
 		}
 	}
+
 
 	public void removeEntityFeature(EntityFeature entityFeature)
 	{
@@ -71,15 +81,16 @@ class EntityReferenceImpl extends NamedImpl
 		{
 			assert entityFeature.getEntityFeatureOf() == this;
 			this.entityFeature.remove(entityFeature);
-			entityFeature.setEntityFeatureOf(null);
+			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null); //todo
 		}
 	}
 
-	public void setEntityFeature(Set<EntityFeature> entityFeature)
+	protected void setEntityFeature(Set<EntityFeature> entityFeature)
 	{
 		this.entityFeature = entityFeature;
 	}
 
+	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReference")
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return simplePhysicalEntity;
@@ -102,21 +113,13 @@ class EntityReferenceImpl extends NamedImpl
 		this.entityReferenceType.remove(entityReferenceType);
 	}
 
-	public void setEntityReferenceType(
+	protected void setEntityReferenceType(
 			Set<EntityReferenceTypeVocabulary> entityReferenceType)
 	{
-		// remove all elements from existing set
-		for (EntityReferenceTypeVocabulary ocv : this.entityReferenceType)
-		{
-			removeEntityReferenceType(ocv);
-		}
-		// addNew new open controlled vocabulary
-		for (EntityReferenceTypeVocabulary ocv : entityReferenceType)
-		{
-			addEntityReferenceType(ocv);
-		}
+		this.entityReferenceType=entityReferenceType;
 	}
 
+	@ManyToMany(targetEntity = EntityReferenceImpl.class) //todo generify?
 	public Set<EntityReference> getMemberEntityReference()
 	{
 		return memberEntity;
@@ -125,16 +128,30 @@ class EntityReferenceImpl extends NamedImpl
 	public void addMemberEntityReference(EntityReference memberEntity)
 	{
 		this.memberEntity.add(memberEntity);
+		memberEntity.getMemberEntityReferenceOf().add(this);
 	}
 
 	public void removeMemberEntityReference(EntityReference memberEntity)
 	{
 		this.memberEntity.remove(memberEntity);
+		memberEntity.getMemberEntityReferenceOf().remove(this);
 	}
 
 	public void setMemberEntityReference(Set<EntityReference> memberEntity)
 	{
 		this.memberEntity = memberEntity;
+
+	}
+
+	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
+	public Set<EntityReference> getMemberEntityReferenceOf()
+	{
+		return ownerEntityReference;
+	}
+
+	protected  void setMemberEntityReferenceOf(Set<EntityReference> newOwnerEntityReferenceSet)
+	{
+		this.ownerEntityReference = newOwnerEntityReferenceSet;
 	}
 
 	//
@@ -142,6 +159,7 @@ class EntityReferenceImpl extends NamedImpl
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
+	@ManyToMany(targetEntity = EvidenceImpl.class)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

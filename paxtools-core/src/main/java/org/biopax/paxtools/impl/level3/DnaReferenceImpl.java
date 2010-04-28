@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-class DnaReferenceImpl extends SequenceEntityReferenceImpl implements
+class DnaReferenceImpl extends NucleicAcidReferenceImpl implements
 		DnaReference
 {
 	

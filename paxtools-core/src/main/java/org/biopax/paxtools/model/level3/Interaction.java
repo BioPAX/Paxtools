@@ -7,11 +7,11 @@ public interface Interaction extends Process
 {
 	// Property INTERACTION-TYPE
 
-	Set<ControlledVocabulary> getInteractionType();
+	Set<InteractionVocabulary> getInteractionType();
 
-	void addInteractionType(ControlledVocabulary newINTERACTION_TYPE);
+	void addInteractionType(InteractionVocabulary newINTERACTION_TYPE);
 
-	void removeInteractionType(ControlledVocabulary oldINTERACTION_TYPE);
+	void removeInteractionType(InteractionVocabulary oldINTERACTION_TYPE);
 
 
 	// Property PARTICIPANT

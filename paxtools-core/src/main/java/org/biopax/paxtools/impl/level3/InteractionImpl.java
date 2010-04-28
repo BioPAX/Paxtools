@@ -5,26 +5,30 @@ import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.model.level3.InteractionVocabulary;
 
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  *
  */
+@javax.persistence.Entity
 class InteractionImpl extends ProcessImpl implements Interaction
 {
 // ------------------------------ FIELDS ------------------------------
 
 	Set<Entity> participant;
-	private Set<ControlledVocabulary> interactionType;
+	private Set<InteractionVocabulary> interactionType;
     private final Log log = LogFactory.getLog(InteractionImpl.class);
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public InteractionImpl()
 	{
-		this.interactionType = new HashSet<ControlledVocabulary>();
+		this.interactionType = new HashSet<InteractionVocabulary>();
 		this.participant = new HashSet<Entity>();
 	}
 
@@ -35,7 +39,7 @@ class InteractionImpl extends ProcessImpl implements Interaction
 
 
 
-
+	@Transient
 	public Class<? extends Interaction> getModelInterface()
 	{
 		return Interaction.class;
@@ -45,40 +49,38 @@ class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public Set<ControlledVocabulary> getInteractionType()
+	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
+	public Set<InteractionVocabulary> getInteractionType()
 	{
 	   return interactionType;
 	}
 
 	public void addInteractionType(
-		ControlledVocabulary interactionType)
+		InteractionVocabulary interactionType)
 	{
 	   this.interactionType.add(interactionType);
 	}
 
 	public void removeInteractionType(
-		ControlledVocabulary interactionType)
+		InteractionVocabulary interactionType)
 	{
 	   this.interactionType.remove(interactionType);
 	}
 
 	public void setInteractionType(
-		Set<ControlledVocabulary> interactionType)
+		Set<InteractionVocabulary> interactionType)
 	{
 	   this.interactionType = interactionType;
 	}
 
+	@ManyToMany(targetEntity = EntityImpl.class)
 	public Set<Entity> getParticipant()
 	{
 		return participant;
 	}
 
-	public void setParticipant(Set<Entity> participant)
+	protected void setParticipant(Set<Entity> participant)
 	{
-		if (participant == null)
-		{
-			participant = new HashSet<Entity>();
-		}
         this.participant = participant;
     }
 

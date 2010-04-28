@@ -22,25 +22,20 @@ public interface EntityFeature extends UtilityClass, Observable
 
 	// Inverse of Property NOT_MODIFIED_AT
 
-	Set<PhysicalEntity> getNoFeatureOf();
+	Set<PhysicalEntity> getNotFeatureOf();
 
 	// Property featureLocation
 
-	Set<SequenceLocation> getFeatureLocation();
+	SequenceLocation getFeatureLocation();
 
-	void addFeatureLocation(SequenceLocation featureLocation);
-
-	void removeFeatureLocation(SequenceLocation featureLocation);
-
-
-
+	void setFeatureLocation(SequenceLocation sequenceLocation);
 
 	SequenceRegionVocabulary getFeatureLocationType();
 
 	void setFeatureLocationType(SequenceRegionVocabulary regionVocabulary);
 
 
-	Set<EntityFeature> getMemberFeature();
+	Set<EntityFeature> getMemberFeature();   //todo generify?
 
 	void addMemberFeature(EntityFeature entityFeature);
 

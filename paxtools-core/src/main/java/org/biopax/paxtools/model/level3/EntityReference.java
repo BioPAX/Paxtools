@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * User: demir Date: Aug 15, 2007 Time: 8:08:52 PM
  */
-public interface EntityReference extends UtilityClass, Named, Observable, XReferrable
+public interface EntityReference extends UtilityClass, Named, Observable
 {
 
 
@@ -53,10 +53,12 @@ public interface EntityReference extends UtilityClass, Named, Observable, XRefer
 
 
 
-	Set<EntityReference> getMemberEntityReference();
+	Set<EntityReference> getMemberEntityReference();  //todo generify?
 
 	void addMemberEntityReference(EntityReference entity);
 
 	void removeMemberEntityReference(EntityReference entity);
+
+	public Set<EntityReference> getMemberEntityReferenceOf();
 
 }

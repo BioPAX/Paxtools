@@ -11,7 +11,7 @@ package org.biopax.paxtools.model.level3;
  * and can be present in multiple copies ( which are different DNA molecules).
  */
 
-public interface DnaReference extends SequenceEntityReference
+public interface DnaReference extends NucleicAcidReference
 {
 
 }

@@ -82,7 +82,7 @@ abstract class EntityImpl extends NamedImpl implements Entity
 		this.availability.remove(availability_text);
 	}
 
-	@ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = ProvenanceImpl.class)
+	@ManyToMany(targetEntity = ProvenanceImpl.class)
 	public Set<Provenance> getDataSource()
 	{
 		return dataSource;
@@ -105,7 +105,7 @@ abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
-	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = participants)
+	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participants")
 	public Set<Interaction> getParticipantsOf()
 	{
 		return participantOf;
@@ -116,7 +116,7 @@ abstract class EntityImpl extends NamedImpl implements Entity
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
-	@ManyToMany(cascade = {CascadeType.ALL}, targetEntity = EvidenceImpl.class)
+	@ManyToMany(targetEntity = EvidenceImpl.class)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,40 +17,34 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	private EntityReference ownerEntityReference;
 	private Set<PhysicalEntity> featuredEntities;
 	private Set<PhysicalEntity> notFeaturedEntities;
-	private Set<SequenceLocation> featureLocation;
+	private SequenceLocation featureLocation;
 	private Set<EntityFeature> memberFeature;
 	private SequenceRegionVocabulary featureLocationType;
+	private Set<EntityFeature> memberFeatureOf;
 
 
-	/**
-	 * Constructor.
-	 */
+	@javax.persistence.Entity
 	public EntityFeatureImpl()
 	{
 		evidence = new HashSet<Evidence>();
 		featuredEntities = new HashSet<PhysicalEntity>();
 		notFeaturedEntities = new HashSet<PhysicalEntity>();
-		this.featureLocation = new HashSet<SequenceLocation>();
+		this.memberFeatureOf = new HashSet<EntityFeature>();
 		this.memberFeature = new HashSet<EntityFeature>();
 	}
 
-	//
-	// BioPAXElement interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
 
+	@Transient
 	public Class<? extends EntityFeature> getModelInterface()
 	{
 		return EntityFeature.class;
 	}
 
 
-	// Inverse of Property ENTITY-FEATURE
-
 	/**
 	 * @return Reference entity that this feature belongs to.
 	 */
-
+	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	public EntityReference getEntityFeatureOf()
 	{
 		return ownerEntityReference;
@@ -64,7 +59,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	 *          : If already specified, this feature first should be removed from the old reference
 	 *          entity's feature list.
 	 */
-	public void setEntityFeatureOf(EntityReference newEntityReference)
+	protected void setEntityFeatureOf(EntityReference newEntityReference)
 	{
 
 		if (this.ownerEntityReference == null)
@@ -85,21 +80,21 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
-	// Inverse of Property MODIFIED_AT
 
+	@ManyToMany(targetEntity = PhysicalEntity.class, mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
 	{
 		return featuredEntities;
 	}
 
-	// Inverse of Property NOT_MODIFIED_AT
-
-	public Set<PhysicalEntity> getNoFeatureOf()
+	@ManyToMany(targetEntity = PhysicalEntity.class, mappedBy = "notFeature")
+	public Set<PhysicalEntity> getNotFeatureOf()
 	{
 		return notFeaturedEntities;
 	}
 
 
+	@ManyToMany(targetEntity = Evidence.class)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
@@ -120,28 +115,18 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.evidence = evidence;
 	}
 
-	// Property FEATURE-LOCATION
 
-	public Set<SequenceLocation> getFeatureLocation()
+	@OneToOne(targetEntity = SequenceLocationImpl.class)
+	public SequenceLocation getFeatureLocation()
 	{
 		return featureLocation;
 	}
-
-	public void addFeatureLocation(SequenceLocation featureLocation)
-	{
-		this.featureLocation.add(featureLocation);
-	}
-
-	public void removeFeatureLocation(SequenceLocation featureLocation)
-	{
-		this.featureLocation.remove(featureLocation);
-	}
-
-	public void setFeatureLocation(Set<SequenceLocation> featureLocation)
+	public void setFeatureLocation(SequenceLocation featureLocation)
 	{
 		this.featureLocation = featureLocation;
 	}
 
+	@OneToMany(targetEntity = SequenceRegionVocabularyImpl.class)
 	public SequenceRegionVocabulary getFeatureLocationType()
 	{
 		return featureLocationType;
@@ -152,8 +137,8 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocationType= regionVocabulary;
 	}
 
-	// Property memberFeature
 
+	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	public Set<EntityFeature> getMemberFeature()
 	{
 		return memberFeature;
@@ -169,29 +154,33 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		memberFeature.remove(feature);
 	}
 
-	public void setMemberFeature(Set<EntityFeature> feature)
+	protected void setMemberFeature(Set<EntityFeature> feature)
 	{
 		this.memberFeature = feature;
 	}
 
-	
+
+	public Set<EntityFeature> getMemberFeatureOf()
+	{
+		return this.memberFeatureOf;
+
+	}
+	@Transient
 	public boolean atEquivalentLocation(EntityFeature that)
 	{
 		return 
 			(getEntityFeatureOf() != null ?
 				getEntityFeatureOf().isEquivalent(that.getEntityFeatureOf())
 				: that.getEntityFeatureOf() == null)
-		       && SetEquivalanceChecker.isEquivalent(
-				getFeatureLocation(), that.getFeatureLocation());
+		       && getFeatureLocation().isEquivalent(that.getFeatureLocation());
 	}
 
+	@Transient
 	protected int locationCode()
 	{
 		int code = this.getEntityFeatureOf().equivalenceCode();
-		for (SequenceLocation sequenceLocation : this.featureLocation)
-		{
-		   code=code+13*sequenceLocation.equivalenceCode();
-		}
+		code=code+13*this.getFeatureLocation().equivalenceCode();
+
 		return code;
 	}
 

@@ -1,12 +1,18 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.*;
 
+import org.biopax.paxtools.model.level3.Evidence;
+import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
+import org.biopax.paxtools.model.level3.ExperimentalForm;
+import org.biopax.paxtools.model.level3.Score;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- */
+@Entity
 class EvidenceImpl extends XReferrableImpl implements Evidence
 {
 
@@ -46,6 +52,7 @@ class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of scores representing confidence
 	 */
+	@OneToMany(targetEntity = ScoreImpl.class)
 	public Set<Score> getConfidence()
 	{
 		return confidence;
@@ -93,6 +100,7 @@ class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of evidence codes  for this evidence type.
 	 */
+	@ManyToOne(targetEntity = EvidenceCodeVocabularyImpl.class)
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
 	{
 		return evidenceCode;
@@ -137,8 +145,8 @@ class EvidenceImpl extends XReferrableImpl implements Evidence
 		this.evidenceCode.remove(evidenceCode);
 	}
 
-	// Property EXPERIMENTAL-FORM
 
+	@OneToMany(targetEntity = ExperimentalForm.class)
 	public Set<ExperimentalForm> getExperimentalForm()
 	{
 		return experimentalForm;

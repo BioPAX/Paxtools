@@ -2,7 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.RnaReference;
 
-class RnaReferenceImpl extends SequenceEntityReferenceImpl 
+class RnaReferenceImpl extends NucleicAcidReferenceImpl 
 	implements RnaReference
 {
 

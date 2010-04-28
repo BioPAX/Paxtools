@@ -10,6 +10,10 @@ import java.util.HashSet;
 import java.util.Set;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+
+@javax.persistence.Entity
 class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
 {
 
@@ -36,14 +40,7 @@ class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
 		return ExperimentalForm.class;
 	}
 
-
-	//
-	// experimentalForm interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
-
-	// Property EXPERIMENTAL-FORM-DESCRIPTION
-
+	@ManyToMany(targetEntity = ExperimentalFormVocabularyImpl.class)
 	public Set<ExperimentalFormVocabulary> getExperimentalFormDescription()
 	{
 		return experimentalFormDescription;
@@ -67,24 +64,13 @@ class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
 		this.experimentalFormDescription = experimentalFormDescription;
 	}
 
-	// Property experimentalFormEntity
-
+	@ManyToOne(targetEntity = EntityImpl.class)
 	public Entity getExperimentalFormEntity()
 	{
 		return experimentalFormEntity;
 	}
 
-    /*
-	public void setExperimentalFormEntity(PhysicalEntity experimentalFormEntity)
-	{
-		this.experimentalFormEntity = experimentalFormEntity;
-	}
-
-    public void setExperimentalFormEntity(Gene gene) {
-        this.experimentalFormEntity = gene;
-    }
-    */
-
+	
 	public void setExperimentalFormEntity(Entity experimentalFormEntity)
 	{
 		if(PhysicalEntity.class.isAssignableFrom(experimentalFormEntity.getClass())
@@ -97,6 +83,7 @@ class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
         }
 	}
 
+    @ManyToMany(targetEntity = EntityFeatureImpl.class)
     public Set<EntityFeature> getExperimentalFeature()
     {
         return experimentalFeature;

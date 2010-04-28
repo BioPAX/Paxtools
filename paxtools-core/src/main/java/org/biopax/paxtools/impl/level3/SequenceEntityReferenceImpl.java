@@ -4,7 +4,11 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.SequenceEntityReference;
 
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 
+@Entity
 abstract class SequenceEntityReferenceImpl
         extends EntityReferenceImpl
         implements SequenceEntityReference
@@ -26,7 +30,7 @@ abstract class SequenceEntityReferenceImpl
     ////////////////////////////////////////////////////////////////////////////
 
     // Property organism
-
+	@ManyToOne(targetEntity = BioSourceImpl.class)
     public BioSource getOrganism()
     {
         return organism;
@@ -39,7 +43,8 @@ abstract class SequenceEntityReferenceImpl
 
     // Property sequence
 
-    public String getSequence()
+	@Lob
+	public String getSequence()
     {
         return sequence;
     }
