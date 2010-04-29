@@ -153,6 +153,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 				ns.put(pre, namespace);
 			}
 
+			
 		}
 		catch (XMLStreamException e)
 		{
