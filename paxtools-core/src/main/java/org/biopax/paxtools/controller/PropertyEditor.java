@@ -233,8 +233,15 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 			Type genericReturnType = getMethod.getGenericReturnType();
 			if (genericReturnType instanceof ParameterizedType)
 			{
-				range = (Class) ((ParameterizedType) genericReturnType)
-						.getActualTypeArguments()[0];
+				try
+				{
+					range = (Class) ((ParameterizedType) genericReturnType)
+							.getActualTypeArguments()[0];
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+				}
 				//Now this is required as autoboxing will not work with reflection
 				if (range == Double.class)
 				{
@@ -273,8 +280,6 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		if (multipleCardinality)
 		{
 
-			this.setMethod =
-					domain.getMethod("set" + javaName, Set.class);
 			this.addMethod =
 					domain.getMethod("add" + javaName, range);
 			this.removeMethod =

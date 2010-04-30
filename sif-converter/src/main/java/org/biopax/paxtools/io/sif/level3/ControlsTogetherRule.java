@@ -66,7 +66,7 @@ public class ControlsTogetherRule implements InteractionRuleL3
 		PhysicalEntity pe)
 	{
 		// Iterate over controls of A
-		for (Interaction inter : pe.getParticipantsOf())
+		for (Interaction inter : pe.getParticipantOf())
 		{
 			if (!(inter instanceof Control)) continue;
 

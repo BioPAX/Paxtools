@@ -31,6 +31,6 @@ public interface PathwayStep extends UtilityClass,Observable
     void removeStepProcess(Process oldSTEP_INTERACTIONS);
     
     
-    Set<Pathway> getPathwayOrdersOf();
+    Pathway getPathwayOrderOf();
 
 }

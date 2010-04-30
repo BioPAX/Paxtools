@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 @Entity
-class RnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl<RnaRegionReference> implements RnaRegionReference
+class RnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl implements RnaRegionReference
 {
 	//
 	// utilityClass interface implementation

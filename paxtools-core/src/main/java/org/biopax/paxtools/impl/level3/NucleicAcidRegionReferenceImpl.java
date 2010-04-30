@@ -1,54 +1,65 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.NucleicAcidReference;
+import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
+import org.biopax.paxtools.model.level3.SequenceLocation;
+import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.util.Set;
 
 @Entity
-abstract class NucleicAcidRegionReferenceImpl<T extends NucleicAcidRegionReference>
+abstract class NucleicAcidRegionReferenceImpl
 		extends SequenceEntityReferenceImpl
-		implements NucleicAcidRegionReference<T>
+		implements NucleicAcidRegionReference
 {
-	private Set<T> subRegion;
+	private Set<NucleicAcidRegionReference> subRegion;
 	private SequenceLocation absoluteRegion;
 	private Set<SequenceRegionVocabulary> regionType;
 	private NucleicAcidReference containerEntityReference;
-	private Set<T> subRegionOf;
 
-	
+
+	private Set<NucleicAcidRegionReference> subRegionOf;
+
 
 	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class)
-	public Set<T> getSubRegion()
+	public Set<NucleicAcidRegionReference> getSubRegion()
 	{
 		return subRegion;
 	}
 
-	protected void setSubRegion(Set<T> subRegion)
+	protected void setSubRegion(Set<NucleicAcidRegionReference> subRegion)
 	{
 		this.subRegion = subRegion;
 	}
 
-	public void addSubRegion(T regionReference)
+	public void addSubRegion(NucleicAcidRegionReference regionReference)
 	{
 		subRegion.add(regionReference);
 		this.subRegionOf.add(regionReference);
 	}
 
-	public void removeSubRegion(T regionReference)
+	public void removeSubRegion(NucleicAcidRegionReference regionReference)
 	{
 		subRegion.remove(regionReference);
 		this.subRegionOf.remove(regionReference);
 
 	}
 
-	public Set<T> getSubRegionOf()
+	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, mappedBy = "subRegion")
+	public Set<NucleicAcidRegionReference> getSubRegionOf()
 	{
 		return subRegionOf;
 	}
+
+	protected void setSubRegionOf(Set<NucleicAcidRegionReference> subRegionOf)
+	{
+		this.subRegionOf = subRegionOf;
+	}
+
 
 	@OneToOne(targetEntity = SequenceLocationImpl.class)
 	public SequenceLocation getAbsoluteRegion()
@@ -83,11 +94,12 @@ abstract class NucleicAcidRegionReferenceImpl<T extends NucleicAcidRegionReferen
 		this.regionType = regionType;
 	}
 
-	@OneToMany(targetEntity = NucleicAcidReferenceImpl.class)
+	@ManyToOne(targetEntity = NucleicAcidReferenceImpl.class)
 	public NucleicAcidReference getContainerEntityReference()
 	{
 		return this.containerEntityReference;
 	}
+
 	public void setContainerEntityReference(NucleicAcidReference containerEntityReference)
 	{
 		this.containerEntityReference = containerEntityReference;

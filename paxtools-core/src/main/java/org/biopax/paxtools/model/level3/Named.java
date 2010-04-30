@@ -56,6 +56,9 @@ public interface Named extends XReferrable
 	String getStandardName();
 
 
-
+	 /**
+	 * Full standard name for this entity.
+	 */
+	public void setStandardName(String standardName);
 
 }

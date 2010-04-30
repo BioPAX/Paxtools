@@ -57,7 +57,7 @@ public class ControlRule implements InteractionRuleL3
 	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A,
 		boolean mineStatetateChange, boolean mineMetabolicChange, PhysicalEntity pe)
 	{
-		for (Interaction inter : pe.getParticipantsOf())
+		for (Interaction inter : pe.getParticipantOf())
 		{
 			if (inter instanceof Control)
 			{

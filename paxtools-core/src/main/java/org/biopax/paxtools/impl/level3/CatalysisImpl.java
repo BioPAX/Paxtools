@@ -7,10 +7,7 @@ import org.biopax.paxtools.model.level3.CatalysisDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Process;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +34,7 @@ class CatalysisImpl extends ControlImpl implements Catalysis
 // --------------------- Interface BioPAXElement ---------------------
 
 
-
+	@Transient
 	public Class<? extends Catalysis> getModelInterface()
 	{
 		return Catalysis.class;

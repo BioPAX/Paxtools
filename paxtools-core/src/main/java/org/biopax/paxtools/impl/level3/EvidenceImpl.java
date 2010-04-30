@@ -148,7 +148,7 @@ class EvidenceImpl extends XReferrableImpl implements Evidence
 	}
 
 
-	@OneToMany(targetEntity = ExperimentalForm.class)
+	@OneToMany(targetEntity = ExperimentalFormImpl.class)
 	public Set<ExperimentalForm> getExperimentalForm()
 	{
 		return experimentalForm;

@@ -17,7 +17,10 @@ abstract class EntityReferenceImpl extends NamedImpl
 {
 
 	private Set<EntityFeature> entityFeature;
-	private HashSet<SimplePhysicalEntity> simplePhysicalEntity;
+
+
+
+	private Set<SimplePhysicalEntity> entityReferenceOf;
 	private Set<Evidence> evidence;
 	Set<EntityReferenceTypeVocabulary> entityReferenceType;
 	Set<EntityReference> memberEntity;
@@ -29,7 +32,7 @@ abstract class EntityReferenceImpl extends NamedImpl
 	EntityReferenceImpl()
 	{
 		this.entityFeature = new HashSet<EntityFeature>();
-		this.simplePhysicalEntity = new HashSet<SimplePhysicalEntity>();
+		this.entityReferenceOf = new HashSet<SimplePhysicalEntity>();
 		this.evidence = new HashSet<Evidence>();
 		this.entityReferenceType = new HashSet<EntityReferenceTypeVocabulary>();
 		this.memberEntity = new HashSet<EntityReference>();
@@ -94,9 +97,10 @@ abstract class EntityReferenceImpl extends NamedImpl
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReference")
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
-		return simplePhysicalEntity;
+		return entityReferenceOf;
 	}
 
+	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class)
 	public Set<EntityReferenceTypeVocabulary> getEntityReferenceType()
 	{
 		return entityReferenceType;
@@ -181,4 +185,19 @@ abstract class EntityReferenceImpl extends NamedImpl
 		this.evidence = evidence;
 	}
 
+
+	protected void setEntityReferenceOf(Set<SimplePhysicalEntity> entityReferenceOf)
+	{
+		this.entityReferenceOf = entityReferenceOf;
+	}
+
+	protected void setMemberEntity(Set<EntityReference> memberEntity)
+	{
+		this.memberEntity = memberEntity;
+	}
+
+	protected void setOwnerEntityReference(Set<EntityReference> ownerEntityReference)
+	{
+		this.ownerEntityReference = ownerEntityReference;
+	}
 }

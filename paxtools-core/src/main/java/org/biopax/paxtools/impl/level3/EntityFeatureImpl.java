@@ -2,7 +2,6 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 
 import javax.persistence.*;
@@ -17,19 +16,22 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	private Set<Evidence> evidence;
 
 	private EntityReference ownerEntityReference;
-	private Set<PhysicalEntity> featuredEntities;
-	private Set<PhysicalEntity> notFeaturedEntities;
+	private Set<PhysicalEntity> featureOf;
+	private Set<PhysicalEntity> notFeatureOf;
 	private SequenceLocation featureLocation;
 	private Set<EntityFeature> memberFeature;
 	private SequenceRegionVocabulary featureLocationType;
 	private Set<EntityFeature> memberFeatureOf;
 
 
+
+
 	EntityFeatureImpl()
+	
 	{
 		evidence = new HashSet<Evidence>();
-		featuredEntities = new HashSet<PhysicalEntity>();
-		notFeaturedEntities = new HashSet<PhysicalEntity>();
+		featureOf = new HashSet<PhysicalEntity>();
+		notFeatureOf = new HashSet<PhysicalEntity>();
 		this.memberFeatureOf = new HashSet<EntityFeature>();
 		this.memberFeature = new HashSet<EntityFeature>();
 	}
@@ -81,21 +83,22 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
+	
 
-	@ManyToMany(targetEntity = PhysicalEntity.class, mappedBy = "feature")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
 	{
-		return featuredEntities;
+		return featureOf;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntity.class, mappedBy = "notFeature")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()
 	{
-		return notFeaturedEntities;
+		return notFeatureOf;
 	}
 
 
-	@ManyToMany(targetEntity = Evidence.class)
+	@ManyToMany(targetEntity = EvidenceImpl.class)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
@@ -127,7 +130,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocation = featureLocation;
 	}
 
-	@OneToMany(targetEntity = SequenceRegionVocabularyImpl.class)
+	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class)
 	public SequenceRegionVocabulary getFeatureLocationType()
 	{
 		return featureLocationType;
@@ -160,7 +163,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.memberFeature = feature;
 	}
 
-
+	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
 	public Set<EntityFeature> getMemberFeatureOf()
 	{
 		return this.memberFeatureOf;
@@ -207,5 +210,25 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		SequenceRegionVocabulary siteType = this.getFeatureLocationType();
 		int code = siteType == null ? 0 : siteType.hashCode();
 		return code + 13 * this.locationCode();
+	}
+
+	protected void setOwnerEntityReference(EntityReference ownerEntityReference)
+	{
+		this.ownerEntityReference = ownerEntityReference;
+	}
+
+	protected void setFeatureOf(Set<PhysicalEntity> featureOf)
+	{
+		this.featureOf = featureOf;
+	}
+
+	protected void setNotFeatureOf(Set<PhysicalEntity> notFeatureOf)
+	{
+		this.notFeatureOf = notFeatureOf;
+	}
+
+	protected void setMemberFeatureOf(Set<EntityFeature> memberFeatureOf)
+	{
+		this.memberFeatureOf = memberFeatureOf;
 	}
 }

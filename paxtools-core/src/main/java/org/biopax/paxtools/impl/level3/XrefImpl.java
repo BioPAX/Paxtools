@@ -108,12 +108,18 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.id = id;
 	}
 
+
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()
 	{
 		return xrefOf;
 	}
-	
+
+	protected void setXrefOf(Set<XReferrable> xrefOf)
+	{
+		this.xrefOf = xrefOf;
+	}
+
 	@Override
 	public String toString() {
 		return getDb() + 

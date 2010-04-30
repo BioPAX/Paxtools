@@ -18,7 +18,7 @@ abstract class EntityImpl extends NamedImpl implements Entity
 {
 // ------------------------------ FIELDS ------------------------------
 
-	private HashSet<Interaction> participantOf;
+	private Set<Interaction> participantOf;
 	/**
 	 * This Set keeps statements describing the availability of this data (e.g. a copyright
 	 * statement).
@@ -104,10 +104,15 @@ abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
-	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participants")
-	public Set<Interaction> getParticipantsOf()
+	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
+	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;
+	}
+
+	protected void setParticipantOf(Set<Interaction> participantOf)
+	{
+		this.participantOf= participantOf;
 	}
 
 	//

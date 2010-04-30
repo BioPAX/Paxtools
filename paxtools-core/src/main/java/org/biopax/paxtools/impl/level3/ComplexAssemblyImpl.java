@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.ComplexAssembly;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @Entity
 class ComplexAssemblyImpl extends ConversionImpl
@@ -13,7 +14,7 @@ class ComplexAssemblyImpl extends ConversionImpl
 
 // --------------------- Interface BioPAXElement ---------------------
 
-    @Override
+    @Override   @Transient
 	public Class<? extends ComplexAssembly> getModelInterface()
 	{
 		return ComplexAssembly.class;

@@ -45,7 +45,7 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A,
 	                                   PhysicalEntity pe)
 	{
-		for (Interaction inter : pe.getParticipantsOf())
+		for (Interaction inter : pe.getParticipantOf())
 		{
 			if (inter instanceof Catalysis)
 			{
@@ -147,7 +147,7 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 
 		for (PhysicalEntity pe : pes)
 		{
-			for (Interaction inter : pe.getParticipantsOf())
+			for (Interaction inter : pe.getParticipantOf())
 			{
 				if (inter instanceof Conversion)
 				{

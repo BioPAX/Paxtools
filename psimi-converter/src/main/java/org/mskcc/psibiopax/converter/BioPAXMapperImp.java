@@ -29,6 +29,7 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
+
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.model.level3.*;
@@ -36,14 +37,14 @@ import org.biopax.paxtools.model.level3.*;
 import java.util.Set;
 import java.util.List;
 import java.util.HashSet;
-import java.math.BigInteger;
 
 /**
  * An base class that creates paxtool models given psi.
  *
  * @author Benjamin Gross
  */
-public class BioPAXMapperImp implements BioPAXMapper {
+public class BioPAXMapperImp implements BioPAXMapper
+{
 
 	/**
 	 * Ref to biopax model.
@@ -66,14 +67,17 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 *
 	 * @param bpLevel BioPAXLevel
 	 */
-	public BioPAXMapperImp(BioPAXLevel bpLevel) {
+	public BioPAXMapperImp(BioPAXLevel bpLevel)
+	{
 
 		// init members
 		this.bpLevel = bpLevel;
-		if (bpLevel == BioPAXLevel.L2) {
+		if (bpLevel == BioPAXLevel.L2)
+		{
 			bpModel = BioPAXLevel.L2.getDefaultFactory().createModel();
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
 			bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();
 		}
 		this.vocabularyL2 = new HashSet<openControlledVocabulary>();
@@ -85,7 +89,8 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 *
 	 * @return Model
 	 */
-	public Model getModel() {
+	public Model getModel()
+	{
 		return bpModel;
 	}
 
@@ -95,13 +100,16 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * @param id String
 	 * @return <T extends BioPAXElement>
 	 */
-	public <T extends BioPAXElement> T getUnificationXref(String id) {
+	public <T extends BioPAXElement> T getUnificationXref(String id)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			return (T)bpModel.addNew(unificationXref.class, id);
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			return (T) bpModel.addNew(unificationXref.class, id);
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			return (T)bpModel.addNew(UnificationXref.class, id);
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			return (T) bpModel.addNew(UnificationXref.class, id);
 		}
 
 		// should not get here
@@ -111,29 +119,35 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets a relationship xref.
 	 *
-	 * @param id String
-	 * @param refType String
+	 * @param id        String
+	 * @param refType   String
 	 * @param refTypeID String
 	 * @return <T extends BioPAXElement>
 	 */
-	public <T extends BioPAXElement> T getRelationshipXref(String id, String refType, String refTypeID) {
+	public <T extends BioPAXElement> T getRelationshipXref(String id, String refType,
+	                                                       String refTypeID)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			relationshipXref toReturn = (relationshipXref)bpModel.addNew(relationshipXref.class, id);
-			if (refType != null) {
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			relationshipXref toReturn = bpModel.addNew(relationshipXref.class, id);
+			if (refType != null)
+			{
 				toReturn.setRELATIONSHIP_TYPE(refType);
 			}
-			return (T)toReturn;
+			return (T) toReturn;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			RelationshipXref toReturn = (RelationshipXref)bpModel.addNew(RelationshipXref.class, id);
-			if (refType != null && refTypeID != null) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			RelationshipXref toReturn = bpModel.addNew(RelationshipXref.class, id);
+			if (refType != null && refTypeID != null)
+			{
 				RelationshipTypeVocabulary rtv =
-					(RelationshipTypeVocabulary)bpModel.addNew(RelationshipTypeVocabulary.class, refTypeID);
+						bpModel.addNew(RelationshipTypeVocabulary.class, refTypeID);
 				rtv.addTerm(refType);
 				toReturn.setRelationshipType(rtv);
 			}
-			return (T)toReturn;
+			return (T) toReturn;
 		}
 
 		// should not get here
@@ -146,13 +160,16 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * @param id String
 	 * @return <T extends BioPAXElement>
 	 */
-	public <T extends BioPAXElement> T getPublicationXref(String id) {
-		
-		if (bpLevel == BioPAXLevel.L2) {
-			return (T)bpModel.addNew(publicationXref.class, id);
+	public <T extends BioPAXElement> T getPublicationXref(String id)
+	{
+
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			return (T) bpModel.addNew(publicationXref.class, id);
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			return (T)bpModel.addNew(PublicationXref.class, id);
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			return (T) bpModel.addNew(PublicationXref.class, id);
 		}
 
 		// should not get here
@@ -162,58 +179,87 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets an evidence object.
 	 *
-	 * @param id String
-	 * @param bpXrefs Set<? extends BioPAXElement>
-	 * @param evidenceCodes Set<? extends BioPAXElement>
+	 * @param id                  String
+	 * @param bpXrefs             Set<? extends BioPAXElement>
+	 * @param evidenceCodes       Set<? extends BioPAXElement>
 	 * @param scoresOrConfidences Set<? extends BioPAXElement>
-	 * @param comments Set<String>
-	 * @param experimentalForms Set<? extends BioPAXElement>
+	 * @param comments            Set<String>
+	 * @param experimentalForms   Set<? extends BioPAXElement>
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getEvidence(String id,
-												   Set<? extends BioPAXElement> bpXrefs,
-												   Set<? extends BioPAXElement> evidenceCodes,
-												   Set<? extends BioPAXElement> scoresOrConfidences,
-												   Set<String> comments,
-												   Set<? extends BioPAXElement> experimentalForms) {
-		if (bpLevel == BioPAXLevel.L2) {
-			evidence bpEvidence = (evidence)bpModel.addNew(evidence.class, id);
-			if (bpXrefs != null && bpXrefs.size() > 0) bpEvidence.setXREF((Set<xref>)bpXrefs);
-			if (evidenceCodes != null && evidenceCodes.size() > 0) {
-				bpEvidence.setEVIDENCE_CODE((Set<openControlledVocabulary>)evidenceCodes);
+	                                               Set<? extends BioPAXElement> bpXrefs,
+	                                               Set<? extends BioPAXElement> evidenceCodes,
+	                                               Set<? extends BioPAXElement> scoresOrConfidences,
+	                                               Set<String> comments,
+	                                               Set<? extends BioPAXElement> experimentalForms)
+	{
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			evidence bpEvidence = bpModel.addNew(evidence.class, id);
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				bpEvidence.setXREF((Set<xref>) bpXrefs);
 			}
-			if (scoresOrConfidences != null && scoresOrConfidences.size() > 0) {
-				bpEvidence.setCONFIDENCE((Set<confidence>)scoresOrConfidences);
+			if (evidenceCodes != null && evidenceCodes.size() > 0)
+			{
+				bpEvidence.setEVIDENCE_CODE((Set<openControlledVocabulary>) evidenceCodes);
 			}
-			if (comments != null && comments.size() > 0) bpEvidence.setCOMMENT(comments);
-			if (experimentalForms != null && experimentalForms.size() > 0) {
-				bpEvidence.setEXPERIMENTAL_FORM((Set<experimentalForm>)experimentalForms);
+			if (scoresOrConfidences != null && scoresOrConfidences.size() > 0)
+			{
+				bpEvidence.setCONFIDENCE((Set<confidence>) scoresOrConfidences);
 			}
-			return (T)bpEvidence;
+			if (comments != null && comments.size() > 0)
+			{
+				bpEvidence.setCOMMENT(comments);
+			}
+			if (experimentalForms != null && experimentalForms.size() > 0)
+			{
+				bpEvidence.setEXPERIMENTAL_FORM((Set<experimentalForm>) experimentalForms);
+			}
+			return (T) bpEvidence;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			Evidence bpEvidence = (Evidence)bpModel.addNew(Evidence.class, id);
-			if (bpXrefs != null && bpXrefs.size() > 0) bpEvidence.setXref((Set<Xref>)bpXrefs);
-			if (evidenceCodes != null && evidenceCodes.size() > 0) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			Evidence bpEvidence = bpModel.addNew(Evidence.class, id);
+			if (bpXrefs != null)
+			{
+				for (BioPAXElement bpXref : bpXrefs)
+				{
+					bpEvidence.addXref((Xref) bpXref);
+
+				}
+			}
+			if (evidenceCodes != null && evidenceCodes.size() > 0)
+			{
 				// go through these hoops to keep EntryMapper from juggling different L3 ControlledVocabulary types
-				Set<EvidenceCodeVocabulary> evidenceCodeVocabularies = new HashSet<EvidenceCodeVocabulary>();
-				for (ControlledVocabulary cv : (Set<ControlledVocabulary>)evidenceCodes) {
-					if (bpModel.contains(cv)) bpModel.remove(cv);
+				Set<EvidenceCodeVocabulary> evidenceCodeVocabularies =
+						new HashSet<EvidenceCodeVocabulary>();
+				for (ControlledVocabulary cv : (Set<ControlledVocabulary>) evidenceCodes)
+				{
+					if (bpModel.contains(cv))
+					{
+						bpModel.remove(cv);
+					}
 					EvidenceCodeVocabulary ecv =
-						(EvidenceCodeVocabulary)bpModel.addNew(EvidenceCodeVocabulary.class, cv.getRDFId());
-					replaceControlledVocabulary(cv, (ControlledVocabulary)ecv);
+							bpModel.addNew(EvidenceCodeVocabulary.class, cv.getRDFId());
+					replaceControlledVocabulary(cv, ecv);
 					evidenceCodeVocabularies.add(ecv);
 				}
-				bpEvidence.setEvidenceCode(evidenceCodeVocabularies);
 			}
-			if (scoresOrConfidences != null && scoresOrConfidences.size() > 0) {
-				bpEvidence.setConfidence((Set<Score>)scoresOrConfidences);
+			if (scoresOrConfidences != null && scoresOrConfidences.size() > 0)
+			{
+				bpEvidence.setConfidence((Set<Score>) scoresOrConfidences);
 			}
-			if (comments != null && comments.size() > 0) bpEvidence.setComment(comments);
-			if (experimentalForms != null && experimentalForms.size() > 0) {
-				bpEvidence.setExperimentalForm((Set<ExperimentalForm>)experimentalForms);
+			if (comments != null && comments.size() > 0)
+			{
+				bpEvidence.setComment(comments);
 			}
-			return (T)bpEvidence;
+			if (experimentalForms != null && experimentalForms.size() > 0)
+			{
+				bpEvidence.setExperimentalForm((Set<ExperimentalForm>) experimentalForms);
+			}
+			return (T) bpEvidence;
 		}
 
 		// should not get here
@@ -223,30 +269,51 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets a confidence/score object.
 	 *
-	 * @param id String
-	 * @param value String
-	 * @param bpXrefs Set<? extends BioPAXElement>
+	 * @param id       String
+	 * @param value    String
+	 * @param bpXrefs  Set<? extends BioPAXElement>
 	 * @param comments Set<String>
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getScoreOrConfidence(String id,
-															String value,
-															Set<? extends BioPAXElement> bpXrefs,
-															Set<String> comments) {
+	                                                        String value,
+	                                                        Set<? extends BioPAXElement> bpXrefs,
+	                                                        Set<String> comments)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			confidence bpConfidence = (confidence)bpModel.addNew(confidence.class, id);
-			if (value != null) bpConfidence.setCONFIDENCE_VALUE(value);
-			if (bpXrefs != null && bpXrefs.size() > 0) bpConfidence.setXREF((Set<xref>)bpXrefs);
-			if (comments != null && comments.size() > 0) bpConfidence.setCOMMENT(comments);
-			return (T)bpConfidence;
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			confidence bpConfidence = bpModel.addNew(confidence.class, id);
+			if (value != null)
+			{
+				bpConfidence.setCONFIDENCE_VALUE(value);
+			}
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				bpConfidence.setXREF((Set<xref>) bpXrefs);
+			}
+			if (comments != null && comments.size() > 0)
+			{
+				bpConfidence.setCOMMENT(comments);
+			}
+			return (T) bpConfidence;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			Score bpScore = (Score)bpModel.addNew(Score.class, id);
-			if (value != null) bpScore.setValue(value);
-			if (bpXrefs != null && bpXrefs.size() > 0) bpScore.setXref((Set<Xref>)bpXrefs);
-			if (comments != null && comments.size() > 0) bpScore.setComment(comments);
-			return (T)bpScore;
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			Score bpScore = bpModel.addNew(Score.class, id);
+			if (value != null)
+			{
+				bpScore.setValue(value);
+			}
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				bpScore.setXref((Set<Xref>) bpXrefs);
+			}
+			if (comments != null && comments.size() > 0)
+			{
+				bpScore.setComment(comments);
+			}
+			return (T) bpScore;
 		}
 
 		// should not get here
@@ -256,38 +323,52 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets a experimental form object.
 	 *
-	 * @param id String
-	 * @param formType BioPAXElement
+	 * @param id          String
+	 * @param formType    BioPAXElement
 	 * @param participant BioPAXElement
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getExperimentalForm(String id,
-														   BioPAXElement formType,
-														   BioPAXElement participant) {
-		if (bpLevel == BioPAXLevel.L2) {
-			experimentalForm bpExperimentalForm = (experimentalForm)bpModel.addNew(experimentalForm.class, id);
-			if (formType != null) {
-				bpExperimentalForm.addEXPERIMENTAL_FORM_TYPE((openControlledVocabulary)formType);
+	                                                       BioPAXElement formType,
+	                                                       BioPAXElement participant)
+	{
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			experimentalForm bpExperimentalForm =
+					bpModel.addNew(experimentalForm.class, id);
+			if (formType != null)
+			{
+				bpExperimentalForm.addEXPERIMENTAL_FORM_TYPE((openControlledVocabulary) formType);
 			}
-			if (participant != null) {
-				bpExperimentalForm.setPARTICIPANT((physicalEntityParticipant)participant);
+			if (participant != null)
+			{
+				bpExperimentalForm.setPARTICIPANT((physicalEntityParticipant) participant);
 			}
-			return (T)bpExperimentalForm;
+			return (T) bpExperimentalForm;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			ExperimentalForm bpExperimentalForm = (ExperimentalForm)bpModel.addNew(ExperimentalForm.class, id);
-			if (formType != null) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			ExperimentalForm bpExperimentalForm =
+					bpModel.addNew(ExperimentalForm.class, id);
+			if (formType != null)
+			{
 				// go through these hoops to keep EntryMapper from juggling different L3 ControlledVocabulary types
-				if (bpModel.contains(formType)) bpModel.remove(formType);
+				if (bpModel.contains(formType))
+				{
+					bpModel.remove(formType);
+				}
 				ExperimentalFormVocabulary efv =
-					(ExperimentalFormVocabulary)bpModel.addNew(ExperimentalFormVocabulary.class, formType.getRDFId());
-				replaceControlledVocabulary((ControlledVocabulary)formType, (ControlledVocabulary)efv);
+						bpModel
+								.addNew(ExperimentalFormVocabulary.class, formType.getRDFId());
+				replaceControlledVocabulary((ControlledVocabulary) formType,
+						efv);
 				bpExperimentalForm.addExperimentalFormDescription(efv);
 			}
-			if (participant != null) {
-				bpExperimentalForm.setExperimentalFormEntity((Entity)participant);				
+			if (participant != null)
+			{
+				bpExperimentalForm.setExperimentalFormEntity((Entity) participant);
 			}
-			return (T)bpExperimentalForm;
+			return (T) bpExperimentalForm;
 		}
 
 		// should not get here
@@ -300,19 +381,32 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * @param termToSearch String
 	 * @return <T extends BioPAXElement>
 	 */
-	public <T extends BioPAXElement> T getOpenControlledVocabulary(String termToSearch) {
+	public <T extends BioPAXElement> T getOpenControlledVocabulary(String termToSearch)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			for (openControlledVocabulary ocv : vocabularyL2) {
-				for (String term : ocv.getTERM()) {
-					if (term.equals(termToSearch)) return (T)ocv;
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			for (openControlledVocabulary ocv : vocabularyL2)
+			{
+				for (String term : ocv.getTERM())
+				{
+					if (term.equals(termToSearch))
+					{
+						return (T) ocv;
+					}
 				}
 			}
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			for (ControlledVocabulary cv : vocabularyL3) {
-				for (String term : cv.getTerm()) {
-					if (term.equals(termToSearch)) return (T)cv;
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			for (ControlledVocabulary cv : vocabularyL3)
+			{
+				for (String term : cv.getTerm())
+				{
+					if (term.equals(termToSearch))
+					{
+						return (T) cv;
+					}
 				}
 			}
 		}
@@ -324,37 +418,48 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets a open/controlled vocabulary object.
 	 *
-	 * @param id String
-	 * @param term String
+	 * @param id      String
+	 * @param term    String
 	 * @param bpXrefs Set<? extends BioPAXElement>
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getOpenControlledVocabulary(String id, String term,
-																   Set<? extends BioPAXElement> bpXrefs) {
+	                                                               Set<? extends BioPAXElement> bpXrefs)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
+		if (bpLevel == BioPAXLevel.L2)
+		{
 			openControlledVocabulary toReturn =
-				(openControlledVocabulary)bpModel.addNew(openControlledVocabulary.class, id);
-			if (term != null) {
+					bpModel.addNew(openControlledVocabulary.class, id);
+			if (term != null)
+			{
 				Set<String> terms = new HashSet<String>();
 				terms.add(term);
 				toReturn.setTERM(terms);
 			}
-			if (bpXrefs != null && bpXrefs.size() > 0) toReturn.setXREF((Set<xref>)bpXrefs);
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				toReturn.setXREF((Set<xref>) bpXrefs);
+			}
 			vocabularyL2.add(toReturn);
-			return (T)toReturn;
+			return (T) toReturn;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
 			ControlledVocabulary toReturn =
-				(ControlledVocabulary)bpModel.addNew(ControlledVocabulary.class, id);
-			if (term != null) {
+					bpModel.addNew(ControlledVocabulary.class, id);
+			if (term != null)
+			{
 				Set<String> terms = new HashSet<String>();
 				terms.add(term);
 				toReturn.setTerm(terms);
 			}
-			if (bpXrefs != null && bpXrefs.size() > 0) toReturn.setXref((Set<Xref>)bpXrefs);
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				toReturn.setXref((Set<Xref>) bpXrefs);
+			}
 			vocabularyL3.add(toReturn);
-			return (T)toReturn;
+			return (T) toReturn;
 		}
 
 		// should not get here
@@ -367,7 +472,8 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * @param rdfID
 	 * @return BioPAXElement
 	 */
-	public BioPAXElement getBioPAXElement(String rdfID) {
+	public BioPAXElement getBioPAXElement(String rdfID)
+	{
 		// does a key exist ?
 		return bpModel.getIdMap().get(rdfID);
 	}
@@ -375,49 +481,72 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets an interaction.
 	 *
-	 * @param id String
-	 * @param name String
-	 * @param shortName String
+	 * @param id           String
+	 * @param name         String
+	 * @param shortName    String
 	 * @param availability Set<String>
 	 * @param participants Set<? extends BioPAXElement>
-	 * @param bpEvidence Set<? extends BioPAXElement>
+	 * @param bpEvidence   Set<? extends BioPAXElement>
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getInteraction(String id,
-													  String name, String shortName,
-													  Set<String> availability,
-													  Set<? extends BioPAXElement> participants,
-													  Set<? extends BioPAXElement> bpEvidence) {
+	                                                  String name, String shortName,
+	                                                  Set<String> availability,
+	                                                  Set<? extends BioPAXElement> participants,
+	                                                  Set<? extends BioPAXElement> bpEvidence)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			physicalInteraction toReturn = (physicalInteraction)bpModel.addNew(physicalInteraction.class, id);
-			if (name != null) toReturn.setNAME(name);
-			if (shortName != null) toReturn.setSHORT_NAME(shortName);
-			if (availability != null && availability.size() > 0) {
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			physicalInteraction toReturn =
+					bpModel.addNew(physicalInteraction.class, id);
+			if (name != null)
+			{
+				toReturn.setNAME(name);
+			}
+			if (shortName != null)
+			{
+				toReturn.setSHORT_NAME(shortName);
+			}
+			if (availability != null && availability.size() > 0)
+			{
 				toReturn.setAVAILABILITY(availability);
 			}
-			if (participants != null && participants.size() > 0) {
-				toReturn.setPARTICIPANTS((Set<InteractionParticipant>)participants);
+			if (participants != null && participants.size() > 0)
+			{
+				toReturn.setPARTICIPANTS((Set<InteractionParticipant>) participants);
 			}
-			if (bpEvidence != null && bpEvidence.size() > 0) {
-				toReturn.setEVIDENCE((Set<evidence>)bpEvidence);
+			if (bpEvidence != null && bpEvidence.size() > 0)
+			{
+				toReturn.setEVIDENCE((Set<evidence>) bpEvidence);
 			}
-			return (T)toReturn;
+			return (T) toReturn;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			MolecularInteraction toReturn = (MolecularInteraction)bpModel.addNew(MolecularInteraction.class, id);
-			if (name != null) toReturn.setStandardName(name);
-			if (shortName != null) toReturn.setDisplayName(shortName);
-			if (availability != null && availability.size() > 0) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			MolecularInteraction toReturn =
+					bpModel.addNew(MolecularInteraction.class, id);
+			if (name != null)
+			{
+				toReturn.setStandardName(name);
+			}
+			if (shortName != null)
+			{
+				toReturn.setDisplayName(shortName);
+			}
+			if (availability != null && availability.size() > 0)
+			{
 				toReturn.setAvailability(availability);
 			}
-			if (participants != null && participants.size() > 0) {
-				toReturn.setParticipant((Set<Entity>)participants);
+			if (participants != null && participants.size() > 0)
+			{
+				toReturn.setParticipant((Set<Entity>) participants);
 			}
-			if (bpEvidence != null && bpEvidence.size() > 0) {
-				toReturn.setEvidence((Set<Evidence>)bpEvidence);
+			if (bpEvidence != null && bpEvidence.size() > 0)
+			{
+				toReturn.setEvidence((Set<Evidence>) bpEvidence);
 			}
-			return (T)toReturn;
+			return (T) toReturn;
 		}
 
 		// should not get here
@@ -427,44 +556,60 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets a participant.
 	 *
-	 * @param id String
-	 * @param features <? extends BioPAXElement>
+	 * @param id               String
+	 * @param features         <? extends BioPAXElement>
 	 * @param cellularLocation BioPAXElement
 	 * @param bpPhysicalEntity BioPAXElement
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getParticipant(String id,
-													  Set<? extends BioPAXElement> features,
-													  BioPAXElement cellularLocation,
-													  BioPAXElement bpPhysicalEntity) {
-		if (bpLevel == BioPAXLevel.L2) {
-			sequenceParticipant toReturn = (sequenceParticipant)bpModel.addNew(sequenceParticipant.class, id);
-			if (features != null && features.size() > 0) {
-				toReturn.setSEQUENCE_FEATURE_LIST((Set<sequenceFeature>)features);
+	                                                  Set<? extends BioPAXElement> features,
+	                                                  BioPAXElement cellularLocation,
+	                                                  BioPAXElement bpPhysicalEntity)
+	{
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			sequenceParticipant toReturn =
+					bpModel.addNew(sequenceParticipant.class, id);
+			if (features != null && features.size() > 0)
+			{
+				toReturn.setSEQUENCE_FEATURE_LIST((Set<sequenceFeature>) features);
 			}
-			if (cellularLocation != null) {
-				toReturn.setCELLULAR_LOCATION((openControlledVocabulary)cellularLocation);
+			if (cellularLocation != null)
+			{
+				toReturn.setCELLULAR_LOCATION((openControlledVocabulary) cellularLocation);
 			}
-			if (bpPhysicalEntity != null) {
-				toReturn.setPHYSICAL_ENTITY((physicalEntity)bpPhysicalEntity);
+			if (bpPhysicalEntity != null)
+			{
+				toReturn.setPHYSICAL_ENTITY((physicalEntity) bpPhysicalEntity);
 			}
-			return (T)toReturn;
+			return (T) toReturn;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			if (bpPhysicalEntity != null) {
-				if (features != null && features.size() > 0) {
-					((PhysicalEntity)bpPhysicalEntity).setFeature((Set<EntityFeature>)features);
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			if (bpPhysicalEntity != null)
+			{
+				if (features != null && features.size() > 0)
+				{
+					((PhysicalEntity) bpPhysicalEntity).setFeature((Set<EntityFeature>) features);
 				}
-				if (cellularLocation != null && bpPhysicalEntity != null) {
+				if (cellularLocation != null && bpPhysicalEntity != null)
+				{
 					// go through these hoops to keep EntryMapper from juggling different L3 ControlledVocabulary types
-					if (bpModel.contains(cellularLocation)) bpModel.remove(cellularLocation);
+					if (bpModel.contains(cellularLocation))
+					{
+						bpModel.remove(cellularLocation);
+					}
 					CellularLocationVocabulary clv =
-						(CellularLocationVocabulary)bpModel.addNew(CellularLocationVocabulary.class, cellularLocation.getRDFId());
-					replaceControlledVocabulary((ControlledVocabulary)cellularLocation, (ControlledVocabulary)clv);
-					((PhysicalEntity)bpPhysicalEntity).setCellularLocation(clv);
+							bpModel
+									.addNew(CellularLocationVocabulary.class,
+											cellularLocation.getRDFId());
+					replaceControlledVocabulary((ControlledVocabulary) cellularLocation,
+							clv);
+					((PhysicalEntity) bpPhysicalEntity).setCellularLocation(clv);
 				}
 			}
-			return (T)bpPhysicalEntity;
+			return (T) bpPhysicalEntity;
 		}
 
 		// should not get here
@@ -475,83 +620,121 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * Gets a physical Entity.
 	 *
 	 * @param physicalEntityType String
-	 * @param id String
-	 * @param name String
-	 * @param shortName String
-	 * @param synonyms Set<String>
-	 * @param bpXrefs Set<? extends BioPAXElement>
-	 * @parma entityRefId String
-	 * @param bioSource BioPAXElement
-	 * @param sequence String
+	 * @param id                 String
+	 * @param name               String
+	 * @param shortName          String
+	 * @param synonyms           Set<String>
+	 * @param bpXrefs            Set<? extends BioPAXElement>
+	 * @param bioSource          BioPAXElement
+	 * @param sequence           String
 	 * @return <T extends BioPAXElement>
+	 * @parma entityRefId String
 	 */
 	public <T extends BioPAXElement> T getPhysicalEntity(String physicalEntityType, String id,
-														 String name, String shortName,
-														 Set<String> synonyms,
-														 Set<? extends BioPAXElement> bpXrefs,
-														 String entityRefId,
-														 BioPAXElement bioSource,
-														 String sequence) {
+	                                                     String name, String shortName,
+	                                                     Set<String> synonyms,
+	                                                     Set<? extends BioPAXElement> bpXrefs,
+	                                                     String entityRefId,
+	                                                     BioPAXElement bioSource,
+	                                                     String sequence)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
+		if (bpLevel == BioPAXLevel.L2)
+		{
 			physicalEntity toReturn = null;
-			if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("small molecule")){
-				toReturn = (physicalEntity)bpModel.addNew(smallMolecule.class, id);
+			if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("small molecule"))
+			{
+				toReturn = bpModel.addNew(smallMolecule.class, id);
 			}
-			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("dna")) {
-				toReturn = (physicalEntity)bpModel.addNew(dna.class, id);
+			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("dna"))
+			{
+				toReturn = bpModel.addNew(dna.class, id);
 			}
-			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("rna")) {
-				toReturn = (physicalEntity)bpModel.addNew(rna.class, id);
+			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("rna"))
+			{
+				toReturn = bpModel.addNew(rna.class, id);
 			}
-			else {
+			else
+			{
 				// default to protein
-				toReturn = (physicalEntity)bpModel.addNew(protein.class, id);
-				if (bioSource != null) ((protein)toReturn).setORGANISM((bioSource)bioSource);
-				if (sequence != null) ((protein)toReturn).setSEQUENCE(sequence);
+				toReturn = bpModel.addNew(protein.class, id);
+				if (bioSource != null)
+				{
+					((protein) toReturn).setORGANISM((bioSource) bioSource);
+				}
+				if (sequence != null)
+				{
+					((protein) toReturn).setSEQUENCE(sequence);
+				}
 			}
-			if (name != null) toReturn.setNAME(name);
-			if (shortName != null) toReturn.setSHORT_NAME(shortName);
-			for (String synonym : synonyms) {
+			if (name != null)
+			{
+				toReturn.setNAME(name);
+			}
+			if (shortName != null)
+			{
+				toReturn.setSHORT_NAME(shortName);
+			}
+			for (String synonym : synonyms)
+			{
 				toReturn.addSYNONYMS(synonym);
 			}
-			if (bpXrefs != null && bpXrefs.size() > 0) toReturn.setXREF((Set<xref>)bpXrefs);
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				toReturn.setXREF((Set<xref>) bpXrefs);
+			}
 
-			return (T)toReturn;
+			return (T) toReturn;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
 			SimplePhysicalEntity toReturn = null;
 			SequenceEntityReference ser = null;
-			if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("small molecule")){
-				toReturn = (SimplePhysicalEntity)bpModel.addNew(SmallMolecule.class, id);
-				ser = (SequenceEntityReference)bpModel.addNew(SmallMoleculeReference.class, entityRefId);
+			if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("small molecule"))
+			{
+				toReturn = bpModel.addNew(SmallMolecule.class, id);
+				ser = (SequenceEntityReference) bpModel
+						.addNew(SmallMoleculeReference.class, entityRefId);
 			}
-			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("dna")) {
-				toReturn = (SimplePhysicalEntity)bpModel.addNew(Dna.class, id);
-				ser = (SequenceEntityReference)bpModel.addNew(DnaReference.class, entityRefId);
+			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("dna"))
+			{
+				toReturn = bpModel.addNew(Dna.class, id);
+				ser = bpModel.addNew(DnaReference.class, entityRefId);
 			}
-			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("rna")) {
-				toReturn = (SimplePhysicalEntity)bpModel.addNew(Rna.class, id);
-				ser = (SequenceEntityReference)bpModel.addNew(RnaReference.class, entityRefId);
+			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("rna"))
+			{
+				toReturn = bpModel.addNew(Rna.class, id);
+				ser = bpModel.addNew(RnaReference.class, entityRefId);
 			}
-			else {
+			else
+			{
 				// default to protein
-				toReturn = (SimplePhysicalEntity)bpModel.addNew(Protein.class, id);
-				ser = (SequenceEntityReference)bpModel.addNew(ProteinReference.class, entityRefId);
+				toReturn = bpModel.addNew(Protein.class, id);
+				ser = bpModel.addNew(ProteinReference.class, entityRefId);
 			}
-			if (name != null) toReturn.setStandardName(name);
-			if (shortName != null) toReturn.setDisplayName(shortName);
-			if (synonyms != null && synonyms.size() > 0) {
+			if (name != null)
+			{
+				toReturn.setStandardName(name);
+			}
+			if (shortName != null)
+			{
+				toReturn.setDisplayName(shortName);
+			}
+			if (synonyms != null && synonyms.size() > 0)
+			{
 				toReturn.setName(synonyms);
 			}
-			if (bpXrefs != null && bpXrefs.size() > 0) toReturn.setXref((Set<Xref>)bpXrefs);
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				toReturn.setXref((Set<Xref>) bpXrefs);
+			}
 			// set sequence entity ref props
-			ser.setOrganism((BioSource)bioSource);
+			ser.setOrganism((BioSource) bioSource);
 			ser.setSequence(sequence);
 			// set entity ref on pe
 			toReturn.setEntityReference(ser);
 
-			return (T)toReturn;
+			return (T) toReturn;
 		}
 
 		// should not get here
@@ -561,31 +744,59 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets a biosource.
 	 *
-	 * @param id String
+	 * @param id        String
 	 * @param taxonXref BioPAXElement
-	 * @param cellType BioPAXElement
-	 * @param tissue BioPAXElement
-	 * @param name String
+	 * @param cellType  BioPAXElement
+	 * @param tissue    BioPAXElement
+	 * @param name      String
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getBioSource(String id, BioPAXElement taxonXref,
-													BioPAXElement cellType, BioPAXElement tissue, String name) {
+	                                                BioPAXElement cellType, BioPAXElement tissue,
+	                                                String name)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			bioSource toReturn = (bioSource)bpModel.addNew(bioSource.class, id);
-			if (taxonXref != null) toReturn.setTAXON_XREF((unificationXref)taxonXref);
-			if (cellType != null) toReturn.setCELLTYPE((openControlledVocabulary)cellType);
-			if (tissue != null) toReturn.setTISSUE((openControlledVocabulary)tissue);
-			if (name != null) toReturn.setNAME(name);
-			return (T)toReturn;
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			bioSource toReturn = bpModel.addNew(bioSource.class, id);
+			if (taxonXref != null)
+			{
+				toReturn.setTAXON_XREF((unificationXref) taxonXref);
+			}
+			if (cellType != null)
+			{
+				toReturn.setCELLTYPE((openControlledVocabulary) cellType);
+			}
+			if (tissue != null)
+			{
+				toReturn.setTISSUE((openControlledVocabulary) tissue);
+			}
+			if (name != null)
+			{
+				toReturn.setNAME(name);
+			}
+			return (T) toReturn;
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			BioSource toReturn = (BioSource)bpModel.addNew(BioSource.class, id);
-			if (taxonXref != null) toReturn.setTaxonXref((UnificationXref)taxonXref);
-			if (cellType != null) toReturn.setCellType((CellVocabulary)cellType);
-			if (tissue != null) toReturn.setTissue((TissueVocabulary)tissue);
-			if (name != null) toReturn.setStandardName(name);
-			return (T)toReturn;
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			BioSource toReturn = bpModel.addNew(BioSource.class, id);
+			if (taxonXref != null)
+			{
+				toReturn.setTaxonXref((UnificationXref) taxonXref);
+			}
+			if (cellType != null)
+			{
+				toReturn.setCellType((CellVocabulary) cellType);
+			}
+			if (tissue != null)
+			{
+				toReturn.setTissue((TissueVocabulary) tissue);
+			}
+			if (name != null)
+			{
+				toReturn.setStandardName(name);
+			}
+			return (T) toReturn;
 		}
 
 		// should not get here
@@ -596,42 +807,51 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * Used to add feature attributes to given sequence or entity feature.
 	 *
 	 * @param bpSequenceFeature BioPAXElement
-	 * @param bpXrefs Set<? extends BioPAXElement>
-	 * @param featureLocations Set<? extends BioPAXElement>
-	 * @param featureType BioPAXElement
+	 * @param bpXrefs           Set<? extends BioPAXElement>
+	 * @param featureLocations  Set<? extends BioPAXElement>
+	 * @param featureType       BioPAXElement
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getFeature(BioPAXElement bpFeature,
-												  Set<? extends BioPAXElement> bpXrefs,
-												  Set<? extends BioPAXElement> featureLocations,
-												  BioPAXElement featureType) {
+	                                              Set<? extends BioPAXElement> bpXrefs,
+	                                              Set<? extends BioPAXElement> featureLocations,
+	                                              BioPAXElement featureType)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			sequenceFeature toReturn = (sequenceFeature)bpFeature;
-			if (bpXrefs != null && bpXrefs.size() > 0) {
-				for (xref bpXref : (Set<xref>)bpXrefs) {
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			sequenceFeature toReturn = (sequenceFeature) bpFeature;
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				for (xref bpXref : (Set<xref>) bpXrefs)
+				{
 					toReturn.addXREF(bpXref);
 				}
 			}
-			if (featureLocations != null) {
-				toReturn.setFEATURE_LOCATION((Set<sequenceLocation>)featureLocations);
+			if (featureLocations != null)
+			{
+				toReturn.setFEATURE_LOCATION((Set<sequenceLocation>) featureLocations);
 			}
-			if (featureType != null) {
-				toReturn.setFEATURE_TYPE((openControlledVocabulary)featureType);
+			if (featureType != null)
+			{
+				toReturn.setFEATURE_TYPE((openControlledVocabulary) featureType);
 			}
-			return (T)toReturn;
-			
+			return (T) toReturn;
+
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			EntityFeature toReturn = (EntityFeature)bpFeature;
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			EntityFeature toReturn = (EntityFeature) bpFeature;
 			// question: EntityFeature does not implement XReferrable
-			if (featureLocations != null) {
-				toReturn.setFeatureLocation((Set<SequenceLocation>)featureLocations);
+			if (featureLocations != null)
+			{
+				toReturn.setFeatureLocation((Set<SequenceLocation>) featureLocations);
 			}
-			if (featureType != null) {
-				toReturn.setFeatureLocationType((SequenceRegionVocabulary)featureType);
+			if (featureType != null)
+			{
+				toReturn.setFeatureLocationType((SequenceRegionVocabulary) featureType);
 			}
-			return (T)toReturn;
+			return (T) toReturn;
 		}
 
 		// should not get here
@@ -641,38 +861,57 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets a sequence or entity feature.
 	 *
-	 * @param id String
-	 * @param bpXrefs Set<? extends BioPAXElement>
+	 * @param id               String
+	 * @param bpXrefs          Set<? extends BioPAXElement>
 	 * @param featureLocations Set<? extends BioPAXElement>
-	 * @param featureType BioPAXElement
+	 * @param featureType      BioPAXElement
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getFeature(String id,
-												  Set<? extends BioPAXElement> bpXrefs,
-												  Set<? extends BioPAXElement> featureLocations,
-												  BioPAXElement featureType) {
-		if (bpLevel == BioPAXLevel.L2) {
-			sequenceFeature toReturn = (sequenceFeature)bpModel.addNew(sequenceFeature.class, id);
-			if (bpXrefs != null && bpXrefs.size() > 0) toReturn.setXREF((Set<xref>)bpXrefs);
-			if (featureLocations != null) toReturn.setFEATURE_LOCATION((Set<sequenceLocation>)featureLocations);
-			if (featureType != null) toReturn.setFEATURE_TYPE((openControlledVocabulary)featureType);
-			return (T)toReturn;
-		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			EntityFeature toReturn = (EntityFeature)bpModel.addNew(EntityFeature.class, id);
-			// question: EntityFeature does not implement XReferrable
-			if (featureLocations != null) {
-				toReturn.setFeatureLocation((Set<SequenceLocation>)featureLocations);
+	                                              Set<? extends BioPAXElement> bpXrefs,
+	                                              Set<? extends BioPAXElement> featureLocations,
+	                                              BioPAXElement featureType)
+	{
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			sequenceFeature toReturn = bpModel.addNew(sequenceFeature.class, id);
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				toReturn.setXREF((Set<xref>) bpXrefs);
 			}
-			if (featureType != null) {
+			if (featureLocations != null)
+			{
+				toReturn.setFEATURE_LOCATION((Set<sequenceLocation>) featureLocations);
+			}
+			if (featureType != null)
+			{
+				toReturn.setFEATURE_TYPE((openControlledVocabulary) featureType);
+			}
+			return (T) toReturn;
+		}
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			EntityFeature toReturn = bpModel.addNew(EntityFeature.class, id);
+			// question: EntityFeature does not implement XReferrable
+			if (featureLocations != null)
+			{
+				toReturn.setFeatureLocation((Set<SequenceLocation>) featureLocations);
+			}
+			if (featureType != null)
+			{
 				// go through these hoops to keep EntryMapper from juggling different L3 ControlledVocabulary types
-				if (bpModel.contains(featureType)) bpModel.remove(featureType);
+				if (bpModel.contains(featureType))
+				{
+					bpModel.remove(featureType);
+				}
 				SequenceRegionVocabulary srv =
-					(SequenceRegionVocabulary)bpModel.addNew(SequenceRegionVocabulary.class, featureType.getRDFId());
-				replaceControlledVocabulary((ControlledVocabulary)featureType, (ControlledVocabulary)srv);
+						bpModel
+								.addNew(SequenceRegionVocabulary.class, featureType.getRDFId());
+				replaceControlledVocabulary((ControlledVocabulary) featureType,
+						srv);
 				toReturn.setFeatureLocationType(srv);
 			}
-			return (T)toReturn;
+			return (T) toReturn;
 		}
 
 		// should not get here
@@ -682,38 +921,48 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	/**
 	 * Gets a sequence location.
 	 *
-	 * @param seqLocationID String
-	 * @param beginSeqSiteID String
-	 * @param endSeqSiteID String
+	 * @param seqLocationID         String
+	 * @param beginSeqSiteID        String
+	 * @param endSeqSiteID          String
 	 * @param beginSequenceInterval long
-	 * @param endSequenceInterval long
+	 * @param endSequenceInterval   long
 	 * @return <T extends BioPAXElement>
 	 */
 	public <T extends BioPAXElement> T getSequenceLocation(String seqLocationID,
-														   String beginSeqSiteID, String endSeqSiteID,
-														   long beginSequenceInterval,
-														   long endSequenceInterval) {
+	                                                       String beginSeqSiteID,
+	                                                       String endSeqSiteID,
+	                                                       long beginSequenceInterval,
+	                                                       long endSequenceInterval)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			sequenceInterval toReturn = (sequenceInterval)bpModel.addNew(sequenceInterval.class, seqLocationID);
-			sequenceSite bpSequenceSiteBegin = (sequenceSite)bpModel.addNew(sequenceSite.class, beginSeqSiteID);
-			bpSequenceSiteBegin.setSEQUENCE_POSITION((int)beginSequenceInterval);
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			sequenceInterval toReturn =
+					bpModel.addNew(sequenceInterval.class, seqLocationID);
+			sequenceSite bpSequenceSiteBegin =
+					bpModel.addNew(sequenceSite.class, beginSeqSiteID);
+			bpSequenceSiteBegin.setSEQUENCE_POSITION((int) beginSequenceInterval);
 			toReturn.setSEQUENCE_INTERVAL_BEGIN(bpSequenceSiteBegin);
-			sequenceSite bpSequenceSiteEnd = (sequenceSite)bpModel.addNew(sequenceSite.class, endSeqSiteID);
-			bpSequenceSiteEnd.setSEQUENCE_POSITION((int)endSequenceInterval);
+			sequenceSite bpSequenceSiteEnd =
+					bpModel.addNew(sequenceSite.class, endSeqSiteID);
+			bpSequenceSiteEnd.setSEQUENCE_POSITION((int) endSequenceInterval);
 			toReturn.setSEQUENCE_INTERVAL_END(bpSequenceSiteEnd);
-			return (T)toReturn;
-			
+			return (T) toReturn;
+
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			SequenceInterval toReturn = (SequenceInterval)bpModel.addNew(SequenceInterval.class, seqLocationID);
-			SequenceSite bpSequenceSiteBegin = (SequenceSite)bpModel.addNew(SequenceSite.class, beginSeqSiteID);
-			bpSequenceSiteBegin.setSequencePosition((int)beginSequenceInterval);
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			SequenceInterval toReturn =
+					bpModel.addNew(SequenceInterval.class, seqLocationID);
+			SequenceSite bpSequenceSiteBegin =
+					bpModel.addNew(SequenceSite.class, beginSeqSiteID);
+			bpSequenceSiteBegin.setSequencePosition((int) beginSequenceInterval);
 			toReturn.setSequenceIntervalBegin(bpSequenceSiteBegin);
-			SequenceSite bpSequenceSiteEnd = (SequenceSite)bpModel.addNew(SequenceSite.class, endSeqSiteID);
-			bpSequenceSiteEnd.setSequencePosition((int)endSequenceInterval);
+			SequenceSite bpSequenceSiteEnd =
+					bpModel.addNew(SequenceSite.class, endSeqSiteID);
+			bpSequenceSiteEnd.setSequencePosition((int) endSequenceInterval);
 			toReturn.setSequenceIntervalEnd(bpSequenceSiteEnd);
-			return (T)toReturn;
+			return (T) toReturn;
 		}
 
 		// should not get here
@@ -726,13 +975,16 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * @param bpXref BioPAXElement
 	 * @return String
 	 */
-	public String getXrefID(BioPAXElement bpXref) {
+	public String getXrefID(BioPAXElement bpXref)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			return ((xref)bpXref).getID();
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			return ((xref) bpXref).getID();
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			return ((Xref)bpXref).getId();
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			return ((Xref) bpXref).getId();
 		}
 
 		// should not get here
@@ -743,18 +995,21 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * Sets given xref's db and id.
 	 *
 	 * @param xrefType BioPAXElement
-	 * @param db String
-	 * @param id String
+	 * @param db       String
+	 * @param id       String
 	 */
-	public void setXrefDBAndID(BioPAXElement bpXref, String db, String id) {
-		
-		if (bpLevel == BioPAXLevel.L2) {
-			((xref)bpXref).setDB(db);
-			((xref)bpXref).setID(id);
+	public void setXrefDBAndID(BioPAXElement bpXref, String db, String id)
+	{
+
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			((xref) bpXref).setDB(db);
+			((xref) bpXref).setID(id);
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			((Xref)bpXref).setDb(db);
-			((Xref)bpXref).setId(id);
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			((Xref) bpXref).setDb(db);
+			((Xref) bpXref).setId(id);
 		}
 	}
 
@@ -763,48 +1018,65 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 *
 	 * @param namespace String
 	 */
-	public void setNamespace(String namespace) {
+	public void setNamespace(String namespace)
+	{
 		bpModel.getNameSpacePrefixMap().put("", namespace);
 	}
 
 	/**
 	 * Creates a data source on the model.
 	 *
-	 * @param id String
-	 * @param name String
-	 * @param byXrefs  Set<? extends BioPAXElement>
+	 * @param id      String
+	 * @param name    String
+	 * @param byXrefs Set<? extends BioPAXElement>
 	 */
-	public void setModelDataSource(String id, String name, Set<? extends BioPAXElement> bpXrefs) {
+	public void setModelDataSource(String id, String name, Set<? extends BioPAXElement> bpXrefs)
+	{
 		setInteractionDataSource(null, id, name, bpXrefs);
 	}
 
 	/**
 	 * Creates a data source and adds to given interaction.
 	 *
-	 * @parma interaction Object
-	 * @param id String
+	 * @param id      String
 	 * @param bpXrefs Set<BioPAXElement>
+	 * @parma interaction Object
 	 */
-	public <T extends BioPAXElement> void setInteractionDataSource(T interaction, String id, String name, Set<? extends BioPAXElement> bpXrefs) {
+	public <T extends BioPAXElement> void setInteractionDataSource(T interaction, String id,
+	                                                               String name,
+	                                                               Set<? extends BioPAXElement> bpXrefs)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			dataSource dSource = (dataSource)bpModel.addNew(dataSource.class, id);
-			if (name != null) {
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			dataSource dSource = bpModel.addNew(dataSource.class, id);
+			if (name != null)
+			{
 				dSource.addNAME(name);
 			}
-			if (bpXrefs != null && bpXrefs.size() > 0) dSource.setXREF((Set<xref>)bpXrefs);
-			if (interaction != null) {
-				((physicalInteraction)interaction).addDATA_SOURCE(dSource);
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				dSource.setXREF((Set<xref>) bpXrefs);
+			}
+			if (interaction != null)
+			{
+				((physicalInteraction) interaction).addDATA_SOURCE(dSource);
 			}
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			Provenance provenance = (Provenance)bpModel.addNew(Provenance.class, id);
-			if (name != null) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			Provenance provenance = bpModel.addNew(Provenance.class, id);
+			if (name != null)
+			{
 				provenance.addName(name);
 			}
-			if (bpXrefs != null && bpXrefs.size() > 0) provenance.setXref((Set<Xref>)bpXrefs);
-			if (interaction != null) {
-				((MolecularInteraction)interaction).addDataSource(provenance);
+			if (bpXrefs != null && bpXrefs.size() > 0)
+			{
+				provenance.setXref((Set<Xref>) bpXrefs);
+			}
+			if (interaction != null)
+			{
+				((MolecularInteraction) interaction).addDataSource(provenance);
 			}
 		}
 	}
@@ -814,22 +1086,32 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * is a genetic interaction.
 	 *
 	 * @param geneticInteractionTerms List<String>
-     * @param bpEvidence Set<? extends BioPAXElement>
+	 * @param bpEvidence              Set<? extends BioPAXElement>
 	 * @return boolean
 	 */
 	public boolean isGeneticInteraction(final List<String> geneticInteractionTerms,
-										Set<? extends BioPAXElement> bpEvidence) {
+	                                    Set<? extends BioPAXElement> bpEvidence)
+	{
 
-		if (bpLevel == BioPAXLevel.L2) {
-			if (bpEvidence != null && bpEvidence.size() > 0) {
-				for (evidence e : (Set<evidence>)bpEvidence) {
+		if (bpLevel == BioPAXLevel.L2)
+		{
+			if (bpEvidence != null && bpEvidence.size() > 0)
+			{
+				for (evidence e : (Set<evidence>) bpEvidence)
+				{
 					Set<openControlledVocabulary> evidenceCodes = e.getEVIDENCE_CODE();
-					if (evidenceCodes != null) {
-						for (openControlledVocabulary ocv : evidenceCodes) {
+					if (evidenceCodes != null)
+					{
+						for (openControlledVocabulary ocv : evidenceCodes)
+						{
 							Set<String> terms = ocv.getTERM();
-							if (terms != null) {
-								for (String term : terms) {
-									if (geneticInteractionTerms != null && geneticInteractionTerms.contains(term.toLowerCase())) {
+							if (terms != null)
+							{
+								for (String term : terms)
+								{
+									if (geneticInteractionTerms != null &&
+									    geneticInteractionTerms.contains(term.toLowerCase()))
+									{
 										return true;
 									}
 								}
@@ -839,16 +1121,25 @@ public class BioPAXMapperImp implements BioPAXMapper {
 				}
 			}
 		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			if (bpEvidence != null && bpEvidence.size() > 0) {
-				for (Evidence e : (Set<Evidence>)bpEvidence) {
+		else if (bpLevel == BioPAXLevel.L3)
+		{
+			if (bpEvidence != null && bpEvidence.size() > 0)
+			{
+				for (Evidence e : (Set<Evidence>) bpEvidence)
+				{
 					Set<EvidenceCodeVocabulary> evidenceCodes = e.getEvidenceCode();
-					if (evidenceCodes != null) {
-						for (EvidenceCodeVocabulary cv : evidenceCodes) {
+					if (evidenceCodes != null)
+					{
+						for (EvidenceCodeVocabulary cv : evidenceCodes)
+						{
 							Set<String> terms = cv.getTerm();
-							if (terms != null) {
-								for (String term : terms) {
-									if (geneticInteractionTerms != null && geneticInteractionTerms.contains(term.toLowerCase())) {
+							if (terms != null)
+							{
+								for (String term : terms)
+								{
+									if (geneticInteractionTerms != null &&
+									    geneticInteractionTerms.contains(term.toLowerCase()))
+									{
 										return true;
 									}
 								}
@@ -865,15 +1156,24 @@ public class BioPAXMapperImp implements BioPAXMapper {
 	 * Replaces current cv with new one - only used in Level 3
 	 *
 	 * @param previous ControlledVocabulary
-	 * @param current ControlledVocababulary
+	 * @param current  ControlledVocababulary
 	 */
-	private void replaceControlledVocabulary(ControlledVocabulary previous, ControlledVocabulary current) {
+	private void replaceControlledVocabulary(ControlledVocabulary previous,
+	                                         ControlledVocabulary current)
+	{
 		Set<String> terms = previous.getTerm();
-		if (terms != null) current.setTerm(terms);
+		if (terms != null)
+		{
+			current.setTerm(terms);
+		}
 		Set<Xref> xrefs = previous.getXref();
-		if (xrefs != null) current.setXref(xrefs);
+		if (xrefs != null)
+		{
+			current.setXref(xrefs);
+		}
 
-		if (vocabularyL3.contains(previous)) {
+		if (vocabularyL3.contains(previous))
+		{
 			vocabularyL3.remove(previous);
 		}
 		vocabularyL3.add(current);

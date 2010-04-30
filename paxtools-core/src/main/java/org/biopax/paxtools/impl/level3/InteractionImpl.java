@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.apache.commons.logging.Log;
@@ -89,7 +88,7 @@ class InteractionImpl extends ProcessImpl implements Interaction
 		if(aParticipant!= null)
         {
             this.participant.add(aParticipant);
-            aParticipant.getParticipantsOf().add(this);
+            aParticipant.getParticipantOf().add(this);
         }
         else
         {
@@ -100,7 +99,7 @@ class InteractionImpl extends ProcessImpl implements Interaction
 	public void removeParticipant(Entity aParticipant)
 	{
 		this.participant.remove(aParticipant);
-		aParticipant.getParticipantsOf().remove(this);
+		aParticipant.getParticipantOf().remove(this);
 	}
     
 }

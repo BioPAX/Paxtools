@@ -16,7 +16,7 @@ class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalP
 	// utilityClass interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-
+	@Transient
     public Class<? extends BiochemicalPathwayStep> getModelInterface()
     {
         return BiochemicalPathwayStep.class;

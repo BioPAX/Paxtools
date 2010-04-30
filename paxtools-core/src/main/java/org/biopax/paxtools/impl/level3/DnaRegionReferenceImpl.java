@@ -5,7 +5,7 @@ import org.biopax.paxtools.model.level3.SequenceLocation;
 
 import javax.persistence.Transient;
 
-class DnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl<DnaRegionReference>
+class DnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl
 		implements DnaRegionReference
 {
 

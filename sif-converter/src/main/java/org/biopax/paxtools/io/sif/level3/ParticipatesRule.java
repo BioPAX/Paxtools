@@ -49,7 +49,7 @@ public class ParticipatesRule implements InteractionRuleL3
 	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference er,
 		boolean skipConversions, boolean skipInteractions, PhysicalEntity pe)
 	{
-		for (Interaction interaction : pe.getParticipantsOf())
+		for (Interaction interaction : pe.getParticipantOf())
 		{
 			BinaryInteractionType type;
 			if ((interaction instanceof Control))

@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  */
@@ -13,7 +14,7 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
 {
 	private String patoData;
 
-	@Override
+	@Override @Transient 
     public Class<? extends PhenotypeVocabulary> getModelInterface() {
         return PhenotypeVocabulary.class;
     }

@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
+import javax.persistence.Transient;
+
 /**
  */
 @javax.persistence.Entity
@@ -13,11 +15,8 @@ class MolecularInteractionImpl extends InteractionImpl
 {
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public MolecularInteractionImpl()
-    {
-    }
 
-
+	@Transient
     public Class<? extends MolecularInteraction> getModelInterface()
     {
         return MolecularInteraction.class;

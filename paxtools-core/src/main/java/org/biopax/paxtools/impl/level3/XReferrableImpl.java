@@ -41,14 +41,9 @@ abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 
 // -------------------------- OTHER METHODS --------------------------
 
+
+
 	@ManyToMany(targetEntity = XrefImpl.class)
-	public void addXref(Xref xref)
-	{
-		this.xref.add(xref);
-
-		xref.getXrefOf().add(this);
-	}
-
 	public Set<Xref> getXref()
 	{
 		return xref;
@@ -63,6 +58,13 @@ abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 	private void setXref(Set<Xref> xref)
 	{
 		this.xref = xref;
+	}
+
+	public void addXref(Xref xref)
+	{
+		this.xref.add(xref);
+
+		xref.getXrefOf().add(this);
 	}
 
 	@Override

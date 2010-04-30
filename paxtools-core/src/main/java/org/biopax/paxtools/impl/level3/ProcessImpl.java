@@ -15,6 +15,7 @@ abstract class ProcessImpl extends EntityImpl implements Process
 {
 // ------------------------------ FIELDS ------------------------------
 
+
 	private Set<Control> controlledOf;
 	private Set<PathwayStep> stepProcessOf;
 	private Set<Pathway> pathwayComponentOf;
@@ -48,10 +49,26 @@ abstract class ProcessImpl extends EntityImpl implements Process
 		return stepProcessOf;
 	}
 
-	@ManyToMany (targetEntity = ControlImpl.class, mappedBy = "controlled")
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "controlled")
 	public Set<Control> getControlledOf()
 	{
 		return controlledOf;
 	}
+
+	protected void setControlledOf(Set<Control> controlledOf)
+	{
+		this.controlledOf = controlledOf;
+	}
+
+	protected void setStepProcessOf(Set<PathwayStep> stepProcessOf)
+	{
+		this.stepProcessOf = stepProcessOf;
+	}
+
+	protected void setPathwayComponentOf(Set<Pathway> pathwayComponentOf)
+	{
+		this.pathwayComponentOf = pathwayComponentOf;
+	}
+
 
 }

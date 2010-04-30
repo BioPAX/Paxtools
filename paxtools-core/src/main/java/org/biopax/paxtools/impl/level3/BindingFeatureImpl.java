@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 @Entity
 class BindingFeatureImpl extends EntityFeatureImpl
@@ -20,6 +21,7 @@ class BindingFeatureImpl extends EntityFeatureImpl
 	//
 	////////////////////////////////////////////////////////////////////////////
 
+	@Transient
 	public Class<? extends BindingFeature> getModelInterface()
 	{
 		return BindingFeature.class;

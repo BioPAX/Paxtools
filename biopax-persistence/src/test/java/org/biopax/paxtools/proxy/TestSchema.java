@@ -20,11 +20,8 @@ public class TestSchema
                setProperty("hibernate.connection.autocommit", "true").
                setProperty("hibernate.cache.provider_class", "org.hibernate.cache.HashtableCacheProvider").
                setProperty("hibernate.hbm2ddl.auto", "create-drop").
-               setProperty("hibernate.show_sql", "true").
-               addClass(PhysicalEntityProxy.class);
-
-        SessionFactory sessionFactory = config.buildSessionFactory();
-
+               setProperty("hibernate.show_sql", "true");
+	       SessionFactory sessionFactory = config.buildSessionFactory();
     }
 
 }

@@ -17,10 +17,11 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	private CellularLocationVocabulary cellularLocation;
 	private Set<PhysicalEntity> memberPhysicalEntity;
 
-	private Set<Complex> ownerComplex;
+
+	private Set<Complex> componentOf;
 	private Set<EntityFeature> feature;
-	private Set<EntityFeature> noFeature;
-	private	Set<Control> controllerOf;
+	private Set<EntityFeature> notFeature;
+	private Set<Control> controllerOf;
 
 	private final Log log = LogFactory.getLog(PhysicalEntityImpl.class);
 	private Set<PhysicalEntity> memberPhysicalEntityOf;
@@ -28,23 +29,24 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public PhysicalEntityImpl()
 	{
 		feature = new HashSet<EntityFeature>();
-		noFeature = new HashSet<EntityFeature>();
+		notFeature = new HashSet<EntityFeature>();
 		controllerOf = new HashSet<Control>();
-		ownerComplex = new HashSet<Complex>();
+		componentOf = new HashSet<Complex>();
 		memberPhysicalEntityOf = new HashSet<PhysicalEntity>(); //TODO make generic?
 		this.memberPhysicalEntity = new HashSet<PhysicalEntity>();
 	}
 
-    @Transient
+	@Transient
 	public Class<? extends PhysicalEntity> getModelInterface()
 	{
 		return PhysicalEntity.class;
 	}
 
-	@ManyToMany(targetEntity = ComplexImpl.class , mappedBy = "component")
-    public Set<Complex> getComponentOf()
+
+	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
+	public Set<Complex> getComponentOf()
 	{
-		return ownerComplex;
+		return componentOf;
 	}
 
 	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
@@ -59,7 +61,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
-    public Set<EntityFeature> getFeature()
+	public Set<EntityFeature> getFeature()
 	{
 		return feature;
 	}
@@ -83,32 +85,32 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.feature = feature;
 	}
 
-    @ManyToMany(targetEntity = EntityFeatureImpl.class)
-    public Set<EntityFeature> getNotFeature()
+	@ManyToMany(targetEntity = EntityFeatureImpl.class)
+	public Set<EntityFeature> getNotFeature()
 	{
-		return noFeature;
+		return notFeature;
 	}
 
 
 	public void addNotFeature(EntityFeature feature)
 	{
 		checkAndAddFeature(feature, feature.getNotFeatureOf());
-		this.noFeature.add(feature);
+		this.notFeature.add(feature);
 	}
 
 	public void removeNotFeature(EntityFeature feature)
 	{
 		checkAndRemoveFeature(feature, feature.getNotFeatureOf());
-		this.noFeature.remove(feature);
+		this.notFeature.remove(feature);
 	}
 
 	protected void setNotFeature(Set<EntityFeature> featureSet)
 	{
-		this.noFeature = featureSet;
+		this.notFeature = featureSet;
 	}
 
 
-    @ManyToMany(targetEntity = PhysicalEntityImpl.class)
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
 		return this.memberPhysicalEntity;    //todo
@@ -117,14 +119,14 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void addMemberPhysicalEntity(PhysicalEntity newMember)
 	{
 		this.memberPhysicalEntity.add(newMember);
-        newMember.getMemberPhysicalEntityOf().add(this);
-	
+		newMember.getMemberPhysicalEntityOf().add(this);
+
 	}
 
 	public void removeMemberPhysicalEntity(PhysicalEntity oldMember)
 	{
 		this.memberPhysicalEntity.remove(oldMember); //todo
-        oldMember.getMemberPhysicalEntityOf().remove(this);
+		oldMember.getMemberPhysicalEntityOf().remove(this);
 	}
 
 	protected void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity
@@ -133,7 +135,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.memberPhysicalEntity = memberPhysicalEntity;             //todo
 	}
 
-    @ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 
@@ -164,16 +166,20 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	// --------------------- Interface BioPAXElement ---------------------
 
 
-
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		if(!(element instanceof PhysicalEntity)) return false;
+		if (!(element instanceof PhysicalEntity))
+		{
+			return false;
+		}
 		PhysicalEntity that = (PhysicalEntity) element;
-		return hasEquivalentCellularLocation(that) 
-			&& hasEquivalentFeatures(that)
-			&& SetEquivalanceChecker.isEquivalent(getMemberPhysicalEntity(), that.getMemberPhysicalEntity())
-			&& super.semanticallyEquivalent(element); // StackOverflow BUG fixed: was isEquivalent !
+		return hasEquivalentCellularLocation(that)
+		       && hasEquivalentFeatures(that)
+		       && SetEquivalanceChecker
+				.isEquivalent(getMemberPhysicalEntity(), that.getMemberPhysicalEntity())
+		       &&
+		       super.semanticallyEquivalent(element); // StackOverflow BUG fixed: was isEquivalent !
 	}
 
 	@Override
@@ -184,23 +190,24 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public boolean hasEquivalentCellularLocation(PhysicalEntity that)
 	{
-		boolean equivalency=false;
-		if(that!=null)
+		boolean equivalency = false;
+		if (that != null)
 		{
-			equivalency = (cellularLocation != null) 
-				? cellularLocation.isEquivalent(that.getCellularLocation()) 
-				: that.getCellularLocation() == null;
+			equivalency = (cellularLocation != null)
+			              ? cellularLocation.isEquivalent(that.getCellularLocation())
+			              : that.getCellularLocation() == null;
 		}
 		return equivalency;
 	}
 
 	public boolean hasEquivalentFeatures(PhysicalEntity that)
 	{
-		boolean equivalency=false;
-		if(that!=null)
+		boolean equivalency = false;
+		if (that != null)
 		{
-			equivalency = SetEquivalanceChecker.isEquivalent(this.getFeature(), that.getFeature()) &&
-		       SetEquivalanceChecker.isEquivalent(this.getNotFeature(), that.getNotFeature());
+			equivalency =
+					SetEquivalanceChecker.isEquivalent(this.getFeature(), that.getFeature()) &&
+					SetEquivalanceChecker.isEquivalent(this.getNotFeature(), that.getNotFeature());
 		}
 		return equivalency;
 	}
@@ -209,14 +216,30 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	{
 		int result = (cellularLocation != null ? cellularLocation.hashCode() : 0);
 		result = 31 * result + (feature != null ? feature.hashCode() : 0);
-		result = 31 * result + (noFeature != null ? noFeature.hashCode() : 0);
+		result = 31 * result + (notFeature != null ? notFeature.hashCode() : 0);
 		return result;
 
 	}
 
-
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;
 	}
+
+	protected void setControllerOf(Set<Control> controllerOf)
+	{
+		this.controllerOf = controllerOf;
+	}
+
+	protected void setMemberPhysicalEntityOf(Set<PhysicalEntity> memberPhysicalEntityOf)
+	{
+		this.memberPhysicalEntityOf = memberPhysicalEntityOf;
+	}
+
+	protected void setComponentOf(Set<Complex> componentOf)
+	{
+		this.componentOf = componentOf;
+	}
+
 }

@@ -91,6 +91,6 @@ public interface Entity
 	 *
 	 * @return a set of interactions that
 	 */
-	public Set<Interaction> getParticipantsOf();
+	public Set<Interaction> getParticipantOf();
 
 }

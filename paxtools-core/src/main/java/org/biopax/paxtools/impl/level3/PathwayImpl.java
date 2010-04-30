@@ -34,7 +34,6 @@ class PathwayImpl extends ProcessImpl implements Pathway
 // --------------------- Interface BioPAXElement ---------------------
 
 
-
 	@Transient
 	public Class<? extends Pathway> getModelInterface()
 	{
@@ -54,8 +53,8 @@ class PathwayImpl extends ProcessImpl implements Pathway
 
 	protected void setPathwayComponent(Set<Process> pathwayComponent)
 	{
-        this.pathwayComponent = pathwayComponent;
-    }
+		this.pathwayComponent = pathwayComponent;
+	}
 
 	public void addPathwayComponent(Process component)
 	{
@@ -69,7 +68,7 @@ class PathwayImpl extends ProcessImpl implements Pathway
 		component.getPathwayComponentOf().remove(this);
 	}
 
-	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayComponentsOf")
+	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")
 	public Set<PathwayStep> getPathwayOrder()
 	{
 		return pathwayOrder;
@@ -83,18 +82,15 @@ class PathwayImpl extends ProcessImpl implements Pathway
 	public void addPathwayOrder(PathwayStep pathwayOrder)
 	{
 		this.pathwayOrder.add(pathwayOrder);
-		pathwayOrder.getPathwayOrdersOf().add(this);
+		((PathwayStepImpl) pathwayOrder).setPathwayOrderOf(this);
 
 	}
 
 	public void removePathwayOrder(PathwayStep pathwayOrder)
 	{
 		this.pathwayOrder.remove(pathwayOrder);
-		pathwayOrder.getPathwayOrdersOf().remove(this);
-		
+		((PathwayStepImpl) pathwayOrder).setPathwayOrderOf(null);
 	}
-
-
 
 
 	@ManyToOne(targetEntity = BioSourceImpl.class)
@@ -108,9 +104,14 @@ class PathwayImpl extends ProcessImpl implements Pathway
 		this.organism = organism;
 	}
 
-
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController")
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;
+	}
+
+	protected void setControllerOf(Set<Control> controllerOf)
+	{
+		this.controllerOf = controllerOf;
 	}
 }

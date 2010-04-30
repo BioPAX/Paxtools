@@ -7,7 +7,6 @@ import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.Node;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +49,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	protected void initInteractions()
 	{
-		for (Conversion conv : getRelatedConversions(pe.getParticipantsOf()))
+		for (Conversion conv : getRelatedConversions(pe.getParticipantOf()))
 		{
 			graph.getGraphObject(conv);
 		}
