@@ -22,13 +22,13 @@ public enum BinaryInteractionType
 			"The first entity is a component of the second entity, which is a complex.  " +
 			"This interaction is transient in the sense that A component_of B and B component_of " +
 			"C implies A component_of C.  " +
-			"This interaction is directed.", false),
+			"This interaction is directed.", true),
 
 	IN_SAME_COMPONENT(
 			"Two entities belong to the same molecular complex.  This does not necessarily " +
 			"mean they interact directly.  In a complex with n molecules, this rule will create a " +
 			"clique composed of n(n-1)/2 interactions.  " +
-			"This interaction is directed.", true),
+			"This interaction is undirected.", false),
 
 	CO_CONTROL(
 			"This rule infers an interaction " +
