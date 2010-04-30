@@ -6,9 +6,11 @@ import org.biopax.paxtools.model.level3.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@javax.persistence.Entity
 class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 {
 
@@ -33,20 +35,19 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.memberPhysicalEntity = new HashSet<PhysicalEntity>();
 	}
 
-
+    @Transient
 	public Class<? extends PhysicalEntity> getModelInterface()
 	{
 		return PhysicalEntity.class;
 	}
 
-	//--------------------------------------------------------Section:In-Complex
-	//TODO
-	public Set<Complex> getComponentOf()
+	@ManyToMany(targetEntity = ComplexImpl.class , mappedBy = "component")
+    public Set<Complex> getComponentOf()
 	{
 		return ownerComplex;
 	}
 
-	//-----------------------------------------------Section: Cellular Location
+	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
 	public CellularLocationVocabulary getCellularLocation()
 	{
 		return cellularLocation;
@@ -57,8 +58,8 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
-	//------------------------------------------------------Section:Modified at
-	public Set<EntityFeature> getFeature()
+	@ManyToMany(targetEntity = EntityFeatureImpl.class)
+    public Set<EntityFeature> getFeature()
 	{
 		return feature;
 	}
@@ -77,12 +78,13 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
-	public void setFeature(Set<EntityFeature> feature)
+	protected void setFeature(Set<EntityFeature> feature)
 	{
 		this.feature = feature;
 	}
 
-	public Set<EntityFeature> getNotFeature()
+    @ManyToMany(targetEntity = EntityFeatureImpl.class)
+    public Set<EntityFeature> getNotFeature()
 	{
 		return noFeature;
 	}
@@ -90,44 +92,48 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public void addNotFeature(EntityFeature feature)
 	{
-		checkAndAddFeature(feature, feature.getNoFeatureOf());
+		checkAndAddFeature(feature, feature.getNotFeatureOf());
 		this.noFeature.add(feature);
 	}
 
 	public void removeNotFeature(EntityFeature feature)
 	{
-		checkAndRemoveFeature(feature, feature.getNoFeatureOf());
+		checkAndRemoveFeature(feature, feature.getNotFeatureOf());
 		this.noFeature.remove(feature);
 	}
 
-	public void setNotFeature(Set<EntityFeature> featureSet)
+	protected void setNotFeature(Set<EntityFeature> featureSet)
 	{
 		this.noFeature = featureSet;
 	}
 
+
+    @ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
 		return this.memberPhysicalEntity;    //todo
 	}
 
-	public void addMemberPhysicalEntity(PhysicalEntity memberPhysicalEntity)
+	public void addMemberPhysicalEntity(PhysicalEntity newMember)
 	{
-		this.memberPhysicalEntity.add(memberPhysicalEntity);
+		this.memberPhysicalEntity.add(newMember);
+        newMember.getMemberPhysicalEntityOf().add(this);
 	
 	}
 
-	public void removeMemberPhysicalEntity(PhysicalEntity memberPhysicalEntity)
+	public void removeMemberPhysicalEntity(PhysicalEntity oldMember)
 	{
-		this.memberPhysicalEntity.remove(memberPhysicalEntity); //todo
+		this.memberPhysicalEntity.remove(oldMember); //todo
+        oldMember.getMemberPhysicalEntityOf().remove(this);
 	}
 
-	public void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity
+	protected void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity
 	)
 	{
 		this.memberPhysicalEntity = memberPhysicalEntity;             //todo
 	}
 
-	@Override
+    @ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 
@@ -139,7 +145,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	                                Set<PhysicalEntity> target)
 	{
 		if (feature.getFeatureOf().contains(this) ||
-		    feature.getNoFeatureOf().contains(this))
+		    feature.getNotFeatureOf().contains(this))
 		{
 			log.warn("Redundant attempt to set the inverse link!");
 
@@ -151,7 +157,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	                                   Set<PhysicalEntity> target)
 	{
 		assert feature.getFeatureOf().contains(this) ^
-		       feature.getNoFeatureOf().contains(this);
+		       feature.getNotFeatureOf().contains(this);
 		target.remove(this);
 	}
 

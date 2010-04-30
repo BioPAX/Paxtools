@@ -2,16 +2,15 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.TemplateReactionRegulation;
 
-/**
- * TODO:Class description
- * User: demir
- * Date: Aug 18, 2008
- * Time: 10:13:08 AM
- */
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
+@Entity
 public class TemplateReactionRegulationImpl extends ControlImpl implements TemplateReactionRegulation
 {
 	
-	public Class<? extends TemplateReactionRegulation> getModelInterface()
+	@Transient
+    public Class<? extends TemplateReactionRegulation> getModelInterface()
 	{
 		return TemplateReactionRegulation.class;
 	}

@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.TissueVocabulary;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  */
@@ -10,7 +11,7 @@ import javax.persistence.Entity;
 public class TissueVocabularyImpl extends ControlledVocabularyImpl
 	implements TissueVocabulary
 {
-    @Override
+    @Override @Transient
     public Class<? extends TissueVocabulary> getModelInterface() {
         return TissueVocabulary.class;
     }

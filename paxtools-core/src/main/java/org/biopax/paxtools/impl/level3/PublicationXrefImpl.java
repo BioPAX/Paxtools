@@ -3,9 +3,14 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PublicationXref;
 
+import javax.persistence.Basic;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 class PublicationXrefImpl extends XrefImpl implements PublicationXref
 {
 	private String title;
@@ -24,12 +29,8 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 		this.author = new HashSet<String>();
 	}
 
-	//
-	// BioPAXElement interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
-
-	public Class<? extends PublicationXref> getModelInterface()
+	@Transient
+    public Class<? extends PublicationXref> getModelInterface()
 	{
 		return PublicationXref.class;
 	}
@@ -40,7 +41,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	////////////////////////////////////////////////////////////////////////////
 
     // Property author
-
+    @ElementCollection
 	public Set<String> getAuthor()
 	{
 		return author;
@@ -61,8 +62,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 		this.author.remove(author);
 	}
 
-    // Property source
-
+    @ElementCollection
 	public Set<String> getSource()
 	{
 		return source;
@@ -83,9 +83,8 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 		this.source.remove(source);
 	}
 
-    // Property title
-
-	public String getTitle()
+    @Basic
+ 	public String getTitle()
 	{
 		return title;
 	}
@@ -95,8 +94,8 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 		this.title = title;
 	}
 
-    // Property url
-
+        // Property url
+    @ElementCollection
 	public Set<String> getUrl()
 	{
 		return url;
@@ -118,7 +117,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     // Property year
-
+    @Basic
 	public int getYear()
 	{
 		return year;

@@ -4,12 +4,18 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
 import org.biopax.paxtools.model.BioPAXElement;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+@Entity
 class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 {
 	private float stoichiometricCoefficient = UNKNOWN_FLOAT;
 	private PhysicalEntity physicalEntity;
 
 
+    @Transient
 	public Class<? extends Stoichiometry> getModelInterface()
 	{
 		return Stoichiometry.class;
@@ -66,7 +72,8 @@ class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 		return (int) (physicalEntity.equivalenceCode() + 23 * stoichiometricCoefficient);
 	}
 
-	public PhysicalEntity getPhysicalEntity()
+	@ManyToOne(targetEntity = PhysicalEntityImpl.class)
+    public PhysicalEntity getPhysicalEntity()
 	{
 		return physicalEntity;
 	}
@@ -76,6 +83,7 @@ class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 		this.physicalEntity = PhysicalEntity;
 	}
 
+    @Basic
 	public float getStoichiometricCoefficient()
 	{
 		return stoichiometricCoefficient;

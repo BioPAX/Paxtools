@@ -2,15 +2,11 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 
+import javax.persistence.*;
 import java.util.Set;
 import java.util.HashSet;
 
-/**
- * TODO:Class description
- * User: demir
- * Date: Aug 14, 2008
- * Time: 7:54:51 PM
- */
+@javax.persistence.Entity
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
     private Set<NucleicAcid> initiationRegion;
@@ -21,23 +17,21 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
         this.product = new HashSet<PhysicalEntity>();
         this.initiationRegion =  new HashSet<NucleicAcid>();
     }
-	public Class<? extends TemplateReaction> getModelInterface()
+	@Transient
+    public Class<? extends TemplateReaction> getModelInterface()
 	{
 		return TemplateReaction.class;
 	}
 
-
+    @ManyToMany(targetEntity = PhysicalEntityImpl.class) //Todo: make sequence entity?
     public Set<PhysicalEntity> getProduct()
     {
         return product;
     }
 
-    public void setProduct(Set<PhysicalEntity> product)
+
+    protected void setProduct(Set<PhysicalEntity> product)
     {
-        if (product == null)
-        {
-            product = new HashSet<PhysicalEntity>();
-        }
         this.product = product;
     }
 
@@ -53,32 +47,8 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
         this.product.remove(product);
     }
 
-     public Set<NucleicAcid> getInitiationRegion()
-    {
-        return initiationRegion;
-    }
 
-    public void setInitiationRegion(Set<NucleicAcid> initiationRegion)
-    {
-        if (initiationRegion == null)
-        {
-            initiationRegion = new HashSet<NucleicAcid>();
-        }
-        this.initiationRegion = initiationRegion;
-    }
-
-    public void addInitiationRegion(NucleicAcid initiationRegion)
-    {
-        this.initiationRegion.add(initiationRegion);
-        super.addParticipant(initiationRegion);
-    }
-
-    public void removeInitiationRegion(NucleicAcid initiationRegion)
-    {
-        super.removeParticipant(initiationRegion);
-        this.initiationRegion.remove(initiationRegion);
-    }
-
+    @ManyToOne(targetEntity = NucleicAcidImpl.class)
     public NucleicAcid getTemplate()
      {
          return this.template;
@@ -94,6 +64,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
          super.addParticipant(template);
      }
 
+    @Enumerated
 	public TemplateDirectionType getTemplateDirection()
 	{
 		return templateDirection;

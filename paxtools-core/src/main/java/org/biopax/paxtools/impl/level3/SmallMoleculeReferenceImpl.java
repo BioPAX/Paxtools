@@ -4,6 +4,12 @@ import org.biopax.paxtools.model.level3.ChemicalStructure;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 import org.biopax.paxtools.model.BioPAXElement;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+@Entity
 class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMoleculeReference
 {
 	private String chemicalFormula;
@@ -16,19 +22,13 @@ class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMol
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @Override
+    @Override  @Transient
 	public Class<? extends SmallMoleculeReference> getModelInterface()
 	{
 		return SmallMoleculeReference.class;
 	}
 
-	//
-	// SmallMoleculeReference interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
-
-    // Property CHEMICAL-FORMULA
-
+    @Basic
     public String getChemicalFormula()
 	{
 		return chemicalFormula;
@@ -40,7 +40,7 @@ class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMol
 	}
 
     // Property MOLECULAR-WEIGHT
-
+    @Basic
     public float getMolecularWeight()
 	{
 		return molecularWeight;
@@ -52,7 +52,7 @@ class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMol
 	}
 
     // Property structure
-
+    @OneToOne(targetEntity = ChemicalStructureImpl.class)
     public ChemicalStructure getStructure()
 	{
 		return structure;

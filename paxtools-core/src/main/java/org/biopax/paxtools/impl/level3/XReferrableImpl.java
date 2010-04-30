@@ -19,7 +19,7 @@ import static org.biopax.paxtools.model.SetEquivalanceChecker.isEquivalentInters
  * @author Emek Demir
  */
 @Entity
-public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
+abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
 // ------------------------------ FIELDS ------------------------------
 

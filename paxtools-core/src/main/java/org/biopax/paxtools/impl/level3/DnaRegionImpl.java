@@ -7,7 +7,7 @@ import javax.persistence.Transient;
 
 /**
  */
-class DnaRegionImpl extends SimplePhysicalEntityImpl implements DnaRegion
+class DnaRegionImpl extends NucleicAcidImpl implements DnaRegion
 {
 // ------------------------ INTERFACE METHODS ------------------------
 

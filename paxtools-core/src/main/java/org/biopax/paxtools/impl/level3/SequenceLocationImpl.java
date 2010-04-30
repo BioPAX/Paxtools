@@ -1,10 +1,14 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.SequenceLocation;
+import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
+@javax.persistence.Entity
 class SequenceLocationImpl extends L3ElementImpl implements
                                                               SequenceLocation
 {
@@ -23,7 +27,7 @@ class SequenceLocationImpl extends L3ElementImpl implements
 	// BioPAXElement interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-
+    @Transient
 	public Class<? extends SequenceLocation> getModelInterface()
 	{
 		return SequenceLocation.class;
@@ -35,7 +39,7 @@ class SequenceLocationImpl extends L3ElementImpl implements
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property Region-TYPE
-
+    @ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class)
 	public Set<SequenceRegionVocabulary> getRegionType()
 	{
 		return regionType;

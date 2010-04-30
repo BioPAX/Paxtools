@@ -7,35 +7,22 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.GenerationType.*;
-
+/**
+ **/
 
 @Entity
-//@Inheritance(strategy = InheritanceType.SINGLE_TABLE) TODO: decide on inheritance strategy
 abstract class L3ElementImpl extends BioPAXElementImpl
         implements Level3Element
 {
     private Set<String> comment;
-	private Long proxyId = 0L;
+    private Long proxyId;
 
-	L3ElementImpl()
+    L3ElementImpl()
     {
-	    comment = new HashSet<String>();
+        this.comment = new HashSet<String>();
     }
 
-
-	@Id
-    @GeneratedValue(strategy= AUTO)
-    @Column(name="proxy_id")
-	private Long getProxyId() {
-		return proxyId;
-	}
-
-	private void setProxyId(Long value) {
-		proxyId = value;
-	}
-
-	@ElementCollection
+    @ElementCollection
     public Set<String> getComment()
     {
         return this.comment;
@@ -46,30 +33,24 @@ abstract class L3ElementImpl extends BioPAXElementImpl
         this.comment = comment;
     }
 
-    public void addComment(String comment)
+    public void addComment(String COMMENT)
     {
-        this.comment.add(comment);
+        this.comment.add(COMMENT);
     }
 
-    public void removeComment(String comment)
+    public void removeComment(String COMMENT)
     {
-        this.comment.remove(comment);
+        this.comment.remove(COMMENT);
     }
 
-	@Override
-	public String toString()
-	{
-		return "L3ElementImpl{" +
-		       "comment=" + comment +
-		       ", proxyId=" + proxyId +
-		       '}';
-	}
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long getProxyId() {
+        return proxyId;
+    }
 
-	@Override
-	@Column(nullable=false, unique=true)
-	public String getRDFId()
-	{
-	    return super.getRDFId();
-	}
+    private void setProxyId(Long value) {
+        proxyId = value;
+    }
 
 }

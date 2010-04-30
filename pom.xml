@@ -23,6 +23,7 @@
         <module>biopax-converter</module>
         <module>psimi-converter</module>
         <module>paxtools-main</module>
+        <module>cpath-dao</module>
     </modules>
 
     <developers>
@@ -126,6 +127,7 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-    
+    <distributionManagement>
+</distributionManagement>
 </project>
 

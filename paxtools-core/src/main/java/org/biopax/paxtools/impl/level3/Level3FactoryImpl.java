@@ -158,12 +158,7 @@ public class Level3FactoryImpl extends BioPAXFactoryImpl implements Level3Factor
 		return new DnaReferenceImpl();
 	}
 
-	public EntityReference createEntityReference()
-	{
-		return new EntityReferenceImpl();
-	}
 
-    
 
     public RnaReference createRnaReference()
 	{

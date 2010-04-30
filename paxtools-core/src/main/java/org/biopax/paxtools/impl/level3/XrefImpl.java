@@ -3,10 +3,15 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.hibernate.annotations.ManyToAny;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 abstract class XrefImpl extends L3ElementImpl implements Xref
 {
 
@@ -23,11 +28,6 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 	{
 		this.xrefOf = new HashSet<XReferrable>();
 	}
-
-	//
-	// BioPAXElement interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement other)
@@ -62,14 +62,8 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 		return result;
 	}
 
-	//
-	// Xref interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
-
-   // Property db
-
-	public String getDb()
+	@Basic
+    public String getDb()
 	{
 		return db;
 	}
@@ -79,9 +73,9 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.db = db;
 	}
 
-    // Property db-VERSION
 
-	public String getDbVersion()
+	@Basic
+    public String getDbVersion()
 	{
 		return dbVersion;
 	}
@@ -91,6 +85,7 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.dbVersion = dbVersion;
 	}
 
+    @Basic
 	public String getIdVersion()
 	{
 		return idVersion;
@@ -102,7 +97,7 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
     // Property id
-
+    @Basic
 	public String getId()
 	{
 		return id;
@@ -113,8 +108,7 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.id = id;
 	}
 
-	// Inverse of property Xref
-
+	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()
 	{
 		return xrefOf;

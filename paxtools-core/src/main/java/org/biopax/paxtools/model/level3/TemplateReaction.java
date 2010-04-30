@@ -14,19 +14,6 @@ public interface TemplateReaction extends Interaction {
 	void removeProduct(PhysicalEntity product);
 
 
-
-
-	// Property Initiation Region
-
-	public Set<NucleicAcid> getInitiationRegion();
-
-	void addInitiationRegion(NucleicAcid initiationRegion);
-
-	void removeInitiationRegion(NucleicAcid initiationRegion);
-
-
-
-
 	// Property template
 
 	public NucleicAcid getTemplate();

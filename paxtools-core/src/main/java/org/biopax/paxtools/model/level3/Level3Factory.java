@@ -4,97 +4,94 @@ import org.biopax.paxtools.model.BioPAXFactory;
 
 /**
  */
-public interface Level3Factory extends BioPAXFactory
-{
-	public BiochemicalReaction createBiochemicalReaction();
+public interface Level3Factory extends BioPAXFactory {
+    public BiochemicalReaction createBiochemicalReaction();
 
-	public BioSource createBioSource();
+    public BioSource createBioSource();
 
-	public Catalysis createCatalysis();
+    public Catalysis createCatalysis();
 
-	public ChemicalStructure createChemicalStructure();
+    public ChemicalStructure createChemicalStructure();
 
-	public Complex createComplex();
+    public Complex createComplex();
 
-	public ComplexAssembly createComplexAssembly();
+    public ComplexAssembly createComplexAssembly();
 
     public Degradation createDegradation();
 
     public Stoichiometry createStoichiometry();
 
-	public Score createScore();
+    public Score createScore();
 
-	public Control createControl();
+    public Control createControl();
 
-	public Conversion createConversion();
+    public Conversion createConversion();
 
-	public ModificationFeature createModificationFeature();
+    public ModificationFeature createModificationFeature();
 
-	public BindingFeature createBindingFeature();
+    public BindingFeature createBindingFeature();
 
-	public Provenance createProvenance();
+    public Provenance createProvenance();
 
-	public DeltaG createDeltaG();
+    public DeltaG createDeltaG();
 
-	public BiochemicalPathwayStep createBiochemicalPathwayStep();
+    public BiochemicalPathwayStep createBiochemicalPathwayStep();
 
-	public Dna createDna();
+    public Dna createDna();
 
-	public EntityFeature createEntityFeature();
+    public EntityFeature createEntityFeature();
 
-	public Evidence createEvidence();
+    public Evidence createEvidence();
 
-	public ExperimentalForm createExperimentalForm();
+    public ExperimentalForm createExperimentalForm();
 
     public Gene createGene();
 
     public Interaction createInteraction();
 
-	public KPrime createKPrime();
+    public KPrime createKPrime();
 
-	public Modulation createModulation();
+    public Modulation createModulation();
 
-	public ControlledVocabulary createControlledVocabulary();
+    public ControlledVocabulary createControlledVocabulary();
 
-	public Pathway createPathway();
+    public Pathway createPathway();
 
-	public PathwayStep createPathwayStep();
+    public PathwayStep createPathwayStep();
 
-	public PhysicalEntity createPhysicalEntity();
+    public PhysicalEntity createPhysicalEntity();
 
-	public MolecularInteraction createMolecularInteraction();
+    public MolecularInteraction createMolecularInteraction();
 
-	public Protein createProtein();
+    public Protein createProtein();
 
-	public PublicationXref createPublicationXref();
+    public PublicationXref createPublicationXref();
 
-	public EntityReference createEntityReference();
+    public DnaReference createDnaReference();
 
-	public DnaReference createDnaReference();
+    public RnaReference createRnaReference();
 
-	public RnaReference createRnaReference();
+    public SmallMoleculeReference createSmallMoleculeReference();
 
-	public SmallMoleculeReference createSmallMoleculeReference();
+    public ProteinReference createProteinReference();
 
-	public ProteinReference createProteinReference();
+    public RelationshipXref createRelationshipXref();
 
-	public RelationshipXref createRelationshipXref();
+    public Rna createRna();
 
-	public Rna createRna();
+    public SequenceInterval createSequenceInterval();
 
-	public SequenceInterval createSequenceInterval();
+    public SequenceLocation createSequenceLocation();
 
-	public SequenceLocation createSequenceLocation();
+    public SequenceSite createSequenceSite();
 
-	public SequenceSite createSequenceSite();
+    public SmallMolecule createSmallMolecule();
 
-	public SmallMolecule createSmallMolecule();
+    public Transport createTransport();
 
-	public Transport createTransport();
+    public TransportWithBiochemicalReaction createTransportWithBiochemicalReaction();
 
-	public TransportWithBiochemicalReaction createTransportWithBiochemicalReaction();
-
-	public UnificationXref createUnificationXref();
+    public UnificationXref createUnificationXref();
 
     public TissueVocabulary createTissueVocabulary();
 
@@ -106,10 +103,10 @@ public interface Level3Factory extends BioPAXFactory
 
     public EvidenceCodeVocabulary createEvidenceCodeVocabulary();
 
-    public EntityReferenceTypeVocabulary createEntityReferenceTypeVocabulary();
-
     public SequenceRegionVocabulary createSequenceRegionVocabulary();
+
     public SequenceModificationVocabulary createSequenceModificationVocabulary();
+
     public RelationshipTypeVocabulary createRelationshipTypeVocabulary();
 
     public CovalentBindingFeature createDisulfideFeature();
@@ -123,13 +120,13 @@ public interface Level3Factory extends BioPAXFactory
     public DnaRegion createDnaRegion();
 
     public DnaRegionReference createDnaRegionReference();
-    
+
     public RnaRegion createRnaRegion();
 
     public RnaRegionReference createRnaRegionReference();
-    
+
     public InteractionVocabulary createInteractionVocabulary();
-    
+
     public PhenotypeVocabulary createPhenotypeVocabulary();
 
     public CovalentBindingFeature createCovalentBindingFeature();

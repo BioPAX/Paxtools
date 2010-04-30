@@ -4,20 +4,21 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PositionStatusType;
 import org.biopax.paxtools.model.level3.SequenceSite;
 
-/**
- */
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.Transient;
+
+@Entity
 class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
 {
 
 	private PositionStatusType positionStatus;
 	private int sequencePosition = UNKNOWN_INT;
 
-	//
-	// utilityClass (BioPAXElement) interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
 
-	public Class<? extends SequenceSite> getModelInterface()
+	@Transient
+    public Class<? extends SequenceSite> getModelInterface()
 	{
 		return SequenceSite.class;
 	}
@@ -46,7 +47,7 @@ class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property POSITION-STATUS
-
+    @Enumerated
 	public PositionStatusType getPositionStatus()
 	{
 		return positionStatus;
@@ -58,7 +59,7 @@ class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
 	}
 
     // Property sequence-POSITION
-
+    @Basic
 	public int getSequencePosition()
 	{
 		return sequencePosition;

@@ -4,24 +4,26 @@ import org.biopax.paxtools.model.level3.Score;
 import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.Xref;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.util.Set;
 
+@Entity
 class ScoreImpl extends XReferrableImpl implements Score
 {
 
 	private String value;
     private Provenance scoreSource;
 
-    public ScoreImpl()
-    {
-    }
-
     //
 	// BioPAXElement interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	public Class<? extends Score> getModelInterface()
+	@Transient
+    public Class<? extends Score> getModelInterface()
 	{
 		return Score.class;
 	}
@@ -33,7 +35,8 @@ class ScoreImpl extends XReferrableImpl implements Score
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	public String getValue()
+	@Basic
+    public String getValue()
 	{
 		return value;
 	}
@@ -43,6 +46,7 @@ class ScoreImpl extends XReferrableImpl implements Score
 		this.value = value;
 	}
 
+    @ManyToOne(targetEntity = ProvenanceImpl.class)
     public Provenance getScoreSource()
     {
         return scoreSource;
@@ -53,7 +57,6 @@ class ScoreImpl extends XReferrableImpl implements Score
         this.scoreSource = scoreSource;
     }
 
-// ------------------------ INTERFACE METHODS ------------------------
 
 
 }

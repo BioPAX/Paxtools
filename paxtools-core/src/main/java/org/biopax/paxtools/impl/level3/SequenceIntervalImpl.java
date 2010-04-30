@@ -4,6 +4,11 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.SequenceInterval;
 import org.biopax.paxtools.model.level3.SequenceSite;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+@Entity
 class SequenceIntervalImpl extends SequenceLocationImpl implements
                                                                SequenceInterval
 {
@@ -15,7 +20,7 @@ class SequenceIntervalImpl extends SequenceLocationImpl implements
 	// utilityClass (BioPAXElement) interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-
+    @Transient
 	public Class<? extends SequenceInterval> getModelInterface()
 	{
 		return SequenceInterval.class;
@@ -50,7 +55,7 @@ class SequenceIntervalImpl extends SequenceLocationImpl implements
 	// sequenceInterval interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-
+    @OneToOne(targetEntity = SequenceSiteImpl.class)
 	public SequenceSite getSequenceIntervalBegin()
 	{
 		return sequenceIntervalBegin;
@@ -61,6 +66,7 @@ class SequenceIntervalImpl extends SequenceLocationImpl implements
 		this.sequenceIntervalBegin = sequenceIntervalBegin;
 	}
 
+    @OneToOne(targetEntity = SequenceSiteImpl.class)
 	public SequenceSite getSequenceIntervalEnd()
 	{
 		return sequenceIntervalEnd;

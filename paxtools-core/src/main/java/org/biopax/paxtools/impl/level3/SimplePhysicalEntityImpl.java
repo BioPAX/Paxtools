@@ -7,16 +7,11 @@ import org.biopax.paxtools.model.BioPAXElement;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-/**
- *
- */
 @Entity
 abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 		implements SimplePhysicalEntity
 {
 	private EntityReference entityReference;
-
-	//--------------------------------------------------Section:Reference Entity
 
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	public EntityReference getEntityReference()
@@ -53,5 +48,4 @@ abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 					: getEntityReference() == null
 				) && super.semanticallyEquivalent(element);
 	}
-	
 }

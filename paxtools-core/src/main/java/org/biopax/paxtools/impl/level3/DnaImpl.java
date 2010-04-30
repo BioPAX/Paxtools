@@ -7,7 +7,7 @@ import javax.persistence.Transient;
 
 
 @Entity
-class DnaImpl extends SimplePhysicalEntityImpl implements Dna
+class DnaImpl extends NucleicAcidImpl implements Dna
 {
 // ------------------------ INTERFACE METHODS ------------------------
 

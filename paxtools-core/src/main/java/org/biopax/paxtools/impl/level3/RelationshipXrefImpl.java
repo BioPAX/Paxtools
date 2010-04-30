@@ -4,6 +4,11 @@ import org.biopax.paxtools.model.level3.RelationshipXref;
 import org.biopax.paxtools.model.level3.RelationshipTypeVocabulary;
 import org.biopax.paxtools.model.BioPAXElement;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+@Entity
 class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 {
 
@@ -14,7 +19,8 @@ class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	public Class<? extends RelationshipXref> getModelInterface()
+	@Transient
+    public Class<? extends RelationshipXref> getModelInterface()
 	{
 		return RelationshipXref.class;
 	}
@@ -24,6 +30,7 @@ class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
+    @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class)
 	public RelationshipTypeVocabulary getRelationshipType()
 	{
 		return relationshipType;

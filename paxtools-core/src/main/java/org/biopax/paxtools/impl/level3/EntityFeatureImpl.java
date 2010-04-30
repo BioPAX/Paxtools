@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
 
@@ -24,8 +25,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	private Set<EntityFeature> memberFeatureOf;
 
 
-	@Entity
-	public EntityFeatureImpl()
+	EntityFeatureImpl()
 	{
 		evidence = new HashSet<Evidence>();
 		featuredEntities = new HashSet<PhysicalEntity>();
