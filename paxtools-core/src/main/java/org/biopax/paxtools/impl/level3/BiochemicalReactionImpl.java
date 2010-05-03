@@ -3,8 +3,10 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.bridge.builtin.StringBridge;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -123,6 +125,7 @@ class BiochemicalReactionImpl extends ConversionImpl
 
 	@ElementCollection
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_EC_NUMBER, index=Index.TOKENIZED)
+	@FieldBridge(impl=StringBridge.class)
 	public Set<String> getECNumber()
 	{
 		return eCNumber;

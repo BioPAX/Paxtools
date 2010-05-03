@@ -4,8 +4,10 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PublicationXref;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.bridge.builtin.StringBridge;
 
 import javax.persistence.Basic;
 import javax.persistence.ElementCollection;
@@ -48,6 +50,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
     // Property author
     @ElementCollection
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @FieldBridge(impl=StringBridge.class)
 	public Set<String> getAuthor()
 	{
 		return author;
@@ -70,6 +73,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
     @ElementCollection
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @FieldBridge(impl=StringBridge.class)
 	public Set<String> getSource()
 	{
 		return source;
@@ -104,6 +108,8 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
         // Property url
     @ElementCollection
+    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @FieldBridge(impl=StringBridge.class)
 	public Set<String> getUrl()
 	{
 		return url;
@@ -126,6 +132,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
     // Property year
     @Basic
+    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public int getYear()
 	{
 		return year;

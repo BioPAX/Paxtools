@@ -5,7 +5,9 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.bridge.builtin.StringBridge;
 
 
 import javax.persistence.ElementCollection;
@@ -65,6 +67,7 @@ abstract class EntityImpl extends NamedImpl implements Entity
 
 	@ElementCollection
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
+	@FieldBridge(impl=StringBridge.class)
 	public Set<String> getAvailability()
 	{
 		return availability;

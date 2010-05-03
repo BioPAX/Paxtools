@@ -3,7 +3,9 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Level3Element;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.bridge.builtin.StringBridge;
 
 import javax.persistence.*;
 
@@ -29,6 +31,7 @@ abstract class L3ElementImpl extends BioPAXElementImpl
 
     @ElementCollection
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_COMMENT, index = Index.TOKENIZED)
+	@FieldBridge(impl=StringBridge.class)
     public Set<String> getComment()
     {
         return this.comment;

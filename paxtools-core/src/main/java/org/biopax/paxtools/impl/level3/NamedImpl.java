@@ -6,7 +6,9 @@ import javax.persistence.Entity;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.bridge.builtin.StringBridge;
 
 import java.util.*;
 
@@ -29,6 +31,7 @@ abstract class NamedImpl extends XReferrableImpl
 
 	@Basic
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
+	@FieldBridge(impl=StringBridge.class)
 	public String getStandardName()
 	{
 		return standardName;
@@ -41,6 +44,7 @@ abstract class NamedImpl extends XReferrableImpl
 
 	@Basic
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
+	@FieldBridge(impl=StringBridge.class)
 	public String getDisplayName()
 	{
 		return displayName;
@@ -53,6 +57,7 @@ abstract class NamedImpl extends XReferrableImpl
 
 	@ElementCollection
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
+	@FieldBridge(impl=StringBridge.class)
 	public Set<String> getName()
 	{
 		return allNames;

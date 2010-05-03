@@ -14,7 +14,7 @@ import javax.persistence.*;
 /**
  * This is the default implementation of the {@link Model}.
  */
-@Entity(name="l3model")
+@Entity
 public class ModelImpl implements Model
 {
 // ------------------------------ FIELDS ------------------------------
@@ -22,7 +22,7 @@ public class ModelImpl implements Model
 	private static final long serialVersionUID = -2087521863213381434L;
 	private final Map<String, BioPAXElement> idMap;
     private final Map<String, String> nameSpacePrefixMap;
-	private final BioPAXLevel level;
+	private BioPAXLevel level;
 	private transient BioPAXFactory factory;
     private transient final Map<String, BioPAXElement> exposedIdMap;
     private transient final Set<BioPAXElement> exposedObjectSet;
@@ -81,13 +81,24 @@ public class ModelImpl implements Model
         return this.idMap.get(id);
     }
 
+
+    @Transient
     @ElementCollection
     @MapKey(name="ns")
+    @Column(name="namespace")
     public Map<String, String> getNameSpacePrefixMap()
 	{
 		return nameSpacePrefixMap;
 	}
 
+    private void setNameSpacePrefixMap(Map<String, String> nameSpacePrefixMap) {
+    	synchronized (this.nameSpacePrefixMap) {
+			this.nameSpacePrefixMap.clear();
+			this.nameSpacePrefixMap.putAll(nameSpacePrefixMap);
+		}
+	}
+    
+    
     @Transient
     public void setFactory(BioPAXFactory factory)
 	{
@@ -100,6 +111,7 @@ public class ModelImpl implements Model
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
+    @ElementCollection(targetClass=BioPAXElementImpl.class)
     @ManyToMany(targetEntity=BioPAXElementImpl.class)
 	public Set<BioPAXElement> getObjects()
 	{
@@ -111,10 +123,9 @@ public class ModelImpl implements Model
 		return new ClassFilterSet<T>(exposedObjectSet, filterBy);
 	}
 
-	// TODO not sure...
-    public void setObjects(Set<BioPAXElement> objects) {   	
-    	synchronized (objects) {
-    		objects.clear();
+    private void setObjects(Set<BioPAXElement> objects) {   	
+    	synchronized (idMap) {
+    		idMap.clear();
         	for(BioPAXElement bpe : objects) {
         		if(!containsID(bpe.getRDFId()))
         			add(bpe);
@@ -190,6 +201,13 @@ public class ModelImpl implements Model
 		return level;
 	}
 
+    // used by hibernate only
+    private void setLevel(BioPAXLevel level) {
+		this.level = level;
+		this.factory = level.getDefaultFactory();
+	}
+    
+    
     @Transient
     public void setAddDependencies(boolean value) {
         this.addDependencies = value;

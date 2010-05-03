@@ -7,8 +7,10 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.bridge.builtin.StringBridge;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -57,6 +59,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 
 	@ElementCollection
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_TERM, index = Index.TOKENIZED)
+	@FieldBridge(impl=StringBridge.class)
 	public Set<String> getTerm()
 	{
 		return term;
