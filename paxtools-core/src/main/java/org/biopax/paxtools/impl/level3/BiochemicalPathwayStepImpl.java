@@ -3,10 +3,12 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.StepDirection;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 
 @Entity
+@Indexed
 class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
 	Conversion stepConversion;

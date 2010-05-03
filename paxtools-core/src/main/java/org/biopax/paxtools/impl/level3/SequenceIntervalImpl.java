@@ -3,14 +3,16 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.SequenceInterval;
 import org.biopax.paxtools.model.level3.SequenceSite;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
-class SequenceIntervalImpl extends SequenceLocationImpl implements
-                                                               SequenceInterval
+@Indexed
+class SequenceIntervalImpl extends SequenceLocationImpl 
+	implements SequenceInterval
 {
 	
 	private SequenceSite sequenceIntervalBegin;

@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.KPrime;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import static java.lang.Float.floatToIntBits;
 /**
  */
 @Entity
+@Indexed
 class KPrimeImpl extends L3ElementImpl implements KPrime
 {
 

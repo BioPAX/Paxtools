@@ -1,8 +1,12 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.ChemicalStructure;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -10,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
+@Indexed
 class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMoleculeReference
 {
 	private String chemicalFormula;
@@ -29,6 +34,7 @@ class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMol
 	}
 
     @Basic
+    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     public String getChemicalFormula()
 	{
 		return chemicalFormula;

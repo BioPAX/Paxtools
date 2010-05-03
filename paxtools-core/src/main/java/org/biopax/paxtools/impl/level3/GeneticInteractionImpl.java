@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.GeneticInteraction;
 import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 import org.biopax.paxtools.model.level3.Score;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -12,6 +13,7 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
+@Indexed
 class GeneticInteractionImpl extends InteractionImpl
         implements GeneticInteraction
 {

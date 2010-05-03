@@ -97,7 +97,12 @@ public abstract class Level3ElementProxy<T extends Level3Element> extends BioPAX
 
 	public void setComment(Set<String> COMMENT)
 	{
-		object.setComment(COMMENT);
+		synchronized (object) {
+			object.getComment().clear();
+			for(String c : COMMENT) {
+				object.addComment(c);
+			}
+		}
 	}
 
 	protected <T> void updateSet(Set<T> source, Set<T> target)

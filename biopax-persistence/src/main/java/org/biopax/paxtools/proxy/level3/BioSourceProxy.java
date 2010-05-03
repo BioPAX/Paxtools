@@ -30,7 +30,7 @@ public class BioSourceProxy extends Level3ElementProxy<BioSource> implements Bio
 	
 	@CollectionOfElements @Column(name="name_x", columnDefinition="text")
 	@FieldBridge(impl=StringSetBridge.class)
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
+	@Field(name=BioPAXElementProxy.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public Set<String> getName() {
 		return object.getName();
 	}

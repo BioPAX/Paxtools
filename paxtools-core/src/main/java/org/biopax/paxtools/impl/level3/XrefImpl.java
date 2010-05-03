@@ -3,7 +3,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
-import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;

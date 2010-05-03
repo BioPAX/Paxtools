@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 
 @javax.persistence.Entity
+@Indexed
 class PathwayImpl extends ProcessImpl implements Pathway
 {
 // ------------------------------ FIELDS ------------------------------

@@ -3,12 +3,14 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.RelationshipXref;
 import org.biopax.paxtools.model.level3.RelationshipTypeVocabulary;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
+@Indexed
 class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 {
 

@@ -1,7 +1,11 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PublicationXref;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Basic;
 import javax.persistence.ElementCollection;
@@ -11,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Indexed
 class PublicationXrefImpl extends XrefImpl implements PublicationXref
 {
 	private String title;
@@ -42,6 +47,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
     // Property author
     @ElementCollection
+    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public Set<String> getAuthor()
 	{
 		return author;
@@ -63,6 +69,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     @ElementCollection
+    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public Set<String> getSource()
 	{
 		return source;
@@ -84,6 +91,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     @Basic
+    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
  	public String getTitle()
 	{
 		return title;

@@ -14,14 +14,13 @@ import org.biopax.paxtools.proxy.BioPAXElementProxy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Proxy for xref
  */
 @Entity(name="l3xref")
+@Indexed
 public abstract class XrefProxy<T extends Xref> extends Level3ElementProxy<T>
 	implements Xref 
 {
@@ -40,7 +39,6 @@ public abstract class XrefProxy<T extends Xref> extends Level3ElementProxy<T>
     // Property DB-VERSION
 
 	@Basic @Column(name="db_version_x", columnDefinition="text")
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getDbVersion() {
 		return object.getDbVersion();
 	}
@@ -64,7 +62,6 @@ public abstract class XrefProxy<T extends Xref> extends Level3ElementProxy<T>
     // Property ID-VERSION
 
 	@Basic @Column(name="id_version_x", columnDefinition="text")
-	@Field(name=BioPAXElementProxy.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getIdVersion() {
 		return object.getIdVersion();
 	}

@@ -9,12 +9,14 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import java.util.HashSet;
 import java.util.Set;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @javax.persistence.Entity
+@Indexed
 class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
 {
 

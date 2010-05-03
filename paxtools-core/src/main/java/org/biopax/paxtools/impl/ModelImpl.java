@@ -9,9 +9,12 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.*;
 
+import javax.persistence.*;
+
 /**
  * This is the default implementation of the {@link Model}.
  */
+@Entity(name="l3model")
 public class ModelImpl implements Model
 {
 // ------------------------------ FIELDS ------------------------------
@@ -44,11 +47,26 @@ public class ModelImpl implements Model
 
     }
 
+	
+	private Long id = 0L;
+	
+	@Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long value) {
+		id = value;
+	}
+	
+	
 // --------------------- GETTER / SETTER METHODS ---------------------
 
     /**
      *@deprecated use getByID(id) or containsID(id) instead.
      */
+	@Transient
     public Map<String, BioPAXElement> getIdMap()
 	{
         return exposedIdMap;
@@ -58,15 +76,19 @@ public class ModelImpl implements Model
         return this.idMap.containsKey(id);
     }
     
+    @Transient
     public BioPAXElement getByID(String id) {
         return this.idMap.get(id);
     }
 
+    @ElementCollection
+    @MapKey(name="ns")
     public Map<String, String> getNameSpacePrefixMap()
 	{
 		return nameSpacePrefixMap;
 	}
 
+    @Transient
     public void setFactory(BioPAXFactory factory)
 	{
 		this.factory = factory;
@@ -78,6 +100,7 @@ public class ModelImpl implements Model
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
+    @ManyToMany(targetEntity=BioPAXElementImpl.class)
 	public Set<BioPAXElement> getObjects()
 	{
 		return exposedObjectSet;
@@ -88,7 +111,17 @@ public class ModelImpl implements Model
 		return new ClassFilterSet<T>(exposedObjectSet, filterBy);
 	}
 
-
+	// TODO not sure...
+    public void setObjects(Set<BioPAXElement> objects) {   	
+    	synchronized (objects) {
+    		objects.clear();
+        	for(BioPAXElement bpe : objects) {
+        		if(!containsID(bpe.getRDFId()))
+        			add(bpe);
+        	}
+		}
+    }
+	
 	public void remove(BioPAXElement aBioPAXElement)
 	{
 		this.idMap.remove(aBioPAXElement.getRDFId());
@@ -157,11 +190,12 @@ public class ModelImpl implements Model
 		return level;
 	}
 
+    @Transient
     public void setAddDependencies(boolean value) {
         this.addDependencies = value;
     }
 
-
+    @Transient
     public boolean isAddDependencies() {
         return addDependencies;
     }

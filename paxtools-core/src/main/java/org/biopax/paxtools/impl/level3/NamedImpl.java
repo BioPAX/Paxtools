@@ -3,6 +3,11 @@ package org.biopax.paxtools.impl.level3;
 import javax.persistence.Basic;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+
+import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+
 import java.util.*;
 
 /**
@@ -23,6 +28,7 @@ abstract class NamedImpl extends XReferrableImpl
 	}
 
 	@Basic
+	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public String getStandardName()
 	{
 		return standardName;
@@ -34,6 +40,7 @@ abstract class NamedImpl extends XReferrableImpl
 	}
 
 	@Basic
+	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public String getDisplayName()
 	{
 		return displayName;
@@ -45,6 +52,7 @@ abstract class NamedImpl extends XReferrableImpl
 	}
 
 	@ElementCollection
+	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
 	public Set<String> getName()
 	{
 		return allNames;

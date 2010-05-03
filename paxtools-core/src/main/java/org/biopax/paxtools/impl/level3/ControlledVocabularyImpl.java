@@ -1,10 +1,14 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -14,6 +18,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 @Entity
+@Indexed
 public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {
@@ -51,6 +56,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	// Property term
 
 	@ElementCollection
+	@Field(name = BioPAXElementImpl.SEARCH_FIELD_TERM, index = Index.TOKENIZED)
 	public Set<String> getTerm()
 	{
 		return term;

@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Indexed
 class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 {
 

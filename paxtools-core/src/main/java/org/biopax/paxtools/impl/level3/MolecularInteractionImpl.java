@@ -4,12 +4,14 @@ import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Transient;
 
 /**
  */
 @javax.persistence.Entity
+@Indexed
 class MolecularInteractionImpl extends InteractionImpl
         implements MolecularInteraction
 {

@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.SetEquivalanceChecker;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Indexed
 class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
 // ------------------------------ FIELDS ------------------------------

@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.level3.Interaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
@@ -15,6 +16,7 @@ import java.util.Set;
  *
  */
 @javax.persistence.Entity
+@Indexed
 class InteractionImpl extends ProcessImpl implements Interaction
 {
 // ------------------------------ FIELDS ------------------------------

@@ -4,6 +4,7 @@ import org.apache.commons.collections15.set.CompositeSet;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Indexed
 class ControlImpl extends InteractionImpl
 		implements Control
 {

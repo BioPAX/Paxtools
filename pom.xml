@@ -23,9 +23,7 @@
         <module>biopax-converter</module>
         <!--<module>psimi-converter</module>-->
         <module>paxtools-main</module>
-        <module>cpath-dao</module>
         <module>paxtools-query</module>
-
     </modules>
 
     <developers>
@@ -110,7 +108,6 @@
         </pluginManagement>
     </build>
     <dependencies>
-       
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -129,12 +126,6 @@
             <version>4.7</version>
             <scope>test</scope>
         </dependency>
-       <dependency>
-	    <groupId>org.hibernate.java-persistence</groupId>
-	    <artifactId>jpa-api</artifactId>
-	    <version>2.0-cr-1</version>
-        <scope>provided</scope>
-	  </dependency>
     </dependencies>
     <repositories>
        <repository>

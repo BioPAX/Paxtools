@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
 import org.biopax.paxtools.model.level3.Score;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Indexed
 class EvidenceImpl extends XReferrableImpl implements Evidence
 {
 

@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.CatalysisDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Process;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.Set;
 /**
  */
 @Entity
+@Indexed
 class CatalysisImpl extends ControlImpl implements Catalysis
 {
 // ------------------------------ FIELDS ------------------------------

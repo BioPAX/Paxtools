@@ -5,12 +5,14 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Indexed
 class ConversionImpl extends InteractionImpl
 		implements Conversion
 {

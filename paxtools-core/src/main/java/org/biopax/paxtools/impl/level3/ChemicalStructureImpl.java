@@ -1,12 +1,17 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ChemicalStructure;
 import org.biopax.paxtools.model.level3.StructureFormatType;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 
 @Entity
+@Indexed
 class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 {
 	private StructureFormatType structureFormat;
@@ -66,6 +71,7 @@ class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 	}
 
 	@Enumerated
+	@Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public StructureFormatType getStructureFormat()
 	{
 		return structureFormat;
