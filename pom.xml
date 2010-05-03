@@ -21,9 +21,9 @@
         <!--<module>biopax-persistence</module>-->
         <module>pathwaycommons-client</module>
         <module>biopax-converter</module>
-        <module>psimi-converter</module>
+        <!--<module>psimi-converter</module>-->
         <module>paxtools-main</module>
-        <!--<module>cpath-dao</module>-->
+        <module>cpath-dao</module>
         <module>paxtools-query</module>
 
     </modules>
@@ -136,6 +136,38 @@
         <scope>provided</scope>
 	  </dependency>
     </dependencies>
+    <repositories>
+       <repository>
+          <id>jboss-public-repository-group</id>
+          <name>JBoss Public Maven Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </repository>
+    </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>jboss-public-repository-group</id>
+          <name>JBoss Public Maven Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
     <distributionManagement>
 </distributionManagement>
 </project>
