@@ -46,7 +46,6 @@
         </developer>
     </developers>
 
-
     <profiles>
         <profile>
             <id>rodche</id>
@@ -107,6 +106,7 @@
             </plugins>
         </pluginManagement>
     </build>
+    
     <dependencies>
         <dependency>
             <groupId>commons-logging</groupId>
@@ -127,6 +127,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+      
     <repositories>
        <repository>
           <id>jboss-public-repository-group</id>
@@ -143,23 +144,8 @@
           </snapshots>
         </repository>
     </repositories>
-     <pluginRepositories>
-        <pluginRepository>
-          <id>jboss-public-repository-group</id>
-          <name>JBoss Public Maven Repository Group</name>
-          <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-          <layout>default</layout>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
+         
     <distributionManagement>
-</distributionManagement>
+	</distributionManagement>
 </project>
 

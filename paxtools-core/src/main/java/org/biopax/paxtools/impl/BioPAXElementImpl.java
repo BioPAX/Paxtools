@@ -92,7 +92,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
         return id;
     }
     
-    
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @DocumentId
