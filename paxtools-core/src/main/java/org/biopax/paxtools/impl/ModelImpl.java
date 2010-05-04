@@ -111,7 +111,6 @@ public class ModelImpl implements Model
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    @ElementCollection(targetClass=BioPAXElementImpl.class)
     @ManyToMany(targetEntity=BioPAXElementImpl.class)
 	public Set<BioPAXElement> getObjects()
 	{
@@ -125,7 +124,7 @@ public class ModelImpl implements Model
 
     private void setObjects(Set<BioPAXElement> objects) {   	
     	synchronized (idMap) {
-    		idMap.clear();
+    		//idMap.clear();
         	for(BioPAXElement bpe : objects) {
         		if(!containsID(bpe.getRDFId()))
         			add(bpe);
