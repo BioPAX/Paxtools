@@ -101,7 +101,7 @@ public class SimpleMerger
 	private void migrateToTarget(BioPAXElement update, Model target, PropertyEditor editor,
 	                         BioPAXElement value)
 	{
-		if (!target.contains(value))
+		if (value!=null && !target.contains(value))
 		{
 			BioPAXElement newValue = target.getByID(value.getRDFId());
 			editor.setPropertyToBean(update, newValue);

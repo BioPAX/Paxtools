@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 import org.hibernate.search.annotations.Indexed;
@@ -10,9 +11,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
-@Indexed
-class SequenceLocationImpl extends L3ElementImpl implements
-                                                              SequenceLocation
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+class SequenceLocationImpl extends L3ElementImpl 
+	implements SequenceLocation
 {
 	private Set<SequenceRegionVocabulary> regionType;
 

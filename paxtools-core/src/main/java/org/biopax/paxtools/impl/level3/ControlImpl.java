@@ -1,6 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.collections15.set.CompositeSet;
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
@@ -14,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 class ControlImpl extends InteractionImpl
 		implements Control
 {

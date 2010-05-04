@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.SequenceInterval;
 import org.biopax.paxtools.model.level3.SequenceSite;
@@ -10,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 class SequenceIntervalImpl extends SequenceLocationImpl 
 	implements SequenceInterval
 {

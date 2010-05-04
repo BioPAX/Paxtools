@@ -1,6 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
@@ -15,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 class EvidenceImpl extends XReferrableImpl implements Evidence
 {
 

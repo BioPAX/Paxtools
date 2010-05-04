@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.hibernate.search.annotations.Indexed;
@@ -11,7 +12,7 @@ import javax.persistence.Transient;
 import static java.lang.Float.compare;
 
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 class DeltaGImpl extends L3ElementImpl implements DeltaG
 {
 

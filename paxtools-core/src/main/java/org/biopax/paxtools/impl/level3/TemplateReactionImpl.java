@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
@@ -8,7 +9,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 @javax.persistence.Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
     private Set<NucleicAcid> initiationRegion;

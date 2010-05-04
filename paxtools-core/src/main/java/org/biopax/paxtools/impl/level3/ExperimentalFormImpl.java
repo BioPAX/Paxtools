@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.EntityFeature;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
 import org.biopax.paxtools.model.level3.ExperimentalFormVocabulary;
@@ -16,7 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @javax.persistence.Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
 {
 

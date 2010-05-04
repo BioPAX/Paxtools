@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.SetEquivalanceChecker;
@@ -11,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
 // ------------------------------ FIELDS ------------------------------

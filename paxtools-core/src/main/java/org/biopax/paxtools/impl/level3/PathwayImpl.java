@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
@@ -10,7 +11,7 @@ import java.util.Set;
 
 
 @javax.persistence.Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 class PathwayImpl extends ProcessImpl implements Pathway
 {
 // ------------------------------ FIELDS ------------------------------

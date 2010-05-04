@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {

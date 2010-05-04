@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.GeneticInteraction;
 import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 import org.biopax.paxtools.model.level3.Score;
@@ -13,7 +14,7 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 class GeneticInteractionImpl extends InteractionImpl
         implements GeneticInteraction
 {

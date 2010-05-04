@@ -13,12 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@NamedQueries({
-	@NamedQuery(name="org.biopax.paxtools.impl.level3.elementByRdfId",
-		query="from org.biopax.paxtools.model.BioPAXElement as el where upper(el.RDFId) = upper(:rdfid)"),
-	@NamedQuery(name="org.biopax.paxtools.impl.level3.elementByRdfIdEager",
-		query="from org.biopax.paxtools.model.BioPAXElement as el fetch all properties where upper(el.RDFId) = upper(:rdfid)")
-})
 abstract class L3ElementImpl extends BioPAXElementImpl
         implements Level3Element
 {

@@ -1,6 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Catalysis;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.CatalysisDirectionType;
@@ -15,7 +16,7 @@ import java.util.Set;
 /**
  */
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 class CatalysisImpl extends ControlImpl implements Catalysis
 {
 // ------------------------------ FIELDS ------------------------------

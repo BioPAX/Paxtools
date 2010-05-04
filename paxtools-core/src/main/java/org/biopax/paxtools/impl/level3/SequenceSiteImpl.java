@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PositionStatusType;
 import org.biopax.paxtools.model.level3.SequenceSite;
@@ -11,7 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
 {
 

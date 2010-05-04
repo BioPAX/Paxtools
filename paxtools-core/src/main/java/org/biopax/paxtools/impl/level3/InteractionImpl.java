@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.apache.commons.logging.Log;
@@ -16,7 +17,7 @@ import java.util.Set;
  *
  */
 @javax.persistence.Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 class InteractionImpl extends ProcessImpl implements Interaction
 {
 // ------------------------------ FIELDS ------------------------------

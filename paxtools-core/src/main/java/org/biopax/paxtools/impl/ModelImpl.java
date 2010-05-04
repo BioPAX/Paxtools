@@ -30,7 +30,10 @@ public class ModelImpl implements Model
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-
+    ModelImpl() {
+    	this(BioPAXLevel.L3); // TODO it's level-specific for now, but no-args constructor is required NOW for persistence...
+	}
+    
     protected ModelImpl(BioPAXLevel level)
 	{
 	   this(level.getDefaultFactory());
@@ -51,7 +54,7 @@ public class ModelImpl implements Model
 	private Long id = 0L;
 	
 	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue
 	public Long getId() {
 		return id;
 	}
@@ -82,10 +85,7 @@ public class ModelImpl implements Model
     }
 
 
-    @Transient
     @ElementCollection
-    @MapKey(name="ns")
-    @Column(name="namespace")
     public Map<String, String> getNameSpacePrefixMap()
 	{
 		return nameSpacePrefixMap;
@@ -111,7 +111,8 @@ public class ModelImpl implements Model
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    @ManyToMany(targetEntity=BioPAXElementImpl.class)
+    //@OneToMany(cascade = {CascadeType.ALL}, targetEntity=BioPAXElementImpl.class)
+    @ElementCollection(targetClass=BioPAXElementImpl.class)
 	public Set<BioPAXElement> getObjects()
 	{
 		return exposedObjectSet;
@@ -151,7 +152,8 @@ public class ModelImpl implements Model
 	 */
 	public boolean contains(BioPAXElement aBioPAXElement)
 	{
-		return this.idMap.get(aBioPAXElement.getRDFId()) == aBioPAXElement;
+		String rdfid = aBioPAXElement.getRDFId();
+		return this.idMap.get(rdfid) == aBioPAXElement;
 	}
 
 // -------------------------- OTHER METHODS --------------------------

@@ -14,7 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMoleculeReference
 {
 	private String chemicalFormula;

@@ -1,20 +1,21 @@
 package org.biopax.paxtools.impl;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.hibernate.search.annotations.DocumentId;
 
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfId",
+		query="from org.biopax.paxtools.model.BioPAXElement as el where upper(el.RDFId) = upper(:rdfid)"),
+	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfIdEager",
+		query="from org.biopax.paxtools.model.BioPAXElement as el fetch all properties where upper(el.RDFId) = upper(:rdfid)")
+})
 public abstract class BioPAXElementImpl implements BioPAXElement
 {
 	// ----------------- Index Names and Search Fields --------------------
 	public final static String SEARCH_FIELD_SOURCE_NAME = "source_name";
-	public final static String SEARCH_INDEX_NAME = "paxtools";
 	public final static String SEARCH_FIELD_KEYWORD ="keyword";
 	public final static String SEARCH_FIELD_NAME = "name";
 	public final static String SEARCH_FIELD_SYNONYMS = "synonyms";
@@ -26,16 +27,28 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public final static String SEARCH_FIELD_AVAILABILITY = "availability";
 	public final static String SEARCH_FIELD_COMMENT = "comment";
 	public final static String SEARCH_FIELD_NAMESPACE = "namespace";
+	public final static String SEARCH_INDEX_FOR_ENTITY = "entities";
+	public final static String SEARCH_INDEX_FOR_UTILILTY_CLASS = "utilityClasses";
 	
 	// ------------------------------ FIELDS ------------------------------
 
 	private String id;
-    private Long proxyId;
+	private Long proxyId = 0L;
+    
+	@Id
+    @GeneratedValue
+    private Long getProxyId() {
+        return proxyId;
+    }
 
-	protected BioPAXElementImpl()
-	{
-	}
-
+    private void setProxyId(Long value) {
+        proxyId = value;
+    }
+    
+    
+	protected BioPAXElementImpl(){ proxyId = 0L; }
+	
+	
 	public int hashCode()
     {
         return id == null ? super.hashCode() : id.hashCode();
@@ -92,15 +105,5 @@ public abstract class BioPAXElementImpl implements BioPAXElement
         return id;
     }
     
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @DocumentId
-    private Long getProxyId() {
-        return proxyId;
-    }
-
-    private void setProxyId(Long value) {
-        proxyId = value;
-    }
 }
 

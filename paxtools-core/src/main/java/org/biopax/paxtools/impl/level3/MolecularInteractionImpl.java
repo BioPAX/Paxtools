@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
@@ -11,7 +12,7 @@ import javax.persistence.Transient;
 /**
  */
 @javax.persistence.Entity
-@Indexed
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 class MolecularInteractionImpl extends InteractionImpl
         implements MolecularInteraction
 {
