@@ -217,15 +217,15 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 
 		// get list
 		Set<EntityFeature> entityFeatureList = participant.getFeature();
-		Assert.assertEquals(1, entityFeatureList.size());
+		Assert.assertEquals(4, entityFeatureList.size());
 
 		// get feature
 		EntityFeature bpEntityFeature = entityFeatureList.iterator().next();
 		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_2681741952554656410", bpEntityFeature.getRDFId());
 
         // feature location
-        Set<SequenceLocation> sequenceLocation = bpEntityFeature.getFeatureLocation();
-        Assert.assertEquals(0, sequenceLocation.size());
+        SequenceLocation sequenceLocation = bpEntityFeature.getFeatureLocation();
+        Assert.assertEquals(null, sequenceLocation);
 
         // get feature location type
         SequenceRegionVocabulary featureLocationType = bpEntityFeature.getFeatureLocationType();
@@ -270,10 +270,13 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 		BioSource bpBioSource = proteinReference.getOrganism();
 		Assert.assertEquals("Mus musculus", bpBioSource.getName().iterator().next());
 		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#BS-10090", bpBioSource.getRDFId());
-		UnificationXref bioSourceXRef = bpBioSource.getTaxonXref();
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_8992476572203004810", bioSourceXRef.getRDFId());
-		Assert.assertEquals("TAXONOMY", bioSourceXRef.getDb());
-		Assert.assertEquals("10090", bioSourceXRef.getId());
+		Set<Xref> bioSourceXRef = bpBioSource.getXref();
+		Assert.assertEquals(1, bioSourceXRef.size());
+		for (Xref unificationXref : bioSourceXRef) {
+			Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_8992476572203004810", unificationXref.getRDFId());
+			Assert.assertEquals("TAXONOMY", unificationXref.getDb());
+			Assert.assertEquals("10090", unificationXref.getId());
+		}
 
 		// sequence
 		Assert.assertEquals("MEPFDPAELPELLKLYYRRLFPYAQYYRWLNYGGVTKNYFQHREFSFTLKDDIYIRYQSFNNQSELEKEMQKMNPYKIDIGAVYSHRPNQHNTVKLGAFQAQEKELVFDIDMTDYDDVRRCCSSADICSKCWTLMTMAMRIIDRALKEDFGFKHRLWVYSGRRGVHCWVCDESVRKLSSAVRSGIVEYLSLVKGGQDVKKKVHLNEKVHPFVRKSINIIKKYFEEYALVGQDILENKENWDKILALVPETIHDELQRGFQKFHSSPQRWEHLRKVANSSQNMKNDKCGPWLEWEVMLQYCFPRLDVNVSKGVNHLLKSPFSVHPKTGRISVPIDFHKVDQFDPFTVPTISAICRELDMVSTHEKEKEENEADSKHRVRGYKKTSLAPYVKVFEQFLENLDKSRKGELLKKSDLQKDF", proteinReference.getSequence());

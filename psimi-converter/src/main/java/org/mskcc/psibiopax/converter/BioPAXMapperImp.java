@@ -249,15 +249,21 @@ public class BioPAXMapperImp implements BioPAXMapper
 			}
 			if (scoresOrConfidences != null && scoresOrConfidences.size() > 0)
 			{
-				bpEvidence.setConfidence((Set<Score>) scoresOrConfidences);
+				for (BioPAXElement score : scoresOrConfidences) {
+					bpEvidence.addConfidence((Score)score);
+				}
 			}
 			if (comments != null && comments.size() > 0)
 			{
-				bpEvidence.setComment(comments);
+				for (String comment : comments) {
+					bpEvidence.addComment(comment);
+				}
 			}
 			if (experimentalForms != null && experimentalForms.size() > 0)
 			{
-				bpEvidence.setExperimentalForm((Set<ExperimentalForm>) experimentalForms);
+				for (BioPAXElement experimentalForm : experimentalForms) {
+					bpEvidence.addExperimentalForm((ExperimentalForm)experimentalForm);
+				}
 			}
 			return (T) bpEvidence;
 		}
@@ -307,11 +313,15 @@ public class BioPAXMapperImp implements BioPAXMapper
 			}
 			if (bpXrefs != null && bpXrefs.size() > 0)
 			{
-				bpScore.setXref((Set<Xref>) bpXrefs);
+				for (BioPAXElement xref : bpXrefs) {
+					bpScore.addXref((Xref)xref);
+				}
 			}
 			if (comments != null && comments.size() > 0)
 			{
-				bpScore.setComment(comments);
+				for (String comment : comments) {
+					bpScore.addComment(comment);
+				}
 			}
 			return (T) bpScore;
 		}
@@ -450,13 +460,14 @@ public class BioPAXMapperImp implements BioPAXMapper
 					bpModel.addNew(ControlledVocabulary.class, id);
 			if (term != null)
 			{
-				Set<String> terms = new HashSet<String>();
-				terms.add(term);
-				toReturn.setTerm(terms);
+				toReturn.addTerm(term);
 			}
 			if (bpXrefs != null && bpXrefs.size() > 0)
 			{
-				toReturn.setXref((Set<Xref>) bpXrefs);
+				for (BioPAXElement bpXref : bpXrefs)
+				{
+					toReturn.addXref((Xref)bpXref);
+				}
 			}
 			vocabularyL3.add(toReturn);
 			return (T) toReturn;
@@ -536,15 +547,21 @@ public class BioPAXMapperImp implements BioPAXMapper
 			}
 			if (availability != null && availability.size() > 0)
 			{
-				toReturn.setAvailability(availability);
+				for (String availabilityStr : availability) {
+					toReturn.addAvailability(availabilityStr);
+				}
 			}
 			if (participants != null && participants.size() > 0)
 			{
-				toReturn.setParticipant((Set<Entity>) participants);
+				for (BioPAXElement participant : participants) {
+					toReturn.addParticipant((Entity)participant);
+				}
 			}
 			if (bpEvidence != null && bpEvidence.size() > 0)
 			{
-				toReturn.setEvidence((Set<Evidence>) bpEvidence);
+				for (BioPAXElement evidence : bpEvidence) {
+					toReturn.addEvidence((Evidence)evidence);
+				}
 			}
 			return (T) toReturn;
 		}
@@ -591,7 +608,9 @@ public class BioPAXMapperImp implements BioPAXMapper
 			{
 				if (features != null && features.size() > 0)
 				{
-					((PhysicalEntity) bpPhysicalEntity).setFeature((Set<EntityFeature>) features);
+					for (BioPAXElement feature : features) {
+						((PhysicalEntity) bpPhysicalEntity).addFeature((EntityFeature)feature);
+					}
 				}
 				if (cellularLocation != null && bpPhysicalEntity != null)
 				{
@@ -722,11 +741,15 @@ public class BioPAXMapperImp implements BioPAXMapper
 			}
 			if (synonyms != null && synonyms.size() > 0)
 			{
-				toReturn.setName(synonyms);
+				for (String synonym : synonyms) {
+					toReturn.addName(synonym);
+				}
 			}
 			if (bpXrefs != null && bpXrefs.size() > 0)
 			{
-				toReturn.setXref((Set<Xref>) bpXrefs);
+				for (BioPAXElement xref : bpXrefs) {
+					toReturn.addXref((Xref)xref);
+				}
 			}
 			// set sequence entity ref props
 			ser.setOrganism((BioSource) bioSource);
@@ -782,7 +805,7 @@ public class BioPAXMapperImp implements BioPAXMapper
 			BioSource toReturn = bpModel.addNew(BioSource.class, id);
 			if (taxonXref != null)
 			{
-				toReturn.setTaxonXref((UnificationXref) taxonXref);
+				toReturn.addXref((Xref)taxonXref);
 			}
 			if (cellType != null)
 			{
@@ -845,7 +868,9 @@ public class BioPAXMapperImp implements BioPAXMapper
 			// question: EntityFeature does not implement XReferrable
 			if (featureLocations != null)
 			{
-				toReturn.setFeatureLocation((Set<SequenceLocation>) featureLocations);
+				for (BioPAXElement sequenceLocation : featureLocations) {
+					toReturn.setFeatureLocation((SequenceLocation) sequenceLocation);
+				}
 			}
 			if (featureType != null)
 			{
@@ -895,7 +920,9 @@ public class BioPAXMapperImp implements BioPAXMapper
 			// question: EntityFeature does not implement XReferrable
 			if (featureLocations != null)
 			{
-				toReturn.setFeatureLocation((Set<SequenceLocation>) featureLocations);
+				for (BioPAXElement featureLocation : featureLocations) {
+					toReturn.setFeatureLocation((SequenceLocation) featureLocation);
+				}
 			}
 			if (featureType != null)
 			{
@@ -1072,7 +1099,9 @@ public class BioPAXMapperImp implements BioPAXMapper
 			}
 			if (bpXrefs != null && bpXrefs.size() > 0)
 			{
-				provenance.setXref((Set<Xref>) bpXrefs);
+				for (BioPAXElement xref : bpXrefs) {
+					provenance.addXref((Xref)xref);
+				}
 			}
 			if (interaction != null)
 			{
@@ -1161,17 +1190,12 @@ public class BioPAXMapperImp implements BioPAXMapper
 	private void replaceControlledVocabulary(ControlledVocabulary previous,
 	                                         ControlledVocabulary current)
 	{
-		Set<String> terms = previous.getTerm();
-		if (terms != null)
-		{
-			current.setTerm(terms);
+		for (String term : previous.getTerm()) {
+			current.addTerm(term);
 		}
-		Set<Xref> xrefs = previous.getXref();
-		if (xrefs != null)
-		{
-			current.setXref(xrefs);
+		for (Xref xref : previous.getXref()) {
+			current.addXref(xref);
 		}
-
 		if (vocabularyL3.contains(previous))
 		{
 			vocabularyL3.remove(previous);
