@@ -33,8 +33,9 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	// ------------------------------ FIELDS ------------------------------
 
 	private String id;
+	
 	private Long proxyId = 0L;
-    
+
 	@Id
     @GeneratedValue
     private Long getProxyId() {
@@ -46,7 +47,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     }
     
     
-	protected BioPAXElementImpl(){ proxyId = 0L; }
+	protected BioPAXElementImpl(){};
 	
 	
 	public int hashCode()

@@ -10,6 +10,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.bridge.builtin.StringBridge;
 
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -132,6 +133,7 @@ class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
     // Property year
     @Basic
+    @Column(name="published") //default one caused MySQLIntegrityConstraintViolationException: Column 'year' in field list is ambiguous
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public int getYear()
 	{

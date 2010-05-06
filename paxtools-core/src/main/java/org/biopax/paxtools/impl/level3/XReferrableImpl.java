@@ -55,7 +55,7 @@ abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 		xref.getXrefOf().remove(this);
 	}
 
-	private void setXref(Set<Xref> xref)
+	protected void setXref(Set<Xref> xref)
 	{
 		this.xref = xref;
 	}

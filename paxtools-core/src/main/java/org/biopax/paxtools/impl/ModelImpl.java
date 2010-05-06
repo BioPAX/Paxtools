@@ -1,9 +1,6 @@
 package org.biopax.paxtools.impl;
 
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.BioPAXFactory;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -20,7 +17,7 @@ public class ModelImpl implements Model
 // ------------------------------ FIELDS ------------------------------
 
 	private static final long serialVersionUID = -2087521863213381434L;
-	private final Map<String, BioPAXElement> idMap;
+	protected final Map<String, BioPAXElement> idMap;
     private final Map<String, String> nameSpacePrefixMap;
 	private BioPAXLevel level;
 	private transient BioPAXFactory factory;
@@ -30,8 +27,11 @@ public class ModelImpl implements Model
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    ModelImpl() {
-    	this(BioPAXLevel.L3); // TODO it's level-specific for now, but no-args constructor is required NOW for persistence...
+    protected ModelImpl() {
+		idMap = new HashMap<String, BioPAXElement>();
+        nameSpacePrefixMap = new HashMap<String, String>();
+        this.exposedIdMap = Collections.unmodifiableMap(idMap);
+        this.exposedObjectSet = new UnmodifiableImplicitSet(idMap.values());
 	}
     
     protected ModelImpl(BioPAXLevel level)
@@ -41,13 +41,9 @@ public class ModelImpl implements Model
 
 	public ModelImpl(BioPAXFactory factory)
 	{
-		idMap = new HashMap<String, BioPAXElement>();
-        nameSpacePrefixMap = new HashMap<String, String>();
+		this();
 		this.factory = factory;
 		this.level = factory.getLevel();
-        this.exposedIdMap = Collections.unmodifiableMap(idMap);
-        this.exposedObjectSet = new UnmodifiableImplicitSet(idMap.values());
-
     }
 
 	
@@ -103,6 +99,7 @@ public class ModelImpl implements Model
     public void setFactory(BioPAXFactory factory)
 	{
 		this.factory = factory;
+		this.level = factory.getLevel();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -111,8 +108,7 @@ public class ModelImpl implements Model
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    //@OneToMany(cascade = {CascadeType.ALL}, targetEntity=BioPAXElementImpl.class)
-    @ElementCollection(targetClass=BioPAXElementImpl.class)
+    @ManyToMany(targetEntity=BioPAXElementImpl.class, cascade={CascadeType.ALL})
 	public Set<BioPAXElement> getObjects()
 	{
 		return exposedObjectSet;
@@ -123,12 +119,11 @@ public class ModelImpl implements Model
 		return new ClassFilterSet<T>(exposedObjectSet, filterBy);
 	}
 
-    private void setObjects(Set<BioPAXElement> objects) {   	
+    void setObjects(Set<BioPAXElement> objects) {   	
     	synchronized (idMap) {
     		idMap.clear();
         	for(BioPAXElement bpe : objects) {
-        		if(!containsID(bpe.getRDFId()))
-        			add(bpe);
+        		add(bpe);
         	}
 		}
     }
@@ -197,18 +192,19 @@ public class ModelImpl implements Model
 	}
 
 
+	@Enumerated(EnumType.STRING)
     public BioPAXLevel getLevel()
 	{
 		return level;
 	}
 
-    // used by hibernate only
-    private void setLevel(BioPAXLevel level) {
+	// used by hibernate
+	void setLevel(BioPAXLevel level) {
 		this.level = level;
 		this.factory = level.getDefaultFactory();
 	}
-    
-    
+	
+	
     @Transient
     public void setAddDependencies(boolean value) {
         this.addDependencies = value;
