@@ -68,10 +68,10 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 	}
 
 	@Override
-	protected void checkRestrictions(Object bean, Object value)
+	protected void checkRestrictions(D bean, R value)
 	{
 		super.checkRestrictions(bean, value);
-		Set<Class> classes = getRestrictedRangesFor((Class<? extends D>) ((BioPAXElement) bean).getModelInterface());
+		Set<Class> classes = getRestrictedRangesFor((Class<? extends D>) bean.getModelInterface());
 		if (classes != null && !isInstanceOfAtLeastOne(classes, value))
 		{
 			throw new IllegalBioPAXArgumentException(
