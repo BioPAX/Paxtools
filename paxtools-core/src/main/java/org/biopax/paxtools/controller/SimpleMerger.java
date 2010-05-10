@@ -46,8 +46,7 @@ public class SimpleMerger
 	 * @param target model into which merging process will be done
 	 * @param source model that is going to be merged with <em>target</em>
 	 */
-	public void merge
-			(Model target, Model source)
+	public void merge(Model target, Model source)
 	{
 
 		Set<BioPAXElement> sourceElements = source.getObjects();
@@ -98,8 +97,9 @@ public class SimpleMerger
 
 	}
 
-	private void migrateToTarget(BioPAXElement update, Model target, PropertyEditor editor,
-	                         BioPAXElement value)
+	
+	private void migrateToTarget(BioPAXElement update, Model target, 
+			PropertyEditor editor, BioPAXElement value)
 	{
 		if (value!=null && !target.contains(value))
 		{

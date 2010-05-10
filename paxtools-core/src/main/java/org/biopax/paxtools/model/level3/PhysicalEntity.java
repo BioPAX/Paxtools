@@ -1,7 +1,5 @@
 package org.biopax.paxtools.model.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
-
 import java.util.Set;
 
 

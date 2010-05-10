@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl;
 import javax.persistence.*;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.hibernate.search.annotations.Key;
 
 
 @Entity
@@ -37,12 +38,12 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	private Long proxyId = 0L;
 
 	@Id
-    @GeneratedValue
-    private Long getProxyId() {
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    public Long getProxyId() {
         return proxyId;
     }
-
-    private void setProxyId(Long value) {
+	
+    public void setProxyId(Long value) {
         proxyId = value;
     }
     
@@ -88,9 +89,9 @@ public abstract class BioPAXElementImpl implements BioPAXElement
         return hashCode();
     }
 
-// --------------------- ACCESORS and MUTATORS---------------------
 
-
+    @Key
+    @Column(unique=true, nullable=false)
     public String getRDFId()
     {
         return id;

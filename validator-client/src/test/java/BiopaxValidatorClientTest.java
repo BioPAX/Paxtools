@@ -4,10 +4,11 @@ import java.io.IOException;
 
 import org.biopax.validator.BiopaxValidatorClient;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-
+// remove @Ignore when biopax.org/biopax-validator/  is available
+@Ignore
 public class BiopaxValidatorClientTest {
 
 	@Before

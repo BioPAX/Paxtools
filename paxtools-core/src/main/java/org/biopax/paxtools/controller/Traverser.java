@@ -18,7 +18,7 @@ public class Traverser
 {
 // ------------------------------ FIELDS ------------------------------
 
-	private final EditorMap editorMap;
+	protected final EditorMap editorMap;
 	private Visitor visitor;
 	private PropertyFilter[] filters;
 	protected final Log log = LogFactory.getLog(Traverser.class);
