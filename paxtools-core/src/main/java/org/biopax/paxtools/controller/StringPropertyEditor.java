@@ -5,25 +5,29 @@ import org.biopax.paxtools.model.BioPAXElement;
 import java.lang.reflect.Method;
 
 /**
- * Provides an String class compatible editor by extending the
- *  {@link org.biopax.paxtools.controller.PropertyEditor}.
+ * Provides an String class compatible editor by extending the {@link
+ * org.biopax.paxtools.controller.PropertyEditor}.
  *
  * @see org.biopax.paxtools.controller.PropertyEditor
  */
-public class StringPropertyEditor extends PropertyEditor
+public class StringPropertyEditor<D extends BioPAXElement> extends PropertyEditor<D, String>
 {
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public StringPropertyEditor(String property, Method getMethod,
-	                            Class<? extends BioPAXElement> domain,
-                                Class range,
+	                            Class<D> domain,
 	                            boolean multipleCardinality)
 	{
 		super(property,
-			getMethod,
-			domain,
-			range,
-			multipleCardinality);
-		assert(range.equals(String.class));
+				getMethod,
+				domain,
+				String.class,
+				multipleCardinality);
+	}
+
+	@Override
+	protected String parseValueFromString(String value)
+	{
+		return value;
 	}
 }

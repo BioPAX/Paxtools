@@ -158,7 +158,6 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 				editor = new StringPropertyEditor(property,
 						getMethod,
 						domain,
-						range,
 						multipleCardinality);
 			}
 			else
@@ -465,7 +464,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 * @param value to be removed from the bean
 	 * @param bean  bean from which the value is going to be removed
 	 */
-	public void removePropertyFromBean(BioPAXElement value, BioPAXElement bean)
+	public void removePropertyFromBean(R value, D bean)
 	{
 		try
 		{
@@ -478,6 +477,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 
 	}
 
+	
 	/**
 	 * Calls the <em>method</em> onto <em>bean</em> with the <em>value</em> as its parameter. In this
 	 * context <em>method</em> can be one of these three: set, add, or remove.
@@ -486,7 +486,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 * @param bean   bean onto which the method is going to be applied
 	 * @param value  the value which is going to be used by method
 	 */
-	protected void invokeMethod(Method method, Object bean, Object value)
+	protected void invokeMethod(Method method, D bean, R value)
 	{
 		assert bean != null;
 		try
@@ -532,6 +532,10 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		}
 	}
 
+	protected R parseValueFromString(String value)
+	{
+		throw new IllegalBioPAXArgumentException();
+	}
 	/**
 	 * Sets the <em>value</em> to the <em>bean</em> using the default {@link #setMethod} if
 	 * <em>value</em> is not null.
@@ -539,7 +543,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 * @param bean  to which the <em>value</em> is to be set
 	 * @param value to be set to the <em>bean</em>
 	 */
-	public void setPropertyToBean(BioPAXElement bean, Object value)
+	public void setPropertyToBean(D bean, R value)
 	{
 		if (log.isTraceEnabled())
 		{
@@ -548,7 +552,10 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		}
 		if (value != null)
 		{
-
+			if(value instanceof String)
+			{
+				value = this.parseValueFromString(((String) value));
+			}
 			try
 			{
 				checkRestrictions(bean, value);
@@ -563,6 +570,31 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		}
 	}
 
+
+	/**
+	 * Returns the value of the <em>bean</em> using the default {@link #getMethod}.
+	 *
+	 * @param bean the object whose property is requested
+	 * @return an object as the value
+	 */
+	public R getValueFromBean(D bean) throws IllegalBioPAXArgumentException
+	{
+		try
+		{
+			return (R) this.getMethod.invoke(bean);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new IllegalBioPAXArgumentException("Could not invoke get method " +
+			                                         getMethod.getName() + " for " + bean, e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new IllegalBioPAXArgumentException("Could not invoke get method " +
+			                                         getMethod.getName() + " for " + bean, e);
+		}
+	}
+
 	/**
 	 * Checks if the <em>bean</em> and the <em>value</em> are consistent with the cardinality rules of
 	 * the model. This method is important for validations.
@@ -570,7 +602,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 * @param bean  Object that is related to the value
 	 * @param value Value that is related to the object
 	 */
-	protected void checkRestrictions(Object bean, Object value)
+	protected void checkRestrictions(D bean, R value)
 	{
 		Integer max = this.maxCardinalities.get(value.getClass());
 		if (max != null)
@@ -594,30 +626,6 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	}
 
 	/**
-	 * Returns the value of the <em>bean</em> using the default {@link #getMethod}.
-	 *
-	 * @param bean the object whose property is requested
-	 * @return an object as the value
-	 */
-	public R getValueFromBean(Object bean) throws IllegalBioPAXArgumentException
-	{
-		try
-		{
-			return (R) this.getMethod.invoke(bean);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new IllegalBioPAXArgumentException("Could not invoke get method " +
-			                                         getMethod.getName() + " for " + bean, e);
-		}
-		catch (InvocationTargetException e)
-		{
-			throw new IllegalBioPAXArgumentException("Could not invoke get method " +
-			                                         getMethod.getName() + " for " + bean, e);
-		}
-	}
-
-	/**
 	 * Returns the primary set method of the editor. It is the {@link #setMethod} for a property of
 	 * single cardinality, and the {@link #addMethod} method for a property of multiple cardinality.
 	 *
@@ -633,7 +641,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 * elements will not be preserved. Primitive fields and enums however will be cloned.
 	 * @return
 	 */
-	public R copyValueFromBean(Object bean)
+	public R copyValueFromBean(D bean)
 	{
 		return getValueFromBean(bean);
 	}
