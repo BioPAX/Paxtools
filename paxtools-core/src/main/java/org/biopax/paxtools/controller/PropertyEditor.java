@@ -545,9 +545,9 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 */
 	public void setPropertyToBean(D bean, R value)
 	{
-		if (setMethod != null) {
+		if (this.getPrimarySetMethod() != null) {
 			if (log.isTraceEnabled())
-				log.trace(setMethod.getName() + " bean:" + bean + " val:"
+				log.trace(this.getPrimarySetMethod().getName() + " bean:" + bean + " val:"
 						+ value);
 		} else {
 			log.error("setMethod is null; " + " bean:" + bean + " ("
