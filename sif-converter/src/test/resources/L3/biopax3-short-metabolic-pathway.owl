@@ -39,14 +39,14 @@
         >GLK</bp:standardName>
         <bp:organism>
           <bp:BioSource rdf:ID="Escherichia_coli">
-            <bp:taxonXref>
+            <bp:xref>
               <bp:UnificationXref rdf:ID="taxon_562">
                 <bp:id rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
                 >562</bp:id>
                 <bp:db rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
                 >taxonomy</bp:db>
               </bp:UnificationXref>
-            </bp:taxonXref>
+            </bp:xref>
             <bp:displayName rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
             >Escherichia coli</bp:displayName>
           </bp:BioSource>
