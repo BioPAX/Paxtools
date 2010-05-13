@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * This class represents a general BioPAXElement, regardless of Level.
  */
-public interface BioPAXElement extends Serializable
+public interface BioPAXElement extends Serializable, Cloneable
 {
 // ------------------------------ FIELDS ------------------------------
 

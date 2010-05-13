@@ -22,8 +22,12 @@ public abstract class AbstractGraph implements Graph
 		if (!objectMap.containsKey(key))
 		{
 			Node node = wrap(obj);
-			objectMap.put(key, node);
-			node.init();
+
+			if (node != null)
+			{
+				objectMap.put(key, node);
+				node.init();
+			}
 		}
 
 		return objectMap.get(key);

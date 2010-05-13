@@ -31,12 +31,12 @@ public class EnumeratedPropertyEditor<D extends BioPAXElement, R extends Enum>
 
 // -------------------------- OTHER METHODS --------------------------
 
-		@Override
+	@Override
 	protected R parseValueFromString(String value)
 	{
 
 		value = value.replaceAll("-", "_");
-		return (R)Enum.valueOf(this.getRange(), value);
+		return (R) Enum.valueOf(this.getRange(), value);
 	}
 }
 

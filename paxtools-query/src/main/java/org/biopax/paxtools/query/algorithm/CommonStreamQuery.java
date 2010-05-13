@@ -22,6 +22,9 @@ import org.biopax.paxtools.query.model.Node;
  */
 public class CommonStreamQuery
 {
+	public static final boolean UPSTREAM = true;
+	public static final boolean DOWNSTREAM = false;
+
     /**
      * Collection of Set of nodes.
      * Each Set contains all states of corresponding physical entity or
