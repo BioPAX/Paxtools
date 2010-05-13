@@ -60,6 +60,8 @@ public interface EditorMap
      */
     Set<PropertyEditor> getEditorsOf(BioPAXElement bpe);
 
+	Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe);
+
     //TODO generify
     /**
      * Returns a set of sub classes of a given class. This method

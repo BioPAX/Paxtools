@@ -24,11 +24,12 @@ import java.util.Set;
 public abstract class EditorMapAdapter implements EditorMap
 {
 
-	protected final HashMap<String, Set<PropertyEditor>> propertyToEditorMap =
-			new HashMap<String, Set<PropertyEditor>>();
+	protected final HashMap<String, Set<PropertyEditor>> propertyToEditorMap;
 
-	protected final HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>> classToEditorMap =
-			new HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>>();
+	protected final HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>> classToEditorMap;
+
+	protected final HashMap<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>>
+		classToInverseEditorMap;
 
 	protected final BioPAXLevel level;
 
@@ -37,6 +38,10 @@ public abstract class EditorMapAdapter implements EditorMap
 	public EditorMapAdapter(BioPAXLevel level)  //todo : change default to level 3
 	{
 		this.level = level != null ? level : BioPAXLevel.L2;
+		classToInverseEditorMap =
+			new HashMap<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>>();
+		classToEditorMap = new HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>>();
+		propertyToEditorMap = new HashMap<String, Set<PropertyEditor>>();
 	}
 
 	public EditorMapAdapter()
@@ -47,6 +52,11 @@ public abstract class EditorMapAdapter implements EditorMap
 	public Set<PropertyEditor> getEditorsOf(BioPAXElement bpe)
 	{
 		return this.classToEditorMap.get(bpe.getModelInterface());
+	}
+
+	public Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe)
+	{
+		return this.classToInverseEditorMap.get(bpe.getModelInterface());
 	}
 
 	public PropertyEditor getEditorForProperty(String property, Class javaClass)
@@ -140,9 +150,7 @@ public abstract class EditorMapAdapter implements EditorMap
 
 	protected void registerEditorsWithClasses(PropertyEditor editor)
 	{
-
-		for (Class<? extends BioPAXElement> c : classToEditorMap
-				.keySet())
+		for (Class<? extends BioPAXElement> c : classToEditorMap.keySet())
 		{
 			if (editor.getDomain().isAssignableFrom(c))
 			{
@@ -179,14 +187,34 @@ public abstract class EditorMapAdapter implements EditorMap
 			}
 
 		}
+
+		if (editor instanceof ObjectPropertyEditor &&
+			((ObjectPropertyEditor) editor).hasInverseLink())
+		{
+			for (Class<? extends BioPAXElement> c : classToInverseEditorMap.keySet())
+			{
+				if (editor.getRange().isAssignableFrom(c))
+				{
+					classToInverseEditorMap.get(c).add((ObjectPropertyEditor) editor);
+
+				}
+			}
+		}
+	}
+
+	private void registerEditorsWithClasses(PropertyEditor editor, Class domain,
+		HashMap<Class<? extends BioPAXElement>, Set<? extends PropertyEditor>> editorMap)
+	{
 	}
 
 	protected void registerModelClass(String localName)
 	{
 		try
 		{
-			classToEditorMap.put(getModelInterface(localName),
-					new HashSet<PropertyEditor>());
+			Class<? extends BioPAXElement> modelInterface = getModelInterface(localName);
+
+			classToEditorMap.put(modelInterface, new HashSet<PropertyEditor>());
+			classToInverseEditorMap.put(modelInterface, new HashSet<ObjectPropertyEditor>());
 		}
 		catch (IllegalBioPAXArgumentException e)
 		{

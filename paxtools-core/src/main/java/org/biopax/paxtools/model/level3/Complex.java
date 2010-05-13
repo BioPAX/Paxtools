@@ -1,5 +1,7 @@
 package org.biopax.paxtools.model.level3;
 
+import org.biopax.paxtools.util.AutoComplete;
+
 import java.util.Set;
 
 
@@ -21,6 +23,7 @@ public interface Complex extends PhysicalEntity
 	 *
 	 * @return components of this complex
 	 */
+	@AutoComplete(backward = true)
 	Set<PhysicalEntity> getComponent();
 
 	/**

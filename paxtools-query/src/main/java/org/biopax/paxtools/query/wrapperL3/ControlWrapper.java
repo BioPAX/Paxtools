@@ -7,6 +7,9 @@ import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.Graph;
 import org.biopax.paxtools.query.model.Node;
 
+import java.util.Collection;
+import java.util.Collections;
+
 /**
  * @author Ozgun Babur
  */
@@ -80,4 +83,16 @@ public class ControlWrapper extends AbstractNode
 	{
 		return ctrl;
 	}
+
+	@Override
+	public Collection<Node> getUpperEquivalent()
+	{
+		return Collections.emptySet();
+	}
+
+	@Override
+	public Collection<Node> getLowerEquivalent()
+	{
+		return Collections.emptySet();
+	}	
 }

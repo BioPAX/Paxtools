@@ -23,7 +23,7 @@ public class AbstractEdge implements Edge
 
 	public Node getSourceNode()
 	{
-		return target;
+		return source;
 	}
 
 	public Graph getGraph()

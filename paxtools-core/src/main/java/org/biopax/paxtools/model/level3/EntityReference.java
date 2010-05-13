@@ -1,5 +1,7 @@
 package org.biopax.paxtools.model.level3;
 
+import org.biopax.paxtools.util.AutoComplete;
+
 import java.util.Set;
 
 /**
@@ -16,6 +18,7 @@ public interface EntityReference extends UtilityClass, Named, Observable
 	 *
 	 * @return a set of entityFeatures
 	 */
+	@AutoComplete(backward = true)
 	Set<EntityFeature> getEntityFeature();
 
 	/**

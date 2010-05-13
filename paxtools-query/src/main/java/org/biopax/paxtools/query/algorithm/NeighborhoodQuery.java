@@ -22,8 +22,8 @@ public class NeighborhoodQuery
     /**
      * Booleans to determine the directin of search.
      */
-    private boolean isUpstream;
-    private boolean isDownstream;
+    private boolean goUpstream;
+    private boolean goDownstream;
 
     /**
      * Stop distance.
@@ -40,15 +40,15 @@ public class NeighborhoodQuery
      * Result Set of Neighborhood Query
      */
     private Set<GraphObject> queryResult = new HashSet<GraphObject>();
-    
-    /**
+
+	/**
      * Constructor for Neighborhood Query.
      */
-    public NeighborhoodQuery(Set<Node> sourceNodes, boolean isUpstream, boolean isDownstream, int limit)
+    public NeighborhoodQuery(Set<Node> sourceNodes, boolean goUpstream, boolean goDownstream, int limit)
     {
         this.sourceNodes = sourceNodes;
-        this.isUpstream = isUpstream;
-        this.isDownstream = isDownstream;
+        this.goUpstream = goUpstream;
+        this.goDownstream = goDownstream;
         this.limit = limit;
     }
 
@@ -58,7 +58,7 @@ public class NeighborhoodQuery
     public Set<GraphObject> run()
     {
     	//if upstream is selected
-		if (isUpstream)
+		if (goUpstream)
 		{
 			//run BFS in upstream direction
 			BFS bfsBackward = new BFS(sourceNodes, null, false, this.limit);
@@ -69,7 +69,7 @@ public class NeighborhoodQuery
 			queryResult.addAll(mapBackward.keySet());
 		}
 		//if downstream is selected
-		if (isDownstream)
+		if (goDownstream)
 		{
 			//run BFS in downstream direction
 			BFS bfsForward = new BFS(sourceNodes, null, true, this.limit);

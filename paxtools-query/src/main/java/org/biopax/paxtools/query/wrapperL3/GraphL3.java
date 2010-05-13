@@ -1,6 +1,7 @@
 package org.biopax.paxtools.query.wrapperL3;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Conversion;
@@ -20,6 +21,7 @@ public class GraphL3 extends AbstractGraph
 
 	public GraphL3(Model model)
 	{
+		assert model.getLevel() == BioPAXLevel.L3;
 		this.model = model;
 	}
 
@@ -73,12 +75,15 @@ public class GraphL3 extends AbstractGraph
 		for (Object object : objects)
 		{
 			Node node = (Node) getGraphObject(object);
-			wrapped.add(node);
+			if (node != null)
+			{
+				wrapped.add(node);
+			}
 		}
 		return wrapped;
 	}
 
-	public Set<Object> getWrappedSet(Set<GraphObject> wrappers)
+	public Set<Object> getWrappedSet(Set<? extends GraphObject> wrappers)
 	{
 		Set<Object> objects = new HashSet<Object>();
 
