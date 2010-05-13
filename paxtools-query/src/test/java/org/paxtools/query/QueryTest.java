@@ -11,6 +11,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.PoIQuery;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -21,6 +22,7 @@ import java.util.Set;
 /**
  * @author Ozgun Babur
  */
+@Ignore
 public class QueryTest
 {
 	static final String DIR = "../biopax/Level3/examples/";
