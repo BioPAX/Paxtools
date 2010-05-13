@@ -13,12 +13,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-abstract class L3ElementImpl extends BioPAXElementImpl
+public abstract class L3ElementImpl extends BioPAXElementImpl
         implements Level3Element
 {
     private Set<String> comment;
 
-    L3ElementImpl()
+    public L3ElementImpl()
     {
         this.comment = new HashSet<String>();
     }

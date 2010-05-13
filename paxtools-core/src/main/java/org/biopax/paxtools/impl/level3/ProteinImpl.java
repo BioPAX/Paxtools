@@ -9,8 +9,11 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class ProteinImpl extends SimplePhysicalEntityImpl implements Protein
+public class ProteinImpl extends SimplePhysicalEntityImpl implements Protein
 {
+	public ProteinImpl() {
+	}
+	
 // ------------------------ INTERFACE METHODS ------------------------
 
 

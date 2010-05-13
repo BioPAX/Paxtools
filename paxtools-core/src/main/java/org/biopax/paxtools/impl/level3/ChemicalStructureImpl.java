@@ -12,16 +12,12 @@ import javax.persistence.*;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
+public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 {
 	private StructureFormatType structureFormat;
 	private String structureData;
 
-	/**
-	 * Constructor.
-	 */
-	public ChemicalStructureImpl()
-	{
+	public ChemicalStructureImpl() {
 	}
 
 	@Transient

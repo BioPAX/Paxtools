@@ -12,8 +12,11 @@ import javax.persistence.Transient;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class RnaRegionImpl extends NucleicAcidImpl implements RnaRegion
+public class RnaRegionImpl extends NucleicAcidImpl implements RnaRegion
 {
+	public RnaRegionImpl() {
+	}
+	
 // --------------------- Interface BioPAXElement ---------------------
 
     @Override @Transient

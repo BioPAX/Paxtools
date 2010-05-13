@@ -15,14 +15,14 @@ import java.util.*;
 /**
  */
 @Entity
-abstract class NamedImpl extends XReferrableImpl
+public abstract class NamedImpl extends XReferrableImpl
 {
 
 	private String standardName;
 	private String displayName;
 	private Set<String> allNames;
 
-	NamedImpl()
+	public NamedImpl()
 	{
 		allNames = new HashSet<String>();
 		displayName = null;

@@ -10,7 +10,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class RnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl implements RnaRegionReference
+public class RnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl implements RnaRegionReference
 {
 	//
 	// utilityClass interface implementation
@@ -19,6 +19,8 @@ class RnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl implements R
     RnaRegionReference rnaRegionReference;
     SequenceLocation sequenceLocation;
 
+    public RnaRegionReferenceImpl() {
+	}
 
     @Override @Transient
 	public Class<? extends RnaRegionReference> getModelInterface()

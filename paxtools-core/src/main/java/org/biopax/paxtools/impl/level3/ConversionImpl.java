@@ -9,12 +9,13 @@ import org.biopax.paxtools.model.level3.Stoichiometry;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class ConversionImpl extends InteractionImpl
+public class ConversionImpl extends InteractionImpl
 		implements Conversion
 {
 // ------------------------------ FIELDS ------------------------------
@@ -30,8 +31,8 @@ class ConversionImpl extends InteractionImpl
 
 	public ConversionImpl()
 	{
-		this.left = new HashSet<PhysicalEntity>();
-		this.right = new HashSet<PhysicalEntity>();
+		left = new HashSet<PhysicalEntity>();
+		right = new HashSet<PhysicalEntity>();
 		participantStoichiometry = new HashSet<Stoichiometry>();
 	}
 
@@ -48,7 +49,7 @@ class ConversionImpl extends InteractionImpl
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, fetch= FetchType.EAGER)
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, fetch= FetchType.EAGER, cascade={CascadeType.ALL})
 	public Set<PhysicalEntity> getRight()
 	{
 		return right;
@@ -71,7 +72,7 @@ class ConversionImpl extends InteractionImpl
 		this.right.remove(right);
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, fetch= FetchType.EAGER)
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, fetch= FetchType.EAGER, cascade={CascadeType.ALL})
 	public Set<PhysicalEntity> getLeft()
 	{
 		return left;
@@ -105,7 +106,7 @@ class ConversionImpl extends InteractionImpl
 		this.spontaneous = spontaneous;
 	}
 
-	@OneToMany(targetEntity = StoichiometryImpl.class, fetch=FetchType.LAZY)
+	@OneToMany(targetEntity = StoichiometryImpl.class, fetch=FetchType.LAZY, cascade={CascadeType.ALL})
 	public Set<Stoichiometry> getParticipantStoichiometry()
 	{
 		return participantStoichiometry;

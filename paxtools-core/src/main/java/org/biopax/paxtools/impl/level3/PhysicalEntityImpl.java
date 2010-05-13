@@ -9,12 +9,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
+public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 {
 
 	private CellularLocationVocabulary cellularLocation;
@@ -36,7 +37,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		controllerOf = new HashSet<Control>();
 		componentOf = new HashSet<Complex>();
 		memberPhysicalEntityOf = new HashSet<PhysicalEntity>(); //TODO make generic?
-		this.memberPhysicalEntity = new HashSet<PhysicalEntity>();
+		memberPhysicalEntity = new HashSet<PhysicalEntity>();
 	}
 
 	@Transient
@@ -46,13 +47,13 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
+	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component", cascade={CascadeType.ALL})
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
 	}
 
-	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
+	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public CellularLocationVocabulary getCellularLocation()
 	{
 		return cellularLocation;
@@ -63,7 +64,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class)
+	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
 	public Set<EntityFeature> getFeature()
 	{
 		return feature;
@@ -88,7 +89,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.feature = feature;
 	}
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class)
+	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
 	public Set<EntityFeature> getNotFeature()
 	{
 		return notFeature;
@@ -113,7 +114,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
 		return this.memberPhysicalEntity;    //todo
@@ -138,7 +139,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.memberPhysicalEntity = memberPhysicalEntity;             //todo
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity", cascade={CascadeType.ALL})
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 
@@ -224,7 +225,7 @@ class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController", cascade={CascadeType.ALL})
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

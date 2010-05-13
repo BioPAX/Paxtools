@@ -11,6 +11,9 @@ import javax.persistence.Transient;
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 public class TemplateReactionRegulationImpl extends ControlImpl implements TemplateReactionRegulation
 {
+	public TemplateReactionRegulationImpl() {
+	}
+	
 	@Transient
     public Class<? extends TemplateReactionRegulation> getModelInterface()
 	{

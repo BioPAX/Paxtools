@@ -7,25 +7,20 @@ import org.biopax.paxtools.model.level3.SequenceEntityReference;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
-abstract class SequenceEntityReferenceImpl
-        extends EntityReferenceImpl
+public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
         implements SequenceEntityReference
 {
     private BioSource organism;
     private String sequence;
 
-    /**
-     * Constructor.
-     */
-    SequenceEntityReferenceImpl()
-    {
-    }
-
+    public SequenceEntityReferenceImpl() {
+	}
 
     //
     // referenceSequenceEntity interface implementation
@@ -33,7 +28,7 @@ abstract class SequenceEntityReferenceImpl
     ////////////////////////////////////////////////////////////////////////////
 
     // Property organism
-	@ManyToOne(targetEntity = BioSourceImpl.class)
+	@ManyToOne(targetEntity = BioSourceImpl.class, cascade = {CascadeType.ALL})
     public BioSource getOrganism()
     {
         return organism;

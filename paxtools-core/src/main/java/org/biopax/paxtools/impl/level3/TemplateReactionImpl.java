@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.level3.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+
 import java.util.Set;
 import java.util.HashSet;
 
@@ -20,13 +21,14 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
         this.product = new HashSet<PhysicalEntity>();
         this.initiationRegion =  new HashSet<NucleicAcid>();
     }
+	
 	@Transient
     public Class<? extends TemplateReaction> getModelInterface()
 	{
 		return TemplateReaction.class;
 	}
 
-    @ManyToMany(targetEntity = PhysicalEntityImpl.class) //Todo: make sequence entity?
+    @ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL}) //Todo: make sequence entity?
     public Set<PhysicalEntity> getProduct()
     {
         return product;
@@ -51,7 +53,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
     }
 
 
-    @ManyToOne(targetEntity = NucleicAcidImpl.class)
+    @ManyToOne(targetEntity = NucleicAcidImpl.class, cascade = {CascadeType.ALL})
     public NucleicAcid getTemplate()
      {
          return this.template;

@@ -12,6 +12,9 @@ import javax.persistence.Transient;
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFeature
 {
+	public FragmentFeatureImpl() {
+	}
+	
 	@Override @Transient
 	public Class<? extends FragmentFeature> getModelInterface()
 	{

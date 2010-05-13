@@ -15,6 +15,9 @@ import javax.persistence.Transient;
 public class SequenceModificationVocabularyImpl extends ControlledVocabularyImpl
 	implements SequenceModificationVocabulary
 {
+	public SequenceModificationVocabularyImpl() {
+	}
+	
     @Override @Transient
     public Class<? extends SequenceModificationVocabulary> getModelInterface() {
         return SequenceModificationVocabulary.class;

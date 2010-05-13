@@ -10,9 +10,11 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class SmallMoleculeImpl extends SimplePhysicalEntityImpl
+public class SmallMoleculeImpl extends SimplePhysicalEntityImpl
 		implements SmallMolecule
 {
+	public SmallMoleculeImpl() {
+	}
 	
 	@Override @Transient
 	public Class<? extends PhysicalEntity> getModelInterface() {

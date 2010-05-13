@@ -27,7 +27,6 @@ import org.biopax.paxtools.proxy.StringSetBridge;
 //PostgreSQL
 //TABLE_PER_CLASS: ok
 //JOINED: not tested
-//SINGLE_TABLE: ok
 @javax.persistence.Entity(name = "l3element")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NamedQueries({

@@ -9,10 +9,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class ProteinReferenceImpl extends SequenceEntityReferenceImpl
+public class ProteinReferenceImpl extends SequenceEntityReferenceImpl
         implements ProteinReference
 {
-
+	public ProteinReferenceImpl() {
+	}
+	
     @Transient
     public Class<? extends ProteinReference> getModelInterface()
     {

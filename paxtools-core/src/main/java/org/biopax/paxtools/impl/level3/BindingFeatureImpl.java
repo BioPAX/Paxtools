@@ -6,13 +6,14 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class BindingFeatureImpl extends EntityFeatureImpl
+public class BindingFeatureImpl extends EntityFeatureImpl
 		implements BindingFeature
 {
 
@@ -24,6 +25,10 @@ class BindingFeatureImpl extends EntityFeatureImpl
 	//
 	////////////////////////////////////////////////////////////////////////////
 
+	public BindingFeatureImpl() {
+	}
+	
+	
 	@Transient
 	public Class<? extends BindingFeature> getModelInterface()
 	{
@@ -37,7 +42,7 @@ class BindingFeatureImpl extends EntityFeatureImpl
 
 	// Property BOUND-TO
 
-	@OneToOne(targetEntity = BindingFeatureImpl.class)
+	@OneToOne(targetEntity = BindingFeatureImpl.class, cascade={CascadeType.ALL})
 	public BindingFeature getBindsTo()
 	{
 		return bindsTo;

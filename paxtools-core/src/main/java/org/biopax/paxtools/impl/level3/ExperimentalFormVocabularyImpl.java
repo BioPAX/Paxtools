@@ -14,6 +14,9 @@ import javax.persistence.Transient;
 public class ExperimentalFormVocabularyImpl extends ControlledVocabularyImpl
 	implements ExperimentalFormVocabulary
 {
+	public ExperimentalFormVocabularyImpl() {
+	}
+	
     @Override @Transient
     public Class<? extends ExperimentalFormVocabulary> getModelInterface() {
         return ExperimentalFormVocabulary.class;

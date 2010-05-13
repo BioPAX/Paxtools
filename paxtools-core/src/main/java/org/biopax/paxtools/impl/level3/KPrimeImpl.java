@@ -16,7 +16,7 @@ import static java.lang.Float.floatToIntBits;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class KPrimeImpl extends L3ElementImpl implements KPrime
+public class KPrimeImpl extends L3ElementImpl implements KPrime
 {
 
 	private float ionicStrength = UNKNOWN_FLOAT;
@@ -25,6 +25,9 @@ class KPrimeImpl extends L3ElementImpl implements KPrime
 	private float pMg = UNKNOWN_FLOAT;
 	private float temperature = UNKNOWN_FLOAT;
 
+	public KPrimeImpl() {
+	}
+	
 	//
 	// bioPAXElement interface implementation
 	//

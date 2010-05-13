@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
@@ -16,7 +17,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class ControlImpl extends InteractionImpl
+public class ControlImpl extends InteractionImpl
 		implements Control
 {
 // ------------------------------ FIELDS ------------------------------
@@ -33,10 +34,10 @@ class ControlImpl extends InteractionImpl
 
 	public ControlImpl()
 	{
-		this.pathwayController = new HashSet<Pathway>();
-		this.peController = new HashSet<PhysicalEntity>();
-		this.controlled = new HashSet<Process>();
-		this.controller = new CompositeSet<Controller>();
+		pathwayController = new HashSet<Pathway>();
+		peController = new HashSet<PhysicalEntity>();
+		controlled = new HashSet<Process>();
+		controller = new CompositeSet<Controller>();
 		controller.addComposited(peController);
 		controller.addComposited(pathwayController);
 
@@ -65,7 +66,7 @@ class ControlImpl extends InteractionImpl
 		this.controlType = ControlType;
 	}
 
-	@ManyToMany(targetEntity = ProcessImpl.class)
+	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
 	public Set<Process> getControlled()
 	{
 		return this.controlled;
@@ -140,7 +141,7 @@ class ControlImpl extends InteractionImpl
 		return true;
 	}
 
-	@ManyToMany(targetEntity = PathwayImpl.class)
+	@ManyToMany(targetEntity = PathwayImpl.class, cascade={CascadeType.ALL})
 	Set<Pathway> getPathwayController()
 	{
 		return pathwayController;
@@ -152,7 +153,7 @@ class ControlImpl extends InteractionImpl
 		this.pathwayController = pathwayController;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
 	Set<PhysicalEntity> getPeController()
 	{
 		return peController;

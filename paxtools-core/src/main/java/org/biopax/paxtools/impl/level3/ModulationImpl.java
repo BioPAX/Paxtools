@@ -11,8 +11,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class ModulationImpl extends ControlImpl implements Modulation
+public class ModulationImpl extends ControlImpl implements Modulation
 {
+	
+	public ModulationImpl() {
+	}
+
 // ------------------------ INTERFACE METHODS ------------------------
 
 

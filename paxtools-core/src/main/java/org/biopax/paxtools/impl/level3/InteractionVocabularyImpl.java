@@ -14,6 +14,9 @@ import javax.persistence.Transient;
 public class InteractionVocabularyImpl extends ControlledVocabularyImpl
 	implements InteractionVocabulary
 {
+	public InteractionVocabularyImpl() {
+	}
+	
     @Override @Transient
     public Class<? extends InteractionVocabulary> getModelInterface() {
         return InteractionVocabulary.class;

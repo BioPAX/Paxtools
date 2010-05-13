@@ -5,5 +5,7 @@ import org.biopax.paxtools.model.level3.NucleicAcid;
 import javax.persistence.Entity;
 
 @Entity
-abstract class NucleicAcidImpl extends SimplePhysicalEntityImpl implements NucleicAcid {
+public abstract class NucleicAcidImpl extends SimplePhysicalEntityImpl implements NucleicAcid {
+	public NucleicAcidImpl() {
+	}
 }

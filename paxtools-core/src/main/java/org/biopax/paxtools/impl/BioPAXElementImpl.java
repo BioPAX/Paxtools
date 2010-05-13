@@ -3,10 +3,10 @@ package org.biopax.paxtools.impl;
 import javax.persistence.*;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.hibernate.search.annotations.Key;
 
 
 @Entity
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NamedQueries({
 	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfId",
 		query="from org.biopax.paxtools.model.BioPAXElement as el where upper(el.RDFId) = upper(:rdfid)"),
@@ -34,21 +34,20 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	// ------------------------------ FIELDS ------------------------------
 
 	private String id;
-	
 	private Long proxyId = 0L;
+
 
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     public Long getProxyId() {
         return proxyId;
     }
-	
-    public void setProxyId(Long value) {
+    protected void setProxyId(Long value) {
         proxyId = value;
     }
     
-    
-	protected BioPAXElementImpl(){};
+
+	public BioPAXElementImpl(){};
 	
 	
 	public int hashCode()
@@ -73,13 +72,14 @@ public abstract class BioPAXElementImpl implements BioPAXElement
         return value;
     }
 
+    @Transient
     public boolean isEquivalent(BioPAXElement element)
     {
         return this.equals(element) || this.getModelInterface().isInstance(element) &&
                 this.semanticallyEquivalent(element);
     }
 
-   protected boolean semanticallyEquivalent(BioPAXElement element)
+    protected boolean semanticallyEquivalent(BioPAXElement element)
     {
         return false;
     }
@@ -89,8 +89,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
         return hashCode();
     }
 
-
-    @Key
     @Column(unique=true, nullable=false)
     public String getRDFId()
     {

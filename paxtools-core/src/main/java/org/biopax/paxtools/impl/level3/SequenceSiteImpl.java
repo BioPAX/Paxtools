@@ -13,12 +13,14 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
+public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
 {
 
 	private PositionStatusType positionStatus;
 	private int sequencePosition = UNKNOWN_INT;
 
+	public SequenceSiteImpl() {
+	}
 
 	@Transient
     public Class<? extends SequenceSite> getModelInterface()

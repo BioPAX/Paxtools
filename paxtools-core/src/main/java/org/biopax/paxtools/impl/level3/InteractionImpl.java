@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -18,7 +19,7 @@ import java.util.Set;
  */
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class InteractionImpl extends ProcessImpl implements Interaction
+public class InteractionImpl extends ProcessImpl implements Interaction
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -51,7 +52,7 @@ class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
+	@ManyToMany(targetEntity = InteractionVocabularyImpl.class, cascade={CascadeType.ALL})
 	public Set<InteractionVocabulary> getInteractionType()
 	{
 	   return interactionType;
@@ -75,7 +76,7 @@ class InteractionImpl extends ProcessImpl implements Interaction
 	   this.interactionType = interactionType;
 	}
 
-	@ManyToMany(targetEntity = EntityImpl.class)
+	@ManyToMany(targetEntity = EntityImpl.class, cascade={CascadeType.ALL})
 	public Set<Entity> getParticipant()
 	{
 		return participant;

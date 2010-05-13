@@ -14,6 +14,9 @@ import javax.persistence.Transient;
 public class TissueVocabularyImpl extends ControlledVocabularyImpl
 	implements TissueVocabulary
 {
+	public TissueVocabularyImpl() {
+	}
+	
     @Override @Transient
     public Class<? extends TissueVocabulary> getModelInterface() {
         return TissueVocabulary.class;
