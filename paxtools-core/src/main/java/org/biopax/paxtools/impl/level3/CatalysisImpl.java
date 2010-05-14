@@ -10,6 +10,7 @@ import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import java.util.Set;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class CatalysisImpl extends ControlImpl implements Catalysis
+public class CatalysisImpl extends ControlImpl implements Catalysis
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -58,7 +59,7 @@ class CatalysisImpl extends ControlImpl implements Catalysis
 		this.catalysisDirection = catalysisDirection;
 	}
 
-	@ManyToMany(targetEntity= PhysicalEntityImpl.class)
+	@ManyToMany(targetEntity= PhysicalEntityImpl.class, cascade={CascadeType.ALL})
 	public Set<PhysicalEntity> getCofactor()
 	{
 		return cofactor;

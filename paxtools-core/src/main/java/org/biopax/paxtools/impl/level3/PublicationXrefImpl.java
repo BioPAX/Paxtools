@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class PublicationXrefImpl extends XrefImpl implements PublicationXref
+public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 {
 	private String title;
 	private Set<String> url;

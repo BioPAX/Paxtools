@@ -9,8 +9,11 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class DegradationImpl extends ConversionImpl implements Degradation
+public class DegradationImpl extends ConversionImpl implements Degradation
 {
+	public DegradationImpl() {
+	}
+	
     @Transient
 	public Class<? extends Degradation> getModelInterface()
     {

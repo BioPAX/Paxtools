@@ -14,6 +14,9 @@ import javax.persistence.Transient;
 public class SequenceRegionVocabularyImpl extends ControlledVocabularyImpl
 	implements SequenceRegionVocabulary
 {
+	public SequenceRegionVocabularyImpl() {
+	}
+	
     @Override @Transient
     public Class<? extends SequenceRegionVocabulary> getModelInterface() {
         return SequenceRegionVocabulary.class;

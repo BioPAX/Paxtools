@@ -14,6 +14,9 @@ import javax.persistence.Transient;
 public class EvidenceCodeVocabularyImpl extends ControlledVocabularyImpl
 	implements EvidenceCodeVocabulary
 {
+	public EvidenceCodeVocabularyImpl() {
+	}
+	
     @Override @Transient
     public Class<? extends EvidenceCodeVocabulary> getModelInterface() {
         return EvidenceCodeVocabulary.class;

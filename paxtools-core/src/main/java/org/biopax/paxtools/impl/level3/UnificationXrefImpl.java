@@ -11,6 +11,9 @@ import javax.persistence.Transient;
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 public class UnificationXrefImpl extends XrefImpl implements UnificationXref {
 
+	public UnificationXrefImpl() {
+	}
+	
     @Transient
     public Class<? extends UnificationXref> getModelInterface() {
         return UnificationXref.class;

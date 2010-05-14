@@ -9,17 +9,17 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class DnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl
+public class DnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl
 		implements DnaRegionReference
 {
+	public DnaRegionReferenceImpl() {
+	}
 
 	@Override @Transient
 	public Class<? extends DnaRegionReference> getModelInterface()
 	{
 		return DnaRegionReference.class;
 	}
-
-
 }
 
 

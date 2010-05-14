@@ -6,13 +6,14 @@ import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class PathwayImpl extends ProcessImpl implements Pathway
+public class PathwayImpl extends ProcessImpl implements Pathway
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -48,7 +49,7 @@ class PathwayImpl extends ProcessImpl implements Pathway
 // --------------------- ACCESORS and MUTATORS---------------------
 
 
-	@ManyToMany(targetEntity = ProcessImpl.class)
+	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
 	public Set<Process> getPathwayComponent()
 	{
 		return this.pathwayComponent;
@@ -71,7 +72,7 @@ class PathwayImpl extends ProcessImpl implements Pathway
 		component.getPathwayComponentOf().remove(this);
 	}
 
-	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")
+	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf", cascade={CascadeType.ALL})
 	public Set<PathwayStep> getPathwayOrder()
 	{
 		return pathwayOrder;
@@ -96,7 +97,7 @@ class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-	@ManyToOne(targetEntity = BioSourceImpl.class)
+	@ManyToOne(targetEntity = BioSourceImpl.class, cascade = {CascadeType.ALL})
 	public BioSource getOrganism()
 	{
 		return organism;
@@ -107,7 +108,7 @@ class PathwayImpl extends ProcessImpl implements Pathway
 		this.organism = organism;
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController")
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController", cascade={CascadeType.ALL})
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

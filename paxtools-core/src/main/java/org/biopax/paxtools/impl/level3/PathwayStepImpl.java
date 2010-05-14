@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -16,7 +17,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class PathwayStepImpl extends L3ElementImpl implements PathwayStep
+public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 {
 
 	private Set<Process> stepProcess;
@@ -43,7 +44,7 @@ class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class)
+	@ManyToMany(targetEntity = PathwayStepImpl.class, cascade={CascadeType.ALL})
 	public Set<PathwayStep> getNextStep()
 	{
 		return nextStep;
@@ -66,7 +67,7 @@ class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStep = nextStep;
 	}
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep", cascade={CascadeType.ALL})
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;
@@ -78,7 +79,7 @@ class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 
-	@ManyToMany(targetEntity = ProcessImpl.class)
+	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
 	public Set<Process> getStepProcess()
 	{
 		return stepProcess;
@@ -101,7 +102,7 @@ class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.stepProcess = stepProcess;
 	}
 
-	@ManyToMany(targetEntity = EvidenceImpl.class)
+	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
@@ -122,7 +123,7 @@ class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = evidence;
 	}
 
-	@ManyToOne(targetEntity = PathwayImpl.class)
+	@ManyToOne(targetEntity = PathwayImpl.class, cascade = {CascadeType.ALL})
 	public Pathway getPathwayOrderOf()
 	{
 		return this.pathwayOrderOf;

@@ -18,7 +18,7 @@ import java.util.Set;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class BiochemicalReactionImpl extends ConversionImpl
+public class BiochemicalReactionImpl extends ConversionImpl
 	implements BiochemicalReaction
 {
 // ------------------------------ FIELDS ------------------------------

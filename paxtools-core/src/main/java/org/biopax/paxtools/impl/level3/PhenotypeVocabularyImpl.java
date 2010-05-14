@@ -19,6 +19,9 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
 {
 	private String patoData;
 
+	public PhenotypeVocabularyImpl() {
+	}
+	
 	@Override @Transient 
     public Class<? extends PhenotypeVocabulary> getModelInterface() {
         return PhenotypeVocabulary.class;

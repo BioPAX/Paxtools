@@ -5,14 +5,17 @@ import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-abstract class NucleicAcidRegionReferenceImpl
+public abstract class NucleicAcidRegionReferenceImpl
 		extends SequenceEntityReferenceImpl
 		implements NucleicAcidRegionReference
 {
@@ -25,7 +28,12 @@ abstract class NucleicAcidRegionReferenceImpl
 	private Set<NucleicAcidRegionReference> subRegionOf;
 
 
-	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class)
+	public NucleicAcidRegionReferenceImpl() {
+		regionType = new HashSet<SequenceRegionVocabulary>();
+		subRegion = new HashSet<NucleicAcidRegionReference>();
+	}
+	
+	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, cascade={CascadeType.ALL})
 	public Set<NucleicAcidRegionReference> getSubRegion()
 	{
 		return subRegion;
@@ -49,7 +57,7 @@ abstract class NucleicAcidRegionReferenceImpl
 
 	}
 
-	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, mappedBy = "subRegion")
+	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, mappedBy = "subRegion", cascade={CascadeType.ALL})
 	public Set<NucleicAcidRegionReference> getSubRegionOf()
 	{
 		return subRegionOf;
@@ -61,7 +69,7 @@ abstract class NucleicAcidRegionReferenceImpl
 	}
 
 
-	@OneToOne(targetEntity = SequenceLocationImpl.class)
+	@OneToOne(targetEntity = SequenceLocationImpl.class, cascade={CascadeType.ALL})
 	public SequenceLocation getAbsoluteRegion()
 	{
 		return this.absoluteRegion;
@@ -73,7 +81,7 @@ abstract class NucleicAcidRegionReferenceImpl
 
 	}
 
-	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class)
+	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class, cascade={CascadeType.ALL})
 	public Set<SequenceRegionVocabulary> getRegionType()
 	{
 		return this.regionType;
@@ -94,7 +102,7 @@ abstract class NucleicAcidRegionReferenceImpl
 		this.regionType = regionType;
 	}
 
-	@ManyToOne(targetEntity = NucleicAcidReferenceImpl.class)
+	@ManyToOne(targetEntity = NucleicAcidReferenceImpl.class, cascade = {CascadeType.ALL})
 	public NucleicAcidReference getContainerEntityReference()
 	{
 		return this.containerEntityReference;

@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
@@ -19,7 +20,7 @@ import static org.biopax.paxtools.model.SetEquivalanceChecker.isEquivalentInters
  * @author Emek Demir
  */
 @Entity
-abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
+public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -34,7 +35,7 @@ abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 	 * Default constructor.
 	 */
 
-	protected XReferrableImpl()
+	public XReferrableImpl()
 	{
 		this.xref = new HashSet<Xref>();
 	}
@@ -43,7 +44,7 @@ abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 
 
 
-	@ManyToMany(targetEntity = XrefImpl.class)
+	@ManyToMany(targetEntity = XrefImpl.class, cascade={CascadeType.ALL})
 	public Set<Xref> getXref()
 	{
 		return xref;

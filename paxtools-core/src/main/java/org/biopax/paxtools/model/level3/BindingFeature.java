@@ -1,5 +1,7 @@
 package org.biopax.paxtools.model.level3;
 
+import org.biopax.paxtools.util.AutoComplete;
+
 public interface BindingFeature extends EntityFeature
 {
 
@@ -11,6 +13,7 @@ public interface BindingFeature extends EntityFeature
 	 *
 	 * @return paired binding feature.
 	 */
+	@AutoComplete(forward = false)
 	BindingFeature getBindsTo();
 
 	/**

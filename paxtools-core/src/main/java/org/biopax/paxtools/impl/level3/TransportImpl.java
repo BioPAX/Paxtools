@@ -9,9 +9,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class TransportImpl extends ConversionImpl implements Transport
+public class TransportImpl extends ConversionImpl implements Transport
 {
-// --------------------- Interface BioPAXElement ---------------------
+	public TransportImpl() {
+	}
+	
+	// --------------------- Interface BioPAXElement ---------------------
 
 	@Transient
     public Class<? extends Transport> getModelInterface()

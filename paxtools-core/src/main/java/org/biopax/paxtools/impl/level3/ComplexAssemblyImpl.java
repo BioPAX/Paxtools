@@ -9,14 +9,17 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class ComplexAssemblyImpl extends ConversionImpl
+public class ComplexAssemblyImpl extends ConversionImpl
 	implements ComplexAssembly
 {
+	public ComplexAssemblyImpl() {
+	}
+	
 // ------------------------ INTERFACE METHODS ------------------------
 
 
 // --------------------- Interface BioPAXElement ---------------------
-
+	
     @Override   @Transient
 	public Class<? extends ComplexAssembly> getModelInterface()
 	{

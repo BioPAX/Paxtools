@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -14,9 +15,12 @@ import javax.persistence.Transient;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class ModificationFeatureImpl extends EntityFeatureImpl
+public class ModificationFeatureImpl extends EntityFeatureImpl
 		implements ModificationFeature
 {
+	public ModificationFeatureImpl() {
+	}
+	
 	@Transient
 	public Class<? extends ModificationFeature> getModelInterface()
 	{
@@ -26,7 +30,7 @@ class ModificationFeatureImpl extends EntityFeatureImpl
 	private SequenceModificationVocabulary modificationType;
 
 
-	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)
+	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return modificationType;

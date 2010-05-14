@@ -7,18 +7,22 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
+public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 {
 	private float stoichiometricCoefficient = UNKNOWN_FLOAT;
 	private PhysicalEntity physicalEntity;
 
 
+	public StoichiometryImpl() {
+	}
+	
     @Transient
 	public Class<? extends Stoichiometry> getModelInterface()
 	{
@@ -76,7 +80,7 @@ class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 		return (int) (physicalEntity.equivalenceCode() + 23 * stoichiometricCoefficient);
 	}
 
-	@ManyToOne(targetEntity = PhysicalEntityImpl.class)
+	@ManyToOne(targetEntity = PhysicalEntityImpl.class, cascade = {CascadeType.ALL})
     public PhysicalEntity getPhysicalEntity()
 	{
 		return physicalEntity;

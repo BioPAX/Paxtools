@@ -12,6 +12,9 @@ import javax.persistence.Transient;
 public class RelationshipTypeVocabularyImpl extends ControlledVocabularyImpl
         implements RelationshipTypeVocabulary {
 
+	public RelationshipTypeVocabularyImpl() {
+	}
+	
     @Override @Transient
     public Class<? extends RelationshipTypeVocabulary> getModelInterface() {
         return RelationshipTypeVocabulary.class;

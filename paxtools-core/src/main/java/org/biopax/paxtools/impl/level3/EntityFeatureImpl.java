@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
+public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
 
 	private Set<Evidence> evidence;
@@ -27,16 +27,13 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	private Set<EntityFeature> memberFeatureOf;
 
 
-
-
-	EntityFeatureImpl()
-	
+	public EntityFeatureImpl()
 	{
 		evidence = new HashSet<Evidence>();
 		featureOf = new HashSet<PhysicalEntity>();
 		notFeatureOf = new HashSet<PhysicalEntity>();
-		this.memberFeatureOf = new HashSet<EntityFeature>();
-		this.memberFeature = new HashSet<EntityFeature>();
+		memberFeatureOf = new HashSet<EntityFeature>();
+		memberFeature = new HashSet<EntityFeature>();
 	}
 
 
@@ -50,7 +47,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	/**
 	 * @return Reference entity that this feature belongs to.
 	 */
-	@ManyToOne(targetEntity = EntityReferenceImpl.class)
+	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL})
 	public EntityReference getEntityFeatureOf()
 	{
 		return ownerEntityReference;
@@ -88,20 +85,20 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature", cascade={CascadeType.ALL})
 	public Set<PhysicalEntity> getFeatureOf()
 	{
 		return featureOf;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature", cascade={CascadeType.ALL})
 	public Set<PhysicalEntity> getNotFeatureOf()
 	{
 		return notFeatureOf;
 	}
 
 
-	@ManyToMany(targetEntity = EvidenceImpl.class)
+	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
@@ -123,7 +120,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
-	@OneToOne(targetEntity = SequenceLocationImpl.class)
+	@OneToOne(targetEntity = SequenceLocationImpl.class, cascade={CascadeType.ALL})
 	public SequenceLocation getFeatureLocation()
 	{
 		return featureLocation;
@@ -133,7 +130,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocation = featureLocation;
 	}
 
-	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class)
+	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public SequenceRegionVocabulary getFeatureLocationType()
 	{
 		return featureLocationType;
@@ -145,7 +142,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class)
+	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
 	public Set<EntityFeature> getMemberFeature()
 	{
 		return memberFeature;
@@ -166,7 +163,7 @@ class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.memberFeature = feature;
 	}
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
+	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature", cascade={CascadeType.ALL})
 	public Set<EntityFeature> getMemberFeatureOf()
 	{
 		return this.memberFeatureOf;

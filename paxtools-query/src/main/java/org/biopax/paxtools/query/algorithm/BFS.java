@@ -122,6 +122,8 @@ public class BFS
 
 		for (Edge edge : isFwd ? current.getDownstream() : current.getUpstream())
 		{
+			assert edge != null;
+
 			// Label the edge considering direction of traversal and type of current node
 
 			if (isFwd || !current.isBreadthNode())
@@ -135,6 +137,8 @@ public class BFS
 
 			// Get the other end of the edge
 			Node neigh = isFwd ? edge.getTargetNode() : edge.getSourceNode();
+
+			assert neigh != null;
 
 			// Process the neighbor if not processed or not in queue
 

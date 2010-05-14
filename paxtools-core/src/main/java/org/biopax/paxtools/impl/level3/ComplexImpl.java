@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class ComplexImpl extends PhysicalEntityImpl implements Complex
+public class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -22,7 +22,7 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-	ComplexImpl()
+	public ComplexImpl()
 	{
 		this.component = new HashSet<PhysicalEntity>();
 		this.componentStoichiometry = new HashSet<Stoichiometry>();
@@ -44,7 +44,7 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;
@@ -71,7 +71,7 @@ class ComplexImpl extends PhysicalEntityImpl implements Complex
 		}
 	}
 
-	@OneToMany(targetEntity = StoichiometryImpl.class)
+	@OneToMany(targetEntity = StoichiometryImpl.class, cascade={CascadeType.ALL})
 	public Set<Stoichiometry> getComponentStoichiometry()
 	{
 		return componentStoichiometry;

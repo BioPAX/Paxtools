@@ -8,6 +8,7 @@ import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -53,7 +54,11 @@ public class ConversionWrapper extends AbstractNode
 		}
 
 		wrapAround();
-		reverse.wrapAround();
+
+		if (reverse !=  null)
+		{
+			reverse.wrapAround();
+		}
 	}
 
 	protected void wrapAround()
@@ -114,6 +119,18 @@ public class ConversionWrapper extends AbstractNode
 	public Conversion getConversion()
 	{
 		return conv;
+	}
+
+	@Override
+	public Collection<Node> getUpperEquivalent()
+	{
+		return Collections.emptySet();
+	}
+
+	@Override
+	public Collection<Node> getLowerEquivalent()
+	{
+		return Collections.emptySet();
 	}
 
 	public static final boolean LEFT_TO_RIGHT = true;

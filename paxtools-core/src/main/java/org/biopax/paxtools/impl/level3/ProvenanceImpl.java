@@ -11,6 +11,8 @@ import javax.persistence.Transient;
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 public class ProvenanceImpl extends NamedImpl implements Provenance
 {
+	public ProvenanceImpl() {
+	}
 
 	@Transient
     public Class<? extends Provenance> getModelInterface()

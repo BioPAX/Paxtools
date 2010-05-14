@@ -6,17 +6,21 @@ import org.biopax.paxtools.model.level3.RelationshipTypeVocabulary;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
+public class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 {
 
 	private RelationshipTypeVocabulary relationshipType;
 
+	public RelationshipXrefImpl() {
+	}
+	
 	//
 	// BioPAXElement interface implementation
 	//
@@ -33,7 +37,7 @@ class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class)
+    @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public RelationshipTypeVocabulary getRelationshipType()
 	{
 		return relationshipType;

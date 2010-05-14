@@ -10,11 +10,14 @@ import javax.persistence.*;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
+public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
 	Conversion stepConversion;
 	StepDirection stepDirection;
 
+	public BiochemicalPathwayStepImpl() {
+	}
+	
 	//
 	// utilityClass interface implementation
 	//
@@ -31,7 +34,7 @@ class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalP
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property STEP-CONVERSION
-	@ManyToOne(targetEntity = ControlImpl.class)
+	@ManyToOne(targetEntity = ControlImpl.class, cascade = {CascadeType.ALL})
     public Conversion getStepConversion()
 	{
 		return stepConversion;

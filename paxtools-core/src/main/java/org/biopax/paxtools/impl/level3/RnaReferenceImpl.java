@@ -9,9 +9,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class RnaReferenceImpl extends NucleicAcidReferenceImpl 
+public class RnaReferenceImpl extends NucleicAcidReferenceImpl 
 	implements RnaReference
 {
+
+	public RnaReferenceImpl() {
+	}
 
 	//
 	// utilityClass interface implementation

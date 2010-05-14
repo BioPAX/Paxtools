@@ -5,13 +5,14 @@ import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-abstract class XrefImpl extends L3ElementImpl implements Xref
+public abstract class XrefImpl extends L3ElementImpl implements Xref
 {
 
 	private String db;
@@ -108,7 +109,7 @@ abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 
-	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
+	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref", cascade={CascadeType.ALL})
 	public Set<XReferrable> getXrefOf()
 	{
 		return xrefOf;

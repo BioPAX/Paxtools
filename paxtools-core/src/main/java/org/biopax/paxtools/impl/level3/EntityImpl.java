@@ -9,6 +9,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
@@ -55,8 +56,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 		this.dataSource = new HashSet<Provenance>();
 		this.participantOf = new HashSet<Interaction>();
 		this.evidence = new HashSet<Evidence>();
-	
-
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -87,7 +86,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 		this.availability.remove(availability_text);
 	}
 
-	@ManyToMany(targetEntity = ProvenanceImpl.class)
+	@ManyToMany(targetEntity = ProvenanceImpl.class, cascade={CascadeType.ALL})
 	public Set<Provenance> getDataSource()
 	{
 		return dataSource;
@@ -110,7 +109,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
-	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
+	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant", cascade={CascadeType.ALL})
 	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;
@@ -126,7 +125,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
-	@ManyToMany(targetEntity = EvidenceImpl.class)
+	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.level3.ExperimentalForm;
 import org.biopax.paxtools.model.level3.Score;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -17,7 +18,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class EvidenceImpl extends XReferrableImpl implements Evidence
+public class EvidenceImpl extends XReferrableImpl implements Evidence
 {
 
 	private Set<ExperimentalForm> experimentalForm;
@@ -57,7 +58,7 @@ class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of scores representing confidence
 	 */
-	@OneToMany(targetEntity = ScoreImpl.class)
+	@OneToMany(targetEntity = ScoreImpl.class, cascade={CascadeType.ALL})
 	public Set<Score> getConfidence()
 	{
 		return confidence;
@@ -105,7 +106,7 @@ class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of evidence codes  for this evidence type.
 	 */
-	@ManyToOne(targetEntity = EvidenceCodeVocabularyImpl.class)
+	@ManyToOne(targetEntity = EvidenceCodeVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
 	{
 		return evidenceCode;
@@ -151,7 +152,7 @@ class EvidenceImpl extends XReferrableImpl implements Evidence
 	}
 
 
-	@OneToMany(targetEntity = ExperimentalFormImpl.class)
+	@OneToMany(targetEntity = ExperimentalFormImpl.class, cascade={CascadeType.ALL})
 	public Set<ExperimentalForm> getExperimentalForm()
 	{
 		return experimentalForm;

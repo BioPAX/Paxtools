@@ -8,9 +8,11 @@ import javax.persistence.*;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class DnaReferenceImpl extends NucleicAcidReferenceImpl implements
+public class DnaReferenceImpl extends NucleicAcidReferenceImpl implements
 		DnaReference
 {
+	public DnaReferenceImpl() {
+	}
 
 	@Override @Transient
 	public Class<? extends DnaReference> getModelInterface()

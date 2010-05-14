@@ -13,12 +13,12 @@ import javax.persistence.Transient;
  */
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class MolecularInteractionImpl extends InteractionImpl
+public class MolecularInteractionImpl extends InteractionImpl
         implements MolecularInteraction
 {
-// --------------------------- CONSTRUCTORS ---------------------------
-
-
+	public MolecularInteractionImpl() {
+	}
+	
 	@Transient
     public Class<? extends MolecularInteraction> getModelInterface()
     {

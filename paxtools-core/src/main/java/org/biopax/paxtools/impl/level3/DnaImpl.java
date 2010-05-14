@@ -10,8 +10,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class DnaImpl extends NucleicAcidImpl implements Dna
+public class DnaImpl extends NucleicAcidImpl implements Dna
 {
+	
+	public DnaImpl() {
+	}
+	
 // ------------------------ INTERFACE METHODS ------------------------
 
 

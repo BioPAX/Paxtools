@@ -7,13 +7,14 @@ import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.TissueVocabulary;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class BioSourceImpl extends NamedImpl implements BioSource
+public class BioSourceImpl extends NamedImpl implements BioSource
 {
 
 
@@ -21,8 +22,7 @@ class BioSourceImpl extends NamedImpl implements BioSource
 	private TissueVocabulary tissue;
 
 
-	public BioSourceImpl()
-	{
+	public BioSourceImpl(){
 	}
 
 	//
@@ -64,7 +64,7 @@ class BioSourceImpl extends NamedImpl implements BioSource
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @ManyToOne(targetEntity = CellVocabularyImpl.class)
+    @ManyToOne(targetEntity = CellVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public CellVocabulary getCellType()
 	{
 		return celltype;
@@ -75,7 +75,7 @@ class BioSourceImpl extends NamedImpl implements BioSource
 		this.celltype = celltype;
 	}
 
-	@ManyToOne(targetEntity = TissueVocabularyImpl.class)
+	@ManyToOne(targetEntity = TissueVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public TissueVocabulary getTissue()
 	{
 		return tissue;

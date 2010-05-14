@@ -13,7 +13,7 @@ import static java.lang.Float.compare;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class DeltaGImpl extends L3ElementImpl implements DeltaG
+public class DeltaGImpl extends L3ElementImpl implements DeltaG
 {
 
 	private float deltaGPrime0 = UNKNOWN_FLOAT;
@@ -22,6 +22,10 @@ class DeltaGImpl extends L3ElementImpl implements DeltaG
 	private float ph = UNKNOWN_FLOAT;
 	private float pMg = UNKNOWN_FLOAT;
 
+	
+	public DeltaGImpl() {
+	}
+	
 	//
 	// BioPAXElement interface implementation
 	//

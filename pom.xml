@@ -22,7 +22,7 @@
         <module>pathwaycommons-client</module>
         <module>biopax-converter</module>
         <!--<module>psimi-converter</module>-->
-        <module>paxtools-main</module>
+        <!--<module>paxtools-main</module>-->
         <module>paxtools-query</module>
     </modules>
 

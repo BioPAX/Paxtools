@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 import org.biopax.paxtools.model.level3.Score;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -15,10 +16,13 @@ import javax.persistence.Transient;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
-class GeneticInteractionImpl extends InteractionImpl
+public class GeneticInteractionImpl extends InteractionImpl
         implements GeneticInteraction
 {
 
+	public GeneticInteractionImpl() {
+	}
+	
 	@Transient
 	public Class<? extends GeneticInteraction> getModelInterface()
 	{
@@ -29,7 +33,7 @@ class GeneticInteractionImpl extends InteractionImpl
 
     private Score interactionScore;
 
-    @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)
+    @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public PhenotypeVocabulary getPhenotype()
     {
         return phenotype;
@@ -40,7 +44,7 @@ class GeneticInteractionImpl extends InteractionImpl
         this.phenotype = phenotype;
     }
 
-	@OneToOne(targetEntity = ScoreImpl.class)
+	@OneToOne(targetEntity = ScoreImpl.class, cascade={CascadeType.ALL})
     public Score getInteractionScore()
     {
         return interactionScore;

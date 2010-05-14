@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -16,13 +17,16 @@ public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements Co
 {
 	private SequenceModificationVocabulary modificationType;
 
+	public CovalentBindingFeatureImpl() {
+	}
+	
 	@Override @Transient
 	public Class<? extends CovalentBindingFeature> getModelInterface()
 	{
 		return CovalentBindingFeature.class;
 	}
 
-	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)
+	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return this.modificationType;

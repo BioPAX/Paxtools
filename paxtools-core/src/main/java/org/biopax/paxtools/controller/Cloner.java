@@ -4,6 +4,9 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.Model;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,74 +19,67 @@ import java.util.Set;
 public class Cloner implements Visitor
 {
 	Traverser traverser;
-	private EditorMap map;
 	private BioPAXFactory factory;
-	private Model currentTarget;
+	private Model targetModel;
+	private Map<String, BioPAXElement> sourceMap;
+	private Map<String, BioPAXElement> targetMap;
 
 	public Cloner(EditorMap map, BioPAXFactory factory)
 	{
-
-		this.map = map;
 		this.factory = factory;
 		traverser = new Traverser(map, this);
+		sourceMap = new HashMap<String, BioPAXElement>();
+		targetMap = new HashMap<String, BioPAXElement>();
 	}
 
 	public Model clone(Model source, Set<BioPAXElement> toBeCloned)
 	{
-		Model target = factory.createModel();
+		targetModel = factory.createModel();
+
 		for (BioPAXElement bpe : toBeCloned)
 		{
-			cloneInto(source, target, bpe);
+			sourceMap.put(bpe.getRDFId(), bpe);
 		}
-		return target;
-	}
 
-	/**
-	 * Clones and adds the BioPAX element into the model and traverses the element for its dependent
-	 * elements.
-	 * @param source Source model for the objects to be cloned
-	 * @param target Target model to add clones
-	 * @param bpe BioPAXElement to be cloned
-	 */
-	public void cloneInto(Model source, Model target, BioPAXElement... bpe)
-	{
-		currentTarget = target;
-		for (BioPAXElement paxElement : bpe)
+		for (BioPAXElement bpe : toBeCloned)
 		{
-			traverser.traverse(paxElement, source);
+			traverser.traverse(bpe, source);
 		}
-		currentTarget=null;
+
+		return targetModel;
 	}
 
 // --------------------- Interface Visitor ---------------------
 
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-		if (range != null)
+		if (!targetMap.containsKey(domain.getRDFId()))
 		{
-			if (range instanceof BioPAXElement && !model.getObjects().contains(range))
-			{
-				BioPAXElement bpe = (BioPAXElement) range;
-
-				BioPAXElement clone = factory.reflectivelyCreate(bpe.getClass());
-
-				currentTarget.add(clone);
-				traverser.traverse(bpe, model);
-			}
-			else
-			{
-				editor.setPropertyToBean(getClone(domain),range);
-			}
+			BioPAXElement targetDomain = factory.reflectivelyCreate(domain.getModelInterface());
+			targetDomain.setRDFId(domain.getRDFId());
+			targetMap.put(targetDomain.getRDFId(), targetDomain);
+			targetModel.add(targetDomain);
 		}
 
+		if (range instanceof BioPAXElement)
+		{
+			BioPAXElement bpe = (BioPAXElement) range;
+			if (sourceMap.containsKey(bpe.getRDFId()))
+			{
+				if (!targetMap.containsKey(bpe.getRDFId()))
+				{
+					traverser.traverse(bpe, model);
+				}
+
+				editor.setPropertyToBean(
+					targetMap.get(domain.getRDFId()), targetMap.get(bpe.getRDFId()));
+			}
+		}
+		else
+		{
+			editor.setPropertyToBean(targetMap.get(domain.getRDFId()), range);
+		}
 	}
-
-	private BioPAXElement getClone(BioPAXElement domain)
-	{
-		return null;
-	}
-
-
 }
 
 

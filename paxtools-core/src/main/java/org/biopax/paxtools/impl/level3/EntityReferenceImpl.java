@@ -4,7 +4,9 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -12,14 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-abstract class EntityReferenceImpl extends NamedImpl
+public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
 {
-
 	private Set<EntityFeature> entityFeature;
-
-
-
 	private Set<SimplePhysicalEntity> entityReferenceOf;
 	private Set<Evidence> evidence;
 	Set<EntityReferenceTypeVocabulary> entityReferenceType;
@@ -29,7 +27,7 @@ abstract class EntityReferenceImpl extends NamedImpl
 	/**
 	 * Constructor.
 	 */
-	EntityReferenceImpl()
+	public EntityReferenceImpl()
 	{
 		this.entityFeature = new HashSet<EntityFeature>();
 		this.entityReferenceOf = new HashSet<SimplePhysicalEntity>();
@@ -51,7 +49,8 @@ abstract class EntityReferenceImpl extends NamedImpl
 	 *
 	 * @return A set of entity features for the reference entity.
 	 */
-	@OneToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "entityFeatureOf")
+	@OneToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "entityFeatureOf", 
+			cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
@@ -94,13 +93,15 @@ abstract class EntityReferenceImpl extends NamedImpl
 		this.entityFeature = entityFeature;
 	}
 
-	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReference")
+	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReference", 
+			cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;
 	}
 
-	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class)
+	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class, 
+			cascade={CascadeType.ALL})
 	public Set<EntityReferenceTypeVocabulary> getEntityReferenceType()
 	{
 		return entityReferenceType;
@@ -124,7 +125,8 @@ abstract class EntityReferenceImpl extends NamedImpl
 		this.entityReferenceType=entityReferenceType;
 	}
 
-	@ManyToMany(targetEntity = EntityReferenceImpl.class) //todo generify?
+	@ManyToMany(targetEntity = EntityReferenceImpl.class, 
+			cascade={CascadeType.ALL}) //todo generify?
 	public Set<EntityReference> getMemberEntityReference()
 	{
 		return memberEntity;
@@ -148,7 +150,8 @@ abstract class EntityReferenceImpl extends NamedImpl
 
 	}
 
-	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
+	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference", 
+			cascade={CascadeType.ALL})
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
 		return ownerEntityReference;
@@ -164,7 +167,7 @@ abstract class EntityReferenceImpl extends NamedImpl
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
-	@ManyToMany(targetEntity = EvidenceImpl.class)
+	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

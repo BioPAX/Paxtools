@@ -8,18 +8,22 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class ScoreImpl extends XReferrableImpl implements Score
+public class ScoreImpl extends XReferrableImpl implements Score
 {
 
 	private String value;
     private Provenance scoreSource;
 
+    public ScoreImpl() {
+	}
+    
     //
 	// BioPAXElement interface implementation
 	//
@@ -50,7 +54,7 @@ class ScoreImpl extends XReferrableImpl implements Score
 		this.value = value;
 	}
 
-    @ManyToOne(targetEntity = ProvenanceImpl.class)
+    @ManyToOne(targetEntity = ProvenanceImpl.class, cascade = {CascadeType.ALL})
     public Provenance getScoreSource()
     {
         return scoreSource;

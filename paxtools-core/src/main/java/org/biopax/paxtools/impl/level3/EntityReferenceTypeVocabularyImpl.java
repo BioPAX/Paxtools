@@ -14,6 +14,9 @@ import javax.persistence.Transient;
 public class EntityReferenceTypeVocabularyImpl extends ControlledVocabularyImpl
 	implements EntityReferenceTypeVocabulary
 {
+	public EntityReferenceTypeVocabularyImpl() {
+	}
+	
     @Override @Transient
     public Class<? extends EntityReferenceTypeVocabulary> getModelInterface() {
         return EntityReferenceTypeVocabulary.class;

@@ -11,10 +11,15 @@ import javax.persistence.Transient;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-class CellVocabularyImpl extends ControlledVocabularyImpl
+public class CellVocabularyImpl extends ControlledVocabularyImpl
 	implements CellVocabulary
 {
-    @Override @Transient
+	
+	public CellVocabularyImpl() {
+	}
+
+	
+	@Override @Transient
     public Class<? extends CellVocabulary> getModelInterface() {
         return CellVocabulary.class;
     }
