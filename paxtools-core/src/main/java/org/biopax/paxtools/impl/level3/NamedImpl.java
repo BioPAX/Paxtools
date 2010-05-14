@@ -1,5 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.util.SetStringBridge;
+
 import javax.persistence.Basic;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -15,14 +17,14 @@ import java.util.*;
 /**
  */
 @Entity
-abstract class NamedImpl extends XReferrableImpl
+public abstract class NamedImpl extends XReferrableImpl
 {
 
 	private String standardName;
 	private String displayName;
 	private Set<String> allNames;
 
-	NamedImpl()
+	public NamedImpl()
 	{
 		allNames = new HashSet<String>();
 		displayName = null;
@@ -57,7 +59,7 @@ abstract class NamedImpl extends XReferrableImpl
 
 	@ElementCollection
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
-	@FieldBridge(impl=StringBridge.class)
+	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getName()
 	{
 		return allNames;
