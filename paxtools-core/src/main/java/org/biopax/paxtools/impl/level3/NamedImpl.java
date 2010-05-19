@@ -17,6 +17,7 @@ import java.util.*;
 /**
  */
 @Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class NamedImpl extends XReferrableImpl
 {
 
@@ -32,8 +33,8 @@ public abstract class NamedImpl extends XReferrableImpl
 	}
 
 	@Basic
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
-	@FieldBridge(impl=StringBridge.class)
+	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@FieldBridge(impl = StringBridge.class)
 	public String getStandardName()
 	{
 		return standardName;
@@ -45,8 +46,8 @@ public abstract class NamedImpl extends XReferrableImpl
 	}
 
 	@Basic
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
-	@FieldBridge(impl=StringBridge.class)
+	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@FieldBridge(impl = StringBridge.class)
 	public String getDisplayName()
 	{
 		return displayName;
@@ -58,8 +59,8 @@ public abstract class NamedImpl extends XReferrableImpl
 	}
 
 	@ElementCollection
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAME, index=Index.TOKENIZED)
-	@FieldBridge(impl=SetStringBridge.class)
+	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@FieldBridge(impl = SetStringBridge.class)
 	public Set<String> getName()
 	{
 		return allNames;
@@ -80,19 +81,24 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	public void addName(String name)
 	{
-		allNames.add(name);
+		if (name != null)
+
+			allNames.add(name);
 	}
 
 	public void removeName(String name)
 	{
-		allNames.remove(name);
-		if (name.equals(standardName))
+		if (name != null)
 		{
-			standardName = null;
-		}
-		if (name.equals(displayName))
-		{
-			displayName = null;
+			allNames.remove(name);
+			if (name.equals(standardName))
+			{
+				standardName = null;
+			}
+			if (name.equals(displayName))
+			{
+				displayName = null;
+			}
 		}
 	}
 

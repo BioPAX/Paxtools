@@ -11,6 +11,7 @@ import java.util.HashSet;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
     private Set<NucleicAcid> initiationRegion;

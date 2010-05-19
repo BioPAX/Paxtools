@@ -17,6 +17,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 {
 
@@ -67,7 +68,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStep = nextStep;
 	}
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;

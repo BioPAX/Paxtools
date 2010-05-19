@@ -175,9 +175,9 @@ public abstract class EditorMapAdapter implements EditorMap
 						)
 						)
 				{
-					if (log.isInfoEnabled())
+					if (log.isDebugEnabled())
 					{
-						log.info("skipping restricted participant property");
+						log.debug("skipping restricted participant property");
 					}
 				}
 				else

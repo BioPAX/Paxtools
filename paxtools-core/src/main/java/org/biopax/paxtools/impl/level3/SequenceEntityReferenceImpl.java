@@ -13,6 +13,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
         implements SequenceEntityReference
 {

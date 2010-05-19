@@ -19,6 +19,7 @@ import static org.biopax.paxtools.model.SetEquivalanceChecker.*;
 
 
 @javax.persistence.Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class EntityImpl extends NamedImpl implements Entity
 {
 // ------------------------------ FIELDS ------------------------------
@@ -109,7 +110,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
-	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
 	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;

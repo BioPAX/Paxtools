@@ -13,7 +13,9 @@ import org.biopax.paxtools.io.BioPAXIOHandlerAdapter;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
+
 import static org.biopax.paxtools.model.BioPAXLevel.isInBioPAXNameSpace;
+
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -63,12 +65,13 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 	}
 
 	// -------------------------- OTHER METHODS --------------------------
-	
+
 	@Override
-	protected void resetEditorMap() {
+	protected void resetEditorMap()
+	{
 		setEditorMap(new JenaEditorMap(this.getLevel()));
 	}
-	
+
 	protected void init(InputStream in)
 	{
 		ontModel = readJenaModel(in);
@@ -185,10 +188,11 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 						}
 						checkCardinalityAndBindValue(bpe, individual, model, ontProperty, editor);
 					}
-					else
+					else if (log.isDebugEnabled())
 					{
-						log.info("Skipping non-biopax statement:" + predicate);
+						log.debug("Skipping non-biopax statement:" + predicate);
 					}
+
 				}
 				catch (IllegalBioPAXArgumentException
 						e)
@@ -388,7 +392,8 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 		Class range = editor.getRange();
 		JenaEditorMap editorMap = (JenaEditorMap) this.getEditorMap();
 		XSDDatatype dataType = editorMap.getDataTypeFor(editor);
-		if (dataType != null) {
+		if (dataType != null)
+		{
 			ind.addProperty(property,
 					ontModel.createTypedLiteral(value.toString(),
 							dataType));
@@ -396,7 +401,8 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 		else
 		{
 			Individual valueInd = objectToIndividualMap.get(value);
-			if (valueInd == null) // TODO not sure about Boolean case here, but this makes tests pass...
+			if (valueInd ==
+			    null) // TODO not sure about Boolean case here, but this makes tests pass...
 			{
 				throw new IllegalBioPAXArgumentException(
 						range + " : for value '" + value

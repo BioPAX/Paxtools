@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 @Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 		implements SimplePhysicalEntity
 {

@@ -13,7 +13,8 @@ import java.util.Set;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
-public class SequenceLocationImpl extends L3ElementImpl 
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+public class SequenceLocationImpl extends L3ElementImpl
 	implements SequenceLocation
 {
 	private Set<SequenceRegionVocabulary> regionType;

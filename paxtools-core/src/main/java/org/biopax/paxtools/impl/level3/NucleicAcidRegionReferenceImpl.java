@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class NucleicAcidRegionReferenceImpl
 		extends SequenceEntityReferenceImpl
 		implements NucleicAcidRegionReference
@@ -57,7 +58,7 @@ public abstract class NucleicAcidRegionReferenceImpl
 
 	}
 
-	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, mappedBy = "subRegion", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, mappedBy = "subRegion")
 	public Set<NucleicAcidRegionReference> getSubRegionOf()
 	{
 		return subRegionOf;

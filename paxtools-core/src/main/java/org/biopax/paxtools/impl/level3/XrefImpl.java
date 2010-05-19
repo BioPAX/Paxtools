@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class XrefImpl extends L3ElementImpl implements Xref
 {
 
@@ -109,7 +110,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 
-	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()
 	{
 		return xrefOf;

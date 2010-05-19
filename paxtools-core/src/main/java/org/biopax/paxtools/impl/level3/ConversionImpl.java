@@ -15,6 +15,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ConversionImpl extends InteractionImpl
 		implements Conversion
 {
@@ -49,7 +50,7 @@ public class ConversionImpl extends InteractionImpl
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, fetch= FetchType.EAGER, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
 	public Set<PhysicalEntity> getRight()
 	{
 		return right;
@@ -72,7 +73,7 @@ public class ConversionImpl extends InteractionImpl
 		this.right.remove(right);
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, fetch= FetchType.EAGER, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
 	public Set<PhysicalEntity> getLeft()
 	{
 		return left;
@@ -106,7 +107,7 @@ public class ConversionImpl extends InteractionImpl
 		this.spontaneous = spontaneous;
 	}
 
-	@OneToMany(targetEntity = StoichiometryImpl.class, fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+	@OneToMany(targetEntity = StoichiometryImpl.class,  cascade={CascadeType.ALL})
 	public Set<Stoichiometry> getParticipantStoichiometry()
 	{
 		return participantStoichiometry;

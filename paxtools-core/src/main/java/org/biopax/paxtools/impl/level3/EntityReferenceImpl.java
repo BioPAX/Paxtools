@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
 {

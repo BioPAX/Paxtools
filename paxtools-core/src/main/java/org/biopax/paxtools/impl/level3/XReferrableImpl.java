@@ -20,6 +20,7 @@ import static org.biopax.paxtools.model.SetEquivalanceChecker.isEquivalentInters
  * @author Emek Demir
  */
 @Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
 // ------------------------------ FIELDS ------------------------------

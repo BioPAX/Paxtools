@@ -13,6 +13,7 @@ import java.util.Set;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PathwayImpl extends ProcessImpl implements Pathway
 {
 // ------------------------------ FIELDS ------------------------------
@@ -72,7 +73,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		component.getPathwayComponentOf().remove(this);
 	}
 
-	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf", cascade={CascadeType.ALL})
+	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")
 	public Set<PathwayStep> getPathwayOrder()
 	{
 		return pathwayOrder;
@@ -108,7 +109,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		this.organism = organism;
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController")
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

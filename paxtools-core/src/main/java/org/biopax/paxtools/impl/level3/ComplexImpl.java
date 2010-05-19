@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
 // ------------------------------ FIELDS ------------------------------
@@ -44,7 +45,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;

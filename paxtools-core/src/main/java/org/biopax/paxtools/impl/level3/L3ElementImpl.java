@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class L3ElementImpl extends BioPAXElementImpl
         implements Level3Element
 {

@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
 
@@ -85,13 +86,13 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
 	{
 		return featureOf;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()
 	{
 		return notFeatureOf;
@@ -163,7 +164,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.memberFeature = feature;
 	}
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
 	public Set<EntityFeature> getMemberFeatureOf()
 	{
 		return this.memberFeatureOf;

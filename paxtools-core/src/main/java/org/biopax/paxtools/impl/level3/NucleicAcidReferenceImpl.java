@@ -5,7 +5,8 @@ import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import javax.persistence.Entity;
 
 @Entity
-public abstract class NucleicAcidReferenceImpl extends SequenceEntityReferenceImpl 
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+public abstract class NucleicAcidReferenceImpl extends SequenceEntityReferenceImpl
 	implements NucleicAcidReference
 {
 	public NucleicAcidReferenceImpl() {

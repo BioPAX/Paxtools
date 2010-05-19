@@ -17,6 +17,7 @@ import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ControlImpl extends InteractionImpl
 		implements Control
 {
@@ -66,7 +67,7 @@ public class ControlImpl extends InteractionImpl
 		this.controlType = ControlType;
 	}
 
-	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.PERSIST})
 	public Set<Process> getControlled()
 	{
 		return this.controlled;
@@ -141,7 +142,7 @@ public class ControlImpl extends InteractionImpl
 		return true;
 	}
 
-	@ManyToMany(targetEntity = PathwayImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PathwayImpl.class, cascade={CascadeType.PERSIST})
 	Set<Pathway> getPathwayController()
 	{
 		return pathwayController;
@@ -153,7 +154,7 @@ public class ControlImpl extends InteractionImpl
 		this.pathwayController = pathwayController;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
 	Set<PhysicalEntity> getPeController()
 	{
 		return peController;

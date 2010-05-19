@@ -53,6 +53,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	{
 		super(factory, level);
 		resetEditorMap();
+		log.info("new!!--------------------!!!---------------");
 	}
 
 	// -------------------------- OTHER METHODS --------------------------	
@@ -248,6 +249,8 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	 */
 	private void bindValue(Triple triple, Model model)
 	{
+		System.out.println("triple = " + triple);
+		log.warn(triple);
 		BioPAXElement domain = model.getByID(triple.domain);
 		PropertyEditor editor =
 				this.getEditorMap().getEditorForProperty(triple.property, domain.getClass());
@@ -451,6 +454,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 			this.domain = domain;
 			this.range = range;
 			this.property = property;
+
 		}
 
 		@Override
@@ -465,6 +469,8 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 			sb.append(range);
 			return sb.toString();
 		}
+
 	}
+
 }
 

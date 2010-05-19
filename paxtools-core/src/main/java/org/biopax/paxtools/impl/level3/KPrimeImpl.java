@@ -16,6 +16,7 @@ import static java.lang.Float.floatToIntBits;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class KPrimeImpl extends L3ElementImpl implements KPrime
 {
 

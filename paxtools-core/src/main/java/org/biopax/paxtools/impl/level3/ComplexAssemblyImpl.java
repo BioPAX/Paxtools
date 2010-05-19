@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ComplexAssemblyImpl extends ConversionImpl
 	implements ComplexAssembly
 {

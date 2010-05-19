@@ -12,6 +12,7 @@ import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Level3Factory;
+import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.Protein;
 import org.junit.Test;
 
@@ -136,5 +137,27 @@ public class SimpleExporterTest extends TestCase
     		fail("displayName gets duplicated by the SimpleExporter!");
     	}
     	
+    }
+
+	 @Test
+    public void testhibernateFile() throws IOException {
+    	System.out.println("export");
+		Level3Factory level3 = new Level3FactoryImpl();
+		Model m = level3.createModel();
+        Protein p = m.addNew(Protein.class, "myProtein");
+    	p.setRDFId("myProtein");
+		MolecularInteraction mi = m.addNew(MolecularInteraction.class,"myInteraction");
+		mi.addParticipant(p);
+		System.out.println("export");
+	    FileOutputStream out =
+            new FileOutputStream( // to the target test dir
+            	"/tmp/hibtest.owl"
+            	);
+		SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L3);
+		simpleExporter.convertToOWL(m, out);
+		out.close();
+
+
+
     }
 }

@@ -41,11 +41,11 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	private Map<String, String> namespaces;
 
-	protected static final String rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-	protected static final String rdfs ="http://www.w3.org/2000/01/rdf-schema#";
+	protected static final String rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+	protected static final String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 	protected static String bp;
-	protected static final String xsd="http://www.w3.org/2001/XMLSchema#";
-	protected static final String owl="owl=http://www.w3.org/2002/07/owl#";
+	protected static final String xsd = "http://www.w3.org/2001/XMLSchema#";
+	protected static final String owl = "owl=http://www.w3.org/2002/07/owl#";
 
 
 	public BioPAXIOHandlerAdapter()
@@ -58,37 +58,40 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		this(null, level);
 	}
 
-	public BioPAXIOHandlerAdapter(BioPAXFactory factory, BioPAXLevel level)	{
+	public BioPAXIOHandlerAdapter(BioPAXFactory factory, BioPAXLevel level)
+	{
 		resetLevel(level, factory);
 	}
 
-	protected void resetLevel(BioPAXLevel level, BioPAXFactory factory) {
-		if(level != null) this.level = level;
+	protected void resetLevel(BioPAXLevel level, BioPAXFactory factory)
+	{
+		if (level != null)
+		{
+			this.level = level;
+		}
 		this.factory = (factory != null) ? factory : this.level.getDefaultFactory();
-		
+
 		// default flags
 		if (this.level == BioPAXLevel.L1)
 		{
 			this.convertingFromLevel1ToLevel2 = true;
 			this.fixReusedPEPs = true;
-		} else if (this.level == BioPAXLevel.L2) {
+		}
+		else if (this.level == BioPAXLevel.L2)
+		{
 			this.fixReusedPEPs = true;
 		}
-		
+
 		bp = this.level.getNameSpace();
 		resetEditorMap();
 	}
-	
+
 	/**
-	 * Updates the member EditorMap for the 
-	 * new BioPAX level and factory
-	 * (different implementations of EditorMap
-	 * can be used in modules, e.g. SimpleEditorMap
-	 * and JenaEditorMap.)
-	 * 
-	 * @see EditorMapAdapter
-	 * 
+	 * Updates the member EditorMap for the new BioPAX level and factory (different implementations of
+	 * EditorMap can be used in modules, e.g. SimpleEditorMap and JenaEditorMap.)
+	 *
 	 * @param editorMap
+	 * @see EditorMapAdapter
 	 */
 	protected abstract void resetEditorMap();
 
@@ -215,12 +218,12 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	public Model convertFromOWL(InputStream in)
 	{
 		init(in);
-		
+
 		//cache the namespaces.
 		namespaces = this.readNameSpaces();
-		
+
 		autodetectBiopaxLevel(); // this may update level, editorMap and factory!
-		
+
 		bp = level.getNameSpace();
 		Model model = factory.createModel();
 		model.getNameSpacePrefixMap().putAll(namespaces);
@@ -243,30 +246,36 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	}
 
 
-	private void autodetectBiopaxLevel() {
+	private void autodetectBiopaxLevel()
+	{
 		BioPAXLevel filelevel = null;
-		for (String namespaceValue : namespaces.values()) {
-			filelevel= BioPAXLevel.getLevelFromNameSpace(namespaceValue);
-			if (filelevel != null) {
+		for (String namespaceValue : namespaces.values())
+		{
+			filelevel = BioPAXLevel.getLevelFromNameSpace(namespaceValue);
+			if (filelevel != null)
+			{
 				log.info("Detected biopax namespace for level " + filelevel.getValue());
 				log.info("Using level: " + level.getValue());
 				break;
 			}
 		}
-		
-		if(filelevel==null)	{
+
+		if (filelevel == null)
+		{
 			log.error("Cannot detect biopax level.");
 			throw new BioPaxIOException("Cannot detect biopax level.");
-		} else if (level != filelevel || filelevel != factory.getLevel()) {
+		}
+		else if (level != filelevel || filelevel != factory.getLevel())
+		{
 			log.info("Reset to the default factory for the detected BioPAX level.");
 			resetLevel(filelevel, null); // use default factory for the new level
-		}		
+		}
 	}
 
 
 	protected void createAndAdd(Model model, String id, String localName)
 	{
-		BioPAXElement bp =	this.getFactory().reflectivelyCreate(localName);
+		BioPAXElement bp = this.getFactory().reflectivelyCreate(localName);
 		if (log.isTraceEnabled())
 		{
 			log.trace("id:" + id + " " + localName + " : " + bp);
@@ -275,10 +284,11 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		 * so the following is to prevent the NullPointerException
 		 * and to continue the model assembling.
 		 */
-		if (bp != null) { 
+		if (bp != null)
+		{
 			bp.setRDFId(id);
 			model.add(bp);
-		} 
+		}
 	}
 
 	protected abstract void init(InputStream in);
@@ -287,10 +297,11 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected abstract void createAndBind(Model model);
 
-	protected BioPAXElement literalFixes(PropertyEditor editor, 
-			BioPAXElement bpe, Model model, String value) {
+	protected BioPAXElement literalFixes(PropertyEditor editor,
+	                                     BioPAXElement bpe, Model model, String value)
+	{
 		BioPAXElement created = null;
-		
+
 		if (this.isConvertingFromLevel1ToLevel2())
 		{
 			if (editor.getProperty().equals("DELTA-G"))
@@ -313,7 +324,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			}
 
 		}
-		
+
 		return created;
 	}
 
@@ -329,24 +340,35 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	}
 
 	protected void bindValue(String valueString, PropertyEditor editor,
-			BioPAXElement bpe, Model model) {
-		
+	                         BioPAXElement bpe, Model model)
+	{
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("Binding: " + bpe + '(' + bpe.getModelInterface() + " has  " + editor + ' ' +
+			          valueString);
+		}
 		Object value = valueString;
 
-		if (editor instanceof ObjectPropertyEditor) {
+		if (editor instanceof ObjectPropertyEditor)
+		{
 			value = model.getByID(valueString);
 			value = resourceFixes(bpe, value);
-			if (value == null) {
+			if (value == null)
+			{
 				value = literalFixes(editor, bpe, model, valueString);
-				if (value == null) {
+				if (value == null)
+				{
 					throw new IllegalBioPAXArgumentException(
 							"Illegal or Dangling Value/Reference: " + valueString
-									+ " (element: " + bpe.getRDFId()
-									+ " property: " + editor.getProperty()
-									+ ")");
+							+ " (element: " + bpe.getRDFId()
+							+ " property: " + editor.getProperty()
+							+ ")");
 				}
-			} else if (this.isTreatNilAsNull()
-					&& valueString.trim().equalsIgnoreCase("NIL")) {
+			}
+			else if (this.isTreatNilAsNull()
+			         && valueString.trim().equalsIgnoreCase("NIL"))
+			{
 				value = null;
 			}
 		}

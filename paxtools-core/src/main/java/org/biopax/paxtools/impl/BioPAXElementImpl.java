@@ -6,13 +6,16 @@ import org.biopax.paxtools.model.BioPAXElement;
 
 
 @Entity
-//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @NamedQueries({
 	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfId",
 		query="from org.biopax.paxtools.model.BioPAXElement as el where upper(el.RDFId) = upper(:rdfid)"),
 	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfIdEager",
 		query="from org.biopax.paxtools.model.BioPAXElement as el fetch all properties where upper(el.RDFId) = upper(:rdfid)")
+
 })
+
 public abstract class BioPAXElementImpl implements BioPAXElement
 {
 	// ----------------- Index Names and Search Fields --------------------
@@ -38,7 +41,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
 
 	@Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.AUTO)
     public Long getProxyId() {
         return proxyId;
     }

@@ -15,6 +15,7 @@ import java.util.Set;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 {
 
@@ -47,7 +48,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
@@ -139,7 +140,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.memberPhysicalEntity = memberPhysicalEntity;             //todo
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 
@@ -225,7 +226,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController", cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

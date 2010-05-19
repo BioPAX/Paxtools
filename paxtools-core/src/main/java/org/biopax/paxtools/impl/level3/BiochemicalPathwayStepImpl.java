@@ -10,6 +10,8 @@ import javax.persistence.*;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+
 public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
 	Conversion stepConversion;
@@ -34,7 +36,7 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property STEP-CONVERSION
-	@ManyToOne(targetEntity = ControlImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = ControlImpl.class, cascade = {CascadeType.PERSIST})
     public Conversion getStepConversion()
 	{
 		return stepConversion;

@@ -19,6 +19,7 @@ import javax.persistence.Transient;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
 {
 

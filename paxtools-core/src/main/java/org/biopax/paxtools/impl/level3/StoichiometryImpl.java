@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 {
 	private float stoichiometricCoefficient = UNKNOWN_FLOAT;

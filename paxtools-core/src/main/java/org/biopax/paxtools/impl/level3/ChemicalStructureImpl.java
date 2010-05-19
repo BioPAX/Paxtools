@@ -12,6 +12,7 @@ import javax.persistence.*;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 {
 	private StructureFormatType structureFormat;

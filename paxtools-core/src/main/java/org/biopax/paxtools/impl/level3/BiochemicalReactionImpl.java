@@ -18,6 +18,8 @@ import java.util.Set;
  */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+
 public class BiochemicalReactionImpl extends ConversionImpl
 	implements BiochemicalReaction
 {

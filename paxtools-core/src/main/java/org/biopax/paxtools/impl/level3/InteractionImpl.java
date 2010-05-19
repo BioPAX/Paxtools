@@ -19,6 +19,7 @@ import java.util.Set;
  */
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class InteractionImpl extends ProcessImpl implements Interaction
 {
 // ------------------------------ FIELDS ------------------------------
