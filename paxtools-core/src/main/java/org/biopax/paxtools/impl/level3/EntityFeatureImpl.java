@@ -100,6 +100,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 
 	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
@@ -144,6 +145,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="memberFeature")
 	public Set<EntityFeature> getMemberFeature()
 	{
 		return memberFeature;

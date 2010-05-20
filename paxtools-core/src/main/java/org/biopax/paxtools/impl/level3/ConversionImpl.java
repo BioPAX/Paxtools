@@ -51,6 +51,7 @@ public class ConversionImpl extends InteractionImpl
 // --------------------- ACCESORS and MUTATORS---------------------
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
+	@JoinTable(name="right")
 	public Set<PhysicalEntity> getRight()
 	{
 		return right;
@@ -74,6 +75,7 @@ public class ConversionImpl extends InteractionImpl
 	}
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
+	@JoinTable(name="left")
 	public Set<PhysicalEntity> getLeft()
 	{
 		return left;
@@ -108,6 +110,7 @@ public class ConversionImpl extends InteractionImpl
 	}
 
 	@OneToMany(targetEntity = StoichiometryImpl.class,  cascade={CascadeType.ALL})
+	@JoinTable(name="stoichiometry")		
 	public Set<Stoichiometry> getParticipantStoichiometry()
 	{
 		return participantStoichiometry;

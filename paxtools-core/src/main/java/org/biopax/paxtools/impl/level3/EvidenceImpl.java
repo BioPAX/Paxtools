@@ -8,11 +8,7 @@ import org.biopax.paxtools.model.level3.ExperimentalForm;
 import org.biopax.paxtools.model.level3.Score;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,6 +56,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 * @return a set of scores representing confidence
 	 */
 	@OneToMany(targetEntity = ScoreImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="confidence")		
 	public Set<Score> getConfidence()
 	{
 		return confidence;
@@ -154,6 +151,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 
 
 	@OneToMany(targetEntity = ExperimentalFormImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="experimentalForm")	
 	public Set<ExperimentalForm> getExperimentalForm()
 	{
 		return experimentalForm;

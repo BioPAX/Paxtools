@@ -61,6 +61,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 
 	@OneToMany(targetEntity = DeltaGImpl.class, cascade = {CascadeType.ALL})
+	@JoinTable(name="deltaG")	
 	public Set<DeltaG> getDeltaG()
 	{
 		return deltaG;
@@ -149,6 +150,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 	}
 
 	@OneToMany(targetEntity = KPrimeImpl.class, cascade = {CascadeType.ALL})
+	@JoinTable(name="keq")		
 	public Set<KPrime> getKEQ()
 	{
 		return kEQ;

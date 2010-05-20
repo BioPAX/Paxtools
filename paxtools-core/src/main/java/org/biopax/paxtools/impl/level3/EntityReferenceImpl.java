@@ -4,12 +4,8 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 
-import javax.persistence.CascadeType;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -103,6 +99,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class, 
 			cascade={CascadeType.ALL})
+	@JoinTable(name="entityReferenceType")
 	public Set<EntityReferenceTypeVocabulary> getEntityReferenceType()
 	{
 		return entityReferenceType;
@@ -128,6 +125,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, 
 			cascade={CascadeType.ALL}) //todo generify?
+	@JoinTable(name="memberEntityReference")
 	public Set<EntityReference> getMemberEntityReference()
 	{
 		return memberEntity;
@@ -169,6 +167,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	/////////////////////////////////////////////////////////////////////////////
 
 	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="evidence")	
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

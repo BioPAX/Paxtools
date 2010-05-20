@@ -8,6 +8,7 @@ import org.biopax.paxtools.util.ClassFilterSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +47,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 
 	@ManyToMany(targetEntity = XrefImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="xref") 	
 	public Set<Xref> getXref()
 	{
 		return xref;

@@ -9,6 +9,7 @@ import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -54,6 +55,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 // --------------------- ACCESORS and MUTATORS---------------------
 
 	@ManyToMany(targetEntity = InteractionVocabularyImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="interactionType")
 	public Set<InteractionVocabulary> getInteractionType()
 	{
 	   return interactionType;
@@ -78,6 +80,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	}
 
 	@ManyToMany(targetEntity = EntityImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="participant")
 	public Set<Entity> getParticipant()
 	{
 		return participant;

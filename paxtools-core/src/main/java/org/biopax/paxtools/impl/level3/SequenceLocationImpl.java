@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -44,7 +45,8 @@ public class SequenceLocationImpl extends L3ElementImpl
 
 	// Property Region-TYPE
     @ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class, cascade={CascadeType.ALL})
-	public Set<SequenceRegionVocabulary> getRegionType()
+    @JoinTable(name="regionType") 	
+    public Set<SequenceRegionVocabulary> getRegionType()
 	{
 		return regionType;
 	}

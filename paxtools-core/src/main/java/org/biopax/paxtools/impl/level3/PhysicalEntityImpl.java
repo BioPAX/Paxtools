@@ -66,6 +66,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="feature")
 	public Set<EntityFeature> getFeature()
 	{
 		return feature;
@@ -91,6 +92,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="notfeature")
 	public Set<EntityFeature> getNotFeature()
 	{
 		return notFeature;
@@ -116,6 +118,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="memberPhysicalEntity") 	
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
 		return this.memberPhysicalEntity;    //todo

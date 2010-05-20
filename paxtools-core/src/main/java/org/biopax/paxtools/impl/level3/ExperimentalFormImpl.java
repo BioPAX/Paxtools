@@ -12,10 +12,7 @@ import java.util.Set;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
@@ -48,6 +45,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 	}
 
 	@ManyToMany(targetEntity = ExperimentalFormVocabularyImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="experimentalFormDescription")
 	public Set<ExperimentalFormVocabulary> getExperimentalFormDescription()
 	{
 		return experimentalFormDescription;
@@ -91,6 +89,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 	}
 
     @ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
+    @JoinTable(name="experimentalFeature")
     public Set<EntityFeature> getExperimentalFeature()
     {
         return experimentalFeature;

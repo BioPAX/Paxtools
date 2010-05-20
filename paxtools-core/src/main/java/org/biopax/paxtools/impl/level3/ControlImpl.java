@@ -7,11 +7,8 @@ import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.CascadeType;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,6 +65,7 @@ public class ControlImpl extends InteractionImpl
 	}
 
 	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.PERSIST})
+	@JoinTable(name="controlled")
 	public Set<Process> getControlled()
 	{
 		return this.controlled;
@@ -143,6 +141,7 @@ public class ControlImpl extends InteractionImpl
 	}
 
 	@ManyToMany(targetEntity = PathwayImpl.class, cascade={CascadeType.PERSIST})
+	@JoinTable(name="pathwayController")
 	Set<Pathway> getPathwayController()
 	{
 		return pathwayController;
@@ -155,6 +154,7 @@ public class ControlImpl extends InteractionImpl
 	}
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
+	@JoinTable(name="peController")
 	Set<PhysicalEntity> getPeController()
 	{
 		return peController;

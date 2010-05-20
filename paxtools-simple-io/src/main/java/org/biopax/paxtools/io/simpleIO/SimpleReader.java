@@ -249,9 +249,12 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	 */
 	private void bindValue(Triple triple, Model model)
 	{
-		System.out.println("triple = " + triple);
-		log.warn(triple);
+		if(log.isDebugEnabled())log.debug(triple);
 		BioPAXElement domain = model.getByID(triple.domain);
+		if(domain==null)
+		{
+			System.out.println("remove!!");
+		}
 		PropertyEditor editor =
 				this.getEditorMap().getEditorForProperty(triple.property, domain.getClass());
 
@@ -261,10 +264,6 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		 */
 		if (editor == null)
 		{
-			throw new IllegalBioPAXArgumentException("'" +
-			                                         triple.property + "' is not property of '" +
-			                                         domain.getModelInterface().getSimpleName() +
-			                                         "' (" + triple.domain + ")");
 		}
 
 		bindValue(triple.range, editor, domain, model);

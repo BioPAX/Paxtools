@@ -5,11 +5,7 @@ import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +31,7 @@ public abstract class NucleicAcidRegionReferenceImpl
 	}
 	
 	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="subRegion")
 	public Set<NucleicAcidRegionReference> getSubRegion()
 	{
 		return subRegion;
@@ -83,6 +80,7 @@ public abstract class NucleicAcidRegionReferenceImpl
 	}
 
 	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="regionType") 		
 	public Set<SequenceRegionVocabulary> getRegionType()
 	{
 		return this.regionType;

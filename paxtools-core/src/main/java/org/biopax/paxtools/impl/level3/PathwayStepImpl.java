@@ -7,11 +7,7 @@ import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,6 +42,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 
 	@ManyToMany(targetEntity = PathwayStepImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="nextStep")
 	public Set<PathwayStep> getNextStep()
 	{
 		return nextStep;
@@ -81,6 +78,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 
 	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="stepProcess")
 	public Set<Process> getStepProcess()
 	{
 		return stepProcess;
@@ -104,6 +102,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="evidence") 	
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

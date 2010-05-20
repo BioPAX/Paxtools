@@ -30,6 +30,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 	}
 
     @ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL}) //Todo: make sequence entity?
+    @JoinTable(name="product") 	
     public Set<PhysicalEntity> getProduct()
     {
         return product;

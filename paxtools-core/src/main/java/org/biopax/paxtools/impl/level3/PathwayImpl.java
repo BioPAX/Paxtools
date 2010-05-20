@@ -51,6 +51,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 
 	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="pathwayComponent") 		
 	public Set<Process> getPathwayComponent()
 	{
 		return this.pathwayComponent;

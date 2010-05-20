@@ -62,6 +62,7 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 	}
 
 	@ManyToMany(targetEntity= PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
+	@JoinTable(name="cofactor")
 	public Set<PhysicalEntity> getCofactor()
 	{
 		return cofactor;

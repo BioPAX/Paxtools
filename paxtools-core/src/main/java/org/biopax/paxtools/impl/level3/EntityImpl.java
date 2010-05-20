@@ -11,6 +11,7 @@ import org.hibernate.search.annotations.Index;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
@@ -88,6 +89,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	}
 
 	@ManyToMany(targetEntity = ProvenanceImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="dataSource")
 	public Set<Provenance> getDataSource()
 	{
 		return dataSource;
@@ -127,6 +129,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	/////////////////////////////////////////////////////////////////////////////
 
 	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
