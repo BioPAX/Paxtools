@@ -245,9 +245,6 @@ public class PaxtoolsMain {
         		}
             }
         }
-
-        System.exit(0);
-
     }
 
     private static void showHelp() {
