@@ -34,7 +34,6 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	@Basic
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
-	@FieldBridge(impl = StringBridge.class)
 	public String getStandardName()
 	{
 		return standardName;
@@ -47,7 +46,6 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	@Basic
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
-	@FieldBridge(impl = StringBridge.class)
 	public String getDisplayName()
 	{
 		return displayName;

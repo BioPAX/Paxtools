@@ -73,7 +73,18 @@ public class Traverser
 			{
 				if (editor.isMultipleCardinality())
 				{
-					Set valueSet = new HashSet((Collection) editor.getValueFromBean(element));
+					//Set valueSet = new HashSet((Collection) editor.getValueFromBean(element));
+					// - NullPointerException bug fix -
+					Set valueSet = new HashSet();
+					Object v = editor.getValueFromBean(element);
+					if(v instanceof Collection) {
+						valueSet.addAll((Collection)v);
+					} else {
+						log.error("Null Collection! Bean: " + element.getRDFId() + 
+							" (" + element.getModelInterface().getSimpleName() +
+							"); editor: " + editor);
+					}
+					
 					for (Object value : valueSet)
 					{
 						visitor.visit(element, value, model, editor);

@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PublicationXref;
+import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -52,7 +53,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     // Property author
     @ElementCollection
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
-    @FieldBridge(impl=StringBridge.class)
+    @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAuthor()
 	{
 		return author;
@@ -75,7 +76,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
     @ElementCollection
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
-    @FieldBridge(impl=StringBridge.class)
+    @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getSource()
 	{
 		return source;
@@ -111,7 +112,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
         // Property url
     @ElementCollection
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
-    @FieldBridge(impl=StringBridge.class)
+    @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getUrl()
 	{
 		return url;
