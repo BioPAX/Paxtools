@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.hibernate.search.annotations.Field;
 
 import java.util.*;
 
@@ -82,6 +83,8 @@ public class ModelImpl implements Model
 
 
     @ElementCollection
+    //@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAMESPACE)
+    // TODO custom FieldBridge
     public Map<String, String> getNameSpacePrefixMap()
 	{
 		return nameSpacePrefixMap;

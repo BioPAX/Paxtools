@@ -1,8 +1,10 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.hibernate.search.annotations.Field;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -64,6 +66,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 	@Basic
+	@Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_DB)
     public String getDb()
 	{
 		return db;
@@ -99,6 +102,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 
     // Property id
     @Basic
+    @Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_ID)
 	public String getId()
 	{
 		return id;
