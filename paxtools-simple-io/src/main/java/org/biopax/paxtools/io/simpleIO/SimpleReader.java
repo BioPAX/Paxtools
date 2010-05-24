@@ -36,6 +36,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	boolean propertyContext = false;
 	private String base = "";
 	private List<Triple> triples;
+	private boolean mergeDuplicates;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
@@ -56,6 +57,10 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		log.info("new!!--------------------!!!---------------");
 	}
 
+	public void mergeDuplicates(boolean mergeDuplicates)
+	{
+		this.mergeDuplicates = mergeDuplicates;
+	}
 	// -------------------------- OTHER METHODS --------------------------	
 
 	@Override
@@ -154,7 +159,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 				ns.put(pre, namespace);
 			}
 
-			
+
 		}
 		catch (XMLStreamException e)
 		{
@@ -172,7 +177,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		try
 		{
 			int type;
-			while ((type= r.getEventType()) != END_DOCUMENT)
+			while ((type = r.getEventType()) != END_DOCUMENT)
 			{
 				switch (type)
 				{
@@ -192,7 +197,8 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 								skip();
 							}
 
-						}  break;
+						}
+						break;
 					case CHARACTERS:
 						if (log.isTraceEnabled())
 						{
@@ -203,14 +209,19 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 								sb.append(r.getText());
 							}
 							log.trace(sb.toString());
-						} break;
+						}
+						break;
 					case END_ELEMENT:
 						if (log.isTraceEnabled())
 						{
 							log.trace(r);
-						} break;
+						}
+						break;
 					default:
-						if(log.isTraceEnabled()) log.trace("Test this!:"+type);  //TODO
+						if (log.isTraceEnabled())
+						{
+							log.trace("Test this!:" + type);
+						}  //TODO
 				}
 				r.next();
 
@@ -249,9 +260,12 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	 */
 	private void bindValue(Triple triple, Model model)
 	{
-		if(log.isDebugEnabled())log.debug(triple);
+		if (log.isDebugEnabled())
+		{
+			log.debug(triple);
+		}
 		BioPAXElement domain = model.getByID(triple.domain);
-		if(domain==null)
+		if (domain == null)
 		{
 			System.out.println("remove!!");
 		}
@@ -287,8 +301,22 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 
 		if (this.getFactory().canInstantiate(s))
 		{
-			BioPAXElement bpe = this.getFactory().reflectivelyCreate(s);
-			bpe.setRDFId(id);
+			BioPAXElement bpe;
+
+			if (mergeDuplicates)
+			{
+				bpe = model.getByID(id);
+				if(bpe == null)
+				{
+					bpe = createBpe(s, id);
+				}
+
+			}
+			else
+			{
+				bpe = createBpe(s, id);
+			}
+
 			model.add(bpe);
 		}
 		else
@@ -317,6 +345,14 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 			r.next();
 		}
 		return id;
+	}
+
+	private BioPAXElement createBpe(String s, String id)
+	{
+		BioPAXElement bpe;
+		bpe = this.getFactory().reflectivelyCreate(s);
+		bpe.setRDFId(id);
+		return bpe;
 	}
 
 	private void skip() throws XMLStreamException
