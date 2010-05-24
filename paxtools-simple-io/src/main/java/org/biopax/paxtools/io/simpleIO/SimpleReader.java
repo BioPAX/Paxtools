@@ -301,23 +301,12 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 
 		if (this.getFactory().canInstantiate(s))
 		{
-			BioPAXElement bpe;
 
-			if (mergeDuplicates)
+			if (!mergeDuplicates || (model.getByID(id))==null)
 			{
-				bpe = model.getByID(id);
-				if(bpe == null)
-				{
-					bpe = createBpe(s, id);
-				}
-
-			}
-			else
-			{
-				bpe = createBpe(s, id);
+					createBpe(s, id,model);
 			}
 
-			model.add(bpe);
 		}
 		else
 		{
@@ -347,12 +336,11 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		return id;
 	}
 
-	private BioPAXElement createBpe(String s, String id)
+	private void createBpe(String s, String id, Model model)
 	{
-		BioPAXElement bpe;
-		bpe = this.getFactory().reflectivelyCreate(s);
+		BioPAXElement bpe = this.getFactory().reflectivelyCreate(s);
 		bpe.setRDFId(id);
-		return bpe;
+		model.add(bpe);
 	}
 
 	private void skip() throws XMLStreamException
