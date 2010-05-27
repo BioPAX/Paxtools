@@ -477,13 +477,18 @@ public class EntryMapper extends Thread {
 			Interval endInterval = (range.hasEndInterval()) ?
 				range.getEndInterval() : null;
 
-			// sanity check
-			if (beginInterval == null) continue;
+			if (beginInterval == null) {
+				continue;
+			}
+			else {
+				toReturn.add(bpMapper.getSequenceLocation(genRdfId(), genRdfId(), genRdfId(),
+														  beginInterval.getBegin(), beginInterval.getEnd()));
+			}
 
-			// add location  to return set
-			toReturn.add(bpMapper.getSequenceLocation(genRdfId(), genRdfId(), genRdfId(),
-													  beginInterval.getBegin(),
-													  (endInterval != null) ? endInterval.getEnd() : null));
+			if (endInterval != null) {
+				toReturn.add(bpMapper.getSequenceLocation(genRdfId(), genRdfId(), genRdfId(),
+														  endInterval.getBegin(), endInterval.getEnd()));
+			}
 		}
 
 		// outta here
@@ -543,8 +548,7 @@ public class EntryMapper extends Thread {
 		if (openCvType == null) return null;
 
 		// outta here
-		return getOpenControlledVocabulary(openCvType);
-		
+		return getOpenControlledVocabulary((CvType)openCvType);
 	}
 
 	/**
