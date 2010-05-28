@@ -6,6 +6,7 @@ import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,7 +92,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReference", 
-			cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade={CascadeType.ALL})
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;

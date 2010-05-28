@@ -20,7 +20,6 @@ import java.util.Set;
  * Proxy for xref
  */
 @Entity(name="l3xref")
-@Indexed
 public abstract class XrefProxy<T extends Xref> extends Level3ElementProxy<T>
 	implements Xref 
 {

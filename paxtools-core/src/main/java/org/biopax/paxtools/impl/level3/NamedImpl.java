@@ -10,7 +10,6 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
-import org.hibernate.search.bridge.builtin.StringBridge;
 
 import java.util.*;
 
@@ -67,6 +66,7 @@ public abstract class NamedImpl extends XReferrableImpl
 	public void setName(Set<String> names)
 	{
 		allNames = names;
+		
 		if (!names.contains(standardName))
 		{
 			standardName = null;
@@ -75,12 +75,12 @@ public abstract class NamedImpl extends XReferrableImpl
 		{
 			displayName = null;
 		}
+		
 	}
 
 	public void addName(String name)
 	{
 		if (name != null)
-
 			allNames.add(name);
 	}
 

@@ -36,6 +36,7 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-annotations</artifactId>
             <version>3.5.1-Final</version>
+            <scope>provided</scope>
         </dependency>
 	</dependencies>
 </project>
