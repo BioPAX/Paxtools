@@ -351,7 +351,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 					  if(parent instanceof conversion || parent instanceof complex) { 
 						PhysicalEntity pe3 = (PhysicalEntity) newValue;
 						Stoichiometry stoichiometry = factory.reflectivelyCreate(Stoichiometry.class);
-						stoichiometry.setRDFId(pe3.getRDFId() + "-stoichiometry");
+						stoichiometry.setRDFId(pe3.getRDFId() + "-stoichiometry" + coeff);
 						stoichiometry.setStoichiometricCoefficient(coeff);
 						stoichiometry.setPhysicalEntity(pe3);
 						//System.out.println("parent=" + parent + "; phy.ent.=" + pep + "; coeff=" + coeff);
