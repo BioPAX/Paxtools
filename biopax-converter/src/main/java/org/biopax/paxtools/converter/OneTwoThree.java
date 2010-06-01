@@ -1,9 +1,10 @@
 package org.biopax.paxtools.converter;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,10 +61,23 @@ import org.biopax.paxtools.model.level3.Stoichiometry;
  */
 public final class OneTwoThree extends AbstractTraverser implements ModelFilter {
 	private static final Log log = LogFactory.getLog(OneTwoThree.class);
+	private static final String l3PackageName = "org.biopax.paxtools.model.level3.";
+
 	private Level3Factory factory;
 	private Properties classesmap;
 	private Properties propsmap;
-	
+
+	/**
+	 * For mapping level2 enums to level2.
+	 */
+	private Map<Object, Object> enumMap;
+
+	/**
+	 * Several PEPs in L2 will correspond to a PE in L3. Id of PE will be the ID of one of the
+	 * related PEPs. This map will point Ids of PEPs to the ID of PE.
+	 */
+	private Map<String, String> pep2PE;
+
 	public static EditorMap editorMap2 = new SimpleEditorMap(BioPAXLevel.L2);
 	public static EditorMap editorMap3 = new SimpleEditorMap(BioPAXLevel.L3);
 	
@@ -102,6 +116,8 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		enumMap = new HashMap<Object, Object>();
 	}
 	
 	/**
@@ -127,7 +143,9 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 				log.info("Model is " + model.getLevel());
 			return model; // nothing to do
 		}
-		
+
+		preparePep2PEIDMap(model);
+
 		final Model newModel = factory.createModel();
 		newModel.getNameSpacePrefixMap().putAll(model.getNameSpacePrefixMap());
 		
@@ -221,10 +239,16 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	private Level3Element mapClass(BioPAXElement bpe) {
 		Level3Element newElement = null;
 		
-		if(bpe instanceof physicalEntityParticipant) {
-			// create a new simplePhysicalEntity 
-			//(excluding Complex and basic PhysicalEntity that map directly and have no ERs)
-			newElement = createSimplePhysicalEntity((physicalEntityParticipant)bpe);
+		if(bpe instanceof physicalEntityParticipant)
+		{
+			String id = pep2PE.get(bpe.getRDFId());
+
+			if (id.equals(bpe.getRDFId()))
+			{
+				// create a new simplePhysicalEntity
+				//(excluding Complex and basic PhysicalEntity that map directly and have no ERs)
+				newElement = createSimplePhysicalEntity((physicalEntityParticipant)bpe);
+			}
 		}
 		else if(!(bpe instanceof openControlledVocabulary)) // skip oCVs
 		{
@@ -322,7 +346,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 			
 			// for pEPs, getting the corresponding simple PE or Complex is different
 			if(parent instanceof physicalEntityParticipant) {
-				newParent = getMappedPep((physicalEntityParticipant) parent, newModel);
+				newParent = getMappedPE((physicalEntityParticipant) parent, newModel);
 			} else {
 				newParent = newModel.getByID(parent.getRDFId());
 			}
@@ -344,14 +368,14 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 				if(value instanceof physicalEntityParticipant) 
 				{
 					physicalEntityParticipant pep = (physicalEntityParticipant) value;
-					newValue = getMappedPep(pep, newModel);
+					newValue = getMappedPE(pep, newModel);
 					
 					float coeff = (float) pep.getSTOICHIOMETRIC_COEFFICIENT();
 					if (coeff > 1 ) { //!= BioPAXElement.UNKNOWN_DOUBLE) {
 					  if(parent instanceof conversion || parent instanceof complex) { 
 						PhysicalEntity pe3 = (PhysicalEntity) newValue;
 						Stoichiometry stoichiometry = factory.reflectivelyCreate(Stoichiometry.class);
-						stoichiometry.setRDFId(pe3.getRDFId() + "-stoichiometry" + coeff);
+						stoichiometry.setRDFId(pe3.getRDFId() + "-stoichiometry" + Math.random());
 						stoichiometry.setStoichiometricCoefficient(coeff);
 						stoichiometry.setPhysicalEntity(pe3);
 						//System.out.println("parent=" + parent + "; phy.ent.=" + pep + "; coeff=" + coeff);
@@ -389,7 +413,13 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 					String id = ((Level2Element) value).getRDFId();
 					newValue = newModel.getByID(id);
 				}
-			} else {
+			}
+			else if (value.getClass().isEnum())
+			{
+				newValue = getMatchingEnum(value);
+			}
+			else
+			{
 				// relationshipXref.RELATIONSHIP-TYPE range changed (String -> RelationshipTypeVocabulaty)
 				if(parent instanceof relationshipXref && editor.getProperty().equals("RELATIONSHIP-TYPE")) {
 					String id = URLEncoder.encode(value.toString());
@@ -423,7 +453,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 					// if several pEPs use the same phy.entity, we get this property/value cloned...
 					for(physicalEntityParticipant pep: ppeps) {
 						//find proper L3 physical entity
-						newParent = getMappedPep(pep, newModel);
+						newParent = getMappedPE(pep, newModel);
 						if(newParent != null) {
 							newEditor = 
 								editorMap3.getEditorForProperty(
@@ -465,8 +495,9 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 * for complex and the "basic" pE, it is pE->PE mapping
 	 * (although pEPs were skipped, their properties are to save anyway)
 	 */
-	private PhysicalEntity getMappedPep(physicalEntityParticipant pep, Model newModel) {
-		String id = pep.getRDFId();
+	private PhysicalEntity getMappedPE(physicalEntityParticipant pep, Model newModel)
+	{
+		String id = pep2PE.get(pep.getRDFId());
 		BioPAXElement pe = newModel.getByID(id);
 		physicalEntity pe2er = pep.getPHYSICAL_ENTITY();
 		
@@ -507,4 +538,143 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 		return (id != null) ? id.replaceFirst("^.+#", "") : null;
 	}
 
+	protected Object getMatchingEnum(Object o)
+	{
+		assert o.getClass().isEnum();
+
+		if (enumMap.containsKey(o))
+			return enumMap.get(o);
+
+		if (!propsmap.containsKey(o.toString()))
+		{
+			enumMap.put(o, null);
+			return null;
+		}
+
+		String l2Name = o.getClass().getName();
+		l2Name = l2Name.substring(l2Name.lastIndexOf(".") + 1);
+
+		if (!classesmap.containsKey(l2Name))
+		{
+			log.error("There is no class mapping for enum " + o.getClass() + " in classesmap");
+			return null;
+		}
+
+		String l3Name = classesmap.getProperty(l2Name);
+
+		assert l3Name != null;
+
+		String l3value = propsmap.getProperty(o.toString());
+
+		assert l3value != null;
+
+		Class<?> cls = null;
+		try
+		{
+			cls = Class.forName(l3PackageName + l3Name);
+		}
+		catch (ClassNotFoundException e)
+		{
+			log.error("Cannot find class " + l3PackageName + l3Name);
+			e.printStackTrace();
+		}
+
+		assert cls != null;
+
+		Method meth = null;
+		try
+		{
+			meth = cls.getMethod("valueOf", String.class);
+		}
+		catch (NoSuchMethodException e)
+		{
+			log.error("No valueOf method here. Is this possible ?!");
+			e.printStackTrace();
+		}
+
+		assert meth != null;
+
+		Object l3enum = null;
+		try
+		{
+			l3enum = meth.invoke(null, l3value);
+		}
+		catch (IllegalAccessException e)
+		{
+			log.error("Cannot invoke method " + meth);
+			log.error(e.toString());
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
+			log.error("Cannot invoke method " + meth);
+			log.error(e.toString());
+			e.printStackTrace();
+		}
+
+		enumMap.put(o, l3enum);
+		return l3enum;
+	}
+
+	private List<Set<physicalEntityParticipant>> getPepsGrouped(physicalEntity pe)
+	{
+		List<Set<physicalEntityParticipant>> list = new ArrayList<Set<physicalEntityParticipant>>();
+
+		for (physicalEntityParticipant pep : pe.isPHYSICAL_ENTITYof())
+		{
+			boolean added = false;
+
+			for (Set<physicalEntityParticipant> group : list)
+			{
+				physicalEntityParticipant first = group.iterator().next();
+
+				if (first.isInEquivalentState(pep))
+				{
+					group.add(pep);
+					added = true;
+					break;
+				}
+			}
+
+			if (!added)
+			{
+				Set<physicalEntityParticipant> group = new HashSet<physicalEntityParticipant>();
+				group.add(pep);
+				list.add(group);
+			}
+		}
+		return list;
+	}
+
+	private Map<String, String> getPep2StateIDMapping(physicalEntity pe)
+	{
+		List<Set<physicalEntityParticipant>> sets = getPepsGrouped(pe);
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		for (Set<physicalEntityParticipant> set : sets)
+		{
+			physicalEntityParticipant first = set.iterator().next();
+
+			for (physicalEntityParticipant pep : set)
+			{
+				map.put(pep.getRDFId(), first.getRDFId());
+			}
+		}
+		return map;
+	}
+
+	protected void preparePep2PEIDMap(Model model)
+	{
+		assert model.getLevel() == BioPAXLevel.L2;
+
+		pep2PE = new HashMap<String, String>();
+
+		for (physicalEntity pe : model.getObjects(physicalEntity.class))
+		{
+			Map<String, String> map = getPep2StateIDMapping(pe);
+
+			pep2PE.putAll(map);
+		}
+	}
 }
