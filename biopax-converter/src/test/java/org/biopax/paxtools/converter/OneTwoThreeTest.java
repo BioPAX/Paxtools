@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class OneTwoThreeTest {
 
-//	@Test
+    @Test
 	public final void testFilter() throws IOException {
 		SimpleReader reader = new SimpleReader();
 		Model model = reader.convertFromOWL(
@@ -30,7 +30,7 @@ public class OneTwoThreeTest {
 		}
 	}
 
-//	@Test
+    @Test
 	public final void testFilterBigger() throws IOException {
 		SimpleReader reader = new SimpleReader();
 		Model model = reader.convertFromOWL(
@@ -45,7 +45,7 @@ public class OneTwoThreeTest {
 		}
 	}
 	
-	@Test
+	//@Test
 	public final void testFilterOthers() throws Throwable
 	{
 		SimpleReader reader = new SimpleReader();

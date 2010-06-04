@@ -40,11 +40,13 @@
 			</activation>
 			<dependencies>
 				<!-- with jena-io and persistence the 'full' jar weights over ~20Mb -->
+				<!--  deprecated module
 				<dependency>
 					<groupId>${project.groupId}</groupId>
 					<artifactId>biopax-persistence</artifactId>
 					<version>${project.version}</version>
 				</dependency>
+				-->
 				<dependency>
 					<groupId>${project.groupId}</groupId>
 					<artifactId>paxtools-jena-io</artifactId>
@@ -87,6 +89,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>validator-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>paxtools-query</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
