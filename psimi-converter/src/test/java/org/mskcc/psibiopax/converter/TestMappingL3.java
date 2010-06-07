@@ -220,16 +220,31 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 		Assert.assertEquals(4, entityFeatureList.size());
 
 		// get feature
-		EntityFeature bpEntityFeature = entityFeatureList.iterator().next();
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_2681741952554656410", bpEntityFeature.getRDFId());
+		boolean featureFound = false;
+		EntityFeature bpEntityFeature = null;
+		for (EntityFeature ef : entityFeatureList) {
+			if (ef.getRDFId().equals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_2681741952554656410")) {
+				featureFound = true;
+				bpEntityFeature = ef;
+				break;
+			}
+		}
 
         // feature location
         SequenceLocation sequenceLocation = bpEntityFeature.getFeatureLocation();
         Assert.assertEquals(null, sequenceLocation);
 
         // get feature location type
+		boolean featureLocationTypeFound = false;
         SequenceRegionVocabulary featureLocationType = bpEntityFeature.getFeatureLocationType();
-        Assert.assertEquals("ha tagged", featureLocationType.getTerm().iterator().next());
+		Set<String> featureLocationTypes = featureLocationType.getTerm();
+		for (String flt : featureLocationTypes) {
+			if (flt.equals("ha tagged")) {
+				featureLocationTypeFound = true;
+				break;
+			}
+		}
+		Assert.assertTrue(featureLocationTypeFound);
 	}
 
 	/**
