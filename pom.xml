@@ -21,8 +21,8 @@
         <!-- <module>biopax-persistence</module> - deprecated (mappings moved to paxtools-core)-->
         <module>pathwaycommons-client</module>
         <module>biopax-converter</module>
-        <!--<module>psimi-converter</module>-->
-        <!--<module>paxtools-main</module>-->
+        <module>psimi-converter</module>
+        <module>paxtools-main</module>
         <module>paxtools-query</module>
     </modules>
 
