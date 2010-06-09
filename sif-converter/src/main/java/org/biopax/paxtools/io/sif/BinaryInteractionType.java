@@ -47,17 +47,17 @@ public enum BinaryInteractionType
 	STATE_CHANGE(
 			"The first entity controls a reaction that changes the state of the " +
 			"second entity, e.g. by phosphorylation or other posttranslational modification, " +
-			"or by a change in subcellular location.  " +
+			"or by a change in subcellular location. " +
 			"This interaction is directed.", true),
 
 	ACTIVATES(
 			"The first entity controls a reaction that changes the state of the " +
-			"second entity, from inactive to notr or active, or from notr to active. " +
+			"second entity to active, from inactive or notr. " +
 			"This interaction is directed.", true),
 
 	INACTIVATES(
 			"The first entity controls a reaction that changes the state of the " +
-			"second entity, from active to notr or inactive, or from notr to inactive. " +
+			"second entity to inactive, from active or notr. " +
 			"This interaction is directed.", true),
 
 	REACTS_WITH(
