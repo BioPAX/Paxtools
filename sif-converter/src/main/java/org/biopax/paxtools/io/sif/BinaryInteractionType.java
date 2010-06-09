@@ -52,12 +52,12 @@ public enum BinaryInteractionType
 
 	ACTIVATES(
 			"The first entity controls a reaction that changes the state of the " +
-			"second entity, from inactive to notr or active, or from notr to active. " +
+			"second entity, from inactive or notr, to active. " +
 			"This interaction is directed.", true),
 
 	INACTIVATES(
 			"The first entity controls a reaction that changes the state of the " +
-			"second entity, from active to notr or inactive, or from notr to inactive. " +
+			"second entity, from active or notr, to inactive. " +
 			"This interaction is directed.", true),
 
 	REACTS_WITH(

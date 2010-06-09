@@ -147,8 +147,13 @@ public class SimpleInteraction
 
 	public String toString()
 	{
-		String from = getANameForSIF(source);
-		String to = getANameForSIF(target);
+		String from = source.getRDFId();
+		String to = target.getRDFId();
+
+// These lines are for creating a SIF with readable names instead of rdf ids.
+//
+//		String from = getANameForSIF(source);
+//		String to = getANameForSIF(target);
 
 		return from + "\t" + type.toString() + "\t" + to;
 	}
