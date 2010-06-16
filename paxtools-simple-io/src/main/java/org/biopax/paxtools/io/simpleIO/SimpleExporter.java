@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.EditorMap;
 import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Provides output in OWL format for BioPAX model(s),
+ * Provides output in OWL format for BioPAX model(s);
  * does not depend on {@link com.hp.hpl.jena}.
  *
  * @author Emek Demir
@@ -39,8 +40,9 @@ public class SimpleExporter
     private Map<String, String> nsMap;
 
 	/**
+     * Constructor.
      *
-     * @param level BioPAX level in which the output will be
+     * @param level output BioPAX level
      */
     public SimpleExporter(BioPAXLevel level)
     {
@@ -48,8 +50,14 @@ public class SimpleExporter
     }
 
     /**
-     * Converts a model into OWL format, and writes it into
-     * the outputStream.
+     * Converts a model into BioPAX (OWL) format, and writes it into
+     * the outputStream. Saved data can be then read via {@link BioPAXIOHandler}
+     * interface (e.g., {@link SimpleReader}).
+     * 
+     * Note: When the model is incomplete (i.e., contains elements that refer externals,
+     * dangling BioPAX elements) and is exported by this method, it works; however one 
+     * will find corresponding object properties set to NULL later,
+     * after converting such data back to Model.
      *
      * @param model model to be converted into OWL format
      * @param outputStream output stream into which the output will be written
@@ -72,6 +80,17 @@ public class SimpleExporter
         out.close();
     }
 
+    /**
+     * Writes the XML representation of individual BioPAX element that 
+     * is BioPAX-like but only for display or debug purpose (incomplete).
+     * 
+     * Note: use {@link #convertToOWL(Model, OutputStream)} instead 
+     * if you have a model and want to save and later restore it.
+     * 
+     * @param out
+     * @param bean
+     * @throws IOException
+     */
     public void writeObject(Writer out, BioPAXElement bean) throws IOException {
     	if(bp == null) bp = "bp";
 		String name = bp + ":" + bean.getModelInterface().getSimpleName();
@@ -101,6 +120,7 @@ public class SimpleExporter
 		
 		out.write("\n</" + name + ">");
 	}
+ 
     
     private void writeObjects(Writer out, Model model) throws IOException
     {
@@ -152,6 +172,7 @@ public class SimpleExporter
         }
     }
 
+	
     private String findLiteralType(PropertyEditor editor)
     {
         Class range = editor.getRange();
@@ -195,6 +216,7 @@ public class SimpleExporter
 
     }
 
+    
     private void initialize(Model model)
     {
         base = null;
@@ -254,6 +276,7 @@ public class SimpleExporter
 
     }
 
+    
     private void writeHeader(Writer out)
             throws IOException
     {

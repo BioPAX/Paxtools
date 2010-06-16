@@ -1,22 +1,11 @@
 package org.biopax.paxtools.io.sif;
 
-import java.util.Map;
-import java.util.HashMap;
-
-import org.biopax.paxtools.model.BioPAXLevel;
-
 /**
  * This class holds the description, tag (used in SIF file), the information if the interaction is
  * directed for the relevant binary interaction types.
  */
 public enum BinaryInteractionType
 {
-	/**
-	 * Returns a map between the new binary interaction tags and old ones. That is, new tag is key, old
-	 * tag is value.
-	 *
-	 * @return Map<String, String>
-	 */
 
 	COMPONENT_OF(
 			"The first entity is a component of the second entity, which is a complex.  " +

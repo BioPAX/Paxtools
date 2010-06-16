@@ -1,8 +1,5 @@
 package org.biopax.paxtools.model.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.util.AutoComplete;
-
 import java.util.Set;
 
 
