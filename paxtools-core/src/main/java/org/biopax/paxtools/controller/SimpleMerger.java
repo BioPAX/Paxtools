@@ -104,6 +104,7 @@ public class SimpleMerger
 		if (value!=null && !target.contains(value))
 		{
 			BioPAXElement newValue = target.getByID(value.getRDFId());
+			editor.removePropertyFromBean(value,update);
 			editor.setPropertyToBean(update, newValue);
 		}
 	}
