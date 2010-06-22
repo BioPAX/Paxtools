@@ -81,8 +81,9 @@ public class SimpleMerger
 			{
 				if(editor.isMultipleCardinality())
 				{
-					Set<BioPAXElement> values = (Set<BioPAXElement>) editor.getValueFromBean(update);
-					for (BioPAXElement value : values)
+					Set<BioPAXElement> values = new HashSet<BioPAXElement>(
+							(Set<BioPAXElement>) editor.getValueFromBean(update));
+					for (BioPAXElement value : values) // threw concurrent modification exception here; fixed above.
 					{
 						migrateToTarget(update, target, editor, value);
 					}
