@@ -6,9 +6,9 @@
 		<groupId>org.biopax.paxtools</groupId>
 		<version>2.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>paxtools-main</artifactId>
+	<artifactId>paxtools-console</artifactId>
 	<packaging>jar</packaging>
-	<name>Paxtools Main</name>
+	<name>Paxtools Console Application</name>
 	<description>Paxtools Console Application (with dependencies)</description>
 	
 	<build>

@@ -48,7 +48,8 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	/**
 	 * @return Reference entity that this feature belongs to.
 	 */
-	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL}, 
+			fetch=FetchType.EAGER)
 	public EntityReference getEntityFeatureOf()
 	{
 		return ownerEntityReference;
@@ -86,13 +87,15 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL}, 
+			mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
 	{
 		return featureOf;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade = {CascadeType.ALL},
+			mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()
 	{
 		return notFeatureOf;
@@ -166,7 +169,8 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.memberFeature = feature;
 	}
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
+	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature",
+		cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<EntityFeature> getMemberFeatureOf()
 	{
 		return this.memberFeatureOf;

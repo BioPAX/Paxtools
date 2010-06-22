@@ -92,7 +92,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReference", 
-			cascade={CascadeType.ALL})
+			cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;
@@ -151,7 +151,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference", 
-			cascade={CascadeType.ALL})
+			cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
 		return ownerEntityReference;

@@ -48,7 +48,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
+	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component",
+			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
@@ -143,7 +144,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.memberPhysicalEntity = memberPhysicalEntity;             //todo
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity",
+			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 
@@ -229,7 +231,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController",
+			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

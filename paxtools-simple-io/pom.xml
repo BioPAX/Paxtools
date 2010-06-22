@@ -12,7 +12,7 @@
     <artifactId>paxtools-simple-io</artifactId>
     <packaging>jar</packaging>
 
-    <name>STAX based IO</name>
+    <name>STAX based IO (SimpleIO)</name>
 
     <dependencies>
         <dependency>

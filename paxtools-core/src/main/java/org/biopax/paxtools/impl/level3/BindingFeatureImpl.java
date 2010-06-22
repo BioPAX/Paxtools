@@ -5,11 +5,7 @@ import org.biopax.paxtools.model.level3.BindingFeature;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)

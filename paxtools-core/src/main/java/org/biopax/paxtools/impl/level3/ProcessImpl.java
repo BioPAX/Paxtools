@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.level3.Process;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +38,8 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 // --------------------- Interface PathwayComponent ---------------------
 
 
-	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent")
+	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent",
+			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<Pathway> getPathwayComponentOf()
 	{
 		return pathwayComponentOf;
@@ -45,13 +47,15 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 // --------------------- Interface process ---------------------
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess")
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess",
+			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<PathwayStep> getStepProcessOf()
 	{
 		return stepProcessOf;
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "controlled")
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "controlled",
+			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<Control> getControlledOf()
 	{
 		return controlledOf;

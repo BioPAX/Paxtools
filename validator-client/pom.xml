@@ -10,7 +10,7 @@
 
 	<artifactId>validator-client</artifactId>
 	<packaging>jar</packaging>
-	<name>validator-client</name>
+	<name>BioPAX Validator Client</name>
 	<url>http://www.biopax.org</url>
 
 	<dependencies>

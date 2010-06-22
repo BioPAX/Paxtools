@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,7 +66,8 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStep = nextStep;
 	}
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep",
+			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;
@@ -123,7 +125,8 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = evidence;
 	}
 
-	@ManyToOne(targetEntity = PathwayImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = PathwayImpl.class, cascade = {CascadeType.ALL},
+			fetch=FetchType.EAGER)
 	public Pathway getPathwayOrderOf()
 	{
 		return this.pathwayOrderOf;
