@@ -16,6 +16,8 @@ import javax.persistence.*;
 public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 {
 	private StructureFormatType structureFormat;
+
+	@Column(columnDefinition="LONGTEXT")
 	private String structureData;
 
 	public ChemicalStructureImpl() {
