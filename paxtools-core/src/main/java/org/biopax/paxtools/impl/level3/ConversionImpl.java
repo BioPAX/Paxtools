@@ -50,8 +50,8 @@ public class ConversionImpl extends InteractionImpl
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
-	@JoinTable(name="right")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="rightParticipant")
 	public Set<PhysicalEntity> getRight()
 	{
 		return right;
@@ -74,8 +74,8 @@ public class ConversionImpl extends InteractionImpl
 		this.right.remove(right);
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
-	@JoinTable(name="left")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="leftParticipant")
 	public Set<PhysicalEntity> getLeft()
 	{
 		return left;
