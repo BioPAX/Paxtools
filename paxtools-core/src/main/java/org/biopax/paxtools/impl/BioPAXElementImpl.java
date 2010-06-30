@@ -4,8 +4,6 @@ import javax.persistence.*;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
-
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -17,7 +15,6 @@ import org.hibernate.search.annotations.Index;
 		query="from org.biopax.paxtools.model.BioPAXElement as el fetch all properties where upper(el.RDFId) = upper(:rdfid)")
 
 })
-
 public abstract class BioPAXElementImpl implements BioPAXElement
 {
 	// ----------------- Index Names and Search Fields --------------------
@@ -41,10 +38,16 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	private String id;
 	private Long proxyId = 0L;
 
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-    public Long getProxyId() {
+	/* 
+	 * proxyId did not work: during model merge,
+	 * i.e., using session.save or saveOrUpdate -
+	 * cased duplicated entry for the key 2 (unique RDFId))
+	 * (probably, because of the cascade updates...)
+	 */
+	//@Id
+	//@GeneratedValue(strategy=GenerationType.AUTO)
+    @Transient
+	public Long getProxyId() {
         return proxyId;
     }
     protected void setProxyId(Long value) {
@@ -94,7 +97,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
         return hashCode();
     }
 
-    @Column(unique=true, nullable=false)
+    @Id
+    //@Column(unique=true, nullable=false)
     @Field(name = BioPAXElementImpl.SEARCH_FIELD_ID)
     public String getRDFId()
     {

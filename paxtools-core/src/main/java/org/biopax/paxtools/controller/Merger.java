@@ -142,7 +142,7 @@ public class Merger implements Visitor
 	 * Inserts a BioPAX element into the <em>target</em> model if it does not contain an equivalent;
 	 * but if does, than it updates the equivalent using this element's values.
 	 *
-	 * @param target model into which bpe will be insterted
+	 * @param target model into which bpe will be inserted
 	 * @param bpe    BioPAX element to be inserted into target
 	 */
 	private void insert(Model target, BioPAXElement bpe)

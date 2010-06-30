@@ -95,16 +95,18 @@ public class SimpleMerger
 				}
 			}
 		}
-
 	}
 
 	
 	private void migrateToTarget(BioPAXElement update, Model target, 
 			PropertyEditor editor, BioPAXElement value)
 	{
-		if (value!=null && !target.contains(value))
-		{
+		if (value!=null) {
 			BioPAXElement newValue = target.getByID(value.getRDFId());
+			if(newValue == null) 
+				throw new IllegalStateException("Target model must " +
+					"have got the element with id=" + value.getRDFId()
+					+ " at this point, but getById returned null!");
 			editor.removePropertyFromBean(value,update);
 			editor.setPropertyToBean(update, newValue);
 		}
