@@ -3,7 +3,6 @@ package org.biopax.paxtools.impl;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.hibernate.search.annotations.Field;
 
 import java.util.*;
 
@@ -313,5 +312,15 @@ public class ModelImpl implements Model
 			throw new IllegalBioPAXArgumentException(
 					"I do not have an object with the ID: " + oldID);
 		}
+	}
+
+	/*
+	 * Other implementations can perform more specific merging.
+	 * (non-Javadoc)
+	 * @see org.biopax.paxtools.model.Model#merge(org.biopax.paxtools.model.Model)
+	 */
+	public void merge(Model source) {
+		throw new UnsupportedOperationException("Operation is not supported " +
+				"in this Model implementation (use Merger or SimpleMerger directly).");
 	}
 }

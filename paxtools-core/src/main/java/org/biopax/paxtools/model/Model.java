@@ -151,5 +151,12 @@ public interface Model extends Serializable
      */
     void updateID(String oldID, String newID);
     
+    
+    /**
+     * Merges the source model into this one.
+     * 
+     * @param source a model to merge
+     */
+    void merge(Model source);
 
 }
