@@ -23,7 +23,6 @@ public class ConversionImpl extends InteractionImpl
 
 	private Set<PhysicalEntity> right;
 	private Set<PhysicalEntity> left;
-
 	private ConversionDirectionType conversionDirection;
 	private Set<Stoichiometry> participantStoichiometry;
 	private Boolean spontaneous;

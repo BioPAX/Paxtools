@@ -9,8 +9,6 @@ import java.util.Set;
  */
 public interface EntityFeature extends UtilityClass, Observable
 {
-
-
 	// Inverse of Property ENTITY-FEATURE
 
 	EntityReference getEntityFeatureOf();
@@ -43,4 +41,6 @@ public interface EntityFeature extends UtilityClass, Observable
 
 
 	boolean atEquivalentLocation(EntityFeature that);
+	
+	Set<EntityFeature> getMemberFeatureOf();
 }

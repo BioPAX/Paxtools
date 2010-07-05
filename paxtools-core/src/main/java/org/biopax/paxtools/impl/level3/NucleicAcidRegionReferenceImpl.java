@@ -55,8 +55,8 @@ public abstract class NucleicAcidRegionReferenceImpl
 
 	}
 
-	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, mappedBy = "subRegion",
-			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, 
+			mappedBy = "subRegion", cascade = {CascadeType.ALL})
 	public Set<NucleicAcidRegionReference> getSubRegionOf()
 	{
 		return subRegionOf;

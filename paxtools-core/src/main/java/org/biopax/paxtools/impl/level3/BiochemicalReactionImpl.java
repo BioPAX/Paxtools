@@ -7,20 +7,15 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.bridge.builtin.StringBridge;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- *
- */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-
 public class BiochemicalReactionImpl extends ConversionImpl
 	implements BiochemicalReaction
 {
@@ -28,7 +23,6 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 	private Set<Float> deltaS;
 	private Set<KPrime> kEQ;
-
 	private Set<Float> deltaH;
 	private Set<DeltaG> deltaG;
 	private Set<String> eCNumber;
@@ -68,7 +62,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		return deltaG;
 	}
 
-	private void setDeltaG(Set<DeltaG> deltaG)
+	protected void setDeltaG(Set<DeltaG> deltaG)
 	{
 		this.deltaG = deltaG;
 	}
@@ -90,7 +84,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		return deltaH;
 	}
 
-	private void setDeltaH(Set<Float> deltaH)
+	protected void setDeltaH(Set<Float> deltaH)
 	{
 		this.deltaH = deltaH;
 	}
@@ -112,7 +106,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		return deltaS;
 	}
 
-	private void setDeltaS(Set<Float> deltaS)
+	protected void setDeltaS(Set<Float> deltaS)
 	{
 		this.deltaS = deltaS;
 	}
@@ -135,7 +129,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		return eCNumber;
 	}
 
-	public void setECNumber(Set<String> eCNumber)
+	protected void setECNumber(Set<String> eCNumber)
 	{
 		this.eCNumber = eCNumber;
 	}
@@ -157,7 +151,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		return kEQ;
 	}
 
-	public void setKEQ(Set<KPrime> kEQ)
+	protected void setKEQ(Set<KPrime> kEQ)
 	{
 		this.kEQ = kEQ;
 	}

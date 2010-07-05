@@ -19,7 +19,6 @@ import java.util.Set;
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-
 public class CatalysisImpl extends ControlImpl implements Catalysis
 {
 // ------------------------------ FIELDS ------------------------------
@@ -61,14 +60,14 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 		this.catalysisDirection = catalysisDirection;
 	}
 
-	@ManyToMany(targetEntity= PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
+	@ManyToMany(targetEntity= PhysicalEntityImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="cofactor")
 	public Set<PhysicalEntity> getCofactor()
 	{
 		return cofactor;
 	}
 
-	private void setCofactor(Set<PhysicalEntity> cofactor)
+	protected void setCofactor(Set<PhysicalEntity> cofactor)
 	{
 		this.cofactor = cofactor;
 	}

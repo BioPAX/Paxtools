@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
@@ -19,6 +20,15 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	}
 	
 	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL})
+	protected EntityReference getEntityReferenceX()
+	{
+		return entityReference;
+	}
+	protected void setEntityReferenceX(EntityReference entityReference) {
+		this.entityReference = entityReference;
+	}
+	
+	@Transient
 	public EntityReference getEntityReference()
 	{
 		return entityReference;

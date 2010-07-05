@@ -11,7 +11,6 @@ import org.hibernate.search.annotations.Index;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
@@ -114,7 +113,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 // --------------------- Interface entity ---------------------
 
 	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant",
-			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade = {CascadeType.ALL})
 	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;
@@ -147,7 +146,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 		this.evidence.remove(oldEvidence);
 	}
 
-	private void setEvidence(Set<Evidence> newEvidence)
+	protected void setEvidence(Set<Evidence> newEvidence)
 	{
 		this.evidence = newEvidence;
 	}

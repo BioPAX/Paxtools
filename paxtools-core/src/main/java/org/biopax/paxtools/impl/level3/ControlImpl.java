@@ -22,8 +22,6 @@ public class ControlImpl extends InteractionImpl
 
 	private ControlType controlType;
 	private Set<Pathway> pathwayController;
-
-
 	private Set<PhysicalEntity> peController;
 	private CompositeSet<Controller> controller;
 	private Set<Process> controlled;
@@ -38,7 +36,6 @@ public class ControlImpl extends InteractionImpl
 		controller = new CompositeSet<Controller>();
 		controller.addComposited(peController);
 		controller.addComposited(pathwayController);
-
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -64,7 +61,7 @@ public class ControlImpl extends InteractionImpl
 		this.controlType = ControlType;
 	}
 
-	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.PERSIST})
+	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="controlled")
 	public Set<Process> getControlled()
 	{
@@ -96,7 +93,6 @@ public class ControlImpl extends InteractionImpl
 		super.removeParticipant(controlled);
 		controlled.getControlledOf().remove(this);
 		this.controlled.remove(controlled);
-
 	}
 
 	@Transient
@@ -140,20 +136,19 @@ public class ControlImpl extends InteractionImpl
 		return true;
 	}
 
-	@ManyToMany(targetEntity = PathwayImpl.class, cascade={CascadeType.PERSIST})
+	@ManyToMany(targetEntity = PathwayImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="pathwayController")
 	Set<Pathway> getPathwayController()
 	{
 		return pathwayController;
 	}
 
-
-	void setPathwayController(Set<Pathway> pathwayController)
+	protected void setPathwayController(Set<Pathway> pathwayController)
 	{
 		this.pathwayController = pathwayController;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="peController")
 	Set<PhysicalEntity> getPeController()
 	{

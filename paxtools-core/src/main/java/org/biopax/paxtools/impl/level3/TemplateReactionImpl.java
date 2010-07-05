@@ -54,8 +54,14 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
         this.product.remove(product);
     }
 
-
-    @ManyToOne(targetEntity = NucleicAcidImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = NucleicAcidImpl.class, cascade = { CascadeType.ALL })
+	protected NucleicAcid getTemplateX() {
+		return this.template;
+	}
+	protected void setTemplateX(NucleicAcid template) {
+		this.template = template;
+	}
+    
     public NucleicAcid getTemplate()
      {
          return this.template;

@@ -44,9 +44,9 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 // --------------------- Interface Complex ---------------------
 
 // --------------------- ACCESORS and MUTATORS---------------------
-
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.PERSIST})
-	@JoinTable(name="component") 	
+	
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@JoinTable(name="component") 
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;
@@ -64,13 +64,9 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		component.getComponentOf().add(null);
 	}
 
-	public void setComponent(Set<PhysicalEntity> component)
+	protected void setComponent(Set<PhysicalEntity> component)
 	{
 		this.component = component;
-		for (PhysicalEntity PhysicalEntity : component)
-		{
-			PhysicalEntity.getComponentOf().add(this);
-		}
 	}
 
 	@OneToMany(targetEntity = StoichiometryImpl.class, cascade={CascadeType.ALL})
@@ -83,7 +79,6 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	public void addComponentStoichiometry(
 			Stoichiometry stoichiometry)
 	{
-
 		this.componentStoichiometry.add(stoichiometry);
 	}
 
@@ -93,8 +88,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		this.componentStoichiometry.remove(stoichiometry);
 	}
 
-	protected void setComponentStoichiometry(
-			Set<Stoichiometry> stoichiometry)
+	protected void setComponentStoichiometry(Set<Stoichiometry> stoichiometry)
 	{
 		this.componentStoichiometry = stoichiometry;
 	}

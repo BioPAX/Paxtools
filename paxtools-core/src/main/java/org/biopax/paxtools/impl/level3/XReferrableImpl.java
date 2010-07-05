@@ -67,7 +67,6 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	public void addXref(Xref xref)
 	{
 		this.xref.add(xref);
-
 		xref.getXrefOf().add(this);
 	}
 

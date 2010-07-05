@@ -18,7 +18,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
 
 	private Set<Evidence> evidence;
-
 	private EntityReference ownerEntityReference;
 	private Set<PhysicalEntity> featureOf;
 	private Set<PhysicalEntity> notFeatureOf;
@@ -48,8 +47,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	/**
 	 * @return Reference entity that this feature belongs to.
 	 */
-	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL}, 
-			fetch=FetchType.EAGER)
+	@Transient
 	public EntityReference getEntityFeatureOf()
 	{
 		return ownerEntityReference;
@@ -66,7 +64,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	 */
 	protected void setEntityFeatureOf(EntityReference newEntityReference)
 	{
-
 		if (this.ownerEntityReference == null)
 		{
 			this.ownerEntityReference = newEntityReference;
@@ -84,7 +81,15 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		}
 	}
 
-
+	
+	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
+	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL})
+	protected EntityReference getEntityFeatureXOf(){
+		return ownerEntityReference;
+	}
+	protected void setEntityFeatureXOf(EntityReference entityReference){
+		ownerEntityReference = entityReference;
+	}
 	
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL}, 
@@ -119,7 +124,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.evidence.remove(evidence);
 	}
 
-	public void setEvidence(Set<Evidence> evidence)
+	protected void setEvidence(Set<Evidence> evidence)
 	{
 		this.evidence = evidence;
 	}
@@ -146,36 +151,43 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocationType= regionVocabulary;
 	}
 
-
+	
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="memberFeature")
 	public Set<EntityFeature> getMemberFeature()
 	{
 		return memberFeature;
 	}
+	
+	protected void setMemberFeature(Set<EntityFeature> memberFeature) {
+		this.memberFeature = memberFeature;
+	}
 
 	public void addMemberFeature(EntityFeature feature)
 	{
 		memberFeature.add(feature);
+		feature.getMemberFeatureOf().add(this);
 	}
 
 	public void removeMemberFeature(EntityFeature feature)
 	{
 		memberFeature.remove(feature);
+		feature.getMemberFeatureOf().remove(this);
 	}
 
-	protected void setMemberFeature(Set<EntityFeature> feature)
-	{
-		this.memberFeature = feature;
-	}
 
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature",
-		cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+		cascade = {CascadeType.ALL})
 	public Set<EntityFeature> getMemberFeatureOf()
 	{
 		return this.memberFeatureOf;
-
 	}
+	
+	protected void setMemberFeatureOf(Set<EntityFeature> memberFeatureOf)
+	{
+		this.memberFeatureOf = memberFeatureOf;
+	}
+	
 	@Transient
 	public boolean atEquivalentLocation(EntityFeature that)
 	{
@@ -219,11 +231,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return code + 13 * this.locationCode();
 	}
 
-	protected void setOwnerEntityReference(EntityReference ownerEntityReference)
-	{
-		this.ownerEntityReference = ownerEntityReference;
-	}
-
 	protected void setFeatureOf(Set<PhysicalEntity> featureOf)
 	{
 		this.featureOf = featureOf;
@@ -232,10 +239,5 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	protected void setNotFeatureOf(Set<PhysicalEntity> notFeatureOf)
 	{
 		this.notFeatureOf = notFeatureOf;
-	}
-
-	protected void setMemberFeatureOf(Set<EntityFeature> memberFeatureOf)
-	{
-		this.memberFeatureOf = memberFeatureOf;
 	}
 }

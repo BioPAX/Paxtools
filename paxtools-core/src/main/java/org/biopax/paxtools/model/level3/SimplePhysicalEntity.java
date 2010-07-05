@@ -5,9 +5,6 @@ package org.biopax.paxtools.model.level3;
  */
 public interface SimplePhysicalEntity extends PhysicalEntity
 {
-	
-
-	         // Property REFERENCE-ENTITY
 
     EntityReference getEntityReference();
 

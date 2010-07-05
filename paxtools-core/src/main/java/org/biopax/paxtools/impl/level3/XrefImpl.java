@@ -9,7 +9,6 @@ import org.hibernate.search.annotations.Field;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
@@ -116,7 +115,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 
 
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref",
-			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade = {CascadeType.ALL})
 	public Set<XReferrable> getXrefOf()
 	{
 		return xrefOf;

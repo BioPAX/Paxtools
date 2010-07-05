@@ -1,7 +1,5 @@
 package org.biopax.paxtools.model.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
-
 /**
  * This class represents  an ordered step in a biochemical pathway. A
  * biochemical reaction can be reversible by itself, but can be physiologically

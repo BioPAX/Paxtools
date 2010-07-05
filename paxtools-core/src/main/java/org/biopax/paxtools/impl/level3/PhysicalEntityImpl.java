@@ -18,16 +18,12 @@ import java.util.Set;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 {
-
 	private CellularLocationVocabulary cellularLocation;
 	private Set<PhysicalEntity> memberPhysicalEntity;
-
-
 	private Set<Complex> componentOf;
 	private Set<EntityFeature> feature;
 	private Set<EntityFeature> notFeature;
 	private Set<Control> controllerOf;
-
 	private final Log log = LogFactory.getLog(PhysicalEntityImpl.class);
 	private Set<PhysicalEntity> memberPhysicalEntityOf;
 
@@ -49,13 +45,14 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 
 	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component",
-			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade = {CascadeType.ALL})
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
 	}
 
-	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class, 
+			cascade = {CascadeType.ALL})
 	public CellularLocationVocabulary getCellularLocation()
 	{
 		return cellularLocation;
@@ -129,7 +126,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	{
 		this.memberPhysicalEntity.add(newMember);
 		newMember.getMemberPhysicalEntityOf().add(this);
-
 	}
 
 	public void removeMemberPhysicalEntity(PhysicalEntity oldMember)
@@ -138,17 +134,15 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		oldMember.getMemberPhysicalEntityOf().remove(this);
 	}
 
-	protected void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity
-	)
+	protected void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity)
 	{
-		this.memberPhysicalEntity = memberPhysicalEntity;             //todo
+		this.memberPhysicalEntity = memberPhysicalEntity; //todo
 	}
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity",
-			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade = {CascadeType.ALL})
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
-
 		return memberPhysicalEntityOf;
 	}
 
@@ -232,7 +226,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController",
-			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade = {CascadeType.ALL})
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

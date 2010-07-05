@@ -13,13 +13,12 @@ import javax.persistence.Transient;
 public class TransportWithBiochemicalReactionImpl extends BiochemicalReactionImpl
 	implements TransportWithBiochemicalReaction
 {
-	public TransportWithBiochemicalReactionImpl() {
-	}
+	public TransportWithBiochemicalReactionImpl() {}
 	
     @Transient
     public Class<? extends TransportWithBiochemicalReaction> getModelInterface()
-        {
-            return TransportWithBiochemicalReaction.class;
-        }
+    {
+        return TransportWithBiochemicalReaction.class;
+    }
 
 }

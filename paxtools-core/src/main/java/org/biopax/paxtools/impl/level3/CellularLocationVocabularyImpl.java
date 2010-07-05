@@ -7,15 +7,12 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
-/**
- */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-
 public class CellularLocationVocabularyImpl extends ControlledVocabularyImpl
-        implements CellularLocationVocabulary {
-	
+        implements CellularLocationVocabulary 
+{	
 	public CellularLocationVocabularyImpl() {
 	}
 

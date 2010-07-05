@@ -111,7 +111,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController",
-			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade = {CascadeType.ALL})
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

@@ -15,11 +15,8 @@ import javax.persistence.Transient;
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-
 public class BioSourceImpl extends NamedImpl implements BioSource
 {
-
-
 	private CellVocabulary celltype;
 	private TissueVocabulary tissue;
 
@@ -50,8 +47,6 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 				(tissue != null ?
 					!tissue.isEquivalent(bioSource.getTissue()) :
 					bioSource.getTissue() == null);
-
-
     }
 
 	public int equivalenceCode()
@@ -66,7 +61,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @ManyToOne(targetEntity = CellVocabularyImpl.class, cascade = {CascadeType.PERSIST})
+    @ManyToOne(targetEntity = CellVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public CellVocabulary getCellType()
 	{
 		return celltype;
@@ -77,7 +72,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 		this.celltype = celltype;
 	}
 
-	@ManyToOne(targetEntity = TissueVocabularyImpl.class, cascade = {CascadeType.PERSIST})
+	@ManyToOne(targetEntity = TissueVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public TissueVocabulary getTissue()
 	{
 		return tissue;

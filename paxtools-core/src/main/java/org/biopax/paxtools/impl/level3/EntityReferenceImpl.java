@@ -47,8 +47,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 *
 	 * @return A set of entity features for the reference entity.
 	 */
-	@OneToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "entityFeatureOf", 
-			cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
+	@OneToMany(targetEntity = EntityFeatureImpl.class, 
+			mappedBy = "entityFeatureXOf", cascade={CascadeType.ALL})
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
@@ -91,8 +91,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityFeature = entityFeature;
 	}
 
-	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReference", 
-			cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
+	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, 
+			mappedBy = "entityReferenceX", cascade={CascadeType.ALL})
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;
@@ -151,7 +151,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference", 
-			cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade={CascadeType.ALL})
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
 		return ownerEntityReference;
@@ -162,10 +162,6 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.ownerEntityReference = newOwnerEntityReferenceSet;
 	}
 
-	//
-	// observable interface implementation
-	//
-	/////////////////////////////////////////////////////////////////////////////
 
 	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="evidence")	
@@ -189,7 +185,6 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.evidence = evidence;
 	}
 
-
 	protected void setEntityReferenceOf(Set<SimplePhysicalEntity> entityReferenceOf)
 	{
 		this.entityReferenceOf = entityReferenceOf;
@@ -200,8 +195,4 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.memberEntity = memberEntity;
 	}
 
-	protected void setOwnerEntityReference(Set<EntityReference> ownerEntityReference)
-	{
-		this.ownerEntityReference = ownerEntityReference;
-	}
 }

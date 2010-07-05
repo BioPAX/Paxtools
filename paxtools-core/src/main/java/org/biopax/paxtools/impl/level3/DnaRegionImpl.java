@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 
-/**
- */
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
 public class DnaRegionImpl extends NucleicAcidImpl implements DnaRegion

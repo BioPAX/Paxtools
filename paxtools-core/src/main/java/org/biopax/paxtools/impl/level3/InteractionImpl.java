@@ -100,7 +100,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
         }
         else
         {
-            log.warn("Null object passed to addParticipant @"+this.getRDFId());
+            log.warn("Null object passed to addParticipant @"
+            		+ this.getRDFId());
         }
     }
 

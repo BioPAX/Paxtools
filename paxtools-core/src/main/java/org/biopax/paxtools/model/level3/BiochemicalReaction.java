@@ -57,8 +57,6 @@ public interface BiochemicalReaction extends Conversion
 	 */
 	void removeDeltaG(DeltaG deltaG);
 
-
-
 	Set<Float> getDeltaH();
 
 	void addDeltaH(float delta_h);
@@ -94,6 +92,5 @@ public interface BiochemicalReaction extends Conversion
 	void addKEQ(KPrime keq);
 
 	void removeKEQ(KPrime keq);
-
 
 }

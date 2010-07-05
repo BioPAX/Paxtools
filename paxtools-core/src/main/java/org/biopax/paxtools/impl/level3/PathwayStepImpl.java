@@ -67,7 +67,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep",
-			cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+			cascade = {CascadeType.ALL})
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;
@@ -125,8 +125,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = evidence;
 	}
 
-	@ManyToOne(targetEntity = PathwayImpl.class, cascade = {CascadeType.ALL},
-			fetch=FetchType.EAGER)
+	@ManyToOne(targetEntity = PathwayImpl.class, cascade = {CascadeType.ALL})
 	public Pathway getPathwayOrderOf()
 	{
 		return this.pathwayOrderOf;

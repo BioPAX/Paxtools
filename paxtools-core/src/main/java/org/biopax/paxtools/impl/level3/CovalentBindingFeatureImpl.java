@@ -27,7 +27,7 @@ public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements Co
 		return CovalentBindingFeature.class;
 	}
 
-	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class, cascade = {CascadeType.PERSIST})
+	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class, cascade = {CascadeType.ALL})
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return this.modificationType;
