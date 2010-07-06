@@ -62,6 +62,10 @@ public class SimpleMerger
 
 		for (BioPAXElement bpe : sourceElements)
 		{
+			// get target's equivalent 
+			//(for some Model implementations, it can be a different object!)
+			bpe = target.getByID(bpe.getRDFId()); 
+			
 			updateObjectFields(bpe, target);
 		}
 	}
