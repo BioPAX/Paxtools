@@ -31,6 +31,7 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	@Basic
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@Column(columnDefinition="LONGTEXT")
 	public String getStandardName()
 	{
 		return standardName;
@@ -43,12 +44,12 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	@Basic
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@Column(columnDefinition="LONGTEXT")
 	public String getDisplayName()
 	{
 		return displayName;
 	}
 
-	@Column(columnDefinition="LONGTEXT")
 	public void setDisplayName(String name)
 	{
 		addName(displayName = name);
