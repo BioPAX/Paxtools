@@ -2,9 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.util.SetStringBridge;
 
-import javax.persistence.Basic;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.hibernate.search.annotations.Field;
@@ -50,6 +48,7 @@ public abstract class NamedImpl extends XReferrableImpl
 		return displayName;
 	}
 
+	@Column(columnDefinition="LONGTEXT")
 	public void setDisplayName(String name)
 	{
 		addName(displayName = name);
@@ -58,6 +57,7 @@ public abstract class NamedImpl extends XReferrableImpl
 	@ElementCollection
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
+	@Column(columnDefinition="LONGTEXT")
 	public Set<String> getName()
 	{
 		return allNames;

@@ -17,7 +17,6 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 {
 	private StructureFormatType structureFormat;
 
-	@Column(columnDefinition="LONGTEXT")
 	private String structureData;
 
 	public ChemicalStructureImpl() {
@@ -59,6 +58,7 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 	/////////////////////////////////////////////////////////////////////////////
 
 	@Basic //TODO:@Lob?
+	@Column(columnDefinition="LONGTEXT")
 	public String getStructureData()
 	{
 		return structureData;
