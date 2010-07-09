@@ -53,8 +53,8 @@ public abstract class AbstractTraverser extends Traverser
 	 * calls the protected abstract method visitValue that is to be 
 	 * implemented in subclasses of this abstract class.
 	 * 
-	 * @param val property value (can be BioPAX element, primitive, enum, string)
-	 * @param parent BioPAX Element
+	 * @param domain BioPAX Element
+	 * @param range property value (can be BioPAX element, primitive, enum, string)
 	 * @param model 
 	 * @param editor parent's property PropertyEditor
 	 */

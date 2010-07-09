@@ -4,14 +4,14 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.Model;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * This class is used to clone an element (traverse it to obtain its dependent elements) and to add
- * this element into a model using the visitor and traverser framework.
+ * "Clones" the BioPAX elements set
+ * (traverses to obtain dependent elements), 
+ * puts them to the new model using the visitor and traverser framework.
  *
  * @see org.biopax.paxtools.controller.Visitor
  * @see org.biopax.paxtools.controller.Traverser
@@ -32,6 +32,18 @@ public class Cloner implements Visitor
 		targetMap = new HashMap<String, BioPAXElement>();
 	}
 
+	
+	/**
+	 * For each element from the 'toBeCloned' list,
+	 * it creates a copy in the new model, setting all 
+	 * the data properties; however, object property values
+	 * that refer to BioPAX elements not in 'toBeCloned' list
+	 * are ignored.
+	 * 
+	 * @param source
+	 * @param toBeCloned
+	 * @return
+	 */
 	public Model clone(Model source, Set<BioPAXElement> toBeCloned)
 	{
 		targetModel = factory.createModel();
@@ -55,6 +67,7 @@ public class Cloner implements Visitor
 	{
 		if (!targetMap.containsKey(domain.getRDFId()))
 		{
+			// TODO Why? Remove 'targetMap', simply use targetModel.addNew(clazz, rdfid), targetModel.containsID(id) instead.
 			BioPAXElement targetDomain = factory.reflectivelyCreate(domain.getModelInterface());
 			targetDomain.setRDFId(domain.getRDFId());
 			targetMap.put(targetDomain.getRDFId(), targetDomain);
@@ -73,6 +86,8 @@ public class Cloner implements Visitor
 
 				editor.setPropertyToBean(
 					targetMap.get(domain.getRDFId()), targetMap.get(bpe.getRDFId()));
+			} else {
+				// ignore the element that is not in the source list
 			}
 		}
 		else
