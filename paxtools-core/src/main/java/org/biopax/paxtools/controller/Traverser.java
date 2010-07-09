@@ -46,11 +46,11 @@ public class Traverser
 // -------------------------- OTHER METHODS --------------------------
 
 	/**
-	 * Traverse and visit {@link Visitor} all properties of the element. This method does not
-	 * traverse iteratively to the values.
+	 * Traverse and visit {@link Visitor} all properties of the element. 
+	 * This method does not traverse iteratively to the values.
 	 *
 	 * @param element BioPAX element to be traversed
-	 * @param model   model containing the graph to be traversed.
+	 * @param model to be traversed, but not necessarily (depends on the Visitor implementation).
 	 */
 	public void traverse(BioPAXElement element, Model model)
 	{
