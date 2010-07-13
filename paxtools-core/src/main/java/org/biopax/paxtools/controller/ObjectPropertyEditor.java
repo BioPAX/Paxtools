@@ -125,7 +125,7 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		{
 			throw new IllegalBioPAXArgumentException(
 					"The range restriction is violated \n" +
-					value + "-->" + bean);
+					"value: " + value + "--> bean: " + bean);
 		}
 	}
 
@@ -163,11 +163,11 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		return method;
 	}
 
-	protected D getInverseValueFromBean(R bean)
+	protected Object getInverseValueFromBean(R bean)
 	{
 		try
 		{
-			return (D) getInverseGetMethod().invoke(bean);
+			return getInverseGetMethod().invoke(bean);
 		}
 		catch (IllegalAccessException e)
 		{
@@ -178,6 +178,10 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		{
 			throw new IllegalBioPAXArgumentException("Could not invoke inverse get method " +
 				getInverseGetMethod().getName() + " for " + bean, e);
+		}
+		catch (ClassCastException e) {
+			throw new IllegalBioPAXArgumentException("Could not invoke inverse get method " +
+					getInverseGetMethod().getName() + " for " + bean, e);
 		}
 	}
 
