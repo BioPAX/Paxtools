@@ -71,6 +71,20 @@ public class SimpleMerger
 	}
 
 	/**
+	 * Merges the <em>source</em> element 
+	 * and its "downstream" dependents into <em>target</em> model.
+	 * 
+	 * @param target
+	 * @param source
+	 */
+	public void merge(Model target, BioPAXElement source) {
+		Model m = map.getLevel().getDefaultFactory().createModel();
+		(new Fetcher(map)).fetch(source, m);
+		merge(target, m);
+	}
+	
+	
+	/**
 	 * Updates each value of <em>existing</em> element, using the value(s) of <em>update</em>.
 	 *
 	 * @param update BioPAX element of which values are ued for update
