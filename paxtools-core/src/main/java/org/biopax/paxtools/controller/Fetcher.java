@@ -84,6 +84,7 @@ public class Fetcher implements Visitor
      */
     public void fetch(BioPAXElement element, Model model)
 	{
-		traverser.traverse(element, model);
+    	traverser.traverse(element, model);
+    	model.add(element);
 	}
 }

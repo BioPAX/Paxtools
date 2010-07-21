@@ -118,7 +118,6 @@ public class ProteinNameLister
             Model onePathwayModel =
                     BioPAXLevel.L2.getDefaultFactory().createModel();
             fetcher.fetch(aPathway, onePathwayModel);
-
             //get all proteins in the new level2
             Set<protein> proteins =
                     onePathwayModel.getObjects(protein.class);
