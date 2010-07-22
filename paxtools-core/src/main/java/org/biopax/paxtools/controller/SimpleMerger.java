@@ -2,43 +2,38 @@ package org.biopax.paxtools.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 
 import java.util.*;
 
 /**
- * Utility class to merge two already normalized biopax models into one. Note that this merger does not preserve
- * the integrity of the passed models. Target will be a merged model and source will become
- * unusable.
+ * Utility class to merge two (normalized) 
+ * biopax models into one based on the RDFId
+ * (URI) identity.
+ * 
+ * Note that this merger does not preserve 
+ * the integrity of the passed models! 
+ * 'Target' will be a merged model and 
+ * 'source' may become unusable.
+ * 
+ * Use With Care!
  */
-
 public class SimpleMerger
 {
-// ------------------------------ FIELDS ------------------------------
-
 	private static final Log log = LogFactory.getLog(SimpleMerger.class);
 
 	private final EditorMap map;
 
-
-	// --------------------------- CONSTRUCTORS ---------------------------
-
 	/**
-	 * @param map a class to editor map containing the editors for the elements of models to be
-	 *            modified.
+	 * @param map a class to editor map for the elements to be modified.
 	 */
 	public SimpleMerger(EditorMap map)
 	{
 		this.map = map;
 	}
-
-// ------------------------ INTERFACE METHODS ------------------------
-
-	// --------------------- Interface Visitor ---------------------
-
-// -------------------------- OTHER METHODS --------------------------
-
+	
 
 	/**
 	 * Merges the <em>source</em> model into <em>target</em> model.
@@ -48,24 +43,47 @@ public class SimpleMerger
 	 */
 	public void merge(Model target, Model source)
 	{
-
+		// this may work not as expected for some Models...
+		if(!(target instanceof ModelImpl)) {
+			log.warn("'target': using user's Model implementation, "
+					+ target.getClass().getCanonicalName());
+		}
+		if(!(source instanceof ModelImpl)) {
+			log.warn("'source': using user's Model implementation,"
+					+ source.getClass().getCanonicalName());
+		}
+		
+		// get all the objects from source, iterate
 		Set<BioPAXElement> sourceElements = source.getObjects();
 		for (BioPAXElement bpe : sourceElements)
 		{
 			BioPAXElement paxElement = target.getByID(bpe.getRDFId());
+			/* 
+			 * if there is an element with the same id,
+			 * no not merge this one (see the warning below...)
+			 */
 			if (paxElement == null)
 			{
 				target.add(bpe);
+				/* Warning: 
+				 * concrete target Model implementations
+				 * may add not only 'bpe' but also
+				 * all its dependents (using cascades/recursion); 
+				 * it might also override target's properties
+				 * with the corresponding ones from the source, 
+				 * even though SimpleMerger avoids this; 
+				 * also, is such cases, the number of times
+				 * this loop body is called can be less that
+				 * the number of elements in sourceElements set 
+				 * that were't originally present in the target 
+				 * model, or - even equals to one)
+				 */
 			}
-
 		}
 
+		// "re-wire" object relationships
 		for (BioPAXElement bpe : sourceElements)
 		{
-			// get target's equivalent 
-			//(for some Model implementations, it can be a different object!)
-			bpe = target.getByID(bpe.getRDFId()); 
-			
 			updateObjectFields(bpe, target);
 		}
 	}
@@ -115,7 +133,7 @@ public class SimpleMerger
 		}
 	}
 
-	
+
 	private void migrateToTarget(BioPAXElement update, Model target, 
 			PropertyEditor editor, BioPAXElement value)
 	{
