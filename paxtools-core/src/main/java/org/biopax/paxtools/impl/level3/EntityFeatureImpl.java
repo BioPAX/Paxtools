@@ -195,7 +195,10 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 			(getEntityFeatureOf() != null ?
 				getEntityFeatureOf().isEquivalent(that.getEntityFeatureOf())
 				: that.getEntityFeatureOf() == null)
-		       && getFeatureLocation().isEquivalent(that.getFeatureLocation());
+		    && 
+		    (getFeatureLocation() != null ?
+		    	getFeatureLocation().isEquivalent(that.getFeatureLocation())
+		    	: that.getFeatureLocation() == null);
 	}
 
 	@Transient
