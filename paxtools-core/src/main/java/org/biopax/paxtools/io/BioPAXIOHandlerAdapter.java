@@ -32,7 +32,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	private boolean fixReusedPEPs = false;
 
-	private static final Log log = LogFactory.getLog(BioPAXIOHandler.class);
+	private static final Log log = LogFactory.getLog(BioPAXIOHandlerAdapter.class);
 
 	protected BioPAXLevel level = BioPAXLevel.L2; //todo change to level 3 as default
 

@@ -54,7 +54,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	{
 		super(factory, level);
 		resetEditorMap();
-		log.info("new!!--------------------!!!---------------");
+		if(log.isDebugEnabled()) log.debug("new!!!");
 	}
 
 	public void mergeDuplicates(boolean mergeDuplicates)
@@ -271,14 +271,6 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 		}
 		PropertyEditor editor =
 				this.getEditorMap().getEditorForProperty(triple.property, domain.getClass());
-
-		/* Check for NULL now, and raise the exception; otherwise, the next call (bindValue)
-		 * will throw the NullPointerException, anyway, which is difficult to interpret
-		 * (e.g. in the Validator).
-		 */
-		if (editor == null)
-		{
-		}
 
 		bindValue(triple.range, editor, domain, model);
 	}
