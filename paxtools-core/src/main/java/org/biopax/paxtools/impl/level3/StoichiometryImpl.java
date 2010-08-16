@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@Indexed(index = BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 {
@@ -21,10 +21,11 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	private PhysicalEntity physicalEntity;
 
 
-	public StoichiometryImpl() {
+	public StoichiometryImpl()
+	{
 	}
-	
-    @Transient
+
+	@Transient
 	public Class<? extends Stoichiometry> getModelInterface()
 	{
 		return Stoichiometry.class;
@@ -34,43 +35,34 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	@Override
 	public boolean equals(Object o)
 	{
-		boolean value = super.equals(o);
-		if (!value && o instanceof Stoichiometry)
-		{
-			Stoichiometry that = (Stoichiometry) o;
-			value = that.getStoichiometricCoefficient() ==
-			        this.getStoichiometricCoefficient() &&
-			        ((that.getPhysicalEntity() == null) 
-			        	? this.getPhysicalEntity() == null
-			        		: that.getPhysicalEntity().equals(this.getPhysicalEntity()));
-
-		}
-		return value;
+		return semanticallyEquivalent((BioPAXElement) o) || super.equals(o);
 	}
 
-	
+
 	@Override
 	public int hashCode()
 	{
 		return ((int) this.getStoichiometricCoefficient()) +
-		       ((this.getPhysicalEntity() != null) 
-		         ? 31 * this.getPhysicalEntity().hashCode()
-		        	: 0);
+		       ((this.getPhysicalEntity() != null)
+		        ? 31 * this.getPhysicalEntity().hashCode()
+		        : 0);
 	}
-	
+
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
 
 		boolean value = false;
-		if (element instanceof Stoichiometry)
+		if (!value && element instanceof Stoichiometry)
 		{
 			Stoichiometry that = (Stoichiometry) element;
-			value = that.getStoichiometricCoefficient() == this.getStoichiometricCoefficient()
-				&& ((that.getPhysicalEntity() == null) 
-			        ? this.getPhysicalEntity() == null
-				    : that.getPhysicalEntity().isEquivalent(this.getPhysicalEntity()));
+			if (that.getPhysicalEntity() != null && this.getPhysicalEntity() != null)
+			{
+				value = (that.getStoichiometricCoefficient() ==
+				         this.getStoichiometricCoefficient()) &&
+				        that.getPhysicalEntity().equals(this.getPhysicalEntity());
 
+			}
 		}
 		return value;
 	}
@@ -78,11 +70,11 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	@Override
 	public int equivalenceCode()
 	{
-		return (int) (physicalEntity.equivalenceCode() + 23 * stoichiometricCoefficient);
+		return hashCode();
 	}
 
 	@ManyToOne(targetEntity = PhysicalEntityImpl.class, cascade = {CascadeType.ALL})
-    public PhysicalEntity getPhysicalEntity()
+	public PhysicalEntity getPhysicalEntity()
 	{
 		return physicalEntity;
 	}
@@ -92,7 +84,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 		this.physicalEntity = PhysicalEntity;
 	}
 
-    @Basic
+	@Basic
 	public float getStoichiometricCoefficient()
 	{
 		return stoichiometricCoefficient;
