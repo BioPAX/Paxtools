@@ -5,7 +5,11 @@ import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
-import org.biopax.paxtools.io.sif.level2.*;
+import org.biopax.paxtools.io.sif.level2.ComponentRule;
+import org.biopax.paxtools.io.sif.level2.ConsecutiveCatalysisRule;
+import org.biopax.paxtools.io.sif.level2.ControlRule;
+import org.biopax.paxtools.io.sif.level2.ControlsTogetherRule;
+import org.biopax.paxtools.io.sif.level2.ParticipatesRule;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 import org.biopax.paxtools.controller.Merger;
 import org.biopax.paxtools.controller.Integrator;
@@ -93,14 +97,24 @@ public class PaxtoolsMain {
 
                 Model model = getModel(io, argv[count+1]);
 
-                SimpleInteractionConverter sic
-                        = new SimpleInteractionConverter(
-                                new ComponentRule(),
-                                new ConsecutiveCatalysisRule(),
-                                new ControlRule(),
-                                new ControlsTogetherRule(),
-                                new ParticipatesRule()
-                        );
+                SimpleInteractionConverter sic = null;
+				if (BioPAXLevel.L2.equals(model.getLevel())) {
+					sic = new SimpleInteractionConverter(new ComponentRule(),
+							new ConsecutiveCatalysisRule(), new ControlRule(),
+							new ControlsTogetherRule(), new ParticipatesRule());
+				} else if (BioPAXLevel.L3.equals(model.getLevel())) {
+					sic = new SimpleInteractionConverter(
+							new org.biopax.paxtools.io.sif.level3.ComponentRule(),
+							new org.biopax.paxtools.io.sif.level3.ConsecutiveCatalysisRule(),
+							new org.biopax.paxtools.io.sif.level3.ControlRule(),
+							new org.biopax.paxtools.io.sif.level3.ControlsTogetherRule(),
+							new org.biopax.paxtools.io.sif.level3.ParticipatesRule());
+				} else {
+        			System.err.println("SIF converter does not yet support BioPAX level: " 
+        					+ model.getLevel());
+        			System.exit(0);
+				}
+				
                 sic.writeInteractionsInSIF(model, new FileOutputStream(argv[count+2]));
 
             } else if( argv[count].equals("--validate") ) {
