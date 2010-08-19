@@ -304,7 +304,8 @@ public class ModelImpl implements Model
 				// roolback and fail
 				setIdAndAdd(bpe, oldID); 
 				throw new IllegalBioPAXArgumentException(
-					"Updating ID failed (model is unchanged): " +
+					"Updating ID: " + oldID + 
+					" failed (model is unchanged): " +
 					"cannot use new ID: " + newID, e);
 			}
 			

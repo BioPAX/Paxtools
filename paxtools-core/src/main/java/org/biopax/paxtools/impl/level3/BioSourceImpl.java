@@ -2,9 +2,12 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.TissueVocabulary;
+import org.biopax.paxtools.model.level3.UnificationXref;
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
@@ -46,7 +49,11 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 				&&
 				(tissue != null ?
 					!tissue.isEquivalent(bioSource.getTissue()) :
-					bioSource.getTissue() == null);
+					bioSource.getTissue() == null)
+				&& SetEquivalanceChecker.isEquivalentIntersection(
+				new ClassFilterSet<UnificationXref>(getXref(), UnificationXref.class),
+				new ClassFilterSet<UnificationXref>(bioSource.getXref(), UnificationXref.class)
+			);
     }
 
 	public int equivalenceCode()
