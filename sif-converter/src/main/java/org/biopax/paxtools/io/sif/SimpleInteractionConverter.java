@@ -170,14 +170,19 @@ public class SimpleInteractionConverter
 		List<PropertyEditor> editors = new LinkedList<PropertyEditor>();
 		for (String s : entityProperty)
 		{
+			PropertyEditor editor = null;
+			
 			if (model.getLevel() == BioPAXLevel.L2)
 			{
-				editors.add(map.getEditorForProperty(s, physicalEntity.class));
+				editor = map.getEditorForProperty(s, physicalEntity.class);
 			}
 			else if (model.getLevel() == BioPAXLevel.L3)
 			{
-				editors.add(map.getEditorForProperty(s, EntityReference.class));
+				editor = map.getEditorForProperty(s, EntityReference.class);
 			}
+			
+			if(editor != null)
+				editors.add(editor);
 		}
 		for (SimpleInteraction si : interactionSet)
 		{
