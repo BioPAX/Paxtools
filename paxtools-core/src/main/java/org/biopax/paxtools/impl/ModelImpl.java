@@ -133,6 +133,8 @@ public class ModelImpl implements Model
 	public void remove(BioPAXElement aBioPAXElement)
 	{
 		this.idMap.remove(aBioPAXElement.getRDFId());
+		// for 'broken' models, where rdfid was updated directly,..
+		this.idMap.values().remove(aBioPAXElement);
 	}
                             
 	public <T extends BioPAXElement> T addNew(Class<T> c, String id)
