@@ -35,7 +35,7 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property STEP-CONVERSION
-	@ManyToOne(targetEntity = ControlImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = ConversionImpl.class, cascade = {CascadeType.ALL})
     public Conversion getStepConversion()
 	{
 		return stepConversion;
