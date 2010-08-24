@@ -138,26 +138,30 @@ public class ControlImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PathwayImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="pathwayController")
-	Set<Pathway> getPathwayController()
+	protected Set<Pathway> getPathwayController()
 	{
 		return pathwayController;
 	}
 
 	protected void setPathwayController(Set<Pathway> pathwayController)
 	{
+		this.controller.removeComposited(this.pathwayController);
 		this.pathwayController = pathwayController;
+		this.controller.addComposited(pathwayController);
 	}
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="peController")
-	Set<PhysicalEntity> getPeController()
+	protected Set<PhysicalEntity> getPeController()
 	{
 		return peController;
 	}
 
-	void setPeController(Set<PhysicalEntity> peController)
+	protected void setPeController(Set<PhysicalEntity> peController)
 	{
+		this.controller.removeComposited(this.peController);
 		this.peController = peController;
+		this.controller.addComposited(peController);
 	}
 
 }

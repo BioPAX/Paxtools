@@ -77,7 +77,11 @@ public class ModelImpl implements Model
     
     @Transient
     public BioPAXElement getByID(String id) {
-        return this.idMap.get(id);
+    	BioPAXElement ret = this.idMap.get(id);
+    	if(ret != null) {
+    		assert ret.getRDFId().equals(id);
+    	}
+        return ret;
     }
 
 
@@ -132,9 +136,16 @@ public class ModelImpl implements Model
 	
 	public void remove(BioPAXElement aBioPAXElement)
 	{
-		this.idMap.remove(aBioPAXElement.getRDFId());
-		// for 'broken' models, where rdfid was updated directly,..
-		this.idMap.values().remove(aBioPAXElement);
+		BioPAXElement deleted = this.idMap.remove(aBioPAXElement.getRDFId());
+		
+		// inconsistent/intermediate model may have
+		if( deleted == null) {
+			// model stores aBioPAXElement under different ID, doesn't it?
+			assert !this.idMap.values().contains(aBioPAXElement);
+		} else {
+			// it actually deleted aBioPAXElement, not another Object with the same ID, didn't it?
+			assert deleted == aBioPAXElement;
+		}
 	}
                             
 	public <T extends BioPAXElement> T addNew(Class<T> c, String id)

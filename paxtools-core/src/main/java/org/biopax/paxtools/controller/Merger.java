@@ -74,8 +74,7 @@ public class Merger implements Visitor
 					{
 						editor.removePropertyFromBean(bpe, domain);
 					}
-					editor
-							.setPropertyToBean(domain, getIdentical(bpe));
+					editor.setPropertyToBean(domain, getIdentical(bpe));
 				}
 			}
 		}
