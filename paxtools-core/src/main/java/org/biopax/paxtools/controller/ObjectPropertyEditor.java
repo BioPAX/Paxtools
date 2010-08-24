@@ -163,7 +163,7 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		return method;
 	}
 
-	protected Object getInverseValueFromBean(R bean)
+	public Object getInverseValueFromBean(R bean)
 	{
 		try
 		{
