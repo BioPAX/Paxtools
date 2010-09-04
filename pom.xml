@@ -10,6 +10,7 @@
 
     <name>BioPAX PaxTools (multi-module project)</name>
     <packaging>pom</packaging>
+    <description>Paxtools is a Java library that allows software to read, write, analyze and manipulate BioPAX models. Paxtools provide a consistent, fully implemented, validating BioPAX API that significantly reduces development time of oftware  that require programmatic access to BioPAX. Paxtools is modular, lightweight and platform independent to be easily embedded into applications.</description>
     <url>http://www.biopax.org/paxtools</url>
 
     <modules>
@@ -18,7 +19,6 @@
         <module>paxtools-jena-io</module>
         <module>paxtools-simple-io</module>
         <module>sif-converter</module>
-        <!-- <module>biopax-persistence</module> - deprecated (mappings moved to paxtools-core)-->
         <module>pathwaycommons-client</module>
         <module>biopax-converter</module>
         <module>psimi-converter</module>
@@ -28,14 +28,6 @@
 
     <developers>
         <developer>
-            <id>rodche</id>
-            <name>Igor Rodchenkov</name>
-            <organization>University of Toronto</organization>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
             <id>emekdemir</id>
             <name>Emek Demir</name>
             <organization>CBIO MSKCC</organization>
@@ -44,7 +36,60 @@
                 <role>developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>rodche</id>
+            <name>Igor Rodchenkov</name>
+            <organization>University of Toronto</organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>ozgunbabur</id>
+            <name>Ozgun Babur</name>
+            <organization>CBIO MSKCC</organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>kenichirofukuda</id>
+            <name>Ken-Ichiro Fukuda</name>
+            <organization></organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>armanaksoy</id>
+            <name>Arman Aksoy</name>
+            <organization></organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>benjamingross</id>
+            <name>Benjamin Gross</name>
+            <organization>CBIO MSKCC</organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
+
+	<licenses>
+		<license>
+			<name>LGPL 2.0 license</name>
+			<url>http://www.opensource.org/licenses/lgpl-2.0.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<issueManagement>
+		<system>SF</system>
+		<url>https://sourceforge.net/tracker/?group_id=85345</url>
+	</issueManagement>
 
     <profiles>
         <profile>
@@ -129,6 +174,7 @@
     </dependencies>
       
     <repositories>
+    <!-- 
        <repository>
           <id>jboss-public-repository-group</id>
           <name>JBoss Public Maven Repository Group</name>
@@ -143,9 +189,49 @@
             <updatePolicy>always</updatePolicy>
           </snapshots>
         </repository>
+     -->
+        <repository>
+            <id>JBoss Repo</id>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+            <name>JBoss Repo</name>
+        </repository>
+        <repository>
+			<id>biopax.snapshots</id>
+			<name>BioPAX Snapshots Repository at Sourceforge</name>
+			<url>http://biopax.sourceforge.net/m2repo/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>biopax.releases</id>
+			<name>BioPAX Repository at Sourceforge</name>
+			<url>http://biopax.sourceforge.net/m2repo/releases/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
     </repositories>
          
     <distributionManagement>
 	</distributionManagement>
+	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jxr-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.0.1</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
 
