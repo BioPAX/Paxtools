@@ -464,7 +464,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 * @param value to be removed from the bean
 	 * @param bean  bean from which the value is going to be removed
 	 */
-	public void removePropertyFromBean(R value, D bean)
+	public void removeValueFromBean(R value, D bean)
 	{
 		try
 		{
@@ -540,10 +540,10 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 * Sets the <em>value</em> to the <em>bean</em> using the default {@link #setMethod} if
 	 * <em>value</em> is not null.
 	 *
-	 * @param bean  to which the <em>value</em> is to be set
 	 * @param value to be set to the <em>bean</em>
+	 * @param bean  to which the <em>value</em> is to be set
 	 */
-	public void setPropertyToBean(D bean, R value)
+	public void setValueToBean(R value, D bean)
 	{
 		if (this.getPrimarySetMethod() != null) {
 			if (log.isTraceEnabled())
@@ -562,7 +562,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 			}
 			try
 			{
-				checkRestrictions(bean, value);
+				checkRestrictions(value, bean);
 				invokeMethod(this.getPrimarySetMethod(), bean, value);
 			}
 			catch (Exception e)
@@ -607,10 +607,10 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 * Checks if the <em>bean</em> and the <em>value</em> are consistent with the cardinality rules of
 	 * the model. This method is important for validations.
 	 *
-	 * @param bean  Object that is related to the value
 	 * @param value Value that is related to the object
+	 * @param bean  Object that is related to the value
 	 */
-	protected void checkRestrictions(D bean, R value)
+	protected void checkRestrictions(R value, D bean)
 	{
 		Integer max = this.maxCardinalities.get(value.getClass());
 		if (max != null)

@@ -2,10 +2,7 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
  * Provides an ENUM class compatible editor by extending the {@link org.biopax.paxtools.controller.PropertyEditor}.

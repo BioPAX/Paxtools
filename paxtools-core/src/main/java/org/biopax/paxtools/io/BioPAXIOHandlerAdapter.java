@@ -90,9 +90,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 * Updates the member EditorMap for the new BioPAX level and factory (different implementations of
 	 * EditorMap can be used in modules, e.g. SimpleEditorMap and JenaEditorMap.)
 	 *
-	 * @param editorMap
-	 * @see EditorMapAdapter
-	 */
+hg	 */
 	protected abstract void resetEditorMap();
 
 	/**
@@ -372,8 +370,16 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 				value = null;
 			}
 		}
-
-		editor.setPropertyToBean(bpe, value);
+		if (editor == null)
+		{
+			log.error(
+					"Editor is null. This probably means an invalid BioPAX property. Failed to set" +
+					valueString);
+		}
+		else
+		{
+			editor.setValueToBean(value, bpe);
+		}
 	}
 
 	protected PropertyEditor getRDFCommentEditor(BioPAXElement bpe)

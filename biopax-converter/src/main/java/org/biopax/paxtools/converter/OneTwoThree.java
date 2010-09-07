@@ -486,7 +486,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 			if(newEditor instanceof PrimitivePropertyEditor) {
 				newValue = newValue.toString();
 			}
-			newEditor.setPropertyToBean(newParent, newValue);
+			newEditor.setValueToBean(newValue, newParent);
 		}		
 	}
 

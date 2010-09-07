@@ -3,7 +3,10 @@ package org.biopax.paxtools.impl;
 import javax.persistence.*;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.Model;
 import org.hibernate.search.annotations.Field;
+
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -108,12 +111,19 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     public void setRDFId(String id)
     {
         this.id = id;
+//	    Set<Model> ownerModels = this.getOwnerModels();
+//	    for (Model ownerModel : ownerModels)
+//	    {
+//		    ownerModel.notifyIdChange();
+//	    }
     }
 
     public String toString()
     {
         return id;
     }
+
+	
     
 }
 

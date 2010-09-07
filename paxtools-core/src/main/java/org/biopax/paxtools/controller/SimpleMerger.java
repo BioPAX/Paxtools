@@ -6,7 +6,8 @@ import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Utility class to merge two (normalized) 
@@ -143,8 +144,8 @@ public class SimpleMerger
 				throw new IllegalStateException("Target model must " +
 					"have got the element with id=" + value.getRDFId()
 					+ " at this point, but getById returned null!");
-			editor.removePropertyFromBean(value,update);
-			editor.setPropertyToBean(update, newValue);
+			editor.removeValueFromBean(value,update);
+			editor.setValueToBean(newValue, update);
 		}
 	}
 

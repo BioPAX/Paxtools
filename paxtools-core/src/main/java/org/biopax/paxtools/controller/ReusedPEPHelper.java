@@ -6,12 +6,14 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.Level2Factory;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
-import org.biopax.paxtools.model.level2.sequenceParticipant;
 import org.biopax.paxtools.model.level2.sequenceFeature;
+import org.biopax.paxtools.model.level2.sequenceParticipant;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class contains methods for handling reused PEPs.

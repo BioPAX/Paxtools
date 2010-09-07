@@ -381,7 +381,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 			r.next();
 			assert r.getEventType() == CHARACTERS;
 			String text = r.getText();
-			commentor.setPropertyToBean(paxElement, text);
+			commentor.setValueToBean(text, paxElement);
 			log.warn("rdfs:comment is converted into the bp:comment; " +
 			         "however, this can be overridden " +
 			         "if there exists another bp:comment (element: " +

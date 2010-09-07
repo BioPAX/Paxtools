@@ -1,13 +1,10 @@
 package org.biopax.paxtools.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.biopax.paxtools.controller.EditorMap;
-import org.biopax.paxtools.controller.PropertyEditor;
-import org.biopax.paxtools.controller.Visitor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is a convenience all-in-one Traverser/Visitor that

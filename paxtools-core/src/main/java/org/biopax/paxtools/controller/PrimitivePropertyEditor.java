@@ -1,10 +1,9 @@
 package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.lang.reflect.Method;
-
-import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
  * Provides a primitive (int, float, double)  class compatible editor by extending the {@link

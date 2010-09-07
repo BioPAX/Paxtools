@@ -1,6 +1,7 @@
 package org.biopax.paxtools.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * This class represents a general BioPAXElement, regardless of Level.
@@ -72,5 +73,8 @@ public interface BioPAXElement extends Serializable, Cloneable
      * @return an integer that is same across all equivalent entities.
      */
 	int equivalenceCode();
+
+	//public Set<Model> getOwnerModels();
+		
 	
 }

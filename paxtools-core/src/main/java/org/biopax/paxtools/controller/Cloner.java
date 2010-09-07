@@ -84,15 +84,15 @@ public class Cloner implements Visitor
 					traverser.traverse(bpe, model);
 				}
 
-				editor.setPropertyToBean(
-					targetMap.get(domain.getRDFId()), targetMap.get(bpe.getRDFId()));
+				editor.setValueToBean(
+						targetMap.get(bpe.getRDFId()), targetMap.get(domain.getRDFId()));
 			} else {
 				// ignore the element that is not in the source list
 			}
 		}
 		else
 		{
-			editor.setPropertyToBean(targetMap.get(domain.getRDFId()), range);
+			editor.setValueToBean(range, targetMap.get(domain.getRDFId()));
 		}
 	}
 }

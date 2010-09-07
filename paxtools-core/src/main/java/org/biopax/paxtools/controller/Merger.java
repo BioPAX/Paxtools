@@ -72,9 +72,9 @@ public class Merger implements Visitor
 				{
 					if (editor.isMultipleCardinality())
 					{
-						editor.removePropertyFromBean(bpe, domain);
+						editor.removeValueFromBean(bpe, domain);
 					}
-					editor.setPropertyToBean(domain, getIdentical(bpe));
+					editor.setValueToBean(getIdentical(bpe), domain);
 				}
 			}
 		}
@@ -293,7 +293,7 @@ public class Merger implements Visitor
 			//be moved.
 
 		}
-		editor.setPropertyToBean(existing, updateValue);
+		editor.setValueToBean(updateValue, existing);
 	}
 
 	/**

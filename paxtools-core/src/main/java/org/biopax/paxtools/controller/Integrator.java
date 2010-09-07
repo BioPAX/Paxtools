@@ -2,10 +2,9 @@ package org.biopax.paxtools.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
-
 
 import java.util.*;
 
@@ -862,7 +861,7 @@ public class Integrator {
 
     private void updateField(PropertyEditor editor, Object updateValue,
 	                   BioPAXElement existing) {
-		editor.setPropertyToBean(existing, updateValue);
+		editor.setValueToBean(updateValue, existing);
 	}
 
     /* End of update functions */
