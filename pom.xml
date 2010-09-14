@@ -8,7 +8,7 @@
     <artifactId>paxtools</artifactId>
     <version>2.0-SNAPSHOT</version>
 
-    <name>BioPAX PaxTools (multi-module project)</name>
+    <name>PaxTools</name>
     <packaging>pom</packaging>
     <description>Paxtools is a Java library that allows software to read, write, analyze and manipulate BioPAX models. Paxtools provide a consistent, fully implemented, validating BioPAX API that significantly reduces development time of oftware  that require programmatic access to BioPAX. Paxtools is modular, lightweight and platform independent to be easily embedded into applications.</description>
     <url>http://www.biopax.org/paxtools</url>
@@ -25,6 +25,11 @@
         <module>paxtools-console</module>
         <module>paxtools-query</module>
     </modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
     <developers>
         <developer>
@@ -78,6 +83,20 @@
         </developer>
     </developers>
 
+   <mailingLists>
+     <mailingList>
+       <name>BioPAX Discussion Group</name>
+       <!-- 
+       <subscribe></subscribe>
+       <unsubscribe></unsubscribe>
+       -->
+      <post>biopax-discuss@googlegroups.com</post>
+      <!--
+      <archive>http://www.biopax.org/mailman/listinfo/biopax-discuss</archive>
+      -->
+     </mailingList>
+   </mailingLists>
+
 	<licenses>
 		<license>
 			<name>LGPL 2.0 license</name>
@@ -93,6 +112,10 @@
 
     <profiles>
         <profile>
+        	<!-- this is to first 'deploy' locally 
+        	and then manually 'rsync' with a remote m2repo;
+        	it works faster this way (compared to 
+        	"mvn deploy" going directly to biopax.sf.net/m2repo/...) -->
             <id>rodche</id>
             <distributionManagement>
                 <snapshotRepository>
@@ -174,22 +197,6 @@
     </dependencies>
       
     <repositories>
-    <!-- 
-       <repository>
-          <id>jboss-public-repository-group</id>
-          <name>JBoss Public Maven Repository Group</name>
-          <url>https://repository.jboss.org/nexus/content/groups/public</url>
-          <layout>default</layout>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-          </snapshots>
-        </repository>
-     -->
         <repository>
             <id>JBoss Repo</id>
             <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
@@ -212,8 +219,25 @@
 			</snapshots>
 		</repository>
     </repositories>
-         
-    <distributionManagement>
+
+	<distributionManagement>
+	<!-- set login/passwd in your m2 settings.xml, <servers> section
+	(id values there should match ids below) -->
+		<site>
+			<id>biopax.sf.net</id>
+			<name>BioPAX Sourceforge site</name>
+			<url>scp://shell.sourceforge.net/home/groups/b/bi/biopax/htdocs/paxtools</url>
+		</site>
+		<snapshotRepository>
+			<id>biopax.snapshots</id>
+			<name>BioPAX Snapshots Repository</name>
+			<url>scp://shell.sourceforge.net/home/groups/b/bi/biopax/htdocs/m2repo/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>biopax.releases</id>
+			<name>BioPAX Releases Repository</name>
+			<url>>scp://shell.sourceforge.net/home/groups/b/bi/biopax/htdocs/m2repo/releases</url>
+		</repository>
 	</distributionManagement>
 	
 	<reporting>
