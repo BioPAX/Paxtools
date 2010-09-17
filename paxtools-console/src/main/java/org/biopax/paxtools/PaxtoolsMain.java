@@ -11,6 +11,8 @@ import org.biopax.paxtools.io.sif.level2.ControlRule;
 import org.biopax.paxtools.io.sif.level2.ControlsTogetherRule;
 import org.biopax.paxtools.io.sif.level2.ParticipatesRule;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
+import org.biopax.paxtools.io.gsea.GSEAEntry;
+import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.controller.Merger;
 import org.biopax.paxtools.controller.Integrator;
 import org.biopax.paxtools.converter.OneTwoThree;
@@ -22,13 +24,7 @@ import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,11 +35,14 @@ import java.util.HashSet;
  *  Usage: CLASS_NAME [options]
  *  Avaliable operations:
  *      --merge file1 file2 output		merges file2 into file1 and writes it into output\n"
- *      --to-sif file1 output			converts model to simple interaction format\n"
- *      --validate path out xml|html	validates BioPAX model file (or all the files in the directory), outputs xml or html\n"
- *      --integrate file1 file2 output	integrates file2 into file1 and writes it into output (experimental)\n"
- *      --to-level3 file1 output		converts level 1 or 2 to the level 3 file\n"
- *      --psimi-to level file1 output	converts PSI-MI Level 2.5 to biopax level 2 or 3 file\n"
+ *      --to-sif file1 output			converts model to simple interaction format
+ *      --validate path out xml|html	validates BioPAX model file (or all the files in the directory), outputs xml or html
+ *      --integrate file1 file2 output	integrates file2 into file1 and writes it into output (experimental)
+ *      --to-level3 file1 output		converts level 1 or 2 to the level 3 file
+ *      --psimi-to level file1 output	converts PSI-MI Level 2.5 to biopax level 2 or 3 file
+ *      --to-GSEA file1 output database crossSpeciesCheck" converts level 1 or 2 or 3 to GSEA output.
+ *      Searches database for participant id or uses biopax rdf id if database is NONE.
+ *      Cross species check ensures participant protein is from same species as pathway (set to true or false).
  *      --help							prints this screen and exits"
  *
  */
@@ -258,6 +257,13 @@ public class PaxtoolsMain {
         			System.exit(0);
         		}
             }
+            else if (argv[count].equals("--to-GSEA")) {
+            	if (argv.length != count+5) {
+            		showHelp();
+            	}
+            	Model model = (new SimpleReader()).convertFromOWL(new FileInputStream(argv[count+1]));
+            	(new GSEAConverter()).writeToGSEA(model, argv[count+3], new Boolean(argv[count+4]), new FileOutputStream(argv[count+2]));
+            }
         }
     }
 
@@ -272,7 +278,9 @@ public class PaxtoolsMain {
                 +   "--integrate file1 file2 output" +		"\t\tintegrates file2 into file1 and writes it into output (experimental)\n"
                 +   "--to-level3 file1 output"	+			"\t\tconverts level 1 or 2 to the level 3 file\n"
                 +	"--psimi-to level file1 output" +		"\t\tconverts PSI-MI Level 2.5 to biopax level 2 or 3 file\n"
-                +   "\n"
+                +	"--to-GSEA file1 output database crossSpeciesCheck" + "\t\tconverts level 1 or 2 or 3 to GSEA output.\n"
+                +   "                                                 " + "\t\tSearches database for participant id or uses biopax rdf id if database is \"NONE\".\n"
+                +   "                                                 " + "\t\tCross species check ensures participant protein is from same species as pathway (set to true or false).\n"
                 +   "--help" +								"\t\t\t\t\t\tprints this screen and exits"
             );
 
