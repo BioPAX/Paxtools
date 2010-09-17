@@ -1,7 +1,8 @@
 from jpype import *
 #call this to initialize use of Java
+#(with using a 'fat' paxtools.jar (with all dependencies built-in), setting long java.class.path is not required anymore - )
 #startJVM(getDefaultJVMPath(), "-ea","-Djava.class.path=/Users/admin/pythonPaxtools/lib/collections-generic-4.01.jar:/Users/admin/pythonPaxtools/lib/commons-logging.jar:/Users/admin/pythonPaxtools/lib/concurrent.jar:/Users/admin/pythonPaxtools/lib/icu4j_3_4.jar:/Users/admin/pythonPaxtools/lib/iri.jar:/Users/admin/pythonPaxtools/lib/jakarta-oro.jar:/Users/admin/pythonPaxtools/lib/jena.jar:/Users/admin/pythonPaxtools/lib/junit-4.1.jar:/Users/admin/pythonPaxtools/lib/log4j-1.2.12.jar:/Users/admin/pythonPaxtools/lib/paxtools.jar:/Users/admin/pythonPaxtools/lib/xercesImpl.jar:/Users/admin/pythonPaxtools/lib/xml-apis.jar")
-startJVM(getDefaultJVMPath(), "-ea","-Djava.class.path=paxtools-main-2.0-SNAPSHOT-jar-with-dependencies.jar")
+startJVM(getDefaultJVMPath(), "-ea","-Djava.class.path=paxtools.jar")
 #print out using java or python
 java.lang.System.out.println("Starting pythonPaxToolsExample")
 print java.lang.System.getProperty("java.version")

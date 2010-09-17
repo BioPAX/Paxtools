@@ -1,16 +1,40 @@
 <project name="PaxTools">
 
+<!--
+<bannerLeft>
+    <name>Maven</name>
+    <src>http://www.pathwaycommons.org/pc/jsp/images/pathwaycommons/pc_logo.gif</src>
+    <href>http://www.pathwaycommons.org/</href>
+</bannerLeft>
+-->
+
+<bannerRight>
+	<name>Sourceforge</name>
+    <src>http://sflogo.sourceforge.net/sflogo.php?group_id=102411&amp;type=2</src>
+    <href>http://sourceforge.net</href>
+</bannerRight>
+
+
 <body>
 
 <links>
+<item name="Javadoc" href="apidocs/index.html"/>
+<item name="BioPAX" href="http://www.biopax.org/" />
+<item name="Wiki" href="http://sourceforge.net/apps/mediawiki/biopax/index.php?title=Paxtools" />
+<item name="Changelog" href="http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools/atom-log" />
 </links>
 
-<menu ref="reports"/>
-
-<menu name="Javadoc">
-      <item name="Main" href="apidocs/index.html"/>
-</menu>
+<menu ref="reports" />
+<menu ref="modules" />
 
 </body>
+
+
+<!-- default is: "built by: Maven"
+<poweredBy>
+    <logo name="Hosted on SourceForge.net" href="http://sourceforge.net" 
+    	img="http://sflogo.sourceforge.net/sflogo.php?group_id=102411&amp;type=2"/>
+</poweredBy>
+-->
 
 </project>
