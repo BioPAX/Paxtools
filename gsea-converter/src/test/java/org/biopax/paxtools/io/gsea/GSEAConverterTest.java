@@ -52,8 +52,8 @@ public class GSEAConverterTest {
 		for (String testFile : testDir.list(filter)) {
 			InputStream in = getClass().getResourceAsStream("/L2/" + testFile); // this is classpath - no need to use a "separator"
 			Model level2 = handler.convertFromOWL(in);
-			GSEAConverter gseaConverter = new GSEAConverter();
-			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level2, "GENE_SYMBOL", true);
+			GSEAConverter gseaConverter = new GSEAConverter("GENE_SYMBOL", true);
+			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level2);
 			// assert some things
 			assertEquals(entries.size(), 1);
 			GSEAEntry entry = entries.iterator().next();
@@ -63,7 +63,7 @@ public class GSEAConverterTest {
 			Collection<String> genes = entry.getGenes();
 			assertEquals(genes.size(), 27);
 			// dump the output
-			(new GSEAConverter()).writeToGSEA(level2, "GENE_SYMBOL", true, out);
+			(new GSEAConverter("GENE_SYMBOL", true)).writeToGSEA(level2, out);
 			in.close();
 		}
 	}
@@ -84,21 +84,20 @@ public class GSEAConverterTest {
 		for (String testFile : testDir.list(filter)) {
 			InputStream in = getClass().getResourceAsStream("/L3/" + testFile); // this is classpath - no need to use a "separator"
 			Model level3 = handler.convertFromOWL(in);
-			GSEAConverter gseaConverter = new GSEAConverter();
-			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level3, "uniprot", true);
+			GSEAConverter gseaConverter = new GSEAConverter("uniprot", true);
+			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level3);
 			// assert some things
 			assertEquals(entries.size(), 1);
 			GSEAEntry entry = entries.iterator().next();
 			assertEquals(entry.getName(), "Glycolysis Pathway");
 			assertEquals(entry.getDataSource(), "aMAZE");
-			assertEquals(entry.getTaxID(), "");
+			assertEquals(entry.getTaxID(), "562");
 			Collection<String> genes = entry.getGenes();
 			assertEquals(genes.size(), 1);
 			assertEquals(genes.iterator().next(), "P46880");
 			// dump the output
-			(new GSEAConverter()).writeToGSEA(level3, "uniprot", true, out);
+			(new GSEAConverter("uniprot", true)).writeToGSEA(level3, out);
 			in.close();
 		}
 	}
-	
 }

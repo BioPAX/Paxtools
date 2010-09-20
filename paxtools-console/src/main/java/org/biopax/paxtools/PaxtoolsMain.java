@@ -262,7 +262,7 @@ public class PaxtoolsMain {
             		showHelp();
             	}
             	Model model = (new SimpleReader()).convertFromOWL(new FileInputStream(argv[count+1]));
-            	(new GSEAConverter()).writeToGSEA(model, argv[count+3], new Boolean(argv[count+4]), new FileOutputStream(argv[count+2]));
+            	(new GSEAConverter(argv[count+3], new Boolean(argv[count+4]))).writeToGSEA(model, new FileOutputStream(argv[count+2]));
             }
         }
     }

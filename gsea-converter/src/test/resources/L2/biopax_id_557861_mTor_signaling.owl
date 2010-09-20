@@ -9,7 +9,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7344474">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -126,7 +126,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7443574">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -190,7 +190,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-124714">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -224,7 +224,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-125928">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -311,7 +311,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7435238">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -349,7 +349,7 @@
       <bp:bioSource rdf:ID="CPATH-LOCAL-69377">
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-69378">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -414,7 +414,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7443331">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -504,7 +504,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7432090">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -574,7 +574,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-279262">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -621,7 +621,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-5608">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -641,7 +641,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7426284">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -714,7 +714,7 @@
       <bp:bioSource rdf:ID="CPATH-LOCAL-71674">
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-71675">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -759,7 +759,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-256273">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
@@ -829,7 +829,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-13997">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -850,7 +850,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7421693">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -968,7 +968,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7434574">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1018,7 +1018,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7427788">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1053,7 +1053,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-87204">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -1097,7 +1097,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-242202">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1143,7 +1143,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7442833">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1234,7 +1234,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7415633">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1260,7 +1260,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7418753">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1317,7 +1317,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-279147">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -1363,7 +1363,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-279741">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -1384,7 +1384,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7418739">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1489,7 +1489,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7425245">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1638,7 +1638,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-1987">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -1862,7 +1862,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-279492">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -1936,7 +1936,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-1880">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -2078,7 +2078,7 @@
       <bp:bioSource rdf:ID="CPATH-LOCAL-296629">
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-296630">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -2213,7 +2213,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7440015">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -2327,7 +2327,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7416182">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -2385,7 +2385,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-255289">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
@@ -2556,7 +2556,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7440906">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -2592,7 +2592,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-46663">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
@@ -2677,7 +2677,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-57127">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
@@ -2774,7 +2774,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-239354">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -2820,7 +2820,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7430880">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -2983,7 +2983,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-280733">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -3029,7 +3029,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-283737">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
       </bp:bioSource>
@@ -3212,7 +3212,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7427782">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -3373,7 +3373,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-45003">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
@@ -3801,7 +3801,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7428987">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -3864,7 +3864,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-17395">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -3885,7 +3885,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7428976">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -4297,7 +4297,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7439657">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -4374,7 +4374,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7438553">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -4422,7 +4422,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7425396">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -4556,7 +4556,7 @@
         <bp:NAME rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-7438331">
-            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -4891,7 +4891,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-3627">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -5038,7 +5038,7 @@
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-17141">
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
           </bp:unificationXref>
         </bp:TAXON-XREF>
@@ -5438,7 +5438,7 @@
         <bp:TAXON-XREF>
           <bp:unificationXref rdf:ID="CPATH-LOCAL-55352">
             <bp:ID rdf:datatype="xsd:string">9606</bp:ID>
-            <bp:DB rdf:datatype="xsd:string">NCBI_TAXONOMY</bp:DB>
+            <bp:DB rdf:datatype="xsd:string">taxonomy</bp:DB>
           </bp:unificationXref>
         </bp:TAXON-XREF>
         <bp:NAME rdf:datatype="xsd:string">Homo sapiens</bp:NAME>

@@ -22,6 +22,19 @@ import java.util.Set;
 
 /**
  * Converts a BioPAX model to GSEA (GMT format).
+ * 
+ * Creates GSEA entries from the pathways contained in the model.
+ * 
+ * Pathway members are derived by finding the xref who's
+ * database name matches the database constructor argument and returning
+ * the respective database id.  If database id is empty, 
+ * the rdf id of the protein is returned.
+ * 
+ * Note, to properly enforce cross-species violations, bio-sources must
+ * be annotated with "taxonomy" database name.
+ * 
+ * Note this code assumes that the model has successfully been validated
+ * using the BioPAX validator.
  */
 public class GSEAConverter implements Visitor {
 	
@@ -38,19 +51,32 @@ public class GSEAConverter implements Visitor {
 	 * Constructor.
 	 */
 	public GSEAConverter() {
-		this.traverser = new Traverser(new SimpleEditorMap(BioPAXLevel.L3), this);
+		this("", true);
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * See class declaration for more information.
+	 * 
+	 * @param database String: the database/xref to use for grabbing participants
+	 * @param crossSpeciesCheck - if true, enforces no cross species participants in output
+	 * 
+	 */
+	public GSEAConverter(String database, boolean crossSpeciesCheck) {
+		this.database = database;
+    	this.crossSpeciesCheck = crossSpeciesCheck;
+    	this.traverser = new Traverser(new SimpleEditorMap(BioPAXLevel.L3), this);
 	}
 		
 	/**
-	 * Converts model to GSEA and writes to out.  See convert for more information.
+	 * Converts model to GSEA and writes to out.  See class declaration for more information.
 	 * 
 	 * @param model Model
-	 * @param database String: the database/xref to use for grabbing participants (can be null)
-	 * @param crossSpeciesCheck - if true, enforces no cross species participants in output
 	 */
-	public void writeToGSEA(final Model model, final String database, final boolean crossSpeciesCheck, OutputStream out) throws IOException {
+	public void writeToGSEA(final Model model, OutputStream out) throws IOException {
 	
-		Collection<? extends GSEAEntry> entries = convert(model, database, crossSpeciesCheck);
+		Collection<? extends GSEAEntry> entries = convert(model);
     	if (entries.size() > 0) {
     		Writer writer = new OutputStreamWriter(out);
     		for (GSEAEntry entry : entries) {
@@ -67,27 +93,15 @@ public class GSEAConverter implements Visitor {
 
 	/**
      * Creates GSEA entries from the pathways contained in the model.
-     * 
-     * Pathway members are derived by finding the xref who's
-     * database name matches the database argument and returning
-     * the respective database id.  If database id is empty (or null), 
-     * the rdf id of the protein is returned.
-     * 
-     * Note, to properly enforce cross-species violations, bio-sources must
-     * be annotated with either "urn.miriam.taxonomy" or "NCBI_TAXONOMY"
-     * database names.
      *	
      * @param model Model
-     * @param database String
-     * @param crossSpeciesCheck
      * @return a set of GSEA entries
      */
-    public Collection<? extends GSEAEntry> convert(final Model model, final String database, final boolean crossSpeciesCheck) {
+    public Collection<? extends GSEAEntry> convert(final Model model) {
     	
     	// setup some vars
     	Model l3Model = null;
-    	this.database = database;
-    	this.crossSpeciesCheck = crossSpeciesCheck;
+    	
     	Collection<GSEAEntry> toReturn = new HashSet<GSEAEntry>();
     	    	    	
     	// convert to level 3 in necessary
@@ -228,8 +242,7 @@ public class GSEAConverter implements Visitor {
 	private String getTaxID(Set<Xref> xrefs) {
 
 		for (Xref xref : xrefs) {
-			if (xref.getDb().equals("urn.miriam.taxonomy") ||
-				xref.getDb().equals("NCBI_TAXONOMY")) {
+			if (xref.getDb().equalsIgnoreCase("taxonomy")) {
 				return xref.getId();
 			}
 		}
