@@ -11,7 +11,6 @@ import org.biopax.paxtools.io.sif.level2.ControlRule;
 import org.biopax.paxtools.io.sif.level2.ControlsTogetherRule;
 import org.biopax.paxtools.io.sif.level2.ParticipatesRule;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.io.gsea.GSEAEntry;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.controller.Merger;
 import org.biopax.paxtools.controller.Integrator;

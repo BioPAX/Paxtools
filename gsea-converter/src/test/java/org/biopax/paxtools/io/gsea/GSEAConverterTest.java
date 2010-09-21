@@ -1,6 +1,5 @@
 package org.biopax.paxtools.io.gsea;
 
-import org.biopax.paxtools.io.gsea.*;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
 
@@ -12,6 +11,7 @@ import org.junit.Before;
 import static org.junit.Assert.*;
 
 import java.io.*;
+import java.util.Map;
 import java.util.Collection;
 
 /**
@@ -60,8 +60,8 @@ public class GSEAConverterTest {
 			assertEquals(entry.getName(), "mTOR signaling pathway");
 			assertEquals(entry.getDataSource(), "Pathway Interaction Database NCI-Nature Curated Data");
 			assertEquals(entry.getTaxID(), "9606");
-			Collection<String> genes = entry.getGenes();
-			assertEquals(genes.size(), 27);
+			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
+			assertEquals(rdfToGenes.size(), 27);
 			// dump the output
 			(new GSEAConverter("GENE_SYMBOL", true)).writeToGSEA(level2, out);
 			in.close();
@@ -92,9 +92,11 @@ public class GSEAConverterTest {
 			assertEquals(entry.getName(), "Glycolysis Pathway");
 			assertEquals(entry.getDataSource(), "aMAZE");
 			assertEquals(entry.getTaxID(), "562");
-			Collection<String> genes = entry.getGenes();
-			assertEquals(genes.size(), 1);
-			assertEquals(genes.iterator().next(), "P46880");
+			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
+			assertEquals(rdfToGenes.size(), 2);
+			for (String aSymbol : rdfToGenes.values()) {
+				assertTrue(aSymbol.equals("P46880") || aSymbol.equals("Q9KH85"));
+			}
 			// dump the output
 			(new GSEAConverter("uniprot", true)).writeToGSEA(level3, out);
 			in.close();

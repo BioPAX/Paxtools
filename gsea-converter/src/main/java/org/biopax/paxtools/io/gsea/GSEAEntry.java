@@ -1,7 +1,9 @@
 package org.biopax.paxtools.io.gsea;
 
 // imports
-import java.util.Set;
+import java.util.Map;
+import java.util.HashSet;
+import java.util.Collection;
 
 /**
  * This class represents an entry found in a GSEA (GMT format) file.
@@ -11,7 +13,7 @@ public class GSEAEntry {
     private String name;
     private String taxID;
     private String datasource;
-    private Set<String> genes;
+    private Map<String,String> rdfToGenes;
 
     public String getName() {
         return name;
@@ -37,19 +39,29 @@ public class GSEAEntry {
         this.datasource = datasource;
     }
 
-    public Set<String> getGenes() {
-        return genes;
+    public Map<String, String> getRDFToGeneMap() {
+        return rdfToGenes;
     }
-
-    public void setGenes(Set<String> genes) {
-        this.genes = genes;
+    
+    public void setRDFToGeneMap(Map<String, String> rdfToGenes) {
+    	this.rdfToGenes = rdfToGenes;
+    }
+    
+    public Collection<String> getGenes() {
+    	return (rdfToGenes != null) ? rdfToGenes.values() : new HashSet<String>(); 
     }
 
     public String toString() {
-        String toReturn = name + "\t" + datasource;
-        for (String gene : genes) {
-            toReturn += "\t" + gene;
-        }
+ 
+    	String toReturn = "";
+    	if (name != null && datasource != null && rdfToGenes != null) {
+    		toReturn = name + "\t" + datasource;
+    		for (String gene : rdfToGenes.values()) {
+    			toReturn += "\t" + gene;
+    		}
+    	}
+
+    	// outta here
         return toReturn;
     }
 }
