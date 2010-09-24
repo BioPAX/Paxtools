@@ -16,8 +16,10 @@ import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
 
 import java.io.*;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Collection;
 import java.util.Set;
+import java.util.Map;
 
 
 /**
@@ -42,7 +44,7 @@ public class GSEAConverter implements Visitor {
 	String database;
 	boolean crossSpeciesCheck;
 	boolean visitProtein; // true we visit proteins, false we visit ProteinReference
-	Set<String> genes; // member genes of the pathway
+	Map<String, String> rdfToGenes; // map of member proteins of the pathway rdf id to gene symbol
 	Set<BioPAXElement> visited; // helps during traversal
 	String taxID;
 	Traverser traverser;
@@ -80,12 +82,7 @@ public class GSEAConverter implements Visitor {
     	if (entries.size() > 0) {
     		Writer writer = new OutputStreamWriter(out);
     		for (GSEAEntry entry : entries) {
-    			String dataSource = entry.getDataSource();
-    			writer.write(entry.getName() + "\t" + dataSource);
-    			for (String gene : entry.getGenes()) {
-    				writer.write("\t" + gene);
-    			}
-    			writer.write("\n");
+    			writer.write(entry.toString() + "\n");
     		}
     		writer.close();
     	}
@@ -160,16 +157,16 @@ public class GSEAConverter implements Visitor {
 		// genes
 		this.taxID = taxID;
 		this.visitProtein = true;
-		this.genes = new HashSet<String>();
+		this.rdfToGenes = new HashMap<String, String>();
 		this.visited = new HashSet<BioPAXElement>();
 		this.traverser.traverse(aPathway, model);
-		if (this.genes.size() == 0) {
+		if (this.rdfToGenes.size() == 0) {
 			this.visitProtein = false;
 			this.visited = new HashSet<BioPAXElement>();
 			this.traverser.traverse(aPathway, model);
 		}
-		toReturn.setGenes(this.genes);
-		
+		toReturn.setRDFToGeneMap(this.rdfToGenes);
+	 	
 		// outta here
 		return toReturn;
 	}
@@ -186,14 +183,14 @@ public class GSEAConverter implements Visitor {
     		if (checkDatabase) {
     			ClassFilterSet<Xref> xrefs= new ClassFilterSet<Xref>(aProtein.getXref(), Xref.class);
     			for (Xref aXref: xrefs) {
-    				if (aXref.getDb().equals(this.database)) {
-    					this.genes.add(aXref.getId());
+    				if (aXref.getDb().equalsIgnoreCase(this.database)) {
+    					this.rdfToGenes.put(aProtein.getRDFId(), aXref.getId());
     					break;
     				}
     			}
     		}
     		else {
-    			this.genes.add(aProtein.getRDFId());
+    			this.rdfToGenes.put(aProtein.getRDFId(), aProtein.getRDFId());
     		}
     	}
 	}
@@ -209,14 +206,14 @@ public class GSEAConverter implements Visitor {
     		if (checkDatabase) {
     			ClassFilterSet<Xref> xrefs= new ClassFilterSet<Xref>(aProteinRef.getXref(), Xref.class);
     			for (Xref aXref: xrefs) {
-    				if (aXref.getDb().equals(database)) {
-    					this.genes.add(aXref.getId());
+    				if (aXref.getDb().equalsIgnoreCase(database)) {
+    					this.rdfToGenes.put(aProteinRef.getRDFId(), aXref.getId());
     					break;
     				}
     			}
     		}
     		else {
-    			this.genes.add(aProteinRef.getRDFId());
+    			this.rdfToGenes.put(aProteinRef.getRDFId(), aProteinRef.getRDFId());
     		}
     	}
 	}
