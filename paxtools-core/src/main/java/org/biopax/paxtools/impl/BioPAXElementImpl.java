@@ -3,10 +3,6 @@ package org.biopax.paxtools.impl;
 import javax.persistence.*;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.Model;
-import org.hibernate.search.annotations.Field;
-
-import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -34,7 +30,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public final static String SEARCH_FIELD_NAMESPACE = "namespace";
 	public final static String SEARCH_INDEX_FOR_ENTITY = "entities";
 	public final static String SEARCH_INDEX_FOR_UTILILTY_CLASS = "utilityClasses";
-	public static final String SEARCH_FIELD_ID = "rdfid";
+	//public static final String SEARCH_FIELD_ID = "rdfid";
 	
 	// ------------------------------ FIELDS ------------------------------
 
@@ -102,7 +98,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
     @Id
     //@Column(unique=true, nullable=false)
-    @Field(name = BioPAXElementImpl.SEARCH_FIELD_ID)
+    //@Field(name = BioPAXElementImpl.SEARCH_FIELD_ID) // better not to match rdfid!
     public String getRDFId()
     {
         return id;
@@ -122,8 +118,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     {
         return id;
     }
-
-	
     
 }
 

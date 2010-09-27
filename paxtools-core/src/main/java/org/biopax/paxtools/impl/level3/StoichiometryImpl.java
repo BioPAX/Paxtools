@@ -39,6 +39,9 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	}
 
 
+	/* having this method creates high chance of getting 
+	 * a wrong Set<BioPAXElement> and dangling properties 
+	 * if one would collect elements from a model(s)...
 	@Override
 	public int hashCode()
 	{
@@ -47,6 +50,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 		        ? 31 * this.getPhysicalEntity().hashCode()
 		        : 0);
 	}
+	*/
 
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
@@ -70,7 +74,11 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	@Override
 	public int equivalenceCode()
 	{
-		return hashCode();
+		//return hashCode();
+		return ((int) this.getStoichiometricCoefficient()) +
+	       ((this.getPhysicalEntity() != null)
+	        ? 31 * this.getPhysicalEntity().hashCode()
+	        : 0);
 	}
 
 	@ManyToOne(targetEntity = PhysicalEntityImpl.class, cascade = {CascadeType.ALL})
