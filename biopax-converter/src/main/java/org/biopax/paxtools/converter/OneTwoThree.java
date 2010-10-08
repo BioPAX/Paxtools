@@ -38,6 +38,7 @@ import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.DnaRegion;
+import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.Level3Element;
 import org.biopax.paxtools.model.level3.Level3Factory;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
@@ -228,9 +229,23 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 			}
 		}
 		
-		// TODO add step processes to the pathway components (L3)
+		// ...adding step processes to the pathway components (L3) is NOT always required
 		
-		// TODO remove clones
+		// TODO remove cloned UtilityClass elements
+		
+		// set 'name' for simple physical entities (because pEPs didn't have names)
+		for(EntityReference er : model.getObjects(EntityReference.class)) {
+			for(SimplePhysicalEntity spe : er.getEntityReferenceOf()) {
+				// after the conversion, it's always empty.., but let's double-check
+				if(spe.getName().isEmpty()) {
+					spe.getName().addAll(er.getName());
+				}
+				
+				if(spe.getDisplayName() == null || spe.getDisplayName().trim().length() == 0) {
+					spe.setDisplayName(er.getDisplayName());
+				}
+			}
+		}
 		
 	}
 

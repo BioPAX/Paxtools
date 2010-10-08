@@ -373,7 +373,7 @@ hg	 */
 		if (editor == null)
 		{
 			log.error(
-					"Editor is null. This probably means an invalid BioPAX property. Failed to set" +
+					"Editor is null. This probably means an invalid BioPAX property. Failed to set " +
 					valueString);
 		}
 		else
