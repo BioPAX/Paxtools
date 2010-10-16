@@ -3,8 +3,7 @@ package org.biopax.paxtools.controller;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 /**
  * This is a convenience all-in-one Traverser/Visitor that
@@ -21,18 +20,28 @@ import java.util.List;
 public abstract class AbstractTraverser extends Traverser 
 	implements Visitor 
 {
-	private final List<BioPAXElement> currentParentsList;
+	private final Stack<BioPAXElement> visited;
 		
 	public AbstractTraverser(EditorMap editorMap, PropertyFilter... filters)
 	{
 		super(editorMap, null, filters);
-		currentParentsList = new ArrayList<BioPAXElement>();
+		visited = new Stack<BioPAXElement>();
 		setVisitor(this);
 	}
 
-	protected List<BioPAXElement> getCurrentParentsList() {
-		return currentParentsList;
+	protected Stack<BioPAXElement> getVisited() {
+		return visited;
 	}
+	
+	
+	@Deprecated
+	/**
+	 * Use getVisited() instead.
+	 */
+	protected Stack<BioPAXElement> getCurrentParentsList() {
+		return getVisited();
+	}
+	
 	
 	/**
 	 * This is to implement a real action here: 
@@ -56,18 +65,17 @@ public abstract class AbstractTraverser extends Traverser
 	 * @param editor parent's property PropertyEditor
 	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
-			final List<BioPAXElement> path = getCurrentParentsList();
+			final Stack<BioPAXElement> path = getVisited();
 		
 			if(range instanceof BioPAXElement) {
 				if(path.contains(range)) {
-				    if(log.isWarnEnabled())
-					log.warn("Cyclic inclusion of " 
-						+ ((BioPAXElement)range).getRDFId() 
-						+ " : " + path.toString());
+				    if(log.isDebugEnabled())
+				    	log.debug(((BioPAXElement)range).getRDFId() 
+				    		+ " already visited (cycle): " + path.toString());
 					return;
 				}
  
-				path.add((BioPAXElement) range);
+				path.push((BioPAXElement) range);
 				
 				if(log.isTraceEnabled())
 					log.trace("visits " + domain + "." 
@@ -79,8 +87,8 @@ public abstract class AbstractTraverser extends Traverser
 			visit(range, domain, model, editor);
 			
 			if(range instanceof BioPAXElement) {
-				path.remove(range);
+				path.pop();
 			}
 	}
-
+	
 }
