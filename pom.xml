@@ -25,6 +25,7 @@
         <module>psimi-converter</module>
         <module>paxtools-console</module>
         <module>paxtools-query</module>
+        <module>paxtools-editor</module>
     </modules>
 
 	<properties>
