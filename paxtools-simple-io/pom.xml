@@ -24,6 +24,11 @@
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>stax2-api</artifactId>
             <version>3.0.1</version>
+       <!-- 
+       		<groupId>com.sun.xml.stream</groupId>
+      		<artifactId>sjsxp</artifactId>
+    		<version>1.0.1</version>
+    	-->
         </dependency>
         <dependency>
         	<groupId>commons-lang</groupId>

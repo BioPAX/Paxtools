@@ -4,12 +4,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.xref;
-import org.biopax.paxtools.model.level3.Xref;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 
 public class SimpleReaderTest extends TestCase
