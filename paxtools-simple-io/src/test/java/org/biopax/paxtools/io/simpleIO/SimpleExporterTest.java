@@ -152,7 +152,9 @@ public class SimpleExporterTest extends TestCase
 		System.out.println("export");
 		FileOutputStream out =
 				new FileOutputStream( // to the target test dir
-						"/tmp/hibtest.owl"
+						getClass().getClassLoader()
+						.getResource("").getPath() 
+						+ File.separator + "hibtest.owl"
 				);
 		SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L3);
 		simpleExporter.convertToOWL(m, out);
@@ -232,7 +234,8 @@ public class SimpleExporterTest extends TestCase
 		try
 		{
 			System.out.println("test");
-			File f = new File("test.owl");
+			File f = new File(getClass().getClassLoader()
+					.getResource("").getPath() + File.separator + "test.owl");
 			FileOutputStream anOutputStream = new FileOutputStream(f);
 			SimpleExporter exporter = new SimpleExporter(biopaxModel.getLevel());
 			exporter.convertToOWL(biopaxModel, anOutputStream);
