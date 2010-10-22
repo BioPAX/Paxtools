@@ -203,11 +203,10 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 						if (log.isTraceEnabled())
 						{
 							StringBuffer sb = new StringBuffer("Ignoring text ");
-							sb.append(r.getLocalName());
+							if(r.hasName())
+								sb.append(r.getLocalName());
 							if (r.hasText())
-							{
 								sb.append(r.getText());
-							}
 							log.trace(sb.toString());
 						}
 						break;
