@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
@@ -174,6 +175,58 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 
 // ------------------------ INTERFACE METHODS ------------------------
 
-
+	/**
+	 * Answers whether two Evidence objects are semantically equivalent.
+	 * (Currently, it considers only member UnificationXrefs and EvidenceCodeVocabularies
+	 * for comparison...)
+	 * 
+	 * TODO: review; add comparing ExperimentalForm and Confidence values...
+	 * 
+	 */
+	@Override
+	protected boolean semanticallyEquivalent(BioPAXElement element) {
+		if(! (element instanceof Evidence) ) return false;
+		Evidence that = (Evidence) element; // not null (guaranteed by here)
+		boolean hasAllEquivEvidenceCodes = false;
+		
+		if(this.getEvidenceCode().isEmpty()) {
+			if(that.getEvidenceCode().isEmpty()) {
+				hasAllEquivEvidenceCodes = true;
+			}
+		} else {
+			if(!that.getEvidenceCode().isEmpty()) {
+				Set<EvidenceCodeVocabulary> shorter;
+				Set<EvidenceCodeVocabulary> longer;
+				if (this.getEvidenceCode().size() < that.getEvidenceCode().size())
+				{
+					shorter = this.getEvidenceCode();
+					longer  = that.getEvidenceCode();
+				} else {
+					longer = this.getEvidenceCode();
+					shorter  = that.getEvidenceCode();
+				}
+				
+				/* each ECV in the 'shorter' set must find its equivalent
+				 * in the 'longer' set; 
+				 * otherwise two Evidence objects (this and that) are not equiv.
+				 */
+				hasAllEquivEvidenceCodes = true; // initial guess
+				for(EvidenceCodeVocabulary secv : shorter) {
+					boolean foundEquiv = false;
+					for(EvidenceCodeVocabulary lecv : longer) {
+						if(secv.isEquivalent(lecv)) {
+							foundEquiv = true;
+						}
+					}
+					if(!foundEquiv) {
+						hasAllEquivEvidenceCodes = false;
+						break;
+					}
+				}
+			}
+		}
+		
+		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes;
+	}
 
 }
