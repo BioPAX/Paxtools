@@ -70,7 +70,7 @@ public class SimpleExporter
 
         initialize(model);
 
-        Writer out = new BufferedWriter(new OutputStreamWriter(outputStream));
+        Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
 
         writeHeader(out);
 
