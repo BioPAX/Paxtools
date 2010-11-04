@@ -33,7 +33,9 @@ public class SimpleExporter
     private static final String rdfNS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     private static final String RDF_ID = "rdf:ID=\"";
     private static final String RDF_about = "rdf:about=\"";
+    private static final String newline = System.getProperty("line.separator");
     private static final String close = "\">";
+    
 
     private String base;
     private String bp;
@@ -72,11 +74,8 @@ public class SimpleExporter
 
         Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
 
-        writeHeader(out);
-
         writeObjects(out, model);
-
-        out.write("\n</rdf:RDF>");
+        
         out.close();
     }
 
@@ -100,7 +99,7 @@ public class SimpleExporter
 		if(editors==null || editors.isEmpty()) {
 			log.warn("no editors for " + bean.getRDFId() + " | " 
 					+ bean.getModelInterface().getSimpleName());
-			out.write("\n</" + name + ">");
+			out.write(newline+"</" + name + ">");
 			return;
 		}
 		
@@ -118,17 +117,21 @@ public class SimpleExporter
 			}
 		}
 		
-		out.write("\n</" + name + ">");
+		out.write(newline+"</" + name + ">");
 	}
  
     
     private void writeObjects(Writer out, Model model) throws IOException
     {
+    	writeHeader(out);
+    	
         Set<BioPAXElement> bioPAXElements = model.getObjects();
         for (BioPAXElement bean : bioPAXElements)
         {
             writeObject(out, bean);
         }
+        
+        out.write(newline+"</rdf:RDF>");
     }
 
 
@@ -150,7 +153,7 @@ public class SimpleExporter
         }
         
         String prop = bp + ":" + editor.getProperty();
-        out.write("\n <" + prop);
+        out.write(newline+" <" + prop);
 
         if (value instanceof BioPAXElement)
         {
@@ -201,7 +204,7 @@ public class SimpleExporter
             throws IOException
     {
 
-        out.write("\n\n<" + name + " ");
+        out.write(newline+newline+"<" + name + " ");
         String s = bpe.getRDFId();
         if (base != null && s.startsWith(base))
         {
@@ -282,7 +285,7 @@ public class SimpleExporter
     {
         //Header
         out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        out.write("\n<rdf:RDF");
+        out.write(newline+"<rdf:RDF");
         String bpns = this.editorMap.getLevel().getNameSpace();
         for (String pre : nsMap.keySet())
         {
@@ -304,23 +307,22 @@ public class SimpleExporter
                 pre = ":" + pre;
 
             }
-            out.write("\n xmlns" + pre + "=\"" + ns + "\"");
+            out.write(newline+" xmlns" + pre + "=\"" + ns + "\"");
         }
         if (bp == null)
         {
             bp = "bp";
-            out.write("\n xmlns:bp" + "=\"" + bpns + "\"");
+            out.write(newline+" xmlns:bp" + "=\"" + bpns + "\"");
         }
         if (base != null)
         {
-            out.write("\n xml:base=\"" + base + "\"");
+            out.write(newline+" xml:base=\"" + base + "\"");
         }
 
         out.write(">");
-        out.write("\n<owl:Ontology rdf:about=\"\">");
-        out.write(
-                "\n <owl:imports rdf:resource=\""+bpns+"\" />");
-        out.write("\n</owl:Ontology>");
+        out.write(newline+"<owl:Ontology rdf:about=\"\">");
+        out.write(newline+" <owl:imports rdf:resource=\""+bpns+"\" />");
+        out.write(newline+"</owl:Ontology>");
     }
 
 }
