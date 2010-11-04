@@ -83,6 +83,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		}
 
 		bp = this.level.getNameSpace();
+		
 		resetEditorMap();
 	}
 
@@ -252,8 +253,9 @@ hg	 */
 			filelevel = BioPAXLevel.getLevelFromNameSpace(namespaceValue);
 			if (filelevel != null)
 			{
-				log.info("Detected biopax namespace for level " + filelevel.getValue());
-				log.info("Using level: " + level.getValue());
+				log.info("Auto-detected biopax Level " + filelevel.getValue()
+					+ " (current settings are for Level " 
+						+ level.toString() + ")");
 				break;
 			}
 		}
@@ -266,7 +268,7 @@ hg	 */
 		else if (level != filelevel || filelevel != factory.getLevel())
 		{
 			log.info("Reset to the default factory for the detected BioPAX level.");
-			resetLevel(filelevel, null); // use default factory for the new level
+			resetLevel(filelevel, filelevel.getDefaultFactory());
 		}
 	}
 

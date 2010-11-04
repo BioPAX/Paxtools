@@ -54,7 +54,6 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 	{
 		super(factory, level);
 		resetEditorMap();
-		if(log.isDebugEnabled()) log.debug("new!!!");
 	}
 
 	public void mergeDuplicates(boolean mergeDuplicates)
