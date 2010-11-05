@@ -467,14 +467,19 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	public void removeValueFromBean(R value, D bean)
 	{
 		try
-		{
-			invokeMethod(removeMethod, bean, value);
+		{	
+			if(removeMethod != null) {
+				invokeMethod(removeMethod, bean, value);
+			} else {
+				log.error("Null removeMethod in the editor: " 
+					+ this + " (multipleCardinality=" 
+					+ isMultipleCardinality() + ")");
+			}
 		}
 		catch (Exception e)
 		{
 			log.error(e);
 		}
-
 	}
 
 	
