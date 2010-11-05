@@ -10,15 +10,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Utility class to merge two (normalized) 
- * biopax models into one based on the RDFId
- * (URI) identity.
- * 
- * Note that this merger does not preserve 
- * the integrity of the passed models! 
- * 'Target' will be a merged model and 
- * 'source' may become unusable.
- * 
+ * Utility class to merge two (normalized) biopax models into one based on the RDFId (URI)
+ * identity.
+ * <p/>
+ * Note that this merger does not preserve the integrity of the passed models! 'Target' will be a
+ * merged model and 'source' may become unusable.
+ * <p/>
  * Use With Care!
  */
 public class SimpleMerger
@@ -34,7 +31,7 @@ public class SimpleMerger
 	{
 		this.map = map;
 	}
-	
+
 
 	/**
 	 * Merges the <em>source</em> model into <em>target</em> model.
@@ -45,15 +42,17 @@ public class SimpleMerger
 	public void merge(Model target, Model source)
 	{
 		// this may work not as expected for some Models...
-		if(!(target instanceof ModelImpl)) {
+		if (!(target instanceof ModelImpl))
+		{
 			log.warn("'target': using user's Model implementation, "
-					+ target.getClass().getCanonicalName());
+			         + target.getClass().getCanonicalName());
 		}
-		if(!(source instanceof ModelImpl)) {
+		if (!(source instanceof ModelImpl))
+		{
 			log.warn("'source': using user's Model implementation,"
-					+ source.getClass().getCanonicalName());
+			         + source.getClass().getCanonicalName());
 		}
-		
+
 		// get all the objects from source, iterate
 		Set<BioPAXElement> sourceElements = source.getObjects();
 		for (BioPAXElement bpe : sourceElements)
@@ -90,19 +89,19 @@ public class SimpleMerger
 	}
 
 	/**
-	 * Merges the <em>source</em> element 
-	 * and its "downstream" dependents into <em>target</em> model.
-	 * 
+	 * Merges the <em>source</em> element and its "downstream" dependents into <em>target</em> model.
+	 *
 	 * @param target
 	 * @param source
 	 */
-	public void merge(Model target, BioPAXElement source) {
+	public void merge(Model target, BioPAXElement source)
+	{
 		Model m = map.getLevel().getDefaultFactory().createModel();
 		(new Fetcher(map)).fetch(source, m);
 		merge(target, m);
 	}
-	
-	
+
+
 	/**
 	 * Updates each value of <em>existing</em> element, using the value(s) of <em>update</em>.
 	 *
@@ -116,7 +115,7 @@ public class SimpleMerger
 		{
 			if (editor instanceof ObjectPropertyEditor)
 			{
-				if(editor.isMultipleCardinality())
+				if (editor.isMultipleCardinality())
 				{
 					Set<BioPAXElement> values = new HashSet<BioPAXElement>(
 							(Set<BioPAXElement>) editor.getValueFromBean(update));
@@ -127,7 +126,7 @@ public class SimpleMerger
 				}
 				else
 				{
-				BioPAXElement value = (BioPAXElement) editor.getValueFromBean(update);
+					BioPAXElement value = (BioPAXElement) editor.getValueFromBean(update);
 					migrateToTarget(update, target, editor, value);
 				}
 			}
@@ -135,16 +134,22 @@ public class SimpleMerger
 	}
 
 
-	private void migrateToTarget(BioPAXElement update, Model target, 
-			PropertyEditor editor, BioPAXElement value)
+	private void migrateToTarget(BioPAXElement update, Model target,
+	                             PropertyEditor editor, BioPAXElement value)
 	{
-		if (value!=null) {
+		if (value != null)
+		{
 			BioPAXElement newValue = target.getByID(value.getRDFId());
-			if(newValue == null) 
+			if (newValue == null)
+			{
 				throw new IllegalStateException("Target model must " +
-					"have got the element with id=" + value.getRDFId()
-					+ " at this point, but getById returned null!");
-			editor.removeValueFromBean(value,update);
+				                                "have got the element with id=" + value.getRDFId()
+				                                + " at this point, but getById returned null!");
+			}
+			if (editor.isMultipleCardinality())
+			{
+				editor.removeValueFromBean(value, update);
+			}
 			editor.setValueToBean(newValue, update);
 		}
 	}

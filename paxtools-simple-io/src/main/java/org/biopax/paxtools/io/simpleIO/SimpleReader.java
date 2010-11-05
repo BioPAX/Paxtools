@@ -5,16 +5,13 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.io.BioPAXIOHandlerAdapter;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import javax.xml.stream.XMLInputFactory;
-
-import static javax.xml.stream.XMLStreamConstants.*;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
@@ -24,12 +21,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static javax.xml.stream.XMLStreamConstants.*;
+
 /**
- * TODO:Class description User: demir Date: Jun 30, 2009 Time: 2:36:56 PM
+
  */
 public class SimpleReader extends BioPAXIOHandlerAdapter
 {
-
 	private static final Log log = LogFactory.getLog(SimpleReader.class);
 
 	private XMLStreamReader r;
