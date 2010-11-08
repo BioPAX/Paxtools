@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(length=40)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @NamedQueries({
 	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfId",
