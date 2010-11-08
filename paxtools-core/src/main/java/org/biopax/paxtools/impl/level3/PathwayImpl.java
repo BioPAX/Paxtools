@@ -74,7 +74,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		component.getPathwayComponentOf().remove(this);
 	}
 
-	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")
+	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf", cascade = {CascadeType.ALL})
 	public Set<PathwayStep> getPathwayOrder()
 	{
 		return pathwayOrder;
