@@ -35,7 +35,11 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	@Override
 	public boolean equals(Object o)
 	{
-		return semanticallyEquivalent((BioPAXElement) o) || super.equals(o);
+		if(o instanceof BioPAXElement)
+			return semanticallyEquivalent((BioPAXElement) o) 
+				|| super.equals(o);
+		else
+			return false;
 	}
 
 
