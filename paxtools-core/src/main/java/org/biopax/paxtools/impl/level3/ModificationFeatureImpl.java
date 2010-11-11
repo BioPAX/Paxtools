@@ -53,7 +53,7 @@ public class ModificationFeatureImpl extends EntityFeatureImpl
 			SequenceModificationVocabulary myType = getModificationType();
 			value = (yourType == null) ?
 			        myType == null :
-			        myType.isEquivalent(yourType);
+			        yourType.isEquivalent(myType);
 		}
 
 		return value;
