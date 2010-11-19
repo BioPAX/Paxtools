@@ -8,7 +8,7 @@ import org.biopax.paxtools.model.Model;
  * its dependent elements) and to add this element into a model
  * using the visitor and traverse functionalities.
  *
- * FIXME may fail (StackOverFlow) when there is a cycle (@see  org.biopax.paxtools.controller.AbstractTraverser)
+ * FIXME may fail (StackOverFlow) when there is a cycle (see {@link AbstractTraverser}; use {@link PropertyFilter})
  * 
  * @see org.biopax.paxtools.controller.Visitor
  * @see org.biopax.paxtools.controller.Traverser

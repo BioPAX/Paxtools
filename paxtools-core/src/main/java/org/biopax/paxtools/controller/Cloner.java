@@ -9,9 +9,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * "Clones" the BioPAX elements set
+ * Specifically "Clones" the BioPAX elements set
  * (traverses to obtain dependent elements), 
- * puts them to the new model using the visitor and traverser framework.
+ * puts them to the new model using the visitor and traverser framework;
+ * ignores elements that are not in the source list (compare to {@link Fetcher})
  *
  * @see org.biopax.paxtools.controller.Visitor
  * @see org.biopax.paxtools.controller.Traverser

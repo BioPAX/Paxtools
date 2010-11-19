@@ -591,7 +591,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 		catch (ClassNotFoundException e)
 		{
 			log.error("Cannot find class " + l3PackageName + l3Name);
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		assert cls != null;
@@ -616,15 +616,15 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 		}
 		catch (IllegalAccessException e)
 		{
-			log.error("Cannot invoke method " + meth);
-			log.error(e.toString());
-			e.printStackTrace();
+			log.error("Cannot invoke method " 
+				+ meth + " - " + e);
+			//e.printStackTrace();
 		}
 		catch (InvocationTargetException e)
 		{
-			log.error("Cannot invoke method " + meth);
-			log.error(e.toString());
-			e.printStackTrace();
+			log.error("Cannot invoke method " + meth 
+				+ " - " + e);
+			//e.printStackTrace();
 		}
 
 		enumMap.put(o, l3enum);
