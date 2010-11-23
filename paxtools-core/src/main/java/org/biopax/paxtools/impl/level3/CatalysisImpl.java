@@ -74,14 +74,18 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 
 	public void addCofactor(PhysicalEntity cofactor)
 	{
-		this.cofactor.add(cofactor);
-		super.addParticipant(cofactor);
+		if (cofactor != null) {
+			this.cofactor.add(cofactor);
+			super.addParticipant(cofactor);
+		}
 	}
 
 	public void removeCofactor(PhysicalEntity cofactor)
 	{
-		super.removeParticipant(cofactor);
-        this.cofactor.remove(cofactor);
+		if (cofactor != null) {
+			super.removeParticipant(cofactor);
+			this.cofactor.remove(cofactor);
+		}
 	}
 
 

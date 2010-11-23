@@ -53,12 +53,14 @@ public class SequenceLocationImpl extends L3ElementImpl
 
 	public void addRegionType(SequenceRegionVocabulary regionType)
 	{
-		this.regionType.add(regionType);
+		if(regionType != null)
+			this.regionType.add(regionType);
 	}
 
 	public void removeRegionType(SequenceRegionVocabulary regionType)
 	{
-		this.regionType.remove(regionType);
+		if(regionType != null)
+			this.regionType.remove(regionType);
 	}
 
 	public void setRegionType(Set<SequenceRegionVocabulary> regionType)

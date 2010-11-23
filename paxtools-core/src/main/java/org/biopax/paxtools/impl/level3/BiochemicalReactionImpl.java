@@ -69,12 +69,14 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 	public void addDeltaG(DeltaG deltaG)
 	{
-		this.deltaG.add(deltaG);
+		if(deltaG != null)
+			this.deltaG.add(deltaG);
 	}
 
 	public void removeDeltaG(DeltaG deltaG)
 	{
-		this.deltaG.remove(deltaG);
+		if(deltaG != null) 
+			this.deltaG.remove(deltaG);
 	}
 
 

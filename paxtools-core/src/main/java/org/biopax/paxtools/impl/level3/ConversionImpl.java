@@ -63,14 +63,18 @@ public class ConversionImpl extends InteractionImpl
 
 	public void addRight(PhysicalEntity right)
 	{
-		this.right.add(right);
-		super.addParticipant(right);
+		if(right != null) {
+			this.right.add(right);
+			super.addParticipant(right);
+		}
 	}
 
 	public void removeRight(PhysicalEntity right)
 	{
-		super.removeParticipant(right);
-		this.right.remove(right);
+		if(right != null) {
+			super.removeParticipant(right);
+			this.right.remove(right);
+		}
 	}
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
@@ -87,14 +91,18 @@ public class ConversionImpl extends InteractionImpl
 
 	public void addLeft(PhysicalEntity left)
 	{
-		this.left.add(left);
-		super.addParticipant(left);
+		if(left != null) {
+			this.left.add(left);
+			super.addParticipant(left);
+		}
 	}
 
 	public void removeLeft(PhysicalEntity left)
 	{
-		super.removeParticipant(left);
-		this.left.remove(left);
+		if(left != null) {
+			super.removeParticipant(left);
+			this.left.remove(left);
+		}
 	}
 
 	@Basic

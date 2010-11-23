@@ -109,13 +109,15 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	public void addEntityReferenceType(
 			EntityReferenceTypeVocabulary entityReferenceType)
 	{
-		this.entityReferenceType.add(entityReferenceType);
+		if(entityReferenceType != null)
+			this.entityReferenceType.add(entityReferenceType);
 	}
 
 	public void removeEntityReferenceType(
 			EntityReferenceTypeVocabulary entityReferenceType)
 	{
-		this.entityReferenceType.remove(entityReferenceType);
+		if(entityReferenceType != null)
+			this.entityReferenceType.remove(entityReferenceType);
 	}
 
 	protected void setEntityReferenceType(
@@ -134,14 +136,18 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	public void addMemberEntityReference(EntityReference memberEntity)
 	{
-		this.memberEntity.add(memberEntity);
-		memberEntity.getMemberEntityReferenceOf().add(this);
+		if (memberEntity != null) {
+			this.memberEntity.add(memberEntity);
+			memberEntity.getMemberEntityReferenceOf().add(this);
+		}
 	}
 
 	public void removeMemberEntityReference(EntityReference memberEntity)
 	{
-		this.memberEntity.remove(memberEntity);
-		memberEntity.getMemberEntityReferenceOf().remove(this);
+		if (memberEntity != null) {
+			this.memberEntity.remove(memberEntity);
+			memberEntity.getMemberEntityReferenceOf().remove(this);
+		}
 	}
 
 	public void setMemberEntityReference(Set<EntityReference> memberEntity)
@@ -172,12 +178,14 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	public void addEvidence(Evidence evidence)
 	{
-		this.evidence.add(evidence);
+		if(evidence != null)
+			this.evidence.add(evidence);
 	}
 
 	public void removeEvidence(Evidence evidence)
 	{
-		this.evidence.remove(evidence);
+		if(evidence != null)
+			this.evidence.remove(evidence);
 	}
 
 	public void setEvidence(Set<Evidence> evidence)

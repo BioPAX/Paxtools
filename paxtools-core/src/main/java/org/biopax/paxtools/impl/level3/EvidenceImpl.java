@@ -84,7 +84,8 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	public void addConfidence(Score confidence)
 	{
-		this.confidence.add(confidence);
+		if(confidence != null)
+			this.confidence.add(confidence);
 	}
 
 	/**
@@ -94,7 +95,8 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	public void removeConfidence(Score confidence)
 	{
-		this.confidence.remove(confidence);
+		if(confidence != null)
+			this.confidence.remove(confidence);
 	}
 
 
@@ -135,7 +137,8 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	public void addEvidenceCode(EvidenceCodeVocabulary evidenceCode)
 	{
-		this.evidenceCode.add(evidenceCode);
+		if(evidenceCode != null)
+			this.evidenceCode.add(evidenceCode);
 	}
 
 	/**
@@ -147,7 +150,8 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	public void removeEvidenceCode(EvidenceCodeVocabulary evidenceCode)
 	{
-		this.evidenceCode.remove(evidenceCode);
+		if(evidenceCode != null)
+			this.evidenceCode.remove(evidenceCode);
 	}
 
 
@@ -165,12 +169,14 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 
 	public void addExperimentalForm(ExperimentalForm experimentalForm)
 	{
-		this.experimentalForm.add(experimentalForm);
+		if(experimentalForm != null)
+			this.experimentalForm.add(experimentalForm);
 	}
 
 	public void removeExperimentalForm(ExperimentalForm experimentalForm)
 	{
-		this.experimentalForm.remove(experimentalForm);
+		if(experimentalForm != null)
+			this.experimentalForm.remove(experimentalForm);
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

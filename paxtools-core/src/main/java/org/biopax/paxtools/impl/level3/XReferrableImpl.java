@@ -55,8 +55,10 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	public void removeXref(Xref xref)
 	{
-		this.xref.remove(xref);
-		xref.getXrefOf().remove(this);
+		if (xref != null) {
+			this.xref.remove(xref);
+			xref.getXrefOf().remove(this);
+		}
 	}
 
 	protected void setXref(Set<Xref> xref)
@@ -66,8 +68,10 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	public void addXref(Xref xref)
 	{
-		this.xref.add(xref);
-		xref.getXrefOf().add(this);
+		if (xref != null) {
+			this.xref.add(xref);
+			xref.getXrefOf().add(this);
+		}
 	}
 
 	@Override

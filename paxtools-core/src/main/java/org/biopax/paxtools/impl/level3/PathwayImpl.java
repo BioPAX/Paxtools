@@ -64,14 +64,18 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 	public void addPathwayComponent(Process component)
 	{
-		this.pathwayComponent.add(component);
-		component.getPathwayComponentOf().add(this);
+		if (component != null) {
+			this.pathwayComponent.add(component);
+			component.getPathwayComponentOf().add(this);
+		}
 	}
 
 	public void removePathwayComponent(Process component)
 	{
-		this.pathwayComponent.remove(component);
-		component.getPathwayComponentOf().remove(this);
+		if (component != null) {
+			this.pathwayComponent.remove(component);
+			component.getPathwayComponentOf().remove(this);
+		}
 	}
 
 	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf", cascade = {CascadeType.ALL})
@@ -87,15 +91,18 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 	public void addPathwayOrder(PathwayStep pathwayOrder)
 	{
-		this.pathwayOrder.add(pathwayOrder);
-		((PathwayStepImpl) pathwayOrder).setPathwayOrderOf(this);
-
+		if (pathwayOrder != null) {
+			this.pathwayOrder.add(pathwayOrder);
+			((PathwayStepImpl) pathwayOrder).setPathwayOrderOf(this);
+		}
 	}
 
 	public void removePathwayOrder(PathwayStep pathwayOrder)
 	{
-		this.pathwayOrder.remove(pathwayOrder);
-		((PathwayStepImpl) pathwayOrder).setPathwayOrderOf(null);
+		if (pathwayOrder != null) {
+			this.pathwayOrder.remove(pathwayOrder);
+			((PathwayStepImpl) pathwayOrder).setPathwayOrderOf(null);
+		}
 	}
 
 

@@ -81,7 +81,7 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	public void addName(String name)
 	{
-		if (name != null)
+		if (name != null && name.length() > 0)
 			allNames.add(name);
 	}
 

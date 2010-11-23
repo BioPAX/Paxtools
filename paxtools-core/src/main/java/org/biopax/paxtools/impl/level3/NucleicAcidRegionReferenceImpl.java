@@ -44,15 +44,18 @@ public abstract class NucleicAcidRegionReferenceImpl
 
 	public void addSubRegion(NucleicAcidRegionReference regionReference)
 	{
-		subRegion.add(regionReference);
-		this.subRegionOf.add(regionReference);
+		if (regionReference != null) {
+			subRegion.add(regionReference);
+			this.subRegionOf.add(regionReference);
+		}
 	}
 
 	public void removeSubRegion(NucleicAcidRegionReference regionReference)
 	{
-		subRegion.remove(regionReference);
-		this.subRegionOf.remove(regionReference);
-
+		if (regionReference != null) {
+			subRegion.remove(regionReference);
+			this.subRegionOf.remove(regionReference);
+		}
 	}
 
 	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, 
@@ -89,12 +92,14 @@ public abstract class NucleicAcidRegionReferenceImpl
 
 	public void addRegionType(SequenceRegionVocabulary regionType)
 	{
-		this.regionType.add(regionType);
+		if(regionType != null)
+			this.regionType.add(regionType);
 	}
 
 	public void removeRegionType(SequenceRegionVocabulary regionType)
 	{
-		this.regionType.remove(regionType);
+		if(regionType != null)
+			this.regionType.remove(regionType);
 	}
 
 	protected void setRegionType(Set<SequenceRegionVocabulary> regionType)

@@ -75,24 +75,29 @@ public class ControlImpl extends InteractionImpl
 
 	public void addControlled(Process controlled)
 	{
-		if (!checkControlled(controlled))
-		{
-			throw new IllegalBioPAXArgumentException(
-					"Illegal argument. Attempting to set " +
-					controlled.getRDFId() +
-					" to " + this.getRDFId());
+		if (controlled != null) {
+			if (!checkControlled(controlled)) {
+				throw new IllegalBioPAXArgumentException(
+						"Illegal argument. Attempting to set "
+								+ controlled.getRDFId() + " to "
+								+ this.getRDFId());
 
+			}
+			if (controlled != null) {
+				this.controlled.add(controlled);
+				controlled.getControlledOf().add(this);
+				super.addParticipant(controlled);
+			}
 		}
-		this.controlled.add(controlled);
-		controlled.getControlledOf().add(this);
-		super.addParticipant(controlled);
 	}
 
 	public void removeControlled(Process controlled)
 	{
-		super.removeParticipant(controlled);
-		controlled.getControlledOf().remove(this);
-		this.controlled.remove(controlled);
+		if(controlled != null) {
+			super.removeParticipant(controlled);
+			controlled.getControlledOf().remove(this);
+			this.controlled.remove(controlled);
+		}
 	}
 
 	@Transient
@@ -103,29 +108,27 @@ public class ControlImpl extends InteractionImpl
 
 	public void addController(Controller controller)
 	{
-		if (controller instanceof Pathway)
-		{
-			pathwayController.add((Pathway) controller);
+		if (controller != null) {
+			if (controller instanceof Pathway) {
+				pathwayController.add((Pathway) controller);
+			} else {
+				peController.add((PhysicalEntity) controller);
+			}
+			controller.getControllerOf().add(this);
+			super.addParticipant(controller);
 		}
-		else
-		{
-			peController.add((PhysicalEntity) controller);
-		}
-		controller.getControllerOf().add(this);
-		super.addParticipant(controller);
 	}
 
 	public void removeController(Controller controller)
 	{
-		super.removeParticipant(controller);
-		controller.getControllerOf().remove(this);
-		if (controller instanceof Pathway)
-		{
-			pathwayController.remove(controller);
-		}
-		else
-		{
-			peController.remove(controller);
+		if (controller != null) {
+			super.removeParticipant(controller);
+			controller.getControllerOf().remove(this);
+			if (controller instanceof Pathway) {
+				pathwayController.remove(controller);
+			} else {
+				peController.remove(controller);
+			}
 		}
 	}
 

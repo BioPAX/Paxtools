@@ -73,12 +73,14 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 
 	public void addTerm(String term)
 	{
-		this.term.add(term);
+		if(term != null && term.length()>0)
+			this.term.add(term);
 	}
 
 	public void removeTerm(String term)
 	{
-		this.term.remove(term);
+		if(term != null)
+			this.term.remove(term);
 	}
 	
 	@Override

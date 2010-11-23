@@ -40,12 +40,14 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 
     public void addComment(String COMMENT)
     {
-        this.comment.add(COMMENT);
+        if(COMMENT != null && COMMENT.length() > 0)
+        	this.comment.add(COMMENT);
     }
 
     public void removeComment(String COMMENT)
     {
-        this.comment.remove(COMMENT);
+    	if(COMMENT != null)
+    		this.comment.remove(COMMENT);
     }
 
 }

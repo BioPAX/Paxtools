@@ -54,14 +54,18 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 	public void addComponent(PhysicalEntity component)
 	{
-		this.component.add(component);
-		component.getComponentOf().add(this);
+		if (component != null) {
+			this.component.add(component);
+			component.getComponentOf().add(this);
+		}
 	}
 
 	public void removeComponent(PhysicalEntity component)
 	{
-		this.component.remove(component);
-		component.getComponentOf().add(null);
+		if (component != null) {
+			this.component.remove(component);
+			component.getComponentOf().add(null);
+		}
 	}
 
 	protected void setComponent(Set<PhysicalEntity> component)
@@ -79,13 +83,15 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	public void addComponentStoichiometry(
 			Stoichiometry stoichiometry)
 	{
-		this.componentStoichiometry.add(stoichiometry);
+		if(stoichiometry != null)
+			this.componentStoichiometry.add(stoichiometry);
 	}
 
 	public void removeComponentStoichiometry(
 			Stoichiometry stoichiometry)
 	{
-		this.componentStoichiometry.remove(stoichiometry);
+		if(stoichiometry != null)
+			this.componentStoichiometry.remove(stoichiometry);
 	}
 
 	protected void setComponentStoichiometry(Set<Stoichiometry> stoichiometry)

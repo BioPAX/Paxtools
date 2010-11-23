@@ -80,12 +80,14 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	public void addAvailability(String availability_text)
 	{
-		availability.add(availability_text);
+		if(availability_text != null && availability_text.length() > 0)
+			availability.add(availability_text);
 	}
 
 	public void removeAvailability(String availability_text)
 	{
-		this.availability.remove(availability_text);
+		if(availability_text != null)
+			this.availability.remove(availability_text);
 	}
 
 	@ManyToMany(targetEntity = ProvenanceImpl.class, cascade={CascadeType.ALL})
@@ -102,12 +104,14 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	public void addDataSource(Provenance dataSource)
 	{
-		this.dataSource.add(dataSource);
+		if(dataSource != null)
+			this.dataSource.add(dataSource);
 	}
 
 	public void removeDataSource(Provenance dataSource)
 	{
-		this.dataSource.remove(dataSource);
+		if(dataSource != null)
+			this.dataSource.remove(dataSource);
 	}
 
 // --------------------- Interface entity ---------------------
@@ -138,12 +142,14 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	public void addEvidence(Evidence newEvidence)
 	{
-		this.evidence.add(newEvidence);
+		if(newEvidence != null)
+			this.evidence.add(newEvidence);
 	}
 
 	public void removeEvidence(Evidence oldEvidence)
 	{
-		this.evidence.remove(oldEvidence);
+		if(oldEvidence != null)
+			this.evidence.remove(oldEvidence);
 	}
 
 	protected void setEvidence(Set<Evidence> newEvidence)

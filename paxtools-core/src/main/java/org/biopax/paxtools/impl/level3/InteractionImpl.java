@@ -64,13 +64,15 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	public void addInteractionType(
 		InteractionVocabulary interactionType)
 	{
-	   this.interactionType.add(interactionType);
+	   if(interactionType != null)
+			this.interactionType.add(interactionType);
 	}
 
 	public void removeInteractionType(
 		InteractionVocabulary interactionType)
 	{
-	   this.interactionType.remove(interactionType);
+		if(interactionType != null)
+			this.interactionType.remove(interactionType);
 	}
 
 	public void setInteractionType(
@@ -93,22 +95,24 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	public void addParticipant(Entity aParticipant)
 	{
-		if(aParticipant!= null)
-        {
-            this.participant.add(aParticipant);
-            aParticipant.getParticipantOf().add(this);
-        }
-        else
-        {
-            log.warn("Null object passed to addParticipant @"
-            		+ this.getRDFId());
-        }
+		if (aParticipant != null) {
+			if (aParticipant != null) {
+				this.participant.add(aParticipant);
+				aParticipant.getParticipantOf().add(this);
+			} else {
+				if (log.isWarnEnabled())
+					log.warn("Null object passed to addParticipant @"
+							+ this.getRDFId());
+			}
+		}
     }
 
 	public void removeParticipant(Entity aParticipant)
 	{
-		this.participant.remove(aParticipant);
-		aParticipant.getParticipantOf().remove(this);
+		if (aParticipant != null) {
+			this.participant.remove(aParticipant);
+			aParticipant.getParticipantOf().remove(this);
+		}
 	}
     
 }

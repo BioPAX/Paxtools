@@ -51,14 +51,18 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	public void addNextStep(PathwayStep nextStep)
 	{
-		this.nextStep.add(nextStep);
-		nextStep.getNextStepOf().add(this);
+		if (nextStep != null) {
+			this.nextStep.add(nextStep);
+			nextStep.getNextStepOf().add(this);
+		}
 	}
 
 	public void removeNextStep(PathwayStep nextStep)
 	{
-		nextStep.getNextStepOf().remove(this);
-		this.nextStep.remove(nextStep);
+		if (nextStep != null) {
+			nextStep.getNextStepOf().remove(this);
+			this.nextStep.remove(nextStep);
+		}
 	}
 
 	protected void setNextStep(Set<PathwayStep> nextStep)
@@ -88,14 +92,18 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	public void addStepProcess(Process processStep)
 	{
-		this.stepProcess.add(processStep);
-		processStep.getStepProcessOf().add(this);
+		if (processStep != null) {
+			this.stepProcess.add(processStep);
+			processStep.getStepProcessOf().add(this);
+		}
 	}
 
 	public void removeStepProcess(Process processStep)
 	{
-		processStep.getStepProcessOf().remove(this);
-		this.stepProcess.remove(processStep);
+		if (processStep != null) {
+			processStep.getStepProcessOf().remove(this);
+			this.stepProcess.remove(processStep);
+		}
 	}
 
 	public void setStepProcess(Set<Process> stepProcess)
@@ -112,12 +120,14 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	public void addEvidence(Evidence evidence)
 	{
-		this.evidence.add(evidence);
+		if (evidence != null)
+			this.evidence.add(evidence);
 	}
 
 	public void removeEvidence(Evidence evidence)
 	{
-		this.evidence.remove(evidence);
+		if (evidence != null)
+			this.evidence.remove(evidence);
 	}
 
 	public void setEvidence(Set<Evidence> evidence)

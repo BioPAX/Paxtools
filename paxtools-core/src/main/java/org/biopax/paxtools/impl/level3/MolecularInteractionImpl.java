@@ -28,17 +28,16 @@ public class MolecularInteractionImpl extends InteractionImpl
 
     public void addParticipant(Entity participant)
     {
-        if (participant instanceof PhysicalEntity)
-        {
-            super.addParticipant(participant);
-        }
-        else
-        {
-            throw new IllegalBioPAXArgumentException
-                    ("Participants of a molecular interaction should be" +
-                     "of type PhysicalEntity. Parameter " +
-                     participant + "is of type " + participant.getClass());
-        }
-
+		if (participant != null) {
+			if (participant instanceof PhysicalEntity) {
+				super.addParticipant(participant);
+			} else {
+				throw new IllegalBioPAXArgumentException(
+						"Participants of a molecular interaction should be"
+								+ "of type PhysicalEntity. Parameter "
+								+ participant + "is of type "
+								+ participant.getClass());
+			}
+		}
     }
 }

@@ -66,12 +66,14 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
 	public void addAuthor(String author)
 	{
-		this.author.add(author);
+		if(author != null && author.length() > 0)
+			this.author.add(author);
 	}
 
 	public void removeAuthor(String author)
 	{
-		this.author.remove(author);
+		if(author != null)
+			this.author.remove(author);
 	}
 
     @ElementCollection
@@ -89,12 +91,14 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
 	public void addSource(String source)
 	{
-		this.source.add(source);
+		if(source != null && source.length() > 0)
+			this.source.add(source);
 	}
 
 	public void removeSource(String source)
 	{
-		this.source.remove(source);
+		if(source != null)
+			this.source.remove(source);
 	}
 
     @Basic
@@ -125,12 +129,14 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
 	public void addUrl(String url)
 	{
-		this.url.add(url);
+		if(url != null && url.length() > 0)
+			this.url.add(url);
 	}
 
 	public void removeUrl(String url)
 	{
-		this.url.remove(url);
+		if(url != null)
+			this.url.remove(url);
 	}
 
     // Property year

@@ -54,13 +54,15 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 	public void addExperimentalFormDescription(
 		ExperimentalFormVocabulary experimentalFormType)
 	{
-		this.experimentalFormDescription.add(experimentalFormType);
+		if(experimentalFormType != null)
+			this.experimentalFormDescription.add(experimentalFormType);
 	}
 
 	public void removeExperimentalFormDescription(
 		ExperimentalFormVocabulary experimentalFormType)
 	{
-		this.experimentalFormDescription.remove(experimentalFormType);
+		if(experimentalFormType != null)
+			this.experimentalFormDescription.remove(experimentalFormType);
 	}
 
 	public void setExperimentalFormDescription(
@@ -102,10 +104,13 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 
     public void addExperimentalFeature(EntityFeature experimentalFeature)
     {
-        this.experimentalFeature.add(experimentalFeature);
+    	if(experimentalFeature != null)
+    		this.experimentalFeature.add(experimentalFeature);
     }
+    
     public void removeExperimentalFeature(EntityFeature experimentalFeature)
     {
-        this.experimentalFeature.remove(experimentalFeature);
+    	if(experimentalFeature != null)
+    		this.experimentalFeature.remove(experimentalFeature);
     }
 }

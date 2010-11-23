@@ -116,12 +116,14 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	public void addEvidence(Evidence evidence)
 	{
-		this.evidence.add(evidence);
+		if(evidence != null)
+			this.evidence.add(evidence);
 	}
 
 	public void removeEvidence(Evidence evidence)
 	{
-		this.evidence.remove(evidence);
+		if(evidence != null)
+			this.evidence.remove(evidence);
 	}
 
 	protected void setEvidence(Set<Evidence> evidence)
@@ -165,14 +167,18 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	public void addMemberFeature(EntityFeature feature)
 	{
-		memberFeature.add(feature);
-		feature.getMemberFeatureOf().add(this);
+		if (feature != null) {
+			memberFeature.add(feature);
+			feature.getMemberFeatureOf().add(this);
+		}
 	}
 
 	public void removeMemberFeature(EntityFeature feature)
 	{
-		memberFeature.remove(feature);
-		feature.getMemberFeatureOf().remove(this);
+		if (feature != null) {
+			memberFeature.remove(feature);
+			feature.getMemberFeatureOf().remove(this);
+		}
 	}
 
 

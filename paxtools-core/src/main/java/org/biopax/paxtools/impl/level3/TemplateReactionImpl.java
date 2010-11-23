@@ -36,7 +36,6 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
         return product;
     }
 
-
     protected void setProduct(Set<PhysicalEntity> product)
     {
         this.product = product;
@@ -44,14 +43,18 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 
     public void addProduct(PhysicalEntity product)
     {
-        this.product.add(product);
-        super.addParticipant(product);
+    	if(product != null) {
+    		this.product.add(product);
+    		super.addParticipant(product);
+    	}
     }
 
     public void removeProduct(PhysicalEntity product)
     {
-        super.removeParticipant(product);
-        this.product.remove(product);
+    	if(product != null) {
+    		super.removeParticipant(product);
+        	this.product.remove(product);
+    	}
     }
 
 	@ManyToOne(targetEntity = NucleicAcidImpl.class, cascade = { CascadeType.ALL })
@@ -73,8 +76,10 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
          {
             super.removeParticipant(this.template);
          }
-         this.template=template;
-         super.addParticipant(template);
+         if(template != null) {
+        	 this.template=template;
+        	 super.addParticipant(template);
+         }
      }
 
     @Enumerated

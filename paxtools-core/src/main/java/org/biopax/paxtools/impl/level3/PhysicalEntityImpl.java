@@ -72,16 +72,19 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public void addFeature(EntityFeature feature)
 	{
-		checkAndAddFeature(feature, feature.getFeatureOf());
-		this.feature.add(feature);
+		if (feature != null) {
+			checkAndAddFeature(feature, feature.getFeatureOf());
+			this.feature.add(feature);
+		}
 	}
 
 
 	public void removeFeature(EntityFeature feature)
 	{
-		checkAndRemoveFeature(feature, feature.getFeatureOf());
-		this.feature.remove(feature);
-
+		if (feature != null) {
+			checkAndRemoveFeature(feature, feature.getFeatureOf());
+			this.feature.remove(feature);
+		}
 	}
 
 	protected void setFeature(Set<EntityFeature> feature)
@@ -99,14 +102,18 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public void addNotFeature(EntityFeature feature)
 	{
-		checkAndAddFeature(feature, feature.getNotFeatureOf());
-		this.notFeature.add(feature);
+		if (feature != null) {
+			checkAndAddFeature(feature, feature.getNotFeatureOf());
+			this.notFeature.add(feature);
+		}
 	}
 
 	public void removeNotFeature(EntityFeature feature)
 	{
-		checkAndRemoveFeature(feature, feature.getNotFeatureOf());
-		this.notFeature.remove(feature);
+		if (feature != null) {
+			checkAndRemoveFeature(feature, feature.getNotFeatureOf());
+			this.notFeature.remove(feature);
+		}
 	}
 
 	protected void setNotFeature(Set<EntityFeature> featureSet)
@@ -124,14 +131,18 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public void addMemberPhysicalEntity(PhysicalEntity newMember)
 	{
-		this.memberPhysicalEntity.add(newMember);
-		newMember.getMemberPhysicalEntityOf().add(this);
+		if (newMember != null) {
+			this.memberPhysicalEntity.add(newMember);
+			newMember.getMemberPhysicalEntityOf().add(this);
+		}
 	}
 
 	public void removeMemberPhysicalEntity(PhysicalEntity oldMember)
 	{
-		this.memberPhysicalEntity.remove(oldMember); //todo
-		oldMember.getMemberPhysicalEntityOf().remove(this);
+		if (oldMember != null) {
+			this.memberPhysicalEntity.remove(oldMember); // todo
+			oldMember.getMemberPhysicalEntityOf().remove(this);
+		}
 	}
 
 	protected void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity)
