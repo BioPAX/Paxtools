@@ -39,7 +39,7 @@ public class BindingFeatureImpl extends EntityFeatureImpl
 
 	// Property BOUND-TO
 
-	@OneToOne(targetEntity = BindingFeatureImpl.class)
+	@OneToOne(targetEntity = BindingFeatureImpl.class, cascade={CascadeType.ALL})
 	public BindingFeature getBindsTo()
 	{
 		return bindsTo;

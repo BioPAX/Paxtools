@@ -82,7 +82,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
-
 	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="stepProcess")
 	public Set<Process> getStepProcess()

@@ -71,7 +71,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 		this.experimentalFormDescription = experimentalFormDescription;
 	}
 
-	@ManyToOne(targetEntity = EntityImpl.class)
+	@ManyToOne(targetEntity = EntityImpl.class, cascade={CascadeType.ALL})
 	public Entity getExperimentalFormEntity()
 	{
 		return experimentalFormEntity;
