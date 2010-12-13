@@ -107,7 +107,24 @@ public class PSIMIBioPAXConverter {
 			bpMapper.setNamespace(EntryMapper.RDF_ID_PREFIX);
 
 			// create and start PSIMapper
-			(new EntryMapper(bpMapper, biopaxMarshaller, entry)).start();
+            (new EntryMapper(bpMapper, biopaxMarshaller, entry)).start();
+		}
+
+		// wait for marshalling to complete
+		while (true) {
+
+			// sleep for a bit
+			try {
+				Thread.sleep(100);
+			}
+			catch (InterruptedException e){
+				e.printStackTrace();
+				System.exit(1);
+			}
+
+            if (conversionIsComplete()) {
+                break;
+            }
 		}
 
 		// outta here
