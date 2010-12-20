@@ -68,7 +68,7 @@ public class KPrimeImpl extends L3ElementImpl implements KPrime
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	@Basic
+	
 	public float getIonicStrength()
 	{
 		return ionicStrength;
@@ -79,7 +79,6 @@ public class KPrimeImpl extends L3ElementImpl implements KPrime
 		this.ionicStrength = ionicStrength;
 	}
 
-	@Basic
 	public float getKPrime()
 	{
 		return kPrime;
@@ -90,7 +89,6 @@ public class KPrimeImpl extends L3ElementImpl implements KPrime
 		this.kPrime = prime;
 	}
 
-	@Basic
 	public float getPh()
 	{
 		return ph;
@@ -101,7 +99,6 @@ public class KPrimeImpl extends L3ElementImpl implements KPrime
 		this.ph = ph;
 	}
 
-	@Basic
 	public float getPMg()
 	{
 		return pMg;
@@ -112,7 +109,6 @@ public class KPrimeImpl extends L3ElementImpl implements KPrime
 		this.pMg = pMg;
 	}
 
-	@Basic
 	public float getTemperature()
 	{
 		return temperature;

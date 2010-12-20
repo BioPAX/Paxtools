@@ -74,7 +74,6 @@ public class BindingFeatureImpl extends EntityFeatureImpl
 		}
 	}
 
-	@Basic
 	public Boolean getIntraMolecular()
 	{
 		return intramolecular;

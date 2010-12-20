@@ -70,8 +70,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStep = nextStep;
 	}
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep", cascade = {CascadeType.ALL})
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;

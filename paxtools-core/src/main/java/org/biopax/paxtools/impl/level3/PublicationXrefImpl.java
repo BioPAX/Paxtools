@@ -101,7 +101,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 			this.source.remove(source);
 	}
 
-    @Basic
+    
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
  	public String getTitle()
 	{
@@ -140,7 +140,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     // Property year
-    @Basic
+    
     @Column(name="published") //default one caused MySQLIntegrityConstraintViolationException: Column 'year' in field list is ambiguous
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public int getYear()

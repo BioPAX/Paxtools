@@ -65,7 +65,7 @@ public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSi
 	}
 
     // Property sequence-POSITION
-    @Basic
+    
 	public int getSequencePosition()
 	{
 		return sequencePosition;

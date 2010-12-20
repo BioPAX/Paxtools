@@ -37,13 +37,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
 	private String id;
 	private Long proxyId = 0L;
+	private Integer version;
 
-	/* 
-	 * proxyId did not work: during model merge,
-	 * i.e., using session.save or saveOrUpdate -
-	 * cased duplicated entry for the key 2 (unique RDFId))
-	 * (probably, because of the cascade updates...)
-	 */
 	//@Id
 	//@GeneratedValue(strategy=GenerationType.AUTO)
     @Transient
@@ -55,6 +50,17 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     }
     
 
+    //@Version
+    //@Column(name="OPTLOCK")
+    @Transient
+    public Integer getVersion() {
+		return version;
+	}
+    protected void setVersion(Integer version) {
+		this.version = version;
+	}
+    
+    
 	public BioPAXElementImpl(){};
 	
 	
@@ -98,8 +104,10 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     }
 
     @Id
+    @Column(length=255)//, columnDefinition="BINARY(255)")
+    //@Column(length=255, nullable=false)
     //@Column(unique=true, nullable=false)
-    //@Field(name = BioPAXElementImpl.SEARCH_FIELD_ID) // better not to match rdfid!
+    //@Field(name = BioPAXElementImpl.SEARCH_FIELD_ID) // full-text search better not to use rdfid!
     public String getRDFId()
     {
         return id;

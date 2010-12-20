@@ -71,7 +71,7 @@ public abstract class NucleicAcidRegionReferenceImpl
 	}
 
 
-	@OneToOne(targetEntity = SequenceLocationImpl.class, cascade={CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceLocationImpl.class, cascade={CascadeType.ALL})
 	public SequenceLocation getAbsoluteRegion()
 	{
 		return this.absoluteRegion;

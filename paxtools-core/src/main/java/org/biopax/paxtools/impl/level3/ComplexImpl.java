@@ -73,7 +73,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		this.component = component;
 	}
 
-	@OneToMany(targetEntity = StoichiometryImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = StoichiometryImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="complexstoichiometry")		
 	public Set<Stoichiometry> getComponentStoichiometry()
 	{

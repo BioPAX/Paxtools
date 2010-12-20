@@ -132,7 +132,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
-	@OneToOne(targetEntity = SequenceLocationImpl.class, cascade={CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceLocationImpl.class, cascade={CascadeType.ALL})
 	public SequenceLocation getFeatureLocation()
 	{
 		return featureLocation;

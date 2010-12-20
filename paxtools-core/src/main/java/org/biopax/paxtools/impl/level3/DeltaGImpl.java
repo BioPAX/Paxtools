@@ -62,8 +62,6 @@ public class DeltaGImpl extends L3ElementImpl implements DeltaG
 		return result;
 	}
 
-
-	@Basic
 	public float getDeltaGPrime0()
 	{
 		return deltaGPrime0;
@@ -74,7 +72,6 @@ public class DeltaGImpl extends L3ElementImpl implements DeltaG
 		this.deltaGPrime0 = deltaGPrime0;
 	}
 
-	@Basic
 	public float getIonicStrength()
 	{
 		return ionicStrength;
@@ -85,7 +82,7 @@ public class DeltaGImpl extends L3ElementImpl implements DeltaG
 		this.ionicStrength = ionicStrength;
 	}
 
-	@Basic
+	
 	public float getPh()
 	{
 		return ph;
@@ -96,7 +93,6 @@ public class DeltaGImpl extends L3ElementImpl implements DeltaG
 		this.ph = ph;
 	}
 
-	@Basic
 	public float getPMg()
 	{
 		return pMg;
@@ -107,7 +103,6 @@ public class DeltaGImpl extends L3ElementImpl implements DeltaG
 		this.pMg = pmg;
 	}
 
-	@Basic
 	public float getTemperature()
 	{
 		return temperature;

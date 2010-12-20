@@ -11,7 +11,7 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
@@ -39,7 +39,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	}
 
     
-    @Basic
+    
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     public String getChemicalFormula()
 	{
@@ -52,7 +52,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	}
 
     // Property MOLECULAR-WEIGHT
-    @Basic
+    
     public float getMolecularWeight()
 	{
 		return molecularWeight;
@@ -64,7 +64,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	}
 
     // Property structure
-    @OneToOne(targetEntity = ChemicalStructureImpl.class, cascade={CascadeType.ALL})
+    @ManyToOne(targetEntity = ChemicalStructureImpl.class, cascade={CascadeType.ALL})
     public ChemicalStructure getStructure()
 	{
 		return structure;

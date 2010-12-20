@@ -105,7 +105,7 @@ public class ConversionImpl extends InteractionImpl
 		}
 	}
 
-	@Basic
+	
 	public Boolean getSpontaneous()
 	{
 		return spontaneous;
@@ -116,8 +116,8 @@ public class ConversionImpl extends InteractionImpl
 		this.spontaneous = spontaneous;
 	}
 
-	@OneToMany(targetEntity = StoichiometryImpl.class,  cascade={CascadeType.ALL})
-	@JoinTable(name="stoichiometry")		
+	@ManyToMany(targetEntity = StoichiometryImpl.class,  cascade={CascadeType.ALL})
+	@JoinTable(name="conversionstoichiometry")		
 	public Set<Stoichiometry> getParticipantStoichiometry()
 	{
 		return participantStoichiometry;

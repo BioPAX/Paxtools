@@ -8,7 +8,7 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
@@ -63,7 +63,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
 	// sequenceInterval interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-    @OneToOne(targetEntity = SequenceSiteImpl.class, cascade={CascadeType.ALL})
+    @ManyToOne(targetEntity = SequenceSiteImpl.class, cascade={CascadeType.ALL})
 	public SequenceSite getSequenceIntervalBegin()
 	{
 		return sequenceIntervalBegin;
@@ -74,7 +74,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
 		this.sequenceIntervalBegin = sequenceIntervalBegin;
 	}
 
-    @OneToOne(targetEntity = SequenceSiteImpl.class, cascade={CascadeType.ALL})
+    @ManyToOne(targetEntity = SequenceSiteImpl.class, cascade={CascadeType.ALL})
 	public SequenceSite getSequenceIntervalEnd()
 	{
 		return sequenceIntervalEnd;

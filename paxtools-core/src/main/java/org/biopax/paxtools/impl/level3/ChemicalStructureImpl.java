@@ -57,7 +57,6 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
-	@Basic //TODO:@Lob?
 	@Column(columnDefinition="LONGTEXT")
 	public String getStructureData()
 	{

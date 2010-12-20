@@ -43,7 +43,7 @@ public class ScoreImpl extends XReferrableImpl implements Score
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	@Basic
+	
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     public String getValue()
 	{

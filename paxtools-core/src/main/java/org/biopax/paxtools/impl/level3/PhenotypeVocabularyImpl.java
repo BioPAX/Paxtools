@@ -28,7 +28,7 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
         return PhenotypeVocabulary.class;
     }
 
-	@Basic
+	
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
 	public String getPatoData()
 	{

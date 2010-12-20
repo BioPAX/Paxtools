@@ -65,7 +65,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		return result;
 	}
 
-	@Basic
+	
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_DB)
     public String getDb()
 	{
@@ -78,7 +78,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 
-	@Basic
+	
     public String getDbVersion()
 	{
 		return dbVersion;
@@ -89,7 +89,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.dbVersion = dbVersion;
 	}
 
-    @Basic
+    
 	public String getIdVersion()
 	{
 		return idVersion;
@@ -101,7 +101,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
     // Property id
-    @Basic
+    
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_ID)
 	public String getId()
 	{

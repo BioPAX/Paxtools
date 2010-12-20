@@ -32,6 +32,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	}
 
 
+	/*
 	@Override
 	public boolean equals(Object o)
 	{
@@ -41,6 +42,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 		else
 			return false;
 	}
+	*/
 
 
 	/* having this method creates high chance of getting 
@@ -96,7 +98,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 		this.physicalEntity = PhysicalEntity;
 	}
 
-	@Basic
+	
 	public float getStoichiometricCoefficient()
 	{
 		return stoichiometricCoefficient;
