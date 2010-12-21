@@ -103,6 +103,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
     
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+	@Column(columnDefinition="LONGTEXT")
  	public String getTitle()
 	{
 		return title;
