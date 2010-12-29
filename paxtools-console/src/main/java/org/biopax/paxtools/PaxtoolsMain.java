@@ -278,7 +278,7 @@ public class PaxtoolsMain {
     }
 
     
-	private static void exportModel(OutputStream outputStream, Model model, String... ids) 
+	public static void exportModel(OutputStream outputStream, Model model, String... ids) 
 	{
 		Model newModel;
 		
