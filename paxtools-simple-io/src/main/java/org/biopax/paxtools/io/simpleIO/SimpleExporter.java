@@ -4,7 +4,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.EditorMap;
+import org.biopax.paxtools.controller.Fetcher;
 import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.controller.PropertyFilter;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -13,9 +15,7 @@ import org.biopax.paxtools.model.level3.Named;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Provides output in OWL format for BioPAX model(s);
@@ -68,8 +68,8 @@ public class SimpleExporter
      * @throws InvocationTargetException in case of problems related to invoke methods
      */
     public void convertToOWL(Model model, OutputStream outputStream)
-            throws IOException {
-
+            throws IOException 
+    {    	
         initialize(model);
 
         Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
@@ -79,6 +79,52 @@ public class SimpleExporter
         out.close();
     }
 
+    /**
+     * Similar to {@link #convertToOWL(Model, OutputStream)}, but 
+     * extracts a sub-model, converts it into BioPAX (OWL) format, 
+     * and writes it into the outputStream. 
+     * Saved data can be then read via {@link BioPAXIOHandler}
+     * interface (e.g., {@link SimpleReader}).
+     *
+     * @param model model to be converted into OWL format
+     * @param outputStream output stream into which the output will be written
+     * @param ids the list of "root" element IDs to export (with all their properties/children altogether)
+     * @throws IOException in case of I/O problems
+     * @throws IllegalAccessException in case of problem related to access
+     * @throws InvocationTargetException in case of problems related to invoke methods
+     */
+    public void convertToOWL(Model model, OutputStream outputStream, String... ids)
+            throws IOException 
+    {
+		if (ids.length == 0) {
+			convertToOWL(model, outputStream);
+		}
+		else {
+			Model m = model.getLevel().getDefaultFactory().createModel();
+			String base = model.getNameSpacePrefixMap().get("");
+			m.getNameSpacePrefixMap().put("", base);
+			//to avoid 'nextStep' that may lead to infinite loops -
+			PropertyFilter filter = new PropertyFilter() {
+				public boolean filter(PropertyEditor editor) {
+					return !"nextStep".equalsIgnoreCase(editor.getProperty())
+					 && !"NEXT-STEP".equalsIgnoreCase(editor.getProperty());
+				}
+			};
+			Fetcher fetcher = new Fetcher(
+					new SimpleEditorMap(model.getLevel()), filter);
+			
+			for(String uri : ids) {
+				BioPAXElement bpe = model.getByID(uri);
+				if(bpe != null) {
+					fetcher.fetch(bpe, m);
+				}
+			}
+			
+			convertToOWL(m, outputStream);
+		} 
+    }
+    
+    
     /**
      * Writes the XML representation of individual BioPAX element that 
      * is BioPAX-like but only for display or debug purpose (incomplete).

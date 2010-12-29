@@ -270,46 +270,13 @@ public class PaxtoolsMain {
         		String[] ids = argv[count+2].split(",");
         		String out = argv[count+3];
         		
-				Model model = (new SimpleReader()).convertFromOWL(new FileInputStream(in));
-				exportModel(new FileOutputStream(out), model, ids);
+				Model model = io.convertFromOWL(new FileInputStream(in));
+				SimpleExporter exporter = new SimpleExporter(model.getLevel());
+				exporter.convertToOWL(model, new FileOutputStream(out), ids);
             }
             
         }
     }
-
-    
-	public static void exportModel(OutputStream outputStream, Model model, String... ids) 
-	{
-		Model newModel;
-		
-		if (ids.length > 0) {
-			newModel = model.getLevel().getDefaultFactory().createModel();
-			String base = model.getNameSpacePrefixMap().get("");
-			newModel.getNameSpacePrefixMap().put("", base);
-			PropertyFilter filter = new PropertyFilter() {
-				public boolean filter(PropertyEditor editor) {
-					return !"nextStep".equalsIgnoreCase(editor.getProperty());
-				}
-			};
-			
-			Fetcher fetcher = new Fetcher(
-					new SimpleEditorMap(model.getLevel()), filter);
-			for(String uri : ids) {
-				BioPAXElement bpe = model.getByID(uri);
-				if(bpe != null) {
-					fetcher.fetch(bpe, newModel);
-				}
-			}
-		} else {
-			newModel = model; // export everything!
-		}
-		
-		try {
-			new SimpleExporter(model.getLevel()).convertToOWL(newModel, outputStream);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to export Model.", e);
-		}
-	}
     
     
     private static void showHelp() {
