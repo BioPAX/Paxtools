@@ -12,11 +12,9 @@ import org.biopax.paxtools.io.sif.level2.ControlsTogetherRule;
 import org.biopax.paxtools.io.sif.level2.ParticipatesRule;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
-import org.biopax.paxtools.controller.Merger;
-import org.biopax.paxtools.controller.Integrator;
+import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.OneTwoThree;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.*;
 import org.biopax.validator.BiopaxValidatorClient;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
@@ -42,6 +40,7 @@ import java.util.HashSet;
  *      --to-GSEA file1 output database crossSpeciesCheck" converts level 1 or 2 or 3 to GSEA output.
  *      Searches database for participant id or uses biopax rdf id if database is NONE.
  *      Cross species check ensures participant protein is from same species as pathway (set to true or false).
+ *      --fetch file1 id1,id2,.. output	extracts a sub-model from the file1 and writes BioPAX to output\n"
  *      --help							prints this screen and exits"
  *
  */
@@ -262,10 +261,57 @@ public class PaxtoolsMain {
             	}
             	Model model = (new SimpleReader()).convertFromOWL(new FileInputStream(argv[count+1]));
             	(new GSEAConverter(argv[count+3], new Boolean(argv[count+4]))).writeToGSEA(model, new FileOutputStream(argv[count+2]));
+            } else if( argv[count].equals("--fetch") ) {
+                if( argv.length <= count+3 )
+                    showHelp();
+                
+                // set strings vars
+        		String in = argv[count+1];
+        		String[] ids = argv[count+2].split(",");
+        		String out = argv[count+3];
+        		
+				Model model = (new SimpleReader()).convertFromOWL(new FileInputStream(in));
+				exportModel(new FileOutputStream(out), model, ids);
             }
+            
         }
     }
 
+    
+	private static void exportModel(OutputStream outputStream, Model model, String... ids) 
+	{
+		Model newModel;
+		
+		if (ids.length > 0) {
+			newModel = model.getLevel().getDefaultFactory().createModel();
+			String base = model.getNameSpacePrefixMap().get("");
+			newModel.getNameSpacePrefixMap().put("", base);
+			PropertyFilter filter = new PropertyFilter() {
+				public boolean filter(PropertyEditor editor) {
+					return !"nextStep".equalsIgnoreCase(editor.getProperty());
+				}
+			};
+			
+			Fetcher fetcher = new Fetcher(
+					new SimpleEditorMap(model.getLevel()), filter);
+			for(String uri : ids) {
+				BioPAXElement bpe = model.getByID(uri);
+				if(bpe != null) {
+					fetcher.fetch(bpe, newModel);
+				}
+			}
+		} else {
+			newModel = model; // export everything!
+		}
+		
+		try {
+			new SimpleExporter(model.getLevel()).convertToOWL(newModel, outputStream);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to export Model.", e);
+		}
+	}
+    
+    
     private static void showHelp() {
         System.err.println(
                     "Invalid usage: " + CLASS_NAME + "\n"
@@ -280,6 +326,7 @@ public class PaxtoolsMain {
                 +	"--to-GSEA file1 output database crossSpeciesCheck" + "\t\tconverts level 1 or 2 or 3 to GSEA output.\n"
                 +   "                                                 " + "\t\tSearches database for participant id or uses biopax rdf id if database is \"NONE\".\n"
                 +   "                                                 " + "\t\tCross species check ensures participant protein is from same species as pathway (set to true or false).\n"
+                +	"--fetch file1 id1,id2,.. output" + 	"\t\textracts a sub-model from file1 and writes BioPAX to output\n"
                 +   "--help" +								"\t\t\t\t\t\tprints this screen and exits"
             );
 
