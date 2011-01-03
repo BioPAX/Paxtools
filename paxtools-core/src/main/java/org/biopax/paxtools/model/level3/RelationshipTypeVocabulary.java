@@ -6,6 +6,6 @@ package org.biopax.paxtools.model.level3;
  * <a href = http://www.ebi.ac.uk/ontology-lookup/browse.do?termId=MI%3A0353>
  * Cross Reference</a> type.
  */
-public interface RelationshipTypeVocabulary extends ControlledVocabulary
-{
+
+public interface RelationshipTypeVocabulary extends ControlledVocabulary {
 }

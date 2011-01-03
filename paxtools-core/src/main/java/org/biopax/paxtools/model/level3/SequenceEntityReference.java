@@ -28,11 +28,20 @@ public interface SequenceEntityReference extends EntityReference
 	 */
 	void setOrganism(BioSource source);
 
-	
+	/**
+	 * Polymer sequence in uppercase letters. For DNA, usually A,C,G,T letters representing the
+	 * nucleosides of adenine, cytosine, guanine and thymine, respectively; for RNA, usually A, C, U,
+	 * G; for protein, usually the letters corresponding to the 20 letter IUPAC amino acid code.
+	 */
 	String getSequence();
 
+	/**
+	 * Polymer sequence in uppercase letters. For DNA, usually A,C,G,T letters representing the
+	 * nucleosides of adenine, cytosine, guanine and thymine, respectively; for RNA, usually A, C, U,
+	 * G; for protein, usually the letters corresponding to the 20 letter IUPAC amino acid code.
+	 * @param sequence Polymer sequence in uppercase letters.
+	 */
 	void setSequence(String sequence);
 
-	
 
 }
