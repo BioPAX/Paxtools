@@ -38,34 +38,4 @@ public class SequenceLocationImpl extends L3ElementImpl
 		return SequenceLocation.class;
 	}
 
-	//
-	// SequenceLocation interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
-
-	// Property Region-TYPE
-    @ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class, cascade={CascadeType.ALL})
-    @JoinTable(name="regionType") 	
-    public Set<SequenceRegionVocabulary> getRegionType()
-	{
-		return regionType;
-	}
-
-	public void addRegionType(SequenceRegionVocabulary regionType)
-	{
-		if(regionType != null)
-			this.regionType.add(regionType);
-	}
-
-	public void removeRegionType(SequenceRegionVocabulary regionType)
-	{
-		if(regionType != null)
-			this.regionType.remove(regionType);
-	}
-
-	public void setRegionType(Set<SequenceRegionVocabulary> regionType)
-	{
-        this.regionType = regionType;
-	}
-
 }

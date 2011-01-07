@@ -12,11 +12,4 @@ import java.util.Set;
 public interface SequenceLocation extends UtilityClass
 {
 
-	Set<SequenceRegionVocabulary> getRegionType();
-
-	void addRegionType(SequenceRegionVocabulary regionType);
-
-	void removeRegionType(SequenceRegionVocabulary regionType);
-
-
 }
