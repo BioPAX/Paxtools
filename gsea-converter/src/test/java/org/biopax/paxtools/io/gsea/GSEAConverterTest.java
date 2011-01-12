@@ -55,13 +55,13 @@ public class GSEAConverterTest {
 			GSEAConverter gseaConverter = new GSEAConverter("GENE_SYMBOL", true);
 			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level2);
 			// assert some things
-			assertEquals(entries.size(), 1);
+			assertEquals(1, entries.size());
 			GSEAEntry entry = entries.iterator().next();
-			assertEquals(entry.getName(), "mTOR signaling pathway");
-			assertEquals(entry.getDataSource(), "Pathway Interaction Database NCI-Nature Curated Data");
-			assertEquals(entry.getTaxID(), "9606");
+			assertEquals("mTOR signaling pathway", entry.getName());
+			assertEquals("Pathway Interaction Database NCI-Nature Curated Data", entry.getDataSource());
+			assertEquals("9606", entry.getTaxID());
 			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
-			assertEquals(rdfToGenes.size(), 27);
+			assertEquals(27, rdfToGenes.size());
 			// dump the output
 			(new GSEAConverter("GENE_SYMBOL", true)).writeToGSEA(level2, out);
 			in.close();
@@ -87,13 +87,13 @@ public class GSEAConverterTest {
 			GSEAConverter gseaConverter = new GSEAConverter("uniprot", true);
 			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level3);
 			// assert some things
-			assertEquals(entries.size(), 1);
+			assertEquals(1, entries.size());
 			GSEAEntry entry = entries.iterator().next();
-			assertEquals(entry.getName(), "Glycolysis Pathway");
-			assertEquals(entry.getDataSource(), "aMAZE");
-			assertEquals(entry.getTaxID(), "562");
+			assertEquals("Glycolysis Pathway", entry.getName() );
+			assertEquals("aMAZE", entry.getDataSource());
+			assertEquals("562", entry.getTaxID());
 			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
-			assertEquals(rdfToGenes.size(), 2);
+			assertEquals(2, rdfToGenes.size());
 			for (String aSymbol : rdfToGenes.values()) {
 				assertTrue(aSymbol.equals("P46880") || aSymbol.equals("Q9KH85"));
 			}
