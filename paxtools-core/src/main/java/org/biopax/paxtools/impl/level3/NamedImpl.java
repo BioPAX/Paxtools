@@ -52,7 +52,7 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	public void setDisplayName(String displayName)
 	{
-		addName(displayName = displayName);
+		addName(this.displayName = displayName);
 	}
 
 	@ElementCollection
