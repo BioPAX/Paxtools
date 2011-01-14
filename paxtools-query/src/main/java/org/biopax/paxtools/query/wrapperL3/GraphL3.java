@@ -1,5 +1,7 @@
 package org.biopax.paxtools.query.wrapperL3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -18,6 +20,8 @@ import java.util.Set;
 public class GraphL3 extends AbstractGraph 
 {
 	private Model model;
+
+	protected final Log log = LogFactory.getLog(GraphL3.class);
 
 	public GraphL3(Model model)
 	{
@@ -42,7 +46,8 @@ public class GraphL3 extends AbstractGraph
 		}
 		else
 		{
-			throw new IllegalArgumentException("Illegal BioPAX object to wrap as node: " + obj);
+			log.warn("Invalid BioPAX object to wrap as node. Ignoring: " + obj);
+			return null;
 		}
 	}
 
