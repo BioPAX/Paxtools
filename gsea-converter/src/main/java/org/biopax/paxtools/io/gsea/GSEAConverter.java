@@ -233,7 +233,15 @@ public class GSEAConverter implements Visitor {
 	private boolean sameSpecies(Protein aProtein, String taxID) {
 
 		ProteinReference pRef = (ProteinReference)aProtein.getEntityReference();
-		return (getTaxID(pRef.getOrganism().getXref()).equals(taxID));
+		if (pRef != null && pRef.getOrganism() != null) {
+			BioSource bs = pRef.getOrganism();
+			if (bs.getXref() != null) {
+				return (getTaxID(bs.getXref()).equals(taxID));
+			}
+		}
+
+		// outta here
+		return false;
 	}
 	
 	private String getTaxID(Set<Xref> xrefs) {
