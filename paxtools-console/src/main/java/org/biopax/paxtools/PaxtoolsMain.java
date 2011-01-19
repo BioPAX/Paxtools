@@ -15,6 +15,9 @@ import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.OneTwoThree;
 import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.level2.entity;
+import org.biopax.paxtools.model.level3.Entity;
+import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.validator.BiopaxValidatorClient;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
@@ -25,6 +28,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A command line accessible utility for basic Paxtools functionalities.
@@ -41,6 +45,7 @@ import java.util.HashSet;
  *      Searches database for participant id or uses biopax rdf id if database is NONE.
  *      Cross species check ensures participant protein is from same species as pathway (set to true or false).
  *      --fetch file1 id1,id2,.. output	extracts a sub-model from the file1 and writes BioPAX to output\n"
+ *      --get-neighbors file1 id1,id2,.. output	- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)
  *      --help							prints this screen and exits"
  *
  */
@@ -273,6 +278,43 @@ public class PaxtoolsMain {
 				Model model = io.convertFromOWL(new FileInputStream(in));
 				SimpleExporter exporter = new SimpleExporter(model.getLevel());
 				exporter.convertToOWL(model, new FileOutputStream(out), ids);
+            } else if( argv[count].equals("--get-neighbors") ) {
+                if( argv.length <= count+3 )
+                    showHelp();
+                
+                // set strings vars
+        		String in = argv[count+1];
+        		String[] ids = argv[count+2].split(",");
+        		String out = argv[count+3];
+        		
+        		// read BioPAX from the file
+				Model model = io.convertFromOWL(new FileInputStream(in));
+				
+				// get elements (entities)
+				Set<BioPAXElement> elements = new HashSet<BioPAXElement>();
+				for(Object id : ids) {
+					BioPAXElement e = model.getByID(id.toString());
+					if(e != null && (e instanceof Entity || e instanceof entity)) {
+						elements.add(e);
+					} else {
+						log.warn("Source element not found: " + id);
+					}
+				}
+				
+				// execute the 'nearest neighborhood' query
+				Set<BioPAXElement> result =  QueryExecuter
+					.runNeighborhood(elements, model, 1, true, true);
+				
+				// auto-complete/clone the results in a new model
+				// (this also cuts some less important edges, right?..)
+				Completer c = new Completer(io.getEditorMap());
+				result = c.complete(result, model);
+				Cloner cln = new Cloner(io.getEditorMap(), io.getFactory());
+				model = cln.clone(model, result); // new sub-model
+				
+				// export to OWL
+				SimpleExporter exporter = new SimpleExporter(model.getLevel());
+				exporter.convertToOWL(model, new FileOutputStream(out), ids);
             }
             
         }
@@ -294,6 +336,7 @@ public class PaxtoolsMain {
                 +   "                                                 " + "\t\tSearches database for participant id or uses biopax rdf id if database is \"NONE\".\n"
                 +   "                                                 " + "\t\tCross species check ensures participant protein is from same species as pathway (set to true or false).\n"
                 +	"--fetch file1 id1,id2,.. output" + 	"\t\textracts a sub-model from file1 and writes BioPAX to output\n"
+                +   "--get-neighbors file1 id1,id2,.. output" +	"\t\tnearest neighborhood graph query (id1,id2 - of Entity sub-class only)\n"
                 +   "--help" +								"\t\t\t\t\t\tprints this screen and exits"
             );
 
