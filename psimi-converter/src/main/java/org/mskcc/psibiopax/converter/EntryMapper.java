@@ -65,8 +65,10 @@ public class EntryMapper extends Thread {
 		GENETIC_INTERACTIONS.add("dosage growth defect");
 		GENETIC_INTERACTIONS.add("dosage lethality");
 		GENETIC_INTERACTIONS.add("dosage rescue");
+		GENETIC_INTERACTIONS.add("negative genetic");
 		GENETIC_INTERACTIONS.add("phenotypic enhancement");
 		GENETIC_INTERACTIONS.add("phenotypic suppression");
+		GENETIC_INTERACTIONS.add("positive genetic");
 		GENETIC_INTERACTIONS.add("synthetic growth defect");
 		GENETIC_INTERACTIONS.add("synthetic haploinsufficiency");
 		GENETIC_INTERACTIONS.add("synthetic lethality");
