@@ -15,7 +15,6 @@
 
     <modules>
         <module>paxtools-core</module>
-        <module>validator-client</module>
         <module>paxtools-jena-io</module>
         <module>paxtools-simple-io</module>
         <module>sif-converter</module>
