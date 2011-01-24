@@ -1,14 +1,13 @@
 package org.biopax.paxtools.io.sif.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.INTERACTS_WITH;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
@@ -19,6 +18,9 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
  */
 public class ParticipatesRule implements InteractionRuleL3
 {
+	
+	private final Log log = LogFactory.getLog(ParticipatesRule.class);
+	
 	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model,
 		Map options)
 	{
@@ -93,7 +95,13 @@ public class ParticipatesRule implements InteractionRuleL3
 		if (entity instanceof SimplePhysicalEntity)
 		{
 			EntityReference er2 = ((SimplePhysicalEntity) entity).getEntityReference();
-			createInteraction(er, er2, interactionSet, type, interaction);
+			if(er2 != null) {
+				createInteraction(er, er2, interactionSet, type, interaction);
+			} else {
+				if(log.isWarnEnabled())
+					log.warn("Skip processing the interaction of EntityReference " 
+						+ er + " with entity " + entity + ", which has NULL entityReference");
+			}
 		}
 		else if (entity instanceof Complex)
 		{
@@ -104,12 +112,11 @@ public class ParticipatesRule implements InteractionRuleL3
 		}
 	}
 
-	private void createInteraction(EntityReference er1,
-		EntityReference er2,
+	private void createInteraction(EntityReference er1, EntityReference er2,
 		Set<SimpleInteraction> set,
 		BinaryInteractionType type, Interaction interaction)
 	{
-		if (!er2.equals(er1))
+		if (er2 != null && er1 != null && !er2.equals(er1))
 		{
 			SimpleInteraction si = new SimpleInteraction(er1, er2, type);
 			si.extractPublications(interaction);

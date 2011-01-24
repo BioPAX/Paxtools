@@ -164,7 +164,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		if (feature.getFeatureOf().contains(this) ||
 		    feature.getNotFeatureOf().contains(this))
 		{
-			log.warn("Redundant attempt to set the inverse link!");
+			if(log.isWarnEnabled())
+				log.warn("Redundant attempt to set the inverse link!");
 
 		}
 		target.add(this);

@@ -4,12 +4,8 @@ package org.biopax.paxtools;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
+import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
-import org.biopax.paxtools.io.sif.level2.ComponentRule;
-import org.biopax.paxtools.io.sif.level2.ConsecutiveCatalysisRule;
-import org.biopax.paxtools.io.sif.level2.ControlRule;
-import org.biopax.paxtools.io.sif.level2.ControlsTogetherRule;
-import org.biopax.paxtools.io.sif.level2.ParticipatesRule;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.controller.*;
@@ -37,6 +33,7 @@ import java.util.Set;
  *  Avaliable operations:
  *      --merge file1 file2 output		merges file2 into file1 and writes it into output\n"
  *      --to-sif file1 output			converts model to simple interaction format
+ *      --to-sifnx file1 outEdges outNodes property1,property2,..		converts model to simple interaction format
  *      --validate path out xml|html	validates BioPAX model file (or all the files in the directory), outputs xml or html
  *      --integrate file1 file2 output	integrates file2 into file1 and writes it into output (experimental)
  *      --to-level3 file1 output		converts level 1 or 2 to the level 3 file
@@ -99,25 +96,24 @@ public class PaxtoolsMain {
 
                 Model model = getModel(io, argv[count+1]);
 
-                SimpleInteractionConverter sic = null;
-				if (BioPAXLevel.L2.equals(model.getLevel())) {
-					sic = new SimpleInteractionConverter(new ComponentRule(),
-							new ConsecutiveCatalysisRule(), new ControlRule(),
-							new ControlsTogetherRule(), new ParticipatesRule());
-				} else if (BioPAXLevel.L3.equals(model.getLevel())) {
-					sic = new SimpleInteractionConverter(
-							new org.biopax.paxtools.io.sif.level3.ComponentRule(),
-							new org.biopax.paxtools.io.sif.level3.ConsecutiveCatalysisRule(),
-							new org.biopax.paxtools.io.sif.level3.ControlRule(),
-							new org.biopax.paxtools.io.sif.level3.ControlsTogetherRule(),
-							new org.biopax.paxtools.io.sif.level3.ParticipatesRule());
-				} else {
-        			System.err.println("SIF converter does not yet support BioPAX level: " 
-        					+ model.getLevel());
-        			System.exit(0);
-				}
-				
+                SimpleInteractionConverter sic = 
+                	new SimpleInteractionConverter(SimpleInteractionConverter
+						.getRules(model.getLevel()).toArray(new InteractionRule[]{}));
+                
                 sic.writeInteractionsInSIF(model, new FileOutputStream(argv[count+2]));
+
+            } else if( argv[count].equals("--to-sifnx") ) {
+                if( argv.length <= count+4 )
+                    showHelp();
+
+                Model model = getModel(io, argv[count+1]);
+
+                SimpleInteractionConverter sic = 
+                	new SimpleInteractionConverter(SimpleInteractionConverter
+						.getRules(model.getLevel()).toArray(new InteractionRule[]{}));
+                
+                sic.writeInteractionsInSIFNX(model, new FileOutputStream(argv[count+2]), new FileOutputStream(argv[count+3]), 
+                		false, new SimpleEditorMap(model.getLevel()), argv[4].split(","));
 
             } else if( argv[count].equals("--validate") ) {
               	if(argv.length <= count+3) 
@@ -327,7 +323,8 @@ public class PaxtoolsMain {
                 +   "\n"
                 +   "Avaliable operations:\n"
                 +   "--merge file1 file2 output" +			"\t\tmerges file2 into file1 and writes it into output\n"
-                +   "--to-sif file1 output" +				"\t\t\tconverts model to simple interaction format\n"
+                +   "--to-sif file1 output" +				"\t\t\tconverts model to the simple interaction format\n"
+                +   "--to-sifnx file1 outEdges outNodes property1,property2,.." +	"\tconverts model to the extendent simple interaction format\n"
                 +   "--validate path out xml|html" +		"\t\tvalidates the BioPAX file (or all the files in the directory), outputs xml or html\n"
                 +   "--integrate file1 file2 output" +		"\t\tintegrates file2 into file1 and writes it into output (experimental)\n"
                 +   "--to-level3 file1 output"	+			"\t\tconverts level 1 or 2 to the level 3 file\n"

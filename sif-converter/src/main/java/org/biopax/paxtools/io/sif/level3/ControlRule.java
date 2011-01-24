@@ -1,5 +1,7 @@
 package org.biopax.paxtools.io.sif.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
@@ -20,6 +22,8 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.STATE_CHANGE;
  */
 public class ControlRule implements InteractionRuleL3
 {
+	private final Log log = LogFactory.getLog(ControlRule.class);
+	
 	public void inferInteractions(Set<SimpleInteraction> interactionSet,
 		Object entity,
 		Model model,
@@ -178,7 +182,13 @@ public class ControlRule implements InteractionRuleL3
 			//todo handle complexes
 			if (pe instanceof SimplePhysicalEntity)
 			{
-				enSet.add(((SimplePhysicalEntity) pe).getEntityReference());
+				EntityReference er = ((SimplePhysicalEntity) pe).getEntityReference();
+				if(er != null)
+					enSet.add(er);
+				else 
+					log.warn("SimplePhysicalEntity " + pe + 
+						" has NO (NULL) entityReference. " +
+							" (its interactions, if any, are likely to be ignored!)");
 			}
 		}
 		return enSet;
@@ -278,10 +288,16 @@ public class ControlRule implements InteractionRuleL3
 	{
 		Set<SimplePhysicalEntity> set = new HashSet<SimplePhysicalEntity>();
 
+		if(er == null) {
+			if(log.isWarnEnabled())
+				log.warn("Skipping ");
+			return set; // empty
+		}
+		
 		for (PhysicalEntity pe : pes)
 		{
 			if (pe instanceof SimplePhysicalEntity &&
-				((SimplePhysicalEntity) pe).getEntityReference().equals(er))
+				er.equals(((SimplePhysicalEntity) pe).getEntityReference()))
 			{
 				set.add((SimplePhysicalEntity) pe);
 			}
