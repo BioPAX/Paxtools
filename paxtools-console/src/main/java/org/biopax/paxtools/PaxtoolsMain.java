@@ -76,6 +76,19 @@ public class PaxtoolsMain {
                 SimpleExporter simpleIO = new SimpleExporter(model1.getLevel());
                 simpleIO.convertToOWL(model1, new FileOutputStream(argv[count+3]));
 
+            } else if( argv[count].equals("--excise") ) {
+                if( argv.length <= count+3 )
+                    showHelp();
+
+                Model model1 = getModel(io, argv[count+1]);
+                String rdfId = argv[count+2];
+
+                Excisor excisor = new Excisor(new SimpleEditorMap(model1.getLevel()));
+                Model model2 = excisor.excise(model1, model1.getByID());
+
+                SimpleExporter simpleIO = new SimpleExporter(model2.getLevel());
+                simpleIO.convertToOWL(model2, new FileOutputStream(argv[count+3]));
+
             } else if( argv[count].equals("--integrate") ) {
                 if( argv.length <= count+3 )
                     showHelp();
@@ -160,7 +173,7 @@ public class PaxtoolsMain {
 				OutputStream os = new FileOutputStream(out);
 				try {
 					if (!files.isEmpty()) {
-        				BiopaxValidatorClient val = 
+        				BiopaxValidatorClient val =
         					new BiopaxValidatorClient(null, isGetHtml);
         				val.validate(files.toArray(new File[]{}), os);
         			} 
@@ -324,6 +337,7 @@ public class PaxtoolsMain {
                 +   "Avaliable operations:\n"
                 +   "--merge file1 file2 output" +			"\t\tmerges file2 into file1 and writes it into output\n"
                 +   "--to-sif file1 output" +				"\t\t\tconverts model to the simple interaction format\n"
+                +   "--excise file1 elementID output" +		"\t\t\texcises the element with the elementID from file1 and writes it into output\n"
                 +   "--to-sifnx file1 outEdges outNodes property1,property2,.." +	"\tconverts model to the extendent simple interaction format\n"
                 +   "--validate path out xml|html" +		"\t\tvalidates the BioPAX file (or all the files in the directory), outputs xml or html\n"
                 +   "--integrate file1 file2 output" +		"\t\tintegrates file2 into file1 and writes it into output (experimental)\n"
