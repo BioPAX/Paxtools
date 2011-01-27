@@ -76,19 +76,6 @@ public class PaxtoolsMain {
                 SimpleExporter simpleIO = new SimpleExporter(model1.getLevel());
                 simpleIO.convertToOWL(model1, new FileOutputStream(argv[count+3]));
 
-            } else if( argv[count].equals("--excise") ) {
-                if( argv.length <= count+3 )
-                    showHelp();
-
-                Model model1 = getModel(io, argv[count+1]);
-                String rdfId = argv[count+2];
-
-                Excisor excisor = new Excisor(new SimpleEditorMap(model1.getLevel()));
-                Model model2 = excisor.excise(model1, model1.getByID());
-
-                SimpleExporter simpleIO = new SimpleExporter(model2.getLevel());
-                simpleIO.convertToOWL(model2, new FileOutputStream(argv[count+3]));
-
             } else if( argv[count].equals("--integrate") ) {
                 if( argv.length <= count+3 )
                     showHelp();
