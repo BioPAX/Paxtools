@@ -273,6 +273,7 @@ public class PaxtoolsMain {
         		
 				Model model = io.convertFromOWL(new FileInputStream(in));
 				SimpleExporter exporter = new SimpleExporter(model.getLevel());
+				// extract and save the sub-model (defined by ids)
 				exporter.convertToOWL(model, new FileOutputStream(out), ids);
             } else if( argv[count].equals("--get-neighbors") ) {
                 if( argv.length <= count+3 )
@@ -308,9 +309,14 @@ public class PaxtoolsMain {
 				Cloner cln = new Cloner(io.getEditorMap(), io.getFactory());
 				model = cln.clone(model, result); // new sub-model
 				
-				// export to OWL
-				SimpleExporter exporter = new SimpleExporter(model.getLevel());
-				exporter.convertToOWL(model, new FileOutputStream(out), ids);
+				if(model != null) {
+					log.info("Elements in the result model: " + model.getObjects().size());
+					// export to OWL
+					SimpleExporter exporter = new SimpleExporter(model.getLevel());
+					exporter.convertToOWL(model, new FileOutputStream(out));
+				} else {
+					log.error("NULL model returned.");
+				}
             }
             
         }
@@ -324,8 +330,7 @@ public class PaxtoolsMain {
                 +   "Avaliable operations:\n"
                 +   "--merge file1 file2 output" +			"\t\tmerges file2 into file1 and writes it into output\n"
                 +   "--to-sif file1 output" +				"\t\t\tconverts model to the simple interaction format\n"
-                +   "--excise file1 elementID output" +		"\t\t\texcises the element with the elementID from file1 and writes it into output\n"
-                +   "--to-sifnx file1 outEdges outNodes property1,property2,.." +	"\tconverts model to the extendent simple interaction format\n"
+                +   "--to-sifnx file1 outEdges outNodes prop1,prop2,.." +	"\tconverts model to the extendent simple interaction format\n"
                 +   "--validate path out xml|html" +		"\t\tvalidates the BioPAX file (or all the files in the directory), outputs xml or html\n"
                 +   "--integrate file1 file2 output" +		"\t\tintegrates file2 into file1 and writes it into output (experimental)\n"
                 +   "--to-level3 file1 output"	+			"\t\tconverts level 1 or 2 to the level 3 file\n"
