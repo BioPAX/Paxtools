@@ -1,5 +1,7 @@
 package org.biopax.paxtools.io.sif.level2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
@@ -17,7 +19,20 @@ import java.util.Set;
  */
 public class ParticipatesRule implements InteractionRuleL2
 {
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
+	private long threshold;
+    private static Log log = LogFactory.getLog(ComponentRule.class);
+
+    public ParticipatesRule()
+    {
+        this(Integer.MAX_VALUE);
+    }
+
+    public ParticipatesRule(int threshold)
+    {
+      this.threshold = threshold;
+
+    }
+    public void inferInteractions(Set<SimpleInteraction> interactionSet,
 		Object entity,
 		Model model, Map options)
 	{
@@ -70,10 +85,17 @@ public class ParticipatesRule implements InteractionRuleL2
 			}
 
 			Set<InteractionParticipant> ips = interaction.getPARTICIPANTS();
-			for (InteractionParticipant ip : ips)
-			{
-				processParticipant(interactionSet, pe, ip, type, interaction);
-			}
+            if(ips.size()>threshold)
+            {
+                log.warn("The size of participants is too large! Skipping");
+            }
+            else
+            {
+                for (InteractionParticipant ip : ips)
+                {
+                    processParticipant(interactionSet, pe, ip, type, interaction);
+                }
+            }
 		}
 	}
 

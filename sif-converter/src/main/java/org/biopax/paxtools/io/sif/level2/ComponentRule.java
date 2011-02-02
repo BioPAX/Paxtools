@@ -1,5 +1,7 @@
 package org.biopax.paxtools.io.sif.level2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
@@ -7,6 +9,7 @@ import org.biopax.paxtools.model.level2.complex;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,22 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.IN_SAME_COMPONENT
  */
 public class ComponentRule implements InteractionRuleL2
 {
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
+    private long threshold;
+    private static Log log = LogFactory.getLog(ComponentRule.class);
+
+    public ComponentRule()
+    {
+        this(Integer.MAX_VALUE);
+    }
+
+    public ComponentRule(int threshold)
+    {
+      this.threshold = threshold;
+
+    }
+
+
+    public void inferInteractions(Set<SimpleInteraction> interactionSet,
 		Object entity,
 		Model model, Map options)
 	{
@@ -91,7 +109,7 @@ public class ComponentRule implements InteractionRuleL2
         if (mostOuter && (!options.containsKey(IN_SAME_COMPONENT) ||
                 options.get(IN_SAME_COMPONENT).equals(Boolean.TRUE))) {
             // Iterate other members for components_of_same_complex rule
-            processComplexMembers(interactionSet, A, comp);
+            processComplexMembers(interactionSet, A, comp, 0);
         }
     }
 
@@ -103,17 +121,26 @@ public class ComponentRule implements InteractionRuleL2
      * @param interactionSet repository of rules
      * @param pe             A
      * @param comp           common complex
+     * @param size           threshold control
      */
     private void processComplexMembers(Set<SimpleInteraction> interactionSet,
                                        physicalEntity pe,
-                                       complex comp) {
-        for (physicalEntityParticipant pep : comp.getCOMPONENTS()) {
+                                       complex comp, int size) {
+
+
+        Set<physicalEntityParticipant> components = comp.getCOMPONENTS();
+        if((size +=components.size()) >threshold)
+        {
+            log.warn("This complex is too large. Quitting");
+            return;
+        }
+        for (physicalEntityParticipant pep : components) {
             physicalEntity member = pep.getPHYSICAL_ENTITY();
 
             if (pe != member) {
                 if (member instanceof complex) {
                     // recursive call for inner complex
-                    processComplexMembers(interactionSet, pe, (complex) member);
+                    processComplexMembers(interactionSet, pe, (complex) member, size);
                 } else {
                     // rule generation for simple member
                     SimpleInteraction si = new SimpleInteraction(pe,
