@@ -3,6 +3,7 @@ package org.biopax.paxtools.io.sif.level2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.MaximumInteractionThresholdExceedException;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.complex;
@@ -29,16 +30,22 @@ public class ComponentRule implements InteractionRuleL2
 {
     private long threshold;
     private static Log log = LogFactory.getLog(ComponentRule.class);
+    boolean suppressExceptions;
 
     public ComponentRule()
     {
-        this(Integer.MAX_VALUE);
+        this(Integer.MAX_VALUE, false);
     }
 
     public ComponentRule(int threshold)
     {
-      this.threshold = threshold;
+        this(threshold, false);
+    }
 
+    public ComponentRule(int threshold, boolean suppressExceptions)
+    {
+      this.threshold = threshold;
+      this.suppressExceptions = suppressExceptions;
     }
 
 
@@ -132,7 +139,10 @@ public class ComponentRule implements InteractionRuleL2
         if((size +=components.size()) >threshold)
         {
             log.warn("This complex is too large. Quitting");
-            return;
+            if(suppressExceptions)
+                        return;
+            else
+                throw new MaximumInteractionThresholdExceedException(pe.toString());
         }
         for (physicalEntityParticipant pep : components) {
             physicalEntity member = pep.getPHYSICAL_ENTITY();
