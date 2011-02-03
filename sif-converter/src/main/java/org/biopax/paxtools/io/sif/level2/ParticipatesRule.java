@@ -97,6 +97,7 @@ public class ParticipatesRule implements InteractionRuleL2
 			Set<InteractionParticipant> ips = interaction.getPARTICIPANTS();
             if(ips.size()>threshold)
             {
+                log.warn("The size of participants is too large! Skipping");
                 if(suppressExceptions)
                             return;
                 else

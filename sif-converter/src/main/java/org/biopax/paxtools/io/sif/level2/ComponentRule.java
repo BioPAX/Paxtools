@@ -138,7 +138,7 @@ public class ComponentRule implements InteractionRuleL2
         Set<physicalEntityParticipant> components = comp.getCOMPONENTS();
         if((size +=components.size()) >threshold)
         {
-            log.warn("This complex is too large. Quitting");
+            log.warn("This complex is too large. Skipping");
             if(suppressExceptions)
                         return;
             else
