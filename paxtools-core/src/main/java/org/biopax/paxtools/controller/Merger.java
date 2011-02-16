@@ -149,10 +149,14 @@ public class Merger implements Visitor
 		// do nothing if you already inserted this
 		if (!target.contains(bpe))
 		{
-			//if there is an identical
-
+			//if there is an identical (in fact, "equal") object
 			BioPAXElement ibpe = target.getByID(bpe.getRDFId());
 			if (ibpe != null && ibpe.equals(bpe))
+			/* - ibpe.equals(bpe) can be 'false' here, because, 
+			 * even though the above !target.contains(bpe) is true,
+			 * it probably compared objects using '==' operator
+			 * (see the ModelImpl for details)
+			 */
 			{
 				updateObjectFields(bpe, ibpe, target);
 				// We have a merged element, add it into the tracker
@@ -196,7 +200,7 @@ public class Merger implements Visitor
 	/**
 	 * Updates each value of <em>existing</em> element, using the value(s) of <em>update</em>.
 	 *
-	 * @param update   BioPAX element of which values are ued for update
+	 * @param update   BioPAX element of which values are used for update
 	 * @param existing BioPAX element to be updated
 	 * @param target
 	 */

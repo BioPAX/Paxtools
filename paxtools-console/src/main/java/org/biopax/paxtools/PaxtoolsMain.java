@@ -33,7 +33,7 @@ import java.util.Set;
  *  Avaliable operations:
  *      --merge file1 file2 output		merges file2 into file1 and writes it into output\n"
  *      --to-sif file1 output			converts model to simple interaction format
- *      --to-sifnx file1 outEdges outNodes property1,property2,..		converts model to simple interaction format
+ *      --to-sifnx file1 outEdges outNodes property1,property2,..		converts model to simple interaction format extended
  *      --validate path out xml|html	validates BioPAX model file (or all the files in the directory), outputs xml or html
  *      --integrate file1 file2 output	integrates file2 into file1 and writes it into output (experimental)
  *      --to-level3 file1 output		converts level 1 or 2 to the level 3 file

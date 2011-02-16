@@ -307,6 +307,12 @@ public class ModelImpl implements Model
 		}
 	}
 
+    /* 
+     * TODO for safety, updating ID has to be done by replacing the element rather than modifying it...
+     * 
+     * (non-Javadoc)
+     * @see org.biopax.paxtools.model.Model#updateID(java.lang.String, java.lang.String)
+     */
 	public synchronized void updateID(String oldID, String newID) {
 		if (this.containsID(oldID)) {
 			BioPAXElement bpe = getByID(oldID);

@@ -2,9 +2,6 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-
 public class PropertySetCommand extends AbstractPropertyCommand
 {
 	private Object oldValue;

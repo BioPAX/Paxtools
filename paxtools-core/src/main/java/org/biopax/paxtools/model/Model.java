@@ -146,6 +146,9 @@ public interface Model extends Serializable
      * Updates BioPAX element's ID
      * and the model's internal id map.
      * 
+     * Warning: this potentially (depending on the implementation) 
+     * can make other models (that contain the element) inconsistent!
+     * 
      * @param oldID
      * @param newID
      */
