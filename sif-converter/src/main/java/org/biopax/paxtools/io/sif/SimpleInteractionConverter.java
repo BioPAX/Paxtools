@@ -70,9 +70,12 @@ public class SimpleInteractionConverter
 					catch (Exception e)
 					{
 						log.error("Exception while applying rule :" +
-							this.getClass().getSimpleName() +
-							"to the element: " +
-							pe.getRDFId(), e);
+								  this.getClass().getSimpleName() +
+								  "to the element: " +
+								  pe.getRDFId(), e);
+						if (e instanceof MaximumInteractionThresholdExceedException) {
+							throw (MaximumInteractionThresholdExceedException)e;
+						}
 					}
 				}
 			}
@@ -103,9 +106,12 @@ public class SimpleInteractionConverter
 					catch (Exception e)
 					{
 						log.error("Exception while applying rule :" +
-							this.getClass().getSimpleName() +
-							"to the element: " +
-							er.getRDFId(), e);
+								  this.getClass().getSimpleName() +
+								  "to the element: " +
+								  er.getRDFId(), e);
+						if (e instanceof MaximumInteractionThresholdExceedException) {
+							throw (MaximumInteractionThresholdExceedException)e;
+						}
 					}
 				}
 			}
