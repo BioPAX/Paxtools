@@ -1,31 +1,37 @@
 package org.biopax.paxtools.controller;
 
+import org.apache.commons.collections15.set.CompositeSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.EntityReference;
-import org.biopax.paxtools.model.level3.Named;
-import org.biopax.paxtools.model.level3.XReferrable;
-import org.biopax.paxtools.model.level3.Xref;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This is a simple BioPAX merger, a utility class to merge one 
- * (normalized) biopax model into the other, 
- * based on the RDFId (URI) identity.
+ * This is a "simple" BioPAX merger, a utility class to merge one 
+ * BioPAX model (source) into the other (target), based on the RDFId (URI) identity. 
+ * Merging of normalized, self-consistent models normally gives the best (self-consistent) result.
  * <p/>
- * Note that it skips (does not copy "source" elements to "target" nor - update/merge their object properties)
- * if the target (model) has got the elements with the same IDs (thus only new elements are copied and refreshed).
+ * Note, "based on the RDFId (URI) identity" means that it skips, i.e., does not copy 
+ * a source's element to the target (model) nor updates sources' object properties, if the 
+ * target contains the element with the same RDFId. However, where required, 
+ * it will update (re-wire) all the object properties within the target model afterwards 
+ * - to make sure they do not refer to the skipped objects (from "source") anymore.
  * <p/>
+ * Note also that this merger does not preserve the integrity of the passed models! 
+ * 'Target' will be a merged model (and often becomes "more integral"), and 'source' 
+ * may become "unusable" (in fact, - still somewhat usable, but modified for sure, 
+ * with some of its elements' object properties now refer to the "target" model elements).
  * <p/>
- * Note also that this merger does not preserve the integrity of the passed models! 'Target' will be a
- * merged model and 'source' may become unusable.
- * <p/>
- * Use With Care!
+ * Finally, although called Simple Merger, it is in fact an advanced BioPAX utility, 
+ * which should be used wisely. Otherwise, it can actually waste resources. 
+ * So consider using model.add(..), model.addNew(..) approach first (or instead), 
+ * especially, when you're adding "new" things (ID not present in the target model), 
+ * or/and target model does not contain any references to the source or another one, etc.
  */
 public class SimpleMerger
 {
@@ -41,87 +47,107 @@ public class SimpleMerger
 		this.map = map;
 	}
 
-
+	
 	/**
-	 * Merges the <em>source</em> model into <em>target</em> model.
+	 * Merges the <em>source</em> models into <em>target</em> model.
+	 * When no sources provided, it will just refresh all the object properties
+	 * in the target model (this may actually fix dangling values, and generates useful logs)
+	 *
+	 * Note: both target and source models (would be nice to believe but) 
+	 * are not necessarily self-consistent, i.e.,  
+	 * may already have cross-links and dangling elements...
 	 *
 	 * @param target model into which merging process will be done
-	 * @param source model that is going to be merged with <em>target</em>
+	 * @param sources models, if any, that are going to be merged with <em>target</em>
 	 */
-	public void merge(Model target, Model source)
+	public void merge(Model target, Model... sources) {
+		CompositeSet<BioPAXElement> objects = new CompositeSet<BioPAXElement>();
+		/* collect all the objects and then merge at once 
+		 * (do not merge for each model separately: this is not only less expensive 
+		 * but also more reliable approach, because models may in fact overlap!)
+		 */
+		for (Model source : sources) {
+			if (source != null) {
+				objects.addComposited(source.getObjects());
+			}
+		}
+		merge(target, objects.toCollection());
+	}
+	
+	
+	/**
+	 * Merges the <em>elements</em> into <em>target</em> model.
+	 * When no elements provided, it will refresh all the object properties
+	 * in the target model (this may actually fix dangling values)
+	 *
+	 * Note: both target and source models (would be nice to believe but) 
+	 * are not necessarily self-consistent, i.e.,  
+	 * may already have cross-links and dangling elements...
+	 *
+	 * @param target model into which merging process will be done
+	 * @param elements elements, if any, that are going to be merged with <em>target</em>
+	 */
+	public void merge(Model target, Collection<? extends BioPAXElement> elements) 
 	{
-		// this may work not as expected for some Models...
-		if (!(target instanceof ModelImpl))
-		{
-			log.warn("'target': using user's Model implementation, "
-			         + target.getClass().getCanonicalName());
-		}
-		if (!(source instanceof ModelImpl))
-		{
-			log.warn("'source': using user's Model implementation,"
-			         + source.getClass().getCanonicalName());
-		}
-
-		// get all the objects from source, iterate
-		Set<BioPAXElement> sourceElements = source.getObjects();
-		for (BioPAXElement bpe : sourceElements)
-		{
-			BioPAXElement paxElement = target.getByID(bpe.getRDFId());
-			/* 
-			 * if there is present the element with the same id, skip,
-			 * do not merge this one (see the warning below...)
+		for (BioPAXElement bpe : elements) {
+			BioPAXElement targetElement = target.getByID(bpe.getRDFId());
+			/*
+			 * if there is present the element with the same id, skip, do not
+			 * merge this one (see the warning below...)
 			 */
-			if (paxElement == null)
-			{
+			if (targetElement == null) {
 				target.add(bpe);
-				/* Warning: 
-				 * concrete target Model implementations
-				 * may add not only 'bpe' but also
-				 * all its dependents (using cascades/recursion); 
-				 * it might also override target's properties
-				 * with the corresponding ones from the source, 
-				 * even though SimpleMerger avoids this; 
-				 * also, is such cases, the number of times
-				 * this loop body is called can be less that
-				 * the number of elements in sourceElements set 
-				 * that were't originally present in the target 
-				 * model, or - even equals to one)
+				/*
+				 * Warning: concrete target Model implementations may add not
+				 * only 'bpe' but also all its dependents (using
+				 * cascades/recursion); it might also override target's
+				 * properties with the corresponding ones from the source, even
+				 * though SimpleMerger tends to avoid this; also, is such cases,
+				 * the number of times this loop body is called can be less that
+				 * the number of elements in sourceElements set that were't
+				 * originally present in the target model, or - even equals to
+				 * one)
 				 */
 			}
 		}
 		
-		// Now that target model has all the unique IDs from both models,
-		// "re-wire" object relationships:
-		
-		/*
-		 * One may think she could iterate over 
-		 * newly added elements only.., but, in fact,
-		 * life is tricky, and models can be inconsistent, 
-		 * and a 'target' model's element may have already
-		 * pointed to a 'source' element, and vice versa...
+		/* Now that target model has all the IDs from both models
+		 * (might also have an object property value that is not yet added to the model!)
+		 * let's "re-wire" object relationships.
 		 * 
-		 * So, we'll refresh the objects properties (re-link to target's) 
-		 * for not only those just added elements, but also (and at least) all 'source' elements!
-		 * (doing this for all 'target' could catch more fish but would be wasting of resources 
-		 * in 99% of situations that I can imagine...)
+		 * Remark: one may think she could iterate over 
+		 * newly added elements only.., but, in fact,
+		 * things are way more tricky (models intersect)...
+		 * So, we are going to refresh the objects properties (re-link to 'target') 
+		 * not only for just added elements, nor even for all source elements, 
+		 * but - for all 'target' elements!
 		 */
-		for (BioPAXElement bpe : sourceElements)
+		for (BioPAXElement targetElement : target.getObjects())
 		{
-			updateObjectFields(bpe, target);
+			updateObjectFields(targetElement, target);
 		}
 	}
 
+	
 	/**
-	 * Merges the <em>source</em> element and its "downstream" dependents into <em>target</em> model.
+	 * Merges the <em>source</em> element (and its "downstream" dependents) 
+	 * into <em>target</em> model if its RDFId is not yet there. 
+	 * 
+	 * Dependents, though, are not explicitly added to the target model, 
+	 * but the corresponding object properties of the element either 
+	 * become magically 'fixed' (point to target's elements if found) 
+	 * or "dangling" (not null though, but still refer to external objects,
+	 * which simply will be skipped if one exports to OWL using 
+	 * e.g. org.biopax.paxtools.io.simpleIO.SimpleExporter).
+	 * The same apply to other merge methods in this class.
 	 *
 	 * @param target
 	 * @param source
+	 * 
 	 */
 	public void merge(Model target, BioPAXElement source)
 	{
-		Model m = map.getLevel().getDefaultFactory().createModel();
-		(new Fetcher(map)).fetch(source, m);
-		merge(target, m);
+		merge(target, Collections.singleton(source));
 	}
 
 
@@ -165,10 +191,40 @@ public class SimpleMerger
 			BioPAXElement newValue = target.getByID(value.getRDFId());
 			if (newValue == null)
 			{
-				throw new IllegalStateException("Target model must " +
-				                                "have got the element with id=" + value.getRDFId()
-				                                + " at this point, but getById returned null!");
+				log.warn("Target model does not have id=" + value.getRDFId()
+				         + " (that aslo means, the value wasn't in the 'source' model);"
+				         + " won't touch this (note: when exporting to OWL, " 
+				         + "this 'dangling' property becomes empty)");
+				return;
 			}
+			
+			if(!newValue.isEquivalent(value)) {
+				// are they at least of the same type?
+				if(newValue.getModelInterface().equals(value.getModelInterface())) {
+					String msg = "Target object value: " 
+						+ newValue + " (" + newValue.getModelInterface().getSimpleName() 
+						+ "), with the same RDFId (" + newValue.getRDFId() + "), "
+						+ " might have a DIFFERENT semantics/type from the source's: " 
+						+ value + " (" + value.getModelInterface().getSimpleName() + ")!";
+					log.error(msg); // but we can live with it
+					
+					// TODO shall we keep/copy at least something from the old value?
+					/*//not sure.., it's risky: biting own tail is highly possible...
+					if(newValue instanceof XReferrable 
+						&& value instanceof XReferrable) {
+						for(Xref x : ((XReferrable)value).getXref()) {
+							((XReferrable) newValue).addXref(x);
+						}
+						((XReferrable) newValue).getComment()
+							.addAll(((XReferrable) value).getComment());
+						if(newValue instanceof Named) {
+							((Named)newValue).getName().addAll(((Named)value).getName());
+						}
+					}
+					*/
+				} //else - nothing - exception will be thrown below, anyway!
+			}
+			
 			if (editor.isMultipleCardinality())
 			{
 				editor.removeValueFromBean(value, update);
@@ -177,139 +233,4 @@ public class SimpleMerger
 		}
 	}
 
-	
-	/**
-	 * This method either puts the new element under the required ID 
-	 * (updates if the old ID different) to the model or removes the
-	 * (old) element and uses another existing one (with the specified ID) instead
-	 * (it then updates the internal object references as well)
-	 * 
-	 * @param target - Model
-	 * @param bpe - element to update (must be present in the model)
-	 * @param targetRdfid - the ID to use (another element in the model might have the same ID; then the element will be wisely ignored)
-	 * @return
-	 */
-	public void merge(final Model target, final BioPAXElement bpe, final String targetRdfid) 
-	{	
-		// anything to do at all?
-		if(bpe == null || targetRdfid == null 
-			|| "".equals(targetRdfid.trim())) 
-		{
-			if(log.isWarnEnabled())
-				log.warn("Won't update (null or empty element/ID argument)!");
-			return;
-		}
-				
-		String currentId = bpe.getRDFId();
-		
-		// if the target model contains the (target) element/ID
-		final BioPAXElement v = target.getByID(targetRdfid);
-		if(v == bpe) { 
-			// the element is already there known under the targetID
-			assert(currentId.equals(targetRdfid)); // hardly possible otherwise... ;)
-			// nothing to do except for the quick fix... (and if java assersions are off)
-			if(!currentId.equals(targetRdfid)) {
-				log.error("model.idMap: key is not in sync with the value bpe's rdfid!");
-				bpe.setRDFId(targetRdfid);
-			}
-		} 
-		else if(v != null) { 
-			// model does contain a different (from bpe) object with the required targetID 
-			
-			/* we could simply set the new ID and use merge(model, bpe) method, 
-			 * but must take extra care about the not equivalent replacement 
-			 * and the situation when elements in the target model refer to this bpe elememnt 
-			 * as well as its replacement 'v'! 
-			 * It's possible for inconsistent models (linking to external elements...)
-			 */
-			
-			// we'll use that existing element as the replacement for the bpe...
-			if(log.isInfoEnabled())
-				log.info("Target element found! " +
-					"Now re-setting object properties to "
-					+ v + " ("+ targetRdfid + ") from " 
-					+ bpe + " (" + bpe.getRDFId() + "), where found");
-			
-			// TODO do our best for not equivalent elements (it may happen...)
-			if(!v.isEquivalent(bpe)) {
-				String msg = "Resulting (target) element: " +
-				v + " (" + v.getRDFId() + ", " + v.getModelInterface().getSimpleName()
-				+ ") MIGHT be of a DIFFERENT type or semantics from: " + 
-				bpe + " (" + bpe.getRDFId() + ", " + bpe.getModelInterface().getSimpleName() 
-				+ ")!";
-				// are they at least of the same type?
-				if(v.getModelInterface().equals(bpe.getModelInterface())) {
-					log.error(msg); // can live with it
-
-					 // TODO what about things like Uniprot isoforms (e.g., Q9BVL2-2)?
-					
-					 // TODO think to skip it at all, but for now - will copy names, xrefs, and comments
-					if(v instanceof XReferrable 
-						&& bpe instanceof XReferrable) { // the second is for sure ;)
-						// copy at least something...
-						for(Xref x : ((XReferrable)bpe).getXref()) {
-							((XReferrable) v).addXref(x);
-						}
-						
-						((XReferrable) v).getComment()
-							.addAll(((XReferrable) bpe).getComment());
-						
-						if(v instanceof Named) {
-							((Named)v).getName().addAll(((Named)bpe).getName());
-						}
-					}
-				} else {
-					throw new RuntimeException(msg); // too bad!
-				}
-			}
-			
-			AbstractTraverser traverser = new AbstractTraverser(map) {
-				@Override
-				protected void visit(Object range, BioPAXElement domain, Model model,
-						PropertyEditor editor) {
-					if(editor instanceof ObjectPropertyEditor && bpe.equals(range)) {
-						// replaces the reference to 'bpe' (range) with the 'v'
-						if(editor.isMultipleCardinality()) {
-							editor.removeValueFromBean(bpe, domain);
-						}
-						editor.setValueToBean(v, domain);
-						if(log.isDebugEnabled()) {
-							log.debug("Replaced " + bpe.getRDFId() + 
-								" with " + v.getRDFId() + "; " + editor.toString() + 
-								"; (domain) bean: " + domain);
-						}
-					}
-				}
-			};
-			
-			// traverse starting from each "parent" object
-			for(BioPAXElement element : target.getObjects()) {
-				traverser.traverse(element, target);
-			}
-			// remove the (now dangling) object
-			target.remove(bpe);
-			
-			// smoke test...
-			if(bpe instanceof Xref)
-				assert(((Xref)bpe).getXrefOf().isEmpty());
-			else if(bpe instanceof EntityReference)
-				assert(((EntityReference)bpe).getEntityReferenceOf().isEmpty());
-		} 
-		else if(target.contains(bpe)) { 
-			// replace ID of existing object
-			target.updateID(bpe.getRDFId(), targetRdfid);
-		} else {
-			/* 
-			 * it's a new object (which, by the way, may still refer to target's elements), 
-			 * which also requires the new ID to be set
-			 */
-			if(log.isInfoEnabled())
-				log.info("The target model does not have neither element: " +
-					bpe + " nor ID: " + targetRdfid +
-					"; so we'll update the ID for the element " +
-					"and merge it to the model.");
-			bpe.setRDFId(targetRdfid);
-			merge(target, bpe);
-		}
-	}
 }

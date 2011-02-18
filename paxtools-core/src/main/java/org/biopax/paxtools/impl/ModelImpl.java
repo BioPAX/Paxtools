@@ -138,6 +138,11 @@ public class ModelImpl implements Model
 	{
 		BioPAXElement deleted = this.idMap.remove(aBioPAXElement.getRDFId());
 		
+		/* note: idMap.values().remove(aBioPAXElement) would delete it for sure
+		 * but... what if its RDFId does not match the corresponding key in the idMap?
+		 * So, we go another way (see below) ;-)
+		 */
+		
 		// inconsistent/intermediate model may have
 		if( deleted == null) {
 			// model stores aBioPAXElement under different ID, doesn't it?
