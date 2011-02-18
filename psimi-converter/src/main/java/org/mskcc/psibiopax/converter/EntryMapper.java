@@ -74,6 +74,9 @@ public class EntryMapper extends Thread {
 		GENETIC_INTERACTIONS.add("synthetic lethality");
 		GENETIC_INTERACTIONS.add("synthetic rescue");
 	}
+	// as of BioGRID v3.1.72 (at least), genetic interaction code can reside
+	// as an attribute of the Interaction via "BioGRID Evidence Code" key
+	private static final String BIOGRID_EVIDENCE_CODE = "BioGRID Evidence Code";
 
 	/**
 	 * Ref to random number generator
@@ -261,7 +264,20 @@ public class EntryMapper extends Thread {
 		Map<Participant, BioPAXElement> psimiParticipantToBiopaxParticipantMap =
 			new HashMap<Participant, BioPAXElement>();
 
-		// experiment data - get it here, because it will help us determine if interaciton is genetic
+		// as of BioGRID v3.1.72 (at least), genetic interaction code can reside
+		// as an attribute of the Interaction via "BioGRID Evidence Code" key
+		if (interaction.hasAttributes()) {
+			for (Attribute attribute : interaction.getAttributes()) {
+				if (attribute.getName().equalsIgnoreCase(BIOGRID_EVIDENCE_CODE)) {
+					String value = (attribute.hasValue()) ? attribute.getValue().toLowerCase() : "";
+					if (GENETIC_INTERACTIONS.contains(value)) {
+						return;
+					}
+				}
+			}
+		}
+
+		// experiment data - get it here, because it will help us determine if interaction is genetic
 		Set<BioPAXElement> bpEvidence = getExperimentalData(interaction, psimiParticipantToBiopaxParticipantMap);
 
 		// don't add genetic interactions to file (at least biogrid will be affected 1/6/09)
