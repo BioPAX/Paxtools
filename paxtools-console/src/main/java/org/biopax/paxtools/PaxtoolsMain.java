@@ -59,6 +59,7 @@ public class PaxtoolsMain {
         }
 
         BioPAXIOHandler io = new SimpleReader();
+        ((SimpleReader)io).mergeDuplicates(true);
         
         for(int count = 0; count < argv.length; count++) {
             if( argv[count].equals("--help") ) {

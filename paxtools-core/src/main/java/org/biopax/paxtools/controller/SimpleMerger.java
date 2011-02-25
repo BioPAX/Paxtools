@@ -122,7 +122,8 @@ public class SimpleMerger
 		 * not only for just added elements, nor even for all source elements, 
 		 * but - for all 'target' elements!
 		 */
-		for (BioPAXElement targetElement : target.getObjects())
+		Set<BioPAXElement> targetObjs = new HashSet<BioPAXElement>(target.getObjects());
+		for (BioPAXElement targetElement : targetObjs)
 		{
 			updateObjectFields(targetElement, target);
 		}
@@ -192,9 +193,11 @@ public class SimpleMerger
 			if (newValue == null)
 			{
 				log.warn("Target model does not have id=" + value.getRDFId()
-				         + " (that aslo means, the value wasn't in the 'source' model);"
-				         + " won't touch this (note: when exporting to OWL, " 
-				         + "this 'dangling' property becomes empty)");
+					+ " (that aslo means, the value wasn't in the 'source' model);"
+					//+ " won't touch this (but when exporting to OWL, this 'dangling' property becomes empty)"
+					+ " adding it now!"
+					);
+				target.add(value);
 				return;
 			}
 			
@@ -207,21 +210,6 @@ public class SimpleMerger
 						+ " might have a DIFFERENT semantics/type from the source's: " 
 						+ value + " (" + value.getModelInterface().getSimpleName() + ")!";
 					log.error(msg); // but we can live with it
-					
-					// TODO shall we keep/copy at least something from the old value?
-					/*//not sure.., it's risky: biting own tail is highly possible...
-					if(newValue instanceof XReferrable 
-						&& value instanceof XReferrable) {
-						for(Xref x : ((XReferrable)value).getXref()) {
-							((XReferrable) newValue).addXref(x);
-						}
-						((XReferrable) newValue).getComment()
-							.addAll(((XReferrable) value).getComment());
-						if(newValue instanceof Named) {
-							((Named)newValue).getName().addAll(((Named)value).getName());
-						}
-					}
-					*/
 				} //else - nothing - exception will be thrown below, anyway!
 			}
 			
