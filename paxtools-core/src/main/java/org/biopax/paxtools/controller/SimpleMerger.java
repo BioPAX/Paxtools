@@ -192,7 +192,7 @@ public class SimpleMerger
 			BioPAXElement newValue = target.getByID(value.getRDFId());
 			if (newValue == null)
 			{
-				log.warn("Target model does not have id=" + value.getRDFId()
+				log.info("Target model does not have id=" + value.getRDFId()
 					+ " (that aslo means, the value wasn't in the 'source' model);"
 					//+ " won't touch this (but when exporting to OWL, this 'dangling' property becomes empty)"
 					+ " adding it now!"

@@ -140,7 +140,7 @@
                 <site>
                     <id>sourceforge.net</id>
                     <name>BioPAX Sourceforge site</name>
-                    <url>scp://emekdemir@shell.sourceforge.net/home/groups/b/bi/biopax/htdocs/paxtools</url>
+                    <url>scp://emekdemir@shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>
                 </site>
             </distributionManagement>
             <properties>
@@ -227,17 +227,17 @@
 		<site>
 			<id>biopax.sf.net</id>
 			<name>BioPAX Sourceforge site</name>
-			<url>scp://shell.sourceforge.net/home/groups/b/bi/biopax/htdocs/paxtools</url>
+			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>
 		</site>
 		<snapshotRepository>
 			<id>biopax.snapshots</id>
 			<name>BioPAX Snapshots Repository</name>
-			<url>scp://shell.sourceforge.net/home/groups/b/bi/biopax/htdocs/m2repo/snapshots</url>
+			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots</url>
 		</snapshotRepository>
 		<repository>
 			<id>biopax.releases</id>
 			<name>BioPAX Releases Repository</name>
-			<url>>scp://shell.sourceforge.net/home/groups/b/bi/biopax/htdocs/m2repo/releases</url>
+			<url>>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases</url>
 		</repository>
 	</distributionManagement>
 	
