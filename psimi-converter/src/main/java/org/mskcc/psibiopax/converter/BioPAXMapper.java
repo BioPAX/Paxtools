@@ -33,7 +33,6 @@ import org.biopax.paxtools.model.*;
 
 import java.util.Set;
 import java.util.List;
-import java.math.BigInteger;
 
 /**
  * An interface which provides methods to query a Paxtools model.
