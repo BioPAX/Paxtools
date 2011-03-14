@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://biopax.org/validator/2.0/schema" xmlns:tns="http://biopax.org/validator/2.0/schema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="validatorResponse" type="tns:ValidatorResponse"/>
+
+  <xs:complexType name="ErrorCaseType">
+    <xs:sequence>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="object" type="xs:string"/>
+    <xs:attribute name="reportedBy" type="xs:string"/>
+    <xs:attribute name="fixed" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ErrorType">
+    <xs:sequence>
+      <xs:element name="errorCase" type="tns:ErrorCaseType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="category" type="tns:Category"/>
+    <xs:attribute name="code" type="xs:string"/>
+    <xs:attribute name="message" type="xs:string"/>
+    <xs:attribute name="notFixedCases" type="xs:int" use="required"/>
+    <xs:attribute name="totalCases" type="xs:int" use="required"/>
+    <xs:attribute name="type" type="tns:Behavior"/>
+  </xs:complexType>
+
+  <xs:complexType name="Validation">
+    <xs:sequence>
+      <xs:element name="comment" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="error" type="tns:ErrorType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="modelSerialized" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="fix" type="xs:boolean" use="required"/>
+    <xs:attribute name="maxErrors" type="xs:int" use="required"/>
+    <xs:attribute name="normalize" type="xs:boolean" use="required"/>
+    <xs:attribute name="notFixedErrors" type="xs:int" use="required"/>
+    <xs:attribute name="notFixedProblems" type="xs:int" use="required"/>
+    <xs:attribute name="summary" type="xs:string"/>
+    <xs:attribute name="threshold" type="tns:Behavior"/>
+    <xs:attribute name="totalProblemsFound" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ValidatorResponse">
+    <xs:sequence>
+      <xs:element name="validationResult" type="tns:Validation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="Behavior">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="IGNORE"/>
+      <xs:enumeration value="WARNING"/>
+      <xs:enumeration value="ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Category">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SYNTAX"/>
+      <xs:enumeration value="SPECIFICATION"/>
+      <xs:enumeration value="RECOMMENDATION"/>
+      <xs:enumeration value="INFORMATION"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

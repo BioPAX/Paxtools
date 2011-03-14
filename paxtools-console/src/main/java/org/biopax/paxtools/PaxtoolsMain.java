@@ -15,6 +15,7 @@ import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.validator.BiopaxValidatorClient;
+import org.biopax.validator.BiopaxValidatorClient.RetFormat;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
 import org.apache.commons.logging.LogFactory;
@@ -122,14 +123,14 @@ public class PaxtoolsMain {
             	
                 String name = argv[count + 1];
 				String out = argv[count + 2];
-				boolean isGetHtml;
+				RetFormat outf;
 				if("html".equalsIgnoreCase(argv[count + 3])) 
 				{
-					isGetHtml = true;
+					outf = RetFormat.HTML;
 					out += ".htm";
 					
 				} else {
-					isGetHtml = false;
+					outf = RetFormat.XML;
 					out += ".xml";
 				}
                 
@@ -157,14 +158,15 @@ public class PaxtoolsMain {
 				}
 				
 				// upload and validate using the default URL:
-				// http://www.biopax.org/biopax-validator/validator/fileUpload.html
+				// http://www.biopax.org/biopax-validator/check.html
 				OutputStream os = new FileOutputStream(out);
 				try {
 					if (!files.isEmpty()) {
         				BiopaxValidatorClient val =
-        					new BiopaxValidatorClient(null, isGetHtml);
-        				val.validate(files.toArray(new File[]{}), os);
-        			} 
+        					new BiopaxValidatorClient();
+        				// do not auto-fix, nor normalize, nor filter errors, etc..
+        				val.validate(false, false, outf, null, null, files.toArray(new File[]{}), os);
+        			}
 				} catch (Exception ex) {
 					// fall-back: not using the remote validator; trying to read files
 					String msg = "Faild to Validate Using the Remote Service.\n " +
