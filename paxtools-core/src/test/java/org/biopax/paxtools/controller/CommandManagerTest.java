@@ -4,7 +4,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.Protein;
 import org.junit.Test;
@@ -34,13 +33,11 @@ public class CommandManagerTest
 		interaction.setRDFId("3");
 		objects.add(interaction);
 
-
 		manager.addObjects(objects);
 		System.out.println(model.getObjects().size());
 		manager.undo();
 		System.out.println(model.getObjects().size());
 		manager.redo();
-
 
 		PropertyEditor propertyEditor =
 				PropertyEditor.createPropertyEditor(MolecularInteraction.class, "participant");
@@ -56,11 +53,5 @@ public class CommandManagerTest
 		manager.redo();
 		manager.redo();
 		System.out.println(model.getObjects().size());
-
-
-
-
-
-
 	}
 }
