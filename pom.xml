@@ -136,13 +136,7 @@
         </profile>
         <profile>
             <id>emekdemir</id>
-            <distributionManagement>
-                <site>
-                    <id>sourceforge.net</id>
-                    <name>BioPAX Sourceforge site</name>
-                    <url>scp://emekdemir@shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>
-                </site>
-            </distributionManagement>
+            <!--deleted here - use the distributionManagement conf. below and local ~/.m2/settings.xml -->
             <properties>
                 <scm.username>emekdemir</scm.username>
             </properties>
