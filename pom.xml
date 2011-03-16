@@ -111,37 +111,49 @@
 		<url>https://sourceforge.net/tracker/?group_id=85345</url>
 	</issueManagement>
 
-    <profiles>
-        <profile>
-        	<!-- this is to first 'deploy' locally 
-        	and then manually 'rsync' with a remote m2repo;
-        	it works faster this way (compared to 
-        	"mvn deploy" going directly to biopax.sf.net/m2repo/...) -->
-            <id>rodche</id>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>biopax.snapshots</id>
-                    <name>Local BioPAX Snapshots Repository</name>
-                    <url>file:///Volumes/Work/m2repo-biopax/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>biopax.releases</id>
-                    <name>Local BioPAX Repository</name>
-                    <url>file:///Volumes/Work/m2repo-biopax/releases</url>
-                </repository>
-            </distributionManagement>
-            <properties>
-                <scm.username>rodche</scm.username>
-            </properties>
-        </profile>
-        <profile>
-            <id>emekdemir</id>
-            <!--deleted here - use the distributionManagement conf. below and local ~/.m2/settings.xml -->
-            <properties>
-                <scm.username>emekdemir</scm.username>
-            </properties>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<!-- this is to first 'deploy' locally and then manually 'rsync' with 
+				a remote m2repo; it works faster this way (compared to "mvn deploy" going 
+				directly to biopax.sf.net/m2repo/...) -->
+			<id>rodche</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>biopax.snapshots</id>
+					<name>Local BioPAX Snapshots Repository</name>
+					<url>file:///Volumes/Work/m2repo-biopax/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>biopax.releases</id>
+					<name>Local BioPAX Repository</name>
+					<url>file:///Volumes/Work/m2repo-biopax/releases</url>
+				</repository>
+				<!-- I set login/passwd in my ~/.m2/settings.xml, 
+				<servers> section (id values there should match id below) -->
+				<site>
+					<id>biopax.sf.net</id>
+					<name>BioPAX Sourceforge site</name>
+					<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>
+				</site>
+			</distributionManagement>
+			<properties>
+				<scm.username>rodche</scm.username>
+			</properties>
+		</profile>
+		<profile>
+			<id>emekdemir</id>
+			<distributionManagement>
+				<site>
+					<id>sourceforge.net</id>
+					<name>BioPAX Sourceforge site</name>
+					<url>scp://emekdemir@shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>
+				</site>
+			</distributionManagement>
+			<properties>
+				<scm.username>emekdemir</scm.username>
+			</properties>
+		</profile>
+	</profiles>
 
     <scm>
         <connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
@@ -215,26 +227,6 @@
 			</snapshots>
 		</repository>
     </repositories>
-
-	<distributionManagement>
-	<!-- set login/passwd in your m2 settings.xml, <servers> section
-	(id values there should match ids below) -->
-		<site>
-			<id>biopax.sf.net</id>
-			<name>BioPAX Sourceforge site</name>
-			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>
-		</site>
-		<snapshotRepository>
-			<id>biopax.snapshots</id>
-			<name>BioPAX Snapshots Repository</name>
-			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>biopax.releases</id>
-			<name>BioPAX Releases Repository</name>
-			<url>>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases</url>
-		</repository>
-	</distributionManagement>
 	
 	<reporting>
 		<plugins>
