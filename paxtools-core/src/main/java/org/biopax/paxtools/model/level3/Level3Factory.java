@@ -109,8 +109,6 @@ public interface Level3Factory extends BioPAXFactory {
 
     public RelationshipTypeVocabulary createRelationshipTypeVocabulary();
 
-    public CovalentBindingFeature createDisulfideFeature();
-
     public FragmentFeature createFragmentFeature();
 
     public TemplateReaction createTemplateReaction();
@@ -130,4 +128,6 @@ public interface Level3Factory extends BioPAXFactory {
     public PhenotypeVocabulary createPhenotypeVocabulary();
 
     public CovalentBindingFeature createCovalentBindingFeature();
+
+    public GeneticInteraction createGeneticInteraction();
 }
