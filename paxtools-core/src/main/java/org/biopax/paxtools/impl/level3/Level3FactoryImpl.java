@@ -280,10 +280,6 @@ public class Level3FactoryImpl extends BioPAXFactoryImpl implements Level3Factor
         return new  RelationshipTypeVocabularyImpl();
     }
 
-    public CovalentBindingFeature createDisulfideFeature() {
-        return new CovalentBindingFeatureImpl();
-    }
-
     public FragmentFeature createFragmentFeature() {
         return new FragmentFeatureImpl();
     }
