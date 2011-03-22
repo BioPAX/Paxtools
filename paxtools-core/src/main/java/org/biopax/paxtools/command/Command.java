@@ -1,4 +1,4 @@
-package org.biopax.paxtools.controller;
+package org.biopax.paxtools.command;
 
 public interface Command
 {

@@ -1,5 +1,6 @@
-package org.biopax.paxtools.controller;
+package org.biopax.paxtools.command;
 
+import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
 
 public class PropertyRemoveCommand extends AbstractPropertyCommand

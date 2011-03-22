@@ -1,4 +1,4 @@
-package org.biopax.paxtools.io.simpleIO;
+package org.biopax.paxtools.controller;
 /**
  * Created by IntelliJ IDEA.
  * User: Emek
@@ -6,6 +6,7 @@ package org.biopax.paxtools.io.simpleIO;
  * Time: 1:03:41 AM
  */
 
+import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.junit.Test;
 
@@ -17,8 +18,8 @@ public class SimpleEditorMapTest
     {
         for (BioPAXLevel level : BioPAXLevel.values())
         {
-           SimpleEditorMap simpleEditorMap = new SimpleEditorMap(level);
-	        System.out.println("initilized for " + level );
+            SimpleEditorMap simpleEditorMap = new SimpleEditorMap(level);
+	        System.out.println("initialized for " + level );
 	        System.out.println(simpleEditorMap);
 
         }

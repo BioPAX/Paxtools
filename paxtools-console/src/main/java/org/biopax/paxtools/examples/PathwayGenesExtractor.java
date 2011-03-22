@@ -3,9 +3,9 @@ import java.io.*;
 import java.util.*;
 
 import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.Traverser;
 import org.biopax.paxtools.controller.Visitor;
-import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.*;

@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * @author Ozgun Babur
  */
-public class QueryExecuter
+public class    QueryExecuter
 {
 	public static Set<BioPAXElement> runNeighborhood(
 		Set<BioPAXElement> sourceSet,

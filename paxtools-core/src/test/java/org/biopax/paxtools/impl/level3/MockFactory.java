@@ -584,7 +584,7 @@ public class MockFactory implements Level3Factory {
                 !toCreate.isAssignableFrom(domain)) {
             actual = toCreate;
         } else {
-            Set<Class> classesOf = map.getKnownSubClassesOf(toCreate);
+            Set<Class<? extends BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
             for (Class subclass : classesOf) {
                 if (!subclass.isAssignableFrom(domain) &&
                         subclass != toCreate &&

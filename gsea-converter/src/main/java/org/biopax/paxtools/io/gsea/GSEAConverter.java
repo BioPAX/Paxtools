@@ -1,6 +1,7 @@
 package org.biopax.paxtools.io.gsea;
 
 // imports
+import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -12,7 +13,6 @@ import org.biopax.paxtools.controller.PropertyEditor;
 
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.converter.OneTwoThree;
-import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
 
 import java.io.*;
 import java.util.HashSet;

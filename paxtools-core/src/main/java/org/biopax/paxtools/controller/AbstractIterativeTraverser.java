@@ -17,12 +17,12 @@ import java.util.Stack;
  * 
  *
  */
-public abstract class AbstractTraverser extends Traverser 
+public abstract class AbstractIterativeTraverser extends Traverser
 	implements Visitor 
 {
 	private final Stack<BioPAXElement> visited;
 		
-	public AbstractTraverser(EditorMap editorMap, PropertyFilter... filters)
+	public AbstractIterativeTraverser(EditorMap editorMap, PropertyFilter... filters)
 	{
 		super(editorMap, null, filters);
 		visited = new Stack<BioPAXElement>();

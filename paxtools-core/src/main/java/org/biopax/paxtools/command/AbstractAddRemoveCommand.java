@@ -1,10 +1,8 @@
-package org.biopax.paxtools.controller;
+package org.biopax.paxtools.command;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 import java.util.Set;
 
 

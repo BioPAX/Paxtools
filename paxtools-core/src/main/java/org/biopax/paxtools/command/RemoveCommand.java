@@ -1,4 +1,4 @@
-package org.biopax.paxtools.controller;
+package org.biopax.paxtools.command;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;

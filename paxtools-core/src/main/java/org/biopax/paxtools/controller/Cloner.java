@@ -68,7 +68,9 @@ public class Cloner implements Visitor
 	{
 		if (!targetMap.containsKey(domain.getRDFId()))
 		{
-			// TODO Why? Remove 'targetMap', simply use targetModel.addNew(clazz, rdfid), targetModel.containsID(id) instead.
+			// Why? Remove 'targetMap', simply use targetModel.addNew(clazz, rdfid), targetModel.containsID(id) instead.
+            //^^ At one point we were getting concurrent modification exception - that's why. I am not sure if we are
+            //still getting this.
 			BioPAXElement targetDomain = factory.reflectivelyCreate(domain.getModelInterface());
 			targetDomain.setRDFId(domain.getRDFId());
 			targetMap.put(targetDomain.getRDFId(), targetDomain);

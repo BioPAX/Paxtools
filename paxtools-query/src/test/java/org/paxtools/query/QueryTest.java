@@ -2,7 +2,7 @@ package org.paxtools.query;
 
 import org.biopax.paxtools.controller.Cloner;
 import org.biopax.paxtools.controller.Completer;
-import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
+import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.model.BioPAXElement;
