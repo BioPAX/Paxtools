@@ -275,7 +275,8 @@ hg	 */
 
 	protected void createAndAdd(Model model, String id, String localName)
 	{
-		BioPAXElement bp = this.getFactory().reflectivelyCreate(localName);
+		BioPAXElement bp = this.getFactory().reflectivelyCreate(localName, id);
+		
 		if (log.isTraceEnabled())
 		{
 			log.trace("id:" + id + " " + localName + " : " + bp);
@@ -286,7 +287,6 @@ hg	 */
 		 */
 		if (bp != null)
 		{
-			bp.setRDFId(id);
 			model.add(bp);
 		}
 	}

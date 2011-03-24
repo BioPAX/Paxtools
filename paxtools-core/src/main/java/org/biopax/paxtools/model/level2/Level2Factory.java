@@ -2,80 +2,78 @@ package org.biopax.paxtools.model.level2;
 
 import org.biopax.paxtools.model.BioPAXFactory;
 
-/**
- */
+
 public interface Level2Factory extends BioPAXFactory
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public bioSource createBioSource();
+	bioSource createBioSource();
 
-	public biochemicalReaction createBiochemicalReaction();
+	biochemicalReaction createBiochemicalReaction();
 
-	public catalysis createCatalysis();
+	catalysis createCatalysis();
 
-	public chemicalStructure createChemicalStructure();
+	chemicalStructure createChemicalStructure();
 
-	public complex createComplex();
+	complex createComplex();
 
-	public complexAssembly createComplexAssembly();
+	complexAssembly createComplexAssembly();
 
-	public confidence createConfidence();
+	confidence createConfidence();
 
-	public control createControl();
+	control createControl();
 
-	public conversion createConversion();
+	conversion createConversion();
 
-	public dataSource createDataSource();
+	dataSource createDataSource();
 
-	public deltaGprimeO createDeltaGprimeO();
+	deltaGprimeO createDeltaGprimeO();
 
-	public dna createDna();
+	dna createDna();
 
-	public evidence createEvidence();
+	evidence createEvidence();
 
-	public experimentalForm createExperimentalForm();
+	experimentalForm createExperimentalForm();
 
-	public interaction createInteraction();
+	interaction createInteraction();
 
-	public kPrime createKPrime();
+	kPrime createKPrime();
 
+	modulation createModulation();
 
-	public modulation createModulation();
+	openControlledVocabulary createOpenControlledVocabulary();
 
-	public openControlledVocabulary createOpenControlledVocabulary();
+	pathway createPathway();
 
-	public pathway createPathway();
+	pathwayStep createPathwayStep();
 
-	public pathwayStep createPathwayStep();
+	physicalEntity createPhysicalEntity();
 
-	public physicalEntity createPhysicalEntity();
+	physicalEntityParticipant createPhysicalEntityParticipant();
 
-	public physicalEntityParticipant createPhysicalEntityParticipant();
+	physicalInteraction createPhysicalInteraction();
 
-	public physicalInteraction createPhysicalInteraction();
+	protein createProtein();
 
-	public protein createProtein();
+	publicationXref createPublicationXref();
 
-	public publicationXref createPublicationXref();
+	relationshipXref createRelationshipXref();
 
-	public relationshipXref createRelationshipXref();
+	rna createRna();
 
-	public rna createRna();
+	sequenceFeature createSequenceFeature();
 
-	public sequenceFeature createSequenceFeature();
+	sequenceInterval createSequenceInterval();
 
-	public sequenceInterval createSequenceInterval();
+	sequenceParticipant createSequenceParticipant();
 
-	public sequenceParticipant createSequenceParticipant();
+	sequenceSite createSequenceSite();
 
-	public sequenceSite createSequenceSite();
+	smallMolecule createSmallMolecule();
 
-	public smallMolecule createSmallMolecule();
+	transport createTransport();
 
-	public transport createTransport();
+	transportWithBiochemicalReaction createTransportWithBiochemicalReaction();
 
-	public transportWithBiochemicalReaction createTransportWithBiochemicalReaction();
-
-	public unificationXref createUnificationXref();
+	unificationXref createUnificationXref();
 }

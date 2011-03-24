@@ -46,21 +46,17 @@ public class ReusedPEPHelper
         		log.warn(pep.getRDFId() +
                      " is reused, duplicating it to fix");
 
-            physicalEntityParticipant duplicated =
-                    (physicalEntityParticipant) factory.reflectivelyCreate(
-                    pep.getModelInterface());
-
-
-            String syntheticID = createSyntheticID(pep, bpe);
+        	String syntheticID = createSyntheticID(pep, bpe);
+            
             if (model.containsID(syntheticID))
             {
                 pep = (physicalEntityParticipant) model.getByID(syntheticID);
             }
             else
             {
-                duplicated.setRDFId(syntheticID);
+            	physicalEntityParticipant duplicated = (physicalEntityParticipant) model
+            		.addNew(pep.getModelInterface(), syntheticID);
                 duplicatedPeps.put(duplicated, pep);
-                model.add(duplicated);
                 pep = duplicated;
             }
         }

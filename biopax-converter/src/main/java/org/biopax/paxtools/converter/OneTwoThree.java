@@ -53,7 +53,7 @@ import org.biopax.paxtools.model.level3.Stoichiometry;
  * Converts BioPAX L1 and L2 to Level 3.
  * 
  * Notes:
- * - it does not fix existing BioPAX errors (TODO add validation/normalization in the future, maybe)
+ * - it does not fix existing BioPAX errors
  * - most but not all things are converted (e.g., complex.ORGANISM property cannot...)
  * - phy. entities "clones" - because, during L1 or L2 data read, all re-used pEPs are duplicated... (TODO filter after the conversion)
  * 
@@ -213,15 +213,10 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 				if (ip instanceof physicalEntity) { 
 					physicalEntity pe = (physicalEntity) ip;
 					// create a new pEP
-					physicalEntityParticipant pep = BioPAXLevel.L2
-							.getDefaultFactory().reflectivelyCreate(
-									physicalEntityParticipant.class);
 					String newId = itr.getRDFId() + "_"	+ getLocalId(pe);
-					pep.setRDFId(newId);
+					physicalEntityParticipant pep = model.addNew(physicalEntityParticipant.class, newId);
 					pep.setPHYSICAL_ENTITY(pe);
-					model.add(pep);
 					// no other properties though
-					
 					// reset participant
 					itr.removePARTICIPANTS(pe);
 					itr.addPARTICIPANTS(pep);
@@ -271,16 +266,13 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 			String type = bpe.getModelInterface().getSimpleName();	
 			String newType = classesmap.getProperty(type).trim();
 			if (newType != null && factory.canInstantiate(newType)) {
-				newElement = (Level3Element) factory.reflectivelyCreate(newType);
+				newElement = (Level3Element) factory.reflectivelyCreate(newType, bpe.getRDFId());
 			} else {
 				if(log.isDebugEnabled()) 
 					log.debug("No mapping found for " + type);
 				return null;
 			}
 		}
-		
-		if(newElement != null)
-			newElement.setRDFId(bpe.getRDFId());
 		
 		return newElement;
 	}
@@ -294,19 +286,19 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 */
 	private SimplePhysicalEntity createSimplePhysicalEntity(physicalEntityParticipant pep) {
 		physicalEntity pe2 = pep.getPHYSICAL_ENTITY();
-		return createSimplePhysicalEntity(pe2);
+		return createSimplePhysicalEntity(pe2, pep.getRDFId());
 	}
 	
-	private SimplePhysicalEntity createSimplePhysicalEntity(physicalEntity pe2) {
+	private SimplePhysicalEntity createSimplePhysicalEntity(physicalEntity pe2, String id) {
 		SimplePhysicalEntity e = null;
 		if(pe2 instanceof protein) {
-			e = factory.reflectivelyCreate(Protein.class);	
+			e = factory.reflectivelyCreate(Protein.class, id);	
 		} else if(pe2 instanceof dna) {
-			e = factory.reflectivelyCreate(DnaRegion.class);
+			e = factory.reflectivelyCreate(DnaRegion.class, id);
 		} else if (pe2 instanceof rna) {
-			e = factory.reflectivelyCreate(RnaRegion.class);
+			e = factory.reflectivelyCreate(RnaRegion.class, id);
 		} else if (pe2 instanceof smallMolecule) {
-			e = factory.reflectivelyCreate(SmallMolecule.class);
+			e = factory.reflectivelyCreate(SmallMolecule.class, id);
 		} 
 		return e;
 	}
@@ -323,10 +315,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 		
 		if (!newModel.containsID(id)) {
 			if (newEditor != null) {
-				cv = (ControlledVocabulary) 
-					factory.reflectivelyCreate(newEditor.getRange());
-				cv.setRDFId(id);
-				newModel.add(cv);
+				newModel.addNew(newEditor.getRange(), id);
 				// copy properties
 				traverse(value, newModel);
 			} else {
@@ -389,8 +378,9 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 					if (coeff > 1 ) { //!= BioPAXElement.UNKNOWN_DOUBLE) {
 					  if(parent instanceof conversion || parent instanceof complex) { 
 						PhysicalEntity pe3 = (PhysicalEntity) newValue;
-						Stoichiometry stoichiometry = factory.reflectivelyCreate(Stoichiometry.class);
-						stoichiometry.setRDFId(pe3.getRDFId() + "-stoichiometry" + Math.random());
+						Stoichiometry stoichiometry = factory
+							.reflectivelyCreate(Stoichiometry.class,
+								pe3.getRDFId() + "-stoichiometry" + Math.random());
 						stoichiometry.setStoichiometricCoefficient(coeff);
 						stoichiometry.setPhysicalEntity(pe3);
 						//System.out.println("parent=" + parent + "; phy.ent.=" + pep + "; coeff=" + coeff);
@@ -440,10 +430,8 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 					String id = URLEncoder.encode(value.toString());
 					if(!newModel.containsID(id)) {
 						RelationshipTypeVocabulary cv = (RelationshipTypeVocabulary) 
-							factory.reflectivelyCreate(newEditor.getRange());
-						cv.setRDFId(id);
-						cv.addTerm(value.toString().toLowerCase()); // TODO later, normalize, add xref, check term...
-						newModel.add(cv);
+							newModel.addNew(newEditor.getRange(), id);
+						cv.addTerm(value.toString().toLowerCase());
 						newValue = cv;
 					} else {
 						newValue = newModel.getByID(id);

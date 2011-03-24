@@ -50,30 +50,27 @@ public class ModelBuilder
 
 	public static void createStateChange(String name, Model model)
 	{
-		ProteinReference ref = factory.reflectivelyCreate(ProteinReference.class);
-		ref.setStandardName(name + "_PR");
-		ref.setRDFId(IDBASE + ref.getStandardName());
-		model.add(ref);
+		String stdName = name + "_PR";
+		ProteinReference ref = model.addNew(ProteinReference.class, IDBASE + stdName);
+		ref.setStandardName(stdName);
 
-		Protein p1 = factory.reflectivelyCreate(Protein.class);
+		stdName = name + "-1";
+		Protein p1 = model.addNew(Protein.class, IDBASE + stdName);
 		p1.setEntityReference(ref);
-		p1.setStandardName(name + "-1");
-		p1.setRDFId(IDBASE + p1.getStandardName());
-		model.add(p1);
+		p1.setStandardName(stdName);
 		
-		Protein p2 = factory.reflectivelyCreate(Protein.class);
+		stdName = name + "-2";
+		Protein p2 = model.addNew(Protein.class, IDBASE + stdName);
 		p2.setEntityReference(ref);
-		p2.setStandardName(name + "-2");
-		p2.setRDFId(IDBASE + p2.getStandardName());
-		model.add(p2);
+		p2.setStandardName(stdName);
 
-		BiochemicalReaction reac = factory.reflectivelyCreate(BiochemicalReaction.class);
-		reac.setStandardName(p1.getStandardName() + REACTION_ARROW + p2.getStandardName());
-		reac.setRDFId(IDBASE + reac.getStandardName());
+		stdName = p1.getStandardName() + REACTION_ARROW + p2.getStandardName();
+		BiochemicalReaction reac = model.addNew(BiochemicalReaction.class, 
+				IDBASE + stdName);
+		reac.setStandardName(stdName);
 		reac.addLeft(p1);
 		reac.addRight(p2);
 		reac.setConversionDirection(ConversionDirectionType.LEFT_TO_RIGHT);
-		model.add(reac);
 	}
 
 	public static void createActivatedStateChange(Protein activator, String name, Model model)
@@ -88,9 +85,9 @@ public class ModelBuilder
 	public static void createControl(Protein effector, Conversion conv,
 									 Class<? extends Control> cls, ControlType type, Model model)
 	{
-		Control con = factory.reflectivelyCreate(cls);
-		con.setStandardName(effector.getStandardName() + ACTIV_ARROW + conv.getStandardName());
-		con.setRDFId(IDBASE + con.getStandardName());
+		String std = effector.getStandardName() + ACTIV_ARROW + conv.getStandardName();
+		Control con = factory.reflectivelyCreate(cls, IDBASE + std);
+		con.setStandardName(std);
 		con.addController(effector);
 		con.addControlled(conv);
 		con.setControlType(type);
@@ -114,29 +111,25 @@ public class ModelBuilder
 
 	public static void createComplex(Model model, String compName, Protein... prots)
 	{
-		Complex comp = factory.reflectivelyCreate(Complex.class);
+		Complex comp = model.addNew(Complex.class, IDBASE + compName);
 		comp.setStandardName(compName);
-		comp.setRDFId(IDBASE + comp.getStandardName());
-		model.add(comp);
 
 		for (Protein prot : prots)
 		{
-			Protein p = factory.reflectivelyCreate(Protein.class);
-			p.setStandardName(prot.getStandardName() + "_cm");
-			p.setRDFId(IDBASE + p.getStandardName());
+			String std = prot.getStandardName() + "_cm";
+			Protein p = model.addNew(Protein.class, IDBASE + std);
+			p.setStandardName(std);
 			comp.addComponent(p);
-			model.add(p);
 		}
 
-		ComplexAssembly ca = factory.reflectivelyCreate(ComplexAssembly.class);
-		ca.setStandardName("Assembly_of_" + compName);
-		ca.setRDFId(IDBASE + ca.getStandardName());
+		String std = "Assembly_of_" + compName;
+		ComplexAssembly ca = model.addNew(ComplexAssembly.class, IDBASE + std);
+		ca.setStandardName(std);
 		ca.setConversionDirection(ConversionDirectionType.LEFT_TO_RIGHT);
 		for (Protein prot : prots)
 		{
 			ca.addLeft(prot);
 		}
 		ca.addRight(comp);
-		model.add(ca);
 	}
 }

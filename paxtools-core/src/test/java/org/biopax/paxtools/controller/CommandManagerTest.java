@@ -13,6 +13,7 @@ import java.util.Set;
 
 public class CommandManagerTest
 {
+	// TODO use assertions instead System.out...
 	@Test
 	public void TestCommandManager()
 	{
@@ -21,16 +22,13 @@ public class CommandManagerTest
 		CommandManager manager = new CommandManager(model);
 		Set<BioPAXElement> objects = new HashSet<BioPAXElement>();
 
-		Protein protein = factory.reflectivelyCreate(Protein.class);
-		protein.setRDFId("1");
+		Protein protein = factory.reflectivelyCreate(Protein.class, "1");
 		objects.add(protein);
 
-		Protein protein2 = factory.reflectivelyCreate(Protein.class);
-		protein2.setRDFId("2");
+		Protein protein2 = factory.reflectivelyCreate(Protein.class, "2");
 		objects.add(protein2);
 
-		MolecularInteraction interaction = factory.reflectivelyCreate(MolecularInteraction.class);
-		interaction.setRDFId("3");
+		MolecularInteraction interaction = factory.reflectivelyCreate(MolecularInteraction.class, "3");
 		objects.add(interaction);
 
 		manager.addObjects(objects);

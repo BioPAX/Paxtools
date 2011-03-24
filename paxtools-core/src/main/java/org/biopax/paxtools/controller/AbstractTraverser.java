@@ -34,15 +34,6 @@ public abstract class AbstractTraverser extends Traverser
 	}
 	
 	
-	@Deprecated
-	/**
-	 * Use getVisited() instead.
-	 */
-	protected Stack<BioPAXElement> getCurrentParentsList() {
-		return getVisited();
-	}
-	
-	
 	/**
 	 * This is to implement a real action here: 
 	 * do something, return or continue (traverse)

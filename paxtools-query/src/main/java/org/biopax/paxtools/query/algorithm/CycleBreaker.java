@@ -6,7 +6,6 @@ import org.biopax.paxtools.query.model.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 
 /**

@@ -198,10 +198,11 @@ public class SimpleMerger
 					+ " adding it now!"
 					);
 				target.add(value);
+				updateObjectFields(value, target); // recursion!
 				return;
 			}
 			
-			if(!newValue.isEquivalent(value)) {
+			if(!value.isEquivalent(newValue)) {
 				// are they at least of the same type?
 				if(newValue.getModelInterface().equals(value.getModelInterface())) {
 					String msg = "Target object value: " 

@@ -650,8 +650,10 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	}
 
 	/**
-	 * Returns a shallow copy of the value. If this is a biopax element, links to other Biopax
-	 * elements will not be preserved. Primitive fields and enums however will be cloned.
+	 * Returns a shallow copy of the value. 
+	 * [FIXME TODO is this still true?] If this is a biopax element, links to other Biopax elements will not be preserved. 
+	 * Primitive fields and enums however will be cloned.
+	 * 
 	 * @return
 	 */
 	public R copyValueFromBean(D bean)

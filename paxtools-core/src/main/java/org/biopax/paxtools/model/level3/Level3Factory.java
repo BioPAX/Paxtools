@@ -2,132 +2,133 @@ package org.biopax.paxtools.model.level3;
 
 import org.biopax.paxtools.model.BioPAXFactory;
 
-/**
- */
 public interface Level3Factory extends BioPAXFactory {
-    public BiochemicalReaction createBiochemicalReaction();
+	
+    BiochemicalReaction createBiochemicalReaction();
 
-    public BioSource createBioSource();
+    BioSource createBioSource();
 
-    public Catalysis createCatalysis();
+    Catalysis createCatalysis();
 
-    public ChemicalStructure createChemicalStructure();
+    ChemicalStructure createChemicalStructure();
 
-    public Complex createComplex();
+    Complex createComplex();
 
-    public ComplexAssembly createComplexAssembly();
+    ComplexAssembly createComplexAssembly();
 
-    public Degradation createDegradation();
+    Degradation createDegradation();
 
-    public Stoichiometry createStoichiometry();
+    Stoichiometry createStoichiometry();
 
-    public Score createScore();
+    Score createScore();
 
-    public Control createControl();
+    Control createControl();
 
-    public Conversion createConversion();
+    Conversion createConversion();
 
-    public ModificationFeature createModificationFeature();
+    ModificationFeature createModificationFeature();
 
-    public BindingFeature createBindingFeature();
+    BindingFeature createBindingFeature();
 
-    public Provenance createProvenance();
+    Provenance createProvenance();
 
-    public DeltaG createDeltaG();
+    DeltaG createDeltaG();
 
-    public BiochemicalPathwayStep createBiochemicalPathwayStep();
+    BiochemicalPathwayStep createBiochemicalPathwayStep();
 
-    public Dna createDna();
+    Dna createDna();
 
-    public EntityFeature createEntityFeature();
+    EntityFeature createEntityFeature();
 
-    public Evidence createEvidence();
+    Evidence createEvidence();
 
-    public ExperimentalForm createExperimentalForm();
+    ExperimentalForm createExperimentalForm();
 
-    public Gene createGene();
+    Gene createGene();
+    
+    GeneticInteraction createGeneticInteraction();
 
-    public Interaction createInteraction();
+    Interaction createInteraction();
 
-    public KPrime createKPrime();
+    KPrime createKPrime();
 
-    public Modulation createModulation();
+    Modulation createModulation();
 
-    public ControlledVocabulary createControlledVocabulary();
+    ControlledVocabulary createControlledVocabulary();
 
-    public Pathway createPathway();
+    Pathway createPathway();
 
-    public PathwayStep createPathwayStep();
+    PathwayStep createPathwayStep();
 
-    public PhysicalEntity createPhysicalEntity();
+    PhysicalEntity createPhysicalEntity();
 
-    public MolecularInteraction createMolecularInteraction();
+    MolecularInteraction createMolecularInteraction();
 
-    public Protein createProtein();
+    Protein createProtein();
 
-    public PublicationXref createPublicationXref();
+    PublicationXref createPublicationXref();
 
-    public DnaReference createDnaReference();
+    DnaReference createDnaReference();
 
-    public RnaReference createRnaReference();
+    RnaReference createRnaReference();
 
-    public SmallMoleculeReference createSmallMoleculeReference();
+    SmallMoleculeReference createSmallMoleculeReference();
 
-    public ProteinReference createProteinReference();
+    ProteinReference createProteinReference();
 
-    public RelationshipXref createRelationshipXref();
+    RelationshipXref createRelationshipXref();
 
-    public Rna createRna();
+    Rna createRna();
 
-    public SequenceInterval createSequenceInterval();
+    SequenceInterval createSequenceInterval();
 
-    public SequenceLocation createSequenceLocation();
+    SequenceLocation createSequenceLocation();
 
-    public SequenceSite createSequenceSite();
+    SequenceSite createSequenceSite();
 
-    public SmallMolecule createSmallMolecule();
+    SmallMolecule createSmallMolecule();
 
-    public Transport createTransport();
+    Transport createTransport();
 
-    public TransportWithBiochemicalReaction createTransportWithBiochemicalReaction();
+    TransportWithBiochemicalReaction createTransportWithBiochemicalReaction();
 
-    public UnificationXref createUnificationXref();
+    UnificationXref createUnificationXref();
 
-    public TissueVocabulary createTissueVocabulary();
+    TissueVocabulary createTissueVocabulary();
 
-    public CellVocabulary createCellVocabulary();
+    CellVocabulary createCellVocabulary();
 
-    public CellularLocationVocabulary createCellularLocationVocabulary();
+    CellularLocationVocabulary createCellularLocationVocabulary();
 
-    public ExperimentalFormVocabulary createExperimentalFormVocabulary();
+    ExperimentalFormVocabulary createExperimentalFormVocabulary();
 
-    public EvidenceCodeVocabulary createEvidenceCodeVocabulary();
+    EvidenceCodeVocabulary createEvidenceCodeVocabulary();
 
-    public SequenceRegionVocabulary createSequenceRegionVocabulary();
+    SequenceRegionVocabulary createSequenceRegionVocabulary();
 
-    public SequenceModificationVocabulary createSequenceModificationVocabulary();
+    SequenceModificationVocabulary createSequenceModificationVocabulary();
 
-    public RelationshipTypeVocabulary createRelationshipTypeVocabulary();
+    RelationshipTypeVocabulary createRelationshipTypeVocabulary();
 
-    public CovalentBindingFeature createDisulfideFeature();
+    CovalentBindingFeature createDisulfideFeature();
 
-    public FragmentFeature createFragmentFeature();
+    FragmentFeature createFragmentFeature();
 
-    public TemplateReaction createTemplateReaction();
+    TemplateReaction createTemplateReaction();
 
-    public TemplateReactionRegulation createTemplateReactionRegulation();
+    TemplateReactionRegulation createTemplateReactionRegulation();
 
-    public DnaRegion createDnaRegion();
+    DnaRegion createDnaRegion();
 
-    public DnaRegionReference createDnaRegionReference();
+    DnaRegionReference createDnaRegionReference();
 
-    public RnaRegion createRnaRegion();
+    RnaRegion createRnaRegion();
 
-    public RnaRegionReference createRnaRegionReference();
+    RnaRegionReference createRnaRegionReference();
 
-    public InteractionVocabulary createInteractionVocabulary();
+    InteractionVocabulary createInteractionVocabulary();
 
-    public PhenotypeVocabulary createPhenotypeVocabulary();
+    PhenotypeVocabulary createPhenotypeVocabulary();
 
-    public CovalentBindingFeature createCovalentBindingFeature();
+    CovalentBindingFeature createCovalentBindingFeature();
 }

@@ -42,7 +42,10 @@ public class MockFactory implements Level3Factory {
 
     public MockFactory(Level3Factory factory) {
         this.factory = factory;
-        map = new SimpleEditorMap(BioPAXLevel.L3);
+        map = null; //new SimpleEditorMap(BioPAXLevel.L3);
+     // TODO cannot use SimpleEditorMap here (from paxtools-simple-io, creates a dependency loop)
+        throw new UnsupportedOperationException("Not implemented: cannot use SimpleEditorMap here" +
+        	" (from paxtools-simple-io, creates a dependency loop)!");
     }
 
 // --------------------- GETTER / SETTER METHODS ---------------------
@@ -220,12 +223,8 @@ public class MockFactory implements Level3Factory {
         return factory.createModel();
     }
 
-    public BioPAXElement reflectivelyCreate(String name) {
-        return factory.reflectivelyCreate(name);
-    }
-
-    public <T extends BioPAXElement> T reflectivelyCreate(Class<T> aClass) {
-        return factory.reflectivelyCreate(aClass);
+    public BioPAXElement reflectivelyCreate(String name, String uri) {
+        return factory.reflectivelyCreate(name, uri);
     }
 
     public Modulation createModulation() {
@@ -325,7 +324,9 @@ public class MockFactory implements Level3Factory {
     }
 
     public SequenceLocation createSequenceLocation() {
-        return null;
+        SequenceLocation bpe = factory.createSequenceLocation();
+        populateMock(bpe);
+        return bpe;
     }
 
     public SmallMolecule createSmallMolecule() {
@@ -335,7 +336,9 @@ public class MockFactory implements Level3Factory {
     }
 
     public Stoichiometry createStoichiometry() {
-        return null;
+    	Stoichiometry bpe = factory.createStoichiometry();
+    	populateMock(bpe);
+        return bpe;
     }
 
     public Transport createTransport() {
@@ -516,8 +519,7 @@ public class MockFactory implements Level3Factory {
                     if (!Entity.class.isAssignableFrom(range)) {
                         if (multiple) {
                             value =
-                                    createRestrictedMock(propertyEditor, bpe,
-                                            3);
+                                    createRestrictedMock(propertyEditor, bpe, 3);
                         } else {
                             value = createRestrictedMock(propertyEditor, bpe, 1)
                                     .iterator().next();
@@ -556,8 +558,7 @@ public class MockFactory implements Level3Factory {
         int length = restricted.length;
         for (int i = 0; i < k; i++) {
             Class restrictedRange = (Class) restricted[i % length];
-            hashSet
-                    .add(createMock(restrictedRange, bpe.getClass()));
+            hashSet.add(createMock(restrictedRange, bpe.getClass()));
         }
         return hashSet;
     }
@@ -568,7 +569,7 @@ public class MockFactory implements Level3Factory {
         actual = findConcreteMockClass(toCreate, domain);
         if (actual != null) {
             return map.getLevel().getDefaultFactory()
-                    .reflectivelyCreate(actual);
+            	.reflectivelyCreate(actual, null); // FIXME no RDFID ok?
         } else {
             System.out.println("actual = " + actual);
             System.out.println("toCreate = " + toCreate);
@@ -615,4 +616,15 @@ public class MockFactory implements Level3Factory {
         return values;
     }
 
+	public CovalentBindingFeature createDisulfideFeature() {
+		CovalentBindingFeature bpe = factory.createDisulfideFeature();
+		populateMock(bpe);
+		return bpe;
+	}
+
+	public <T extends BioPAXElement> T reflectivelyCreate(Class<T> aClass, String uri) 
+	{
+		T bpe = reflectivelyCreate(aClass, uri);
+		return bpe;
+	}
 }

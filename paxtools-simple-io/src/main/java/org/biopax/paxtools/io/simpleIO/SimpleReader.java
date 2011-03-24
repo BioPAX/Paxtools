@@ -326,8 +326,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 
 	private void createBpe(String s, String id, Model model)
 	{
-		BioPAXElement bpe = this.getFactory().reflectivelyCreate(s);
-		bpe.setRDFId(id);
+		BioPAXElement bpe = this.getFactory().reflectivelyCreate(s, id);
 		model.add(bpe);
 	}
 

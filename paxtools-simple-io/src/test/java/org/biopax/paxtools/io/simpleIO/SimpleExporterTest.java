@@ -108,9 +108,8 @@ public class SimpleExporterTest extends TestCase
 	public void testDuplicateNamesByExporter() throws IOException
 	{
 		Level3Factory level3 = new Level3FactoryImpl();
-		Protein p = level3.createProtein();
+		Protein p = level3.reflectivelyCreate(Protein.class, "myProtein");
 		String name = "aDisplayName";
-		p.setRDFId("myProtein");
 		p.setDisplayName(name);
 		p.addComment("Display Name should not be repeated again in the Name property!");
 		Model m = level3.createModel();
@@ -146,7 +145,6 @@ public class SimpleExporterTest extends TestCase
 		Level3Factory level3 = new Level3FactoryImpl();
 		Model m = level3.createModel();
 		Protein p = m.addNew(Protein.class, "myProtein");
-		p.setRDFId("myProtein");
 		MolecularInteraction mi = m.addNew(MolecularInteraction.class, "myInteraction");
 		mi.addParticipant(p);
 		System.out.println("export");

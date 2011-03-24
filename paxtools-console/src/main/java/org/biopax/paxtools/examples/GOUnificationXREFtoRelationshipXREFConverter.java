@@ -126,12 +126,11 @@ public class GOUnificationXREFtoRelationshipXREFConverter
         Set<XReferrable> referrables =
 			new HashSet<XReferrable>(uni.isXREFof());
 
-        //Create the new relationship xref.
+        //Create the new relationship xref in the model.
         relationshipXref relationshipXref =
-			factory.createRelationshipXref();
+        	level2.addNew(relationshipXref.class, uni.getRDFId());
 
         //Copy the fields from uni
-        relationshipXref.setRDFId(uni.getRDFId());
 		relationshipXref.setCOMMENT(uni.getCOMMENT());
 		relationshipXref.setDB(uni.getDB());
 		relationshipXref.setDB_VERSION(uni.getDB_VERSION());
@@ -139,9 +138,6 @@ public class GOUnificationXREFtoRelationshipXREFConverter
 		relationshipXref.setID_VERSION(uni.getID_VERSION());
 		relationshipXref.setRELATIONSHIP_TYPE(
 			"http://www.biopax.org/paxtools/convertedGOUnificationXREF");
-
-        //Add it to the model.
-        level2.add(relationshipXref);
 
         //Create a link to the new xref from all the owners.
         for (XReferrable referrable : referrables)

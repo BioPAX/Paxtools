@@ -68,11 +68,9 @@ public class Cloner implements Visitor
 	{
 		if (!targetMap.containsKey(domain.getRDFId()))
 		{
-			// TODO Why? Remove 'targetMap', simply use targetModel.addNew(clazz, rdfid), targetModel.containsID(id) instead.
-			BioPAXElement targetDomain = factory.reflectivelyCreate(domain.getModelInterface());
-			targetDomain.setRDFId(domain.getRDFId());
+			BioPAXElement targetDomain = targetModel
+				.addNew(domain.getModelInterface(), domain.getRDFId());
 			targetMap.put(targetDomain.getRDFId(), targetDomain);
-			targetModel.add(targetDomain);
 		}
 
 		if (range instanceof BioPAXElement)
@@ -96,6 +94,22 @@ public class Cloner implements Visitor
 			editor.setValueToBean(range, targetMap.get(domain.getRDFId()));
 		}
 	}
+	
+	
+    /**
+     * Returns a full copy (new object) of the existing biopax element
+     * (if any) with all its properties set to the same values, 
+     * except for possibly rdfid (can be the same as well).
+     * The new object is not added to the model.
+     * 
+     * @param id
+     * @param newId
+     * @return
+     */
+    public static BioPAXElement copy(BioPAXElement bpe, String newId) {
+    	throw new UnsupportedOperationException("not implemented yet.");
+    	// TODO implement Cloner.copy method
+    }
 }
 
 

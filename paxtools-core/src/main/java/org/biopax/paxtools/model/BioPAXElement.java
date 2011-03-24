@@ -1,7 +1,6 @@
 package org.biopax.paxtools.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * This class represents a general BioPAXElement, regardless of Level.
@@ -43,13 +42,6 @@ public interface BioPAXElement extends Serializable, Cloneable
      */
     String getRDFId();
 
-    /**
-     * This method sets the RDF id of the element.  All data providers are
-     * responsible for generating unique ids.
-     * @param id  the unique rdf Id for this object.
-     */
-    void setRDFId(String id);
-
 
     /**
      * This method compare the given element for equivalency. This is different
@@ -75,6 +67,5 @@ public interface BioPAXElement extends Serializable, Cloneable
 	int equivalenceCode();
 
 	//public Set<Model> getOwnerModels();
-		
 	
 }

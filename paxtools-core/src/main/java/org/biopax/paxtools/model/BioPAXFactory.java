@@ -28,21 +28,23 @@ public interface BioPAXFactory
      * given name. If the name is not defined in the BioPAX ontology, it will
      * throw an exception.
      * @param name of the class. Case is important.
+     * @param uri elements id (rdfID which is URI)
      * @return a new instance of the class of the given name as defined by
      * BioPAX ontology
      */
-    BioPAXElement reflectivelyCreate(String name);
+    BioPAXElement reflectivelyCreate(String name, String uri);
 
     /**
-     * This method will create and return a new instance of the class given name.
-     * If the name is not defined in the BioPAX ontology, it will throw an
+     * This method will create and return a new instance of the given class.
+     * If the class is not defined in the API, it will throw an
      * exception.
      * @param aClass a BioPAX model interface
+     * @param uri rdfid
      * @return a new instance of the class as defined by BioPAX ontology
      */
-	<T extends BioPAXElement> T reflectivelyCreate(Class<T> aClass);
-
-
+    <T extends BioPAXElement> T  reflectivelyCreate(Class<T> aClass, String uri);
+	
+    
     /**
      * This method will return true, if this factory can create a new instance
      * of the class defined by the name.
@@ -50,4 +52,5 @@ public interface BioPAXFactory
      * @return true if this factory can instatiate an instance of this class.
      */
     boolean canInstantiate(String name);
+    
 }

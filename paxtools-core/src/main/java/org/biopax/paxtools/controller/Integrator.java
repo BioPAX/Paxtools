@@ -13,8 +13,8 @@ import java.util.*;
  *
  * This class is intended to merge and to integrate biopax models
  * not necessarily from the same resource - if models allow such a
- * thing. This class has very similar functionallity to the controller.Merger
- * but it differs in means of merging/integrating methadology.
+ * thing. This class has very similar functionality to the controller.Merger
+ * but it differs in means of merging/integrating methodology.
  *
  * Integrator iterates all the conversions in from the <em>target</em> and
  * <em>source</em> model(s), and assigns scores indicating their similarity.
@@ -389,7 +389,7 @@ public class Integrator {
             for(physicalEntityParticipant pep1: convScore.getMatchedPEPs() ) {
                 physicalEntityParticipant pep2 = convScore.getMatch(pep1);
                 // We got the match, now set lets build sets of PEPs of equal states
-                equalize(pep1, pep2);
+                equalizePEP(pep1, pep2);
             } // End of score maximazing
 
             for( control control1: conv1.isCONTROLLEDOf() ) {
@@ -398,15 +398,15 @@ public class Integrator {
                     for(physicalEntityParticipant controller1: control1.getCONTROLLER() ) {
                         for(physicalEntityParticipant controller2: control2.getCONTROLLER() )  {
                             if( getScore(controller1, controller2) > BASE_SCORE ) {
-                                equalize(controller1, controller2);
+                                equalizePEP(controller1, controller2);
                             } else {
                                 allSimilar = false;
                             }
                         }
                     }
                     if( allSimilar // size 0 causes false equivalance, thus regard that case
-                            && !(control1.getCONTROLLER().size() == 0 ^ control2.getCONTROLLER().size() == 0)) {
-
+                            && !(control1.getCONTROLLER().size() == 0 ^ control2.getCONTROLLER().size() == 0)) 
+                    {
                         equalize(control1, control2);
 
                         if( convScore.isReverseMatch() && control2 instanceof catalysis)
@@ -420,12 +420,27 @@ public class Integrator {
         }
     }
 
-    private void equalize(control control1, control control2) {
+    /**
+     * @deprecated setRDFId is not available anymore!
+     */
+    private void equalize(BioPAXElement e1, BioPAXElement e2) {
         // Operation below is enough for the time being
-        control2.setRDFId(control1.getRDFId());
+    	// TODO re-factoring: setRDFId is not available anymore! (We don't really want to change rdfIDs, do we?..)
+        //e2.setRDFId(e1.getRDFId());
+    	
+    	throw new UnsupportedOperationException("This needs re-factoring: bpe.setRDFId is not available anymore!");
+    	
+    	//TODO ? use some alternative way to store that a1 equals e2, e.g., Set<String> matched, 
+    	//matched.add(e1.getRDFId()+e2.getRDFId()); matched.add(e2.getRDFId()+e1.getRDFId());
+    }
+    
+    private boolean equals(BioPAXElement a, BioPAXElement b) {
+    	throw new UnsupportedOperationException("not implemented yet.");
+    	// TODO ? implement equals(BioPAXElement a, BioPAXElement b): can be smth. like the following... and use below
+    	//return (a == null) ? b == null : a.equals(b) || matched.contains(a.getRDFId()+b.getRDFId());
     }
 
-    private void equalize(physicalEntityParticipant controller1, physicalEntityParticipant controller2) {
+    private void equalizePEP(physicalEntityParticipant controller1, physicalEntityParticipant controller2) {
         // There is a special case for PEPs: we also need to update equivalent PEPs' fields
         Set<physicalEntityParticipant> tempEqvPeps = new HashSet<physicalEntityParticipant>();
         tempEqvPeps.addAll(getEquivalentsOfPEP(controller1));
@@ -436,12 +451,7 @@ public class Integrator {
         for(physicalEntityParticipant eqPep : tempEqvPeps)
             updatePepFields(controller2, eqPep);
 
-        controller2.setRDFId(controller1.getRDFId());
-    }
-
-    private void equalize(conversion conv1, conversion conv2) {
-        // Operation below is enough for the time being
-        conv2.setRDFId(conv1.getRDFId());
+        equalize(controller1, controller2);
     }
 
     private Set<physicalEntityParticipant> getEquivalentsOfPEP(physicalEntityParticipant onePep) {
@@ -880,14 +890,14 @@ public class Integrator {
         for(openControlledVocabulary ocv1: target.getObjects(openControlledVocabulary.class)) {
             for(openControlledVocabulary ocv2: model.getObjects(openControlledVocabulary.class)) {
                 if( isOCVsSemanticallyEquivalent(ocv1, ocv2) ) {
-                    ocv2.setRDFId( ocv1.getRDFId() );
+                    equalize(ocv1, ocv2);
                 }
             }
         }
         for(openControlledVocabulary ocv1: model.getObjects(openControlledVocabulary.class)) {
             for(openControlledVocabulary ocv2: model.getObjects(openControlledVocabulary.class)) {
                 if( isOCVsSemanticallyEquivalent(ocv1, ocv2) ) {
-                    ocv2.setRDFId( ocv1.getRDFId() );
+                    equalize(ocv1, ocv2);
                 }
             }
         }
@@ -945,12 +955,9 @@ public class Integrator {
                     = ((physicalEntityParticipant) pep).getCELLULAR_LOCATION();
 
             if( ov == null ) {
-                Object preOV;
                 if( model.getByID(mostlyUsed.getRDFId()) == null ) {
-                    preOV = model.addNew(openControlledVocabulary.class, mostlyUsed.getRDFId());
-                    ov = (openControlledVocabulary) preOV;
+                    ov = model.addNew(openControlledVocabulary.class, mostlyUsed.getRDFId());
                     ov.setCOMMENT( mostlyUsed.getCOMMENT() );
-                    ov.setRDFId( mostlyUsed.getRDFId() );
                     ov.setTERM( mostlyUsed.getTERM() );
                     ov.setXREF( mostlyUsed.getXREF() );
                 } else {

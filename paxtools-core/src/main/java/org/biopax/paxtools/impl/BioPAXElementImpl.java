@@ -63,6 +63,9 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     
 	public BioPAXElementImpl(){};
 	
+	public BioPAXElementImpl(String uri){
+		this.id = uri;
+	};
 	
 	public int hashCode()
     {
@@ -113,7 +116,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
         return id;
     }
 
-    public void setRDFId(String id)
+    protected void setRDFId(String id)
     {
         this.id = id;
 //	    Set<Model> ownerModels = this.getOwnerModels();

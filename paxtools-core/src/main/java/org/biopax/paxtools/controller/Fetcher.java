@@ -63,7 +63,8 @@ public class Fetcher implements Visitor
      */
     public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-		if (range != null && range instanceof BioPAXElement && !model.getObjects().contains(range))
+    	//TODO ?? use a PropertyFilter (in Traverser's constructor) that checks "editor instanceof ObjectPropertyEditor"
+		if (range instanceof BioPAXElement && !model.getObjects().contains(range))
 		{
 			BioPAXElement bpe = (BioPAXElement) range;
 			model.add(bpe);

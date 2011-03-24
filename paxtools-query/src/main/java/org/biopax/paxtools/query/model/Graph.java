@@ -1,6 +1,5 @@
 package org.biopax.paxtools.query.model;
 
-import java.util.Map;
 import java.util.Set;
 
 /**

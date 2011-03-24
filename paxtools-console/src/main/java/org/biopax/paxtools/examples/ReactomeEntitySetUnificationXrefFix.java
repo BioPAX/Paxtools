@@ -5,7 +5,6 @@ import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level2.Level2Factory;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.relationshipXref;
 import org.biopax.paxtools.model.level2.unificationXref;
@@ -38,7 +37,6 @@ public class ReactomeEntitySetUnificationXrefFix
 	{
 		SimpleReader reader = new SimpleReader();
 		SimpleExporter exporter = new SimpleExporter(BioPAXLevel.L2);
-		Level2Factory l2f = (Level2Factory) BioPAXLevel.L2.getDefaultFactory();
 		Model level2 = reader.convertFromOWL(in);
 		Set<physicalEntity> physicalEntitySet = new HashSet<physicalEntity>();
 		physicalEntitySet.addAll(level2.getObjects(physicalEntity.class));
@@ -58,8 +56,8 @@ public class ReactomeEntitySetUnificationXrefFix
 			if (entitySet)
 			{
 				Set<unificationXref> unis = new HashSet<unificationXref>();
-				unis.addAll(
-						new ClassFilterSet<unificationXref>(pe.getXREF(), unificationXref.class));
+				unis.addAll(new ClassFilterSet<unificationXref>(pe.getXREF(), unificationXref.class));
+				
 				for (unificationXref uni : unis)
 				{
 					relationshipXref rel;
@@ -71,11 +69,9 @@ public class ReactomeEntitySetUnificationXrefFix
 					}
 					else
 					{
-						rel = l2f.createRelationshipXref();
+						rel = level2.addNew(relationshipXref.class, rid);
 						rel.setDB(uni.getDB());
 						rel.setID(uni.getID());
-						rel.setRDFId(rid);
-						level2.add(rel);
 					}
 					pe.removeXREF(uni);
 					if (uni.isXREFof().isEmpty())

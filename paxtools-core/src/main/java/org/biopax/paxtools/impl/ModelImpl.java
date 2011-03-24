@@ -155,8 +155,8 @@ public class ModelImpl implements Model
                             
 	public <T extends BioPAXElement> T addNew(Class<T> c, String id)
 	{
-		T paxElement = factory.reflectivelyCreate(c);
-		this.setIdAndAdd(paxElement, id);
+		T paxElement = factory.reflectivelyCreate(c, id);
+		this.add(paxElement);
 		return paxElement;
 	}
 
@@ -172,12 +172,6 @@ public class ModelImpl implements Model
 	}
 
 // -------------------------- OTHER METHODS --------------------------
-
-	private void setIdAndAdd(BioPAXElement bp, String id)
-	{
-		bp.setRDFId(id);
-		this.add(bp);
-	}
 
 	public void add(BioPAXElement aBioPAXElement)
 	{
@@ -312,13 +306,14 @@ public class ModelImpl implements Model
 		}
 	}
 
-    /* 
-     * TODO for safety, updating ID has to be done by replacing the element rather than modifying it...
+    /**
+     * Note: for safety, updating ID has to be done by replacing the element rather than modifying it...
      * 
-     * (non-Javadoc)
-     * @see org.biopax.paxtools.model.Model#updateID(java.lang.String, java.lang.String)
+     * @deprecated (do re-factoring) to use the new method {@link Model#replace(BioPAXElement, BioPAXElement)} instead
      */
 	public synchronized void updateID(String oldID, String newID) {
+		throw new UnsupportedOperationException("This method is broken; use Model.replace instead!");
+		/*
 		if (this.containsID(oldID)) {
 			BioPAXElement bpe = getByID(oldID);
 			this.idMap.remove(oldID);
@@ -328,17 +323,24 @@ public class ModelImpl implements Model
 				// roolback and fail
 				setIdAndAdd(bpe, oldID); 
 				throw new IllegalBioPAXArgumentException(
-					"Updating ID: " + oldID + 
-					" failed (model is unchanged): " +
-					"cannot use new ID: " + newID, e);
-			}
-			
+					"Updating ID: " + oldID + " failed (model is unchanged): "
+						+ "cannot use new ID: " + newID, e);
+			}	
 		} else {
 			throw new IllegalBioPAXArgumentException(
-					"I do not have an object with the ID: " + oldID);
+				"I do not have an object with the ID: " + oldID);
 		}
+		*/
 	}
 
+	/*
+	 * TODO implement the 'replace' method
+	 */
+	public synchronized void replace(BioPAXElement existing, BioPAXElement replacement) {
+		throw new UnsupportedOperationException("not implemented yet.");
+	}
+	
+	
 	/*
 	 * Other implementations can perform more specific merging.
 	 * (non-Javadoc)
