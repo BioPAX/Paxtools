@@ -18,25 +18,31 @@ public class ShallowCopy implements Visitor
 	Traverser traverser;
 
     private BioPAXElement copy;
+    private BioPAXLevel level;
 
+    
     public ShallowCopy(EditorMap map)
 	{
-
 		traverser = new Traverser(map, this);
+		this.level = map.getLevel();
 	}
 
-
+    
     public ShallowCopy(BioPAXLevel l)
     {
         this(new SimpleEditorMap(l));
     }
 
+    
     public ShallowCopy()
     {
         this(BioPAXLevel.L3);
     }
 
+    
     /**
+	 * Creates a copy of the BioPAX object with all its properties
+	 * are the same, and also adds it to a model.
 	 *
 	 * @param model
      * @param source
@@ -45,19 +51,36 @@ public class ShallowCopy implements Visitor
 	 */
 	public <T extends BioPAXElement> T copy(Model model, T source, String newID)
 	{
-        T copy = model.addNew(((Class<T>) source.getModelInterface()), newID);
-        this.copy = copy;
-        traverser.traverse(copy,model);
-        return copy;
-
+		T copy = copy(source, newID);
+		model.add(copy);
+		return copy;
     }
 
 
+	/**
+	 * Returns a copy of the BioPAX element 
+	 * (with all the property values are same)
+	 * 
+	 * @param <T>
+	 * @param source
+	 * @param newID
+	 * @return
+	 */
+	public <T extends BioPAXElement> T copy(T source, String newID) 
+	{
+		T copy = (T) level.getDefaultFactory().reflectivelyCreate(
+				(Class<T>) source.getModelInterface(), newID);
+		this.copy = copy;
+		traverser.traverse(copy, null);
+		return copy;
+	}
+
+	
 // --------------------- Interface Visitor ---------------------
 
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-        editor.setValueToBean(range,copy);
+        editor.setValueToBean(range, copy);
 	}
 }
 

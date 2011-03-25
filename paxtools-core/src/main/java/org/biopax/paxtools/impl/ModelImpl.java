@@ -1,5 +1,7 @@
 package org.biopax.paxtools.impl;
 
+import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.controller.SimpleMerger;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
@@ -341,13 +343,19 @@ public class ModelImpl implements Model
 	}
 	
 	
-	/*
-	 * Other implementations can perform more specific merging.
-	 * (non-Javadoc)
-	 * @see org.biopax.paxtools.model.Model#merge(org.biopax.paxtools.model.Model)
+	/**
+	 * This is default implementation that uses the 
+	 * id-based merging ({@link SimpleMerger#merge(Model, Model...)})
+	 * 
+	 * NOTE: some applications, such as those dealing with persistence/transactions 
+	 * or advanced BioPAX alignment/comparison algorithms (like the Patch), 
+	 * may have to implement and use a more specific method instead.
+	 * 
+	 * @see SimpleMerger
+	 * @see Model#merge(Model)
 	 */
 	public void merge(Model source) {
-		throw new UnsupportedOperationException("Operation is not supported " +
-				"in this Model implementation (use Merger or SimpleMerger directly).");
+		new SimpleMerger(new SimpleEditorMap(level))
+			.merge(this, source);
 	}
 }
