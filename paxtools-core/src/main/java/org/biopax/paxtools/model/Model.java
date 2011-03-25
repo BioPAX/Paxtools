@@ -44,15 +44,6 @@ public interface Model extends Serializable
      */
     boolean contains(BioPAXElement aBioPAXElement);
 
-
-    /**
-     * This method returns the IDMap which maps ids to objects.
-     * The IDMap should not be modified.
-     * @deprecated use getByID method instead.
-     * @return an unmodifiable map of IDs to objects
-     */
-    Map<String, BioPAXElement> getIdMap();
-
     /**
      * This method returns the biopax element with the given id,
      * returns null if the object with the given id does not exist
@@ -141,20 +132,23 @@ public interface Model extends Serializable
      */
     boolean isAddDependencies();
 
-
+    
     /**
-     * Updates BioPAX element's ID
-     * and the model's internal id map.
+     * Merges the source model into this one.
      * 
-     * Warning: this potentially (depending on the implementation) 
-     * can make other models (that contain the element) inconsistent!
-     * 
-     * @param oldID
-     * @param newID
+     * @param source a model to merge
      */
-    void updateID(String oldID, String newID);
+    void merge(Model source);
     
     
-
+    /**
+     * Replaces existing BioPAX element with another one,
+     * of the same or possibly equivalent type,
+     * and updates all the affected references (object properties).
+     * 
+     * @param existing
+     * @param replacement
+     */
+    void replace(BioPAXElement existing, BioPAXElement replacement);
 
 }

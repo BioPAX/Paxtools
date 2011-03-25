@@ -28,7 +28,7 @@ public abstract class BioPAXFactory
             	+ "Make sure that there is a default non-private noarg constructor");
             log.error(e.getStackTrace());
         } catch (IllegalAccessException e) {
-            log.error("Could not instantiate "+ aClass 
+            log.error("Could not instantiate a class implementing "+ aClass 
             	+ " Make sure that there is a default non-private noarg constructor");
             log.error(e.getStackTrace());
         }

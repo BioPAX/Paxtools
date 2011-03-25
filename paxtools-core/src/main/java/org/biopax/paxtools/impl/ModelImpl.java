@@ -9,13 +9,11 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import javax.persistence.*;
 import java.util.*;
 
 /**
  * This is the default implementation of the {@link Model}.
  */
-@Entity
 public class ModelImpl implements Model
 {
 // ------------------------------ FIELDS ------------------------------
@@ -49,37 +47,14 @@ public class ModelImpl implements Model
 		this.factory = factory;
 		this.level = factory.getLevel();
     }
-
-	
-	private Long id = 0L;
-	
-	@Id
-    @GeneratedValue
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long value) {
-		id = value;
-	}
 	
 	
 // --------------------- GETTER / SETTER METHODS ---------------------
-
-    /**
-     *@deprecated use getByID(id) or containsID(id) instead.
-     */
-	@Transient
-    public Map<String, BioPAXElement> getIdMap()
-	{
-        return exposedIdMap;
-	}
 
     public boolean containsID(String id) {
         return this.idMap.containsKey(id);
     }
     
-    @Transient
     public BioPAXElement getByID(String id) {
     	BioPAXElement ret = this.idMap.get(id);
     	if(ret != null) {
@@ -89,9 +64,6 @@ public class ModelImpl implements Model
     }
 
 
-    @ElementCollection
-    //@Field(name=BioPAXElementImpl.SEARCH_FIELD_NAMESPACE)
-    // TODO custom FieldBridge
     public Map<String, String> getNameSpacePrefixMap()
 	{
 		return nameSpacePrefixMap;
@@ -104,8 +76,7 @@ public class ModelImpl implements Model
 		}
 	}
     
-    
-    @Transient
+
     public void setFactory(BioPAXFactory factory)
 	{
 		this.factory = factory;
@@ -118,7 +89,6 @@ public class ModelImpl implements Model
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    @ManyToMany(targetEntity=BioPAXElementImpl.class, cascade={CascadeType.ALL})
 	public Set<BioPAXElement> getObjects()
 	{
 		return exposedObjectSet;
@@ -210,7 +180,6 @@ public class ModelImpl implements Model
 	}
 
 
-	@Enumerated(EnumType.STRING)
     public BioPAXLevel getLevel()
 	{
 		return level;
@@ -222,13 +191,12 @@ public class ModelImpl implements Model
 		this.factory = level.getDefaultFactory();
 	}
 	
-	
-    @Transient
+
     public void setAddDependencies(boolean value) {
         this.addDependencies = value;
     }
 
-    @Transient
+    
     public boolean isAddDependencies() {
         return addDependencies;
     }
@@ -308,33 +276,6 @@ public class ModelImpl implements Model
 		{
 			throw new UnsupportedOperationException();
 		}
-	}
-
-    /**
-     * Note: for safety, updating ID has to be done by replacing the element rather than modifying it...
-     * 
-     * @deprecated (do re-factoring) to use the new method {@link Model#replace(BioPAXElement, BioPAXElement)} instead
-     */
-	public synchronized void updateID(String oldID, String newID) {
-		throw new UnsupportedOperationException("This method is broken; use Model.replace instead!");
-		/*
-		if (this.containsID(oldID)) {
-			BioPAXElement bpe = getByID(oldID);
-			this.idMap.remove(oldID);
-			try {
-				setIdAndAdd(bpe, newID);
-			} catch (IllegalBioPAXArgumentException e) {
-				// roolback and fail
-				setIdAndAdd(bpe, oldID); 
-				throw new IllegalBioPAXArgumentException(
-					"Updating ID: " + oldID + " failed (model is unchanged): "
-						+ "cannot use new ID: " + newID, e);
-			}	
-		} else {
-			throw new IllegalBioPAXArgumentException(
-				"I do not have an object with the ID: " + oldID);
-		}
-		*/
 	}
 
 	/*
