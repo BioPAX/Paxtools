@@ -211,7 +211,7 @@ public class MockFactory extends BioPAXFactoryAdaptor
 
 
     @Override
-    public <T extends BioPAXElement> T InstantiateImplementingClass(Class<T> aClass, String uri) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public <T extends BioPAXElement> T createInstance(Class<T> aClass, String uri) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         throw new UnsupportedOperationException();
     }
 

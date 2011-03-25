@@ -19,7 +19,7 @@ public abstract class BioPAXFactory
 
         try {
 
-            T bpe = InstantiateImplementingClass(aClass, uri);
+            T bpe = createInstance(aClass, uri);
             return bpe;
 
         } catch (InstantiationException e) {
@@ -37,7 +37,7 @@ public abstract class BioPAXFactory
         return null;
     }
 
-    protected abstract <T extends BioPAXElement> T InstantiateImplementingClass(Class<T> aClass, String id)
+    protected abstract <T extends BioPAXElement> T createInstance(Class<T> aClass, String id)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException;
 
     public abstract boolean canInstantiate(Class<? extends BioPAXElement> aClass);

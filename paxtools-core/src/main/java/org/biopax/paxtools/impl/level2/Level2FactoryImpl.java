@@ -8,7 +8,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 public class Level2FactoryImpl extends BioPAXFactoryAdaptor {
 
     @Override
-    public <T extends BioPAXElement> T InstantiateImplementingClass(Class<T> aClass, String id)
+    protected <T extends BioPAXElement> T createInstance(Class<T> aClass, String id)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         T bpe = (T) Class.forName(mapClassName(aClass)).newInstance();
