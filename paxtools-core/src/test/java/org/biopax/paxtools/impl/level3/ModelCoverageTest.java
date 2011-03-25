@@ -8,19 +8,15 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-
-
 /**
-
  */
 public class ModelCoverageTest
 {
-    @Test public void testCreationMethods() throws InvocationTargetException, IllegalAccessException
-
+    @Test 
+    public void testCreationMethods() throws InvocationTargetException, IllegalAccessException
     {
         MockFactory factory = new MockFactory(BioPAXLevel.L3);
 
@@ -34,9 +30,7 @@ public class ModelCoverageTest
                 BioPAXElement bpe = factory.create(aClass, "mock://ModelCoverageTest/id/" + i++);
                 assertNotNull(bpe);
                 assertTrue(aClass.isAssignableFrom(bpe.getClass()));
-
             }
         }
-
-      }
+	}
 }
