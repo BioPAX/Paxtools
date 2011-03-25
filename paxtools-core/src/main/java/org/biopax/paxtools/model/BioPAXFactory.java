@@ -21,17 +21,18 @@ public abstract class BioPAXFactory
         T bpe = null;
         try {
             bpe = getImplementingClass(aClass).newInstance();
+            setId(bpe, uri);
         } catch (InstantiationException e)
         {
-            log.error("Could not instantiate "+ aClass + "with "+ bpe.getClass());
-            log.error("Make sure that there is a default non-private noarg constructor");
+            log.error("Could not instantiate "+ aClass + "with "+ bpe.getClass()
+            	+ "Make sure that there is a default non-private noarg constructor");
             log.error(e.getStackTrace());
         } catch (IllegalAccessException e) {
-            log.error("Could not instantiate "+ aClass + "with "+ bpe.getClass());
-            log.error("Make sure that there is a default non-private noarg constructor");
+            log.error("Could not instantiate "+ aClass 
+            	+ " Make sure that there is a default non-private noarg constructor");
             log.error(e.getStackTrace());
         }
-        setId(bpe, uri);
+
         return bpe;
 	}
 
