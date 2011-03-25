@@ -41,7 +41,8 @@ public abstract class BioPAXFactory
 
     public boolean canInstantiate(Class<? extends BioPAXElement> aClass)
     {
-        return !Modifier.isAbstract(getImplementingClass(aClass).getModifiers());
+        Class<? extends BioPAXElement> implementingClass = getImplementingClass(aClass);
+        return implementingClass!= null && !Modifier.isAbstract(implementingClass.getModifiers());
     }
 
 	public abstract Model createModel();

@@ -7,37 +7,34 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+
 
 /**
- * TODO:Class description
- * User: demir
- * Date: Jan 14, 2009
- * Time: 1:11:27 PM
+
  */
 public class ModelCoverageTest
 {
-    @Test
-      public void testCreationMethods() throws InvocationTargetException, IllegalAccessException {
-          Method[] methods = MockFactory.class.getMethods();
-          MockFactory factory = new MockFactory(BioPAXLevel.L3);
-          for (Method method : methods) {
-              if (method.getName().startsWith("create")) {
-                  System.out.println("testing " + method);
-                      method.invoke(factory);
-                  }
-              }
-          
+    @Test public void testCreationMethods() throws InvocationTargetException, IllegalAccessException
+
+    {
+        MockFactory factory = new MockFactory(BioPAXLevel.L3);
+
         //test reflectively create
         EditorMap map = new SimpleEditorMap(BioPAXLevel.L3);
+        int i = 0;
         for (Class<? extends BioPAXElement> aClass : map.getKnownSubClassesOf(BioPAXElement.class))
         {
-            int i = 0;
-            if (!Modifier.isAbstract(aClass.getModifiers()))
+            if (factory.canInstantiate(aClass))
             {
+                BioPAXElement bpe = factory.create(aClass, "mock://ModelCoverageTest/id/" + i++);
+                assertNotNull(bpe);
+                assertTrue(aClass.isAssignableFrom(bpe.getClass()));
 
-                factory.create(aClass, "mock://ModelCoverageTest/id/"+i++);
             }
         }
 

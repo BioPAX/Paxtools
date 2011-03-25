@@ -17,7 +17,7 @@ public abstract class BioPAXFactoryAdaptor extends BioPAXFactory {
     @Override
     public <T extends BioPAXElement> Class<? extends T> getImplementingClass(Class<T> aClass) {
         String name = aClass.getName();
-        name = this.getClass().getPackage().getName() + name.substring(name.lastIndexOf('.') + 1, name.length()) + "Impl"; //TEST!!!
+        name = this.getClass().getPackage().getName() + name.substring(name.lastIndexOf('.'),name.length()) + "Impl"; //TEST!!!
         try {
             return (Class<? extends T>) Class.forName(name);
         } catch (ClassNotFoundException e) {
