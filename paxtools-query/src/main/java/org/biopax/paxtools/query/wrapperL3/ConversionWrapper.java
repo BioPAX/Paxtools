@@ -48,7 +48,7 @@ public class ConversionWrapper extends AbstractNode
 		}
 		else
 		{
-			this.direction = RIGHT_TO_LEFT;
+			this.direction = LEFT_TO_RIGHT;
 		}
 
 		wrapAround();

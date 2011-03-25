@@ -17,8 +17,8 @@ import java.util.*;
  */
 public class CommonStreamQuery
 {
-	public static final boolean UPSTREAM = true;
-	public static final boolean DOWNSTREAM = false;
+	public static final boolean UPSTREAM = false;
+	public static final boolean DOWNSTREAM = true;
 
     /**
      * Collection of Set of nodes.

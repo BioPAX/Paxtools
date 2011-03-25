@@ -122,16 +122,15 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	protected void collectUpperEquivalent(PhysicalEntity pe)
 	{
-		//todo -- use the method when available
-		for (PhysicalEntity eq : pe.getMemberPhysicalEntity/*Of*/())
+		for (PhysicalEntity eq : pe.getMemberPhysicalEntityOf())
 		{
 			this.upperEquivalent.add((Node) graph.getGraphObject(eq));
 		}
 
-		for (PhysicalEntity eq : pe.getComponentOf())
-		{
-			this.upperEquivalent.add((Node) graph.getGraphObject(eq));
-		}
+//		for (PhysicalEntity eq : pe.getComponentOf())
+//		{
+//			this.upperEquivalent.add((Node) graph.getGraphObject(eq));
+//		}
 	}
 	
 	protected void collectLowerEquivalent(PhysicalEntity pe)
@@ -141,13 +140,13 @@ public class PhysicalEntityWrapper extends AbstractNode
 			this.lowerEquivalent.add((Node) graph.getGraphObject(eq));
 		}
 
-		if (pe instanceof Complex)
-		{
-			for (PhysicalEntity eq : ((Complex) pe).getComponent())
-			{
-				this.lowerEquivalent.add((Node) graph.getGraphObject(eq));
-			}
-		}
+//		if (pe instanceof Complex)
+//		{
+//			for (PhysicalEntity eq : ((Complex) pe).getComponent())
+//			{
+//				this.lowerEquivalent.add((Node) graph.getGraphObject(eq));
+//			}
+//		}
 	}
 
 	public boolean isBreadthNode()
