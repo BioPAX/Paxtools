@@ -4,8 +4,6 @@ package org.biopax.paxtools.model;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.lang.reflect.Modifier;
-
 public abstract class BioPAXFactory
 {
     private static Log log = LogFactory.getLog(BioPAXFactory.class);
@@ -18,33 +16,31 @@ public abstract class BioPAXFactory
 
     public <T extends BioPAXElement> T create(Class<T> aClass, String uri)
     {
-        T bpe = null;
+
         try {
-            bpe = getImplementingClass(aClass).newInstance();
-            setId(bpe, uri);
-        } catch (InstantiationException e)
-        {
-            log.error("Could not instantiate "+ aClass + "with "+ bpe.getClass()
-            	+ "Make sure that there is a default non-private noarg constructor");
+
+            T bpe = InstantiateImplementingClass(aClass, uri);
+            return bpe;
+
+        } catch (InstantiationException e) {
+            log.error("Could not instantiate " + aClass
+                    + "Make sure that there is a default non-private noarg constructor");
             log.error(e.getStackTrace());
         } catch (IllegalAccessException e) {
-            log.error("Could not instantiate a class implementing "+ aClass 
-            	+ " Make sure that there is a default non-private noarg constructor");
+            log.error("Could not instantiate a class implementing " + aClass
+                    + " Make sure that there is a default non-private noarg constructor");
+            log.error(e.getStackTrace());
+        } catch (ClassNotFoundException e) {
+            log.error("No implementing class for " + aClass);
             log.error(e.getStackTrace());
         }
-
-        return bpe;
-	}
-
-    protected abstract void setId(BioPAXElement bpe, String uri);
-
-    public abstract <T extends BioPAXElement> Class<? extends T>  getImplementingClass(Class<T> aClass);
-
-    public boolean canInstantiate(Class<? extends BioPAXElement> aClass)
-    {
-        Class<? extends BioPAXElement> implementingClass = getImplementingClass(aClass);
-        return implementingClass!= null && !Modifier.isAbstract(implementingClass.getModifiers());
+        return null;
     }
+
+    protected abstract <T extends BioPAXElement> T InstantiateImplementingClass(Class<T> aClass, String id)
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException;
+
+    public abstract boolean canInstantiate(Class<? extends BioPAXElement> aClass);
 
 	public abstract Model createModel();
 

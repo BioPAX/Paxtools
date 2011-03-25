@@ -50,8 +50,20 @@ public class MockFactory extends BioPAXFactoryAdaptor
       this.level = level;
     }
 
+    @Override
+    public <T extends BioPAXElement> T create(Class<T> aClass, String uri)
+    {
+        T t = this.getLevel().getDefaultFactory().create(aClass, uri);
+        populateMock(t);
+        return t;
+    }
 
-
+    @Override
+    public BioPAXElement create(String localName, String uri) {
+        BioPAXElement bpe = this.getLevel().getDefaultFactory().create(localName, uri);
+        populateMock(bpe);
+        return bpe;
+    }
 
     private void populateMock(BioPAXElement bpe) {
         Set<PropertyEditor> propertyEditors =
@@ -196,14 +208,14 @@ public class MockFactory extends BioPAXFactoryAdaptor
         return values;
     }
 
-	public <T extends BioPAXElement> T create(Class<T> aClass, String uri)
-	{
-        T t = this.getLevel().getDefaultFactory().create(aClass, uri);
-        populateMock(t);
-        return t;
-	}
+
 
     @Override
+    public <T extends BioPAXElement> T InstantiateImplementingClass(Class<T> aClass, String uri) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        throw new UnsupportedOperationException();
+    }
+
+
     public BioPAXLevel getLevel() {
         return this.level;
     }
