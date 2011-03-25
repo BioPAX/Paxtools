@@ -46,7 +46,10 @@ public class GraphL3 extends AbstractGraph
 		}
 		else
 		{
-			log.warn("Invalid BioPAX object to wrap as node. Ignoring: " + obj);
+			if (log.isWarnEnabled())
+			{
+				log.warn("Invalid BioPAX object to wrap as node. Ignoring: " + obj);
+			}
 			return null;
 		}
 	}
