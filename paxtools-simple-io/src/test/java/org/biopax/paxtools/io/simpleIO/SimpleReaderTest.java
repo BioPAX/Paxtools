@@ -28,7 +28,7 @@ public class SimpleReaderTest extends TestCase
 		while (iterator.hasNext())
 		{
 			Model model = iterator.next();
-			System.out.println("done (model has " + model.getObjects().size() + " objects)");
+			assertTrue(model.getObjects().size()==50);
 		}
 	}
 }
