@@ -28,11 +28,10 @@
  **/
 package org.mskcc.psibiopax.converter.driver;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
-import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Driver class for PSI-MI to BioPax converter.

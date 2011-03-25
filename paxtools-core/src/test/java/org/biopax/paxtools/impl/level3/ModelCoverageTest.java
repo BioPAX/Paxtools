@@ -4,11 +4,10 @@ import org.biopax.paxtools.controller.EditorMap;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
-
 import org.junit.Test;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
@@ -22,7 +21,7 @@ public class ModelCoverageTest
     @Test
       public void testCreationMethods() throws InvocationTargetException, IllegalAccessException {
           Method[] methods = MockFactory.class.getMethods();
-          MockFactory factory = new MockFactory();
+          MockFactory factory = new MockFactory(BioPAXLevel.L3);
           for (Method method : methods) {
               if (method.getName().startsWith("create")) {
                   System.out.println("testing " + method);
@@ -34,10 +33,11 @@ public class ModelCoverageTest
         EditorMap map = new SimpleEditorMap(BioPAXLevel.L3);
         for (Class<? extends BioPAXElement> aClass : map.getKnownSubClassesOf(BioPAXElement.class))
         {
+            int i = 0;
             if (!Modifier.isAbstract(aClass.getModifiers()))
             {
-            	//FIXME in practice, they must be created with not null rdfid
-                factory.reflectivelyCreate(aClass, null);
+
+                factory.create(aClass, "mock://ModelCoverageTest/id/"+i++);
             }
         }
 

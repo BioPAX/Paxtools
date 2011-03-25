@@ -1,8 +1,8 @@
 package org.biopax.paxtools.impl.level2;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.InteractionParticipant;
 import org.biopax.paxtools.model.level2.physicalInteraction;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.HashSet;

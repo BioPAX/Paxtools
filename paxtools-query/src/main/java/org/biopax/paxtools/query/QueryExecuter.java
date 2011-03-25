@@ -1,6 +1,8 @@
 package org.biopax.paxtools.query;
 
-import org.biopax.paxtools.controller.*;
+import org.biopax.paxtools.controller.AbstractTraverser;
+import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;

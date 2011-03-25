@@ -1,14 +1,9 @@
 package org.biopax.paxtools.query.algorithm;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
+
+import java.util.*;
 
 /**
  * Searches common downstream or common upstream of a specified set of entities

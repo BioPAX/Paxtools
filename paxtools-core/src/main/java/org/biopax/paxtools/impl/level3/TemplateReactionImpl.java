@@ -1,13 +1,15 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
-import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.NucleicAcid;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.TemplateDirectionType;
+import org.biopax.paxtools.model.level3.TemplateReaction;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)

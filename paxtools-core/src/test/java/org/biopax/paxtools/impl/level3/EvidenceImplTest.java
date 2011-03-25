@@ -1,13 +1,13 @@
 package org.biopax.paxtools.impl.level3;
 
-import static org.junit.Assert.*;
-
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
 
 public class EvidenceImplTest {
 

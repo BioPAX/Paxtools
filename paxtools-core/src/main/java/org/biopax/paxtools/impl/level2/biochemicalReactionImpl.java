@@ -1,9 +1,9 @@
 package org.biopax.paxtools.impl.level2;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.biochemicalReaction;
 import org.biopax.paxtools.model.level2.deltaGprimeO;
 import org.biopax.paxtools.model.level2.kPrime;
-import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.HashSet;
 import java.util.Set;

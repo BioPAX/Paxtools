@@ -1,7 +1,7 @@
 package org.biopax.paxtools.impl.level2;
 
-import org.biopax.paxtools.model.level2.complexAssembly;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level2.complexAssembly;
 
 /**
  * User: root Date: Apr 13, 2006 Time: 2:22:39 PM_DOT

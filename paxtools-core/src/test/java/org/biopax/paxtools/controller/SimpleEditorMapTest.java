@@ -6,7 +6,6 @@ package org.biopax.paxtools.controller;
  * Time: 1:03:41 AM
  */
 
-import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.junit.Test;
 

@@ -2,13 +2,12 @@ package org.biopax.paxtools.impl.level3;
 
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
+import org.biopax.paxtools.util.SetEquivalanceChecker;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -210,7 +209,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
     protected boolean semanticallyEquivalent(BioPAXElement element) {
     	if(!(element instanceof EntityReference)) return false;
     	EntityReference that = (EntityReference) element;
-    	return  SetEquivalanceChecker.isEquivalent(this.getMemberEntityReference(), that.getMemberEntityReference()) 
+    	return  SetEquivalanceChecker.isEquivalent(this.getMemberEntityReference(), that.getMemberEntityReference())
 			&& super.semanticallyEquivalent(element);
     }
 }

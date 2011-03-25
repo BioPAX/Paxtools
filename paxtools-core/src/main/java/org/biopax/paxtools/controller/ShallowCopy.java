@@ -68,7 +68,7 @@ public class ShallowCopy implements Visitor
 	 */
 	public <T extends BioPAXElement> T copy(T source, String newID) 
 	{
-		T copy = (T) level.getDefaultFactory().reflectivelyCreate(
+		T copy = (T) level.getDefaultFactory().create(
 				(Class<T>) source.getModelInterface(), newID);
 		this.copy = copy;
 		traverser.traverse(copy, null);

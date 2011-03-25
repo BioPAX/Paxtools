@@ -4,7 +4,8 @@ import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Ozgun Babur

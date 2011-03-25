@@ -12,7 +12,9 @@ import org.biopax.paxtools.model.level3.Named;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides output in OWL format for BioPAX model(s);

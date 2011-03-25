@@ -2,9 +2,9 @@ package org.biopax.paxtools.util;
 
 import org.biopax.paxtools.model.level2.*;
 
-import java.util.List;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**

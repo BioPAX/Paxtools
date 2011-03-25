@@ -1,13 +1,13 @@
 package org.biopax.paxtools.io;
 
-import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.controller.EditorMap;
+import org.biopax.paxtools.controller.ReusedPEPHelper;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.controller.ReusedPEPHelper;
-import org.biopax.paxtools.controller.EditorMap;
+import org.biopax.paxtools.model.Model;
 
-import java.io.InputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**

@@ -6,7 +6,6 @@ import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 
 import javax.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 

@@ -3,14 +3,16 @@ package org.biopax.paxtools.io;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.EditorMap;
+import org.biopax.paxtools.controller.ObjectPropertyEditor;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.ReusedPEPHelper;
-import org.biopax.paxtools.controller.ObjectPropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.model.level2.deltaGprimeO;
+import org.biopax.paxtools.model.level2.kPrime;
+import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -231,7 +233,7 @@ hg	 */
 		if (fixingPEPS)
 		{
 			reusedPEPHelper =
-					new ReusedPEPHelper(model, (Level2Factory) this.getFactory());
+					new ReusedPEPHelper(model);
 		}
 
 		createAndBind(model);
@@ -275,7 +277,7 @@ hg	 */
 
 	protected void createAndAdd(Model model, String id, String localName)
 	{
-		BioPAXElement bp = this.getFactory().reflectivelyCreate(localName, id);
+		BioPAXElement bp = this.getFactory().create(localName, id);
 		
 		if (log.isTraceEnabled())
 		{

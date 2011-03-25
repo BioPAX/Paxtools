@@ -182,7 +182,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 					case START_ELEMENT:
 						if (BioPAXLevel.isInBioPAXNameSpace(r.getName().getNamespaceURI()))
 						{
-							if (this.getFactory().canInstantiate(r.getLocalName()))
+							if (this.getFactory().canInstantiate(this.getLevel().getInterfaceForName(r.getLocalName())))
 							{
 								processIndividual(model);
 							}
@@ -288,7 +288,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 					+ s + ". rdf:ID or rdf:about not found!", e);
 		}
 
-		if (this.getFactory().canInstantiate(s))
+		if (this.getFactory().canInstantiate((this.getLevel().getInterfaceForName(s))))
 		{
 
 			if (!mergeDuplicates || (model.getByID(id))==null)
@@ -327,7 +327,7 @@ public class SimpleReader extends BioPAXIOHandlerAdapter
 
 	private void createBpe(String s, String id, Model model)
 	{
-		BioPAXElement bpe = this.getFactory().reflectivelyCreate(s, id);
+		BioPAXElement bpe = this.getFactory().create(s, id);
 		model.add(bpe);
 	}
 

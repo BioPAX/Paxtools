@@ -4,12 +4,10 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.model.AbstractNode;
 import org.biopax.paxtools.query.model.Edge;
-import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * @author Ozgun Babur

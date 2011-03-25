@@ -1,16 +1,14 @@
 package org.biopax.paxtools.converter;
 
-import static org.junit.Assert.*;
+import org.biopax.paxtools.io.simpleIO.SimpleExporter;
+import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.model.Model;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
-import org.biopax.paxtools.model.Model;
-import org.junit.Test;
 
 public class OneTwoThreeTest {
 

@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.Level2Factory;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.model.level2.sequenceFeature;
 import org.biopax.paxtools.model.level2.sequenceParticipant;
@@ -22,17 +21,16 @@ public class ReusedPEPHelper
 {
     private static final Log log = LogFactory.getLog(ReusedPEPHelper.class);
     private final Model model;
-    private final Level2Factory factory;
+
     private final Map<physicalEntityParticipant, physicalEntityParticipant> duplicatedPeps;
 
     /**
      * @param model
-     * @param factory
      */
-    public ReusedPEPHelper(Model model, Level2Factory factory)
+    public ReusedPEPHelper(Model model)
     {
         this.model = model;
-        this.factory = factory;
+
         duplicatedPeps =
                 new HashMap<physicalEntityParticipant, physicalEntityParticipant>();
 

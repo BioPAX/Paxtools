@@ -29,17 +29,16 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
-import org.biopax.paxtools.model.BioPAXLevel;
 
+import org.biopax.paxtools.model.BioPAXLevel;
 import psidev.psi.mi.xml.PsimiXmlReader;
+import psidev.psi.mi.xml.PsimiXmlReaderException;
 import psidev.psi.mi.xml.model.Entry;
 import psidev.psi.mi.xml.model.EntrySet;
-import psidev.psi.mi.xml.PsimiXmlReaderException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  * The converter class. 

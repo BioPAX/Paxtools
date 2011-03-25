@@ -23,13 +23,13 @@ public class CommandManagerTest
 		CommandManager manager = new CommandManager(model);
 		Set<BioPAXElement> objects = new HashSet<BioPAXElement>();
 
-		Protein protein = factory.reflectivelyCreate(Protein.class, "1");
+		Protein protein = factory.create(Protein.class, "1");
 		objects.add(protein);
 
-		Protein protein2 = factory.reflectivelyCreate(Protein.class, "2");
+		Protein protein2 = factory.create(Protein.class, "2");
 		objects.add(protein2);
 
-		MolecularInteraction interaction = factory.reflectivelyCreate(MolecularInteraction.class, "3");
+		MolecularInteraction interaction = factory.create(MolecularInteraction.class, "3");
 		objects.add(interaction);
 
 		manager.addObjects(objects);

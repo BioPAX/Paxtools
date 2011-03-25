@@ -86,7 +86,7 @@ public class ModelBuilder
 									 Class<? extends Control> cls, ControlType type, Model model)
 	{
 		String std = effector.getStandardName() + ACTIV_ARROW + conv.getStandardName();
-		Control con = factory.reflectivelyCreate(cls, IDBASE + std);
+		Control con = factory.create(cls, IDBASE + std);
 		con.setStandardName(std);
 		con.addController(effector);
 		con.addControlled(conv);

@@ -1,10 +1,10 @@
 package org.biopax.paxtools.examples;
 
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
+import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.relationshipXref;
 import org.biopax.paxtools.model.level2.unificationXref;

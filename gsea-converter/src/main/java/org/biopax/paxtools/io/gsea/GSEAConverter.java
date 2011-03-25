@@ -1,25 +1,23 @@
 package org.biopax.paxtools.io.gsea;
 
 // imports
+
+import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.controller.Traverser;
+import org.biopax.paxtools.controller.Visitor;
+import org.biopax.paxtools.converter.OneTwoThree;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.BioPAXElement;
-
-import org.biopax.paxtools.controller.SimpleEditorMap;
-import org.biopax.paxtools.controller.Visitor;
-import org.biopax.paxtools.controller.Traverser;
-import org.biopax.paxtools.controller.PropertyEditor;
-
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.biopax.paxtools.converter.OneTwoThree;
 
-import java.io.*;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.Set;
-import java.util.Map;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.*;
 
 
 /**

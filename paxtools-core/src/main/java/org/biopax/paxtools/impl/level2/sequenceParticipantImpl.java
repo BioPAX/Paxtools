@@ -1,10 +1,10 @@
 package org.biopax.paxtools.impl.level2;
 
-import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.model.level2.sequenceFeature;
 import org.biopax.paxtools.model.level2.sequenceParticipant;
+import org.biopax.paxtools.util.SetEquivalanceChecker;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -76,7 +76,7 @@ class sequenceParticipantImpl extends physicalEntityParticipantImpl
 	private boolean hasEquivalentFeatures(sequenceParticipant that)
 	{
 		return SetEquivalanceChecker.isEquivalent(SEQUENCE_FEATURE_LIST,
-			that.getSEQUENCE_FEATURE_LIST());
+                that.getSEQUENCE_FEATURE_LIST());
 	}
 
 	public int stateCode()

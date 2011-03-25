@@ -29,10 +29,12 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
-import org.biopax.paxtools.model.*;
 
-import java.util.Set;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.Model;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * An interface which provides methods to query a Paxtools model.

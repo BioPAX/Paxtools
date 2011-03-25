@@ -1,12 +1,10 @@
 package org.biopax.paxtools.io.sif.level2;
 
-import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntity;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

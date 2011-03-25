@@ -16,7 +16,7 @@ import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.biopax.paxtools.model.SetEquivalanceChecker.*;
+import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
 
 
 @javax.persistence.Entity

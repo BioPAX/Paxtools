@@ -2,15 +2,12 @@ package org.biopax.paxtools.impl.level3;
 
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
-import org.biopax.paxtools.model.level3.Catalysis;
-import org.biopax.paxtools.model.level3.Conversion;
-import org.biopax.paxtools.model.level3.CatalysisDirectionType;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 

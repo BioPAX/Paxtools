@@ -1,13 +1,18 @@
 package org.biopax.paxtools.examples;
 
-import java.io.*;
-
 import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
-import org.biopax.paxtools.model.*;
-import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.ProteinReference;
+import org.biopax.paxtools.model.level3.UnificationXref;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public final class SimpleIOExample {
 

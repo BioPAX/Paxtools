@@ -3,16 +3,19 @@
  */
 package org.biopax.paxtools.controller;
 
-import static org.junit.Assert.*;
+import org.biopax.paxtools.io.simpleIO.SimpleExporter;
+import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.model.*;
-import org.biopax.paxtools.model.level3.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author rodche
@@ -57,8 +60,8 @@ public class SimpleMergerTest {
     	
     	// create these, add to properties, but not add to the model explicitely 
     	//(merger should find and add them!)
-		BioSource bs = factory.reflectivelyCreate(BioSource.class, "Mouse");
-    	ref = factory.reflectivelyCreate(UnificationXref.class, "Xref5");
+		BioSource bs = factory.create(BioSource.class, "Mouse");
+    	ref = factory.create(UnificationXref.class, "Xref5");
     	ref.setDb("taxonomy"); 
     	ref.setId("10090"); // the same id
 		bs.addXref(ref);

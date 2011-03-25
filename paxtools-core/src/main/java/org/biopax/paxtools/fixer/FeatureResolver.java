@@ -1,11 +1,10 @@
 package org.biopax.paxtools.fixer;
 
-import org.biopax.paxtools.controller.FeatureUtils;
 import org.biopax.paxtools.controller.ShallowCopy;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.SetEquivalanceChecker;
 
 import java.util.Set;
 
@@ -20,12 +19,10 @@ import static org.biopax.paxtools.controller.FeatureUtils.findFeaturesAddedToSec
 public class FeatureResolver {
 
     private boolean fix;
-    private Level3Factory factory;
+
     ShallowCopy copier = new ShallowCopy();
 
-    public FeatureResolver(Level3Factory factory) {
-        this.factory = factory;
-    }
+
 
     public void resolveFeatures(Model model) {
         if (!model.getLevel().equals(BioPAXLevel.L3)) {

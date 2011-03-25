@@ -6,7 +6,6 @@ import org.biopax.paxtools.model.level3.PositionStatusType;
 import org.biopax.paxtools.model.level3.SequenceSite;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Transient;

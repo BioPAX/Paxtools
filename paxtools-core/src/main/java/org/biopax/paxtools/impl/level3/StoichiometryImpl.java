@@ -1,9 +1,9 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;

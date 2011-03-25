@@ -1,8 +1,8 @@
 package org.biopax.paxtools.impl.level2;
 
+import org.apache.commons.collections15.set.CompositeSet;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.*;
-import org.apache.commons.collections15.set.CompositeSet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

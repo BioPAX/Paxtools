@@ -1,5 +1,7 @@
 package org.biopax.paxtools.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.level2.Level2FactoryImpl;
 import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
 
@@ -11,6 +13,7 @@ import java.io.InputStream;
 
 public enum BioPAXLevel
 {
+
     L1(1,
        "biopax-level1.owl",
        Level2FactoryImpl.class,
@@ -25,9 +28,8 @@ public enum BioPAXLevel
        "org.biopax.paxtools.model.level3");
 
 // ------------------------------ FIELDS ------------------------------
-
+    private static Log log = LogFactory.getLog(BioPAXLevel.class);
     private final String filename;
-
     private BioPAXFactory factory;
     private final int value;
     private final String packageName;
@@ -153,5 +155,17 @@ public enum BioPAXLevel
     {
         return element.getModelInterface().getPackage().getName().equals(
                 this.packageName);
+    }
+
+    public Class<? extends BioPAXElement> getInterfaceForName(String localName)
+    {
+        try {
+            return (Class<? extends BioPAXElement>) Class.forName(this.packageName+"."+localName);
+        } catch (ClassNotFoundException e)
+        {
+            log.error("Could not find the interface for "+localName);
+            log.error(e.getStackTrace());
+            return null;
+        }
     }
 }

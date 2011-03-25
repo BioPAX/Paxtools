@@ -11,9 +11,6 @@ import org.biopax.paxtools.io.BioPAXIOHandlerAdapter;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
-
-import static org.biopax.paxtools.model.BioPAXLevel.isInBioPAXNameSpace;
-
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -21,8 +18,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
+
+import static org.biopax.paxtools.model.BioPAXLevel.isInBioPAXNameSpace;
 
 
 /**

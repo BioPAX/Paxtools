@@ -7,7 +7,10 @@ import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.INTERACTS_WITH;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;

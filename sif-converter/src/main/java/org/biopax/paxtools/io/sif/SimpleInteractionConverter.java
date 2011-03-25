@@ -2,8 +2,8 @@ package org.biopax.paxtools.io.sif;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.EditorMap;
+import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;

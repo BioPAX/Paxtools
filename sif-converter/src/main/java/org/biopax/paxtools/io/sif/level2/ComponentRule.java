@@ -10,7 +10,6 @@ import org.biopax.paxtools.model.level2.complex;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

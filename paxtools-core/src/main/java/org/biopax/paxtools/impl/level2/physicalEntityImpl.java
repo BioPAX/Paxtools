@@ -1,9 +1,9 @@
 package org.biopax.paxtools.impl.level2;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.interaction;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.ClassFilterSet;
 
 import java.util.HashSet;

@@ -3,7 +3,6 @@ package org.biopax.paxtools.io.sif.level3;
 import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level3.EntityReference;
 
 import java.util.Map;

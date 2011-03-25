@@ -1,56 +1,50 @@
 package org.biopax.paxtools.model;
 
-/**
- * A BioPAXFactory is the preferred method of creating BioPAX objects.
- * This interface allows reflective creation of the objects.
- * Strongly typed creation methods are implemented in level specific factories.
- * @see org.biopax.paxtools.model.level2.Level2Factory
- * @see org.biopax.paxtools.model.level3.Level3Factory
- *
- */
-public interface BioPAXFactory
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.lang.reflect.Modifier;
+
+public abstract class BioPAXFactory
 {
+    private static Log log = LogFactory.getLog(BioPAXFactory.class);
+
+    public BioPAXElement create(String localName, String uri)
+    {
+        return this.create((this.getLevel().getInterfaceForName(localName)), uri);
+    }
 
 
-    /**
-     * @return the BioPAX level this factory was written for.
-     */
-    BioPAXLevel getLevel();
+    public <T extends BioPAXElement> T create(Class<T> aClass, String uri)
+    {
+        T bpe = null;
+        try {
+            bpe = getImplementingClass(aClass).newInstance();
+        } catch (InstantiationException e)
+        {
+            log.error("Could not instantiate "+ aClass + "with "+ bpe.getClass());
+            log.error("Make sure that there is a default non-private noarg constructor");
+            log.error(e.getStackTrace());
+        } catch (IllegalAccessException e) {
+            log.error("Could not instantiate "+ aClass + "with "+ bpe.getClass());
+            log.error("Make sure that there is a default non-private noarg constructor");
+            log.error(e.getStackTrace());
+        }
+        setId(bpe, uri);
+        return bpe;
+	}
 
-    /**
-     * @return a new BioPAX model
-     */
-    Model createModel();
+    protected abstract void setId(BioPAXElement bpe, String uri);
 
+    public abstract <T extends BioPAXElement> Class<? extends T>  getImplementingClass(Class<T> aClass);
 
-    /**
-     * This method will create and return a new instance of the class of the
-     * given name. If the name is not defined in the BioPAX ontology, it will
-     * throw an exception.
-     * @param name of the class. Case is important.
-     * @param uri elements id (rdfID which is URI)
-     * @return a new instance of the class of the given name as defined by
-     * BioPAX ontology
-     */
-    BioPAXElement reflectivelyCreate(String name, String uri);
+    public boolean canInstantiate(Class<? extends BioPAXElement> aClass)
+    {
+        return !Modifier.isAbstract(getImplementingClass(aClass).getModifiers());
+    }
 
-    /**
-     * This method will create and return a new instance of the given class.
-     * If the class is not defined in the API, it will throw an
-     * exception.
-     * @param aClass a BioPAX model interface
-     * @param uri rdfid
-     * @return a new instance of the class as defined by BioPAX ontology
-     */
-    <T extends BioPAXElement> T  reflectivelyCreate(Class<T> aClass, String uri);
-	
-    
-    /**
-     * This method will return true, if this factory can create a new instance
-     * of the class defined by the name.
-     * @param name of the BioPAX class
-     * @return true if this factory can instatiate an instance of this class.
-     */
-    boolean canInstantiate(String name);
-    
+	public abstract Model createModel();
+
+    public abstract BioPAXLevel getLevel();
 }

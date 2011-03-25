@@ -5,9 +5,6 @@ import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;

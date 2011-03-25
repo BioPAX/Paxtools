@@ -1,14 +1,19 @@
 package org.biopax.paxtools.examples;
-import java.io.*;
-import java.util.*;
 
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.Traverser;
 import org.biopax.paxtools.controller.Visitor;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.*;
 
 /**
  * Prints all the genes (aka proteins) in the L2 pathway 

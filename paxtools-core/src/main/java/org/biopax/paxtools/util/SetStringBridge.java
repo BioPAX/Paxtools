@@ -1,8 +1,10 @@
 package org.biopax.paxtools.util;
 
 // imports
-import java.util.Set;
+
 import org.hibernate.search.bridge.StringBridge;
+
+import java.util.Set;
 
 /**
  * Hibernate - Lucene bridge between Set<String> and String.

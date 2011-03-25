@@ -1,11 +1,14 @@
 package org.biopax.paxtools.io.jena;
 
-import org.junit.Test;
-import org.biopax.paxtools.model.*;
-import org.biopax.paxtools.model.level2.physicalEntityParticipant;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntity;
+import org.biopax.paxtools.model.level2.physicalEntityParticipant;
+import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Set;
 

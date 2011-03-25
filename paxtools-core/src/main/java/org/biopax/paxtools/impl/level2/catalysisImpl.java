@@ -1,13 +1,13 @@
 package org.biopax.paxtools.impl.level2;
 
-import org.biopax.paxtools.model.level2.*;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.apache.commons.collections15.set.CompositeSet;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level2.*;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.HashSet;
 import java.util.Set;
-import java.io.ObjectInputStream;
-import java.io.IOException;
 
 /**
  */

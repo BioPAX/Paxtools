@@ -1,18 +1,23 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.controller.*;
-import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.impl.BioPAXFactoryAdaptor;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
  * This factory returns decorated objects for testing.
  */
-public class MockFactory implements Level3Factory {
+public class MockFactory extends BioPAXFactoryAdaptor
+{
 // ------------------------------ FIELDS ------------------------------
+
+
 
     private static final List<String> strings = Arrays
             .asList(" ",
@@ -29,446 +34,24 @@ public class MockFactory implements Level3Factory {
             Arrays.asList(Integer.MAX_VALUE, 1, 0, Integer.MIN_VALUE + 1);
     private static final List<Boolean> booleans =
             Arrays.asList(Boolean.TRUE,Boolean.FALSE);
-    private final Level3Factory factory;
+
+    private static final String base="mock://id/";
+
+    private int id = 0;
 
 
-    private final EditorMap map;
+    private final EditorMap map = new SimpleEditorMap(BioPAXLevel.L3);
+    private BioPAXLevel level;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public MockFactory() {
-        this(new Level3FactoryImpl());
-    }
-
-    public MockFactory(Level3Factory factory) {
-        this.factory = factory;
-        map = new SimpleEditorMap(BioPAXLevel.L3);
-    }
-
-// --------------------- GETTER / SETTER METHODS ---------------------
-
-    public EditorMap getMap() {
-        return map;
-    }
-
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface BioPAXFactory ---------------------
-
-    public BioSource createBioSource() {
-        BioSource bpe = factory.createBioSource();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public BiochemicalReaction createBiochemicalReaction() {
-        BiochemicalReaction bpe = factory.createBiochemicalReaction();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Catalysis createCatalysis() {
-        Catalysis bpe = factory.createCatalysis();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public ChemicalStructure createChemicalStructure() {
-        ChemicalStructure bpe = factory.createChemicalStructure();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Complex createComplex() {
-        Complex bpe = factory.createComplex();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public ComplexAssembly createComplexAssembly() {
-        ComplexAssembly bpe = factory.createComplexAssembly();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Degradation createDegradation() {
-        Degradation bpe = factory.createDegradation();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Interaction createInteraction() {
-        Interaction bpe = factory.createInteraction();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public MolecularInteraction createMolecularInteraction() {
-        MolecularInteraction bpe = factory.createMolecularInteraction();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Score createScore() {
-        Score bpe = factory.createScore();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Control createControl() {
-        Control bpe = factory.createControl();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Conversion createConversion() {
-        Conversion bpe = factory.createConversion();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public ModificationFeature createModificationFeature() {
-        ModificationFeature bpe = factory.createModificationFeature();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public BindingFeature createBindingFeature() {
-        BindingFeature bpe = factory.createBindingFeature();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public CovalentBindingFeature createCovalentBindingFeature() {
-        CovalentBindingFeature bpe = factory.createCovalentBindingFeature();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public GeneticInteraction createGeneticInteraction() {
-      GeneticInteraction bpe = factory.createGeneticInteraction();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Provenance createProvenance() {
-        Provenance bpe = factory.createProvenance();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public DeltaG createDeltaG() {
-        DeltaG bpe = factory.createDeltaG();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public BiochemicalPathwayStep createBiochemicalPathwayStep() {
-        BiochemicalPathwayStep bpe = factory.createBiochemicalPathwayStep();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public Dna createDna() {
-        Dna bpe = factory.createDna();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public EntityFeature createEntityFeature() {
-        EntityFeature bpe = factory.createEntityFeature();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public Evidence createEvidence() {
-        Evidence bpe = factory.createEvidence();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public ExperimentalForm createExperimentalForm() {
-        ExperimentalForm bpe = factory.createExperimentalForm();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Gene createGene() {
-        Gene bpe = factory.createGene();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public KPrime createKPrime() {
-        KPrime bpe = factory.createKPrime();
-        populateMock(bpe);
-        return bpe;
-    }
-
-
-    public boolean canInstantiate(String name) {
-        return factory.canInstantiate(name);
-    }
-
-    public BioPAXLevel getLevel() {
-        return factory.getLevel();
-    }
-
-    public Model createModel() {
-        return factory.createModel();
-    }
-
-    public BioPAXElement reflectivelyCreate(String name, String uri) {
-        return factory.reflectivelyCreate(name, uri);
-    }
-
-    public Modulation createModulation() {
-        Modulation bpe = factory.createModulation();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public ControlledVocabulary createControlledVocabulary() {
-        ControlledVocabulary bpe = factory.createControlledVocabulary();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Pathway createPathway() {
-        Pathway bpe = factory.createPathway();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public PathwayStep createPathwayStep() {
-        PathwayStep bpe = factory.createPathwayStep();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public PhysicalEntity createPhysicalEntity() {
-        PhysicalEntity bpe = factory.createPhysicalEntity();
-        populateMock(bpe);
-        return bpe;
-    }
-
-
-    public Protein createProtein() {
-        Protein bpe = factory.createProtein();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public PublicationXref createPublicationXref() {
-        PublicationXref bpe = factory.createPublicationXref();
-        populateMock(bpe);
-        return bpe;
-    }
-
-
-
-    public DnaReference createDnaReference() {
-        DnaReference bpe = factory.createDnaReference();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public RnaReference createRnaReference() {
-        RnaReference bpe = factory.createRnaReference();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public SmallMoleculeReference createSmallMoleculeReference() {
-        SmallMoleculeReference bpe = factory.createSmallMoleculeReference();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public ProteinReference createProteinReference() {
-        ProteinReference bpe = factory.createProteinReference();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public RelationshipXref createRelationshipXref() {
-        RelationshipXref bpe = factory.createRelationshipXref();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Rna createRna() {
-        Rna bpe = factory.createRna();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public SequenceSite createSequenceSite() {
-        SequenceSite bpe = factory.createSequenceSite();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public SequenceInterval createSequenceInterval() {
-        SequenceInterval bpe = factory.createSequenceInterval();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public SequenceLocation createSequenceLocation() {
-        SequenceLocation bpe = factory.createSequenceLocation();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public SmallMolecule createSmallMolecule() {
-        SmallMolecule bpe = factory.createSmallMolecule();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public Stoichiometry createStoichiometry() {
-    	Stoichiometry bpe = factory.createStoichiometry();
-    	populateMock(bpe);
-        return bpe;
-    }
-
-    public Transport createTransport() {
-        Transport bpe = factory.createTransport();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public TransportWithBiochemicalReaction createTransportWithBiochemicalReaction() {
-        TransportWithBiochemicalReaction bpe =
-                factory.createTransportWithBiochemicalReaction();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public UnificationXref createUnificationXref() {
-        UnificationXref bpe = factory.createUnificationXref();
-        populateMock(bpe);
-        bpe.setId(((int) Math.random() * Integer.MAX_VALUE) + "");
-        return bpe;
-    }
-
-    public TissueVocabulary createTissueVocabulary() {
-        TissueVocabulary bpe = factory.createTissueVocabulary();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public CellVocabulary createCellVocabulary() {
-        CellVocabulary bpe = factory.createCellVocabulary();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public CellularLocationVocabulary createCellularLocationVocabulary() {
-        CellularLocationVocabulary bpe = factory.createCellularLocationVocabulary();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public ExperimentalFormVocabulary createExperimentalFormVocabulary() {
-        ExperimentalFormVocabulary bpe = factory.createExperimentalFormVocabulary();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public EvidenceCodeVocabulary createEvidenceCodeVocabulary() {
-        EvidenceCodeVocabulary bpe = factory.createEvidenceCodeVocabulary();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-
-    public SequenceRegionVocabulary createSequenceRegionVocabulary() {
-        SequenceRegionVocabulary bpe = factory.createSequenceRegionVocabulary();
-        populateMock(bpe);
-        return bpe;
-
-    }
-
-    public SequenceModificationVocabulary createSequenceModificationVocabulary() {
-        SequenceModificationVocabulary bpe = factory.createSequenceModificationVocabulary();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public RelationshipTypeVocabulary createRelationshipTypeVocabulary() {
-        RelationshipTypeVocabulary bpe = factory.createRelationshipTypeVocabulary();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public FragmentFeature createFragmentFeature() {
-        FragmentFeature bpe = factory.createFragmentFeature();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public TemplateReaction createTemplateReaction() {
-        TemplateReaction bpe = factory.createTemplateReaction();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public TemplateReactionRegulation createTemplateReactionRegulation() {
-        TemplateReactionRegulation bpe = factory.createTemplateReactionRegulation();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public DnaRegion createDnaRegion() {
-        DnaRegion bpe = factory.createDnaRegion();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public DnaRegionReference createDnaRegionReference() {
-        DnaRegionReference bpe = factory.createDnaRegionReference();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public RnaRegion createRnaRegion() {
-        RnaRegion bpe = factory.createRnaRegion();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public RnaRegionReference createRnaRegionReference() {
-        RnaRegionReference bpe = factory.createRnaRegionReference();
-        populateMock(bpe);
-        return bpe;
-    }
-
-    public InteractionVocabulary createInteractionVocabulary()
+    public MockFactory(BioPAXLevel level)
     {
-        InteractionVocabulary bpe = factory.createInteractionVocabulary();
-        populateMock(bpe);
-        return bpe;
+      this.level = level;
     }
 
-    public PhenotypeVocabulary createPhenotypeVocabulary() {
-        PhenotypeVocabulary bpe = factory.createPhenotypeVocabulary();
-        populateMock(bpe);
-        return bpe;
-    }
 
-// -------------------------- OTHER METHODS --------------------------
+
 
     private void populateMock(BioPAXElement bpe) {
         Set<PropertyEditor> propertyEditors =
@@ -566,7 +149,7 @@ public class MockFactory implements Level3Factory {
         actual = findConcreteMockClass(toCreate, domain);
         if (actual != null) {
             return map.getLevel().getDefaultFactory()
-            	.reflectivelyCreate(actual, null); // FIXME no RDFID ok?
+            	.create(actual, base+id++);
         } else {
             System.out.println("actual = " + actual);
             System.out.println("toCreate = " + toCreate);
@@ -577,7 +160,7 @@ public class MockFactory implements Level3Factory {
     private Class findConcreteMockClass(Class toCreate, Class domain) {
         Class actual = null;
         if (map.getLevel().getDefaultFactory()
-                .canInstantiate(toCreate.getSimpleName())
+                .canInstantiate(toCreate)
                 &&
                 !toCreate.isAssignableFrom(domain)) {
             actual = toCreate;
@@ -613,9 +196,15 @@ public class MockFactory implements Level3Factory {
         return values;
     }
 
-	public <T extends BioPAXElement> T reflectivelyCreate(Class<T> aClass, String uri) 
+	public <T extends BioPAXElement> T create(Class<T> aClass, String uri)
 	{
-		T bpe = reflectivelyCreate(aClass, uri);
-		return bpe;
+        T t = this.getLevel().getDefaultFactory().create(aClass, uri);
+        populateMock(t);
+        return t;
 	}
+
+    @Override
+    public BioPAXLevel getLevel() {
+        return this.level;
+    }
 }

@@ -1,17 +1,19 @@
 package org.biopax.paxtools.io.sif.level2;
 
-import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
-
-import static org.biopax.paxtools.io.sif.BinaryInteractionType.*;
-
+import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.model.level2.control;
+import org.biopax.paxtools.model.level2.physicalEntity;
+import org.biopax.paxtools.model.level2.physicalEntityParticipant;
+import org.biopax.paxtools.model.level2.process;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.biopax.paxtools.io.sif.BinaryInteractionType.CO_CONTROL;
 
 /**
  * <p/>

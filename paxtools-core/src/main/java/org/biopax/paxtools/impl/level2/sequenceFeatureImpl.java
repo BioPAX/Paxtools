@@ -1,8 +1,8 @@
 package org.biopax.paxtools.impl.level2;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.util.SetEquivalanceChecker;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -7,8 +7,9 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 

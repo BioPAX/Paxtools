@@ -2,17 +2,17 @@ package org.biopax.paxtools.io.gsea;
 
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
-
 import org.biopax.paxtools.model.Model;
-
-import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.*;
-import java.util.Map;
 import java.util.Collection;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * GSEA conversion test.

@@ -1,8 +1,6 @@
 package org.biopax.paxtools.io.sif;
 
-import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.physicalEntity;
 
 import java.util.List;
 import java.util.Map;

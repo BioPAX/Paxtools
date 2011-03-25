@@ -30,13 +30,15 @@ package org.mskcc.psibiopax.converter;
 
 // imports
 
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.model.level3.*;
 
-import java.util.Set;
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * An base class that creates paxtool models given psi.

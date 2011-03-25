@@ -1,10 +1,10 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.hibernate.search.annotations.Indexed;
 

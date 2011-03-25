@@ -1,11 +1,11 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;

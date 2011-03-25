@@ -2,11 +2,9 @@ package org.biopax.paxtools.io.sif.level2;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.MaximumInteractionThresholdExceedException;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
-import org.biopax.paxtools.io.sif.BinaryInteractionType;
-import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
-import static org.biopax.paxtools.io.sif.BinaryInteractionType.INTERACTS_WITH;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
 
@@ -14,6 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.biopax.paxtools.io.sif.BinaryInteractionType.INTERACTS_WITH;
+import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
 
 /**
  * User: demir Date: Dec 28, 2007 Time: 5:52:06 PM

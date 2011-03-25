@@ -1,17 +1,16 @@
 package org.biopax.paxtools.io.sif;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Evidence;
-import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class implements a directed binary interaction between two entities. Most bioinformatics

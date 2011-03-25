@@ -1,4 +1,6 @@
-package org.biopax.paxtools.model;
+package org.biopax.paxtools.util;
+
+import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.HashSet;
 import java.util.Set;

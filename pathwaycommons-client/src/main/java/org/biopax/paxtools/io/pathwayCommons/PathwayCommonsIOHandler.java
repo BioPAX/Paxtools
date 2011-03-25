@@ -1,8 +1,8 @@
 package org.biopax.paxtools.io.pathwayCommons;
 
 import org.biopax.paxtools.controller.Merger;
-import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.model.Model;
 
 import java.io.BufferedReader;
 import java.io.IOException;

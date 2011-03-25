@@ -2,12 +2,10 @@ package org.biopax.paxtools.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.level3.PhysicalEntityImpl;
 import org.biopax.paxtools.model.level3.EntityFeature;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.util.HashSet;
 import java.util.Set;

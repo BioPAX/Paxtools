@@ -1,48 +1,20 @@
 package org.biopax.paxtools.converter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.controller.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level2.*;
+import org.biopax.paxtools.model.level3.*;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.*;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.controller.*;
-import org.biopax.paxtools.controller.SimpleEditorMap;
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.InteractionParticipant;
-import org.biopax.paxtools.model.level2.Level2Element;
-import org.biopax.paxtools.model.level2.complex;
-import org.biopax.paxtools.model.level2.control;
-import org.biopax.paxtools.model.level2.conversion;
-import org.biopax.paxtools.model.level2.dna;
-import org.biopax.paxtools.model.level2.interaction;
-import org.biopax.paxtools.model.level2.openControlledVocabulary;
-import org.biopax.paxtools.model.level2.pathway;
-import org.biopax.paxtools.model.level2.pathwayStep;
-import org.biopax.paxtools.model.level2.physicalEntity;
-import org.biopax.paxtools.model.level2.physicalEntityParticipant;
-import org.biopax.paxtools.model.level2.protein;
-import org.biopax.paxtools.model.level2.relationshipXref;
-import org.biopax.paxtools.model.level2.rna;
-import org.biopax.paxtools.model.level2.smallMolecule;
-import org.biopax.paxtools.model.level3.Complex;
-import org.biopax.paxtools.model.level3.ControlledVocabulary;
-import org.biopax.paxtools.model.level3.Conversion;
-import org.biopax.paxtools.model.level3.DnaRegion;
-import org.biopax.paxtools.model.level3.EntityReference;
-import org.biopax.paxtools.model.level3.Level3Element;
-import org.biopax.paxtools.model.level3.Level3Factory;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
-import org.biopax.paxtools.model.level3.Protein;
-import org.biopax.paxtools.model.level3.RelationshipTypeVocabulary;
-import org.biopax.paxtools.model.level3.RnaRegion;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
-import org.biopax.paxtools.model.level3.SmallMolecule;
-import org.biopax.paxtools.model.level3.Stoichiometry;
 
 /**
  * Converts BioPAX L1 and L2 to Level 3.
@@ -59,7 +31,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	private static final Log log = LogFactory.getLog(OneTwoThree.class);
 	private static final String l3PackageName = "org.biopax.paxtools.model.level3.";
 
-	private Level3Factory factory;
+	private BioPAXFactory factory;
 	private Properties classesmap;
 	private Properties propsmap;
 
@@ -101,7 +73,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 		  }
 		);
 		
-		factory = (Level3Factory) BioPAXLevel.L3.getDefaultFactory();
+		factory = BioPAXLevel.L3.getDefaultFactory();
 		// load L2-L3 classes map
 		classesmap = new Properties();
 		try {
@@ -121,7 +93,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 * @param factory
 	 * @throws IOException
 	 */
-	public OneTwoThree(Level3Factory factory) throws IOException{
+	public OneTwoThree(BioPAXFactory factory) throws IOException{
 		this();
 		this.factory = factory;
 	}
@@ -260,54 +232,55 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 			// using classesmap.properties to map other types
 			String type = bpe.getModelInterface().getSimpleName();	
 			String newType = classesmap.getProperty(type).trim();
-			if (newType != null && factory.canInstantiate(newType)) {
-				newElement = (Level3Element) factory.reflectivelyCreate(newType, bpe.getRDFId());
+			if (newType != null && factory.canInstantiate(factory.getLevel().getInterfaceForName(newType)))
+            {
+				newElement = (Level3Element) factory.create(newType, bpe.getRDFId());
 			} else {
-				if(log.isDebugEnabled()) 
+				if(log.isDebugEnabled())
 					log.debug("No mapping found for " + type);
 				return null;
 			}
 		}
-		
+
 		return newElement;
 	}
 
-	
+
 	/*
 	 * Create L3 simple PE type using the L2 pEP.
-	 * 
-	 * When pEP's PHYSICAL_ENTITY is either complex 
+	 *
+	 * When pEP's PHYSICAL_ENTITY is either complex
 	 * or basic physicalEntity, null will be the result.
 	 */
 	private SimplePhysicalEntity createSimplePhysicalEntity(physicalEntityParticipant pep) {
 		physicalEntity pe2 = pep.getPHYSICAL_ENTITY();
 		return createSimplePhysicalEntity(pe2, pep.getRDFId());
 	}
-	
+
 	private SimplePhysicalEntity createSimplePhysicalEntity(physicalEntity pe2, String id) {
 		SimplePhysicalEntity e = null;
 		if(pe2 instanceof protein) {
-			e = factory.reflectivelyCreate(Protein.class, id);	
+			e = factory.create(Protein.class, id);
 		} else if(pe2 instanceof dna) {
-			e = factory.reflectivelyCreate(DnaRegion.class, id);
+			e = factory.create(DnaRegion.class, id);
 		} else if (pe2 instanceof rna) {
-			e = factory.reflectivelyCreate(RnaRegion.class, id);
+			e = factory.create(RnaRegion.class, id);
 		} else if (pe2 instanceof smallMolecule) {
-			e = factory.reflectivelyCreate(SmallMolecule.class, id);
-		} 
+			e = factory.create(SmallMolecule.class, id);
+		}
 		return e;
 	}
 
-	
-	/* 
-	 * Creates a specific ControlledVocabulary subclass 
+
+	/*
+	 * Creates a specific ControlledVocabulary subclass
 	 * and adds to the new model
 	 */
 	private ControlledVocabulary convertAndAddVocabulary(openControlledVocabulary value,
 			Level2Element parent, Model newModel, PropertyEditor newEditor) {
 		ControlledVocabulary cv = null;
 		String id = ((BioPAXElement) value).getRDFId();
-		
+
 		if (!newModel.containsID(id)) {
 			if (newEditor != null) {
 				newModel.addNew(newEditor.getRange(), id);
@@ -320,13 +293,13 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 		} else {
 			cv = (ControlledVocabulary) newModel.getByID(id);
 		}
-		
+
 		return cv;
 	}
-	
+
 	// parent class's abstract method implementation
-	protected void visit(Object value, BioPAXElement parent, 
-			Model newModel, PropertyEditor editor) 
+	protected void visit(Object value, BioPAXElement parent,
+			Model newModel, PropertyEditor editor)
 	{
 			if(editor != null && editor.isUnknown(value)) {
 				return;
@@ -336,46 +309,46 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 			BioPAXElement newParent = null;
 			Object newValue = value;
 			String newProp = propsmap.getProperty(editor.getProperty());
-			
+
 			// special case (PATHWAY-COMPONENTS maps to pathwayComponent or pathwayOrder)
 			if(parent instanceof pathway && value instanceof pathwayStep
 					&& editor.getProperty().equals("PATHWAY-COMPONENTS")) {
 				newProp = "pathwayOrder";
 			}
-			
+
 			// for pEPs, getting the corresponding simple PE or Complex is different
 			if(parent instanceof physicalEntityParticipant) {
 				newParent = getMappedPE((physicalEntityParticipant) parent, newModel);
 			} else {
 				newParent = newModel.getByID(parent.getRDFId());
 			}
-			
+
 			// bug check!
 			if(newParent == null) {
-				throw new IllegalAccessError("Of " + value + 
+				throw new IllegalAccessError("Of " + value +
 					", parent " + parentType + " : " + parent +
 					" is not yet in the new model: ");
 			}
-			
-			PropertyEditor newEditor = 
+
+			PropertyEditor newEditor =
 				editorMap3.getEditorForProperty(newProp, newParent.getModelInterface());
-			
-			if(value instanceof Level2Element) 
+
+			if(value instanceof Level2Element)
 			// not a String, Enum, or primitive type
-			{ 
-				// when pEP, create/add stoichiometry! 
-				if(value instanceof physicalEntityParticipant) 
+			{
+				// when pEP, create/add stoichiometry!
+				if(value instanceof physicalEntityParticipant)
 				{
 					physicalEntityParticipant pep = (physicalEntityParticipant) value;
 					newValue = getMappedPE(pep, newModel);
-					
+
 					float coeff = (float) pep.getSTOICHIOMETRIC_COEFFICIENT();
 					if (coeff > 1 ) { //!= BioPAXElement.UNKNOWN_DOUBLE) {
-					  if(parent instanceof conversion || parent instanceof complex) { 
+					  if(parent instanceof conversion || parent instanceof complex) {
 						PhysicalEntity pe3 = (PhysicalEntity) newValue;
 						Stoichiometry stoichiometry = factory
-							.reflectivelyCreate(Stoichiometry.class,
-								pe3.getRDFId() + "-stoichiometry" + Math.random());
+							.create(Stoichiometry.class,
+                                    pe3.getRDFId() + "-stoichiometry" + Math.random());
 						stoichiometry.setStoichiometricCoefficient(coeff);
 						stoichiometry.setPhysicalEntity(pe3);
 						//System.out.println("parent=" + parent + "; phy.ent.=" + pep + "; coeff=" + coeff);

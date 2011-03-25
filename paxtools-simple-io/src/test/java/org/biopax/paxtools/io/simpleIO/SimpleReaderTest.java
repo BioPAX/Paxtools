@@ -1,9 +1,9 @@
 package org.biopax.paxtools.io.simpleIO;
 
 import junit.framework.TestCase;
-import org.junit.Test;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.junit.Test;
 
 import java.net.URISyntaxException;
 

@@ -10,16 +10,14 @@ import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.sif.level2.ControlRule;
 import org.biopax.paxtools.io.sif.level2.ParticipatesRule;
 import org.biopax.paxtools.io.simpleIO.SimpleReader;
-
 import org.biopax.paxtools.model.Model;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import java.io.*;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TODO write tests that actually check the SIF output is correct (not just that no exceptions happend...)

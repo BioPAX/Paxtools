@@ -4,10 +4,10 @@ import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implements breadth-first search. Takes a set of source nodes, distance limit and labels nodes

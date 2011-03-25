@@ -13,7 +13,7 @@ import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.biopax.paxtools.model.SetEquivalanceChecker.isEquivalentIntersection;
+import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
 
 /**
  * This class helps with managing the bidirectional xref links.

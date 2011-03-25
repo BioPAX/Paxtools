@@ -1,10 +1,10 @@
 package org.biopax.paxtools.impl.level2;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.catalysis;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level2.modulation;
 import org.biopax.paxtools.model.level2.process;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**

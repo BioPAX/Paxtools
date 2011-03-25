@@ -1,18 +1,14 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
-import org.biopax.paxtools.model.level3.EntityFeature;
-import org.biopax.paxtools.model.level3.ExperimentalForm;
-import org.biopax.paxtools.model.level3.ExperimentalFormVocabulary;
-import org.biopax.paxtools.model.level3.Gene;
 import org.biopax.paxtools.model.level3.Entity;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
-import java.util.HashSet;
-import java.util.Set;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @javax.persistence.Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)

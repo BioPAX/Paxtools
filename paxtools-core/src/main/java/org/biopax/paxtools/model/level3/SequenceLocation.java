@@ -1,7 +1,5 @@
 package org.biopax.paxtools.model.level3;
 
-import java.util.Set;
-
 /**
  * Definition: A location on a nucleotide or amino acid sequence.
  * <p/>

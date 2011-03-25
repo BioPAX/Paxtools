@@ -1,15 +1,14 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.SetEquivalanceChecker;
-import org.biopax.paxtools.model.level3.*;
-import org.hibernate.search.annotations.Indexed;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 

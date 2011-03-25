@@ -1,7 +1,7 @@
 package org.biopax.paxtools.impl.level2;
 
-import org.biopax.paxtools.model.level2.dna;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level2.dna;
 
 /**
  */

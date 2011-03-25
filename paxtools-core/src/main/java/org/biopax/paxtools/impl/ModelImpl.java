@@ -2,13 +2,15 @@ package org.biopax.paxtools.impl;
 
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.SimpleMerger;
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.util.*;
-
 import javax.persistence.*;
+import java.util.*;
 
 /**
  * This is the default implementation of the {@link Model}.
@@ -157,7 +159,7 @@ public class ModelImpl implements Model
                             
 	public <T extends BioPAXElement> T addNew(Class<T> c, String id)
 	{
-		T paxElement = factory.reflectivelyCreate(c, id);
+		T paxElement = factory.create(c, id);
 		this.add(paxElement);
 		return paxElement;
 	}

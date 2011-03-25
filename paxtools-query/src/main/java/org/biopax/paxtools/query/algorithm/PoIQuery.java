@@ -4,10 +4,10 @@ package org.biopax.paxtools.query.algorithm;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Finds the paths from a specified source set of states or entities to a

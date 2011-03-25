@@ -29,24 +29,23 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
-import org.biopax.paxtools.model.*;
-import org.biopax.paxtools.model.level3.*;
-
-import psidev.psi.mi.xml.model.Entry;
-import psidev.psi.mi.xml.model.EntrySet;
-import psidev.psi.mi.xml.PsimiXmlReader;
-import psidev.psi.mi.xml.PsimiXmlReaderException;
-
-import java.io.InputStream;
-
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Collection;
 
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.*;
+import psidev.psi.mi.xml.PsimiXmlReader;
+import psidev.psi.mi.xml.model.Entry;
+import psidev.psi.mi.xml.model.EntrySet;
+
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This tests that a PSI-MI document (level 2-compact) is correctly mapped into a biopax model (L3).

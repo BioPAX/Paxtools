@@ -1,8 +1,8 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
-import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.EntityReference;
+import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

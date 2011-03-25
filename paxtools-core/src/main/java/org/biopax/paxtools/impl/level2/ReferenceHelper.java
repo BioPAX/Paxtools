@@ -1,8 +1,8 @@
 package org.biopax.paxtools.impl.level2;
 
-import org.biopax.paxtools.model.SetEquivalanceChecker;
 import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.util.SetEquivalanceChecker;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -89,8 +89,8 @@ class ReferenceHelper implements Serializable
 	private <T extends xref> Set<T> findIntersectionOfType(XReferrable that, Class<T> type)
 	{
 		return SetEquivalanceChecker.findEquivalentIntersection(
-			new ClassFilterSet<T>(this.XREF,type),
-			new ClassFilterSet<T>(that.getXREF(),type));
+                new ClassFilterSet<T>(this.XREF, type),
+                new ClassFilterSet<T>(that.getXREF(), type));
 	}
 
 

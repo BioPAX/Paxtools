@@ -9,7 +9,6 @@ import org.biopax.paxtools.model.level3.Stoichiometry;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 

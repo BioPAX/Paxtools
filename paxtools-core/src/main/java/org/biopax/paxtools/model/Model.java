@@ -151,28 +151,10 @@ public interface Model extends Serializable
      * 
      * @param oldID
      * @param newID
-     * 
-     * @deprecated (do re-factoring) to use the new method {@link Model#replace(BioPAXElement, BioPAXElement)}
      */
     void updateID(String oldID, String newID);
+    
+    
 
-    
-    /**
-     * Merges the source model into this one.
-     * 
-     * @param source a model to merge
-     */
-    void merge(Model source);
-    
-    
-    /**
-     * Replaces existing BioPAX element with another one,
-     * of the same or possibly equivalent type,
-     * and updates all the affected references (object properties).
-     * 
-     * @param existing
-     * @param replacement
-     */
-    void replace(BioPAXElement existing, BioPAXElement replacement);
-    
+
 }

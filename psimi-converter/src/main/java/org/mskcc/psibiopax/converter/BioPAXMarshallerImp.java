@@ -29,15 +29,16 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
-import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
 
-import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
+import org.biopax.paxtools.io.simpleIO.SimpleExporter;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
+
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class waits for each EntryProcessor thread to finish.

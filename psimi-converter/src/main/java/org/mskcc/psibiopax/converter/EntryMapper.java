@@ -29,18 +29,11 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
-import org.biopax.paxtools.model.BioPAXElement;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import psidev.psi.mi.xml.model.*;
 
-import java.util.Set;
-import java.util.Map;
-import java.util.List;
-import java.util.Random;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * A thread class which processes an entry in a psi xml doc.

@@ -1,9 +1,10 @@
 package org.biopax.paxtools.io.gsea;
 
 // imports
-import java.util.Map;
-import java.util.HashSet;
+
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * This class represents an entry found in a GSEA (GMT format) file.

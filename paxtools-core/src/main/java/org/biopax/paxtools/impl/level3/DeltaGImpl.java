@@ -5,7 +5,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 

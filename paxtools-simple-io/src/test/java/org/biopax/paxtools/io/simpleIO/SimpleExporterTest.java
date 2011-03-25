@@ -7,19 +7,14 @@ package org.biopax.paxtools.io.simpleIO;
  */
 
 import junit.framework.TestCase;
-
 import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
+import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class SimpleExporterTest extends TestCase
@@ -107,12 +102,12 @@ public class SimpleExporterTest extends TestCase
 	@Test
 	public void testDuplicateNamesByExporter() throws IOException
 	{
-		Level3Factory level3 = new Level3FactoryImpl();
-		Protein p = level3.reflectivelyCreate(Protein.class, "myProtein");
+		BioPAXFactory factory = new Level3FactoryImpl();
+		Protein p = factory.create(Protein.class, "myProtein");
 		String name = "aDisplayName";
 		p.setDisplayName(name);
 		p.addComment("Display Name should not be repeated again in the Name property!");
-		Model m = level3.createModel();
+		Model m = factory.createModel();
 		m.add(p);
 
 		FileOutputStream out =
@@ -142,8 +137,8 @@ public class SimpleExporterTest extends TestCase
 	public void testhibernateFile() throws IOException
 	{
 		System.out.println("export");
-		Level3Factory level3 = new Level3FactoryImpl();
-		Model m = level3.createModel();
+		BioPAXFactory factory = new Level3FactoryImpl();
+		Model m = factory.createModel();
 		Protein p = m.addNew(Protein.class, "myProtein");
 		MolecularInteraction mi = m.addNew(MolecularInteraction.class, "myInteraction");
 		mi.addParticipant(p);

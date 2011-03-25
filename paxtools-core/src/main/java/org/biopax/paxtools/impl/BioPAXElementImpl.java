@@ -1,8 +1,8 @@
 package org.biopax.paxtools.impl;
 
-import javax.persistence.*;
-
 import org.biopax.paxtools.model.BioPAXElement;
+
+import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
