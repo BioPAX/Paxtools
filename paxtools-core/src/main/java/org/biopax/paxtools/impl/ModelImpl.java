@@ -23,7 +23,7 @@ public class ModelImpl implements Model
     private final Map<String, String> nameSpacePrefixMap;
 	private BioPAXLevel level;
 	private transient BioPAXFactory factory;
-    private transient final Map<String, BioPAXElement> exposedIdMap;
+
     private transient final Set<BioPAXElement> exposedObjectSet;
     private boolean addDependencies = false;
 
@@ -32,7 +32,6 @@ public class ModelImpl implements Model
     protected ModelImpl() {
 		idMap = new HashMap<String, BioPAXElement>();
         nameSpacePrefixMap = new HashMap<String, String>();
-        this.exposedIdMap = Collections.unmodifiableMap(idMap);
         this.exposedObjectSet = new UnmodifiableImplicitSet(idMap.values());
 	}
     
