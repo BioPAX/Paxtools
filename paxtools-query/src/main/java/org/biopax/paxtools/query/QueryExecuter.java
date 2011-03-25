@@ -1,10 +1,6 @@
 package org.biopax.paxtools.query;
 
-import org.biopax.paxtools.controller.AbstractTraverser;
-import org.biopax.paxtools.controller.ObjectPropertyEditor;
-import org.biopax.paxtools.controller.PropertyEditor;
-import org.biopax.paxtools.controller.PropertyFilter;
-import org.biopax.paxtools.io.simpleIO.SimpleEditorMap;
+import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -24,7 +20,7 @@ import java.util.Set;
 /**
  * @author Ozgun Babur
  */
-public class QueryExecuter
+public class    QueryExecuter
 {
 	public static Set<BioPAXElement> runNeighborhood(
 		Set<BioPAXElement> sourceSet,

@@ -45,8 +45,6 @@ public interface Level3Factory extends BioPAXFactory {
     ExperimentalForm createExperimentalForm();
 
     Gene createGene();
-    
-    GeneticInteraction createGeneticInteraction();
 
     Interaction createInteraction();
 
@@ -110,8 +108,6 @@ public interface Level3Factory extends BioPAXFactory {
 
     RelationshipTypeVocabulary createRelationshipTypeVocabulary();
 
-    CovalentBindingFeature createDisulfideFeature();
-
     FragmentFeature createFragmentFeature();
 
     TemplateReaction createTemplateReaction();
@@ -131,4 +127,6 @@ public interface Level3Factory extends BioPAXFactory {
     PhenotypeVocabulary createPhenotypeVocabulary();
 
     CovalentBindingFeature createCovalentBindingFeature();
+
+    GeneticInteraction createGeneticInteraction();
 }

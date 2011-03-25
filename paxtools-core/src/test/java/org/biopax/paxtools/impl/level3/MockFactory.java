@@ -42,10 +42,7 @@ public class MockFactory implements Level3Factory {
 
     public MockFactory(Level3Factory factory) {
         this.factory = factory;
-        map = null; //new SimpleEditorMap(BioPAXLevel.L3);
-     // TODO cannot use SimpleEditorMap here (from paxtools-simple-io, creates a dependency loop)
-        throw new UnsupportedOperationException("Not implemented: cannot use SimpleEditorMap here" +
-        	" (from paxtools-simple-io, creates a dependency loop)!");
+        map = new SimpleEditorMap(BioPAXLevel.L3);
     }
 
 // --------------------- GETTER / SETTER METHODS ---------------------
@@ -585,7 +582,7 @@ public class MockFactory implements Level3Factory {
                 !toCreate.isAssignableFrom(domain)) {
             actual = toCreate;
         } else {
-            Set<Class> classesOf = map.getKnownSubClassesOf(toCreate);
+            Set<Class<? extends BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
             for (Class subclass : classesOf) {
                 if (!subclass.isAssignableFrom(domain) &&
                         subclass != toCreate &&
@@ -615,12 +612,6 @@ public class MockFactory implements Level3Factory {
         }
         return values;
     }
-
-	public CovalentBindingFeature createDisulfideFeature() {
-		CovalentBindingFeature bpe = factory.createDisulfideFeature();
-		populateMock(bpe);
-		return bpe;
-	}
 
 	public <T extends BioPAXElement> T reflectivelyCreate(Class<T> aClass, String uri) 
 	{

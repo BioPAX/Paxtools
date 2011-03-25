@@ -486,7 +486,7 @@ public class BioPAXMapperImp implements BioPAXMapper
 	public BioPAXElement getBioPAXElement(String rdfID)
 	{
 		// does a key exist ?
-		return bpModel.getIdMap().get(rdfID);
+		return bpModel.getByID(rdfID);
 	}
 
 	/**
@@ -829,7 +829,7 @@ public class BioPAXMapperImp implements BioPAXMapper
 	/**
 	 * Used to add feature attributes to given sequence or entity feature.
 	 *
-	 * @param bpSequenceFeature BioPAXElement
+	 * @param bpFeature BioPAXElement
 	 * @param bpXrefs           Set<? extends BioPAXElement>
 	 * @param featureLocations  Set<? extends BioPAXElement>
 	 * @param featureType       BioPAXElement
@@ -1021,7 +1021,7 @@ public class BioPAXMapperImp implements BioPAXMapper
 	/**
 	 * Sets given xref's db and id.
 	 *
-	 * @param xrefType BioPAXElement
+	 * @param bpXref BioPAXElement
 	 * @param db       String
 	 * @param id       String
 	 */
@@ -1055,7 +1055,7 @@ public class BioPAXMapperImp implements BioPAXMapper
 	 *
 	 * @param id      String
 	 * @param name    String
-	 * @param byXrefs Set<? extends BioPAXElement>
+	 * @param bpXrefs Set<? extends BioPAXElement>
 	 */
 	public void setModelDataSource(String id, String name, Set<? extends BioPAXElement> bpXrefs)
 	{

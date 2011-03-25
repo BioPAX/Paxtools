@@ -1,10 +1,15 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.junit.Ignore;
+import org.biopax.paxtools.controller.EditorMap;
+import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+
 import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 
 /**
  * TODO:Class description
@@ -12,26 +17,29 @@ import java.lang.reflect.InvocationTargetException;
  * Date: Jan 14, 2009
  * Time: 1:11:27 PM
  */
-@Ignore // TODO fix in MockFactory
 public class ModelCoverageTest
 {
     @Test
-      public void testCreationMethods()
-      {
+      public void testCreationMethods() throws InvocationTargetException, IllegalAccessException {
           Method[] methods = MockFactory.class.getMethods();
           MockFactory factory = new MockFactory();
           for (Method method : methods) {
               if (method.getName().startsWith("create")) {
                   System.out.println("testing " + method);
-                  try {
                       method.invoke(factory);
-                  } catch (IllegalAccessException e) {
-                      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                  } catch (InvocationTargetException e) {
-                      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                   }
               }
-          }
-      }
+          
+        //test reflectively create
+        EditorMap map = new SimpleEditorMap(BioPAXLevel.L3);
+        for (Class<? extends BioPAXElement> aClass : map.getKnownSubClassesOf(BioPAXElement.class))
+        {
+            if (!Modifier.isAbstract(aClass.getModifiers()))
+            {
+            	//FIXME in practice, they must be created with not null rdfid
+                factory.reflectivelyCreate(aClass, null);
+            }
+        }
 
+      }
 }

@@ -1,5 +1,6 @@
 package org.biopax.paxtools.controller;
 
+import org.biopax.paxtools.command.CommandManager;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;

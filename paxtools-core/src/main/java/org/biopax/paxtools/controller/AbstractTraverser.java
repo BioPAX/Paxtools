@@ -17,7 +17,7 @@ import java.util.Stack;
  * 
  *
  */
-public abstract class AbstractTraverser extends Traverser 
+public abstract class AbstractTraverser extends Traverser
 	implements Visitor 
 {
 	private final Stack<BioPAXElement> visited;

@@ -107,7 +107,7 @@ public abstract class EditorMapAdapter implements EditorMap
 		return this.propertyToEditorMap.get(property);
 	}
 
-	public Set<Class> getKnownSubClassesOf(Class javaClass)
+	public Set<Class<? extends BioPAXElement>> getKnownSubClassesOf(Class<? extends BioPAXElement> javaClass)
 	{
 		return new SubClassFilterSet(classToEditorMap.keySet(), javaClass);
 	}
@@ -225,12 +225,12 @@ public abstract class EditorMapAdapter implements EditorMap
 		}
 	}
 
-	private class SubClassFilterSet extends AbstractFilterSet<Class>
+	private class SubClassFilterSet extends AbstractFilterSet<Class<? extends BioPAXElement>>
 	{
 		private Class filterClass = null;
 
-		public SubClassFilterSet(Set<? extends Class> baseSet,
-		                         Class filterClass)
+		public SubClassFilterSet(Set<Class<? extends BioPAXElement>> baseSet,
+		                         Class<? extends BioPAXElement> filterClass)
 		{
 			super(baseSet);
 			this.filterClass = filterClass;
