@@ -16,7 +16,6 @@ public abstract class BioPAXFactory
 
     public <T extends BioPAXElement> T create(Class<T> aClass, String uri)
     {
-
         try {
 
             T bpe = createInstance(aClass, uri);

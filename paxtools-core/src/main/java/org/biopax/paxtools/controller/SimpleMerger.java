@@ -190,35 +190,44 @@ public class SimpleMerger
 		if (value != null)
 		{
 			BioPAXElement newValue = target.getByID(value.getRDFId());
-			if (newValue == null)
+			
+			if (newValue == null) // not yet in the target model
 			{
 				log.info("Target model does not have id=" + value.getRDFId()
 					+ " (that aslo means, the value wasn't in the 'source' model);"
-					//+ " won't touch this (but when exporting to OWL, this 'dangling' property becomes empty)"
 					+ " adding it now!"
 					);
 				target.add(value);
 				updateObjectFields(value, target); // recursion!
-				return;
+			} else if(!value.equals(newValue)) { 
+				// newValue is a different, not null BioPAX element
+				if (!value.isEquivalent(newValue)) {
+					// are they at least of the same type?
+					if (newValue.getModelInterface().equals(
+							value.getModelInterface())) {
+						String msg = "Target object value: " + newValue + " ("
+								+ newValue.getModelInterface().getSimpleName()
+								+ "), with the same RDFId (" + newValue.getRDFId() + "), "
+								+ " might have a DIFFERENT semantics/type from the source's: "
+								+ value + " (" + value.getModelInterface().getSimpleName()
+								+ ")!";
+						log.error(msg); // but we can live with it
+					} // else - exception will be thrown below, anyway!
+				}
+
+				/* 
+				 * "setValueToBean" comes first to prevent deleting of current value 
+				 * even though it cannot be replaced with newValue 
+				 * due to the property range error
+				 */
+				editor.setValueToBean(newValue, update);
+				if (editor.isMultipleCardinality()) {
+					editor.removeValueFromBean(value, update);
+				}
+			} else {
+				// skip (same values)
 			}
 			
-			if(!value.isEquivalent(newValue)) {
-				// are they at least of the same type?
-				if(newValue.getModelInterface().equals(value.getModelInterface())) {
-					String msg = "Target object value: " 
-						+ newValue + " (" + newValue.getModelInterface().getSimpleName() 
-						+ "), with the same RDFId (" + newValue.getRDFId() + "), "
-						+ " might have a DIFFERENT semantics/type from the source's: " 
-						+ value + " (" + value.getModelInterface().getSimpleName() + ")!";
-					log.error(msg); // but we can live with it
-				} //else - nothing - exception will be thrown below, anyway!
-			}
-			
-			if (editor.isMultipleCardinality())
-			{
-				editor.removeValueFromBean(value, update);
-			}
-			editor.setValueToBean(newValue, update);
 		}
 	}
 

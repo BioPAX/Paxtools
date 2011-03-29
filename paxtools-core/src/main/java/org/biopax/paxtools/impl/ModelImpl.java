@@ -1,7 +1,10 @@
 package org.biopax.paxtools.impl;
 
+import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.SimpleMerger;
+import org.biopax.paxtools.controller.Traverser;
+import org.biopax.paxtools.controller.Visitor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -23,7 +26,6 @@ public class ModelImpl implements Model
     private final Map<String, String> nameSpacePrefixMap;
 	private BioPAXLevel level;
 	private transient BioPAXFactory factory;
-
     private transient final Set<BioPAXElement> exposedObjectSet;
     private boolean addDependencies = false;
 
@@ -53,6 +55,7 @@ public class ModelImpl implements Model
     public boolean containsID(String id) {
         return this.idMap.containsKey(id);
     }
+
     
     public BioPAXElement getByID(String id) {
     	BioPAXElement ret = this.idMap.get(id);
@@ -68,6 +71,7 @@ public class ModelImpl implements Model
 		return nameSpacePrefixMap;
 	}
 
+    
     private void setNameSpacePrefixMap(Map<String, String> nameSpacePrefixMap) {
     	synchronized (this.nameSpacePrefixMap) {
 			this.nameSpacePrefixMap.clear();
@@ -277,11 +281,45 @@ public class ModelImpl implements Model
 		}
 	}
 
-	/*
-	 * TODO implement the 'replace' method
-	 */
-	public synchronized void replace(BioPAXElement existing, BioPAXElement replacement) {
-		throw new UnsupportedOperationException("not implemented yet.");
+    /**
+     * It does not automatically replace or clean up the old 
+     * element's object properties, therefore, some child 
+     * elements may become "dangling" if they were used by
+     * the replaced element only.
+     * 
+     * Can also clear object properties (- replace with null).
+     */
+	public synchronized void replace(final BioPAXElement existing, final BioPAXElement replacement) 
+	{
+		//throw new UnsupportedOperationException("not implemented yet.");
+		Visitor visitor = new Visitor() {
+			@Override
+			public void visit(BioPAXElement domain, Object range, Model model,
+					PropertyEditor editor) {
+				if(range instanceof BioPAXElement && range.equals(existing))
+				{
+					if(editor.isMultipleCardinality()) {
+						if(replacement != null)
+							editor.setValueToBean(replacement, domain);
+						editor.removeValueFromBean(existing, domain);
+					} else {
+						editor.setValueToBean(replacement, domain);
+					}
+				}
+			}
+		};
+		
+		Traverser traverser = new Traverser(new SimpleEditorMap(level), visitor);
+		for(BioPAXElement bpe : getObjects()) {
+			traverser.traverse(bpe, null);
+		}
+		
+		remove(existing);
+		if(replacement != null) {
+			//add(replacement);
+			new SimpleMerger(new SimpleEditorMap(level))
+				.merge(this, replacement);
+		}
 	}
 	
 	

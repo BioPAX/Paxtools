@@ -144,7 +144,7 @@ public interface Model extends Serializable
     /**
      * Replaces existing BioPAX element with another one,
      * of the same or possibly equivalent type,
-     * and updates all the affected references (object properties).
+     * and updates all the affected references to it (object properties).
      * 
      * @param existing
      * @param replacement

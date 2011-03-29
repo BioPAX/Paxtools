@@ -71,7 +71,7 @@ public class ShallowCopy implements Visitor
 		T copy = (T) level.getDefaultFactory().create(
 				(Class<T>) source.getModelInterface(), newID);
 		this.copy = copy;
-		traverser.traverse(copy, null);
+		traverser.traverse(source, null);
 		return copy;
 	}
 

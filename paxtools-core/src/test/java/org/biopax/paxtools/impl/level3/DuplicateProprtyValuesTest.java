@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level3.ProteinReference;
@@ -46,6 +45,10 @@ public class DuplicateProprtyValuesTest {
 		/* this is not really a bug (considering multiple models 
 		 * that can share some objects), but one should be aware and taking care of:
 		 */
-		//assertEquals(0, ref2.getXrefOf().size()); // TODO BANG! ref2 wasn't added but has xrefOf!
+		try {
+			assertEquals(0, ref2.getXrefOf().size()); // TODO BANG! ref2 wasn't added but has xrefOf!
+		} catch (AssertionError e) {
+			System.out.println("WARN: BANG! Xref wasn't added to the model but got xrefOf value!");
+		}
 	}
 }
