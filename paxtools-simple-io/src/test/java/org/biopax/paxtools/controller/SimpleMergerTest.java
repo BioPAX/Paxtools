@@ -30,11 +30,8 @@ public class SimpleMergerTest {
 	public void setUp() throws Exception {
 	}
 
-	/**
-	 * Test method for {@link org.biopax.paxtools.controller.SimpleMerger#merge(org.biopax.paxtools.model.Model, java.util.Collection)}.
-	 */
 	@Test
-	public final void testMergeModelCollectionOfQextendsBioPAXElement() {
+	public final void testMergeModel() {
 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 		Model model = factory.createModel();
 		Xref ref =  model.addNew(UnificationXref.class, "Xref1");
@@ -69,8 +66,9 @@ public class SimpleMergerTest {
 		
 		assertEquals(5, model.getObjects().size());
 		
+		// do merge
 		SimpleMerger merger = new SimpleMerger(new SimpleEditorMap(BioPAXLevel.L3));
-		merger.merge(model); // 
+		merger.merge(model, model); // to itself
 		
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -80,11 +78,12 @@ public class SimpleMergerTest {
 			fail(e.toString());
 		}
 		
-		assertEquals(7, model.getObjects().size()); // Bug fixed: SimpleMerger adds BioSource to the model but not its children (xref)!
 		bs = (BioSource) model.getByID("Mouse");
 		assertEquals(1, bs.getXref().size());
 		pr = (ProteinReference) model.getByID("ProteinReference");
 		assertEquals(4, pr.getXref().size());
+		
+		assertEquals(7, model.getObjects().size()); // Bug fixed: SimpleMerger adds BioSource to the model but not its children (xref)!
 	}
 
 }

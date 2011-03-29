@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl;
 
+import org.biopax.paxtools.controller.EditorMap;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.SimpleMerger;
@@ -291,11 +292,10 @@ public class ModelImpl implements Model
      */
 	public synchronized void replace(final BioPAXElement existing, final BioPAXElement replacement) 
 	{
-		//throw new UnsupportedOperationException("not implemented yet.");
+		// a visitor to replace the element in the model
 		Visitor visitor = new Visitor() {
 			@Override
-			public void visit(BioPAXElement domain, Object range, Model model,
-					PropertyEditor editor) {
+			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
 				if(range instanceof BioPAXElement && range.equals(existing))
 				{
 					if(editor.isMultipleCardinality()) {
@@ -309,17 +309,40 @@ public class ModelImpl implements Model
 			}
 		};
 		
-		Traverser traverser = new Traverser(new SimpleEditorMap(level), visitor);
+		EditorMap em = new SimpleEditorMap(level);
+		Traverser traverser = new Traverser(em, visitor);
 		for(BioPAXElement bpe : getObjects()) {
 			traverser.traverse(bpe, null);
 		}
 		
+		/* next, remove the old element and 
+		 * its direct children from the model
+		 * (can be added later by 'merge' model to itself
+		 * if they are still used by other elements)
+		 */
+		
+		// another 'visitor' to remove child elements from the model
+		Visitor visitor2 = new Visitor() {
+			@Override
+			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
+				if(range instanceof BioPAXElement 
+						&& model.contains((BioPAXElement) range))
+				{
+					model.remove((BioPAXElement) range);
+				}
+			}
+		};
+		Traverser traverser2 = new Traverser(em, visitor2);
+		traverser2.traverse(existing, this);
 		remove(existing);
+		
+		// add new one 
 		if(replacement != null) {
-			//add(replacement);
-			new SimpleMerger(new SimpleEditorMap(level))
-				.merge(this, replacement);
+			add(replacement); // - does not add children now...
 		}
+		
+		// auto-updates object properties and finds/adds child elements
+		merge(this);
 	}
 	
 	

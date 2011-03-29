@@ -12,24 +12,31 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This is a "simple" BioPAX merger, a utility class to merge one 
- * BioPAX model (source) into the other (target), based on the RDFId (URI) identity. 
- * Merging of normalized, self-consistent models normally gives the best (self-consistent) result.
+ * This is a "simple" BioPAX merger, a utility class to merge 
+ * 'source' BioPAX models or a set of elements into the target model, 
+ * using the RDFId (URI) identity only. Merging of normalized, 
+ * self-consistent models normally gives "better" results 
+ * (though it depends on the application).
  * <p/>
- * Note, "based on the RDFId (URI) identity" means that it skips, i.e., does not copy 
- * a source's element to the target (model) nor updates sources' object properties, if the 
- * target contains the element with the same RDFId. However, where required, 
- * it will update (re-wire) all the object properties within the target model afterwards 
- * - to make sure they do not refer to the skipped objects (from "source") anymore.
+ * One can also "merge" a model to itself, i.e.: merge(target,target), 
+ * which adds those missing child elements that were not added
+ * (explicitly) to the model (via model.add*) and makes it more integral.
  * <p/>
- * Note also that this merger does not preserve the integrity of the passed models! 
- * 'Target' will be a merged model (and often becomes "more integral"), and 'source' 
- * may become "unusable" (in fact, - still somewhat usable, but modified for sure, 
- * with some of its elements' object properties now refer to the "target" model elements).
+ * Note, "RDFId (URI) identity" means that it skips, i.e., does not copy 
+ * a source's element to the target (model) nor it updates sources' object properties, 
+ * if the target already contains the element with the same RDFId. However, after all, 
+ * it does update (re-wire) all the object properties of just added source elements
+ * to make sure they do not refer to the skipped objects (from the "source") anymore
+ * (if something is missing, it will be added at this second pass).
+ * <p/>
+ * Note also that this merger does not guarantee the integrity of the passed models: 
+ * 'target' will be the merged model (often, "more integral"), and the 'source' 
+ * may be trashed (in fact, - still somewhat usable, but modified for sure, 
+ * with some of its object properties now refer to target's elements).
  * <p/>
  * Finally, although called Simple Merger, it is in fact an advanced BioPAX utility, 
  * which should be used wisely. Otherwise, it can actually waste resources. 
- * So consider using model.add(..), model.addNew(..) approach first (or instead), 
+ * So, consider using model.add(..), model.addNew(..) approach first (or instead), 
  * especially, when you're adding "new" things (ID not present in the target model), 
  * or/and target model does not contain any references to the source or another one, etc.
  */
@@ -50,15 +57,12 @@ public class SimpleMerger
 	
 	/**
 	 * Merges the <em>source</em> models into <em>target</em> model.
-	 * When no sources provided, it will just refresh all the object properties
-	 * in the target model (this may actually fix dangling values, and generates useful logs)
 	 *
-	 * Note: both target and source models (would be nice to believe but) 
-	 * are not necessarily self-consistent, i.e.,  
-	 * may already have cross-links and dangling elements...
+	 * Note: both target and source models are not necessarily self-consistent,
+	 * i.e., they may already contain external and dangling elements...
 	 *
 	 * @param target model into which merging process will be done
-	 * @param sources models, if any, that are going to be merged with <em>target</em>
+	 * @param sources models, if any, that are going to be merged/updated to <em>target</em>
 	 */
 	public void merge(Model target, Model... sources) {
 		CompositeSet<BioPAXElement> objects = new CompositeSet<BioPAXElement>();
@@ -77,15 +81,9 @@ public class SimpleMerger
 	
 	/**
 	 * Merges the <em>elements</em> into <em>target</em> model.
-	 * When no elements provided, it will refresh all the object properties
-	 * in the target model (this may actually fix dangling values)
-	 *
-	 * Note: both target and source models (would be nice to believe but) 
-	 * are not necessarily self-consistent, i.e.,  
-	 * may already have cross-links and dangling elements...
 	 *
 	 * @param target model into which merging process will be done
-	 * @param elements elements, if any, that are going to be merged with <em>target</em>
+	 * @param elements elements, if any, that are going to be merged/updated to <em>target</em>
 	 */
 	public void merge(Model target, Collection<? extends BioPAXElement> elements) 
 	{
@@ -98,11 +96,11 @@ public class SimpleMerger
 			if (targetElement == null) {
 				target.add(bpe);
 				/*
-				 * Warning: concrete target Model implementations may add not
-				 * only 'bpe' but also all its dependents (using
+				 * Warning: concrete target Model implementations may add 
+				 * child elements automatically (e.g., using jpa
 				 * cascades/recursion); it might also override target's
 				 * properties with the corresponding ones from the source, even
-				 * though SimpleMerger tends to avoid this; also, is such cases,
+				 * though SimpleMerger is not supposed to do this; also, is such cases,
 				 * the number of times this loop body is called can be less that
 				 * the number of elements in sourceElements set that were't
 				 * originally present in the target model, or - even equals to
@@ -111,21 +109,23 @@ public class SimpleMerger
 			}
 		}
 		
-		/* Now that target model has all the IDs from both models
-		 * (might also have an object property value that is not yet added to the model!)
-		 * let's "re-wire" object relationships.
+		/* 
+		 * Now that target model contains all source IDs,
+		 * although it might still refer to "external" child objects, 
+		 * (i.e., such property values that were not listed in the 
+		 * sources, thus - not in target model map yet), 
+		 * let's update new objects' object fields to target's values:
 		 * 
-		 * Remark: one may think she could iterate over 
-		 * newly added elements only.., but, in fact,
-		 * things are way more tricky (models intersect)...
-		 * So, we are going to refresh the objects properties (re-link to 'target') 
-		 * not only for just added elements, nor even for all source elements, 
-		 * but - for all 'target' elements!
+		 * REM: here we iterate over all source elements! 
+		 * But, things can be more tricky (when models already intersect 
+		 * or the target refers to external child elements), in which
+		 * case, one may (but not necessarily have to) refresh the properties 
+		 * (re-link everything to target's) by calling merge(target,target) -
+		 * i.e., merge to itself!
 		 */
-		Set<BioPAXElement> targetObjs = new HashSet<BioPAXElement>(target.getObjects());
-		for (BioPAXElement targetElement : targetObjs)
+		for (BioPAXElement bpe : elements)
 		{
-			updateObjectFields(targetElement, target);
+			updateObjectFields(bpe, target);
 		}
 	}
 
