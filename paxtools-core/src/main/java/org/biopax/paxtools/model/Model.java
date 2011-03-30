@@ -150,5 +150,17 @@ public interface Model extends Serializable
      * @param replacement
      */
     void replace(BioPAXElement existing, BioPAXElement replacement);
+    
+    
+    /**
+     * Attempts to repairs the model:
+     * - recursively find/add lost "children"
+     * - update object properties (should refer to model's elements)
+     * - repair the internal map so that a object returned 
+     *   by {@link #getByID(String)} does actually have this ID
+     * 
+     * @param source a model to merge
+     */
+    void repair();
 
 }

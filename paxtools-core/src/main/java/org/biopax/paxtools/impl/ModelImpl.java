@@ -1,11 +1,8 @@
 package org.biopax.paxtools.impl;
 
-import org.biopax.paxtools.controller.EditorMap;
-import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.controller.Replacer;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.SimpleMerger;
-import org.biopax.paxtools.controller.Traverser;
-import org.biopax.paxtools.controller.Visitor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -139,7 +136,10 @@ public class ModelImpl implements Model
 	}
 
 	/**
-	 * This method returns true if and only if the given object is
+	 * This method returns true if and only if given element 
+	 * is the same object ("==") as the object stored in the model
+	 * under under given element's ID.
+	 * 
 	 * @param aBioPAXElement
 	 * @return
 	 */
@@ -292,58 +292,8 @@ public class ModelImpl implements Model
      */
 	public synchronized void replace(final BioPAXElement existing, final BioPAXElement replacement) 
 	{
-		// a visitor to replace the element in the model
-		Visitor visitor = new Visitor() {
-			@Override
-			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
-				if(range instanceof BioPAXElement && range.equals(existing))
-				{
-					if(editor.isMultipleCardinality()) {
-						if(replacement != null)
-							editor.setValueToBean(replacement, domain);
-						editor.removeValueFromBean(existing, domain);
-					} else {
-						editor.setValueToBean(replacement, domain);
-					}
-				}
-			}
-		};
-		
-		EditorMap em = new SimpleEditorMap(level);
-		Traverser traverser = new Traverser(em, visitor);
-		for(BioPAXElement bpe : getObjects()) {
-			traverser.traverse(bpe, null);
-		}
-		
-		/* next, remove the old element and 
-		 * its direct children from the model
-		 * (can be added later by 'merge' model to itself
-		 * if they are still used by other elements)
-		 */
-		
-		// another 'visitor' to remove child elements from the model
-		Visitor visitor2 = new Visitor() {
-			@Override
-			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
-				if(range instanceof BioPAXElement 
-						&& model.contains((BioPAXElement) range))
-				{
-					model.remove((BioPAXElement) range);
-				}
-			}
-		};
-		Traverser traverser2 = new Traverser(em, visitor2);
-		traverser2.traverse(existing, this);
-		remove(existing);
-		
-		// add new one 
-		if(replacement != null) {
-			if(!containsID(replacement.getRDFId()))
-				add(replacement); // - does not add children for now...
-		}
-		
-		// auto-updates object properties and finds/adds child elements
-		merge(this);
+		Replacer replacer = new Replacer(this);
+		replacer.replace(existing, replacement, true);
 	}
 	
 	
@@ -361,5 +311,40 @@ public class ModelImpl implements Model
 	public void merge(Model source) {
 		new SimpleMerger(new SimpleEditorMap(level))
 			.merge(this, source);
+	}
+
+	@Override
+	public synchronized void repair() {
+		// repair idMap
+		for(String id : idMap.keySet()) {
+			BioPAXElement o = getByID(id);
+			if(o == null) {
+				// delete null
+				idMap.remove(id);
+			} else {
+				// check its rdfid field
+				String oid = o.getRDFId();
+				// mismatch?
+				if(!id.equals(oid)) {
+					// id mismatch (broken model!)
+					if(containsID(oid)) {
+						// has another object under this one's id
+						if(o == getByID(oid)) {
+							// the same - simply remove current one
+							idMap.remove(id);
+						} else {
+							//sooner or later it will be fixed in next loops
+						}
+					} else {
+						// add with its real ID
+						idMap.remove(id);
+						idMap.put(oid, o);
+					}
+				}
+			}
+		}
+		
+		// merge to itself - updates props and children
+		merge(this);
 	}
 }
