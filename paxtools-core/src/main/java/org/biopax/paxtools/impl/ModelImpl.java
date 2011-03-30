@@ -338,7 +338,8 @@ public class ModelImpl implements Model
 		
 		// add new one 
 		if(replacement != null) {
-			add(replacement); // - does not add children now...
+			if(!containsID(replacement.getRDFId()))
+				add(replacement); // - does not add children for now...
 		}
 		
 		// auto-updates object properties and finds/adds child elements
