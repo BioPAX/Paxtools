@@ -182,6 +182,22 @@ public class ModelUtils {
     }
     
     
+	/**
+	 * Recursively copies parent object's property values 
+	 * down to all the children objects that have the same property. 
+	 * If the property is multiple cardinality property, it will add
+	 * new values, otherwise - will set but won't overwrite existing 
+	 * (not null) values.
+	 * 
+	 * @param property property name
+	 * @param type a class of elements which property is to infer
+	 */
+	public <T extends BioPAXElement> void inferPropertyFromParent(String property, Class<T> type) 
+	{	
+		inferPropertyFromParent(model, property, type);
+	}
+    
+    
     /**
      * Replaces the RDFId of the BioPAX element
      * and in the current model. 
@@ -311,7 +327,7 @@ public class ModelUtils {
 	 * Recursively removes dangling utility class elements
 	 * from the model.
 	 */
-	public static  void removeUtilityObjectsIfDangling(Model fromModel) 
+	public static void removeUtilityObjectsIfDangling(Model fromModel) 
 	{
 		Set<UtilityClass> dangling = getRootElements(fromModel.getObjects(), UtilityClass.class);
 		// get rid of dangling objects
@@ -334,4 +350,66 @@ public class ModelUtils {
 		}
 	}
 	
+	
+	/**
+	 * This static method recursively copies parent object's properties 
+	 * down to all the children objects that have the same property. 
+	 * If the property is multiple cardinality property, it will add
+	 * new values, otherwise - will set but won't overwrite existing 
+	 * (not null) values.
+	 * 
+	 * @param model
+	 * @param property property name
+	 * @param type a class of elements which property is to infer
+	 */
+	public static <T extends BioPAXElement> void inferPropertyFromParent(
+		Model model, String property, Class<T> type) 
+	{	
+		// ready,..
+		final EditorMap editorMap = new SimpleEditorMap(model.getLevel());
+		final PropertyEditor propertyEditor = editorMap.getEditorForProperty(property, type);
+		if(propertyEditor == null) 
+			throw new IllegalArgumentException("No such property (editor): " 
+				+ type.getSimpleName() + "." + property);
+		// - set,..
+		final boolean isMul = propertyEditor.isMultipleCardinality();
+		/* 
+		 * Will ignore 'nextStep' property, because it can eventually lead 
+		 * outside the current pathway, and normally it (and pathwayOrder)
+		 * is not necessary for (step) processes to be reached (because they must be 
+		 * listed in the pathwayComponent property as well).
+		 */
+		PropertyFilter nextStepFilter = new PropertyFilter() {
+			@Override
+			public boolean filter(PropertyEditor editor) {
+				return !editor.getProperty().equals("nextStep");
+			}
+		};
+		Fetcher fetcher = new Fetcher(editorMap, nextStepFilter);
+		
+		// - go!
+		for(T bpe : model.getObjects(type)) {
+			Object val = propertyEditor.getValueFromBean(bpe);
+			if((isMul && ((Set)val).isEmpty()) || propertyEditor.isUnknown(val))
+				continue; // parent does not have any value for this property
+			
+			Model m = model.getLevel().getDefaultFactory().createModel();
+			fetcher.fetch(bpe, m);
+			m.remove(bpe); // remove itself
+			for(T child : m.getObjects(type)) {
+				Object existing = propertyEditor.getValueFromBean(child);
+				// set/add only if 
+				if(isMul || propertyEditor.isUnknown(existing)) {
+					if(!isMul)
+						propertyEditor.setValueToBean(val, child);
+					else {
+						for(Object v : (Set)val) {
+							if(!((Set)existing).contains(v))
+								propertyEditor.setValueToBean(v, child);
+						}
+					}
+				}
+			}
+		}
+	}
 }
