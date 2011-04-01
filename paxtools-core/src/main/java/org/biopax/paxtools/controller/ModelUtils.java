@@ -10,6 +10,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.Level2Element;
+import org.biopax.paxtools.model.level3.UtilityClass;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -170,6 +171,15 @@ public class ModelUtils {
 		}
     	
     }
+
+    
+    /**
+     * Removes (recursively) all dangling UtilityClass objects 
+     * from the current model.
+     */
+    public void removeUtilityObjectsIfDangling()  {
+    	removeUtilityObjectsIfDangling(model);
+    }
     
     
     /**
@@ -295,6 +305,33 @@ public class ModelUtils {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Recursively removes dangling utility class elements
+	 * from the model.
+	 */
+	public static  void removeUtilityObjectsIfDangling(Model fromModel) 
+	{
+		Set<UtilityClass> dangling = getRootElements(fromModel.getObjects(), UtilityClass.class);
+		// get rid of dangling objects
+		if(!dangling.isEmpty()) {
+			if(LOG.isInfoEnabled()) 
+				LOG.info(dangling.size() + " BioPAX utility objects " +
+						"were/became dangling, and they "
+						+ " will be deleted...");
+			if(LOG.isDebugEnabled())
+				LOG.debug("to remove (dangling after merge) :" + dangling);
+
+			for(BioPAXElement thing : dangling) {
+				fromModel.remove(thing);
+				assert !fromModel.contains(thing);
+				assert !fromModel.containsID(thing.getRDFId());
+			}
+			
+			// some may have become dangling now, so check again...
+			removeUtilityObjectsIfDangling(fromModel);
+		}
 	}
 	
 }
