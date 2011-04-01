@@ -3,23 +3,20 @@
  */
 package org.biopax.paxtools.controller;
 
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.model.BioPAXFactory;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.io.*;
+import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
  * @author rodche
- * @deprecated
+ *
  */
 public class SimpleMergerTest {
 
@@ -72,9 +69,9 @@ public class SimpleMergerTest {
 		
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			(new SimpleExporter(BioPAXLevel.L3)).convertToOWL(model, out);
+			(new SimpleIOHandler(BioPAXLevel.L3)).convertToOWL(model, out);
 			System.out.println(out.toString());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			fail(e.toString());
 		}
 		

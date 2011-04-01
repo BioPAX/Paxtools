@@ -1,27 +1,22 @@
 package org.biopax.paxtools.converter;
 
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.model.Model;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class OneTwoThreeTest {
 
     @Test
 	public final void testFilter() throws IOException {
-		SimpleReader reader = new SimpleReader();
-		Model model = reader.convertFromOWL(
+		SimpleIOHandler io = new SimpleIOHandler();
+		Model model = io.convertFromOWL(
 			getClass().getClassLoader()
 				.getResourceAsStream("biopax-example-short-pathway.owl"));
 		model = (new OneTwoThree()).filter(model);
 		if (model != null) {
-			SimpleExporter exporter = new SimpleExporter(model.getLevel());
-			exporter.convertToOWL(model, new FileOutputStream(
+			io.convertToOWL(model, new FileOutputStream(
 					getClass().getClassLoader().getResource("").getFile() 
 	        		+ File.separator + "converted.owl"));
 		}
@@ -29,14 +24,13 @@ public class OneTwoThreeTest {
 
     @Test
 	public final void testFilterBigger() throws IOException {
-		SimpleReader reader = new SimpleReader();
-		Model model = reader.convertFromOWL(
+		SimpleIOHandler io = new SimpleIOHandler();
+		Model model = io.convertFromOWL(
 			getClass().getClassLoader()
 				.getResourceAsStream("biopax-example-ecocyc-glycolysis.owl"));
 		model = (new OneTwoThree()).filter(model);
 		if (model != null) {
-			SimpleExporter exporter = new SimpleExporter(model.getLevel());
-			exporter.convertToOWL(model, new FileOutputStream(
+			io.convertToOWL(model, new FileOutputStream(
 					getClass().getClassLoader().getResource("").getFile() 
 	        		+ File.separator + "converted-big.owl"));
 		}
@@ -45,13 +39,12 @@ public class OneTwoThreeTest {
 	//@Test
 	public final void testFilterOthers() throws Throwable
 	{
-		SimpleReader reader = new SimpleReader();
-		Model model = reader.convertFromOWL(new FileInputStream(
+		SimpleIOHandler io = new SimpleIOHandler();
+		Model model = io.convertFromOWL(new FileInputStream(
 			"/D:/Ozgun/chibe1x/samples/biopax-files/NGF-independant TRKA activation.owl"));
 		model = (new OneTwoThree()).filter(model);
 		if (model != null) {
-			SimpleExporter exporter = new SimpleExporter(model.getLevel());
-			exporter.convertToOWL(model, new FileOutputStream("/D:/Ozgun/temp/temp.owl"));
+			io.convertToOWL(model, new FileOutputStream("/D:/Ozgun/temp/temp.owl"));
 		}
 	}
 }

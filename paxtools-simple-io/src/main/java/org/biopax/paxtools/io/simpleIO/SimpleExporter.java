@@ -21,6 +21,8 @@ import java.util.Set;
  * does not depend on {@link com.hp.hpl.jena}.
  *
  * @author Emek Demir
+ * 
+ * @deprecated
  */
 public class SimpleExporter
 {
@@ -53,7 +55,7 @@ public class SimpleExporter
     /**
      * Converts a model into BioPAX (OWL) format, and writes it into
      * the outputStream. Saved data can be then read via {@link BioPAXIOHandler}
-     * interface (e.g., {@link SimpleReader}).
+     * interface (e.g., {@link SimpleIOHandler}).
      * 
      * Note: When the model is incomplete (i.e., contains elements that refer externals,
      * dangling BioPAX elements) and is exported by this method, it works; however one 
@@ -83,7 +85,7 @@ public class SimpleExporter
      * extracts a sub-model, converts it into BioPAX (OWL) format, 
      * and writes it into the outputStream. 
      * Saved data can be then read via {@link BioPAXIOHandler}
-     * interface (e.g., {@link SimpleReader}).
+     * interface (e.g., {@link SimpleIOHandler}).
      *
      * @param model model to be converted into OWL format
      * @param outputStream output stream into which the output will be written

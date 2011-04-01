@@ -25,7 +25,7 @@ import java.util.Map;
 import static javax.xml.stream.XMLStreamConstants.*;
 
 /**
-
+ * @deprecated
  */
 public class SimpleReader extends BioPAXIOHandlerAdapter
 {

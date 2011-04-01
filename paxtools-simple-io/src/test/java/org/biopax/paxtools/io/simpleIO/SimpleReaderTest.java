@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import java.net.URISyntaxException;
 
+/**
+ * @deprecated
+ */
 public class SimpleReaderTest extends TestCase
 {
 

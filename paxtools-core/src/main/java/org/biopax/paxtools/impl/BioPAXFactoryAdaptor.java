@@ -15,7 +15,8 @@ public abstract class BioPAXFactoryAdaptor extends BioPAXFactory {
     }
 
 
-    protected String mapClassName(Class<? extends BioPAXElement> aClass) {
+    protected String mapClassName(Class<? extends BioPAXElement> aClass) 
+    {
         String name = aClass.getSimpleName();
         name = this.getClass().getPackage().getName() + "."
                 + name

@@ -39,9 +39,10 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	protected BioPAXLevel level = BioPAXLevel.L2; //todo change to level 3 as default
 
 	protected BioPAXFactory factory;
+	
 	protected EditorMap editorMap;
 
-	private Map<String, String> namespaces;
+	protected Map<String, String> namespaces;
 
 	protected static final String rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	protected static final String rdfs = "http://www.w3.org/2000/01/rdf-schema#";

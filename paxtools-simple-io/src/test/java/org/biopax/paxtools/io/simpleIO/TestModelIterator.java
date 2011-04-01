@@ -15,6 +15,8 @@ import java.util.Iterator;
 
 /**
  * TODO:Class description User: demir Date: Mar 25, 2010 Time: 2:31:16 PM
+ * 
+ * @deprecated
  */
 @Ignore
 public class TestModelIterator implements Iterator<Model>

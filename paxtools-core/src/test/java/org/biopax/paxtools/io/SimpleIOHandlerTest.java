@@ -1,111 +1,77 @@
-package org.biopax.paxtools.io.simpleIO;
-/**
- * Created by IntelliJ IDEA.
- * User: Emek
- * Date: Feb 25, 2008
- * Time: 12:11:27 PM
- */
+package org.biopax.paxtools.io;
 
-import junit.framework.TestCase;
-import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
-import org.biopax.paxtools.model.BioPAXFactory;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
+import static org.junit.Assert.*;
+
+import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 
-/**
- * @deprecated
- */
-public class SimpleExporterTest extends TestCase
+public class SimpleIOHandlerTest
 {
-
+	
 	@Test
-	public void testExportL2() throws InvocationTargetException, IOException,
-			IllegalAccessException
-	{
-		SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L2);
+	public final void testExportL2() throws FileNotFoundException	{
+		SimpleIOHandler simpleExporter = new SimpleIOHandler(BioPAXLevel.L2);
 		Model model = BioPAXLevel.L2.getDefaultFactory().createModel();
 		FileOutputStream out = new FileOutputStream(
 				getClass().getResource("").getFile()
 				+ File.separator + "simple.owl"
 		);
 		simpleExporter.convertToOWL(model, out);
-		out.close();
-
 	}
 
 	@Test
-	public void testReadWriteL2()
+	public final void testReadWriteL2() throws IOException
 	{
 		String s = "L2" + File.separator
 		           + "biopax_id_557861_mTor_signaling.owl";
-		SimpleReader simpleReader = new SimpleReader();
+		SimpleIOHandler io = new SimpleIOHandler();
 
 		System.out.println("file = " + s);
-		try
-		{
-			System.out.println("starting " + s);
-			InputStream in = getClass().getClassLoader().getResourceAsStream(s);
-			assertNotNull(in);
-			Model model = simpleReader.convertFromOWL(in);
-			assertNotNull(model);
-			assertFalse(model.getObjects().isEmpty());
-			System.out.println("Model has " + model.getObjects().size() + " objects)");
-			FileOutputStream out =
-					new FileOutputStream(
-							getClass().getResource("").getFile()
-							+ File.separator + "simpleReadWrite.owl"
-					);
-			SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L2);
-			simpleExporter.convertToOWL(model, out);
-			out.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			System.exit(1);
-		}
+
+		System.out.println("starting " + s);
+		InputStream in = getClass().getClassLoader().getResourceAsStream(s);
+		assertNotNull(in);
+		Model model = io.convertFromOWL(in);
+		assertNotNull(model);
+		assertFalse(model.getObjects().isEmpty());
+		System.out.println("Model has " + model.getObjects().size() + " objects)");
+		FileOutputStream out =
+			new FileOutputStream(
+				getClass().getResource("").getFile()
+				+ File.separator + "simpleReadWrite.owl"
+			);
+		io.convertToOWL(model, out);
+		out.close();
 	}
 
 	@Test
-	public void testReadWriteL3()
+	public final void testReadWriteL3() throws IOException
 	{
 		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
-		SimpleReader simpleReader = new SimpleReader(BioPAXLevel.L3);
+		SimpleIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
 
 		System.out.println("file = " + s);
-		try
-		{
-			System.out.println("starting " + s);
-			InputStream in = getClass().getClassLoader().getResourceAsStream(s);
-			Model model = simpleReader.convertFromOWL(in);
-			assertNotNull(model);
-			assertFalse(model.getObjects().isEmpty());
-			System.out.println("Model has " + model.getObjects().size() + " objects)");
-			FileOutputStream out =
-					new FileOutputStream(
-							getClass().getResource("").getFile()
-							+ File.separator + "simpleReadWrite.owl"
-					);
-			SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L3);
-			simpleExporter.convertToOWL(model, out);
-			out.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			System.exit(1);
-		}
+
+		System.out.println("starting " + s);
+		InputStream in = getClass().getClassLoader().getResourceAsStream(s);
+		Model model = io.convertFromOWL(in);
+		assertNotNull(model);
+		assertFalse(model.getObjects().isEmpty());
+		System.out.println("Model has " + model.getObjects().size()
+				+ " objects)");
+		FileOutputStream out = new FileOutputStream(getClass().getResource("")
+				.getFile() + File.separator + "simpleReadWrite.owl");
+		io.convertToOWL(model, out);
+		out.close();
 	}
 
 	@Test
-	public void testDuplicateNamesByExporter() throws IOException
+	public final void testDuplicateNamesByExporter() throws IOException
 	{
-		BioPAXFactory factory = new Level3FactoryImpl();
+		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 		Protein p = factory.create(Protein.class, "myProtein");
 		String name = "aDisplayName";
 		p.setDisplayName(name);
@@ -118,8 +84,8 @@ public class SimpleExporterTest extends TestCase
 						getClass().getResource("").getFile()
 						+ File.separator + "testDuplicateNamesByExporter.xml"
 				);
-		SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L3);
-		simpleExporter.convertToOWL(m, out);
+		SimpleIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+		io.convertToOWL(m, out);
 		out.close();
 
 		// read
@@ -131,37 +97,34 @@ public class SimpleExporterTest extends TestCase
 		String xml = new String(buf);
 		if (xml.indexOf(name) != xml.lastIndexOf(name))
 		{
-			fail("displayName gets duplicated by the SimpleExporter!");
+			fail("displayName gets duplicated by the SimpleIOHandler!");
 		}
 
 	}
 
 	@Test
-	public void testhibernateFile() throws IOException
+	public final void testhibernateFile() throws IOException
 	{
 		System.out.println("export");
-		BioPAXFactory factory = new Level3FactoryImpl();
+		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 		Model m = factory.createModel();
 		Protein p = m.addNew(Protein.class, "myProtein");
 		MolecularInteraction mi = m.addNew(MolecularInteraction.class, "myInteraction");
 		mi.addParticipant(p);
-		System.out.println("export");
 		FileOutputStream out =
 				new FileOutputStream( // to the target test dir
 						getClass().getClassLoader()
 						.getResource("").getPath() 
 						+ File.separator + "hibtest.owl"
 				);
-		SimpleExporter simpleExporter = new SimpleExporter(BioPAXLevel.L3);
-		simpleExporter.convertToOWL(m, out);
+		SimpleIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+		io.convertToOWL(m, out);
 		out.close();
-
-
 	}
 
 
 	@Test
-	public void testBioPAXDocument()
+	public final void testBioPAXDocument()
 	{
 
 		String ID_COMPARTMENT_1 = "compartment_1";
@@ -173,7 +136,7 @@ public class SimpleExporterTest extends TestCase
 		String ID_PROTEIN_REFERENCE_2 = "PROTEIN_REFERENCE_2";
 		String ID_PROTEIN_REFERENCE_3 = "PROTEIN_REFERENCE_3";
 
-		Level3FactoryImpl level3Factory = new Level3FactoryImpl();
+		BioPAXFactory level3Factory = BioPAXLevel.L3.getDefaultFactory();
 		Model biopaxModel = level3Factory.createModel();
 
 		// Create a compartment
@@ -233,7 +196,7 @@ public class SimpleExporterTest extends TestCase
 			File f = new File(getClass().getClassLoader()
 					.getResource("").getPath() + File.separator + "test.owl");
 			FileOutputStream anOutputStream = new FileOutputStream(f);
-			SimpleExporter exporter = new SimpleExporter(biopaxModel.getLevel());
+			SimpleIOHandler exporter = new SimpleIOHandler(biopaxModel.getLevel());
 			exporter.convertToOWL(biopaxModel, anOutputStream);
 			anOutputStream.close();
 		}

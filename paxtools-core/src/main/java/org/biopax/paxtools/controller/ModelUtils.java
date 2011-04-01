@@ -1,14 +1,17 @@
 package org.biopax.paxtools.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.BioPAXFactoryAdaptor;
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.Level2Element;
 import org.biopax.paxtools.model.level3.UtilityClass;
 import org.biopax.paxtools.util.ClassFilterSet;
@@ -28,6 +31,7 @@ public class ModelUtils {
 	
 	private final Model model; // a model to hack ;)
 	private final EditorMap editorMap;
+	private final BioPAXIOHandler io;
 	
 	/**
 	 * Constructor.
@@ -38,6 +42,7 @@ public class ModelUtils {
 	{
 		this.model = model;
 		this.editorMap = new SimpleEditorMap(model.getLevel());
+		this.io = new SimpleIOHandler(model.getLevel());
 	}
 	
     /**
@@ -412,4 +417,24 @@ public class ModelUtils {
 			}
 		}
 	}
+	
+    
+	/**
+	 * Cut the BioPAX model off other models and/or BioPAX objects 
+	 * by essentially performing write/read to/from OWL. 
+	 * The resulting model contains new objects with same IDs 
+	 * and have object properties "fixed", i.e., dangling values 
+	 * become null/empty, and inverse properties (e.g. xrefOf)
+	 * re-calculated. The original model is unchanged.
+	 * 
+	 * @return copy of the model
+	 * @throws IOException 
+	 */
+	public Model writeRead(Model model) throws IOException 
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		io.convertToOWL(model, baos);
+		return io.convertFromOWL(new ByteArrayInputStream(baos.toByteArray()));
+	}	
+
 }
