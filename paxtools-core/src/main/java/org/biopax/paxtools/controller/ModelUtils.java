@@ -1,50 +1,65 @@
 package org.biopax.paxtools.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.BioPAXFactoryAdaptor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level2.Level2Element;
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
  * An advanced BioPAX utility class to
+ * find root elements, remove dangling,
  * replace elements or/and identifiers
- * in the model.
+ * in the model, etc.
  * 
  * @author rodche
  *
  */
-public class Replacer {
-	private static final Log LOG = LogFactory.getLog(Replacer.class);
+public class ModelUtils {
+	private static final Log LOG = LogFactory.getLog(ModelUtils.class);
 	
 	private final Model model; // a model to hack ;)
+	private final EditorMap editorMap;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param model
 	 */
-	public Replacer(Model model) 
+	public ModelUtils(Model model) 
 	{
 		this.model = model;
+		this.editorMap = new SimpleEditorMap(model.getLevel());
 	}
 	
     /**
      * Replaces existing BioPAX element with another one,
-     * of the same or possibly equivalent type or null,
-     * and updates all the affected references to it 
+     * of the same or possibly equivalent type (or null),
+     * recursively updates all the references to it 
      * (parents' object properties).
      * 
      * @param existing
      * @param replacement
-     * @param isRefresh
      */
-	// when true, - also delete children (which may "dirty" the model, i.e., become dangling or useless)
-	// auto-add new children to the model and fix properties (via self-merging)
-    public void replace(final BioPAXElement existing, final BioPAXElement replacement, boolean isRefresh) 
+    public void replace(final BioPAXElement existing, final BioPAXElement replacement) 
     {
+    	if(replacement != null && 
+    		existing.getModelInterface() != replacement.getModelInterface()) {
+    		LOG.error("Cannot replace " + existing.getRDFId()
+    				+ " (" + existing.getModelInterface().getSimpleName() 
+    				+ ") with a different type object: "
+    				+ replacement.getRDFId() + " (" 
+    				+ replacement.getModelInterface().getSimpleName() + ")!");
+    		return;
+    	}
+    	
     	// first, check if "shortcut" is possible
     	// nothing to replace?
     	if(!model.contains(existing)) {
@@ -98,26 +113,64 @@ public class Replacer {
 		
 		// remove the old one from the model
 		model.remove(existing);
-		
+
 		// add the replacement
 		if(replacement != null && !model.contains(replacement)) {
 			model.add(replacement);
 		}
-		
-		// optionally, fix properties/add children
-		if (isRefresh) {
-			// remove 'existing' and all its children from the model
-			Fetcher fetcher = new Fetcher(em);
-			Model old = model.getLevel().getDefaultFactory().createModel();
-			fetcher.fetch(existing, old);
-			for (BioPAXElement o : old.getObjects()) {
-				model.remove(o);
-			}
-			// restore - new children to the model
-			model.merge(model);
-		}
     }
 
+    
+    /**
+     * Deletes (recursively from the current model) 
+     * only those child elements that would become "dangling" 
+     * (not a property value of anything) if the parent 
+     * element were (or already was) removed from the model.
+     * 
+     * @param parent
+     */
+    public void removeDependentsIfDangling(BioPAXElement parent) 
+    {	
+		// get the parent and all its children
+		Fetcher fetcher = new Fetcher(editorMap);
+		Model childModel = model.getLevel().getDefaultFactory().createModel();
+		fetcher.fetch(parent, childModel);
+		
+		// copy all elements
+		Set<BioPAXElement> others = new HashSet<BioPAXElement>(model.getObjects());
+		
+		// retain only those not the parent nor its child
+		// (asymmetric difference)
+		others.removeAll(childModel.getObjects());
+		
+		// traverse from each of "others" to exclude those from "children" that are used
+		for(BioPAXElement e : others) {
+			final BioPAXElement bpe = e;
+			// define a special 'visitor'
+			BioPAXLevel level = (e instanceof Level2Element) ? BioPAXLevel.L2 : BioPAXLevel.L3;
+			AbstractTraverser traverser = new AbstractTraverser(editorMap) 
+			{
+				@Override
+				protected void visit(Object value, BioPAXElement parent, 
+						Model m, PropertyEditor editor) 
+				{
+					if(value instanceof BioPAXElement 
+							&& m.contains((BioPAXElement) value)) {
+						m.remove((BioPAXElement) value); 
+					}
+				}
+			};
+			// check all biopax properties
+			traverser.traverse(e, childModel);
+		}
+			
+		// remove those left (would be dangling if parent were removed)!
+		for (BioPAXElement o : childModel.getObjects()) {
+			model.remove(o);
+		}
+    	
+    }
+    
     
     /**
      * Replaces the RDFId of the BioPAX element
@@ -129,7 +182,7 @@ public class Replacer {
      * will be broken (contain the updated element under its oldId) 
      * One can call {@link Model#repair()} to fix.
      * 
-     * The method {@link #replace(BioPAXElement, BioPAXElement, boolean)} 
+     * The method {@link #replace(BioPAXElement, BioPAXElement)} 
      * is much safer but less efficient in special cases, such as when 
      * one just needs to create/import one model, quickly update several or all
      * IDs, and save it to a file. 
@@ -157,21 +210,25 @@ public class Replacer {
 					LOG.warn("Cannot replace ID. Element known by ID: " 
 						+ oldId + ", in fact, has another ID: " 
 						+ old.getRDFId());
-				/* too much unsafe...
-				// find/update the object with oldId which is stored under another map key
-				Set<BioPAXElement> objs = new HashSet<BioPAXElement>(model.getObjects());
-				for(BioPAXElement o : objs) {
-					if(oldId.equals(o.getRDFId())) {
-						hackFactory.setId(old, newId);
-					}
-				}
-				*/
 			}
 		} else {
 			if(LOG.isWarnEnabled())
 				LOG.warn("Cannot replace ID. Element is not found by ID: " + oldId);
 		}
     }
+    
+    
+	/**
+	 * Finds a subset of "root" BioPAX objects of the specified class 
+	 * (and sub-classes) in the model.
+	 * 
+	 * @param filterClass 
+	 * @return
+	 */
+	public <T extends BioPAXElement> Set<T> getRootElements(final Class<T> filterClass) {
+		return getRootElements(model.getObjects(), filterClass);
+	}
+    
     
     /* 
      * Extend the factory class to open up the setId method
@@ -195,4 +252,49 @@ public class Replacer {
 			super.setId(bpe, uri);
 		}
 	}
+	
+	
+	public Model getModel() {
+		return model;
+	}
+	
+	
+	/**
+	 * Finds a subset of "root" BioPAX objects of specific class (incl. sub-classes;
+	 * also works with a mix of different level biopax elements.)
+	 * 
+	 * Note: however, such "root" elements may or may not be, a property of other
+	 * elements, not included in the query (source) set.
+	 * 
+	 * @author rodche
+	 * @param sourceSet - model elements that can be "children" (property value) of each-other
+	 * @param filterClass 
+	 * @return
+	 */
+	public static <T extends BioPAXElement> Set<T> getRootElements(Set<BioPAXElement> sourceSet, 
+			final Class<T> filterClass) 
+	{
+		// copy all such elements (initially, we think all are roots...)
+		final Set<T> result = new HashSet<T>();
+		result.addAll(new ClassFilterSet<T>(sourceSet, filterClass));
+		
+		for(BioPAXElement e : sourceSet) {
+			// define a special 'visitor'
+			BioPAXLevel level = (e instanceof Level2Element) ? BioPAXLevel.L2 : BioPAXLevel.L3;
+			AbstractTraverser traverser = new AbstractTraverser(new SimpleEditorMap(level)) 
+			{
+				@Override
+				protected void visit(Object value, BioPAXElement parent, 
+						Model model, PropertyEditor editor) {
+					if(filterClass.isInstance(value)) 
+						result.remove(value); 
+				}
+			};
+			// check all biopax properties
+			traverser.traverse(e, null);
+		}
+		
+		return result;
+	}
+	
 }

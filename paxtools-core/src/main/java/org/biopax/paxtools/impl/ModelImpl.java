@@ -1,6 +1,6 @@
 package org.biopax.paxtools.impl;
 
-import org.biopax.paxtools.controller.Replacer;
+import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.SimpleMerger;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -292,8 +292,8 @@ public class ModelImpl implements Model
      */
 	public synchronized void replace(final BioPAXElement existing, final BioPAXElement replacement) 
 	{
-		Replacer replacer = new Replacer(this);
-		replacer.replace(existing, replacement, true);
+		ModelUtils modelUtils = new ModelUtils(this);
+		modelUtils.replace(existing, replacement);
 	}
 	
 	
@@ -313,6 +313,7 @@ public class ModelImpl implements Model
 			.merge(this, source);
 	}
 
+	
 	@Override
 	public synchronized void repair() {
 		// repair idMap
