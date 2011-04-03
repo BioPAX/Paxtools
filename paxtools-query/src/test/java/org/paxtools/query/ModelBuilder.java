@@ -1,6 +1,7 @@
 package org.paxtools.query;
 
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -43,8 +44,8 @@ public class ModelBuilder
 			(Conversion) model.getByID(IDBASE + "A-1" + REACTION_ARROW + "A-2"),
 			Catalysis.class, ControlType.INHIBITION, model);
 
-		SimpleExporter se = new SimpleExporter(BioPAXLevel.L3);
-		se.convertToOWL(model, new FileOutputStream(DIR + "temp2.owl"));
+		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+		io.convertToOWL(model, new FileOutputStream(DIR + "temp2.owl"));
 //		return model;
 	}
 

@@ -104,11 +104,6 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>paxtools-simple-io</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>pathwaycommons-client</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -2,8 +2,7 @@ package org.biopax.paxtools.examples;
 
 import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
 import org.biopax.paxtools.io.BioPAXIOHandler;
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.ProteinReference;
@@ -24,8 +23,8 @@ public final class SimpleIOExample {
 		}
 
 		// import BioPAX from OWL file (auto-detects level)
-		BioPAXIOHandler biopaxReader = new SimpleReader();
-		Model model = biopaxReader.convertFromOWL(new FileInputStream(args[0]));
+		BioPAXIOHandler biopaxIO = new SimpleIOHandler();
+		Model model = biopaxIO.convertFromOWL(new FileInputStream(args[0]));
 		// write (as BioPAX OWL)
 		output(model);
 		// TODO play with model...
@@ -35,29 +34,6 @@ public final class SimpleIOExample {
 		 */
 
 		// Well, let's do something with a (new) BioPAX model
-		
-		// BAD practice (causes extra dependencies and/or potential bugs)
-/*
-		Level3Factory factory = new Level3FactoryImpl();
-		Model model1 = new ModelImpl(factory); //this constructor may be made (or is) "protected"
-		// create a new empty element
-		UnificationXref ref = factory.createUnificationXref(); // not very flexible way...
-		ref.setRDFId("http://baderlab.org#xref_P62158"); // rdfid must be set
-		ref.setDb("uniprotkb");
-		ref.setId("P62158");
-		// create another one -
-		ProteinReference pr = factory.createProteinReference();
-		pr.setRDFId("urn:miriam:uniprot:P62158"); // rdfid must be set
-		pr.setDisplayName("CALM_HUMAN");
-		pr.addXref(ref);
-		// explicitly adding new objects to the model is required!
-		model1.add(pr);
-		model1.add(ref);
-		// write
-		output(model1);
-*/
-		
-		// GOOD practice of doing the same as above
 		
 		BioPAXFactory bioPAXFactory = new Level3FactoryImpl(); 
 		// - one can also use "other implementations" or the level's default:
@@ -86,7 +62,7 @@ public final class SimpleIOExample {
 
 	
 	public  static void output(Model model) throws IOException {
-		SimpleExporter simpleExporter = new SimpleExporter(model.getLevel());
+		BioPAXIOHandler simpleExporter = new SimpleIOHandler(model.getLevel());
 		OutputStream out = new ByteArrayOutputStream();
 		simpleExporter.convertToOWL(model, out);
 		System.out.println(out + "\n");

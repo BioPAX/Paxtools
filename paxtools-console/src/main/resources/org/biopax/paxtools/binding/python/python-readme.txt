@@ -29,7 +29,7 @@ This creates the paxtools.jar file in the build/jars directory
 Set this up by copying all jar files in paxtools/lib and the paxtools.jar file
 itself to your own convenient lib directory
 
-Update: with new paxtools2 - you only need one 'fat' JAR (but can also use individual modules):
+Update: with new paxtools - you only need one 'fat' JAR (but can also use individual modules):
 get either the "paxtools*-no-jena.jar" (smaller, uses simpleIO) or "paxtools*.jar" (with jenaIO)
 from http://downloads.sourceforge.net/project/biopax/paxtools/
 

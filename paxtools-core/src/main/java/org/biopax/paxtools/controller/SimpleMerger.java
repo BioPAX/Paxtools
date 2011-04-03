@@ -139,7 +139,7 @@ public class SimpleMerger
 	 * become magically 'fixed' (point to target's elements if found) 
 	 * or "dangling" (not null though, but still refer to external objects,
 	 * which simply will be skipped if one exports to OWL using 
-	 * e.g. org.biopax.paxtools.io.simpleIO.SimpleExporter).
+	 * e.g. SimpleIO).
 	 * The same apply to other merge methods in this class.
 	 *
 	 * @param target

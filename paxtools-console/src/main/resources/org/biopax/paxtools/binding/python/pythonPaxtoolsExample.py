@@ -1,7 +1,7 @@
 from jpype import *
 #call this to initialize use of Java
 #(with using a 'fat' paxtools.jar (with all dependencies built-in), setting long java.class.path is not required anymore - )
-#startJVM(getDefaultJVMPath(), "-ea","-Djava.class.path=/Users/admin/pythonPaxtools/lib/collections-generic-4.01.jar:/Users/admin/pythonPaxtools/lib/commons-logging.jar:/Users/admin/pythonPaxtools/lib/concurrent.jar:/Users/admin/pythonPaxtools/lib/icu4j_3_4.jar:/Users/admin/pythonPaxtools/lib/iri.jar:/Users/admin/pythonPaxtools/lib/jakarta-oro.jar:/Users/admin/pythonPaxtools/lib/jena.jar:/Users/admin/pythonPaxtools/lib/junit-4.1.jar:/Users/admin/pythonPaxtools/lib/log4j-1.2.12.jar:/Users/admin/pythonPaxtools/lib/paxtools.jar:/Users/admin/pythonPaxtools/lib/xercesImpl.jar:/Users/admin/pythonPaxtools/lib/xml-apis.jar")
+#startJVM(getDefaultJVMPath(), "-ea","-Djava.class.path=$PAXTOOLS_HOME/lib/collections-generic-4.01.jar:$PAXTOOLS_HOME/lib/commons-logging.jar:$PAXTOOLS_HOME/lib/concurrent.jar:$PAXTOOLS_HOME/lib/icu4j_3_4.jar:$PAXTOOLS_HOME/lib/iri.jar:$PAXTOOLS_HOME/lib/jakarta-oro.jar:$PAXTOOLS_HOME/lib/jena.jar:$PAXTOOLS_HOME/lib/junit-4.1.jar:$PAXTOOLS_HOME/lib/log4j-1.2.12.jar:$PAXTOOLS_HOME/lib/paxtools.jar:$PAXTOOLS_HOME/lib/xercesImpl.jar:$PAXTOOLS_HOME/lib/xml-apis.jar")
 startJVM(getDefaultJVMPath(), "-ea","-Djava.class.path=paxtools.jar")
 #print out using java or python
 java.lang.System.out.println("Starting pythonPaxToolsExample")
@@ -14,16 +14,18 @@ paxPkg = JPackage("org.biopax.paxtools")
 l3Factory = paxPkg.impl.level3.Level3FactoryImpl()
 model = l3Factory.createModel()
 
+#will be using the following BioPAX classes (model interfaces):
+proteinClass = java.lang.Class.forName("org.biopax.paxtools.model.level3.Protein", True, java.lang.ClassLoader.getSystemClassLoader())
+cellularLocationCvClass = java.lang.Class.forName("org.biopax.paxtools.model.level3.CellularLocationVocabulary", True, java.lang.ClassLoader.getSystemClassLoader())
+
 #add elements to the model
 #step 1: create an object using the factory
-protein = l3Factory.createProtein()
+protein = l3Factory.create(proteinClass, "protein1")
 #step 2: must set unique RDF ID and add to model for each object created
-protein.setRDFId("protein1")
 model.add(protein)
 #step 3: add data to your object
 protein.addAvailability("availability text")
-cellLoc = l3Factory.createCellularLocationVocabulary()
-cellLoc.setRDFId("cellularLocationVocabulary1")
+cellLoc = l3Factory.create(cellularLocationCvClass, "cellularLocationVocabulary1")
 model.add(cellLoc)
 cellLoc.addComment("comment")
 cellLoc.addTerm("cytoplasm")
@@ -37,23 +39,18 @@ protein2.addComment("created protein2")
 
 #export to BioPAX OWL
 javaIO = JPackage("java.io")
-exporter = paxPkg.io.simpleIO.SimpleExporter(paxPkg.model.BioPAXLevel.L3)
+io = paxPkg.io.SimpleIOHandler(paxPkg.model.BioPAXLevel.L3)
 fileOS = javaIO.FileOutputStream("test.owl")
 #output to stdout
-exporter.convertToOWL(model, java.lang.System.out)
+io.convertToOWL(model, java.lang.System.out)
 #output to a file
-exporter.convertToOWL(model, fileOS)
+io.convertToOWL(model, fileOS)
 fileOS.close()
 
 #read from file
-reader = paxPkg.io.simpleIO.SimpleReader()
 fileIS = javaIO.FileInputStream("test.owl")
-model2 = reader.convertFromOWL(fileIS)
-exporter.convertToOWL(model, java.lang.System.out)
-#output to a file
-fileOS = javaIO.FileOutputStream("test2.owl")
-exporter.convertToOWL(model, fileOS)
-fileOS.close()
+model2 = io.convertFromOWL(fileIS)
+io.convertToOWL(model, java.lang.System.out)
 
 #end use of jpype - docs say you can only do this once, so all java must be run before calling this
 shutdownJVM() 

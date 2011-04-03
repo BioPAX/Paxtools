@@ -3,7 +3,8 @@ package org.biopax.paxtools.examples;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -32,7 +33,7 @@ import java.util.Set;
  * - one may prefer using the Paxtools' jenaIO instead of the simpleIO:
  * 
  * import org.biopax.paxtools.io.jena.JenaIOHandler;
- * JenaIOHandler reader = new JenaIOHandler(null, BioPAXLevel.L2);
+ * JenaIOHandler handler = new JenaIOHandler(null, BioPAXLevel.L2);
  * 
  */
 public class ProteinNameLister
@@ -51,7 +52,7 @@ public class ProteinNameLister
 			System.exit(-1);
 		}
     	
-    	SimpleReader reader = new SimpleReader(BioPAXLevel.L2);
+    	BioPAXIOHandler reader = new SimpleIOHandler(BioPAXLevel.L2);
         final String pathname = args[0];
         File testDir = new File(pathname);
         
@@ -90,8 +91,7 @@ public class ProteinNameLister
         }
     }
 
-    private static void process(String pathname, String name,
-                                SimpleReader reader)
+    private static void process(String pathname, String name, BioPAXIOHandler reader)
             throws FileNotFoundException
     {
         System.out.println("--------------" + name + "---------");

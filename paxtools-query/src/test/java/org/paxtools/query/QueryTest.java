@@ -3,9 +3,7 @@ package org.paxtools.query;
 import org.biopax.paxtools.controller.Cloner;
 import org.biopax.paxtools.controller.Completer;
 import org.biopax.paxtools.controller.SimpleEditorMap;
-import org.biopax.paxtools.io.BioPAXIOHandler;
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -27,14 +25,12 @@ public class QueryTest
 {
 	static final String DIR = "../biopax/Level3/examples/";
 	static final SimpleEditorMap EM = new SimpleEditorMap(BioPAXLevel.L3);
-	static BioPAXIOHandler handler =  new SimpleReader();
+	static BioPAXIOHandler handler =  new SimpleIOHandler(BioPAXLevel.L3);
 
 	@Test
 	public void testQuery() throws Throwable
 	{
-		SimpleReader reader = new SimpleReader(BioPAXLevel.L3);
-
-		Model model = reader.convertFromOWL(new FileInputStream(DIR +
+		Model model = handler.convertFromOWL(new FileInputStream(DIR +
 			"temp2.owl"));
 
 		Set<BioPAXElement> set = findElements(model,
@@ -43,12 +39,9 @@ public class QueryTest
 
 //		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(set, model, 2, true, true);
 		Set<BioPAXElement> result = QueryExecuter.runGOI(set, model, 10);
-
-
+		
 		Model clonedModel = excise(model, result);
-
-		SimpleExporter se = new SimpleExporter(BioPAXLevel.L3);
-		se.convertToOWL(clonedModel, new FileOutputStream(DIR + "temp.owl"));
+		handler.convertToOWL(clonedModel, new FileOutputStream(DIR + "temp.owl"));
 	}
 
 	private Model excise(Model model, Set<BioPAXElement> result)
@@ -96,7 +89,6 @@ public class QueryTest
 			System.out.println("result.size() = " + result.size());
 
 		Model ex = excise(model, result);
-		SimpleExporter se = new SimpleExporter(BioPAXLevel.L3);
-		se.convertToOWL(ex, new FileOutputStream("QueryResult.owl"));		
+		handler.convertToOWL(ex, new FileOutputStream("QueryResult.owl"));		
 	}
 }

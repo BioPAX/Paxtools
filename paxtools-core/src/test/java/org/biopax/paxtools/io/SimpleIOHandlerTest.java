@@ -13,7 +13,7 @@ public class SimpleIOHandlerTest
 	
 	@Test
 	public final void testExportL2() throws FileNotFoundException	{
-		SimpleIOHandler simpleExporter = new SimpleIOHandler(BioPAXLevel.L2);
+		BioPAXIOHandler simpleExporter = new SimpleIOHandler(BioPAXLevel.L2);
 		Model model = BioPAXLevel.L2.getDefaultFactory().createModel();
 		FileOutputStream out = new FileOutputStream(
 				getClass().getResource("").getFile()
@@ -27,7 +27,7 @@ public class SimpleIOHandlerTest
 	{
 		String s = "L2" + File.separator
 		           + "biopax_id_557861_mTor_signaling.owl";
-		SimpleIOHandler io = new SimpleIOHandler();
+		BioPAXIOHandler io = new SimpleIOHandler();
 
 		System.out.println("file = " + s);
 
@@ -51,7 +51,7 @@ public class SimpleIOHandlerTest
 	public final void testReadWriteL3() throws IOException
 	{
 		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
-		SimpleIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
 
 		System.out.println("file = " + s);
 
@@ -84,7 +84,7 @@ public class SimpleIOHandlerTest
 						getClass().getResource("").getFile()
 						+ File.separator + "testDuplicateNamesByExporter.xml"
 				);
-		SimpleIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
 		io.convertToOWL(m, out);
 		out.close();
 
@@ -117,7 +117,7 @@ public class SimpleIOHandlerTest
 						.getResource("").getPath() 
 						+ File.separator + "hibtest.owl"
 				);
-		SimpleIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
 		io.convertToOWL(m, out);
 		out.close();
 	}
@@ -196,7 +196,7 @@ public class SimpleIOHandlerTest
 			File f = new File(getClass().getClassLoader()
 					.getResource("").getPath() + File.separator + "test.owl");
 			FileOutputStream anOutputStream = new FileOutputStream(f);
-			SimpleIOHandler exporter = new SimpleIOHandler(biopaxModel.getLevel());
+			BioPAXIOHandler exporter = new SimpleIOHandler(biopaxModel.getLevel());
 			exporter.convertToOWL(biopaxModel, anOutputStream);
 			anOutputStream.close();
 		}

@@ -4,7 +4,8 @@ import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.Traverser;
 import org.biopax.paxtools.controller.Visitor;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -58,7 +59,7 @@ public class PathwayGenesExtractor implements Visitor {
 			System.exit(-1);
 		}
 			
-		SimpleReader handler = new SimpleReader();
+		BioPAXIOHandler handler = new SimpleIOHandler();
 		FileInputStream fileInputStream = new FileInputStream(args[0]);
 		Model model = handler.convertFromOWL(fileInputStream);
 		

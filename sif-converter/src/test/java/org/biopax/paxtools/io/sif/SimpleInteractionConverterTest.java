@@ -9,7 +9,7 @@ package org.biopax.paxtools.io.sif;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.sif.level2.ControlRule;
 import org.biopax.paxtools.io.sif.level2.ParticipatesRule;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class SimpleInteractionConverterTest
 {
 	SimpleInteractionConverter simpleInteractionConverter;
-	static BioPAXIOHandler handler =  new SimpleReader();
+	static BioPAXIOHandler handler =  new SimpleIOHandler();
 	static final String outFile = "target" + File.separator + "simpleInteractionConverterTest.out.txt";
 	PrintStream out = null;
 	

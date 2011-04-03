@@ -30,7 +30,8 @@ package org.mskcc.psibiopax.converter;
 
 // imports
 
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -171,8 +172,8 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 
 		// write out the file
 		try {
-			SimpleExporter simpleExporter = new SimpleExporter(bpLevel);
-			simpleExporter.convertToOWL(completeModel, outputStream);
+			BioPAXIOHandler io = new SimpleIOHandler(bpLevel);
+			io.convertToOWL(completeModel, outputStream);
 			outputStream.close();
 			this.converter.conversionIsComplete = true;
 		}

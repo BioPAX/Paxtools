@@ -19,11 +19,6 @@
             <artifactId>paxtools-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-        	<groupId>org.biopax.paxtools</groupId>
-        	<artifactId>paxtools-simple-io</artifactId>
-        	<version>${project.version}</version>
-        </dependency>
     </dependencies>
 
 </project>

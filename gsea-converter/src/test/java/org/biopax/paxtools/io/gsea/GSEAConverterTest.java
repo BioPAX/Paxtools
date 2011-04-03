@@ -1,7 +1,7 @@
 package org.biopax.paxtools.io.gsea;
 
 import org.biopax.paxtools.io.BioPAXIOHandler;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 public class GSEAConverterTest {
 
 	PrintStream out = null;
-	static BioPAXIOHandler handler =  new SimpleReader();
+	static BioPAXIOHandler handler =  new SimpleIOHandler();
 	static final String outFile = "target" + File.separator + "gseaConverterTest.out.txt";
 	
 	

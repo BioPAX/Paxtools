@@ -5,15 +5,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.OneTwoThree;
-import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.query.QueryExecuter;
@@ -37,10 +33,11 @@ public class PaxtoolsMain {
 
     public static Log log = LogFactory.getLog(PaxtoolsMain.class);
     private final static String CLASS_NAME = "PaxtoolsMain";
-    private static SimpleReader io = new SimpleReader();
+    private static SimpleIOHandler io = new SimpleIOHandler();
 
-    public static void main(String[] argv) throws IOException, InvocationTargetException, IllegalAccessException {
-
+    public static void main(String[] argv) throws IOException, 
+    InvocationTargetException, IllegalAccessException 
+    {
         io.mergeDuplicates(true);
         if (argv.length == 0) {
             help();
@@ -102,7 +99,7 @@ public class PaxtoolsMain {
 
     private static void toGSEA(String[] argv) throws IOException
     {
-        Model model = (new SimpleReader()).convertFromOWL(new FileInputStream(argv[1]));
+    	Model model = io.convertFromOWL(new FileInputStream(argv[1]));
         (new GSEAConverter(argv[3], new Boolean(argv[4]))).writeToGSEA(model, new FileOutputStream(argv[2]));
     }
 
@@ -141,8 +138,7 @@ public class PaxtoolsMain {
         if (model != null) {
             log.info("Elements in the result model: " + model.getObjects().size());
             // export to OWL
-            SimpleExporter exporter = new SimpleExporter(model.getLevel());
-            exporter.convertToOWL(model, new FileOutputStream(out));
+            io.convertToOWL(model, new FileOutputStream(out));
         } else {
             log.error("NULL model returned.");
         }
@@ -156,21 +152,18 @@ public class PaxtoolsMain {
         String out = argv[3];
 
         Model model = io.convertFromOWL(new FileInputStream(in));
-        SimpleExporter exporter = new SimpleExporter(model.getLevel());
+        io.setFactory(model.getLevel().getDefaultFactory());
         // extract and save the sub-model (defined by ids)
-        exporter.convertToOWL(model, new FileOutputStream(out), ids);
+        io.convertToOWL(model, new FileOutputStream(out), ids);
     }
 
     private static void toLevel3(String[] argv) throws IOException {
-
-        SimpleReader reader = new SimpleReader();
-        Model model = reader.convertFromOWL(new FileInputStream(
+        Model model = io.convertFromOWL(new FileInputStream(
                 argv[1]));
         model = (new OneTwoThree()).filter(model);
         if (model != null) {
-            SimpleExporter exporter = new SimpleExporter(model
-                    .getLevel());
-            exporter.convertToOWL(model, new FileOutputStream(argv[2]));
+            io.setFactory(model.getLevel().getDefaultFactory());
+            io.convertToOWL(model, new FileOutputStream(argv[2]));
         }
     }
 
@@ -281,8 +274,8 @@ public class PaxtoolsMain {
                 new Integrator(new SimpleEditorMap(), model1, model2);
         integrator.integrate();
 
-        SimpleExporter simpleIO = new SimpleExporter(model1.getLevel());
-        simpleIO.convertToOWL(model1, new FileOutputStream(argv[3]));
+        io.setFactory(model1.getLevel().getDefaultFactory());
+        io.convertToOWL(model1, new FileOutputStream(argv[3]));
     }
 
     private static void merge(String[] argv) throws IOException {
@@ -293,8 +286,8 @@ public class PaxtoolsMain {
         Merger merger = new Merger(new SimpleEditorMap());
         merger.merge(model1, model2);
 
-        SimpleExporter simpleIO = new SimpleExporter(model1.getLevel());
-        simpleIO.convertToOWL(model1, new FileOutputStream(argv[3]));
+        io.setFactory(model1.getLevel().getDefaultFactory());
+        io.convertToOWL(model1, new FileOutputStream(argv[3]));
     }
 
 

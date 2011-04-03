@@ -5,7 +5,7 @@ import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ public final class SifnxExportExample {
 		}
 
 		// import BioPAX from OWL file (auto-detects level)
-		BioPAXIOHandler biopaxReader = new SimpleReader();
+		BioPAXIOHandler biopaxReader = new SimpleIOHandler();
 		Model model = biopaxReader.convertFromOWL(new FileInputStream(args[0]));
 		
 		SimpleInteractionConverter sic = // add all rules

@@ -1,7 +1,7 @@
 package org.biopax.paxtools.examples;
 
-import org.biopax.paxtools.io.simpleIO.SimpleExporter;
-import org.biopax.paxtools.io.simpleIO.SimpleReader;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -35,9 +35,8 @@ public class ReactomeEntitySetUnificationXrefFix
 
 	public static void fixReactome(InputStream in, OutputStream out) throws IOException
 	{
-		SimpleReader reader = new SimpleReader();
-		SimpleExporter exporter = new SimpleExporter(BioPAXLevel.L2);
-		Model level2 = reader.convertFromOWL(in);
+		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L2);
+		Model level2 = io.convertFromOWL(in);
 		Set<physicalEntity> physicalEntitySet = new HashSet<physicalEntity>();
 		physicalEntitySet.addAll(level2.getObjects(physicalEntity.class));
 		for (physicalEntity pe : physicalEntitySet)
@@ -85,7 +84,7 @@ public class ReactomeEntitySetUnificationXrefFix
 
 		}
 
-		exporter.convertToOWL(level2, out);
+		io.convertToOWL(level2, out);
 		out.close();
 	}
 }
