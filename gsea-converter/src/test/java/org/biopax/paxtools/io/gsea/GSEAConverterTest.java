@@ -90,7 +90,8 @@ public class GSEAConverterTest {
 			assertEquals(1, entries.size());
 			GSEAEntry entry = entries.iterator().next();
 			assertEquals("Glycolysis Pathway", entry.getName() );
-			assertEquals("aMAZE", entry.getDataSource());
+			//FIXME it can return either aMAZE or "KEGG" below; - because the order is not defined in gseaConverter.convert!
+			assertTrue("aMAZE".equals(entry.getDataSource()) || "KEGG".equals(entry.getDataSource()));
 			assertEquals("562", entry.getTaxID());
 			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
 			assertEquals(2, rdfToGenes.size());

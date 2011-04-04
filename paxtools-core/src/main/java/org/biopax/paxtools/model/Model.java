@@ -153,13 +153,9 @@ public interface Model extends Serializable
     
     
     /**
-     * Attempts to repairs the model:
-     * - recursively find/add lost "children"
-     * - update object properties (should refer to model's elements)
-     * - repair the internal map so that a object returned 
-     *   by {@link #getByID(String)} does actually have this ID
+     * Attempts to repair the model,
+     * i.e., make it self-consistent, integral.
      * 
-     * @param source a model to merge
      */
     void repair();
 

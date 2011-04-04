@@ -66,11 +66,12 @@ public class SimpleMergerTest {
 		// do merge
 		SimpleMerger merger = new SimpleMerger(new SimpleEditorMap(BioPAXLevel.L3));
 		merger.merge(model, model); // to itself
+		// - can use model.merge(model) or model.repair() instead
 		
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			(new SimpleIOHandler(BioPAXLevel.L3)).convertToOWL(model, out);
-			System.out.println(out.toString());
+			//System.out.println(out.toString());
 		} catch (Exception e) {
 			fail(e.toString());
 		}

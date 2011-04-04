@@ -36,7 +36,7 @@ public class ShallowCopyTest {
 		
 		Protein p2 = (new ShallowCopy()).copy(p1, "p1");
 		
-		assertEquals(p1, p2);
+		assertEquals(p1.getRDFId(), p2.getRDFId());
 		assertFalse(p1 == p2);
 		assertTrue(p1.isEquivalent(p2));
 		assertEquals(pr1, p2.getEntityReference());

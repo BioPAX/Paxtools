@@ -43,6 +43,7 @@ public class ModelUtils {
 		this.model = model;
 		this.editorMap = new SimpleEditorMap(model.getLevel());
 		this.io = new SimpleIOHandler(model.getLevel());
+		((SimpleIOHandler) this.io).mergeDuplicates(true);
 	}
 	
     /**
@@ -172,7 +173,9 @@ public class ModelUtils {
 			
 		// remove those left (would be dangling if parent were removed)!
 		for (BioPAXElement o : childModel.getObjects()) {
+			//if(model.contains(o))
 			model.remove(o);
+			//- it does not remove another object with the same ID (if any) though!
 		}
     	
     }

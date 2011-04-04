@@ -66,28 +66,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public BioPAXElementImpl(String uri){
 		this.id = uri;
 	};
-	
-	public int hashCode()
-    {
-        return id == null ? super.hashCode() : id.hashCode();
-    }
 
-    public boolean equals(Object o)
-    {
-        boolean value = false;
-
-        if (this == o)
-        {
-            value = true;
-        }
-        else if (o != null && o instanceof BioPAXElement)
-        {
-
-            final BioPAXElement that = (BioPAXElement) o;
-            value = this.getRDFId().equals(that.getRDFId());
-        }
-        return value;
-    }
 
     @Transient
     public boolean isEquivalent(BioPAXElement element)

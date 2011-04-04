@@ -111,21 +111,18 @@ public class ModelImpl implements Model
 	
 	public void remove(BioPAXElement aBioPAXElement)
 	{
+		this.idMap.values().remove(aBioPAXElement);
+		/*
+		// remove by ID:
 		BioPAXElement deleted = this.idMap.remove(aBioPAXElement.getRDFId());
-		
-		/* note: idMap.values().remove(aBioPAXElement) would delete it for sure
-		 * but... what if its RDFId does not match the corresponding key in the idMap?
-		 * So, we go another way (see below) ;-)
-		 */
-		
-		// inconsistent/intermediate model may have
-		if( deleted == null) {
-			// model stores aBioPAXElement under different ID, doesn't it?
-			assert !this.idMap.values().contains(aBioPAXElement);
-		} else {
-			// it actually deleted aBioPAXElement, not another Object with the same ID, didn't it?
+		// integrity check:
+		// model contains aBioPAXElement under a different ID?
+		assert !this.idMap.values().contains(aBioPAXElement);
+		if( deleted != null) {
+			// it actually deleted the aBioPAXElement, not another one with the same ID?
 			assert deleted == aBioPAXElement;
 		}
+		*/
 	}
                             
 	public <T extends BioPAXElement> T addNew(Class<T> c, String id)
@@ -145,8 +142,11 @@ public class ModelImpl implements Model
 	 */
 	public boolean contains(BioPAXElement aBioPAXElement)
 	{
+		return this.idMap.containsValue(aBioPAXElement);
+		/*
 		String rdfid = aBioPAXElement.getRDFId();
 		return this.idMap.get(rdfid) == aBioPAXElement;
+		*/
 	}
 
 // -------------------------- OTHER METHODS --------------------------
@@ -159,19 +159,18 @@ public class ModelImpl implements Model
             throw new IllegalBioPAXArgumentException(
                 "Given object is of wrong level");
         }
+        
         if (rdfId == null)
 		{
 			throw new IllegalBioPAXArgumentException(
 				"null ID: every object must have an RDF ID");
 		}
-
 		else if (this.idMap.containsKey(rdfId))
 		{
 			throw new IllegalBioPAXArgumentException(
 				"I already have an object with the same ID: " + rdfId +
 					". Try removing it first");
 		}
-
 		else if (this.contains(aBioPAXElement))
 		{
 			throw new IllegalBioPAXArgumentException(
@@ -292,8 +291,8 @@ public class ModelImpl implements Model
      */
 	public synchronized void replace(final BioPAXElement existing, final BioPAXElement replacement) 
 	{
-		ModelUtils modelUtils = new ModelUtils(this);
-		modelUtils.replace(existing, replacement);
+		 new ModelUtils(this)
+		 	.replace(existing, replacement);
 	}
 	
 	
@@ -314,6 +313,17 @@ public class ModelImpl implements Model
 	}
 
 	
+	/**
+	 * 
+	 * This implementation "repairs" the model 
+	 * without unnecessarily copying objects:
+     * - recursively adds lost "children" (not null object property values
+     *   for which {@link Model#contains(BioPAXElement)} returns False)
+     * - updates object properties (should refer to model's elements)
+     * - repairs the internal map so that a object returned 
+     *   by {@link #getByID(String)} does actually have this ID
+	 * 
+	 */
 	@Override
 	public synchronized void repair() {
 		// repair idMap

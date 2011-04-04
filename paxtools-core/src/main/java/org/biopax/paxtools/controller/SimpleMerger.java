@@ -202,17 +202,15 @@ public class SimpleMerger
 			} else if(!value.equals(newValue)) { 
 				// newValue is a different, not null BioPAX element
 				if (!value.isEquivalent(newValue)) {
-					// are they at least of the same type?
-					if (newValue.getModelInterface().equals(
-							value.getModelInterface())) {
-						String msg = "Target object value: " + newValue + " ("
-								+ newValue.getModelInterface().getSimpleName()
-								+ "), with the same RDFId (" + newValue.getRDFId() + "), "
-								+ " might have a DIFFERENT semantics/type from the source's: "
-								+ value + " (" + value.getModelInterface().getSimpleName()
-								+ ")!";
-						log.error(msg); // but we can live with it
-					} // else - exception will be thrown below, anyway!
+					String msg = "(Updating object fields) " +
+						"the replacement (target) object " + newValue + " ("
+						+ newValue.getModelInterface().getSimpleName()
+						+ "), with the same RDFId (" + newValue.getRDFId() + "), "
+						+ " is not equivalent to the source: "
+						+ value + " (" + value.getModelInterface().getSimpleName()
+						+ ")!";
+					log.warn(msg); // we can live with it in some cases...
+					//(exception may be thrown below)
 				}
 
 				/* 
