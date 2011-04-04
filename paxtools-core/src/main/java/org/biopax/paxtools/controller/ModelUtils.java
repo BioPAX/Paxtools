@@ -430,7 +430,7 @@ public class ModelUtils {
 	 * @return copy of the model
 	 * @throws IOException 
 	 */
-	public Model writeRead() throws IOException 
+	public Model writeRead()
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		io.convertToOWL(model, baos);
