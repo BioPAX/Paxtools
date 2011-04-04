@@ -420,7 +420,7 @@ public class ModelUtils {
 	
     
 	/**
-	 * Cut the BioPAX model off other models and/or BioPAX objects 
+	 * Cuts the BioPAX model off other models and BioPAX objects 
 	 * by essentially performing write/read to/from OWL. 
 	 * The resulting model contains new objects with same IDs 
 	 * and have object properties "fixed", i.e., dangling values 
@@ -430,7 +430,7 @@ public class ModelUtils {
 	 * @return copy of the model
 	 * @throws IOException 
 	 */
-	public Model writeRead(Model model) throws IOException 
+	public Model writeRead() throws IOException 
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		io.convertToOWL(model, baos);

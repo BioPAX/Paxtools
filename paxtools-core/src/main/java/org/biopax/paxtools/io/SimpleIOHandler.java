@@ -500,8 +500,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
      *
      * @param model model to be converted into OWL format
      * @param outputStream output stream into which the output will be written
-     * @throws IllegalAccessException in case of problem related to access
-     * @throws InvocationTargetException in case of problems related to invoke methods
+     * @throws BioPaxIOException in case of I/O problems
      */
     public void convertToOWL(Model model, OutputStream outputStream) 
     {    	
@@ -528,8 +527,6 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
      * @param outputStream output stream into which the output will be written
      * @param ids the list of "root" element IDs to export (with all their properties/children altogether)
      * @throws IOException in case of I/O problems
-     * @throws IllegalAccessException in case of problem related to access
-     * @throws InvocationTargetException in case of problems related to invoke methods
      */
     public void convertToOWL(Model model, OutputStream outputStream, String... ids)
             throws IOException 
