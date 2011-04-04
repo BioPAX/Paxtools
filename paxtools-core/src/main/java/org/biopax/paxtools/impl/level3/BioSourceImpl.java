@@ -46,14 +46,13 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 			(celltype != null ?
 				celltype.isEquivalent(bioSource.getCellType()) :
 				bioSource.getCellType() == null)
-				&&
+			&&
 				(tissue != null ?
-					!tissue.isEquivalent(bioSource.getTissue()) :
+					tissue.isEquivalent(bioSource.getTissue()) :
 					bioSource.getTissue() == null)
-				&& SetEquivalanceChecker.isEquivalentIntersection(
-                    new ClassFilterSet<UnificationXref>(getXref(), UnificationXref.class),
-                    new ClassFilterSet<UnificationXref>(bioSource.getXref(), UnificationXref.class)
-            );
+			&& 
+			// Named, XReferrable equivalence test
+			super.semanticallyEquivalent(bioSource);
     }
 
 	public int equivalenceCode()
