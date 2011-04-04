@@ -529,7 +529,6 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
      * @throws IOException in case of I/O problems
      */
     public void convertToOWL(Model model, OutputStream outputStream, String... ids)
-            throws IOException 
     {
 		if (ids.length == 0) {
 			convertToOWL(model, outputStream);
