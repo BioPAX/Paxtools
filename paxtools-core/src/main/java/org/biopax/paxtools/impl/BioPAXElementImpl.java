@@ -82,7 +82,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
     public int equivalenceCode()
     {
-        return hashCode();
+        return id.hashCode();
+        // return id == null ? super.hashCode() : id.hashCode();
     }
 
     @Id

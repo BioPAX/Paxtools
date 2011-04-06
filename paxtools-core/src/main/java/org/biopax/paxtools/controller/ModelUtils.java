@@ -98,7 +98,7 @@ public class ModelUtils {
 		Visitor visitor = new Visitor() {
 			@Override
 			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
-				if(range instanceof BioPAXElement && range.equals(existing))
+				if(range instanceof BioPAXElement && range.equals(existing)) //it's Object.equals (not just RDFId)!
 				{
 					if(editor.isMultipleCardinality()) {
 						if(replacement != null)
