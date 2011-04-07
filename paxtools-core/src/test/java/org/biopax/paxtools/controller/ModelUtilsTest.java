@@ -1,6 +1,8 @@
-package org.biopax.paxtools.impl;
+package org.biopax.paxtools.controller;
 
 import static org.junit.Assert.*;
+
+import java.util.Collections;
 
 import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.model.BioPAXFactory;
@@ -114,4 +116,24 @@ public class ModelUtilsTest {
 		assertEquals(pr1, p1.getEntityReference());
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public final void testInferPropertyFromParent() {
+		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
+		Provenance pro1 = model.addNew(Provenance.class, "urn:miriam:pid.pathway");
+		Provenance pro2 = model.addNew(Provenance.class, "urn:miriam:signaling-gateway");
+		Pathway pw1 = model.addNew(Pathway.class, "pathway");
+		pw1.addDataSource(pro1);
+		pw1.setStandardName("Pathway");
+		Pathway pw2 = model.addNew(Pathway.class, "sub_pathway");
+		pw2.setStandardName("Sub-Pathway");
+		pw2.addDataSource(pro2);
+		pw1.addPathwayComponent(pw2);
+		ModelUtils mu = new ModelUtils(model);
+		mu.inferPropertyFromParent("dataSource", Pathway.class);
+		assertEquals(2, pw2.getDataSource().size());
+		assertEquals(1, pw1.getDataSource().size());
+		// TODO add a protein having empty dataSource and check it's still empty when Pathway.class used as a filter
+	}
 }

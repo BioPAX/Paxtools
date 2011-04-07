@@ -27,7 +27,7 @@ public class Fetcher extends AbstractTraverser
     @Override
     protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
 	{
-		if (range instanceof BioPAXElement && !model.getObjects().contains(range))
+		if (range instanceof BioPAXElement && !model.contains((BioPAXElement) range))
 		{
 			BioPAXElement bpe = (BioPAXElement) range;
 			model.add(bpe);

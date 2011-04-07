@@ -3,8 +3,7 @@ package org.biopax.paxtools.controller;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,22 +11,35 @@ import org.biopax.paxtools.impl.BioPAXFactoryAdaptor;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
-import org.biopax.paxtools.model.level2.Level2Element;
 import org.biopax.paxtools.model.level3.UtilityClass;
-import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
- * An advanced BioPAX utility class to
- * find root elements, remove dangling,
- * replace elements or/and identifiers
- * in the model, etc.
+ * An advanced BioPAX utility class that implements
+ * several useful algorithms to extract root or child 
+ * BioPAX elements, remove dangling, replace elements 
+ * or identifiers, etc.
  * 
  * @author rodche
  *
  */
 public class ModelUtils {
 	private static final Log LOG = LogFactory.getLog(ModelUtils.class);
+	
+	/* 
+	 * to ignore 'nextStep' property in most algorithms, 
+	 * because it can eventually lead outside the current pathway, 
+	 * and normally it (and pathwayOrder) is not necessary 
+	 * for (step) processes to be reached (because they must be 
+	 * listed in the pathwayComponent property as well).
+	 */
+	private static final PropertyFilter nextStepFilter = new PropertyFilter() {
+		@Override
+		public boolean filter(PropertyEditor editor) {
+			return !editor.getProperty().equals("nextStep")
+				&& !editor.getProperty().equals("NEXT-STEP");
+		}
+	};
 	
 	private final Model model; // a model to hack ;)
 	private final EditorMap editorMap;
@@ -154,7 +166,6 @@ public class ModelUtils {
 		for(BioPAXElement e : others) {
 			final BioPAXElement bpe = e;
 			// define a special 'visitor'
-			BioPAXLevel level = (e instanceof Level2Element) ? BioPAXLevel.L2 : BioPAXLevel.L3;
 			AbstractTraverser traverser = new AbstractTraverser(editorMap) 
 			{
 				@Override
@@ -173,37 +184,9 @@ public class ModelUtils {
 			
 		// remove those left (would be dangling if parent were removed)!
 		for (BioPAXElement o : childModel.getObjects()) {
-			//if(model.contains(o))
 			model.remove(o);
-			//- it does not remove another object with the same ID (if any) though!
 		}
-    	
     }
-
-    
-    /**
-     * Removes (recursively) all dangling UtilityClass objects 
-     * from the current model.
-     */
-    public void removeUtilityObjectsIfDangling()  {
-    	removeUtilityObjectsIfDangling(model);
-    }
-    
-    
-	/**
-	 * Recursively copies parent object's property values 
-	 * down to all the children objects that have the same property. 
-	 * If the property is multiple cardinality property, it will add
-	 * new values, otherwise - will set but won't overwrite existing 
-	 * (not null) values.
-	 * 
-	 * @param property property name
-	 * @param type a class of elements which property is to infer
-	 */
-	public <T extends BioPAXElement> void inferPropertyFromParent(String property, Class<T> type) 
-	{	
-		inferPropertyFromParent(model, property, type);
-	}
     
     
     /**
@@ -252,18 +235,6 @@ public class ModelUtils {
     }
     
     
-	/**
-	 * Finds a subset of "root" BioPAX objects of the specified class 
-	 * (and sub-classes) in the model.
-	 * 
-	 * @param filterClass 
-	 * @return
-	 */
-	public <T extends BioPAXElement> Set<T> getRootElements(final Class<T> filterClass) {
-		return getRootElements(model.getObjects(), filterClass);
-	}
-    
-    
     /* 
      * Extend the factory class to open up the setId method
      */
@@ -294,28 +265,24 @@ public class ModelUtils {
 	
 	
 	/**
-	 * Finds a subset of "root" BioPAX objects of specific class (incl. sub-classes;
-	 * also works with a mix of different level biopax elements.)
+	 * Finds a subset of "root" BioPAX objects of specific class (incl. sub-classes)
 	 * 
 	 * Note: however, such "root" elements may or may not be, a property of other
-	 * elements, not included in the query (source) set.
+	 * elements, not included in the model.
 	 * 
-	 * @author rodche
-	 * @param sourceSet - model elements that can be "children" (property value) of each-other
 	 * @param filterClass 
 	 * @return
 	 */
-	public static <T extends BioPAXElement> Set<T> getRootElements(Set<BioPAXElement> sourceSet, 
-			final Class<T> filterClass) 
+	public <T extends BioPAXElement> Set<T> getRootElements(final Class<T> filterClass) 
 	{
 		// copy all such elements (initially, we think all are roots...)
 		final Set<T> result = new HashSet<T>();
-		result.addAll(new ClassFilterSet<T>(sourceSet, filterClass));
+		result.addAll(model.getObjects(filterClass));
 		
-		for(BioPAXElement e : sourceSet) {
+		// but we run from every element (all types)
+		for(BioPAXElement e : model.getObjects()) {
 			// define a special 'visitor'
-			BioPAXLevel level = (e instanceof Level2Element) ? BioPAXLevel.L2 : BioPAXLevel.L3;
-			AbstractTraverser traverser = new AbstractTraverser(new SimpleEditorMap(level)) 
+			AbstractTraverser traverser = new AbstractTraverser(editorMap) 
 			{
 				@Override
 				protected void visit(Object value, BioPAXElement parent, 
@@ -333,11 +300,11 @@ public class ModelUtils {
 	
 	/**
 	 * Recursively removes dangling utility class elements
-	 * from the model.
+	 * from the current model.
 	 */
-	public static void removeUtilityObjectsIfDangling(Model fromModel) 
+	public void removeUtilityObjectsIfDangling() 
 	{
-		Set<UtilityClass> dangling = getRootElements(fromModel.getObjects(), UtilityClass.class);
+		Set<UtilityClass> dangling = getRootElements(UtilityClass.class);
 		// get rid of dangling objects
 		if(!dangling.isEmpty()) {
 			if(LOG.isInfoEnabled()) 
@@ -348,80 +315,140 @@ public class ModelUtils {
 				LOG.debug("to remove (dangling after merge) :" + dangling);
 
 			for(BioPAXElement thing : dangling) {
-				fromModel.remove(thing);
-				assert !fromModel.contains(thing);
-				assert !fromModel.containsID(thing.getRDFId());
+				model.remove(thing);
+				assert !model.contains(thing);
+				assert !model.containsID(thing.getRDFId());
 			}
 			
 			// some may have become dangling now, so check again...
-			removeUtilityObjectsIfDangling(fromModel);
+			removeUtilityObjectsIfDangling();
 		}
+	}
+	
+
+	/**
+	 * For the current (internal) model, this method 
+	 * iteratively copies given property values 
+	 * from parent BioPAX elements to children; i.e., at every level, 
+	 * where applicable, it uses the parent's value for the child's property, 
+	 * and then continues to the next level until all the elements are visited. 
+	 * If the property is multiple cardinality property, it will add
+	 * new values, otherwise - it will set it only if was empty; 
+	 * - in both cases it will never delete/override existing (not null) values!
+	 * 
+	 * @param model - to begin from each root element in the model
+	 * @param property property name
+	 * @param value - default, to begin with (can be 'null' - existing values will be used)
+	 * @param forClasses (optional) infer/set the property for these types only
+	 */
+	public void inferPropertyFromParent(final String property, 
+			final Class<? extends BioPAXElement>... forClasses) 
+	{
+		Set<Class<? extends BioPAXElement>> domains 
+			= new HashSet<Class<? extends BioPAXElement>>();
+		if(forClasses.length > 0)
+			domains.addAll(Arrays.asList(forClasses));
+		else 
+			domains.add(BioPAXElement.class);
+
+		inferPropertyFromParent(this.model, property, null, domains);
 	}
 	
 	
 	/**
-	 * This static method recursively copies parent object's properties 
-	 * down to all the children objects that have the same property. 
+	 * Iteratively copies given property value(s) 
+	 * from parents to immediate children, i.e., at every child level, 
+	 * where applicable, it uses the parent's value for child's property, 
+	 * and then continues to the next level until all the elements are visited. 
 	 * If the property is multiple cardinality property, it will add
-	 * new values, otherwise - will set but won't overwrite existing 
-	 * (not null) values.
+	 * new values, otherwise - it will set it if empty; - in both cases
+	 * it never deletes/overrides existing (not null) values!
 	 * 
-	 * @param model
+	 * @param model - to begin from each root element in the model
 	 * @param property property name
-	 * @param type a class of elements which property is to infer
+	 * @param value - default value (use collection for a multiple cardinality property!), when 'null' or 'empty' - existing values will be used
+	 * @param forClasses (optional) infer/set the property for these types only
 	 */
-	public static <T extends BioPAXElement> void inferPropertyFromParent(
-		Model model, String property, Class<T> type) 
+	private void inferPropertyFromParent(
+		final Model model, final String property, final Object value, 
+		final Set<Class<? extends BioPAXElement>> domains) 
 	{	
-		// ready,..
 		final EditorMap editorMap = new SimpleEditorMap(model.getLevel());
-		final PropertyEditor propertyEditor = editorMap.getEditorForProperty(property, type);
-		if(propertyEditor == null) 
-			throw new IllegalArgumentException("No such property (editor): " 
-				+ type.getSimpleName() + "." + property);
-		// - set,..
-		final boolean isMul = propertyEditor.isMultipleCardinality();
-		/* 
-		 * Will ignore 'nextStep' property, because it can eventually lead 
-		 * outside the current pathway, and normally it (and pathwayOrder)
-		 * is not necessary for (step) processes to be reached (because they must be 
-		 * listed in the pathwayComponent property as well).
-		 */
-		PropertyFilter nextStepFilter = new PropertyFilter() {
-			@Override
-			public boolean filter(PropertyEditor editor) {
-				return !editor.getProperty().equals("nextStep");
-			}
-		};
-		Fetcher fetcher = new Fetcher(editorMap, nextStepFilter);
 		
-		// - go!
-		for(T bpe : model.getObjects(type)) {
-			Object val = propertyEditor.getValueFromBean(bpe);
-			if((isMul && ((Set)val).isEmpty()) || propertyEditor.isUnknown(val))
-				continue; // parent does not have any value for this property
-			
-			Model m = model.getLevel().getDefaultFactory().createModel();
-			fetcher.fetch(bpe, m);
-			m.remove(bpe); // remove itself
-			for(T child : m.getObjects(type)) {
-				Object existing = propertyEditor.getValueFromBean(child);
-				// set/add only if 
-				if(isMul || propertyEditor.isUnknown(existing)) {
-					if(!isMul)
-						propertyEditor.setValueToBean(val, child);
-					else {
-						for(Object v : (Set)val) {
-							if(!((Set)existing).contains(v))
-								propertyEditor.setValueToBean(v, child);
-						}
-					}
-				}
-			}
+		// when no domains listed means - for all classes
+		if(domains.isEmpty()) {
+			domains.add(BioPAXElement.class);
 		}
+		
+		// for each ROOT element (puts a strict top-down order on the following)
+		for(BioPAXElement bpe : getRootElements(BioPAXElement.class)) {
+			Object updatedValue = value; // - to use in the next level (with this element's children)
+			// is there such property?
+			PropertyEditor editor = editorMap.getEditorForProperty(property, bpe.getModelInterface());
+			if (editor != null) {
+				boolean isMul = editor.isMultipleCardinality();
+				// the object must pass the filter in order to be affected,
+				// (but, even if it does not, its property value will be considered for children anyway)
+				if (isInstanceofOneOf(domains, bpe)) {
+					// get current value
+					Object existing = editor.getValueFromBean(bpe);
+					// change only if the new value for the property makes sense
+					if (!isMul) {
+						// for singular, set only if it was empty (null/unknown)!
+						if (editor.isUnknown(existing)
+								&& !editor.isUnknown(value)) {
+							editor.setValueToBean(value, bpe);
+						}
+					} else if (value != null && !((Set) value).isEmpty()) {
+						// for multiple cardinality, always add new values
+						for (Object v : (Set) value) {
+							if (!((Set) existing).contains(v))
+								editor.setValueToBean(v, bpe);
+						}
+						// save the new value for the next iteration
+						updatedValue = editor.getValueFromBean(bpe);
+					}
+				} 
+
+				// remember current value (does not matter - was it modified above or not)
+				Object existing = editor.getValueFromBean(bpe);
+				if (isMul) {
+					// add values
+					if (updatedValue == null) {
+						updatedValue = new HashSet((Set) existing);
+					} else {
+						((Set) updatedValue).addAll((Set) existing);
+					}
+				} else if (!editor.isUnknown(existing)) {
+					// use value
+					updatedValue = existing;
+				} 
+			} else {
+				// no such property; we'll continue into children, using original 'value'
+			}			
+			// well, done for this element
+
+			// get children
+			final Model childModel = getDirectChildren(bpe);
+			// repeat entire method with the children model and updated property value ;)
+			new ModelUtils(childModel)
+				.inferPropertyFromParent(childModel, property, updatedValue, domains);
+		}
+		
 	}
 	
-    
+	
+	private static boolean isInstanceofOneOf(final Collection<Class<? extends BioPAXElement>> classes, BioPAXElement obj) 
+	{
+		for(Class<? extends BioPAXElement> c : classes) {
+			if(c.isInstance(obj)) {
+				return true;
+			}
+		}	
+		return false;
+	}
+
+	
 	/**
 	 * Cuts the BioPAX model off other models and BioPAX objects 
 	 * by essentially performing write/read to/from OWL. 
@@ -440,4 +467,51 @@ public class ModelUtils {
 		return io.convertFromOWL(new ByteArrayInputStream(baos.toByteArray()));
 	}	
 
+	
+	/**
+	 * Gets all the child BioPAX elements of a given BioPAX element
+	 * (using the "tuned" {@link Fetcher}) and adds them to a 
+	 * new model.
+	 * 
+	 * @param bpe
+	 * @return
+	 */
+	public Model getAllChildren(BioPAXElement bpe) {
+		Model model = this.model.getLevel().getDefaultFactory().createModel();
+		new Fetcher(editorMap, nextStepFilter).fetch(bpe, model);
+		model.remove(bpe); // remove the parent
+		
+		return model;
+		//TODO limit to elements from this.model (add extra parameter)?
+	}
+	
+	
+	/**
+	 * Gets direct children of a given BioPAX element
+	 * and adds them to a new model.
+	 * 
+	 * @param bpe
+	 * @return
+	 */
+	public Model getDirectChildren(BioPAXElement bpe) 
+	{	
+		Model model = this.model.getLevel().getDefaultFactory().createModel();
+		
+		AbstractTraverser traverser = new AbstractTraverser(editorMap, nextStepFilter) {
+			@Override
+			protected void visit(Object range, BioPAXElement domain,
+					Model model, PropertyEditor editor) {
+				if (range instanceof BioPAXElement 
+						&& !model.contains((BioPAXElement) range)) {
+					model.add((BioPAXElement) range);
+				}
+			}
+		};
+		
+		traverser.traverse(bpe, model);
+		
+		return model;
+		//TODO limit to elements from this.model (add extra parameter)?
+	}
+	
 }
