@@ -44,28 +44,32 @@ public interface BioPAXElement extends Serializable, Cloneable
 
 
     /**
-     * This method compare the given element for equivalency. This is different
+     * This method compares the given element for equivalency. This is different
      * from equals(), as BioPAX elements resolve equality based on RDF ID.
      * Equivalent returns true if elements are equal or if
      *  <ul>
      *   <li> both elements implement the same model interface AND
-     *   <li> both elements have equivalent <b>critical</b> properties
+     *   <li> both elements have equivalent <b>Key</b> properties
      *  </ul>
-     *  What these critical properties are varies from class to class.
+     *  These Key properties vary from class to class.
      *
-     * @param element to be compared for equivalancy
-     * @return true if the element equals to this, or has equivalant critical
+     * @param element to be compared for equivalency
+     * @return true if the element equals to this, or has equivalent critical
      * properties.
      */
     boolean isEquivalent(BioPAXElement element);
 
     /**
-     * If two elements are equivalent, then their equivalance code should be the
+     * If two elements are equivalent, then their equivalence code should be the
      * same.
      * @return an integer that is same across all equivalent entities.
      */
-	int equivalenceCode();
+     int equivalenceCode();
 
-	//public Set<Model> getOwnerModels();
+    /**
+     * This annotation identifies properties that are
+     */
+    public @interface Key{}
+
 	
 }
