@@ -192,6 +192,7 @@ public class ModelUtilsTest {
 		
 		assertEquals(hs, pr2.getOrganism()); // still human, because it wasn't empty!
 		assertEquals(mm, g1.getOrganism()); // inferred from the parent pathway!
+		assertEquals(1, g1.getComment().size()); // - he-he, and a new comment was generated!
 		assertNull(pr1.getOrganism()); // because ERs were filtered!
 	}
 }

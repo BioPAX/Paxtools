@@ -11,7 +11,6 @@ import org.biopax.paxtools.impl.BioPAXFactoryAdaptor;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
-import org.biopax.paxtools.model.level3.UtilityClass;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
@@ -299,12 +298,13 @@ public class ModelUtils {
 	}
 	
 	/**
-	 * Recursively removes dangling utility class elements
-	 * from the current model.
+	 * Iteratively removes dangling elements
+	 * of given type, e.g., utility class,  
+	 * from current model.
 	 */
-	public void removeUtilityObjectsIfDangling() 
+	public <T extends BioPAXElement> void removeObjectsIfDangling(Class<T> clazz) 
 	{
-		Set<UtilityClass> dangling = getRootElements(UtilityClass.class);
+		Set<T> dangling = getRootElements(clazz);
 		// get rid of dangling objects
 		if(!dangling.isEmpty()) {
 			if(LOG.isInfoEnabled()) 
@@ -316,12 +316,10 @@ public class ModelUtils {
 
 			for(BioPAXElement thing : dangling) {
 				model.remove(thing);
-				assert !model.contains(thing);
-				assert !model.containsID(thing.getRDFId());
 			}
 			
 			// some may have become dangling now, so check again...
-			removeUtilityObjectsIfDangling();
+			removeObjectsIfDangling(clazz);
 		}
 	}
 	
@@ -398,12 +396,15 @@ public class ModelUtils {
 						if (editor.isUnknown(existing)
 								&& !editor.isUnknown(value)) {
 							editor.setValueToBean(value, bpe);
+							comment(bpe, value, property);
 						}
 					} else if (value != null && !((Set) value).isEmpty()) {
 						// for multiple cardinality, always add new values
 						for (Object v : (Set) value) {
-							if (!((Set) existing).contains(v))
+							if (!((Set) existing).contains(v)) {
 								editor.setValueToBean(v, bpe);
+								comment(bpe, v, property);
+							}
 						}
 						// save the new value for the next iteration
 						updatedValue = editor.getValueFromBean(bpe);
@@ -437,6 +438,29 @@ public class ModelUtils {
 		
 	}
 	
+	
+	/**
+	 * To add a special comment for a BioPAX element 
+	 * when one of its property values was
+	 * inferred from parent's.
+	 * 
+	 * @param bpe
+	 * @param v
+	 * @param property
+	 */
+	private void comment(BioPAXElement bpe, Object v, String property) {
+		String propCommentName = "comment";
+		if(model.getLevel() == BioPAXLevel.L2)
+			propCommentName = propCommentName.toUpperCase();
+		PropertyEditor pe = editorMap.getEditorForProperty(propCommentName, bpe.getModelInterface());
+		if(pe != null) {
+			pe.setValueToBean("Inferred property: "
+				+ property + ", value: " 
+				+ ((v instanceof BioPAXElement)? "rdfID=" + ((BioPAXElement)v).getRDFId() : v)
+				, bpe);				
+		}
+	}
+
 	
 	private static boolean isInstanceofOneOf(final Collection<Class<? extends BioPAXElement>> classes, BioPAXElement obj) 
 	{
