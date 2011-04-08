@@ -36,7 +36,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	private static final Log log = LogFactory.getLog(BioPAXIOHandlerAdapter.class);
 
-	protected BioPAXLevel level = BioPAXLevel.L2; //todo change to level 3 as default
+	protected BioPAXLevel level = BioPAXLevel.L3;
 
 	protected BioPAXFactory factory;
 	

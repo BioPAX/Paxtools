@@ -2,9 +2,11 @@ package org.biopax.paxtools.controller;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 
 import org.biopax.paxtools.controller.ModelUtils;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -117,7 +119,6 @@ public class ModelUtilsTest {
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public final void testInferPropertyFromParent() {
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
@@ -130,10 +131,67 @@ public class ModelUtilsTest {
 		pw2.setStandardName("Sub-Pathway");
 		pw2.addDataSource(pro2);
 		pw1.addPathwayComponent(pw2);
+		
+		
+		Protein p1 = model.addNew(Protein.class, "p1"); // no dataSource
+		Conversion conv1 = model.addNew(Conversion.class, "conv1"); // no dataSource
+		pw1.addPathwayComponent(conv1);
+		pw2.addPathwayComponent(conv1);
+		conv1.addLeft(p1);
+		
 		ModelUtils mu = new ModelUtils(model);
-		mu.inferPropertyFromParent("dataSource", Pathway.class);
+		mu.inferPropertyFromParent("dataSource", Pathway.class); // apply to pathways only
+		
 		assertEquals(2, pw2.getDataSource().size());
 		assertEquals(1, pw1.getDataSource().size());
-		// TODO add a protein having empty dataSource and check it's still empty when Pathway.class used as a filter
+		//a protein without dataSource must still have it empty (when Pathway.class used to filter)
+		assertEquals(0, p1.getDataSource().size());
+		
+		mu.inferPropertyFromParent("dataSource"); // no filters
+		
+		assertEquals(2, pw2.getDataSource().size());
+		assertEquals(1, pw1.getDataSource().size());
+		assertEquals(2, p1.getDataSource().size()); // because conv1 belongs to pw1 and pw2!
+		//System.out.println("p1 inferred datasources: " + p1.getDataSource());
+	}
+	
+	
+	@Test
+	public final void testInferPropertyFromParent2() {
+		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
+		Pathway pw1 = model.addNew(Pathway.class, "pathway1");
+		BioSource mm = model.addNew(BioSource.class, "mouse");
+		pw1.setOrganism(mm); // 
+		Protein p1 = model.addNew(Protein.class, "p1"); 
+		ProteinReference pr1 = model.addNew(ProteinReference.class, "pr1"); 
+		p1.setEntityReference(pr1);
+		Protein p2 = model.addNew(Protein.class, "p2"); 
+		ProteinReference pr2 = model.addNew(ProteinReference.class, "pr2"); 
+		p2.setEntityReference(pr2);
+		BioSource hs = model.addNew(BioSource.class, "human");
+		pr2.setOrganism(hs);
+		Conversion conv1 = model.addNew(Conversion.class, "conv1");
+		conv1.addLeft(p1);
+		pw1.addPathwayComponent(conv1);
+		pw1.setStandardName("Pathway1");
+		Gene g1 = model.addNew(Gene.class, "gene1");
+		PathwayStep s1 = model.addNew(PathwayStep.class, "step1");
+		Catalysis ca1 = model.addNew(Catalysis.class, "catalysis1");
+		ca1.addControlled(conv1);
+		GeneticInteraction gi1 = model.addNew(GeneticInteraction.class, "gi1");
+		pw1.addPathwayComponent(gi1);
+		pw1.addPathwayComponent(ca1);
+		gi1.addParticipant(g1);
+		
+		ModelUtils mu = new ModelUtils(model);
+		mu.inferPropertyFromParent("organism", Gene.class, Pathway.class); // but not for SequenceEntityReference.class in this test ;)
+		
+		//ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		//new SimpleIOHandler().convertToOWL(model, bytes);
+		//System.out.println(bytes.toString());
+		
+		assertEquals(hs, pr2.getOrganism()); // still human, because it wasn't empty!
+		assertEquals(mm, g1.getOrganism()); // inferred from the parent pathway!
+		assertNull(pr1.getOrganism()); // because ERs were filtered!
 	}
 }

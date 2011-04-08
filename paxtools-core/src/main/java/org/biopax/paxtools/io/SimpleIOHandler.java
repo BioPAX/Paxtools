@@ -56,7 +56,6 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	public SimpleIOHandler(BioPAXFactory factory, BioPAXLevel level)
 	{
 		super(factory, level);
-		//resetEditorMap(); // also called in the base constructor
 	}
 
 	public void mergeDuplicates(boolean mergeDuplicates)
@@ -576,7 +575,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		
 		Set<PropertyEditor> editors = editorMap.getEditorsOf(bean);
 		if(editors==null || editors.isEmpty()) {
-			log.warn("no editors for " + bean.getRDFId() + " | " 
+			log.info("no editors for " + bean.getRDFId() + " | " 
 					+ bean.getModelInterface().getSimpleName());
 			out.write(newline+"</" + name + ">");
 			return;

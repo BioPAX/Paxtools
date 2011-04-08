@@ -65,8 +65,7 @@ public abstract class EditorMapAdapter implements EditorMap
 		PropertyEditor result = this.ifExistsGetEditorForProperty(property, javaClass);
 		if (result == null)
 		{
-			log.warn(
-					"Could not locate controller for " + property + " | " +
+			log.info("Could not locate controller for " + property + " | " +
 					javaClass);
 		}
 
