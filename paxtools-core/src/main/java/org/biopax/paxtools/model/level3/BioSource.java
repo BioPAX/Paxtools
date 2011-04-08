@@ -14,7 +14,6 @@ public interface BioSource extends UtilityClass, Named
 	 * A cell type, e.g. 'HeLa'. This should reference a term in a controlled vocabulary of cell types.
 	 * Best practice is to refer to <a href="http://www.obofoundry.org/cgi-bin/detail.cgi?id=cell">OBOCell
 	 * Ontology</a>.
-	 *
 	 * @return cell type if this biosource is a cell line or a specific tissue. Null otherwise.
 	 */
 	CellVocabulary getCellType();
@@ -23,15 +22,22 @@ public interface BioSource extends UtilityClass, Named
 	 * A cell type, e.g. 'HeLa'. This should reference a term in a controlled vocabulary of cell types.
 	 * Best practice is to refer to <a href="http://www.obofoundry.org/cgi-bin/detail.cgi?id=cell">OBOCell
 	 * Ontology</a>.
-	 *
 	 * @param cellType if this biosource is a cell line or a specific tissue. Null for n/a.
 	 */
 	void setCellType(CellVocabulary cellType);
 
 
-	// Property TISSUE
-
+	/**
+	 * An external controlled vocabulary of tissue types. A reference to the  <a href = http://www.brenda-enzymes
+	 * .info/>BRENDA</a>
+	 * @return An external controlled vocabulary of tissue types.
+	 */
 	TissueVocabulary getTissue();
 
+	/**
+	 * An external controlled vocabulary of tissue types. A reference to the  <a href = http://www.brenda-enzymes
+	 * .info/>BRENDA</a>
+	 * @param tissue An external controlled vocabulary of tissue types.
+	 */
 	void setTissue(TissueVocabulary tissue);
 }

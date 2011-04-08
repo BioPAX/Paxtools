@@ -13,6 +13,7 @@ public interface BindingFeature extends EntityFeature
 	 * @return paired binding feature.
 	 */
 	@AutoComplete(forward = false)
+    @Key
 	BindingFeature getBindsTo();
 
 	/**
@@ -24,10 +25,24 @@ public interface BindingFeature extends EntityFeature
 	 */
 	void setBindsTo(BindingFeature bindsTo);
 
-	//property intramolecular
 
-	Boolean getIntraMolecular();
+    /**
+     * IntraMolecular flag is true iff this binding feature represents a bond within the same molecule,  for example a
+     * disulfide bond within the same molecule.
+     * A true value true implies that this.isEntityFeatureOf() == this.getBindsTo.isEntityFeatureOf() although the
+     * inverse is not true e.g a chain of actin proteins.
+     * @return true iff this binding feature represents a bond within the same molecule.
+     */
+    @Key
+    Boolean getIntraMolecular();
 
+	/**
+	 * IntraMolecular flag is true iff this binding feature represents a bond within the same molecule,  for example a
+	 * disulfide bond within the same molecule.
+	 * A true value implies that this.isEntityFeatureOf() == this.getBindsTo.isEntityFeatureOf() although the
+	 * inverse is not true e.g a chain of actin proteins.
+	 * @param intramolecular whether if this  binding feature represents a bond within the same molecule.
+	 */
 	void setIntraMolecular(Boolean intramolecular);
 
 }

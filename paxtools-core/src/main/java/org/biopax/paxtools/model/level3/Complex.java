@@ -42,7 +42,7 @@ public interface Complex extends PhysicalEntity {
      * @return components of this complex
      */
     @AutoComplete(backward = true)
-    Set<PhysicalEntity> getComponent();
+    @Key Set<PhysicalEntity> getComponent();
 
     /**
      * Defines the PhysicalEntity subunits of this complex. This property should not contain other complexes, i.e. it
@@ -78,14 +78,13 @@ public interface Complex extends PhysicalEntity {
     void removeComponent(PhysicalEntity component);
 
 
-// Property Component-STOICHIOMETRY
 
     /**
      * The stoichiometry of components in a complex.
      *
      * @return the stoichiometry of components in a complex.
      */
-    Set<Stoichiometry> getComponentStoichiometry();
+    @Key Set<Stoichiometry> getComponentStoichiometry();
 
     /**
      * The stoichiometry of components in a complex.

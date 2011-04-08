@@ -4,7 +4,7 @@ import java.util.Set;
 
 
 public interface Conversion extends Interaction {
-	// Property LEFT
+
 
 	public Set<PhysicalEntity> getLeft();
 
