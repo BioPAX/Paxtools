@@ -7,9 +7,7 @@ import java.util.Collections;
 
 import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.model.BioPAXFactory;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -156,7 +154,7 @@ public class ModelUtilsTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public final void testInferPropertyFromParent2() {
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
 		Pathway pw1 = model.addNew(Pathway.class, "pathway1");

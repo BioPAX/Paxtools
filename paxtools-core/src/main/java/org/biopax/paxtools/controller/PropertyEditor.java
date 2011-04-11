@@ -106,7 +106,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	@Override
 	public String toString()
 	{
-		//todo cardinalities are not being read
+		//TODO cardinalities are not being read
 		String def = domain.getSimpleName() + " " + property + " " + range.getSimpleName();
 		for (Class aClass : maxCardinalities.keySet())
 		{
@@ -171,7 +171,8 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		}
 		catch (NoSuchMethodException e)
 		{
-			log.warn("Failed creating the controller for " + property + " on " +
+			if(log.isWarnEnabled()	)
+				log.warn("Failed creating the controller for " + property + " on " +
 			         domain);
 		}
 		return editor;
@@ -459,6 +460,19 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	}
 
 	/**
+	 * Gets the unknown <em>value</em>. In an object property or enumeration 
+	 * context a <em>value</em> is regarded to be unknown if it is null (unset);
+	 * in a primitive property context it depends (can be e.g., 
+	 * {@link BioPAXElement#UNKNOWN_FLOAT})
+	 * 
+	 * @return
+	 */
+	public Object getUnknown() {
+		return null;
+	}
+	
+	
+	/**
 	 * Removes the <em>value</em> from the <em>bean</em> using the default {@link #removeMethod}.
 	 *
 	 * @param value to be removed from the bean
@@ -559,15 +573,18 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 					+ bean.getRDFId() + ") val:" + value);
 		}
 
-		if (value != null)
-		{
+		// 'null' definitely means 'unknown'for single cardinality props
+		if(value == null && !isMultipleCardinality())
+			value = (R) getUnknown(); // not null for primitive property editors
+		
 			if(value instanceof String)
 			{
 				value = this.parseValueFromString(((String) value));
 			}
 			try
 			{
-				checkRestrictions(value, bean);
+				if (value != null)
+					checkRestrictions(value, bean);
 				invokeMethod(this.getPrimarySetMethod(), bean, value);
 			}
 			catch (Exception e)
@@ -578,9 +595,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 				          + "; primary set method: " + this.getPrimarySetMethod()
 				          + "; value class: " + value.getClass() + ". Error: " + e
 				          + ". " + e.getCause());
-				//e.printStackTrace();
 			}
-		}
 	}
 
 

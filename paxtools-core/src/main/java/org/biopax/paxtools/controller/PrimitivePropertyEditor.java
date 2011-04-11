@@ -100,4 +100,10 @@ public class PrimitivePropertyEditor<D extends BioPAXElement, R>
 	{
 		return value == unknownValue || value.equals(unknownValue);
 	}
+
+	
+	@Override
+	public Object getUnknown() {
+		return unknownValue;
+	}
 }

@@ -327,152 +327,29 @@ public class ModelUtils {
 	/**
 	 * For the current (internal) model, this method 
 	 * iteratively copies given property values 
-	 * from parent BioPAX elements to children; i.e., at every level, 
-	 * where applicable, it uses the parent's value for the child's property, 
-	 * and then continues to the next level until all the elements are visited. 
+	 * from parent BioPAX elements to children.
 	 * If the property is multiple cardinality property, it will add
 	 * new values, otherwise - it will set it only if was empty; 
-	 * - in both cases it will never delete/override existing (not null) values!
+	 * in both cases it won't delete/override existing values!
 	 * 
-	 * @param model - to begin from each root element in the model
+	 * @see PropertyReasoner
+	 * 
 	 * @param property property name
-	 * @param value - default, to begin with (can be 'null' - existing values will be used)
 	 * @param forClasses (optional) infer/set the property for these types only
 	 */
 	public void inferPropertyFromParent(final String property, 
 			final Class<? extends BioPAXElement>... forClasses) 
-	{
-		Set<Class<? extends BioPAXElement>> domains 
-			= new HashSet<Class<? extends BioPAXElement>>();
-		if(forClasses.length > 0)
-			domains.addAll(Arrays.asList(forClasses));
-		else 
-			domains.add(BioPAXElement.class);
-
-		inferPropertyFromParent(this.model, property, null, domains);
-	}
-	
-	
-	/**
-	 * Iteratively copies given property value(s) 
-	 * from parents to immediate children, i.e., at every child level, 
-	 * where applicable, it uses the parent's value for child's property, 
-	 * and then continues to the next level until all the elements are visited. 
-	 * If the property is multiple cardinality property, it will add
-	 * new values, otherwise - it will set it if empty; - in both cases
-	 * it never deletes/overrides existing (not null) values!
-	 * 
-	 * @param model - to begin from each root element in the model
-	 * @param property property name
-	 * @param value - default value (use collection for a multiple cardinality property!), when 'null' or 'empty' - existing values will be used
-	 * @param forClasses (optional) infer/set the property for these types only
-	 */
-	private void inferPropertyFromParent(
-		final Model model, final String property, final Object value, 
-		final Set<Class<? extends BioPAXElement>> domains) 
-	{	
-		final EditorMap editorMap = new SimpleEditorMap(model.getLevel());
-		
-		// when no domains listed means - for all classes
-		if(domains.isEmpty()) {
-			domains.add(BioPAXElement.class);
-		}
-		
+	{		
 		// for each ROOT element (puts a strict top-down order on the following)
-		for(BioPAXElement bpe : getRootElements(BioPAXElement.class)) {
-			Object updatedValue = value; // - to use in the next level (with this element's children)
-			// is there such property?
-			PropertyEditor editor = editorMap.getEditorForProperty(property, bpe.getModelInterface());
-			if (editor != null) {
-				boolean isMul = editor.isMultipleCardinality();
-				// the object must pass the filter in order to be affected,
-				// (but, even if it does not, its property value will be considered for children anyway)
-				if (isInstanceofOneOf(domains, bpe)) {
-					// get current value
-					Object existing = editor.getValueFromBean(bpe);
-					// change only if the new value for the property makes sense
-					if (!isMul) {
-						// for singular, set only if it was empty (null/unknown)!
-						if (editor.isUnknown(existing)
-								&& !editor.isUnknown(value)) {
-							editor.setValueToBean(value, bpe);
-							comment(bpe, value, property);
-						}
-					} else if (value != null && !((Set) value).isEmpty()) {
-						// for multiple cardinality, always add new values
-						for (Object v : (Set) value) {
-							if (!((Set) existing).contains(v)) {
-								editor.setValueToBean(v, bpe);
-								comment(bpe, v, property);
-							}
-						}
-						// save the new value for the next iteration
-						updatedValue = editor.getValueFromBean(bpe);
-					}
-				} 
-
-				// remember current value (does not matter - was it modified above or not)
-				Object existing = editor.getValueFromBean(bpe);
-				if (isMul) {
-					// add values
-					if (updatedValue == null) {
-						updatedValue = new HashSet((Set) existing);
-					} else {
-						((Set) updatedValue).addAll((Set) existing);
-					}
-				} else if (!editor.isUnknown(existing)) {
-					// use value
-					updatedValue = existing;
-				} 
-			} else {
-				// no such property; we'll continue into children, using original 'value'
-			}			
-			// well, done for this element
-
-			// get children
-			final Model childModel = getDirectChildren(bpe);
-			// repeat entire method with the children model and updated property value ;)
-			new ModelUtils(childModel)
-				.inferPropertyFromParent(childModel, property, updatedValue, domains);
+		Set<BioPAXElement> roots = getRootElements(BioPAXElement.class);
+		for(BioPAXElement bpe : roots) {
+			PropertyReasoner reasoner = new PropertyReasoner(property, editorMap, nextStepFilter);
+			reasoner.setDomains(forClasses);
+			reasoner.setOverride(false); // important here! (we're not going to overwrite/clear all the values with one)
+			reasoner.run(bpe, null); // auto-detects the initial value (from the first suitable element down the object properties path)
 		}
+	}
 		
-	}
-	
-	
-	/**
-	 * To add a special comment for a BioPAX element 
-	 * when one of its property values was
-	 * inferred from parent's.
-	 * 
-	 * @param bpe
-	 * @param v
-	 * @param property
-	 */
-	private void comment(BioPAXElement bpe, Object v, String property) {
-		String propCommentName = "comment";
-		if(model.getLevel() == BioPAXLevel.L2)
-			propCommentName = propCommentName.toUpperCase();
-		PropertyEditor pe = editorMap.getEditorForProperty(propCommentName, bpe.getModelInterface());
-		if(pe != null) {
-			pe.setValueToBean("Inferred property: "
-				+ property + ", value: " 
-				+ ((v instanceof BioPAXElement)? "rdfID=" + ((BioPAXElement)v).getRDFId() : v)
-				, bpe);				
-		}
-	}
-
-	
-	private static boolean isInstanceofOneOf(final Collection<Class<? extends BioPAXElement>> classes, BioPAXElement obj) 
-	{
-		for(Class<? extends BioPAXElement> c : classes) {
-			if(c.isInstance(obj)) {
-				return true;
-			}
-		}	
-		return false;
-	}
-
-	
 	/**
 	 * Cuts the BioPAX model off other models and BioPAX objects 
 	 * by essentially performing write/read to/from OWL. 
