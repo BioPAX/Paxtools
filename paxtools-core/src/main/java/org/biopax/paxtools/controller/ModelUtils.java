@@ -343,10 +343,9 @@ public class ModelUtils {
 		// for each ROOT element (puts a strict top-down order on the following)
 		Set<BioPAXElement> roots = getRootElements(BioPAXElement.class);
 		for(BioPAXElement bpe : roots) {
-			PropertyReasoner reasoner = new PropertyReasoner(property, editorMap, nextStepFilter);
+			PropertyReasoner reasoner = new PropertyReasoner(property, editorMap);
 			reasoner.setDomains(forClasses);
-			reasoner.setOverride(false); // important here! (we're not going to overwrite/clear all the values with one)
-			reasoner.run(bpe, null); // auto-detects the initial value (from the first suitable element down the object properties path)
+			reasoner.inferPropertyValue(bpe);
 		}
 	}
 		

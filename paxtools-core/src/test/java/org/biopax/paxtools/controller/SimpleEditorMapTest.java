@@ -79,4 +79,24 @@ public class SimpleEditorMapTest
     	editor.setValueToBean(BioPAXElement.UNKNOWN_FLOAT, dg);
     	assertTrue(editor.isUnknown(dg.getPh()));
     }
+    
+	@Test
+	public final void testComments() {
+    	BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
+    	EditorMap em = new SimpleEditorMap(BioPAXLevel.L3);
+		ProteinReference pr1 = fac.create(ProteinReference.class, "pr1"); 
+		pr1.addComment("one");
+		pr1.addComment("two");
+		assertEquals(2, pr1.getComment().size());
+		
+		pr1.getComment().clear();
+		assertEquals(0, pr1.getComment().size());
+		
+		PropertyEditor commEditor = em.getEditorForProperty("comment", pr1.getModelInterface());
+		assertNotNull(commEditor);
+		assertTrue(commEditor.isMultipleCardinality());
+		commEditor.setValueToBean("one", pr1);
+		commEditor.setValueToBean("two", pr1);
+		assertEquals(2, pr1.getComment().size());
+	}
 }
