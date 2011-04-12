@@ -10,17 +10,16 @@ import java.util.Set;
  * created. Instead, more specific classes should be used. Synonyms: thing,
  * object, bioentity.
  */
-public interface Entity
-	extends Level3Element, Observable, Named
+public interface Entity extends Level3Element, Observable, Named
 {
 	// --------------------- ACCESORS and MUTATORS---------------------
 
 	// Property AVAILABILITY
+
 	/**
 	 * The contents of this set can be modified but semantic consistency is not
 	 * guaranteed. Using {@link #addAvailability(String)} and {@link
 	 * #removeAvailability(String)} is recommended.
-	 *
 	 * @return a set of  strings describing the availability of this data (e.g. a
 	 *         copyright statement).
 	 */
@@ -29,17 +28,15 @@ public interface Entity
 
 	/**
 	 * This method adds the given text to the avaialability set.
-	 *
 	 * @param availability a string describing the availability of this data
-	 *                          (e.g. a copyright statement).
+	 * (e.g. a copyright statement).
 	 */
 	public void addAvailability(String availability);
 
 	/**
 	 * This method removes the given text from the avaialability set.
-	 *
 	 * @param availability a string describing the availability of this data
-	 *                          (e.g. a copyright statement).
+	 * (e.g. a copyright statement).
 	 */
 	public void removeAvailability(String availability);
 
@@ -57,9 +54,8 @@ public interface Entity
 	 * data has passed through from creation.
 	 * <p/>
 	 * The contents of this set can be modified but semantic consistency is not
-	 * guaranteed. Using {@link #addDataSource} and {@link #removeDataSource} is
+	 * guaranteed. Using {@link #addDataSource(Provenance)} and {@link #removeDataSource(Provenance)} is
 	 * recommended.
-	 *
 	 * @return a set of free text descriptions of the source of this data, e.g. a
 	 *         database or person name.
 	 */
@@ -68,27 +64,25 @@ public interface Entity
 
 	/**
 	 * This method adds the given value to the DATA_SOURCE set.
-	 *
 	 * @param dataSource a free text description of the source of this data,
-	 *                         e.g. a database or person name.
+	 * e.g. a database or person name.
 	 */
 	public void addDataSource(Provenance dataSource);
 
 	/**
 	 * This method removes the given value from the DATA_SOURCE set.
-	 *
 	 * @param dataSource a free text description of the source of this data,
-	 *                         e.g. a database or person name.
+	 * e.g. a database or person name.
 	 */
 	public void removeDataSource(Provenance dataSource);
 
 
-	// Inverse method of PARTICIPANT
 
-    /**
+
+	/**
 	 * This method  returns the interaction that this entity/pep takes part in.
 	 * Contents of this set should not be modified.
-	 *
+	 * Reverse of {@link org.biopax.paxtools.model.level3.Interaction#getParticipant()}
 	 * @return a set of interactions that
 	 */
 	public Set<Interaction> getParticipantOf();
