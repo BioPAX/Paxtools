@@ -16,8 +16,8 @@ public class SimpleReaderTest extends TestCase
 	@Test
 	public void testSimpleReaderL2() throws URISyntaxException
 	{
-		//testDirectory(BioPAXLevel.L2); //resources dir
-	}
+		testDirectory(BioPAXLevel.L2);
+    }
 
 	@Test
 	public void testSimpleReaderL3() throws URISyntaxException
@@ -31,7 +31,7 @@ public class SimpleReaderTest extends TestCase
 		while (iterator.hasNext())
 		{
 			Model model = iterator.next();
-			assertTrue(model.getObjects().size()==50);
+
 		}
 	}
 }

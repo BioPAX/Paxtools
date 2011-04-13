@@ -40,10 +40,24 @@ public interface ExperimentalForm extends UtilityClass
 
 	void setExperimentalFormEntity(Entity newPARTICIPANT);
 
-
+	/**
+	 * Contents of this set should not be modified. Please use add/remove methods instead.
+	 * @return A feature of the experimental form of the participant of the interaction,
+	 *         such as a protein tag. It is not expected to occur in vivo or be necessary for the interaction.
+	 */
 	Set<EntityFeature> getExperimentalFeature();
 
+	/**
+	 * This method adds an experimental feature
+	 * @param experimentalFeature of the experimental form of the participant of the interaction,
+	 *         such as a protein tag. It is not expected to occur in vivo or be necessary for the interaction.
+	 */
 	void addExperimentalFeature(EntityFeature experimentalFeature);
 
+	/**
+	 * This method removes an experimental feature
+	 * @param experimentalFeature of the experimental form of the participant of the interaction,
+	 *         such as a protein tag. It is not expected to occur in vivo or be necessary for the interaction.
+	 */
 	void removeExperimentalFeature(EntityFeature experimentalFeature);
 }
