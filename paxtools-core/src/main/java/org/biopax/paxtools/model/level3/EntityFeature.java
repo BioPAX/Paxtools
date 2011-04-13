@@ -143,8 +143,15 @@ public interface EntityFeature extends UtilityClass, Observable
 	 */
 	void removeMemberFeature(EntityFeature entityFeature);
 
-
+	/**
+	 * @param that EntityFeature to be compared
+	 * @return returns true iff the given feature is at the equivalent sequence location with this feature
+	 */
 	boolean atEquivalentLocation(EntityFeature that);
 
+	/**
+	 * Reverse of {@link #getMemberFeature()}
+	 * @return the generic feature(s) that this feature belong to
+	 */
 	Set<EntityFeature> getMemberFeatureOf();
 }

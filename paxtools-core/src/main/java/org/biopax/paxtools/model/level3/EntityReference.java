@@ -130,7 +130,7 @@ public interface EntityReference extends UtilityClass, Named, Observable
 	void removeMemberEntityReference(EntityReference entityReference);
 
 	/**
-	 * Inverse of {@link #getMemberEntityReference()}
+	 * Reverse of {@link #getMemberEntityReference()}
 	 *
 	 * @return EntityReferences that this EntityReference is a member of.
 	 */

@@ -6,7 +6,6 @@ package org.biopax.paxtools.model.level3;
  * reference to the PSI Molecular Interaction ontology (MI) participant identification method (e.g. mass spectrometry),
  * experimental role (e.g. bait, prey) or experimental preparation (e.g. expression level) type.
  * <p/>
- * <b>Rationale:<b> <ratify with Gary>
  *
  * @see <a href="http://www.psidev.info"/>PSI-DEV</a>
  * @see <a href="http://www.ebi.ac.uk/ontology-lookup/browse.do?ontName=MI&termId=MI%3A0002&termName=participant%20identification%20method"/>PSI-MI:

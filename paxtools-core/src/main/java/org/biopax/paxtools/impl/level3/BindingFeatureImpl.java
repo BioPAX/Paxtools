@@ -3,12 +3,14 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BindingFeature;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import java.util.Set;
 
 @Entity
 @Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
@@ -33,6 +35,14 @@ public class BindingFeatureImpl extends EntityFeatureImpl
 	public Class<? extends BindingFeature> getModelInterface()
 	{
 		return BindingFeature.class;
+	}
+
+	/**
+	 * Inverse of {@link org.biopax.paxtools.model.level3.PhysicalEntity#getFeature()}
+	 */
+	@Override public Set<PhysicalEntity> getFeatureOf()
+	{
+		return featureOf;
 	}
 
 	//

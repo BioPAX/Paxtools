@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ModificationFeature;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
 import org.hibernate.search.annotations.Indexed;
 
@@ -10,6 +11,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import java.util.Set;
 
 /**
  */
@@ -26,6 +28,14 @@ public class ModificationFeatureImpl extends EntityFeatureImpl
 	public Class<? extends ModificationFeature> getModelInterface()
 	{
 		return ModificationFeature.class;
+	}
+
+	/**
+	 * Inverse of {@link org.biopax.paxtools.model.level3.PhysicalEntity#getFeature()}
+	 */
+	@Override public Set<PhysicalEntity> getFeatureOf()
+	{
+		return featureOf;
 	}
 
 	private SequenceModificationVocabulary modificationType;
