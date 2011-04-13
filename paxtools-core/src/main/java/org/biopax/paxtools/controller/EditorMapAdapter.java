@@ -65,7 +65,8 @@ public abstract class EditorMapAdapter implements EditorMap
 		PropertyEditor result = this.ifExistsGetEditorForProperty(property, javaClass);
 		if (result == null)
 		{
-			log.info("Could not locate controller for " + property + " | " +
+			if(log.isDebugEnabled())
+				log.debug("Could not locate controller for " + property + " | " +
 					javaClass);
 		}
 
@@ -142,7 +143,8 @@ public abstract class EditorMapAdapter implements EditorMap
 		}
 		else
 		{
-			log.warn("property = " + pName + "\njavaClass = " + javaClass);
+			if(log.isWarnEnabled())
+				log.warn("property = " + pName + "\njavaClass = " + javaClass);
 		}
 		return editor;
 	}
@@ -217,9 +219,9 @@ public abstract class EditorMapAdapter implements EditorMap
 		}
 		catch (IllegalBioPAXArgumentException e)
 		{
-			if (log.isInfoEnabled())
+			if (log.isDebugEnabled())
 			{
-				log.info("Skipping (" + e.getMessage() + ")");
+				log.debug("Skipping (" + e.getMessage() + ")");
 			}
 		}
 	}

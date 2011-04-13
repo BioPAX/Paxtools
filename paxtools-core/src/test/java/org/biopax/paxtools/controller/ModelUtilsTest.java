@@ -2,14 +2,7 @@ package org.biopax.paxtools.controller;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
-import java.util.Collections;
-
-import org.biopax.paxtools.controller.ModelUtils;
-import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.model.BioPAXFactory;
-import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,7 +129,7 @@ public class ModelUtilsTest {
 		Protein p1 = model.addNew(Protein.class, "p1"); // no dataSource
 		Conversion conv1 = model.addNew(Conversion.class, "conv1"); // no dataSource
 		pw1.addPathwayComponent(conv1);
-		pw2.addPathwayComponent(conv1);
+		pw2.addPathwayComponent(conv1); //smoke/loop test: because hardly a conv1 (thus p1) can belong to 2 such pathways...
 		conv1.addLeft(p1);
 		
 		ModelUtils mu = new ModelUtils(model);
@@ -181,14 +174,14 @@ public class ModelUtilsTest {
 		GeneticInteraction gi1 = model.addNew(GeneticInteraction.class, "gi1");
 		pw1.addPathwayComponent(gi1);
 		pw1.addPathwayComponent(ca1);
+		pw1.addPathwayOrder(s1);
 		gi1.addParticipant(g1);
+		s1.addStepProcess(ca1);
+		s1.addStepProcess(gi1);
+		
 		
 		ModelUtils mu = new ModelUtils(model);
 		mu.inferPropertyFromParent("organism", Gene.class, Pathway.class); // but not for SequenceEntityReference.class in this test ;)
-		
-		//ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		//new SimpleIOHandler().convertToOWL(model, bytes);
-		//System.out.println(bytes.toString());
 		
 		assertEquals(hs, pr2.getOrganism()); // still human, because it wasn't empty!
 		assertEquals(mm, g1.getOrganism()); // inferred from the parent pathway!

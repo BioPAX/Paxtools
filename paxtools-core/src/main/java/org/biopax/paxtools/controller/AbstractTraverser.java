@@ -8,6 +8,8 @@ import java.util.Stack;
 /**
  * This is a convenience all-in-one Traverser/Visitor that
  * keeps track in the model and prevents infinite loops.
+ * Like it's for the {@link Traverser}, there is no any 
+ * particular order in which it processes properties.
  * 
  * @see Fetcher
  * @see Traverser
@@ -60,9 +62,9 @@ public abstract class AbstractTraverser extends Traverser
 		
 			if(range instanceof BioPAXElement) {
 				if(path.contains(range)) {
-				    if(log.isDebugEnabled())
-				    	log.debug(((BioPAXElement)range).getRDFId() 
-				    		+ " already visited (cycle): " + path.toString());
+				    if(log.isInfoEnabled())
+				    	log.info(((BioPAXElement)range).getRDFId() 
+				    		+ " already visited (cycle!): " + path.toString());
 					return;
 				}
  
