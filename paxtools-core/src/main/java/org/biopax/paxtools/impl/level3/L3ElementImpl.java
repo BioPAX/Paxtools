@@ -13,6 +13,10 @@ import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Base BioPAX Level3 element.
+ *
+ */
 @Entity
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class L3ElementImpl extends BioPAXElementImpl

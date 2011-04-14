@@ -17,9 +17,8 @@ public abstract class BioPAXFactoryAdaptor extends BioPAXFactory {
 
     protected String mapClassName(Class<? extends BioPAXElement> aClass) 
     {
-        String name = aClass.getSimpleName();
-        name = this.getClass().getPackage().getName() + "."
-                + name
+        String name = this.getClass().getPackage().getName() + "."
+                + aClass.getSimpleName()
                 + "Impl";
         return name;
     }
@@ -39,6 +38,23 @@ public abstract class BioPAXFactoryAdaptor extends BioPAXFactory {
     public Model createModel() {
         return new ModelImpl(this);
     }
+
+    
+    @Override
+	public <T extends BioPAXElement> Class<T> getImplClass(
+			Class<T> aModelInterfaceClass) 
+	{
+		Class<T> implClass = null;
+
+		if (aModelInterfaceClass.isInterface()) {
+			String name = mapClassName(aModelInterfaceClass);
+			try {
+				implClass = (Class<T>) Class.forName(name);
+			} catch (ClassNotFoundException e) {} //TODO log?
+		}
+
+		return implClass;
+	}
 }
 
 

@@ -18,7 +18,6 @@ import javax.persistence.*;
 public abstract class BioPAXElementImpl implements BioPAXElement
 {
 	// ----------------- Index Names and Search Fields --------------------
-	public final static String SEARCH_FIELD_SOURCE_NAME = "source_name";
 	public final static String SEARCH_FIELD_KEYWORD ="keyword";
 	public final static String SEARCH_FIELD_NAME = "name";
 	public final static String SEARCH_FIELD_TERM = "term";
@@ -28,10 +27,11 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public final static String SEARCH_FIELD_XREF_ID = "xref_id";
 	public final static String SEARCH_FIELD_AVAILABILITY = "availability";
 	public final static String SEARCH_FIELD_COMMENT = "comment";
-	public final static String SEARCH_FIELD_NAMESPACE = "namespace";
 	public final static String SEARCH_INDEX_FOR_ENTITY = "entities";
 	public final static String SEARCH_INDEX_FOR_UTILILTY_CLASS = "utilityClasses";
 	//public static final String SEARCH_FIELD_ID = "rdfid";
+	public final static String SEARCH_FIELD_ORGANISM ="organism";
+	public final static String SEARCH_FIELD_DATASOURCE = "datasource";
 	
 	// ------------------------------ FIELDS ------------------------------
 
@@ -41,6 +41,9 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
 	//@Id
 	//@GeneratedValue(strategy=GenerationType.AUTO)
+	/**
+	 * @deprecated
+	 */
     @Transient
 	public Long getProxyId() {
         return proxyId;
@@ -90,7 +93,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     @Column(length=333)//, columnDefinition="BINARY(255)")
     //@Column(length=255, nullable=false)
     //@Column(unique=true, nullable=false)
-    //@Field(name = BioPAXElementImpl.SEARCH_FIELD_ID) // full-text search better not to use rdfid!
+    //@Field(name = BioPAXElementImpl.SEARCH_FIELD_ID) // full-text search: better NOT to use rdfid!
     public String getRDFId()
     {
         return id;
@@ -110,6 +113,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     {
         return id;
     }
-    
+
 }
 
