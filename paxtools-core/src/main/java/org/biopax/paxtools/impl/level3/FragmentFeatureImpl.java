@@ -24,13 +24,6 @@ public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFe
 		return FragmentFeature.class;
 	}
 
-	/**
-	 * Inverse of {@link org.biopax.paxtools.model.level3.PhysicalEntity#getFeature()}
-	 */
-	@Override public Set<PhysicalEntity> getFeatureOf()
-	{
-		return featureOf;
-	}
 
 	@Override
 	public int equivalenceCode()

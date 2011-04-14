@@ -30,13 +30,6 @@ public class ModificationFeatureImpl extends EntityFeatureImpl
 		return ModificationFeature.class;
 	}
 
-	/**
-	 * Inverse of {@link org.biopax.paxtools.model.level3.PhysicalEntity#getFeature()}
-	 */
-	@Override public Set<PhysicalEntity> getFeatureOf()
-	{
-		return featureOf;
-	}
 
 	private SequenceModificationVocabulary modificationType;
 

@@ -37,13 +37,6 @@ public class BindingFeatureImpl extends EntityFeatureImpl
 		return BindingFeature.class;
 	}
 
-	/**
-	 * Inverse of {@link org.biopax.paxtools.model.level3.PhysicalEntity#getFeature()}
-	 */
-	@Override public Set<PhysicalEntity> getFeatureOf()
-	{
-		return featureOf;
-	}
 
 	//
 	// nonCovalentFeature interface implementation
