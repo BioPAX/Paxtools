@@ -62,17 +62,17 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	}
 
 	public void addInteractionType(
-		InteractionVocabulary interactionType)
+		InteractionVocabulary newinteractionType)
 	{
-	   if(interactionType != null)
-			this.interactionType.add(interactionType);
+	   if(newinteractionType != null)
+			this.interactionType.add(newinteractionType);
 	}
 
 	public void removeInteractionType(
-		InteractionVocabulary interactionType)
+		InteractionVocabulary oldinteractionType)
 	{
-		if(interactionType != null)
-			this.interactionType.remove(interactionType);
+		if(oldinteractionType != null)
+			this.interactionType.remove(oldinteractionType);
 	}
 
 	public void setInteractionType(
