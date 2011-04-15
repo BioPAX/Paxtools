@@ -44,4 +44,17 @@ public abstract class BioPAXFactory
 	public abstract Model createModel();
 
     public abstract BioPAXLevel getLevel();
+    
+    /**
+     * Get a concrete or abstract BioPAX type (not interface), 
+     * from org.biopax.paxtools.impl..*, i.e., one that has 
+     * persistence/search annotations, etc. This may be required for
+     * some DAO and web service controllers; it also returns such 
+     * abstract BioPAX "adapters" as XReferrableImpl, ProcessImpl, etc.
+     * 
+     * @param <T>
+     * @param aModelInterfaceClass
+     * @return
+     */
+    public abstract <T extends BioPAXElement> Class<T> getImplClass(Class<T> aModelInterfaceClass);
 }

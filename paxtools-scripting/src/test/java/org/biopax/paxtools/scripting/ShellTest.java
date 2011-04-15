@@ -6,7 +6,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.biopax.paxtools.io.simpleIO.*;
+import org.biopax.paxtools.io.*;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -20,7 +20,7 @@ public class ShellTest {
     @Test
     public void testLoad() throws Exception
     {
-        TestModelIterator tmi = new TestModelIterator(BioPAXLevel.L3, ".");
+        TestModelIterator tmi = new TestModelIterator(BioPAXLevel.L3);
         while (tmi.hasNext()) {
             Model next = tmi.next();
         }
@@ -31,11 +31,10 @@ public class ShellTest {
         private Log log = LogFactory.getLog(TestModelIterator.class);
         private Iterator<String> fileNames;
         private String dir;
-        private SimpleReader simpleReader;
+        private BioPAXIOHandler simpleIO;
 
-        public TestModelIterator(BioPAXLevel level, String pathRoot) throws URISyntaxException {
+        public TestModelIterator(BioPAXLevel level) throws URISyntaxException {
             this(level,
-                    pathRoot,
                     new FilenameFilter() {
                         public boolean accept(File dir, String name) {
                             return (name.endsWith(".owl"));
@@ -46,9 +45,9 @@ public class ShellTest {
         }
 
 
-        public TestModelIterator(BioPAXLevel level, String pathRoot, FilenameFilter filter)
+        public TestModelIterator(BioPAXLevel level, FilenameFilter filter)
                 throws URISyntaxException {
-            dir = pathRoot + File.separator + level.name();
+            dir = level.name();
 
             System.out.println("dir = " + dir);
 
@@ -60,7 +59,7 @@ public class ShellTest {
 
             fileNames = Arrays.asList(testDir.list(filter)).iterator();
 
-            simpleReader = new SimpleReader(level);
+            simpleIO = new SimpleIOHandler(level);
         }
 
         public boolean hasNext() {
@@ -72,7 +71,7 @@ public class ShellTest {
             System.out.println("Reading " + s);
             InputStream in = getClass().getClassLoader() // - at the root classpath
                     .getResourceAsStream(dir + File.separator + s);
-            return simpleReader.convertFromOWL(in);
+            return simpleIO.convertFromOWL(in);
         }
 
         public void remove() {
