@@ -216,7 +216,7 @@ public class ModelUtilsTest {
 		gi1.addParticipant(g1);
 		
 		ModelUtils mu = new ModelUtils(model);
-		mu.generateEntityProcessXrefsAndComments(Process.class, null);
+		mu.generateEntityProcessXrefs(Process.class, null);
 		
 		//printModel(model);
 		
