@@ -2,8 +2,12 @@ package org.biopax.paxtools.controller;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -145,7 +149,6 @@ public class ModelUtilsTest {
 		assertEquals(2, pw2.getDataSource().size());
 		assertEquals(1, pw1.getDataSource().size());
 		assertEquals(2, p1.getDataSource().size()); // because conv1 belongs to pw1 and pw2!
-		//System.out.println("p1 inferred datasources: " + p1.getDataSource());
 	}
 	
 	
@@ -187,5 +190,48 @@ public class ModelUtilsTest {
 		assertEquals(mm, g1.getOrganism()); // inferred from the parent pathway!
 		assertEquals(1, g1.getComment().size()); // - he-he, and a new comment was generated!
 		assertNull(pr1.getOrganism()); // because ERs were filtered!
+	}
+	
+	
+	@Test
+	public final void testA() {
+		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
+		Provenance pro1 = model.addNew(Provenance.class, "urn:miriam:pid.pathway");
+		Protein p1 = model.addNew(Protein.class, "p1"); 
+		Pathway pw1 = model.addNew(Pathway.class, "pathway");
+		Pathway pw2 = model.addNew(Pathway.class, "sub_pathway");
+		Conversion conv1 = model.addNew(Conversion.class, "conv1");
+		GeneticInteraction gi1 = model.addNew(GeneticInteraction.class, "gi1");
+		Gene g1 = model.addNew(Gene.class, "gene1");
+		
+		pw1.addDataSource(pro1);
+		pw1.setStandardName("Pathway");
+		pw1.addPathwayComponent(pw2);
+		pw1.addPathwayComponent(conv1);
+		conv1.addLeft(p1);
+		
+		pw2.setStandardName("Sub-Pathway");
+		pw2.addDataSource(pro1);
+		pw2.addPathwayComponent(gi1);
+		gi1.addParticipant(g1);
+		
+		ModelUtils mu = new ModelUtils(model);
+		mu.generateEntityProcessXrefsAndComments(Process.class, null);
+		
+		//printModel(model);
+		
+		assertEquals(4, model.getObjects(RelationshipXref.class).size()); //- for 2 pathways and 2 interactions!
+		assertEquals(1, model.getObjects(UnificationXref.class).size());
+		assertEquals(1, model.getObjects(RelationshipTypeVocabulary.class).size());
+		for(Entity e : model.getObjects(Entity.class)) {
+			if(!e.equals(pw1))
+				assertFalse(e.getXref().isEmpty());
+		}
+	}
+	
+	private void printModel(Model model) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		new SimpleIOHandler().convertToOWL(model, bytes);
+		System.out.println(bytes.toString());
 	}
 }
