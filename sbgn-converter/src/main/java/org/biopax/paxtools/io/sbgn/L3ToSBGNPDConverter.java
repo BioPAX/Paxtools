@@ -953,8 +953,8 @@ public class L3ToSBGNPDConverter
 	private static void createArc(Object source, Object target, String clazz,
 		Map<String, Arc> arcMap)
 	{
-		assert source instanceof Glyph || source instanceof Glyph.Port;
-		//assert target instanceof Glyph || source instanceof Glyph.Port; //TODO FAILS here when test run with -ea!
+		assert source instanceof Glyph || source instanceof Glyph.Port : "source = " + source;
+		assert target instanceof Glyph || target instanceof Glyph.Port : "target = " + target;
 
 		Arc arc = factory.createArc();
 		arc.setSource(source);
