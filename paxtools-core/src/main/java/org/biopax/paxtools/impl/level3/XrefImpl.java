@@ -4,6 +4,7 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
 import javax.persistence.CascadeType;
@@ -115,6 +116,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref",
 			cascade = {CascadeType.ALL})
+	@ContainedIn
 	public Set<XReferrable> getXrefOf()
 	{
 		return xrefOf;

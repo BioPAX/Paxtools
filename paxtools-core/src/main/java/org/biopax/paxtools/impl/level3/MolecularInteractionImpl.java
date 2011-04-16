@@ -12,7 +12,7 @@ import javax.persistence.Transient;
 /**
  */
 @javax.persistence.Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class MolecularInteractionImpl extends InteractionImpl
         implements MolecularInteraction

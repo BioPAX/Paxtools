@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 public class DnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl
 		implements DnaRegionReference
 {
