@@ -6,7 +6,6 @@ import org.biopax.paxtools.model.Model;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.net.URL;
 
 /**
  * @author Ozgun Babur

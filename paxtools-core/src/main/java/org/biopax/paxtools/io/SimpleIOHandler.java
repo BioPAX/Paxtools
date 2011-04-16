@@ -502,7 +502,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
      */
     public void convertToOWL(Model model, OutputStream outputStream) 
     {    	
-        initialize(model);
+        initializeExporter(model);
 
 		try {
 			Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
@@ -698,7 +698,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
     }
 
     
-    private void initialize(Model model)
+    private void initializeExporter(Model model)
     {
         base = null;
         bp = null;
@@ -755,6 +755,9 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
         namespaces.put("owl", owlNS);
         namespaces.put("xsd", xsdNS);
 
+        
+        level = model.getLevel();
+        resetEditorMap();
     }
 
     

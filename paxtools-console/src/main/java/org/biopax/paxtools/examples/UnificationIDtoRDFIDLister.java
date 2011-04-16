@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.unificationXref;
@@ -24,7 +23,7 @@ public class UnificationIDtoRDFIDLister
 	private static Log log = LogFactory.getLog(
 		UnificationIDtoRDFIDLister.class);
 
-	static BioPAXIOHandler handler = new SimpleIOHandler(BioPAXLevel.L2);
+	static BioPAXIOHandler handler = new SimpleIOHandler();
 
 	public static void main(String[] args)
 		throws IllegalAccessException, InvocationTargetException

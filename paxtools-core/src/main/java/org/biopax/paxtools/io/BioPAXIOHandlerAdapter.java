@@ -93,8 +93,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	/**
 	 * Updates the member EditorMap for the new BioPAX level and factory (different implementations of
 	 * EditorMap can be used in modules, e.g. SimpleEditorMap and JenaEditorMap.)
-	 *
-hg	 */
+	 *	 
+	 */
 	protected abstract void resetEditorMap();
 
 	/**

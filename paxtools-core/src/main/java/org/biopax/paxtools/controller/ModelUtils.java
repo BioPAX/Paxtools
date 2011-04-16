@@ -452,6 +452,8 @@ public class ModelUtils {
 			if(ux == null) {
 				ux = model.addNew(UnificationXref.class, uxid);
 				ux.addComment(COMMENT);
+				ux.setDb("MI");
+				ux.setId("MI:0359");
 			}
 			cv.addXref(ux);
 			cv.addComment(COMMENT);

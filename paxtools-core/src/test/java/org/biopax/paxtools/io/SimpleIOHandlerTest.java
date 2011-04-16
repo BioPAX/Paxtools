@@ -11,15 +11,18 @@ import java.io.*;
 public class SimpleIOHandlerTest
 {
 	
+	private void outputModel(Model m, OutputStream out) {
+		(new SimpleIOHandler()).convertToOWL(m, out);
+	}
+	
 	@Test
 	public final void testExportL2() throws FileNotFoundException	{
-		BioPAXIOHandler simpleExporter = new SimpleIOHandler(BioPAXLevel.L2);
 		Model model = BioPAXLevel.L2.getDefaultFactory().createModel();
 		FileOutputStream out = new FileOutputStream(
 				getClass().getResource("").getFile()
 				+ File.separator + "simple.owl"
 		);
-		simpleExporter.convertToOWL(model, out);
+		outputModel(model, out);
 	}
 
 	@Test
@@ -44,14 +47,13 @@ public class SimpleIOHandlerTest
 				+ File.separator + "simpleReadWrite.owl"
 			);
 		io.convertToOWL(model, out);
-		out.close();
 	}
 
 	@Test
 	public final void testReadWriteL3() throws IOException
 	{
 		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
-		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+		BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
 
 		System.out.println("file = " + s);
 
@@ -65,7 +67,6 @@ public class SimpleIOHandlerTest
 		FileOutputStream out = new FileOutputStream(getClass().getResource("")
 				.getFile() + File.separator + "simpleReadWrite.owl");
 		io.convertToOWL(model, out);
-		out.close();
 	}
 
 	@Test
@@ -84,9 +85,8 @@ public class SimpleIOHandlerTest
 						getClass().getResource("").getFile()
 						+ File.separator + "testDuplicateNamesByExporter.xml"
 				);
-		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
-		io.convertToOWL(m, out);
-		out.close();
+		
+		outputModel(m, out);
 
 		// read
 		BufferedReader in = new BufferedReader(
@@ -117,9 +117,7 @@ public class SimpleIOHandlerTest
 						.getResource("").getPath() 
 						+ File.separator + "hibtest.owl"
 				);
-		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
-		io.convertToOWL(m, out);
-		out.close();
+		outputModel(m, out);
 	}
 
 
@@ -196,9 +194,7 @@ public class SimpleIOHandlerTest
 			File f = new File(getClass().getClassLoader()
 					.getResource("").getPath() + File.separator + "test.owl");
 			FileOutputStream anOutputStream = new FileOutputStream(f);
-			BioPAXIOHandler exporter = new SimpleIOHandler(biopaxModel.getLevel());
-			exporter.convertToOWL(biopaxModel, anOutputStream);
-			anOutputStream.close();
+			outputModel(biopaxModel, anOutputStream);
 		}
 		catch (Exception e)
 		{

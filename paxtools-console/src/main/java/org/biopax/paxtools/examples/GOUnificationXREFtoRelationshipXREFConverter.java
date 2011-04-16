@@ -2,11 +2,8 @@ package org.biopax.paxtools.examples;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.level2.Level2FactoryImpl;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.model.BioPAXFactory;
-import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.XReferrable;
 import org.biopax.paxtools.model.level2.relationshipXref;
@@ -31,9 +28,8 @@ public class GOUnificationXREFtoRelationshipXREFConverter
 {
 	private static Log log = LogFactory.getLog(
 		GOUnificationXREFtoRelationshipXREFConverter.class);
-
-    static BioPAXFactory factory = new Level2FactoryImpl();    
-	static BioPAXIOHandler reader = new SimpleIOHandler(factory, BioPAXLevel.L2);
+   
+	static BioPAXIOHandler reader = new SimpleIOHandler();
 
     /**
      *

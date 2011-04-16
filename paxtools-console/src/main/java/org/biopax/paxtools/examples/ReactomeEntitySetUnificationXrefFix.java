@@ -3,7 +3,6 @@ package org.biopax.paxtools.examples;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.relationshipXref;
@@ -35,7 +34,7 @@ public class ReactomeEntitySetUnificationXrefFix
 
 	public static void fixReactome(InputStream in, OutputStream out) throws IOException
 	{
-		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L2);
+		BioPAXIOHandler io = new SimpleIOHandler();
 		Model level2 = io.convertFromOWL(in);
 		Set<physicalEntity> physicalEntitySet = new HashSet<physicalEntity>();
 		physicalEntitySet.addAll(level2.getObjects(physicalEntity.class));
