@@ -658,7 +658,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
     {
         Class range = editor.getRange();
         String type = null;
-        if (range.isEnum() || range.equals(String.class))
+	    if (range.isEnum() || range.equals(String.class))
         {
             type = "string";
         }
@@ -674,6 +674,14 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
         {
             type = "float";
         }
+        else if (range.equals(float.class))
+        {
+            type = "float";
+        }
+	    else if (range.equals(boolean.class))
+	    {
+	        type = "boolean";
+	    }
         return type;
     }
 
