@@ -55,6 +55,9 @@ public class L3ToSBGNPDConverter
 	private static final String AND = "and";
 	private static final String NOT = "not";
 
+	public static final String STATE_VARIABLE = "state variable";
+	public static final String INFO = "unit of information";
+
 	/**
 	 * A matching between physical entities and SBGN classes.
 	 */
@@ -148,6 +151,7 @@ public class L3ToSBGNPDConverter
 
 		Sbgn sbgn = factory.createSbgn();
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
+		// todo set the language here when libSBGN supports
 		sbgn.setMap(map);
 		map.getGlyph().addAll(glyphMap.values());
 		map.getGlyph().addAll(compartmentMap.values());
@@ -240,11 +244,9 @@ public class L3ToSBGNPDConverter
 
 		// Put on state variables
 
-		List<Glyph.State> states = getStates(pe);
+		List<Glyph> states = getInformation(pe);
+		g.getGlyph().addAll(states);
 
-		// Only one state variable is allowed in linSBGN -- this must be a bug
-		if (!states.isEmpty()) g.setState(states.get(0));
-//		g.getState().addAll(states);
 		return g;
 	}
 
@@ -393,15 +395,31 @@ public class L3ToSBGNPDConverter
 	}
 
 	/**
-	 * Iterates over features of the entity and creates corresponding state variables. Ignores
-	 * binding features and covalent-binding features.
+	 * Adds molecule type, and iterates over features of the entity and creates corresponding state
+	 * variables. Ignores binding features and covalent-binding features.
 	 * 
 	 * @param pe entity to collect features
 	 * @return list of state variables
 	 */
-	private static List<Glyph.State> getStates(PhysicalEntity pe)
+	private static List<Glyph> getInformation(PhysicalEntity pe)
 	{
-		List<Glyph.State> list = new ArrayList<Glyph.State>();
+		List<Glyph> list = new ArrayList<Glyph>();
+
+		// Add the molecule type before states if this is a nucleic acid
+
+		if (pe instanceof NucleicAcid)
+		{
+			Glyph g = factory.createGlyph();
+			g.setClazz(INFO);
+			Glyph.State s = factory.createGlyphState();
+			s.setVariable("mt");
+			s.setValue((pe instanceof Dna || pe instanceof DnaRegion) ? "DNA" :
+				(pe instanceof Rna || pe instanceof RnaRegion) ? "RNA" : "NucleicAcid");
+			g.setState(s);
+			list.add(g);
+		}
+
+		// Extract state variables
 
 		extractFeatures(pe.getFeature(), true, list);
 		extractFeatures(pe.getNotFeature(), false, list);
@@ -418,13 +436,16 @@ public class L3ToSBGNPDConverter
 	 * @param list state variables
 	 */
 	private static void extractFeatures(Set<EntityFeature> features, boolean normalFeature,
-		List<Glyph.State> list)
+		List<Glyph> list)
 	{
 		for (EntityFeature feature : features)
 		{
 			if (feature instanceof ModificationFeature || feature instanceof FragmentFeature)
 			{
+				Glyph stvar = factory.createGlyph();
+				stvar.setClazz(STATE_VARIABLE);
 				Glyph.State state = factory.createGlyphState();
+				stvar.setState(state);
 
 				if (feature instanceof ModificationFeature)
 				{
@@ -467,7 +488,7 @@ public class L3ToSBGNPDConverter
 					state.setValue(value);
 				}
 
-				list.add(state);
+				list.add(stvar);
 			}
 		}
 	}
@@ -964,8 +985,8 @@ public class L3ToSBGNPDConverter
 	}
 
 	/**
-	 * Arcs do not have an ID in libSBGN (!!). Because of this wise decision, we need to generate
-	 * mock ID for arcs just to be able to store them in maps.
+	 * Arcs do not have an ID in libSBGN. So, we need to generate mock ID for arcs just to be able
+	 * to store them in maps.
 	 *
 	 * @param arc arc to get its ID
 	 * @return ID
