@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.SequenceEntityReference;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,6 +31,7 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
 
     // Property organism
 	@ManyToOne(targetEntity = BioSourceImpl.class, cascade = {CascadeType.ALL})
+	@IndexedEmbedded
     public BioSource getOrganism()
     {
         return organism;

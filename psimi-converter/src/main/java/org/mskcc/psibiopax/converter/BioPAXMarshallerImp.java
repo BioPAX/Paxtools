@@ -172,7 +172,7 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 
 		// write out the file
 		try {
-			BioPAXIOHandler io = new SimpleIOHandler(bpLevel);
+			BioPAXIOHandler io = new SimpleIOHandler();
 			io.convertToOWL(completeModel, outputStream);
 			outputStream.close();
 			this.converter.conversionIsComplete = true;

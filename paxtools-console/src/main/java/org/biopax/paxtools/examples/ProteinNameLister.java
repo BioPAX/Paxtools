@@ -52,7 +52,7 @@ public class ProteinNameLister
 			System.exit(-1);
 		}
     	
-    	BioPAXIOHandler reader = new SimpleIOHandler(BioPAXLevel.L2);
+    	BioPAXIOHandler reader = new SimpleIOHandler();
         final String pathname = args[0];
         File testDir = new File(pathname);
         

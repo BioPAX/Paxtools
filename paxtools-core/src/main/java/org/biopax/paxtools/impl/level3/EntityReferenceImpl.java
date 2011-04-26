@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.hibernate.search.annotations.ContainedIn;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -94,6 +95,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, 
 			mappedBy = "entityReferenceX", cascade={CascadeType.ALL})
+	@ContainedIn
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;

@@ -25,7 +25,7 @@ public class QueryTest
 {
 	static final String DIR = "../biopax/Level3/examples/";
 	static final SimpleEditorMap EM = new SimpleEditorMap(BioPAXLevel.L3);
-	static BioPAXIOHandler handler =  new SimpleIOHandler(BioPAXLevel.L3);
+	static BioPAXIOHandler handler =  new SimpleIOHandler();
 
 	@Test
 	public void testQuery() throws Throwable

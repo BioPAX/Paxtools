@@ -62,7 +62,7 @@ public final class SimpleIOExample {
 
 	
 	public  static void output(Model model) throws IOException {
-		BioPAXIOHandler simpleExporter = new SimpleIOHandler(model.getLevel());
+		BioPAXIOHandler simpleExporter = new SimpleIOHandler();
 		OutputStream out = new ByteArrayOutputStream();
 		simpleExporter.convertToOWL(model, out);
 		System.out.println(out + "\n");

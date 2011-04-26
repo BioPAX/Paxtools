@@ -10,7 +10,7 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class TissueVocabularyImpl extends ControlledVocabularyImpl
 	implements TissueVocabulary

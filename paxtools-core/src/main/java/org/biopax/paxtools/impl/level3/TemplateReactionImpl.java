@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_ENTITY)
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;

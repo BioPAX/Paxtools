@@ -6,7 +6,6 @@ import org.biopax.paxtools.model.Model;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.net.URL;
 
 /**
  * @author Ozgun Babur
@@ -18,10 +17,9 @@ public class SBGNConverterTest
 	@Test
 	public void testSBGNConversion()
 	{
-		String owlname = "merge-bmp";
-		InputStream in = getClass().getResourceAsStream("/" + owlname + ".owl");
+		InputStream in = getClass().getResourceAsStream("/merge-bmp.owl");
 		Model level3 = handler.convertFromOWL(in);
 
-		L3ToSBGNPDConverter.writeSBGN(level3, owlname + ".sbgn");
+		L3ToSBGNPDConverter.writeSBGN(level3, "target/merge-bmp.sbgn");
 	}
 }

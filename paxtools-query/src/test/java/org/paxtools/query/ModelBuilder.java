@@ -44,7 +44,7 @@ public class ModelBuilder
 			(Conversion) model.getByID(IDBASE + "A-1" + REACTION_ARROW + "A-2"),
 			Catalysis.class, ControlType.INHIBITION, model);
 
-		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+		BioPAXIOHandler io = new SimpleIOHandler();
 		io.convertToOWL(model, new FileOutputStream(DIR + "temp2.owl"));
 //		return model;
 	}

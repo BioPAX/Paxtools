@@ -59,7 +59,7 @@ public class ShellTest {
 
             fileNames = Arrays.asList(testDir.list(filter)).iterator();
 
-            simpleIO = new SimpleIOHandler(level);
+            simpleIO = new SimpleIOHandler();
         }
 
         public boolean hasNext() {

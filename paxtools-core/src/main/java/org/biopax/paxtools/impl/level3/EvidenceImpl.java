@@ -1,12 +1,16 @@
 package org.biopax.paxtools.impl.level3;
 
 
+import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
+
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
+import org.biopax.paxtools.model.level3.PublicationXref;
 import org.biopax.paxtools.model.level3.Score;
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -14,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class EvidenceImpl extends XReferrableImpl implements Evidence
 {
@@ -232,7 +236,12 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 			}
 		}
 		
-		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes;
+		//consider publication xrefs!
+		boolean hasCommonPublicationXref = isEquivalentIntersection(
+				new ClassFilterSet<PublicationXref>(getXref(), PublicationXref.class),
+				new ClassFilterSet<PublicationXref>(that.getXref(), PublicationXref.class));
+		
+		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes && hasAllEquivEvidenceCodes;
 	}
 
 }

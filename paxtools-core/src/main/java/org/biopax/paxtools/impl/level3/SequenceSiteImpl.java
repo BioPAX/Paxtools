@@ -11,7 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_FOR_UTILILTY_CLASS)
+@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
 {
