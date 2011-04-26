@@ -46,7 +46,7 @@ public class PaxtoolsMain {
         }
     }
 
-    private static void psimiTo(String[] argv) throws IOException {
+    public static void fromPsimi(String[] argv) throws IOException {
 
         // some utility info
         System.out.println("PSI-MI to BioPAX Conversion Tool v2.0");
@@ -97,13 +97,13 @@ public class PaxtoolsMain {
     }
 
 
-    private static void toGSEA(String[] argv) throws IOException
+    public static void toGSEA(String[] argv) throws IOException
     {
     	Model model = io.convertFromOWL(new FileInputStream(argv[1]));
         (new GSEAConverter(argv[3], new Boolean(argv[4]))).writeToGSEA(model, new FileOutputStream(argv[2]));
     }
 
-    private static void getNeighbors(String[] argv) throws IOException
+    public static void getNeighbors(String[] argv) throws IOException
     {
         // set strings vars
         String in = argv[1];
@@ -144,7 +144,7 @@ public class PaxtoolsMain {
         }
     }
 
-    private static void fetch(String[] argv) throws IOException {
+    public static void fetch(String[] argv) throws IOException {
 
         // set strings vars
         String in = argv[1];
@@ -157,7 +157,7 @@ public class PaxtoolsMain {
         io.convertToOWL(model, new FileOutputStream(out), ids);
     }
 
-    private static void toLevel3(String[] argv) throws IOException {
+    public static void toLevel3(String[] argv) throws IOException {
         Model model = io.convertFromOWL(new FileInputStream(
                 argv[1]));
         model = (new OneTwoThree()).filter(model);
@@ -167,7 +167,7 @@ public class PaxtoolsMain {
         }
     }
 
-    private static void validate(String[] argv) throws IOException {
+    public static void validate(String[] argv) throws IOException {
 
         String name = argv[1];
         String out = argv[2];
@@ -242,7 +242,7 @@ public class PaxtoolsMain {
         }
     }
 
-    private static void toSifnx(String[] argv) throws IOException {
+    public static void toSifnx(String[] argv) throws IOException {
 
         Model model = getModel(io, argv[1]);
 
@@ -254,7 +254,7 @@ public class PaxtoolsMain {
                 false, new SimpleEditorMap(model.getLevel()), argv[4].split(","));
     }
 
-    private static void toSif(String[] argv) throws IOException {
+    public static void toSif(String[] argv) throws IOException {
 
         Model model = getModel(io, argv[1]);
 
@@ -265,7 +265,7 @@ public class PaxtoolsMain {
         sic.writeInteractionsInSIF(model, new FileOutputStream(argv[2]));
     }
 
-    private static void integrate(String[] argv) throws IOException {
+    public static void integrate(String[] argv) throws IOException {
 
         Model model1 = getModel(io, argv[1]);
         Model model2 = getModel(io, argv[2]);
@@ -278,7 +278,7 @@ public class PaxtoolsMain {
         io.convertToOWL(model1, new FileOutputStream(argv[3]));
     }
 
-    private static void merge(String[] argv) throws IOException {
+    public static void merge(String[] argv) throws IOException {
 
         Model model1 = getModel(io, argv[1]);
         Model model2 = getModel(io, argv[2]);
@@ -307,19 +307,30 @@ public class PaxtoolsMain {
     }
 
     enum Command {
-        merge("file1 file2 output\t\tmerges file2 into file1 and writes it into output", 3),
-        toSif("file1 output\t\t\tconverts model to the simple interaction format", 2),
-        toSifnx("file1 outEdges outNodes prop1,prop2,..\tconverts model to the extendent simple interaction format", 4),
-        validate("path out xml|html\t\tvalidates the BioPAX file (or all the files in the directory), outputs xml or html", 3),
-        integrate("file1 file2 output\t\tintegrates file2 into file1 and writes it into output (experimental)", 3),
-        toLevel3("file1 output\t\tconverts level 1 or 2 to the level 3 file", 2),
-        fromPsimi("level file1 output\t\tconverts PSI-MI Level 2.5 to biopax level 2 or 3 file", 3),
+        merge("file1 file2 output\t\tmerges file2 into file1 and writes it into output", 3)
+		        {public void run(String[] argv) throws IOException{merge(argv);} },
+        toSif("file1 output\t\t\tconverts model to the simple interaction format", 2)
+		        {public void run(String[] argv) throws IOException{toSif(argv);} },
+        toSifnx("file1 outEdges outNodes prop1,prop2,..\tconverts model to the extendent simple interaction format", 4)
+		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
+        validate("path out xml|html\t\tvalidates the BioPAX file (or all the files in the directory), outputs xml or html", 3)
+		        {public void run(String[] argv) throws IOException{validate(argv);} },
+        integrate("file1 file2 output\t\tintegrates file2 into file1 and writes it into output (experimental)", 3)
+		        {public void run(String[] argv) throws IOException{integrate(argv);} },
+        toLevel3("file1 output\t\tconverts level 1 or 2 to the level 3 file", 2)
+		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
+        fromPsimi("level file1 output\t\tconverts PSI-MI Level 2.5 to biopax level 2 or 3 file", 3)
+		        {public void run(String[] argv) throws IOException{fromPsimi(argv);} },
         toGSEA("file1 output database crossSpeciesCheck\t\tconverts level 1 or 2 or 3 to GSEA output."
                 + "\t\tSearches database for participant id or uses biopax rdf id if database is \"NONE\"."
-                + "\t\tCross species check ensures participant protein is from same species as pathway (set to true or false).", 4),
-        fetch("file1 id1,id2,.. output\t\textracts a sub-model from file1 and writes BioPAX to output", 3),
-        getNeighbors("file1 id1,id2,.. output\t\tnearest neighborhood graph query (id1,id2 - of Entity sub-class only)", 3),
-        help("\t\t\t\t\t\tprints this screen and exits", Integer.MAX_VALUE);
+                + "\t\tCross species check ensures participant protein is from same species as pathway (set to true or false).", 4)
+		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
+        fetch("file1 id1,id2,.. output\t\textracts a sub-model from file1 and writes BioPAX to output", 3)
+		        {public void run(String[] argv) throws IOException{fetch(argv);} },
+        getNeighbors("file1 id1,id2,.. output\t\tnearest neighborhood graph query (id1,id2 - of Entity sub-class only)", 3)
+		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
+        help("\t\t\t\t\t\tprints this screen and exits", Integer.MAX_VALUE)
+		        {public void run(String[] argv) throws IOException{help();} };
 
         String description;
         int params;
@@ -329,21 +340,6 @@ public class PaxtoolsMain {
             this.params = params;
         }
 
-        public void run(String[] argv) {
-            if (argv.length == params + 1) {
-                try {
-                    Method method = PaxtoolsMain.class.getMethod(name());            //todo
-                    method.invoke(argv);
-                } catch (Exception e) {
-                    System.err.print(Arrays.toString(e.getStackTrace()));
-                    PaxtoolsMain.help();
-                }
-            }
-            else
-            {
-                System.err.println("Invalid number of parameters!");
-                PaxtoolsMain.help();
-            }
-        }
+        public abstract void run(String[] argv) throws IOException;
     }
 }
