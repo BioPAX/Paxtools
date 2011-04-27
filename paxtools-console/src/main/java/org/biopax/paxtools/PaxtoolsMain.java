@@ -251,7 +251,7 @@ public class PaxtoolsMain {
                         .getRules(model.getLevel()).toArray(new InteractionRule[]{}));
 
         sic.writeInteractionsInSIFNX(model, new FileOutputStream(argv[2]), new FileOutputStream(argv[3]),
-                false, new SimpleEditorMap(model.getLevel()), argv[4].split(","));
+                                     new Boolean(argv[4]), new SimpleEditorMap(model.getLevel()), argv[5].split(","));
     }
 
     public static void toSif(String[] argv) throws IOException {
@@ -311,7 +311,7 @@ public class PaxtoolsMain {
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
         toSif("file1 output\t\t\tconverts model to the simple interaction format", 2)
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("file1 outEdges outNodes prop1,prop2,..\tconverts model to the extendent simple interaction format", 4)
+        toSifnx("file1 outEdges outNodes writePublications prop1,prop2,..\tconverts model to the extendent simple interaction format", 4)
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         validate("path out xml|html\t\tvalidates the BioPAX file (or all the files in the directory), outputs xml or html", 3)
 		        {public void run(String[] argv) throws IOException{validate(argv);} },
