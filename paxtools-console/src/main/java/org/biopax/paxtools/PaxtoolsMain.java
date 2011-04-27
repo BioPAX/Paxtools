@@ -20,8 +20,6 @@ import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +30,6 @@ import java.util.Set;
 public class PaxtoolsMain {
 
     public static Log log = LogFactory.getLog(PaxtoolsMain.class);
-    private final static String CLASS_NAME = "PaxtoolsMain";
     private static SimpleIOHandler io = new SimpleIOHandler();
 
     public static void main(String[] argv) throws IOException, 
