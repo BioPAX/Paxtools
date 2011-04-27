@@ -29,16 +29,16 @@ public class SimpleInteractionConverterTest
 {
 	SimpleInteractionConverter simpleInteractionConverter;
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
-	static final String outFile = "simpleInteractionConverterTest.out.txt";
+	// test out - to target/test-classes dir:
+	static final String outFile = SimpleInteractionConverterTest.class.getResource("/").getPath()
+		+ File.separator + "simpleInteractionConverterTest.out.txt";
 	PrintStream out = null;
 	
 	@Before
 	public void setupTest() throws IOException {
 		FileOutputStream out1 = new FileOutputStream(outFile, true);
 		FileDescriptor fd = out1.getFD();
-
 		out = new PrintStream(out1);
-
 	}
 	
 	@After
