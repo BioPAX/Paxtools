@@ -57,6 +57,7 @@ class dataSourceImpl extends BioPAXLevel2ElementImpl implements dataSource
 	{
 		referenceHelper.removeXREF(XREF);
 	}
+
 	public Set<unificationXref> findCommonUnifications(XReferrable that)
 	{
 		return referenceHelper.findCommonUnifications(that);
@@ -106,6 +107,17 @@ class dataSourceImpl extends BioPAXLevel2ElementImpl implements dataSource
 		{
 			if (s.length() > 0) s += "; ";
 			s += name;
+		}
+		Set<xref> xref = this.getXREF();
+		if (!xref.isEmpty())
+		{
+			s += " (";
+			for (xref anXref : xref)
+			{
+
+				s += anXref ;
+			}
+			s += ")";
 		}
 		return s;
 	}
