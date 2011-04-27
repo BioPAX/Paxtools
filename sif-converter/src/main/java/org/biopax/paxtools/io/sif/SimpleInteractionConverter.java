@@ -23,8 +23,11 @@ import java.util.*;
 public class SimpleInteractionConverter
 {
 	private final InteractionRule[] rules;
+
 	private final Log log = LogFactory.getLog(SimpleInteractionConverter.class);
+
 	private final Map options;
+
 	public static final String REDUCE_COMPLEXES = "REDUCE_COMPLEXES";
 
 	/**
@@ -37,7 +40,7 @@ public class SimpleInteractionConverter
 
 	/**
 	 * @param options options to be used during the conversion process
-	 * @param rules   interaction rule set to be used in the conversion
+	 * @param rules interaction rule set to be used in the conversion
 	 */
 	public SimpleInteractionConverter(Map options, InteractionRule... rules)
 	{
@@ -48,7 +51,6 @@ public class SimpleInteractionConverter
 	/**
 	 * Infers simple interactions from the interactions found in the <em>model</em> for every
 	 * interaction rule given; and returns this inferred simple interactions.
-	 *
 	 * @param model model from which simple interactions are going to be inferred
 	 * @return a set of inferred simple interactions
 	 */
@@ -69,12 +71,11 @@ public class SimpleInteractionConverter
 					}
 					catch (Exception e)
 					{
-						log.error("Exception while applying rule :" +
-								  this.getClass().getSimpleName() +
-								  "to the element: " +
-								  pe.getRDFId(), e);
-						if (e instanceof MaximumInteractionThresholdExceedException) {
-							throw (MaximumInteractionThresholdExceedException)e;
+						log.error("Exception while applying rule :" + this.getClass().getSimpleName() +
+						          "to the element: " + pe.getRDFId(), e);
+						if (e instanceof MaximumInteractionThresholdExceedException)
+						{
+							throw (MaximumInteractionThresholdExceedException) e;
 						}
 					}
 				}
@@ -90,8 +91,7 @@ public class SimpleInteractionConverter
 			}
 			log.info(interactions.size() + " interactions inferred");
 			return interactions;
-		}
-		else if (model.getLevel() == BioPAXLevel.L3)
+		} else if (model.getLevel() == BioPAXLevel.L3)
 		{
 			Set<SimpleInteraction> interactions = new HashSet<SimpleInteraction>();
 			Set<EntityReference> bioPAXElements = model.getObjects(EntityReference.class);
@@ -105,31 +105,27 @@ public class SimpleInteractionConverter
 					}
 					catch (Exception e)
 					{
-						log.error("Exception while applying rule :" +
-								  this.getClass().getSimpleName() +
-								  "to the element: " +
-								  er.getRDFId(), e);
-						if (e instanceof MaximumInteractionThresholdExceedException) {
-							throw (MaximumInteractionThresholdExceedException)e;
+						log.error("Exception while applying rule :" + this.getClass().getSimpleName() +
+						          "to the element: " + er.getRDFId(), e);
+						if (e instanceof MaximumInteractionThresholdExceedException)
+						{
+							throw (MaximumInteractionThresholdExceedException) e;
 						}
 					}
 				}
 			}
 			return interactions;
-		}
-		else return null;
+		} else return null;
 	}
 
 	/**
 	 * Infers simple interactions from the <em>model</em> using {@link
 	 * #inferInteractions(org.biopax.paxtools.model.Model)} and wrties them to an output stream.
-	 *
 	 * @param model model from which simple interactions are going to be inferred
-	 * @param out   output stream to which simple interactions will be written
-	 * @throws IOException in case of problems with output.
+	 * @param out output stream to which simple interactions will be written
+	 * @exception IOException in case of problems with output.
 	 */
-	public void writeInteractionsInSIF(Model model, OutputStream out)
-		throws IOException
+	public void writeInteractionsInSIF(Model model, OutputStream out) throws IOException
 	{
 		Set<SimpleInteraction> interactionSet = inferInteractions(model);
 		Writer writer = new OutputStreamWriter(out);
@@ -156,40 +152,21 @@ public class SimpleInteractionConverter
 	 * id    aName   uniprot:xxx;entrez-gene:yyy
 	 * <p/>
 	 * in the entity section
-	 *
 	 * @param model
 	 * @param edgeStream
 	 * @param writePublications
 	 * @param entityProperty
-	 * @throws IOException
+	 * @exception IOException
 	 */
-	public void writeInteractionsInSIFNX(Model model,
-		OutputStream edgeStream,
-		OutputStream nodeStream,
-		boolean writePublications,
-		EditorMap map,
-		String... entityProperty) throws IOException
+	public void writeInteractionsInSIFNX(Model model, OutputStream edgeStream, OutputStream nodeStream,
+	                                     boolean writePublications, EditorMap map, String... entityProperty)
+			throws IOException
 	{
 		Set<SimpleInteraction> interactionSet = inferInteractions(model);
 		Writer writer = new OutputStreamWriter(edgeStream);
 		Set<BioPAXElement> entities = new HashSet<BioPAXElement>();
-		List<PropertyEditor> editors = new LinkedList<PropertyEditor>();
-		for (String s : entityProperty)
-		{
-			PropertyEditor editor = null;
-			
-			if (model.getLevel() == BioPAXLevel.L2)
-			{
-				editor = map.getEditorForProperty(s, physicalEntity.class);
-			}
-			else if (model.getLevel() == BioPAXLevel.L3)
-			{
-				editor = map.getEditorForProperty(s, EntityReference.class);
-			}
-			
-			if(editor != null)
-				editors.add(editor);
-		}
+
+
 		for (SimpleInteraction si : interactionSet)
 		{
 			writer.write(si.toString());
@@ -210,10 +187,13 @@ public class SimpleInteractionConverter
 		for (BioPAXElement entity : entities)
 		{
 			writer.write(entity.getRDFId());
-			for (PropertyEditor editor : editors)
+			for (String s : entityProperty)
 			{
+				PropertyEditor editor = map.getEditorForProperty(s, entity.getModelInterface());
 				writer.write("\t");
-				if (editor.isMultipleCardinality())
+				if (editor == null) writer.write("(not applicable)");
+				else if (editor.isUnknown(entity)) writer.write("(not specified)");
+				else if (editor.isMultipleCardinality())
 				{
 					Set values = (Set) editor.getValueFromBean(entity);
 					for (Object value : values)
@@ -224,14 +204,13 @@ public class SimpleInteractionConverter
 				else
 				{
 					Object valueFromBean = editor.getValueFromBean(entity);
-					String propertyString =
-						(valueFromBean != null) ? valueFromBean.toString() : "NULL";
+					String propertyString = (valueFromBean != null) ? valueFromBean.toString() : "NULL";
 					writer.write(propertyString);
 				}
 			}
 			writer.write("\n");
 		}
-		writer.flush();
+		writer.close();
 	}
 
 	public static List<InteractionRule> getRules(BioPAXLevel level)
@@ -245,8 +224,7 @@ public class SimpleInteractionConverter
 			list.add(new org.biopax.paxtools.io.sif.level2.ControlsTogetherRule());
 			list.add(new org.biopax.paxtools.io.sif.level2.ParticipatesRule());
 			list.add(new org.biopax.paxtools.io.sif.level2.AffectsRule());
-		}
-		else if (level == BioPAXLevel.L3)
+		} else if (level == BioPAXLevel.L3)
 		{
 			list.add(new org.biopax.paxtools.io.sif.level3.ComponentRule());
 			list.add(new org.biopax.paxtools.io.sif.level3.ConsecutiveCatalysisRule());

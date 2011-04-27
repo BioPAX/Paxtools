@@ -29,12 +29,16 @@ public class SimpleInteractionConverterTest
 {
 	SimpleInteractionConverter simpleInteractionConverter;
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
-	static final String outFile = "target" + File.separator + "simpleInteractionConverterTest.out.txt";
+	static final String outFile = "simpleInteractionConverterTest.out.txt";
 	PrintStream out = null;
 	
 	@Before
 	public void setupTest() throws IOException {
-		out = new PrintStream(new FileOutputStream(outFile, true));
+		FileOutputStream out1 = new FileOutputStream(outFile, true);
+		FileDescriptor fd = out1.getFD();
+
+		out = new PrintStream(out1);
+
 	}
 	
 	@After
@@ -92,7 +96,7 @@ public class SimpleInteractionConverterTest
 			InputStream in = getClass().getResourceAsStream("/L2/" + s);
 			Model level2 = handler.convertFromOWL(in);
 			converter.writeInteractionsInSIFNX(level2, out, out, true, 
-					 handler.getEditorMap(),"NAME","XREF");
+					 handler.getEditorMap(),"NAME","XREF","ORGANISM");
 			in.close();
 		}
 	}
