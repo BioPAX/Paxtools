@@ -64,7 +64,7 @@ public class SimpleMergerTest {
 		assertEquals(5, model.getObjects().size());
 		
 		// do merge
-		SimpleMerger merger = new SimpleMerger(new SimpleEditorMap(BioPAXLevel.L3));
+		SimpleMerger merger = new SimpleMerger(SimpleEditorMap.L3);
 		merger.merge(model, model); // to itself
 		// - can use model.merge(model) or model.repair() instead
 		

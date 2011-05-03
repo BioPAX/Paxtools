@@ -256,9 +256,9 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			filelevel = BioPAXLevel.getLevelFromNameSpace(namespaceValue);
 			if (filelevel != null)
 			{
-				log.info("Auto-detected biopax Level " + filelevel.getValue()
+				log.info("Auto-detected biopax " + filelevel
 					+ " (current settings are for Level " 
-						+ level.toString() + ")");
+						+ level + ")");
 				break;
 			}
 		}

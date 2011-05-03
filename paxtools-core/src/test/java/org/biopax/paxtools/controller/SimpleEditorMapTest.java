@@ -9,6 +9,7 @@ package org.biopax.paxtools.controller;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.DeltaG;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.junit.Test;
 
@@ -21,7 +22,7 @@ public class SimpleEditorMapTest
     {
         for (BioPAXLevel level : BioPAXLevel.values())
         {
-            SimpleEditorMap simpleEditorMap = new SimpleEditorMap(level);
+            SimpleEditorMap simpleEditorMap = SimpleEditorMap.L3;
             assertNotNull(simpleEditorMap);
             assertEquals(level, simpleEditorMap.getLevel());
 	        System.out.println("initialized for " + level );
@@ -38,7 +39,7 @@ public class SimpleEditorMapTest
     @Test
     public void testClearSingularProperty() {    	
     	BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
-    	EditorMap em = new SimpleEditorMap(BioPAXLevel.L3);
+    	EditorMap em = SimpleEditorMap.L3;
     	
     	// test - for a singular object property
     	ProteinReference pr = fac.create(ProteinReference.class, "PR");
@@ -83,7 +84,7 @@ public class SimpleEditorMapTest
 	@Test
 	public final void testComments() {
     	BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
-    	EditorMap em = new SimpleEditorMap(BioPAXLevel.L3);
+    	EditorMap em = SimpleEditorMap.L3;
 		ProteinReference pr1 = fac.create(ProteinReference.class, "pr1"); 
 		pr1.addComment("one");
 		pr1.addComment("two");
@@ -98,5 +99,13 @@ public class SimpleEditorMapTest
 		commEditor.setValueToBean("one", pr1);
 		commEditor.setValueToBean("two", pr1);
 		assertEquals(2, pr1.getComment().size());
+	}
+
+	@Test
+	public final void testReflection()
+	{
+		BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
+    	EditorMap em = SimpleEditorMap.L3;
+		System.out.println("debug point");
 	}
 }

@@ -248,7 +248,7 @@ public class PaxtoolsMain {
                         .getRules(model.getLevel()).toArray(new InteractionRule[]{}));
 
         sic.writeInteractionsInSIFNX(model, new FileOutputStream(argv[2]), new FileOutputStream(argv[3]),
-                                     new Boolean(argv[4]), new SimpleEditorMap(model.getLevel()), argv[5].split(","));
+                                     new Boolean(argv[4]), SimpleEditorMap.get(model.getLevel()), argv[5].split(","));
     }
 
     public static void toSif(String[] argv) throws IOException {
@@ -268,7 +268,7 @@ public class PaxtoolsMain {
         Model model2 = getModel(io, argv[2]);
 
         Integrator integrator =
-                new Integrator(new SimpleEditorMap(), model1, model2);
+                new Integrator(SimpleEditorMap.get(model1.getLevel()), model1, model2);
         integrator.integrate();
 
         io.setFactory(model1.getLevel().getDefaultFactory());
@@ -280,7 +280,7 @@ public class PaxtoolsMain {
         Model model1 = getModel(io, argv[1]);
         Model model2 = getModel(io, argv[2]);
 
-        Merger merger = new Merger(new SimpleEditorMap());
+        Merger merger = new Merger(SimpleEditorMap.get(model1.getLevel()));
         merger.merge(model1, model2);
 
         io.setFactory(model1.getLevel().getDefaultFactory());

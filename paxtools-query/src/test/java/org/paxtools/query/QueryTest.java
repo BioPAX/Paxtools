@@ -24,7 +24,7 @@ import java.util.Set;
 public class QueryTest
 {
 	static final String DIR = "../biopax/Level3/examples/";
-	static final SimpleEditorMap EM = new SimpleEditorMap(BioPAXLevel.L3);
+	static final SimpleEditorMap EM = SimpleEditorMap.L3;
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
 
 	@Test

@@ -53,7 +53,7 @@ public final class SifnxExportExample {
 		}
 		*/
 		
-		EditorMap editorMap = new SimpleEditorMap(model.getLevel());
+		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
 		OutputStream edgeStream = new FileOutputStream(args[1]);
 		OutputStream nodeStream = new FileOutputStream(args[2]);
         sic.writeInteractionsInSIFNX(model, edgeStream, nodeStream, 

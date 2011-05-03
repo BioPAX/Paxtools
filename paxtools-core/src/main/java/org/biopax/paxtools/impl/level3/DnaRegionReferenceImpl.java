@@ -7,12 +7,11 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
-@Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
-public class DnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl
-		implements DnaRegionReference
+@Entity @Indexed(index = BioPAXElementImpl.SEARCH_INDEX_NAME)
+public class DnaRegionReferenceImpl extends NucleicAcidRegionReferenceImpl implements DnaRegionReference
 {
-	public DnaRegionReferenceImpl() {
+	public DnaRegionReferenceImpl()
+	{
 	}
 
 	@Override @Transient

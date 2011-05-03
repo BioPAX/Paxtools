@@ -57,7 +57,7 @@ public class ModelUtils {
 	public ModelUtils(Model model) 
 	{
 		this.model = model;
-		this.editorMap = new SimpleEditorMap(model.getLevel());
+		this.editorMap = SimpleEditorMap.get(model.getLevel());
 		this.io = new SimpleIOHandler(model.getLevel());
 		((SimpleIOHandler) this.io).mergeDuplicates(true);
 	}
@@ -128,7 +128,7 @@ public class ModelUtils {
 		};
 		
 		// run to update parent's properties with the new value ('replacement')
-		EditorMap em = new SimpleEditorMap(model.getLevel());
+		EditorMap em = SimpleEditorMap.get(model.getLevel());
 		Traverser traverser = new Traverser(em, visitor);
 		for(BioPAXElement bpe : model.getObjects()) {
 			traverser.traverse(bpe, null);
