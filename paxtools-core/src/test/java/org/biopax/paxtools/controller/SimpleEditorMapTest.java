@@ -9,7 +9,6 @@ package org.biopax.paxtools.controller;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.DeltaG;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.junit.Test;
 
@@ -22,7 +21,7 @@ public class SimpleEditorMapTest
     {
         for (BioPAXLevel level : BioPAXLevel.values())
         {
-            SimpleEditorMap simpleEditorMap = SimpleEditorMap.L3;
+            SimpleEditorMap simpleEditorMap = SimpleEditorMap.valueOf(level.name());
             assertNotNull(simpleEditorMap);
             assertEquals(level, simpleEditorMap.getLevel());
 	        System.out.println("initialized for " + level );
