@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.biopax.paxtools</groupId>
     <artifactId>paxtools</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>4.0.0a</version>
 
     <name>PaxTools</name>
     <packaging>pom</packaging>
@@ -154,7 +154,7 @@
       </server>
   	</servers>
   	(alternatively, one can define developer's profile in this pom.xml 
-  	with a <distributionManagement/> inside, and use username explicitely, e.g., 
+  	with a <distributionManagement /> inside, and use username explicitely, e.g., 
   	<url>scp://USERID@shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>)
   	2) [Important!] CREATE the remote shell first (before using "mvn deploy"):
   		- from terminal do: "ssh -t USERID,biopax@shell.sourceforge.net create", wait...
