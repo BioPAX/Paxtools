@@ -1,5 +1,6 @@
 package org.biopax.paxtools.fixer;
 
+import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.controller.ShallowCopy;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -15,14 +16,14 @@ import static org.biopax.paxtools.controller.FeatureUtils.findFeaturesAddedToSec
  * This class takes a L3 model and attempts to resolve features and not features within the context of that model.
  * It can aggressively resolve to a complete closed world semantics or can operate on a "relaxed" mode where it resolves
  * only when certain.
+ * 
+ * TODO merge this with the {@link ModelUtils} ?
  */
 public class FeatureResolver {
 
     private boolean fix;
 
     ShallowCopy copier = new ShallowCopy();
-
-
 
     public void resolveFeatures(Model model) {
         if (!model.getLevel().equals(BioPAXLevel.L3)) {
