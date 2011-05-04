@@ -129,7 +129,7 @@
     <scm>
         <connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
         <developerConnection>
-            scm:hg:ssh://${scm.username},biopax@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
+            scm:hg:ssh://${scm.username}@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
         </developerConnection>
         <url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
     </scm>
