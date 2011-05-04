@@ -9,68 +9,40 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-public abstract class NucleicAcidRegionReferenceImpl
-		extends SequenceEntityReferenceImpl
+@Entity @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenceImpl
 		implements NucleicAcidRegionReference
 {
-	private Set<NucleicAcidRegionReference> subRegion;
+
 	private SequenceLocation absoluteRegion;
+
 	private Set<SequenceRegionVocabulary> regionType;
+
 	private NucleicAcidReference containerEntityReference;
 
+	private Set<NucleicAcidReference> subRegionOf;
 
-	private Set<NucleicAcidRegionReference> subRegionOf;
-
-
-	public NucleicAcidRegionReferenceImpl() {
+	public NucleicAcidRegionReferenceImpl()
+	{
 		regionType = new HashSet<SequenceRegionVocabulary>();
-		subRegion = new HashSet<NucleicAcidRegionReference>();
-	}
-	
-	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, cascade={CascadeType.ALL})
-	@JoinTable(name="subRegion")
-	public Set<NucleicAcidRegionReference> getSubRegion()
-	{
-		return subRegion;
+		this.subRegionOf = new HashSet<NucleicAcidReference>();
 	}
 
-	protected void setSubRegion(Set<NucleicAcidRegionReference> subRegion)
-	{
-		this.subRegion = subRegion;
-	}
 
-	public void addSubRegion(NucleicAcidRegionReference regionReference)
-	{
-		if (regionReference != null) {
-			subRegion.add(regionReference);
-			this.subRegionOf.add(regionReference);
-		}
-	}
-
-	public void removeSubRegion(NucleicAcidRegionReference regionReference)
-	{
-		if (regionReference != null) {
-			subRegion.remove(regionReference);
-			this.subRegionOf.remove(regionReference);
-		}
-	}
-
-	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class, 
-			mappedBy = "subRegion", cascade = {CascadeType.ALL})
-	public Set<NucleicAcidRegionReference> getSubRegionOf()
+	@ManyToMany(targetEntity = NucleicAcidReferenceImpl.class,
+	            mappedBy = "subRegion", cascade = {CascadeType.ALL})
+	public Set<NucleicAcidReference> getSubRegionOf()
 	{
 		return subRegionOf;
 	}
 
-	protected void setSubRegionOf(Set<NucleicAcidRegionReference> subRegionOf)
+	protected void setSubRegionOf(Set<NucleicAcidReference> subRegionOf)
 	{
 		this.subRegionOf = subRegionOf;
 	}
 
 
-	@ManyToOne(targetEntity = SequenceLocationImpl.class, cascade={CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceLocationImpl.class, cascade = {CascadeType.ALL})
 	public SequenceLocation getAbsoluteRegion()
 	{
 		return this.absoluteRegion;
@@ -82,8 +54,8 @@ public abstract class NucleicAcidRegionReferenceImpl
 
 	}
 
-	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class, cascade={CascadeType.ALL})
-	@JoinTable(name="regionType") 		
+	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class, cascade = {CascadeType.ALL})
+	@JoinTable(name = "regionType")
 	public Set<SequenceRegionVocabulary> getRegionType()
 	{
 		return this.regionType;
@@ -91,14 +63,12 @@ public abstract class NucleicAcidRegionReferenceImpl
 
 	public void addRegionType(SequenceRegionVocabulary regionType)
 	{
-		if(regionType != null)
-			this.regionType.add(regionType);
+		if (regionType != null) this.regionType.add(regionType);
 	}
 
 	public void removeRegionType(SequenceRegionVocabulary regionType)
 	{
-		if(regionType != null)
-			this.regionType.remove(regionType);
+		if (regionType != null) this.regionType.remove(regionType);
 	}
 
 	protected void setRegionType(Set<SequenceRegionVocabulary> regionType)

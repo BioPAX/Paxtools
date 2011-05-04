@@ -4,14 +4,11 @@ import java.util.Set;
 /**
  */
 public interface NucleicAcidRegionReference
-		extends SequenceEntityReference
+		extends NucleicAcidReference
 {
-	Set<NucleicAcidRegionReference> getSubRegion();
 
-	void addSubRegion(NucleicAcidRegionReference regionReference);
 
-	void removeSubRegion(NucleicAcidRegionReference regionReference);
-
+	public Set<NucleicAcidReference> getSubRegionOf();
 
 	SequenceLocation getAbsoluteRegion();
 
