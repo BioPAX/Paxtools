@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.biopax.paxtools</groupId>
 		<artifactId>paxtools</artifactId>
-		<version>4.0.0a</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>paxtools-core</artifactId>
