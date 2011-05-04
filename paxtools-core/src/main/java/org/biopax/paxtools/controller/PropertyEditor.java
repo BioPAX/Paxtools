@@ -18,7 +18,7 @@ import java.util.Set;
  * This is the base class for all property editors. Each property controller is responsible for
  * manipulating a certain property for a given class of objects (domain).
  */
-public abstract class PropertyEditor<D extends BioPAXElement, R> extends PropertyAccessorAdapter<D,R> implements PropertyAccessor<D,R>
+public abstract class PropertyEditor<D extends BioPAXElement, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -57,7 +57,21 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	 */
 	protected final String property;
 
+	/**
+	 * This is the Class representing the domain of the property.
+	 */
+	private Class<D> domain;
 
+	/**
+	 * This is the Class representing the range of the property. It is by default an object.
+	 */
+	private Class<R> range;
+
+
+	/**
+	 * This is false if there is a cardinality restriction of one on the property.
+	 */
+	protected final boolean multipleCardinality;
 
 	/**
 	 * This map keeps a list of maximum cardinality restrictions.
@@ -70,7 +84,9 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	public PropertyEditor(String property, Method getMethod, Class<D> domain,
 	                      Class<R> range, boolean multipleCardinality)
 	{
-		super(domain,range, multipleCardinality);
+		this.domain = domain;
+		this.range = range;
+		this.multipleCardinality = multipleCardinality;
 		this.getMethod = getMethod;
 		this.property = property;
 
@@ -109,8 +125,8 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	 * @param property to be managed by the constructed controller.
 	 * @return a property controller to manipulate the beans for the given property.
 	 */
-	public static <D extends BioPAXElement,R> PropertyEditor<D,R> createPropertyEditor(
-			Class<D> domain,
+	public static PropertyEditor createPropertyEditor(
+			Class<? extends BioPAXElement> domain,
 			String property)
 	{
 		PropertyEditor editor = null;
@@ -118,11 +134,11 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 		{
 			Method getMethod = detectGetMethod(domain, property);
 			boolean multipleCardinality = isMultipleCardinality(getMethod);
-			Class<R> range = detectRange(getMethod, multipleCardinality);
+			Class range = detectRange(getMethod, multipleCardinality);
 
 			if (range.isPrimitive() || range.equals(Boolean.class))
 			{
-				editor = new PrimitivePropertyEditor<D,R>(property,
+				editor = new PrimitivePropertyEditor(property,
 						getMethod,
 						domain,
 						range,
@@ -289,6 +305,16 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	}
 
 	/**
+	 * Returns the domain of the property.
+	 *
+	 * @return the domain of the editor
+	 */
+	public Class<D> getDomain()
+	{
+		return domain;
+	}
+
+	/**
 	 * Returns {@link #getMethod}.
 	 *
 	 * @return the get method
@@ -306,6 +332,16 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	public String getProperty()
 	{
 		return property;
+	}
+
+	/**
+	 * Returns the range of the editor.
+	 *
+	 * @return a class
+	 */
+	public Class<R> getRange()
+	{
+		return range;
 	}
 
 	/**
@@ -330,7 +366,17 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	// -------------------------- OTHER METHODS --------------------------
+	/**
+	 * Checks if the property to which editor is assigned has multiple cardinality.
+	 *
+	 * @return true if editor belongs to a multiple cardinality property.
+	 */
+	public boolean isMultipleCardinality()
+	{
+		return multipleCardinality;
+	}
+
+// -------------------------- OTHER METHODS --------------------------
 
 	/**
 	 * Sets a maximum cardinality for a domain.
@@ -559,7 +605,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	 * @param bean the object whose property is requested
 	 * @return an object as the value
 	 */
-	@Override public R getValueFromBean(D bean) throws IllegalBioPAXArgumentException
+	public R getValueFromBean(D bean) throws IllegalBioPAXArgumentException
 	{
 		try
 		{

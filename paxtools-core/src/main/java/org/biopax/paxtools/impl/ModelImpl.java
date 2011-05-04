@@ -308,7 +308,7 @@ public class ModelImpl implements Model
 	 * @see Model#merge(Model)
 	 */
 	public void merge(Model source) {
-		new SimpleMerger(SimpleEditorMap.get(level))
+		new SimpleMerger(new SimpleEditorMap(level))
 			.merge(this, source);
 	}
 

@@ -31,16 +31,14 @@ public class JenaEditorMap extends EditorMapAdapter {
 
     private static final Log log = LogFactory.getLog(JenaEditorMap.class);
 
-	private BioPAXLevel level;
-
-	// --------------------------- CONSTRUCTORS ---------------------------
+    // --------------------------- CONSTRUCTORS ---------------------------
 
     public JenaEditorMap() {
         this(null);
     }
 
     public JenaEditorMap(BioPAXLevel level) {
-        this.level = level;
+        super(level);
         OntModel ontologyDefinition =
                 org.biopax.paxtools.io.jena.JenaHelper.createModel();
 
@@ -277,10 +275,6 @@ public class JenaEditorMap extends EditorMapAdapter {
     }
 
 
-	@Override public BioPAXLevel getLevel()
-	{
-		return level;
-	}
 }
 
 

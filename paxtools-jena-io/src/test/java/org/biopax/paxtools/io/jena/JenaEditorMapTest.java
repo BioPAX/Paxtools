@@ -15,18 +15,19 @@ import java.io.IOException;
  */
 public class JenaEditorMapTest
 {
-	@Test
-	public void writeOutEditorProperties() throws IOException
-	{
-		for (BioPAXLevel level : BioPAXLevel.values())
-		{
-			JenaEditorMap editorMap = new JenaEditorMap(level);
-			FileOutputStream outputStream = new FileOutputStream( // to 'target' dir ;)
-			                                                      getClass().getResource("").getFile() +
-			                                                      File.separator + level + "Editor.properties");
-			editorMap.writeSimpleEditorMapProperties(outputStream);
-			outputStream.close();
+    @Test
+    public void writeOutEditorProperties() throws IOException
+    {
+        for (BioPAXLevel level : BioPAXLevel.values())
+        {
+            JenaEditorMap editorMap = new JenaEditorMap(level);
+            FileOutputStream outputStream =
+                    new FileOutputStream( // to 'target' dir ;)
+                    	getClass().getResource("").getFile() + File.separator +
+                        "Level" + level.getValue() + "Editor.properties");
+	        editorMap.writeSimpleEditorMapProperties(outputStream);
+            outputStream.close();
 
-		}
-	}
+        }
+    }
 }

@@ -66,7 +66,7 @@ public class GSEAConverter implements Visitor {
 	public GSEAConverter(String database, boolean crossSpeciesCheck) {
 		this.database = database;
     	this.crossSpeciesCheck = crossSpeciesCheck;
-    	this.traverser = new Traverser(SimpleEditorMap.L3, this);
+    	this.traverser = new Traverser(new SimpleEditorMap(BioPAXLevel.L3), this);
 	}
 		
 	/**

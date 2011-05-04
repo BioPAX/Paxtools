@@ -71,7 +71,7 @@ public class PropertyReasonerTest {
 	
 	@Test
 	public final void testRun_Domains() {	
-		PropertyReasoner prr = new PropertyReasoner("organism", SimpleEditorMap.L3);
+		PropertyReasoner prr = new PropertyReasoner("organism", new SimpleEditorMap(BioPAXLevel.L3));
 		prr.setDomains(Gene.class, Pathway.class); // update for only these types (ignore SequenceEntityReference)
 		prr.inferPropertyValue(pw1);
 		
@@ -89,7 +89,7 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_Basic() {	
 		// singular object property
-		PropertyReasoner prr = new PropertyReasoner("organism", SimpleEditorMap.L3);
+		PropertyReasoner prr = new PropertyReasoner("organism", new SimpleEditorMap(BioPAXLevel.L3));
 		prr.inferPropertyValue(pw1);
 		
 		assertEquals(hs, pr2.getOrganism()); // still human, because it wasn't empty!
@@ -119,7 +119,7 @@ public class PropertyReasonerTest {
 	
 	@Test
 	public final void testRun_Clear() {
-		PropertyReasoner prr = new PropertyReasoner(null,SimpleEditorMap.L3);
+		PropertyReasoner prr = new PropertyReasoner(null, new SimpleEditorMap(BioPAXLevel.L3));
 		prr.setPropertyName("organism");
 		prr.clearProperty(pw1);
 		
@@ -137,7 +137,7 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_AutoOverride() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
+		PropertyReasoner prr = new PropertyReasoner(null, new SimpleEditorMap(BioPAXLevel.L3));
 		prr.setPropertyName("organism");
 		
 		assertNull(pr1.getOrganism());
@@ -171,7 +171,7 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_AutoOverride1() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
+		PropertyReasoner prr = new PropertyReasoner(null, new SimpleEditorMap(BioPAXLevel.L3));
 		prr.setPropertyName("organism");
 		
 		assertNull(pr1.getOrganism());
@@ -188,7 +188,7 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_AutoOverride2() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
+		PropertyReasoner prr = new PropertyReasoner(null, new SimpleEditorMap(BioPAXLevel.L3));
 		prr.setPropertyName("organism");
 		
 		assertNull(pr1.getOrganism());
@@ -202,7 +202,7 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_DefaultOverride() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
+		PropertyReasoner prr = new PropertyReasoner(null, new SimpleEditorMap(BioPAXLevel.L3));
 		prr.setPropertyName("organism");
 		
 		assertEquals(hs, pr2.getOrganism());
@@ -229,7 +229,7 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_NullOverride() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
+		PropertyReasoner prr = new PropertyReasoner(null, new SimpleEditorMap(BioPAXLevel.L3));
 		prr.setPropertyName("organism");
 		try {
 			prr.resetPropertyValue(pw1, null);

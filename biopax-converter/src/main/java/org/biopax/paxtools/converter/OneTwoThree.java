@@ -46,15 +46,16 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 */
 	private Map<String, String> pep2PE;
 
+	public static EditorMap editorMap2 = new SimpleEditorMap(BioPAXLevel.L2);
+	public static EditorMap editorMap3 = new SimpleEditorMap(BioPAXLevel.L3);
 	
-
 	/**
 	 * Default Constructor 
 	 * that also loads 'classesmap' and 'propsmap' 
 	 * from the properties files.
 	 */
 	public OneTwoThree() {
-		super(SimpleEditorMap.L2, new PropertyFilter() {
+		super(editorMap2, new PropertyFilter() {
 			public boolean filter(PropertyEditor editor) {
 				return !editor.getProperty().equals("STOICHIOMETRIC-COEFFICIENT"); 
 				// will be set manually (pEPs special case)
@@ -330,7 +331,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 			}
 
 			PropertyEditor newEditor =
-				SimpleEditorMap.L3.getEditorForProperty(newProp, newParent.getModelInterface());
+				editorMap3.getEditorForProperty(newProp, newParent.getModelInterface());
 
 			if(value instanceof Level2Element)
 			// not a String, Enum, or primitive type
@@ -426,7 +427,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 						newParent = getMappedPE(pep, newModel);
 						if(newParent != null) {
 							newEditor = 
-								SimpleEditorMap.L3.getEditorForProperty(
+								editorMap3.getEditorForProperty(
 										newProp, newParent.getModelInterface());
 							setNewProperty(newParent, newValue, newEditor);
 						} else { // bug!

@@ -67,7 +67,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	@Override
 	final protected void resetEditorMap()
 	{
-		setEditorMap(SimpleEditorMap.get(this.getLevel())); // was 'level' - bug!
+		setEditorMap(new SimpleEditorMap(this.getLevel())); // was 'level' - bug!
 	}
 
 	/**
@@ -543,7 +543,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 				}
 			};
 			Fetcher fetcher = new Fetcher(
-					SimpleEditorMap.get(model.getLevel()), filter);
+					new SimpleEditorMap(model.getLevel()), filter);
 			
 			for(String uri : ids) {
 				BioPAXElement bpe = model.getByID(uri);

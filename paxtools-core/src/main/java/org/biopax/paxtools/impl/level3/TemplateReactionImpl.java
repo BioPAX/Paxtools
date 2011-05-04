@@ -16,11 +16,13 @@ import java.util.Set;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
+    private Set<NucleicAcid> initiationRegion;
     private NucleicAcid template;
 	private TemplateDirectionType templateDirection;
 
 	public TemplateReactionImpl() {
         this.product = new HashSet<PhysicalEntity>();
+        this.initiationRegion =  new HashSet<NucleicAcid>();
     }
 	
 	@Transient

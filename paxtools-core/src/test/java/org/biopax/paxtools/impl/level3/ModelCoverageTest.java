@@ -21,7 +21,7 @@ public class ModelCoverageTest
         MockFactory factory = new MockFactory(BioPAXLevel.L3);
 
         //test reflectively create
-        EditorMap map = SimpleEditorMap.L3;
+        EditorMap map = new SimpleEditorMap(BioPAXLevel.L3);
         int i = 0;
         for (Class<? extends BioPAXElement> aClass : map.getKnownSubClassesOf(BioPAXElement.class))
         {

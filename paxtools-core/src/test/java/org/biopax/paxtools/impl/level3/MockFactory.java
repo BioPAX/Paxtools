@@ -40,7 +40,7 @@ public class MockFactory extends BioPAXFactoryAdaptor
     private int id = 0;
 
 
-    private final EditorMap map = SimpleEditorMap.L3;
+    private final EditorMap map = new SimpleEditorMap(BioPAXLevel.L3);
     private BioPAXLevel level;
 
 // --------------------------- CONSTRUCTORS ---------------------------

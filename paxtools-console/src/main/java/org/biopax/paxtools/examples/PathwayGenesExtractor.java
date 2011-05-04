@@ -39,7 +39,7 @@ public class PathwayGenesExtractor implements Visitor {
 	Collection<interaction> interactions;
 	
 	public PathwayGenesExtractor(pathway pw) {
-		traverser = new Traverser(SimpleEditorMap.get(BioPAXLevel.L2), this);
+		traverser = new Traverser(new SimpleEditorMap(BioPAXLevel.L2), this);
 		geneset = new HashMap<String, Set<String>>();
 		subpathways = new HashSet<pathway>();
 		interactions = new HashSet<interaction>();
