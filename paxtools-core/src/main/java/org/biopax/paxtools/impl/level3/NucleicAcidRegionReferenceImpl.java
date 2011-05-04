@@ -29,7 +29,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 	}
 
 
-	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class,
+	@ManyToMany(targetEntity = NucleicAcidReferenceImpl.class,
 	            mappedBy = "subRegion", cascade = {CascadeType.ALL})
 	public Set<NucleicAcidReference> getSubRegionOf()
 	{
