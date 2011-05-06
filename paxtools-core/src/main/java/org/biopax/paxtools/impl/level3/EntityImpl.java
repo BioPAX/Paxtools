@@ -93,7 +93,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	@ManyToMany(targetEntity = ProvenanceImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="dataSource")
-	@IndexedEmbedded
 	public Set<Provenance> getDataSource()
 	{
 		return dataSource;

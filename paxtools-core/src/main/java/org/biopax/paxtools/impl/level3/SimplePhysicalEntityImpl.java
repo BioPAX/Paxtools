@@ -21,7 +21,7 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	}
 	
 	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL})
-	@IndexedEmbedded
+	@IndexedEmbedded //TODO test whether if works for our model...
 	protected EntityReference getEntityReferenceX()
 	{
 		return entityReference;

@@ -95,7 +95,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, 
 			mappedBy = "entityReferenceX", cascade={CascadeType.ALL})
-	@ContainedIn
+	@ContainedIn //TODO test whether if works for our model...
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;

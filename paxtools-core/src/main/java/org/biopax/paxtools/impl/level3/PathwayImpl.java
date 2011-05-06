@@ -107,7 +107,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 
 	@ManyToOne(targetEntity = BioSourceImpl.class, cascade = {CascadeType.ALL})
-	@IndexedEmbedded
 	public BioSource getOrganism()
 	{
 		return organism;

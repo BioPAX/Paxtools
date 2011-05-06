@@ -221,7 +221,6 @@ public class ModelUtilsTest {
 		//printModel(model);
 		
 		assertEquals(4, model.getObjects(RelationshipXref.class).size()); //- for 2 pathways and 2 interactions!
-		assertEquals(1, model.getObjects(UnificationXref.class).size());
 		assertEquals(1, model.getObjects(RelationshipTypeVocabulary.class).size());
 		for(Entity e : model.getObjects(Entity.class)) {
 			if(!e.equals(pw1))

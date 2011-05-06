@@ -49,7 +49,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	@ManyToMany(targetEntity = XrefImpl.class, cascade={CascadeType.ALL})
 	@JoinTable(name="xref")
-	@IndexedEmbedded(depth=1) //TODO ? seems NOT working for abstract classess/polymorphism..!
+	@IndexedEmbedded(depth=1) //TODO Test whether it's working in our model (for abstract classess/polymorphism..)!
 	public Set<Xref> getXref()
 	{
 		return xref;

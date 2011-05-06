@@ -31,7 +31,6 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
 
     // Property organism
 	@ManyToOne(targetEntity = BioSourceImpl.class, cascade = {CascadeType.ALL})
-	@IndexedEmbedded
     public BioSource getOrganism()
     {
         return organism;

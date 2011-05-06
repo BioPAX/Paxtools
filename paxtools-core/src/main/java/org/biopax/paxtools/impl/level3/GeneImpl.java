@@ -28,7 +28,6 @@ public class GeneImpl extends EntityImpl implements Gene
     }
 
 	@ManyToOne(targetEntity = BioSourceImpl.class, cascade = {CascadeType.ALL})
-	@IndexedEmbedded
     public BioSource getOrganism()
     {
         return organism;
