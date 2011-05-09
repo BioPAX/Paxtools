@@ -104,8 +104,8 @@ public class ControlRule implements InteractionRuleL3
 							if (mineStatetateChange)
 							{
 								SimpleInteraction sc = new SimpleInteraction(A, B, STATE_CHANGE);
-								sc.extractPublications(cont);
-								sc.extractPublications(conv);
+								sc.addMediator(cont);
+								sc.addMediator(conv);
 								interactionSet.add(sc);
 							}
 						}
@@ -117,8 +117,8 @@ public class ControlRule implements InteractionRuleL3
 							{
 								SimpleInteraction mc = new SimpleInteraction(A, B,
 									METABOLIC_CATALYSIS);
-								mc.extractPublications(cont);
-								mc.extractPublications(conv);
+								mc.addMediator(cont);
+								mc.addMediator(conv);
 								interactionSet.add(mc);
 							}
 						}

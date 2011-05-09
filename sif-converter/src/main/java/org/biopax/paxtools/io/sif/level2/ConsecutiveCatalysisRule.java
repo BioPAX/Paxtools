@@ -238,8 +238,8 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL2
 						new SimpleInteraction(pe,
 							pepi.getPHYSICAL_ENTITY(),
 							SEQUENTIAL_CATALYSIS);
-					si.extractPublications(aCatalysis);
-					si.extractPublications(consequentCatalysis);
+					si.addMediator(aCatalysis);
+					si.addMediator(consequentCatalysis);
 					interactionSet.add(si);
 				}
 			}

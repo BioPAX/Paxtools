@@ -9,9 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -556,14 +554,16 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	/**
 	 * Returns the value of the <em>bean</em> using the default {@link #getMethod}.
 	 *
+	 *
 	 * @param bean the object whose property is requested
 	 * @return an object as the value
 	 */
-	@Override public R getValueFromBean(D bean) throws IllegalBioPAXArgumentException
+	@Override public Set<R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
 	{
+		Object value;
 		try
 		{
-			return (R) this.getMethod.invoke(bean);
+			value = this.getMethod.invoke(bean);
 		}
 		catch (IllegalAccessException e)
 		{
@@ -574,6 +574,14 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 		{
 			throw new IllegalBioPAXArgumentException("Could not invoke get method " +
 			                                         getMethod.getName() + " for " + bean, e);
+		}
+		if(this.isMultipleCardinality())
+		{
+			return ((Set<R>) value);
+		}
+		else
+		{
+			return Collections.singleton(((R) value));
 		}
 	}
 
@@ -597,7 +605,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 			else
 			{
 				assert multipleCardinality;
-				Set values = (Set) this.getValueFromBean(bean);
+				Set values = this.getValueFromBean(bean);
 				if (values.size() >= max)
 				{
 					throw new IllegalBioPAXArgumentException(
@@ -627,4 +635,6 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 //	{
 //		return getValueFromBean(bean);
 //	}
+
+
 }

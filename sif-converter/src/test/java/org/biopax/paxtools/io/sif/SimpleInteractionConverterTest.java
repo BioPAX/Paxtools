@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,8 +96,9 @@ public class SimpleInteractionConverterTest
 		{
 			InputStream in = getClass().getResourceAsStream("/L2/" + s);
 			Model level2 = handler.convertFromOWL(in);
-			converter.writeInteractionsInSIFNX(level2, out, out, true, 
-					 handler.getEditorMap(),"NAME","XREF","ORGANISM");
+			converter.writeInteractionsInSIFNX(level2, out, out,
+			null,
+			Arrays.asList("entity/NAME","entity/XREF","entity/ORGANISM"));
 			in.close();
 		}
 	}
@@ -159,7 +161,7 @@ public class SimpleInteractionConverterTest
 			InputStream in = getClass().getResourceAsStream("/L3/" + s);
 			Model m = handler.convertFromOWL(in);
 			converter.writeInteractionsInSIFNX(m,
-					out,out,true,handler.getEditorMap(),"name","xref");
+					out,out, Arrays.asList("Entity/name","Entity/xref"), Arrays.asList("Entity/xref"));
 			in.close();
 		}
 	}

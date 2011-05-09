@@ -240,7 +240,7 @@ public class Merger implements Visitor
 	{
 		if (editor.isMultipleCardinality())
 		{
-			for (Object updateValue : (Set) editor.getValueFromBean(update))
+			for (Object updateValue : editor.getValueFromBean(update))
 			{
 				updateField(editor, updateValue, existing, target);
 			}

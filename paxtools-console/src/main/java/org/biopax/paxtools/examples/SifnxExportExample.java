@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 public final class SifnxExportExample {
 
@@ -57,7 +58,7 @@ public final class SifnxExportExample {
 		OutputStream edgeStream = new FileOutputStream(args[1]);
 		OutputStream nodeStream = new FileOutputStream(args[2]);
         sic.writeInteractionsInSIFNX(model, edgeStream, nodeStream, 
-        		false, editorMap, "NAME","XREF"); // use, e.g., "name","xref" instead - when BioPAX L3
+        		null, Arrays.asList("entity/NAME","entity/XREF"));
 	}
 
 }

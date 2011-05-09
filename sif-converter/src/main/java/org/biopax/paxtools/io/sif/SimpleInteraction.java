@@ -40,9 +40,9 @@ public class SimpleInteraction
 	 */
 	private BinaryInteractionType type;
 
-	private Set<String> pubs;
-
 	Log log = LogFactory.getLog(SimpleInteraction.class);
+
+	private Set<BioPAXElement> mediators;
 
 	public SimpleInteraction(BioPAXElement source, BioPAXElement target,
 	                         BinaryInteractionType type)
@@ -50,7 +50,7 @@ public class SimpleInteraction
 		this.source = source;
 		this.target = target;
 		this.type = type;
-		this.pubs = new HashSet<String>();
+		this.mediators = new HashSet<BioPAXElement>();
 	}
 
 	public BioPAXElement getSource()
@@ -216,7 +216,7 @@ public class SimpleInteraction
 				for (physicalEntity target : targetSet)
 				{
 					SimpleInteraction interaction = new SimpleInteraction(source, target, type);
-					interaction.getPubs().addAll(this.getPubs());
+					interaction.getMediators().addAll(this.getMediators());
 					reducedInts.add(interaction);
 				}
 			}
@@ -249,56 +249,14 @@ public class SimpleInteraction
 	}
 
 
-	public Set<String> getPubs()
+	public Set<BioPAXElement> getMediators()
 	{
-		return pubs;
+		return mediators;
 	}
 
-	public void extractPublications(entity anEntity)
+	public void addMediator(BioPAXElement element)
 	{
-		log.trace("extracting pubs from " + anEntity.getNAME() + "(" + anEntity.getRDFId() + ")");
-		log.trace(pubs.size());
-		for (publicationXref xref : new ClassFilterSet<publicationXref>(
-			anEntity.getXREF(), publicationXref.class))
-		{
-			getPubs().add(xref.toString());
-		}
-
-		if (anEntity instanceof interaction)
-		{
-			Set<evidence> evidenceSet = ((interaction) anEntity).getEVIDENCE();
-			for (evidence evidence : evidenceSet)
-			{
-				for (publicationXref xref : new ClassFilterSet<publicationXref>(
-					evidence.getXREF(), publicationXref.class))
-				{
-					getPubs().add(xref.toString());
-				}
-			}
-
-		}
-		log.trace(pubs.size());
+		this.mediators.add(element);
 	}
 
-	public void extractPublications(Entity anEntity)
-	{
-		log.trace("extracting pubs from " + anEntity.getStandardName() + "(" +
-			anEntity.getRDFId() + ")");
-		log.trace(pubs.size());
-
-		for (Xref xref : new ClassFilterSet<Xref>(anEntity.getXref(), Xref.class))
-		{
-			getPubs().add(xref.toString());
-		}
-
-		Set<Evidence> evidenceSet = anEntity.getEvidence();
-		for (Evidence evidence : evidenceSet)
-		{
-			for (Xref xref : new ClassFilterSet<Xref>(evidence.getXref(), Xref.class))
-			{
-				getPubs().add(xref.toString());
-			}
-		}
-		log.trace(pubs.size());
-	}
 }

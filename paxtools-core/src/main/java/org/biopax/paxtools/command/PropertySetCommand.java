@@ -21,7 +21,7 @@ public class PropertySetCommand extends AbstractPropertyCommand
 	@Override
 	protected void undoAction()
 	{
-		editor.setValueToBean(oldValue, bpe);
+		editor.setValueToBean(oldValue, bpe);    //TODO
 
 	}
 

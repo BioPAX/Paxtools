@@ -20,6 +20,7 @@ import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -248,7 +249,7 @@ public class PaxtoolsMain {
                         .getRules(model.getLevel()).toArray(new InteractionRule[]{}));
 
         sic.writeInteractionsInSIFNX(model, new FileOutputStream(argv[2]), new FileOutputStream(argv[3]),
-                                     new Boolean(argv[4]), SimpleEditorMap.get(model.getLevel()), argv[5].split(","));
+                                     Arrays.asList(argv[4].split(",")), Arrays.asList(argv[5].split(",")));
     }
 
     public static void toSif(String[] argv) throws IOException {

@@ -92,7 +92,7 @@ public class ComponentRule implements InteractionRuleL2
                 options.get(COMPONENT_OF).equals(Boolean.TRUE)) {
             // Add Component.Of rule
             SimpleInteraction si = new SimpleInteraction(A, comp, COMPONENT_OF);
-            si.extractPublications(comp);
+            si.addMediator(comp);
             interactionSet.add(si);
         }
 
@@ -155,7 +155,7 @@ public class ComponentRule implements InteractionRuleL2
                     SimpleInteraction si = new SimpleInteraction(pe,
                             member,
                             IN_SAME_COMPONENT);
-                    si.extractPublications(comp);
+                    si.addMediator(comp);
                     interactionSet.add(si);
                 }
             }
