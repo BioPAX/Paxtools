@@ -3,9 +3,7 @@ package org.biopax.paxtools.query;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.query.algorithm.CommonStreamQuery;
-import org.biopax.paxtools.query.algorithm.NeighborhoodQuery;
-import org.biopax.paxtools.query.algorithm.PoIQuery;
+import org.biopax.paxtools.query.algorithm.*;
 import org.biopax.paxtools.query.model.Graph;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
@@ -23,8 +21,7 @@ public class    QueryExecuter
 		Set<BioPAXElement> sourceSet,
 		Model model,
 		int limit,
-		boolean upstream,
-		boolean downstream)
+		Direction direction)
 	{
 		Graph graph;
 
@@ -36,7 +33,7 @@ public class    QueryExecuter
 
 		Set<Node> source = graph.getWrapperSet(sourceSet);
 
-		NeighborhoodQuery query = new NeighborhoodQuery(source, upstream, downstream, limit);
+		NeighborhoodQuery query = new NeighborhoodQuery(source, direction, limit);
 		Set<GraphObject> resultWrappers = query.run();
 		Set<Object> result = graph.getWrappedSet(resultWrappers);
 
@@ -53,14 +50,14 @@ public class    QueryExecuter
 		Model model,
 		int limit)
 	{
-		return runPOI(sourceSet, sourceSet, model, PoIQuery.NORMAL_LIMIT, limit);
+		return runPOI(sourceSet, sourceSet, model, LimitType.NORMAL, limit);
 	}
 
 	public static Set<BioPAXElement> runPOI(
 		Set<BioPAXElement> sourceSet,
 		Set<BioPAXElement> targetSet,
 		Model model,
-		boolean limitType,
+		LimitType limitType,
 		int limit)
 	{
 		Graph graph;
@@ -79,6 +76,7 @@ public class    QueryExecuter
 		Set<Object> result = graph.getWrappedSet(resultWrappers);
 
 		HashSet<BioPAXElement> set = new HashSet<BioPAXElement>();
+
 		for (Object o : result)
 		{
 			set.add((BioPAXElement) o);
@@ -89,7 +87,7 @@ public class    QueryExecuter
 	public static Set<BioPAXElement> runCommonStream(
 		Set<BioPAXElement> sourceSet,
 		Model model,
-		boolean direction,
+		Direction direction,
 		int limit)
 	{
 		Graph graph;
@@ -118,12 +116,12 @@ public class    QueryExecuter
 	public static Set<BioPAXElement> runCommonStreamWithPOI(
 		Set<BioPAXElement> sourceSet,
 		Model model,
-		boolean direction,
+		Direction direction,
 		int limit)
 	{
 		Set<BioPAXElement> result = runCommonStream(sourceSet, model, direction, limit);
-		return (direction == CommonStreamQuery.UPSTREAM) ?
-			runPOI(result, sourceSet, model, PoIQuery.NORMAL_LIMIT, limit) :
-			runPOI(sourceSet, result, model, PoIQuery.NORMAL_LIMIT, limit);
+		return (direction == Direction.UPSTREAM) ?
+			runPOI(result, sourceSet, model, LimitType.NORMAL, limit) :
+			runPOI(sourceSet, result, model, LimitType.NORMAL, limit);
 	}
 }

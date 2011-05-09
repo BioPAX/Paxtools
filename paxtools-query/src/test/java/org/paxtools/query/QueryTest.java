@@ -9,6 +9,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.CommonStreamQuery;
+import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.algorithm.PoIQuery;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -72,7 +73,7 @@ public class QueryTest
 	}
 	
 	@Test
-	public void testNeignborhood() throws IOException
+	public void testNeighborhood() throws IOException
 	{
 		InputStream in = getClass().getResourceAsStream("/merge-bmp.owl"); // this is classpath - no need to use a "separator"
 		Model model = handler.convertFromOWL(in);
@@ -85,8 +86,10 @@ public class QueryTest
 		source.add(s1);
 		source.add(t1);
 
-		Set<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(source, model, CommonStreamQuery.DOWNSTREAM, 2);
-			System.out.println("result.size() = " + result.size());
+		Set<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(
+			source, model, Direction.DOWNSTREAM, 2);
+
+		System.out.println("result.size() = " + result.size());
 
 		Model ex = excise(model, result);
 		handler.convertToOWL(ex, new FileOutputStream("QueryResult.owl"));		
