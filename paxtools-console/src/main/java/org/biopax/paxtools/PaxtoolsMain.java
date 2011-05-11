@@ -13,6 +13,7 @@ import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.query.QueryExecuter;
+import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.validator.BiopaxValidatorClient;
 import org.biopax.validator.BiopaxValidatorClient.RetFormat;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
@@ -123,8 +124,8 @@ public class PaxtoolsMain {
         }
 
         // execute the 'nearest neighborhood' query
-        Set<BioPAXElement> result = QueryExecuter
-                .runNeighborhood(elements, model, 1, true, true);
+        Set<BioPAXElement> result = QueryExecuter.runNeighborhood(
+			elements, model, 1, Direction.BOTHSTREAM);
 
         // auto-complete/clone the results in a new model
         // (this also cuts some less important edges, right?..)

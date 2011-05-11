@@ -14,73 +14,72 @@ import java.util.Set;
  */
 public class NeighborhoodQuery
 {
-    /**
-     * Set of source nodes.
-     */
+	/**
+	 * Set of source nodes.
+	 */
 	private Set<Node> sourceNodes;
-    
-    /**
-     * Booleans to determine the directin of search.
-     */
-    private boolean goUpstream;
-    private boolean goDownstream;
+	
+	/**
+	 * Booleans to determine the directin of search.
+	 */
+	private Direction direction;
 
-    /**
-     * Stop distance.
-     */
-    private int limit;
+	/**
+	 * Stop distance.
+	 */
+	private int limit;
 
-    /**
-     * Maps to hold forward and backward BFS results
-     */
-    private Map<GraphObject, Integer> mapBackward;
+	/**
+	 * Maps to hold forward and backward BFS results
+	 */
+	private Map<GraphObject, Integer> mapBackward;
 	private Map<GraphObject, Integer> mapForward;
-    
-    /**
-     * Result Set of Neighborhood Query
-     */
-    private Set<GraphObject> queryResult = new HashSet<GraphObject>();
 
 	/**
-     * Constructor for Neighborhood Query.
-     */
-    public NeighborhoodQuery(Set<Node> sourceNodes, boolean goUpstream, boolean goDownstream, int limit)
-    {
-        this.sourceNodes = sourceNodes;
-        this.goUpstream = goUpstream;
-        this.goDownstream = goDownstream;
-        this.limit = limit;
-    }
+	 * Result Set of Neighborhood Query
+	 */
+	private Set<GraphObject> queryResult = new HashSet<GraphObject>();
 
 	/**
-     * Method to run query
-     */
-    public Set<GraphObject> run()
-    {
-    	//if upstream is selected
-		if (goUpstream)
+	 * Constructor for Neighborhood Query.
+	 */
+	public NeighborhoodQuery(Set<Node> sourceNodes, Direction direction, int limit)
+	{
+		this.sourceNodes = sourceNodes;
+		this.direction = direction;
+		this.limit = limit;
+	}
+
+	/**
+	 * Method to run query
+	 */
+	public Set<GraphObject> run()
+	{
+		//if upstream is selected
+		if (direction == Direction.UPSTREAM || direction == Direction.BOTHSTREAM)
 		{
 			//run BFS in upstream direction
-			BFS bfsBackward = new BFS(sourceNodes, null, false, this.limit);
+			BFS bfsBackward = new BFS(sourceNodes, null, Direction.UPSTREAM, this.limit);
 
 			mapBackward = bfsBackward.run();
 
 			//add result of BFS to result Set
 			queryResult.addAll(mapBackward.keySet());
 		}
+
 		//if downstream is selected
-		if (goDownstream)
+		if (direction == Direction.DOWNSTREAM || direction == Direction.BOTHSTREAM)
 		{
 			//run BFS in downstream direction
-			BFS bfsForward = new BFS(sourceNodes, null, true, this.limit);
+			BFS bfsForward = new BFS(sourceNodes, null, Direction.DOWNSTREAM, this.limit);
 
 			mapForward = bfsForward.run();
 
 			//add result of BFS to result Set
 			queryResult.addAll(mapForward.keySet());
 		}
-    	
-        //Return the result of query
-    	return this.queryResult;
-    }
+		
+		//Return the result of query
+		return this.queryResult;
+	}
 }

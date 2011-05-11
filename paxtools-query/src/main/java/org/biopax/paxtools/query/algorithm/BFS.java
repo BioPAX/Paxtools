@@ -41,7 +41,7 @@ public class BFS
 	/**
 	 * Whether the direction is FORWARD, it is REVERSE otherwise.
 	 */
-	protected boolean isFwd;
+	protected Direction direction;
 
 	/**
 	 * Stop distance.
@@ -50,11 +50,13 @@ public class BFS
 
 	protected LinkedList<Node> queue;
 
-	public BFS(Set<Node> sourceSet, Set<Node> stopSet, boolean direction, int limit)
+	public BFS(Set<Node> sourceSet, Set<Node> stopSet, Direction direction, int limit)
 	{
+		assert direction != Direction.BOTHSTREAM : "BOTHSTREAM is not a valid parameter in BFS";
+
 		this.sourceSet = sourceSet;
 		this.stopSet = stopSet;
-		this.isFwd = direction;
+		this.direction = direction;
 		this.limit = limit;
 	}
 
@@ -120,13 +122,14 @@ public class BFS
 	{
 		// Process edges towards the direction
 
-		for (Edge edge : isFwd ? current.getDownstream() : current.getUpstream())
+		for (Edge edge : direction == Direction.DOWNSTREAM ?
+			current.getDownstream() : current.getUpstream())
 		{
 			assert edge != null;
 
 			// Label the edge considering direction of traversal and type of current node
 
-			if (isFwd || !current.isBreadthNode())
+			if (direction == Direction.DOWNSTREAM || !current.isBreadthNode())
 			{
 				setLabel(edge, getLabel(current));
 			}
@@ -136,7 +139,8 @@ public class BFS
 			}
 
 			// Get the other end of the edge
-			Node neigh = isFwd ? edge.getTargetNode() : edge.getSourceNode();
+			Node neigh = direction == Direction.DOWNSTREAM ?
+				edge.getTargetNode() : edge.getSourceNode();
 
 			assert neigh != null;
 
@@ -146,7 +150,7 @@ public class BFS
 			{
 				// Label the neighbor according to the search direction and node type
 
-				if (!neigh.isBreadthNode() || !isFwd)
+				if (!neigh.isBreadthNode() || direction == Direction.UPSTREAM)
 				{
 					setLabel(neigh, getLabel(edge));
 				}
