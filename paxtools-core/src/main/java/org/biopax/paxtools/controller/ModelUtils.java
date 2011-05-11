@@ -13,6 +13,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process; //separate import required here!
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
@@ -46,7 +47,6 @@ public class ModelUtils {
 	private final EditorMap editorMap;
 	private final BioPAXIOHandler io;
 	
-	
 	/**
 	 * Controlled vocabulary terms for the RelationshipType 
 	 * CV to be added with auto-generated/inferred comments
@@ -75,6 +75,12 @@ public class ModelUtils {
 	 * i.e., controlled vocabularies, relationship and unification xrefs. 
 	 */
 	public static final String URN_PREFIX_FOR_GENERATED_REFS = "urn:biopax:paxtools:";
+
+	
+	/**
+	 * A comment (at least - prefix) to add to all generated objects
+	 */
+	public final String COMMENT_FOR_GENERATED = "Paxtools-generated";
 	
 	/**
 	 * Constructor.
@@ -406,11 +412,16 @@ public class ModelUtils {
 	 * new model.
 	 * 
 	 * @param bpe
+	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
 	 * @return
 	 */
-	public Model getAllChildren(BioPAXElement bpe) {
+	public Model getAllChildren(BioPAXElement bpe, PropertyFilter... filters) {
 		Model model = this.model.getLevel().getDefaultFactory().createModel();
-		new Fetcher(editorMap, nextStepFilter).fetch(bpe, model);
+		if(filters.length == 0	) {
+			new Fetcher(editorMap, nextStepFilter).fetch(bpe, model);
+		} else {
+			new Fetcher(editorMap, filters).fetch(bpe, model);
+		}
 		model.remove(bpe); // remove the parent
 		
 		return model;
@@ -467,30 +478,8 @@ public class ModelUtils {
 	public <T extends Process> void generateEntityProcessXrefs(
 			Class<T> processClass, final String provider) 
 	{	
-		final String COMMENT = "Paxtools-generated";
-		
-		// use a special relationship CV
-		//String cvId = "urn:miriam:obo.mi:MI%3A0359";
-		String cvId = URN_PREFIX_FOR_GENERATED_REFS
-			+ "RelationshipType:" + RelationshipType.PROCESS;
-		// try to get from the model first
-		RelationshipTypeVocabulary cv = (RelationshipTypeVocabulary) model.getByID(cvId);
-		if(cv == null) { // one instance per model to be created
-			cv = model.addNew(RelationshipTypeVocabulary.class, cvId);
-			/* disabled: in favor of custom terms from RelationshipType -
-			String uxid = "urn:biopax:UnificationXref:MI_MI%3A0359";
-			UnificationXref ux = (UnificationXref) model.getByID(uxid);
-			if(ux == null) {
-				ux = model.addNew(UnificationXref.class, uxid);
-				ux.addComment(COMMENT);
-				ux.setDb("MI");
-				ux.setId("MI:0359");
-			}
-			cv.addXref(ux);
-			cv.addComment(COMMENT);
-			*/
-			cv.addTerm(RelationshipType.PROCESS.name()); //yes!
-		}
+		// use a special relationship CV;
+		RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(RelationshipType.PROCESS);
 		
 		Set<T> processes = new HashSet<T>(model.getObjects(processClass)); //to avoid concurr. mod. ex.
 		for(T ownerProc : processes) 
@@ -500,7 +489,7 @@ public class ModelUtils {
 			RelationshipXref rx =  (RelationshipXref) model.getByID(relXrefId);
 			if (rx == null) {
 				rx = model.addNew(RelationshipXref.class, relXrefId);
-				rx.addComment(COMMENT);
+				rx.addComment(COMMENT_FOR_GENERATED);
 				rx.setDb(provider);
 				rx.setId(ownerProc.getRDFId()); // intra-model link (this is BioPAX hack :)
 				rx.setRelationshipType(cv);
@@ -514,38 +503,11 @@ public class ModelUtils {
 
 	
 	/**
-	 * Generates BioPAX comments about {@link Entity}
-	 * participate in a {@link Process}.
+	 * Adds the relationship xref to every entity in the set.
 	 * 
-	 * @see #generateEntityProcessXrefs(Class, String)
-	 * 
-	 * @param <T>
-	 * @param processClass
+	 * @param elements
+	 * @param x
 	 */
-	public <T extends Process> void generateEntityProcessComments(Class<T> processClass) 
-	{	
-		for(T ownerProc : model.getObjects(processClass)) {
-			Model childModel = getAllChildren(ownerProc);
-			addEntityProcessComment(childModel.getObjects(Entity.class), ownerProc);
-		}
-	}
-
-	
-	private <T extends Process> void addEntityProcessComment(Set<? extends Entity> elements, T ownerProc) 
-	{	
-		//TODO shall we ignore entities within Evidence, ExperimentalForm, etc.?
-		for(Entity ent : elements) {
-			ent.addComment(RelationshipType.PROCESS + " " +
-				ownerProc.getModelInterface().getSimpleName()
-				+ ":" + ownerProc.getRDFId() 
-				+ ((ownerProc.getDisplayName()==null) 
-					? "" 
-					: " (" + ownerProc.getDisplayName() + ")"
-				));
-		}
-	}
-
-	
 	private void addRelationshipXref(Set<? extends Entity> elements, RelationshipXref x) 
 	{
 		//TODO shall we ignore entities within Evidence, ExperimentalForm, etc.?
@@ -556,15 +518,200 @@ public class ModelUtils {
 	
 	
 	/**
-	 * TODO auto-generate organism relationship xrefs - 
-	 * for BioPAX entities that do not have such property but their children do 
-	 * (Interaction?, Protein, Complex, DNA, etc., of SimplePhysicalEntity sub-class )
+	 * Auto-generates organism relationship xrefs - 
+	 * for BioPAX entities that do not have such property (but their children do), 
+	 * such as of Interaction, Protein, Complex, DNA, Protein, etc. classes.
+	 * 
+	 * Infers organisms in two steps:
+	 * 
+	 * 1. add organisms as relationship xrefs 
+	 *    of {@link SimplePhysicalEntity} objects (from EntityReference objects), 
+	 *    except for smallmolecules.
+	 * 2. infer organism information recursively via all children, 
+	 *    but only when children are also Entity objects (not utility classes)
+	 *    (equivalently, this can be achieved by collecting all the children first, 
+	 *     though not visiting properties who's range is a sub-class of UtilityClass)
+	 * 
 	 */
-	public void generateEntityOrganismXrefs() {
-		//TODO
+	public void generateEntityOrganismXrefs() 
+	{
+		// The first pass (physical entities)
+		Set<SimplePhysicalEntity> simplePEs = // prevents concurrent mod. exceptions
+			new HashSet<SimplePhysicalEntity>(model.getObjects(SimplePhysicalEntity.class));
+		for(SimplePhysicalEntity spe : simplePEs) {
+			//get the organism value (BioSource) from the ER; create/add rel. xrefs to the spe
+			EntityReference er = spe.getEntityReference();
+			// er can be generic (member ers), so -
+			Set<BioSource> organisms = getOrganismsFromER(er);
+			addOrganismXrefs(spe, organisms);
+		}
+		
+		// use a special filter for the (child elements) fetcher
+		PropertyFilter entityRangeFilter = new PropertyFilter() {
+			@Override
+			public boolean filter(PropertyEditor editor) {
+				// values are of Entity sub-class -
+				return Entity.class.isAssignableFrom(editor.getRange());
+			}
+		};
+		
+		/* 
+		 * The second pass (all entities, particularly - 
+		 * Pathway, Gene, Interaction, Complex and generic physical entities
+		 */
+		Set<Entity> entities = new HashSet<Entity>(model.getObjects(Entity.class));
+		for(Entity entity : entities) {
+			Set<BioSource> organisms = new HashSet<BioSource>();
+			
+			//If the entity has "true" organism property (it's Gene or Pathway), collect it
+			addOrganism(entity, organisms);
+		
+			/* collect its children (- of Entity class only, 
+			 * i.e., won't traverse into UtilityClass elements's properties)
+			 * 
+			 * Note: although Stoichiometry.physicalEntity, 
+			 *       ExperimentalForm.experimentalFormEntity, 
+			 *       and PathwayStep.stepProcess are (only) examples 
+			 *       when an Entity can be value of a UtilityClass
+			 *       object's property, we have to skip these 
+			 *       utility classes (with their properties) anyway.
+			 */
+			Model submodel = getAllChildren(entity, entityRangeFilter);
+			// now, collect organism values from the children entities 
+			// (using both property 'organism' and rel.xrefs created above!)
+			for(Entity e : submodel.getObjects(Entity.class)) {
+				//skip SM
+				if(e instanceof SmallMolecule)
+					continue;
+				
+				//has "true" organism property? (a Gene or Pathway?) Collect it.
+				addOrganism(e, organisms);
+				// check in rel. xrefs
+				for(RelationshipXref x 
+					: new ClassFilterSet<RelationshipXref>(e.getXref(), RelationshipXref.class)) 
+				{
+					RelationshipTypeVocabulary cv = x.getRelationshipType();
+					if(cv != null && cv.getTerm().contains(RelationshipType.ORGANISM.name())) {
+						//previously, xref.id was set to a BioSource' ID!
+						assert(x.getId() != null);
+						BioSource bs = (BioSource) model.getByID(x.getId());
+						assert(bs != null);
+						organisms.add(bs);
+					}
+				}
+			}
+			
+			// add all the organisms (xrefs) to this entity
+			addOrganismXrefs(entity, organisms);
+		}
+	}
+
+	
+	/**
+	 * Returns a set of organism of the entity reference.
+	 * If it is a generic entity reference (has members), 
+	 * - will recursively collect all the organisms from 
+	 * its members.  
+	 * 
+	 * @param er
+	 * @return
+	 */
+	private Set<BioSource> getOrganismsFromER(EntityReference er) {
+		Set<BioSource> organisms = new HashSet<BioSource>();
+		if(er instanceof SequenceEntityReference) {
+			BioSource organism = ((SequenceEntityReference) er).getOrganism();
+			if(organism != null) {
+				organisms.add(organism);
+			}
+			
+			if(!er.getMemberEntityReference().isEmpty()) {
+				for(EntityReference mer : er.getMemberEntityReference()) {
+					organisms.addAll(
+							getOrganismsFromER(mer)
+					);
+				}
+			}
+		}
+		return organisms;
+	}
+
+	
+	/**
+	 * Adds entity's organism value (if applicable and it has any) to the set.
+	 * 
+	 * @param entity
+	 * @param organisms
+	 */
+	private void addOrganism(BioPAXElement entity, Set<BioSource> organisms) {
+		PropertyEditor editor = editorMap.getEditorForProperty("organism",
+				entity.getModelInterface());
+		if (editor != null) {
+			BioSource o = (BioSource) editor.getValueFromBean(entity);
+			if(o != null)
+				organisms.add(o);
+		}
+	}
+
+	
+	/**
+	 * Generates a relationship xref for each 
+	 * organism (BioSource) in the list and adds them to the entity.
+	 * 
+	 * @param entity
+	 * @param organisms
+	 */
+	private void addOrganismXrefs(Entity entity, Set<BioSource> organisms) {
+		// create/find a RelationshipTypeVocabulary with term="ORGANISM"
+		RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(RelationshipType.ORGANISM);
+		// add xref(s) to the entity
+		for(BioSource organism : organisms) {
+			String relXrefId = organism.getRDFId() + "_" + 
+				RelationshipType.ORGANISM.name(); //no more than one xref per organism!
+			RelationshipXref rx =  (RelationshipXref) model.getByID(relXrefId);
+			if (rx == null) {
+				rx = model.addNew(RelationshipXref.class, relXrefId);
+				rx.addComment(COMMENT_FOR_GENERATED);
+				rx.setId(organism.getRDFId()); // intra-model link (this is a hack :)
+				rx.setRelationshipType(cv);
+			}
+			entity.addXref(rx);
+		}
+		
+	}
+
+	
+	/**
+	 * Finds in the model or creates a new special RelationshipTypeVocabulary 
+	 * controlled vocabulary with the term value defined by the argument (enum).
+	 * 
+	 * @param relationshipType
+	 * @return
+	 */
+	private RelationshipTypeVocabulary getTheRelatioshipTypeCV(RelationshipType relationshipType) 
+	{
+		String cvId = URN_PREFIX_FOR_GENERATED_REFS + "RelationshipType:"
+				+ relationshipType;
+		// try to get from the model first
+		RelationshipTypeVocabulary cv = (RelationshipTypeVocabulary) model
+				.getByID(cvId);
+		if (cv == null) { // one instance per model to be created
+			cv = model.addNew(RelationshipTypeVocabulary.class, cvId);
+			cv.addTerm(relationshipType.name());
+			cv.addComment(COMMENT_FOR_GENERATED);
+			/* disabled: in favor of custom terms from RelationshipType -
+			String uxid = "urn:biopax:UnificationXref:MI_MI%3A0359";
+			UnificationXref ux = (UnificationXref) model.getByID(uxid);
+			if(ux == null) {
+				ux = model.addNew(UnificationXref.class, uxid);
+				ux.addComment(COMMENT_FOR_GENERATED);
+				ux.setDb("MI");
+				ux.setId("MI:0359");
+			}
+			cv.addXref(ux);
+			*/
+		}
+		
+		return cv;
 	}
 	
-	public void generateEntityOrganismComments() {
-		//TODO
-	}
 }

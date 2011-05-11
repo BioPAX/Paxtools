@@ -190,6 +190,9 @@ public class ModelUtilsTest {
 		assertEquals(mm, g1.getOrganism()); // inferred from the parent pathway!
 		assertEquals(1, g1.getComment().size()); // - he-he, and a new comment was generated!
 		assertNull(pr1.getOrganism()); // because ERs were filtered!
+		
+		mu.generateEntityOrganismXrefs();	
+		//printModel(mu.getModel());
 	}
 	
 	
