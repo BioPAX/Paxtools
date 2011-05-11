@@ -97,8 +97,7 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 
 	/**
 	 * Writes a model in OWL format using the an output stream.
-	 *
-	 * @param model        model to be converted into OWL format
+	 * @param model model to be converted into OWL format
 	 * @param outputStream output stream to which the model will be written
 	 */
 	public void convertToOWL(Model model, OutputStream outputStream)
@@ -108,8 +107,7 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 		createIndividuals(ontModel, model);
 		bindObjectsToProperties(ontModel, model);
 		RDFWriter writer = ontModel.getWriter("RDF/XML-ABBREV");
-		writer.setProperty("relativeURIs",
-				"same-document, relative, parent, absolute");
+		writer.setProperty("relativeURIs", "same-document, relative, parent, absolute");
 		String base = model.getNameSpacePrefixMap().get("");
 		if (log.isDebugEnabled())
 		{
@@ -138,16 +136,13 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 		while (extendedIterator.hasNext())
 		{
 			Individual individual = (Individual) extendedIterator.next();
-			OntClass ontClass =
-					(OntClass) individual.getRDFType()
-							.as(OntClass.class);
+			OntClass ontClass = (OntClass) individual.getRDFType().as(OntClass.class);
 			createAndAdd(model, individual.getURI(), ontClass.getLocalName());
 		}
 	}
 
 
-	private void bindPropertiesToObjects(OntModel ontModel, Model model)
-			throws IllegalBioPAXArgumentException
+	private void bindPropertiesToObjects(OntModel ontModel, Model model) throws IllegalBioPAXArgumentException
 	{
 		ExtendedIterator extendedIterator = ontModel.listIndividuals();
 		while (extendedIterator.hasNext())
@@ -165,46 +160,39 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 					if (isInBioPAXNameSpace(predicate.getNameSpace()))
 					{
 						bindProperty(predicate, bpe, individual, model);
-					}
-					else if (predicate.getLocalName().equals("comment") && predicate.getNameSpace()
-							.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#"))
+					} else if (predicate.getLocalName().equals("comment") && predicate.getNameSpace().equals(
+							"http://www.w3.org/1999/02/22-rdf-syntax-ns#"))
 					{
 						PropertyEditor editor = getRDFCommentEditor(bpe);
 
 						OntProperty ontProperty;
 						try
 						{
-							ontProperty =
-									((OntProperty) predicate.as(OntProperty.class));
+							ontProperty = ((OntProperty) predicate.as(OntProperty.class));
 						}
 						catch (ConversionException e)
 						{
-							throw new IllegalBioPAXArgumentException("Unknown property! " +
-							                                         predicate + " bpe:" +
-							                                         bpe.getRDFId(), e);
+							throw new IllegalBioPAXArgumentException(
+									"Unknown property! " + predicate + " bpe:" + bpe.getRDFId(), e);
 						}
 						checkCardinalityAndBindValue(bpe, individual, model, ontProperty, editor);
-					}
-					else if (log.isDebugEnabled())
+					} else if (log.isDebugEnabled())
 					{
 						log.debug("Skipping non-biopax statement:" + predicate);
 					}
 
 				}
-				catch (IllegalBioPAXArgumentException
-						e)
+				catch (IllegalBioPAXArgumentException e)
 				{
 
 					log.error("Conversion error. " + e);
 
 				}
-				catch (IllegalAccessException
-						ex)
+				catch (IllegalAccessException ex)
 				{
 					throw new IllegalBioPAXArgumentException("Conversion failed.", ex);
 				}
-				catch (InvocationTargetException
-						ex)
+				catch (InvocationTargetException ex)
 				{
 					throw new IllegalBioPAXArgumentException("Conversion failed.", ex);
 				}
@@ -213,33 +201,28 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 	}
 
 
-	private void bindProperty(Property predicate, BioPAXElement bpe,
-	                          Individual individual, Model model)
+	private void bindProperty(Property predicate, BioPAXElement bpe, Individual individual, Model model)
 			throws IllegalAccessException, InvocationTargetException
 	{
 		OntProperty ontProperty;
 		try
 		{
-			ontProperty =
-					((OntProperty) predicate.as(OntProperty.class));
+			ontProperty = ((OntProperty) predicate.as(OntProperty.class));
 		}
 		catch (ConversionException e)
 		{
-			throw new IllegalBioPAXArgumentException("Unknown property! " +
-			                                         predicate + " bpe:" + bpe.getRDFId(), e);
+			throw new IllegalBioPAXArgumentException("Unknown property! " + predicate + " bpe:" + bpe.getRDFId(), e);
 		}
 		String localName = ontProperty.getLocalName();
-		PropertyEditor editor = this.getEditorMap().getEditorForProperty(
-				localName, bpe.getClass());
+		PropertyEditor editor = this.getEditorMap().getEditorForProperty(localName, bpe.getClass());
 		if (editor != null)
 		{
 			checkCardinalityAndBindValue(bpe, individual, model, ontProperty, editor);
-		}
-		else
+		} else
 		{
-			throw new IllegalBioPAXArgumentException("Could not locate editor! "
-			                                         + predicate + " element:" + bpe.getRDFId() +
-			                                         " property:" + localName);
+			throw new IllegalBioPAXArgumentException(
+					"Could not locate editor! " + predicate + " element:" + bpe.getRDFId() + " property:" +
+					localName);
 		}
 	}
 
@@ -248,24 +231,20 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 	{
 		if (editor.isMultipleCardinality())
 		{
-			NodeIterator nodeIterator =
-					individual.listPropertyValues(ontProperty);
+			NodeIterator nodeIterator = individual.listPropertyValues(ontProperty);
 			while (nodeIterator.hasNext())
 			{
 				RDFNode propertyValue = (RDFNode) nodeIterator.next();
 				bindValue(propertyValue, editor, bpe, model);
 			}
-		}
-		else
+		} else
 		{
-			RDFNode propertyValue =
-					individual.getPropertyValue(ontProperty);
+			RDFNode propertyValue = individual.getPropertyValue(ontProperty);
 			bindValue(propertyValue, editor, bpe, model);
 		}
 	}
 
-	private void bindValue(RDFNode propertyValue, PropertyEditor editor,
-	                       BioPAXElement bpe, Model model)
+	private void bindValue(RDFNode propertyValue, PropertyEditor editor, BioPAXElement bpe, Model model)
 	{
 
 		String stringValue = null;
@@ -273,12 +252,10 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 		{
 			stringValue = ((Resource) propertyValue).getURI();
 
-		}
-		else if (propertyValue.isLiteral())
+		} else if (propertyValue.isLiteral())
 		{
 			stringValue = ((Literal) propertyValue).getString();
-		}
-		else
+		} else
 		{
 			log.error("Unexpected state." + propertyValue + " is not a resource or literal.");
 		}
@@ -318,15 +295,13 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 		{
 			String name = bp.getModelInterface().getName();
 			name = name.substring(name.lastIndexOf('.') + 1);
-			OntClass ontClass = ontModel.getOntClass(
-					this.getLevel().getNameSpace() + name);
+			OntClass ontClass = ontModel.getOntClass(this.getLevel().getNameSpace() + name);
 			if (log.isTraceEnabled())
 			{
 				log.trace("ontClass = " + ontClass);
 			}
 
-			Individual individual =
-					ontModel.createIndividual(bp.getRDFId(), ontClass);
+			Individual individual = ontModel.createIndividual(bp.getRDFId(), ontClass);
 			if (log.isTraceEnabled())
 			{
 				log.trace("individual = " + individual);
@@ -340,8 +315,7 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 	{
 		for (BioPAXElement bean : model.getObjects())
 		{
-			Set<PropertyEditor> beanEditors =
-					this.getEditorMap().getEditorsOf(bean);
+			Set<PropertyEditor> beanEditors = this.getEditorMap().getEditorsOf(bean);
 
 			for (PropertyEditor propertyEditor : beanEditors)
 			{
@@ -353,57 +327,42 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 	/**
 	 * Builds an OWL statement from the given <em>bean</em> using the <em>editor</em> and inserts it
 	 * into an ontology model.
-	 *
-	 * @param editor   editor to be used for the statement build
-	 * @param bean     bean which the statement is about
+	 * @param editor editor to be used for the statement build
+	 * @param bean bean which the statement is about
 	 * @param ontModel ontology model into which the built statement will be inserted
 	 */
-	private void insertStatement(PropertyEditor editor, BioPAXElement bean,
-	                             OntModel ontModel)
+	private void insertStatement(PropertyEditor editor, BioPAXElement bean, OntModel ontModel)
 
 	{
-		Object value = editor.getValueFromBean(bean);
-		if (value != null && !editor.isUnknown(value))
+		Set value = editor.getValueFromBean(bean);
+		if (value != null)
 		{
-			if (editor.isMultipleCardinality())
+			for (Object valueElement : value)
 			{
-				for (Object valueElement : ((Set) value))
-				{
-					buildStatementFor(bean, editor, valueElement, ontModel);
-				}
-			}
-			else
-			{
-				buildStatementFor(bean, editor, value, ontModel);
+				if (!editor.isUnknown(valueElement)) buildStatementFor(bean, editor, valueElement, ontModel);
 			}
 		}
 	}
 
-	private void buildStatementFor(BioPAXElement bean, PropertyEditor editor,
-	                               Object value, OntModel ontModel)
+
+	private void buildStatementFor(BioPAXElement bean, PropertyEditor editor, Object value, OntModel ontModel)
 	{
 		assert (bean != null && editor != null);
-		Property property = ontModel.getProperty(
-				this.getLevel().getNameSpace() + editor.getProperty());
+		Property property = ontModel.getProperty(this.getLevel().getNameSpace() + editor.getProperty());
 		Individual ind = objectToIndividualMap.get(bean);
 		Class range = editor.getRange();
 		JenaEditorMap editorMap = (JenaEditorMap) this.getEditorMap();
 		XSDDatatype dataType = editorMap.getDataTypeFor(editor);
 		if (dataType != null)
 		{
-			ind.addProperty(property,
-					ontModel.createTypedLiteral(value.toString(),
-							dataType));
-		}
-		else
+			ind.addProperty(property, ontModel.createTypedLiteral(value.toString(), dataType));
+		} else
 		{
 			Individual valueInd = objectToIndividualMap.get(value);
-			if (valueInd ==
-			    null) // TODO not sure about Boolean case here, but this makes tests pass...
+			if (valueInd == null) // TODO not sure about Boolean case here, but this makes tests pass...
 			{
 				throw new IllegalBioPAXArgumentException(
-						range + " : for value '" + value
-						+ "' coresponding individual value is NULL " +
+						range + " : for value '" + value + "' coresponding individual value is NULL " +
 						"(objectToIndividualMap)");
 			}
 

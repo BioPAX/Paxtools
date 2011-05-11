@@ -122,7 +122,7 @@ public class ParticipatesRule implements InteractionRuleL3
 		if (er2 != null && er1 != null && !er2.equals(er1))
 		{
 			SimpleInteraction si = new SimpleInteraction(er1, er2, type);
-			si.extractPublications(interaction);
+			si.addMediator(interaction);
 			set.add(si);
 		}
 	}

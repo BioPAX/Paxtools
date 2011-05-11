@@ -4,6 +4,7 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
+import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.biopax.paxtools.util.SetStringBridge;
@@ -96,8 +97,8 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 		return getModelInterface().equals(that.getModelInterface()) 
 				&& (term.isEmpty() && that.getTerm().isEmpty() || !terms.isEmpty() )
 				&& SetEquivalanceChecker.isEquivalentIntersection(
-						new ClassFilterSet<UnificationXref>(getXref(), UnificationXref.class),
-						new ClassFilterSet<UnificationXref>(that.getXref(), UnificationXref.class)
+						new ClassFilterSet<Xref,UnificationXref>(getXref(), UnificationXref.class),
+						new ClassFilterSet<Xref, UnificationXref>(that.getXref(), UnificationXref.class)
 					);		
 	}
 	

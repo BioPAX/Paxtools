@@ -102,7 +102,7 @@ public class Integrator {
         this.editorMap = editorMap;
         this.merger = new Merger(editorMap);
         this.target = target;
-        
+
         log.info(sources.length + " source model(s) will be merged.");
         // Merge all "sources" into one single model
         for(Model source : sources) {
@@ -258,7 +258,7 @@ public class Integrator {
      * Does the integration using user-provided scores list.
      *
      * @see #integrate()
-     * 
+     *
      * @param alternativeScores alternative scores, can be null
      * @return a sorted list of ConversionScores
      */
@@ -405,7 +405,7 @@ public class Integrator {
                         }
                     }
                     if( allSimilar // size 0 causes false equivalance, thus regard that case
-                            && !(control1.getCONTROLLER().size() == 0 ^ control2.getCONTROLLER().size() == 0)) 
+                            && !(control1.getCONTROLLER().size() == 0 ^ control2.getCONTROLLER().size() == 0))
                     {
                         equalize(control1, control2);
 
@@ -427,13 +427,13 @@ public class Integrator {
         // Operation below is enough for the time being
     	// TODO re-factoring: setRDFId is not available anymore! (We don't really want to change rdfIDs, do we?..)
         //e2.setRDFId(e1.getRDFId());
-    	
+
     	throw new UnsupportedOperationException("This needs re-factoring: bpe.setRDFId is not available anymore!");
-    	
-    	//TODO ? use some alternative way to store that a1 equals e2, e.g., Set<String> matched, 
+
+    	//TODO ? use some alternative way to store that a1 equals e2, e.g., Set<String> matched,
     	//matched.add(e1.getRDFId()+e2.getRDFId()); matched.add(e2.getRDFId()+e1.getRDFId());
     }
-    
+
     private boolean equals(BioPAXElement a, BioPAXElement b) {
     	throw new UnsupportedOperationException("not implemented yet.");
     	// TODO ? implement equals(BioPAXElement a, BioPAXElement b): can be smth. like the following... and use below
@@ -834,13 +834,13 @@ public class Integrator {
     private void updateObjectFieldsForEditor(PropertyEditor editor,
 	                                            BioPAXElement update,
 	                                            BioPAXElement existing) {
-        if (editor.isMultipleCardinality()) {
-			for (Object updateValue : (Set) editor.getValueFromBean(update)) {
+
+			for (Object updateValue : editor.getValueFromBean(update)) {
                 boolean notDuplicate = true;
 
                 try {
                     if( updateValue instanceof BioPAXElement ) {
-                        for (Object existingValue : (Set) editor.getValueFromBean(existing)) {
+                        for (Object existingValue : editor.getValueFromBean(existing)) {
                             if( ((BioPAXElement) existingValue).isEquivalent((BioPAXElement) updateValue) ) {
                                 notDuplicate = false;
                                 break;
@@ -854,24 +854,12 @@ public class Integrator {
                 if( notDuplicate )
                     updateField(editor, updateValue, existing);
 			}
-        } else {
-			Object existingValue = editor.getValueFromBean(existing);
-			Object updateValue = editor.getValueFromBean(update);
 
-			if (editor.isUnknown(existingValue)) {
-				if (!editor.isUnknown(updateValue)) {
-					updateField(editor, updateValue, existing);
-				}
-			} else {
-                // We want to use update's values
-                updateField(editor, updateValue,  existing);
-            }
-		}
 	}
 
     private void updateField(PropertyEditor editor, Object updateValue,
 	                   BioPAXElement existing) {
-		editor.setValueToBean(updateValue, existing);
+		editor.setValueToBean(updateValue, existing); //TODO:TEST
 	}
 
     /* End of update functions */

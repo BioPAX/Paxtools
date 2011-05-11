@@ -9,6 +9,7 @@ import org.biopax.paxtools.model.level2.conversion;
 import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.util.AbstractFilterSet;
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.HashMap;
@@ -48,10 +49,11 @@ public abstract class EditorMapAdapter implements EditorMap
 		return this.classToInverseEditorMap.get(bpe.getModelInterface());
 	}
 
-	public PropertyEditor getEditorForProperty(String property, Class javaClass)
+	public <D extends BioPAXElement> PropertyEditor<D, ?> getEditorForProperty(String property,
+	                                                                           Class<? extends D> javaClass)
 
 	{
-		PropertyEditor result = this.ifExistsGetEditorForProperty(property, javaClass);
+		PropertyEditor<D, ?> result = this.ifExistsGetEditorForProperty(property, javaClass);
 		if (result == null)
 		{
 			if (log.isDebugEnabled()) log.debug("Could not locate controller for " + property + " | " + javaClass);
@@ -60,7 +62,9 @@ public abstract class EditorMapAdapter implements EditorMap
 		return result;
 	}
 
-	protected PropertyEditor ifExistsGetEditorForProperty(String property, Class javaClass)
+	protected <D extends BioPAXElement> PropertyEditor<D, ?> ifExistsGetEditorForProperty(String property,
+	                                                                                      Class<? extends D>
+			                                                                                      javaClass)
 	{
 		PropertyEditor result = null;
 		Set<PropertyEditor> editors = this.getEditorsForProperty(property);
@@ -92,7 +96,7 @@ public abstract class EditorMapAdapter implements EditorMap
 		return this.propertyToEditorMap.get(property);
 	}
 
-	public Set<Class<? extends BioPAXElement>> getKnownSubClassesOf(Class<? extends BioPAXElement> javaClass)
+	public <E extends BioPAXElement> Set<Class<E>> getKnownSubClassesOf(Class<E> javaClass)
 	{
 		return new SubClassFilterSet(classToEditorMap.keySet(), javaClass);
 	}
@@ -164,11 +168,6 @@ public abstract class EditorMapAdapter implements EditorMap
 		}
 	}
 
-	private void registerEditorsWithClasses(PropertyEditor editor, Class domain,
-	                                        HashMap<Class<? extends BioPAXElement>,
-			                                        Set<? extends PropertyEditor>> editorMap)
-	{
-	}
 
 	protected void registerModelClass(String localName)
 	{
@@ -188,20 +187,21 @@ public abstract class EditorMapAdapter implements EditorMap
 		}
 	}
 
-	private class SubClassFilterSet extends AbstractFilterSet<Class<? extends BioPAXElement>>
-	{
-		private Class filterClass = null;
 
-		public SubClassFilterSet(Set<Class<? extends BioPAXElement>> baseSet,
-		                         Class<? extends BioPAXElement> filterClass)
+	private class SubClassFilterSet<E> extends AbstractFilterSet<Class<? extends BioPAXElement>, Class<E>>
+	{
+		private Class superClass = null;
+
+		public SubClassFilterSet(Set<Class<? extends BioPAXElement>> baseSet, Class<E> superClass)
 		{
 			super(baseSet);
-			this.filterClass = filterClass;
+			this.superClass = superClass;
 		}
 
-		protected boolean filter(Object value)
+
+		@Override public boolean filter(Class<? extends BioPAXElement> subClass)
 		{
-			return filterClass.isAssignableFrom((Class) value);
+			return superClass.isAssignableFrom(subClass);
 		}
 	}
 

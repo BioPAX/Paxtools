@@ -5,6 +5,7 @@ import java.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.util.Filter;
 
 /**
  * A tool to set or infer a particular BioPAX
@@ -30,18 +31,18 @@ public class PropertyReasoner extends AbstractTraverser
 	private String propertyName;
     private final Set<Class<? extends BioPAXElement>> domains;
     private boolean override;
-    private final Stack<Object> value;
+    private final Stack<Set> valueStack;
     private boolean generateComments;
 	
 	public PropertyReasoner(String propertyName, EditorMap editorMap, 
-			PropertyFilter... propertyFilters) 
+			Filter<PropertyEditor>... propertyFilters)
 	{
         super(editorMap, propertyFilters);
         this.propertyName = propertyName;
         this.domains = new HashSet<Class<? extends BioPAXElement>>();
         this.domains.add(BioPAXElement.class); // default - any
         this.override = false; // do not replace existing values 
-        this.value = new Stack<Object>();
+        this.valueStack = new Stack<Set>();
         this.generateComments = true;
     }
 
@@ -54,21 +55,19 @@ public class PropertyReasoner extends AbstractTraverser
 	 * {@link #visit(Object, BioPAXElement, Model, PropertyEditor)} 
 	 * for each *object* property, except for 'nextStep'.
 	 * 
-	 * @param propertyName
+	 * @param property
 	 * @param editorMap
 	 */
 	public PropertyReasoner(String property, EditorMap editorMap) 
 	{
-        this(property, editorMap, new PropertyFilter[]{});
-        
-		filters = new PropertyFilter[] { new PropertyFilter() {
-			@Override
+        this(property, editorMap, new Filter<PropertyEditor>() {
+
 			public boolean filter(PropertyEditor editor) {
 				return (editor instanceof ObjectPropertyEditor)
 						&& !editor.getProperty().equals("nextStep")
 						&& !editor.getProperty().equals("NEXT-STEP");
 			}
-		} };
+		});
     }
 	
 	
@@ -92,7 +91,7 @@ public class PropertyReasoner extends AbstractTraverser
 	/**
 	 * When set (not empty list), only instances of the listed types can be
 	 * updated by {@link #run(BioPAXElement, Object)} method, although the 
-	 * {@link #propertyName} property value of every element (where apply) 
+	 * {@link #propertyName} property valueStack of every element (where apply)
 	 * can be still considered for its children (of the specified type).
 	 * 
 	 * @param domains (optional) the types to modify (others won't be affected)
@@ -124,11 +123,11 @@ public class PropertyReasoner extends AbstractTraverser
 	 * method:
 	 * 
 	 * - when {@link #override} is true, and {@link #propertyName} is
-	 * a functional BioPAX property: A, B and C all get the X value
-	 * TODO ???(if default {@link #value} was null, otherwise - they get the default value).
+	 * a functional BioPAX property: A, B and C all get the X valueStack
+	 * TODO ???(if default {@link #valueStack} was null, otherwise - they get the default valueStack).
 	 * 
 	 * - when {@link #override} is false, and {@link #propertyName} is
-	 * a functional BioPAX property: A, B - stay unmodified, C acquires Y value (B's).
+	 * a functional BioPAX property: A, B - stay unmodified, C acquires Y valueStack (B's).
 	 * 
 	 * - when {@link #override} is false, and {@link #propertyName} is
 	 * a multiple cardinality property: - B and C will have both X and Y values!
@@ -174,32 +173,35 @@ public class PropertyReasoner extends AbstractTraverser
 		
 		if(LOG.isDebugEnabled())
 			LOG.debug(bpe + ", " + propertyName 
-					+ " stack: " + this.value);
+					+ " stack: " + this.valueStack);
 		
 		PropertyEditor editor = editorMap
 			.getEditorForProperty(propertyName, bpe.getModelInterface());
-		if (editor != null) { // will consider its value
+		if (editor != null) { // will consider its valueStack
 			boolean isMul = editor.isMultipleCardinality();
 			if (isInstanceofOneOf(domains, bpe)) { // - allowed to modify
-				Object existing = editor.getValueFromBean(bpe);
+				Set existing = editor.getValueFromBean(bpe);  //TODO fix this
 				if (!isMul) {
-					Object value = this.value.peek();
+
+					Set value = this.valueStack.peek();
 					if (editor.isUnknown(existing)) {
 						if(!editor.isUnknown(value)) { // skip repl. unknown with unknown
 							editor.setValueToBean(value, bpe);
 							comment(bpe, value, false);
 						}
-					} else if(override) {
-						if(!existing.equals(value)) { // skip repl. with the same
+					} else if(override)
+					{
+						Object singleExisting = existing.iterator().next();
+						if(!singleExisting.equals(value)) { // skip repl. with the same
 							editor.setValueToBean(value, bpe);
-							comment(bpe, existing, true);
+							comment(bpe, singleExisting, true);
 							comment(bpe, value, false);
 						}
 					}
 				} else { // multiple cardinality
 					// to add from the stack
 					Set<Object> toAdd = new HashSet<Object>();
-					for (Object values : this.value) {
+					for (Object values : this.valueStack) {
 						if (values != null) {
 							for (Object v : (Set) values) {
 								if(v != null)
@@ -209,7 +211,7 @@ public class PropertyReasoner extends AbstractTraverser
 					}
 					
 					if(override) { // clear, skipping those to stay
-						for (Object v : (Set) existing) {
+						for (Object v : existing) {
 							if(!toAdd.contains(v)) {
 								editor.removeValueFromBean(v, bpe);
 								comment(bpe, v, true); //removed
@@ -219,7 +221,7 @@ public class PropertyReasoner extends AbstractTraverser
 					
 					// add all new values
 					for (Object v : toAdd) {
-						if(!((Set) existing).contains(v)) {
+						if(!existing.contains(v)) {
 							editor.setValueToBean(v, bpe);
 							comment(bpe, v, false); // added
 						}
@@ -228,16 +230,13 @@ public class PropertyReasoner extends AbstractTraverser
 			} 
 
 			if (!override) {
-				// save current value (does not matter modified or not)
-				Object existing = editor.getValueFromBean(bpe);
-				if (isMul) {
-					this.value.push(new HashSet((Set) existing));
-				} else {
-					this.value.push(existing);
-				}
+				// save current valueStack (does not matter modified or not)
+
+					this.valueStack.push(editor.getValueFromBean(bpe));
+
 			} else {
 				// just repeat the same
-				this.value.push(this.value.peek());
+				this.valueStack.push(this.valueStack.peek());
 			}
 		}
 		
@@ -245,15 +244,15 @@ public class PropertyReasoner extends AbstractTraverser
 		super.traverse(bpe, model);
 		
 		if(editor != null) {
-			// return to previous parent value/state
-			this.value.pop();
+			// return to previous parent valueStack/state
+			this.valueStack.pop();
 		}
 	}
 	
 
 	/**
 	 * Simply, calls {@link #traverse(BioPAXElement, Model)} 
-	 * and goes deeper when the propertyName's range/value is a BioPAX object.
+	 * and goes deeper when the propertyName's range/valueStack is a BioPAX object.
 	 */
 	@Override
     protected void visit(Object range, BioPAXElement bpe, 
@@ -272,9 +271,8 @@ public class PropertyReasoner extends AbstractTraverser
 	 * inferred from parent's.
 	 * 
 	 * @param bpe BioPAX object
-	 * @param v value
-	 * @param propertyName BioPAX propertyname
-	 * @param unset whether it's about removed/added value (true/false)
+	 * @param v valueStack
+	 * @param unset whether it's about removed/added valueStack (true/false)
 	 */
 	private void comment(BioPAXElement bpe, Object v, boolean unset) 
 	{
@@ -297,12 +295,12 @@ public class PropertyReasoner extends AbstractTraverser
 				return; // no need to comment on removal or adding of "unknown"
 			} else if(unset){ // unset==true, v is not 'unknown'
 				msg = "REMOVED by a reasoner: " 
-					+ propertyName + ", value: " 
+					+ propertyName + ", valueStack: "
 					+ ((v instanceof BioPAXElement)? "rdfID=" 
 					+ ((BioPAXElement)v).getRDFId() : v);
 			} else {
 				msg = "ADDED by a reasoner: " 
-					+ propertyName + ", value: " 
+					+ propertyName + ", valueStack: "
 					+ ((v instanceof BioPAXElement)? "rdfID=" 
 					+ ((BioPAXElement)v).getRDFId() : v);
 			}
@@ -331,26 +329,26 @@ public class PropertyReasoner extends AbstractTraverser
 	/**
 	 * Basic, universal method (used by others in this class) -
 	 * 
-	 * updates the {@link #propertyName} value of a BioPAX element
+	 * updates the {@link #propertyName} valueStack of a BioPAX element
 	 * and its children. The root element (first parameter) does not
 	 * necessarily have the propertyName though.
 	 * 
-	 * For example, if X is the {@link #propertyName} value of A; Y - of B; 
-	 * and C has unknown value; and A has "child" B, which in turn has C 
+	 * For example, if X is the {@link #propertyName} valueStack of A; Y - of B;
+	 * and C has unknown valueStack; and A has "child" B, which in turn has C
 	 * (not necessarily immediate); and A, B, C are instances of 
 	 * one of classes listed in {@link #domains} (if any), then 
 	 * the following results are expected
 	 * (note: even if, e.g., B would not pass the domains filter, 
 	 * the results for A and C will be the same):
 	 * 
-	 * - value X will be considered a replacement/addition to Y for B, 
+	 * - valueStack X will be considered a replacement/addition to Y for B,
 	 * and both X and Y - for C. The result depends on {@link #override}, 
-	 * the default {@link #value} and the propertyName's cardinality.
+	 * the default {@link #valueStack} and the propertyName's cardinality.
 	 * 
-	 * A default value (or a {@link Set} or values, object or primitive) 
+	 * A default valueStack (or a {@link Set} or values, object or primitive)
 	 * is to apply when both current and parent's propertyName values are
 	 * yet unknown. However, if {@link #override} is true, the default
-	 * value, if given, will unconditionally replace all existing.
+	 * valueStack, if given, will unconditionally replace all existing.
 	 * 
 	 * Warning: when defaultValue==null and override==true, it will
 	 * clear the propertyName values of all corresponding elements.
@@ -359,12 +357,13 @@ public class PropertyReasoner extends AbstractTraverser
 	 * @see #setOverride(boolean)
 	 *  
 	 * @param element
-	 * @param defaultValue a default value or set of values
+	 * @param defaultValue a default valueStack or set of values
 	 */
     protected void run(BioPAXElement element, Object defaultValue)
 	{
-    	value.clear();
-    	value.push(defaultValue);
+    	valueStack.clear();
+		Set valueInSet= defaultValue instanceof Set? (Set) defaultValue :Collections.singleton(defaultValue);
+    	valueStack.push(valueInSet);
     	traverse(element, null);
 	}
     
@@ -389,7 +388,7 @@ public class PropertyReasoner extends AbstractTraverser
     /**
      * For the element and its children,
      * where it's desired (in {@link #domains}) and allowed (by BioPAX), 
-     * it forces the given {@link #propertyName} value replace existing ones.
+     * it forces the given {@link #propertyName} valueStack replace existing ones.
      *  
      * @see PropertyReasoner#run(BioPAXElement, Object)
      *  
@@ -417,7 +416,7 @@ public class PropertyReasoner extends AbstractTraverser
      * where it's empty, desired (in {@link #domains}) and allowed, 
      * it adds or sets the {@link #propertyName} from parents's 
      * (if the top-most, a parent element that has this propertyName,
-     * does not have any value, then given value will be set, and 
+     * does not have any valueStack, then given valueStack will be set, and
      * children may inherit it)
      * 
      * @see PropertyReasoner#run(BioPAXElement, Object)
@@ -438,7 +437,7 @@ public class PropertyReasoner extends AbstractTraverser
      * For the element and its children,
      * where it's empty, desired (in {@link #domains}) and allowed, 
      * it adds or sets the {@link #propertyName} from parents's 
-     * (if they have any value)
+     * (if they have any valueStack)
      * 
      * @see PropertyReasoner#run(BioPAXElement, Object)
      * 

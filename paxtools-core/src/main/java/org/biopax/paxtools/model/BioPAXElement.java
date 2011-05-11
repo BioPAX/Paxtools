@@ -13,19 +13,19 @@ public interface BioPAXElement extends Serializable, Cloneable
      * Constant for representing unknown doubles. This is required
      * as by default java would assign 0.
      */
-    public static final double UNKNOWN_DOUBLE = Double.MIN_VALUE;
+    public static final Double UNKNOWN_DOUBLE = Double.MIN_VALUE;
 
     /**
      * Constant for representing unknown floats. This is required
      * as by default java would assign 0.
      */
-	public static final float UNKNOWN_FLOAT = Float.MIN_VALUE;
+	public static final Float UNKNOWN_FLOAT = Float.MIN_VALUE;
 
     /**
      * Constant for representing unknown integers. This is required
      * as by default java would assign 0.
      */
-	public static final int UNKNOWN_INT = Integer.MIN_VALUE;
+	public static final Integer UNKNOWN_INT = Integer.MIN_VALUE;
 	
 	
     /**

@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level2.relationshipXref;
 import org.biopax.paxtools.model.level2.unificationXref;
+import org.biopax.paxtools.model.level2.xref;
 import org.biopax.paxtools.util.ClassFilterSet;
 
 import java.io.*;
@@ -54,7 +55,7 @@ public class ReactomeEntitySetUnificationXrefFix
 			if (entitySet)
 			{
 				Set<unificationXref> unis = new HashSet<unificationXref>();
-				unis.addAll(new ClassFilterSet<unificationXref>(pe.getXREF(), unificationXref.class));
+				unis.addAll(new ClassFilterSet<xref,unificationXref>(pe.getXREF(), unificationXref.class));
 				
 				for (unificationXref uni : unis)
 				{

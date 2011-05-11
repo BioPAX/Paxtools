@@ -2,6 +2,7 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.util.Filter;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -54,7 +55,7 @@ public class TraverserBilinked extends Traverser
 
 	protected boolean filterInverse(PropertyEditor editor)
 	{
-		for (PropertyFilter filter : filters)
+		for (Filter<PropertyEditor> filter : filters)
 		{
 			if (!((PropertyFilterBilinked) filter).filterInverse(editor))
 			{

@@ -143,7 +143,7 @@ public class ParticipatesRule implements InteractionRuleL2
 		if (!pe2.equals(pe))
 		{
             SimpleInteraction si = new SimpleInteraction(pe, pe2, type);
-            si.extractPublications(interaction);
+            si.addMediator(interaction);
             set.add(si);
 		}
 	}

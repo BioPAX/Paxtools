@@ -2,6 +2,7 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.util.Filter;
 
 import java.util.Stack;
 
@@ -24,7 +25,7 @@ public abstract class AbstractTraverser extends Traverser
 {
 	private final Stack<BioPAXElement> visited;
 		
-	public AbstractTraverser(EditorMap editorMap, PropertyFilter... filters)
+	public AbstractTraverser(EditorMap editorMap, Filter<PropertyEditor>... filters)
 	{
 		super(editorMap, null, filters);
 		visited = new Stack<BioPAXElement>();

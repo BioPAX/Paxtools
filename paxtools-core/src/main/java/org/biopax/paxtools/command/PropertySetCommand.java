@@ -2,19 +2,29 @@ package org.biopax.paxtools.command;
 
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-public class PropertySetCommand extends AbstractPropertyCommand
+import java.util.Set;
+
+public class PropertySetCommand<D extends BioPAXElement, R> extends AbstractPropertyCommand<D,R>
 {
-	private Object oldValue;
+	private R  oldValue;
 
-	PropertySetCommand(BioPAXElement bpe, PropertyEditor editor, Object value)
+	PropertySetCommand (D bpe, PropertyEditor<D,R> editor, R value)
 	{
 		super(bpe, editor, value);
-		if (!editor.isMultipleCardinality())
+		if (editor.isMultipleCardinality())
 		{
-			throw new IllegalArgumentException();
+			throw new IllegalBioPAXArgumentException();
 		}
-		oldValue = editor.getValueFromBean(bpe);
+
+		Set<R> valueFromBean = editor.getValueFromBean(bpe);
+		if(valueFromBean == null || valueFromBean.isEmpty()) oldValue = null;
+		else if(valueFromBean.size()>1)
+		{
+			throw new IllegalBioPAXArgumentException();
+		}
+		oldValue = valueFromBean.iterator().next();
 	}
 
 

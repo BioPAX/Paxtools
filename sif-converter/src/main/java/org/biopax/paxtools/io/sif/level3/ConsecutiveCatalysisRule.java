@@ -160,7 +160,7 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 
 					Set<Control> controls = neighConv.getControlledOf();
 
-					for (Catalysis consequentCatalysis : new ClassFilterSet<Catalysis>(
+					for (Catalysis consequentCatalysis : new ClassFilterSet<Control,Catalysis>(
 							controls, Catalysis.class))
 					{
 						ConversionDirectionType dirB = findConsensusDirection(
@@ -208,8 +208,8 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 				//create interactions and add to set
 				SimpleInteraction si = new SimpleInteraction(A, B, SEQUENTIAL_CATALYSIS);
 				interactionSet.add(si);
-				si.extractPublications(firstCatalysis);
-				si.extractPublications(consequentCatalysis);
+				si.addMediator(firstCatalysis);
+				si.addMediator(consequentCatalysis);
 			}
 		}
 	}

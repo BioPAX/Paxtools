@@ -12,24 +12,18 @@ import java.util.Set;
  * Base class for implementing various filter sets.
  * Filter sets are unmodifiable.
  */
-public abstract class AbstractFilterSet<E> extends AbstractSet<E>
+
+public abstract class AbstractFilterSet<E, F> extends AbstractSet<F> implements Filter<E>
 {
-// ------------------------------ FIELDS ------------------------------
+	final Log log = LogFactory.getLog(ClassFilterSet.class);
 
-	final Log log = LogFactory.getLog(AbstractFilterSet.class);
-	private final Set baseSet;
+	protected final Set<? extends E> baseSet;
 
-// --------------------------- CONSTRUCTORS ---------------------------
 
-	protected AbstractFilterSet(Set baseSet)
+	public AbstractFilterSet(Set<? extends E> baseSet)
 	{
 		this.baseSet = baseSet;
 	}
-
-// ------------------------ INTERFACE METHODS ------------------------
-
-
-// --------------------- Interface Collection ---------------------
 
 	/**
 	 * This size operation runs on O(n) and should be avoided for large sets.
@@ -41,7 +35,7 @@ public abstract class AbstractFilterSet<E> extends AbstractSet<E>
 	public int size()
 	{
 		int i = 0;
-		for (E e : this)
+		for (F e : this)
 		{
 			i++;
 		}
@@ -50,28 +44,23 @@ public abstract class AbstractFilterSet<E> extends AbstractSet<E>
 
 	public boolean contains(Object o)
 	{
-		return filter(o) && baseSet.contains(o);
+
+		return  baseSet.contains(o) && filter(((E) o));
 	}
 
-// --------------------- Interface Iterable ---------------------
-
-	public Iterator<E> iterator()
+	public Iterator<F> iterator()
 	{
-		return new FilterIterator<E>(baseSet.iterator());
+		return new FilterIterator(baseSet.iterator());
 	}
 
-// -------------------------- OTHER METHODS --------------------------
 
-	protected abstract boolean filter(Object value);
 
-// -------------------------- INNER CLASSES --------------------------
-
-	private class FilterIterator<E> implements Iterator<E>
+	private class FilterIterator implements Iterator<F>
 	{
-		E next = null;
-		final Iterator base;
+		F next = null;
+		final Iterator<? extends E> base;
 
-		public FilterIterator(Iterator base)
+		public FilterIterator(Iterator<? extends E> base)
 		{
 			this.base = base;
 			fetchNext();
@@ -79,7 +68,7 @@ public abstract class AbstractFilterSet<E> extends AbstractSet<E>
 
 		private void fetchNext()
 		{
-			Object check;
+			E check;
 			next = null;
 			while (base.hasNext())
 			{
@@ -88,7 +77,7 @@ public abstract class AbstractFilterSet<E> extends AbstractSet<E>
 				{
 					try
 					{
-						next = (E) check;
+						next = (F) check;
 						break;
 					}
 					catch (ClassCastException ce)
@@ -105,11 +94,11 @@ public abstract class AbstractFilterSet<E> extends AbstractSet<E>
 			return next != null;
 		}
 
-		public E next()
+		public F next()
 		{
 			if (hasNext())
 			{
-				E value = next;
+				F value = next;
 				fetchNext();
 				return value;
 			}

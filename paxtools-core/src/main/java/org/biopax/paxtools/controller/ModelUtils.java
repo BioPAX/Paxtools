@@ -13,7 +13,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process; //separate import required here!
-import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
@@ -35,8 +35,7 @@ public class ModelUtils {
 	 * for (step) processes to be reached (because they must be 
 	 * listed in the pathwayComponent property as well).
 	 */
-	private static final PropertyFilter nextStepFilter = new PropertyFilter() {
-		@Override
+		private static final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>() {
 		public boolean filter(PropertyEditor editor) {
 			return !editor.getProperty().equals("nextStep")
 				&& !editor.getProperty().equals("NEXT-STEP");
@@ -415,7 +414,7 @@ public class ModelUtils {
 	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
 	 * @return
 	 */
-	public Model getAllChildren(BioPAXElement bpe, PropertyFilter... filters) {
+	public Model getAllChildren(BioPAXElement bpe, Filter<PropertyEditor>... filters) {
 		Model model = this.model.getLevel().getDefaultFactory().createModel();
 		if(filters.length == 0	) {
 			new Fetcher(editorMap, nextStepFilter).fetch(bpe, model);
@@ -547,7 +546,7 @@ public class ModelUtils {
 		}
 		
 		// use a special filter for the (child elements) fetcher
-		PropertyFilter entityRangeFilter = new PropertyFilter() {
+		Filter<PropertyEditor> entityRangeFilter = new Filter<PropertyEditor>() {
 			@Override
 			public boolean filter(PropertyEditor editor) {
 				// values are of Entity sub-class -
@@ -587,16 +586,19 @@ public class ModelUtils {
 				//has "true" organism property? (a Gene or Pathway?) Collect it.
 				addOrganism(e, organisms);
 				// check in rel. xrefs
-				for(RelationshipXref x 
-					: new ClassFilterSet<RelationshipXref>(e.getXref(), RelationshipXref.class)) 
+				for(Xref x : e.getXref()) 
 				{
-					RelationshipTypeVocabulary cv = x.getRelationshipType();
-					if(cv != null && cv.getTerm().contains(RelationshipType.ORGANISM.name())) {
-						//previously, xref.id was set to a BioSource' ID!
-						assert(x.getId() != null);
-						BioSource bs = (BioSource) model.getByID(x.getId());
-						assert(bs != null);
-						organisms.add(bs);
+					if(x instanceof RelationshipXref) {
+						RelationshipXref rx = (RelationshipXref) x;
+					
+						RelationshipTypeVocabulary cv = rx.getRelationshipType();
+						if(cv != null && cv.getTerm().contains(RelationshipType.ORGANISM.name())) {
+							//previously, xref.id was set to a BioSource' ID!
+							assert(rx.getId() != null);
+							BioSource bs = (BioSource) model.getByID(rx.getId());
+							assert(bs != null);
+							organisms.add(bs);
+						}
 					}
 				}
 			}

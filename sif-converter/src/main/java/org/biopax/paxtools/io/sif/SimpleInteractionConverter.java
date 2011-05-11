@@ -2,8 +2,7 @@ package org.biopax.paxtools.io.sif;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.controller.EditorMap;
-import org.biopax.paxtools.controller.PropertyEditor;
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -154,17 +153,34 @@ public class SimpleInteractionConverter
 	 * in the entity section
 	 * @param model
 	 * @param edgeStream
-	 * @param writePublications
-	 * @param entityProperty
 	 * @exception IOException
 	 */
 	public void writeInteractionsInSIFNX(Model model, OutputStream edgeStream, OutputStream nodeStream,
-	                                     boolean writePublications, EditorMap map, String... entityProperty)
+	                                     List<String> interactorPropertyPaths, List<String> mediatorPropertyPaths)
 			throws IOException
 	{
 		Set<SimpleInteraction> interactionSet = inferInteractions(model);
 		Writer writer = new OutputStreamWriter(edgeStream);
 		Set<BioPAXElement> entities = new HashSet<BioPAXElement>();
+		List<PathAccessor> interactorAccessors = null;
+		List<PathAccessor> mediatorAccessors = null;
+
+		if (interactorPropertyPaths != null)
+		{
+			interactorAccessors = new ArrayList<PathAccessor>(interactorPropertyPaths.size());
+			for (String s : interactorPropertyPaths)
+			{
+				interactorAccessors.add(new PathAccessor(s, model.getLevel()));
+			}
+		}
+		if (mediatorPropertyPaths != null)
+		{
+			mediatorAccessors = new ArrayList<PathAccessor>(mediatorPropertyPaths.size());
+			for (String s : mediatorPropertyPaths)
+			{
+				mediatorAccessors.add(new PathAccessor(s, model.getLevel()));
+			}
+		}
 
 
 		for (SimpleInteraction si : interactionSet)
@@ -172,12 +188,19 @@ public class SimpleInteractionConverter
 			writer.write(si.toString());
 			entities.add(si.getSource());
 			entities.add(si.getTarget());
-			if (writePublications)
+			if (mediatorAccessors != null)
 			{
-				writer.write("\t");
-				for (String px : si.getPubs())
+				for (PathAccessor mediatorAccessor : mediatorAccessors)
 				{
-					writer.write(px + ";");
+					for (BioPAXElement mediator : si.getMediators())
+					{
+						String cell = ("\t");
+						if (mediatorAccessor.getDomain().isInstance(mediator))
+						{
+							cell += mediatorAccessor.getValueFromBean(mediator).toString(); //TODO
+						} else cell += "not applicable";
+						writer.write(cell);
+					}
 				}
 			}
 			writer.write("\n");
@@ -187,27 +210,27 @@ public class SimpleInteractionConverter
 		for (BioPAXElement entity : entities)
 		{
 			writer.write(entity.getRDFId());
-			for (String s : entityProperty)
+			if (interactorAccessors != null)
 			{
-				PropertyEditor editor = map.getEditorForProperty(s, entity.getModelInterface());
-				writer.write("\t");
-				if (editor == null) writer.write("(not applicable)");
-				else if (editor.isUnknown(entity)) writer.write("(not specified)");
-				else if (editor.isMultipleCardinality())
+				for (PathAccessor accessor : interactorAccessors)
 				{
-					Set values = (Set) editor.getValueFromBean(entity);
-					for (Object value : values)
+					writer.write("\t");
+					if (accessor == null) writer.write("(not applicable)");
+					else if (accessor.isUnknown(entity)) writer.write("(not specified)");
+					else
 					{
-						writer.write(value + ";");
+						Set values = accessor.getValueFromBean(entity);
+						StringBuilder bldr = new StringBuilder();
+						for (Object value : values)
+						{
+							bldr.append(value).append(";");
+						}
+						if (bldr.length() > 0) bldr.deleteCharAt(bldr.length() - 1);
+						writer.write(bldr.toString());
 					}
 				}
-				else
-				{
-					Object valueFromBean = editor.getValueFromBean(entity);
-					String propertyString = (valueFromBean != null) ? valueFromBean.toString() : "NULL";
-					writer.write(propertyString);
-				}
 			}
+
 			writer.write("\n");
 		}
 		writer.close();

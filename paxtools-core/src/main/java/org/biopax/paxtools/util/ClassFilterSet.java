@@ -2,32 +2,21 @@ package org.biopax.paxtools.util;
 
 import java.util.Set;
 
-/**
- * User: root Date: Aug 30, 2006 Time: 3:05:58 PM
- */
-public class ClassFilterSet<E> extends AbstractFilterSet<E>
+public class ClassFilterSet<E, F extends E> extends AbstractFilterSet<E, F>
 {
 // ------------------------------ FIELDS ------------------------------
+protected Class<F> filterClass;
 
-	private Class<E> filterClass = null;
+	// --------------------------- CONSTRUCTORS ---------------------------
 
-// --------------------------- CONSTRUCTORS ---------------------------
-
-	/**
-	 * Constructor
-	 *
-	 * @param baseSet     to filter
-	 * @param filterClass to be used as filtering parameter
-	 */
-	public ClassFilterSet(Set baseSet, Class<E> filterClass)
+	public ClassFilterSet(Set<? extends E> baseSet,Class<F> filterClass)
 	{
 		super(baseSet);
 		this.filterClass = filterClass;
+
 	}
 
-// -------------------------- OTHER METHODS --------------------------
-
-	protected boolean filter(Object value)
+	public boolean filter(E value)
 	{
 		return filterClass.isInstance(value);
 	}

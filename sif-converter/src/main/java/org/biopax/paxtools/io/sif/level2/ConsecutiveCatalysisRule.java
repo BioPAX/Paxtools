@@ -225,7 +225,7 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL2
 	{
 		Set<control> controls =
 			aConversion.isCONTROLLEDOf();
-		for (catalysis consequentCatalysis : new ClassFilterSet<catalysis>(
+		for (catalysis consequentCatalysis : new ClassFilterSet<control,catalysis>(
 			controls, catalysis.class))
 		{
 			if (findConsensusDirection(direction,
@@ -238,8 +238,8 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL2
 						new SimpleInteraction(pe,
 							pepi.getPHYSICAL_ENTITY(),
 							SEQUENTIAL_CATALYSIS);
-					si.extractPublications(aCatalysis);
-					si.extractPublications(consequentCatalysis);
+					si.addMediator(aCatalysis);
+					si.addMediator(consequentCatalysis);
 					interactionSet.add(si);
 				}
 			}

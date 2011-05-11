@@ -2,13 +2,15 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.util.Filter;
 
 /**
  * This class is used to fetch an element (traverse it to obtain
  * its dependent elements) and to add this element into a model
  * using the visitor and traverse functions.
  *
- * FIXME may fail (StackOverFlow) when there is a cycle (see {@link AbstractTraverser}; use {@link PropertyFilter})
+ * FIXME may fail (StackOverFlow) when there is a cycle (see {@link AbstractTraverser}; use {@link org.biopax.paxtool
+  s.util.Filter})
  * 
  * @see org.biopax.paxtools.controller.Visitor
  * @see org.biopax.paxtools.controller.Traverser
@@ -16,7 +18,7 @@ import org.biopax.paxtools.model.Model;
  */
 public class Fetcher extends AbstractTraverser
 {
-    public Fetcher(EditorMap editorMap, PropertyFilter... filters) {
+    public Fetcher(EditorMap editorMap, Filter<PropertyEditor>... filters) {
         super(editorMap, filters);
     }
 

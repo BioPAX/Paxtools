@@ -9,6 +9,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.Filter;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -54,13 +55,13 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 * from the properties files.
 	 */
 	public OneTwoThree() {
-		super(SimpleEditorMap.L2, new PropertyFilter() {
+		super(SimpleEditorMap.L2, new Filter<PropertyEditor>() {
 			public boolean filter(PropertyEditor editor) {
 				return !editor.getProperty().equals("STOICHIOMETRIC-COEFFICIENT"); 
 				// will be set manually (pEPs special case)
 			}
 		  },
-		  new PropertyFilter() {
+		  new Filter<PropertyEditor>() {
 			public boolean filter(PropertyEditor editor) {
 				return 
 					!( 

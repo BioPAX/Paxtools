@@ -16,7 +16,7 @@ public class PrimitivePropertyEditor<D extends BioPAXElement, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
-	private Object unknownValue = null;
+	private R unknownValue = null;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -35,15 +35,15 @@ public class PrimitivePropertyEditor<D extends BioPAXElement, R>
 
 		if (range.equals(double.class))
 		{
-			unknownValue = BioPAXElement.UNKNOWN_DOUBLE;
+			unknownValue = ((R) BioPAXElement.UNKNOWN_DOUBLE);
 		}
 		else if (range.equals(float.class))
 		{
-			unknownValue = BioPAXElement.UNKNOWN_FLOAT;
+			unknownValue = ((R) BioPAXElement.UNKNOWN_FLOAT);
 		}
 		else if (range.equals(int.class))
 		{
-			unknownValue = BioPAXElement.UNKNOWN_INT;
+			unknownValue = ((R) BioPAXElement.UNKNOWN_INT);
 		}
 
 	}
@@ -103,7 +103,7 @@ public class PrimitivePropertyEditor<D extends BioPAXElement, R>
 
 	
 	@Override
-	public Object getUnknown() {
+	public R getUnknown() {
 		return unknownValue;
 	}
 }

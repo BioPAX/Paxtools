@@ -80,7 +80,7 @@ public class ComponentRule implements InteractionRuleL3
 				if (!B.equals(A))
 				{
 					SimpleInteraction si = new SimpleInteraction(A, B, IN_SAME_COMPONENT);
-					si.extractPublications(comp);
+					si.addMediator(comp);
 					interactionSet.add(si);
 				}
 			}

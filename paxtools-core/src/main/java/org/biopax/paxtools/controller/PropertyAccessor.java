@@ -3,6 +3,8 @@ package org.biopax.paxtools.controller;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
+import java.util.Set;
+
 /**
  * Allows generic access to the properties or a path of properties from a bean.
  */
@@ -33,5 +35,14 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 	 * @return an object as the value
 	 */
 
-	R getValueFromBean(D bean) throws IllegalBioPAXArgumentException;
+	Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException;
+
+	/**
+	 * Checks if the <em>value</em> is unkown. In this context a <em>value</em> is regarded to be
+	 * unknown if it is null (unset).
+	 * @param value the value to be checked
+	 * @return true if the value is unknown
+	 */
+	public boolean isUnknown(Object value);
+
 }
