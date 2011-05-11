@@ -407,6 +407,21 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 
 
 	/**
+	 * Removes the <em>values</em> from the <em>bean</em> 
+	 * using the {@link #removeValueFromBean(Object, BioPAXElement)}
+	 * for each value in the set.
+	 * 
+	 * @param values to be removed from the bean
+	 * @param bean bean from which the value is going to be removed
+	 */
+	public void removeValueFromBean(Set<R> values, D bean) {
+		for(R r : values) {
+			removeValueFromBean(r, bean);
+		}
+	}
+	
+	
+	/**
 	 * Calls the <em>method</em> onto <em>bean</em> with the <em>value</em> as its parameter. In this
 	 * context <em>method</em> can be one of these three: set, add, or remove.
 	 * @param method method that is going to be called
@@ -542,6 +557,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 		}
 	}
 
+	
 	/**
 	 * Checks if the <em>bean</em> and the <em>value</em> are consistent with the cardinality rules of
 	 * the model. This method is important for validations.
@@ -577,16 +593,5 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	{
 		return multipleCardinality ? addMethod : setMethod;
 	}
-
-//	/**
-//	 * Returns a shallow copy of the value. If this is a biopax element, links to other Biopax
-//	 * elements will not be preserved. Primitive fields and enums however will be cloned.
-//	 * @return
-//	 */
-//	public R copyValueFromBean(D bean)
-//	{
-//		return getValueFromBean(bean);
-//	}
-
 
 }

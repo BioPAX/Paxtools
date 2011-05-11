@@ -4,6 +4,8 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Provides a primitive (int, float, double)  class compatible editor by extending the {@link
@@ -89,8 +91,9 @@ public class PrimitivePropertyEditor<D extends BioPAXElement, R>
 
 
 	/**
-	 * According the editor type, this methods checks if value equals to one of the unknown values
-	 * defined under {@link org.biopax.paxtools.model.BioPAXElement}.
+	 * According the editor type, this methods checks if value equals 
+	 * to one of the unknown values defined under {@link org.biopax.paxtools.model.BioPAXElement}
+	 *  or is an empty set or set of "unknown" values.
 	 *
 	 * @param value the value to be checked if it is unknown
 	 * @return true, if value equals to the predefined unknown value
@@ -98,7 +101,20 @@ public class PrimitivePropertyEditor<D extends BioPAXElement, R>
 	@Override
 	public boolean isUnknown(Object value)
 	{
-		return value == unknownValue || value.equals(unknownValue);
+		return (value instanceof Set) 
+			? emptySetOrContainsOnlyUnknowns((Set)value) 
+				: emptySetOrContainsOnlyUnknowns(Collections.singleton(value));
+	}
+
+	
+	private boolean emptySetOrContainsOnlyUnknowns(Set value) {
+		for(Object o : value) {
+			if(o != unknownValue && !o.equals(unknownValue)) {
+				return false; // found a "known" value
+			}
+		}
+		// empty set or all unknown
+		return true;
 	}
 
 	

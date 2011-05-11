@@ -648,9 +648,11 @@ public class ModelUtils {
 		PropertyEditor editor = editorMap.getEditorForProperty("organism",
 				entity.getModelInterface());
 		if (editor != null) {
-			BioSource o = (BioSource) editor.getValueFromBean(entity);
-			if(o != null)
-				organisms.add(o);
+			Object o = editor.getValueFromBean(entity);
+			if(o != null) {
+				Set<BioSource> seto = (Set<BioSource>) o;
+				organisms.addAll(seto);
+			}
 		}
 	}
 

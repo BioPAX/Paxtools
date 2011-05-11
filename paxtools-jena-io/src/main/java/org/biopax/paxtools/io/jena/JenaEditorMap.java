@@ -277,7 +277,7 @@ public class JenaEditorMap extends EditorMapAdapter {
     }
 
 
-	@Override public BioPAXLevel getLevel()
+	public BioPAXLevel getLevel()
 	{
 		return level;
 	}

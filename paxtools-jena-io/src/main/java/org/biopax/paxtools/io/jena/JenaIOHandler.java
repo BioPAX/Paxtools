@@ -334,13 +334,10 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 	private void insertStatement(PropertyEditor editor, BioPAXElement bean, OntModel ontModel)
 
 	{
-		Set value = editor.getValueFromBean(bean);
-		if (value != null)
+		Set value = editor.getValueFromBean(bean);// value cannot be null
+		for (Object valueElement : value)
 		{
-			for (Object valueElement : value)
-			{
-				if (!editor.isUnknown(valueElement)) buildStatementFor(bean, editor, valueElement, ontModel);
-			}
+			if (!editor.isUnknown(valueElement)) buildStatementFor(bean, editor, valueElement, ontModel);
 		}
 	}
 

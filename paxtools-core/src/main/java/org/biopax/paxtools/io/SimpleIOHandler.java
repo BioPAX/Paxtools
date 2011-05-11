@@ -583,14 +583,11 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		}
 		
 		for (PropertyEditor editor : editors) {
-			Set value = editor.getValueFromBean(bean);
-			if (value != null)
+			Set value = editor.getValueFromBean(bean); //value is never null
+			for (Object valueElement : value)
 			{
-					for (Object valueElement : value)
-					{
-						if(!editor.isUnknown(valueElement))
-						writeStatementFor(bean, editor, valueElement, out);
-					}
+				if(!editor.isUnknown(valueElement))
+				writeStatementFor(bean, editor, valueElement, out);
 			}
 		}
 		
