@@ -8,11 +8,9 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.pathway;
-import org.biopax.paxtools.model.level2.physicalEntity;
-import org.biopax.paxtools.model.level2.protein;
-import org.biopax.paxtools.model.level2.unificationXref;
+import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.util.Filter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,7 +61,7 @@ public class ProteinNameLister
 				 * (do not worry - those pathway steps that are part of
 				 * the pathway must be in the PATHWAY-COMPONENTS set)
 				 */
-		PropertyFilter nextStepPropertyFilter = new PropertyFilter()
+		Filter<PropertyEditor> nextStepPropertyFilter = new Filter<PropertyEditor>()
 		{
 			public boolean filter(PropertyEditor editor)
 			{
@@ -120,7 +118,7 @@ public class ProteinNameLister
 			{
 				System.out.println("\t" + aProtein.getNAME());
 				//now list xrefs and print if uni
-				Set<unificationXref> xrefs = new ClassFilterSet<unificationXref>(aProtein.getXREF(),
+				Set<unificationXref> xrefs = new ClassFilterSet<xref,unificationXref>(aProtein.getXREF(),
 				                                                                 unificationXref.class);
 				for (unificationXref x : xrefs)
 				{
@@ -146,7 +144,7 @@ public class ProteinNameLister
 				{
 					// Do whatever you want with the pe and xref here
 					physicalEntity pe = (physicalEntity) range;
-					ClassFilterSet<unificationXref> unis = new ClassFilterSet<unificationXref>(pe.getXREF(),
+					ClassFilterSet<xref,unificationXref> unis = new ClassFilterSet<xref,unificationXref>(pe.getXREF(),
 					                                                                           unificationXref.class);
 					for (unificationXref uni : unis)
 					{

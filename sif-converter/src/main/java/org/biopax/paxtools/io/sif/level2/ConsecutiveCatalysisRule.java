@@ -225,7 +225,7 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL2
 	{
 		Set<control> controls =
 			aConversion.isCONTROLLEDOf();
-		for (catalysis consequentCatalysis : new ClassFilterSet<catalysis>(
+		for (catalysis consequentCatalysis : new ClassFilterSet<control,catalysis>(
 			controls, catalysis.class))
 		{
 			if (findConsensusDirection(direction,

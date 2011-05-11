@@ -105,8 +105,8 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	protected boolean hasCommonUnificationXref(XReferrable xReferrable)
 	{
 		return isEquivalentIntersection(
-				new ClassFilterSet<UnificationXref>(xref, UnificationXref.class),
-				new ClassFilterSet<UnificationXref>(xReferrable.getXref(), UnificationXref.class)
+				new ClassFilterSet<Xref,UnificationXref>(xref, UnificationXref.class),
+				new ClassFilterSet<Xref,UnificationXref>(xReferrable.getXref(), UnificationXref.class)
 		);
 	}
 }

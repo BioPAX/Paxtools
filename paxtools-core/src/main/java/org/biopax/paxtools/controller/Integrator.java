@@ -859,7 +859,7 @@ public class Integrator {
 
     private void updateField(PropertyEditor editor, Object updateValue,
 	                   BioPAXElement existing) {
-		editor.setValueToBean(updateValue, existing);
+		editor.setValueToBean(updateValue, existing); //TODO:TEST
 	}
 
     /* End of update functions */

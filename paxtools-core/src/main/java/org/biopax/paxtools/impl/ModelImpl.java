@@ -97,7 +97,7 @@ public class ModelImpl implements Model
 
 	public <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy)
 	{
-		return new ClassFilterSet<T>(exposedObjectSet, filterBy);
+		return new ClassFilterSet<BioPAXElement,T>(exposedObjectSet, filterBy);
 	}
 
     void setObjects(Set<BioPAXElement> objects) {   	

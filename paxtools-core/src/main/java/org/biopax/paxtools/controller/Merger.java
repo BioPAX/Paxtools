@@ -214,14 +214,14 @@ public class Merger implements Visitor
 			updateObjectFieldsForEditor(editor, update, existing, target);
 		}
 
-		if (!update.getRDFId().equals(existing.getRDFId()))
-		{
+//		if (!update.getRDFId().equals(existing.getRDFId()))
+//		{
 //TODO addNew a unification xref
 //			if(existing instanceof XReferrable)
 //			{
 //				((XReferrable) existing).addXref(fa);
 //			}
-		}
+//		}
 	}
 
 	/**

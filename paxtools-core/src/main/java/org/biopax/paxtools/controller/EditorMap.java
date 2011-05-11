@@ -35,7 +35,7 @@ public interface EditorMap
      * @param javaClass class of the element
      * @return null if there is no such editor
      */
-	PropertyEditor getEditorForProperty(String property, Class javaClass);
+	<D extends BioPAXElement> PropertyEditor<D,?> getEditorForProperty(String property, Class<? extends D> javaClass);
 
     /**
      * This method returns the set of <em>editor</em>s intended to handle
@@ -60,7 +60,7 @@ public interface EditorMap
      */
     Set<PropertyEditor> getEditorsOf(BioPAXElement bpe);
 
-	Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe);
+	Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe); //TODO generify
 
 
     /**
@@ -70,7 +70,7 @@ public interface EditorMap
      * @param javaClass the class whose subclasses will be returned
      * @return an empty set if there are no such editors
      */
-    public Set<Class<? extends BioPAXElement>> getKnownSubClassesOf(Class<? extends BioPAXElement> javaClass);
+    public <E extends BioPAXElement> Set<Class<E>> getKnownSubClassesOf(Class<E> javaClass);
 
 
     /**

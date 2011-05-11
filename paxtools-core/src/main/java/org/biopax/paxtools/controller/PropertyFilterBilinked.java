@@ -1,6 +1,8 @@
 package org.biopax.paxtools.controller;
 
-public interface PropertyFilterBilinked extends PropertyFilter
+import org.biopax.paxtools.util.Filter;
+
+public interface PropertyFilterBilinked extends Filter<PropertyEditor>
 {
 	 boolean filterInverse(PropertyEditor editor);
 }

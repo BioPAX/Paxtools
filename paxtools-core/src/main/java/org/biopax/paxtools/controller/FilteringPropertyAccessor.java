@@ -7,12 +7,12 @@ import java.util.Set;
 
 /**
  */
-public abstract class FilteringProperyAccessor<D extends BioPAXElement, R> implements PropertyAccessor<D, R>
+public abstract class FilteringPropertyAccessor<D extends BioPAXElement, R> implements PropertyAccessor<D, R>
 {
 
 	private PropertyAccessor<D, R> impl;
 
-	protected FilteringProperyAccessor(PropertyAccessor<D,R> impl)
+	protected FilteringPropertyAccessor(PropertyAccessor<D, R> impl)
 	{
 		this.impl = impl;
 	}
@@ -32,12 +32,12 @@ public abstract class FilteringProperyAccessor<D extends BioPAXElement, R> imple
 		return isMultipleCardinality();
 	}
 
-	@Override public Set<R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
+	@Override public Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
 	{
 		return filter(impl.getValueFromBean(bean));
 	}
 
-	protected abstract Set<R> filter(Set<R> valueFromBean);
+	protected abstract Set<? extends R> filter(Set<? extends R> valueFromBean);
 
 
 	@Override public boolean isUnknown(Object value)

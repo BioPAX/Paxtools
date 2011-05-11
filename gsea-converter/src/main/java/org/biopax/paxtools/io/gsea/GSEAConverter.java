@@ -179,8 +179,8 @@ public class GSEAConverter implements Visitor {
     		}
     		// if we are not checking database, just return rdf id
     		if (checkDatabase) {
-    			ClassFilterSet<Xref> xrefs= new ClassFilterSet<Xref>(aProtein.getXref(), Xref.class);
-    			for (Xref aXref: xrefs) {
+			    for (Xref aXref : aProtein.getXref())
+			    {
     				if (aXref.getDb().equalsIgnoreCase(this.database)) {
     					this.rdfToGenes.put(aProtein.getRDFId(), aXref.getId());
     					break;
@@ -202,8 +202,8 @@ public class GSEAConverter implements Visitor {
     			return;
     		}
     		if (checkDatabase) {
-    			ClassFilterSet<Xref> xrefs= new ClassFilterSet<Xref>(aProteinRef.getXref(), Xref.class);
-    			for (Xref aXref: xrefs) {
+
+    			for (Xref aXref: aProteinRef.getXref()) {
     				if (aXref.getDb().equalsIgnoreCase(database)) {
     					this.rdfToGenes.put(aProteinRef.getRDFId(), aXref.getId());
     					break;

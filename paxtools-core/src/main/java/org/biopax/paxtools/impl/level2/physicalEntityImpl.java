@@ -60,7 +60,7 @@ class physicalEntityImpl extends entityImpl implements physicalEntity
 	public <T extends interaction> Set<T> getAllInteractions(
 		Class<T> ofType)
 	{
-		return new ClassFilterSet<T>(getAllInteractions(), ofType);
+		return new ClassFilterSet<interaction, T>(getAllInteractions(), ofType);
 	}
 
 // -------------------------- OTHER METHODS --------------------------

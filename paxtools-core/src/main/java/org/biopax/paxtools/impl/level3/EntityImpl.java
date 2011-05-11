@@ -170,8 +170,8 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 			equivalance = isEquivalentIntersection(
 					dataSource, otherEntity.getDataSource())
 			              && isEquivalentIntersection(
-					new ClassFilterSet<UnificationXref>(getXref(), UnificationXref.class),
-					new ClassFilterSet<UnificationXref>(otherEntity.getXref(),
+					new ClassFilterSet<Xref,UnificationXref>(getXref(), UnificationXref.class),
+					new ClassFilterSet<Xref,UnificationXref>(otherEntity.getXref(),
 							UnificationXref.class))
 			              && isEquivalentIntersection(evidence, otherEntity.getEvidence());
 		}

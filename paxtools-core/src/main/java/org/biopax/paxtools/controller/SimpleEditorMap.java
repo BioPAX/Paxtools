@@ -37,7 +37,7 @@ public enum SimpleEditorMap implements EditorMap
 	{
 		for (SimpleEditorMap value : values())
 		{
-			if(value.getLevel().equals(level)) return value;
+			if (value.getLevel().equals(level)) return value;
 		}
 		//should never reach here
 		throw new IllegalBioPAXArgumentException("Unknown level:" + level);
@@ -97,7 +97,9 @@ public enum SimpleEditorMap implements EditorMap
 	}
 
 
-	@Override public PropertyEditor getEditorForProperty(String property, Class javaClass)
+	public <D extends BioPAXElement> PropertyEditor<D, ?> getEditorForProperty(String property,
+	                                                                           Class<? extends D> javaClass)
+
 	{
 		return impl.getEditorForProperty(property, javaClass);
 	}
@@ -118,11 +120,11 @@ public enum SimpleEditorMap implements EditorMap
 		return impl.getInverseEditorsOf(bpe);
 	}
 
-	@Override public Set<Class<? extends BioPAXElement>> getKnownSubClassesOf(Class<? extends BioPAXElement>
-			                                                                          javaClass)
+	@Override public <E extends BioPAXElement> Set<Class<E>> getKnownSubClassesOf(Class<E> javaClass)
 	{
 		return impl.getKnownSubClassesOf(javaClass);
 	}
+
 
 	public BioPAXLevel getLevel()
 	{

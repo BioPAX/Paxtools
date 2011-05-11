@@ -51,8 +51,8 @@ public class SimpleEditorMapTest
     	
     	pr.setOrganism(bs);
     	
-    	editor.removeValueFromBean(bs, pr); // no effect (this is correct result)
-    	assertEquals(bs, pr.getOrganism());
+    	editor.removeValueFromBean(bs, pr);
+    	assertNull(pr.getOrganism());
     	
     	editor.setValueToBean(null, pr);
     	/*

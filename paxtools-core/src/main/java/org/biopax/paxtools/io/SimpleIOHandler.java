@@ -7,6 +7,7 @@ import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.util.BioPaxIOException;
+import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import javax.xml.stream.XMLInputFactory;
@@ -536,7 +537,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			String base = model.getNameSpacePrefixMap().get("");
 			m.getNameSpacePrefixMap().put("", base);
 			//to avoid 'nextStep' that may lead to infinite loops -
-			PropertyFilter filter = new PropertyFilter() {
+			Filter<PropertyEditor> filter = new Filter<PropertyEditor>() {
 				public boolean filter(PropertyEditor editor) {
 					return !"nextStep".equalsIgnoreCase(editor.getProperty())
 					 && !"NEXT-STEP".equalsIgnoreCase(editor.getProperty());

@@ -5,15 +5,12 @@ import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentInterse
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Evidence;
-import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
-import org.biopax.paxtools.model.level3.ExperimentalForm;
-import org.biopax.paxtools.model.level3.PublicationXref;
-import org.biopax.paxtools.model.level3.Score;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -238,8 +235,8 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 		
 		//consider publication xrefs!
 		boolean hasCommonPublicationXref = isEquivalentIntersection(
-				new ClassFilterSet<PublicationXref>(getXref(), PublicationXref.class),
-				new ClassFilterSet<PublicationXref>(that.getXref(), PublicationXref.class));
+				new ClassFilterSet<Xref,PublicationXref>(getXref(), PublicationXref.class),
+				new ClassFilterSet<Xref,PublicationXref>(that.getXref(), PublicationXref.class));
 		
 		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes && hasAllEquivEvidenceCodes;
 	}

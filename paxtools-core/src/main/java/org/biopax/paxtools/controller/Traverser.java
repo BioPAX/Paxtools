@@ -5,7 +5,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.util.Filter;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -20,14 +23,14 @@ public class Traverser
 
 	protected Visitor visitor;
 
-	protected PropertyFilter[] filters;
+	protected Filter<PropertyEditor>[] filters;
 
 	protected final Log log = LogFactory.getLog(Traverser.class);
 
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-	public Traverser(EditorMap editorMap, Visitor visitor, PropertyFilter... filters)
+	public Traverser(EditorMap editorMap, Visitor visitor, Filter<PropertyEditor>... filters)
 	{
 		this.editorMap = editorMap;
 		this.visitor = visitor;
@@ -72,8 +75,8 @@ public class Traverser
 		{
 			if (filter(editor))
 			{
-				Set valueSet = editor.getValueFromBean(element);
-				if (valueSet != null) for (Object value : valueSet)
+				Set valueSet = new HashSet(editor.getValueFromBean(element));
+				if (!valueSet.isEmpty()) for (Object value : valueSet)
 				{
 					visitor.visit(element, value, model, editor);
 				}
@@ -84,7 +87,7 @@ public class Traverser
 
 	protected boolean filter(PropertyEditor editor)
 	{
-		for (PropertyFilter filter : filters)
+		for (Filter<PropertyEditor> filter : filters)
 		{
 			if (!filter.filter(editor))
 			{

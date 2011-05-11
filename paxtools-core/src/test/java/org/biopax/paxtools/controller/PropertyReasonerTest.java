@@ -126,11 +126,11 @@ public class PropertyReasonerTest {
 		//printModel();
 		
 		assertNull(pr2.getOrganism());
-		assertEquals(1, pr2.getComment().size()); 
+		assertEquals(2, pr2.getComment().size());
 		assertNull(pr1.getOrganism());
-		assertEquals(0, pr1.getComment().size());
+		assertEquals(1, pr1.getComment().size());
 		assertNull(g1.getOrganism()); 
-		assertEquals(0, g1.getComment().size());
+		assertEquals(1, g1.getComment().size());
 	}
 
 	

@@ -5,13 +5,13 @@ import org.biopax.paxtools.model.BioPAXElement;
 
 /**
  */
-public abstract class AbstractPropertyCommand implements Command
+public abstract class  AbstractPropertyCommand<D extends BioPAXElement,R> implements Command
 {
-	BioPAXElement bpe;
-	PropertyEditor editor;
-	Object value;
+	D bpe;
+	PropertyEditor<D,R> editor;
+	R value;
 
-	AbstractPropertyCommand(BioPAXElement bpe, PropertyEditor editor, Object value)
+	AbstractPropertyCommand(D bpe, PropertyEditor<D,R> editor, R value)
 	{
 
 		if (bpe == null || editor == null)

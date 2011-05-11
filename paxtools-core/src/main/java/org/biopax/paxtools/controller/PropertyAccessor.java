@@ -35,7 +35,7 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 	 * @return an object as the value
 	 */
 
-	Set<R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException;
+	Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException;
 
 	/**
 	 * Checks if the <em>value</em> is unkown. In this context a <em>value</em> is regarded to be

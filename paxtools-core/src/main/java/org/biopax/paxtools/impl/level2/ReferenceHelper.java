@@ -89,8 +89,8 @@ class ReferenceHelper implements Serializable
 	private <T extends xref> Set<T> findIntersectionOfType(XReferrable that, Class<T> type)
 	{
 		return SetEquivalanceChecker.findEquivalentIntersection(
-                new ClassFilterSet<T>(this.XREF, type),
-                new ClassFilterSet<T>(that.getXREF(), type));
+                new ClassFilterSet<xref, T>(this.XREF, type),
+                new ClassFilterSet<xref, T>(that.getXREF(), type));
 	}
 
 

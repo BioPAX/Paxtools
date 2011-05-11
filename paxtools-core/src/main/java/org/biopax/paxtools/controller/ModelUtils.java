@@ -13,6 +13,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process; //separate import required here!
+import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 /**
@@ -34,8 +35,7 @@ public class ModelUtils {
 	 * for (step) processes to be reached (because they must be 
 	 * listed in the pathwayComponent property as well).
 	 */
-	private static final PropertyFilter nextStepFilter = new PropertyFilter() {
-		@Override
+		private static final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>() {
 		public boolean filter(PropertyEditor editor) {
 			return !editor.getProperty().equals("nextStep")
 				&& !editor.getProperty().equals("NEXT-STEP");
