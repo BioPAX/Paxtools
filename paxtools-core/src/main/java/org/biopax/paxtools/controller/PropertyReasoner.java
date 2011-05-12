@@ -293,15 +293,9 @@ public class PropertyReasoner extends AbstractTraverser
 				? ((Set)v).iterator().next() : v;
 			
 			if(unset){ // unset==true, v is not 'unknown'
-				msg = "REMOVED by a reasoner: " 
-					+ propertyName + ", "
-					+ ((val instanceof BioPAXElement)? "rdfID=" 
-					+ ((BioPAXElement)val).getRDFId() : val);
+				msg = propertyName + " REMOVED by a reasoner: " + list(val);
 			} else {
-				msg = "ADDED by a reasoner: " 
-					+ propertyName + ", "
-					+ ((val instanceof BioPAXElement)? "rdfID=" 
-					+ ((BioPAXElement)val).getRDFId() : val);
+				msg = propertyName + " ADDED by a reasoner: " + list(val);
 			}
 			
 			pe.setValueToBean(msg, bpe);
@@ -312,6 +306,23 @@ public class PropertyReasoner extends AbstractTraverser
 	}
 
 	
+	private String list(Object val) {
+		StringBuffer sb = new StringBuffer();
+		
+		if(val instanceof Set) {
+			for(Object o : (Set) val) {
+				sb.append(list(o)).append(" ");
+			}
+		} else if(val instanceof BioPAXElement) {
+			sb.append(((BioPAXElement)val).getRDFId());
+		} else {
+			sb.append(val);
+		}
+		
+		return sb.toString();
+	}
+
+
 	private static boolean isInstanceofOneOf(
 		final Collection<Class<? extends BioPAXElement>> classes, 
 		BioPAXElement obj) 
@@ -361,9 +372,20 @@ public class PropertyReasoner extends AbstractTraverser
     protected void run(BioPAXElement element, Object defaultValue)
 	{
     	valueStack.clear();
-		Set valueInSet = (defaultValue instanceof Set) 
-			? (Set) defaultValue 
-			: Collections.singleton(defaultValue);
+		// default
+    	Set valueInSet; 
+		if(defaultValue instanceof Set) {
+			valueInSet = (Set) defaultValue;
+		}
+		else if(defaultValue != null) {
+			valueInSet =  Collections.singleton(defaultValue);
+		}
+		else if(isOverride()) {
+			valueInSet = Collections.singleton(null);
+		} else {
+			valueInSet = Collections.EMPTY_SET; 
+		}
+				
     	valueStack.push(valueInSet);
     	traverse(element, null);
 	}
