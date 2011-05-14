@@ -56,19 +56,18 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	}
 
 
-
-	private Class<? extends BioPAXElement> extractAccessor(BioPAXLevel level,
-	                                                       Class<? extends BioPAXElement> domain, String term)
+	private Class<? extends BioPAXElement> extractAccessor(BioPAXLevel level, Class<? extends BioPAXElement> domain,
+	                                                       String term)
 	{
 		StringTokenizer ct = new StringTokenizer(term, ":");
 
 		PropertyEditor editor = getEditor(level, ct, domain);
 		Class<? extends BioPAXElement> restricted = getRestricted(level, ct);
 
-		PropertyAccessor accessor = restricted == null ? editor :
-				new ClassFilteringPropertyAccessor(editor,restricted);
+		PropertyAccessor accessor = restricted == null ? editor : new ClassFilteringPropertyAccessor(editor,
+		                                                                                             restricted);
 		objectAccessors.add(accessor);
-		if(editor instanceof ObjectPropertyEditor)
+		if (editor instanceof ObjectPropertyEditor)
 		{
 			domain = restricted == null ? editor.getRange() : restricted;
 			if (!editor.getRange().isAssignableFrom(domain))
@@ -76,20 +75,24 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 				throw new IllegalBioPAXArgumentException(
 						"Could not parse path." + domain + " can not be reached by property" + editor);
 			}
-		}
-		else domain = null;
+		} else domain = null;
 		return domain;
 	}
 
 	private void extractLastStep(BioPAXLevel level, String term, Class<? extends BioPAXElement> domain)
 	{
 		StringTokenizer ct = new StringTokenizer(term, ":");
-		PropertyEditor editor = getEditor(level, ct,domain);
+		PropertyEditor editor = getEditor(level, ct, domain);
 
 		Class<? extends BioPAXElement> restricted = getRestricted(level, ct);
 
-		lastStep = restricted == null ? editor :
-				new ClassFilteringPropertyAccessor(editor,restricted);
+		lastStep = restricted == null ? editor : new ClassFilteringPropertyAccessor(editor, restricted);
+		if(lastStep == null)
+		{
+			throw new IllegalBioPAXArgumentException(
+				"Could not parse path." + term + " did not resolve to any BioPAX properties of "
+				+ domain +".");
+		}
 	}
 
 	private Class<? extends BioPAXElement> getClass(BioPAXLevel level, String domainstr)
@@ -114,21 +117,30 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			CompositeSet<BioPAXElement> nextBpes = new CompositeSet<BioPAXElement>();
 			for (BioPAXElement bpe : bpes)
 			{
-				nextBpes.addComposited(objectAccessor.getValueFromBean(bpe));
+				Set valueFromBean = objectAccessor.getValueFromBean(bpe);
+				if (valueFromBean != null || valueFromBean.isEmpty())
+				{
+					nextBpes.addComposited(valueFromBean);
+				}
 			}
 			bpes = nextBpes;
 		}
 		CompositeSet values = new CompositeSet();
 		for (BioPAXElement bpe : bpes)
 		{
-			values.addComposited(lastStep.getValueFromBean(bpe));
+
+			Set valueFromBean = lastStep.getValueFromBean(bpe);
+			if (valueFromBean != null || valueFromBean.isEmpty())
+			{
+				values.addComposited(lastStep.getValueFromBean(bpe));
+			}
 		}
 		return values;
 	}
 
 	private Class<? extends BioPAXElement> getRestricted(BioPAXLevel level, StringTokenizer ct)
 	{
-		return ct.hasMoreTokens()?getClass(level, ct.nextToken()):null;
+		return ct.hasMoreTokens() ? getClass(level, ct.nextToken()) : null;
 	}
 
 	private PropertyEditor getEditor(BioPAXLevel level, StringTokenizer ct, Class<? extends BioPAXElement> domain)

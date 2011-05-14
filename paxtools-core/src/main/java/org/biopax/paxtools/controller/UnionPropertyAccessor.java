@@ -1,0 +1,64 @@
+package org.biopax.paxtools.controller;
+
+import org.apache.commons.collections15.set.CompositeSet;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+
+import java.util.Set;
+
+/**
+
+ */
+public class UnionPropertyAccessor<D extends BioPAXElement,R> implements PropertyAccessor<D,R>
+{
+	Set<PropertyAccessor<? extends D, R>> union;
+	PropertyAccessor<? extends D, R> first;
+
+	private Class<D> domain;
+
+	public UnionPropertyAccessor(Set<PropertyAccessor<? extends D, R>> union, Class<D> domain)
+	{
+		this.domain = domain;
+		if(this.union == null || this.union.isEmpty())
+		{
+			throw new IllegalBioPAXArgumentException("Empty set of editors. Can't create a union");
+		}
+		this.union = union;
+		first = this.union.iterator().next();
+
+	}
+
+	@Override public Class<D> getDomain()
+	{
+		return domain;
+	}
+
+	@Override public Class<R> getRange()
+	{
+		return first.getRange();
+	}
+
+	@Override public boolean isMultipleCardinality()
+	{
+		return first.isMultipleCardinality();
+	}
+
+	@Override public Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
+	{
+		CompositeSet<R> valueFromBean =new CompositeSet<R>();
+
+		for (PropertyAccessor atomicAccessor : union)
+		{
+			if(atomicAccessor.getDomain().isAssignableFrom(bean.getModelInterface()))
+			{
+				valueFromBean.addComposited(atomicAccessor.getValueFromBean(bean));
+			}
+		}
+		return valueFromBean;
+	}
+
+	@Override public boolean isUnknown(Object value)
+	{
+		return first.isUnknown(value);
+	}
+}
