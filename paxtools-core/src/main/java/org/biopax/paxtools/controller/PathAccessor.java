@@ -158,7 +158,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 	@Override public boolean isUnknown(Object value)
 	{
-		return value == null || !(value instanceof Set) || ((Set) value).isEmpty();
+		return value == null || (value instanceof Set && ((Set) value).isEmpty());
 	}
 
 }

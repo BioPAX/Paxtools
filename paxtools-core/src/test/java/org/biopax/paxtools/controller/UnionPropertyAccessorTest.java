@@ -46,6 +46,7 @@ public class UnionPropertyAccessorTest
 		PathAccessor pa = new PathAccessor("Complex/component/entityReference/organism", BioPAXLevel.L3);
 		Set valueFromBean = pa.getValueFromBean(complex);
 		assertTrue(valueFromBean.containsAll(Arrays.asList(human,alien)));
+		assertTrue(valueFromBean.size()==2);
 
 
 	}
