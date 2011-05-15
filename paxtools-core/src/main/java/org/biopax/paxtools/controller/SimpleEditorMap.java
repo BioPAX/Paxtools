@@ -97,8 +97,8 @@ public enum SimpleEditorMap implements EditorMap
 	}
 
 
-	public <D extends BioPAXElement> PropertyEditor<D, ?> getEditorForProperty(String property,
-	                                                                           Class<? extends D> javaClass)
+	public <D extends BioPAXElement> PropertyEditor<? super D, ?> getEditorForProperty(String property,
+	                                                                           Class<D> javaClass)
 
 	{
 		return impl.getEditorForProperty(property, javaClass);
@@ -107,6 +107,12 @@ public enum SimpleEditorMap implements EditorMap
 	@Override public Set<PropertyEditor> getEditorsForProperty(String property)
 	{
 		return impl.getEditorsForProperty(property);
+	}
+
+	@Override public <D extends BioPAXElement> Set<PropertyEditor<? extends D, ?>> getSubclassEditorsForProperty(
+			String property, Class<D> domain)
+	{
+		return impl.getSubclassEditorsForProperty(property,domain);
 	}
 
 	@Override public Set<PropertyEditor> getEditorsOf(BioPAXElement bpe)

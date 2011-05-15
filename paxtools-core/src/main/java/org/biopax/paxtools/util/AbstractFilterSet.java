@@ -13,14 +13,14 @@ import java.util.Set;
  * Filter sets are unmodifiable.
  */
 
-public abstract class AbstractFilterSet<E, F> extends AbstractSet<F> implements Filter<E>
+public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements Filter<F>
 {
 	final Log log = LogFactory.getLog(ClassFilterSet.class);
 
-	protected final Set<? extends E> baseSet;
+	protected final Set<? extends F> baseSet;
 
 
-	public AbstractFilterSet(Set<? extends E> baseSet)
+	public AbstractFilterSet(Set<? extends F> baseSet)
 	{
 		this.baseSet = baseSet;
 	}
@@ -35,7 +35,7 @@ public abstract class AbstractFilterSet<E, F> extends AbstractSet<F> implements 
 	public int size()
 	{
 		int i = 0;
-		for (F e : this)
+		for (E e : this)
 		{
 			i++;
 		}
@@ -45,22 +45,22 @@ public abstract class AbstractFilterSet<E, F> extends AbstractSet<F> implements 
 	public boolean contains(Object o)
 	{
 
-		return  baseSet.contains(o) && filter(((E) o));
+		return  baseSet.contains(o) && filter(((F) o));
 	}
 
-	public Iterator<F> iterator()
+	public Iterator<E> iterator()
 	{
 		return new FilterIterator(baseSet.iterator());
 	}
 
 
 
-	private class FilterIterator implements Iterator<F>
+	private class FilterIterator implements Iterator<E>
 	{
-		F next = null;
-		final Iterator<? extends E> base;
+		E next = null;
+		final Iterator<? extends F> base;
 
-		public FilterIterator(Iterator<? extends E> base)
+		public FilterIterator(Iterator<? extends F> base)
 		{
 			this.base = base;
 			fetchNext();
@@ -68,7 +68,7 @@ public abstract class AbstractFilterSet<E, F> extends AbstractSet<F> implements 
 
 		private void fetchNext()
 		{
-			E check;
+			F check;
 			next = null;
 			while (base.hasNext())
 			{
@@ -77,7 +77,7 @@ public abstract class AbstractFilterSet<E, F> extends AbstractSet<F> implements 
 				{
 					try
 					{
-						next = (F) check;
+						next = (E) check;
 						break;
 					}
 					catch (ClassCastException ce)
@@ -94,11 +94,11 @@ public abstract class AbstractFilterSet<E, F> extends AbstractSet<F> implements 
 			return next != null;
 		}
 
-		public F next()
+		public E next()
 		{
 			if (hasNext())
 			{
-				F value = next;
+				E value = next;
 				fetchNext();
 				return value;
 			}

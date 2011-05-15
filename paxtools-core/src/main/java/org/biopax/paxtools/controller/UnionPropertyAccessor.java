@@ -9,17 +9,17 @@ import java.util.Set;
 /**
 
  */
-public class UnionPropertyAccessor<D extends BioPAXElement,R> implements PropertyAccessor<D,R>
+public class UnionPropertyAccessor<D extends BioPAXElement> implements PropertyAccessor<D,Object>
 {
-	Set<PropertyAccessor<? extends D, R>> union;
-	PropertyAccessor<? extends D, R> first;
+	Set<PropertyAccessor<? extends D, ?>> union;
+	PropertyAccessor<? extends D, ?> first;
 
 	private Class<D> domain;
 
-	public UnionPropertyAccessor(Set<PropertyAccessor<? extends D, R>> union, Class<D> domain)
+	public UnionPropertyAccessor(Set<PropertyAccessor<? extends D, ?>> union, Class<D> domain)
 	{
 		this.domain = domain;
-		if(this.union == null || this.union.isEmpty())
+		if(union == null || union.isEmpty())
 		{
 			throw new IllegalBioPAXArgumentException("Empty set of editors. Can't create a union");
 		}
@@ -33,7 +33,7 @@ public class UnionPropertyAccessor<D extends BioPAXElement,R> implements Propert
 		return domain;
 	}
 
-	@Override public Class<R> getRange()
+	@Override public Class getRange()
 	{
 		return first.getRange();
 	}
@@ -43,9 +43,9 @@ public class UnionPropertyAccessor<D extends BioPAXElement,R> implements Propert
 		return first.isMultipleCardinality();
 	}
 
-	@Override public Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
+	@Override public Set getValueFromBean(D bean) throws IllegalBioPAXArgumentException
 	{
-		CompositeSet<R> valueFromBean =new CompositeSet<R>();
+		CompositeSet valueFromBean =new CompositeSet();
 
 		for (PropertyAccessor atomicAccessor : union)
 		{

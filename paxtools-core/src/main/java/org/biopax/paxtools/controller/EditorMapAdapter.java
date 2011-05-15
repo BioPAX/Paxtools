@@ -12,6 +12,7 @@ import org.biopax.paxtools.util.AbstractFilterSet;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -49,8 +50,8 @@ public abstract class EditorMapAdapter implements EditorMap
 		return this.classToInverseEditorMap.get(bpe.getModelInterface());
 	}
 
-	public <D extends BioPAXElement> PropertyEditor<D, ?> getEditorForProperty(String property,
-	                                                                           Class<? extends D> javaClass)
+	public <D extends BioPAXElement> PropertyEditor<? super D, ?> getEditorForProperty(String property,
+	                                                                           Class<D> javaClass)
 
 	{
 		PropertyEditor<D, ?> result = this.ifExistsGetEditorForProperty(property, javaClass);
@@ -60,6 +61,13 @@ public abstract class EditorMapAdapter implements EditorMap
 		}
 
 		return result;
+	}
+
+	public <D extends BioPAXElement> Set<PropertyEditor<? extends D, ?>> getSubclassEditorsForProperty(
+			String property, Class<D> domain)
+	{
+		return new SubDomainFilterSet<D>(this.getEditorsForProperty(property), domain);
+
 	}
 
 	protected <D extends BioPAXElement> PropertyEditor<D, ?> ifExistsGetEditorForProperty(String property,
@@ -204,6 +212,21 @@ public abstract class EditorMapAdapter implements EditorMap
 			return superClass.isAssignableFrom(subClass);
 		}
 	}
+	private class SubDomainFilterSet<D extends BioPAXElement>
+		extends AbstractFilterSet<PropertyEditor,PropertyEditor<? extends D,?>>
+		{
+			private Class<D> domain;
+
+			public SubDomainFilterSet(Set<PropertyEditor> baseSet, Class<D> domain)
+			{
+				super(baseSet);
+				this.domain = domain;
+			}
+			@Override public boolean filter(PropertyEditor editor)
+			{
+				return domain.isAssignableFrom(editor.getDomain());
+			}
+		}
 
 	protected Class<? extends BioPAXElement> getModelInterface(String localName)
 	{

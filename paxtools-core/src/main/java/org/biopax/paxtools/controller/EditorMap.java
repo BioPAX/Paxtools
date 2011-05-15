@@ -35,7 +35,7 @@ public interface EditorMap
      * @param javaClass class of the element
      * @return null if there is no such editor
      */
-	<D extends BioPAXElement> PropertyEditor<D,?> getEditorForProperty(String property, Class<? extends D> javaClass);
+	<D extends BioPAXElement> PropertyEditor<? super D,?> getEditorForProperty(String property, Class<D> javaClass);
 
     /**
      * This method returns the set of <em>editor</em>s intended to handle
@@ -51,7 +51,23 @@ public interface EditorMap
      */
     Set<PropertyEditor> getEditorsForProperty(String property);
 
-    /**
+	/**
+	  * This method returns the set of <em>editor</em>s intended to handle
+	  * property named <em>property</em>. This editor can then be used
+	  * to modify the property of an element which is in editor's domain list.
+	  *
+	  * In other words, this methods returns the set of the editors
+	  * that can handle the <em>property</em>. Editors are not filtered for
+	  * a specific domain class.
+	  *
+	  * @param property name of the property for which editor will be called
+	  * @return empty set if there are no such editors
+	  */
+
+	public <D extends BioPAXElement> Set<PropertyEditor<? extends D, ?>> getSubclassEditorsForProperty(
+			String property, Class<D> domain);
+
+	/**
      * This method returns the set of <em>editor</em>s whose domain
      * contains the class of given BioPAX element.
      *
