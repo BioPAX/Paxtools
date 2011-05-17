@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 

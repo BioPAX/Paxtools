@@ -64,17 +64,19 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		PropertyAccessor stepAccessor = getStepAccessor(level, ct, domain);
 		Class<? extends BioPAXElement> restricted = getRestricted(level, ct);
 
-		PropertyAccessor accessor = restricted == null ? stepAccessor :
-				new ClassFilteringPropertyAccessor(stepAccessor,restricted);
+		PropertyAccessor accessor = restricted == null ? stepAccessor : new ClassFilteringPropertyAccessor
+				(stepAccessor,
+
+				 restricted);
 		objectAccessors.add(accessor);
 		domain = restricted == null ? stepAccessor.getRange() : restricted;
-		domain = BioPAXElement.class.isAssignableFrom(domain)?domain:null;
+		domain = BioPAXElement.class.isAssignableFrom(domain) ? domain : null;
 		if (!stepAccessor.getRange().isAssignableFrom(domain))
 		{
-				throw new IllegalBioPAXArgumentException(
-						"Could not parse path." + domain + " can not be reached by property" + stepAccessor);
+			throw new IllegalBioPAXArgumentException(
+					"Could not parse path." + domain + " can not be reached by property" + stepAccessor);
 		}
-		return domain ;
+		return domain;
 	}
 
 	private void extractLastStep(BioPAXLevel level, String term, Class<? extends BioPAXElement> domain)
@@ -145,13 +147,21 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	                                                                                 Class<D> domain)
 	{
 		String property = ct.nextToken();
-		PropertyAccessor<? super D, ?> simple = SimpleEditorMap.get(level).getEditorForProperty(property, domain);
-		if (simple == null)
+		PropertyAccessor<? super D, ?> simple;
+		if (property.endsWith("Of"))
 		{
-			Set<PropertyEditor<? extends D, ?>> subclassEditorsForProperty = SimpleEditorMap.get(
-					level).getSubclassEditorsForProperty(property, domain);
-			simple = new UnionPropertyAccessor(subclassEditorsForProperty, domain);
+			simple = SimpleEditorMap.get(level).getEditorForProperty(property, domain);
+		}
+		else
+		{
+			simple = SimpleEditorMap.get(level).getEditorForProperty(property, domain);
+			if (simple == null)
+			{
+				Set<PropertyEditor<? extends D, ?>> subclassEditorsForProperty = SimpleEditorMap.get(
+						level).getSubclassEditorsForProperty(property, domain);
+				simple = new UnionPropertyAccessor(subclassEditorsForProperty, domain);
 
+			}
 		}
 		return simple;
 	}

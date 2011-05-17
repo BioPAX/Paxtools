@@ -9,10 +9,8 @@ import org.biopax.paxtools.model.level2.conversion;
 import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.util.AbstractFilterSet;
-import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,12 +27,13 @@ public abstract class EditorMapAdapter implements EditorMap
 	protected final HashMap<String, Set<PropertyEditor>> propertyToEditorMap =
 			new HashMap<String, Set<PropertyEditor>>();
 
-	protected final HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>> classToEditorMap =
+	protected final HashMap<Class<? extends BioPAXElement>, HashMap<String, PropertyEditor>> classToEditorMap =
 
-			new HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>>();
+			new HashMap<Class<? extends BioPAXElement>, HashMap<String, PropertyEditor>>();
 
-	protected final HashMap<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>> classToInverseEditorMap =
-			new HashMap<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>>();
+	protected final HashMap<Class<? extends BioPAXElement>, HashMap<String, ObjectPropertyEditor>>
+			classToInverseEditorMap =
+			new HashMap<Class<? extends BioPAXElement>, HashMap<String, ObjectPropertyEditor>>();
 
 
 	private static final Log log = LogFactory.getLog(EditorMapAdapter.class);
@@ -42,19 +41,20 @@ public abstract class EditorMapAdapter implements EditorMap
 
 	public Set<PropertyEditor> getEditorsOf(BioPAXElement bpe)
 	{
-		return this.classToEditorMap.get(bpe.getModelInterface());
+		return (Set<PropertyEditor>) this.classToEditorMap.get(bpe.getModelInterface()).values();
 	}
 
 	public Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe)
 	{
-		return this.classToInverseEditorMap.get(bpe.getModelInterface());
+		return (Set<ObjectPropertyEditor>) this.classToInverseEditorMap.get(bpe.getModelInterface()).values();
 	}
 
 	public <D extends BioPAXElement> PropertyEditor<? super D, ?> getEditorForProperty(String property,
 	                                                                           Class<D> javaClass)
 
 	{
-		PropertyEditor<D, ?> result = this.ifExistsGetEditorForProperty(property, javaClass);
+		PropertyEditor<? super D,?> result = this.classToEditorMap.get(javaClass).get(property);
+
 		if (result == null)
 		{
 			if (log.isDebugEnabled()) log.debug("Could not locate controller for " + property + " | " + javaClass);
@@ -67,35 +67,6 @@ public abstract class EditorMapAdapter implements EditorMap
 			String property, Class<D> domain)
 	{
 		return new SubDomainFilterSet<D>(this.getEditorsForProperty(property), domain);
-
-	}
-
-	protected <D extends BioPAXElement> PropertyEditor<D, ?> ifExistsGetEditorForProperty(String property,
-	                                                                                      Class<? extends D>
-			                                                                                      javaClass)
-	{
-		PropertyEditor result = null;
-		Set<PropertyEditor> editors = this.getEditorsForProperty(property);
-		if (editors != null)
-		{
-			for (PropertyEditor editor : editors)
-			{
-				if (editor.getDomain().isAssignableFrom(javaClass))
-				{
-					if (result == null)
-					{
-						result = editor;
-					} else if (editor.getDomain().isAssignableFrom(result.getDomain()))
-					{
-						result = editor;
-					} else
-					{
-						assert result.getDomain().isAssignableFrom(editor.getDomain());
-					}
-				}
-			}
-		}
-		return result;
 
 	}
 
@@ -155,9 +126,10 @@ public abstract class EditorMapAdapter implements EditorMap
 					{
 						log.debug("skipping restricted participant property");
 					}
-				} else
+				}
+				else
 				{
-					classToEditorMap.get(c).add(editor);
+					classToEditorMap.get(c).put(editor.getProperty(),editor);
 				}
 			}
 
@@ -169,7 +141,12 @@ public abstract class EditorMapAdapter implements EditorMap
 			{
 				if (editor.getRange().isAssignableFrom(c))
 				{
-					classToInverseEditorMap.get(c).add((ObjectPropertyEditor) editor);
+					HashMap<String, ObjectPropertyEditor> classMap =
+							classToInverseEditorMap.get(c);
+					if(classMap.get(editor.getProperty())== null)
+					classMap.put(editor.getProperty(), (ObjectPropertyEditor) editor);
+					else
+						throw new RuntimeException();
 
 				}
 			}
@@ -183,8 +160,8 @@ public abstract class EditorMapAdapter implements EditorMap
 		{
 			Class<? extends BioPAXElement> modelInterface = getModelInterface(localName);
 
-			classToEditorMap.put(modelInterface, new HashSet<PropertyEditor>());
-			classToInverseEditorMap.put(modelInterface, new HashSet<ObjectPropertyEditor>());
+			classToEditorMap.put(modelInterface, new HashMap<String,PropertyEditor>());
+			classToInverseEditorMap.put(modelInterface, new HashMap<String,ObjectPropertyEditor>());
 		}
 		catch (IllegalBioPAXArgumentException e)
 		{

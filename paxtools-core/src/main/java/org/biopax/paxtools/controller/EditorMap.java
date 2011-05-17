@@ -3,6 +3,8 @@ package org.biopax.paxtools.controller;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -71,8 +73,9 @@ public interface EditorMap
      * This method returns the set of <em>editor</em>s whose domain
      * contains the class of given BioPAX element.
      *
-     * @param bpe BioPAX element for which the avaliable editors will be returned
-     * @return empty set if there are no such editors
+     *
+	 * @param bpe BioPAX element for which the avaliable editors will be returned
+	 * @return empty set if there are no such editors
      */
     Set<PropertyEditor> getEditorsOf(BioPAXElement bpe);
 

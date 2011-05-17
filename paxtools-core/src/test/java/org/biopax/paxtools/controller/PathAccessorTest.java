@@ -1,6 +1,5 @@
 package org.biopax.paxtools.controller;
 
-import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 import org.biopax.paxtools.impl.level3.MockFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -11,8 +10,6 @@ import org.biopax.paxtools.model.level3.RelationshipXref;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Random;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
