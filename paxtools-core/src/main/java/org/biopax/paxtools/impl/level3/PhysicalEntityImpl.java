@@ -139,14 +139,14 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void removeMemberPhysicalEntity(PhysicalEntity oldMember)
 	{
 		if (oldMember != null) {
-			this.memberPhysicalEntity.remove(oldMember); // todo
+			this.memberPhysicalEntity.remove(oldMember); // todo (what?)
 			oldMember.getMemberPhysicalEntityOf().remove(this);
 		}
 	}
 
 	protected void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity)
 	{
-		this.memberPhysicalEntity = memberPhysicalEntity; //todo
+		this.memberPhysicalEntity = memberPhysicalEntity; //todo (what?)
 	}
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity",
@@ -164,8 +164,11 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		    feature.getNotFeatureOf().contains(this))
 		{
 			if(log.isWarnEnabled())
-				log.warn("Redundant attempt to set the inverse link!");
-
+				log.warn("Redundant attempt to set the inverse link! " 
+						+ " this " + getModelInterface().getSimpleName() 
+						+ " " + getRDFId() + " and - " 
+						+ feature.getModelInterface().getSimpleName() + " "
+						+ feature.getRDFId());
 		}
 		target.add(this);
 	}
