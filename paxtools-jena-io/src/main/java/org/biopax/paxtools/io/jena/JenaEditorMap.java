@@ -121,7 +121,7 @@ public class JenaEditorMap extends EditorMapAdapter {
 
     protected void createAndRegisterBeanEditor(OntProperty property, OntResource domain) {
         createAndRegisterBeanEditor(property.getLocalName(),
-                extractClass(domain.asClass()));
+                extractClass(domain.asClass()), null);
     }
 
     private OntResource retrieveDomain(OntProperty property) {
@@ -184,7 +184,7 @@ public class JenaEditorMap extends EditorMapAdapter {
                             OntClass values = (OntClass) valuesFromRestriction.
                                     getAllValuesFrom().
                                     as(OntClass.class);
-                            Set<Class> ranges = getSetOfJavaClasses(
+                            Set<Class<? extends BioPAXElement>> ranges = getSetOfJavaClasses(
                                     values);
                             ((ObjectPropertyEditor) propertyEditor).
                                     addRangeRestriction(domain, ranges);
@@ -212,14 +212,14 @@ public class JenaEditorMap extends EditorMapAdapter {
         return resource.getLocalName().replaceAll("-", "_");
     }
 
-    private Set<Class> getSetOfJavaClasses(OntClass values) {
-        HashSet<Class> set = new HashSet<Class>();
+    private Set<Class<? extends BioPAXElement>> getSetOfJavaClasses(OntClass values) {
+        HashSet<Class<? extends BioPAXElement>> set = new HashSet<Class<? extends BioPAXElement>>();
         recursivelyTraverse(values, set);
         assert !set.isEmpty();
         return set;
     }
 
-    private void recursivelyTraverse(OntClass values, HashSet<Class> set) {
+    private void recursivelyTraverse(OntClass values, HashSet<Class<? extends BioPAXElement>> set) {
         if (values.isUnionClass()) {
             UnionClass unionClass = values.asUnionClass();
             ExtendedIterator iterator1 =

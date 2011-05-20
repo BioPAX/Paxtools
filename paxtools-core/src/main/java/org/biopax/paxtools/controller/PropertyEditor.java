@@ -16,8 +16,8 @@ import java.util.*;
  * This is the base class for all property editors. Each property controller is responsible for
  * manipulating a certain property for a given class of objects (domain).
  */
-public abstract class PropertyEditor<D extends BioPAXElement, R> extends PropertyAccessorAdapter<D, R>
-		implements PropertyAccessor<D, R>
+public abstract class PropertyEditor<D extends BioPAXElement, R>
+		extends SimplePropertyAccessor<D,R>
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -29,13 +29,6 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	 * {@link java.util.Set} as its only parameter.
 	 */
 	protected Method setMethod;
-
-	/**
-	 * This variable stores the method to invoke for getting the value of the property on a given bean.
-	 * In the case of multiple cardinality, this method is expected to return a {@link java.util.Set}
-	 * otherwise an instance of {@link #range}
-	 */
-	protected final Method getMethod;
 
 	/**
 	 * This variable stores the method to invoke for adding the given value to the property managed by
@@ -67,8 +60,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	public PropertyEditor(String property, Method getMethod, Class<D> domain, Class<R> range,
 	                      boolean multipleCardinality)
 	{
-		super(domain, range, multipleCardinality);
-		this.getMethod = getMethod;
+		super(domain, range, multipleCardinality, getMethod);
 		this.property = property;
 
 		try
@@ -94,6 +86,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 			Integer cardinality = maxCardinalities.get(aClass);
 			def += " C:" + aClass.getSimpleName() + ":" + cardinality;
 		}
+
 		return def;
 	}
 
@@ -161,11 +154,6 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 		String s = owlName.replaceAll("-", "_");
 		s = s.substring(0, 1).toUpperCase() + s.substring(1);
 		return s;
-	}
-
-	protected static boolean isMultipleCardinality(Method getMethod)
-	{
-		return Set.class.isAssignableFrom(getMethod.getReturnType());
 	}
 
 	/**
@@ -333,11 +321,12 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 	 * Checks if <em>value</em> is an instance of one of the classes given in a set. This method
 	 * becomes useful, when the restrictions have to be checked for a set of objects. e.g. check if the
 	 * value is in the range of the editor.
+	 *
 	 * @param classes a set of classes to be checked
 	 * @param value value whose class will be checked
 	 * @return true if value belongs to one of the classes in the set
 	 */
-	protected boolean isInstanceOfAtLeastOne(Set<Class> classes, Object value)
+	protected boolean isInstanceOfAtLeastOne(Set<Class<? extends BioPAXElement>> classes, Object value)
 	{
 		boolean check = false;
 		for (Class aClass : classes)
@@ -351,16 +340,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 		return check;
 	}
 
-	/**
-	 * Checks if the <em>value</em> is unkown. In this context a <em>value</em> is regarded to be
-	 * unknown if it is null (unset).
-	 * @param value the value to be checked
-	 * @return true if the value is unknown
-	 */
-	public boolean isUnknown(Object value)
-	{
-		return value == null || (value instanceof Set ? ((Set) value).isEmpty() : false);
-	}
+
 
 	/**
 	 * Gets the unknown <em>value</em>. In an object property or enumeration
@@ -523,41 +503,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R> extends Propert
 					" 1");
 	}
 
-	/**
-	 * Returns the value of the <em>bean</em> using the default {@link #getMethod}.
-	 * If the value is unknown returns null or an empty set depending on the cardinality.
-	 * @param bean the object whose property is requested
-	 * @return an object as the value
-	 */
-	@Override public Set<R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
-	{
-		Object value;
-		try
-		{
-			value = this.getMethod.invoke(bean);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new IllegalBioPAXArgumentException(
-					"Could not invoke get method " + getMethod.getName() + " for " + bean, e);
-		}
-		catch (InvocationTargetException e)
-		{
-			throw new IllegalBioPAXArgumentException(
-					"Could not invoke get method " + getMethod.getName() + " for " + bean, e);
-		}
-		if (value == null) return Collections.emptySet();
-		else if (this.isMultipleCardinality())
-		{
-			return (Collections.unmodifiableSet(((Set<R>) value)));
-		}
-		else
-		{
-			return Collections.singleton(((R) value));
-		}
-	}
 
-	
 	/**
 	 * Checks if the <em>bean</em> and the <em>value</em> are consistent with the cardinality rules of
 	 * the model. This method is important for validations.

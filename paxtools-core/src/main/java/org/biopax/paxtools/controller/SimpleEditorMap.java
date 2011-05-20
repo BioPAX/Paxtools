@@ -10,8 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Provides a simple editor map for a level with a given factory.
@@ -65,11 +64,32 @@ public enum SimpleEditorMap implements EditorMap
 				{
 					st = new StringTokenizer(line);
 					String domain = st.nextToken();
-					String propertyName = st.nextToken();
-
 					Class<? extends BioPAXElement> domainInterface = getModelInterface(domain);
 
-					createAndRegisterBeanEditor(propertyName, domainInterface);
+					String propertyName = st.nextToken();
+					Map<Class<? extends BioPAXElement>,Set<Class<? extends BioPAXElement>>> rangeRestrictions =
+							new HashMap<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>>();
+					while (st.hasMoreTokens())
+					{
+						String rToken = st.nextToken();
+						if (rToken.startsWith("R:"))
+						{
+							StringTokenizer rt = new StringTokenizer(rToken.substring(2), "=");
+							Class<? extends BioPAXElement> rDomain = level.getInterfaceForName(rt.nextToken());
+							Set<Class<? extends BioPAXElement>> rRanges =
+									new HashSet<Class<? extends BioPAXElement>>();
+							for (StringTokenizer dt = new StringTokenizer(rt.nextToken(), ","); dt.hasMoreTokens();)
+							{
+								rRanges.add(level.getInterfaceForName(dt.nextToken()));
+							}
+							rangeRestrictions.put(rDomain,rRanges);
+						}
+
+					}
+
+
+
+					createAndRegisterBeanEditor(propertyName, domainInterface,rangeRestrictions);
 				}
 			}
 			catch (IOException e)
@@ -98,7 +118,7 @@ public enum SimpleEditorMap implements EditorMap
 
 
 	public <D extends BioPAXElement> PropertyEditor<? super D, ?> getEditorForProperty(String property,
-	                                                                           Class<D> javaClass)
+	                                                                                   Class<D> javaClass)
 
 	{
 		return impl.getEditorForProperty(property, javaClass);
@@ -112,7 +132,7 @@ public enum SimpleEditorMap implements EditorMap
 	@Override public <D extends BioPAXElement> Set<PropertyEditor<? extends D, ?>> getSubclassEditorsForProperty(
 			String property, Class<D> domain)
 	{
-		return impl.getSubclassEditorsForProperty(property,domain);
+		return impl.getSubclassEditorsForProperty(property, domain);
 	}
 
 	@Override public Set<PropertyEditor> getEditorsOf(BioPAXElement bpe)

@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -21,8 +22,8 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 {
 // ------------------------------ FIELDS ------------------------------
 
-	private final HashMap<Class, Set<Class>> restrictedRanges =
-			new HashMap<Class, Set<Class>>();
+	private Map<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>> restrictedRanges =
+			new HashMap<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>>();
 
 	private Method inverseGetMethod;
 
@@ -31,28 +32,13 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 	private boolean completeForward;
 	private boolean completeBackward;
 
+	private PropertyAccessor<R,D> inverseAccessor;
+
 // --------------------------- CONSTRUCTORS ---------------------------
-//todo
-//	@Override
-//	public String toString()
-//	{
-//		String s = super.toString();
-//		Set<Class> ranges = restrictedRanges.get(domain);
-//		if (ranges != null)
-//
-//		{
-//			s += " R";
-//			for (Class aClass1 : ranges)
-//			{
-//				s += ":" + aClass1.getSimpleName();
-//			}
-//		}
-//		return s;
-//	}
 
 	public ObjectPropertyEditor(String property, Method getMethod,
-	                            Class<D> domain,
-	                            Class<R> range,
+	                            final Class<D> domain,
+	                            final Class<R> range,
 	                            boolean multipleCardinality)
 	{
 		super(property,
@@ -67,7 +53,8 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		{
 			inverseMultipleCardinality = isMultipleCardinality(inverseGetMethod);
 		}
-
+		this.inverseAccessor = new SimplePropertyAccessor<R, D>(
+				range, domain,inverseMultipleCardinality,inverseGetMethod);
 		AutoComplete autComp = getGetMethod().getAnnotation(AutoComplete.class);
 
 		if (autComp == null)
@@ -80,11 +67,13 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 			completeForward = autComp.forward();
 			completeBackward = autComp.backward();
 		}
+
+
 	}
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
-	public HashMap<Class, Set<Class>> getRestrictedRanges()
+	public Map<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>> getRestrictedRanges()
 	{
 		return restrictedRanges;
 	}
@@ -109,18 +98,46 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		return inverseGetMethod;
 	}
 
+	public PropertyAccessor<R,D> getInverseAccessor()
+	{
+		return inverseAccessor;
+	}
+
 	// -------------------------- OTHER METHODS --------------------------
 
-	public void addRangeRestriction(Class domain, Set<Class> ranges)
+	@Override public String toString()
+	{
+		StringBuilder sb = new StringBuilder(super.toString());
+		for (Class rDomain : restrictedRanges.keySet())
+		{
+			sb.append(" D:").append(rDomain.getSimpleName()).append("=");
+			String delim ="";
+			for (Class<? extends BioPAXElement> range : restrictedRanges.get(rDomain))
+			{
+				sb.append(delim).append(range.getSimpleName());
+				delim= ",";
+			}
+
+		}
+		return sb.toString();
+	}
+
+	public void addRangeRestriction(Class<? extends BioPAXElement> domain, Set<Class<? extends BioPAXElement>> ranges)
 	{
 		this.restrictedRanges.put(domain, ranges);
 	}
 
+	public void setRangeRestriction(Map<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>>
+			restrictedRanges)
+	{
+		this.restrictedRanges = restrictedRanges;
+	}
 	@Override
 	protected void checkRestrictions(R value, D bean)
 	{
 		super.checkRestrictions(value, bean);
-		Set<Class> classes = getRestrictedRangesFor((Class<? extends D>) bean.getModelInterface());
+		Set<Class<? extends BioPAXElement>> classes = getRestrictedRangesFor(
+				(Class<? extends D>) bean.getModelInterface());
 		if (classes != null && !isInstanceOfAtLeastOne(classes, value))
 		{
 			throw new IllegalBioPAXArgumentException(
@@ -129,12 +146,12 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		}
 	}
 
-	public Set<Class> getRestrictedRangesFor(Class<? extends D> restrictedDomain)
+	public Set<Class<? extends BioPAXElement>> getRestrictedRangesFor(Class<? extends D> restrictedDomain)
 	{
-		Set<Class> classes = this.restrictedRanges.get(restrictedDomain);
+		Set<Class<? extends BioPAXElement>> classes = this.restrictedRanges.get(restrictedDomain);
 		if (classes == null)
 		{
-			classes = new HashSet<Class>();
+			classes = new HashSet<Class<? extends BioPAXElement>>();
 			classes.add(this.getRange());
 		}
 		return classes;
@@ -163,27 +180,11 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		return method;
 	}
 
-	public Object getInverseValueFromBean(R bean)
+	public Set<? extends D> getInverseValueFromBean(R bean)
 	{
-		try
-		{
-			return getInverseGetMethod().invoke(bean);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new IllegalBioPAXArgumentException("Could not invoke inverse get method " +
-				getInverseGetMethod().getName() + " for " + bean, e);
-		}
-		catch (InvocationTargetException e)
-		{
-			throw new IllegalBioPAXArgumentException("Could not invoke inverse get method " +
-				getInverseGetMethod().getName() + " for " + bean, e);
-		}
-		catch (ClassCastException e) {
-			throw new IllegalBioPAXArgumentException("Could not invoke inverse get method " +
-					getInverseGetMethod().getName() + " for " + bean, e);
-		}
+		return this.getInverseAccessor().getValueFromBean(bean);
 	}
 
 	// --------------------- ACCESORS and MUTATORS---------------------
+
 }

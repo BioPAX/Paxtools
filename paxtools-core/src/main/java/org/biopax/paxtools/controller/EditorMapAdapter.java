@@ -13,6 +13,7 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -86,9 +87,14 @@ public abstract class EditorMapAdapter implements EditorMap
 		return nameSpace != null && nameSpace.startsWith(BioPAXLevel.BP_PREFIX);
 	}
 
-	protected PropertyEditor createAndRegisterBeanEditor(String pName, Class javaClass)
+	protected PropertyEditor createAndRegisterBeanEditor(String pName, Class domain,Map<Class<? extends BioPAXElement>,
+			Set<Class<? extends BioPAXElement>>> rRestrictions)
 	{
-		PropertyEditor editor = PropertyEditor.createPropertyEditor(javaClass, pName);
+		PropertyEditor editor = PropertyEditor.createPropertyEditor(domain, pName);
+		if(editor instanceof ObjectPropertyEditor && rRestrictions!=null)
+		{
+			((ObjectPropertyEditor)editor).setRangeRestriction(rRestrictions);
+		}
 
 		if (editor != null)
 		{
@@ -96,23 +102,24 @@ public abstract class EditorMapAdapter implements EditorMap
 			if (beanEditorsForProperty == null)
 			{
 				beanEditorsForProperty = new HashSet<PropertyEditor>();
+				propertyToEditorMap.put(pName, beanEditorsForProperty);
 			}
 			beanEditorsForProperty.add(editor);
 
-			propertyToEditorMap.put(pName, beanEditorsForProperty);
-			registerEditorsWithClasses(editor);
+			registerEditorsWithSubClasses(editor, domain);
 		} else
 		{
-			if (log.isWarnEnabled()) log.warn("property = " + pName + "\njavaClass = " + javaClass);
+			if (log.isWarnEnabled()) log.warn("property = " + pName + "\ndomain = " + domain);
 		}
 		return editor;
 	}
 
-	protected void registerEditorsWithClasses(PropertyEditor editor)
+	protected void registerEditorsWithSubClasses(PropertyEditor editor, Class<? extends BioPAXElement> domain)
 	{
+
 		for (Class<? extends BioPAXElement> c : classToEditorMap.keySet())
 		{
-			if (editor.getDomain().isAssignableFrom(c))
+			if (domain.isAssignableFrom(c))
 			{
 				//workaround for participants - can be replaced w/ a general
 				// annotation based system. For the time being, I am just handling it
@@ -129,28 +136,62 @@ public abstract class EditorMapAdapter implements EditorMap
 				}
 				else
 				{
-					classToEditorMap.get(c).put(editor.getProperty(),editor);
+					classToEditorMap.get(c).put(editor.getProperty(), editor);
 				}
 			}
 
 		}
 
-		if (editor instanceof ObjectPropertyEditor && ((ObjectPropertyEditor) editor).hasInverseLink())
+		if (editor instanceof ObjectPropertyEditor)
+		{
+			registerInverseEditors((ObjectPropertyEditor) editor);
+		}
+	}
+
+	private void registerInverseEditors(ObjectPropertyEditor editor)
+	{
+		if(editor.hasInverseLink())
 		{
 			for (Class<? extends BioPAXElement> c : classToInverseEditorMap.keySet())
 			{
-				if (editor.getRange().isAssignableFrom(c))
+				if(checkInverseRangeIsAssignable(editor, c))
 				{
-					HashMap<String, ObjectPropertyEditor> classMap =
+				HashMap<String, ObjectPropertyEditor> classMap =
 							classToInverseEditorMap.get(c);
 					if(classMap.get(editor.getProperty())== null)
-					classMap.put(editor.getProperty(), (ObjectPropertyEditor) editor);
+					classMap.put(editor.getProperty(), editor);
 					else
-						throw new RuntimeException();
+					{
+					   //TODO - put a union inverse accessor here..
+
+					};
 
 				}
 			}
 		}
+	}
+
+	private boolean checkInverseRangeIsAssignable(ObjectPropertyEditor editor, Class<? extends BioPAXElement> c)
+	{
+		if (editor.getRange().isAssignableFrom(c) )
+		{
+			Set<Class<? extends BioPAXElement>> restrictedRanges =
+					editor.getRestrictedRangesFor(editor.getDomain());
+			if(restrictedRanges.isEmpty()) return true;
+			else
+			{
+				for (Class<? extends BioPAXElement> restrictedRange : restrictedRanges)
+				{
+					if(restrictedRange.isAssignableFrom(c))
+					{
+						return true;
+					}
+
+				}
+				return false;
+			}
+		}
+		return false;
 	}
 
 
