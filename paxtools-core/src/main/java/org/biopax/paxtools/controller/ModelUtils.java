@@ -15,6 +15,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process; //separate import required here!
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -70,18 +71,12 @@ public class ModelUtils {
 		SEQUENCE, // e.g, to relate UniProt to RefSeq identifiers (incl. for splice variants...)
 		; //TODO add more on use-case bases...
 	}
-	
-	/** 
-	 * A URI (rdf ID) prefix to use with auto-generated BioPAX utility classes,
-	 * i.e., controlled vocabularies, relationship and unification xrefs. 
-	 */
-	public static final String URN_PREFIX_FOR_GENERATED_REFS = "urn:biopax:paxtools:";
 
 	
 	/**
 	 * A comment (at least - prefix) to add to all generated objects
 	 */
-	public final String COMMENT_FOR_GENERATED = "Paxtools-generated";
+	public static final String COMMENT_FOR_GENERATED = "auto-generated";
 	
 	
 	/* 
@@ -94,13 +89,24 @@ public class ModelUtils {
 	
 	/**
 	 * This is to consistently create URI prefixes for  
-	 * auto-generated/inferred utility class objects. 
+	 * auto-generated/inferred Xref objects
+	 * (except for PublicationXref, where creating of 
+	 * something like, e.g., 'urn:miriam:pubmed:' is recommended). 
 	 * 
 	 * @param clazz
 	 * @return
 	 */
-	public static String uriPrefixForGeneratedUtilityClass(Class<? extends UtilityClass> clazz) {
-		return BIOPAX_URI_PREFIX + clazz.getSimpleName() + ":";
+	public static String uriPrefixForGeneratedXref(Class<? extends Xref> clazz) {
+		String prefix = BIOPAX_URI_PREFIX + clazz.getSimpleName() + ":";
+		
+		if(PublicationXref.class.equals(clazz) && LOG.isWarnEnabled()) {
+			LOG.warn("uriPrefixForGeneratedXref: for a PublicationXref, " +
+				"one should probably use a different prefix, " +
+				"e.g., 'urn:miriam:pubmed:', etc. istead of this: "
+				+ prefix);
+		}
+		
+		return prefix;
 	}
 	
 
@@ -495,10 +501,9 @@ public class ModelUtils {
 	 * 
 	 * @param <T>
 	 * @param processClass to relate entities with an interaction/pathway of this type 
-	 * @param provider - (optional) the 'db' property value for the auto-generated xref
 	 */
 	public <T extends Process> void generateEntityProcessXrefs(
-			Class<T> processClass, final String provider) 
+			Class<T> processClass) 
 	{	
 		// use a special relationship CV;
 		RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(RelationshipType.PROCESS);
@@ -507,13 +512,13 @@ public class ModelUtils {
 		for(T ownerProc : processes) 
 		{
 			// prepare the xref to use in children
-			String relXrefId = ownerProc.getRDFId() + "_" + ownerProc.getModelInterface().getSimpleName();
+			String relXrefId = generateURIForRelationshipXref(COMMENT_FOR_GENERATED, ownerProc.getRDFId());
 			RelationshipXref rx =  (RelationshipXref) model.getByID(relXrefId);
 			if (rx == null) {
 				rx = model.addNew(RelationshipXref.class, relXrefId);
 				rx.addComment(COMMENT_FOR_GENERATED);
-				rx.setDb(provider);
-				rx.setId(ownerProc.getRDFId()); // intra-model link (this is BioPAX hack :)
+				rx.setDb(COMMENT_FOR_GENERATED);
+				rx.setId(ownerProc.getRDFId());
 				rx.setRelationshipType(cv);
 			}
 			
@@ -692,18 +697,19 @@ public class ModelUtils {
 		RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(RelationshipType.ORGANISM);
 		// add xref(s) to the entity
 		for(BioSource organism : organisms) {
-			String relXrefId = organism.getRDFId() + "_" + 
-				RelationshipType.ORGANISM.name(); //no more than one xref per organism!
+			String db = COMMENT_FOR_GENERATED; 
+			String id = organism.getRDFId();
+			String relXrefId = generateURIForRelationshipXref(db, id);
 			RelationshipXref rx =  (RelationshipXref) model.getByID(relXrefId);
 			if (rx == null) {
 				rx = model.addNew(RelationshipXref.class, relXrefId);
-				rx.addComment(COMMENT_FOR_GENERATED);
-				rx.setId(organism.getRDFId()); // intra-model link (this is a hack :)
 				rx.setRelationshipType(cv);
+				rx.addComment(COMMENT_FOR_GENERATED);
+				rx.setDb(db);
+				rx.setId(id);
 			}
 			entity.addXref(rx);
 		}
-		
 	}
 
 	
@@ -716,7 +722,7 @@ public class ModelUtils {
 	 */
 	private RelationshipTypeVocabulary getTheRelatioshipTypeCV(RelationshipType relationshipType) 
 	{
-		String cvId = URN_PREFIX_FOR_GENERATED_REFS + "RelationshipType:"
+		String cvId = BIOPAX_URI_PREFIX + "RelationshipTypeVocabulary:"
 				+ relationshipType;
 		// try to get from the model first
 		RelationshipTypeVocabulary cv = (RelationshipTypeVocabulary) model
@@ -725,6 +731,7 @@ public class ModelUtils {
 			cv = model.addNew(RelationshipTypeVocabulary.class, cvId);
 			cv.addTerm(relationshipType.name());
 			cv.addComment(COMMENT_FOR_GENERATED);
+			
 			/* disabled: in favor of custom terms from RelationshipType -
 			String uxid = "urn:biopax:UnificationXref:MI_MI%3A0359";
 			UnificationXref ux = (UnificationXref) model.getByID(uxid);
@@ -743,10 +750,7 @@ public class ModelUtils {
 	
 	
 	/**
-	 * Builds a "normalized"
-	 * RelationshipXref URI from given parameters. 
-	 * Miriam resource is used to get a standard db name, 
-	 * and if it fails, the initial value is still used. 
+	 * Builds a "normalized" RelationshipXref URI.
 	 * 
 	 * @param db
 	 * @param id
@@ -755,9 +759,8 @@ public class ModelUtils {
 	 */
 	public static String generateURIForRelationshipXref(String db, String id) 
 	{
-		String rdfid = null;
-		String prefix = "urn:biopax:RelationshipXref:"; 
-		//TODO better solution? (it's now hard-coded to match the prefix that the BioPAX validator/normalizer uses..)
+		String rdfid;
+		String prefix = uriPrefixForGeneratedXref(RelationshipXref.class); 
 			
 		// add the local part of the URI encoded -
 		try {
