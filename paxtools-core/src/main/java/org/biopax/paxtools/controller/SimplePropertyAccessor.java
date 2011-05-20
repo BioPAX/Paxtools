@@ -49,11 +49,18 @@ public class SimplePropertyAccessor<D extends BioPAXElement, R> extends Property
 			throw new IllegalBioPAXArgumentException(
 					"Could not invoke get method " + getMethod.getName() + " for " + bean, e);
 		}
+		catch (IllegalArgumentException e)
+		{
+			throw new IllegalBioPAXArgumentException(
+					"Could not invoke get method " + getMethod.getName() + " for " + bean, e);
+		}
+
 		catch (InvocationTargetException e)
 		{
 			throw new IllegalBioPAXArgumentException(
 					"Could not invoke get method " + getMethod.getName() + " for " + bean, e);
 		}
+
 		if (value == null) return Collections.emptySet();
 		else if (this.isMultipleCardinality())
 		{

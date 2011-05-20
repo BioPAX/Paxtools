@@ -11,10 +11,8 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.util.AbstractFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import javax.jnlp.ExtendedService;
+import java.util.*;
 
 
 /**
@@ -25,16 +23,20 @@ import java.util.Set;
 public abstract class EditorMapAdapter implements EditorMap
 {
 
-	protected final HashMap<String, Set<PropertyEditor>> propertyToEditorMap =
+	protected final Map<String, Set<PropertyEditor>> propertyToEditorMap =
 			new HashMap<String, Set<PropertyEditor>>();
 
-	protected final HashMap<Class<? extends BioPAXElement>, HashMap<String, PropertyEditor>> classToEditorMap =
+	protected final Map<Class<? extends BioPAXElement>,Map<String, PropertyEditor>> classToEditorMap =
 
-			new HashMap<Class<? extends BioPAXElement>, HashMap<String, PropertyEditor>>();
+			new HashMap<Class<? extends BioPAXElement>, Map<String, PropertyEditor>>();
 
-	protected final HashMap<Class<? extends BioPAXElement>, HashMap<String, ObjectPropertyEditor>>
+	protected final Map<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>>
 			classToInverseEditorMap =
-			new HashMap<Class<? extends BioPAXElement>, HashMap<String, ObjectPropertyEditor>>();
+			new HashMap<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>>();
+
+	protected final Map<Class<? extends BioPAXElement>, Set<PropertyEditor>>
+			classToEditorSet =
+			new HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>>();
 
 
 	private static final Log log = LogFactory.getLog(EditorMapAdapter.class);
@@ -42,13 +44,24 @@ public abstract class EditorMapAdapter implements EditorMap
 
 	public Set<PropertyEditor> getEditorsOf(BioPAXElement bpe)
 	{
-		return (Set<PropertyEditor>) this.classToEditorMap.get(bpe.getModelInterface()).values();
+		return getEditorsOf(bpe.getModelInterface());
+	}
+
+	public Set<PropertyEditor> getEditorsOf(Class<? extends BioPAXElement> domain)
+	{
+		return this.classToEditorSet.get(domain);
 	}
 
 	public Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe)
 	{
-		return (Set<ObjectPropertyEditor>) this.classToInverseEditorMap.get(bpe.getModelInterface()).values();
+		return this.getInverseEditorsOf(bpe.getModelInterface());
 	}
+
+	public Set<ObjectPropertyEditor> getInverseEditorsOf(Class<? extends BioPAXElement> domain)
+	{
+		return this.classToInverseEditorMap.get(domain);
+	}
+
 
 	public <D extends BioPAXElement> PropertyEditor<? super D, ?> getEditorForProperty(String property,
 	                                                                           Class<D> javaClass)
@@ -156,16 +169,7 @@ public abstract class EditorMapAdapter implements EditorMap
 			{
 				if(checkInverseRangeIsAssignable(editor, c))
 				{
-				HashMap<String, ObjectPropertyEditor> classMap =
-							classToInverseEditorMap.get(c);
-					if(classMap.get(editor.getProperty())== null)
-					classMap.put(editor.getProperty(), editor);
-					else
-					{
-					   //TODO - put a union inverse accessor here..
-
-					};
-
+					classToInverseEditorMap.get(c).add(editor);
 				}
 			}
 		}
@@ -199,10 +203,12 @@ public abstract class EditorMapAdapter implements EditorMap
 	{
 		try
 		{
-			Class<? extends BioPAXElement> modelInterface = getModelInterface(localName);
+			Class<? extends BioPAXElement> domain = getModelInterface(localName);
 
-			classToEditorMap.put(modelInterface, new HashMap<String,PropertyEditor>());
-			classToInverseEditorMap.put(modelInterface, new HashMap<String,ObjectPropertyEditor>());
+			HashMap<String, PropertyEditor> peMap = new HashMap<String, PropertyEditor>();
+			classToEditorMap.put(domain, peMap);
+			classToInverseEditorMap.put(domain, new HashSet<ObjectPropertyEditor>());
+			classToEditorSet.put(domain,new ValueSet(peMap.values()));
 		}
 		catch (IllegalBioPAXArgumentException e)
 		{
@@ -263,6 +269,26 @@ public abstract class EditorMapAdapter implements EditorMap
 		catch (ClassNotFoundException e)
 		{
 			throw new IllegalBioPAXArgumentException("Could not locate interface for:" + localName);
+		}
+	}
+
+	private class ValueSet extends AbstractSet<PropertyEditor>
+	{
+		Collection values;
+
+		public ValueSet(Collection<PropertyEditor> values)
+		{
+			this.values = values;
+		}
+
+		@Override public Iterator<PropertyEditor> iterator()
+		{
+			return values.iterator();
+		}
+
+		@Override public int size()
+		{
+			return values.size();
 		}
 	}
 

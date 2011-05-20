@@ -106,7 +106,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		{
 			Method getMethod = detectGetMethod(domain, property);
 			boolean multipleCardinality = isMultipleCardinality(getMethod);
-			Class<R> range = detectRange(getMethod, multipleCardinality);
+			Class<R> range = detectRange(getMethod);
 
 			if (range.isPrimitive() || range.equals(Boolean.class))
 			{
@@ -159,14 +159,14 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	/**
 	 * Given the multiple cardinality feature, the range of the get method is returned.
 	 * @param getMethod default method
-	 * @param multipleCardinality boolean value to indicate whether to consider multiple cardinality
+
 	 * @return the range as a class
 	 */
-	private static Class detectRange(Method getMethod, boolean multipleCardinality)
+	protected static Class detectRange(Method getMethod)
 	{
 		Class range = getMethod.getReturnType();
 		//if the return type is a collection then we have multiple cardinality
-		if (multipleCardinality)
+		if (Collection.class.isAssignableFrom(range))
 		{
 			//it is a collection, by default assume non parameterized.
 			range = Object.class;

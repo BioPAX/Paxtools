@@ -59,5 +59,10 @@ public class PathAccessorTest
 	  accessor = new PathAccessor("Protein/entityReference/xref:RelationshipXref/id", BioPAXLevel.L3);
 	  values = accessor.getValueFromBean(p1);
 	  assertTrue(values.contains("yourID"));
+
+	  accessor = new PathAccessor("PublicationXref/xrefOf", BioPAXLevel.L3);
+	  values = accessor.getValueFromBean(px2);
+	  assertTrue(values.contains(r2));
+
   }
 }

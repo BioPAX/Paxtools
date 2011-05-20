@@ -32,8 +32,6 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 		StringTokenizer st = new StringTokenizer(path, "/");
 		String domainstr = st.nextToken();
-
-		SimpleEditorMap sem = SimpleEditorMap.get(level);
 		Class<? extends BioPAXElement> intermediate = getClass(level, domainstr);
 
 		this.objectAccessors = new ArrayList<PropertyAccessor<? extends BioPAXElement, ? extends BioPAXElement>>(
@@ -64,10 +62,9 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		PropertyAccessor stepAccessor = getStepAccessor(level, ct, domain);
 		Class<? extends BioPAXElement> restricted = getRestricted(level, ct);
 
-		PropertyAccessor accessor = restricted == null ? stepAccessor : new ClassFilteringPropertyAccessor
-				(stepAccessor,
+		PropertyAccessor accessor = restricted == null ? stepAccessor :
+				new ClassFilteringPropertyAccessor(stepAccessor,restricted);
 
-				 restricted);
 		objectAccessors.add(accessor);
 		domain = restricted == null ? stepAccessor.getRange() : restricted;
 		domain = BioPAXElement.class.isAssignableFrom(domain) ? domain : null;
@@ -147,10 +144,21 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	                                                                                 Class<D> domain)
 	{
 		String property = ct.nextToken();
-		PropertyAccessor<? super D, ?> simple;
+		PropertyAccessor<? super D, ?> simple = null;
 		if (property.endsWith("Of"))
 		{
-			simple = SimpleEditorMap.get(level).getEditorForProperty(property, domain);
+
+			String forwardName = property.substring(0, property.length() - 2);
+			for (ObjectPropertyEditor ope : SimpleEditorMap.get(level).getInverseEditorsOf(domain))
+			{
+			  if(ope.property.equals(forwardName))
+			  {
+				  if(simple == null)
+					  simple = ope.getInverseAccessor();
+				  else System.out.println("ouch");
+			  }
+
+			}
 		}
 		else
 		{

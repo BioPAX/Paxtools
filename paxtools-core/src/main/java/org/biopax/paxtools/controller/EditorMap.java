@@ -79,7 +79,7 @@ public interface EditorMap
      */
     Set<PropertyEditor> getEditorsOf(BioPAXElement bpe);
 
-	Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe); //TODO generify
+	Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe);
 
 
     /**
@@ -100,4 +100,7 @@ public interface EditorMap
      */
     BioPAXLevel getLevel();
 
+	Set<PropertyEditor> getEditorsOf(Class<? extends BioPAXElement> domain);
+
+	Set<ObjectPropertyEditor> getInverseEditorsOf(Class<? extends BioPAXElement> domain);
 }

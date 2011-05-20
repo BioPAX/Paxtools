@@ -40,7 +40,7 @@ public class TraverserBilinked extends Traverser
 			{
 				if (editor.isInverseMultipleCardinality())
 				{
-					Set valueSet = new HashSet((Collection) editor.getInverseValueFromBean(element));
+					Set valueSet = new HashSet(editor.getInverseAccessor().getValueFromBean(element));
 					for (Object value : valueSet)
 					{
 						visitor.visit(element, value, model, editor);
@@ -48,7 +48,7 @@ public class TraverserBilinked extends Traverser
 				}
 				else
 				{
-					visitor.visit(element, editor.getInverseValueFromBean(element), model, editor);
+					visitor.visit(element, editor.getInverseAccessor().getValueFromBean(element), model, editor);
 				}
 			}
 		}

@@ -111,9 +111,9 @@ public class MockFactory extends BioPAXFactoryAdaptor
                     if (!Entity.class.isAssignableFrom(range)) {
                         if (multiple) {
                             value =
-                                    createRestrictedMock(propertyEditor, bpe, 3);
+                                    createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe, 3);
                         } else {
-                            value = createRestrictedMock(propertyEditor, bpe, 1)
+                            value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe, 1)
                                     .iterator().next();
                         }
                     }
@@ -139,19 +139,17 @@ public class MockFactory extends BioPAXFactoryAdaptor
         }
     }
 
-    private HashSet<BioPAXElement> createRestrictedMock(PropertyEditor propertyEditor,
+    private HashSet<BioPAXElement> createRestrictedMock(ObjectPropertyEditor propertyEditor,
                                                         BioPAXElement bpe, int k) {
         HashSet<BioPAXElement> hashSet = new HashSet<BioPAXElement>();
 
-        Object[] restricted =
-                ((ObjectPropertyEditor) propertyEditor)
-                        .getRestrictedRangesFor(bpe.getModelInterface())
-                        .toArray();
-        int length = restricted.length;
-        for (int i = 0; i < k; i++) {
-            Class restrictedRange = (Class) restricted[i % length];
-            hashSet.add(createMock(restrictedRange, bpe.getClass()));
-        }
+
+	   Set<Class<? extends BioPAXElement>> rranges = propertyEditor.getRestrictedRangesFor(
+			   bpe.getModelInterface());
+	    for (Class<? extends BioPAXElement> rrange : rranges)
+	    {
+		      hashSet.add(createMock(rrange, bpe.getModelInterface()));
+	    }
         return hashSet;
     }
 

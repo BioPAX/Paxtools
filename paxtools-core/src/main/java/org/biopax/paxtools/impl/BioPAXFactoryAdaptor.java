@@ -24,7 +24,7 @@ public abstract class BioPAXFactoryAdaptor extends BioPAXFactory {
     }
 
     @Override
-    public boolean canInstantiate(Class<? extends BioPAXElement> aClass)
+    public boolean canInstantiate(Class<? extends BioPAXElement> aClass)    //TODO do better, check package etc..
     {
         try {
             return !Modifier.isAbstract(Class.forName(mapClassName(aClass)).getModifiers());

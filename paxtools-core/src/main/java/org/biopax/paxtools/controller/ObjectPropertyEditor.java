@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.AutoComplete;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
+import javax.jnlp.ExtendedService;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -14,11 +15,9 @@ import java.util.Set;
 /**
  * Provides an editor compatible with all value types other Primitive, ENUM, and String by extending
  * the {@link org.biopax.paxtools.controller.PropertyEditor}.
- *
  * @see org.biopax.paxtools.controller.PropertyEditor
  */
-public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXElement>
-		extends PropertyEditor<D, R>
+public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXElement> extends PropertyEditor<D, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -30,45 +29,48 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 	private boolean inverseMultipleCardinality;
 
 	private boolean completeForward;
+
 	private boolean completeBackward;
 
-	private PropertyAccessor<R,D> inverseAccessor;
+	private PropertyAccessor<R, ? super D> inverseAccessor;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-	public ObjectPropertyEditor(String property, Method getMethod,
-	                            final Class<D> domain,
-	                            final Class<R> range,
+	public ObjectPropertyEditor(String property, Method getMethod, final Class<D> domain, final Class<R> range,
 	                            boolean multipleCardinality)
 	{
-		super(property,
-				getMethod,
-				domain,
-				range,
-				multipleCardinality);
+		super(property, getMethod, domain, range, multipleCardinality);
 
 		inverseGetMethod = findInverseGetMethod();
 
 		if (inverseGetMethod != null)
 		{
 			inverseMultipleCardinality = isMultipleCardinality(inverseGetMethod);
+			this.inverseAccessor = buildInverse(detectRange(inverseGetMethod),range);
 		}
-		this.inverseAccessor = new SimplePropertyAccessor<R, D>(
-				range, domain,inverseMultipleCardinality,inverseGetMethod);
+
+
 		AutoComplete autComp = getGetMethod().getAnnotation(AutoComplete.class);
 
 		if (autComp == null)
 		{
 			completeForward = true;
 			completeBackward = false;
-		}
-		else
+		} else
 		{
 			completeForward = autComp.forward();
 			completeBackward = autComp.backward();
 		}
 
 
+	}
+
+	private <T extends BioPAXElement> SimplePropertyAccessor<R, ? super D> buildInverse(Class<T> inverseRange,
+	                                                                                    Class<R> inverseDomain)
+	{
+		return (SimplePropertyAccessor<R, ? super D>) new SimplePropertyAccessor<R, T>(inverseDomain, inverseRange,
+		                                                                               inverseMultipleCardinality,
+		                                                                               inverseGetMethod);
 	}
 
 // --------------------- GETTER / SETTER METHODS ---------------------
@@ -98,9 +100,9 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		return inverseGetMethod;
 	}
 
-	public PropertyAccessor<R,D> getInverseAccessor()
+	public PropertyAccessor<R, ? super D> getInverseAccessor()
 	{
-		return inverseAccessor;
+		return (PropertyAccessor<R, ? super D>) inverseAccessor;
 	}
 
 	// -------------------------- OTHER METHODS --------------------------
@@ -111,11 +113,11 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		for (Class rDomain : restrictedRanges.keySet())
 		{
 			sb.append(" D:").append(rDomain.getSimpleName()).append("=");
-			String delim ="";
+			String delim = "";
 			for (Class<? extends BioPAXElement> range : restrictedRanges.get(rDomain))
 			{
 				sb.append(delim).append(range.getSimpleName());
-				delim= ",";
+				delim = ",";
 			}
 
 		}
@@ -127,11 +129,12 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		this.restrictedRanges.put(domain, ranges);
 	}
 
-	public void setRangeRestriction(Map<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>>
-			restrictedRanges)
+	public void setRangeRestriction(
+			Map<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>> restrictedRanges)
 	{
 		this.restrictedRanges = restrictedRanges;
 	}
+
 	@Override
 	protected void checkRestrictions(R value, D bean)
 	{
@@ -141,8 +144,7 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		if (classes != null && !isInstanceOfAtLeastOne(classes, value))
 		{
 			throw new IllegalBioPAXArgumentException(
-					"The range restriction is violated \n" +
-					"value: " + value + "--> bean: " + bean);
+					"The range restriction is violated \n" + "value: " + value + "--> bean: " + bean);
 		}
 	}
 
@@ -180,10 +182,6 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		return method;
 	}
 
-	public Set<? extends D> getInverseValueFromBean(R bean)
-	{
-		return this.getInverseAccessor().getValueFromBean(bean);
-	}
 
 	// --------------------- ACCESORS and MUTATORS---------------------
 

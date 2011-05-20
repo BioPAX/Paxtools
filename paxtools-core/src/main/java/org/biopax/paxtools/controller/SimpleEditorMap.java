@@ -157,4 +157,14 @@ public enum SimpleEditorMap implements EditorMap
 		return impl.getLevel();
 
 	}
+
+	@Override public Set<PropertyEditor> getEditorsOf(Class<? extends BioPAXElement> domain)
+	{
+		return impl.getEditorsOf(domain);
+	}
+
+	@Override public Set<ObjectPropertyEditor> getInverseEditorsOf(Class<? extends BioPAXElement> domain)
+	{
+		return impl.getInverseEditorsOf(domain);
+	}
 }
