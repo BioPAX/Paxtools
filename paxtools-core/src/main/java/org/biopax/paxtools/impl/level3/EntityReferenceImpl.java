@@ -1,6 +1,8 @@
 package org.biopax.paxtools.impl.level3;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
@@ -17,6 +19,8 @@ import java.util.Set;
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
 {
+	private final Log log = LogFactory.getLog(EntityReferenceImpl.class);
+	
 	private Set<EntityFeature> entityFeature;
 	private Set<SimplePhysicalEntity> entityReferenceOf;
 	private Set<Evidence> evidence;
@@ -65,14 +69,23 @@ public abstract class EntityReferenceImpl extends NamedImpl
 			{
 				if (!eFof.equals(this))
 				{
-					throw new BidirectionalLinkViolationException(this,
-							entityFeature);
+					//throw new BidirectionalLinkViolationException(this, entityFeature);
+					if(log.isWarnEnabled())
+						log.warn("Using addEntityFeature method bidirectional " +
+								"link gets violated between " 
+								+ getModelInterface().getSimpleName() +
+								" " + getRDFId() 
+								+ " and " + entityFeature.getModelInterface().getSimpleName()
+								+ " " + entityFeature.getRDFId());
 				}
 			}
+			/* do it anyway!
 			else
+			*/
 			{
-				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this); //todo
+				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this); //todo (what?)
 			}
+			
 			this.entityFeature.add(entityFeature);
 		}
 	}

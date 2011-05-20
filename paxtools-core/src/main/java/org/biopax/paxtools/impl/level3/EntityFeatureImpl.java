@@ -1,5 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
@@ -16,7 +18,8 @@ import java.util.Set;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
-
+	private final Log log = LogFactory.getLog(EntityFeatureImpl.class);
+	
 	private Set<Evidence> evidence;
 	private EntityReference ownerEntityReference;
 	private Set<PhysicalEntity> featureOf;
@@ -72,9 +75,17 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		{
 			if (this.ownerEntityReference.getEntityFeature().contains(this))
 			{
-				throw new BidirectionalLinkViolationException(this, this.ownerEntityReference);
+				//throw new BidirectionalLinkViolationException(this, this.ownerEntityReference);
+				log.warn("Using setEntityFeatureOf method bidirectional " +
+						"link gets violated between " 
+						+ getModelInterface().getSimpleName() +
+						" " + getRDFId() 
+						+ " and " + newEntityReference.getModelInterface().getSimpleName()
+						+ " " + newEntityReference.getRDFId());
 			}
+			/* do it anyway!
 			else
+			*/
 			{
 				this.ownerEntityReference = newEntityReference;
 			}
