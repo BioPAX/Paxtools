@@ -3,6 +3,8 @@ package org.biopax.paxtools.controller;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 import org.apache.commons.logging.Log;
@@ -35,7 +37,7 @@ public class ModelUtils {
 	 * for (step) processes to be reached (because they must be 
 	 * listed in the pathwayComponent property as well).
 	 */
-		private static final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>() {
+	private static final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>() {
 		public boolean filter(PropertyEditor editor) {
 			return !editor.getProperty().equals("nextStep")
 				&& !editor.getProperty().equals("NEXT-STEP");
@@ -81,6 +83,27 @@ public class ModelUtils {
 	 */
 	public final String COMMENT_FOR_GENERATED = "Paxtools-generated";
 	
+	
+	/* 
+	 * URI prefix for auto-generated utility class objects
+	 * (can be useful, for consistency, during, e.g.,
+	 * data convertion, normalization, merge, etc.
+	 */
+	public static final String BIOPAX_URI_PREFIX = "urn:biopax:";
+
+	
+	/**
+	 * This is to consistently create URI prefixes for  
+	 * auto-generated/inferred utility class objects. 
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static String uriPrefixForGeneratedUtilityClass(Class<? extends UtilityClass> clazz) {
+		return BIOPAX_URI_PREFIX + clazz.getSimpleName() + ":";
+	}
+	
+
 	/**
 	 * Constructor.
 	 * 
@@ -718,4 +741,37 @@ public class ModelUtils {
 		return cv;
 	}
 	
+	
+	/**
+	 * Builds a "normalized"
+	 * RelationshipXref URI from given parameters. 
+	 * Miriam resource is used to get a standard db name, 
+	 * and if it fails, the initial value is still used. 
+	 * 
+	 * @param db
+	 * @param id
+	 * @return new ID (URI); not null (unless it's a bug :))
+	 * 
+	 */
+	public static String generateURIForRelationshipXref(String db, String id) 
+	{
+		String rdfid = null;
+		String prefix = "urn:biopax:RelationshipXref:"; 
+		//TODO better solution? (it's now hard-coded to match the prefix that the BioPAX validator/normalizer uses..)
+			
+		// add the local part of the URI encoded -
+		try {
+			rdfid = prefix + URLEncoder
+				.encode(db.trim() + "_" + id.trim(), "UTF-8")
+					.toUpperCase();
+		} catch (UnsupportedEncodingException e) {
+			if(LOG.isWarnEnabled())
+				LOG.warn("ID UTF-8 encoding failed! " +
+					"Using the platform default (deprecated method).", e);
+			rdfid = prefix + URLEncoder
+				.encode(db.trim() + "_" + id.trim()).toUpperCase();
+		}
+
+		return rdfid;
+	}
 }
