@@ -40,6 +40,8 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
     private static final String RDF_about = "rdf:about=\"";
     private static final String newline = System.getProperty("line.separator");
     private static final String close = "\">";
+    
+    private boolean normalizeNameSpaces;
 	
 	
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -57,6 +59,8 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	public SimpleIOHandler(BioPAXFactory factory, BioPAXLevel level)
 	{
 		super(factory, level);
+		normalizeNameSpaces = true;
+		mergeDuplicates = false;
 	}
 
 	public void mergeDuplicates(boolean mergeDuplicates)
@@ -706,8 +710,20 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
     {
         base = null;
         bp = null;
-        namespaces = model.getNameSpacePrefixMap();
+        namespaces = new HashMap<String, String>(model.getNameSpacePrefixMap());
+        normalizeNameSpaces(); // - for this reader/exporter tool
+        // also save the changes to the model?
+        if(normalizeNameSpaces) {
+	        model.getNameSpacePrefixMap().clear();
+	        model.getNameSpacePrefixMap().putAll(namespaces);
+        }
+        
+        level = model.getLevel();
+        resetEditorMap();
+    }
 
+    
+    private void normalizeNameSpaces() {
         String owlPre = null;
         String rdfPre = null;
         String xsdPre = null;
@@ -715,42 +731,33 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	    Map<String, String> reverseMap = new HashMap<String, String>();
         for (String pre : namespaces.keySet())
         {
-
             String ns = namespaces.get(pre);
-            if (ns.equalsIgnoreCase(
-                    rdfNS))
-
-            {
+            if (rdfNS.equalsIgnoreCase(ns)) {
                 rdfPre = pre;
             }
-            else if (ns.equalsIgnoreCase(
-                    owlNS))
-
-            {
+            else if (owlNS.equalsIgnoreCase(ns)) {
                 owlPre = pre;
             }
-            else if (ns.equalsIgnoreCase(
-                    xsdNS))
-
-            {
+            else if (xsdNS.equalsIgnoreCase(ns)) {
                 xsdPre = pre;
             }
 
-            reverseMap.put(ns, pre);
+            if(ns != null) {
+            	reverseMap.put(ns, pre);
+            }
         }
-        if (owlPre != null)
-        {
+        
+        if (owlPre != null) {
             reverseMap.remove(namespaces.get(owlPre));
             namespaces.remove(owlPre);
         }
-        if (rdfPre != null)
-        {
+        
+        if (rdfPre != null) {
             reverseMap.remove(namespaces.get(rdfPre));
             namespaces.remove(rdfPre);
         }
 
-        if (xsdPre != null)
-        {
+        if (xsdPre != null) {
             reverseMap.remove(namespaces.get(xsdPre));
             namespaces.remove(xsdPre);
         }
@@ -758,14 +765,10 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
         namespaces.put("rdf", rdfNS);
         namespaces.put("owl", owlNS);
         namespaces.put("xsd", xsdNS);
-
-        
-        level = model.getLevel();
-        resetEditorMap();
-    }
+	}
 
     
-    private void writeHeader(Writer out)
+	private void writeHeader(Writer out)
             throws IOException
     {
         //Header
@@ -809,5 +812,10 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
         out.write(newline+" <owl:imports rdf:resource=\""+bpns+"\" />");
         out.write(newline+"</owl:Ontology>");
     }
+    
+    
+    public void normalizeNameSpaces(boolean normalizeNameSpaces) {
+		this.normalizeNameSpaces = normalizeNameSpaces;
+	}
 }
 
