@@ -11,7 +11,6 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.util.AbstractFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import javax.jnlp.ExtendedService;
 import java.util.*;
 
 

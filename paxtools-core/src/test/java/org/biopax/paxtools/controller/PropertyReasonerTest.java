@@ -211,7 +211,8 @@ public class PropertyReasonerTest {
 		
 		prr.resetPropertyValue(pw1, mm);
 		
-		printModel();
+		//printModel();
+		
 		assertEquals(0, pw1.getComment().size()); // was already 'mouse'
 		assertEquals(mm, pw2.getOrganism());
 		assertEquals(1, pw2.getComment().size()); //added

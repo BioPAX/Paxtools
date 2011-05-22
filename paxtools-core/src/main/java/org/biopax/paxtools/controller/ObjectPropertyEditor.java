@@ -4,7 +4,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.AutoComplete;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import javax.jnlp.ExtendedService;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
