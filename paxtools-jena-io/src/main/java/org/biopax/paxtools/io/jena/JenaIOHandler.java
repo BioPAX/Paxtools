@@ -214,7 +214,7 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 			throw new IllegalBioPAXArgumentException("Unknown property! " + predicate + " bpe:" + bpe.getRDFId(), e);
 		}
 		String localName = ontProperty.getLocalName();
-		PropertyEditor editor = this.getEditorMap().getEditorForProperty(localName, bpe.getClass());
+		PropertyEditor editor = this.getEditorMap().getEditorForProperty(localName, bpe.getModelInterface());
 		if (editor != null)
 		{
 			checkCardinalityAndBindValue(bpe, individual, model, ontProperty, editor);
