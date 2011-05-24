@@ -278,7 +278,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			System.out.println("remove!!");
 		}
 		PropertyEditor editor =
-				this.getEditorMap().getEditorForProperty(triple.property, domain.getClass());
+				this.getEditorMap().getEditorForProperty(triple.property, domain.getModelInterface());
 
 		bindValue(triple.range, editor, domain, model);
 	}
