@@ -98,7 +98,7 @@ public class SimpleInteractionConverterTest
 			Model level2 = handler.convertFromOWL(in);
 			converter.writeInteractionsInSIFNX(level2, out, out,
 			null,
-			Arrays.asList("entity/NAME","entity/XREF"));//,"entity/ORGANISM")); //TODO
+			Arrays.asList("entity/NAME","entity/XREF","entity/ORGANISM"));
 			in.close();
 		}
 	}
