@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.util.SetStringBridge;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -32,6 +33,7 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@Boost(2.0f)
 	@Column(columnDefinition="LONGTEXT")
 	public String getStandardName()
 	{
@@ -45,6 +47,7 @@ public abstract class NamedImpl extends XReferrableImpl
 
 	
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@Boost(2.0f)
 	@Column(columnDefinition="LONGTEXT")
 	public String getDisplayName()
 	{
@@ -59,6 +62,7 @@ public abstract class NamedImpl extends XReferrableImpl
 	@ElementCollection
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
+	@Boost(1.0f)
 	@Column(columnDefinition="LONGTEXT")
 	public Set<String> getName()
 	{
