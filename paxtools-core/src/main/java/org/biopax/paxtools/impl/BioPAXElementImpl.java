@@ -1,5 +1,8 @@
 package org.biopax.paxtools.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.biopax.paxtools.model.BioPAXElement;
 
 import javax.persistence.*;
@@ -38,6 +41,9 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	private String id;
 	private Long proxyId = 0L;
 	private Integer version;
+	
+	// anything extra can be stored in this map (not to persist in a DB though)
+	private Map<String, Object> annotations;
 
 	//@Id
 	//@GeneratedValue(strategy=GenerationType.AUTO)
@@ -64,7 +70,9 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	}
     
     
-	public BioPAXElementImpl(){};
+	public BioPAXElementImpl(){
+		this.annotations = new HashMap<String, Object>();
+	};
 	
 	public BioPAXElementImpl(String uri){
 		this.id = uri;
@@ -114,5 +122,10 @@ public abstract class BioPAXElementImpl implements BioPAXElement
         return id;
     }
 
+    
+    @Transient
+    public Map<String, Object> getAnnotations() {
+		return annotations;
+	}
 }
 
