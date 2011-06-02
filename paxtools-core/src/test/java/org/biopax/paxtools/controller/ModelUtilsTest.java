@@ -3,8 +3,10 @@ package org.biopax.paxtools.controller;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
 
 import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandlerTest;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
@@ -235,5 +237,16 @@ public class ModelUtilsTest {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		new SimpleIOHandler().convertToOWL(model, bytes);
 		System.out.println(bytes.toString());
+	}
+
+	@Test
+	public final void testMetrics()
+	{
+		Model model = SimpleIOHandlerTest.getL3Model(new SimpleIOHandler());
+		ModelUtils mu = new ModelUtils(model);
+		Map<Class<? extends BioPAXElement>,Integer> metrics =
+				mu.generateClassMetrics();
+		System.out.println("metrics = " + metrics);
+
 	}
 }

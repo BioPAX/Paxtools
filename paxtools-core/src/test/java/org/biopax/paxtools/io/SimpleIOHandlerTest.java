@@ -28,16 +28,8 @@ public class SimpleIOHandlerTest
 	@Test
 	public final void testReadWriteL2() throws IOException
 	{
-		String s = "L2" + File.separator
-		           + "biopax_id_557861_mTor_signaling.owl";
 		BioPAXIOHandler io = new SimpleIOHandler();
-
-		System.out.println("file = " + s);
-
-		System.out.println("starting " + s);
-		InputStream in = getClass().getClassLoader().getResourceAsStream(s);
-		assertNotNull(in);
-		Model model = io.convertFromOWL(in);
+		Model model = getL2Model(io);
 		assertNotNull(model);
 		assertFalse(model.getObjects().isEmpty());
 		System.out.println("Model has " + model.getObjects().size() + " objects)");
@@ -49,17 +41,24 @@ public class SimpleIOHandlerTest
 		io.convertToOWL(model, out);
 	}
 
-	@Test
-	public final void testReadWriteL3() throws IOException
+	public static Model getL2Model(BioPAXIOHandler io)
 	{
-		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
-		BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
+		String s = "L2" + File.separator
+		           + "biopax_id_557861_mTor_signaling.owl";
 
 		System.out.println("file = " + s);
 
 		System.out.println("starting " + s);
-		InputStream in = getClass().getClassLoader().getResourceAsStream(s);
-		Model model = io.convertFromOWL(in);
+		InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
+		assertNotNull(in);
+		return io.convertFromOWL(in);
+	}
+
+	@Test
+	public final void testReadWriteL3() throws IOException
+	{
+		BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
+		Model model = getL3Model(io);
 		assertNotNull(model);
 		assertFalse(model.getObjects().isEmpty());
 		System.out.println("Model has " + model.getObjects().size()
@@ -67,6 +66,17 @@ public class SimpleIOHandlerTest
 		FileOutputStream out = new FileOutputStream(getClass().getResource("")
 				.getFile() + File.separator + "simpleReadWrite.owl");
 		io.convertToOWL(model, out);
+	}
+
+	public static Model getL3Model(BioPAXIOHandler io)
+	{
+		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
+
+		System.out.println("file = " + s);
+
+		System.out.println("starting " + s);
+		InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
+		return io.convertFromOWL(in);
 	}
 
 	@Test
