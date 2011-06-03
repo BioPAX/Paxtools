@@ -1,5 +1,8 @@
 package org.biopax.paxtools.query.model;
 
+import org.biopax.paxtools.model.level3.Conversion;
+import org.biopax.paxtools.query.wrapperL3.ConversionWrapper;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,8 +21,16 @@ public abstract class AbstractGraph implements Graph
 	public GraphObject getGraphObject(Object obj)
 	{
 		String key = getKey(obj);
+		GraphObject go = objectMap.get(key);
 
-		if (!objectMap.containsKey(key))
+//		if (obj instanceof Conversion && go == null)
+//		{
+//			go = objectMap.get(key + ConversionWrapper.LEFT_TO_RIGHT);
+//			if (go == null)
+//				go = objectMap.get(key + ConversionWrapper.RIGHT_TO_LEFT);
+//		}
+
+		if (go == null)
 		{
 			Node node = wrap(obj);
 

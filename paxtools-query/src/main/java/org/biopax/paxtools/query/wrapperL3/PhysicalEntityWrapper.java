@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.query.model.AbstractNode;
 import org.biopax.paxtools.query.model.Edge;
+import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
 import java.util.Collection;
@@ -16,23 +17,25 @@ import java.util.Set;
 public class PhysicalEntityWrapper extends AbstractNode
 {
 	PhysicalEntity pe;
-	boolean interactionsInited;
+	boolean upstreamInited;
+	boolean downstreamInited;
 	boolean equivalentInited;
 
 	public PhysicalEntityWrapper(PhysicalEntity pe, GraphL3 graph)
 	{
 		super(graph);
 		this.pe = pe;
-		this.interactionsInited = false;
+		this.upstreamInited = false;
+		this.downstreamInited = false;
 		this.equivalentInited = false;
 	}
 
 	@Override
 	public Collection<Edge> getUpstream()
 	{
-		if (!interactionsInited)
+		if (!upstreamInited)
 		{
-			initInteractions();
+			initUpstreamInteractions();
 		}
 		return super.getUpstream();
 	}
@@ -40,22 +43,118 @@ public class PhysicalEntityWrapper extends AbstractNode
 	@Override
 	public Collection<Edge> getDownstream()
 	{
-		if (!interactionsInited)
+		if (!downstreamInited)
 		{
-			initInteractions();
+			initDownstreamInteractions();
 		}
 		return super.getDownstream();
 	}
 
-	protected void initInteractions()
+	public Collection<Edge> getUpstreamNoInit()
 	{
-		for (Conversion conv : getRelatedConversions(pe.getParticipantOf()))
+		return super.getUpstream();
+	}
+
+	public Collection<Edge> getDownstreamNoInit()
+	{
+		return super.getDownstream();
+	}
+
+	protected void initUpstreamInteractions()
+	{
+		for (Conversion conv : getUpstreamConversions(pe.getParticipantOf()))
 		{
 			graph.getGraphObject(conv);
 		}
 		
-		interactionsInited = true;
+		upstreamInited = true;
 	}
+
+	protected void initDownstreamInteractions()
+	{
+		for (Conversion conv : getDownstreamConversions(pe.getParticipantOf()))
+		{
+			graph.getGraphObject(conv);
+		}
+		
+		downstreamInited = true;
+	}
+
+	//--- Upstream conversions --------------------------------------------------------------------|
+
+	private Set<Conversion> getUpstreamConversions(Collection<Interaction> inters)
+	{
+		Set<Conversion> set = new HashSet<Conversion>();
+
+		for (Interaction inter : inters)
+		{
+			if (inter instanceof Conversion)
+			{
+				Conversion conv = (Conversion) inter;
+				ConversionDirectionType dir = conv.getConversionDirection();
+
+				if (dir == ConversionDirectionType.REVERSIBLE ||
+					(dir == ConversionDirectionType.RIGHT_TO_LEFT && conv.getLeft().contains(pe)) ||
+					((dir == ConversionDirectionType.LEFT_TO_RIGHT || dir == null) &&
+						conv.getRight().contains(pe)))
+				{
+					set.add(conv);
+				}
+			}
+		}
+		return set;
+	}
+
+	//--- Downstream conversions ------------------------------------------------------------------|
+
+	private Set<Conversion> getDownstreamConversions(Collection<Interaction> inters)
+	{
+		Set<Conversion> set = new HashSet<Conversion>();
+
+		for (Interaction inter : inters)
+		{
+			if (inter instanceof Conversion)
+			{
+				checkAndAddDownstreamConversion((Conversion) inter, set);
+			}
+			else if (inter instanceof Control)
+			{
+				getDownstreamConversions((Control) inter, set);
+			}
+		}
+		return set;
+	}
+
+	private void checkAndAddDownstreamConversion(Conversion conv, Set<Conversion> set)
+	{
+		ConversionDirectionType dir = conv.getConversionDirection();
+
+		if (dir == ConversionDirectionType.REVERSIBLE ||
+			(dir == ConversionDirectionType.RIGHT_TO_LEFT && conv.getRight().contains(pe)) ||
+			((dir == ConversionDirectionType.LEFT_TO_RIGHT || dir == null) &&
+				conv.getLeft().contains(pe)))
+		{
+			set.add(conv);
+		}
+	}
+
+	private Set<Conversion> getDownstreamConversions(Control ctrl, Set<Conversion> set)
+	{
+		for (Process process : ctrl.getControlled())
+		{
+			if (process instanceof Conversion)
+			{
+				set.add((Conversion) process);
+			}
+			else if (process instanceof Control)
+			{
+				getDownstreamConversions((Control) process, set);
+			}
+		}
+		return set;
+	}
+
+	//--- Related conversions ---------------------------------------------------------------------|
 
 	private Set<Conversion> getRelatedConversions(Collection<Interaction> inters)
 	{

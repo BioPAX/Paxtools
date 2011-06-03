@@ -100,8 +100,7 @@ public class CommonStreamQuery
 		{
 			//run BFS for set of states of each entity
 		  	BFS bfs = new BFS (source, null, direction, limit);
-			Map<GraphObject, Integer> BFSResult = 
-				new HashMap<GraphObject, Integer>();
+			Map<GraphObject, Integer> BFSResult = new HashMap<GraphObject, Integer>();
 			BFSResult.putAll(bfs.run());
 
 			/**

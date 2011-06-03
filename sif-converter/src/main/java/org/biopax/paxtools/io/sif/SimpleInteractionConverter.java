@@ -209,6 +209,8 @@ public class SimpleInteractionConverter
 		writer = new OutputStreamWriter(nodeStream);
 		for (BioPAXElement entity : entities)
 		{
+			if (entity == null) continue;
+			
 			writer.write(entity.getRDFId());
 			if (interactorAccessors != null)
 			{

@@ -69,13 +69,18 @@ public class ControlWrapper extends AbstractNode
 		}
 	}
 
-	private void bindUpstream(BioPAXElement control)
+	private void bindUpstream(BioPAXElement element)
 	{
-		Node node = (Node) graph.getGraphObject(control);
+		Node node = (Node) graph.getGraphObject(element);
 
 		Edge edge = new EdgeL3(node, this, graph);
 
-		node.getDownstream().add(edge);
+		if (node instanceof PhysicalEntityWrapper)
+		{
+			((PhysicalEntityWrapper) node).getDownstreamNoInit().add(edge);
+		}
+		else node.getDownstream().add(edge);
+
 		this.getUpstream().add(edge);
 	}
 

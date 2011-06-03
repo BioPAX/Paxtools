@@ -48,7 +48,7 @@ public class SimpleInteractionConverterTest
 		out.close();
 	}
 	
-	@Test
+//	@Test
 	public void testWriteInteractionsInSIF() throws Exception
 	{
 		SimpleInteractionConverter converter = new SimpleInteractionConverter(
@@ -73,7 +73,7 @@ public class SimpleInteractionConverterTest
 	}
 
 
-    @Test 
+//    @Test
     public void testWriteInteractionsInSIFNX() throws Exception
 	{
         Map options = new HashMap();
@@ -103,7 +103,7 @@ public class SimpleInteractionConverterTest
 		}
 	}
     
-	@Test
+//	@Test
 	public void testWriteInteractionsInSIFl3() throws Exception
 	{
 		SimpleInteractionConverter converter = new SimpleInteractionConverter(
@@ -133,7 +133,7 @@ public class SimpleInteractionConverterTest
 	}
 
 
-    @Test 
+    @Test
     public void testWriteInteractionsInSIFNXl3() throws Exception
 	{
         Map options = new HashMap();
@@ -151,7 +151,7 @@ public class SimpleInteractionConverterTest
 		{
 			public boolean accept(File dir, String name)
 			{
-				return (name.endsWith("owl"));
+				return (name.endsWith("p.owl"));
 			}
 		};
 

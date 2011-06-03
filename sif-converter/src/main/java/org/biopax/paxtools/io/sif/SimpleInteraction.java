@@ -147,7 +147,7 @@ public class SimpleInteraction
 	public String toString()
 	{
 		String from = source.getRDFId();
-		String to = target.getRDFId();
+		String to = target == null ? "null" : target.getRDFId();
 
 // These lines are for creating a SIF with readable names instead of rdf ids.
 //

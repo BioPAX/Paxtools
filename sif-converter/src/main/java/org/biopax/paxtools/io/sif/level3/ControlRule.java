@@ -254,7 +254,11 @@ public class ControlRule implements InteractionRuleL3
 			}
 			else if (pe instanceof Complex)
 			{
-				getSimplePEsInComplex(comp, set);
+				// Check for immediate cyclic complex
+				if (!pe.equals(comp) && !comp.getComponentOf().contains(pe))
+				{
+					getSimplePEsInComplex((Complex) pe, set);
+				}
 			}
 		}
 		return set;
