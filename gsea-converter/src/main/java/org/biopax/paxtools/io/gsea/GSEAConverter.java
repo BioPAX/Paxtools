@@ -181,7 +181,7 @@ public class GSEAConverter implements Visitor {
     		if (checkDatabase) {
 			    for (Xref aXref : aProtein.getXref())
 			    {
-    				if (aXref.getDb().equalsIgnoreCase(this.database)) {
+    				if (aXref.getDb() != null && aXref.getDb().equalsIgnoreCase(this.database)) {
     					this.rdfToGenes.put(aProtein.getRDFId(), aXref.getId());
     					break;
     				}
@@ -204,7 +204,7 @@ public class GSEAConverter implements Visitor {
     		if (checkDatabase) {
 
     			for (Xref aXref: aProteinRef.getXref()) {
-    				if (aXref.getDb().equalsIgnoreCase(database)) {
+    				if (aXref.getDb() != null && aXref.getDb().equalsIgnoreCase(database)) {
     					this.rdfToGenes.put(aProteinRef.getRDFId(), aXref.getId());
     					break;
     				}
