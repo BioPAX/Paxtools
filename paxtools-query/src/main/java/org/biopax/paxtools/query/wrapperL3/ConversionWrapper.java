@@ -34,6 +34,16 @@ public class ConversionWrapper extends AbstractNode
 		return POSITIVE;
 	}
 
+	public boolean getDirection()
+	{
+		return direction;
+	}
+
+	public ConversionWrapper getReverse()
+	{
+		return reverse;
+	}
+
 	public void init()
 	{
 		if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE)
@@ -41,6 +51,7 @@ public class ConversionWrapper extends AbstractNode
 			reverse = new ConversionWrapper(conv, (GraphL3) graph);
 			this.direction = LEFT_TO_RIGHT;
 			reverse.direction = RIGHT_TO_LEFT;
+			reverse.reverse = this;
 		}
 		else if (conv.getConversionDirection() == ConversionDirectionType.LEFT_TO_RIGHT)
 		{
@@ -95,7 +106,12 @@ public class ConversionWrapper extends AbstractNode
 		Node node = (Node) graph.getGraphObject(ele);
 		Edge edge = new EdgeL3(node, this, graph);
 
-		node.getDownstream().add(edge);
+		if (node instanceof PhysicalEntityWrapper)
+		{
+			((PhysicalEntityWrapper) node).getDownstreamNoInit().add(edge);
+		}
+		else node.getDownstream().add(edge);
+
 		this.getUpstream().add(edge);
 	}
 
@@ -104,7 +120,13 @@ public class ConversionWrapper extends AbstractNode
 		Node node = (Node) graph.getGraphObject(pe);
 		Edge edge = new EdgeL3(this, node, graph);
 
-		node.getUpstream().add(edge);
+		if (node instanceof PhysicalEntityWrapper)
+		{
+			((PhysicalEntityWrapper) node).getUpstreamNoInit().add(edge);
+		}
+		else node.getUpstream().add(edge);
+
+
 		this.getDownstream().add(edge);
 	}
 

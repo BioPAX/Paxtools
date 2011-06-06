@@ -791,4 +791,24 @@ public class ModelUtils {
 
 		return rdfid;
 	}
+
+	public Map<Class<? extends BioPAXElement>, Integer> generateClassMetrics()
+	{
+		Map<Class<? extends BioPAXElement>, Integer> metrics =
+				new HashMap<Class<? extends BioPAXElement>, Integer>();
+		for (BioPAXElement bpe : this.model.getObjects())
+		{
+			Integer count = metrics.get(bpe.getModelInterface());
+			if(count == null)
+			{
+				count = 1;
+			}
+			else
+			{
+				count = count+1;
+			}
+			metrics.put(bpe.getModelInterface(),count);
+		}
+		return metrics;
+	}
 }

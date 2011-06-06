@@ -14,8 +14,8 @@ public abstract class AbstractNode implements Node
 	protected Set<Node> upperEquivalent;
 	protected Set<Node> lowerEquivalent;
 
-	private Set<Edge> upstream;
-	private Set<Edge> downstream;
+	protected Set<Edge> upstream;
+	protected Set<Edge> downstream;
 
 	protected AbstractNode(Graph graph)
 	{
@@ -35,6 +35,20 @@ public abstract class AbstractNode implements Node
 	}
 
 	public Collection<Edge> getDownstream()
+	{
+		return downstream;
+	}
+
+	/**
+	 * This class gets the upstream links but does not initialize
+	 * @return
+	 */
+	public Collection<Edge> getUpstreamNoInit()
+	{
+		return upstream;
+	}
+
+	public Collection<Edge> getDownstreamNoInit()
 	{
 		return downstream;
 	}
