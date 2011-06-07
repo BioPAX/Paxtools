@@ -36,11 +36,6 @@ public class NeighborhoodQuery
 	private Map<GraphObject, Integer> mapForward;
 
 	/**
-	 * Result Set of Neighborhood Query
-	 */
-	private Set<GraphObject> queryResult = new HashSet<GraphObject>();
-
-	/**
 	 * Constructor for Neighborhood Query.
 	 */
 	public NeighborhoodQuery(Set<Node> sourceNodes, Direction direction, int limit)
@@ -55,31 +50,34 @@ public class NeighborhoodQuery
 	 */
 	public Set<GraphObject> run()
 	{
-		//if upstream is selected
+		// result set of neighborhood query
+		Set<GraphObject> queryResult = new HashSet<GraphObject>();
+
+		// if upstream is selected
 		if (direction == Direction.UPSTREAM || direction == Direction.BOTHSTREAM)
 		{
-			//run BFS in upstream direction
+			// run BFS in upstream direction
 			BFS bfsBackward = new BFS(sourceNodes, null, Direction.UPSTREAM, this.limit);
 
 			mapBackward = bfsBackward.run();
 
-			//add result of BFS to result Set
+			// add result of BFS to result Set
 			queryResult.addAll(mapBackward.keySet());
 		}
 
-		//if downstream is selected
+		// if downstream is selected
 		if (direction == Direction.DOWNSTREAM || direction == Direction.BOTHSTREAM)
 		{
-			//run BFS in downstream direction
+			// run BFS in downstream direction
 			BFS bfsForward = new BFS(sourceNodes, null, Direction.DOWNSTREAM, this.limit);
 
 			mapForward = bfsForward.run();
 
-			//add result of BFS to result Set
+			// add result of BFS to result Set
 			queryResult.addAll(mapForward.keySet());
 		}
 		
-		//Return the result of query
-		return this.queryResult;
+		// return the result of query
+		return queryResult;
 	}
 }

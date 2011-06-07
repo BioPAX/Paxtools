@@ -41,12 +41,7 @@ public class CommonStreamQuery
 	 * of BFS.
 	 */
 	Map<GraphObject, Integer> reachedCount = new HashMap<GraphObject, Integer>();
-	
-	/**
-	 * Result Set of Stream Query
-	 */
-	private Set<Node> queryResult;
-	
+
 	/**
 	 * Constructor for Common Stream with Selected Nodes.
 	 */
@@ -85,7 +80,7 @@ public class CommonStreamQuery
 	/**
 	 * Method to run query
 	 */
-	public Set<Node> run()
+	public Set<GraphObject> run()
 	{
 		/**
 		 * Candidate contains all the graph objects that are the results of BFS.
@@ -128,19 +123,8 @@ public class CommonStreamQuery
 			}
 		}
 
-		this.queryResult = new HashSet<Node>();
-		
-		//Take out Nodes and store it to result
-		for (GraphObject go : result)
-		{
-			if (go instanceof Node)
-			{
-				this.queryResult.add((Node)go);
-			}
-		}
-		
 		//Return the result of query
-		return this.queryResult;
+		return result;
 	}
 	
 	/**

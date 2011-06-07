@@ -13,8 +13,7 @@ import org.biopax.paxtools.query.model.AbstractGraph;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 public class GraphL3 extends AbstractGraph 
@@ -76,7 +75,7 @@ public class GraphL3 extends AbstractGraph
 		return set;
 	}
 
-	public Set<Node> getWrapperSet(Set<? extends Object> objects)
+	public Set<Node> getWrapperSet(Set<?> objects)
 	{
 		Set<Node> wrapped = new HashSet<Node>();
 
@@ -89,6 +88,22 @@ public class GraphL3 extends AbstractGraph
 			}
 		}
 		return wrapped;
+	}
+
+	@Override
+	public Map<Object, Node> getWrapperMap(Set<?> objects)
+	{
+		Map<Object, Node> map = new HashMap<Object, Node>();
+
+		for (Object object : objects)
+		{
+			Node node = (Node) getGraphObject(object);
+			if (node != null)
+			{
+				map.put(object, node);
+			}
+		}
+		return map;
 	}
 
 	public Set<Object> getWrappedSet(Set<? extends GraphObject> wrappers)

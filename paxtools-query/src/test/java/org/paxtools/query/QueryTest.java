@@ -80,8 +80,8 @@ public class QueryTest
 	{
 		long time = System.currentTimeMillis();
 
-//		InputStream in = getClass().getResourceAsStream("/Meiotic_Recombination.owl");
-		InputStream in = getClass().getResourceAsStream("/cpath2_main_pro.owl");
+		InputStream in = getClass().getResourceAsStream("/Meiotic_Recombination.owl");
+//		InputStream in = getClass().getResourceAsStream("/cpath2_main_pro.owl");
 //		InputStream in = getClass().getResourceAsStream("/merge-bmp.owl");
 		Model model = handler.convertFromOWL(in);
 
@@ -90,9 +90,9 @@ public class QueryTest
 		System.out.println(secs + " secs");
 		time = System.currentTimeMillis();
 
-		BioPAXElement s1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#COMPLEX2684_1_9606");
+		BioPAXElement s1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6022_1_9606");
 //		BioPAXElement s1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6017_1_9606");
-		BioPAXElement t1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN3408_1_9606");
+		BioPAXElement t1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6020_1_9606");
 
 		Set<BioPAXElement> source = new HashSet<BioPAXElement>();
 //		Set<BioPAXElement> target = new HashSet<BioPAXElement>();

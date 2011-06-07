@@ -1,5 +1,7 @@
 package org.biopax.paxtools.query.model;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -11,7 +13,9 @@ public interface Graph
 {
 	public GraphObject getGraphObject(Object obj);
 
-	public Set<Node> getWrapperSet(Set<? extends Object> objects);
+	public Set<Node> getWrapperSet(Set<?> objects);
+
+	public Map<Object, Node> getWrapperMap(Set<?> objects);
 
 	public Set<Object> getWrappedSet(Set<? extends GraphObject> wrappers);
 }
