@@ -194,12 +194,13 @@ public class SimpleInteractionConverter
 				{
 					for (BioPAXElement mediator : si.getMediators())
 					{
-						String cell = ("\t");
+						StringBuilder cell = new StringBuilder("\t");
 						if (mediatorAccessor.getDomain().isInstance(mediator))
 						{
-							cell += mediatorAccessor.getValueFromBean(mediator).toString(); //TODO
-						} else cell += "not applicable";
-						writer.write(cell);
+							cell.append(
+									valuesToString(mediatorAccessor.getValueFromBean(mediator)));
+						} else cell.append("not applicable");
+						writer.write(cell.toString());
 					}
 				}
 			}
@@ -220,13 +221,7 @@ public class SimpleInteractionConverter
 					else
 					{
 						Set values = accessor.getValueFromBean(entity);
-						StringBuilder bldr = new StringBuilder();
-						for (Object value : values)
-						{
-							bldr.append(value).append(";");
-						}
-						if (bldr.length() > 0) bldr.deleteCharAt(bldr.length() - 1);
-						writer.write(bldr.toString());
+						writer.write(valuesToString(values));
 					}
 				}
 			}
@@ -234,6 +229,17 @@ public class SimpleInteractionConverter
 			writer.write("\n");
 		}
 		writer.close();
+	}
+
+	private String valuesToString(Set values)
+	{
+		StringBuilder bldr = new StringBuilder();
+		for (Object value : values)
+		{
+			bldr.append(value).append(";");
+		}
+		if (bldr.length() > 0) bldr.deleteCharAt(bldr.length() - 1);
+		return bldr.toString();
 	}
 
 	public static List<InteractionRule> getRules(BioPAXLevel level)
