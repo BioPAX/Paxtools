@@ -103,7 +103,7 @@ public class QueryExecuter
 		}
 		else return null;
 
-		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
+		Collection<Set<Node>> source = prepareNodeSets(sourceSet, graph);
 
 		CommonStreamQuery query = new CommonStreamQuery(source, direction, limit);
 
@@ -125,11 +125,11 @@ public class QueryExecuter
 		}
 		else return null;
 
-		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
+		Collection<Set<Node>> sourceSets = prepareNodeSets(sourceSet, graph);
 
 		// Run a common stream query
 
-		CommonStreamQuery commStream = new CommonStreamQuery(source, direction, limit);
+		CommonStreamQuery commStream = new CommonStreamQuery(sourceSets, direction, limit);
 
 		Set<GraphObject> resultWrappers = commStream.run();
 
@@ -140,6 +140,14 @@ public class QueryExecuter
 		for (GraphObject go : resultWrappers)
 		{
 			if (go instanceof Node) target.add((Node) go);
+		}
+
+		// Take union of the sources
+
+		Set<Node> source = new HashSet<Node>();
+		for (Set<Node> set : sourceSets)
+		{
+			source.addAll(set);
 		}
 
 		// Run a paths-of-interest query between source set and result set
