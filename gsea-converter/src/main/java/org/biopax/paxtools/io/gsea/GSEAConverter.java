@@ -202,13 +202,21 @@ public class GSEAConverter implements Visitor {
     			return;
     		}
     		if (checkDatabase) {
-
-    			for (Xref aXref: aProteinRef.getXref()) {
-    				if (aXref.getDb() != null && aXref.getDb().equalsIgnoreCase(database)) {
-    					this.rdfToGenes.put(aProteinRef.getRDFId(), aXref.getId());
-    					break;
-    				}
-    			}
+				// short circuit if we are converting for pathway commons
+				// Also ensure we get back primary accession - which is built into the rdf id of the protein  ref
+				if (database.equalsIgnoreCase("uniprot") && aProteinRef.getRDFId().startsWith("urn:miriam:uniprot:")) {
+					String accession = aProteinRef.getRDFId();
+					accession = accession.substring(accession.lastIndexOf(":")+1);
+					this.rdfToGenes.put(aProteinRef.getRDFId(), accession);
+				}
+				else {
+					for (Xref aXref: aProteinRef.getXref()) {
+						if (aXref.getDb() != null && aXref.getDb().equalsIgnoreCase(database)) {
+							this.rdfToGenes.put(aProteinRef.getRDFId(), aXref.getId());
+							break;
+						}
+					}
+				}
     		}
     		else {
     			this.rdfToGenes.put(aProteinRef.getRDFId(), aProteinRef.getRDFId());
