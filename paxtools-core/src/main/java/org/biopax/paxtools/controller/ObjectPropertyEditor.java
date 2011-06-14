@@ -4,7 +4,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.AutoComplete;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -143,7 +142,9 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		if (classes != null && !isInstanceOfAtLeastOne(classes, value))
 		{
 			throw new IllegalBioPAXArgumentException(
-					"The range restriction is violated \n" + "value: " + value + "--> bean: " + bean);
+				"The range restriction is violated; " 
+					+ "property: " + property
+					+ ", bean: " + bean + "--> value: " + value);
 		}
 	}
 
