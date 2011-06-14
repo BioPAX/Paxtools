@@ -112,11 +112,32 @@
 	<profiles>
 		<profile>
 			<id>rodche</id>
-			<!-- used by maven-release-plugin during
-			"mvn release:prepare -Prodche", "mvn release:perform -Prodche" -->
+			<!-- used by maven-release-plugin during 
+				"mvn release:prepare -Prodche", 
+				"mvn release:perform -Prodche";
+			${local.biopax.m2repo}, ${local.biopax.site} must 
+			be defined in the local ~/.m2/settings.xml, profiles...
+			-->
 			<properties>
 				<scm.username>rodche</scm.username>
 			</properties>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>biopax.snapshots</id>
+					<name>Local BioPAX Snapshots Repository</name>
+					<url>${local.biopax.m2repo}/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>biopax.releases</id>
+					<name>Local BioPAX Repository</name>
+					<url>${local.biopax.m2repo}/releases</url>
+				</repository>
+				<site>
+					<id>biopax.sf.net</id>
+					<name>BioPAX Sourceforge site</name>
+					<url>${local.biopax.site}/paxtools</url>
+				</site>
+			</distributionManagement>
 		</profile>
 		<profile>
 			<id>emekdemir</id>
@@ -162,7 +183,13 @@
   		but, after several minutes, the shell will expire due to inactivity; 
   		see also: http://sourceforge.net/apps/trac/sourceforge/wiki/Shell%20service)
   	3) now you can do "mvn deploy" or "mvn site:deploy" (do site:site first, for speed)!
+  	
+  	Alternative approach:
+  	- configure to use local <site> and <repository> locations in your <profile>,
+  	- do site, deploy normally (it now goes not ot tthe BioPAX@Sourceforge but to a local dir) 
+  	- setup/use RSYNC (outside maven stuff) to upload the releases and docs from that locations to @sf.net
 	-->
+	
 	<distributionManagement>
 		<site>
 			<id>biopax.sf.net</id>
