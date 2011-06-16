@@ -135,6 +135,7 @@ public class ModelUtils {
 		this.editorMap = SimpleEditorMap.get(model.getLevel());
 		this.io = new SimpleIOHandler(model.getLevel());
 		((SimpleIOHandler) this.io).mergeDuplicates(true);
+		((SimpleIOHandler) this.io).normalizeNameSpaces(false);
 	}
 	
     /**
@@ -810,5 +811,54 @@ public class ModelUtils {
 			metrics.put(bpe.getModelInterface(),count);
 		}
 		return metrics;
+	}
+	
+	
+	public <T extends BioPAXElement> T getObject(String urn, Class<T> clazz) 
+	{
+		BioPAXElement bpe = model.getByID(urn);
+		if(clazz.isInstance(bpe)) {
+			return (T) bpe;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * This is a special (not always applicable) utility method.
+	 * It finds the list of IDs of objects in the model
+	 * that have a NORMALIZED xref equivalent (same db,id,type) 
+	 * to at least one of the specified xrefs.
+	 * 
+	 * @param xrefs
+	 * @param clazz
+	 * @return
+	 */
+	public Set<String> getByXref(Set<? extends Xref> xrefs, 
+			Class<? extends XReferrable> clazz) 
+	{
+			Set<String> toReturn = new HashSet<String>();
+			
+			for (Xref xref : xrefs) {			
+				// map to a normalized RDFId for this type of xref:
+				if(xref.getDb() == null || xref.getId() == null) {
+					continue;
+				}
+				
+				String xurn = generateURIForXref(xref.getDb(), 
+					xref.getId(), (Class<? extends Xref>) xref.getModelInterface());
+				
+				Xref x = (Xref) model.getByID(xurn);
+				if (x != null) {
+					// collect owners's ids (of requested type only)
+					for (XReferrable xr : x.getXrefOf()) {
+						if (clazz.isInstance(xr)) {
+							toReturn.add(xr.getRDFId());
+						}
+					}
+				} 
+			}
+			
+			return toReturn;
 	}
 }
