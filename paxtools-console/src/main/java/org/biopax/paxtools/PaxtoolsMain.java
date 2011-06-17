@@ -16,8 +16,8 @@ import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.validator.BiopaxValidatorClient;
 import org.biopax.validator.BiopaxValidatorClient.RetFormat;
+import org.mskcc.psibiopax.converter.PSIMIConverter;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
-import org.mskcc.psibiopax.converter.driver.PSIMIBioPAXConverterDriver;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -84,8 +84,7 @@ public class PaxtoolsMain {
             FileOutputStream fos = new FileOutputStream(outputFile);
 
             // create converter
-            PSIMIBioPAXConverterDriver.checkPSILevel(inputFile);
-            PSIMIBioPAXConverter converter = new PSIMIBioPAXConverter(bpLevel);
+			PSIMIConverter converter = new PSIMIBioPAXConverter(bpLevel);
 
             // note streams will be closed by converter
             converter.convert(fis, fos);

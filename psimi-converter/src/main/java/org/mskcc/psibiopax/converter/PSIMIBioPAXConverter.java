@@ -29,16 +29,21 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
-
 import org.biopax.paxtools.model.BioPAXLevel;
-import psidev.psi.mi.xml.PsimiXmlReader;
-import psidev.psi.mi.xml.PsimiXmlReaderException;
+
 import psidev.psi.mi.xml.model.Entry;
 import psidev.psi.mi.xml.model.EntrySet;
+import psidev.psi.mi.xml.PsimiXmlReader;
+import psidev.psi.mi.xml.PsimiXmlReaderException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The converter class. 
@@ -48,7 +53,7 @@ import java.io.OutputStream;
  *
  * @author Benjamin Gross
  */
-public class PSIMIBioPAXConverter {
+public class PSIMIBioPAXConverter implements PSIMIConverter {
 
 	/**
 	 * Ref to bp level
@@ -69,7 +74,6 @@ public class PSIMIBioPAXConverter {
 
 		// set member vars
 		this.bpLevel = bpLevel;
-		this.conversionIsComplete = false;
 	}
 
 	/**
@@ -81,12 +85,10 @@ public class PSIMIBioPAXConverter {
 	 * @return boolean
 	 *
 	 * @throws IOException
-	 * @throws JAXBException
-	 * @throws IllegalArgumentException
 	 * @throws PsimiXmlReaderException
 	 */
 	public boolean convert(InputStream inputStream, OutputStream outputStream)
-		throws IOException, IllegalArgumentException, PsimiXmlReaderException {
+		throws IOException, PsimiXmlReaderException {
 
 		// check args
 		if (inputStream == null || outputStream == null) {
@@ -113,9 +115,6 @@ public class PSIMIBioPAXConverter {
 	 * @param outputStream OutputStream
 	 * @return boolean
 	 *
-	 * @throws IOException
-	 * @throws JAXBException
-	 * @throws IllegalArgumentException
 	 * @throws PsimiXmlReaderException
 	 */
 	public boolean convert(EntrySet entrySet, OutputStream outputStream) {
@@ -123,6 +122,9 @@ public class PSIMIBioPAXConverter {
 		// check args
 		if (entrySet == null || outputStream == null) {
 			throw new IllegalArgumentException("One or more null arguments to PSIMIBioPAXConverter.convert()");
+		}
+		if (entrySet.getLevel() != 2) {
+			throw new IllegalArgumentException("Only PSI-MI Level 2.5 is supported.");
 		}
 
 		// init
@@ -156,21 +158,12 @@ public class PSIMIBioPAXConverter {
 				System.exit(1);
 			}
 
-            if (conversionIsComplete()) {
+            if (conversionIsComplete) {
                 break;
             }
 		}
 
 		// outta here
 		return true;
-	}
-
-	/**
-	 * Method used to determine if conversion is complete.
-	 * 
-	 * @return boolean
-	 */
-	public boolean conversionIsComplete() {
-		return conversionIsComplete;
 	}
 }

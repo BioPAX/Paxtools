@@ -1,5 +1,3 @@
-// $Id: PSIMIBioPAXConverterDriver.java,v 1.1 2009/11/22 15:50:28 rodche Exp $
-//------------------------------------------------------------------------------
 /** Copyright (c) 2009 Memorial Sloan-Kettering Cancer Center.
  **
  ** This library is free software; you can redistribute it and/or modify it
@@ -26,51 +24,42 @@
  ** along with this library; if not, write to the Free Software Foundation,
  ** Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  **/
-package org.mskcc.psibiopax.converter.driver;
+package org.mskcc.psibiopax.converter;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+// imports
+import psidev.psi.mi.xml.model.EntrySet;
+import psidev.psi.mi.xml.PsimiXmlReaderException;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 
 /**
- * Driver class for PSI-MI to BioPax converter.
- *
- * @author Benjamin Gross
+ * An interface which provides methods to convert a PSI-MI file.
  */
-public class PSIMIBioPAXConverterDriver {
+public interface PSIMIConverter {
 
 	/**
-	 * Method to determine PSI level.
+	 * Converts the psi data in inputStream and places into outputStream.
+	 * Streams will be closed by the converter.
 	 *
-	 * @param inputFile String
-	 * @throws Exception
+	 * @param inputStream InputStream
+	 * @param outputStream OutputStream
+	 * @return boolean
+	 *
+	 * @throws IOException
+	 * @throws PsimiXmlReaderException
 	 */
-	static public void checkPSILevel(String inputFile) throws Exception {
+	public boolean convert(InputStream inputStream, OutputStream outputStream)
+		throws IOException, PsimiXmlReaderException;
 
-		// create file input stream
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile));
-
-		// parse input file looking for level tag
-		String lineText = null;
-		Pattern pattern = Pattern.compile("^.*level=\"(\\d)\".*$");
-
-		// look for "<entrySet"
-		while ( (lineText = bufferedReader.readLine()) != null) {
-			if (lineText.matches("^\\s*<entrySet.*$")) {
-				Matcher matcher = pattern.matcher(lineText);
-				if (matcher.find()) {
-					String levelStr = matcher.group(1);
-					if (!levelStr.equals("2")) {
-						bufferedReader.close();
-						throw new IllegalArgumentException("Only PSI-MI Level 2.5 is supported.");
-					}
-					break;
-				}
-			}
-		}
-
-		// outta here
-		bufferedReader.close();
-	}
+	/**
+	 * Converts the psi data in the EntrySet and places into outputstream.
+	 * Stream will be closed by the converter.
+	 *
+	 * @param entrySet EntrySet
+	 * @param outputStream OutputStream
+	 * @return boolean
+	 */
+	public boolean convert(EntrySet entrySet, OutputStream outputStream);
 }
