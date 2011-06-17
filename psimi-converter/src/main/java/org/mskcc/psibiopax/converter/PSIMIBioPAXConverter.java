@@ -76,6 +76,10 @@ public class PSIMIBioPAXConverter {
 	 * Converts the psi data in inputStream and places into outputStream.
 	 * Streams will be closed by the converter.
 	 *
+	 * @param inputStream InputStream
+	 * @param outputStream OutputStream
+	 * @return boolean
+	 *
 	 * @throws IOException
 	 * @throws JAXBException
 	 * @throws IllegalArgumentException
@@ -92,6 +96,37 @@ public class PSIMIBioPAXConverter {
 		// unmarshall the data, close the stream
 		PsimiXmlReader reader = new PsimiXmlReader();
 		EntrySet entrySet = reader.read(inputStream);
+
+		// convert
+		boolean result = convert(entrySet, outputStream);
+
+		// outta here
+		inputStream.close();
+		return result;
+	}
+
+	/**
+	 * Converts the psi data in the EntrySet and places into outputstream.
+	 * Stream will be closed by the converter.
+	 *
+	 * @param entrySet EntrySet
+	 * @param outputStream OutputStream
+	 * @return boolean
+	 *
+	 * @throws IOException
+	 * @throws JAXBException
+	 * @throws IllegalArgumentException
+	 * @throws PsimiXmlReaderException
+	 */
+	public boolean convert(EntrySet entrySet, OutputStream outputStream) {
+
+		// check args
+		if (entrySet == null || outputStream == null) {
+			throw new IllegalArgumentException("One or more null arguments to PSIMIBioPAXConverter.convert()");
+		}
+
+		// init
+		this.conversionIsComplete = false;
 
 		// create, start a marshaller
 		BioPAXMarshallerImp biopaxMarshaller =
@@ -127,7 +162,6 @@ public class PSIMIBioPAXConverter {
 		}
 
 		// outta here
-		inputStream.close();
 		return true;
 	}
 
