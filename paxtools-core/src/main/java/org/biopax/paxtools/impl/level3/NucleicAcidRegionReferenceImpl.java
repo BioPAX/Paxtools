@@ -29,8 +29,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 	}
 
 
-	@ManyToMany(targetEntity = NucleicAcidReferenceImpl.class,
-	            mappedBy = "subRegion", cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = NucleicAcidReferenceImpl.class, mappedBy = "subRegion")
 	public Set<NucleicAcidReference> getSubRegionOf()
 	{
 		return subRegionOf;
@@ -54,7 +53,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	}
 
-	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class, cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class)
 	@JoinTable(name = "regionType")
 	public Set<SequenceRegionVocabulary> getRegionType()
 	{

@@ -43,8 +43,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
@@ -62,7 +61,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="feature")
 	public Set<EntityFeature> getFeature()
 	{
@@ -91,7 +90,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.feature = feature;
 	}
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="notfeature")
 	public Set<EntityFeature> getNotFeature()
 	{
@@ -121,11 +120,11 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="memberPhysicalEntity") 	
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
-		return this.memberPhysicalEntity;    //todo
+		return this.memberPhysicalEntity;    //TODO
 	}
 
 	public void addMemberPhysicalEntity(PhysicalEntity newMember)
@@ -146,11 +145,10 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	protected void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity)
 	{
-		this.memberPhysicalEntity = memberPhysicalEntity; //todo (what?)
+		this.memberPhysicalEntity = memberPhysicalEntity; //TODO (what?)
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 		return memberPhysicalEntityOf;
@@ -239,8 +237,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

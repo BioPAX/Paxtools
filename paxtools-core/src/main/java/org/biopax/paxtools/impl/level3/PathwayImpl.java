@@ -50,7 +50,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 // --------------------- ACCESORS and MUTATORS---------------------
 
 
-	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="pathwayComponent") 		
 	public Set<Process> getPathwayComponent()
 	{
@@ -117,8 +117,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		this.organism = organism;
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController")
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

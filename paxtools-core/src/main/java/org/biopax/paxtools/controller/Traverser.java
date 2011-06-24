@@ -7,7 +7,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 

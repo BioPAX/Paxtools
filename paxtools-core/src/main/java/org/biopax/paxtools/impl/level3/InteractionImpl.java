@@ -54,7 +54,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@ManyToMany(targetEntity = InteractionVocabularyImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
 	@JoinTable(name="interactionType")
 	public Set<InteractionVocabulary> getInteractionType()
 	{
@@ -81,7 +81,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	   this.interactionType = interactionType;
 	}
 
-	@ManyToMany(targetEntity = EntityImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EntityImpl.class)
 	@JoinTable(name="participant")
 	public Set<Entity> getParticipant()
 	{

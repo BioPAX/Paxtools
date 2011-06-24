@@ -483,7 +483,8 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		catch (Exception e)
 		{
 			log.error("Failed to set value: " + value + " to bean " + bean + "; bean class: " + bean.getClass() +
-			          "; primary set method: " + this.getPrimarySetMethod() + "; value class: " + value.getClass() +
+			          "; primary set method: " + this.getPrimarySetMethod() 
+			          + ((value != null) ? "; value class: " + value.getClass() : "") +
 			          ". Error: " + e + ". " + e.getCause());
 		}
 	}

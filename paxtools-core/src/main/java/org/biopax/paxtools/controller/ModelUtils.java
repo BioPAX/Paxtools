@@ -139,10 +139,14 @@ public class ModelUtils {
 	}
 	
     /**
-     * Replaces existing BioPAX element with another one,
+     * Replaces an existing BioPAX element with another one,
      * of the same or possibly equivalent type (or null),
      * recursively updates all the references to it 
      * (parents' object properties).
+     * 
+     * If you're actually replacing multiple objects inthe same model,
+     * for better performance, consider using {@link #replace(Map)} method
+     * instead.
      * 
      * @param existing
      * @param replacement
@@ -219,6 +223,50 @@ public class ModelUtils {
 		}
     }
 
+    
+    /**
+     * Replaces existing BioPAX elements with ones from the map,
+     * and recursively updates all the object references
+     * (parents' object properties) in a single pass.
+     * 
+     * It does not remove old or adds new elements to the model;
+     * so, one may want to do it or - consider using {@link Model#repair()} 
+     * and {@link #removeObjectsIfDangling(Class)} methods after all.
+     * 
+     * @param subs
+     */
+    public <E extends BioPAXElement> void replace(final Map<E,E> subs) 
+    {    	
+		Visitor visitor = new Visitor() {
+			@Override
+			public void visit(BioPAXElement domain, Object range, Model model,
+					PropertyEditor editor) 
+			{
+				if(editor instanceof ObjectPropertyEditor && subs.containsKey(range)) 
+				{
+					ObjectPropertyEditor e = (ObjectPropertyEditor) editor;
+					BioPAXElement replacement = subs.get(range);
+					if (e.isMultipleCardinality()) {
+						e.removeValueFromBean(range, domain);
+					}
+					e.setValueToBean(replacement, domain);
+					if(LOG.isDebugEnabled())
+						LOG.debug("replace(subsMap): replaced - "
+							+ ((BioPAXElement)range).getRDFId() + " (" +  range + "; " 
+							+ ((UtilityClass) range).getModelInterface().getSimpleName() + ")"
+							+ " with " + replacement.getRDFId() + " (" +  replacement 
+							+ "); for property: " + e.getProperty()
+							+ " of bean: " + domain.getRDFId() + " (" + domain + "; " 
+							+ domain.getModelInterface().getSimpleName() + ")");
+				}
+			}
+		};
+		
+		Traverser traverser = new Traverser(SimpleEditorMap.get(model.getLevel()), visitor);
+		for (BioPAXElement bpe: new HashSet<BioPAXElement>(model.getObjects())) {	
+			traverser.traverse(bpe, model);
+		}
+    }
     
     /**
      * Deletes (recursively from the current model) 
@@ -392,11 +440,15 @@ public class ModelUtils {
 				LOG.info(dangling.size() + " BioPAX utility objects " +
 						"were/became dangling, and they "
 						+ " will be deleted...");
-			if(LOG.isDebugEnabled())
-				LOG.debug("to remove (dangling after merge) :" + dangling);
+			
 
 			for(BioPAXElement thing : dangling) {
 				model.remove(thing);
+				if(LOG.isDebugEnabled())
+					LOG.debug("removed (dangling) " 
+						+ thing.getRDFId() + " (" 
+						+ thing.getModelInterface().getSimpleName()
+						+ ") " + thing);
 			}
 			
 			// some may have become dangling now, so check again...
@@ -498,6 +550,55 @@ public class ModelUtils {
 		
 		return model;
 		//TODO limit to elements from this.model (add extra parameter)?
+	}
+	
+	
+	/**
+	 * Collects all child BioPAX elements of a given BioPAX element
+	 * (using the "tuned" {@link Fetcher}), although some of them
+	 * might have the same ID (are "clones" - for a purpose of due to a mistake)
+	 * 
+	 * @param bpe
+	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
+	 * @return
+	 */
+	public Set<BioPAXElement> getAllChildrenAllowClones(BioPAXElement bpe, Filter<PropertyEditor>... filters) {
+		Set<BioPAXElement> toReturn = null;
+		if(filters.length == 0	) {
+			toReturn = new Fetcher(editorMap, nextStepFilter).fetch(bpe);
+		} else {
+			toReturn = new Fetcher(editorMap, filters).fetch(bpe);
+		}
+		
+		toReturn.remove(bpe); // remove the parent
+		return toReturn;
+	}
+	
+	
+	/**
+	 * Collects direct children of a given BioPAX element, although some of them
+	 * might have the same ID (are "clones" - for a purpose of due to a mistake)
+	 * 
+	 * @param bpe
+	 * @return
+	 */
+	public Set<BioPAXElement> getDirectChildrenAllowClones(BioPAXElement bpe) 
+	{	
+		final Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
+		
+		AbstractTraverser traverser = new AbstractTraverser(editorMap, nextStepFilter) {
+			@Override
+			protected void visit(Object range, BioPAXElement domain,
+					Model model, PropertyEditor editor) {
+				if (range instanceof BioPAXElement 
+						&& !toReturn.contains((BioPAXElement) range)) {
+					toReturn.add((BioPAXElement) range);
+				}
+			}
+		};
+		
+		traverser.traverse(bpe, null);
+		return toReturn;
 	}
 	
 	

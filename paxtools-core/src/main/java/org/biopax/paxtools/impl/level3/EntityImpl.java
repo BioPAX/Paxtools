@@ -117,8 +117,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
-	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
 	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;
@@ -134,7 +133,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
-	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()
 	{

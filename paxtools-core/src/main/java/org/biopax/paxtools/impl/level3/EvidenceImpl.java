@@ -108,7 +108,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of evidence codes  for this evidence type.
 	 */
-	@ManyToMany(targetEntity = EvidenceCodeVocabularyImpl.class, cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = EvidenceCodeVocabularyImpl.class)
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
 	{
 		return evidenceCode;

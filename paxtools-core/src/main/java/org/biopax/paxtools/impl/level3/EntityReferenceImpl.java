@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BidirectionalLinkViolationException;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.search.annotations.ContainedIn;
 
@@ -65,26 +64,20 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		if (entityFeature != null)
 		{
 			EntityReference eFof = entityFeature.getEntityFeatureOf();
-			if (eFof != null)
+			if (eFof != null && !eFof.equals(this))
 			{
-				if (!eFof.equals(this))
-				{
-					//throw new BidirectionalLinkViolationException(this, entityFeature);
-					if(log.isWarnEnabled())
-						log.warn("Using addEntityFeature method bidirectional " +
-								"link gets violated between " 
-								+ getModelInterface().getSimpleName() +
-								" " + getRDFId() 
-								+ " and " + entityFeature.getModelInterface().getSimpleName()
-								+ " " + entityFeature.getRDFId());
-				}
+				//throw new BidirectionalLinkViolationException(this, entityFeature);
+				log.warn("addEntityFeature: adding (to this "
+					+ getModelInterface().getSimpleName() +
+					" " + getRDFId() + ") a "
+					+ entityFeature.getModelInterface().getSimpleName()
+					+ " " + entityFeature.getRDFId()
+					+ " that is already owned by another "
+					+ eFof.getModelInterface().getSimpleName()
+					+ " " + eFof.getRDFId());
 			}
-			/* do it anyway!
-			else
-			*/
-			{
-				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this); //todo (what?)
-			}
+
+			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this); //todo (what?)
 			
 			this.entityFeature.add(entityFeature);
 		}
@@ -95,9 +88,12 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	{
 		if (entityFeature != null)
 		{
-			assert entityFeature.getEntityFeatureOf() == this;
-			this.entityFeature.remove(entityFeature);
-			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null); //todo
+			assert entityFeature.getEntityFeatureOf() == this
+				: "attempt to remove not own EntityFeature!"; //- but the assertion alone is not enough...
+			if(entityFeature.getEntityFeatureOf() == this) {
+				this.entityFeature.remove(entityFeature);
+				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null); //todo
+			} 
 		}
 	}
 
@@ -106,16 +102,14 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityFeature = entityFeature;
 	}
 
-	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, 
-			mappedBy = "entityReferenceX", cascade={CascadeType.ALL})
+	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
 	@ContainedIn //TODO test whether if works for our model...
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;
 	}
 
-	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class, 
-			cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class)
 	@JoinTable(name="entityReferenceType")
 	public Set<EntityReferenceTypeVocabulary> getEntityReferenceType()
 	{
@@ -142,8 +136,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityReferenceType=entityReferenceType;
 	}
 
-	@ManyToMany(targetEntity = EntityReferenceImpl.class, 
-			cascade={CascadeType.ALL}) //todo generify?
+	@ManyToMany(targetEntity = EntityReferenceImpl.class) //TODO generify?
 	@JoinTable(name="memberEntityReference")
 	public Set<EntityReference> getMemberEntityReference()
 	{
@@ -172,8 +165,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	}
 
-	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference", 
-			cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
 		return ownerEntityReference;
@@ -185,7 +177,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 
-	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")	
 	public Set<Evidence> getEvidence()
 	{

@@ -256,9 +256,10 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			filelevel = BioPAXLevel.getLevelFromNameSpace(namespaceValue);
 			if (filelevel != null)
 			{
-				log.info("Auto-detected biopax " + filelevel
+				if(log.isDebugEnabled())
+					log.debug("Auto-detected biopax " + filelevel
 					+ " (current settings are for Level " 
-						+ level + ")");
+					+ level + ")");
 				break;
 			}
 		}
@@ -270,7 +271,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		}
 		else if (level != filelevel || filelevel != factory.getLevel())
 		{
-			log.info("Reset to the default factory for the detected BioPAX level.");
+			if(log.isDebugEnabled())
+				log.debug("Reset to the default factory for the detected BioPAX level.");
 			resetLevel(filelevel, filelevel.getDefaultFactory());
 		}
 	}

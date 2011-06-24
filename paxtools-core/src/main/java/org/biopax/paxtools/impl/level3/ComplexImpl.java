@@ -45,7 +45,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------- ACCESORS and MUTATORS---------------------
 	
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="component") 
 	public Set<PhysicalEntity> getComponent()
 	{
@@ -73,7 +73,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		this.component = component;
 	}
 
-	@ManyToMany(targetEntity = StoichiometryImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = StoichiometryImpl.class)
 	@JoinTable(name="complexstoichiometry")		
 	public Set<Stoichiometry> getComponentStoichiometry()
 	{

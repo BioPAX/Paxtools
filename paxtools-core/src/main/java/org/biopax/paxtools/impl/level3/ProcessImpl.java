@@ -37,8 +37,7 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 // --------------------- Interface PathwayComponent ---------------------
 
 
-	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent")
 	public Set<Pathway> getPathwayComponentOf()
 	{
 		return pathwayComponentOf;
@@ -46,15 +45,13 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 // --------------------- Interface process ---------------------
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess")
 	public Set<PathwayStep> getStepProcessOf()
 	{
 		return stepProcessOf;
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "controlled",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "controlled")
 	public Set<Control> getControlledOf()
 	{
 		return controlledOf;

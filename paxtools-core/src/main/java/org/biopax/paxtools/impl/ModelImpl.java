@@ -133,9 +133,9 @@ public class ModelImpl implements Model
 	}
 
 	/**
-	 * This method returns true if and only if given element 
+	 * This method returns true if given element 
 	 * is the same object ("==") as the object stored in the model
-	 * under under given element's ID.
+	 * usually (for self-consistent models) but not necessarily under the element's ID.
 	 * 
 	 * @param aBioPAXElement
 	 * @return

@@ -4,8 +4,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,15 +12,26 @@ import java.util.Set;
  */
 public class TraverserBilinked extends Traverser
 {
+	private boolean isInverseOnly = false;
+	
+	
 	public TraverserBilinked(EditorMap editorMap, Visitor visitor, PropertyFilterBilinked... filters)
 	{
 		super(editorMap, visitor, filters);
 	}
 
+	public boolean isInverseOnly() {
+		return isInverseOnly;
+	}
+	public void setInverseOnly(boolean isInverseOnly) {
+		this.isInverseOnly = isInverseOnly;
+	}
+	
 	@Override
 	public void traverse(BioPAXElement element, Model model)
 	{
-		super.traverse(element, model);
+		if(!isInverseOnly)
+			super.traverse(element, model);
 
 		// Now traverse the inverse links
 
@@ -38,18 +47,12 @@ public class TraverserBilinked extends Traverser
 		{
 			if (filterInverse(editor))
 			{
-				if (editor.isInverseMultipleCardinality())
-				{
 					Set valueSet = new HashSet(editor.getInverseAccessor().getValueFromBean(element));
-					for (Object value : valueSet)
+					if (!valueSet.isEmpty()) for (Object value : valueSet)
 					{
-						visitor.visit(element, value, model, editor);
+						if(value != null)
+							visitor.visit(element, value, model, editor);
 					}
-				}
-				else
-				{
-					visitor.visit(element, editor.getInverseAccessor().getValueFromBean(element), model, editor);
-				}
 			}
 		}
 	}

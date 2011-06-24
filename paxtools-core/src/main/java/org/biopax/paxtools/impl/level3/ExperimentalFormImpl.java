@@ -40,7 +40,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 		return ExperimentalForm.class;
 	}
 
-	@ManyToMany(targetEntity = ExperimentalFormVocabularyImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ExperimentalFormVocabularyImpl.class)
 	@JoinTable(name="experimentalFormDescription")
 	public Set<ExperimentalFormVocabulary> getExperimentalFormDescription()
 	{
@@ -86,7 +86,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
         }
 	}
 
-    @ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
+    @ManyToMany(targetEntity = EntityFeatureImpl.class)
     @JoinTable(name="experimentalFeature")
     public Set<EntityFeature> getExperimentalFeature()
     {

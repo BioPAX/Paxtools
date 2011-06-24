@@ -61,40 +61,31 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	 * new EntityReference for updating the bidirectional link.
 	 *
 	 * @param newEntityReference New owner of this feature.
-	 * @throws BidirectionalLinkViolationException
-	 *          : If already specified, this feature first should be removed from the old reference
-	 *          entity's feature list.
+	 * TODO make it Set of EntityReference (consider, e.g., cloned ERs or what could happen during model merge, etc..)?
 	 */
-	protected void setEntityFeatureOf(EntityReference newEntityReference)
-	{
-		if (this.ownerEntityReference == null)
-		{
-			this.ownerEntityReference = newEntityReference;
-		}
-		else
-		{
-			if (this.ownerEntityReference.getEntityFeature().contains(this))
-			{
-				//throw new BidirectionalLinkViolationException(this, this.ownerEntityReference);
-				log.warn("Using setEntityFeatureOf method bidirectional " +
-						"link gets violated between " 
-						+ getModelInterface().getSimpleName() +
-						" " + getRDFId() 
-						+ " and " + newEntityReference.getModelInterface().getSimpleName()
-						+ " " + newEntityReference.getRDFId());
-			}
-			/* do it anyway!
-			else
-			*/
-			{
-				this.ownerEntityReference = newEntityReference;
-			}
-		}
+	protected void setEntityFeatureOf(EntityReference newEntityReference) {
+//		if (this.ownerEntityReference != null
+//				&& !this.ownerEntityReference.equals(newEntityReference)
+//				&& this.ownerEntityReference.getEntityFeature().contains(this)) 
+//		{
+//			// throw new BidirectionalLinkViolationException(this,
+//			// this.ownerEntityReference);
+//			log.warn("setEntityFeatureOf: "
+//					+ getModelInterface().getSimpleName() + " " + getRDFId()
+//					+ " changes its owner EntityReference from "
+//					+ this.ownerEntityReference.getModelInterface().getSimpleName()
+//					+ " " + this.ownerEntityReference.getRDFId()
+//					+ " to "
+//					+ newEntityReference.getModelInterface().getSimpleName()
+//					+ " " + newEntityReference.getRDFId());
+//		}
+
+		this.ownerEntityReference = newEntityReference;
 	}
 
 	
 	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
-	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	protected EntityReference getEntityFeatureXOf(){
 		return ownerEntityReference;
 	}
@@ -103,14 +94,14 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 	
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL}, 
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, 
 			mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
 	{
 		return featureOf;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade = {CascadeType.ALL},
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class,
 			mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()
 	{
@@ -118,7 +109,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
-	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()
 	{
@@ -165,7 +156,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 	
-	@ManyToMany(targetEntity = EntityFeatureImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="memberFeature")
 	public Set<EntityFeature> getMemberFeature()
 	{
@@ -193,8 +184,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
-	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature",
-		cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
 	public Set<EntityFeature> getMemberFeatureOf()
 	{
 		return this.memberFeatureOf;

@@ -114,8 +114,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 
-	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref",
-			cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	@ContainedIn //TODO test whether if works for our model...
 	public Set<XReferrable> getXrefOf()
 	{

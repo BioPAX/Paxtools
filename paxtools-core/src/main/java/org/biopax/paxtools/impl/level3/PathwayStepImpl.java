@@ -41,7 +41,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PathwayStepImpl.class)
 	@JoinTable(name="nextStep")
 	public Set<PathwayStep> getNextStep()
 	{
@@ -69,7 +69,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStep = nextStep;
 	}
 
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep", cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;
@@ -80,7 +80,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
-	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
 	public Set<Process> getStepProcess()
 	{
@@ -108,7 +108,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.stepProcess = stepProcess;
 	}
 
-	@ManyToMany(targetEntity = EvidenceImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence") 	
 	public Set<Evidence> getEvidence()
 	{
@@ -132,7 +132,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = evidence;
 	}
 
-	@ManyToOne(targetEntity = PathwayImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = PathwayImpl.class)
 	public Pathway getPathwayOrderOf()
 	{
 		return this.pathwayOrderOf;

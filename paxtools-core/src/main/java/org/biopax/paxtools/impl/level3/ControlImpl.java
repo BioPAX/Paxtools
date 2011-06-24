@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.apache.commons.collections15.set.CompositeSet;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
@@ -9,6 +8,8 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,6 @@ public class ControlImpl extends InteractionImpl
 	private ControlType controlType;
 	private Set<Pathway> pathwayController;
 	private Set<PhysicalEntity> peController;
-	private CompositeSet<Controller> controller;
 	private Set<Process> controlled;
 
 // --------------------------- CONSTRUCTORS ---------------------------
@@ -33,9 +33,6 @@ public class ControlImpl extends InteractionImpl
 		pathwayController = new HashSet<Pathway>();
 		peController = new HashSet<PhysicalEntity>();
 		controlled = new HashSet<Process>();
-		controller = new CompositeSet<Controller>();
-		controller.addComposited(peController);
-		controller.addComposited(pathwayController);
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -61,7 +58,7 @@ public class ControlImpl extends InteractionImpl
 		this.controlType = ControlType;
 	}
 
-	@ManyToMany(targetEntity = ProcessImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="controlled")
 	public Set<Process> getControlled()
 	{
@@ -103,7 +100,9 @@ public class ControlImpl extends InteractionImpl
 	@Transient
 	public Set<Controller> getController()
 	{
-		return controller;
+		Set<Controller> controller = new HashSet<Controller>(peController);
+		controller.addAll(pathwayController);
+		return Collections.unmodifiableSet(controller);
 	}
 
 	public void addController(Controller controller)
@@ -148,12 +147,10 @@ public class ControlImpl extends InteractionImpl
 
 	protected void setPathwayController(Set<Pathway> pathwayController)
 	{
-		this.controller.removeComposited(this.pathwayController);
 		this.pathwayController = pathwayController;
-		this.controller.addComposited(pathwayController);
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="peController")
 	protected Set<PhysicalEntity> getPeController()
 	{
@@ -162,9 +159,7 @@ public class ControlImpl extends InteractionImpl
 
 	protected void setPeController(Set<PhysicalEntity> peController)
 	{
-		this.controller.removeComposited(this.peController);
 		this.peController = peController;
-		this.controller.addComposited(peController);
 	}
 
 }

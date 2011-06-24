@@ -10,6 +10,8 @@ import org.hibernate.search.annotations.Index;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +37,16 @@ public abstract class NamedImpl extends XReferrableImpl
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@Boost(2.0f)
 	@Column(columnDefinition="LONGTEXT")
+	protected String getStandardNameX()
+	{
+		return standardName;
+	}
+	protected void setStandardNameX(String name)
+	{
+		standardName = name;
+	}
+
+	@Transient
 	public String getStandardName()
 	{
 		return standardName;
@@ -44,26 +56,47 @@ public abstract class NamedImpl extends XReferrableImpl
 	{
 		addName(standardName = name);
 	}
-
 	
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@Boost(2.0f)
 	@Column(columnDefinition="LONGTEXT")
+	protected String getDisplayNameX()
+	{
+		return displayName;
+	}
+	protected void setDisplayNameX(String displayName)
+	{
+		this.displayName = displayName;
+	}
+	
+	@Transient
 	public String getDisplayName()
 	{
 		return displayName;
 	}
-
+	
 	public void setDisplayName(String displayName)
 	{
 		addName(this.displayName = displayName);
 	}
-
+	
+	
 	@ElementCollection
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
 	@Boost(1.0f)
 	@Column(columnDefinition="LONGTEXT")
+	protected Set<String> getNameX()
+	{
+		return allNames;
+	}
+	protected void setNameX(Set<String> names)
+	{
+		allNames = names;
+	}
+	
+	
+	@Transient
 	public Set<String> getName()
 	{
 		return allNames;
@@ -81,7 +114,6 @@ public abstract class NamedImpl extends XReferrableImpl
 		{
 			displayName = null;
 		}
-		
 	}
 
 	public void addName(String name)

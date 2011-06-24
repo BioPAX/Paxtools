@@ -170,8 +170,8 @@ public class PropertyReasoner extends AbstractTraverser
 		if (bpe == null)
 			return;
 		
-		if(LOG.isDebugEnabled())
-			LOG.debug(bpe + ", " + propertyName 
+		if(LOG.isTraceEnabled())
+			LOG.trace(bpe + ", " + propertyName 
 					+ " stack: " + this.valueStack);
 		
 		PropertyEditor editor = editorMap

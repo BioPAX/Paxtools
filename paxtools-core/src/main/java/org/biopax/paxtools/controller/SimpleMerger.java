@@ -183,8 +183,11 @@ public class SimpleMerger
 
 			if (newValue == null) // not yet in the target model
 			{
-				log.info("Target model does not have id=" + value.getRDFId() +
-				         " (that aslo means, the value wasn't in the 'source' model);" + " adding it now!");
+				if(log.isDebugEnabled())
+					log.debug("Target model does not have " + value.getRDFId() +
+				         " (i.e, a prop. value wasn't in the source model either);" 
+						+ " adding now... bean: "+ update.getRDFId() + " property: "
+						+ editor.getProperty());
 				target.add(value);
 				updateObjectFields(value, target); // recursion!
 			} else if (!value.equals(newValue))
