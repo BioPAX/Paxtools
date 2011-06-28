@@ -16,6 +16,7 @@ import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.validator.BiopaxValidatorClient;
 import org.biopax.validator.BiopaxValidatorClient.RetFormat;
+import org.biopax.validator.jaxb.Behavior;
 import org.mskcc.psibiopax.converter.PSIMIConverter;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 
@@ -165,24 +166,50 @@ public class PaxtoolsMain {
         }
     }
 
-    public static void validate(String[] argv) throws IOException {
-
-        String name = argv[1];
-        String out = argv[2];
-        RetFormat outf;
-        if ("html".equalsIgnoreCase(argv[3])) {
-            outf = RetFormat.HTML;
-            out += ".htm";
-
-        } else {
-            outf = RetFormat.XML;
-            out += ".xml";
-        }
+    
+    /**
+     * Checks files by the online BioPAX validator 
+     * using the validator client.
+     * 
+     * @see http://www.biopax.org/biopax-validator/ws.html
+     * 
+     * @param argv
+     * @throws IOException
+     */
+    public static void validate(String[] argv) throws IOException 
+    {
+        String input = argv[1];
+        String output = argv[2];
+        // default options
+        RetFormat outf = RetFormat.HTML;
+        boolean fix = false;
+        boolean normalize = false;
+        Integer maxErrs = null;
+        Behavior level = null; //will report both errors and warnings
+        // match optional args
+		for (int i = 3; i < argv.length; i++) {
+			if ("html".equalsIgnoreCase(argv[i])) {
+				outf = RetFormat.HTML;
+			} else if ("xml".equalsIgnoreCase(argv[i])) {
+				outf = RetFormat.XML;
+			} else if ("biopax".equalsIgnoreCase(argv[i])) {
+				outf = RetFormat.OWL;
+			} else if ("normalize".equalsIgnoreCase(argv[i])) {
+				normalize = true;
+			} else if ("auto-fix".equalsIgnoreCase(argv[i])) {
+				fix = true;
+			} else if ("only-errors".equalsIgnoreCase(argv[i])) {
+				level = Behavior.ERROR;
+			} else if ((argv[i]).toLowerCase().startsWith("maxErrors=")) {
+				String num = argv[i].substring(10);
+				maxErrs = Integer.valueOf(num);
+			}
+		}
 
         Collection<File> files = new HashSet<File>();
-        File fileOrDir = new File(name);
+        File fileOrDir = new File(input);
         if (!fileOrDir.canRead()) {
-            System.out.println("Cannot read " + name);
+            System.out.println("Cannot read " + input);
             System.exit(-1);
         }
 
@@ -204,13 +231,13 @@ public class PaxtoolsMain {
 
         // upload and validate using the default URL:
         // http://www.biopax.org/biopax-validator/check.html
-        OutputStream os = new FileOutputStream(out);
+        OutputStream os = new FileOutputStream(output);
         try {
             if (!files.isEmpty()) {
                 BiopaxValidatorClient val =
                         new BiopaxValidatorClient();
                 // do not auto-fix, nor normalize, nor filter errors, etc..
-                val.validate(false, false, outf, null, null, files.toArray(new File[]{}), os);
+                val.validate(fix, normalize, outf, level, maxErrs, null, files.toArray(new File[]{}), os);
             }
         } catch (Exception ex) {
             // fall-back: not using the remote validator; trying to read files
@@ -309,9 +336,13 @@ public class PaxtoolsMain {
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
         toSif("file1 output\t\t\tconverts model to the simple interaction format", 2)
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("file1 outEdges outNodes writePublications prop1,prop2,..\tconverts model to the extendent simple interaction format", 4)
+        toSifnx("file1 outEdges outNodes writePublications prop1,prop2,..\tconverts model " +
+        		"to the extendent simple interaction format", 4)
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
-        validate("path out xml|html\t\tvalidates the BioPAX file (or all the files in the directory), outputs xml or html", 3)
+        validate("path out [xml|html|biopax] [auto-fix] [normalize] [only-errors] [maxErrors=n]\t\t" +
+        		"validates the BioPAX file (or all the files in the directory); " +
+        		"writes the html report, xml report (including fixed xml-escaped biopax), " +
+        		"or the biopax (fixed/normalized) only; see also: http://www.biopax.org/biopax-validator/ws.html", 3)
 		        {public void run(String[] argv) throws IOException{validate(argv);} },
         integrate("file1 file2 output\t\tintegrates file2 into file1 and writes it into output (experimental)", 3)
 		        {public void run(String[] argv) throws IOException{integrate(argv);} },
