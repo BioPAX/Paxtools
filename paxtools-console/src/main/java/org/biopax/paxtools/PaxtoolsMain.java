@@ -200,7 +200,7 @@ public class PaxtoolsMain {
 				fix = true;
 			} else if ("only-errors".equalsIgnoreCase(argv[i])) {
 				level = Behavior.ERROR;
-			} else if ((argv[i]).toLowerCase().startsWith("maxErrors=")) {
+			} else if ((argv[i]).toLowerCase().startsWith("maxerrors=")) {
 				String num = argv[i].substring(10);
 				maxErrs = Integer.valueOf(num);
 			}
@@ -339,7 +339,7 @@ public class PaxtoolsMain {
         toSifnx("file1 outEdges outNodes writePublications prop1,prop2,..\tconverts model " +
         		"to the extendent simple interaction format", 4)
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
-        validate("path out [xml|html|biopax] [auto-fix] [normalize] [only-errors] [maxErrors=n]\t\t" +
+        validate("path out [xml|html|biopax] [auto-fix] [normalize] [only-errors] [maxerrors=n]\t\t" +
         		"validates the BioPAX file (or all the files in the directory); " +
         		"writes the html report, xml report (including fixed xml-escaped biopax), " +
         		"or the biopax (fixed/normalized) only; see also: http://www.biopax.org/biopax-validator/ws.html", 3)
