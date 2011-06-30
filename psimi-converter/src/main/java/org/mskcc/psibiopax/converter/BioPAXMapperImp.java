@@ -710,28 +710,27 @@ public class BioPAXMapperImp implements BioPAXMapper
 		else if (bpLevel == BioPAXLevel.L3)
 		{
 			SimplePhysicalEntity toReturn = null;
-			SequenceEntityReference ser = null;
+			EntityReference er = null;
 			if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("small molecule"))
 			{
 				toReturn = bpModel.addNew(SmallMolecule.class, id);
-				ser = (SequenceEntityReference) bpModel
-						.addNew(SmallMoleculeReference.class, entityRefId);
+				er = bpModel.addNew(SmallMoleculeReference.class, entityRefId);
 			}
 			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("dna"))
 			{
 				toReturn = bpModel.addNew(Dna.class, id);
-				ser = bpModel.addNew(DnaReference.class, entityRefId);
+				er = bpModel.addNew(DnaReference.class, entityRefId);
 			}
 			else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("rna"))
 			{
 				toReturn = bpModel.addNew(Rna.class, id);
-				ser = bpModel.addNew(RnaReference.class, entityRefId);
+				er = bpModel.addNew(RnaReference.class, entityRefId);
 			}
 			else
 			{
 				// default to protein
 				toReturn = bpModel.addNew(Protein.class, id);
-				ser = bpModel.addNew(ProteinReference.class, entityRefId);
+				er = bpModel.addNew(ProteinReference.class, entityRefId);
 			}
 			if (name != null)
 			{
@@ -754,10 +753,14 @@ public class BioPAXMapperImp implements BioPAXMapper
 				}
 			}
 			// set sequence entity ref props
-			ser.setOrganism((BioSource) bioSource);
-			ser.setSequence(sequence);
+
+			if (er instanceof SequenceEntityReference) {
+				SequenceEntityReference ser = (SequenceEntityReference)er;
+				ser.setOrganism((BioSource) bioSource);
+				ser.setSequence(sequence);
+			}
 			// set entity ref on pe
-			toReturn.setEntityReference(ser);
+			toReturn.setEntityReference(er);
 
 			return (T) toReturn;
 		}
