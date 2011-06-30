@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index = BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index = BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 {
@@ -58,7 +58,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	        : 0);
 	}
 
-	@ManyToOne(targetEntity = PhysicalEntityImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = PhysicalEntityImpl.class)//, cascade = {CascadeType.ALL})
 	public PhysicalEntity getPhysicalEntity()
 	{
 		return physicalEntity;

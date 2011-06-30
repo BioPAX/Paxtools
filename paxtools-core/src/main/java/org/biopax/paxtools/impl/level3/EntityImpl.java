@@ -8,7 +8,6 @@ import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -91,7 +90,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 			this.availability.remove(availability_text);
 	}
 
-	@ManyToMany(targetEntity = ProvenanceImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ProvenanceImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="dataSource")
 	public Set<Provenance> getDataSource()
 	{

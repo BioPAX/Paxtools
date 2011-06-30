@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  */
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ModificationFeatureImpl extends EntityFeatureImpl
 		implements ModificationFeature
@@ -34,7 +34,7 @@ public class ModificationFeatureImpl extends EntityFeatureImpl
 	private SequenceModificationVocabulary modificationType;
 
 
-	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)//, cascade = {CascadeType.ALL})
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return modificationType;

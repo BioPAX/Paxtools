@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class EvidenceImpl extends XReferrableImpl implements Evidence
 {
@@ -57,7 +57,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of scores representing confidence
 	 */
-	@OneToMany(targetEntity = ScoreImpl.class, cascade={CascadeType.ALL})
+	@OneToMany(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="confidence")		
 	public Set<Score> getConfidence()
 	{
@@ -156,7 +156,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	}
 
 
-	@OneToMany(targetEntity = ExperimentalFormImpl.class, cascade={CascadeType.ALL})
+	@OneToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="experimentalForm")	
 	public Set<ExperimentalForm> getExperimentalForm()
 	{

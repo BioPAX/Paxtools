@@ -3,7 +3,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,8 +19,7 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	public SimplePhysicalEntityImpl() {
 	}
 	
-	@ManyToOne(targetEntity = EntityReferenceImpl.class, cascade = {CascadeType.ALL})
-	@IndexedEmbedded //TODO test whether if works for our model...
+	@ManyToOne(targetEntity = EntityReferenceImpl.class)//, cascade = {CascadeType.ALL})
 	protected EntityReference getEntityReferenceX()
 	{
 		return entityReference;

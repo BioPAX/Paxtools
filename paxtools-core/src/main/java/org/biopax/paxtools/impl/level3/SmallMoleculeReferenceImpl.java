@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMoleculeReference
 {
@@ -63,7 +63,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	}
 
     // Property structure
-    @ManyToOne(targetEntity = ChemicalStructureImpl.class, cascade={CascadeType.ALL})
+    @ManyToOne(targetEntity = ChemicalStructureImpl.class)//, cascade={CascadeType.ALL})
     public ChemicalStructure getStructure()
 	{
 		return structure;

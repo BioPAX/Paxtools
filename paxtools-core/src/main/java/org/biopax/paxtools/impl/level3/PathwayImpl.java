@@ -4,7 +4,6 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,7 +11,7 @@ import java.util.Set;
 
 
 @javax.persistence.Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PathwayImpl extends ProcessImpl implements Pathway
 {
@@ -78,7 +77,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		}
 	}
 
-	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf", cascade = {CascadeType.ALL})
+	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")//, cascade = {CascadeType.ALL})
 	public Set<PathwayStep> getPathwayOrder()
 	{
 		return pathwayOrder;
@@ -106,7 +105,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-	@ManyToOne(targetEntity = BioSourceImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = BioSourceImpl.class)//, cascade = {CascadeType.ALL})
 	public BioSource getOrganism()
 	{
 		return organism;

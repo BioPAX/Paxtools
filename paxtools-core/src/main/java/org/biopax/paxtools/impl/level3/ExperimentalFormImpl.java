@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
 {
@@ -67,7 +67,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 		this.experimentalFormDescription = experimentalFormDescription;
 	}
 
-	@ManyToOne(targetEntity = EntityImpl.class, cascade={CascadeType.ALL})
+	@ManyToOne(targetEntity = EntityImpl.class)//, cascade={CascadeType.ALL})
 	public Entity getExperimentalFormEntity()
 	{
 		return experimentalFormEntity;

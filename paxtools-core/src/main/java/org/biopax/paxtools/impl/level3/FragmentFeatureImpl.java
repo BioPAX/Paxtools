@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFeature
 {

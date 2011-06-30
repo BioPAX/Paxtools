@@ -4,7 +4,6 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.Gene;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class GeneImpl extends EntityImpl implements Gene
 {
@@ -27,7 +26,7 @@ public class GeneImpl extends EntityImpl implements Gene
         return Gene.class;
     }
 
-	@ManyToOne(targetEntity = BioSourceImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = BioSourceImpl.class)//, cascade = {CascadeType.ALL})
     public BioSource getOrganism()
     {
         return organism;

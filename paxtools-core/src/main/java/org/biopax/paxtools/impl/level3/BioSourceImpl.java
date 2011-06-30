@@ -5,9 +5,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.TissueVocabulary;
-import org.biopax.paxtools.model.level3.UnificationXref;
-import org.biopax.paxtools.util.ClassFilterSet;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
@@ -16,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class BioSourceImpl extends NamedImpl implements BioSource
 {
@@ -67,7 +64,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @ManyToOne(targetEntity = CellVocabularyImpl.class, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = CellVocabularyImpl.class)//, cascade = {CascadeType.ALL})
 	public CellVocabulary getCellType()
 	{
 		return celltype;
@@ -78,7 +75,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 		this.celltype = celltype;
 	}
 
-	@ManyToOne(targetEntity = TissueVocabularyImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = TissueVocabularyImpl.class)//, cascade = {CascadeType.ALL})
 	public TissueVocabulary getTissue()
 	{
 		return tissue;

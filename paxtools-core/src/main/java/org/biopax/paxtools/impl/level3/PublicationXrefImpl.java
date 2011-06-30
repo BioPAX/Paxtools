@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 {

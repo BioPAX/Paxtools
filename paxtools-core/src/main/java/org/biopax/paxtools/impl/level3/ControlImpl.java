@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ControlImpl extends InteractionImpl
 		implements Control
@@ -138,7 +138,7 @@ public class ControlImpl extends InteractionImpl
 		return true;
 	}
 
-	@ManyToMany(targetEntity = PathwayImpl.class, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = PathwayImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="pathwayController")
 	protected Set<Pathway> getPathwayController()
 	{

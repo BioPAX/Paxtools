@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ScoreImpl extends XReferrableImpl implements Score
 {
@@ -54,7 +54,7 @@ public class ScoreImpl extends XReferrableImpl implements Score
 		this.value = value;
 	}
 
-    @ManyToOne(targetEntity = ProvenanceImpl.class, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = ProvenanceImpl.class)//, cascade = {CascadeType.ALL})
     public Provenance getScoreSource()
     {
         return scoreSource;

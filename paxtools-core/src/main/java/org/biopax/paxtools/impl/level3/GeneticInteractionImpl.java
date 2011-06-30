@@ -14,7 +14,7 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class GeneticInteractionImpl extends InteractionImpl
         implements GeneticInteraction
@@ -33,7 +33,7 @@ public class GeneticInteractionImpl extends InteractionImpl
 
     private Score interactionScore;
 
-    @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)//, cascade = {CascadeType.ALL})
 	public PhenotypeVocabulary getPhenotype()
     {
         return phenotype;
@@ -44,7 +44,7 @@ public class GeneticInteractionImpl extends InteractionImpl
         this.phenotype = phenotype;
     }
 
-	@ManyToOne(targetEntity = ScoreImpl.class, cascade={CascadeType.ALL})
+	@ManyToOne(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
     public Score getInteractionScore()
     {
         return interactionScore;

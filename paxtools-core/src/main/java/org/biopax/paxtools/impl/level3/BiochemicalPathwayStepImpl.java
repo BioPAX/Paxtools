@@ -9,7 +9,7 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.*;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
@@ -35,7 +35,7 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property STEP-CONVERSION
-	@ManyToOne(targetEntity = ConversionImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = ConversionImpl.class)//, cascade = {CascadeType.ALL})
     public Conversion getStepConversion()
 	{
 		return stepConversion;

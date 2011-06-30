@@ -4,12 +4,14 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
-import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +23,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	private String db;
 	private String dbVersion;
 	private String idVersion;
-	private String id;
+	private String refId;
 	private Set<XReferrable> xrefOf;
 
 	/**
@@ -42,8 +44,8 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 				db.equals(anXref.getDb()) :
 				anXref.getDb() == null)
 				&&
-				(id != null ?
-					id.equals(anXref.getId()) :
+				(refId != null ?
+					refId.equals(anXref.getId()) :
 					anXref.getId() == null)
 				&&
 				(dbVersion != null ?
@@ -61,12 +63,12 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		int result = 29 + (db != null ? db.hashCode() : 0);
 		result = 29 * result + (dbVersion != null ? dbVersion.hashCode() : 0);
 		result = 29 * result + (idVersion != null ? idVersion.hashCode() : 0);
-		result = 29 * result + (id != null ? id.hashCode() : 0);
+		result = 29 * result + (refId != null ? refId.hashCode() : 0);
 		return result;
 	}
 
 	
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_DB)
+	@Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_DB, index=Index.TOKENIZED)
     public String getDb()
 	{
 		return db;
@@ -77,8 +79,6 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.db = db;
 	}
 
-
-	
     public String getDbVersion()
 	{
 		return dbVersion;
@@ -89,7 +89,6 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.dbVersion = dbVersion;
 	}
 
-    
 	public String getIdVersion()
 	{
 		return idVersion;
@@ -100,22 +99,31 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.idVersion = idVersion;
 	}
 
-    // Property id
-    
-    @Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_ID)
-	public String getId()
+    @Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_ID, index=Index.TOKENIZED)
+    @Column(name="id")
+	public String getIdx()
 	{
-		return id;
+		return refId;
+	}
+
+	public void setIdx(String id)
+	{
+		this.refId = id;
+	}
+    
+    @Transient
+    public String getId()
+	{
+		return refId;
 	}
 
 	public void setId(String id)
 	{
-		this.id = id;
+		this.refId = id;
 	}
 
 
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
-	@ContainedIn //TODO test whether if works for our model...
 	public Set<XReferrable> getXrefOf()
 	{
 		return xrefOf;

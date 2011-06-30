@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class SequenceIntervalImpl extends SequenceLocationImpl
 	implements SequenceInterval
@@ -63,7 +63,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
 	// sequenceInterval interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-    @ManyToOne(targetEntity = SequenceSiteImpl.class, cascade={CascadeType.ALL})
+    @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
 	public SequenceSite getSequenceIntervalBegin()
 	{
 		return sequenceIntervalBegin;
@@ -74,7 +74,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
 		this.sequenceIntervalBegin = sequenceIntervalBegin;
 	}
 
-    @ManyToOne(targetEntity = SequenceSiteImpl.class, cascade={CascadeType.ALL})
+    @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
 	public SequenceSite getSequenceIntervalEnd()
 	{
 		return sequenceIntervalEnd;

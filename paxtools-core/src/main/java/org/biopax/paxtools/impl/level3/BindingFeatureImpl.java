@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class BindingFeatureImpl extends EntityFeatureImpl
 		implements BindingFeature
@@ -43,7 +43,7 @@ public class BindingFeatureImpl extends EntityFeatureImpl
 
 	// Property BOUND-TO
 
-	@OneToOne(targetEntity = BindingFeatureImpl.class, cascade={CascadeType.ALL})
+	@OneToOne(targetEntity = BindingFeatureImpl.class)//, cascade={CascadeType.ALL})
 	public BindingFeature getBindsTo()
 	{
 		return bindsTo;

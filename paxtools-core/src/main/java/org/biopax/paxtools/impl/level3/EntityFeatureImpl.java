@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
@@ -134,7 +134,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
-	@ManyToOne(targetEntity = SequenceLocationImpl.class, cascade={CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceLocationImpl.class)//, cascade={CascadeType.ALL})
 	public SequenceLocation getFeatureLocation()
 	{
 		return featureLocation;
@@ -144,7 +144,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocation = featureLocation;
 	}
 
-	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class)//, cascade = {CascadeType.ALL})
 	public SequenceRegionVocabulary getFeatureLocationType()
 	{
 		return featureLocationType;

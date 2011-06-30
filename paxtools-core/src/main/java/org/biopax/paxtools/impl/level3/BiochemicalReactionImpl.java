@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class BiochemicalReactionImpl extends ConversionImpl
 	implements BiochemicalReaction
@@ -56,7 +56,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 
 
-	@OneToMany(targetEntity = DeltaGImpl.class, cascade = {CascadeType.ALL})
+	@OneToMany(targetEntity = DeltaGImpl.class)//, cascade = {CascadeType.ALL})
 	@JoinTable(name="deltaG")	
 	public Set<DeltaG> getDeltaG()
 	{
@@ -147,7 +147,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		this.eCNumber.remove(eCNumber);
 	}
 
-	@OneToMany(targetEntity = KPrimeImpl.class, cascade = {CascadeType.ALL})
+	@OneToMany(targetEntity = KPrimeImpl.class)//, cascade = {CascadeType.ALL})
 	@JoinTable(name="keq")		
 	public Set<KPrime> getKEQ()
 	{

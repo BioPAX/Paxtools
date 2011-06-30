@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 {
@@ -38,7 +38,7 @@ public class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class)//, cascade = {CascadeType.ALL})
 	public RelationshipTypeVocabulary getRelationshipType()
 	{
 		return relationshipType;

@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements CovalentBindingFeature
 {
@@ -27,7 +27,7 @@ public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements Co
 		return CovalentBindingFeature.class;
 	}
 
-	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)//, cascade = {CascadeType.ALL})
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return this.modificationType;

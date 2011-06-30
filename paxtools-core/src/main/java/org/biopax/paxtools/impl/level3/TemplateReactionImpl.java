@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
-@Indexed(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
@@ -57,7 +57,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
     	}
     }
 
-	@ManyToOne(targetEntity = NucleicAcidImpl.class, cascade = { CascadeType.ALL })
+	@ManyToOne(targetEntity = NucleicAcidImpl.class)//, cascade = { CascadeType.ALL })
 	protected NucleicAcid getTemplateX() {
 		return this.template;
 	}
