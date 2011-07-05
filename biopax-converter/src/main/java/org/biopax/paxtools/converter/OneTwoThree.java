@@ -220,7 +220,11 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 		{
 			String id = pep2PE.get(bpe.getRDFId());
 
-			if (id.equals(bpe.getRDFId()))
+			if(id == null) {
+				log.warn("No mapping possible for " + bpe.getRDFId());
+				return null;
+			}
+			else if (id.equals(bpe.getRDFId()))
 			{
 				// create a new simplePhysicalEntity
 				//(excluding Complex and basic PhysicalEntity that map directly and have no ERs)
@@ -469,11 +473,15 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	private PhysicalEntity getMappedPE(physicalEntityParticipant pep, Model newModel)
 	{
 		String id = pep2PE.get(pep.getRDFId());
-		BioPAXElement pe = newModel.getByID(id);
 		physicalEntity pe2er = pep.getPHYSICAL_ENTITY();
 		
+		if(id == null || pe2er == null)
+			throw new IllegalAccessError("Illegal pEP (cannot convert): " 
+				+ pep.getRDFId()); 
+		
+		BioPAXElement pe = newModel.getByID(id);
 		String inf = "pEP " + pep + " that contains " 
-		+ pe2er.getModelInterface().getSimpleName();
+			+ pe2er.getModelInterface().getSimpleName();
 		if(!isSimplePhysicalEntity(pe2er)) {
 			if(pe == null) {
 				if(log.isDebugEnabled())
