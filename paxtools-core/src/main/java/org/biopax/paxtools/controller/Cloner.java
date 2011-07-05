@@ -4,8 +4,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.Model;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,15 +20,11 @@ public class Cloner implements Visitor
 	Traverser traverser;
 	private BioPAXFactory factory;
 	private Model targetModel;
-	private Map<String, BioPAXElement> sourceMap;
-	private Map<String, BioPAXElement> targetMap;
 
 	public Cloner(EditorMap map, BioPAXFactory factory)
 	{
 		this.factory = factory;
 		traverser = new Traverser(map, this);
-		sourceMap = new HashMap<String, BioPAXElement>();
-		targetMap = new HashMap<String, BioPAXElement>();
 	}
 
 	
@@ -51,7 +45,8 @@ public class Cloner implements Visitor
 
 		for (BioPAXElement bpe : toBeCloned)
 		{
-			sourceMap.put(bpe.getRDFId(), bpe);
+			// make a copy (all properties are empty except for ID)
+			targetModel.addNew(bpe.getModelInterface(), bpe.getRDFId());
 		}
 
 		for (BioPAXElement bpe : toBeCloned)
@@ -66,32 +61,21 @@ public class Cloner implements Visitor
 
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-		if (!targetMap.containsKey(domain.getRDFId()))
-		{
-			BioPAXElement targetDomain = targetModel
-				.addNew(domain.getModelInterface(), domain.getRDFId());
-			targetMap.put(targetDomain.getRDFId(), targetDomain);
-		}
-
+		BioPAXElement targetDomain = targetModel.getByID(domain.getRDFId());
 		if (range instanceof BioPAXElement)
 		{
 			BioPAXElement bpe = (BioPAXElement) range;
-			if (sourceMap.containsKey(bpe.getRDFId()))
+			if (targetModel.containsID(bpe.getRDFId()))
 			{
-				if (!targetMap.containsKey(bpe.getRDFId()))
-				{
-					traverser.traverse(bpe, model);
-				}
-
-				editor.setValueToBean(
-						targetMap.get(bpe.getRDFId()), targetMap.get(domain.getRDFId()));
-			} else {
+				editor.setValueToBean(targetModel.getByID(bpe.getRDFId()), targetDomain);
+			} 
+			else {
 				// ignore the element that is not in the source list
 			}
 		}
 		else
 		{
-			editor.setValueToBean(range, targetMap.get(domain.getRDFId()));
+			editor.setValueToBean(range, targetDomain);
 		}
 	}
 }
