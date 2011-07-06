@@ -77,7 +77,7 @@ public class ComponentRule implements InteractionRuleL3
 			// Iterate other members for components_of_same_complex rule
 			for (EntityReference B : comp.getMemberReferences())
 			{
-				if (!B.equals(A))
+				if (B!=null && !B.equals(A))
 				{
 					SimpleInteraction si = new SimpleInteraction(A, B, IN_SAME_COMPONENT);
 					si.addMediator(comp);
