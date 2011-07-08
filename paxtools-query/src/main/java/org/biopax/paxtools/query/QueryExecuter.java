@@ -133,6 +133,9 @@ public class QueryExecuter
 
 		Set<GraphObject> resultWrappers = commStream.run();
 
+		// Stop if they have no common stream.
+		if (resultWrappers.isEmpty()) return null;
+
 		// Extract nodes from the result
 
 		Set<Node> target = new HashSet<Node>();

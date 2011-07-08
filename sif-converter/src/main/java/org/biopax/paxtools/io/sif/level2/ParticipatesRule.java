@@ -74,7 +74,7 @@ public class ParticipatesRule implements InteractionRuleL2
 			BinaryInteractionType type;
 			if ((interaction instanceof control))
 			{
-				return;
+				continue;
 			}
 			else if (interaction instanceof conversion)
 			{
