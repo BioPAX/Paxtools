@@ -197,9 +197,12 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 		if (controller instanceof SimplePhysicalEntity)
 		{
 			//create interactions and add to set
-			SimpleInteraction si = new SimpleInteraction(A,
-					((SimplePhysicalEntity) controller).getEntityReference(), SEQUENTIAL_CATALYSIS);
-			interactionSet.add(si);
+			EntityReference er = ((SimplePhysicalEntity) controller).getEntityReference();
+			if(er!=null)
+			{
+				SimpleInteraction si = new SimpleInteraction(A, er, SEQUENTIAL_CATALYSIS);
+				interactionSet.add(si);
+			}
 		}
 		else if (controller instanceof Complex)
 		{

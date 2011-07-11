@@ -17,17 +17,13 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.STATE_CHANGE;
  * A controls a conversion which B is at left or right or both. -
  * Controls.StateChange (B at both sides (one side may be as a member of a
  * complex), or B is complex) - Controls.MetabolicChange (B at one side only)
- *
  * @author Ozgun Babur Date: Dec 29, 2007 Time: 1:27:55 AM
  */
 public class ControlRule implements InteractionRuleL3
 {
 	private final Log log = LogFactory.getLog(ControlRule.class);
-	
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
-		Object entity,
-		Model model,
-		Map options)
+
+	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model, Map options)
 	{
 		inferInteractions(interactionSet, ((EntityReference) entity), model, options);
 	}
@@ -35,22 +31,18 @@ public class ControlRule implements InteractionRuleL3
 	/**
 	 * When options map is null, then all rules are generated. Otherwise only rules
 	 * that are contained in the options map as a key are generated.
-	 *
 	 * @param interactionSet set to fill in
-	 * @param A			  first physical entity
-	 * @param model		  biopax graph - may be null, has no use here
-	 * @param options		options map
+	 * @param A first physical entity
+	 * @param model biopax graph - may be null, has no use here
+	 * @param options options map
 	 */
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
-		EntityReference A,
-		Model model,
-		Map options)
+	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference A, Model model, Map options)
 	{
 		// Read options
-		boolean mineStatetateChange = !options.containsKey(STATE_CHANGE) ||
-			options.get(STATE_CHANGE).equals(Boolean.TRUE);
-		boolean mineMetabolicChange = !options.containsKey(METABOLIC_CATALYSIS) ||
-			options.get(METABOLIC_CATALYSIS).equals(Boolean.TRUE);
+		boolean mineStatetateChange = !options.containsKey(STATE_CHANGE) || options.get(STATE_CHANGE).equals(
+				Boolean.TRUE);
+		boolean mineMetabolicChange = !options.containsKey(METABOLIC_CATALYSIS) || options.get(
+				METABOLIC_CATALYSIS).equals(Boolean.TRUE);
 		// Iterate over all associated controls
 		for (SimplePhysicalEntity pe : A.getEntityReferenceOf())
 		{
@@ -59,7 +51,7 @@ public class ControlRule implements InteractionRuleL3
 	}
 
 	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A,
-		boolean mineStatetateChange, boolean mineMetabolicChange, PhysicalEntity pe)
+	                                   boolean mineStatetateChange, boolean mineMetabolicChange, PhysicalEntity pe)
 	{
 		for (Interaction inter : pe.getParticipantOf())
 		{
@@ -69,17 +61,13 @@ public class ControlRule implements InteractionRuleL3
 				// Iterate over all affected conversions of this control
 				for (Conversion conv : getAffectedConversions(cont, null))
 				{
-					Set<EntityReference> presenceSet =
-						collectEntities(conv.getLeft(), null);
+					Set<EntityReference> presenceSet = collectEntities(conv.getLeft(), null);
 					collectEntities(conv.getRight(), presenceSet);
 					// Collect left and right simple physical entities of conversion in lists
-					List<EntityReference> left =
-						collectSimpleEntities(conv.getLeft());
-					List<EntityReference> right =
-						collectSimpleEntities(conv.getRight());
+					List<EntityReference> left = collectSimpleEntities(conv.getLeft());
+					List<EntityReference> right = collectSimpleEntities(conv.getRight());
 					// Detect physical entities which appear on both sides.
-					List<EntityReference> bothsided =
-						new ArrayList<EntityReference>();
+					List<EntityReference> bothsided = new ArrayList<EntityReference>();
 					for (EntityReference B : left)
 					{
 						if (right.contains(B))
@@ -115,8 +103,7 @@ public class ControlRule implements InteractionRuleL3
 						{
 							if (mineMetabolicChange)
 							{
-								SimpleInteraction mc = new SimpleInteraction(A, B,
-									METABOLIC_CATALYSIS);
+								SimpleInteraction mc = new SimpleInteraction(A, B, METABOLIC_CATALYSIS);
 								mc.addMediator(cont);
 								mc.addMediator(conv);
 								interactionSet.add(mc);
@@ -128,8 +115,7 @@ public class ControlRule implements InteractionRuleL3
 		}
 		for (Complex comp : pe.getComponentOf())
 		{
-			processPhysicalEntity(interactionSet, A, mineStatetateChange, mineMetabolicChange,
-				comp);
+			processPhysicalEntity(interactionSet, A, mineStatetateChange, mineMetabolicChange, comp);
 		}
 	}
 
@@ -137,13 +123,11 @@ public class ControlRule implements InteractionRuleL3
 	 * Creates a list of conversions on which this control has an effect. If the
 	 * control controls another control, then it is traversed recursively to find
 	 * the affected conversions.
-	 *
-	 * @param cont	 control
+	 * @param cont control
 	 * @param convList list of affected conversions
 	 * @return list of affected conversions
 	 */
-	private List<Conversion> getAffectedConversions(Control cont,
-		List<Conversion> convList)
+	private List<Conversion> getAffectedConversions(Control cont, List<Conversion> convList)
 	{
 		if (convList == null)
 		{
@@ -154,8 +138,7 @@ public class ControlRule implements InteractionRuleL3
 			if (prcss instanceof Conversion)
 			{
 				convList.add((Conversion) prcss);
-			}
-			else if (prcss instanceof Control)
+			} else if (prcss instanceof Control)
 			{
 				getAffectedConversions((Control) prcss, convList);
 			}
@@ -165,13 +148,11 @@ public class ControlRule implements InteractionRuleL3
 
 	/**
 	 * Collects the associated physical entities of the given participant set.
-	 *
-	 * @param pes   participants
+	 * @param pes participants
 	 * @param enSet physical entity set to collect in
 	 * @return associated physical entities
 	 */
-	private Set<EntityReference> collectEntities(Set<PhysicalEntity> pes,
-		Set<EntityReference> enSet)
+	private Set<EntityReference> collectEntities(Set<PhysicalEntity> pes, Set<EntityReference> enSet)
 	{
 		if (enSet == null)
 		{
@@ -180,30 +161,30 @@ public class ControlRule implements InteractionRuleL3
 		for (PhysicalEntity pe : pes)
 		{
 			//todo handle complexes
-			if (pe instanceof SimplePhysicalEntity)
-			{
-				EntityReference er = ((SimplePhysicalEntity) pe).getEntityReference();
-				if(er != null)
-					enSet.add(er);
-				else 
-					log.warn("SimplePhysicalEntity " + pe + 
-						" has NO (NULL) entityReference. " +
-							" (its interactions, if any, are likely to be ignored!)");
-			}
+			getErAndAddifNotNull(enSet, pe);
 		}
 		return enSet;
+	}
+
+	private void getErAndAddifNotNull(Collection<EntityReference> enSet, PhysicalEntity pe)
+	{
+		if (pe instanceof SimplePhysicalEntity)
+		{
+			EntityReference er = ((SimplePhysicalEntity) pe).getEntityReference();
+			if (er != null) enSet.add(er);
+			else log.warn("SimplePhysicalEntity " + pe + " has NO (NULL) entityReference. " +
+			              " (its interactions, if any, are likely to be ignored!)");
+		}
 	}
 
 	/**
 	 * Collects the associated non-complex physical entities of the given
 	 * participant set. This means we are not interested in complexes, but their
 	 * members, at any nesting.
-	 *
 	 * @param pes participants
 	 * @return associated physical entities
 	 */
-	private List<EntityReference> collectSimpleEntities(
-		Set<PhysicalEntity> pes)
+	private List<EntityReference> collectSimpleEntities(Set<PhysicalEntity> pes)
 	{
 		List<EntityReference> erList = new ArrayList<EntityReference>();
 		for (PhysicalEntity pe : pes)
@@ -211,11 +192,8 @@ public class ControlRule implements InteractionRuleL3
 			if (pe instanceof Complex)
 			{
 				collectSimpleMembersOfComplex(erList, (Complex) pe);
-			}
-			else if (pe instanceof SimplePhysicalEntity)
-			{
-				erList.add(((SimplePhysicalEntity) pe).getEntityReference());
-			}
+			} else if (pe instanceof SimplePhysicalEntity)
+			getErAndAddifNotNull(erList,pe);
 		}
 		return erList;
 	}
@@ -223,7 +201,6 @@ public class ControlRule implements InteractionRuleL3
 	/**
 	 * Recursive method for collecting simple members of the given complex in the
 	 * given list.
-	 *
 	 * @param list where to collect
 	 * @param comp complex to collect members
 	 */
@@ -234,16 +211,14 @@ public class ControlRule implements InteractionRuleL3
 			if (pe instanceof Complex)
 			{
 				collectSimpleMembersOfComplex(list, (Complex) pe);
-			}
-			else if (pe instanceof SimplePhysicalEntity)
+			} else if (pe instanceof SimplePhysicalEntity)
 			{
-				list.add(((SimplePhysicalEntity) pe).getEntityReference());
+				getErAndAddifNotNull(list,pe);
 			}
 		}
 	}
 
-	private Set<SimplePhysicalEntity> getSimplePEsInComplex(Complex comp,
-		Set<SimplePhysicalEntity> set)
+	private Set<SimplePhysicalEntity> getSimplePEsInComplex(Complex comp, Set<SimplePhysicalEntity> set)
 	{
 		if (set == null) set = new HashSet<SimplePhysicalEntity>();
 		for (PhysicalEntity pe : comp.getComponent())
@@ -251,8 +226,7 @@ public class ControlRule implements InteractionRuleL3
 			if (pe instanceof SimplePhysicalEntity)
 			{
 				set.add((SimplePhysicalEntity) pe);
-			}
-			else if (pe instanceof Complex)
+			} else if (pe instanceof Complex)
 			{
 				// Check for immediate cyclic complex
 				if (!pe.equals(comp) && !comp.getComponentOf().contains(pe))
@@ -268,7 +242,6 @@ public class ControlRule implements InteractionRuleL3
 	 * Sometimes an entity is both an input and output to a conversion without any state change.
 	 * Normally this phenomena should be modeled using controller property of conversion. In other
 	 * cases this method detects entities that goes in and out without any change.
-	 *
 	 * @param entity
 	 * @param conv
 	 * @return true if entity has a change in conversion
@@ -287,25 +260,22 @@ public class ControlRule implements InteractionRuleL3
 		return false;
 	}
 
-	private Set<SimplePhysicalEntity> getAssociatedStates(EntityReference er,
-		Set<PhysicalEntity> pes)
+	private Set<SimplePhysicalEntity> getAssociatedStates(EntityReference er, Set<PhysicalEntity> pes)
 	{
 		Set<SimplePhysicalEntity> set = new HashSet<SimplePhysicalEntity>();
 
-		if(er == null) {
-			if(log.isWarnEnabled())
-				log.warn("Skipping ");
+		if (er == null)
+		{
+			if (log.isWarnEnabled()) log.warn("Skipping ");
 			return set; // empty
 		}
-		
+
 		for (PhysicalEntity pe : pes)
 		{
-			if (pe instanceof SimplePhysicalEntity &&
-				er.equals(((SimplePhysicalEntity) pe).getEntityReference()))
+			if (pe instanceof SimplePhysicalEntity && er.equals(((SimplePhysicalEntity) pe).getEntityReference()))
 			{
 				set.add((SimplePhysicalEntity) pe);
-			}
-			else if (pe instanceof Complex)
+			} else if (pe instanceof Complex)
 			{
 				for (SimplePhysicalEntity spe : getSimplePEsInComplex((Complex) pe, null))
 				{
@@ -318,7 +288,6 @@ public class ControlRule implements InteractionRuleL3
 
 	public List<BinaryInteractionType> getRuleTypes()
 	{
-		return Arrays.asList(STATE_CHANGE,
-			METABOLIC_CATALYSIS);
+		return Arrays.asList(STATE_CHANGE, METABOLIC_CATALYSIS);
 	}
 }

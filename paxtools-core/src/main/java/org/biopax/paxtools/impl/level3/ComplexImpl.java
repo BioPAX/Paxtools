@@ -129,7 +129,9 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 		for (SimplePhysicalEntity spe : getSimpleMembers())
 		{
-			set.add(spe.getEntityReference());
+			EntityReference er = spe.getEntityReference();
+			if(er!=null)
+				set.add(er); //TODO - ignoring reactome ERs
 		}
 		return set;
 	}

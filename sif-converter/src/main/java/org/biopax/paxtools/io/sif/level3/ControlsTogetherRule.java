@@ -163,7 +163,7 @@ public class ControlsTogetherRule implements InteractionRuleL3
 			{
 				EntityReference B = ((SimplePhysicalEntity) pe).getEntityReference();
 
-				if (B != A)
+				if (B!=null || B!= A)
 				{
 					interactionSet.add(new SimpleInteraction(A, B, CO_CONTROL));
 				}
