@@ -7,7 +7,6 @@ import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.util.BioPaxIOException;
-import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import javax.xml.stream.XMLInputFactory;
@@ -501,11 +500,12 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
      * will find corresponding object properties set to NULL later,
      * after converting such data back to Model.
      *
+     *
      * @param model model to be converted into OWL format
      * @param outputStream output stream into which the output will be written
      * @throws BioPaxIOException in case of I/O problems
      */
-    public void convertToOWL(Model model, OutputStream outputStream) 
+    public void convertToOWL(Model model, OutputStream outputStream)
     {    	
         initializeExporter(model);
 
@@ -519,54 +519,15 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
     }
 
     
-    /**
-     * Similar to {@link #convertToOWL(Model, OutputStream)}, but 
-     * extracts a sub-model, converts it into BioPAX (OWL) format, 
-     * and writes it into the outputStream. 
-     * Saved data can be then read via {@link BioPAXIOHandler}
-     * interface (e.g., {@link SimpleIOHandler}).
-     *
-     * @param model model to be converted into OWL format
-     * @param outputStream output stream into which the output will be written
-     * @param ids the list of "root" element IDs to export (with all their properties/children altogether)
-     * @throws IOException in case of I/O problems
-     */
-    public void convertToOWL(Model model, OutputStream outputStream, String... ids)
-    {
-		if (ids.length == 0) {
-			convertToOWL(model, outputStream);
-		}
-		else {
-			Model m = model.getLevel().getDefaultFactory().createModel();
-			String base = model.getNameSpacePrefixMap().get("");
-			m.getNameSpacePrefixMap().put("", base);
-			//to avoid 'nextStep' that may lead to infinite loops -
-			Filter<PropertyEditor> filter = new Filter<PropertyEditor>() {
-				public boolean filter(PropertyEditor editor) {
-					return !"nextStep".equalsIgnoreCase(editor.getProperty())
-					 && !"NEXT-STEP".equalsIgnoreCase(editor.getProperty());
-				}
-			};
-			Fetcher fetcher = new Fetcher(
-					SimpleEditorMap.get(model.getLevel()), filter);
-			
-			for(String uri : ids) {
-				BioPAXElement bpe = model.getByID(uri);
-				if(bpe != null) {
-					fetcher.fetch(bpe, m);
-				}
-			}
-			
-			convertToOWL(m, outputStream);
-		} 
-    }
+
     
     
     /**
      * Writes the XML representation of individual BioPAX element that 
      * is BioPAX-like but only for display or debug purpose (incomplete).
      * 
-     * Note: use {@link #convertToOWL(Model, OutputStream)} instead 
+     * Note: use {@link BioPAXIOHandler#convertToOWL(org.biopax.paxtools
+     * .model.Model, Object)} instead
      * if you have a model and want to save and later restore it.
      * 
      * @param out

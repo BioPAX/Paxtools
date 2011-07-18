@@ -237,7 +237,9 @@ public class PaxtoolsMain {
                 BiopaxValidatorClient val =
                         new BiopaxValidatorClient();
                 // do not auto-fix, nor normalize, nor filter errors, etc..
-                val.validate(fix, normalize, outf, level, maxErrs, null, files.toArray(new File[]{}), os);
+//                val.validate(fix, normalize, outf, level, maxErrs, null,
+// files.toArray(new File[]{}), os); //Todo ED>>Igor>>Does not compile on my
+// system. Prob. dep issue?
             }
         } catch (Exception ex) {
             // fall-back: not using the remote validator; trying to read files

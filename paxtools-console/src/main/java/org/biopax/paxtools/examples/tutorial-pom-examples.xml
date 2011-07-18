@@ -1,0 +1,25 @@
+<root>
+ <repository>
+  <id>biopax.releases</id>
+  <name>BioPAX Repository at Sourceforge</name>
+  <url>http://biopax.sourceforge.net/m2repo/releases/</url>
+  <snapshots>
+   <enabled>false</enabled>
+  </snapshots>
+ </repository>
+
+ <repository>
+  <id>biopax.snapshots</id>
+  <name>BioPAX Snapshots Repository at Sourceforge</name>
+  <url>http://biopax.sourceforge.net/m2repo/snapshots/</url>
+  <releases>
+   <enabled>false</enabled>
+  </releases>
+ </repository>
+
+ <dependency>
+  <groupId>org.biopax.paxtools</groupId>
+  <artifactId>paxtools-core</artifactId>
+  <version>3.0.0</version>
+ </dependency>
+</root>

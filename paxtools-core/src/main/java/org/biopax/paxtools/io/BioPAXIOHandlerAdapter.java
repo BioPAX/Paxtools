@@ -2,10 +2,7 @@ package org.biopax.paxtools.io;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.controller.EditorMap;
-import org.biopax.paxtools.controller.ObjectPropertyEditor;
-import org.biopax.paxtools.controller.PropertyEditor;
-import org.biopax.paxtools.controller.ReusedPEPHelper;
+import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -14,17 +11,15 @@ import org.biopax.paxtools.model.level2.deltaGprimeO;
 import org.biopax.paxtools.model.level2.kPrime;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.util.BioPaxIOException;
+import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Map;
 
 
 /**
- * TODO:Class description User: demir Date: Jun 30, 2009 Time: 2:44:32 PM
+ *
  */
 public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 {
@@ -39,15 +34,19 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	protected BioPAXLevel level = BioPAXLevel.L3;
 
 	protected BioPAXFactory factory;
-	
+
 	protected EditorMap editorMap;
 
 	protected Map<String, String> namespaces;
 
 	protected static final String rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
 	protected static final String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
+
 	protected static String bp;
+
 	protected static final String xsd = "http://www.w3.org/2001/XMLSchema#";
+
 	protected static final String owl = "owl=http://www.w3.org/2002/07/owl#";
 
 
@@ -79,21 +78,19 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			this.convertingFromLevel1ToLevel2 = true;
 			this.fixReusedPEPs = true;
-		}
-		else if (this.level == BioPAXLevel.L2)
+		} else if (this.level == BioPAXLevel.L2)
 		{
 			this.fixReusedPEPs = true;
 		}
 
 		bp = this.level.getNameSpace();
-		
+
 		resetEditorMap();
 	}
 
 	/**
 	 * Updates the member EditorMap for the new BioPAX level and factory (different implementations of
 	 * EditorMap can be used in modules, e.g. SimpleEditorMap and JenaEditorMap.)
-	 *	 
 	 */
 	protected abstract void resetEditorMap();
 
@@ -101,7 +98,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 * According the BioPAX documentation, it is illegal to reuse a Physical Entity Participant (PEP).
 	 * If this value is set to <em>true</em> (default value), a reused PEP will be duplicated while
 	 * converting the OWL file into a model.
-	 *
 	 * @see org.biopax.paxtools.controller.ReusedPEPHelper
 	 */
 
@@ -109,7 +105,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	/**
 	 * Enables (true) or disables (false) the fixing of reused peps.
-	 *
 	 * @param fixReusedPEPs true if fixing is desired
 	 * @see #fixReusedPEPs
 	 */
@@ -131,11 +126,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	public boolean isTreatNilAsNull()
 	{
 		return treatNilAsNull;
-	}
-
-	public void setTreatNilAsNull(boolean treatNilAsNull)
-	{
-		this.treatNilAsNull = treatNilAsNull;
 	}
 
 	public boolean isConvertingFromLevel1ToLevel2()
@@ -181,21 +171,18 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	/**
 	 * This is experimental and is not not complete. Files have to be given in dependency order. i.e. a
 	 * former file should not point to the latter. Use it at your own risk.
-	 *
 	 * @param files Dependency ordered biopax owl file names
 	 * @return a merged model.
-	 * @throws java.io.FileNotFoundException if any file can not be found
+	 * @exception java.io.FileNotFoundException if any file can not be found
 	 */
 
-	public Model convertFromMultipleOwlFiles(String... files)
-			throws FileNotFoundException
+	public Model convertFromMultipleOwlFiles(String... files) throws FileNotFoundException
 	{
 		Model model = this.factory.createModel();
 
 		for (String file : files)
 		{
-			FileInputStream in =
-					new FileInputStream(new File(file));
+			FileInputStream in = new FileInputStream(new File(file));
 			if (log.isDebugEnabled())
 			{
 				log.debug("start reading file:" + file);
@@ -213,7 +200,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	/**
 	 * Reads a BioPAX model from an OWL file input stream (<em>in</em>) and converts it to a model.
-	 *
 	 * @param in inputStream from which the model will be read
 	 * @return an empty model in case of invalid input.
 	 */
@@ -233,8 +219,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		boolean fixingPEPS = model.getLevel() == BioPAXLevel.L2 && this.isFixReusedPEPs();
 		if (fixingPEPS)
 		{
-			reusedPEPHelper =
-					new ReusedPEPHelper(model);
+			reusedPEPHelper = new ReusedPEPHelper(model);
 		}
 
 		createAndBind(model);
@@ -256,10 +241,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			filelevel = BioPAXLevel.getLevelFromNameSpace(namespaceValue);
 			if (filelevel != null)
 			{
-				if(log.isDebugEnabled())
-					log.debug("Auto-detected biopax " + filelevel
-					+ " (current settings are for Level " 
-					+ level + ")");
+				if (log.isDebugEnabled()) log.debug(
+						"Auto-detected biopax " + filelevel + " (current settings are for Level " + level + ")");
 				break;
 			}
 		}
@@ -268,11 +251,9 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			log.error("Cannot detect biopax level.");
 			throw new BioPaxIOException("Cannot detect biopax level.");
-		}
-		else if (level != filelevel || filelevel != factory.getLevel())
+		} else if (level != filelevel || filelevel != factory.getLevel())
 		{
-			if(log.isDebugEnabled())
-				log.debug("Reset to the default factory for the detected BioPAX level.");
+			if (log.isDebugEnabled()) log.debug("Reset to the default factory for the detected BioPAX level.");
 			resetLevel(filelevel, filelevel.getDefaultFactory());
 		}
 	}
@@ -281,7 +262,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	protected void createAndAdd(Model model, String id, String localName)
 	{
 		BioPAXElement bp = this.getFactory().create(localName, id);
-		
+
 		if (log.isTraceEnabled())
 		{
 			log.trace("id:" + id + " " + localName + " : " + bp);
@@ -302,8 +283,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected abstract void createAndBind(Model model);
 
-	protected BioPAXElement literalFixes(PropertyEditor editor,
-	                                     BioPAXElement bpe, Model model, String value)
+	protected BioPAXElement literalFixes(PropertyEditor editor, BioPAXElement bpe, Model model, String value)
 	{
 		BioPAXElement created = null;
 
@@ -311,19 +291,13 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			if (editor.getProperty().equals("DELTA-G"))
 			{
-				deltaGprimeO aDeltaGprime0 =
-						model.addNew(deltaGprimeO.class,
-								(bpe.getRDFId() +
-								 "-DELTA-G"));
-				aDeltaGprime0
-						.setDELTA_G_PRIME_O(
-								Float.valueOf(value));
+				deltaGprimeO aDeltaGprime0 = model.addNew(deltaGprimeO.class, (bpe.getRDFId() + "-DELTA-G"));
+				aDeltaGprime0.setDELTA_G_PRIME_O(Float.valueOf(value));
 				created = aDeltaGprime0;
 			}
 			if (editor.getProperty().equals("KEQ"))
 			{
-				kPrime aKPrime = model
-						.addNew(kPrime.class, (bpe.getRDFId() + "-KEQ"));
+				kPrime aKPrime = model.addNew(kPrime.class, (bpe.getRDFId() + "-KEQ"));
 				aKPrime.setK_PRIME(Float.valueOf(value));
 				created = aKPrime;
 			}
@@ -335,23 +309,19 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected Object resourceFixes(BioPAXElement bpe, Object value)
 	{
-		if (this.isFixReusedPEPs() &&
-		    value instanceof physicalEntityParticipant)
+		if (this.isFixReusedPEPs() && value instanceof physicalEntityParticipant)
 		{
-			value = this.getReusedPEPHelper()
-					.fixReusedPEP((physicalEntityParticipant) value, bpe);
+			value = this.getReusedPEPHelper().fixReusedPEP((physicalEntityParticipant) value, bpe);
 		}
 		return value;
 	}
 
-	protected void bindValue(String valueString, PropertyEditor editor,
-	                         BioPAXElement bpe, Model model)
+	protected void bindValue(String valueString, PropertyEditor editor, BioPAXElement bpe, Model model)
 	{
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("Binding: " + bpe + '(' + bpe.getModelInterface() + " has  " + editor + ' ' +
-			          valueString);
+			log.debug("Binding: " + bpe + '(' + bpe.getModelInterface() + " has  " + editor + ' ' + valueString);
 		}
 		Object value = valueString;
 
@@ -365,25 +335,18 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 				if (value == null)
 				{
 					throw new IllegalBioPAXArgumentException(
-							"Illegal or Dangling Value/Reference: " + valueString
-							+ " (element: " + bpe.getRDFId()
-							+ " property: " + editor.getProperty()
-							+ ")");
+							"Illegal or Dangling Value/Reference: " + valueString + " (element: " + bpe.getRDFId() +
+							" property: " + editor.getProperty() + ")");
 				}
-			}
-			else if (this.isTreatNilAsNull()
-			         && valueString.trim().equalsIgnoreCase("NIL"))
+			} else if (this.isTreatNilAsNull() && valueString.trim().equalsIgnoreCase("NIL"))
 			{
 				value = null;
 			}
 		}
 		if (editor == null)
 		{
-			log.error(
-					"Editor is null. This probably means an invalid BioPAX property. Failed to set " +
-					valueString);
-		}
-		else
+			log.error("Editor is null. This probably means an invalid BioPAX property. Failed to set " + valueString);
+		} else
 		{
 			editor.setValueToBean(value, bpe);
 		}
@@ -395,15 +358,58 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		Class<? extends BioPAXElement> inter = bpe.getModelInterface();
 		if (this.getLevel().equals(BioPAXLevel.L3))
 		{
-			editor = this.getEditorMap().getEditorForProperty(
-					"comment", inter);
-		}
-		else
+			editor = this.getEditorMap().getEditorForProperty("comment", inter);
+		} else
 		{
-			editor = this.getEditorMap().getEditorForProperty(
-					"COMMENT", inter);
+			editor = this.getEditorMap().getEditorForProperty("COMMENT", inter);
 		}
 		return editor;
+	}
+
+	/**
+	 * Similar to {@link BioPAXIOHandler#convertToOWL(org.biopax.paxtools
+	 * .model.Model, Object)}, but
+	 * extracts a sub-model, converts it into BioPAX (OWL) format,
+	 * and writes it into the outputStream.
+	 * Saved data can be then read via {@link BioPAXIOHandler}
+	 * interface (e.g., {@link SimpleIOHandler}).
+	 * @param model model to be converted into OWL format
+	 * @param outputStream output stream into which the output will be written
+	 * @param ids the list of "root" element IDs to export (with all their properties/children altogether)
+	 * @exception java.io.IOException in case of I/O problems
+	 */
+	@Override public void convertToOWL(Model model, OutputStream outputStream, String... ids)
+	{
+		if (ids.length == 0)
+		{
+			convertToOWL(model, outputStream);
+		} else
+		{
+			Model m = model.getLevel().getDefaultFactory().createModel();
+			String base = model.getNameSpacePrefixMap().get("");
+			m.getNameSpacePrefixMap().put("", base);
+			//to avoid 'nextStep' that may lead to infinite loops -
+			Filter<PropertyEditor> filter = new Filter<PropertyEditor>()
+			{
+				public boolean filter(PropertyEditor editor)
+				{
+					return !"nextStep".equalsIgnoreCase(editor.getProperty()) && !"NEXT-STEP".equalsIgnoreCase(
+							editor.getProperty());
+				}
+			};
+			Fetcher fetcher = new Fetcher(SimpleEditorMap.get(model.getLevel()), filter);
+
+			for (String uri : ids)
+			{
+				BioPAXElement bpe = model.getByID(uri);
+				if (bpe != null)
+				{
+					fetcher.fetch(bpe, m);
+				}
+			}
+
+			convertToOWL(m, outputStream);
+		}
 	}
 
 }

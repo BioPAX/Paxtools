@@ -2,8 +2,6 @@ package org.biopax.paxtools.model;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.controller.EditorMap;
-import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.impl.level2.Level2FactoryImpl;
 import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
 

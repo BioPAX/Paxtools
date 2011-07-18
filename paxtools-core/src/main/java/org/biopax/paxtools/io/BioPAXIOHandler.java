@@ -1,7 +1,6 @@
 package org.biopax.paxtools.io;
 
 import org.biopax.paxtools.controller.EditorMap;
-import org.biopax.paxtools.controller.ReusedPEPHelper;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -11,41 +10,112 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * TODO:Class description User: demir Date: Jun 30, 2009 Time: 2:43:17 PM
+ * This interface defines IO related operations that can be performed on
+ * BioPAX models.
  */
 public interface BioPAXIOHandler
 {
 
-	void fixReusedPEPs(boolean fixReusedPEPs);
+ /**
+  * This option is only applicable two level 2 models.
+  * When enabled it will replicate illegally reused
+  * pysicalEntityParticipants in Level2 files.
+  * @param fixReusedPEPs
+  */
+ void fixReusedPEPs(boolean fixReusedPEPs);
 
-	void treatNilAsNull(boolean treatNILasNull);
+ /**
+  * This flag will fix a common legacy bug from BioCyc where the "NIL" string
+  * was used for representing unknown values.
+  * @param treatNILasNull
+  */
+ void treatNilAsNull(boolean treatNILasNull);
 
-	Model convertFromOWL(InputStream in);
+ /**
+  * This method will read the OWL document given by the input stream
+  * and will convert it into an in memory BioPAX model.
+  * @param in
+  * @return
+  */
+ Model convertFromOWL(InputStream in);
 
-	Model convertFromMultipleOwlFiles(String... files)
-			throws FileNotFoundException;
+ /**
+  * This method will read multiple OWL document
+  * and will merge them into an in memory BioPAX model.
+  * @param files
+  * @return
+  */
+ Model convertFromMultipleOwlFiles(String... files)
+   throws FileNotFoundException;
 
-	void convertToOWL(Model model, OutputStream outputStream);
+ /**
+  * This method will write the model to the output stream. Default encoding
+  * is RDF/XML.
+  * @param model
+  * @param outputStream
+  */
+ void convertToOWL(Model model, OutputStream outputStream);
 
-	void setConvertingFromLevel1ToLevel2(boolean convertingFromLevel1ToLevel2);
+ /**
+  * This flag will allow reader to automatically convert level1 classes to
+  * corresponding level 2 classes.
+  * @param convertingFromLevel1ToLevel2
+  */
+ void setConvertingFromLevel1ToLevel2(boolean convertingFromLevel1ToLevel2);
 
-	boolean isTreatNilAsNull();
+ /**
+  * This flag will fix a common legacy bug from BioCyc where the "NIL" string
+  * was used for representing unknown values.
+  * @return true if this option is enabled.
+  */
+ boolean isTreatNilAsNull();
 
-	void setTreatNilAsNull(boolean treatNilAsNull);
+ /**
+  * This flag will allow reader to automatically convert level1 classes to
+  * corresponding level 2 classes.
+  * @return true if this option is enabled.
+  */
+ boolean isConvertingFromLevel1ToLevel2();
 
-	boolean isConvertingFromLevel1ToLevel2();
+ /**
+  * This option is only applicable two level 2 models.
+  * When enabled it will replicate illegally reused
+  * pysicalEntityParticipants in Level2 files.
+  * @return true if this option is enabled.
+  */
+ boolean isFixReusedPEPs();
 
-	boolean isFixReusedPEPs();
+ /**
+  * @return factory used for creating objects
+  */
+ BioPAXFactory getFactory();
 
-	ReusedPEPHelper getReusedPEPHelper();
+ /**
+  * @param factory used for creating objects
+  */
+ void setFactory(BioPAXFactory factory);
 
-	BioPAXFactory getFactory();
+ /**
+  * @return EditorMap used for this handler.
+  */
+ EditorMap getEditorMap();
 
-	void setFactory(BioPAXFactory factory);
+ /**
+  * @param editorMap used for this handler.
+  */
+ void setEditorMap(EditorMap editorMap);
 
-	EditorMap getEditorMap();
+ /**
+  * @return The level of the model that is being read.
+  */
+ BioPAXLevel getLevel();
 
-	void setEditorMap(EditorMap editorMap);
-
-	BioPAXLevel getLevel();
+ /**
+  * This method will "excise" a new model from the given model that contains
+  * the objects with given ids and their dependents.
+  * @param model
+  * @param outputStream
+  * @param ids
+  */
+ void convertToOWL(Model model, OutputStream outputStream, String... ids);
 }

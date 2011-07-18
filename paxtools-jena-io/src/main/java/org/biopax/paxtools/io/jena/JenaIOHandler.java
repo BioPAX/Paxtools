@@ -97,9 +97,9 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 
 	/**
 	 * Writes a model in OWL format using the an output stream.
-	 * @param model model to be converted into OWL format
-	 * @param outputStream output stream to which the model will be written
-	 */
+   * @param model model to be converted into OWL format
+   * @param outputStream output stream to which the model will be written
+   */
 	public void convertToOWL(Model model, OutputStream outputStream)
 	{
 		objectToIndividualMap = new HashMap<Object, Individual>();
