@@ -336,7 +336,7 @@ public class PaxtoolsMain {
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
         toSif("file1 output\t\t\tconverts model to the simple interaction format", 2)
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("file1 outEdges outNodes writePublications prop1,prop2,..\tconverts model " +
+        toSifnx("file1 outEdges outNodes node-prop1,node-prop2,.. edge-prop1,edge-prop2,...\tconverts model " +
         		"to the extendent simple interaction format", 4)
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         validate("path out [xml|html|biopax] [auto-fix] [normalize] [only-errors] [maxerrors=n]\t\t" +
