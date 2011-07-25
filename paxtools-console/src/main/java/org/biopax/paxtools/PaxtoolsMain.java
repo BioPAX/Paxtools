@@ -278,7 +278,7 @@ public class PaxtoolsMain {
                         .getRules(model.getLevel()).toArray(new InteractionRule[]{}));
 
         sic.writeInteractionsInSIFNX(model, new FileOutputStream(argv[2]), new FileOutputStream(argv[3]),
-                                     Arrays.asList(argv[4].split(",")), Arrays.asList(argv[5].split(",")));
+                                     Arrays.asList(argv[4].split(",")), Arrays.asList(argv[5].split(",")),false);
     }
 
     public static void toSif(String[] argv) throws IOException {

@@ -115,7 +115,7 @@ public class SimpleInteraction
 		boolean equal;
 		equal = (checkNullOrEquals(this.source, that.source) &&
 		         checkNullOrEquals(this.target, that.target));
-		if (!equal || type == null || !type.isDirected())
+		if (!equal && (type == null || !type.isDirected()))
 		{
 			equal = (checkNullOrEquals(this.source, that.target) &&
 			         checkNullOrEquals(this.target, that.source));

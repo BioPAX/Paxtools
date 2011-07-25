@@ -163,7 +163,7 @@ public class SimpleInteractionConverterTest
 			InputStream in = getClass().getResourceAsStream("/L3/" + s);
 			Model m = handler.convertFromOWL(in);
 			converter.writeInteractionsInSIFNX(m,
-					out,out, Arrays.asList("Entity/displayName","Entity/xref"), Arrays.asList("Entity/xref"),true);
+					out,out, Arrays.asList("Entity/name","Entity/xref"), Arrays.asList("Entity/xref"),true);
 			in.close();
 		}
 	}

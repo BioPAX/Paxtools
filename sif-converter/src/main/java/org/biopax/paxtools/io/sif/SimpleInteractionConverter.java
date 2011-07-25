@@ -55,9 +55,10 @@ public class SimpleInteractionConverter
 	 */
 	public Set<SimpleInteraction> inferInteractions(Model model)
 	{
+		Set<SimpleInteraction> interactions = new MergingSet();
 		if (model.getLevel() == BioPAXLevel.L2)
 		{
-			Set<SimpleInteraction> interactions = new HashSet<SimpleInteraction>();
+
 			Set<physicalEntity> bioPAXElements = model.getObjects(physicalEntity.class);
 
 			for (physicalEntity pe : bioPAXElements)
@@ -92,7 +93,7 @@ public class SimpleInteractionConverter
 			return interactions;
 		} else if (model.getLevel() == BioPAXLevel.L3)
 		{
-			Set<SimpleInteraction> interactions = new HashSet<SimpleInteraction>();
+
 			Set<EntityReference> bioPAXElements = model.getObjects(EntityReference.class);
 			for (EntityReference er : bioPAXElements)
 			{

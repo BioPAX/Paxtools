@@ -58,7 +58,7 @@ public final class SifnxExportExample {
 		OutputStream edgeStream = new FileOutputStream(args[1]);
 		OutputStream nodeStream = new FileOutputStream(args[2]);
         sic.writeInteractionsInSIFNX(model, edgeStream, nodeStream, 
-        		null, Arrays.asList("entity/NAME","entity/XREF"));
+        		null, Arrays.asList("entity/NAME","entity/XREF"),false);
 	}
 
 }
