@@ -37,13 +37,9 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.CO_CONTROL;
  * @author Emek Demir
  * @author Ozgun Babur
  */
-public class ControlsTogetherRule implements InteractionRuleL3
+public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 {
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
-		Object entity, Model model, Map options)
-	{
-		inferInteractions(interactionSet, ((EntityReference) entity), model, options);
-	}
+	private static List<BinaryInteractionType> binaryInteractionTypes =  Arrays.asList(CO_CONTROL);
 
 	public void inferInteractions(Set<SimpleInteraction> interactionSet,
 		EntityReference A, Model model, Map options)
@@ -198,7 +194,8 @@ public class ControlsTogetherRule implements InteractionRuleL3
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()
-	{
-		return Arrays.asList(CO_CONTROL);
-	}
+		{
+			return binaryInteractionTypes;
+		}
+
 }

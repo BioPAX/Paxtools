@@ -55,7 +55,9 @@ public enum BinaryInteractionType
 
 	INTERACTS_WITH(
 			"The entities participate in an interaction.  Controllers are not included.  " +
-			"This interaction is undirected.", false);
+			"This interaction is undirected.", false),
+	GENERIC_OF(
+			"The first entity is a generic form of the second entity.",true);
 
 	private String description;
 	private boolean directed;

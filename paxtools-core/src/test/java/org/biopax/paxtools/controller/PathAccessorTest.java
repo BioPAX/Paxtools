@@ -23,8 +23,7 @@ public class PathAccessorTest
   @Test
   public void testPaths()
   {
-	  MockFactory factory = new MockFactory(BioPAXLevel.L3);
-	  Model model = factory.createModel();
+	  Model model = new MockFactory(BioPAXLevel.L3).createModel();
 	  Protein p1 = model.addNew(Protein.class, "P1");
 	  PublicationXref px = model.addNew(PublicationXref.class,"Px1");
 	  px.setId("myId");

@@ -156,7 +156,8 @@ public class SimpleInteractionConverter
 	 * @exception IOException
 	 */
 	public void writeInteractionsInSIFNX(Model model, OutputStream edgeStream, OutputStream nodeStream,
-	                                     List<String> interactorPropertyPaths, List<String> mediatorPropertyPaths)
+	                                     List<String> interactorPropertyPaths, List<String> mediatorPropertyPaths,
+	                                     boolean writeEntityTypes)
 			throws IOException
 	{
 		Set<SimpleInteraction> interactionSet = inferInteractions(model);
@@ -213,6 +214,8 @@ public class SimpleInteractionConverter
 			if (entity == null) continue;
 			
 			writer.write(entity.getRDFId());
+			if(writeEntityTypes)
+			writer.write("\t" + entity.getModelInterface().getSimpleName());
 			if (interactorAccessors != null)
 			{
 				for (PathAccessor accessor : interactorAccessors)

@@ -23,6 +23,9 @@ public class ControlRule implements InteractionRuleL3
 {
 	private final Log log = LogFactory.getLog(ControlRule.class);
 
+	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(METABOLIC_CATALYSIS,
+	                                                                                  STATE_CHANGE);
+
 	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model, Map options)
 	{
 		inferInteractions(interactionSet, ((EntityReference) entity), model, options);
@@ -192,8 +195,7 @@ public class ControlRule implements InteractionRuleL3
 			if (pe instanceof Complex)
 			{
 				collectSimpleMembersOfComplex(erList, (Complex) pe);
-			} else if (pe instanceof SimplePhysicalEntity)
-			getErAndAddifNotNull(erList,pe);
+			} else if (pe instanceof SimplePhysicalEntity) getErAndAddifNotNull(erList, pe);
 		}
 		return erList;
 	}
@@ -213,7 +215,7 @@ public class ControlRule implements InteractionRuleL3
 				collectSimpleMembersOfComplex(list, (Complex) pe);
 			} else if (pe instanceof SimplePhysicalEntity)
 			{
-				getErAndAddifNotNull(list,pe);
+				getErAndAddifNotNull(list, pe);
 			}
 		}
 	}
@@ -288,6 +290,6 @@ public class ControlRule implements InteractionRuleL3
 
 	public List<BinaryInteractionType> getRuleTypes()
 	{
-		return Arrays.asList(STATE_CHANGE, METABOLIC_CATALYSIS);
+		return binaryInteractionTypes;
 	}
 }

@@ -17,13 +17,11 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.SEQUENTIAL_CATALY
  * reaction is the LEFT of the other and if the directions of catalysis and control matches. User:
  * demir Date: Dec 28, 2007 Time: 10:40:01 PM
  */
-public class ConsecutiveCatalysisRule implements InteractionRuleL3
+public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor
 {
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity,
-	                              Model model, Map options)
-	{
-		inferInteractions(interactionSet, ((EntityReference) entity), model, options);
-	}
+	private static List<BinaryInteractionType> binaryInteractionTypes =  Arrays.asList(SEQUENTIAL_CATALYSIS);
+
+
 
 	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference A,
 	                              Model model, Map options)
@@ -264,6 +262,6 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL3
 
 	public List<BinaryInteractionType> getRuleTypes()
 	{
-		return Arrays.asList(SEQUENTIAL_CATALYSIS);
+		return binaryInteractionTypes;
 	}
 }

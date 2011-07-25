@@ -1,99 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.biopax.paxtools</groupId>
-    <artifactId>paxtools</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.biopax.paxtools</groupId>
+	<artifactId>paxtools</artifactId>
+	<version>4.0.0-SNAPSHOT</version>
 
-    <name>PaxTools</name>
-    <packaging>pom</packaging>
-    <description>Paxtools is a Java library that allows software to read, write, analyze and manipulate BioPAX models. Paxtools provide a consistent, fully implemented, validating BioPAX API that significantly reduces development time of oftware  that require programmatic access to BioPAX. Paxtools is modular, lightweight and platform independent to be easily embedded into applications.</description>
-    <url>http://www.biopax.org/paxtools</url>
+	<name>PaxTools</name>
+	<packaging>pom</packaging>
+	<description>Paxtools is a Java library that allows software to read, write, analyze and manipulate BioPAX models.
+		Paxtools provide a consistent, fully implemented, validating BioPAX API that significantly reduces development
+		time of oftware that require programmatic access to BioPAX. Paxtools is modular, lightweight and platform
+		independent to be easily embedded into applications.
+	</description>
+	<url>http://www.biopax.org/paxtools</url>
 
-    <modules>
-        <module>paxtools-core</module>
-        <module>paxtools-jena-io</module>
-        <module>sif-converter</module>
-        <module>gsea-converter</module>
-        <module>pathwaycommons-client</module>
-        <module>biopax-converter</module>
-        <module>psimi-converter</module>
-        <module>sbgn-converter</module>
-        <module>paxtools-console</module>
-        <module>paxtools-query</module>
-    </modules>
+	<modules>
+		<module>paxtools-core</module>
+		<module>paxtools-jena-io</module>
+		<module>sif-converter</module>
+		<module>gsea-converter</module>
+		<module>pathwaycommons-client</module>
+		<module>biopax-converter</module>
+		<module>psimi-converter</module>
+		<module>sbgn-converter</module>
+		<module>paxtools-console</module>
+		<module>paxtools-query</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
-    <developers>
-        <developer>
-            <id>emekdemir</id>
-            <name>Emek Demir</name>
-            <organization>CBIO MSKCC</organization>
-            <roles>
-                <role>architect</role>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>rodche</id>
-            <name>Igor Rodchenkov</name>
-            <organization>University of Toronto</organization>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>ozgunbabur</id>
-            <name>Ozgun Babur</name>
-            <organization>CBIO MSKCC</organization>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>kenichirofukuda</id>
-            <name>Ken-Ichiro Fukuda</name>
-            <organization />
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>armanaksoy</id>
-            <name>Arman Aksoy</name>
-            <organization />
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>benjamingross</id>
-            <name>Benjamin Gross</name>
-            <organization>CBIO MSKCC</organization>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-    </developers>
+	<developers>
+		<developer>
+			<id>emekdemir</id>
+			<name>Emek Demir</name>
+			<organization>CBIO MSKCC</organization>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>rodche</id>
+			<name>Igor Rodchenkov</name>
+			<organization>University of Toronto</organization>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>ozgunbabur</id>
+			<name>Ozgun Babur</name>
+			<organization>CBIO MSKCC</organization>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>kenichirofukuda</id>
+			<name>Ken-Ichiro Fukuda</name>
+			<organization/>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>armanaksoy</id>
+			<name>Arman Aksoy</name>
+			<organization/>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>benjamingross</id>
+			<name>Benjamin Gross</name>
+			<organization>CBIO MSKCC</organization>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
 
-   <mailingLists>
-     <mailingList>
-       <name>BioPAX Discussion Group</name>
-       <!-- 
-       <subscribe></subscribe>
-       <unsubscribe></unsubscribe>
-       -->
-      <post>biopax-discuss@googlegroups.com</post>
-      <!--
-      <archive>http://www.biopax.org/mailman/listinfo/biopax-discuss</archive>
-      -->
-     </mailingList>
-   </mailingLists>
+	<mailingLists>
+		<mailingList>
+			<name>BioPAX Discussion Group</name>
+			<!--
+				   <subscribe></subscribe>
+				   <unsubscribe></unsubscribe>
+				   -->
+			<post>biopax-discuss@googlegroups.com</post>
+			<!--
+				  <archive>http://www.biopax.org/mailman/listinfo/biopax-discuss</archive>
+				  -->
+		</mailingList>
+	</mailingLists>
 
 	<licenses>
 		<license>
@@ -146,13 +151,13 @@
 		</profile>
 	</profiles>
 
-    <scm>
-        <connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
-        <developerConnection>
-            scm:hg:ssh://${scm.username}@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
-        </developerConnection>
-        <url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
-    </scm>
+	<scm>
+		<connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
+		<developerConnection>
+			scm:hg:ssh://${scm.username}@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
+		</developerConnection>
+		<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
+	</scm>
 
 	<!-- In order to deploy or site:deploy this project:
 	1) have login/pw configured in their local (~/.m2/) settings.xml, i.e:
@@ -188,7 +193,7 @@
   	- do site, deploy normally (it now goes not ot tthe BioPAX@Sourceforge but to a local dir) 
   	- setup/use RSYNC (outside maven stuff) to upload the releases and docs from that locations to @sf.net
 	-->
-	
+
 	<distributionManagement>
 		<site>
 			<id>biopax.sf.net</id>
@@ -207,54 +212,66 @@
 		</repository>
 	</distributionManagement>
 
-    <organization>
-        <name>BioPAX</name>
-        <url>http://www.biopax.org</url>
-    </organization>
+	<organization>
+		<name>BioPAX</name>
+		<url>http://www.biopax.org</url>
+	</organization>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-    
-    <dependencies>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.13</version>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-      
-    <repositories>
-        <repository>
-            <id>JBoss Repo</id>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
-            <name>JBoss Repo</name>
-        </repository>
-        <repository>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.2</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test-jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>JBoss Repo</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+			<name>JBoss Repo</name>
+		</repository>
+		<repository>
 			<id>biopax.snapshots</id>
 			<name>BioPAX Snapshots Repository at Sourceforge</name>
 			<url>http://biopax.sourceforge.net/m2repo/snapshots/</url>
@@ -270,8 +287,8 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-    </repositories>
-	
+	</repositories>
+
 	<reporting>
 		<plugins>
 			<plugin>

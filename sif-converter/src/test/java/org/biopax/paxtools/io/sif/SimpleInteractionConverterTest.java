@@ -1,3 +1,4 @@
+
 package org.biopax.paxtools.io.sif;
 /**
  * User: demir
@@ -32,13 +33,14 @@ public class SimpleInteractionConverterTest
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
 	// test out - to target/test-classes dir:
 	static final String outFile = SimpleInteractionConverterTest.class.getResource("/").getPath()
-		+ File.separator + "simpleInteractionConverterTest.out.txt";
+		+ "simpleInteractionConverterTest.out.txt";
 	PrintStream out = null;
 	
 	@Before
 	public void setupTest() throws IOException {
 		FileOutputStream out1 = new FileOutputStream(outFile, true);
 		FileDescriptor fd = out1.getFD();
+		System.out.println(outFile);
 		out = new PrintStream(out1);
 	}
 	
@@ -98,12 +100,12 @@ public class SimpleInteractionConverterTest
 			Model level2 = handler.convertFromOWL(in);
 			converter.writeInteractionsInSIFNX(level2, out, out,
 			null,
-			Arrays.asList("entity/NAME","entity/XREF","entity/ORGANISM"));
+			Arrays.asList("entity/NAME","entity/XREF","entity/ORGANISM"),true);
 			in.close();
 		}
 	}
     
-//	@Test
+	@Test
 	public void testWriteInteractionsInSIFl3() throws Exception
 	{
 		SimpleInteractionConverter converter = new SimpleInteractionConverter(
@@ -151,7 +153,7 @@ public class SimpleInteractionConverterTest
 		{
 			public boolean accept(File dir, String name)
 			{
-				return (name.endsWith("p.owl"));
+				return (name.endsWith(".owl"));
 			}
 		};
 
@@ -161,7 +163,7 @@ public class SimpleInteractionConverterTest
 			InputStream in = getClass().getResourceAsStream("/L3/" + s);
 			Model m = handler.convertFromOWL(in);
 			converter.writeInteractionsInSIFNX(m,
-					out,out, Arrays.asList("Entity/name","Entity/xref"), Arrays.asList("Entity/xref"));
+					out,out, Arrays.asList("Entity/displayName","Entity/xref"), Arrays.asList("Entity/xref"),true);
 			in.close();
 		}
 	}

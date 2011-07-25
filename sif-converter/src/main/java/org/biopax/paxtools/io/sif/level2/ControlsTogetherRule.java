@@ -41,6 +41,7 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.CO_CONTROL;
  */
 public class ControlsTogetherRule implements InteractionRuleL2
 {
+	private static List<BinaryInteractionType> binaryInteractionTypes =  Arrays.asList(CO_CONTROL);
 	public void inferInteractions(Set<SimpleInteraction> interactionSet,
 		Object entity,
 		Model model, Map options)
@@ -177,9 +178,10 @@ public class ControlsTogetherRule implements InteractionRuleL2
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()
-	{
-		return Arrays.asList(CO_CONTROL);
-	}
+		{
+			return binaryInteractionTypes;
+		}
+
 }
 
 	

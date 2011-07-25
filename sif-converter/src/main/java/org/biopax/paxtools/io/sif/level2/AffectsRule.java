@@ -12,10 +12,11 @@ import java.util.*;
  */
 public class AffectsRule implements InteractionRuleL2
 {
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
-								  physicalEntity A,
-								  Model model,
-								  Map options)
+	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(BinaryInteractionType.ACTIVATES,
+	                                                                                 BinaryInteractionType
+			                                                                                 .INACTIVATES);
+
+	public void inferInteractions(Set<SimpleInteraction> interactionSet, physicalEntity A, Model model, Map options)
 	{
 		for (control cont : A.getAllInteractions(control.class))
 		{
@@ -29,26 +30,21 @@ public class AffectsRule implements InteractionRuleL2
 		}
 	}
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
-								  Object entity,
-								  Model model,
-								  Map options)
+	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model, Map options)
 	{
-		inferInteractions(interactionSet, (physicalEntity) entity, model, options );
+		inferInteractions(interactionSet, (physicalEntity) entity, model, options);
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()
 	{
-		return Arrays.asList(
-			BinaryInteractionType.ACTIVATES,
-			BinaryInteractionType.INACTIVATES);
+		return binaryInteractionTypes;
 	}
 
 	private boolean isActive(physicalEntityParticipant pep)
 	{
 		if (affectsSomething(pep) && !isAnnotatedInactive(pep) &&
-			(!(pep.getPHYSICAL_ENTITY() instanceof complex) ||
-				!complexHasInactiveMember((complex) pep.getPHYSICAL_ENTITY())))
+		    (!(pep.getPHYSICAL_ENTITY() instanceof complex) || !complexHasInactiveMember(
+				    (complex) pep.getPHYSICAL_ENTITY())))
 		{
 			return true;
 		}
@@ -58,9 +54,9 @@ public class AffectsRule implements InteractionRuleL2
 			return true;
 		}
 
-		if (pep.getPHYSICAL_ENTITY() instanceof complex &&
-			complexHasActiveMember((complex) pep.getPHYSICAL_ENTITY()) &&
-			!complexHasInactiveMember((complex) pep.getPHYSICAL_ENTITY()))
+		if (pep.getPHYSICAL_ENTITY() instanceof complex && complexHasActiveMember((complex) pep.getPHYSICAL_ENTITY
+				()) &&
+		    !complexHasInactiveMember((complex) pep.getPHYSICAL_ENTITY()))
 		{
 			return true;
 		}
@@ -75,9 +71,8 @@ public class AffectsRule implements InteractionRuleL2
 			return true;
 		}
 
-		if (pep.getPHYSICAL_ENTITY() instanceof complex &&
-			complexHasInactiveMember((complex) pep.getPHYSICAL_ENTITY()) &&
-			!complexHasActiveMember((complex) pep.getPHYSICAL_ENTITY()))
+		if (pep.getPHYSICAL_ENTITY() instanceof complex && complexHasInactiveMember(
+				(complex) pep.getPHYSICAL_ENTITY()) && !complexHasActiveMember((complex) pep.getPHYSICAL_ENTITY()))
 		{
 			return true;
 		}
@@ -174,9 +169,8 @@ public class AffectsRule implements InteractionRuleL2
 			if (isAnnotatedActive(pep))
 			{
 				return true;
-			}
-			else if (pep.getPHYSICAL_ENTITY() instanceof complex &&
-				complexHasActiveMember((complex) pep.getPHYSICAL_ENTITY()))
+			} else if (pep.getPHYSICAL_ENTITY() instanceof complex && complexHasActiveMember(
+					(complex) pep.getPHYSICAL_ENTITY()))
 			{
 				return true;
 			}
@@ -191,9 +185,8 @@ public class AffectsRule implements InteractionRuleL2
 			if (isAnnotatedInactive(pep))
 			{
 				return true;
-			}
-			else if (pep.getPHYSICAL_ENTITY() instanceof complex &&
-				complexHasInactiveMember((complex) pep.getPHYSICAL_ENTITY()))
+			} else if (pep.getPHYSICAL_ENTITY() instanceof complex && complexHasInactiveMember(
+					(complex) pep.getPHYSICAL_ENTITY()))
 			{
 				return true;
 			}
@@ -207,13 +200,11 @@ public class AffectsRule implements InteractionRuleL2
 
 		for (physicalEntityParticipant pep : cmp.getCOMPONENTS())
 		{
-			if (!(pep.getPHYSICAL_ENTITY() instanceof complex) &&
-				((active && isAnnotatedActive(pep)) ||
-					(!active && isAnnotatedInactive(pep))))
+			if (!(pep.getPHYSICAL_ENTITY() instanceof complex) && ((active && isAnnotatedActive(pep)) ||
+			                                                       (!active && isAnnotatedInactive(pep))))
 			{
 				set.add(pep.getPHYSICAL_ENTITY());
-			}
-			else if (pep.getPHYSICAL_ENTITY() instanceof complex)
+			} else if (pep.getPHYSICAL_ENTITY() instanceof complex)
 			{
 				getMembers((complex) pep.getPHYSICAL_ENTITY(), active, set);
 			}
@@ -230,8 +221,7 @@ public class AffectsRule implements InteractionRuleL2
 			if (pep.getPHYSICAL_ENTITY() instanceof complex)
 			{
 				getMembers((complex) pep.getPHYSICAL_ENTITY(), set);
-			}
-			else
+			} else
 			{
 				set.add(pep);
 			}
@@ -239,11 +229,8 @@ public class AffectsRule implements InteractionRuleL2
 		return set;
 	}
 
-	private void createInteractions (
-		Set<SimpleInteraction> interactionSet,
-		physicalEntity A,
-		conversion conv,
-		control cont)
+	private void createInteractions(Set<SimpleInteraction> interactionSet, physicalEntity A, conversion conv,
+	                                control cont)
 	{
 		boolean l2r = true;
 
@@ -255,8 +242,7 @@ public class AffectsRule implements InteractionRuleL2
 			{
 				if (dir == Direction.REVERSIBLE) return;
 
-				if (dir == Direction.IRREVERSIBLE_RIGHT_TO_LEFT ||
-					dir == Direction.PHYSIOL_RIGHT_TO_LEFT)
+				if (dir == Direction.IRREVERSIBLE_RIGHT_TO_LEFT || dir == Direction.PHYSIOL_RIGHT_TO_LEFT)
 				{
 					l2r = false;
 				}
@@ -291,14 +277,13 @@ public class AffectsRule implements InteractionRuleL2
 				if (sign == 1)
 				{
 					interactionSet.add(new SimpleInteraction(A, tuple[1].getPHYSICAL_ENTITY(),
-						BinaryInteractionType.ACTIVATES));
-				}
-				else
+					                                         BinaryInteractionType.ACTIVATES));
+				} else
 				{
 					assert sign == -1;
 
 					interactionSet.add(new SimpleInteraction(A, tuple[1].getPHYSICAL_ENTITY(),
-						BinaryInteractionType.INACTIVATES));
+					                                         BinaryInteractionType.INACTIVATES));
 				}
 			}
 		}
@@ -313,23 +298,20 @@ public class AffectsRule implements InteractionRuleL2
 				if (sign == 1)
 				{
 					interactionSet.add(new SimpleInteraction(A, pep.getPHYSICAL_ENTITY(),
-						BinaryInteractionType.ACTIVATES));
-				}
-				else if (sign == -1)
+					                                         BinaryInteractionType.ACTIVATES));
+				} else if (sign == -1)
 				{
 					interactionSet.add(new SimpleInteraction(A, pep.getPHYSICAL_ENTITY(),
-						BinaryInteractionType.INACTIVATES));
+					                                         BinaryInteractionType.INACTIVATES));
 				}
 
 				if (sign != 0)
 				{
-					for (physicalEntity pe :
-						eff == 1 ?
-							getMembers((complex) pep.getPHYSICAL_ENTITY(), true, null) :
+					for (physicalEntity pe : eff == 1 ? getMembers((complex) pep.getPHYSICAL_ENTITY(), true, null) :
 							getMembers((complex) pep.getPHYSICAL_ENTITY(), false, null))
 					{
 						interactionSet.add(new SimpleInteraction(pe, pep.getPHYSICAL_ENTITY(),
-							BinaryInteractionType.ACTIVATES));
+						                                         BinaryInteractionType.ACTIVATES));
 					}
 				}
 			}
@@ -347,9 +329,8 @@ public class AffectsRule implements InteractionRuleL2
 		}
 	}
 
-	private Set<physicalEntityParticipant[]> getEntityMatching(
-		Set<physicalEntityParticipant> set1,
-		Set<physicalEntityParticipant> set2)
+	private Set<physicalEntityParticipant[]> getEntityMatching(Set<physicalEntityParticipant> set1,
+	                                                           Set<physicalEntityParticipant> set2)
 	{
 		Set<physicalEntityParticipant[]> tuples = new HashSet<physicalEntityParticipant[]>();
 

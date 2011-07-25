@@ -18,19 +18,13 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.IN_SAME_COMPONENT
  * Component.InSame: A and B are components of same flattened complex structure,
  * A and B are simple. Component.Of: A is component of B, B is complex, A may be
  * nested multiple levels in B.
- *
  * @author Ozgun Babur
  */
-public class ComponentRule implements InteractionRuleL3
+public class ComponentRule extends InteractionRuleL3Adaptor
 {
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object AObj,
-		Model model, Map options)
-	{
-		inferInteractions(interactionSet, (EntityReference) AObj, model, options);
-	}
+	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(IN_SAME_COMPONENT);
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference A,
-		Model model, Map options)
+	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference A, Model model, Map options)
 	{
 		// Iterate all PEs of A and process that goes into a complex
 		for (SimplePhysicalEntity pe : A.getEntityReferenceOf())
@@ -50,14 +44,12 @@ public class ComponentRule implements InteractionRuleL3
 	 * of nesting. If it is also detected that this complex is the most outer
 	 * complex, then another recursive search is initiated for mining
 	 * Component.InSame rule.
-	 *
 	 * @param interactionSet interaction repository
-	 * @param A			  first physical entity
-	 * @param options		options map
-	 * @param comp		   complex being processed
+	 * @param A first physical entity
+	 * @param options options map
+	 * @param comp complex being processed
 	 */
-	private void processComplex(Set<SimpleInteraction> interactionSet, EntityReference A,
-		Complex comp, Map options)
+	private void processComplex(Set<SimpleInteraction> interactionSet, EntityReference A, Complex comp, Map options)
 	{
 		// Flag for detecting if this complex is most outer one.
 		boolean mostOuter = true;
@@ -71,13 +63,13 @@ public class ComponentRule implements InteractionRuleL3
 
 		// Search towards other members only if this is the most outer complex
 		// and if options let for sure
-		if (mostOuter && (!options.containsKey(IN_SAME_COMPONENT) ||
-			options.get(IN_SAME_COMPONENT).equals(Boolean.TRUE)))
+		if (mostOuter && (!options.containsKey(IN_SAME_COMPONENT) || options.get(IN_SAME_COMPONENT).equals(
+				Boolean.TRUE)))
 		{
 			// Iterate other members for components_of_same_complex rule
 			for (EntityReference B : comp.getMemberReferences())
 			{
-				if (B!=null && !B.equals(A))
+				if (B != null && !B.equals(A))
 				{
 					SimpleInteraction si = new SimpleInteraction(A, B, IN_SAME_COMPONENT);
 					si.addMediator(comp);
@@ -89,6 +81,6 @@ public class ComponentRule implements InteractionRuleL3
 
 	public List<BinaryInteractionType> getRuleTypes()
 	{
-		return Arrays.asList(IN_SAME_COMPONENT);
+		return binaryInteractionTypes;
 	}
 }

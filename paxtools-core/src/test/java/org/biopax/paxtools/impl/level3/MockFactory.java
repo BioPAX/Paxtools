@@ -160,11 +160,9 @@ public class MockFactory extends BioPAXFactoryAdaptor
         if (actual != null) {
             return map.getLevel().getDefaultFactory()
             	.create(actual, base+id++);
-        } else {
-            System.out.println("actual = " + actual);
-            System.out.println("toCreate = " + toCreate);
+        } else
             return null;
-        }
+
     }
 
     private Class findConcreteMockClass(Class toCreate, Class domain) {
@@ -185,11 +183,6 @@ public class MockFactory extends BioPAXFactoryAdaptor
                     break;
                 }
             }
-        }
-        if(actual==null)
-        {
-            System.out.println("Failed to find restricted domain:" + domain +"for class " +toCreate +". " +
-                    "This might be a bug or a self reference that might cause cycles");
         }
         return actual;
     }

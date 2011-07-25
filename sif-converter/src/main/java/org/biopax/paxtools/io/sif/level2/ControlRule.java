@@ -19,6 +19,9 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.STATE_CHANGE;
  */
 public class ControlRule implements InteractionRuleL2
 {
+	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(METABOLIC_CATALYSIS,
+		                                                                                  STATE_CHANGE);
+
 	public void inferInteractions(Set<SimpleInteraction> interactionSet,
 		Object entity,
 		Model model, Map options)
@@ -278,8 +281,7 @@ public class ControlRule implements InteractionRuleL2
 
 	public List<BinaryInteractionType> getRuleTypes()
 	{
-		return Arrays.asList(STATE_CHANGE,
-                METABOLIC_CATALYSIS);
+		return binaryInteractionTypes;
 	}
 
 	private class StateWrapper

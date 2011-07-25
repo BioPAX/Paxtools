@@ -19,25 +19,20 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
  * @author Emek Demir
  * @author Ozgun Babur
  */
-public class ParticipatesRule implements InteractionRuleL3
+public class ParticipatesRule extends InteractionRuleL3Adaptor
 {
-	
+
 	private final Log log = LogFactory.getLog(ParticipatesRule.class);
-	
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model,
-		Map options)
-	{
-		inferInteractions(interactionSet, ((EntityReference) entity), model, options);
-	}
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference er,
-		Model model,Map options)
-	{
-		boolean skipConversions = options.containsKey(REACTS_WITH) &&
-			options.get(REACTS_WITH).equals(false);
+	 private static final List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(
+			BinaryInteractionType.INTERACTS_WITH, REACTS_WITH);
 
-		boolean skipInteractions = options.containsKey(INTERACTS_WITH) &&
-			options.get(INTERACTS_WITH).equals(false);
+
+	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference er, Model model, Map options)
+	{
+		boolean skipConversions = options.containsKey(REACTS_WITH) && options.get(REACTS_WITH).equals(false);
+
+		boolean skipInteractions = options.containsKey(INTERACTS_WITH) && options.get(INTERACTS_WITH).equals(false);
 
 		// There is nothing to find if we are skipping both rules
 		if (skipConversions && skipInteractions)
@@ -52,7 +47,7 @@ public class ParticipatesRule implements InteractionRuleL3
 	}
 
 	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference er,
-		boolean skipConversions, boolean skipInteractions, PhysicalEntity pe)
+	                                   boolean skipConversions, boolean skipInteractions, PhysicalEntity pe)
 	{
 		for (Interaction interaction : pe.getParticipantOf())
 		{
@@ -60,16 +55,14 @@ public class ParticipatesRule implements InteractionRuleL3
 			if ((interaction instanceof Control))
 			{
 				continue;
-			}
-			else if (interaction instanceof Conversion)
+			} else if (interaction instanceof Conversion)
 			{
 				if (skipConversions)
 				{
 					continue;
 				}
 				type = REACTS_WITH;
-			}
-			else
+			} else
 			{
 				if (skipInteractions)
 				{
@@ -89,24 +82,22 @@ public class ParticipatesRule implements InteractionRuleL3
 		}
 	}
 
-	private void processParticipant(Set<SimpleInteraction> interactionSet,
-		EntityReference er,
-		Entity entity,
-		BinaryInteractionType type,
-		Interaction interaction)
+	private void processParticipant(Set<SimpleInteraction> interactionSet, EntityReference er, Entity entity,
+	                                BinaryInteractionType type, Interaction interaction)
 	{
 		if (entity instanceof SimplePhysicalEntity)
 		{
 			EntityReference er2 = ((SimplePhysicalEntity) entity).getEntityReference();
-			if(er2 != null) {
+			if (er2 != null)
+			{
 				createInteraction(er, er2, interactionSet, type, interaction);
-			} else {
-				if(log.isWarnEnabled())
-					log.warn("Skip processing the interaction of EntityReference " 
-						+ er + " with entity " + entity + ", which has NULL entityReference");
+			} else
+			{
+				if (log.isWarnEnabled()) log.warn(
+						"Skip processing the interaction of EntityReference " + er + " with entity " + entity +
+						", which has NULL entityReference");
 			}
-		}
-		else if (entity instanceof Complex)
+		} else if (entity instanceof Complex)
 		{
 			for (EntityReference er2 : ((Complex) entity).getMemberReferences())
 			{
@@ -115,9 +106,8 @@ public class ParticipatesRule implements InteractionRuleL3
 		}
 	}
 
-	private void createInteraction(EntityReference er1, EntityReference er2,
-		Set<SimpleInteraction> set,
-		BinaryInteractionType type, Interaction interaction)
+	private void createInteraction(EntityReference er1, EntityReference er2, Set<SimpleInteraction> set,
+	                               BinaryInteractionType type, Interaction interaction)
 	{
 		if (er2 != null && er1 != null && !er2.equals(er1))
 		{
@@ -127,8 +117,9 @@ public class ParticipatesRule implements InteractionRuleL3
 		}
 	}
 
-	public List<BinaryInteractionType> getRuleTypes()
+
+	@Override public List<BinaryInteractionType> getRuleTypes()
 	{
-		return Arrays.asList(REACTS_WITH, INTERACTS_WITH);
+		return binaryInteractionTypes;
 	}
 }
