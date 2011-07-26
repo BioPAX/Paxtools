@@ -7,11 +7,12 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.BiochemicalReaction;
-import org.biopax.paxtools.model.level3.Protein;
+import org.biopax.paxtools.model.level3.*;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Tutorial
 {
@@ -114,8 +115,8 @@ public class Tutorial
   }
  }
 
- public static void merge(EditorMap editorMap,
-                          Model srcModel2, Model srcModel1)
+ public static void merge(EditorMap editorMap, Model srcModel2,
+                          Model srcModel1)
  {
   Model targetModel = editorMap.getLevel().getDefaultFactory().createModel();
   Merger merger = new Merger(editorMap);
@@ -123,12 +124,50 @@ public class Tutorial
 
  }
 
+ public static Set access1(Complex complex)
+ {
+  Set<UnificationXref> xrefs = new HashSet<UnificationXref>();
+  recursivelyObtainMembers(complex, xrefs);
+  return xrefs;
+ }
+
+ private static void recursivelyObtainMembers(Complex complex,
+                                              Set<UnificationXref> xrefs)
+ {
+  for (PhysicalEntity pe : complex.getComponent())
+  {
+   if (pe instanceof Complex)
+   {
+    recursivelyObtainMembers((Complex) pe, xrefs);
+   } else
+   {
+    Set<Xref> memberxrefs =
+      ((SimplePhysicalEntity) pe).getEntityReference().getXref();
+    for (Xref xref : memberxrefs)
+    {
+     if (xref instanceof UnificationXref)
+     {
+      xrefs.add((UnificationXref) xref);
+     }
+    }
+   }
+
+  }
+ }
+
+ public static Set access2(Complex complex)
+ {
+  return new PathAccessor(
+    "Complex/component*/EntityReference/xref:UnificationXref",
+    BioPAXLevel.L3).getValueFromBean(complex);
+ }
 
  public void highlightWorkaround()
  {
   myFirstModel();
   IO(null, null);
   Excisor ex = new Excisor(null);
+  access1(null);
  }
 
 
