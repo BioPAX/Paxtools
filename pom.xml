@@ -139,7 +139,7 @@
 				<site>
 					<id>biopax.sf.net</id>
 					<name>BioPAX Sourceforge site</name>
-					<url>${local.biopax.site}/paxtools</url>
+					<url>${local.biopax.site}/paxtools-${project.version}</url>
 				</site>
 			</distributionManagement>
 		</profile>
@@ -180,7 +180,7 @@
   	</servers>
   	(alternatively, one can define developer's profile in this pom.xml 
   	with a <distributionManagement /> inside, and use username explicitely, e.g., 
-  	<url>scp://USERID@shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>)
+  	<url>scp://USERID@shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools-${project.version}</url>)
   	2) [Important!] CREATE the remote shell first (before using "mvn deploy"):
   		- from terminal do: "ssh -t USERID,biopax@shell.sourceforge.net create", wait...
   		- once it's up, - exit (now you can login as "ssh USERID,biopax@shell.sourceforge.net", 
@@ -188,9 +188,9 @@
   		see also: http://sourceforge.net/apps/trac/sourceforge/wiki/Shell%20service)
   	3) now you can do "mvn deploy" or "mvn site:deploy" (do site:site first, for speed)!
   	
-  	Alternative approach:
+  	Alternative (FASTER and MORE SAFE) approach:
   	- configure to use local <site> and <repository> locations in your <profile>,
-  	- do site, deploy normally (it now goes not ot tthe BioPAX@Sourceforge but to a local dir) 
+  	- do deploy, site:deploy with "-P<your_profile_name>" option (so it goes not to BioPAX@Sourceforge but to a local dir) 
   	- setup/use RSYNC (outside maven stuff) to upload the releases and docs from that locations to @sf.net
 	-->
 
@@ -198,7 +198,7 @@
 		<site>
 			<id>biopax.sf.net</id>
 			<name>BioPAX Sourceforge site</name>
-			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools</url>
+			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools-${project.version}</url>
 		</site>
 		<snapshotRepository>
 			<id>biopax.snapshots</id>
