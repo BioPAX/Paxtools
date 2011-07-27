@@ -1,5 +1,7 @@
 package org.biopax.paxtools.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.Model;
@@ -7,8 +9,8 @@ import org.biopax.paxtools.model.Model;
 import java.lang.reflect.Modifier;
 
 public abstract class BioPAXFactoryAdaptor extends BioPAXFactory {
-
-
+	private static final Log LOG = LogFactory.getLog(BioPAXFactoryAdaptor.class);
+	
     protected void setId(BioPAXElement bpe, String uri)
     {
         ((BioPAXElementImpl) bpe).setRDFId(uri);
@@ -27,11 +29,15 @@ public abstract class BioPAXFactoryAdaptor extends BioPAXFactory {
     public boolean canInstantiate(Class<? extends BioPAXElement> aClass)    //TODO do better, check package etc..
     {
         try {
-            return !Modifier.isAbstract(Class.forName(mapClassName(aClass)).getModifiers());
+            String cname = mapClassName(aClass);
+        	return !Modifier.isAbstract(Class.forName(cname).getModifiers());
         } catch (ClassNotFoundException e)
         {
             return false;
-        }
+        } catch (Exception ex) {
+        	LOG.error("Error in canInstantiate(" + aClass + ")", ex);
+			return false;
+		}
     }
 
     @Override

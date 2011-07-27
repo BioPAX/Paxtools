@@ -44,7 +44,7 @@ public class SimpleIOHandlerTest
 	public static Model getL2Model(BioPAXIOHandler io)
 	{
 		String s = "L2" + File.separator
-		           + "biopax_id_557861_mTor_signaling1.owl";
+		           + "biopax_id_557861_mTor_signaling.owl";
 
 		System.out.println("file = " + s);
 
