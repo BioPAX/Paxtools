@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
-	<version>4.0.0-SNAPSHOT</version>
+	<version>4.0.0b</version>
 
 	<name>PaxTools</name>
 	<packaging>pom</packaging>
@@ -63,7 +62,7 @@
 		<developer>
 			<id>kenichirofukuda</id>
 			<name>Ken-Ichiro Fukuda</name>
-			<organization/>
+			<organization />
 			<roles>
 				<role>developer</role>
 			</roles>
@@ -71,7 +70,7 @@
 		<developer>
 			<id>armanaksoy</id>
 			<name>Arman Aksoy</name>
-			<organization/>
+			<organization />
 			<roles>
 				<role>developer</role>
 			</roles>
