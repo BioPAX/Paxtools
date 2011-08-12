@@ -1,6 +1,5 @@
 package org.biopax.paxtools.fixer;
 
-import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.controller.ShallowCopy;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -16,8 +15,6 @@ import static org.biopax.paxtools.controller.FeatureUtils.findFeaturesAddedToSec
  * This class takes a L3 model and attempts to resolve features and not features within the context of that model.
  * It can aggressively resolve to a complete closed world semantics or can operate on a "relaxed" mode where it resolves
  * only when certain.
- * 
- * TODO merge this with the {@link ModelUtils} ?
  */
 public class FeatureResolver {
 
@@ -27,10 +24,9 @@ public class FeatureResolver {
 
     public void resolveFeatures(Model model) {
         if (!model.getLevel().equals(BioPAXLevel.L3)) {
-            //Log error
+            //TODO Log error
         } else {
             resolveBindingFeatures(model);
-
 
             //For each entity reference:
             for (EntityReference er : model.getObjects(EntityReference.class))
@@ -56,24 +52,17 @@ public class FeatureResolver {
                                                 findFeaturesAddedToSecond(physicalEntity, otherSPE,fix);
                                         Set<EntityFeature> removed =
                                                 findFeaturesAddedToSecond(otherSPE,physicalEntity,fix);
-
-
-
-                                    }
                                     }
                                 }
-                                //HANDLE complexes
+                               }
+                                //TODO HANDLE complexes?
                               }
                           }
                       }
                     }
                 }
-
-
-
             }
-        }
-
+    }
 
 
     private void resolveBindingFeatures(Model model) {
@@ -147,6 +136,5 @@ public class FeatureResolver {
         complex.addComponent(component);
         return component;
     }
-
 
 }

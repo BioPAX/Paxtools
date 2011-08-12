@@ -246,7 +246,8 @@ public class PathwayCommonsIOHandler
         DEFAULT("CPATH_ID"),
         UNIPROT("UNIPROT"),
 		CPATH_ID("CPATH_ID"),
-		ENTREZ_GENE("ENTREZ_GENE");
+		ENTREZ_GENE("ENTREZ_GENE"),
+		GENE_SYMBOL("GENE_SYMBOL");
 
         private final String tag;
 
@@ -270,6 +271,11 @@ public class PathwayCommonsIOHandler
       	CELL_MAP("CELL_MAP"),
       	HUMANCYC("HUMANCYC"),
       	NCI_NATURE("NCI_NATURE"),
+      	BIOGRID("BIOGRID"),
+      	HPRD("HPRD"),
+      	IMID("IMID"),
+      	INTACT("INTACT"),
+      	MINT("MINT"),
       	REACTOME("REACTOME");
 
       	private final String tag;
