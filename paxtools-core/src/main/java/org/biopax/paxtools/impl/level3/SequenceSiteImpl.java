@@ -30,6 +30,9 @@ public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSi
 
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof SequenceSite))
+			return false;
+		
 		final SequenceSite that = (SequenceSite) element;
 		return
 			(sequencePosition == that.getSequencePosition()) &&

@@ -38,6 +38,9 @@ public class DeltaGImpl extends L3ElementImpl implements DeltaG
 
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof DeltaG))
+			return false;
+		
 		final DeltaG that = (DeltaG) element;
 
 		return

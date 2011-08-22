@@ -41,6 +41,9 @@ public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements Co
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof CovalentBindingFeature))
+			return false;
+		
 		CovalentBindingFeature that = (CovalentBindingFeature) element;
 		SequenceModificationVocabulary type = that.getModificationType();
 		boolean value = (type == null) ?

@@ -33,6 +33,9 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof ChemicalStructure))
+			return false;
+		
 		final ChemicalStructure that = (ChemicalStructure) element;
 
 		return

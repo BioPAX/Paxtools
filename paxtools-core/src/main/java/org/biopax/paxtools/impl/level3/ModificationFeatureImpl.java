@@ -48,6 +48,9 @@ public class ModificationFeatureImpl extends EntityFeatureImpl
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof ModificationFeature))
+			return false;
+		
 		ModificationFeature that = (ModificationFeature) element;
 		boolean value = super.atEquivalentLocation(that);
 		if (value)

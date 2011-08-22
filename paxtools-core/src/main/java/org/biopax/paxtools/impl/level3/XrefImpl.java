@@ -37,6 +37,8 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement other)
 	{
+		if(!(other instanceof Xref)) return false;
+		
 		final Xref anXref = (Xref) other;
 
 		return

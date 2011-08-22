@@ -37,6 +37,9 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof BioSource))
+			return false;
+		
 		final BioSource bioSource = (BioSource) element;
 
 		return

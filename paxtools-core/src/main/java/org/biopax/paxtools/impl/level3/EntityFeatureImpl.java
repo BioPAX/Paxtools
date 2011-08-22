@@ -220,6 +220,9 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof EntityFeature))
+			return false;
+		
 		EntityFeature that = (EntityFeature) element;
 		boolean value = atEquivalentLocation(that);
 		if (value)

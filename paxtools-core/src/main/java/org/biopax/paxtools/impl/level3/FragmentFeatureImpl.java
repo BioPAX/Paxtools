@@ -33,6 +33,9 @@ public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFe
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		return super.atEquivalentLocation(((FragmentFeature) element));
+		if(!(element instanceof FragmentFeature))
+			return false;
+		else
+			return super.atEquivalentLocation(((FragmentFeature) element));
 	}
 }

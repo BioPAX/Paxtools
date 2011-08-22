@@ -78,7 +78,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
 		boolean equivalence = false;
-		if (element!=null && element instanceof XReferrable)
+		if (element instanceof XReferrable)
 		{
 			equivalence = hasCommonUnificationXref((XReferrable) element);
 		}

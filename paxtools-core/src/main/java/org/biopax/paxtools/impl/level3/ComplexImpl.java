@@ -145,6 +145,9 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if (!(element instanceof Complex))
+			return false;
+		
 		return SetEquivalanceChecker
 				.isEquivalent(this.getComponent(), ((Complex) element).getComponent())
 				&& super.semanticallyEquivalent(element);
