@@ -1,26 +1,26 @@
 package org.biopax.paxtools.impl.level3;
 
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  */
-@Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Entity @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class CatalysisImpl extends ControlImpl implements Catalysis
 {
 // ------------------------------ FIELDS ------------------------------
 
 	private CatalysisDirectionType catalysisDirection;
+
 	private Set<PhysicalEntity> cofactor;
 
 // --------------------------- CONSTRUCTORS ---------------------------
@@ -57,8 +57,7 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 		this.catalysisDirection = catalysisDirection;
 	}
 
-	@ManyToMany(targetEntity= PhysicalEntityImpl.class)
-	@JoinTable(name="cofactor")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class) @JoinTable(name = "cofactor")
 	public Set<PhysicalEntity> getCofactor()
 	{
 		return cofactor;
@@ -71,7 +70,8 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 
 	public void addCofactor(PhysicalEntity cofactor)
 	{
-		if (cofactor != null) {
+		if (cofactor != null)
+		{
 			this.cofactor.add(cofactor);
 			super.addParticipant(cofactor);
 		}
@@ -79,12 +79,20 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 
 	public void removeCofactor(PhysicalEntity cofactor)
 	{
-		if (cofactor != null) {
+		if (cofactor != null)
+		{
 			super.removeParticipant(cofactor);
 			this.cofactor.remove(cofactor);
 		}
 	}
 
+
+	@Override public void addController(Controller controller)
+	{
+		if (controller instanceof Modulation) super.addController(controller);
+		else throw new IllegalBioPAXArgumentException("Catalysis can only be controlled with a modulation");
+
+	}
 
 	protected boolean checkControlled(Process controlled)
 	{
