@@ -89,7 +89,7 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 
 	@Override public void addController(Controller controller)
 	{
-		if (controller instanceof Modulation) super.addController(controller);
+		if (controller instanceof PhysicalEntity) super.addController(controller);
 		else throw new IllegalBioPAXArgumentException("Catalysis can only be controlled with a modulation");
 
 	}
