@@ -41,6 +41,9 @@ public class KPrimeImpl extends L3ElementImpl implements KPrime
 
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof KPrime))
+			return false;
+		
 		final KPrime aKPrime = (KPrime) element;
 		return
 			compare(aKPrime.getIonicStrength(), ionicStrength) == 0 &&

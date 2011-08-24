@@ -36,6 +36,9 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
 
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof SequenceInterval))
+			return false;
+		
 		final SequenceInterval that = (SequenceInterval) element;
 		return
 			(sequenceIntervalBegin != null ?

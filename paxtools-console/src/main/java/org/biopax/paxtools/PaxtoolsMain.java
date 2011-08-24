@@ -322,7 +322,7 @@ public class PaxtoolsMain {
 
         System.out.println("Available operations:");
         for (Command cmd : Command.values()) {
-            System.out.println(cmd.name() + " : " + cmd.description);
+            System.out.println(cmd.name() + "\t" + cmd.description);
         }
 
     }

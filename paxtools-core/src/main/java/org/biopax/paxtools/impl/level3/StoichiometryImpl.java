@@ -35,7 +35,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	{
 
 		boolean value = false;
-		if (!value && element instanceof Stoichiometry)
+		if (element instanceof Stoichiometry)
 		{
 			Stoichiometry that = (Stoichiometry) element;
 			if (that.getPhysicalEntity() != null && this.getPhysicalEntity() != null)

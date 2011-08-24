@@ -185,9 +185,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
 		if (!(element instanceof PhysicalEntity))
-		{
 			return false;
-		}
+
 		PhysicalEntity that = (PhysicalEntity) element;
 		return hasEquivalentCellularLocation(that)
 		       && hasEquivalentFeatures(that)

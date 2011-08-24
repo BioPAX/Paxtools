@@ -31,11 +31,10 @@ public class ModelUtils {
 	private static final Log LOG = LogFactory.getLog(ModelUtils.class);
 	
 	/* 
-	 * to ignore 'nextStep' property in most algorithms, 
-	 * because it can eventually lead outside the current pathway, 
-	 * and normally it (and pathwayOrder) is not necessary 
-	 * for (step) processes to be reached (because they must be 
-	 * listed in the pathwayComponent property as well).
+	 * To ignore 'nextStep' property (in most algorithms), 
+	 * because it can eventually lead us outside current pathway, 
+	 * and normally step processes are listed in the pathwayComponent 
+	 * property as well.
 	 */
 	private static final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>() {
 		public boolean filter(PropertyEditor editor) {

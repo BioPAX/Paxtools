@@ -92,6 +92,9 @@ public class BindingFeatureImpl extends EntityFeatureImpl
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
+		if(!(element instanceof BindingFeature))
+			return false;
+		
 		BindingFeature that = (BindingFeature) element;
 		return super.semanticallyEquivalent(element) &&
 		                this.getIntraMolecular() == that.getIntraMolecular() 

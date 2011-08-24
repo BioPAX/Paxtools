@@ -23,9 +23,9 @@ import java.util.Set;
  * (explicitly) to the model (via model.add*) and makes it more integral.
  * <p/>
  * Note, "RDFId (URI) identity" means that it skips, i.e., does not copy
- * a source's element to the target (model) nor it updates sources' object properties,
- * if the target already contains the element with the same RDFId. However, after all,
- * it does update (re-wire) all the object properties of just added source elements
+ * a source's element to the target model, if the target already contains the element 
+ * with the same RDFId. However, after all,
+ * it does update (re-wire) all the object properties of source elements
  * to make sure they do not refer to the skipped objects (from the "source") anymore
  * (if something is missing, it will be added at this second pass).
  * <p/>
