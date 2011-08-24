@@ -8,9 +8,13 @@ import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.query.QueryExecuter;
+import org.biopax.paxtools.query.algorithm.Direction;
+import org.biopax.paxtools.util.Filter;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,6 +81,26 @@ public class Tutorial
    this.traverser = new Traverser(editorMap, this);
   }
 
+  public Excisor(EditorMap editorMap, boolean filtering)
+  {
+   this.editorMap = editorMap;
+   if (filtering)
+   //We will filter nextStep property, as Reactome pathways leads
+   //outside the current pathway. Step processes are listed in the
+   //pathwayComponent property as well so this does not affect the fetcher.
+   {
+    final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>()
+    {
+     public boolean filter(PropertyEditor editor)
+     {
+      return !editor.getProperty().equals("nextStep");
+     }
+    };
+    this.traverser = new Traverser(editorMap, this, nextStepFilter);
+   }
+   else this.traverser =  new Traverser(editorMap, this);
+  }
+
   //The visitor will add all elements that are reached into the new model,
   // and recursively traverse it
   public void visit(BioPAXElement domain, Object range, Model model,
@@ -95,6 +119,7 @@ public class Tutorial
     }
    }
   }
+
 
   public Model excise(Model sourceModel, String... ids)
   {
@@ -124,15 +149,15 @@ public class Tutorial
 
  }
 
- public static Set access1(Complex complex)
+ public Set access1(Complex complex)
  {
   Set<UnificationXref> xrefs = new HashSet<UnificationXref>();
   recursivelyObtainMembers(complex, xrefs);
   return xrefs;
  }
 
- private static void recursivelyObtainMembers(Complex complex,
-                                              Set<UnificationXref> xrefs)
+ private void recursivelyObtainMembers(Complex complex,
+                                       Set<UnificationXref> xrefs)
  {
   for (PhysicalEntity pe : complex.getComponent())
   {
@@ -155,12 +180,35 @@ public class Tutorial
   }
  }
 
- public static Set access2(Complex complex)
+ public Set access2(Complex complex)
  {
   return new PathAccessor(
     "Complex/component*/EntityReference/xref:UnificationXref",
     BioPAXLevel.L3).getValueFromBean(complex);
  }
+
+ public void graphQuery(Model model, PhysicalEntity entity3,
+                        PhysicalEntity entity2, PhysicalEntity entity1)
+ {
+  Set<BioPAXElement> sourceSet = new HashSet<BioPAXElement>();
+
+  // Add the related source PhysicalEntity (or children) objects to the
+  // source set
+  Collections.addAll(sourceSet, entity1, entity2, entity3);
+
+  int limit = 2;
+
+  // Direction can be upstream, downstream, or bothstream.
+  Direction direction = Direction.BOTHSTREAM;
+
+
+  Set<BioPAXElement> result = QueryExecuter.runNeighborhood(sourceSet, model,
+                                                            limit, direction);
+
+  Completer c = new Completer(SimpleEditorMap.get(BioPAXLevel.L3));
+  result = c.complete(result, model);
+ }
+
 
  public void highlightWorkaround()
  {
@@ -168,6 +216,7 @@ public class Tutorial
   IO(null, null);
   Excisor ex = new Excisor(null);
   access1(null);
+  graphQuery(null, null, null, null);
  }
 
 
