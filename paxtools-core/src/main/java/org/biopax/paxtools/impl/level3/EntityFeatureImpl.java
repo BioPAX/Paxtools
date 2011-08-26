@@ -2,7 +2,6 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
@@ -230,8 +229,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 			SequenceRegionVocabulary myType = this.featureLocationType;
 			SequenceRegionVocabulary yourType = that.getFeatureLocationType();
 			value = (yourType == null) ?
-			        myType == null :
-			        myType.isEquivalent(yourType);
+				myType == null : yourType.isEquivalent(myType);
 		}
 		return value;
 	}
