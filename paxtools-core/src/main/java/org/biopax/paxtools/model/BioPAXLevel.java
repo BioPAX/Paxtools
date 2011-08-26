@@ -6,6 +6,7 @@ import org.biopax.paxtools.impl.level2.Level2FactoryImpl;
 import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
 
 import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * Enumeration type for BioPAX levels.
@@ -157,7 +158,7 @@ public enum BioPAXLevel
 		catch (ClassNotFoundException e)
 		{
 			log.error("Could not find the interface for " + localName);
-			log.error(e.getStackTrace());
+			log.error(Arrays.toString(e.getStackTrace()));
 			return null;
 		}
 	}
