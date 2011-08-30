@@ -1052,7 +1052,7 @@ public class BioPAXMapperImp implements BioPAXMapper
 	 */
 	public void setNamespace(String namespace)
 	{
-		bpModel.getNameSpacePrefixMap().put("", namespace);
+		bpModel.setXmlBase(namespace);
 	}
 
 	/**

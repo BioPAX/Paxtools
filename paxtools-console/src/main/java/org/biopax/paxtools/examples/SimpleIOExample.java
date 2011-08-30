@@ -42,7 +42,7 @@ public final class SimpleIOExample {
 		Model model2 = bioPAXFactory.createModel();
 		
 		// set default name space prefix (base);
-		model2.getNameSpacePrefixMap().put("", "http://baderlab.org#");
+		model2.setXmlBase("http://baderlab.org#");
 		// create and add a new element to the model;
 		// still, rdfid must be set in full (not just "#xref_P62158")
 		UnificationXref uxref = model2.addNew(UnificationXref.class,

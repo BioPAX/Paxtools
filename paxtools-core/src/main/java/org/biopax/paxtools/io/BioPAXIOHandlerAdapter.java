@@ -49,6 +49,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected static final String owl = "owl=http://www.w3.org/2002/07/owl#";
 
+	protected String base;
 
 	public BioPAXIOHandlerAdapter()
 	{
@@ -213,8 +214,12 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		autodetectBiopaxLevel(); // this may update level, editorMap and factory!
 
 		bp = level.getNameSpace();
+
 		Model model = factory.createModel();
+		
 		model.getNameSpacePrefixMap().putAll(namespaces);
+		
+		model.setXmlBase(base);
 
 		boolean fixingPEPS = model.getLevel() == BioPAXLevel.L2 && this.isFixReusedPEPs();
 		if (fixingPEPS)
@@ -386,8 +391,9 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		} else
 		{
 			Model m = model.getLevel().getDefaultFactory().createModel();
-			String base = model.getNameSpacePrefixMap().get("");
-			m.getNameSpacePrefixMap().put("", base);
+			
+			m.setXmlBase(model.getXmlBase());
+			
 			//to avoid 'nextStep' that may lead to infinite loops -
 			Filter<PropertyEditor> filter = new Filter<PropertyEditor>()
 			{
@@ -411,5 +417,4 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			convertToOWL(m, outputStream);
 		}
 	}
-
 }

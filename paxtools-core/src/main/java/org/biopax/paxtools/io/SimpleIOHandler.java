@@ -28,7 +28,6 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	private XMLStreamReader r;
 	boolean propertyContext = false;
-	private String base;
 	private List<Triple> triples;
 	private boolean mergeDuplicates;
 
@@ -156,15 +155,18 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 					pre = "";
 				}
 				String namespace = r.getNamespaceURI(pre);
-				if (pre.equals(""))
-				{
-					base = namespace;
-				}
 
 				ns.put(pre, namespace);
 			}
-
-
+			
+			base = null;
+			for (int i = 0; i < r.getAttributeCount(); i++)
+			{
+				if("base".equalsIgnoreCase(r.getAttributeLocalName(i)) 
+					&& "xml".equalsIgnoreCase(r.getAttributePrefix(i))) {
+					base = r.getAttributeValue(i);
+				}
+			}
 		}
 		catch (XMLStreamException e)
 		{
@@ -535,8 +537,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
      * @throws IOException
      */
     public void writeObject(Writer out, BioPAXElement bean) throws IOException {
-    	if(bp == null) bp = "bp";
-		String name = bp + ":" + bean.getModelInterface().getSimpleName();
+		String name = "bp:" + bean.getModelInterface().getSimpleName();
 		writeIDLine(out, bean, name);
 		
 		Set<PropertyEditor> editors = editorMap.getEditorsOf(bean);
@@ -591,7 +592,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
         	}
         }
         
-        String prop = bp + ":" + editor.getProperty();
+        String prop = "bp:" + editor.getProperty();
         out.write(newline+" <" + prop);
 
         if (value instanceof BioPAXElement)
@@ -669,9 +670,9 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
     
     private void initializeExporter(Model model)
     {
-        base = null;
-        bp = null;
+        base = model.getXmlBase();
         namespaces = new HashMap<String, String>(model.getNameSpacePrefixMap());
+
         normalizeNameSpaces(); // - for this reader/exporter tool
         // also save the changes to the model?
         if(normalizeNameSpaces) {
@@ -738,31 +739,16 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
         String bpns = this.editorMap.getLevel().getNameSpace();
         for (String pre : namespaces.keySet())
         {
-            String ns = namespaces.get(pre);
-            if (pre.equals(""))
-            {
-                base = ns;
+            if (!pre.equals("bp")) {
+            	out.write(
+            		newline+" xmlns" + 
+            		(("".equals(pre) || pre == null) ? "" : ":" + pre) + 
+            		"=\"" + namespaces.get(pre) + "\"");
             }
-            else
-            {
-                if (ns.equalsIgnoreCase(bpns))
-                {
-                    bp = pre;
-                }
-	            else if(pre.equals("bp"))
-                {
-	                pre = "oldbp";
-                }
-                pre = ":" + pre;
+        }
+        // write 'xmlns:bp'
+        out.write(newline+" xmlns:bp" + "=\"" + bpns + "\"");
 
-            }
-            out.write(newline+" xmlns" + pre + "=\"" + ns + "\"");
-        }
-        if (bp == null)
-        {
-            bp = "bp";
-            out.write(newline+" xmlns:bp" + "=\"" + bpns + "\"");
-        }
         if (base != null)
         {
             out.write(newline+" xml:base=\"" + base + "\"");
@@ -775,8 +761,16 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
     }
     
     
+	/**
+	 * Sets the flag used when exporting a BioPAX model to RDF/XML:
+	 * true - to clean up current namespaces (e.g., those read from a file) 
+	 * and use defaults instead (prefixes: 'rdf', 'rdfs', 'owl', 'xsd')
+	 * 
+	 * @param normalizeNameSpaces
+	 */
     public void normalizeNameSpaces(boolean normalizeNameSpaces) {
 		this.normalizeNameSpaces = normalizeNameSpaces;
 	}
+
 }
 

@@ -116,6 +116,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 
 		final Model newModel = factory.createModel();
 		newModel.getNameSpacePrefixMap().putAll(model.getNameSpacePrefixMap());
+		newModel.setXmlBase(model.getXmlBase());
 		
 		// facilitate the conversion
 		normalize(model);

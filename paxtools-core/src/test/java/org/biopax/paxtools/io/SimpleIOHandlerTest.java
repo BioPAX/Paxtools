@@ -71,11 +71,10 @@ public class SimpleIOHandlerTest
 	public static Model getL3Model(BioPAXIOHandler io)
 	{
 		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
-
 		System.out.println("file = " + s);
-
 		System.out.println("starting " + s);
 		InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
+		
 		return io.convertFromOWL(in);
 	}
 
@@ -211,5 +210,22 @@ public class SimpleIOHandlerTest
 			e.printStackTrace();
 		}
 
+	}
+	
+	@Test
+	public final void testIoNoBpNamespacePrefix() throws IOException
+	{
+		BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
+		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway2.owl";
+		InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
+		Model model = io.convertFromOWL(in);
+		assertNotNull(model);
+		assertFalse(model.getObjects().isEmpty());
+		System.out.println("Model2 has " + model.getObjects().size()
+				+ " objects)");
+		FileOutputStream out = new FileOutputStream(getClass().getResource("")
+				.getFile() + File.separator + "simpleReadWrite2.owl");
+		model.setXmlBase(null);
+		io.convertToOWL(model, out);
 	}
 }

@@ -159,4 +159,22 @@ public interface Model extends Serializable
      */
     void repair();
 
+    
+    /**
+     * Sets the xml:base to use when exporting a BioPAX model.
+     * Usually, is is a data-provider's URI prefix, e.g.,
+     * xml:base="http://www.pantherdb.org/pathways/biopax#" 
+     * Setting this to null makes the exporter print using absolute
+     * URIs (and rdf:about) instead of relative ones (and rdf:ID).
+     * 
+     * @param base a URI prefix or null.
+     */
+     void setXmlBase(String base);
+
+     
+     /**
+      * Gets the model's xml:base (URI prefix).
+      * 
+      */
+     String getXmlBase();
 }

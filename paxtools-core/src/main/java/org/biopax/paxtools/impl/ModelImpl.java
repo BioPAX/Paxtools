@@ -26,6 +26,7 @@ public class ModelImpl implements Model
 	private transient BioPAXFactory factory;
     private transient final Set<BioPAXElement> exposedObjectSet;
     private boolean addDependencies = false;
+    private String xmlBase;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -357,5 +358,15 @@ public class ModelImpl implements Model
 		
 		// merge to itself - updates props and children
 		merge(this);
+	}
+
+	@Override
+	public void setXmlBase(String base) {
+		this.xmlBase = base;
+	}
+
+	@Override
+	public String getXmlBase() {
+		return this.xmlBase;
 	}
 }

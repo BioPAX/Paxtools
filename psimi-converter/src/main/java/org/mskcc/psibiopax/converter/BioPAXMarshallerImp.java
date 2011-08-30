@@ -162,7 +162,7 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 			completeModel = BioPAXLevel.L3.getDefaultFactory().createModel();
 		}
 
-		completeModel.getNameSpacePrefixMap().put("", EntryMapper.RDF_ID_PREFIX);
+		completeModel.setXmlBase(EntryMapper.RDF_ID_PREFIX);
 		for (Model bpModel : bpModelList) {
 			Set<BioPAXElement> elementList = bpModel.getObjects();
 			for (BioPAXElement elementInstance : elementList) {

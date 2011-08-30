@@ -108,12 +108,13 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 		bindObjectsToProperties(ontModel, model);
 		RDFWriter writer = ontModel.getWriter("RDF/XML-ABBREV");
 		writer.setProperty("relativeURIs", "same-document, relative, parent, absolute");
-		String base = model.getNameSpacePrefixMap().get("");
+		String base = model.getXmlBase();
 		if (log.isDebugEnabled())
 		{
 			log.debug("base = " + base);
 		}
-		writer.setProperty("xmlbase", base);
+		if(base != null && !"".equals(base))
+			writer.setProperty("xmlbase", base);
 		writer.setProperty("showXmlDeclaration", "true");
 		writer.write(ontModel, outputStream, base);
 		//objectToIndividualMap = null;
@@ -271,10 +272,10 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 	{
 		OntModel ontModel = org.biopax.paxtools.io.jena.JenaHelper.createModel();
 
-		String xmlBase = model.getNameSpacePrefixMap().get("");
+		String xmlBase = model.getXmlBase();
 		if (xmlBase == null || xmlBase.equals(""))
 		{
-			xmlBase = "http://biopax.org/paxtools";
+			xmlBase = "http://biopax.org/paxtools#";
 		}
 		Ontology base = ontModel.createOntology(xmlBase);
 		String uri = model.getLevel().getNameSpace();

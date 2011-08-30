@@ -131,7 +131,7 @@ A \textit{Model} object contains multiple BioPAX elements. Each element within a
 \end{verbatim}
 \end{mylisting}
 
-The namespace with empty (``'') tag is used as the XML base when writing out the model as an OWL file.
+(The namespace with empty (``'') tag used to be XML base when writing out the model as an OWL file but not anymore; there is now a new method setXmlBase.)
 
 \subsubsection{Modifying the contents of a model}
 Having a new biochemical reaction (\textit{rxn1}), now you can define the reaction's \textit{LEFT} and \textit{RIGHT}:
