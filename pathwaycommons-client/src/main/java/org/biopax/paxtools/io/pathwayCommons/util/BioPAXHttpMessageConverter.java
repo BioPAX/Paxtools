@@ -31,17 +31,14 @@ public class BioPAXHttpMessageConverter implements HttpMessageConverter<Model> {
         this.bioPAXIOHandler = bioPAXIOHandler;
     }
 
-    @Override
     public boolean canRead(Class<?> clazz, MediaType mediaType) {
         return Model.class.equals(clazz);
     }
 
-    @Override
     public boolean canWrite(Class<?> clazz, MediaType mediaType) {
         return false;
     }
 
-    @Override
     public List<MediaType> getSupportedMediaTypes() {
         if(mediaList == null) {
             mediaList = new ArrayList<MediaType>();
@@ -55,7 +52,6 @@ public class BioPAXHttpMessageConverter implements HttpMessageConverter<Model> {
         return mediaList;
     }
 
-    @Override
     public Model read(Class<? extends Model> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException
     {
         /* OK, a little bit of hacking here:
@@ -80,7 +76,6 @@ public class BioPAXHttpMessageConverter implements HttpMessageConverter<Model> {
         }
     }
 
-    @Override
     public void write(Model model, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException
     {
         throw new UnsupportedOperationException("Not supported!");

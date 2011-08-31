@@ -27,17 +27,14 @@ import java.util.List;
 public class SearchResponseHttpMessageConverter implements HttpMessageConverter<SearchResponse> {
     private ArrayList<MediaType> mediaList = null;
 
-    @Override
     public boolean canRead(Class<?> clazz, MediaType mediaType) {
         return SearchResponse.class.equals(clazz);
     }
 
-    @Override
     public boolean canWrite(Class<?> clazz, MediaType mediaType) {
         return false;
     }
 
-    @Override
     public List<MediaType> getSupportedMediaTypes() {
         if(mediaList == null) {
             mediaList = new ArrayList<MediaType>();
@@ -51,7 +48,6 @@ public class SearchResponseHttpMessageConverter implements HttpMessageConverter<
         return mediaList;
     }
 
-    @Override
     public SearchResponse read(Class<? extends SearchResponse> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
         XStream xStream = new XStream();
         xStream.alias("searchResponseType", SearchResponse.class);
@@ -69,12 +65,10 @@ public class SearchResponseHttpMessageConverter implements HttpMessageConverter<
         // This is to convert BioPAX class filter value into the actual BioPAX class
         // See http://www.pathwaycommons.org/pc2-demo/#valid_biopax_parameter
         xStream.registerConverter(new SingleValueConverter() {
-            @Override
             public String toString(Object o) {
                 return o.toString();
             }
 
-            @Override
             public Object fromString(String s) {
                 try {
                     return Class.forName("org.biopax.paxtools.model.level3." + s);
@@ -83,7 +77,6 @@ public class SearchResponseHttpMessageConverter implements HttpMessageConverter<
                 }
             }
 
-            @Override
             public boolean canConvert(Class aClass) {
                 return aClass.equals(Class.class);
             }
@@ -93,7 +86,6 @@ public class SearchResponseHttpMessageConverter implements HttpMessageConverter<
         return (SearchResponse) xStream.fromXML(inputMessage.getBody());
     }
 
-    @Override
     public void write(SearchResponse searchResponse, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
         throw new UnsupportedOperationException("Not supported!");
     }
