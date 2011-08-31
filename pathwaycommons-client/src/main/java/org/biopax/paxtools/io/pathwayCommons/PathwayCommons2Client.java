@@ -135,8 +135,7 @@ public class PathwayCommons2Client
      * @return a string compatible with PC2 WEB API
      */
     public static String bioPAXClassToTypeString(Class<? extends BioPAXElement> type) {
-        String[] tokens = type.toString().split("\\.");
-        return tokens[tokens.length-1].replaceAll("Impl", "");
+        return type.getSimpleName(); 
     }
 
     /**
