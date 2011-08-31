@@ -1,17 +1,15 @@
 package org.biopax.paxtools.io.gsea;
 
-// imports
-
+import org.biopax.paxtools.controller.AbstractTraverser;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.Traverser;
-import org.biopax.paxtools.controller.Visitor;
 import org.biopax.paxtools.converter.OneTwoThree;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.util.Filter;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,12 +32,14 @@ import java.util.*;
  * be annotated with "taxonomy" database name.
  * 
  * Note this code assumes that the model has successfully been validated
- * using the BioPAX validator.
+ * (e.g., using the BioPAX validator for Level3 data). L1 and L2 models
+ * are first converted to L3 (this however does not fix BioPAX errors 
+ * if any present in the L1/L2 data but rather adds new; so - double-check)
  */
-public class GSEAConverter implements Visitor {
+public class GSEAConverter {
 	
 	// following vars used during traversal
-	String database;
+	final String database;
 	boolean crossSpeciesCheck;
 	boolean visitProtein; // true we visit proteins, false we visit ProteinReference
 	Map<String, String> rdfToGenes; // map of member proteins of the pathway rdf id to gene symbol
@@ -63,10 +63,39 @@ public class GSEAConverter implements Visitor {
 	 * @param crossSpeciesCheck - if true, enforces no cross species participants in output
 	 * 
 	 */
-	public GSEAConverter(String database, boolean crossSpeciesCheck) {
+	public GSEAConverter(final String database, boolean crossSpeciesCheck) {
 		this.database = database;
     	this.crossSpeciesCheck = crossSpeciesCheck;
-    	this.traverser = new Traverser(SimpleEditorMap.L3, this);
+    	
+    	/* a traverser that skips 'nextStep' property, because it is
+    	 * always misleading for the purpose of getting proteins of a process
+    	 * (it visits all pathwayOrder (step processes) and pathwayComponent sets anyway!)
+    	 */
+    	this.traverser = new AbstractTraverser(SimpleEditorMap.L3, 
+    		new Filter<PropertyEditor>() {
+				public boolean filter(PropertyEditor editor) {
+					return !editor.getProperty().equals("nextStep");
+				}
+    		}
+    	) {
+			@Override
+			protected void visit(Object range, BioPAXElement domain, Model model,
+					PropertyEditor editor) {
+		    	boolean checkDatabase = (database != null && database.length() > 0 && !database.equals("NONE"));
+		    	
+		    	if (range != null && range instanceof BioPAXElement && !visited.contains(range)) {
+		    		if (visitProtein) {
+		    			visitProtein(range, checkDatabase);
+		    		}
+		    		else {
+		    			visitProteinReference(range, checkDatabase);
+		    		}
+		    		visited.add((BioPAXElement)range);
+					traverse((BioPAXElement)range, model);
+		    	}
+				
+			}
+		};
 	}
 		
 	/**
@@ -117,23 +146,7 @@ public class GSEAConverter implements Visitor {
         return toReturn;
     }
     
-    
-    public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
-    	
-    	boolean checkDatabase = (this.database != null && this.database.length() > 0 && !this.database.equals("NONE"));
-    	
-    	if (range != null && range instanceof BioPAXElement && !visited.contains(range)) {
-    		if (visitProtein) {
-    			visitProtein(range, checkDatabase);
-    		}
-    		else {
-    			visitProteinReference(range, checkDatabase);
-    		}
-    		visited.add((BioPAXElement)range);
-			this.traverser.traverse((BioPAXElement)range, model);
-    	}
-    }
-    
+  
 	private GSEAEntry getGSEAEntry(final Model model, final Pathway aPathway, final String database) {
 		
 		// the GSEAEntry to return
