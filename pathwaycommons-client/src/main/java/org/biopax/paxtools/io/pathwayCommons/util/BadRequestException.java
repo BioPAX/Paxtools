@@ -1,9 +1,9 @@
 package org.biopax.paxtools.io.pathwayCommons.util;
 
-import org.biopax.paxtools.io.pathwayCommons.model.Error;
+import cpath.service.jaxb.ErrorType;
 
 public class BadRequestException extends PathwayCommonsException {
-    public BadRequestException(Error error) {
+    public BadRequestException(ErrorType error) {
         super(error);
     }
 }

@@ -1,8 +1,7 @@
 package org.biopax.paxtools.io.pathwayCommons.util;
 
-import com.thoughtworks.xstream.XStream;
+import cpath.service.jaxb.ErrorType;
 import org.biopax.paxtools.io.BioPAXIOHandler;
-import org.biopax.paxtools.io.pathwayCommons.model.Error;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.BioPaxIOException;
 import org.springframework.http.HttpInputMessage;
@@ -11,7 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
+import javax.xml.transform.stream.StreamSource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class BioPAXHttpMessageConverter implements HttpMessageConverter<Model> {
 
            The PC2 server returns either a valid BioPAX model or an error coded in XML.
            So if the BioPAX IO Handler fails, we have to re-read the stream from the
-           scratch in order to parse the error details.
+           beginning in order to parse the error details.
 
            This is why we copy the stream into a buffered one.
          */
@@ -69,9 +70,9 @@ public class BioPAXHttpMessageConverter implements HttpMessageConverter<Model> {
             return bioPAXIOHandler.convertFromOWL(bis);
         } catch(BioPaxIOException ioe) { // Not a BioPAX file, so go with the error parsing
             bis.reset();
-            XStream xStream = new XStream();
-            xStream.alias("error", Error.class);
-            Error error = (Error) xStream.fromXML(bis);
+            Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
+            jaxb2Marshaller.setClassesToBeBound(SingleErrorType.class);
+            ErrorType error = (ErrorType) jaxb2Marshaller.unmarshal(new StreamSource(bis));
             throw ErrorUtil.createException(error);
         }
     }

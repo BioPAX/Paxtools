@@ -1,8 +1,10 @@
 package org.biopax.paxtools.io.pathwayCommons.util;
 
+import cpath.service.jaxb.ErrorType;
+
 public class ErrorUtil {
-    public static PathwayCommonsException createException(org.biopax.paxtools.io.pathwayCommons.model.Error error) {
-        switch(error.getErrorCode()) {
+    public static PathwayCommonsException createException(ErrorType error) {
+        switch(error.getErrorCode().intValue()) {
             case 460:
                 return new NoResultsFoundException(error);
             case 450:

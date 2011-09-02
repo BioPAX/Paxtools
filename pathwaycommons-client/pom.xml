@@ -22,6 +22,11 @@
             <artifactId>paxtools-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>pathwaycommons.cpath</groupId>
+            <artifactId>cpath-schema</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- Spring Dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -42,11 +47,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.thoughtworks.xstream</groupId>
-			<artifactId>xstream</artifactId>
-			<version>1.3.1</version>
 		</dependency>
     </dependencies>
     

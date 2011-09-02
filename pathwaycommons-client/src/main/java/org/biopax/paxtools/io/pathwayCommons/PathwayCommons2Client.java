@@ -1,15 +1,17 @@
 package org.biopax.paxtools.io.pathwayCommons;
 
+import cpath.service.jaxb.ErrorType;
+import cpath.service.jaxb.Help;
+import cpath.service.jaxb.SearchResponseType;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.io.pathwayCommons.model.SearchResponse;
 import org.biopax.paxtools.io.pathwayCommons.util.BioPAXHttpMessageConverter;
 import org.biopax.paxtools.io.pathwayCommons.util.ErrorUtil;
 import org.biopax.paxtools.io.pathwayCommons.util.PathwayCommonsException;
-import org.biopax.paxtools.io.pathwayCommons.util.SearchResponseHttpMessageConverter;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -27,7 +29,7 @@ public class PathwayCommons2Client
     private Integer graphQueryLimit = 1;
     private Collection<String> organisms = new HashSet<String>();
     private Collection<String> dataSources = new HashSet<String>();
-    private Class<? extends BioPAXElement> type = BioPAXElement.class;
+    private String type = null;
 
     private final String graphCommand = "graph";
     private final String findCommand = "find";
@@ -45,11 +47,13 @@ public class PathwayCommons2Client
     private final String typeString = "type";
     private final String organismString = "organism";
     private final String pageString = "page";
+    private final String entityString = "entity/";
 
     private final String commandDelimiter = "?";
     private final String graphURL = endPointURL + graphCommand + commandDelimiter;
     private final String getURL = endPointURL + getCommand + commandDelimiter;
     private final String findURL = endPointURL + findCommand + commandDelimiter;
+    private final String findEntityURL = endPointURL + entityString + findCommand + commandDelimiter;
 
     private RestTemplate restTemplate;
 
@@ -88,9 +92,57 @@ public class PathwayCommons2Client
 
         List<HttpMessageConverter<?>> httpMessageConverters = new ArrayList<HttpMessageConverter<?>>();
         httpMessageConverters.add(new BioPAXHttpMessageConverter(bioPAXIOHandler));
-        httpMessageConverters.add(new SearchResponseHttpMessageConverter());
+
+        Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
+        jaxb2Marshaller.setClassesToBeBound(Help.class, SearchResponseType.class, ErrorType.class);
+        httpMessageConverters.add(new MarshallingHttpMessageConverter(jaxb2Marshaller, jaxb2Marshaller));
 
         restTemplate.setMessageConverters(httpMessageConverters);
+    }
+
+    private SearchResponseType findTemplate(Collection<String> keywords, boolean entitySearch) throws PathwayCommonsException {
+        String url = (entitySearch ? findEntityURL : findURL ) + queryString + "=" + joinStrings(keywords, ",") + "&"
+                     + (getPage() > 0L ? pageString + "=" + getPage() + "&" : "")
+                     + (getDataSources().isEmpty() ? "" : dataSourceString + "=" + joinStrings(getDataSources(), ",") + "&")
+                     + (getOrganisms().isEmpty() ? "" : organismString + "=" + joinStrings(getOrganisms(), ",") + "&")
+                     + (getType() != null ? typeString + "=" + getType() : "");
+
+        if(url.endsWith("&"))
+            url = url.substring(0, url.length()-1);
+
+        SearchResponseType searchResponse = restTemplate.getForObject(url, SearchResponseType.class);
+        if(searchResponse.getError() != null) {
+            throw ErrorUtil.createException(searchResponse.getError());
+        }
+        return searchResponse;
+    }
+
+    /**
+     * Full text search of Pathway Commons. For example, retrieve a list of all records that contain the word, "BRCA2".
+     * This command returns BioPAX Entity classes only.
+     *
+     * See http://www.pathwaycommons.org/pc2-demo/#find
+     *
+     * @param keyword a keyword, name or external identifier
+     * @return see http://www.pathwaycommons.org/pc2-demo/resources/schemas/SearchResponse.txt
+     * @throws PathwayCommonsException when the WEB API gives an error
+     */
+    public SearchResponseType findEntity(String keyword) throws PathwayCommonsException {
+        return findEntity(Collections.singleton(keyword));
+    }
+
+    /**
+     * Full text search of Pathway Commons. For example, retrieve a list of all records that contain the word, "BRCA2".
+     * This command returns BioPAX Entity classes only.
+     *
+     * See http://www.pathwaycommons.org/pc2-demo/#find
+     *
+     * @param keywords set of keywords, names or external identifiers
+     * @return see http://www.pathwaycommons.org/pc2-demo/resources/schemas/SearchResponse.txt
+     * @throws PathwayCommonsException when the WEB API gives an error
+     */
+    public SearchResponseType findEntity(Collection<String> keywords) throws PathwayCommonsException {
+        return findTemplate(keywords, true);
     }
 
     /**
@@ -101,7 +153,7 @@ public class PathwayCommons2Client
      * @return see http://www.pathwaycommons.org/pc2-demo/resources/schemas/SearchResponse.txt
      * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public SearchResponse find(String keyword) throws PathwayCommonsException {
+    public SearchResponseType find(String keyword) throws PathwayCommonsException {
         return find(Collections.singleton(keyword));
     }
 
@@ -113,29 +165,8 @@ public class PathwayCommons2Client
      * @return see http://www.pathwaycommons.org/pc2-demo/resources/schemas/SearchResponse.txt
      * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public SearchResponse find(Collection<String> keywords) throws PathwayCommonsException {
-        String url = findURL + queryString + "=" + joinStrings(keywords, ",") + "&"
-                     + pageString + "=" + getPage() + "&"
-                     + (getDataSources().isEmpty() ? "" : dataSourceString + "=" + joinStrings(getDataSources(), ",") + "&")
-                     + (getOrganisms().isEmpty() ? "" : organismString + "=" + joinStrings(getOrganisms(), ",") + "&")
-                     + typeString + "=" + bioPAXClassToTypeString(getType());
-
-        SearchResponse searchResponse = restTemplate.getForObject(url, SearchResponse.class);
-        if(searchResponse.getError() != null) {
-            throw ErrorUtil.createException(searchResponse.getError());
-        }
-        return searchResponse;
-    }
-
-    /**
-     * Converts BioPAX classes to PC2 compatible names.
-     * See http://www.pathwaycommons.org/pc2-demo/#additional_parameters
-     *
-     * @param type BioPAX L3 model class
-     * @return a string compatible with PC2 WEB API
-     */
-    public static String bioPAXClassToTypeString(Class<? extends BioPAXElement> type) {
-        return type.getSimpleName(); 
+    public SearchResponseType find(Collection<String> keywords) throws PathwayCommonsException {
+        return findTemplate(keywords, false);
     }
 
     /**
@@ -257,6 +288,7 @@ public class PathwayCommons2Client
      * See http://www.pathwaycommons.org/pc2-demo/#find
      *
      * @see #find(java.util.Collection)
+     * @see #findEntity(java.util.Collection)
      *
      * @return the page number
      */
@@ -308,10 +340,11 @@ public class PathwayCommons2Client
      * See http://www.pathwaycommons.org/pc2-demo/#valid_biopax_parameter
      *
      * @see #find(String)
+     * @see #findEntity(String)
      *
-     * @return BioPAX L3 Class
+     * @return BioPAX L3 Class simple name
      */
-    public Class<? extends BioPAXElement> getType() {
+    public String getType() {
         return type;
     }
 
@@ -320,7 +353,7 @@ public class PathwayCommons2Client
      *
      * @param type a BioPAX L3 Class
      */
-    public void setType(Class<? extends BioPAXElement> type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -329,6 +362,7 @@ public class PathwayCommons2Client
      * See http://www.pathwaycommons.org/pc2-demo/#valid_biopax_parameter
      *
      * @see #find(String)
+     * @see #findEntity(String)
      *
      * @return set of strings representing organisms.
      */
@@ -350,6 +384,7 @@ public class PathwayCommons2Client
      * See http://www.pathwaycommons.org/pc2-demo/#valid_datasource_parameter
      *
      * @see #find(String)
+     * @see #findEntity(String)
      *
      * @return data sources as strings
      */
