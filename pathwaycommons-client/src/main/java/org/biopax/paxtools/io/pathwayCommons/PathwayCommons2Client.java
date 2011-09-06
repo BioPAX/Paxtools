@@ -48,6 +48,7 @@ public class PathwayCommons2Client
     private final String organismString = "organism";
     private final String pageString = "page";
     private final String entityString = "entity/";
+    private final String helpString = "help/";
 
     private final String commandDelimiter = "?";
     private final String graphURL = endPointURL + graphCommand + commandDelimiter;
@@ -399,6 +400,39 @@ public class PathwayCommons2Client
      */
     public void setDataSources(Collection<String> dataSources) {
         this.dataSources = dataSources;
+    }
+
+    /**
+     * @see #getDataSources()
+     * @see #setDataSources(java.util.Collection)
+     * @return valid values for the datasource parameter as a Help object.
+     */
+    public Help getValidDataSources() {
+        return getValidParameterValues(dataSourceString);
+    }
+
+    /**
+     * @see #getOrganisms()
+     * @see #setOrganisms(java.util.Collection)
+     * @return valid values for the organism parameter as a Help object.
+     */
+    public Help getValidOrganisms() {
+        return getValidParameterValues(organismString);
+    }
+
+    /**
+     * @see #getType()
+     * @see #setType(String)
+     * @return valid values for the type parameter as a Help object.
+     */
+    public Help getValidTypes() {
+        return getValidParameterValues(typeString);
+
+    }
+
+    private Help getValidParameterValues(String parameter) {
+        String url = endPointURL + helpString + parameter + "s";
+        return restTemplate.getForObject(url, Help.class);
     }
 
     public enum STREAM_DIRECTION {
