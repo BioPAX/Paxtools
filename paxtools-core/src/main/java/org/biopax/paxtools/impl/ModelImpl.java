@@ -358,6 +358,7 @@ public class ModelImpl implements Model
 		
 		// merge to itself - updates props and children
 		merge(this);
+		// TODO could use org.biopax.paxtools.controller.Completer instead (better performance?)...
 	}
 
 	@Override

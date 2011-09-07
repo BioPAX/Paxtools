@@ -5,7 +5,7 @@ package org.biopax.paxtools.query.model;
  */
 public interface Edge extends GraphObject
 {
-	public Node getTargetNode();
+	Node getTargetNode();
 
-	public Node getSourceNode();
+	Node getSourceNode();
 }

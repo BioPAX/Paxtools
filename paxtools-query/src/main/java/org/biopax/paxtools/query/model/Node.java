@@ -9,27 +9,27 @@ import java.util.Collection;
  */
 public interface Node extends GraphObject
 {
-	public Collection<Edge> getUpstream();
+	Collection<Edge> getUpstream();
 
-	public Collection<Edge> getDownstream();
+	Collection<Edge> getDownstream();
 
-	public boolean isBreadthNode();
+	boolean isBreadthNode();
 
 	/**
 	 * Abstractions containing this node.
 	 */
-	public Collection<Node> getUpperEquivalent();
+	Collection<Node> getUpperEquivalent();
 
 	/**
 	 * Abstractions or simple nodes, which are also members of this node.
 	 */
-	public Collection<Node> getLowerEquivalent();
+	Collection<Node> getLowerEquivalent();
 
-	public int getSign();
+	int getSign();
 
-	public void init();
+	void init();
 
-	public static final int POSITIVE = 1;
-	public static final int NEGATIVE = -1;
-	public static final int NEUTRAL = 0;
+	static final int POSITIVE = 1;
+	static final int NEGATIVE = -1;
+	static final int NEUTRAL = 0;
 }

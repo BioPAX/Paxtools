@@ -5,7 +5,7 @@ package org.biopax.paxtools.query.model;
  */
 public interface GraphObject
 {
-	public Graph getGraph();
+	Graph getGraph();
 
-	public String getKey();
+	String getKey();
 }

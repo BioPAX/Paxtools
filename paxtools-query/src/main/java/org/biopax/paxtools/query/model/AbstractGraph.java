@@ -1,8 +1,5 @@
 package org.biopax.paxtools.query.model;
 
-import org.biopax.paxtools.model.level3.Conversion;
-import org.biopax.paxtools.query.wrapperL3.ConversionWrapper;
-
 import java.util.HashMap;
 import java.util.Map;
 
