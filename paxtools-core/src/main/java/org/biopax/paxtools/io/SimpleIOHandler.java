@@ -624,26 +624,26 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
         {
             type = "string";
         }
-        else if (range.equals(double.class))
+        else if (range.equals(double.class) || range.equals(Double.class))
         {
             type = "double";
         }
-        else if (range.equals(int.class))
+        else if (range.equals(int.class) || range.equals(Integer.class))
         {
             type = "int";
         }
-        else if (range.equals(float.class))
+        else if (range.equals(float.class) || range.equals(Float.class))
         {
             type = "float";
         }
-        else if (range.equals(float.class))
-        {
-            type = "float";
-        }
-	    else if (range.equals(boolean.class))
+	    else if (range.equals(boolean.class) || range.equals(Boolean.class))
 	    {
 	        type = "boolean";
 	    }
+	    else if (range.equals(long.class) || range.equals(Long.class))
+        {
+            type = "long";
+        }
         return type;
     }
 
