@@ -24,11 +24,13 @@ public abstract class AbstractTraverser extends Traverser
 	implements Visitor 
 {
 	private final Stack<BioPAXElement> visited;
+	private final Stack<String> props;
 		
 	public AbstractTraverser(EditorMap editorMap, Filter<PropertyEditor>... filters)
 	{
 		super(editorMap, null, filters);
 		visited = new Stack<BioPAXElement>();
+		props = new Stack<String>();
 		setVisitor(this);
 	}
 
@@ -37,6 +39,10 @@ public abstract class AbstractTraverser extends Traverser
 	}
 	
 	
+	public Stack<String> getProps() {
+		return props;
+	}
+
 	/**
 	 * This is to implement a real action here: 
 	 * do something, return or continue (traverse)
@@ -59,29 +65,34 @@ public abstract class AbstractTraverser extends Traverser
 	 * @param editor parent's property PropertyEditor
 	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
-			final Stack<BioPAXElement> path = getVisited();
+			final Stack<BioPAXElement> objPath = getVisited();
+			final Stack<String> propsPath = getProps();
 		
 			if(range instanceof BioPAXElement) {
-				if(path.contains(range)) {
+				if(objPath.contains(range)) {
 				    if(log.isInfoEnabled())
 				    	log.info(((BioPAXElement)range).getRDFId() 
-				    		+ " already visited (cycle!): " + path.toString());
+				    		+ " already visited (cycle!): " + objPath.toString());
 					return;
 				}
  
-				path.push((BioPAXElement) range);
+				objPath.push((BioPAXElement) range);
 				
 				if(log.isTraceEnabled())
 					log.trace("visits " + domain + "." 
 						+ editor.getProperty() +
-						"=>" + path.toString());
+						"=>" + objPath.toString());
 			}
+			
+			propsPath.push(editor.getProperty());
 			
 			// actions
 			visit(range, domain, model, editor);
 			
+			propsPath.pop();
+			
 			if(range instanceof BioPAXElement) {
-				path.pop();
+				objPath.pop();
 			}
 	}
 	
