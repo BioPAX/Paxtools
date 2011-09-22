@@ -155,18 +155,9 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 	{
 		for (Controller pe : ctrl.getController())
 		{
-			if (pe instanceof SimplePhysicalEntity)
+			if (pe instanceof PhysicalEntity)
 			{
-				EntityReference B = ((SimplePhysicalEntity) pe).getEntityReference();
-
-				if (B!=null || B!= A)
-				{
-					interactionSet.add(new SimpleInteraction(A, B, CO_CONTROL));
-				}
-			}
-			else if (pe instanceof Complex)
-			{
-				for (EntityReference B : ((Complex) pe).getMemberReferences())
+				for (EntityReference B : collectEntityReferences((PhysicalEntity) pe))
 				{
 					if (B != A)
 					{

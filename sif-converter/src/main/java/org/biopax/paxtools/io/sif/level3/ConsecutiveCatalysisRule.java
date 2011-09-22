@@ -192,26 +192,12 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor
 	                                     PhysicalEntity controller, Catalysis firstCatalysis,
 	                                     Catalysis consequentCatalysis)
 	{
-		if (controller instanceof SimplePhysicalEntity)
+		for (EntityReference er : collectEntityReferences(controller))
 		{
-			//create interactions and add to set
-			EntityReference er = ((SimplePhysicalEntity) controller).getEntityReference();
-			if(er!=null)
-			{
-				SimpleInteraction si = new SimpleInteraction(A, er, SEQUENTIAL_CATALYSIS);
-				interactionSet.add(si);
-			}
-		}
-		else if (controller instanceof Complex)
-		{
-			for (EntityReference B : ((Complex) controller).getMemberReferences())
-			{
-				//create interactions and add to set
-				SimpleInteraction si = new SimpleInteraction(A, B, SEQUENTIAL_CATALYSIS);
-				interactionSet.add(si);
-				si.addMediator(firstCatalysis);
-				si.addMediator(consequentCatalysis);
-			}
+			SimpleInteraction si = new SimpleInteraction(A, er, SEQUENTIAL_CATALYSIS);
+			interactionSet.add(si);
+			si.addMediator(firstCatalysis);
+			si.addMediator(consequentCatalysis);
 		}
 	}
 

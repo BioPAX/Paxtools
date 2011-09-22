@@ -49,7 +49,8 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 	 * @param options options map
 	 * @param comp complex being processed
 	 */
-	private void processComplex(Set<SimpleInteraction> interactionSet, EntityReference A, Complex comp, Map options)
+	private void processComplex(Set<SimpleInteraction> interactionSet, EntityReference A,
+		Complex comp, Map options)
 	{
 		// Flag for detecting if this complex is most outer one.
 		boolean mostOuter = true;
@@ -63,8 +64,8 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 
 		// Search towards other members only if this is the most outer complex
 		// and if options let for sure
-		if (mostOuter && (!options.containsKey(IN_SAME_COMPONENT) || options.get(IN_SAME_COMPONENT).equals(
-				Boolean.TRUE)))
+		if (mostOuter && (!options.containsKey(IN_SAME_COMPONENT) ||
+			options.get(IN_SAME_COMPONENT).equals(Boolean.TRUE)))
 		{
 			// Iterate other members for components_of_same_complex rule
 			for (EntityReference B : comp.getMemberReferences())

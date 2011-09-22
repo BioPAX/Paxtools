@@ -82,26 +82,17 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 		}
 	}
 
-	private void processParticipant(Set<SimpleInteraction> interactionSet, EntityReference er, Entity entity,
-	                                BinaryInteractionType type, Interaction interaction)
+	private void processParticipant(Set<SimpleInteraction> interactionSet, EntityReference er,
+		Entity entity,BinaryInteractionType type, Interaction interaction)
 	{
-		if (entity instanceof SimplePhysicalEntity)
+		if (entity instanceof PhysicalEntity)
 		{
-			EntityReference er2 = ((SimplePhysicalEntity) entity).getEntityReference();
-			if (er2 != null)
+			for (EntityReference er2 : collectEntityReferences((PhysicalEntity) entity))
 			{
-				createInteraction(er, er2, interactionSet, type, interaction);
-			} else
-			{
-				if (log.isWarnEnabled()) log.warn(
-						"Skip processing the interaction of EntityReference " + er + " with entity " + entity +
-						", which has NULL entityReference");
-			}
-		} else if (entity instanceof Complex)
-		{
-			for (EntityReference er2 : ((Complex) entity).getMemberReferences())
-			{
-				createInteraction(er, er2, interactionSet, type, interaction);
+				if (er != er2) 
+				{
+					createInteraction(er, er2, interactionSet, type, interaction);
+				}
 			}
 		}
 	}
