@@ -19,7 +19,6 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 {
 	private final Log log = LogFactory.getLog(ParticipatesRule.class);
 
-	@Override
 	public final void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity,
 		Model model, Map options)
 	{

@@ -109,7 +109,7 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 	}
 
 
-	@Override public List<BinaryInteractionType> getRuleTypes()
+	public List<BinaryInteractionType> getRuleTypes()
 	{
 		return binaryInteractionTypes;
 	}

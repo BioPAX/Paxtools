@@ -19,7 +19,7 @@ public class GenericsRule extends InteractionRuleL3Adaptor
 
 	private static final List<BinaryInteractionType> binaryInteractionTypes =  Arrays.asList(GENERIC_OF);
 
-	@Override public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference entRef,
+	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference entRef,
 	                                        Model model,
 	                                        Map options)
 	{
@@ -29,7 +29,7 @@ public class GenericsRule extends InteractionRuleL3Adaptor
 		}
 	}
 
-	@Override public List<BinaryInteractionType> getRuleTypes()
+	public List<BinaryInteractionType> getRuleTypes()
 	{
 		return binaryInteractionTypes;
 	}
