@@ -29,6 +29,7 @@ public class SimpleIOHandlerTest
 	public final void testReadWriteL2() throws IOException
 	{
 		BioPAXIOHandler io = new SimpleIOHandler();
+		io.fixReusedPEPs(false);
 		Model model = getL2Model(io);
 		assertNotNull(model);
 		assertFalse(model.getObjects().isEmpty());

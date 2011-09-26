@@ -78,10 +78,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		if (this.level == BioPAXLevel.L1)
 		{
 			this.convertingFromLevel1ToLevel2 = true;
-			this.fixReusedPEPs = true;
-		} else if (this.level == BioPAXLevel.L2)
-		{
-			this.fixReusedPEPs = true;
 		}
 
 		bp = this.level.getNameSpace();
