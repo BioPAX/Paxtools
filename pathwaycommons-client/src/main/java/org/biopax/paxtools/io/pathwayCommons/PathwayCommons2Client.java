@@ -1,5 +1,7 @@
 package org.biopax.paxtools.io.pathwayCommons;
 
+import cpath.service.Cmd;
+import cpath.service.CmdArgs;
 import cpath.service.jaxb.ErrorType;
 import cpath.service.jaxb.Help;
 import cpath.service.jaxb.SearchResponseType;
@@ -31,30 +33,11 @@ public class PathwayCommons2Client
     private Collection<String> dataSources = new HashSet<String>();
     private String type = null;
 
-    private final String graphCommand = "graph";
-    private final String findCommand = "find";
-    private final String getCommand = "get";
-
-    private final String graphSubCommand = "kind";
-
-    private final String formatString = "format";
-    private final String sourceString = "source";
-    private final String directionString = "direction";
-    private final String limitString = "limit";
-    private final String uriString = "uri";
-    private final String queryString = "q";
-    private final String dataSourceString = "datasource";
-    private final String typeString = "type";
-    private final String organismString = "organism";
-    private final String pageString = "page";
-    private final String entityString = "entity/";
-    private final String helpString = "help/";
-
     private final String commandDelimiter = "?";
-    private final String graphURL = endPointURL + graphCommand + commandDelimiter;
-    private final String getURL = endPointURL + getCommand + commandDelimiter;
-    private final String findURL = endPointURL + findCommand + commandDelimiter;
-    private final String findEntityURL = endPointURL + entityString + findCommand + commandDelimiter;
+    private final String graphURL = endPointURL + Cmd.GRAPH + commandDelimiter;
+    private final String getURL = endPointURL + Cmd.GET + commandDelimiter;
+    private final String findURL = endPointURL + Cmd.FIND + commandDelimiter;
+    private final String findEntityURL = endPointURL + Cmd.FIND_ENTITY + commandDelimiter;
 
     private RestTemplate restTemplate;
 
@@ -102,11 +85,11 @@ public class PathwayCommons2Client
     }
 
     private SearchResponseType findTemplate(Collection<String> keywords, boolean entitySearch) throws PathwayCommonsException {
-        String url = (entitySearch ? findEntityURL : findURL ) + queryString + "=" + joinStrings(keywords, ",") + "&"
-                     + (getPage() > 0L ? pageString + "=" + getPage() + "&" : "")
-                     + (getDataSources().isEmpty() ? "" : dataSourceString + "=" + joinStrings(getDataSources(), ",") + "&")
-                     + (getOrganisms().isEmpty() ? "" : organismString + "=" + joinStrings(getOrganisms(), ",") + "&")
-                     + (getType() != null ? typeString + "=" + getType() : "");
+        String url = (entitySearch ? findEntityURL : findURL ) + CmdArgs.q + "=" + joinStrings(keywords, ",") + "&"
+                     + (getPage() > 0L ? CmdArgs.page + "=" + getPage() + "&" : "")
+                     + (getDataSources().isEmpty() ? "" : CmdArgs.datasource + "=" + joinStrings(getDataSources(), ",") + "&")
+                     + (getOrganisms().isEmpty() ? "" : CmdArgs.organism + "=" + joinStrings(getOrganisms(), ",") + "&")
+                     + (getType() != null ? CmdArgs.type + "=" + getType() : "");
 
         if(url.endsWith("&"))
             url = url.substring(0, url.length()-1);
@@ -195,7 +178,7 @@ public class PathwayCommons2Client
      * @throws PathwayCommonsException when the WEB API gives an error
      */
     public Model get(Collection<String> ids) throws PathwayCommonsException {
-        String url = getURL + uriString + "=" + joinStrings(ids, ",");
+        String url = getURL + CmdArgs.uri + "=" + joinStrings(ids, ",");
         return restTemplate.getForObject(url, Model.class);
     }
 
@@ -209,10 +192,10 @@ public class PathwayCommons2Client
      * @throws PathwayCommonsException when the WEB API gives an error
      */
     public Model getPathsBetween(Collection<String> sourceSet) throws PathwayCommonsException {
-        String url = graphURL + graphSubCommand + "=pathsbetween&"
-                        + sourceString + "=" + joinStrings(sourceSet, ",") + "&"
-                        + limitString + "=" + graphQueryLimit + "&"
-                        + formatString + "=" + outputFormat;
+        String url = graphURL + Cmd.GRAPH + "=pathsbetween&"
+                        + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
+                        + CmdArgs.limit + "=" + graphQueryLimit + "&"
+                        + CmdArgs.format + "=" + outputFormat;
 
         return restTemplate.getForObject(url, Model.class);
     }
@@ -226,10 +209,10 @@ public class PathwayCommons2Client
      * @throws PathwayCommonsException when the WEB API gives an error
      */
     public Model getNeighborhood(Collection<String> sourceSet) throws PathwayCommonsException {
-        String url = graphURL + graphSubCommand + "=neighborhood&"
-                        + sourceString + "=" + joinStrings(sourceSet, ",") + "&"
-                        + limitString + "=" + graphQueryLimit + "&"
-                        + formatString + "=" + outputFormat;
+        String url = graphURL + Cmd.GRAPH + "=neighborhood&"
+                        + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
+                        + CmdArgs.limit + "=" + graphQueryLimit + "&"
+                        + CmdArgs.format + "=" + outputFormat;
 
         return restTemplate.getForObject(url, Model.class);
     }
@@ -247,15 +230,26 @@ public class PathwayCommons2Client
      * @throws PathwayCommonsException when the WEB API gives an error
      */
     public Model getCommonStream(Collection<String> sourceSet, STREAM_DIRECTION direction) throws PathwayCommonsException {
-        String url = graphURL + graphSubCommand + "=commonstream&"
-                        + sourceString + "=" + joinStrings(sourceSet, ",") + "&"
-                        + directionString + "=" + direction + "&"
-                        + limitString + "=" + graphQueryLimit + "&"
-                        + formatString + "=" + outputFormat;
+        String url = graphURL + Cmd.GRAPH + "=commonstream&"
+                        + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
+                        + CmdArgs.direction + "=" + direction + "&"
+                        + CmdArgs.limit + "=" + graphQueryLimit + "&"
+                        + CmdArgs.format + "=" + outputFormat;
 
         return restTemplate.getForObject(url, Model.class);
     }
 
+    
+    public SearchResponseType getTopPathways(Collection<String> sourceSet) throws PathwayCommonsException {
+        String url = graphURL + Cmd.GRAPH + "=neighborhood&"
+                        + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
+                        + CmdArgs.limit + "=" + graphQueryLimit + "&"
+                        + CmdArgs.format + "=" + outputFormat;
+
+        return restTemplate.getForObject(url, SearchResponseType.class);
+    }    
+    
+    
     private String joinStrings(Collection strings, String delimiter) {
         String finalString = "";
 
@@ -408,7 +402,7 @@ public class PathwayCommons2Client
      * @return valid values for the datasource parameter as a Help object.
      */
     public Help getValidDataSources() {
-        return getValidParameterValues(dataSourceString);
+        return getValidParameterValues(CmdArgs.datasource.toString());
     }
 
     /**
@@ -417,7 +411,7 @@ public class PathwayCommons2Client
      * @return valid values for the organism parameter as a Help object.
      */
     public Help getValidOrganisms() {
-        return getValidParameterValues(organismString);
+        return getValidParameterValues(CmdArgs.organism.toString());
     }
 
     /**
@@ -426,12 +420,12 @@ public class PathwayCommons2Client
      * @return valid values for the type parameter as a Help object.
      */
     public Help getValidTypes() {
-        return getValidParameterValues(typeString);
+        return getValidParameterValues(CmdArgs.type.toString());
 
     }
 
     private Help getValidParameterValues(String parameter) {
-        String url = endPointURL + helpString + parameter + "s";
+        String url = endPointURL + "help/" + parameter + "s";
         return restTemplate.getForObject(url, Help.class);
     }
 

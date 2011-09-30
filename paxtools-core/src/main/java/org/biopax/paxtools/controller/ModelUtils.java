@@ -392,9 +392,9 @@ public class ModelUtils {
 	
 	
 	/**
-	 * Finds a subset of "root" BioPAX objects of specific class (incl. sub-classes)
-	 * 
-	 * Note: however, such "root" elements may or may not be, a property of other
+	 * Finds a subset of "root" BioPAX objects of specific class (incl. sub-classes),
+	 * which means those objects are not a value of a BioPAX property of any
+	 * element in the current model. However, they may be a property of other 
 	 * elements, not included in the model.
 	 * 
 	 * @param filterClass 
