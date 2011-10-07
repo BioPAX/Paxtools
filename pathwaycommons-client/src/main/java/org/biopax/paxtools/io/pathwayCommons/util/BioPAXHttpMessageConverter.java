@@ -71,7 +71,7 @@ public class BioPAXHttpMessageConverter implements HttpMessageConverter<Model> {
         } catch(BioPaxIOException ioe) { // Not a BioPAX file, so go with the error parsing
             bis.reset();
             Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-            jaxb2Marshaller.setClassesToBeBound(SingleErrorType.class);
+            jaxb2Marshaller.setClassesToBeBound(ErrorType.class); //SingleErrorType.class); - ErrorType now has XmlRoot ann.
             ErrorType error = (ErrorType) jaxb2Marshaller.unmarshal(new StreamSource(bis));
             throw ErrorUtil.createException(error);
         }

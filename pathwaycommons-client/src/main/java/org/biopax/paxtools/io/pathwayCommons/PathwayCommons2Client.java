@@ -25,20 +25,17 @@ import java.util.*;
  */
 public class PathwayCommons2Client
 {
-    private String endPointURL = "http://www.pathwaycommons.org/pc2/";
-    private Integer page = 0;
-    private String outputFormat = "biopax";
+	public static final String JVM_PROPERTY_ENDPOINT_URL = "cPath2Url";
+	public static final String DEFAULT_ENDPOINT_URL = "http://www.pathwaycommons.org/pc2/";
+	private final String commandDelimiter = "?";
+	
+	private String endPointURL;
+	private Integer page = 0;
+    private String outputFormat = "biopax"; //TODO use cpath.service.OutputFormat; add setter/getter
     private Integer graphQueryLimit = 1;
     private Collection<String> organisms = new HashSet<String>();
     private Collection<String> dataSources = new HashSet<String>();
     private String type = null;
-
-    private final String commandDelimiter = "?";
-    private final String graphURL = endPointURL + Cmd.GRAPH + commandDelimiter;
-    private final String getURL = endPointURL + Cmd.GET + commandDelimiter;
-    private final String findURL = endPointURL + Cmd.FIND + commandDelimiter;
-    private final String findEntityURL = endPointURL + Cmd.FIND_ENTITY + commandDelimiter;
-
     private RestTemplate restTemplate;
 
     /**
@@ -74,18 +71,23 @@ public class PathwayCommons2Client
     public PathwayCommons2Client(RestTemplate restTemplate, BioPAXIOHandler bioPAXIOHandler) {
         this.restTemplate = restTemplate;
 
+        // set the service URL
+        endPointURL = System.getProperty(JVM_PROPERTY_ENDPOINT_URL, DEFAULT_ENDPOINT_URL);
+        assert endPointURL!= null :  "BUG: cpath2 URL is not defined!";
+        
         List<HttpMessageConverter<?>> httpMessageConverters = new ArrayList<HttpMessageConverter<?>>();
         httpMessageConverters.add(new BioPAXHttpMessageConverter(bioPAXIOHandler));
 
         Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        jaxb2Marshaller.setClassesToBeBound(Help.class, SearchResponseType.class, ErrorType.class);
+        jaxb2Marshaller.setClassesToBeBound(Help.class, SearchResponseType.class, ErrorType.class);//, SingleErrorType.class);
         httpMessageConverters.add(new MarshallingHttpMessageConverter(jaxb2Marshaller, jaxb2Marshaller));
 
         restTemplate.setMessageConverters(httpMessageConverters);
     }
 
     private SearchResponseType findTemplate(Collection<String> keywords, boolean entitySearch) throws PathwayCommonsException {
-        String url = (entitySearch ? findEntityURL : findURL ) + CmdArgs.q + "=" + joinStrings(keywords, ",") + "&"
+        String url = (entitySearch ? endPointURL + Cmd.FIND_ENTITY + commandDelimiter : endPointURL + Cmd.FIND + commandDelimiter ) 
+        			 + CmdArgs.q + "=" + joinStrings(keywords, ",") + "&"
                      + (getPage() > 0L ? CmdArgs.page + "=" + getPage() + "&" : "")
                      + (getDataSources().isEmpty() ? "" : CmdArgs.datasource + "=" + joinStrings(getDataSources(), ",") + "&")
                      + (getOrganisms().isEmpty() ? "" : CmdArgs.organism + "=" + joinStrings(getOrganisms(), ",") + "&")
@@ -178,7 +180,8 @@ public class PathwayCommons2Client
      * @throws PathwayCommonsException when the WEB API gives an error
      */
     public Model get(Collection<String> ids) throws PathwayCommonsException {
-        String url = getURL + CmdArgs.uri + "=" + joinStrings(ids, ",");
+        String url = endPointURL + Cmd.GET + commandDelimiter 
+        		+ CmdArgs.uri + "=" + joinStrings(ids, ",");
         return restTemplate.getForObject(url, Model.class);
     }
 
@@ -192,7 +195,7 @@ public class PathwayCommons2Client
      * @throws PathwayCommonsException when the WEB API gives an error
      */
     public Model getPathsBetween(Collection<String> sourceSet) throws PathwayCommonsException {
-        String url = graphURL + Cmd.GRAPH + "=pathsbetween&"
+        String url = endPointURL + Cmd.GRAPH + commandDelimiter + Cmd.GRAPH + "=pathsbetween&"
                         + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
                         + CmdArgs.limit + "=" + graphQueryLimit + "&"
                         + CmdArgs.format + "=" + outputFormat;
@@ -209,7 +212,7 @@ public class PathwayCommons2Client
      * @throws PathwayCommonsException when the WEB API gives an error
      */
     public Model getNeighborhood(Collection<String> sourceSet) throws PathwayCommonsException {
-        String url = graphURL + Cmd.GRAPH + "=neighborhood&"
+        String url = endPointURL + Cmd.GRAPH + commandDelimiter + Cmd.GRAPH + "=neighborhood&"
                         + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
                         + CmdArgs.limit + "=" + graphQueryLimit + "&"
                         + CmdArgs.format + "=" + outputFormat;
@@ -230,7 +233,7 @@ public class PathwayCommons2Client
      * @throws PathwayCommonsException when the WEB API gives an error
      */
     public Model getCommonStream(Collection<String> sourceSet, STREAM_DIRECTION direction) throws PathwayCommonsException {
-        String url = graphURL + Cmd.GRAPH + "=commonstream&"
+        String url = endPointURL + Cmd.GRAPH + commandDelimiter + Cmd.GRAPH + "=commonstream&"
                         + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
                         + CmdArgs.direction + "=" + direction + "&"
                         + CmdArgs.limit + "=" + graphQueryLimit + "&"
@@ -240,15 +243,17 @@ public class PathwayCommons2Client
     }
 
     
-    public SearchResponseType getTopPathways(Collection<String> sourceSet) throws PathwayCommonsException {
-        String url = graphURL + Cmd.GRAPH + "=neighborhood&"
-                        + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
-                        + CmdArgs.limit + "=" + graphQueryLimit + "&"
-                        + CmdArgs.format + "=" + outputFormat;
-
-        return restTemplate.getForObject(url, SearchResponseType.class);
+    /**
+     * Gets the list of top (root) pathways 
+     * (in the same xml format used by the full-text search commands)
+     * 
+     * @return
+     */
+    public SearchResponseType getTopPathways() {
+    	return restTemplate.getForObject(endPointURL + Cmd.TOP_PATHWAYS, SearchResponseType.class);
     }    
     
+    //TODO add 'traverse' (get properties from a path) method
     
     private String joinStrings(Collection strings, String delimiter) {
         String finalString = "";
@@ -417,11 +422,15 @@ public class PathwayCommons2Client
     /**
      * @see #getType()
      * @see #setType(String)
-     * @return valid values for the type parameter as a Help object.
+     * @return valid values for the BioPAX type parameter.
      */
-    public Help getValidTypes() {
-        return getValidParameterValues(CmdArgs.type.toString());
-
+    public Collection<String> getValidTypes() {
+        Set<String> types = new TreeSet<String>();
+    	Help help = getValidParameterValues(CmdArgs.type.toString());
+    	for(Help h : help.getMembers()) {
+    		types.add(h.getId());
+    	}
+    	return types;
     }
 
     private Help getValidParameterValues(String parameter) {
