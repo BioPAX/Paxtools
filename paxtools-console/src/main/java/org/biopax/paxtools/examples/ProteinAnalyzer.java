@@ -55,7 +55,7 @@ public class ProteinAnalyzer
   {
    // Search PC2 for the given protein name
    SearchResponseType searchResponse = pc2.find(protein);
-   if (searchResponse.getTotalNumHits() < 1)
+   if (searchResponse.getNumHitsBeforeRefined() < 1)
    {
     System.err.println("No results for protein:" + protein);
     System.exit(-1);
