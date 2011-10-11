@@ -109,25 +109,16 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	{
 		for (PhysicalEntity pe : this.getComponent())
 		{
-			collectSimpleMembersRecursive(pe, set);
+			if (pe instanceof SimplePhysicalEntity)
+			{
+				set.add((SimplePhysicalEntity) pe);
+			}
+			else if (pe instanceof ComplexImpl)
+			{
+				((ComplexImpl) pe).getSimpleMembers(set);
+			}
 		}
 		return set;
-	}
-
-	protected void collectSimpleMembersRecursive(PhysicalEntity pe, Set<SimplePhysicalEntity> set)
-	{
-		if (pe instanceof ComplexImpl && pe != this)
-		{
-			((ComplexImpl) pe).collectSimpleMembersRecursive(pe, set);
-		}
-		else if (pe instanceof SimplePhysicalEntity)
-		{
-			set.add((SimplePhysicalEntity) pe);
-		}
-		for (PhysicalEntity mem : pe.getMemberPhysicalEntity())
-		{
-			collectSimpleMembersRecursive(mem, set);
-		}
 	}
 
 	@Transient
@@ -138,7 +129,8 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		for (SimplePhysicalEntity spe : getSimpleMembers())
 		{
 			EntityReference er = spe.getEntityReference();
-			if(er!=null) set.add(er);
+			if(er!=null)
+				set.add(er); //TODO - ignoring reactome ERs
 		}
 		return set;
 	}

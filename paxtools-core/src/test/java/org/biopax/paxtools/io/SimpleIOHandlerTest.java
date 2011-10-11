@@ -28,7 +28,8 @@ public class SimpleIOHandlerTest
 	@Test
 	public final void testReadWriteL2() throws IOException
 	{
-		BioPAXIOHandler io = new SimpleIOHandler();
+		BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L2);
+		io.fixReusedPEPs(false);
 		Model model = getL2Model(io);
 		assertNotNull(model);
 		assertFalse(model.getObjects().isEmpty());
@@ -44,7 +45,7 @@ public class SimpleIOHandlerTest
 	public static Model getL2Model(BioPAXIOHandler io)
 	{
 		String s = "L2" + File.separator
-		           + "biopax_id_557861_mTor_signaling.owl";
+		           + "NCI-Nature_Curated.bp2.owl";
 
 		System.out.println("file = " + s);
 
