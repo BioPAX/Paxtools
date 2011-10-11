@@ -76,5 +76,14 @@ public class PathAccessorTest
 		assertThat(true, is(values.containsAll(inner.getName())));
 		assertThat(true, is(values.containsAll(innermost.getName())));
 
+		accessor = new PathAccessor("Protein/cellularLocation", BioPAXLevel.L3);
+		values = accessor.getValueFromBean(p1);
+		assertTrue(accessor.isUnknown(values));
+
+		SmallMoleculeReference sm1 = model.addNew(SmallMoleculeReference.class, "SM1");
+		PathAccessor mwAccessor = new PathAccessor("SmallMoleculeReference/molecularWeight", BioPAXLevel.L3);
+		values = mwAccessor.getValueFromBean(sm1);
+//		System.out.println("mw: " + values.toString());
+		assertTrue(mwAccessor.isUnknown(values));
 	}
 }

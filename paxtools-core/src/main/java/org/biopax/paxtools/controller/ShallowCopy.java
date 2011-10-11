@@ -5,10 +5,11 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 
 /**
- * Specifically "Clones" the BioPAX elements set
- * (traverses to obtain dependent elements),
- * puts them to the new model using the visitor and traverser framework;
- * ignores elements that are not in the source list (compare to {@link Fetcher})
+ * "Clones" a BioPAX element -
+ * using direct properties/children only
+ * (shallow copy)
+ *
+ * Compare to {@link Fetcher}
  *
  * @see org.biopax.paxtools.controller.Visitor
  * @see org.biopax.paxtools.controller.Traverser
