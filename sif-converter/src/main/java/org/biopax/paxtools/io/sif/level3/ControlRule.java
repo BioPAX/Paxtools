@@ -44,12 +44,12 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		// Iterate over all associated controls
 		for (SimplePhysicalEntity pe : A.getEntityReferenceOf())
 		{
-			processPhysicalEntity(interactionSet, A, mineStatetateChange, mineMetabolicChange, pe);
+			processPhysicalEntity(interactionSet, A, mineStatetateChange, mineMetabolicChange, pe, options);
 		}
 	}
 
 	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A,
-	                                   boolean mineStatetateChange, boolean mineMetabolicChange, PhysicalEntity pe)
+		boolean mineStatetateChange, boolean mineMetabolicChange, PhysicalEntity pe, Map options)
 	{
 		for (Interaction inter : pe.getParticipantOf())
 		{
@@ -60,8 +60,8 @@ public class ControlRule extends InteractionRuleL3Adaptor
 				for (Conversion conv : getAffectedConversions(cont, null))
 				{
 					// Collect left and right simple physical entities of conversion in lists
-					Set<EntityReference> left = collectEntityReferences(conv.getLeft(), null);
-					Set<EntityReference> right = collectEntityReferences(conv.getRight(), null);
+					Set<EntityReference> left = collectEntityReferences(conv.getLeft(), null, options);
+					Set<EntityReference> right = collectEntityReferences(conv.getRight(), null, options);
 					// Detect physical entities which appear on both sides.
 					List<EntityReference> bothsided = new ArrayList<EntityReference>();
 					for (EntityReference B : left)
@@ -82,7 +82,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 						if (A == B) continue;
 
 						// Consider only molecules that is changed by the conversion
-						if (!entityHasAChange(B, conv))
+						if (!entityHasAChange(B, conv, options))
 						{
 							continue;
 						}
@@ -117,7 +117,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		}
 		for (Complex comp : pe.getComponentOf())
 		{
-			processPhysicalEntity(interactionSet, A, mineStatetateChange, mineMetabolicChange, comp);
+			processPhysicalEntity(interactionSet, A, mineStatetateChange, mineMetabolicChange, comp, options);
 		}
 	}
 
@@ -157,10 +157,10 @@ public class ControlRule extends InteractionRuleL3Adaptor
 	 * @param conv
 	 * @return true if entity has a change in conversion
 	 */
-	private boolean entityHasAChange(EntityReference entity, Conversion conv)
+	private boolean entityHasAChange(EntityReference entity, Conversion conv, Map options)
 	{
-		Set<PhysicalEntity> left = getAssociatedStates(entity, conv.getLeft());
-		Set<PhysicalEntity> right = getAssociatedStates(entity, conv.getRight());
+		Set<PhysicalEntity> left = getAssociatedStates(entity, conv.getLeft(), options);
+		Set<PhysicalEntity> right = getAssociatedStates(entity, conv.getRight(), options);
 
 		// There should be at least one state found
 		assert !left.isEmpty() || !right.isEmpty();
@@ -177,7 +177,8 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		return false;
 	}
 
-	private Set<PhysicalEntity> getAssociatedStates(EntityReference er, Set<PhysicalEntity> pes)
+	private Set<PhysicalEntity> getAssociatedStates(EntityReference er, Set<PhysicalEntity> pes,
+		Map options)
 	{
 		Set<PhysicalEntity> set = new HashSet<PhysicalEntity>();
 
@@ -189,7 +190,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 
 		for (PhysicalEntity pe : pes)
 		{
-			if (collectEntityReferences(pe).contains(er))
+			if (collectEntityReferences(pe, options).contains(er))
 				set.add(pe);
 		}
 		return set;

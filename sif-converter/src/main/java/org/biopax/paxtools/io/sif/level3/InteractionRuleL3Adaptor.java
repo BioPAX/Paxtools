@@ -19,6 +19,12 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 {
 	private final Log log = LogFactory.getLog(ParticipatesRule.class);
 
+	/**
+	 * An option for reaching to EntityReference of member PhysicalEntity of a PhysicalEntity.
+	 */
+	public static final String REACH_GENERIC_MEMBERS = "REACH_GENERIC_MEMBERS";
+
+
 	public final void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity,
 		Model model, Map options)
 	{
@@ -28,13 +34,13 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 		}
 	}
 
-	protected Set<EntityReference> collectEntityReferences(PhysicalEntity pe)
+	protected Set<EntityReference> collectEntityReferences(PhysicalEntity pe, Map options)
 	{
 		return collectEntityReferences(pe, null);
 	}
 
 	protected Set<EntityReference> collectEntityReferences(PhysicalEntity pe,
-		Set<EntityReference> enSet)
+		Set<EntityReference> enSet, Map options)
 	{
 		if (enSet == null)
 		{
@@ -52,19 +58,22 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 		{
 			for (PhysicalEntity mem : ((Complex) pe).getComponent())
 			{
-				collectEntityReferences(mem, enSet);
+				collectEntityReferences(mem, enSet, options);
 			}
 		}
 
-		for (PhysicalEntity mem : pe.getMemberPhysicalEntity())
+		if (options.containsKey(REACH_GENERIC_MEMBERS))
 		{
-			collectEntityReferences(mem, enSet);
+			for (PhysicalEntity mem : pe.getMemberPhysicalEntity())
+			{
+				collectEntityReferences(mem, enSet, options);
+			}
 		}
 		return enSet;
 	}
 
 	protected Set<EntityReference> collectEntityReferences(Set<PhysicalEntity> pes,
-		Set<EntityReference> enSet)
+		Set<EntityReference> enSet, Map options)
 	{
 		if (enSet == null)
 		{
@@ -73,7 +82,7 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 
 		for (PhysicalEntity pe : pes)
 		{
-			collectEntityReferences(pe, enSet);
+			collectEntityReferences(pe, enSet, options);
 		}
 		return enSet;
 	}

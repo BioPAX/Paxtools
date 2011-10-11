@@ -195,7 +195,7 @@ public class QueryExecuter
 	 * @param graph
 	 * @return
 	 */
-	private static Set<Node> prepareSingleNodeSet(Set<BioPAXElement> elements, Graph graph)
+	public static Set<Node> prepareSingleNodeSet(Set<BioPAXElement> elements, Graph graph)
 	{
 		Map<BioPAXElement, Set<PhysicalEntity>> map = getRelatedPhysicalEntityMap(elements);
 
