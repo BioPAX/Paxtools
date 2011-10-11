@@ -44,5 +44,7 @@ public class FixerTest
 		assertThat(true, is(p3.getEntityReference().getMemberEntityReference().contains(pr1)));
 		assertThat(true, is(p3.getEntityReference().getMemberEntityReference().contains(pr1)));
 
+
+
 	}
 }
