@@ -36,7 +36,7 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 
 	protected Set<EntityReference> collectEntityReferences(PhysicalEntity pe, Map options)
 	{
-		return collectEntityReferences(pe, null);
+		return collectEntityReferences(pe, null,options);
 	}
 
 	protected Set<EntityReference> collectEntityReferences(PhysicalEntity pe,
