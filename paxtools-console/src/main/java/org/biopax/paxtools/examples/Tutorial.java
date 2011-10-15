@@ -225,7 +225,7 @@ public class Tutorial
 
 
   Set<BioPAXElement> result = QueryExecuter.runNeighborhood(sourceSet, model,
-                                                            limit, direction);
+                                                            limit, direction, null);
 
   Completer c = new Completer(SimpleEditorMap.get(BioPAXLevel.L3));
   result = c.complete(result, model);

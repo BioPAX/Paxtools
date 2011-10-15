@@ -162,7 +162,8 @@ public class BFS
 				// Check if we need to stop traversing the neighbor, enqueue otherwise
 
 				boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
-					(!neigh.isBreadthNode() || getLabel(neigh) < limit);
+					(!neigh.isBreadthNode() || getLabel(neigh) < limit) &&
+					!neigh.isUbique();
 
 				if (further)
 				{

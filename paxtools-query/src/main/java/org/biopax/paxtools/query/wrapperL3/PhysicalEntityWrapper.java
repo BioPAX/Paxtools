@@ -20,6 +20,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	boolean upstreamInited;
 	boolean downstreamInited;
 	boolean equivalentInited;
+	boolean ubique;
 
 	public PhysicalEntityWrapper(PhysicalEntity pe, GraphL3 graph)
 	{
@@ -28,6 +29,17 @@ public class PhysicalEntityWrapper extends AbstractNode
 		this.upstreamInited = false;
 		this.downstreamInited = false;
 		this.equivalentInited = false;
+		this.ubique = false;
+	}
+
+	public boolean isUbique()
+	{
+		return ubique;
+	}
+
+	public void setUbique(boolean ubique)
+	{
+		this.ubique = ubique;
 	}
 
 	@Override
