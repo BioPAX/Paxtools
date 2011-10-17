@@ -1,7 +1,9 @@
 package org.biopax.paxtools.examples;
 
-import cpath.service.jaxb.SearchHitType;
-import cpath.service.jaxb.SearchResponseType;
+import cpath.service.jaxb.SearchHit;
+import cpath.service.jaxb.SearchResponse;
+import cpath.service.jaxb.ServiceResponse;
+
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.pathwayCommons.PathwayCommons2Client;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
@@ -54,16 +56,17 @@ public class ProteinAnalyzer
   for (String protein : arg)
   {
    // Search PC2 for the given protein name
-   SearchResponseType searchResponse = pc2.find(protein);
-   if (searchResponse.getNumHitsBeforeRefined() < 1)
+   ServiceResponse serviceResponse = pc2.find(protein);
+   if (serviceResponse.isError() || serviceResponse.isEmpty())
    {
     System.err.println("No results for protein:" + protein);
     System.exit(-1);
    }
 
    // Collect all ids associated to this search
+   SearchResponse searchResponse = (SearchResponse) serviceResponse.getResponse();
    Set<String> ids = new HashSet<String>();
-   for (SearchHitType searchHit : searchResponse.getSearchHit())
+   for (SearchHit searchHit : searchResponse.getSearchHit())
    {
     ids.add(searchHit.getUri());
    }

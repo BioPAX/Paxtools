@@ -59,7 +59,10 @@ public class Fetcher extends AbstractTraverser
 	{
     	children.clear();
     	super.traverse(element, null);
-        model.add(element);
+    	
+    	if(!model.containsID(element.getRDFId()))
+    		model.add(element);
+    	
         for(BioPAXElement e : children)
         	if(!model.contains(e))
         		model.add(e);
