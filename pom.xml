@@ -6,7 +6,7 @@
 	<artifactId>paxtools</artifactId>
 	<version>4.0.0-SNAPSHOT</version>
 
-	<name>PaxTools</name>
+	<name>Paxtools</name>
 	<packaging>pom</packaging>
 	<description>Paxtools is a Java library that allows software to read, write, analyze and manipulate BioPAX models.
 		Paxtools provide a consistent, fully implemented, validating BioPAX API that significantly reduces development
@@ -69,8 +69,8 @@
 		</developer>
 		<developer>
 			<id>armanaksoy</id>
-			<name>Arman Aksoy</name>
-			<organization />
+			<name>B. Arman Aksoy</name>
+			<organization>CBIO MSKCC</organization>
 			<roles>
 				<role>developer</role>
 			</roles>
@@ -88,14 +88,7 @@
 	<mailingLists>
 		<mailingList>
 			<name>BioPAX Discussion Group</name>
-			<!--
-				   <subscribe></subscribe>
-				   <unsubscribe></unsubscribe>
-				   -->
 			<post>biopax-discuss@googlegroups.com</post>
-			<!--
-				  <archive>http://www.biopax.org/mailman/listinfo/biopax-discuss</archive>
-				  -->
 		</mailingList>
 	</mailingLists>
 
@@ -111,41 +104,27 @@
 		<system>SF</system>
 		<url>https://sourceforge.net/tracker/?group_id=85345</url>
 	</issueManagement>
+	
+	<!--
+
+	     See the following wiki document for details on how to do the setup for deploying/releasing
+	     http://sourceforge.net/apps/mediawiki/biopax/index.php?title=Deploying_Paxtools
+
+	     -->
 
 	<profiles>
 		<profile>
-			<id>rodche</id>
-			<!-- used by maven-release-plugin during 
-				"mvn release:prepare -Prodche", 
-				"mvn release:perform -Prodche";
-			${local.biopax.m2repo}, ${local.biopax.site} must 
-			be defined in the local ~/.m2/settings.xml, profiles...
-			-->
+			<id>sourceforge</id>
 			<properties>
-				<scm.username>rodche</scm.username>
-			</properties>
-			<distributionManagement>
-				<snapshotRepository>
-					<id>biopax.snapshots</id>
-					<name>Local BioPAX Snapshots Repository</name>
-					<url>${local.biopax.m2repo}/snapshots</url>
-				</snapshotRepository>
-				<repository>
-					<id>biopax.releases</id>
-					<name>Local BioPAX Repository</name>
-					<url>${local.biopax.m2repo}/releases</url>
-				</repository>
-				<site>
-					<id>biopax.sf.net</id>
-					<name>BioPAX Sourceforge site</name>
-					<url>${local.biopax.site}/paxtools-${project.version}</url>
-				</site>
-			</distributionManagement>
-		</profile>
-		<profile>
-			<id>emekdemir</id>
-			<properties>
-				<scm.username>emekdemir</scm.username>
+				<biopax.site.url>
+					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/
+				</biopax.site.url>
+				<biopax.snapshot.url>
+					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots
+				</biopax.snapshot.url>
+				<biopax.release.url>
+					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases
+				</biopax.release.url>
 			</properties>
 		</profile>
 	</profiles>
@@ -158,56 +137,21 @@
 		<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
 	</scm>
 
-	<!-- In order to deploy or site:deploy this project:
-	1) have login/pw configured in their local (~/.m2/) settings.xml, i.e:
-	<servers>
-      <server>
-      	<id>biopax.sf.net</id>
-      	<username>USERID,biopax</username>
-      	<password>PASSWD</password>
-      </server>
-      <server>
-    	<id>biopax.releases</id>
-    	<username>USERID,biopax</username>
-    	<password>PASSWD</password>
-      </server>
-      <server>
-    	<id>biopax.snapshots</id>
-    	<username>USERID,biopax</username>
-    	<password>PASSWD</password>
-      </server>
-  	</servers>
-  	(alternatively, one can define developer's profile in this pom.xml 
-  	with a <distributionManagement /> inside, and use username explicitely, e.g., 
-  	<url>scp://USERID@shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools-${project.version}</url>)
-  	2) [Important!] CREATE the remote shell first (before using "mvn deploy"):
-  		- from terminal do: "ssh -t USERID,biopax@shell.sourceforge.net create", wait...
-  		- once it's up, - exit (now you can login as "ssh USERID,biopax@shell.sourceforge.net", 
-  		but, after several minutes, the shell will expire due to inactivity; 
-  		see also: http://sourceforge.net/apps/trac/sourceforge/wiki/Shell%20service)
-  	3) now you can do "mvn deploy" or "mvn site:deploy" (do site:site first, for speed)!
-  	
-  	Alternative (FASTER and MORE SAFE) approach:
-  	- configure to use local <site> and <repository> locations in your <profile>,
-  	- do deploy, site:deploy with "-P<your_profile_name>" option (so it goes not to BioPAX@Sourceforge but to a local dir) 
-  	- setup/use RSYNC (outside maven stuff) to upload the releases and docs from that locations to @sf.net
-	-->
-
 	<distributionManagement>
 		<site>
 			<id>biopax.sf.net</id>
 			<name>BioPAX Sourceforge site</name>
-			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/paxtools-${project.version}</url>
+			<url>${biopax.site.url}/paxtools-${project.version}</url>
 		</site>
 		<snapshotRepository>
 			<id>biopax.snapshots</id>
 			<name>BioPAX Snapshots Repository</name>
-			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots</url>
+			<url>${biopax.snapshot.url}</url>
 		</snapshotRepository>
 		<repository>
 			<id>biopax.releases</id>
 			<name>BioPAX Releases Repository</name>
-			<url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases</url>
+			<url>${biopax.release.url}</url>
 		</repository>
 	</distributionManagement>
 
@@ -241,6 +185,13 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.0</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<dependencies>

@@ -126,7 +126,7 @@ public class PaxtoolsMain {
 
         // execute the 'nearest neighborhood' query
         Set<BioPAXElement> result = QueryExecuter.runNeighborhood(
-			elements, model, 1, Direction.BOTHSTREAM);
+			elements, model, 1, Direction.BOTHSTREAM, null);
 
         // auto-complete/clone the results in a new model
         // (this also cuts some less important edges, right?..)

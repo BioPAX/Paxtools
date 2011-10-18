@@ -17,17 +17,28 @@ import java.util.*;
  */
 public class QueryExecuter
 {
+	/**
+	 * Gets neighborhood of the source set.
+	 *
+	 * @param sourceSet seed to the query
+	 * @param model BioPAX model
+	 * @param limit neigborhood distance to get
+	 * @param direction UPSTREAM, DOWNSTREAM or BOTHSTREAM
+	 * @param ubiqueIDs RDF IDs of ubiquitous entity references. can be null
+	 * @return BioPAX elements in the result set
+	 */
 	public static Set<BioPAXElement> runNeighborhood(
 		Set<BioPAXElement> sourceSet,
 		Model model,
 		int limit,
-		Direction direction)
+		Direction direction,
+		Set<String> ubiqueIDs)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model);
+			graph = new GraphL3(model, ubiqueIDs);
 		}
 		else return null;
 
@@ -38,14 +49,23 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
+	/**
+	 * Gets the graph constructed by the paths between the given seed nodes. Does not get paths
+	 * between physical entities that belong the same entity reference.
+	 * @param sourceSet Seed to the query
+	 * @param model BioPAX model
+	 * @param limit Length limit for the paths to be found
+	 * @param ubiqueIDs RDF IDs of ubiquitous PEs. Can be null
+	 * @return BioPAX elements in the result
+	 */
 	public static Set<BioPAXElement> runPathsBetween(Set<BioPAXElement> sourceSet, Model model,
-		int limit)
+		int limit, Set<String> ubiqueIDs)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model);
+			graph = new GraphL3(model, ubiqueIDs);
 		}
 		else return null;
 
@@ -58,26 +78,46 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
+	/**
+	 * Gets paths between the seed nodes.
+	 * @param sourceSet Seed to the query
+	 * @param model BioPAX model
+	 * @param limit Length limit for the paths to be found
+	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
+	 * @return BioPAX elements in the result
+	 */
 	public static Set<BioPAXElement> runGOI(
 		Set<BioPAXElement> sourceSet,
 		Model model,
-		int limit)
+		int limit,
+		Set<String> ubiqueIDs)
 	{
-		return runPOI(sourceSet, sourceSet, model, LimitType.NORMAL, limit);
+		return runPOI(sourceSet, sourceSet, model, LimitType.NORMAL, limit, ubiqueIDs);
 	}
 
+	/**
+	 * Gets paths the graph composed of the paths from a source node, and ends at a target node.
+	 * @param sourceSet Seeds for start points of paths
+	 * @param targetSet Seeds for end points of paths
+	 * @param model BioPAX model
+	 * @param limitType either NORMAL or SHORTEST_PLUS_K
+	 * @param limit Length limit fothe paths to be found
+	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
+	 * @return BioPAX elements in the result
+	 */
 	public static Set<BioPAXElement> runPOI(
 		Set<BioPAXElement> sourceSet,
 		Set<BioPAXElement> targetSet,
 		Model model,
 		LimitType limitType,
-		int limit)
+		int limit,
+		Set<String> ubiqueIDs)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model);
+			graph = new GraphL3(model, ubiqueIDs);
 		}
 		else return null;
 
@@ -89,17 +129,27 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
+	/**
+	 * Gets the elements in the common upstream or downstream of the seed
+	 * @param sourceSet Seed to the query
+	 * @param model BioPAX model
+	 * @param direction UPSTREAM or DOWNSTREAM
+	 * @param limit Length limit for the search
+	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
+	 * @return BioPAX elements in the result
+	 */
 	public static Set<BioPAXElement> runCommonStream(
 		Set<BioPAXElement> sourceSet,
 		Model model,
 		Direction direction,
-		int limit)
+		int limit,
+		Set<String> ubiqueIDs)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model);
+			graph = new GraphL3(model, ubiqueIDs);
 		}
 		else return null;
 
@@ -111,17 +161,28 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
+	/**
+	 * First finds the common stream, then completes it with the paths between seed and common
+	 * stream.
+	 * @param sourceSet Seed to the query
+	 * @param model BioPAX model
+	 * @param direction UPSTREAM or DOWNSTREAM
+	 * @param limit Length limit for the search
+	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
+	 * @return BioPAX elements in the result
+	 */
 	public static Set<BioPAXElement> runCommonStreamWithPOI(
 		Set<BioPAXElement> sourceSet,
 		Model model,
 		Direction direction,
-		int limit)
+		int limit,
+		Set<String> ubiqueIDs)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model);
+			graph = new GraphL3(model, ubiqueIDs);
 		}
 		else return null;
 

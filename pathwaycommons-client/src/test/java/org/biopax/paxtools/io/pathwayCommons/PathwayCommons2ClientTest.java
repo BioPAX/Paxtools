@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cpath.service.jaxb.SearchResponseType;
+import cpath.service.jaxb.SearchResponse;
 
 /**
  * INFO: when -DcPath2Url="http://...." system property is not set,
@@ -32,7 +32,7 @@ public class PathwayCommons2ClientTest {
 	public final void testGetTopPathways() {
 		PathwayCommons2Client client = new PathwayCommons2Client();
 		
-		SearchResponseType result = null;
+		SearchResponse result = null;
 		try {
 			result = client.getTopPathways();
 		} catch (Exception e) {
@@ -42,5 +42,4 @@ public class PathwayCommons2ClientTest {
 		assertNotNull(result);
 		assertFalse(result.getSearchHit().isEmpty());
 	}
-
 }

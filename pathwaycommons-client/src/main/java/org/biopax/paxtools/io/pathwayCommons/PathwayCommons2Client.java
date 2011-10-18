@@ -2,9 +2,9 @@ package org.biopax.paxtools.io.pathwayCommons;
 
 import cpath.service.Cmd;
 import cpath.service.CmdArgs;
-import cpath.service.jaxb.ErrorType;
+import cpath.service.jaxb.ErrorResponse;
+import cpath.service.jaxb.*;
 import cpath.service.jaxb.Help;
-import cpath.service.jaxb.SearchResponseType;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.pathwayCommons.util.BioPAXHttpMessageConverter;
@@ -79,13 +79,16 @@ public class PathwayCommons2Client
         httpMessageConverters.add(new BioPAXHttpMessageConverter(bioPAXIOHandler));
 
         Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        jaxb2Marshaller.setClassesToBeBound(Help.class, SearchResponseType.class, ErrorType.class);//, SingleErrorType.class);
+        jaxb2Marshaller.setClassesToBeBound(Help.class, Response.class, 
+        		SearchResponse.class, ErrorResponse.class,
+        		ServiceResponse.class, SearchHit.class, 
+        		TraverseEntry.class, TraverseResponse.class);
         httpMessageConverters.add(new MarshallingHttpMessageConverter(jaxb2Marshaller, jaxb2Marshaller));
 
         restTemplate.setMessageConverters(httpMessageConverters);
     }
 
-    private SearchResponseType findTemplate(Collection<String> keywords, boolean entitySearch) throws PathwayCommonsException {
+    private ServiceResponse findTemplate(Collection<String> keywords, boolean entitySearch) throws PathwayCommonsException {
         String url = (entitySearch ? endPointURL + Cmd.FIND_ENTITY + commandDelimiter : endPointURL + Cmd.FIND + commandDelimiter ) 
         			 + CmdArgs.q + "=" + joinStrings(keywords, ",") + "&"
                      + (getPage() > 0L ? CmdArgs.page + "=" + getPage() + "&" : "")
@@ -96,11 +99,11 @@ public class PathwayCommons2Client
         if(url.endsWith("&"))
             url = url.substring(0, url.length()-1);
 
-        SearchResponseType searchResponse = restTemplate.getForObject(url, SearchResponseType.class);
-        if(searchResponse.getError() != null) {
-            throw ErrorUtil.createException(searchResponse.getError());
+        ServiceResponse resp = restTemplate.getForObject(url, ServiceResponse.class);
+        if(resp.isError()) {
+            throw ErrorUtil.createException((ErrorResponse) resp.getResponse());
         }
-        return searchResponse;
+        return resp;
     }
 
     /**
@@ -113,7 +116,7 @@ public class PathwayCommons2Client
      * @return see http://www.pathwaycommons.org/pc2-demo/resources/schemas/SearchResponse.txt
      * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public SearchResponseType findEntity(String keyword) throws PathwayCommonsException {
+    public ServiceResponse findEntity(String keyword) throws PathwayCommonsException {
         return findEntity(Collections.singleton(keyword));
     }
 
@@ -127,7 +130,7 @@ public class PathwayCommons2Client
      * @return see http://www.pathwaycommons.org/pc2-demo/resources/schemas/SearchResponse.txt
      * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public SearchResponseType findEntity(Collection<String> keywords) throws PathwayCommonsException {
+    public ServiceResponse findEntity(Collection<String> keywords) throws PathwayCommonsException {
         return findTemplate(keywords, true);
     }
 
@@ -139,7 +142,7 @@ public class PathwayCommons2Client
      * @return see http://www.pathwaycommons.org/pc2-demo/resources/schemas/SearchResponse.txt
      * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public SearchResponseType find(String keyword) throws PathwayCommonsException {
+    public ServiceResponse find(String keyword) throws PathwayCommonsException {
         return find(Collections.singleton(keyword));
     }
 
@@ -151,7 +154,7 @@ public class PathwayCommons2Client
      * @return see http://www.pathwaycommons.org/pc2-demo/resources/schemas/SearchResponse.txt
      * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public SearchResponseType find(Collection<String> keywords) throws PathwayCommonsException {
+    public ServiceResponse find(Collection<String> keywords) throws PathwayCommonsException {
         return findTemplate(keywords, false);
     }
 
@@ -249,8 +252,8 @@ public class PathwayCommons2Client
      * 
      * @return
      */
-    public SearchResponseType getTopPathways() {
-    	return restTemplate.getForObject(endPointURL + Cmd.TOP_PATHWAYS, SearchResponseType.class);
+    public SearchResponse getTopPathways() {
+    	return restTemplate.getForObject(endPointURL + Cmd.TOP_PATHWAYS, SearchResponse.class);
     }    
     
     //TODO add 'traverse' (get properties from a path) method
