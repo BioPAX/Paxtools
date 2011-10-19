@@ -768,9 +768,28 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * 
 	 * @param normalizeNameSpaces
 	 */
-    public void normalizeNameSpaces(boolean normalizeNameSpaces) {
+    public void normalizeNameSpaces(boolean normalizeNameSpaces)
+    {
 		this.normalizeNameSpaces = normalizeNameSpaces;
 	}
+
+    /**
+     * @see #normalizeNameSpaces()
+     *
+     */
+    public boolean isNormalizeNameSpaces()
+    {
+        return this.normalizeNameSpaces;
+    }
+
+    /**
+     * @see #mergeDuplicates(boolean)
+     *
+     */
+    public boolean isMergeDuplicates()
+    {
+        return this.mergeDuplicates;
+    }
 
 }
 
