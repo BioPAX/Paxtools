@@ -2,9 +2,7 @@ package org.biopax.paxtools.io.pathwayCommons;
 
 import cpath.service.Cmd;
 import cpath.service.CmdArgs;
-import cpath.service.jaxb.ErrorResponse;
 import cpath.service.jaxb.*;
-import cpath.service.jaxb.Help;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.pathwayCommons.util.BioPAXHttpMessageConverter;
@@ -22,6 +20,13 @@ import java.util.*;
  * Pathway Commons 2 (PC2) Client. Please see
  *      http://www.pathwaycommons.org/pc2-demo/
  * for more information on the PC2 WEB API.
+ * 
+ * For "/get" and "/graph" queries, this client 
+ * returns data in BioPAX L3 format only (or - error).
+ * But BioPAX can be converted to other formats on the client side
+ * (e.g., using converters provided by other Paxtools modules)
+ * 
+ * TODO shall we here support other output formats that '/get','/graph' can return? 
  */
 public class PathwayCommons2Client
 {
@@ -31,12 +36,12 @@ public class PathwayCommons2Client
 	
 	private String endPointURL;
 	private Integer page = 0;
-    private String outputFormat = "biopax"; //TODO use cpath.service.OutputFormat; add setter/getter
     private Integer graphQueryLimit = 1;
     private Collection<String> organisms = new HashSet<String>();
     private Collection<String> dataSources = new HashSet<String>();
     private String type = null;
     private RestTemplate restTemplate;
+    private String path = null;
 
     /**
      * Default constructor, initializes the class with
@@ -68,7 +73,8 @@ public class PathwayCommons2Client
      * @param restTemplate REST Template for making HTTP calls
      * @param bioPAXIOHandler BioPAXIOHandler for reading BioPAX Models
      */
-    public PathwayCommons2Client(RestTemplate restTemplate, BioPAXIOHandler bioPAXIOHandler) {
+    public PathwayCommons2Client(RestTemplate restTemplate, BioPAXIOHandler bioPAXIOHandler) 
+    {
         this.restTemplate = restTemplate;
 
         // set the service URL
@@ -79,25 +85,26 @@ public class PathwayCommons2Client
         httpMessageConverters.add(new BioPAXHttpMessageConverter(bioPAXIOHandler));
 
         Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        jaxb2Marshaller.setClassesToBeBound(Help.class, Response.class, 
-        		SearchResponse.class, ErrorResponse.class,
-        		ServiceResponse.class, SearchHit.class, 
-        		TraverseEntry.class, TraverseResponse.class);
+        jaxb2Marshaller.setClassesToBeBound(Help.class, ErrorResponse.class,
+        		ServiceResponse.class, Response.class, 
+        		SearchResponse.class, SearchHit.class, 
+        		TraverseEntry.class, TraverseResponse.class
+        );
         httpMessageConverters.add(new MarshallingHttpMessageConverter(jaxb2Marshaller, jaxb2Marshaller));
-
+        
         restTemplate.setMessageConverters(httpMessageConverters);
     }
 
-    private ServiceResponse findTemplate(Collection<String> keywords, boolean entitySearch) throws PathwayCommonsException {
-        String url = (entitySearch ? endPointURL + Cmd.FIND_ENTITY + commandDelimiter : endPointURL + Cmd.FIND + commandDelimiter ) 
-        			 + CmdArgs.q + "=" + joinStrings(keywords, ",") + "&"
-                     + (getPage() > 0L ? CmdArgs.page + "=" + getPage() + "&" : "")
-                     + (getDataSources().isEmpty() ? "" : CmdArgs.datasource + "=" + joinStrings(getDataSources(), ",") + "&")
-                     + (getOrganisms().isEmpty() ? "" : CmdArgs.organism + "=" + joinStrings(getOrganisms(), ",") + "&")
-                     + (getType() != null ? CmdArgs.type + "=" + getType() : "");
-
-        if(url.endsWith("&"))
-            url = url.substring(0, url.length()-1);
+    private ServiceResponse findTemplate(Collection<String> keywords, boolean entitySearch) 
+    		throws PathwayCommonsException 
+    {
+        String url = endPointURL +
+        	(entitySearch ? Cmd.FIND_ENTITY : Cmd.FIND ) + commandDelimiter 
+        	+ CmdArgs.q + "=" + join("", keywords, ",")
+            + (getPage() > 0 ? "&" + CmdArgs.page + "=" + getPage() : "")
+            + (getDataSources().isEmpty() ? "" : "&" + join(CmdArgs.datasource + "=", getDataSources(), "&"))
+            + (getOrganisms().isEmpty() ? "" : "&" + join(CmdArgs.organism + "=", getOrganisms(), "&"))
+            + (getType() != null ? "&" + CmdArgs.type + "=" + getType() : "");
 
         ServiceResponse resp = restTemplate.getForObject(url, ServiceResponse.class);
         if(resp.isError()) {
@@ -166,9 +173,8 @@ public class PathwayCommons2Client
      *
      * @param id a BioPAX element ID
      * @return BioPAX model containing the requested element
-     * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public Model get(String id) throws PathwayCommonsException {
+    public Model get(String id) {
         return get(Collections.singleton(id));
     }
 
@@ -180,11 +186,10 @@ public class PathwayCommons2Client
      *
      * @param ids a set of BioPAX element IDs
      * @return BioPAX model containing the requested element
-     * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public Model get(Collection<String> ids) throws PathwayCommonsException {
+    public Model get(Collection<String> ids) {
         String url = endPointURL + Cmd.GET + commandDelimiter 
-        		+ CmdArgs.uri + "=" + joinStrings(ids, ",");
+        	+ join(CmdArgs.uri + "=" , ids, "&");
         return restTemplate.getForObject(url, Model.class);
     }
 
@@ -195,30 +200,29 @@ public class PathwayCommons2Client
      *
      * @param sourceSet set of xrefs, entity references, or physical entities
      * @return a BioPAX model that contains the path(s).
-     * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public Model getPathsBetween(Collection<String> sourceSet) throws PathwayCommonsException {
+    public Model getPathsBetween(Collection<String> sourceSet) 
+    {
         String url = endPointURL + Cmd.GRAPH + commandDelimiter + Cmd.GRAPH + "=pathsbetween&"
-                        + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
-                        + CmdArgs.limit + "=" + graphQueryLimit + "&"
-                        + CmdArgs.format + "=" + outputFormat;
+                        + join(CmdArgs.source + "=", sourceSet, "&") + "&"
+                        + CmdArgs.limit + "=" + graphQueryLimit;
 
         return restTemplate.getForObject(url, Model.class);
     }
 
+    //TODO implement public Model getPOI(Collection<String> sourceSet, Collection<String> targetSet)  ??
+    
     /**
      * Searches directed paths from and/or to the given source set of entities, in the specified search limit.
      * See http://www.pathwaycommons.org/pc2-demo/#graph
      *
      * @param sourceSet Set of source physical entities
      * @return BioPAX model representing the neighborhood.
-     * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public Model getNeighborhood(Collection<String> sourceSet) throws PathwayCommonsException {
+    public Model getNeighborhood(Collection<String> sourceSet) {
         String url = endPointURL + Cmd.GRAPH + commandDelimiter + Cmd.GRAPH + "=neighborhood&"
-                        + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
-                        + CmdArgs.limit + "=" + graphQueryLimit + "&"
-                        + CmdArgs.format + "=" + outputFormat;
+                        + join(CmdArgs.source + "=", sourceSet, "&") + "&"
+                        + CmdArgs.limit + "=" + graphQueryLimit;
 
         return restTemplate.getForObject(url, Model.class);
     }
@@ -233,14 +237,14 @@ public class PathwayCommons2Client
      * @param sourceSet set of physical entities
      * @param direction upstream or downstream
      * @return a BioPAX model that contains the common stream
-     * @throws PathwayCommonsException when the WEB API gives an error
      */
-    public Model getCommonStream(Collection<String> sourceSet, STREAM_DIRECTION direction) throws PathwayCommonsException {
-        String url = endPointURL + Cmd.GRAPH + commandDelimiter + Cmd.GRAPH + "=commonstream&"
-                        + CmdArgs.source + "=" + joinStrings(sourceSet, ",") + "&"
-                        + CmdArgs.direction + "=" + direction + "&"
-                        + CmdArgs.limit + "=" + graphQueryLimit + "&"
-                        + CmdArgs.format + "=" + outputFormat;
+    public Model getCommonStream(Collection<String> sourceSet, STREAM_DIRECTION direction) 
+    {
+        String url = endPointURL + Cmd.GRAPH + commandDelimiter 
+        	+ CmdArgs.kind + "=commonstream&"
+            + join(CmdArgs.source + "=", sourceSet, "&") + "&"
+            + CmdArgs.direction + "=" + direction + "&"
+            + CmdArgs.limit + "=" + graphQueryLimit;
 
         return restTemplate.getForObject(url, Model.class);
     }
@@ -253,20 +257,40 @@ public class PathwayCommons2Client
      * @return
      */
     public SearchResponse getTopPathways() {
-    	return restTemplate.getForObject(endPointURL + Cmd.TOP_PATHWAYS, SearchResponse.class);
+    	return restTemplate.getForObject(endPointURL 
+    		+ Cmd.TOP_PATHWAYS, SearchResponse.class);
     }    
     
-    //TODO add 'traverse' (get properties from a path) method
+    public ServiceResponse traverse(Collection<String> uris) {
+        String url = endPointURL + Cmd.GET + commandDelimiter 
+        		+ join(CmdArgs.uri + "=", uris, "&")
+        		+ "&" + CmdArgs.path + "=" + path;
+        
+        return restTemplate.getForObject(url, ServiceResponse.class);
+    }
     
-    private String joinStrings(Collection strings, String delimiter) {
-        String finalString = "";
+    
+    /**
+     * Can generate stings like 
+     * "prefix=strings[1]&prefix=strings[2]..."
+     * (if the delimiter is '&')
+     * 
+     * @param prefix
+     * @param strings
+     * @param delimiter
+     * @return
+     */
+    private String join(String prefix, Collection<String> strings, String delimiter) {
+        StringBuffer finalString = new StringBuffer();
 
-        for(Object s: strings)
-            finalString += s + delimiter;
+        for(Object s: strings) {
+            finalString.append(prefix).append(s).append(delimiter);
+        }
 
-        return finalString.substring(0, finalString.length() - delimiter.length());
+        return finalString.toString();
     }
 
+    
     /**
      * The WEB Service API prefix. Default is http://www.pathwaycommons.org/pc2/
      * @return the end point URL as a string
@@ -304,7 +328,10 @@ public class PathwayCommons2Client
      * @param page page number
      */
     public void setPage(Integer page) {
-        this.page = page;
+    	if(page >= 0)
+    		this.page = page;
+    	else 
+    		throw new IllegalArgumentException("Negative page numbers are not supported!");
     }
 
     /**
@@ -456,4 +483,12 @@ public class PathwayCommons2Client
         }
     }
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+    
 }

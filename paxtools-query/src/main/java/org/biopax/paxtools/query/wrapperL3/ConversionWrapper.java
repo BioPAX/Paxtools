@@ -34,7 +34,6 @@ public class ConversionWrapper extends AbstractNode
 		return POSITIVE;
 	}
 
-	@Override
 	public boolean isUbique()
 	{
 		return false;

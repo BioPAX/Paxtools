@@ -34,7 +34,6 @@ public class ControlWrapper extends AbstractNode
 		return sign;
 	}
 
-	@Override
 	public boolean isUbique()
 	{
 		return false;
