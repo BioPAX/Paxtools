@@ -17,6 +17,17 @@ import java.util.*;
  */
 public class QueryExecuter
 {
+    /**
+     * @see #runNeighborhood(java.util.Set, org.biopax.paxtools.model.Model, int, org.biopax.paxtools.query.algorithm.Direction)
+     */
+	public static Set<BioPAXElement> runNeighborhood(
+		Set<BioPAXElement> sourceSet,
+		Model model,
+		int limit,
+		Direction direction)
+	{
+        return runNeighborhood(sourceSet, model, limit, direction, null);
+    }
 	/**
 	 * Gets neighborhood of the source set.
 	 *
@@ -49,6 +60,15 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
+    /**
+     * @see #runPathsBetween(java.util.Set, org.biopax.paxtools.model.Model, int)
+     *
+     */
+    public static Set<BioPAXElement> runPathsBetween(Set<BioPAXElement> sourceSet, Model model, int limit)
+	{
+        return runPathsBetween(sourceSet, model, limit, null);
+    }
+
 	/**
 	 * Gets the graph constructed by the paths between the given seed nodes. Does not get paths
 	 * between physical entities that belong the same entity reference.
@@ -78,6 +98,17 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
+    /**
+     * @see #runGOI(java.util.Set, org.biopax.paxtools.model.Model, int)
+     */
+    public static Set<BioPAXElement> runGOI(
+		Set<BioPAXElement> sourceSet,
+		Model model,
+		int limit)
+	{
+        return runGOI(sourceSet, model, limit, null);
+    }
+
 	/**
 	 * Gets paths between the seed nodes.
 	 * @param sourceSet Seed to the query
@@ -95,6 +126,19 @@ public class QueryExecuter
 		return runPOI(sourceSet, sourceSet, model, LimitType.NORMAL, limit, ubiqueIDs);
 	}
 
+    /**
+     * @see #runPOI(java.util.Set, java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.LimitType, int)
+     *
+     */
+    public static Set<BioPAXElement> runPOI(
+		Set<BioPAXElement> sourceSet,
+		Set<BioPAXElement> targetSet,
+		Model model,
+		LimitType limitType,
+		int limit)
+	{
+        return runPOI(sourceSet, targetSet, model, limitType, limit, null);
+    }
 	/**
 	 * Gets paths the graph composed of the paths from a source node, and ends at a target node.
 	 * @param sourceSet Seeds for start points of paths
@@ -129,6 +173,18 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
+    /**
+     * @see #runCommonStream(java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.Direction, int)
+     */
+    public static Set<BioPAXElement> runCommonStream(
+		Set<BioPAXElement> sourceSet,
+		Model model,
+		Direction direction,
+		int limit)
+	{
+        return runCommonStream(sourceSet, model, direction, limit, null);
+
+    }
 	/**
 	 * Gets the elements in the common upstream or downstream of the seed
 	 * @param sourceSet Seed to the query
