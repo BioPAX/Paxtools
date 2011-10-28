@@ -217,6 +217,19 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
+    /**
+     * @see #runCommonStreamWithPOI(java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.Direction, int, java.util.Set)
+     *
+     */
+    public static Set<BioPAXElement> runCommonStreamWithPOI(
+        Set<BioPAXElement> sourceSet,
+        Model model,
+        Direction direction,
+        int limit)
+    {
+        return runCommonStream(sourceSet, model, direction, limit);
+    }
+
 	/**
 	 * First finds the common stream, then completes it with the paths between seed and common
 	 * stream.
