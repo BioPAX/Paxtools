@@ -1,5 +1,6 @@
 package org.biopax.paxtools.examples;
 
+import cpath.service.jaxb.ErrorResponse;
 import cpath.service.jaxb.SearchHit;
 import cpath.service.jaxb.SearchResponse;
 import cpath.service.jaxb.ServiceResponse;
@@ -57,14 +58,14 @@ public class ProteinAnalyzer
   {
    // Search PC2 for the given protein name
    ServiceResponse serviceResponse = pc2.find(protein);
-   if (serviceResponse.isError() || serviceResponse.isEmpty())
+   if (serviceResponse instanceof ErrorResponse || serviceResponse.isEmpty())
    {
     System.err.println("No results for protein:" + protein);
     System.exit(-1);
    }
 
    // Collect all ids associated to this search
-   SearchResponse searchResponse = (SearchResponse) serviceResponse.getResponse();
+   SearchResponse searchResponse = (SearchResponse) serviceResponse;
    Set<String> ids = new HashSet<String>();
    for (SearchHit searchHit : searchResponse.getSearchHit())
    {

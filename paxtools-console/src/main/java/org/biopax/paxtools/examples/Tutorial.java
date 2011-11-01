@@ -1,6 +1,6 @@
 package org.biopax.paxtools.examples;
 
-import cpath.service.jaxb.Response;
+import cpath.service.jaxb.ErrorResponse;
 import cpath.service.jaxb.SearchHit;
 import cpath.service.jaxb.SearchResponse;
 import cpath.service.jaxb.ServiceResponse;
@@ -292,8 +292,8 @@ public class Tutorial
   HashSet<String> uris = new HashSet<String>();
   //For each search hit we got, get the uri for the resource at PC and add it
   // to the set
-  if(!serviceResponse.isError()) {
-	  SearchResponse result = (SearchResponse) serviceResponse.getResponse();
+  if(!(serviceResponse instanceof ErrorResponse)) {
+	  SearchResponse result = (SearchResponse) serviceResponse;
 	  for (SearchHit hit : result.getSearchHit())
 	  {
 		  uris.add(hit.getUri());
@@ -301,7 +301,7 @@ public class Tutorial
 	  //Create a model from this set of resources
 	  Model model = pc2.get(uris);
   } else {
-	  System.out.println(serviceResponse.getResponse().toString()); 
+	  System.out.println(serviceResponse.toString()); 
   }
  }
 

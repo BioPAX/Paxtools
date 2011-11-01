@@ -85,8 +85,8 @@ public class PathwayCommons2Client
         httpMessageConverters.add(new BioPAXHttpMessageConverter(bioPAXIOHandler));
 
         Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        jaxb2Marshaller.setClassesToBeBound(Help.class, ErrorResponse.class,
-        		ServiceResponse.class, Response.class, 
+        jaxb2Marshaller.setClassesToBeBound(Help.class, 
+        		ServiceResponse.class, ErrorResponse.class,
         		SearchResponse.class, SearchHit.class, 
         		TraverseEntry.class, TraverseResponse.class
         );
@@ -107,8 +107,8 @@ public class PathwayCommons2Client
             + (getType() != null ? "&" + CmdArgs.type + "=" + getType() : "");
 
         ServiceResponse resp = restTemplate.getForObject(url, ServiceResponse.class);
-        if(resp.isError()) {
-            throw ErrorUtil.createException((ErrorResponse) resp.getResponse());
+        if(resp instanceof ErrorResponse) {
+            throw ErrorUtil.createException((ErrorResponse) resp);
         }
         return resp;
     }
