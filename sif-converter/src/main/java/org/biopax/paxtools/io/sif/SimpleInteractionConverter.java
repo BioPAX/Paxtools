@@ -194,16 +194,19 @@ public class SimpleInteractionConverter
 			{
 				for (PathAccessor mediatorAccessor : mediatorAccessors)
 				{
+                    StringBuilder cell = new StringBuilder("\t");
+                    HashSet values = new HashSet();
+
 					for (BioPAXElement mediator : si.getMediators())
 					{
-						StringBuilder cell = new StringBuilder("\t");
 						if (mediatorAccessor.getDomain().isInstance(mediator))
 						{
-							cell.append(
-									valuesToString(mediatorAccessor.getValueFromBean(mediator)));
-						} else cell.append("not applicable");
-						writer.write(cell.toString());
+                            values.addAll(mediatorAccessor.getValueFromBean(mediator));
+						} else values.add("not applicable");
 					}
+
+                    cell.append(valuesToString(values));
+                    writer.write(cell.toString());
 				}
 			}
 			writer.write("\n");
