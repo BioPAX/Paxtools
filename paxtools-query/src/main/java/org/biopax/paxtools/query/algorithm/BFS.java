@@ -120,6 +120,14 @@ public class BFS
 
 	protected void processNode(Node current)
 	{
+		// Do not process the node if it is ubique
+
+		if (current.isUbique())
+		{
+			setColor(current, BLACK);
+			return;
+		}
+
 		// Process edges towards the direction
 
 		for (Edge edge : direction == Direction.DOWNSTREAM ?
