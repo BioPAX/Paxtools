@@ -2,11 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.biopax.paxtools</groupId>
-        <artifactId>paxtools</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
-    </parent>
+    <groupId>org.biopax.paxtools</groupId>
+    <version>4.0.0-SNAPSHOT</version>
     <artifactId>pathwaycommons-client</artifactId>
     <packaging>jar</packaging>
 
@@ -14,7 +11,50 @@
 		<spring.version>3.0.5.RELEASE</spring.version>
 	</properties>
 
-    <name>PaxTools Pathway Commons IO</name>
+    <name>Paxtools Pathway Commons IO</name>
+	
+	<profiles>
+		<profile>
+			<id>sourceforge</id>
+			<properties>
+				<biopax.site.url>
+					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/
+				</biopax.site.url>
+				<biopax.snapshot.url>
+					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots
+				</biopax.snapshot.url>
+				<biopax.release.url>
+					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases
+				</biopax.release.url>
+			</properties>
+		</profile>
+	</profiles>
+
+	<scm>
+		<connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
+		<developerConnection>
+			scm:hg:ssh://${scm.username}@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
+		</developerConnection>
+		<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
+	</scm>
+	
+	<distributionManagement>
+		<site>
+			<id>biopax.sf.net</id>
+			<name>BioPAX Sourceforge site</name>
+			<url>${biopax.site.url}/paxtools-${project.version}</url>
+		</site>
+		<snapshotRepository>
+			<id>biopax.snapshots</id>
+			<name>BioPAX Snapshots Repository</name>
+			<url>${biopax.snapshot.url}</url>
+		</snapshotRepository>
+		<repository>
+			<id>biopax.releases</id>
+			<name>BioPAX Releases Repository</name>
+			<url>${biopax.release.url}</url>
+		</repository>
+	</distributionManagement>
 
     <dependencies>
         <dependency>
@@ -48,6 +88,31 @@
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
+	
+	<repositories>
+		<repository>
+			<id>biopax.snapshots</id>
+			<name>BioPAX Snapshots Repository at Sourceforge</name>
+			<url>http://biopax.sourceforge.net/m2repo/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>biopax.releases</id>
+			<name>BioPAX Repository at Sourceforge</name>
+			<url>http://biopax.sourceforge.net/m2repo/releases/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
     
 </project>
