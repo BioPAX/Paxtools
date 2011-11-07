@@ -6,9 +6,9 @@ import org.biopax.paxtools.model.Model;
 
 /**
  * "Clones" a BioPAX element -
- * using direct properties/children only 
+ * using direct properties/children only
  * (shallow copy)
- * 
+ *
  * Compare to {@link Fetcher}
  *
  * @see org.biopax.paxtools.controller.Visitor

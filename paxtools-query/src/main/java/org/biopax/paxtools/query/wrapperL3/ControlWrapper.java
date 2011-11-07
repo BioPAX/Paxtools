@@ -34,6 +34,11 @@ public class ControlWrapper extends AbstractNode
 		return sign;
 	}
 
+	public boolean isUbique()
+	{
+		return false;
+	}
+
 	public String getKey()
 	{
 		return ctrl.getRDFId();

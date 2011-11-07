@@ -1,6 +1,4 @@
 package org.biopax.paxtools;
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
@@ -42,7 +40,10 @@ public class PaxtoolsMain {
         if (argv.length == 0) {
             help();
         } else {
-            Command.valueOf(argv[0]).run(argv);
+	        String command = argv[0];
+	        if(command.startsWith("--"))  //accept both w and w/out --
+		        command = command.substring(2);
+	        Command.valueOf(command).run(argv);
         }
     }
 
@@ -125,7 +126,7 @@ public class PaxtoolsMain {
 
         // execute the 'nearest neighborhood' query
         Set<BioPAXElement> result = QueryExecuter.runNeighborhood(
-			elements, model, 1, Direction.BOTHSTREAM);
+			elements, model, 1, Direction.BOTHSTREAM, null);
 
         // auto-complete/clone the results in a new model
         // (this also cuts some less important edges, right?..)
@@ -171,7 +172,7 @@ public class PaxtoolsMain {
      * Checks files by the online BioPAX validator 
      * using the validator client.
      * 
-     * @see http://www.biopax.org/biopax-validator/ws.html
+     * @see <a href="http://www.biopax.org/biopax-validator/ws.html">BioPAX Validator Webservice</a>
      * 
      * @param argv
      * @throws IOException

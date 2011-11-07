@@ -24,7 +24,6 @@ public class CycleBreaker extends BFS
 		this.limit = limit;
 	}
 
-
 	public void breakCycles()
 	{
 		for (GraphObject go : new ArrayList<GraphObject>(result))

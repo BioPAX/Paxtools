@@ -1,8 +1,12 @@
 package org.biopax.paxtools.examples;
 
+import cpath.service.jaxb.SearchHitType;
+import cpath.service.jaxb.SearchResponseType;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.io.pathwayCommons.PathwayCommons2Client;
+import org.biopax.paxtools.io.pathwayCommons.util.PathwayCommonsException;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -12,8 +16,11 @@ import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.util.Filter;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -97,8 +104,7 @@ public class Tutorial
      }
     };
     this.traverser = new Traverser(editorMap, this, nextStepFilter);
-   }
-   else this.traverser =  new Traverser(editorMap, this);
+   } else this.traverser = new Traverser(editorMap, this);
   }
 
   //The visitor will add all elements that are reached into the new model,
@@ -180,8 +186,25 @@ public class Tutorial
   }
  }
 
- public Set access2(Complex complex)
+ @SuppressWarnings({"unchecked"}) public Set access2(Complex complex)
  {
+  Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
+
+  //  Set up the Path Accessor
+  PathAccessor pathAccessor = new PathAccessor(
+    "ProteinReference/xref:UnificationXref", BioPAXLevel.L3);
+  // Iterate through all proteins in the model
+  for (Protein currentProtein : model.getObjects(Protein.class))
+  {
+   Set<Xref> unificationXrefs = pathAccessor.getValueFromBean(currentProtein);
+   for (Xref currentRef : unificationXrefs)
+   {
+    System.out.println(
+      "Unification XRef:  " + currentRef.getDb() + ": " + currentRef.getId());
+   }
+  }
+  PathAccessor accessor = new PathAccessor(
+    "Complex/component*/EntityReference/xref:UnificationXref", BioPAXLevel.L3);
   return new PathAccessor(
     "Complex/component*/EntityReference/xref:UnificationXref",
     BioPAXLevel.L3).getValueFromBean(complex);
@@ -203,12 +226,80 @@ public class Tutorial
 
 
   Set<BioPAXElement> result = QueryExecuter.runNeighborhood(sourceSet, model,
-                                                            limit, direction);
+                                                            limit, direction, null);
 
   Completer c = new Completer(SimpleEditorMap.get(BioPAXLevel.L3));
   result = c.complete(result, model);
  }
 
+
+ public void simpleTraverse() throws FileNotFoundException
+ {
+  //  Load a sample DNA Repair BioPAX File via Simple IO Handler
+  FileInputStream fin = new FileInputStream("test_data/dna_repair.owl");
+  BioPAXIOHandler handler = new SimpleIOHandler();
+  Model model = handler.convertFromOWL(fin);
+
+  // Iterate through all BioPAX Elements and Display RDF ID and Class Name
+  Set<BioPAXElement> elementSet = model.getObjects();
+  for (BioPAXElement currentElement : elementSet)
+  {
+   String rdfId = currentElement.getRDFId();
+   String className = currentElement.getClass().getName();
+   System.out.println("Element:  " + rdfId + ": " + className);
+  }
+  //  Get Proteins Only
+  Set<Protein> proteinSet = model.getObjects(Protein.class);
+  for (Protein currentProtein : proteinSet)
+  {
+   System.out.println("Protein:  " + currentProtein.getName() + ": " +
+                      currentProtein.getDisplayName());
+  }
+
+  //  Iterate through all proteins in the model
+  proteinSet = model.getObjects(Protein.class);
+
+  for (Protein currentProtein : proteinSet)
+  {
+   EntityReference entityReference = currentProtein.getEntityReference();
+   if (entityReference != null)
+   {
+    Set<Xref> xrefSet = entityReference.getXref();
+    for (Xref currentRef : xrefSet)
+    {
+     if (currentRef instanceof UnificationXref)
+     {
+      System.out.println(
+        "Unification XRef:  " + currentRef.getDb() + ": " + currentRef.getId
+          ());
+     }
+    }
+   }
+  }
+ }
+
+ public void accessPC() throws PathwayCommonsException
+ {
+  PathwayCommons2Client pc2 = new PathwayCommons2Client();
+  pc2.setOrganisms(Collections.singleton("homo sapiens"));
+  pc2.setType("Control");
+
+  //Let's search for anything that starts with BRC
+  SearchResponseType searchResponseType = pc2.find("BRC*");
+  HashSet<String> uris = new HashSet<String>();
+  //For each search hit we got, get the uri for the resource at PC and add it
+  // to the set
+  if(!searchResponseType.getSearchHit().isEmpty()) {
+	  for (SearchHitType hit : searchResponseType.getSearchHit())
+	  {
+		  uris.add(hit.getUri());
+	  }
+	  //Create a model from this set of resources
+      Model model = pc2.get(uris);
+  } else {
+	  System.out.println(searchResponseType.toString());
+  }
+ }
 
  public void highlightWorkaround()
  {

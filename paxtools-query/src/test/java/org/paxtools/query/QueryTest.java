@@ -42,7 +42,7 @@ public class QueryTest
 			"D-1");
 
 //		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(set, model, 2, true, true);
-		Set<BioPAXElement> result = QueryExecuter.runGOI(set, model, 10);
+		Set<BioPAXElement> result = QueryExecuter.runGOI(set, model, 10, null);
 		
 		Model clonedModel = excise(model, result);
 		handler.convertToOWL(clonedModel, new FileOutputStream(DIR + "temp.owl"));
@@ -124,7 +124,8 @@ public class QueryTest
 
 //		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(source, model, 1, Direction.BOTHSTREAM);
 //		Set<BioPAXElement> result = QueryExecuter.runGOI(source, model, 3);
-		Set<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(source, model, Direction.DOWNSTREAM, 3);
+		Set<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(
+			source, model, Direction.DOWNSTREAM, 3, null);
 
 		secs = (System.currentTimeMillis() - time);
 

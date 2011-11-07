@@ -6,6 +6,7 @@ import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level2.interaction;
 import org.biopax.paxtools.model.level2.physicalEntity;
 import org.biopax.paxtools.model.level3.EntityReference;
 
@@ -29,6 +30,8 @@ public class SimpleInteractionConverter
 
 	public static final String REDUCE_COMPLEXES = "REDUCE_COMPLEXES";
 
+	private Set<String> blackList;
+
 	/**
 	 * @param rules interaction rule set to be used in the conversion
 	 */
@@ -43,7 +46,18 @@ public class SimpleInteractionConverter
 	 */
 	public SimpleInteractionConverter(Map options, InteractionRule... rules)
 	{
+		this(options, null, rules);
+	}
+
+	/**
+	 * @param options options to be used during the conversion process
+	 * @param blackList ids of molecules that we do not want them in SIF
+	 * @param rules interaction rule set to be used in the conversion
+	 */
+	public SimpleInteractionConverter(Map options, Set<String> blackList, InteractionRule... rules)
+	{
 		this.options = options;
+		this.blackList = blackList;
 		this.rules = rules;
 	}
 
@@ -114,8 +128,29 @@ public class SimpleInteractionConverter
 					}
 				}
 			}
+
+			if (blackList != null)
+			{
+				removeInteractionsWithBlackListMolecules(interactions, blackList);
+			}
+
 			return interactions;
 		} else return null;
+	}
+
+	protected void removeInteractionsWithBlackListMolecules(Set<SimpleInteraction> interactions,
+		Set<String> blackList)
+	{
+		Iterator<SimpleInteraction> iter = interactions.iterator();
+		while (iter.hasNext())
+		{
+			SimpleInteraction inter =  iter.next();
+			if (blackList.contains(inter.getSource().getRDFId()) ||
+				blackList.contains(inter.getTarget().getRDFId()))
+			{
+				iter.remove();
+			}
+		}
 	}
 
 	/**
@@ -194,16 +229,19 @@ public class SimpleInteractionConverter
 			{
 				for (PathAccessor mediatorAccessor : mediatorAccessors)
 				{
+                    StringBuilder cell = new StringBuilder("\t");
+                    HashSet values = new HashSet();
+
 					for (BioPAXElement mediator : si.getMediators())
 					{
-						StringBuilder cell = new StringBuilder("\t");
 						if (mediatorAccessor.getDomain().isInstance(mediator))
 						{
-							cell.append(
-									valuesToString(mediatorAccessor.getValueFromBean(mediator)));
-						} else cell.append("not applicable");
-						writer.write(cell.toString());
+                            values.addAll(mediatorAccessor.getValueFromBean(mediator));
+						} else values.add("not applicable");
 					}
+
+                    cell.append(valuesToString(values));
+                    writer.write(cell.toString());
 				}
 			}
 			writer.write("\n");

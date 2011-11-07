@@ -34,6 +34,11 @@ public class ConversionWrapper extends AbstractNode
 		return POSITIVE;
 	}
 
+	public boolean isUbique()
+	{
+		return false;
+	}
+
 	public boolean getDirection()
 	{
 		return direction;

@@ -91,9 +91,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	}
 
 	/**
-	 * Answers whether two BioPAX objects that implement 
-	 * @see XReferrable 
-	 * interface have at least one UnificationXref in common
+	 * This method returns true if two {@link XReferrable} objects have at least one UnificationXref in common
 	 * or neither have any.
 	 * 
 	 * @param xReferrable

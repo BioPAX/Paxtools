@@ -610,7 +610,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
         {
             String type = findLiteralType(editor);
             String valString = StringEscapeUtils.escapeXml(value.toString());
-            out.write(" rdf:datatype = \"xsd:" + type + "\">" + valString +
+            out.write(" rdf:datatype = \""+ xsd + type + "\">" + valString +
                       "</" + prop + ">");
         }
     }
@@ -768,9 +768,28 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * 
 	 * @param normalizeNameSpaces
 	 */
-    public void normalizeNameSpaces(boolean normalizeNameSpaces) {
+    public void normalizeNameSpaces(boolean normalizeNameSpaces)
+    {
 		this.normalizeNameSpaces = normalizeNameSpaces;
 	}
+
+    /**
+     * @see #normalizeNameSpaces()
+     *
+     */
+    public boolean isNormalizeNameSpaces()
+    {
+        return this.normalizeNameSpaces;
+    }
+
+    /**
+     * @see #mergeDuplicates(boolean)
+     *
+     */
+    public boolean isMergeDuplicates()
+    {
+        return this.mergeDuplicates;
+    }
 
 }
 

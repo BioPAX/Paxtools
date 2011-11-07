@@ -1,6 +1,6 @@
 package org.biopax.paxtools.io.pathwayCommons.util;
 
-import cpath.service.jaxb.ErrorType;
+import cpath.service.jaxb.ErrorResponse;
 
 import java.io.IOException;
 
@@ -8,14 +8,14 @@ import java.io.IOException;
  * See http://www.pathwaycommons.org/pc2-demo/#errors
  */
 public class PathwayCommonsException extends IOException {
-    private ErrorType error;
+    private ErrorResponse error;
 
-    public PathwayCommonsException(ErrorType error) {
+    public PathwayCommonsException(ErrorResponse error) {
         super(error.toString());
         this.error = error;
     }
 
-    public ErrorType getError() {
+    public ErrorResponse getError() {
         return error;
     }
 }

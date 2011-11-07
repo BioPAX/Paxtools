@@ -29,6 +29,7 @@ public class SimpleIOHandlerTest
 	public final void testReadWriteL2() throws IOException
 	{
 		BioPAXIOHandler io = new SimpleIOHandler();
+		io.fixReusedPEPs(false);
 		Model model = getL2Model(io);
 		assertNotNull(model);
 		assertFalse(model.getObjects().isEmpty());
@@ -228,4 +229,53 @@ public class SimpleIOHandlerTest
 		model.setXmlBase(null);
 		io.convertToOWL(model, out);
 	}
+
+    @Test
+    public final void testReadWriteReadL3() throws IOException
+    {
+        SimpleIOHandler io = new SimpleIOHandler();
+
+        // No flags, just check
+        readWriteReadCheckModel(io);
+
+        // Let's use different flags and do the same
+        io.mergeDuplicates(!io.isMergeDuplicates());
+        readWriteReadCheckModel(io);
+
+        // One more?
+        io.mergeDuplicates(!io.isMergeDuplicates());
+        io.normalizeNameSpaces(!io.isNormalizeNameSpaces());
+        readWriteReadCheckModel(io);
+
+        // And one more
+        io.normalizeNameSpaces(!io.isNormalizeNameSpaces());
+        io.fixReusedPEPs(!io.isFixReusedPEPs());
+        readWriteReadCheckModel(io);
+    }
+
+    public void readWriteReadCheckModel(SimpleIOHandler io) throws IOException
+    {
+        // Read
+		Model model = getL3Model(io);
+
+        // Write
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        io.convertToOWL(model, outputStream);
+        outputStream.flush();
+
+        // Read
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+        outputStream.close();
+        Model newModel = io.convertFromOWL(inputStream);
+        assertTrue(newModel != null);
+        inputStream.close();
+
+        // Let's do a simple check to see if whether new model is OK
+        for(BioPAXElement bpe: model.getObjects())
+        {
+            assertTrue(newModel.containsID(bpe.getRDFId()));
+        }
+
+
+    }
 }

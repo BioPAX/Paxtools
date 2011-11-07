@@ -54,12 +54,12 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 		}
 		for (PhysicalEntity pe : A.getEntityReferenceOf())
 		{
-			processPhysicalEntity(interactionSet, A, pe);
+			processPhysicalEntity(interactionSet, A, pe, options);
 		}
 	}
 
 	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A,
-		PhysicalEntity pe)
+		PhysicalEntity pe, Map options)
 	{
 		// Iterate over controls of A
 		for (Interaction inter : pe.getParticipantOf())
@@ -69,15 +69,15 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 			Control ctrl = (Control) inter;
 
 			// Iterate other controllers
-			iterateControllers(ctrl, A, interactionSet);
+			iterateControllers(ctrl, A, interactionSet, options);
 			// Iterate upward controls
-			proceedUpwards(ctrl, A, interactionSet);
+			proceedUpwards(ctrl, A, interactionSet, options);
 			// Iterate downward controls
-			proceedDownwards(ctrl, A, interactionSet);
+			proceedDownwards(ctrl, A, interactionSet, options);
 		}
 		for (Complex comp : pe.getComponentOf())
 		{
-			processPhysicalEntity(interactionSet, A, comp);
+			processPhysicalEntity(interactionSet, A, comp, options);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 	 * @param interactionSet set to collect inferred interactions
 	 */
 	private void proceedDownwards(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet)
+		Set<SimpleInteraction> interactionSet, Map options)
 	{
 		// Iterate each controlled process
 		for (Process prcss : ctrl.getControlled())
@@ -98,7 +98,7 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 			// Search downwards of controls
 			if (prcss instanceof Control)
 			{
-				searchDownwards((Control) prcss, A, interactionSet);
+				searchDownwards((Control) prcss, A, interactionSet, options);
 			}
 
 			// Search other upwards control trees of all processes (controls and conversions)
@@ -106,7 +106,7 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 			{
 				if (cnt != ctrl) // Do not go where we came from
 				{
-					searchUpwards(cnt, A, interactionSet);
+					searchUpwards(cnt, A, interactionSet, options);
 				}
 			}
 		}
@@ -121,11 +121,11 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 	 * @param interactionSet set to collect inferred interactions
 	 */
 	private void searchDownwards(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet)
+		Set<SimpleInteraction> interactionSet, Map options)
 	{
 		// Search for rules
-		iterateControllers(ctrl, A, interactionSet);
-		proceedDownwards(ctrl, A, interactionSet);
+		iterateControllers(ctrl, A, interactionSet, options);
+		proceedDownwards(ctrl, A, interactionSet, options);
 	}
 
 	/**
@@ -137,10 +137,10 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 	 * @param interactionSet set to collect inferred rules
 	 */
 	private void searchUpwards(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet)
+		Set<SimpleInteraction> interactionSet, Map options)
 	{
-		iterateControllers(ctrl, A, interactionSet);
-		proceedUpwards(ctrl, A, interactionSet);
+		iterateControllers(ctrl, A, interactionSet, options);
+		proceedUpwards(ctrl, A, interactionSet, options);
 	}
 
 	/**
@@ -151,13 +151,13 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 	 * @param interactionSet set to collect inferred interactions
 	 */
 	private void iterateControllers(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet)
+		Set<SimpleInteraction> interactionSet, Map options)
 	{
 		for (Controller pe : ctrl.getController())
 		{
 			if (pe instanceof PhysicalEntity)
 			{
-				for (EntityReference B : collectEntityReferences((PhysicalEntity) pe))
+				for (EntityReference B : collectEntityReferences((PhysicalEntity) pe, options))
 				{
 					if (B != A)
 					{
@@ -176,11 +176,11 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 	 * @param interactionSet set to collect inferred interactions
 	 */
 	private void proceedUpwards(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet)
+		Set<SimpleInteraction> interactionSet, Map options)
 	{
 		for (Control cnt : ctrl.getControlledOf())
 		{
-			searchUpwards(cnt, A, interactionSet);
+			searchUpwards(cnt, A, interactionSet, options);
 		}
 	}
 

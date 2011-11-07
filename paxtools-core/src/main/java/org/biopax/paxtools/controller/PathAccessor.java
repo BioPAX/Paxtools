@@ -191,15 +191,15 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		} else {
 			return isSingleUnknown(value);
 		}
-		
+
 // was -
 //		return value == null || (value instanceof Set && ((Set) value).isEmpty());
-		
+
 	}
-	
+
 	private boolean isSingleUnknown(Object value) {
 		return value == null || BioPAXElement.UNKNOWN_DOUBLE.equals(value)
 				|| BioPAXElement.UNKNOWN_FLOAT.equals(value)
 				|| BioPAXElement.UNKNOWN_INT.equals(value);
-	}	
+	}
 }

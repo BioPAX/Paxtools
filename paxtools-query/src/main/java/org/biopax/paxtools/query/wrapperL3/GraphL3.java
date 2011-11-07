@@ -19,13 +19,20 @@ import java.util.*;
 public class GraphL3 extends AbstractGraph 
 {
 	private Model model;
+	private Set<String> ubiqueIDs;
 
 	protected final Log log = LogFactory.getLog(GraphL3.class);
 
-	public GraphL3(Model model)
+	public GraphL3(Model model, Set<String> ubiqueIDs)
 	{
 		assert model.getLevel() == BioPAXLevel.L3;
 		this.model = model;
+		setUbiqueIDs(ubiqueIDs);
+	}
+
+	public void setUbiqueIDs(Set<String> ubiqueIDs)
+	{
+		this.ubiqueIDs = ubiqueIDs;
 	}
 
 	@Override
@@ -33,7 +40,15 @@ public class GraphL3 extends AbstractGraph
 	{
 		if (obj instanceof PhysicalEntity)
 		{
-			return new PhysicalEntityWrapper((PhysicalEntity) obj, this);
+			PhysicalEntity pe = (PhysicalEntity) obj;
+			PhysicalEntityWrapper pew = new PhysicalEntityWrapper(pe, this);
+
+			if (ubiqueIDs != null && ubiqueIDs.contains(pe.getRDFId()))
+			{
+				pew.setUbique(true);
+			}
+
+			return pew;
 		}
 		else if (obj instanceof Conversion)
 		{

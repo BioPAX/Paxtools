@@ -28,11 +28,14 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 			BinaryInteractionType.INTERACTS_WITH, REACTS_WITH);
 
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference er, Model model, Map options)
+	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference er,
+		Model model, Map options)
 	{
-		boolean skipConversions = options.containsKey(REACTS_WITH) && options.get(REACTS_WITH).equals(false);
+		boolean skipConversions = options.containsKey(REACTS_WITH) &&
+			options.get(REACTS_WITH).equals(false);
 
-		boolean skipInteractions = options.containsKey(INTERACTS_WITH) && options.get(INTERACTS_WITH).equals(false);
+		boolean skipInteractions = options.containsKey(INTERACTS_WITH) &&
+			options.get(INTERACTS_WITH).equals(false);
 
 		// There is nothing to find if we are skipping both rules
 		if (skipConversions && skipInteractions)
@@ -42,12 +45,13 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 
 		for (PhysicalEntity pe : er.getEntityReferenceOf())
 		{
-			processPhysicalEntity(interactionSet, er, skipConversions, skipInteractions, pe);
+			processPhysicalEntity(interactionSet, er, skipConversions, skipInteractions, pe,
+				options);
 		}
 	}
 
 	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference er,
-	                                   boolean skipConversions, boolean skipInteractions, PhysicalEntity pe)
+		boolean skipConversions, boolean skipInteractions, PhysicalEntity pe, Map options)
 	{
 		for (Interaction interaction : pe.getParticipantOf())
 		{
@@ -73,21 +77,22 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 
 			for (Entity partic : interaction.getParticipant())
 			{
-				processParticipant(interactionSet, er, partic, type, interaction);
+				processParticipant(interactionSet, er, partic, type, interaction, options);
 			}
 		}
 		for (Complex comp : pe.getComponentOf())
 		{
-			processPhysicalEntity(interactionSet, er, skipConversions, skipInteractions, comp);
+			processPhysicalEntity(interactionSet, er, skipConversions, skipInteractions, comp,
+				options);
 		}
 	}
 
 	private void processParticipant(Set<SimpleInteraction> interactionSet, EntityReference er,
-		Entity entity,BinaryInteractionType type, Interaction interaction)
+		Entity entity,BinaryInteractionType type, Interaction interaction, Map options)
 	{
 		if (entity instanceof PhysicalEntity)
 		{
-			for (EntityReference er2 : collectEntityReferences((PhysicalEntity) entity))
+			for (EntityReference er2 : collectEntityReferences((PhysicalEntity) entity, options))
 			{
 				if (er != er2) 
 				{

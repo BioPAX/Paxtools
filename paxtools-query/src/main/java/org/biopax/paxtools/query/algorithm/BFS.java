@@ -120,6 +120,14 @@ public class BFS
 
 	protected void processNode(Node current)
 	{
+		// Do not process the node if it is ubique
+
+		if (current.isUbique())
+		{
+			setColor(current, BLACK);
+			return;
+		}
+
 		// Process edges towards the direction
 
 		for (Edge edge : direction == Direction.DOWNSTREAM ?
@@ -162,7 +170,8 @@ public class BFS
 				// Check if we need to stop traversing the neighbor, enqueue otherwise
 
 				boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
-					(!neigh.isBreadthNode() || getLabel(neigh) < limit);
+					(!neigh.isBreadthNode() || getLabel(neigh) < limit) &&
+					!neigh.isUbique();
 
 				if (further)
 				{
