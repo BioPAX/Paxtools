@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.hibernate.annotations.Target;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -44,7 +46,8 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 // -------------------------- OTHER METHODS --------------------------
 
 
-
+	@IndexedEmbedded(depth=1, targetElement=XrefImpl.class)
+	@Target(XrefImpl.class)
 	@ManyToMany(targetEntity = XrefImpl.class)
 	@JoinTable(name="xref")
 	public Set<Xref> getXref()
