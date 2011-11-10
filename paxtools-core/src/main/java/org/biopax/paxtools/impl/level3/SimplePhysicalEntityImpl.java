@@ -6,8 +6,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
-import org.hibernate.annotations.Target;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -25,14 +23,12 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	public SimplePhysicalEntityImpl() {
 	}
 	
-//	@IndexedEmbedded(targetElement=EntityReferenceImpl.class)
-//	@Target(EntityReferenceImpl.class)
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
-	public EntityReference getEntityReferenceX()
+	protected EntityReference getEntityReferenceX()
 	{
 		return entityReference;
 	}
-	public void setEntityReferenceX(EntityReference entityReference) {
+	protected void setEntityReferenceX(EntityReference entityReference) {
 		this.entityReference = entityReference;
 	}
 
