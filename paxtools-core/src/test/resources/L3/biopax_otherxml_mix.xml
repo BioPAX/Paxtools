@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:bp3="http://www.biopax.org/release/biopax-level3.owl#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:sbx3="http://vcell.org/sbpax3#"
+	xmlns:uome-core="http://www.sbpax.org/uome/core.owl#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:sabio="http://sabio.h-its.org/biopax#"
+	xmlns:uome-list="http://www.sbpax.org/uome/list.owl#">
+<owl:Ontology rdf:about="http://sabio.h-its.org/biopax">
+	<owl:imports rdf:resource="http://vcell.org/sbpax3"/>
+	<owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl"/>
+	<owl:imports rdf:resource="http://www.sbpax.org/uome/core.owl"/>
+	<owl:imports rdf:resource="http://www.sbpax.org/uome/list.owl"/>
+</owl:Ontology>
+<bp3:Catalysis rdf:about="catalysis1">
+	<sbx3:sbSubEntity rdf:resource="http://sabio.h-its.org/biopax#kineticLaw24490"/> 
+	<bp3:controlled rdf:resource="reaction1"/>
+	<sabio:foo rdf:resource="bar"/> 
+	<boo /> 
+	<bp3:displayName>Catalysis 1</bp3:displayName>
+</bp3:Catalysis>
+
+<bp3:Conversion rdf:about="reaction1">
+</bp3:Conversion>
+</rdf:RDF>
