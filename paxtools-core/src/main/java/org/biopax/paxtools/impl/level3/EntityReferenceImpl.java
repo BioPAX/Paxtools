@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.hibernate.search.annotations.ContainedIn;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -101,6 +102,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityFeature = entityFeature;
 	}
 
+//	@ContainedIn
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{

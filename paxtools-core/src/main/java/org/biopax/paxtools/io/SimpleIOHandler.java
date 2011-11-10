@@ -382,7 +382,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	private void processProperty(Model model, String ownerID) throws XMLStreamException
 	{
-		if (r.getNamespaceURI().equals(rdfs) && r.getLocalName().equals("comment"))
+		if (rdfs.equals(r.getNamespaceURI()) && "comment".equals(r.getLocalName()))
 		{
 			BioPAXElement paxElement = model.getByID(ownerID);
 			PropertyEditor commentor = getRDFCommentEditor(paxElement);
@@ -396,7 +396,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			         paxElement.getRDFId() + " text: " + text + ")");
 			gotoEndElement();
 		}
-		else if (r.getNamespaceURI().equals(bp))
+		else if (bp != null && bp.equals(r.getNamespaceURI()))
 		{
 			String property = r.getLocalName();
 			String resource = r.getAttributeValue(rdf, "resource");
@@ -451,6 +451,11 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			log.trace("setting = " + resource);
 			triples.add(new Triple(ownerID, resource, property));
 			propertyContext = false;
+		}
+		else {
+			log.trace("ignoring unknown element " + 
+				r.getNamespaceURI() + r.getLocalName());
+			gotoEndElement();
 		}
 
 	}

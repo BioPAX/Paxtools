@@ -275,7 +275,19 @@ public class SimpleIOHandlerTest
         {
             assertTrue(newModel.containsID(bpe.getRDFId()));
         }
-
-
     }
+    
+	@Test
+	public final void testBiopaxAndNotBiopaxMixXml() throws IOException
+	{
+		BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
+		String s = "L3" + File.separator + "biopax_otherxml_mix.xml";
+		InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
+		Model model = io.convertFromOWL(in);
+		assertNotNull(model);
+		Catalysis cat = (Catalysis) model.getByID("catalysis1");
+		assertNotNull(cat);
+		assertEquals(1, cat.getControlled().size());
+		assertEquals("Catalysis 1", cat.getDisplayName());
+	}
 }
