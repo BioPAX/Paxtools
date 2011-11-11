@@ -53,7 +53,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 * @return A set of entity features for the reference entity.
 	 */
 	@OneToMany(targetEntity = EntityFeatureImpl.class, 
-			mappedBy = "entityFeatureXOf")//, cascade={CascadeType.ALL})
+			mappedBy = "entityFeatureXOf")
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
