@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
@@ -22,6 +24,7 @@ import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentInterse
  * @author Emek Demir
  */
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
@@ -50,6 +53,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	@Target(XrefImpl.class)
 	@ManyToMany(targetEntity = XrefImpl.class)
 	@JoinTable(name="xref")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Xref> getXref()
 	{
 		return xref;

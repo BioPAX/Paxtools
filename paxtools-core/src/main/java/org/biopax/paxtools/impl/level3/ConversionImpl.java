@@ -1,18 +1,21 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ConversionImpl extends InteractionImpl
@@ -50,6 +53,7 @@ public class ConversionImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="rightParticipant")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getRight()
 	{
 		return right;
@@ -78,6 +82,7 @@ public class ConversionImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="leftParticipant")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getLeft()
 	{
 		return left;
@@ -116,7 +121,8 @@ public class ConversionImpl extends InteractionImpl
 	}
 
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
-	@JoinTable(name="conversionstoichiometry")		
+	@JoinTable(name="conversionstoichiometry")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Stoichiometry> getParticipantStoichiometry()
 	{
 		return participantStoichiometry;

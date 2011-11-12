@@ -4,6 +4,8 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalForm
@@ -42,6 +45,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 
 	@ManyToMany(targetEntity = ExperimentalFormVocabularyImpl.class)
 	@JoinTable(name="experimentalFormDescription")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<ExperimentalFormVocabulary> getExperimentalFormDescription()
 	{
 		return experimentalFormDescription;
@@ -88,6 +92,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 
     @ManyToMany(targetEntity = EntityFeatureImpl.class)
     @JoinTable(name="experimentalFeature")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     public Set<EntityFeature> getExperimentalFeature()
     {
         return experimentalFeature;

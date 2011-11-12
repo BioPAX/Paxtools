@@ -4,6 +4,8 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -14,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ControlImpl extends InteractionImpl
@@ -60,6 +63,7 @@ public class ControlImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="controlled")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Process> getControlled()
 	{
 		return this.controlled;
@@ -140,6 +144,7 @@ public class ControlImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PathwayImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="pathwayController")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	protected Set<Pathway> getPathwayController()
 	{
 		return pathwayController;
@@ -152,6 +157,7 @@ public class ControlImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="peController")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	protected Set<PhysicalEntity> getPeController()
 	{
 		return peController;

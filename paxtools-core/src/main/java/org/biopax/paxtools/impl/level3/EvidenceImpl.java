@@ -7,6 +7,8 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -15,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class EvidenceImpl extends XReferrableImpl implements Evidence
@@ -58,7 +61,8 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 * @return a set of scores representing confidence
 	 */
 	@OneToMany(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
-	@JoinTable(name="confidence")		
+	@JoinTable(name="confidence")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Score> getConfidence()
 	{
 		return confidence;
@@ -109,6 +113,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 * @return a set of evidence codes  for this evidence type.
 	 */
 	@ManyToMany(targetEntity = EvidenceCodeVocabularyImpl.class)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
 	{
 		return evidenceCode;
@@ -157,7 +162,8 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 
 
 	@OneToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
-	@JoinTable(name="experimentalForm")	
+	@JoinTable(name="experimentalForm")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<ExperimentalForm> getExperimentalForm()
 	{
 		return experimentalForm;

@@ -5,13 +5,17 @@ import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
@@ -43,6 +47,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	@ManyToMany(targetEntity = PathwayStepImpl.class)
 	@JoinTable(name="nextStep")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PathwayStep> getNextStep()
 	{
 		return nextStep;
@@ -70,6 +75,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;
@@ -82,6 +88,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Process> getStepProcess()
 	{
 		return stepProcess;
@@ -109,7 +116,8 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 	@ManyToMany(targetEntity = EvidenceImpl.class)
-	@JoinTable(name="evidence") 	
+	@JoinTable(name="evidence")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

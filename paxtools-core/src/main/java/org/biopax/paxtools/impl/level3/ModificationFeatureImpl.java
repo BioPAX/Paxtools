@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ModificationFeature;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
@@ -16,6 +18,7 @@ import java.util.Set;
 /**
  */
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ModificationFeatureImpl extends EntityFeatureImpl

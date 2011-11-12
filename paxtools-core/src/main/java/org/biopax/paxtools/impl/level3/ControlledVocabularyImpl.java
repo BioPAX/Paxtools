@@ -8,6 +8,8 @@ import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.biopax.paxtools.util.SetStringBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -21,6 +23,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ControlledVocabularyImpl extends XReferrableImpl implements
@@ -62,6 +65,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	@ElementCollection
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_TERM, index = Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<String> getTerm()
 	{
 		return term;

@@ -6,6 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.ContainedIn;
 
 import javax.persistence.*;
@@ -14,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
@@ -54,6 +57,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 */
 	@OneToMany(targetEntity = EntityFeatureImpl.class, 
 			mappedBy = "entityFeatureXOf")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
@@ -104,6 +108,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 //	@ContainedIn
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;
@@ -111,6 +116,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class)
 	@JoinTable(name="entityReferenceType")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EntityReferenceTypeVocabulary> getEntityReferenceType()
 	{
 		return entityReferenceType;
@@ -138,6 +144,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	@ManyToMany(targetEntity = EntityReferenceImpl.class) //TODO generify?
 	@JoinTable(name="memberEntityReference")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EntityReference> getMemberEntityReference()
 	{
 		return memberEntity;
@@ -166,6 +173,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
 		return ownerEntityReference;
@@ -178,7 +186,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 
 	@ManyToMany(targetEntity = EvidenceImpl.class)
-	@JoinTable(name="evidence")	
+	@JoinTable(name="evidence")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

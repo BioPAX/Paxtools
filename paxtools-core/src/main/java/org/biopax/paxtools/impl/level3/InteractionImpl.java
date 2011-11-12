@@ -6,6 +6,8 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
@@ -19,6 +21,7 @@ import java.util.Set;
  *
  */
 @javax.persistence.Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class InteractionImpl extends ProcessImpl implements Interaction
@@ -56,6 +59,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
 	@JoinTable(name="interactionType")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<InteractionVocabulary> getInteractionType()
 	{
 	   return interactionType;
@@ -83,6 +87,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	@ManyToMany(targetEntity = EntityImpl.class)
 	@JoinTable(name="participant")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Entity> getParticipant()
 	{
 		return participant;

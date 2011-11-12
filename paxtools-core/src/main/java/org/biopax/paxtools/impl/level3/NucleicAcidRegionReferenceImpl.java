@@ -4,12 +4,16 @@ import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenceImpl
 		implements NucleicAcidRegionReference
 {
@@ -30,6 +34,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 
 	@ManyToMany(targetEntity = NucleicAcidReferenceImpl.class, mappedBy = "subRegion")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<NucleicAcidReference> getSubRegionOf()
 	{
 		return subRegionOf;
@@ -42,6 +47,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 
 	@ManyToOne(targetEntity = SequenceLocationImpl.class)//, cascade = {CascadeType.ALL})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public SequenceLocation getAbsoluteRegion()
 	{
 		return this.absoluteRegion;
@@ -55,6 +61,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class)
 	@JoinTable(name = "regionType")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<SequenceRegionVocabulary> getRegionType()
 	{
 		return this.regionType;

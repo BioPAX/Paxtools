@@ -4,6 +4,8 @@ import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class ProcessImpl extends EntityImpl implements Process
 {
@@ -38,6 +41,7 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 
 	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Pathway> getPathwayComponentOf()
 	{
 		return pathwayComponentOf;
@@ -46,12 +50,14 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 // --------------------- Interface process ---------------------
 
 	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PathwayStep> getStepProcessOf()
 	{
 		return stepProcessOf;
 	}
 
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "controlled")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Control> getControlledOf()
 	{
 		return controlledOf;
