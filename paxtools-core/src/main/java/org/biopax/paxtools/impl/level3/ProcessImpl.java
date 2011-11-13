@@ -41,7 +41,6 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 
 	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Pathway> getPathwayComponentOf()
 	{
 		return pathwayComponentOf;
@@ -50,14 +49,12 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 // --------------------- Interface process ---------------------
 
 	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PathwayStep> getStepProcessOf()
 	{
 		return stepProcessOf;
 	}
 
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "controlled")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Control> getControlledOf()
 	{
 		return controlledOf;

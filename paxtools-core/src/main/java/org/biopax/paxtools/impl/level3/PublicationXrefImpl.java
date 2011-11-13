@@ -55,7 +55,6 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     @ElementCollection
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     @FieldBridge(impl=SetStringBridge.class)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<String> getAuthor()
 	{
 		return author;
@@ -81,7 +80,6 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     @ElementCollection
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     @FieldBridge(impl=SetStringBridge.class)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<String> getSource()
 	{
 		return source;

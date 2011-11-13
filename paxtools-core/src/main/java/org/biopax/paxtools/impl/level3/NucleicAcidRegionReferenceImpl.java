@@ -34,7 +34,6 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 
 	@ManyToMany(targetEntity = NucleicAcidReferenceImpl.class, mappedBy = "subRegion")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<NucleicAcidReference> getSubRegionOf()
 	{
 		return subRegionOf;
@@ -47,7 +46,6 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 
 	@ManyToOne(targetEntity = SequenceLocationImpl.class)//, cascade = {CascadeType.ALL})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public SequenceLocation getAbsoluteRegion()
 	{
 		return this.absoluteRegion;
@@ -61,7 +59,6 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class)
 	@JoinTable(name = "regionType")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<SequenceRegionVocabulary> getRegionType()
 	{
 		return this.regionType;

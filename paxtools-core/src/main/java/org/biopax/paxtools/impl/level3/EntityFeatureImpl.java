@@ -88,7 +88,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	
 	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	protected EntityReference getEntityFeatureXOf(){
 		return ownerEntityReference;
 	}
@@ -99,7 +98,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, 
 			mappedBy = "feature")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getFeatureOf()
 	{
 		return featureOf;
@@ -107,7 +105,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class,
 			mappedBy = "notFeature")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getNotFeatureOf()
 	{
 		return notFeatureOf;
@@ -116,7 +113,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
@@ -141,7 +137,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 
 	@ManyToOne(targetEntity = SequenceLocationImpl.class)//, cascade={CascadeType.ALL})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public SequenceLocation getFeatureLocation()
 	{
 		return featureLocation;
@@ -152,7 +147,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class)//, cascade = {CascadeType.ALL})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public SequenceRegionVocabulary getFeatureLocationType()
 	{
 		return featureLocationType;
@@ -166,7 +160,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="memberFeature")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EntityFeature> getMemberFeature()
 	{
 		return memberFeature;
@@ -194,7 +187,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EntityFeature> getMemberFeatureOf()
 	{
 		return this.memberFeatureOf;

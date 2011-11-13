@@ -45,7 +45,6 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 
 	@ManyToMany(targetEntity = ExperimentalFormVocabularyImpl.class)
 	@JoinTable(name="experimentalFormDescription")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<ExperimentalFormVocabulary> getExperimentalFormDescription()
 	{
 		return experimentalFormDescription;
@@ -92,7 +91,6 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 
     @ManyToMany(targetEntity = EntityFeatureImpl.class)
     @JoinTable(name="experimentalFeature")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     public Set<EntityFeature> getExperimentalFeature()
     {
         return experimentalFeature;

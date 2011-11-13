@@ -65,7 +65,6 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	@ElementCollection
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_TERM, index = Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<String> getTerm()
 	{
 		return term;

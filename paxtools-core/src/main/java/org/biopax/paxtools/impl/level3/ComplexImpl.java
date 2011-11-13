@@ -49,7 +49,6 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="component")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;
@@ -78,7 +77,6 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
 	@JoinTable(name="complexstoichiometry")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Stoichiometry> getComponentStoichiometry()
 	{
 		return componentStoichiometry;

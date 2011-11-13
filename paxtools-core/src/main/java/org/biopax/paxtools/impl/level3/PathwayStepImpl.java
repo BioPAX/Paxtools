@@ -47,7 +47,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	@ManyToMany(targetEntity = PathwayStepImpl.class)
 	@JoinTable(name="nextStep")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PathwayStep> getNextStep()
 	{
 		return nextStep;
@@ -75,7 +74,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;
@@ -88,7 +86,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Process> getStepProcess()
 	{
 		return stepProcess;
@@ -117,7 +114,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

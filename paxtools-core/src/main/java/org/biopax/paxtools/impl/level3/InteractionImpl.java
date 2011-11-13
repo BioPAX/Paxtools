@@ -59,7 +59,6 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
 	@JoinTable(name="interactionType")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<InteractionVocabulary> getInteractionType()
 	{
 	   return interactionType;
@@ -87,7 +86,6 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	@ManyToMany(targetEntity = EntityImpl.class)
 	@JoinTable(name="participant")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Entity> getParticipant()
 	{
 		return participant;

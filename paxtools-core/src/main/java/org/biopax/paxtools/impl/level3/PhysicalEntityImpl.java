@@ -47,14 +47,12 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 
 	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
 	}
 
 	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)//, cascade = {CascadeType.ALL})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public CellularLocationVocabulary getCellularLocation()
 	{
 		return cellularLocation;
@@ -67,7 +65,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="feature")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EntityFeature> getFeature()
 	{
 		return feature;
@@ -97,7 +94,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="notfeature")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EntityFeature> getNotFeature()
 	{
 		return notFeature;
@@ -128,7 +124,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="memberPhysicalEntity")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
 		return this.memberPhysicalEntity;    //TODO
@@ -156,7 +151,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 		return memberPhysicalEntityOf;
@@ -245,7 +239,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

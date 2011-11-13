@@ -70,7 +70,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	@ElementCollection
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<String> getAvailability()
 	{
 		return availability;
@@ -95,7 +94,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	@ManyToMany(targetEntity = ProvenanceImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="dataSource")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Provenance> getDataSource()
 	{
 		return dataSource;
@@ -121,7 +119,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 // --------------------- Interface entity ---------------------
 
 	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;
@@ -139,7 +136,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

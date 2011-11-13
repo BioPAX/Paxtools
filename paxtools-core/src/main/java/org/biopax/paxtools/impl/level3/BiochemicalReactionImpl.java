@@ -62,7 +62,6 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 	@OneToMany(targetEntity = DeltaGImpl.class)//, cascade = {CascadeType.ALL})
 	@JoinTable(name="deltaG")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<DeltaG> getDeltaG()
 	{
 		return deltaG;
@@ -109,7 +108,6 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 
 	@ElementCollection
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Float> getDeltaS()
 	{
 		return deltaS;
@@ -133,7 +131,6 @@ public class BiochemicalReactionImpl extends ConversionImpl
 	@ElementCollection
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_EC_NUMBER, index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<String> getECNumber()
 	{
 		return eCNumber;
@@ -156,7 +153,6 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 	@OneToMany(targetEntity = KPrimeImpl.class)//, cascade = {CascadeType.ALL})
 	@JoinTable(name="keq")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<KPrime> getKEQ()
 	{
 		return kEQ;

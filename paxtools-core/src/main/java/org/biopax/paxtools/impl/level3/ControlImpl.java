@@ -63,7 +63,6 @@ public class ControlImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="controlled")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Process> getControlled()
 	{
 		return this.controlled;
@@ -144,7 +143,6 @@ public class ControlImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PathwayImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="pathwayController")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	protected Set<Pathway> getPathwayController()
 	{
 		return pathwayController;
@@ -157,7 +155,6 @@ public class ControlImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="peController")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	protected Set<PhysicalEntity> getPeController()
 	{
 		return peController;

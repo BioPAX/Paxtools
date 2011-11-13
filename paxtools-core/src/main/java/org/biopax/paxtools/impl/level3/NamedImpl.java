@@ -89,7 +89,6 @@ public abstract class NamedImpl extends XReferrableImpl
 	@FieldBridge(impl = SetStringBridge.class)
 	@Boost(1.0f)
 	@Column(columnDefinition="LONGTEXT")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	protected Set<String> getNameX()
 	{
 		return allNames;

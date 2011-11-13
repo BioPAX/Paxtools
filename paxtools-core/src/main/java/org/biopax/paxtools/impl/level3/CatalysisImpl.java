@@ -61,7 +61,6 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 	}
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class) @JoinTable(name = "cofactor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getCofactor()
 	{
 		return cofactor;

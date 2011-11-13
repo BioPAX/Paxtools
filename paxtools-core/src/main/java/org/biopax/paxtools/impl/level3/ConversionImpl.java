@@ -53,7 +53,6 @@ public class ConversionImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="rightParticipant")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getRight()
 	{
 		return right;
@@ -82,7 +81,6 @@ public class ConversionImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="leftParticipant")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PhysicalEntity> getLeft()
 	{
 		return left;
@@ -122,7 +120,6 @@ public class ConversionImpl extends InteractionImpl
 
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
 	@JoinTable(name="conversionstoichiometry")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Stoichiometry> getParticipantStoichiometry()
 	{
 		return participantStoichiometry;

@@ -53,7 +53,6 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	@Target(XrefImpl.class)
 	@ManyToMany(targetEntity = XrefImpl.class)
 	@JoinTable(name="xref")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Xref> getXref()
 	{
 		return xref;

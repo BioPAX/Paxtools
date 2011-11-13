@@ -62,7 +62,6 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	@OneToMany(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="confidence")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Score> getConfidence()
 	{
 		return confidence;
@@ -113,7 +112,6 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 * @return a set of evidence codes  for this evidence type.
 	 */
 	@ManyToMany(targetEntity = EvidenceCodeVocabularyImpl.class)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
 	{
 		return evidenceCode;
@@ -163,7 +161,6 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 
 	@OneToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="experimentalForm")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<ExperimentalForm> getExperimentalForm()
 	{
 		return experimentalForm;

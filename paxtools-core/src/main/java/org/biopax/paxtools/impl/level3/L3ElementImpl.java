@@ -36,7 +36,6 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_COMMENT, index = Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	@Column(columnDefinition="LONGTEXT")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     public Set<String> getComment()
     {
         return this.comment;

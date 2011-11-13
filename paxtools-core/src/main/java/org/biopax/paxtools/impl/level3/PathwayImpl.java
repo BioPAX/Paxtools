@@ -55,7 +55,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="pathwayComponent")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Process> getPathwayComponent()
 	{
 		return this.pathwayComponent;
@@ -83,7 +82,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")//, cascade = {CascadeType.ALL})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<PathwayStep> getPathwayOrder()
 	{
 		return pathwayOrder;
@@ -123,7 +121,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;

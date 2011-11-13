@@ -71,7 +71,6 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	////////////////////////////////////////////////////////////////////////////
 
     @ManyToOne(targetEntity = CellVocabularyImpl.class)//, cascade = {CascadeType.ALL})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public CellVocabulary getCellType()
 	{
 		return celltype;
@@ -83,7 +82,6 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	}
 
 	@ManyToOne(targetEntity = TissueVocabularyImpl.class)//, cascade = {CascadeType.ALL})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	public TissueVocabulary getTissue()
 	{
 		return tissue;
