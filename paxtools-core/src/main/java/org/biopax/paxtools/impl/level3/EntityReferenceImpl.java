@@ -6,8 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.ContainedIn;
 
 import javax.persistence.*;
@@ -16,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
@@ -181,7 +178,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 
 	@ManyToMany(targetEntity = EvidenceImpl.class)
-	@JoinTable(name="evidence")
+	@JoinTable(name="evidence")	
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

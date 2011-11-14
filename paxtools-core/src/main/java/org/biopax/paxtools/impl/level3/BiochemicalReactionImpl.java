@@ -5,20 +5,16 @@ import org.biopax.paxtools.model.level3.BiochemicalReaction;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.KPrime;
 import org.biopax.paxtools.util.SetStringBridge;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class BiochemicalReactionImpl extends ConversionImpl
@@ -61,7 +57,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 
 	@OneToMany(targetEntity = DeltaGImpl.class)//, cascade = {CascadeType.ALL})
-	@JoinTable(name="deltaG")
+	@JoinTable(name="deltaG")	
 	public Set<DeltaG> getDeltaG()
 	{
 		return deltaG;
@@ -152,7 +148,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 	}
 
 	@OneToMany(targetEntity = KPrimeImpl.class)//, cascade = {CascadeType.ALL})
-	@JoinTable(name="keq")
+	@JoinTable(name="keq")		
 	public Set<KPrime> getKEQ()
 	{
 		return kEQ;

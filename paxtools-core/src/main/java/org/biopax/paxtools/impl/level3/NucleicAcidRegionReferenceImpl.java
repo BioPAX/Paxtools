@@ -4,16 +4,12 @@ import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenceImpl
 		implements NucleicAcidRegionReference
 {

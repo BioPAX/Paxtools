@@ -4,8 +4,6 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.GeneticInteraction;
 import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 import org.biopax.paxtools.model.level3.Score;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.CascadeType;
@@ -16,7 +14,6 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class GeneticInteractionImpl extends InteractionImpl

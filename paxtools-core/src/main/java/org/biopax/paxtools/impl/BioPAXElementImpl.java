@@ -4,14 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
 
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(length=40)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
@@ -73,11 +70,11 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     
 	public BioPAXElementImpl(){
 		this.annotations = new HashMap<String, Object>();
-	}
+	};
 	
 	public BioPAXElementImpl(String uri){
 		this.uri = uri;
-	}
+	};
 
 
     @Transient

@@ -3,8 +3,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.Xref;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -12,7 +10,6 @@ import javax.persistence.Transient;
 import java.util.Set;
 
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ProvenanceImpl extends NamedImpl implements Provenance

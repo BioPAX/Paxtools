@@ -5,8 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BidirectionalLinkViolationException;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -15,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature

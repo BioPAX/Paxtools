@@ -3,18 +3,14 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @javax.persistence.Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PathwayImpl extends ProcessImpl implements Pathway
@@ -54,7 +50,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 
 	@ManyToMany(targetEntity = ProcessImpl.class)
-	@JoinTable(name="pathwayComponent")
+	@JoinTable(name="pathwayComponent") 		
 	public Set<Process> getPathwayComponent()
 	{
 		return this.pathwayComponent;

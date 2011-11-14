@@ -4,8 +4,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -16,7 +14,6 @@ import java.util.Set;
 /**
  */
 @Entity @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class CatalysisImpl extends ControlImpl implements Catalysis
 {

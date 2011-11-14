@@ -5,17 +5,13 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
@@ -123,7 +119,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="memberPhysicalEntity")
+	@JoinTable(name="memberPhysicalEntity") 	
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
 		return this.memberPhysicalEntity;    //TODO

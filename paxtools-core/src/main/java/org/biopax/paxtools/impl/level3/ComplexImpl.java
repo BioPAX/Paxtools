@@ -3,8 +3,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -13,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ComplexImpl extends PhysicalEntityImpl implements Complex
@@ -48,7 +45,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 // --------------------- ACCESORS and MUTATORS---------------------
 	
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="component")
+	@JoinTable(name="component") 
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;
@@ -76,7 +73,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	}
 
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
-	@JoinTable(name="complexstoichiometry")
+	@JoinTable(name="complexstoichiometry")		
 	public Set<Stoichiometry> getComponentStoichiometry()
 	{
 		return componentStoichiometry;

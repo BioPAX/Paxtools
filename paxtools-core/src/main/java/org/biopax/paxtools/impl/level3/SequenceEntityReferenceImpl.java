@@ -4,8 +4,6 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.SequenceEntityReference;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 
@@ -15,7 +13,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
         implements SequenceEntityReference

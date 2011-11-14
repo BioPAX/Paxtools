@@ -5,17 +5,13 @@ import org.biopax.paxtools.model.level3.NucleicAcid;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.TemplateDirectionType;
 import org.biopax.paxtools.model.level3.TemplateReaction;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
@@ -34,7 +30,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 	}
 
     @ManyToMany(targetEntity = PhysicalEntityImpl.class) //TODO: make sequence entity?
-    @JoinTable(name="product")
+    @JoinTable(name="product") 	
     public Set<PhysicalEntity> getProduct()
     {
         return product;
@@ -65,7 +61,6 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 	protected NucleicAcid getTemplateX() {
 		return this.template;
 	}
-
 	protected void setTemplateX(NucleicAcid template) {
 		this.template = template;
 	}

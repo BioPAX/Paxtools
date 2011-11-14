@@ -5,8 +5,6 @@ import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Transient;
@@ -14,7 +12,6 @@ import javax.persistence.Transient;
 /**
  */
 @javax.persistence.Entity
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class MolecularInteractionImpl extends InteractionImpl
