@@ -3,6 +3,7 @@ package org.biopax.paxtools.io.sif.level2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.MaximumInteractionThresholdExceedException;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
@@ -19,16 +20,20 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
 /**
  * User: demir Date: Dec 28, 2007 Time: 5:52:06 PM
  */
-public class ParticipatesRule implements InteractionRuleL2
+public class ParticipatesRule extends InteractionRuleL2Adaptor
 {
-	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(
-			BinaryInteractionType.INTERACTS_WITH, REACTS_WITH);
+	private static List<BinaryInteractionType> binaryInteractionTypes =
+			Arrays.asList(BinaryInteractionType.INTERACTS_WITH, REACTS_WITH);
 
 	private long threshold;
 
 	private static Log log = LogFactory.getLog(ComponentRule.class);
 
 	boolean suppressExceptions = false;
+
+	private boolean skipInteractions;
+
+	private boolean skipConversions;
 
 	public ParticipatesRule()
 	{
@@ -48,16 +53,17 @@ public class ParticipatesRule implements InteractionRuleL2
 
 	}
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model, Map options)
+
+	@Override public void initOptionsNotNull(Map options)
 	{
-		inferInteractions(interactionSet, ((physicalEntity) entity), model, options);
+		skipConversions = options.containsKey(REACTS_WITH) && options.get(REACTS_WITH).equals(false);
+
+		skipInteractions = options.containsKey(INTERACTS_WITH) && options.get(INTERACTS_WITH).equals(false);
 	}
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, physicalEntity pe, Model model, Map options)
+	public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity pe, Model model)
 	{
-		boolean skipConversions = options.containsKey(REACTS_WITH) && options.get(REACTS_WITH).equals(false);
 
-		boolean skipInteractions = options.containsKey(INTERACTS_WITH) && options.get(INTERACTS_WITH).equals(false);
 
 		// There is nothing to find if we are skipping both rules
 		if (skipConversions && skipInteractions)
@@ -106,9 +112,8 @@ public class ParticipatesRule implements InteractionRuleL2
 		}
 	}
 
-	private void processParticipant(Set<SimpleInteraction> interactionSet, physicalEntity pe,
-	                                InteractionParticipant ip,
-	                                BinaryInteractionType type, interaction interaction)
+	private void processParticipant(InteractionSet interactionSet, physicalEntity pe, InteractionParticipant ip,
+			BinaryInteractionType type, interaction interaction)
 	{
 		physicalEntity pe2 = null;
 		if (ip instanceof physicalEntity)
@@ -124,14 +129,15 @@ public class ParticipatesRule implements InteractionRuleL2
 		}
 	}
 
-	private void createInteraction(physicalEntity pe, physicalEntity pe2, Set<SimpleInteraction> set,
-	                               BinaryInteractionType type, interaction interaction)
+	private void createInteraction(physicalEntity pe, physicalEntity pe2, InteractionSet set,
+			BinaryInteractionType type, interaction interaction)
 	{
 		if (!pe2.equals(pe))
 		{
 			SimpleInteraction si = new SimpleInteraction(pe, pe2, type);
 			si.addMediator(interaction);
 			set.add(si);
+
 		}
 	}
 

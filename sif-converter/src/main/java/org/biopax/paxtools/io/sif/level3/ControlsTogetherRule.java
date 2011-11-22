@@ -1,15 +1,16 @@
 package org.biopax.paxtools.io.sif.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.CO_CONTROL;
 
@@ -33,64 +34,52 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.CO_CONTROL;
  * <li>Downwards only --> dependent relation</li>
  * <li>Downwards then upwards --> independent relation</li>
  * </ul>
- *
  * @author Emek Demir
  * @author Ozgun Babur
  */
 public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 {
-	private static List<BinaryInteractionType> binaryInteractionTypes =  Arrays.asList(CO_CONTROL);
+	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(CO_CONTROL);
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
-		EntityReference A, Model model, Map options)
+	Log log = LogFactory.getLog(ControlsTogetherRule.class);
+	BioPAXElement current;
+
+	public void inferInteractionsFromPE(InteractionSetL3 l3, PhysicalEntity pe, Model model)
 	{
-		boolean mineCoControl = !options.containsKey(CO_CONTROL) ||
-			options.get(CO_CONTROL).equals(true);
-
-		// Return if there is nothing to find
-		if (!mineCoControl)
+		current = this.getEntityReferenceOrGroup(pe,l3);
+		if (current != null)
 		{
-			return;
+			// Iterate over controls of A
+			for (Interaction inter : pe.getParticipantOf())
+			{
+				if ((inter instanceof Control))
+				{
+					Control ctrl = (Control) inter;
+					// Iterate other controllers
+					iterateControllers(ctrl, l3);
+					// Iterate upward controls
+					proceedUpwards(ctrl, l3);
+					// Iterate downward controls
+					proceedDownwards(ctrl, l3);
+				}
+			}
 		}
-		for (PhysicalEntity pe : A.getEntityReferenceOf())
+		else
 		{
-			processPhysicalEntity(interactionSet, A, pe, options);
-		}
-	}
-
-	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A,
-		PhysicalEntity pe, Map options)
-	{
-		// Iterate over controls of A
-		for (Interaction inter : pe.getParticipantOf())
-		{
-			if (!(inter instanceof Control)) continue;
-
-			Control ctrl = (Control) inter;
-
-			// Iterate other controllers
-			iterateControllers(ctrl, A, interactionSet, options);
-			// Iterate upward controls
-			proceedUpwards(ctrl, A, interactionSet, options);
-			// Iterate downward controls
-			proceedDownwards(ctrl, A, interactionSet, options);
-		}
-		for (Complex comp : pe.getComponentOf())
-		{
-			processPhysicalEntity(interactionSet, A, comp, options);
+			if(log.isInfoEnabled())
+			{
+				log.info("Null ER or Group. Skipping"+pe);
+			}
 		}
 	}
 
 	/**
 	 * Iterates downwards processes, initiates a downwards search of controls and
 	 * upwards search of controls and conversions.
-	 *
-	 * @param ctrl		   to look downward
-	 * @param A			  first entity in A-B binary interaction
+	 * @param ctrl to look downward
 	 * @param interactionSet set to collect inferred interactions
 	 */
-	private void proceedDownwards(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet, Map options)
+	private void proceedDownwards(Control ctrl, InteractionSetL3 interactionSet)
 	{
 		// Iterate each controlled process
 		for (Process prcss : ctrl.getControlled())
@@ -98,7 +87,7 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 			// Search downwards of controls
 			if (prcss instanceof Control)
 			{
-				searchDownwards((Control) prcss, A, interactionSet, options);
+				searchDownwards((Control) prcss, interactionSet);
 			}
 
 			// Search other upwards control trees of all processes (controls and conversions)
@@ -106,7 +95,7 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 			{
 				if (cnt != ctrl) // Do not go where we came from
 				{
-					searchUpwards(cnt, A, interactionSet, options);
+					searchUpwards(cnt, interactionSet);
 				}
 			}
 		}
@@ -115,78 +104,65 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 	/**
 	 * Tries to infer relations with the controllers of the control and proceeds
 	 * downwards.
-	 *
-	 * @param ctrl		   to search downwards
-	 * @param A			  A of A-B
+	 * @param ctrl to search downwards
 	 * @param interactionSet set to collect inferred interactions
 	 */
-	private void searchDownwards(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet, Map options)
+	private void searchDownwards(Control ctrl, InteractionSetL3 interactionSet)
 	{
 		// Search for rules
-		iterateControllers(ctrl, A, interactionSet, options);
-		proceedDownwards(ctrl, A, interactionSet, options);
+		iterateControllers(ctrl, interactionSet);
+		proceedDownwards(ctrl, interactionSet);
 	}
 
 	/**
 	 * Tries to infer relations with the controllers of the control and proceeds to
 	 * upwards.
-	 *
-	 * @param ctrl		   to search upwards
-	 * @param A			  A in A-B
+	 * @param ctrl to search upwards
 	 * @param interactionSet set to collect inferred rules
 	 */
-	private void searchUpwards(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet, Map options)
+	private void searchUpwards(Control ctrl, InteractionSetL3 interactionSet)
 	{
-		iterateControllers(ctrl, A, interactionSet, options);
-		proceedUpwards(ctrl, A, interactionSet, options);
+		iterateControllers(ctrl, interactionSet);
+		proceedUpwards(ctrl, interactionSet);
 	}
 
 	/**
 	 * Iterates the controller of ctrl and infers possible binary interactions.
-	 *
-	 * @param ctrl	to iterate controllers
-	 * @param A		A in A-B ctrl
+	 * @param ctrl to iterate controllers
 	 * @param interactionSet set to collect inferred interactions
 	 */
-	private void iterateControllers(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet, Map options)
+	private void iterateControllers(Control ctrl, InteractionSetL3 interactionSet)
 	{
 		for (Controller pe : ctrl.getController())
 		{
 			if (pe instanceof PhysicalEntity)
 			{
-				for (EntityReference B : collectEntityReferences((PhysicalEntity) pe, options))
+				BioPAXElement owner = this.getEntityReferenceOrGroup((PhysicalEntity) pe, interactionSet);
+				if (!current.equals(owner))
 				{
-					if (B != A)
-					{
-						interactionSet.add(new SimpleInteraction(A, B, CO_CONTROL));
-					}
+					interactionSet.add(new SimpleInteraction(current, owner, CO_CONTROL));
 				}
 			}
 		}
 	}
 
+
 	/**
 	 * Iterates upward controls and initiates an upward search for each one.
-	 *
-	 * @param ctrl		   to proceed upwards
-	 * @param A			  A in A-B
+	 * @param ctrl to proceed upwards
 	 * @param interactionSet set to collect inferred interactions
 	 */
-	private void proceedUpwards(Control ctrl, EntityReference A,
-		Set<SimpleInteraction> interactionSet, Map options)
+	private void proceedUpwards(Control ctrl, InteractionSetL3 interactionSet)
 	{
 		for (Control cnt : ctrl.getControlledOf())
 		{
-			searchUpwards(cnt, A, interactionSet, options);
+			searchUpwards(cnt, interactionSet);
 		}
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()
-		{
-			return binaryInteractionTypes;
-		}
+	{
+		return binaryInteractionTypes;
+	}
 
 }

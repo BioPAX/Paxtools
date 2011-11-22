@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
@@ -24,33 +25,28 @@ public class ControlRule extends InteractionRuleL3Adaptor
 	private final Log log = LogFactory.getLog(ControlRule.class);
 
 	private static List<BinaryInteractionType> binaryInteractionTypes =
-		Arrays.asList(METABOLIC_CATALYSIS, STATE_CHANGE);
+			Arrays.asList(METABOLIC_CATALYSIS, STATE_CHANGE);
+
+	private boolean mineStateChange;
+
+	private boolean mineMetabolicChange;
+
+	public void initOptionsNotNull(Map options)
+	{
+		mineStateChange = !options.containsKey(STATE_CHANGE) || options.get(STATE_CHANGE).equals(Boolean.TRUE);
+		mineMetabolicChange =
+				!options.containsKey(METABOLIC_CATALYSIS) || options.get(METABOLIC_CATALYSIS).equals(Boolean.TRUE);
+	}
 
 	/**
 	 * When options map is null, then all rules are generated. Otherwise only rules
 	 * that are contained in the options map as a key are generated.
-	 * @param interactionSet set to fill in
-	 * @param A first physical entity
+	 * @param is3 set to fill in
 	 * @param model biopax graph - may be null, has no use here
-	 * @param options options map
 	 */
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference A, Model model, Map options)
+	public void inferInteractionsFromPE(InteractionSetL3 is3, PhysicalEntity pe, Model model)
 	{
-		// Read options
-		boolean mineStatetateChange = !options.containsKey(STATE_CHANGE) ||
-			options.get(STATE_CHANGE).equals(Boolean.TRUE);
-		boolean mineMetabolicChange = !options.containsKey(METABOLIC_CATALYSIS) ||
-			options.get(METABOLIC_CATALYSIS).equals(Boolean.TRUE);
-		// Iterate over all associated controls
-		for (SimplePhysicalEntity pe : A.getEntityReferenceOf())
-		{
-			processPhysicalEntity(interactionSet, A, mineStatetateChange, mineMetabolicChange, pe, options);
-		}
-	}
-
-	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference A,
-		boolean mineStatetateChange, boolean mineMetabolicChange, PhysicalEntity pe, Map options)
-	{
+		BioPAXElement source = this.getEntityReferenceOrGroup(pe, is3);
 		for (Interaction inter : pe.getParticipantOf())
 		{
 			if (inter instanceof Control)
@@ -59,67 +55,81 @@ public class ControlRule extends InteractionRuleL3Adaptor
 				// Iterate over all affected conversions of this control
 				for (Conversion conv : getAffectedConversions(cont, null))
 				{
-					// Collect left and right simple physical entities of conversion in lists
-					Set<EntityReference> left = collectEntityReferences(conv.getLeft(), null, options);
-					Set<EntityReference> right = collectEntityReferences(conv.getRight(), null, options);
-					// Detect physical entities which appear on both sides.
-					List<EntityReference> bothsided = new ArrayList<EntityReference>();
-					for (EntityReference B : left)
-					{
-						if (right.contains(B))
-						{
-							bothsided.add(B);
-						}
-					}
-
-					Set<EntityReference> presenceSet = new HashSet<EntityReference>(left);
-					presenceSet.addAll(right);
-
-					// Create simple interactions
-					// Try creating a rule for each physical entity in presence list.
-					for (EntityReference B : presenceSet)
-					{
-						if (A == B) continue;
-
-						// Consider only molecules that is changed by the conversion
-						if (!entityHasAChange(B, conv, options))
-						{
-							continue;
-						}
-						// Affecting a complex is accepted as type of state change.
-						// If it is simple, then we check if it is also on both sides, regarding the
-						// possibility that it may be nested in a complex.
-						if (bothsided.contains(B))
-						{
-							if (mineStatetateChange)
-							{
-								SimpleInteraction sc = new SimpleInteraction(A, B, STATE_CHANGE);
-								sc.addMediator(cont);
-								sc.addMediator(conv);
-								interactionSet.add(sc);
-							}
-						}
-						// Else it is a simple molecule appearing on one side of conversion. This means
-						// it is metabolic change.
-						else
-						{
-							if (mineMetabolicChange)
-							{
-								SimpleInteraction mc = new SimpleInteraction(A, B, METABOLIC_CATALYSIS);
-								mc.addMediator(cont);
-								mc.addMediator(conv);
-								interactionSet.add(mc);
-							}
-						}
-					}
+					processConversion(is3, source, cont, conv);
 				}
 			}
 		}
-		for (Complex comp : pe.getComponentOf())
+	}
+
+	private void processConversion(InteractionSetL3 is3, BioPAXElement source, Control cont, Conversion conv)
+	{
+		// Collect left and right simple physical entities of conversion in lists
+		Set<BioPAXElement> left = collectEntities(conv.getLeft(), is3);
+		Set<BioPAXElement> right = collectEntities(conv.getRight(), is3);
+		// Detect physical entities which appear on both sides.
+
+		Set<BioPAXElement> intersection = new HashSet<BioPAXElement>(left);
+		intersection.retainAll(right);
+
+		Set<BioPAXElement> union = new HashSet<BioPAXElement>(left);
+		union.addAll(right);
+
+		// Create simple interactions
+		// Try creating a rule for each physical entity in presence list.
+		for (BioPAXElement target : union)
 		{
-			processPhysicalEntity(interactionSet, A, mineStatetateChange, mineMetabolicChange, comp, options);
+			processParticipatingEntities(source, target, is3, cont, conv, intersection);
 		}
 	}
+
+	private void processParticipatingEntities(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3,
+			Control cont, Conversion conv, Set<BioPAXElement> intersection)
+	{
+		if (source != target)
+		{
+			if (!(target instanceof Group) || ((Group) target).getType() != BinaryInteractionType.COMPONENT_OF)
+			{
+				mineTarget(source, target, is3, cont, conv, intersection);
+			}
+		}
+	}
+
+	private void mineTarget(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3, Control cont,
+			Conversion conv, Set<BioPAXElement> intersection)
+	{
+		if (entityHasAChange(target, conv, is3))
+		{
+
+			// If it is simple, then we check if it is also on both sides, regarding the
+			// possibility that it may be nested in a complex.
+			if (intersection.contains(target))
+			{
+				if (mineStateChange)
+				{
+					createAndAdd(source, target, is3, cont, conv, STATE_CHANGE);
+				}
+			}
+			// Else it is a simple molecule appearing on one side of conversion. This means
+			// it is metabolic change.
+			else
+			{
+				if (mineMetabolicChange)
+				{
+					createAndAdd(source, target, is3, cont, conv, METABOLIC_CATALYSIS);
+				}
+			}
+		}
+	}
+
+	private void createAndAdd(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3, Control cont,
+			Conversion conv, BinaryInteractionType type)
+	{
+		SimpleInteraction sc = new SimpleInteraction(source, target, type);
+		sc.addMediator(cont);
+		sc.addMediator(conv);
+		is3.add(sc);
+	}
+
 
 	/**
 	 * Creates a list of conversions on which this control has an effect. If the
@@ -140,8 +150,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 			if (prcss instanceof Conversion)
 			{
 				convList.add((Conversion) prcss);
-			}
-			else if (prcss instanceof Control)
+			} else if (prcss instanceof Control)
 			{
 				getAffectedConversions((Control) prcss, convList);
 			}
@@ -153,14 +162,14 @@ public class ControlRule extends InteractionRuleL3Adaptor
 	 * Sometimes an entity is both an input and output to a conversion without any state change.
 	 * Normally this phenomena should be modeled using controller property of conversion. In other
 	 * cases this method detects entities that goes in and out without any change.
-	 * @param entity
 	 * @param conv
 	 * @return true if entity has a change in conversion
 	 */
-	private boolean entityHasAChange(EntityReference entity, Conversion conv, Map options)
+
+	private boolean entityHasAChange(BioPAXElement element, Conversion conv, InteractionSetL3 l3)
 	{
-		Set<PhysicalEntity> left = getAssociatedStates(entity, conv.getLeft(), options);
-		Set<PhysicalEntity> right = getAssociatedStates(entity, conv.getRight(), options);
+		Set<PhysicalEntity> left = getAssociatedStates(element, conv.getLeft(), l3);
+		Set<PhysicalEntity> right = getAssociatedStates(element, conv.getRight(), l3);
 
 		// There should be at least one state found
 		assert !left.isEmpty() || !right.isEmpty();
@@ -177,12 +186,12 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		return false;
 	}
 
-	private Set<PhysicalEntity> getAssociatedStates(EntityReference er, Set<PhysicalEntity> pes,
-		Map options)
+	private Set<PhysicalEntity> getAssociatedStates(BioPAXElement element, Set<PhysicalEntity> pes,
+			InteractionSetL3 l3)
 	{
 		Set<PhysicalEntity> set = new HashSet<PhysicalEntity>();
 
-		if (er == null)
+		if (element == null)
 		{
 			if (log.isWarnEnabled()) log.warn("Skipping ");
 			return set; // empty
@@ -190,10 +199,22 @@ public class ControlRule extends InteractionRuleL3Adaptor
 
 		for (PhysicalEntity pe : pes)
 		{
-			if (collectEntityReferences(pe, options).contains(er))
-				set.add(pe);
+			addMappedElement(element, l3, set, pe);
+			if (pe instanceof Complex)
+			{
+				for (PhysicalEntity member : ((Complex) pe).getComponent())
+				{
+					addMappedElement(element, l3, set, member);
+				}
+			}
 		}
 		return set;
+	}
+
+	private void addMappedElement(BioPAXElement element, InteractionSetL3 l3, Set<PhysicalEntity> set,
+			PhysicalEntity pe)
+	{
+		if (element.equals(this.getEntityReferenceOrGroup(pe, l3))) set.add(pe);
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()

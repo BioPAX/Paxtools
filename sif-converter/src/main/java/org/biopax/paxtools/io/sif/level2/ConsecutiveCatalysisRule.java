@@ -1,6 +1,7 @@
 package org.biopax.paxtools.io.sif.level2;
 
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
@@ -17,31 +18,21 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.SEQUENTIAL_CATALY
  * directions of catalysis and control matches. User: demir Date: Dec 28, 2007
  * Time: 10:40:01 PM
  */
-public class ConsecutiveCatalysisRule implements InteractionRuleL2
+public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 {
 	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(SEQUENTIAL_CATALYSIS);
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model, Map options)
-	{
-		inferInteractions(interactionSet, ((physicalEntity) entity), model, options);
-	}
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, physicalEntity pe, Model model, Map options)
+	public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity pe, Model model)
 	{
-		// Stop if options don't let to continue
-		if (options.containsKey(SEQUENTIAL_CATALYSIS) && options.get(SEQUENTIAL_CATALYSIS).equals(false))
-		{
-			return;
-		}
-		// OK, go on...
-		Set<catalysis> catalysises = pe.getAllInteractions(catalysis.class);
-		for (catalysis aCatalysis : catalysises)
+		Set<catalysis> catalyses = pe.getAllInteractions(catalysis.class);
+		for (catalysis aCatalysis : catalyses)
 		{
 			processCatalysis(interactionSet, pe, aCatalysis);
 		}
 	}
 
-	private void processCatalysis(Set<SimpleInteraction> interactionSet, physicalEntity pe, catalysis aCatalysis)
+	private void processCatalysis(InteractionSet interactionSet, physicalEntity pe, catalysis aCatalysis)
 	{
 		//We have to consider two direction statements
 		//Catalysis.direction and Conversion.spontaneous
@@ -103,7 +94,7 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL2
 	}
 
 	private void createInteractions(conversion centerConversion, SpontaneousType direction, physicalEntity pe,
-	                                catalysis aCatalysis, Set<SimpleInteraction> interactionSet)
+	                                catalysis aCatalysis, InteractionSet interactionSet)
 	{
 		//get the peps at the correct side of the conversion.
 		Set<physicalEntityParticipant> peps = getCompatiblePEPs(direction, centerConversion);
@@ -191,7 +182,7 @@ public class ConsecutiveCatalysisRule implements InteractionRuleL2
 	}
 
 	private void findAndAddCatalysts(conversion aConversion, SpontaneousType direction, physicalEntity pe,
-	                                 catalysis aCatalysis, Set<SimpleInteraction> interactionSet)
+	                                 catalysis aCatalysis, InteractionSet interactionSet)
 	{
 		Set<control> controls = aConversion.isCONTROLLEDOf();
 		for (catalysis consequentCatalysis : new ClassFilterSet<control, catalysis>(controls, catalysis.class))

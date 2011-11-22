@@ -1,6 +1,7 @@
 package org.biopax.paxtools.io.sif.level2;
 
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
@@ -10,29 +11,25 @@ import java.util.*;
 /**
  * @author Ozgun Babur
  */
-public class AffectsRule implements InteractionRuleL2
+public class AffectsRule extends InteractionRuleL2Adaptor
 {
 	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(BinaryInteractionType.ACTIVATES,
 	                                                                                 BinaryInteractionType
 			                                                                                 .INACTIVATES);
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, physicalEntity A, Model model, Map options)
+
+	@Override public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity pe, Model model)
 	{
-		for (control cont : A.getAllInteractions(control.class))
+		for (control cont : pe.getAllInteractions(control.class))
 		{
 			for (process prcs : cont.getCONTROLLED())
 			{
 				if (prcs instanceof conversion)
 				{
-					createInteractions(interactionSet, A, (conversion) prcs, cont);
+					createInteractions(interactionSet, pe, (conversion) prcs, cont);
 				}
 			}
 		}
-	}
-
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model, Map options)
-	{
-		inferInteractions(interactionSet, (physicalEntity) entity, model, options);
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()
@@ -229,7 +226,7 @@ public class AffectsRule implements InteractionRuleL2
 		return set;
 	}
 
-	private void createInteractions(Set<SimpleInteraction> interactionSet, physicalEntity A, conversion conv,
+	private void createInteractions(InteractionSet  interactionSet, physicalEntity A, conversion conv,
 	                                control cont)
 	{
 		boolean l2r = true;
@@ -346,4 +343,6 @@ public class AffectsRule implements InteractionRuleL2
 		}
 		return tuples;
 	}
+
+
 }

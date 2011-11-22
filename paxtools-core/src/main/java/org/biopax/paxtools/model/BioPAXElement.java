@@ -72,15 +72,5 @@ public interface BioPAXElement extends Serializable, Cloneable
      */
     public @interface Key{}
 
-    
-    /**
-     * A general-purpose map to optionallly 
-     * store additional application-specific information 
-     * about the BioPAX element, such as statistics,
-     * inferred fields, etc.
-     * 
-     * @return
-     */
-    public Map<String, Object> getAnnotations();
 	
 }

@@ -42,7 +42,7 @@ public class JenaEditorMap extends EditorMapAdapter {
     public JenaEditorMap(BioPAXLevel level) {
         this.level = level;
         OntModel ontologyDefinition =
-                org.biopax.paxtools.io.jena.JenaHelper.createModel();
+                JenaIOHandler.createModel();
 
         ontologyDefinition.read(this.level.getLevelFileAsStream(),
                 this.level.getNameSpace());

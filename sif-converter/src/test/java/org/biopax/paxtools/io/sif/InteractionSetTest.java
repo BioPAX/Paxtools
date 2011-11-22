@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 
 /**
  */
-public class MergingSetTest
+public class InteractionSetTest
 {
 	@Test
 	public void testMergingAdd()
@@ -30,7 +30,7 @@ public class MergingSetTest
 		si2.addMediator(mi2);
 		assertThat(si1, is(si2));
 
-		MergingSet ms = new MergingSet();
+		InteractionSet ms = new InteractionSet();
 		ms.add(si1);
 		ms.add(si2);
 		assertTrue(ms.size() == 1);

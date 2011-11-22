@@ -2,16 +2,16 @@ package org.biopax.paxtools.io.sif.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  */
@@ -19,71 +19,91 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 {
 	private final Log log = LogFactory.getLog(ParticipatesRule.class);
 
-	/**
-	 * An option for reaching to EntityReference of member PhysicalEntity of a PhysicalEntity.
-	 */
-	public static final String REACH_GENERIC_MEMBERS = "REACH_GENERIC_MEMBERS";
-
-
-	public final void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity,
-		Model model, Map options)
+	public final void inferInteractions(InteractionSet interactionSet, BioPAXElement entity, Model model)
 	{
-		if(entity instanceof EntityReference)
+		if (entity instanceof PhysicalEntity)
 		{
-			inferInteractions(interactionSet, ((EntityReference) entity),model,options);
+			inferInteractionsFromPE((InteractionSetL3) interactionSet, ((PhysicalEntity) entity), model);
+		} else
+		{
+			if (log.isInfoEnabled()) log.info("Not a PE Skipping." + entity.getRDFId());
 		}
 	}
 
-	protected Set<EntityReference> collectEntityReferences(PhysicalEntity pe, Map options)
+    public void initOptions(Map options)
+    {
+	   if(options==null)
+		{
+			options = new HashMap();
+		}
+		initOptionsNotNull(options);
+    }
+
+	protected void initOptionsNotNull(Map options)
 	{
-		return collectEntityReferences(pe, null,options);
+
 	}
 
-	protected Set<EntityReference> collectEntityReferences(PhysicalEntity pe,
-		Set<EntityReference> enSet, Map options)
+	protected BioPAXElement getEntityReferenceOrGroup(PhysicalEntity pe, InteractionSetL3 set)
 	{
-		if (enSet == null)
-		{
-			enSet = new HashSet<EntityReference>();
-		}
 
-		if (pe instanceof SimplePhysicalEntity)
+		BioPAXElement bpe = null;
+		Group group = set.getElementToGroupMap().get(pe);
+		if (group != null)
+		{
+			bpe = group;
+		} else if (pe instanceof SimplePhysicalEntity)
 		{
 			EntityReference er = ((SimplePhysicalEntity) pe).getEntityReference();
-			if (er != null) enSet.add(er);
-			else if (log.isWarnEnabled()) log.warn("SimplePhysicalEntity with ID " +
-				pe.getRDFId() + " has NULL EntityReference");
-		}
-		else if (pe instanceof Complex)
-		{
-			for (PhysicalEntity mem : ((Complex) pe).getComponent())
+			if (er != null)
 			{
-				collectEntityReferences(mem, enSet, options);
+				bpe = er;
+			} else
+			{
+				if (log.isWarnEnabled())
+					log.warn("SimplePhysicalEntity with ID " + pe.getRDFId() + " has NULL EntityReference");
 			}
 		}
-
-		if (options.containsKey(REACH_GENERIC_MEMBERS))
-		{
-			for (PhysicalEntity mem : pe.getMemberPhysicalEntity())
-			{
-				collectEntityReferences(mem, enSet, options);
-			}
-		}
-		return enSet;
+		return bpe;
 	}
 
-	protected Set<EntityReference> collectEntityReferences(Set<PhysicalEntity> pes,
-		Set<EntityReference> enSet, Map options)
+	protected Set<BioPAXElement> collectEntities(Set<PhysicalEntity> pes, InteractionSetL3 set)
 	{
-		if (enSet == null)
-		{
-			enSet = new HashSet<EntityReference>();
-		}
-
+		Set<BioPAXElement> entities = new HashSet<BioPAXElement>();
 		for (PhysicalEntity pe : pes)
 		{
-			collectEntityReferences(pe, enSet, options);
+			BioPAXElement entity = this.getEntityReferenceOrGroup(pe, set);
+			if (entity != null) entities.add(entity);
+			if (entity instanceof Group)
+			{
+				getMembersRecursively(entities, (Group) entity);
+			}
 		}
-		return enSet;
+		return entities;
+	}
+
+	private void getMembersRecursively(Set<BioPAXElement> entities, Group group)
+	{
+		entities.addAll(group.members);
+		for (Group subgroup : group.subgroups)
+		{
+			getMembersRecursively(entities, subgroup);
+		}
+	}
+
+
+	protected void createClique(InteractionSet interactionSet, List<BioPAXElement> components,
+			BinaryInteractionType type, BioPAXElement... mediators)
+	{
+
+		for (int j = 0; j < components.size(); j++)
+		{
+			for (int i = 0; i < j; i++)
+			{
+				SimpleInteraction interaction =
+						new SimpleInteraction(components.get(i), components.get(j), type, mediators);
+				interactionSet.add(interaction);
+			}
+		}
 	}
 }

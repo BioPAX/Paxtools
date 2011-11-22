@@ -34,7 +34,7 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	private int id = 0;
 
 
-	private final EditorMap map = SimpleEditorMap.L3;
+	private EditorMap map;
 
 	private BioPAXLevel level;
 
@@ -43,6 +43,7 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	public MockFactory(BioPAXLevel level)
 	{
 		this.level = level;
+		this.map = SimpleEditorMap.get(level);
 	}
 
 	@Override
@@ -160,7 +161,7 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	{
 		if (multiple)
 		{
-			ArrayList list = new ArrayList(6);
+			ArrayList<String> list = new ArrayList<String>(6);
 			for (String str : strings)
 			{
 				list.add(bpe.getRDFId() + str);
@@ -174,18 +175,18 @@ public class MockFactory extends BioPAXFactoryAdaptor
 		HashSet<BioPAXElement> hashSet = new HashSet<BioPAXElement>();
 
 
-		Set<Class<? extends BioPAXElement>> rranges = propertyEditor.getRestrictedRangesFor(bpe.getModelInterface());
-		for (Class<? extends BioPAXElement> rrange : rranges)
+		Set<Class<BioPAXElement>> rranges = propertyEditor.getRestrictedRangesFor(bpe.getModelInterface());
+		for (Class<BioPAXElement> rrange : rranges)
 		{
 			hashSet.add(createMock(rrange, bpe.getModelInterface()));
 		}
 		return hashSet;
 	}
 
-	private BioPAXElement createMock(Class toCreate, Class domain)
+	private BioPAXElement createMock(Class<BioPAXElement> toCreate, Class domain)
 	{
 		assert domain != null;
-		Class actual;
+		Class<BioPAXElement> actual;
 		actual = findConcreteMockClass(toCreate, domain);
 		if (actual != null)
 		{
@@ -194,16 +195,16 @@ public class MockFactory extends BioPAXFactoryAdaptor
 
 	}
 
-	private Class findConcreteMockClass(Class toCreate, Class domain)
+	private Class<BioPAXElement> findConcreteMockClass(Class<BioPAXElement> toCreate, Class domain)
 	{
-		Class actual = null;
+		Class<BioPAXElement> actual = null;
 		if (map.getLevel().getDefaultFactory().canInstantiate(toCreate) && !toCreate.isAssignableFrom(domain))
 		{
 			actual = toCreate;
 		} else
 		{
-			Set<Class<? extends BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
-			for (Class subclass : classesOf)
+			Set<Class<BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
+			for (Class<BioPAXElement> subclass : classesOf)
 			{
 				if (!subclass.isAssignableFrom(domain) && subclass != toCreate &&
 				    subclass.getPackage().getName().startsWith("org.biopax.paxtools.model"))

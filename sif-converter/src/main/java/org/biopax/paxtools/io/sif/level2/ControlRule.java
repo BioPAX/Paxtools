@@ -1,6 +1,7 @@
 package org.biopax.paxtools.io.sif.level2;
 
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
@@ -14,41 +15,38 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.STATE_CHANGE;
  * A controls a conversion which B is at left or right or both. -
  * Controls.StateChange (B at both sides (one side may be as a member of a
  * complex), or B is complex) - Controls.MetabolicChange (B at one side only)
- *
  * @author Ozgun Babur Date: Dec 29, 2007 Time: 1:27:55 AM
  */
-public class ControlRule implements InteractionRuleL2
+public class ControlRule extends InteractionRuleL2Adaptor
 {
-	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(METABOLIC_CATALYSIS,
-		                                                                                  STATE_CHANGE);
+	private static List<BinaryInteractionType> binaryInteractionTypes =
+			Arrays.asList(METABOLIC_CATALYSIS, STATE_CHANGE);
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
-		Object entity,
-		Model model, Map options)
+	private boolean mineMetabolicChange;
+
+	private boolean mineStatetateChange;
+
+
+	@Override public void initOptionsNotNull(Map options)
 	{
-		inferInteractions(interactionSet, ((physicalEntity) entity), model, options);
+
+
+		mineStatetateChange = !options.containsKey(STATE_CHANGE) || options.get(STATE_CHANGE).equals(Boolean.TRUE);
+
+		mineMetabolicChange =
+				!options.containsKey(METABOLIC_CATALYSIS) || options.get(METABOLIC_CATALYSIS).equals(Boolean.TRUE);
+
 	}
 
 	/**
 	 * When options map is null, then all rules are generated. Otherwise only rules
 	 * that are contained in the options map as a key are generated.
-	 *
 	 * @param interactionSet set to fill in
-	 * @param A              first physical entity
-	 * @param model          biopax graph - may be null, has no use here
-	 * @param options        options map
+	 * @param A first physical entity
+	 * @param model biopax graph - may be null, has no use here
 	 */
-	public void inferInteractions(Set<SimpleInteraction> interactionSet,
-	                              physicalEntity A,
-	                              Model model, Map options)
+	public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity A, Model model)
 	{
-		// Read options
-
-		boolean mineStatetateChange = !options.containsKey(STATE_CHANGE) ||
-			options.get(STATE_CHANGE).equals(Boolean.TRUE);
-
-		boolean mineMetabolicChange = !options.containsKey(METABOLIC_CATALYSIS) ||
-			options.get(METABOLIC_CATALYSIS).equals(Boolean.TRUE);
 
 		// Iterate over all associated controls
 
@@ -58,21 +56,17 @@ public class ControlRule implements InteractionRuleL2
 
 			for (conversion conv : getAffectedConversions(cont, null))
 			{
-				Set<physicalEntity> presenceSet =
-					collectEntities(conv.getLEFT(), null);
+				Set<physicalEntity> presenceSet = collectEntities(conv.getLEFT(), null);
 				collectEntities(conv.getRIGHT(), presenceSet);
 
 				// Collect left and right simple physical entities of conversion in lists
 
-				List<physicalEntity> left =
-					collectSimpleEntities(conv.getLEFT());
-				List<physicalEntity> right =
-					collectSimpleEntities(conv.getRIGHT());
+				List<physicalEntity> left = collectSimpleEntities(conv.getLEFT());
+				List<physicalEntity> right = collectSimpleEntities(conv.getRIGHT());
 
 				// Detect physical entities which appear on both sides.
 
-				List<physicalEntity> bothsided =
-					new ArrayList<physicalEntity>();
+				List<physicalEntity> bothsided = new ArrayList<physicalEntity>();
 
 				for (physicalEntity B : left)
 				{
@@ -101,10 +95,11 @@ public class ControlRule implements InteractionRuleL2
 					{
 						if (mineStatetateChange)
 						{
-                            SimpleInteraction sc = new SimpleInteraction(A,B,STATE_CHANGE);
-                            sc.addMediator(cont);
-                            sc.addMediator(conv);
-                            interactionSet.add(sc);						}
+							SimpleInteraction sc = new SimpleInteraction(A, B, STATE_CHANGE);
+							sc.addMediator(cont);
+							sc.addMediator(conv);
+							interactionSet.add(sc);
+						}
 					}
 
 					// Else it is a simple molecule appearing on one side of conversion. This means
@@ -114,10 +109,10 @@ public class ControlRule implements InteractionRuleL2
 					{
 						if (mineMetabolicChange)
 						{
-                            SimpleInteraction mc = new SimpleInteraction(A,B,METABOLIC_CATALYSIS);
-                            mc.addMediator(cont);
-                            mc.addMediator(conv);
-                            interactionSet.add(mc);
+							SimpleInteraction mc = new SimpleInteraction(A, B, METABOLIC_CATALYSIS);
+							mc.addMediator(cont);
+							mc.addMediator(conv);
+							interactionSet.add(mc);
 						}
 					}
 				}
@@ -129,13 +124,11 @@ public class ControlRule implements InteractionRuleL2
 	 * Creates a list of conversions on which this control has an effect. If the
 	 * control controls another control, then it is traversed recursively to find
 	 * the affected conversions.
-	 *
-	 * @param cont     control
+	 * @param cont control
 	 * @param convList list of affected conversions
 	 * @return list of affected conversions
 	 */
-	private List<conversion> getAffectedConversions(control cont,
-	                                                List<conversion> convList)
+	private List<conversion> getAffectedConversions(control cont, List<conversion> convList)
 	{
 		if (convList == null)
 		{
@@ -147,8 +140,7 @@ public class ControlRule implements InteractionRuleL2
 			if (prcss instanceof conversion)
 			{
 				convList.add((conversion) prcss);
-			}
-			else if (prcss instanceof control)
+			} else if (prcss instanceof control)
 			{
 				getAffectedConversions((control) prcss, convList);
 			}
@@ -159,14 +151,11 @@ public class ControlRule implements InteractionRuleL2
 
 	/**
 	 * Collects the associated physical entities of the given participant set.
-	 *
 	 * @param partics participants
-	 * @param peSet   physical entity set to collect in
+	 * @param peSet physical entity set to collect in
 	 * @return associated physical entities
 	 */
-	private Set<physicalEntity> collectEntities(
-		Set<physicalEntityParticipant> partics,
-		Set<physicalEntity> peSet)
+	private Set<physicalEntity> collectEntities(Set<physicalEntityParticipant> partics, Set<physicalEntity> peSet)
 	{
 		if (peSet == null)
 		{
@@ -185,12 +174,10 @@ public class ControlRule implements InteractionRuleL2
 	 * Collects the associated non-complex physical entities of the given
 	 * participant set. This means we are not interested in complexes, but their
 	 * members, at any nesting.
-	 *
 	 * @param partics participants
 	 * @return associated physical entities
 	 */
-	private List<physicalEntity> collectSimpleEntities(
-		Set<physicalEntityParticipant> partics)
+	private List<physicalEntity> collectSimpleEntities(Set<physicalEntityParticipant> partics)
 	{
 		List<physicalEntity> peList = new ArrayList<physicalEntity>();
 
@@ -201,8 +188,7 @@ public class ControlRule implements InteractionRuleL2
 			if (pe instanceof complex)
 			{
 				collectSimpleMembersOfComplex(peList, (complex) pe);
-			}
-			else
+			} else
 			{
 				peList.add(pe);
 			}
@@ -214,12 +200,10 @@ public class ControlRule implements InteractionRuleL2
 	/**
 	 * Recursive method for collecting simple members of the given complex in the
 	 * given list.
-	 *
 	 * @param list where to collect
 	 * @param comp complex to collect members
 	 */
-	private void collectSimpleMembersOfComplex(List<physicalEntity> list,
-	                                           complex comp)
+	private void collectSimpleMembersOfComplex(List<physicalEntity> list, complex comp)
 	{
 		for (physicalEntityParticipant pep : comp.getCOMPONENTS())
 		{
@@ -228,8 +212,7 @@ public class ControlRule implements InteractionRuleL2
 			if (pe instanceof complex)
 			{
 				collectSimpleMembersOfComplex(list, (complex) pe);
-			}
-			else
+			} else
 			{
 				list.add(pe);
 			}
@@ -240,7 +223,6 @@ public class ControlRule implements InteractionRuleL2
 	 * Sometimes an entity is both an input and output to a conversion without any state change.
 	 * Normally this phenomena should be modeled using controller property of conversion. In other
 	 * cases this method detects entities that goes in and out without any change.
-	 *
 	 * @param entity
 	 * @param conv
 	 * @return true if entity has a change in conversion
@@ -268,8 +250,7 @@ public class ControlRule implements InteractionRuleL2
 				{
 					leftonly.remove(sw);
 					both.add(sw);
-				}
-				else if (!both.contains(sw))
+				} else if (!both.contains(sw))
 				{
 					rightonly.add(sw);
 				}

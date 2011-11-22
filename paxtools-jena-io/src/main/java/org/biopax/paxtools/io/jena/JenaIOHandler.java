@@ -32,6 +32,8 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 {
 // ------------------------------ FIELDS ------------------------------
 
+	private static final OntModelSpec spec= new OntModelSpec(OntModelSpec.OWL_DL_MEM);;
+
 
 	private static final Log log = LogFactory.getLog(JenaIOHandler.class);
 
@@ -122,11 +124,11 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 
 	public OntModel readJenaModel(InputStream in)
 	{
-		OntModel ontModel = org.biopax.paxtools.io.jena.JenaHelper.createModel();
+		OntModel ontModel = createModel();
 //		ontModel.setStrictMode(true);
 //		ontModel.getReader().setProperty("error-mode", "strict");
 		ontModel.read(in, "");
-		ontModel.loadImports();
+		//ontModel.loadImports();
 		return ontModel;
 	}
 
@@ -270,7 +272,7 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 
 	private OntModel initializeEmptyOntModel(Model model)
 	{
-		OntModel ontModel = org.biopax.paxtools.io.jena.JenaHelper.createModel();
+		OntModel ontModel = createModel();
 
 		String xmlBase = model.getXmlBase();
 		if (xmlBase == null || xmlBase.equals(""))
@@ -367,7 +369,10 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 			ind.addProperty(property, valueInd);
 		}
 	}
-
+	static OntModel createModel()
+    {
+        return ModelFactory.createOntologyModel(spec);
+    }
 }
 
 

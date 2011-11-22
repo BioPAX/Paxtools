@@ -3,14 +3,15 @@ package org.biopax.paxtools.io.sif.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.INTERACTS_WITH;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
@@ -24,86 +25,76 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 
 	private final Log log = LogFactory.getLog(ParticipatesRule.class);
 
-	 private static final List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(
-			BinaryInteractionType.INTERACTS_WITH, REACTS_WITH);
+	private static final List<BinaryInteractionType> binaryInteractionTypes =
+			Arrays.asList(BinaryInteractionType.INTERACTS_WITH, REACTS_WITH);
 
+	private boolean skipConversions;
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference er,
-		Model model, Map options)
+	private boolean skipInteractions;
+
+	@Override public void initOptionsNotNull(Map options)
 	{
-		boolean skipConversions = options.containsKey(REACTS_WITH) &&
-			options.get(REACTS_WITH).equals(false);
+		super.initOptionsNotNull(options);
+		skipConversions = options.containsKey(REACTS_WITH) && options.get(REACTS_WITH).equals(false);
 
-		boolean skipInteractions = options.containsKey(INTERACTS_WITH) &&
-			options.get(INTERACTS_WITH).equals(false);
-
-		// There is nothing to find if we are skipping both rules
-		if (skipConversions && skipInteractions)
-		{
-			return;
-		}
-
-		for (PhysicalEntity pe : er.getEntityReferenceOf())
-		{
-			processPhysicalEntity(interactionSet, er, skipConversions, skipInteractions, pe,
-				options);
-		}
+		skipInteractions = options.containsKey(INTERACTS_WITH) && options.get(INTERACTS_WITH).equals(false);
 	}
 
-	private void processPhysicalEntity(Set<SimpleInteraction> interactionSet, EntityReference er,
-		boolean skipConversions, boolean skipInteractions, PhysicalEntity pe, Map options)
+	public void inferInteractionsFromPE(InteractionSetL3 interactionSet, PhysicalEntity pe, Model model)
 	{
 		for (Interaction interaction : pe.getParticipantOf())
 		{
-			BinaryInteractionType type;
-			if ((interaction instanceof Control))
-			{
-				continue;
-			} else if (interaction instanceof Conversion)
-			{
-				if (skipConversions)
-				{
-					continue;
-				}
-				type = REACTS_WITH;
-			} else
-			{
-				if (skipInteractions)
-				{
-					continue;
-				}
-				type = INTERACTS_WITH;
-			}
+			BinaryInteractionType type = getType(interaction);
 
-			for (Entity partic : interaction.getParticipant())
+
+			for (Entity participant : interaction.getParticipant())
 			{
-				processParticipant(interactionSet, er, partic, type, interaction, options);
+				processParticipant(interactionSet, participant, type, interaction);
 			}
-		}
-		for (Complex comp : pe.getComponentOf())
-		{
-			processPhysicalEntity(interactionSet, er, skipConversions, skipInteractions, comp,
-				options);
 		}
 	}
 
-	private void processParticipant(Set<SimpleInteraction> interactionSet, EntityReference er,
-		Entity entity,BinaryInteractionType type, Interaction interaction, Map options)
+	private BinaryInteractionType getType(Interaction interaction)
+	{
+		if (interaction instanceof Conversion)
+		{
+			if (!skipConversions)
+			{
+				return REACTS_WITH;
+			}
+		} else if (interaction instanceof Control)
+		{
+			return null;
+		} else if (!skipInteractions)
+		{
+			return INTERACTS_WITH;
+		}
+		return null;
+	}
+
+	private void processParticipant(InteractionSetL3 interactionSet, Entity entity, BinaryInteractionType type,
+			Interaction interaction)
 	{
 		if (entity instanceof PhysicalEntity)
 		{
-			for (EntityReference er2 : collectEntityReferences((PhysicalEntity) entity, options))
+			BioPAXElement source = this.getEntityReferenceOrGroup((PhysicalEntity) entity, interactionSet);
+
+			for (Entity participant : interaction.getParticipant())
 			{
-				if (er != er2) 
+				if (participant instanceof PhysicalEntity)
+
 				{
-					createInteraction(er, er2, interactionSet, type, interaction);
+					BioPAXElement target = this.getEntityReferenceOrGroup((PhysicalEntity) participant,
+					                                                      interactionSet);
+					createInteraction(source, target, interactionSet, type, interaction);
 				}
 			}
 		}
 	}
 
-	private void createInteraction(EntityReference er1, EntityReference er2, Set<SimpleInteraction> set,
-	                               BinaryInteractionType type, Interaction interaction)
+	private void createInteraction(BioPAXElement er1, BioPAXElement er2, InteractionSet set,
+			BinaryInteractionType type,
+			Interaction interaction)
 	{
 		if (er2 != null && er1 != null && !er2.equals(er1))
 		{

@@ -1,16 +1,12 @@
 package org.biopax.paxtools.fixer;
 
+import org.biopax.paxtools.impl.level3.Mock;
 import org.biopax.paxtools.impl.level3.MockFactory;
-import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.junit.Test;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -23,6 +19,17 @@ public class FixerTest
 	@Test
 	public void testGenericNormalization()
 	{
+		Mock mock = new Mock();
+		Protein[] p = mock.create(Protein.class, 3);
+		ProteinReference[] pr = mock.create(ProteinReference.class, 2);
+
+		p[1].setEntityReference(pr[1]);
+		p[2].setEntityReference(pr[2]);
+
+		p[3].addMemberPhysicalEntity(p[1]);
+		p[3].addMemberPhysicalEntity(p[2]);
+
+
 		MockFactory mf = new MockFactory(BioPAXLevel.L3);
 		Model model = mf.createModel();
 		Protein p1= model.addNew(Protein.class, "p1");
