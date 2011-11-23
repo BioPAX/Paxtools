@@ -202,4 +202,12 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 				|| BioPAXElement.UNKNOWN_FLOAT.equals(value)
 				|| BioPAXElement.UNKNOWN_INT.equals(value);
 	}
+
+	public boolean applies(BioPAXElement bpe)
+	{
+		Class domain = objectAccessors.isEmpty()?
+						lastStep.getDomain():
+						objectAccessors.iterator().next().getDomain();
+		return domain.isInstance(bpe.getModelInterface());
+	}
 }

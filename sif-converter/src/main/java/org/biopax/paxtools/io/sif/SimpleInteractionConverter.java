@@ -248,7 +248,7 @@ public class SimpleInteractionConverter
 
 					for (BioPAXElement mediator : si.getMediators())
 					{
-						if (mediatorAccessor.getDomain().isInstance(mediator))
+						if (mediatorAccessor.applies(mediator))
 						{
 							cell.append(valuesToString(mediatorAccessor.getValueFromBean(mediator)));
 						} else cell.append("not applicable");
@@ -277,7 +277,7 @@ public class SimpleInteractionConverter
 					for (PathAccessor accessor : interactorAccessors)
 					{
 						writer.write("\t");
-						if (accessor == null) writer.write("(not applicable)");
+						if (accessor == null ||!accessor.applies(entity)) writer.write("(not applicable)");
 						else if (accessor.isUnknown(entity)) writer.write("(not specified)");
 						else
 						{

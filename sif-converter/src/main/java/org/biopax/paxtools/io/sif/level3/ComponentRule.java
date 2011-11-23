@@ -76,7 +76,7 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 	@Override public void initOptionsNotNull(Map options)
 	{
 		super.initOptionsNotNull(options);
-		inSameComponent = options.containsKey(IN_SAME_COMPONENT) && (!options.get(IN_SAME_COMPONENT).equals(true));
+		inSameComponent = options.containsKey(IN_SAME_COMPONENT) && (!options.get(IN_SAME_COMPONENT).equals(false));
 		componentOf = options.containsKey(COMPONENT_OF) && (!options.get(COMPONENT_OF).equals(false));
 	}
 

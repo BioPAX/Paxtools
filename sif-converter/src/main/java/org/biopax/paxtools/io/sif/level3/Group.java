@@ -29,7 +29,7 @@ public class Group implements BioPAXElement
 
 	@Override public Class<? extends BioPAXElement> getModelInterface()
 	{
-		return null;
+		return EntityReference.class;
 	}
 
 	@Override public String getRDFId()

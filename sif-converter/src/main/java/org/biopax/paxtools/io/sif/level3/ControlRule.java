@@ -171,9 +171,6 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		Set<PhysicalEntity> left = getAssociatedStates(element, conv.getLeft(), l3);
 		Set<PhysicalEntity> right = getAssociatedStates(element, conv.getRight(), l3);
 
-		// There should be at least one state found
-		assert !left.isEmpty() || !right.isEmpty();
-
 		if (left.isEmpty() || right.isEmpty()) return true;
 
 		for (PhysicalEntity lpe : left)

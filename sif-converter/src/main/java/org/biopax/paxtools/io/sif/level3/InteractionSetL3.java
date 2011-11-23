@@ -1,6 +1,5 @@
 package org.biopax.paxtools.io.sif.level3;
 
-import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -32,11 +31,11 @@ public class InteractionSetL3 extends InteractionSet
 		{
 			for (EntityReference member : group.members)
 			{
-				this.add(new SimpleInteraction(group,member,group.type,group.sources));
+				this.add(new SimpleInteraction(member,group,group.type,group.sources));
 			}
 			for (Group subgroup : group.subgroups)
 			{
-				this.add(new SimpleInteraction(group,subgroup,group.type,group.sources));
+				this.add(new SimpleInteraction(subgroup,group,group.type,group.sources));
 			}
 
 		}
