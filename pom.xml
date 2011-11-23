@@ -105,11 +105,9 @@
 	</issueManagement>
 	
 	<!--
-
 	     See the following wiki document for details on how to do the setup for deploying/releasing
 	     http://sourceforge.net/apps/mediawiki/biopax/index.php?title=Deploying_Paxtools
-
-	     -->
+	-->
 
 	<profiles>
 		<profile>
@@ -252,6 +250,7 @@
 		</repository>
 	</repositories>
 
+	<!-- Maven 2.x site report plugins configuration (ignored by Maven 3.x..) -->
 	<reporting>
 		<plugins>
 			<plugin>
@@ -265,7 +264,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.0.1</version>
 			</plugin>
 		</plugins>
 	</reporting>
