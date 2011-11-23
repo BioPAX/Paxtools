@@ -3,6 +3,8 @@ package org.biopax.paxtools.io.pathwayCommons;
 import cpath.service.Cmd;
 import cpath.service.CmdArgs;
 import cpath.service.jaxb.*;
+
+import org.apache.commons.lang.StringUtils;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.pathwayCommons.util.BioPAXHttpMessageConverter;
@@ -281,13 +283,13 @@ public class PathwayCommons2Client
      * @return
      */
     private String join(String prefix, Collection<String> strings, String delimiter) {
-        StringBuffer finalString = new StringBuffer();
+        List<String> prefixed = new ArrayList<String>();
 
-        for(Object s: strings) {
-            finalString.append(prefix).append(s).append(delimiter);
+        for(String s: strings) {
+            prefixed.add(prefix + s);
         }
 
-        return finalString.toString();
+        return StringUtils.join(prefixed, delimiter);
     }
 
     
