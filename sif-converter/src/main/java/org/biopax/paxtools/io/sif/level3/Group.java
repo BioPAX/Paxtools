@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -116,5 +117,11 @@ public class Group implements BioPAXElement
 		}
 		return bldr.append("}").toString();
 
+	}
+
+	@Override
+	public Map<String, Object> getAnnotations() {
+		throw new UnsupportedOperationException("getAnnotations() is not supported " +
+			"for this (special) BioPAXElement: " + getClass());
 	}
 }
