@@ -24,9 +24,9 @@ public class FixerTest
 
 		mock.bindArrays("entityReference", Arrays.copyOfRange(p, 0, 2), pr);
 
-		p[2].addMemberPhysicalEntity(p[0]);
-		p[2].addMemberPhysicalEntity(p[1]);
-
+		mock.bindInPairs("memberPhysicalEntity",
+		                 p[2],p[0],
+		                 p[2],p[1]);
 
 		Fixer.normalizeGenerics(mock.model);
 

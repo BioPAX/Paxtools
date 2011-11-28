@@ -46,6 +46,8 @@ public enum SimpleEditorMap implements EditorMap
 	{
 		private BioPAXLevel level;
 
+		private List<ObjectPropertyEditor> sorted;
+
 		SimpleEditorMapImpl(BioPAXLevel level)
 		{
 			this.level = level;
@@ -53,44 +55,7 @@ public enum SimpleEditorMap implements EditorMap
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			try
 			{
-				String line = reader.readLine();
-				StringTokenizer st = new StringTokenizer(line);
-				while (st.hasMoreElements())
-				{
-					this.registerModelClass(st.nextToken());
-				}
-
-				while ((line = reader.readLine()) != null)
-				{
-					st = new StringTokenizer(line);
-					String domain = st.nextToken();
-					Class<? extends BioPAXElement> domainInterface = getModelInterface(domain);
-
-					String propertyName = st.nextToken();
-					Map<Class<? extends BioPAXElement>,Set<Class<? extends BioPAXElement>>> rangeRestrictions =
-							new HashMap<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>>();
-					while (st.hasMoreTokens())
-					{
-						String rToken = st.nextToken();
-						if (rToken.startsWith("R:"))
-						{
-							StringTokenizer rt = new StringTokenizer(rToken.substring(2), "=");
-							Class<? extends BioPAXElement> rDomain = level.getInterfaceForName(rt.nextToken());
-							Set<Class<? extends BioPAXElement>> rRanges =
-									new HashSet<Class<? extends BioPAXElement>>();
-							for (StringTokenizer dt = new StringTokenizer(rt.nextToken(), ","); dt.hasMoreTokens();)
-							{
-								rRanges.add(level.getInterfaceForName(dt.nextToken()));
-							}
-							rangeRestrictions.put(rDomain,rRanges);
-						}
-
-					}
-
-
-
-					createAndRegisterBeanEditor(propertyName, domainInterface,rangeRestrictions);
-				}
+				readEditors(level, reader);
 			}
 			catch (IOException e)
 			{
@@ -107,6 +72,55 @@ public enum SimpleEditorMap implements EditorMap
 					log.error("Could not close stream! Exiting");
 					System.exit(1);
 				}
+			}
+			sortEditors();
+
+		}
+
+		private void sortEditors()
+		{
+			//TODO
+		}
+
+		private void readEditors(BioPAXLevel level, BufferedReader reader) throws IOException
+		{
+			String line = reader.readLine();
+			StringTokenizer st = new StringTokenizer(line);
+			while (st.hasMoreElements())
+			{
+				this.registerModelClass(st.nextToken());
+			}
+
+			while ((line = reader.readLine()) != null)
+			{
+				st = new StringTokenizer(line);
+				String domain = st.nextToken();
+				Class<? extends BioPAXElement> domainInterface = getModelInterface(domain);
+
+				String propertyName = st.nextToken();
+				Map<Class<? extends BioPAXElement>,Set<Class<? extends BioPAXElement>>> rangeRestrictions =
+						new HashMap<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>>();
+				while (st.hasMoreTokens())
+				{
+					String rToken = st.nextToken();
+					if (rToken.startsWith("R:"))
+					{
+						StringTokenizer rt = new StringTokenizer(rToken.substring(2), "=");
+						Class<? extends BioPAXElement> rDomain = level.getInterfaceForName(rt.nextToken());
+						Set<Class<? extends BioPAXElement>> rRanges =
+								new HashSet<Class<? extends BioPAXElement>>();
+						for (StringTokenizer dt = new StringTokenizer(rt.nextToken(), ","); dt.hasMoreTokens();)
+						{
+							rRanges.add(level.getInterfaceForName(dt.nextToken()));
+						}
+						rangeRestrictions.put(rDomain,rRanges);
+					}
+
+				}
+
+
+
+				createAndRegisterBeanEditor(propertyName, domainInterface,rangeRestrictions);
 			}
 		}
 
@@ -166,5 +180,10 @@ public enum SimpleEditorMap implements EditorMap
 	@Override public Set<ObjectPropertyEditor> getInverseEditorsOf(Class<? extends BioPAXElement> domain)
 	{
 		return impl.getInverseEditorsOf(domain);
+	}
+
+	public List<ObjectPropertyEditor> getSortedProperties()
+	{
+	  return impl.sorted;
 	}
 }

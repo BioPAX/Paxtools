@@ -208,6 +208,6 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		Class domain = objectAccessors.isEmpty()?
 						lastStep.getDomain():
 						objectAccessors.iterator().next().getDomain();
-		return domain.isInstance(bpe.getModelInterface());
+		return domain.isInstance(bpe);
 	}
 }

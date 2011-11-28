@@ -30,13 +30,24 @@ public class Grouper
 		AccessibleSet<Group> groups = new AccessibleSet<Group>();
 		Map<BioPAXElement, Set<Group>> delegated = new HashMap<BioPAXElement, Set<Group>>();
 		Fixer.normalizeGenerics(model);
+		Set<EntityReference> ersToBeGrouped = new HashSet<EntityReference>();
+		Set<Complex> complexesToBeGrouped = new HashSet<Complex>();
+
 		for (EntityReference er : model.getObjects(EntityReference.class))
 		{
-			addIfNotNull(element2GroupMap, groups, er, inferGroupFromER(er, delegated));
+			ersToBeGrouped.add(er);
+		}
+		for (EntityReference er: ersToBeGrouped)
+		{
+			 addIfNotNull(element2GroupMap, groups, er, inferGroupFromER(er, delegated, model));
 		}
 		for (Complex complex : model.getObjects(Complex.class))
 		{
-			addIfNotNull(element2GroupMap, groups, complex, inferGroupFromComplex(complex, delegated));
+			complexesToBeGrouped.add(complex);
+		}
+		for (Complex complex : complexesToBeGrouped)
+		{
+			addIfNotNull(element2GroupMap, groups, complex, inferGroupFromComplex(complex, delegated, model));
 		}
 		return element2GroupMap;
 	}
@@ -61,10 +72,9 @@ public class Grouper
 
 	}
 
-	private static Group inferGroupFromComplex(Complex complex, Map<BioPAXElement, Set<Group>> delegated)
+	private static Group inferGroupFromComplex(Complex complex, Map<BioPAXElement, Set<Group>> delegated, Model model)
 	{
 		Group group = new Group(BinaryInteractionType.COMPONENT_OF, complex);
-		boolean full = false;
 		Set<PhysicalEntity> PElvlMembers = complex.getMemberPhysicalEntity();
 		if (PElvlMembers.isEmpty())
 		{
@@ -120,6 +130,7 @@ public class Grouper
 				owner.addSubgroup(group);
 			}
 		}
+		Fixer.copySimplePointers(model,complex,group);
 		return group;
 	}
 
@@ -134,7 +145,8 @@ public class Grouper
 		groups.add(owner);
 	}
 
-	private static Group inferGroupFromER(EntityReference element, Map<BioPAXElement, Set<Group>> delegated)
+	private static Group inferGroupFromER(EntityReference element, Map<BioPAXElement, Set<Group>> delegated,
+			Model model)
 	{
 		Group group = new Group(BinaryInteractionType.GENERIC_OF, element);
 		for (EntityReference member : element.getMemberEntityReference())
@@ -163,6 +175,7 @@ public class Grouper
 				owner.addSubgroup(group);
 			}
 		}
+		Fixer.copySimplePointers(model,element,group);
 		return group.isEmpty() ? null : group;
 	}
 }

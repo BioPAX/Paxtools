@@ -144,7 +144,8 @@ public class SimpleInteractionConverterTest
 		{
 			InputStream in = getClass().getResourceAsStream("/L3/" + s);
 			Model m = handler.convertFromOWL(in);
-			converter.writeInteractionsInSIFNX(m, out, out, Arrays.asList("Entity/name", "Entity/xref"),
+			converter.writeInteractionsInSIFNX(m, out, out, Arrays.asList("EntityReference/name",
+			                                                              "EntityReference/xref"),
 			                                   Arrays.asList("Interaction/dataSource/displayName"), true);
 			in.close();
 		}

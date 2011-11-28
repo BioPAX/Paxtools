@@ -1,5 +1,6 @@
 package org.biopax.paxtools.io.sif.level3;
 
+import org.biopax.paxtools.impl.level3.EntityReferenceImpl;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
@@ -11,7 +12,7 @@ import java.util.Set;
 /**
  *
  */
-public class Group implements BioPAXElement
+public class Group extends EntityReferenceImpl
 {
 	Set<EntityReference> members = new HashSet<EntityReference>();
 
@@ -26,11 +27,6 @@ public class Group implements BioPAXElement
 		this.type = type;
 		this.sources = new HashSet<BioPAXElement>();
 		this.sources.add(source);
-	}
-
-	@Override public Class<? extends BioPAXElement> getModelInterface()
-	{
-		return EntityReference.class;
 	}
 
 	@Override public String getRDFId()

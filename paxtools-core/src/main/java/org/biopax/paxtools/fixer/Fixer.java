@@ -1,6 +1,7 @@
 package org.biopax.paxtools.fixer;
 
 import org.biopax.paxtools.controller.ShallowCopy;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -52,13 +53,44 @@ public class Fixer
 
 		SimplePhysicalEntity first = (SimplePhysicalEntity) pe.getMemberPhysicalEntity().iterator().next();
 		String syntheticId = "http://biopax.org/generated/fixer/Fixer/normalizeGenerics/" + pe.getRDFId();
-		EntityReference entityReference = (EntityReference) model.addNew(first.getEntityReference()
-				                                                                 .getModelInterface(),
-		                                                                 syntheticId);
-		pe.setEntityReference(entityReference);
+		EntityReference generic =
+				(EntityReference) model.addNew(first.getEntityReference().getModelInterface(), syntheticId);
+		pe.setEntityReference(generic);
+		copySimplePointers(model, pe, generic);
+
 		for (EntityReference member : pe.getGenericEntityReferences())
 		{
-			entityReference.addMemberEntityReference(member);
+			generic.addMemberEntityReference(member);
+		}
+	}
+
+	public static void copySimplePointers(Model model, Named pe, Named generic)
+	{
+		for (String name : pe.getName())
+		{
+			generic.addName(name);
+		}
+		for (Xref xref : pe.getXref())
+		{
+			if ((xref instanceof UnificationXref))
+			{
+				String id = "http://biopax.org/synthetic/u2r/" + xref.getRDFId();
+				BioPAXElement byID = model.getByID(id);
+				if (byID == null)
+				{
+					RelationshipXref rref = model.addNew(RelationshipXref.class, id);
+					rref.setDb(xref.getDb());
+					rref.setId(xref.getId());
+					rref.setDbVersion(xref.getDbVersion());
+					rref.setIdVersion(xref.getDbVersion());
+					xref = rref;
+				}
+				else
+				{
+					xref= (Xref) byID;
+				}
+			}
+			generic.addXref(xref);
 		}
 	}
 
@@ -91,11 +123,10 @@ public class Fixer
 										SimplePhysicalEntity otherSPE = (SimplePhysicalEntity) (physicalEntity);
 										if (otherSPE.getEntityReference().equals(spe.getEntityReference()))
 										{
-											Set<EntityFeature> added = findFeaturesAddedToSecond(physicalEntity,
-											                                                     otherSPE, true);
-											Set<EntityFeature> removed = findFeaturesAddedToSecond(otherSPE,
-											                                                       physicalEntity,
-											                                                       true);
+											Set<EntityFeature> added =
+													findFeaturesAddedToSecond(physicalEntity, otherSPE, true);
+											Set<EntityFeature> removed =
+													findFeaturesAddedToSecond(otherSPE, physicalEntity, true);
 										}
 									}
 								}
@@ -132,7 +163,8 @@ public class Fixer
 		}
 	}
 
-	private void resolveFeaturesOfComponent(Model model, Complex complex, PhysicalEntity component, ShallowCopy copier)
+	private void resolveFeaturesOfComponent(Model model, Complex complex, PhysicalEntity component,
+			ShallowCopy copier)
 	{
 		boolean connected = false;
 		Set<EntityFeature> feature = component.getFeature();
@@ -158,7 +190,7 @@ public class Fixer
 				}
 			}
 		}
-		if (!connected )
+		if (!connected)
 		{
 			Set<Interaction> participantOf = component.getParticipantOf();
 			for (Interaction interaction : participantOf)
