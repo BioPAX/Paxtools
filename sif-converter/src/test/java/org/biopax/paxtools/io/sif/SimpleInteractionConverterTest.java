@@ -30,7 +30,6 @@ import java.util.Map;
  */
 public class SimpleInteractionConverterTest
 {
-	SimpleInteractionConverter simpleInteractionConverter;
 
 	static BioPAXIOHandler handler = new SimpleIOHandler();
 
