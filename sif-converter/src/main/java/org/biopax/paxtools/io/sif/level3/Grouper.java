@@ -24,22 +24,33 @@ public class Grouper
 {
 	private static final Log log = LogFactory.getLog(Grouper.class);
 
+	Map<BioPAXElement, Group> element2GroupMap = new HashMap<BioPAXElement, Group>();
+
+	AccessibleSet<Group> groups = new AccessibleSet<Group>();
+
+	Map<BioPAXElement, Set<Group>> delegated = new HashMap<BioPAXElement, Set<Group>>();
+
+
+	Set<EntityReference> ersToBeGrouped = new HashSet<EntityReference>();
+
+	Set<Complex> complexesToBeGrouped = new HashSet<Complex>();
+
 	public static Map<BioPAXElement, Group> inferGroups(Model model)
 	{
-		Map<BioPAXElement, Group> element2GroupMap = new HashMap<BioPAXElement, Group>();
-		AccessibleSet<Group> groups = new AccessibleSet<Group>();
-		Map<BioPAXElement, Set<Group>> delegated = new HashMap<BioPAXElement, Set<Group>>();
 		Fixer.normalizeGenerics(model);
-		Set<EntityReference> ersToBeGrouped = new HashSet<EntityReference>();
-		Set<Complex> complexesToBeGrouped = new HashSet<Complex>();
+		Grouper grouper =new Grouper();
+		return grouper.inferGroups(model, grouper);
+	}
 
+	private Map<BioPAXElement, Group> inferGroups(Model model, Grouper grouper)
+	{
 		for (EntityReference er : model.getObjects(EntityReference.class))
 		{
-			ersToBeGrouped.add(er);
+			grouper.ersToBeGrouped.add(er);
 		}
-		for (EntityReference er: ersToBeGrouped)
+		for (EntityReference er : ersToBeGrouped)
 		{
-			 addIfNotNull(element2GroupMap, groups, er, inferGroupFromER(er, delegated, model));
+			addIfNotNull(er, inferGroupFromER(er, model));
 		}
 		for (Complex complex : model.getObjects(Complex.class))
 		{
@@ -47,32 +58,30 @@ public class Grouper
 		}
 		for (Complex complex : complexesToBeGrouped)
 		{
-			addIfNotNull(element2GroupMap, groups, complex, inferGroupFromComplex(complex, delegated, model));
+			addIfNotNull(complex, inferGroupFromComplex(complex, model));
 		}
 		return element2GroupMap;
 	}
 
-	private static void addIfNotNull(Map<BioPAXElement, Group> element2GroupMap, AccessibleSet<Group> groups,
-			BioPAXElement element, final Group group)
+	private void addIfNotNull(BioPAXElement element, final Group group)
 	{
 		if (group != null)
 		{
 			Group equivalentGroup = groups.access(group);
-			if(equivalentGroup==null)
+			if (equivalentGroup == null)
 			{
-				equivalentGroup=group;
+				equivalentGroup = group;
 				groups.add(equivalentGroup);
-			}
-			else
+			} else
 			{
-			   equivalentGroup.sources.addAll(group.sources);
+				equivalentGroup.sources.addAll(group.sources);
 			}
 			element2GroupMap.put(element, equivalentGroup);
 		}
 
 	}
 
-	private static Group inferGroupFromComplex(Complex complex, Map<BioPAXElement, Set<Group>> delegated, Model model)
+	private Group inferGroupFromComplex(Complex complex, Model model)
 	{
 		Group group = new Group(BinaryInteractionType.COMPONENT_OF, complex);
 		Set<PhysicalEntity> PElvlMembers = complex.getMemberPhysicalEntity();
@@ -89,16 +98,16 @@ public class Grouper
 						group.addMember(er);
 					} else
 					{
-						//must be generic
-						delegateTo(component, group, delegated);
+						Group subgroup = element2GroupMap.get(component);
+						if (subgroup == null) addOrDelegate(component, group);
+						else group.addSubgroup(subgroup);
 					}
 				} else if (component instanceof Complex)
 				{
-					delegateTo(component, group, delegated);
+					addOrDelegate(component, group);
 				}
 			}
-		}
-		else
+		} else
 		{
 			//If this is a reactome generic it should not have any components?
 			if (!complex.getComponent().isEmpty())
@@ -111,7 +120,7 @@ public class Grouper
 				{
 					if (member instanceof Complex)
 					{
-						delegateTo(member, group, delegated);
+						addOrDelegate(member, group);
 					} else
 					{
 						log.info("Non complex PE member for complex (" + member.getRDFId() + "->" + complex
@@ -130,23 +139,27 @@ public class Grouper
 				owner.addSubgroup(group);
 			}
 		}
-		Fixer.copySimplePointers(model,complex,group);
+		Fixer.copySimplePointers(model, complex, group);
 		return group;
 	}
 
-	private static void delegateTo(BioPAXElement member, Group owner, Map<BioPAXElement, Set<Group>> delegated)
+	private void addOrDelegate(BioPAXElement member, Group owner)
 	{
-		Set<Group> groups = delegated.get(member);
-		if (groups == null)
+		Group subgroup = element2GroupMap.get(member);
+		if (subgroup != null) owner.addSubgroup(subgroup);
+		else
 		{
-			groups = new HashSet<Group>();
-			delegated.put(member, groups);
+			Set<Group> groups = delegated.get(member);
+			if (groups == null)
+			{
+				groups = new HashSet<Group>();
+				delegated.put(member, groups);
+			}
+			groups.add(owner);
 		}
-		groups.add(owner);
 	}
 
-	private static Group inferGroupFromER(EntityReference element, Map<BioPAXElement, Set<Group>> delegated,
-			Model model)
+	private Group inferGroupFromER(EntityReference element, Model model)
 	{
 		Group group = new Group(BinaryInteractionType.GENERIC_OF, element);
 		for (EntityReference member : element.getMemberEntityReference())
@@ -175,7 +188,7 @@ public class Grouper
 				owner.addSubgroup(group);
 			}
 		}
-		Fixer.copySimplePointers(model,element,group);
+		Fixer.copySimplePointers(model, element, group);
 		return group.isEmpty() ? null : group;
 	}
 }

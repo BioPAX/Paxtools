@@ -46,6 +46,7 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 
 					BioPAXElement[] sources = group.sources.toArray(
 							(BioPAXElement[]) Array.newInstance(BioPAXElement.class, group.sources.size()));
+					System.out.println("components = " + components);
 					createClique(interactionSet, components, BinaryInteractionType.IN_SAME_COMPONENT, sources);
 				}
 				if (componentOf)
