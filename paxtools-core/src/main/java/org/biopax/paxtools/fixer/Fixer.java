@@ -52,7 +52,7 @@ public class Fixer
 	{
 
 		SimplePhysicalEntity first = (SimplePhysicalEntity) pe.getMemberPhysicalEntity().iterator().next();
-		String syntheticId = "http://biopax.org/generated/fixer/Fixer/normalizeGenerics/" + pe.getRDFId();
+		String syntheticId = "http://biopax.org/generated/fixer/normalizeGenerics/" + pe.getRDFId();
 		EntityReference generic =
 				(EntityReference) model.addNew(first.getEntityReference().getModelInterface(), syntheticId);
 		pe.setEntityReference(generic);
@@ -74,7 +74,7 @@ public class Fixer
 		{
 			if ((xref instanceof UnificationXref))
 			{
-				String id = "http://biopax.org/synthetic/u2r/" + xref.getRDFId();
+				String id = "http://biopax.org/generated/fixer/copySimplePointers/" + xref.getRDFId();
 				BioPAXElement byID = model.getByID(id);
 				if (byID == null)
 				{

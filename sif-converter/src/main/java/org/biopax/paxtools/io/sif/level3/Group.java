@@ -31,7 +31,7 @@ public class Group extends EntityReferenceImpl
 
 	@Override public String getRDFId()
 	{
-		return "biopax.org/synthetic/" + hashCode();
+		return "http://biopax.org/generated/group/" + hashCode();
 	}
 
 	@Override public boolean isEquivalent(BioPAXElement element)
