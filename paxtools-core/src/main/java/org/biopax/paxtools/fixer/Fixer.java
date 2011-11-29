@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,9 +19,12 @@ import static org.biopax.paxtools.controller.FeatureUtils.findFeaturesAddedToSec
 public class Fixer
 {
 
+
 	public static void normalizeGenerics(Model model)
 	{
 
+		HashMap<Set<EntityReference>, EntityReference> memberMap = new HashMap<Set<EntityReference>,
+				EntityReference>();
 		Set<SimplePhysicalEntity> pes = model.getObjects(SimplePhysicalEntity.class);
 		Set<SimplePhysicalEntity> pesToBeNormalized = new HashSet<SimplePhysicalEntity>();
 		for (SimplePhysicalEntity pe : pes)
@@ -37,7 +41,7 @@ public class Fixer
 		{
 			try
 			{
-				createNewERandAddMembers(model, pe);
+				createNewERandAddMembers(model, pe, memberMap);
 			}
 			catch (Exception e)
 			{
@@ -48,24 +52,33 @@ public class Fixer
 		}
 	}
 
-	private static void createNewERandAddMembers(Model model, SimplePhysicalEntity pe)
+	private static void createNewERandAddMembers(Model model, SimplePhysicalEntity pe,
+			HashMap<Set<EntityReference>, EntityReference> memberMap)
 	{
 
 		SimplePhysicalEntity first = (SimplePhysicalEntity) pe.getMemberPhysicalEntity().iterator().next();
 		String syntheticId = "http://biopax.org/generated/fixer/normalizeGenerics/" + pe.getRDFId();
-		EntityReference generic =
-				(EntityReference) model.addNew(first.getEntityReference().getModelInterface(), syntheticId);
-		pe.setEntityReference(generic);
-		copySimplePointers(model, pe, generic);
-
-		for (EntityReference member : pe.getGenericEntityReferences())
+		Set<EntityReference> members = pe.getGenericEntityReferences();
+		EntityReference er = memberMap.get(members);
+		if (er == null)
 		{
-			generic.addMemberEntityReference(member);
+			er = (EntityReference) model.addNew(first.getEntityReference().getModelInterface(), syntheticId);
+			copySimplePointers(model, pe, er);
+
+			for (EntityReference member : members)
+			{
+				er.addMemberEntityReference(member);
+			}
+			memberMap.put(members, er);
 		}
+		pe.setEntityReference(er);
+
 	}
 
 	public static void copySimplePointers(Model model, Named pe, Named generic)
 	{
+		generic.setDisplayName(pe.getDisplayName());
+		generic.setStandardName(pe.getStandardName());
 		for (String name : pe.getName())
 		{
 			generic.addName(name);
@@ -84,10 +97,9 @@ public class Fixer
 					rref.setDbVersion(xref.getDbVersion());
 					rref.setIdVersion(xref.getDbVersion());
 					xref = rref;
-				}
-				else
+				} else
 				{
-					xref= (Xref) byID;
+					xref = (Xref) byID;
 				}
 			}
 			generic.addXref(xref);
