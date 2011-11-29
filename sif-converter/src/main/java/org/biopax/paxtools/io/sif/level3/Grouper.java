@@ -12,10 +12,7 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.util.AccessibleSet;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
 
@@ -31,9 +28,9 @@ public class Grouper
 	Map<BioPAXElement, Set<Group>> delegated = new HashMap<BioPAXElement, Set<Group>>();
 
 
-	Set<EntityReference> ersToBeGrouped = new HashSet<EntityReference>();
+	Set<EntityReference> ersToBeGrouped ;
 
-	Set<Complex> complexesToBeGrouped = new HashSet<Complex>();
+	Set<Complex> complexesToBeGrouped;
 
 	public static Map<BioPAXElement, Group> inferGroups(Model model)
 	{
@@ -44,23 +41,21 @@ public class Grouper
 
 	private Map<BioPAXElement, Group> inferGroups(Model model, Grouper grouper)
 	{
-		for (EntityReference er : model.getObjects(EntityReference.class))
-		{
-			grouper.ersToBeGrouped.add(er);
-		}
+		ersToBeGrouped = new HashSet<EntityReference>(model.getObjects(EntityReference.class));
+		complexesToBeGrouped = new HashSet<Complex>(model.getObjects(Complex.class));
+
 		for (EntityReference er : ersToBeGrouped)
 		{
 			addIfNotNull(er, inferGroupFromER(er, model));
-		}
-		for (Complex complex : model.getObjects(Complex.class))
-		{
-			complexesToBeGrouped.add(complex);
 		}
 		for (Complex complex : complexesToBeGrouped)
 		{
 			addIfNotNull(complex, inferGroupFromComplex(complex, model));
 		}
+		HashMap<BioPAXElement,Group> debug = new HashMap<BioPAXElement, Group>();
+
 		return element2GroupMap;
+
 	}
 
 	private void addIfNotNull(BioPAXElement element, final Group group)
@@ -166,20 +161,7 @@ public class Grouper
 		{
 			group.addMember(member);
 		}
-		for (PhysicalEntity pe : element.getEntityReferenceOf())
-		{
-			for (PhysicalEntity member : pe.getMemberPhysicalEntity())
-			{
-				if (member instanceof SimplePhysicalEntity)
-				{
-					EntityReference memberEr = ((SimplePhysicalEntity) member).getEntityReference();
-					if (memberEr != null)
-					{
-						group.addMember(memberEr);
-					}
-				}
-			}
-		}
+
 		Set<Group> owners = delegated.get(element);
 		if (owners != null)
 		{

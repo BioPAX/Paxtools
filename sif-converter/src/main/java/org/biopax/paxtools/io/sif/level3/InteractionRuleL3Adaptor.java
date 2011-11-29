@@ -47,16 +47,14 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 	protected BioPAXElement getEntityReferenceOrGroup(PhysicalEntity pe, InteractionSetL3 set)
 	{
 
-		BioPAXElement bpe = null;
-		Group group = set.getElementToGroupMap().get(pe);
-		if (group != null)
-		{
-			bpe = group;
-		} else if (pe instanceof SimplePhysicalEntity)
+		BioPAXElement bpe = set.getElementToGroupMap().get(pe);
+		if(bpe == null && pe instanceof SimplePhysicalEntity)
 		{
 			EntityReference er = ((SimplePhysicalEntity) pe).getEntityReference();
 			if (er != null)
 			{
+				bpe = set.getElementToGroupMap().get(er);
+				if (bpe == null)
 				bpe = er;
 			} else
 			{
