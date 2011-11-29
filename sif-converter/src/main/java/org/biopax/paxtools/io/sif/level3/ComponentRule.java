@@ -34,34 +34,21 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 			{
 				Set<EntityReference> members = group.members;
 				Set<Group> subGroups = group.subgroups;
+				ArrayList<BioPAXElement> components = new ArrayList<BioPAXElement>(members.size() + subGroups.size());
+				components.addAll(members);
+				components.addAll(subGroups);
+
 				if (inSameComponent)
 				{
-
-					ArrayList<BioPAXElement> components =
-							new ArrayList<BioPAXElement>(members.size() + subGroups.size());
-					components.addAll(members);
-					components.addAll(subGroups);
-
-
-
 					BioPAXElement[] sources = group.sources.toArray(
 							(BioPAXElement[]) Array.newInstance(BioPAXElement.class, group.sources.size()));
-					System.out.println("components = " + components);
 					createClique(interactionSet, components, BinaryInteractionType.IN_SAME_COMPONENT, sources);
 				}
 				if (componentOf)
 				{
-					for (EntityReference member : members)
+					for (BioPAXElement component : components)
 					{
-						addComponent(member, group, interactionSet);
-					}
-
-					for (Group subGroup : subGroups)
-					{
-						if (subGroup.getType() == BinaryInteractionType.COMPONENT_OF)
-						{
-							addComponent(subGroup, group, interactionSet);
-						}
+						addComponent(component, group, interactionSet);
 					}
 				}
 			}
