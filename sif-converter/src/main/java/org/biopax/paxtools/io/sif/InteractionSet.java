@@ -8,8 +8,7 @@ public class InteractionSet extends AccessibleSet<SimpleInteraction>
 
 	@Override public boolean add(SimpleInteraction simpleInteraction)
 	{
-		if(simpleInteraction.getSource().getRDFId().startsWith("http://biopax.org/generated/fixer/normalizeGenerics"))
-			System.out.println("ooops");
+
 		SimpleInteraction existing = access(simpleInteraction);
 		if (existing == null)
 		{

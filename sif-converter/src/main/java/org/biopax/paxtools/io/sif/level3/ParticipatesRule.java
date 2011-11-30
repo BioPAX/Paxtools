@@ -77,15 +77,14 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 	{
 		if (entity instanceof PhysicalEntity)
 		{
-			BioPAXElement source = this.getEntityReferenceOrGroup((PhysicalEntity) entity, interactionSet);
+			BioPAXElement source = interactionSet.getEntityReferenceOrGroup((PhysicalEntity) entity);
 
 			for (Entity participant : interaction.getParticipant())
 			{
 				if (participant instanceof PhysicalEntity)
 
 				{
-					BioPAXElement target = this.getEntityReferenceOrGroup((PhysicalEntity) participant,
-					                                                      interactionSet);
+					BioPAXElement target = interactionSet.getEntityReferenceOrGroup((PhysicalEntity) participant);
 					createInteraction(source, target, interactionSet, type, interaction);
 				}
 			}

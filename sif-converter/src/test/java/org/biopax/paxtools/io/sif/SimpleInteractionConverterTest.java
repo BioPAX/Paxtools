@@ -122,7 +122,7 @@ public class SimpleInteractionConverterTest
 		{
 			public boolean accept(File dir, String name)
 			{
-				return (name.endsWith("AKT.owl"));
+				return (name.endsWith(".owl"));
 			}
 		};
 	}
@@ -138,7 +138,6 @@ public class SimpleInteractionConverterTest
 
 		File testDir = new File(getClass().getResource("/L3").getFile());
 
-		out.println("testWriteInteractionsInSIFNX (L3)");
 		for (String s : testDir.list(getFilter()))
 		{
 			InputStream in = getClass().getResourceAsStream("/L3/" + s);

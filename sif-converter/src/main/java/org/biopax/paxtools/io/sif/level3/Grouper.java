@@ -86,16 +86,16 @@ public class Grouper
 			{
 				if (component instanceof SimplePhysicalEntity)
 				{
-					EntityReference er = ((SimplePhysicalEntity) component).getEntityReference();
+					EntityReference er = this.element2GroupMap.get(component);
+					if(er==null)
+						 er = ((SimplePhysicalEntity) component).getEntityReference();
 
-					if (er != null && er.getMemberEntityReference().isEmpty())
+					if (er != null)
 					{
 						group.addMember(er);
 					} else
 					{
-						Group subgroup = element2GroupMap.get(component);
-						if (subgroup == null) addOrDelegate(component, group);
-						else group.addSubgroup(subgroup);
+						addOrDelegate(component, group);
 					}
 				} else if (component instanceof Complex)
 				{

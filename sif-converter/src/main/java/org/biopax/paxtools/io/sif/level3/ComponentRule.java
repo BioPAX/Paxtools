@@ -48,6 +48,7 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 				{
 					for (BioPAXElement component : components)
 					{
+
 						addComponent(component, group, interactionSet);
 					}
 				}
@@ -57,15 +58,17 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 
 	private void addComponent(BioPAXElement component, Group group, InteractionSetL3 interactionSet)
 	{
-		interactionSet.add(new SimpleInteraction(component, group, BinaryInteractionType.COMPONENT_OF));
+
+		interactionSet.add(new SimpleInteraction(interactionSet.getEntityReferenceOrGroup(component), group,
+		                                         BinaryInteractionType.COMPONENT_OF));
 	}
 
 
 	@Override public void initOptionsNotNull(Map options)
 	{
 		super.initOptionsNotNull(options);
-		inSameComponent = options.containsKey(IN_SAME_COMPONENT) && (!options.get(IN_SAME_COMPONENT).equals(false));
-		componentOf = options.containsKey(COMPONENT_OF) && (!options.get(COMPONENT_OF).equals(false));
+		inSameComponent = !options.containsKey(IN_SAME_COMPONENT) || (!options.get(IN_SAME_COMPONENT).equals(false));
+		componentOf = !options.containsKey(COMPONENT_OF) || (!options.get(COMPONENT_OF).equals(false));
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()

@@ -100,11 +100,4 @@ public class SimpleEditorMapTest
 		assertEquals(2, pr1.getComment().size());
 	}
 
-	@Test
-	public final void testReflection()
-	{
-		BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
-    	EditorMap em = SimpleEditorMap.L3;
-		System.out.println("debug point");
-	}
 }

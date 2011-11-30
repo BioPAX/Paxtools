@@ -274,10 +274,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			log.debug(triple);
 		}
 		BioPAXElement domain = model.getByID(triple.domain);
-		if (domain == null)
-		{
-			System.out.println("remove!!");
-		}
+
 		PropertyEditor editor =
 				this.getEditorMap().getEditorForProperty(triple.property, domain.getModelInterface());
 

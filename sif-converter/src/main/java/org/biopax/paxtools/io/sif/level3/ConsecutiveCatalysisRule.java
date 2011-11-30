@@ -34,7 +34,7 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor
 		{
 			if (inter instanceof Catalysis)
 			{
-				BioPAXElement bpe = this.getEntityReferenceOrGroup(pe, interactionSet);
+				BioPAXElement bpe = interactionSet.getEntityReferenceOrGroup(pe);
 				processCatalysis(interactionSet, (Catalysis) inter, bpe);
 			}
 		}
@@ -175,7 +175,7 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor
 	{
 
 		{
-			BioPAXElement target = this.getEntityReferenceOrGroup(controller, interactionSet);
+			BioPAXElement target = interactionSet.getEntityReferenceOrGroup(controller);
 			SimpleInteraction si = new SimpleInteraction(source, target, SEQUENTIAL_CATALYSIS);
 			interactionSet.add(si);
 			si.addMediator(firstCatalysis);

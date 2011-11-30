@@ -7,9 +7,7 @@ import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 
 import java.util.*;
 
@@ -30,47 +28,27 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 		}
 	}
 
-    public void initOptions(Map options)
-    {
-	   if(options==null)
+	public void initOptions(Map options)
+	{
+		if (options == null)
 		{
 			options = new HashMap();
 		}
 		initOptionsNotNull(options);
-    }
+	}
 
 	protected void initOptionsNotNull(Map options)
 	{
 
 	}
 
-	protected BioPAXElement getEntityReferenceOrGroup(PhysicalEntity pe, InteractionSetL3 set)
-	{
-
-		BioPAXElement bpe = set.getElementToGroupMap().get(pe);
-		if(bpe == null && pe instanceof SimplePhysicalEntity)
-		{
-			EntityReference er = ((SimplePhysicalEntity) pe).getEntityReference();
-			if (er != null)
-			{
-				bpe = set.getElementToGroupMap().get(er);
-				if (bpe == null)
-				bpe = er;
-			} else
-			{
-				if (log.isWarnEnabled())
-					log.warn("SimplePhysicalEntity with ID " + pe.getRDFId() + " has NULL EntityReference");
-			}
-		}
-		return bpe;
-	}
 
 	protected Set<BioPAXElement> collectEntities(Set<PhysicalEntity> pes, InteractionSetL3 set)
 	{
 		Set<BioPAXElement> entities = new HashSet<BioPAXElement>();
 		for (PhysicalEntity pe : pes)
 		{
-			BioPAXElement entity = this.getEntityReferenceOrGroup(pe, set);
+			BioPAXElement entity = set.getEntityReferenceOrGroup(pe);
 			if (entity != null) entities.add(entity);
 			if (entity instanceof Group)
 			{
@@ -90,7 +68,7 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 	}
 
 
-	protected void createClique(InteractionSet interactionSet, List<BioPAXElement> components,
+	protected void createClique(InteractionSetL3 interactionSet, List<BioPAXElement> components,
 			BinaryInteractionType type, BioPAXElement... mediators)
 	{
 
@@ -99,7 +77,10 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 			for (int i = 0; i < j; i++)
 			{
 				SimpleInteraction interaction =
-						new SimpleInteraction(components.get(i), components.get(j), type, mediators);
+						new SimpleInteraction(interactionSet.getEntityReferenceOrGroup(components.get(i)),
+						                      interactionSet.getEntityReferenceOrGroup(components.get(j)),
+						                      type,
+						                      mediators);
 				interactionSet.add(interaction);
 			}
 		}

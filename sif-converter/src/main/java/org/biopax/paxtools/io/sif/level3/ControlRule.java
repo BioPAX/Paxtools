@@ -46,7 +46,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 	 */
 	public void inferInteractionsFromPE(InteractionSetL3 is3, PhysicalEntity pe, Model model)
 	{
-		BioPAXElement source = this.getEntityReferenceOrGroup(pe, is3);
+		BioPAXElement source = is3.getEntityReferenceOrGroup(pe);
 		for (Interaction inter : pe.getParticipantOf())
 		{
 			if (inter instanceof Control)
@@ -211,7 +211,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 	private void addMappedElement(BioPAXElement element, InteractionSetL3 l3, Set<PhysicalEntity> set,
 			PhysicalEntity pe)
 	{
-		if (element.equals(this.getEntityReferenceOrGroup(pe, l3))) set.add(pe);
+		if (element.equals(l3.getEntityReferenceOrGroup(pe))) set.add(pe);
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()

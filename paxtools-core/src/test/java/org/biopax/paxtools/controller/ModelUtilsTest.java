@@ -1,17 +1,20 @@
 package org.biopax.paxtools.controller;
 
-import static org.junit.Assert.*;
-
-import java.io.ByteArrayOutputStream;
-import java.util.Map;
-
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandlerTest;
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class ModelUtilsTest {
 
@@ -54,7 +57,7 @@ public class ModelUtilsTest {
 		m.add(p2);
 		assertEquals(3, m.getObjects().size());
 		assertEquals(2, c.getComponent().size());
-		System.out.println("(before) components: " + c.getComponent().toString());
+
 		
 		// only 3 elements were added explicitly, but they have dependents -
 		m.repair();
@@ -73,7 +76,7 @@ public class ModelUtilsTest {
 		// do replace (replaces one element); 
 		m.replace(p2, p3);	
 		
-		System.out.println("(after) components: " + c.getComponent().toString());
+
 		assertEquals(7, m.getObjects().size()); // unchanged!
 		assertEquals(2, c.getComponent().size());
 		assertTrue(m.contains(p3)); // added!
@@ -239,7 +242,7 @@ public class ModelUtilsTest {
 		System.out.println(bytes.toString());
 	}
 
-	@Test
+
 	public final void testMetrics()
 	{
 		Model model = SimpleIOHandlerTest.getL3Model(new SimpleIOHandler());

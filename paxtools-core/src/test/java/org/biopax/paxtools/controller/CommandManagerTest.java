@@ -12,6 +12,8 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import static junit.framework.Assert.assertTrue;
+
 public class CommandManagerTest
 {
 	// TODO use assertions instead System.out...
@@ -33,24 +35,24 @@ public class CommandManagerTest
 		objects.add(interaction);
 
 		manager.addObjects(objects);
-		System.out.println(model.getObjects().size());
+		assertTrue(model.getObjects().size() == 3);
 		manager.undo();
-		System.out.println(model.getObjects().size());
+		assertTrue(model.getObjects().size()==0);
 		manager.redo();
 
 		PropertyEditor propertyEditor =
 				PropertyEditor.createPropertyEditor(MolecularInteraction.class, "participant");
 		manager.addProperty(interaction, propertyEditor,protein);
 		manager.addProperty(interaction, propertyEditor,protein2);
-		System.out.println(model.getObjects().size());
+		assertTrue(model.getObjects().size()==3);
 		manager.undo();
 		manager.undo();
-		System.out.println(model.getObjects().size());
+		assertTrue(model.getObjects().size()==3);
 		manager.undo();
-		System.out.println(model.getObjects().size());
+		assertTrue(model.getObjects().size()==0);
 		manager.redo();
 		manager.redo();
 		manager.redo();
-		System.out.println(model.getObjects().size());
+		assertTrue(model.getObjects().size()==3);
 	}
 }
