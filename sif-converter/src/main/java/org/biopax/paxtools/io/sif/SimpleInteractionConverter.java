@@ -101,11 +101,12 @@ public class SimpleInteractionConverter
 			}
 		}
 
+        	interactions.convertGroupsToInteractions();
+
 		if (blackList != null)
 		{
 			removeInteractionsWithBlackListMolecules(interactions, blackList);
 		}
-		interactions.convertGroupsToInteractions();
 		return interactions;
 	}
 
