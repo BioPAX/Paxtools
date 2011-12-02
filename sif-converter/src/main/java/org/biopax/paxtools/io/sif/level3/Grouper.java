@@ -52,7 +52,6 @@ public class Grouper
 		{
 			addIfNotNull(complex, inferGroupFromComplex(complex, model));
 		}
-		HashMap<BioPAXElement,Group> debug = new HashMap<BioPAXElement, Group>();
 
 		return element2GroupMap;
 
@@ -111,6 +110,7 @@ public class Grouper
 			} else
 			{
 				group = new Group(BinaryInteractionType.GENERIC_OF, complex);
+				group.genericType= Complex.class;
 				for (PhysicalEntity member : PElvlMembers)
 				{
 					if (member instanceof Complex)
@@ -157,8 +157,13 @@ public class Grouper
 	private Group inferGroupFromER(EntityReference element, Model model)
 	{
 		Group group = new Group(BinaryInteractionType.GENERIC_OF, element);
+
 		for (EntityReference member : element.getMemberEntityReference())
 		{
+			if(group.type==null)
+			{
+				group.genericType = member.getModelInterface();
+			}
 			group.addMember(member);
 		}
 

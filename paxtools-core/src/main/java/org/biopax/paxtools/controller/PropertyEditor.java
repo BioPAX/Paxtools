@@ -469,7 +469,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 
 		// 'null' definitely means 'unknown'for single cardinality props
 		if (value == null && !isMultipleCardinality())
-			value = (R) getUnknown(); // not null for primitive property editors
+			value = getUnknown(); // not null for primitive property editors
 
 		if (value instanceof String)
 		{
@@ -540,5 +540,6 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	{
 		return multipleCardinality ? addMethod : setMethod;
 	}
+
 
 }

@@ -22,19 +22,16 @@ import java.util.*;
 public abstract class EditorMapAdapter implements EditorMap
 {
 
-	protected final Map<String, Set<PropertyEditor>> propertyToEditorMap =
-			new HashMap<String, Set<PropertyEditor>>();
+	protected final Map<String, Set<PropertyEditor>> propertyToEditorMap = new HashMap<String, Set<PropertyEditor>>();
 
-	protected final Map<Class<? extends BioPAXElement>,Map<String, PropertyEditor>> classToEditorMap =
+	protected final Map<Class<? extends BioPAXElement>, Map<String, PropertyEditor>> classToEditorMap =
 
 			new HashMap<Class<? extends BioPAXElement>, Map<String, PropertyEditor>>();
 
-	protected final Map<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>>
-			classToInverseEditorMap =
+	protected final Map<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>> classToInverseEditorMap =
 			new HashMap<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>>();
 
-	protected final Map<Class<? extends BioPAXElement>, Set<PropertyEditor>>
-			classToEditorSet =
+	protected final Map<Class<? extends BioPAXElement>, Set<PropertyEditor>> classToEditorSet =
 			new HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>>();
 
 
@@ -63,10 +60,10 @@ public abstract class EditorMapAdapter implements EditorMap
 
 
 	public <D extends BioPAXElement> PropertyEditor<? super D, ?> getEditorForProperty(String property,
-	                                                                           Class<D> javaClass)
+			Class<D> javaClass)
 
 	{
-		PropertyEditor<? super D,?> result = this.classToEditorMap.get(javaClass).get(property);
+		PropertyEditor<? super D, ?> result = this.classToEditorMap.get(javaClass).get(property);
 
 		if (result == null)
 		{
@@ -76,8 +73,9 @@ public abstract class EditorMapAdapter implements EditorMap
 		return result;
 	}
 
-	public <D extends BioPAXElement> Set<PropertyEditor<? extends D, ?>> getSubclassEditorsForProperty(
-			String property, Class<D> domain)
+	public <D extends BioPAXElement> Set<PropertyEditor<? extends D, ?>> getSubclassEditorsForProperty(String
+			property,
+			Class<D> domain)
 	{
 		return new SubDomainFilterSet<D>(this.getEditorsForProperty(property), domain);
 
@@ -99,13 +97,13 @@ public abstract class EditorMapAdapter implements EditorMap
 		return nameSpace != null && nameSpace.startsWith(BioPAXLevel.BP_PREFIX);
 	}
 
-	protected PropertyEditor createAndRegisterBeanEditor(String pName, Class domain,Map<Class<? extends BioPAXElement>,
-			Set<Class<? extends BioPAXElement>>> rRestrictions)
+	protected PropertyEditor createAndRegisterBeanEditor(String pName, Class domain,
+			Map<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>> rRestrictions)
 	{
 		PropertyEditor editor = PropertyEditor.createPropertyEditor(domain, pName);
-		if(editor instanceof ObjectPropertyEditor && rRestrictions!=null)
+		if (editor instanceof ObjectPropertyEditor && rRestrictions != null)
 		{
-			((ObjectPropertyEditor)editor).setRangeRestriction(rRestrictions);
+			((ObjectPropertyEditor) editor).setRangeRestriction(rRestrictions);
 		}
 
 		if (editor != null)
@@ -136,17 +134,16 @@ public abstract class EditorMapAdapter implements EditorMap
 				//workaround for participants - can be replaced w/ a general
 				// annotation based system. For the time being, I am just handling it
 				//as a special case
-				if ((editor.getProperty().equals("PARTICIPANTS") && (conversion.class.isAssignableFrom(c) ||
-				                                                     control.class.isAssignableFrom(c))) ||
-				    (editor.getProperty().equals("participant") && (Conversion.class.isAssignableFrom(c) ||
-				                                                    Control.class.isAssignableFrom(c))))
+				if ((editor.getProperty().equals("PARTICIPANTS") &&
+				     (conversion.class.isAssignableFrom(c) || control.class.isAssignableFrom(c))) ||
+				    (editor.getProperty().equals("participant") &&
+				     (Conversion.class.isAssignableFrom(c) || Control.class.isAssignableFrom(c))))
 				{
 					if (log.isDebugEnabled())
 					{
 						log.debug("skipping restricted participant property");
 					}
-				}
-				else
+				} else
 				{
 					classToEditorMap.get(c).put(editor.getProperty(), editor);
 				}
@@ -162,11 +159,11 @@ public abstract class EditorMapAdapter implements EditorMap
 
 	private void registerInverseEditors(ObjectPropertyEditor editor)
 	{
-		if(editor.hasInverseLink())
+		if (editor.hasInverseLink())
 		{
 			for (Class<? extends BioPAXElement> c : classToInverseEditorMap.keySet())
 			{
-				if(checkInverseRangeIsAssignable(editor, c))
+				if (checkInverseRangeIsAssignable(editor, c))
 				{
 					classToInverseEditorMap.get(c).add(editor);
 				}
@@ -176,16 +173,15 @@ public abstract class EditorMapAdapter implements EditorMap
 
 	private boolean checkInverseRangeIsAssignable(ObjectPropertyEditor editor, Class<? extends BioPAXElement> c)
 	{
-		if (editor.getRange().isAssignableFrom(c) )
+		if (editor.getRange().isAssignableFrom(c))
 		{
-			Set<Class<? extends BioPAXElement>> restrictedRanges =
-					editor.getRestrictedRangesFor(editor.getDomain());
-			if(restrictedRanges.isEmpty()) return true;
+			Set<Class<? extends BioPAXElement>> restrictedRanges = editor.getRestrictedRangesFor(editor.getDomain());
+			if (restrictedRanges.isEmpty()) return true;
 			else
 			{
 				for (Class<? extends BioPAXElement> restrictedRange : restrictedRanges)
 				{
-					if(restrictedRange.isAssignableFrom(c))
+					if (restrictedRange.isAssignableFrom(c))
 					{
 						return true;
 					}
@@ -207,7 +203,7 @@ public abstract class EditorMapAdapter implements EditorMap
 			HashMap<String, PropertyEditor> peMap = new HashMap<String, PropertyEditor>();
 			classToEditorMap.put(domain, peMap);
 			classToInverseEditorMap.put(domain, new HashSet<ObjectPropertyEditor>());
-			classToEditorSet.put(domain,new ValueSet(peMap.values()));
+			classToEditorSet.put(domain, new ValueSet(peMap.values()));
 		}
 		catch (IllegalBioPAXArgumentException e)
 		{
@@ -235,21 +231,23 @@ public abstract class EditorMapAdapter implements EditorMap
 			return superClass.isAssignableFrom(subClass);
 		}
 	}
-	private class SubDomainFilterSet<D extends BioPAXElement>
-		extends AbstractFilterSet<PropertyEditor,PropertyEditor<? extends D,?>>
-		{
-			private Class<D> domain;
 
-			public SubDomainFilterSet(Set<PropertyEditor> baseSet, Class<D> domain)
-			{
-				super(baseSet);
-				this.domain = domain;
-			}
-			@Override public boolean filter(PropertyEditor editor)
-			{
-				return domain.isAssignableFrom(editor.getDomain());
-			}
+	private class SubDomainFilterSet<D extends BioPAXElement>
+			extends AbstractFilterSet<PropertyEditor, PropertyEditor<? extends D, ?>>
+	{
+		private Class<D> domain;
+
+		public SubDomainFilterSet(Set<PropertyEditor> baseSet, Class<D> domain)
+		{
+			super(baseSet);
+			this.domain = domain;
 		}
+
+		@Override public boolean filter(PropertyEditor editor)
+		{
+			return domain.isAssignableFrom(editor.getDomain());
+		}
+	}
 
 	protected Class<? extends BioPAXElement> getModelInterface(String localName)
 	{
@@ -289,6 +287,73 @@ public abstract class EditorMapAdapter implements EditorMap
 		{
 			return values.size();
 		}
+	}
+
+	public List<ObjectPropertyEditor> dependencySortProperties()
+	{
+		HashMap<ObjectPropertyEditor, SortNode> labels = new HashMap<ObjectPropertyEditor, SortNode>();
+		for (ObjectPropertyEditor ope : labels.keySet())
+		{
+
+			LinkedList<ObjectPropertyEditor> opes = new LinkedList<ObjectPropertyEditor>();
+			opes.add(ope);
+			recursivelyTraverse(labels,opes);
+		}
+		return null; //TODO
+	}
+
+	private int recursivelyTraverse(HashMap<ObjectPropertyEditor, SortNode> nodeMap, List<ObjectPropertyEditor> opes)
+	{
+//		SortNode rangeNode = nodeMap.get(range);
+//		int level = 0;
+//		if (rangeNode == null)
+//		{
+//			rangeNode = new SortNode(STATE.REACHED, range);
+//			nodeMap.put(range, rangeNode);
+//			for (PropertyEditor editor : classToEditorMap.get(range).values())
+//			{
+//				if (editor instanceof ObjectPropertyEditor)
+//				{
+//					Class<? extends BioPAXElement> nextRange = editor.getRange();
+//					level = Math.max(level, recursivelyTraverse(nodeMap, range, nextRange));
+//				}
+//			}
+//			rangeNode.state = STATE.FINISHED;
+//		} else if (rangeNode.state == STATE.REACHED)
+//		{
+//
+//		}
+//		return level + 1;
+		return 0; //TODO
+	}
+
+	private class SortNode
+	{
+		STATE state;
+
+		Set<Class<? extends BioPAXElement>> members = new HashSet<Class<? extends BioPAXElement>>();
+
+
+		SortNode(STATE state, Class<? extends BioPAXElement> first)
+		{
+			this.state = state;
+			this.members.add(first);
+		}
+
+		void merge(SortNode toMerge, HashMap<Class<? extends BioPAXElement>, SortNode> nodeMap)
+		{
+			this.members.addAll(toMerge.members);
+			for (Class<? extends BioPAXElement> member : toMerge.members)
+			{
+				nodeMap.put(member, this);
+			}
+		}
+	}
+
+	public enum STATE
+	{
+		REACHED,
+		FINISHED
 	}
 
 }

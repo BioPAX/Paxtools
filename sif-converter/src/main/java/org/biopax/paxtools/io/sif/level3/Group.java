@@ -20,6 +20,8 @@ public class Group extends EntityReferenceImpl
 
 	BinaryInteractionType type;
 
+	Class<? extends BioPAXElement> genericType;
+
 	Set<BioPAXElement> sources;
 
 	Group(BinaryInteractionType type, BioPAXElement source)
@@ -119,5 +121,19 @@ public class Group extends EntityReferenceImpl
 	public Map<String, Object> getAnnotations() {
 		throw new UnsupportedOperationException("getAnnotations() is not supported " +
 			"for this (special) BioPAXElement: " + getClass());
+	}
+
+	public String groupTypeToString()
+	{
+		if(type == BinaryInteractionType.COMPONENT_OF)
+		{
+			return "ComplexGroup";
+		}
+		else if(type == BinaryInteractionType.GENERIC_OF)
+		{
+			return "Generic"+ (genericType==null?"":genericType.getSimpleName());
+		}
+		else throw new IllegalStateException();
+
 	}
 }

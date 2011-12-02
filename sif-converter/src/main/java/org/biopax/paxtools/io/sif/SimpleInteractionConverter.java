@@ -3,6 +3,7 @@ package org.biopax.paxtools.io.sif;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.PathAccessor;
+import org.biopax.paxtools.io.sif.level3.Group;
 import org.biopax.paxtools.io.sif.level3.InteractionSetL3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -269,7 +270,7 @@ public class SimpleInteractionConverter
 			{
 
 				writer.write(entity.getRDFId());
-				if (writeEntityTypes) writer.write("\t" + entity.getModelInterface().getSimpleName());
+				if (writeEntityTypes) writer.write("\t" + getEntityTypeString(entity));
 				if (interactorAccessors != null)
 				{
 					for (PathAccessor accessor : interactorAccessors)
@@ -291,6 +292,17 @@ public class SimpleInteractionConverter
 
 		writer.close();
 	}
+
+	private String getEntityTypeString(BioPAXElement entity)
+	{
+		if(entity instanceof Group)
+		{
+			return ((Group) entity).groupTypeToString();
+		}
+		else
+			return entity.getModelInterface().getSimpleName();
+	}
+
 	private String valuesToString(Set values)
 	{
 		StringBuilder bldr = new StringBuilder();
