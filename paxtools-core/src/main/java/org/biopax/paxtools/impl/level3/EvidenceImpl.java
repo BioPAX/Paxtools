@@ -3,7 +3,6 @@ package org.biopax.paxtools.impl.level3;
 
 import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
@@ -109,6 +108,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 * @return a set of evidence codes  for this evidence type.
 	 */
 	@ManyToMany(targetEntity = EvidenceCodeVocabularyImpl.class)
+	@JoinTable(name="evidencecode")
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
 	{
 		return evidenceCode;

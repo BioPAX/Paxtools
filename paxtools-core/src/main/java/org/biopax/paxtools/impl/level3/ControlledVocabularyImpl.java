@@ -15,6 +15,7 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
@@ -60,6 +61,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	// Property term
 
 	@ElementCollection
+	@JoinTable(name="term")
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_TERM, index = Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getTerm()

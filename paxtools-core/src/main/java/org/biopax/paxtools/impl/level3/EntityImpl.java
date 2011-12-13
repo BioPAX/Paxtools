@@ -65,6 +65,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 // --------------------- ACCESORS and MUTATORS---------------------
 
 	@ElementCollection
+	@JoinTable(name="availability")
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAvailability()

@@ -10,6 +10,7 @@ import org.hibernate.search.annotations.Index;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.Transient;
 
 import java.util.HashSet;
@@ -82,6 +83,7 @@ public abstract class NamedImpl extends XReferrableImpl
 	
 	
 	@ElementCollection
+	@JoinTable(name="name")
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
 	@Boost(1.0f)

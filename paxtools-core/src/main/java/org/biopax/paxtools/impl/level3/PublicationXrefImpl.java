@@ -12,6 +12,7 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,6 +51,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
     // Property author
     @ElementCollection
+    @JoinTable(name="author")
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAuthor()
@@ -75,6 +77,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     @ElementCollection
+    @JoinTable(name="source")
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getSource()
@@ -114,6 +117,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 
         // Property url
     @ElementCollection
+    @JoinTable(name="url")
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getUrl()

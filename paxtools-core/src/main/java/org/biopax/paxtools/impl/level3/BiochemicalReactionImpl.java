@@ -82,6 +82,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 
 	@ElementCollection
+	@JoinTable(name="deltaH")	
 	public Set<Float> getDeltaH()
 	{
 		return deltaH;
@@ -104,6 +105,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 
 	@ElementCollection
+	@JoinTable(name="deltaS")	
 	public Set<Float> getDeltaS()
 	{
 		return deltaS;
@@ -125,6 +127,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 	}
 
 	@ElementCollection
+	@JoinTable(name="ECNumber")	
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_EC_NUMBER, index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getECNumber()

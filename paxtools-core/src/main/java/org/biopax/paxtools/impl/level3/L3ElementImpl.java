@@ -10,6 +10,8 @@ import org.hibernate.search.annotations.Index;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +32,7 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
     }
 
     @ElementCollection
+    @JoinTable(name="comment")
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_COMMENT, index = Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	@Column(columnDefinition="LONGTEXT")
