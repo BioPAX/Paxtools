@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
@@ -23,6 +25,7 @@ import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentInterse
  */
 @Entity
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
 // ------------------------------ FIELDS ------------------------------
@@ -46,6 +49,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 // -------------------------- OTHER METHODS --------------------------
 
 
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@IndexedEmbedded(depth=1, targetElement=XrefImpl.class)
 	@Target(XrefImpl.class)
 	@ManyToMany(targetEntity = XrefImpl.class)

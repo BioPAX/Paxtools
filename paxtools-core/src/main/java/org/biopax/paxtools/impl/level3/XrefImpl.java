@@ -4,6 +4,8 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -18,6 +20,7 @@ import java.util.Set;
 
 @Entity
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class XrefImpl extends L3ElementImpl implements Xref
 {
 
@@ -126,6 +129,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ContainedIn
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()
