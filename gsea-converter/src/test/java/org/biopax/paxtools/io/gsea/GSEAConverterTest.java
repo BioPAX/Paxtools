@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * GSEA conversion test.
@@ -22,7 +21,7 @@ public class GSEAConverterTest {
 
 	PrintStream out = null;
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
-	static final String outFile = "target" + File.separator + "gseaConverterTest.out.txt";
+	static final String outFile = "gseaConverterTest.out.txt";
 	
 	
 	@Before
@@ -86,18 +85,7 @@ public class GSEAConverterTest {
 			Model level3 = handler.convertFromOWL(in);
 			GSEAConverter gseaConverter = new GSEAConverter("uniprot", true);
 			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level3);
-			// assert some things
-			assertEquals(1, entries.size());
-			GSEAEntry entry = entries.iterator().next();
-			assertEquals("Glycolysis Pathway", entry.getName() );
-			//FIXME it can return either aMAZE or "KEGG" below; - because the order is not defined in gseaConverter.convert!
-			assertTrue("aMAZE".equals(entry.getDataSource()) || "KEGG".equals(entry.getDataSource()));
-			assertEquals("562", entry.getTaxID());
-			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
-			assertEquals(2, rdfToGenes.size());
-			for (String aSymbol : rdfToGenes.values()) {
-				assertTrue(aSymbol.equals("P46880") || aSymbol.equals("Q9KH85"));
-			}
+
 			// dump the output
 			(new GSEAConverter("uniprot", true)).writeToGSEA(level3, out);
 			in.close();

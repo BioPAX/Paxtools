@@ -63,14 +63,20 @@ public abstract class EditorMapAdapter implements EditorMap
 			Class<D> javaClass)
 
 	{
-		PropertyEditor<? super D, ?> result = this.classToEditorMap.get(javaClass).get(property);
-
-		if (result == null)
+		Map<String, PropertyEditor> classEditors = this.classToEditorMap.get(javaClass);
+		PropertyEditor<? super D, ?> result = null;
+		if (classEditors != null)
 		{
-			if (log.isDebugEnabled()) log.debug("Could not locate controller for " + property + " | " + javaClass);
-		}
+			result = classEditors.get(property);
 
+			if (result == null)
+			{
+				if (log.isDebugEnabled()) log.debug("Could not locate controller for " + property + " | " +
+				                                    javaClass);
+			} else if (log.isDebugEnabled()) log.debug("Editors are only defined for public BioPAX interfaces");
+		}
 		return result;
+
 	}
 
 	public <D extends BioPAXElement> Set<PropertyEditor<? extends D, ?>> getSubclassEditorsForProperty(String
@@ -289,21 +295,56 @@ public abstract class EditorMapAdapter implements EditorMap
 		}
 	}
 
-	public List<ObjectPropertyEditor> dependencySortProperties()
-	{
-		HashMap<ObjectPropertyEditor, SortNode> labels = new HashMap<ObjectPropertyEditor, SortNode>();
-		for (ObjectPropertyEditor ope : labels.keySet())
-		{
+//	public List<ObjectPropertyEditor> dependencySortProperties()
+//	{
+//
+//
+//		HashMap<Class<? extends BioPAXElement>, SortNode> nodes =
+//				new HashMap<Class<? extends BioPAXElement>, SortNode>();
+//		for (Class<? extends BioPAXElement> aClass : classToEditorMap.keySet())
+//		{
+//			recursivelyTraverse(nodes, new ArrayList<Class<? extends BioPAXElement>>());
+//		}
+//
+//	}
 
-			LinkedList<ObjectPropertyEditor> opes = new LinkedList<ObjectPropertyEditor>();
-			opes.add(ope);
-			recursivelyTraverse(labels,opes);
-		}
-		return null; //TODO
-	}
-
-	private int recursivelyTraverse(HashMap<ObjectPropertyEditor, SortNode> nodeMap, List<ObjectPropertyEditor> opes)
-	{
+//	private int recursivelyTraverse(HashMap<Class<? extends BioPAXElement>, SortNode> nodeMap,
+//			List<Class<? extends BioPAXElement>> path)
+//	{
+//		int level = 0;
+//		Class<? extends BioPAXElement> domain = path.get(path.size() - 1);
+//		SortNode node = nodeMap.get(domain);
+//		for (PropertyEditor propertyEditor : getEditorsOf(domain))
+//		{
+//			if (propertyEditor instanceof ObjectPropertyEditor)
+//			{
+//				ObjectPropertyEditor ope = (ObjectPropertyEditor) propertyEditor;
+//				Class range = ope.getRange();
+//				if (!nodeMap.containsKey(range))
+//				{
+//					SortNode newNode = new SortNode(STATE.REACHED, range);
+//					registerNodeAndTraverse(nodeMap, path, node, range, newNode);
+//				} else
+//				{
+//					//Cycle!
+//					if (node.cyclic)
+//					{
+//						if (!node.members.contains(range))
+//						{
+//							registerNodeAndTraverse(nodeMap, path, node, range, node);
+//						}
+//					} else
+//					{
+//						node.cyclic = true;
+//						for (Class<? extends BioPAXElement> aClass : path)
+//						{
+//							SortNode otherNode = nodeMap.get(aClass);
+//							otherNode.merge(node, nodeMap);
+//						}
+//					}
+//				}
+//			}
+//		}
 //		SortNode rangeNode = nodeMap.get(range);
 //		int level = 0;
 //		if (rangeNode == null)
@@ -324,12 +365,24 @@ public abstract class EditorMapAdapter implements EditorMap
 //
 //		}
 //		return level + 1;
-		return 0; //TODO
+//		return 0; //TODO
+//	}
+
+	private void registerNodeAndTraverse(HashMap<Class<? extends BioPAXElement>, SortNode> nodeMap,
+			List<Class<? extends BioPAXElement>> path, SortNode node, Class range, SortNode newNode)
+	{
+		nodeMap.put(range, newNode);
+		path.add(range);
+//		node.level = Math.max(node.level, recursivelyTraverse(nodeMap, path));
 	}
 
 	private class SortNode
 	{
 		STATE state;
+
+		boolean cyclic = false;
+
+		int level = 0;
 
 		Set<Class<? extends BioPAXElement>> members = new HashSet<Class<? extends BioPAXElement>>();
 
@@ -342,11 +395,16 @@ public abstract class EditorMapAdapter implements EditorMap
 
 		void merge(SortNode toMerge, HashMap<Class<? extends BioPAXElement>, SortNode> nodeMap)
 		{
-			this.members.addAll(toMerge.members);
-			for (Class<? extends BioPAXElement> member : toMerge.members)
+			if (this != toMerge)
 			{
-				nodeMap.put(member, this);
+
+				this.members.addAll(toMerge.members);
+				for (Class<? extends BioPAXElement> member : toMerge.members)
+				{
+					nodeMap.put(member, this);
+				}
 			}
+
 		}
 	}
 

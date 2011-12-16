@@ -1,9 +1,9 @@
 package org.biopax.paxtools.controller;
 
 
-import org.apache.commons.collections15.set.CompositeSet;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.*;
@@ -53,6 +53,10 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 	}
 
+	public PathAccessor(String path)
+	{
+		this(path,BioPAXLevel.L3);
+	}
 
 	private Class<? extends BioPAXElement> extractAccessor(BioPAXLevel level, Class<? extends BioPAXElement> domain,
 	                                                       String term)
@@ -104,18 +108,23 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	public Set getValueFromBean(BioPAXElement bean) throws IllegalBioPAXArgumentException
 	{
 		Set<BioPAXElement> bpes = new HashSet<BioPAXElement>();
-
 		bpes.add(bean);
+		return  getValueFromBeans(bpes);
+	}
+
+	public Set getValueFromBeans(Collection<? extends BioPAXElement> beans) throws IllegalBioPAXArgumentException
+	{
+		Collection<? extends BioPAXElement> bpes = beans;
 
 		for (PropertyAccessor objectAccessor : objectAccessors)
 		{
-			CompositeSet<BioPAXElement> nextBpes = new CompositeSet<BioPAXElement>();
+			HashSet<BioPAXElement> nextBpes = new HashSet<BioPAXElement>();
 			for (BioPAXElement bpe : bpes)
 			{
 				Set valueFromBean = objectAccessor.getValueFromBean(bpe);
 				if (valueFromBean != null || valueFromBean.isEmpty())
 				{
-					nextBpes.addComposited(valueFromBean);
+					nextBpes.addAll(valueFromBean);
 				}
 			}
 			bpes = nextBpes;
@@ -131,6 +140,13 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			}
 		}
 		return values;
+	}
+
+	public Set getValueFromModel(Model model) throws IllegalBioPAXArgumentException
+	{
+		Set<? extends BioPAXElement> domains = new HashSet<BioPAXElement>(model.getObjects(this.objectAccessors.get
+				(0).getDomain()));
+		return getValueFromBeans(domains);
 	}
 
 	private Class<? extends BioPAXElement> getRestricted(BioPAXLevel level, StringTokenizer ct)
@@ -210,4 +226,5 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 						objectAccessors.iterator().next().getDomain();
 		return domain.isInstance(bpe);
 	}
+
 }

@@ -39,10 +39,10 @@ public class SimplePropertyAccessor<D extends BioPAXElement, R> extends Property
 	 */
 	@Override public Set<R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
 	{
-		Object value;
+		Object value = null;
 		try
 		{
-			value = this.getMethod.invoke(bean);
+			if (this.getDomain().isInstance(bean)) value = this.getMethod.invoke(bean);
 		}
 		catch (IllegalAccessException e)
 		{
@@ -65,8 +65,7 @@ public class SimplePropertyAccessor<D extends BioPAXElement, R> extends Property
 		else if (this.isMultipleCardinality())
 		{
 			return (Collections.unmodifiableSet(((Set<R>) value)));
-		}
-		else
+		} else
 		{
 			return Collections.singleton(((R) value));
 		}
