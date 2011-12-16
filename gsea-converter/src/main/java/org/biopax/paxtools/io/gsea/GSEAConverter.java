@@ -111,12 +111,12 @@ public class GSEAConverter
 		if (model.getLevel() == BioPAXLevel.L1 || model.getLevel() == BioPAXLevel.L2)
 		{
 			l3Model = (new OneTwoThree()).filter(model);
-		} else if (model.getLevel() == BioPAXLevel.L3)
+		} else
 		{
 			l3Model = model;
 		}
 
-		for (Pathway pathway : model.getObjects(Pathway.class))
+		for (Pathway pathway : l3Model.getObjects(Pathway.class))
 		{
 			toReturn.add(getGSEAEntry(l3Model, pathway, database));
 		}
