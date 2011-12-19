@@ -119,6 +119,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
 	public Set<Interaction> getParticipantOf()
 	{

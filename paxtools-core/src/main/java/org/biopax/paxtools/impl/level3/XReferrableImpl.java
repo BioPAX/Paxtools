@@ -48,6 +48,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 // -------------------------- OTHER METHODS --------------------------
 
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@IndexedEmbedded(depth=1, targetElement=XrefImpl.class)
 	@Target(XrefImpl.class)
 	@ManyToMany(targetEntity = XrefImpl.class)

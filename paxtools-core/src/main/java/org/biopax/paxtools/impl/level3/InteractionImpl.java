@@ -82,6 +82,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	   this.interactionType = interactionType;
 	}
 
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityImpl.class)
 	@JoinTable(name="participant")
 	public Set<Entity> getParticipant()
