@@ -84,8 +84,8 @@ public abstract class NamedImpl extends XReferrableImpl
 		addName(this.displayName = displayName);
 	}
 	
-	
-	@ElementCollection
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @ElementCollection
 	@JoinTable(name="name")
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)

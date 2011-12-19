@@ -23,7 +23,7 @@ public abstract class NucleicAcidReferenceImpl extends SequenceEntityReferenceIm
 		this.subRegion = new HashSet<NucleicAcidRegionReference>();
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class)
 	@JoinTable(name = "subRegion")
 	public Set<NucleicAcidRegionReference> getSubRegion()

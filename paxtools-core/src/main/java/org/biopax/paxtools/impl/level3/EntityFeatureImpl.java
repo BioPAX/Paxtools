@@ -94,7 +94,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		ownerEntityReference = entityReference;
 	}
 	
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, 
 			mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
@@ -102,6 +102,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return featureOf;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class,
 			mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()
@@ -109,7 +110,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return notFeatureOf;
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()
@@ -156,7 +157,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocationType= regionVocabulary;
 	}
 
-	
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="memberFeature")
 	public Set<EntityFeature> getMemberFeature()
@@ -184,7 +185,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		}
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
 	public Set<EntityFeature> getMemberFeatureOf()
 	{

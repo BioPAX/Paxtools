@@ -31,6 +31,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 		return TemplateReaction.class;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ManyToMany(targetEntity = PhysicalEntityImpl.class) //TODO: make sequence entity?
     @JoinTable(name="product") 	
     public Set<PhysicalEntity> getProduct()

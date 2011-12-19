@@ -34,6 +34,7 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
         this.comment = new HashSet<String>();
     }
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="comment")
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_COMMENT, index = Index.TOKENIZED)

@@ -63,6 +63,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 
 	// Property term
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="term")
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_TERM, index = Index.TOKENIZED)

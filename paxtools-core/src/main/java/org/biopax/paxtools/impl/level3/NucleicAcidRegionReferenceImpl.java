@@ -32,7 +32,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 		this.subRegionOf = new HashSet<NucleicAcidReference>();
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = NucleicAcidReferenceImpl.class, mappedBy = "subRegion")
 	public Set<NucleicAcidReference> getSubRegionOf()
 	{
@@ -57,6 +57,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class)
 	@JoinTable(name = "regionType")
 	public Set<SequenceRegionVocabulary> getRegionType()

@@ -53,6 +53,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	////////////////////////////////////////////////////////////////////////////
 
     // Property author
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="author")
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
@@ -79,6 +80,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 			this.author.remove(author);
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="source")
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
@@ -119,6 +121,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
         // Property url
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="url")
     @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)

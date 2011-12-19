@@ -59,6 +59,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of scores representing confidence
 	 */
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="confidence")		
 	public Set<Score> getConfidence()
@@ -110,6 +111,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of evidence codes  for this evidence type.
 	 */
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceCodeVocabularyImpl.class)
 	@JoinTable(name="evidencecode")
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
@@ -158,7 +160,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 			this.evidenceCode.remove(evidenceCode);
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="experimentalForm")	
 	public Set<ExperimentalForm> getExperimentalForm()

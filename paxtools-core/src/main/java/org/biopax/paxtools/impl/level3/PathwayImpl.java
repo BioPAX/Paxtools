@@ -50,7 +50,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="pathwayComponent") 		
 	public Set<Process> getPathwayComponent()
@@ -79,6 +79,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		}
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")//, cascade = {CascadeType.ALL})
 	public Set<PathwayStep> getPathwayOrder()
 	{
@@ -118,6 +119,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		this.organism = organism;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController")
 	public Set<Control> getControllerOf()
 	{

@@ -60,6 +60,7 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 		this.catalysisDirection = catalysisDirection;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class) @JoinTable(name = "cofactor")
 	public Set<PhysicalEntity> getCofactor()
 	{
