@@ -6,12 +6,17 @@ import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity 
+@Entity
+ @Proxy(proxyClass= NucleicAcidReference.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenceImpl

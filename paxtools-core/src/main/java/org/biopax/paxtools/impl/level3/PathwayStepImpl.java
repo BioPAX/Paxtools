@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+ @Proxy(proxyClass=PathwayStep.class)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

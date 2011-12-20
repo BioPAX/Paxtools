@@ -7,6 +7,7 @@ import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -20,7 +21,10 @@ import java.util.Set;
 import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
 
 
+
 @javax.persistence.Entity
+
+@Proxy(proxyClass= Entity.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class EntityImpl extends NamedImpl implements Entity

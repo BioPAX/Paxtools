@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.level3.Level3Element;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -13,7 +14,6 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +22,7 @@ import java.util.Set;
  *
  */
 @Entity
+ @Proxy(proxyClass= Level3Element.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class L3ElementImpl extends BioPAXElementImpl

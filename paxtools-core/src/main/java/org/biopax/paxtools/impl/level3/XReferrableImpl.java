@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
@@ -24,6 +25,7 @@ import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentInterse
  * @author Emek Demir
  */
 @Entity
+ @Proxy(proxyClass= XReferrable.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable

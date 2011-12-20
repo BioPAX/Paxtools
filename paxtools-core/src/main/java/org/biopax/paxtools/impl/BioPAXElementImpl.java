@@ -1,14 +1,16 @@
 package org.biopax.paxtools.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.EntityReference;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.DocumentId;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
+
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(length=40)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)

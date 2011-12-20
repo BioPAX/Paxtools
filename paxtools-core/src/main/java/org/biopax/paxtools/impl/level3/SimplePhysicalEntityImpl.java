@@ -8,8 +8,7 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Target;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -18,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+ @Proxy(proxyClass= SimplePhysicalEntity.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 		implements SimplePhysicalEntity

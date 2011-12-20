@@ -1,29 +1,27 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.Transient;
-
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  */
 @Entity
+ @Proxy(proxyClass= Named.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public abstract class NamedImpl extends XReferrableImpl
+public abstract class NamedImpl extends XReferrableImpl implements Named
 {
 
 	private String standardName;

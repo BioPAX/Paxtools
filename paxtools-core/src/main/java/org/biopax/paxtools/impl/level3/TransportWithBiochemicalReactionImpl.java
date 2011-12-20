@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.TransportWithBiochemicalReaction;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
