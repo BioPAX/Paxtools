@@ -35,10 +35,10 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 	{
 		super(editor.getDomain(), editor.getRange(), editor.isMultipleCardinality());
 		this.editor = editor;
-		String rangeClass = range.getSimpleName();
+		String rangeClass = range.getName();
 		String rangeName = rangeClass.toLowerCase();
 
-		String domainClass = domain.getSimpleName();
+		String domainClass = domain.getName();
 		String domainName = domainClass.toLowerCase();
 
 		String property = editor.getProperty();
