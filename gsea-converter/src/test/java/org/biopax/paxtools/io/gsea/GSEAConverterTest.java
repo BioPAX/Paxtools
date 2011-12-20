@@ -21,7 +21,8 @@ public class GSEAConverterTest {
 
 	PrintStream out = null;
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
-	static final String outFile = "gseaConverterTest.out.txt";
+	static final String outFile = GSEAConverterTest.class
+			.getResource("/").getFile() + File.separator + "gseaConverterTest.out.txt";
 	
 	
 	@Before

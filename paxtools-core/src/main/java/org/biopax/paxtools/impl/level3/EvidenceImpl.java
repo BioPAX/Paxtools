@@ -6,6 +6,8 @@ import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentInterse
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -16,6 +18,7 @@ import java.util.Set;
 @Entity
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EvidenceImpl extends XReferrableImpl implements Evidence
 {
 
@@ -56,6 +59,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of scores representing confidence
 	 */
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="confidence")		
 	public Set<Score> getConfidence()
@@ -107,6 +111,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of evidence codes  for this evidence type.
 	 */
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceCodeVocabularyImpl.class)
 	@JoinTable(name="evidencecode")
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
@@ -155,7 +160,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 			this.evidenceCode.remove(evidenceCode);
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="experimentalForm")	
 	public Set<ExperimentalForm> getExperimentalForm()

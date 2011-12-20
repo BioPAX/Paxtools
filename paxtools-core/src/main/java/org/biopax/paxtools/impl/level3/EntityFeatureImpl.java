@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -14,6 +16,7 @@ import java.util.Set;
 @Entity
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
 	private final Log log = LogFactory.getLog(EntityFeatureImpl.class);
@@ -91,7 +94,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		ownerEntityReference = entityReference;
 	}
 	
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, 
 			mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
@@ -99,6 +102,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return featureOf;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class,
 			mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()
@@ -106,7 +110,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return notFeatureOf;
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()
@@ -153,7 +157,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocationType= regionVocabulary;
 	}
 
-	
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="memberFeature")
 	public Set<EntityFeature> getMemberFeature()
@@ -181,7 +185,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		}
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
 	public Set<EntityFeature> getMemberFeatureOf()
 	{

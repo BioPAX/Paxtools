@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.level3.BiochemicalReaction;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.KPrime;
 import org.biopax.paxtools.util.SetStringBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -17,6 +19,7 @@ import java.util.Set;
 @Entity
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BiochemicalReactionImpl extends ConversionImpl
 	implements BiochemicalReaction
 {
@@ -55,7 +58,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 // --------------------- Interface BiochemicalReaction ---------------------
 
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = DeltaGImpl.class)//, cascade = {CascadeType.ALL})
 	@JoinTable(name="deltaG")	
 	public Set<DeltaG> getDeltaG()
@@ -80,7 +83,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 			this.deltaG.remove(deltaG);
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="deltaH")	
 	public Set<Float> getDeltaH()
@@ -103,7 +106,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		this.deltaH.remove(deltaH);
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="deltaS")	
 	public Set<Float> getDeltaS()
@@ -126,6 +129,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		this.deltaS.remove(new Float(deltaS));
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="ECNumber")	
 	@Field(name=BioPAXElementImpl.SEARCH_FIELD_EC_NUMBER, index=Index.TOKENIZED)
@@ -150,6 +154,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		this.eCNumber.remove(eCNumber);
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = KPrimeImpl.class)//, cascade = {CascadeType.ALL})
 	@JoinTable(name="keq")		
 	public Set<KPrime> getKEQ()

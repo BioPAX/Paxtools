@@ -1,8 +1,9 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.Set;
 @javax.persistence.Entity
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PathwayImpl extends ProcessImpl implements Pathway
 {
 // ------------------------------ FIELDS ------------------------------
@@ -48,7 +50,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="pathwayComponent") 		
 	public Set<Process> getPathwayComponent()
@@ -77,6 +79,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		}
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")//, cascade = {CascadeType.ALL})
 	public Set<PathwayStep> getPathwayOrder()
 	{
@@ -116,6 +119,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		this.organism = organism;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController")
 	public Set<Control> getControllerOf()
 	{
