@@ -45,17 +45,16 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 		multipleDomainQueryString =
 				"SELECT " + rangeName +
 				" FROM " + rangeClass + " as " + rangeName +
-				" WHERE " + domainClass + " as " +
-				domainName + " in(:" + DOMAIN + ") and " + domainName + "" + property + "=" + rangeName;
+				" , " +domainClass + " as " +domainName +
+				" WHERE " + domainName + " in(:" + DOMAIN + ") and " + domainName + "." + property + "=" + rangeName;
 
 		singleDomainQueryString =
 				"SELECT " + rangeName +
 				" FROM " + rangeClass + " as " + rangeName +
-				" WHERE " + domainClass + " as " +
-				domainName + "=:" + DOMAIN + " and " + domainName + "" + property + "=" + rangeName;
+				" , " +domainClass + " as " +domainName +
+				" WHERE " +domainName + "=:" + DOMAIN + " and " + domainName + "." + property + "=" + rangeName;
 
 	}
-
 	public void init(Session session)
 	{
 		multiDomainQuery = session.createQuery(multipleDomainQueryString);
