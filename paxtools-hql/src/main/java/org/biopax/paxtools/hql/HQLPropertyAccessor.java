@@ -46,7 +46,7 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 				"SELECT " + rangeName +
 				" FROM " + rangeClass + " as " + rangeName +
 				" WHERE " + domainClass + " as " +
-				domainName + "in(:" + DOMAIN + ") and " + domainName + "" + property + "=" + rangeName;
+				domainName + " in(:" + DOMAIN + ") and " + domainName + "" + property + "=" + rangeName;
 
 		singleDomainQueryString =
 				"SELECT " + rangeName +
