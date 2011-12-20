@@ -70,7 +70,7 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 	@Override public Set<? extends R> getValueFromBeans(Collection<? extends D> beans)
 			throws IllegalBioPAXArgumentException
 	{
-		multiDomainQuery.setParameter(DOMAIN,beans);
+		multiDomainQuery.setParameterList(DOMAIN,beans);
 		List list = multiDomainQuery.list();
 		System.out.println("editor = " + editor);
 		System.out.println("list = " + list);
