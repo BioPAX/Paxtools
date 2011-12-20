@@ -9,38 +9,20 @@ import java.util.Set;
 /**
 
  */
-public class UnionPropertyAccessor<D extends BioPAXElement> implements PropertyAccessor<D,Object>
+public class UnionPropertyAccessor<D extends BioPAXElement,R> extends PropertyAccessorAdapter<D,R>
 {
-	Set<PropertyAccessor<? extends D, ?>> union;
-	PropertyAccessor<? extends D, ?> first;
+	Set<PropertyAccessor<? extends D, ? extends R>> union;
 
-	private Class<D> domain;
 
-	public UnionPropertyAccessor(Set<PropertyAccessor<? extends D, ?>> union, Class<D> domain)
+	public UnionPropertyAccessor(Set<PropertyAccessor<? extends D, ? extends R>> union, Class<D> domain)
 	{
-		this.domain = domain;
+		super(domain, (Class<R>) union.iterator().next().getRange(), true);
 		if(union == null || union.isEmpty())
 		{
 			throw new IllegalBioPAXArgumentException("Empty set of editors. Can't create a union");
 		}
 		this.union = union;
-		first = this.union.iterator().next();
-
-	}
-
-	@Override public Class<D> getDomain()
-	{
-		return domain;
-	}
-
-	@Override public Class getRange()
-	{
-		return first.getRange();
-	}
-
-	@Override public boolean isMultipleCardinality()
-	{
-		return first.isMultipleCardinality();
+		this.multipleCardinality = union.iterator().next().isMultipleCardinality();
 	}
 
 	@Override public Set getValueFromBean(D bean) throws IllegalBioPAXArgumentException
@@ -59,6 +41,6 @@ public class UnionPropertyAccessor<D extends BioPAXElement> implements PropertyA
 
 	@Override public boolean isUnknown(Object value)
 	{
-		return first.isUnknown(value);
+		return union.iterator().next().isUnknown(value);
 	}
 }

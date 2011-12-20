@@ -19,4 +19,5 @@ public class EditorMapAdapterTest
 				"organism", BioPAXElement.class);
 		assertTrue(organism.size() == 7);
 	}
+
 }

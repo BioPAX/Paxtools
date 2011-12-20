@@ -28,6 +28,7 @@ public class TransitivePropertyAccessor<D extends BioPAXElement, R> extends Deco
 		return values;
 	}
 
+
 	private void transitiveGet(D bean, Set<R> values)
 	{
 

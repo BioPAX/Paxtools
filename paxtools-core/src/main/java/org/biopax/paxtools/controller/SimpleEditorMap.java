@@ -27,6 +27,7 @@ public enum SimpleEditorMap implements EditorMap
 
 	SimpleEditorMapImpl impl;
 
+
 	SimpleEditorMap(BioPAXLevel level)
 	{
 		this.impl = new SimpleEditorMapImpl(level);
@@ -182,8 +183,6 @@ public enum SimpleEditorMap implements EditorMap
 		return impl.getInverseEditorsOf(domain);
 	}
 
-	public List<ObjectPropertyEditor> getSortedProperties()
-	{
-	  return impl.sorted;
-	}
+
+
 }

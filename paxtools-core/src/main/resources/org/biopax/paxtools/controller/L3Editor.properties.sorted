@@ -1,0 +1,177 @@
+1(*):
+select
+
+from
+	Process process
+where
+	Pathway pathway in(:results)
+	pathway.pathwayComponent = process
+
+from
+	Process process
+where
+	Pathway pathway in(:results)
+	pathway.pathwayComponent = process
+
+
+Pathway pathwayOrder PathwayStep
+PathwayStep stepProcess Process
+Interaction participant Entity
+
+2(*):
+Complex component PhysicalEntity
+PhysicalEntity memberPhysicalEntity PhysicalEntity
+
+3:                                                                             z
+PhysicalEntity entityReference EntityReference
+PhysicalEntity feature EntityFeature
+PhysicalEntity notFeature EntityFeature
+
+
+4(*):
+EntityReference memberEntityReference EntityReference
+EntityFeature memberEntityFeature EntityFeature
+BindingFeature bindsTo BindingFeature
+EntityFeature featureOf EntityReference //This is for binding feature pairs not included in a complex.
+
+NucleicAcidReference subregion NucleicAcidRegionReference
+
+5:
+
+Conversion participantStoichiometry Stoichiometry
+Evidence experimentalForm ExperimentalForm
+SmallMoleculeReference structure ChemicalStructure
+
+RnaReference organism BioSource
+ProteinReference organism BioSource
+DnaReference organism BioSource
+RnaRegionReference organism BioSource
+DnaRegionReference organism BioSource
+Gene organism BioSource
+Pathway organism BioSource
+
+BioSource cellType CellVocabulary
+ModificationFeature modificationType SequenceModificationVocabulary
+
+6:
+EntityFeature featureLocation SequenceLocation
+Entity dataSource Provenance
+PathwayStep evidence Evidence
+Entity evidence Evidence
+EntityReference evidence Evidence
+EntityFeature evidence Evidence
+NucleicAcidRegionReference absoluteRegion SequenceLocation
+
+
+7:
+Evidence confidence Score
+GeneticInteraction interactionScore Score
+SequenceInterval sequenceIntervalEnd SequenceSite
+SequenceInterval sequenceIntervalBegin SequenceSite
+Complex componentStoichiometry Stoichiometry
+
+8:
+Score scoreSource Provenance
+
+ExperimentalForm experimentalFormDescription ExperimentalFormVocabulary
+GeneticInteraction phenotype PhenotypeVocabulary
+NucleicAcidRegionReference regionType SequenceRegionVocabulary
+EntityFeature featureLocationType SequenceRegionVocabulary
+Interaction interactionType InteractionVocabulary
+
+BioSource tissue TissueVocabulary
+EntityReference entityReferenceType EntityReferenceTypeVocabulary
+RelationshipXref relationshipType RelationshipTypeVocabulary
+PhysicalEntity cellularLocation CellularLocationVocabulary
+Evidence evidenceCode EvidenceCodeVocabulary
+BiochemicalReaction kEQ KPrime
+BiochemicalReaction deltaG DeltaG
+
+9:
+ControlledVocabulary xref Xref
+EntityReference xref Xref
+Entity xref Xref
+Provenance xref Xref
+BioSource xref Xref
+Evidence xref Xref
+
+
+
+10:
+Conversion spontaneous Boolean
+SmallMoleculeReference molecularWeight float
+Xref dbVersion String
+DeltaG pMg float
+KPrime pMg float
+KPrime temperature float
+DeltaG temperature float
+BiochemicalReaction eCNumber String
+Score value String
+PublicationXref year int
+DeltaG deltaGPrime0 float
+BindingFeature intraMolecular Boolean
+Xref db String
+PhenotypeVocabulary patoData String
+PublicationXref url String
+UtilityClass comment String
+Entity comment String
+DeltaG ionicStrength float
+KPrime ionicStrength float
+DeltaG ph float
+KPrime ph float
+Provenance name String
+BioSource name String
+EntityReference name String
+Entity name String
+Xref id String
+PublicationXref author String
+Stoichiometry stoichiometricCoefficient float
+ControlledVocabulary term String
+RnaReference sequence String
+DnaReference sequence String
+DnaRegionReference sequence String
+ProteinReference sequence String
+RnaRegionReference sequence String
+Provenance displayName String
+BioSource displayName String
+EntityReference displayName String
+Entity displayName String
+KPrime kPrime float
+BiochemicalReaction deltaH float
+ChemicalStructure structureData String
+Entity availability String
+Xref idVersion String
+PublicationXref source String
+BiochemicalReaction deltaS float
+SmallMoleculeReference chemicalFormula String
+SequenceSite sequencePosition int
+PublicationXref title String
+
+
+//ENUMS
+ChemicalStructure structureFormat StructureFormatType
+Catalysis catalysisDirection CatalysisDirectionType
+Conversion conversionDirection ConversionDirectionType
+TemplateReaction templateDirection TemplateDirectionType
+Control controlType ControlType
+BiochemicalPathwayStep stepDirection StepDirection
+SequenceSite positionStatus PositionStatusType
+
+
+ignore:
+ExperimentalForm experimentalFormEntity Entity
+ExperimentalForm experimentalFeature EntityFeature
+
+
+
+
+
+
+
+
+
+
+
+
+
+
