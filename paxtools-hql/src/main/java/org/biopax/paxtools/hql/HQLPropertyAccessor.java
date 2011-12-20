@@ -31,7 +31,7 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 	private PropertyEditor editor;
 
 
-	protected HQLPropertyAccessor(PropertyEditor editor)
+	public HQLPropertyAccessor(PropertyEditor editor)
 	{
 		super(editor.getDomain(), editor.getRange(), editor.isMultipleCardinality());
 		this.editor = editor;

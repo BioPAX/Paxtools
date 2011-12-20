@@ -3,21 +3,20 @@ package org.paxtools.query;
 import org.biopax.paxtools.controller.Cloner;
 import org.biopax.paxtools.controller.Completer;
 import org.biopax.paxtools.controller.SimpleEditorMap;
-import org.biopax.paxtools.io.*;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.Interaction;
-import org.biopax.paxtools.model.level3.Pathway;
-import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.query.QueryExecuter;
-import org.biopax.paxtools.query.algorithm.CommonStreamQuery;
 import org.biopax.paxtools.query.algorithm.Direction;
-import org.biopax.paxtools.query.algorithm.PoIQuery;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
