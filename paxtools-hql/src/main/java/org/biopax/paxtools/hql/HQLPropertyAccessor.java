@@ -35,24 +35,20 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 	{
 		super(editor.getDomain(), editor.getRange(), editor.isMultipleCardinality());
 		this.editor = editor;
-		String rangeClass = range.getName();
-		String rangeName = "r"+range.getSimpleName();
 
 		String domainClass = domain.getName();
 		String domainName = "d"+domain.getSimpleName();
 
 		String property = editor.getProperty();
 		multipleDomainQueryString =
-				"SELECT " + rangeName +
-				" FROM " + rangeClass + " as " + rangeName +
-				" , " +domainClass + " as " +domainName +
-				" WHERE " + domainName + " in(:" + DOMAIN + ") and " + domainName + "." + property + "=" + rangeName;
+				"SELECT " + domainName + "." + property +
+				" FROM "  +domainClass + " as " +domainName +
+				" WHERE " + domainName + " in(:" + DOMAIN + ")";
 
 		singleDomainQueryString =
-				"SELECT " + rangeName +
-				" FROM " + rangeClass + " as " + rangeName +
-				" , " +domainClass + " as " +domainName +
-				" WHERE " +domainName + "=:" + DOMAIN + " and " + domainName + "." + property + "=" + rangeName;
+				"SELECT " + domainName + "." + property +
+				" FROM "  +domainClass + " as " +domainName +
+				" WHERE " + domainName + "=:" + DOMAIN;
 
 	}
 	public void init(Session session)
