@@ -46,13 +46,13 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 				"SELECT " + rangeName +
 				" FROM " + rangeClass + " as " + rangeName +
 				" WHERE " + domainClass + " as " +
-				domainName + "in(:" + DOMAIN + ") and " + domainName + "." + property + "=" + rangeName;
+				domainName + "in(:" + DOMAIN + ") and " + domainName + "" + property + "=" + rangeName;
 
 		singleDomainQueryString =
 				"SELECT " + rangeName +
 				" FROM " + rangeClass + " as " + rangeName +
 				" WHERE " + domainClass + " as " +
-				domainName + "=:" + DOMAIN + " and " + domainName + "." + property + "=" + rangeName;
+				domainName + "=:" + DOMAIN + " and " + domainName + "" + property + "=" + rangeName;
 
 	}
 
@@ -62,18 +62,23 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 		singleDomainQuery = session.createQuery(singleDomainQueryString);
 	}
 
-	@Override public Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
+	@Override public Set<? extends R> getValueFromBean(D bean)
+			throws IllegalBioPAXArgumentException
 	{
 		singleDomainQuery.setParameter(DOMAIN,bean);
 		List list = singleDomainQuery.list();
+		System.out.println("editor = " + editor);
+		System.out.println("list = " + list);
 		return null; //TODO
 	}
 
-	@Override public Set<? extends R> getValueFromBeans(Collection<? extends D> beans) throws
-	                                                                               IllegalBioPAXArgumentException
+	@Override public Set<? extends R> getValueFromBeans(Collection<? extends D> beans)
+			throws IllegalBioPAXArgumentException
 	{
 		multiDomainQuery.setParameter(DOMAIN,beans);
 		List list = multiDomainQuery.list();
+		System.out.println("editor = " + editor);
+		System.out.println("list = " + list);
 		return null; //TODO
 	}
 
