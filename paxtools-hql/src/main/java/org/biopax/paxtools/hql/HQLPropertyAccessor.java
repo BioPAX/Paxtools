@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,19 +63,16 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 	{
 		singleDomainQuery.setParameter(DOMAIN,bean);
 		List list = singleDomainQuery.list();
-		System.out.println("editor = " + editor);
-		System.out.println("list = " + list);
-		return null; //TODO
+		return new HashSet<R>(list);
+
 	}
 
 	@Override public Set<? extends R> getValueFromBeans(Collection<? extends D> beans)
 			throws IllegalBioPAXArgumentException
 	{
-		multiDomainQuery.setParameterList(DOMAIN,beans);
+		multiDomainQuery.setParameterList(DOMAIN, beans);
 		List list = multiDomainQuery.list();
-		System.out.println("editor = " + editor);
-		System.out.println("list = " + list);
-		return null; //TODO
+		return new HashSet<R>(list);
 	}
 
 	@Override public boolean isUnknown(Object value)
