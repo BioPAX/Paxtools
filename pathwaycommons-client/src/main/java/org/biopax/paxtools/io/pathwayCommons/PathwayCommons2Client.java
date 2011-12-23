@@ -205,7 +205,7 @@ public class PathwayCommons2Client
      */
     public Model getPathsBetween(Collection<String> sourceSet) 
     {
-        String url = endPointURL + Cmd.GRAPH + commandDelimiter + Cmd.GRAPH + "=pathsbetween&"
+        String url = endPointURL + Cmd.GRAPH + commandDelimiter + CmdArgs.kind + "=pathsbetween&"
                         + join(CmdArgs.source + "=", sourceSet, "&") + "&"
                         + CmdArgs.limit + "=" + graphQueryLimit;
 
@@ -222,7 +222,7 @@ public class PathwayCommons2Client
      * @return BioPAX model representing the neighborhood.
      */
     public Model getNeighborhood(Collection<String> sourceSet) {
-        String url = endPointURL + Cmd.GRAPH + commandDelimiter + Cmd.GRAPH + "=neighborhood&"
+        String url = endPointURL + Cmd.GRAPH + commandDelimiter + CmdArgs.kind + "=neighborhood&"
                         + join(CmdArgs.source + "=", sourceSet, "&") + "&"
                         + CmdArgs.limit + "=" + graphQueryLimit;
 
