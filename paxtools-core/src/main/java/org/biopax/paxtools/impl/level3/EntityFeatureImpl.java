@@ -50,49 +50,13 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 
-	/**
-	 * @return Reference entity that this feature belongs to.
-	 */
-	@Transient
-	public EntityReference getEntityFeatureOf()
-	{
-		return ownerEntityReference;
-	}
-
-	/**
-	 * This method sets the EntityReference for this feature. This method should only be used by the
-	 * new EntityReference for updating the bidirectional link.
-	 *
-	 * @param newEntityReference New owner of this feature.
-	 * TODO make it Set of EntityReference (consider, e.g., cloned ERs or what could happen during model merge, etc..)?
-	 */
-	protected void setEntityFeatureOf(EntityReference newEntityReference) {
-//		if (this.ownerEntityReference != null
-//				&& !this.ownerEntityReference.equals(newEntityReference)
-//				&& this.ownerEntityReference.getEntityFeature().contains(this)) 
-//		{
-//			// throw new BidirectionalLinkViolationException(this,
-//			// this.ownerEntityReference);
-//			log.warn("setEntityFeatureOf: "
-//					+ getModelInterface().getSimpleName() + " " + getRDFId()
-//					+ " changes its owner EntityReference from "
-//					+ this.ownerEntityReference.getModelInterface().getSimpleName()
-//					+ " " + this.ownerEntityReference.getRDFId()
-//					+ " to "
-//					+ newEntityReference.getModelInterface().getSimpleName()
-//					+ " " + newEntityReference.getRDFId());
-//		}
-
-		this.ownerEntityReference = newEntityReference;
-	}
-
 	
 	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
-	protected EntityReference getEntityFeatureXOf(){
+	public EntityReference getEntityFeatureOf(){
 		return ownerEntityReference;
 	}
-	protected void setEntityFeatureXOf(EntityReference entityReference){
+	public void setEntityFeatureOf(EntityReference entityReference){
 		ownerEntityReference = entityReference;
 	}
 	

@@ -122,7 +122,7 @@ public class SimpleInteractionConverterTest
 		{
 			public boolean accept(File dir, String name)
 			{
-				return (name.endsWith(".owl"));
+				return (name.endsWith("sapiens.owl"));
 			}
 		};
 	}

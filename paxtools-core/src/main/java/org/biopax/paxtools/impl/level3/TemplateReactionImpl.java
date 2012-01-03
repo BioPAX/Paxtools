@@ -23,7 +23,8 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
     private NucleicAcid template;
 	private TemplateDirectionType templateDirection;
 
-	public TemplateReactionImpl() {
+	public TemplateReactionImpl()
+	{
         this.product = new HashSet<PhysicalEntity>();
     }
 	

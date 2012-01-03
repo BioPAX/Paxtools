@@ -3,6 +3,7 @@ package org.biopax.paxtools.hql;
 import org.biopax.paxtools.controller.PropertyAccessorAdapter;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -29,6 +30,8 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 	private Query singleDomainQuery;
 
 
+
+
 	private PropertyEditor editor;
 
 
@@ -41,6 +44,8 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 		String domainName = "d"+domain.getSimpleName();
 
 		String property = editor.getProperty();
+		property = processPropertyExceptions(domain, property);
+
 		multipleDomainQueryString =
 				"SELECT " + domainName + "." + property +
 				" FROM "  +domainClass + " as " +domainName +
@@ -52,6 +57,20 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 				" WHERE " + domainName + "=:" + DOMAIN;
 
 	}
+
+	private String processPropertyExceptions(Class<D> domain, String property)
+	{
+	   if(domain.equals(Control.class) && property.equals("controller"))
+	   {
+		property="pathwayController, Control.PeController";
+	   }
+	   else if(property.equals("standardName")|| property.equals ("displayName") || property.equals("template"))
+		{
+			property=property+"X";
+		}
+		return property;
+	}
+
 	public void init(Session session)
 	{
 		multiDomainQuery = session.createQuery(multipleDomainQueryString);
@@ -79,4 +98,6 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 	{
 		return editor.isUnknown(value);
 	}
+
+
 }

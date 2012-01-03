@@ -89,17 +89,6 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	@FieldBridge(impl = SetStringBridge.class)
 	@Boost(1.0f)
 	@Column(columnDefinition="LONGTEXT")
-	protected Set<String> getNameX()
-	{
-		return allNames;
-	}
-	protected void setNameX(Set<String> names)
-	{
-		allNames = names;
-	}
-	
-	
-	@Transient
 	public Set<String> getName()
 	{
 		return allNames;
@@ -108,16 +97,10 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	public void setName(Set<String> names)
 	{
 		allNames = names;
-		
-		if (!names.contains(standardName))
-		{
-			standardName = null;
-		}
-		if (!names.contains(displayName))
-		{
-			displayName = null;
-		}
 	}
+	
+	
+
 
 	public void addName(String name)
 	{
