@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(length=40)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)

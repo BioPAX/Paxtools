@@ -7,15 +7,17 @@ import org.biopax.paxtools.model.level3.SequenceEntityReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
- @Proxy(proxyClass=SequenceEntityReference.class)
+@Proxy(proxyClass=SequenceEntityReference.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
@@ -33,7 +35,9 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     ////////////////////////////////////////////////////////////////////////////
 
     // Property organism
-	@ManyToOne(targetEntity = BioSourceImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = BioSourceImpl.class)
+	@IndexedEmbedded(targetElement=BioSourceImpl.class)
+	@Target(BioSourceImpl.class)
     public BioSource getOrganism()
     {
         return organism;

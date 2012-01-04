@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  */
 @Entity
- @Proxy(proxyClass= Named.class)
+@Proxy(proxyClass= Named.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class NamedImpl extends XReferrableImpl implements Named
@@ -87,7 +87,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	@JoinTable(name="name")
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
-	@Boost(1.0f)
+	@Boost(1.5f)
 	@Column(columnDefinition="LONGTEXT")
 	public Set<String> getName()
 	{
@@ -99,9 +99,6 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 		allNames = names;
 	}
 	
-	
-
-
 	public void addName(String name)
 	{
 		if (name != null && name.length() > 0)

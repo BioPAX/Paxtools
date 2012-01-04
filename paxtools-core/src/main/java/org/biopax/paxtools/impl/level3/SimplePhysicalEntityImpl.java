@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
- @Proxy(proxyClass= SimplePhysicalEntity.class)
+@Proxy(proxyClass= SimplePhysicalEntity.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 		implements SimplePhysicalEntity
