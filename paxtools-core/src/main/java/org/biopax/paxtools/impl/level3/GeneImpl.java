@@ -2,10 +2,16 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.Gene;
+import org.biopax.paxtools.util.BioSourceFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Target;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -30,6 +36,10 @@ public class GeneImpl extends EntityImpl implements Gene
     }
 
 	@ManyToOne(targetEntity = BioSourceImpl.class)//, cascade = {CascadeType.ALL})
+//	@IndexedEmbedded(targetElement=BioSourceImpl.class)
+//	@Target(BioSourceImpl.class)
+    @Field(name="organism", index = Index.UN_TOKENIZED)
+    @FieldBridge(impl=BioSourceFieldBridge.class)
     public BioSource getOrganism()
     {
         return organism;

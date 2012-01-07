@@ -4,11 +4,13 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.SequenceEntityReference;
+import org.biopax.paxtools.util.BioSourceFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
@@ -36,8 +38,10 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
 
     // Property organism
 	@ManyToOne(targetEntity = BioSourceImpl.class)
-	@IndexedEmbedded(targetElement=BioSourceImpl.class)
-	@Target(BioSourceImpl.class)
+//	@IndexedEmbedded(targetElement=BioSourceImpl.class)
+//	@Target(BioSourceImpl.class)
+    @Field(name="organism", index = Index.UN_TOKENIZED)
+    @FieldBridge(impl=BioSourceFieldBridge.class)
     public BioSource getOrganism()
     {
         return organism;

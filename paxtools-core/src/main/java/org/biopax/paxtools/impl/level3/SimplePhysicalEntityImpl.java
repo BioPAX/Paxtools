@@ -9,6 +9,8 @@ import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Target;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -28,7 +30,7 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	}
 	
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-//	@IndexedEmbedded(targetElement=EntityReferenceImpl.class)
+	@IndexedEmbedded(targetElement=EntityReferenceImpl.class)
 //	@Target(EntityReferenceImpl.class)
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	public EntityReference getEntityReferenceX()

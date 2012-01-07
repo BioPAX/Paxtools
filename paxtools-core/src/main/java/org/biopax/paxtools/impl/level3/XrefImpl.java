@@ -7,7 +7,6 @@ import org.biopax.paxtools.model.level3.Xref;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 
@@ -17,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Entity
 @Proxy(proxyClass= Xref.class)
@@ -131,7 +131,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 
 
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ContainedIn
+//	@ContainedIn
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()
 	{
