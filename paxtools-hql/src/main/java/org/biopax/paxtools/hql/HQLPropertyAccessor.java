@@ -5,99 +5,94 @@ import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
  */
-public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAccessorAdapter<D, R>
-{
+public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAccessorAdapter<D, R> {
 
-	private static final String DOMAIN = "domain";
+    private static final String DOMAIN = "domain";
 
-	private String multipleDomainQueryString;
+    private String qString;
 
-	private Query multiDomainQuery;
+    private Query query;
 
-	private String singleDomainQueryString;
+    private static HashSet<String> propertyX = new HashSet<String>(
+            Arrays.asList("standardName", "displayName", "template", "entityReference"));
 
-	private Query singleDomainQuery;
+    private static HashSet<String> mixedCase = new HashSet<String>(
+            Arrays.asList("kEQ", "eCNumber"));
 
-
-
-
-	private PropertyEditor editor;
+    private PropertyEditor<D, R> editor;
 
 
-	public HQLPropertyAccessor(PropertyEditor editor)
-	{
-		super(editor.getDomain(), editor.getRange(), editor.isMultipleCardinality());
-		this.editor = editor;
+    public HQLPropertyAccessor(PropertyEditor<D, R> editor) {
+        super(editor.getDomain(), editor.getRange(), editor.isMultipleCardinality());
+        this.editor = editor;
 
-		String domainClass = domain.getName();
-		String domainName = "d"+domain.getSimpleName();
+        String domainClass = domain.getName();
+        String domainName = "d" + domain.getSimpleName();
 
-		String property = editor.getProperty();
-		property = processPropertyExceptions(domain, property);
+        String property = editor.getProperty();
+        property = processPropertyExceptions(domain, property);
 
-		multipleDomainQueryString =
-				"SELECT " + domainName + "." + property +
-				" FROM "  +domainClass + " as " +domainName +
-				" WHERE " + domainName + " in(:" + DOMAIN + ")";
 
-		singleDomainQueryString =
-				"SELECT " + domainName + "." + property +
-				" FROM "  +domainClass + " as " +domainName +
-				" WHERE " + domainName + "=:" + DOMAIN;
+        qString = "SELECT " + domainName +
+                " FROM " + domainClass + " as " + domainName;
+        qString += editor.isMultipleCardinality() ? " left join fetch " + domainName + "." + property : " ";
 
-	}
+        qString += " WHERE " + domainName + " in(:" + DOMAIN + ")";
 
-	private String processPropertyExceptions(Class<D> domain, String property)
-	{
-	   if(domain.equals(Control.class) && property.equals("controller"))
-	   {
-		property="pathwayController, Control.PeController";
-	   }
-	   else if(property.equals("standardName")|| property.equals ("displayName") || property.equals("template"))
-		{
-			property=property+"X";
-		}
-		return property;
-	}
+    }
 
-	public void init(Session session)
-	{
-		multiDomainQuery = session.createQuery(multipleDomainQueryString);
-		singleDomainQuery = session.createQuery(singleDomainQueryString);
-	}
+    private String processPropertyExceptions(Class<D> domain, String property) {
+        if (domain.equals(Control.class) && property.equals("controller")) {
+            property = "pathwayController  left join fetch dControl.peController";
+        } else if (propertyX.contains(property)) {
+            property = property + "X";
+        } else if (mixedCase.contains(property)) {
+            property = property.substring(0, 1).toUpperCase() + property.substring(1);
+        }
+        return property;
+    }
 
-	@Override public Set<? extends R> getValueFromBean(D bean)
-			throws IllegalBioPAXArgumentException
-	{
-		singleDomainQuery.setParameter(DOMAIN,bean);
-		List list = singleDomainQuery.list();
-		return new HashSet<R>(list);
+    public void init(Session session) {
+        query = session.createQuery(qString);
+    }
 
-	}
+    @Override
+    public Set<? extends R> getValueFromBean(D bean)
+            throws IllegalBioPAXArgumentException {
+        Set<R> values = editor.getValueFromBean(bean);
+        Hibernate.initialize(values);
+        return values;
 
-	@Override public Set<? extends R> getValueFromBeans(Collection<? extends D> beans)
-			throws IllegalBioPAXArgumentException
-	{
-		multiDomainQuery.setParameterList(DOMAIN, beans);
-		List list = multiDomainQuery.list();
-		return new HashSet<R>(list);
-	}
+    }
 
-	@Override public boolean isUnknown(Object value)
-	{
-		return editor.isUnknown(value);
-	}
+    @Override
+    public Set<? extends R> getValueFromBeans(Collection<? extends D> beans)
+            throws IllegalBioPAXArgumentException {
+
+        return editor.getValueFromBeans(fetch(beans));
+
+    }
+
+    public List fetch(Collection<? extends D> beans) {
+        if (!beans.isEmpty()) {
+            query.setParameterList(DOMAIN, beans);
+            return query.list();
+        } else return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isUnknown(Object value) {
+        return editor.isUnknown(value);
+    }
 
 
 }

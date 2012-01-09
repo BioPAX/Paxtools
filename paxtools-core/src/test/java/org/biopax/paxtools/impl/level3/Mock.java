@@ -3,10 +3,13 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.controller.EditorMap;
 import org.biopax.paxtools.controller.ObjectPropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 
+import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 
 public class Mock
@@ -69,5 +72,15 @@ public class Mock
 	{
 		return (ObjectPropertyEditor) map.getEditorForProperty(property, clazz);
 	}
+    
+    public static Model model()
+    {
+        String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
+        System.out.println(s);
+        InputStream in = Mock.class.getClassLoader().getResourceAsStream(s);
+
+        return new SimpleIOHandler().convertFromOWL(in);
+    }
+        
 
 }

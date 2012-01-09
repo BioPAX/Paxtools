@@ -3,8 +3,6 @@ package org.biopax.paxtools.controller;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -103,4 +101,5 @@ public interface EditorMap
 	Set<PropertyEditor> getEditorsOf(Class<? extends BioPAXElement> domain);
 
 	Set<ObjectPropertyEditor> getInverseEditorsOf(Class<? extends BioPAXElement> domain);
+
 }

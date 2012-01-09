@@ -13,7 +13,6 @@ public interface BindingFeature extends EntityFeature
 	 * @return paired binding feature.
 	 */
 	@AutoComplete(forward = false)
-    @Key
 	BindingFeature getBindsTo();
 
 	/**
@@ -33,7 +32,6 @@ public interface BindingFeature extends EntityFeature
      * inverse is not true e.g a chain of actin proteins.
      * @return true iff this binding feature represents a bond within the same molecule.
      */
-    @Key
     Boolean getIntraMolecular();
 
 	/**

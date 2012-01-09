@@ -204,7 +204,7 @@ public class JenaEditorMap extends EditorMapAdapter {
 
     protected Class<? extends BioPAXElement> extractClass(Resource resource) {
         String localName = getJavaName(resource);
-        return getModelInterface(localName);
+        return this.getLevel().getInterfaceForName(localName);
     }
 
     private String getJavaName(Resource resource) {

@@ -43,7 +43,7 @@ public interface Catalysis extends Control
 	 * of participants.
 	 * @return cofactor(s) or coenzyme(s) required for catalysis of the conversion
 	 */
-	@Key Set<PhysicalEntity> getCofactor();
+	Set<PhysicalEntity> getCofactor();
 
 	/**
 	 * Any cofactor(s) or coenzyme(s) required for catalysis of the conversion by the enzyme. This is a suproperty

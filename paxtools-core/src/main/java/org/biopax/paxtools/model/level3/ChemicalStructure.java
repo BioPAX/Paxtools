@@ -22,7 +22,7 @@ public interface ChemicalStructure extends UtilityClass
 	 * then the value of this property is a string containing the XML encoding of the CML data.
 	 * @return a string defining chemical structure
 	 */
-	@Key String getStructureData();
+	String getStructureData();
 
 	/**
 	 * This property holds a string of data defining chemical structure,in one of the three formats:
@@ -38,7 +38,7 @@ public interface ChemicalStructure extends UtilityClass
 	 * This property specifies which format is used to define chemical structure.
 	 * @return format used to define chemical structure
 	 */
-	@Key StructureFormatType getStructureFormat();
+	StructureFormatType getStructureFormat();
 
 	/**
 	 * This property specifies which format is used to define chemical structure.

@@ -73,7 +73,7 @@ public abstract class EditorMapAdapter implements EditorMap
 			{
 				if (log.isDebugEnabled()) log.debug("Could not locate controller for " + property + " | " +
 				                                    javaClass);
-			} else if (log.isDebugEnabled()) log.debug("Editors are only defined for public BioPAX interfaces");
+			}
 		}
 		return result;
 
@@ -204,7 +204,7 @@ public abstract class EditorMapAdapter implements EditorMap
 	{
 		try
 		{
-			Class<? extends BioPAXElement> domain = getModelInterface(localName);
+			Class<? extends BioPAXElement> domain = this.getLevel().getInterfaceForName(localName);
 
 			HashMap<String, PropertyEditor> peMap = new HashMap<String, PropertyEditor>();
 			classToEditorMap.put(domain, peMap);
@@ -223,7 +223,7 @@ public abstract class EditorMapAdapter implements EditorMap
 
 	private class SubClassFilterSet<E> extends AbstractFilterSet<Class<? extends BioPAXElement>, Class<E>>
 	{
-		private Class superClass = null;
+		private Class superClass;
 
 		public SubClassFilterSet(Set<Class<? extends BioPAXElement>> baseSet, Class<E> superClass)
 		{
@@ -255,25 +255,6 @@ public abstract class EditorMapAdapter implements EditorMap
 		}
 	}
 
-	protected Class<? extends BioPAXElement> getModelInterface(String localName)
-	{
-		try
-		{
-			Class modelInterface = Class.forName(this.getLevel().getPackageName() + "." + localName);
-			if (BioPAXElement.class.isAssignableFrom(modelInterface))
-			{
-				return modelInterface;
-			} else
-			{
-				throw new IllegalBioPAXArgumentException(
-						"BioPAXElement is not assignable from class:" + modelInterface.getSimpleName());
-			}
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new IllegalBioPAXArgumentException("Could not locate interface for:" + localName);
-		}
-	}
 
 	private class ValueSet extends AbstractSet<PropertyEditor>
 	{

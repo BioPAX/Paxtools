@@ -50,9 +50,9 @@ public interface BioPAXElement extends Serializable, Cloneable
      * Equivalent returns true if elements are equal or if
      *  <ul>
      *   <li> both elements implement the same model interface AND
-     *   <li> both elements have equivalent <b>Key</b> properties
+     *   <li> both elements have equivalent key properties
      *  </ul>
-     *  These Key properties vary from class to class.
+     *  These key properties vary from class to class.
      *
      * @param element to be compared for equivalency
      * @return true if the element equals to this, or has equivalent critical
@@ -67,12 +67,7 @@ public interface BioPAXElement extends Serializable, Cloneable
      */
      int equivalenceCode();
 
-    /**
-     * This annotation identifies properties that are
-     */
-    public @interface Key{}
 
-    
     /**
      * A general-purpose map to optionallly 
      * store additional application-specific information 

@@ -4,9 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.level2.Level2FactoryImpl;
 import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  * Enumeration type for BioPAX levels.
@@ -150,18 +150,23 @@ public enum BioPAXLevel
 
 	public Class<? extends BioPAXElement> getInterfaceForName(String localName)
 	{
-		try
-		{
-			return (Class<? extends BioPAXElement>) Class.forName(this.packageName + "." + localName);
+        try
+        {
+            Class modelInterface = Class.forName(this.packageName + "." + localName);
 
-		}
-		catch (ClassNotFoundException e)
-		{
-			log.error("Could not find the interface for " + localName);
-			log.error(Arrays.toString(e.getStackTrace()));
-			return null;
-		}
-	}
-
+            if (BioPAXElement.class.isAssignableFrom(modelInterface))
+            {
+                return modelInterface;
+            } else
+            {
+                throw new IllegalBioPAXArgumentException(
+                        "BioPAXElement is not assignable from class:" + modelInterface.getSimpleName());
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new IllegalBioPAXArgumentException("Could not locate interface for:" + localName);
+        }
+    }
 
 }

@@ -19,7 +19,7 @@ public interface BiochemicalPathwayStep extends PathwayStep
 	 * of this conversion. The conversion must be reversible.
 	 * @return The central conversion that take place at this step of the biochemical pathway.
 	 */
-	@Key Conversion getStepConversion();
+	Conversion getStepConversion();
 
 	/**
 	 * This method sets the conversion of this BiochemicalPathwayStep to the
@@ -34,7 +34,7 @@ public interface BiochemicalPathwayStep extends PathwayStep
 	 * for that particular pathway.
 	 * @return Direction of the conversion in this particular pathway context.
 	 */
-	@Key StepDirection getStepDirection();
+	StepDirection getStepDirection();
 
 	/**
 	 * This property can be used for annotating direction of enzymatic activity. Even if an enzyme catalyzes a

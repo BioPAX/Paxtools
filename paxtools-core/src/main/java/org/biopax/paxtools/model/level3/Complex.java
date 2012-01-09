@@ -1,7 +1,5 @@
 package org.biopax.paxtools.model.level3;
 
-import org.biopax.paxtools.util.AutoComplete;
-
 import java.util.Set;
 
 /**
@@ -41,8 +39,7 @@ public interface Complex extends PhysicalEntity {
      *
      * @return components of this complex
      */
-    @AutoComplete(backward = true)
-    @Key Set<PhysicalEntity> getComponent();
+    Set<PhysicalEntity> getComponent();
 
     /**
      * Defines the PhysicalEntity subunits of this complex. This property should not contain other complexes, i.e. it
@@ -84,7 +81,7 @@ public interface Complex extends PhysicalEntity {
      *
      * @return the stoichiometry of components in a complex.
      */
-    @Key Set<Stoichiometry> getComponentStoichiometry();
+    Set<Stoichiometry> getComponentStoichiometry();
 
     /**
      * The stoichiometry of components in a complex.

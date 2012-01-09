@@ -96,7 +96,7 @@ public enum SimpleEditorMap implements EditorMap
 			{
 				st = new StringTokenizer(line);
 				String domain = st.nextToken();
-				Class<? extends BioPAXElement> domainInterface = getModelInterface(domain);
+				Class<? extends BioPAXElement> domainInterface = this.getLevel().getInterfaceForName(domain);
 
 				String propertyName = st.nextToken();
 				Map<Class<? extends BioPAXElement>,Set<Class<? extends BioPAXElement>>> rangeRestrictions =

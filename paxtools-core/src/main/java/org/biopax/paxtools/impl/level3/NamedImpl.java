@@ -83,7 +83,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 	
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name="name")
 	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
