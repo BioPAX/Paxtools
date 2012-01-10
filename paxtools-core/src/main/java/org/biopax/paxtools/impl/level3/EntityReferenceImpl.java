@@ -9,6 +9,9 @@ import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Target;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -16,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
- @Proxy(proxyClass= EntityReference.class)
+@Proxy(proxyClass= EntityReference.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class EntityReferenceImpl extends NamedImpl
@@ -108,7 +111,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-//	@ContainedIn
+	@ContainedIn
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
@@ -146,6 +149,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceImpl.class) //TODO generify?
 	@JoinTable(name="memberEntityReference")
+    @IndexedEmbedded(depth=2, targetElement=EntityReferenceImpl.class)
+//    @Target(EntityReferenceImpl.class)
 	public Set<EntityReference> getMemberEntityReference()
 	{
 		return memberEntity;
@@ -175,6 +180,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
+    @ContainedIn
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
 		return ownerEntityReference;

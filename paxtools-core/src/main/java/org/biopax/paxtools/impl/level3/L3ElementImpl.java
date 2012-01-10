@@ -22,7 +22,7 @@ import java.util.Set;
  *
  */
 @Entity
- @Proxy(proxyClass= Level3Element.class)
+@Proxy(proxyClass= Level3Element.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class L3ElementImpl extends BioPAXElementImpl

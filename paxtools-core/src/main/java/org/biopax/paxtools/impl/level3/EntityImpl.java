@@ -4,13 +4,17 @@ import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.util.DatasourcesFieldBridge;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Target;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.JoinTable;
@@ -23,7 +27,6 @@ import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentInterse
 
 
 @javax.persistence.Entity
-
 @Proxy(proxyClass= Entity.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -101,6 +104,10 @@ public abstract class EntityImpl extends NamedImpl implements Entity
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProvenanceImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="dataSource")
+//    @IndexedEmbedded(targetElement=ProvenanceImpl.class)
+//    @Target(ProvenanceImpl.class)
+    @Field(name="datasource", index = Index.UN_TOKENIZED)
+    @FieldBridge(impl=DatasourcesFieldBridge.class)
 	public Set<Provenance> getDataSource()
 	{
 		return dataSource;
@@ -127,6 +134,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
+	@ContainedIn
 	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;
@@ -144,6 +152,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
+    @IndexedEmbedded(targetElement=EvidenceImpl.class)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

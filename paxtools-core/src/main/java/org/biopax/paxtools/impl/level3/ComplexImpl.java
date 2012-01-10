@@ -6,7 +6,9 @@ import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -53,7 +55,9 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="component") 
+	@JoinTable(name="component")
+	@IndexedEmbedded(depth=10, targetElement=PhysicalEntityImpl.class)
+//	@Target(PhysicalEntityImpl.class)
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;

@@ -51,6 +51,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 
 	
+	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	public EntityReference getEntityFeatureOf(){
 		return ownerEntityReference;

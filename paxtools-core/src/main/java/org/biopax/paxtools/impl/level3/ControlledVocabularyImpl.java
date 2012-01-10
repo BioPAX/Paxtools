@@ -1,5 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
@@ -29,10 +31,10 @@ import java.util.regex.Pattern;
 public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {
-
+	private final static Log LOG = LogFactory.getLog(CellVocabularyImpl.class);
+	
 	private Set<String> term;
-	private static final Pattern PATTERN =
-			Pattern.compile("\\]|\\[");
+	private static final Pattern PATTERN = Pattern.compile("\\]|\\[");
 
 	/**
 	 * Constructor.
@@ -110,6 +112,13 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	@Override
 	public String toString()
 	{
-		return PATTERN.matcher(term.toString()).replaceAll("");
+		try {
+			return PATTERN.matcher(term.toString()).replaceAll("");
+		} catch (Exception e) {
+			// in a persistent context, there might be 
+			// a lazy collection initialization issue with this method...
+			LOG.warn("toString(): ", e);
+			return getRDFId();
+		}
 	}
 }

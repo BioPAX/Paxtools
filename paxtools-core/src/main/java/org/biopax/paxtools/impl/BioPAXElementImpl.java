@@ -32,7 +32,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public final static String SEARCH_FIELD_XREF_ID = "xrefid";
 	public final static String SEARCH_FIELD_AVAILABILITY = "availability";
 	public final static String SEARCH_FIELD_COMMENT = "comment";
-	//public static final String SEARCH_FIELD_ID = "rdfid";
 	
 	public final static String SEARCH_INDEX_NAME = "biopax_index";
 	// ------------------------------ FIELDS ------------------------------

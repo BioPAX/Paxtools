@@ -17,7 +17,7 @@ import java.util.Set;
 import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
 
 @Entity
- @Proxy(proxyClass=Evidence.class)
+@Proxy(proxyClass=Evidence.class)
 @Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
