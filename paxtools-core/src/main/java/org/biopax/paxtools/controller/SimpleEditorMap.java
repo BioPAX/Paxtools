@@ -183,6 +183,10 @@ public enum SimpleEditorMap implements EditorMap
 		return impl.getInverseEditorsOf(domain);
 	}
 
+    @Override
+    public Iterator<PropertyEditor> iterator() {
+        return impl.iterator();
+    }
 
 
 }

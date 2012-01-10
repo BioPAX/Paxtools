@@ -6,7 +6,9 @@ package org.biopax.paxtools.controller;
  * Time: 1:03:41 AM
  */
 
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.ProteinReference;
@@ -99,5 +101,7 @@ public class SimpleEditorMapTest
 		commEditor.setValueToBean("two", pr1);
 		assertEquals(2, pr1.getComment().size());
 	}
+
+
 
 }

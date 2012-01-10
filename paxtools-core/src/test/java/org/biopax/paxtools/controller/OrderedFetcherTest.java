@@ -15,10 +15,10 @@ import static junit.framework.Assert.assertTrue;
  */
 public class OrderedFetcherTest {
     @Test
-    public void testFetch() throws Exception
+    public void testFetch()
     {
         OrderedFetcher fetcher =
-                new OrderedFetcher(this.getClass().getResourceAsStream("L3Editor.properties.fetchOrder"));
+                new OrderedFetcher(true);
         Model model = Mock.model();
         Set<BioPAXElement> fetch = fetcher.fetch(model.getObjects(Pathway.class));
         assertTrue(model.getObjects().size() == fetch.size());

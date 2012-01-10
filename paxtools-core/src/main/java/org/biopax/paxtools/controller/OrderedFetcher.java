@@ -2,10 +2,10 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.util.BioPaxIOException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
@@ -15,14 +15,27 @@ import java.util.*;
 public class OrderedFetcher {
     SimpleEditorMap editorMap = SimpleEditorMap.get(BioPAXLevel.L3);
     List<Layer> layers = new ArrayList<Layer>();
+    Layer attributeLayer;
+    boolean fetchAttributes;
 
 
-    public OrderedFetcher(InputStream stream) throws IOException {
+    public OrderedFetcher(boolean fetchAttributes)
+    {
+        this.fetchAttributes = fetchAttributes;
         String line;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        while ((line = reader.readLine()) != null) {
-            layers.add(new Layer(line));
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(OrderedFetcher.class.getResourceAsStream("L3Editor.properties.fetchOrder")));
+        try {
+            while ((line = reader.readLine()) != null) {
+                layers.add(new Layer(line));
+            }
+        } catch (IOException e)
+        {
+            throw new BioPaxIOException(e);
+
         }
+        if (fetchAttributes)
+            attributeLayer = new AttributeLayer();
     }
 
     public Set<BioPAXElement> fetch(Set<? extends BioPAXElement> elements) {
@@ -30,6 +43,8 @@ public class OrderedFetcher {
         for (Layer layer : layers) {
             layer.fetch(values);
         }
+        if (fetchAttributes)
+            attributeLayer.fetchOnce(elements);
         return values;
         //TODO handle non-object fields
     }
@@ -52,6 +67,9 @@ public class OrderedFetcher {
             }
         }
 
+        private Layer() {
+        }
+
         private void addEditor(String domain, String property) {
             Class<? extends BioPAXElement> domainClass = BioPAXLevel.L3.getInterfaceForName(domain);
             editors.addAll(editorMap.getSubclassEditorsForProperty(property, domainClass));
@@ -72,10 +90,9 @@ public class OrderedFetcher {
             }
         }
 
-        public Set<BioPAXElement> fetchOnce(Set<BioPAXElement> elements) {
+        public Set<BioPAXElement> fetchOnce(Set<? extends BioPAXElement> elements) {
             Set<BioPAXElement> newElements = new HashSet<BioPAXElement>();
-            for (PropertyEditor editor : editors)
-            {
+            for (PropertyEditor editor : editors) {
                 newElements.addAll(getValuesFromBeans(elements, editor));
             }
             return newElements;
@@ -84,9 +101,36 @@ public class OrderedFetcher {
     }
 
     protected Set getValuesFromBeans(
-            Set<BioPAXElement> elements,
+            Set<? extends BioPAXElement> elements,
             PropertyEditor editor) {
         return editor.getValueFromBeans(elements);
     }
 
+    private class AttributeLayer extends Layer {
+        public AttributeLayer() {
+            SimpleEditorMap editorMap = SimpleEditorMap.get(BioPAXLevel.L3);
+            Iterator<PropertyEditor> iter = editorMap.iterator();
+            while (iter.hasNext()) {
+                PropertyEditor next = iter.next();
+                if (!(next instanceof ObjectPropertyEditor)) {
+                    this.editors.add(next);
+                }
+            }
+        }
+
+        public Set<BioPAXElement> fetchOnce(Set<? extends BioPAXElement> elements) {
+            for (PropertyEditor editor : editors) {
+                getValuesFromBeans(elements, editor);
+            }
+            return null;
+        }
+
+        @Override
+        public void fetch(Set<BioPAXElement> elements) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+
 }
+
