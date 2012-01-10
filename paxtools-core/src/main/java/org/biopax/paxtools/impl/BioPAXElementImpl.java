@@ -22,20 +22,6 @@ import java.util.Map;
 })
 public abstract class BioPAXElementImpl implements BioPAXElement
 {
-	// ----------------- Index Names and Search Fields --------------------
-	public final static String SEARCH_FIELD_KEYWORD ="keyword";
-	public final static String SEARCH_FIELD_NAME = "name";
-	public final static String SEARCH_FIELD_TERM = "term";
-	public final static String SEARCH_FIELD_EC_NUMBER = "ecnumber";
-	public final static String SEARCH_FIELD_SEQUENCE = "sequence";
-	public final static String SEARCH_FIELD_XREF_DB = "xrefdb";
-	public final static String SEARCH_FIELD_XREF_ID = "xrefid";
-	public final static String SEARCH_FIELD_AVAILABILITY = "availability";
-	public final static String SEARCH_FIELD_COMMENT = "comment";
-	
-	public final static String SEARCH_INDEX_NAME = "biopax_index";
-	// ------------------------------ FIELDS ------------------------------
-
 	private String uri;
 	
 	// anything extra can be stored in this map (not to persist in a DB though)

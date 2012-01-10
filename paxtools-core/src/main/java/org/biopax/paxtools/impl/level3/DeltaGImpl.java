@@ -14,7 +14,7 @@ import static java.lang.Float.compare;
 
 @Entity
  @Proxy(proxyClass= DeltaG.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DeltaGImpl extends L3ElementImpl implements DeltaG

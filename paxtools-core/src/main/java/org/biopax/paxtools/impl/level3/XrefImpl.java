@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
@@ -75,7 +74,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 	
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_DB, index=Index.TOKENIZED)
+	@Field(name="xrefdb", index=Index.TOKENIZED)
     public String getDb()
 	{
 		return db;
@@ -106,7 +105,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.idVersion = idVersion;
 	}
 
-    @Field(name=BioPAXElementImpl.SEARCH_FIELD_XREF_ID, index=Index.TOKENIZED)
+    @Field(name="xrefid", index=Index.TOKENIZED) //Important! - using "id" as the search field name was causing exceptions in the indexer
     @Column(name="id")
 	public String getIdx()
 	{

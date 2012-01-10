@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Entity
  @Proxy(proxyClass=PathwayStep.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PathwayStepImpl extends L3ElementImpl implements PathwayStep

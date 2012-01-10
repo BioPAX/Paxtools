@@ -2,7 +2,6 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
@@ -25,7 +24,7 @@ import java.util.regex.Pattern;
 
 @Entity
 @Proxy(proxyClass= ControlledVocabulary.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ControlledVocabularyImpl extends XReferrableImpl implements
@@ -67,7 +66,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name="term")
-	@Field(name = BioPAXElementImpl.SEARCH_FIELD_TERM, index = Index.TOKENIZED)
+	@Field(name = "term", index = Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getTerm()
 	{

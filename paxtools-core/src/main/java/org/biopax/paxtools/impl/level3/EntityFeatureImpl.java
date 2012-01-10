@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Entity
  @Proxy(proxyClass= EntityFeature.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature

@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.SequenceEntityReference;
@@ -55,7 +54,7 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     // Property sequence
 
 	@Lob
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_SEQUENCE, index=Index.TOKENIZED)
+	@Field(name="sequence", index=Index.TOKENIZED)
 	public String getSequence()
     {
         return sequence;

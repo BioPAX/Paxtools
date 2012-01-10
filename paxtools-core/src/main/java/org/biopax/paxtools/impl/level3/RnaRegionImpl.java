@@ -14,7 +14,7 @@ import javax.persistence.Transient;
  */
 @Entity
  @Proxy(proxyClass= RnaRegion.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class RnaRegionImpl extends NucleicAcidImpl implements RnaRegion

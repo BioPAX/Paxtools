@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
@@ -77,7 +76,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="availability")
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
+	@Field(name="availability", index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAvailability()
 	{

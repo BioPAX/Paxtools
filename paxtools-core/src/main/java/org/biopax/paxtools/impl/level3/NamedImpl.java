@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
@@ -36,7 +35,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 
 	
-	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@Field(name = "name", index = Index.TOKENIZED)
 	@Boost(2.0f)
 	@Column(columnDefinition="LONGTEXT")
 	protected String getStandardNameX()
@@ -59,7 +58,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 		addName(standardName = name);
 	}
 	
-	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@Field(name = "name", index = Index.TOKENIZED)
 	@Boost(2.0f)
 	@Column(columnDefinition="LONGTEXT")
 	protected String getDisplayNameX()
@@ -85,7 +84,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name="name")
-	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
+	@Field(name = "name", index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
 	@Boost(1.5f)
 	@Column(columnDefinition="LONGTEXT")

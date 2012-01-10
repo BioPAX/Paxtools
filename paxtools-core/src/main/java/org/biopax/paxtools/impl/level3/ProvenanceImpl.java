@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Entity
 @Proxy(proxyClass= Provenance.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProvenanceImpl extends NamedImpl implements Provenance

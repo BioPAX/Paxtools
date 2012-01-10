@@ -11,7 +11,7 @@ import javax.persistence.Transient;
 
 @Entity
  @Proxy(proxyClass= UnificationXref.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class UnificationXrefImpl extends XrefImpl implements UnificationXref {

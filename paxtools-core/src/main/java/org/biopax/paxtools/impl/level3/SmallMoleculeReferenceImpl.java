@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ChemicalStructure;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
@@ -17,7 +16,7 @@ import javax.persistence.Transient;
 
 @Entity
  @Proxy(proxyClass= SmallMoleculeReference.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMoleculeReference
@@ -43,7 +42,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 
     
     
-    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Field(name="keyword", index=Index.TOKENIZED)
     public String getChemicalFormula()
 	{
 		return chemicalFormula;

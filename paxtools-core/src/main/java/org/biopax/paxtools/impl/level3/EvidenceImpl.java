@@ -18,7 +18,7 @@ import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentInterse
 
 @Entity
 @Proxy(proxyClass=Evidence.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EvidenceImpl extends XReferrableImpl implements Evidence

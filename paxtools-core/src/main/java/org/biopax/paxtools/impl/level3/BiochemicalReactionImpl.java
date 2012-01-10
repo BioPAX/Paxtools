@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.BiochemicalReaction;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.KPrime;
@@ -19,7 +18,7 @@ import java.util.Set;
 
 @Entity
 @Proxy(proxyClass= BiochemicalReaction.class)
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BiochemicalReactionImpl extends ConversionImpl
@@ -134,7 +133,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="ECNumber")	
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_EC_NUMBER, index=Index.TOKENIZED)
+	@Field(name="ecnumber", index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getECNumber()
 	{
