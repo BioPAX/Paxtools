@@ -63,6 +63,7 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 
     public void init(Session session) {
         query = session.createQuery(qString);
+        query.setReadOnly(true);
     }
 
     @Override
