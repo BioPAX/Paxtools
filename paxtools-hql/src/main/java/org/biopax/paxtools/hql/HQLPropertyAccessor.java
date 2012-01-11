@@ -42,11 +42,10 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
         property = processPropertyExceptions(domain, property);
 
 
-        qString = "SELECT " + domainName +
-                " FROM " + domainClass + " as " + domainName;
-        qString += editor.isMultipleCardinality() ? " left join fetch " + domainName + "." + property : " ";
-
+        qString = " FROM " + domainClass + " as " + domainName;
         qString += " WHERE " + domainName + " in(:" + DOMAIN + ")";
+        qString += editor.isMultipleCardinality() ? " left join fetch " + domainName + "." + property : " "; //TODO further optimize
+;
 
     }
 
