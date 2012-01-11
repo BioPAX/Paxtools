@@ -2,6 +2,8 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.util.DatasourceFilterFactory;
+import org.biopax.paxtools.util.OrganismFilterFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
@@ -9,6 +11,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.FullTextFilterDef;
+import org.hibernate.search.annotations.FullTextFilterDefs;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.JoinTable;
@@ -21,6 +25,10 @@ import java.util.Set;
 @javax.persistence.Entity
 @Proxy(proxyClass=PhysicalEntity.class)
 @Indexed
+@FullTextFilterDefs( { //filters are global (must define on any @Indexed entity), names - unique!
+    @FullTextFilterDef(name = "organism", impl = OrganismFilterFactory.class), 
+    @FullTextFilterDef(name = "datasource", impl = DatasourceFilterFactory.class) 
+})
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
