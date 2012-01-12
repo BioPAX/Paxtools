@@ -130,7 +130,6 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 
 
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-//	@ContainedIn
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()
 	{

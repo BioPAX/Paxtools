@@ -2,16 +2,14 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.util.BioSourceFieldBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -38,7 +36,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		this.pathwayComponent = new HashSet<Process>();
 		this.pathwayOrder = new HashSet<PathwayStep>();
 		this.controllerOf = new HashSet<Control>();
-
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -60,8 +57,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="pathwayComponent")
-    @IndexedEmbedded(depth=10, targetElement=ProcessImpl.class)
-//    @Target(ProcessImpl.class)
 	public Set<Process> getPathwayComponent()
 	{
 		return this.pathwayComponent;
@@ -89,7 +84,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")//, cascade = {CascadeType.ALL})
+	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")
 	public Set<PathwayStep> getPathwayOrder()
 	{
 		return pathwayOrder;
@@ -117,11 +112,9 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-	@ManyToOne(targetEntity = BioSourceImpl.class)//, cascade = {CascadeType.ALL})
-//	@IndexedEmbedded(targetElement=BioSourceImpl.class)
-//	@Target(BioSourceImpl.class)
     @Field(name="organism", index = Index.UN_TOKENIZED)
-    @FieldBridge(impl=BioSourceFieldBridge.class)
+    @FieldBridge(impl=OrganismFieldBridge.class)
+	@ManyToOne(targetEntity = BioSourceImpl.class)
 	public BioSource getOrganism()
 	{
 		return organism;

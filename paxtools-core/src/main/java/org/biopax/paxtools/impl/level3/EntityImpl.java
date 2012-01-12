@@ -3,17 +3,15 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.biopax.paxtools.util.DatasourcesFieldBridge;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.JoinTable;
@@ -100,13 +98,11 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 			this.availability.remove(availability_text);
 	}
 
+	@Field(index = Index.TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProvenanceImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="dataSource")
-//    @IndexedEmbedded(targetElement=ProvenanceImpl.class)
-//    @Target(ProvenanceImpl.class)
-    @Field(name="datasource", index = Index.UN_TOKENIZED)
-    @FieldBridge(impl=DatasourcesFieldBridge.class)
 	public Set<Provenance> getDataSource()
 	{
 		return dataSource;
@@ -151,7 +147,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
-    @IndexedEmbedded(targetElement=EvidenceImpl.class)
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

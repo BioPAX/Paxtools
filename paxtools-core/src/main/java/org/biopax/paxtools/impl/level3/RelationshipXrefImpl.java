@@ -41,7 +41,7 @@ public class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class)
 	public RelationshipTypeVocabulary getRelationshipType()
 	{
 		return relationshipType;

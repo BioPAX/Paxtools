@@ -2,7 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.util.DatasourceFilterFactory;
+import org.biopax.paxtools.util.DataSourceFilterFactory;
 import org.biopax.paxtools.util.OrganismFilterFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
@@ -27,7 +27,7 @@ import java.util.Set;
 @Indexed
 @FullTextFilterDefs( { //filters are global (must define on any @Indexed entity), names - unique!
     @FullTextFilterDef(name = "organism", impl = OrganismFilterFactory.class), 
-    @FullTextFilterDef(name = "datasource", impl = DatasourceFilterFactory.class) 
+    @FullTextFilterDef(name = "datasource", impl = DataSourceFilterFactory.class) 
 })
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -67,7 +67,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		return componentOf;
 	}
 
-	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
 	public CellularLocationVocabulary getCellularLocation()
 	{
 		return cellularLocation;

@@ -7,7 +7,7 @@ import org.hibernate.search.annotations.Key;
 import org.hibernate.search.filter.FilterKey;
 import org.hibernate.search.filter.StandardFilterKey;
 
-public class DatasourceFilterFactory {
+public class DataSourceFilterFactory {
 
 	private Set<String> datasources;
 	
