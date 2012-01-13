@@ -2,13 +2,10 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.Score;
-import org.biopax.paxtools.util.DatasourcesFieldBridge;
-import org.biopax.paxtools.util.ProvenanceFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
@@ -17,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
- @Proxy(proxyClass= Score.class)
+@Proxy(proxyClass= Score.class)
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -60,9 +57,7 @@ public class ScoreImpl extends XReferrableImpl implements Score
 		this.value = value;
 	}
 
-    @ManyToOne(targetEntity = ProvenanceImpl.class)//, cascade = {CascadeType.ALL})
-    @Field(index = Index.UN_TOKENIZED)
-    @FieldBridge(impl=ProvenanceFieldBridge.class)
+    @ManyToOne(targetEntity = ProvenanceImpl.class)
     public Provenance getScoreSource()
     {
         return scoreSource;

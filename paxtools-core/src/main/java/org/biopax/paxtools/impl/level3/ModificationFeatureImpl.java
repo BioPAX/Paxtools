@@ -35,7 +35,7 @@ public class ModificationFeatureImpl extends EntityFeatureImpl
 	private SequenceModificationVocabulary modificationType;
 
 
-	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return modificationType;

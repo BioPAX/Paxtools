@@ -60,7 +60,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = DeltaGImpl.class)//, cascade = {CascadeType.ALL})
+	@OneToMany(targetEntity = DeltaGImpl.class)
 	@JoinTable(name="deltaG")	
 	public Set<DeltaG> getDeltaG()
 	{
@@ -156,7 +156,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 	}
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = KPrimeImpl.class)//, cascade = {CascadeType.ALL})
+	@OneToMany(targetEntity = KPrimeImpl.class)
 	@JoinTable(name="keq")		
 	public Set<KPrime> getKEQ()
 	{

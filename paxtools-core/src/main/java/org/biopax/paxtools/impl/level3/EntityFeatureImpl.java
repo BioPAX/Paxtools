@@ -4,9 +4,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -52,6 +56,8 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	
 	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
+	@Field(name = "dataSource", index = Index.TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	public EntityReference getEntityFeatureOf(){
 		return ownerEntityReference;
@@ -60,17 +66,19 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		ownerEntityReference = entityReference;
 	}
 	
+	@Field(name = "dataSource", index = Index.TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, 
-			mappedBy = "feature")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
 	{
 		return featureOf;
 	}
 
+	@Field(name = "dataSource", index = Index.TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class,
-			mappedBy = "notFeature")
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()
 	{
 		return notFeatureOf;
@@ -112,7 +120,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocation = featureLocation;
 	}
 
-	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class)
 	public SequenceRegionVocabulary getFeatureLocationType()
 	{
 		return featureLocationType;

@@ -75,7 +75,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @ManyToOne(targetEntity = CellVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = CellVocabularyImpl.class)
 	public CellVocabulary getCellType()
 	{
 		return celltype;
@@ -86,7 +86,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 		this.celltype = celltype;
 	}
 
-	@ManyToOne(targetEntity = TissueVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = TissueVocabularyImpl.class)
 	public TissueVocabulary getTissue()
 	{
 		return tissue;

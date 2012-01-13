@@ -14,7 +14,7 @@ import org.hibernate.search.bridge.LuceneOptions;
  * @author rodche
  *
  */
-public final class XrefsFieldBridge implements FieldBridge {
+public final class XrefFieldBridge implements FieldBridge {
 
 	@Override
 	public void set(String name, Object value, Document document, LuceneOptions luceneOptions) {

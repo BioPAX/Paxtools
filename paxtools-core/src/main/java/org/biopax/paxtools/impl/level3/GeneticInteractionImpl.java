@@ -36,7 +36,7 @@ public class GeneticInteractionImpl extends InteractionImpl
 
     private Score interactionScore;
 
-    @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)
 	public PhenotypeVocabulary getPhenotype()
     {
         return phenotype;

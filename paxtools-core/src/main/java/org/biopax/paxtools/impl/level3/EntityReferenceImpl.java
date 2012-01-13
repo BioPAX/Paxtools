@@ -5,13 +5,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -110,6 +112,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityFeature = entityFeature;
 	}
 
+	@Field(name = "dataSource", index = Index.TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ContainedIn
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
@@ -149,8 +153,6 @@ public abstract class EntityReferenceImpl extends NamedImpl
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceImpl.class) //TODO generify?
 	@JoinTable(name="memberEntityReference")
-    @IndexedEmbedded(depth=2, targetElement=EntityReferenceImpl.class)
-//    @Target(EntityReferenceImpl.class)
 	public Set<EntityReference> getMemberEntityReference()
 	{
 		return memberEntity;

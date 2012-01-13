@@ -8,9 +8,7 @@ import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.Target;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -91,8 +89,6 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityImpl.class)
 	@JoinTable(name="participant")
-	@IndexedEmbedded(depth=10, targetElement=EntityImpl.class)
-//	@Target(EntityImpl.class)
 	public Set<Entity> getParticipant()
 	{
 		return participant;

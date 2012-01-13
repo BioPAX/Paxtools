@@ -3,25 +3,55 @@
  */
 package org.biopax.paxtools.util;
 
+import java.util.Set;
+
 import org.apache.lucene.document.Document;
 import org.biopax.paxtools.model.level3.BioSource;
+import org.biopax.paxtools.model.level3.Pathway;
+import org.biopax.paxtools.model.level3.SequenceEntityReference;
+import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.Xref;
 import org.hibernate.search.bridge.FieldBridge;
 import org.hibernate.search.bridge.LuceneOptions;
 
 /**
+ * A muli-domain FieldBridge implementation 
+ * for extracting and indexing organism names/ids
+ * from other BioPAX properties (incl. some inverse properties)
+ * 
  * @author rodche
  *
  */
-public final class BioSourceFieldBridge implements FieldBridge {
+public final class OrganismFieldBridge implements FieldBridge {
 
 	@Override
 	public void set(String name, Object value, Document document, LuceneOptions luceneOptions) {
-		BioSource bs = (BioSource) value;
+		if (value instanceof BioSource) {
+			setOrganism(name, (BioSource)value, document, luceneOptions);
+		} else if (value instanceof Pathway) {
+			setOrganism(name, ((Pathway) value).getOrganism(), document, luceneOptions);
+		} else if (value instanceof SequenceEntityReference) {
+			setOrganism(name, ((SequenceEntityReference) value).getOrganism(), document, luceneOptions);
+		} else if (value instanceof SimplePhysicalEntity) {
+			set(name, ((SimplePhysicalEntity) value).getEntityReference(), document, luceneOptions);
+		} else if (value instanceof Set) {
+			for (Object o : (Set) value) {
+				set(name, o, document, luceneOptions);
+			}
+		} else if (value != null) {
+			//Not applicable to value.getClass(); it's ok to ignore
+		}
+	}
+
+	
+	private void setOrganism(String name, BioSource bs,
+			Document document, LuceneOptions luceneOptions) 
+	{
 		// put id (e.g., urn:miriam:taxonomy:9606, if normalized...)
 		// (toLowerCase() is very important here and there...it's long to explain)
 		luceneOptions.addFieldToDocument(name, bs.getRDFId().toLowerCase(), document);
+		
 		// add organism names
 		for(String s : bs.getName()) {
 			luceneOptions.addFieldToDocument(name, s.toLowerCase(), document);
@@ -45,4 +75,5 @@ public final class BioSourceFieldBridge implements FieldBridge {
 			}
 		}
 	}
+
 }

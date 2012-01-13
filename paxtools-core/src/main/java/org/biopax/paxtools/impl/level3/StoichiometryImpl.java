@@ -61,7 +61,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	        : 0);
 	}
 
-	@ManyToOne(targetEntity = PhysicalEntityImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = PhysicalEntityImpl.class)
 	public PhysicalEntity getPhysicalEntity()
 	{
 		return physicalEntity;
