@@ -1,5 +1,6 @@
 package org.biopax.paxtools.hql;
 
+import org.biopax.paxtools.controller.ObjectPropertyEditor;
 import org.biopax.paxtools.controller.PropertyAccessorAdapter;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -26,7 +27,7 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
             Arrays.asList("standardName", "displayName", "template", "entityReference"));
 
     private static HashSet<String> mixedCase = new HashSet<String>(
-            Arrays.asList("kEQ", "eCNumber"));
+            Arrays.asList("kEQ", "eCNumber", "pMg"));
 
     private PropertyEditor<D, R> editor;
 
@@ -41,11 +42,28 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
         String property = editor.getProperty();
         property = processPropertyExceptions(domain, property);
 
+        this.qString = constructQueryString(domainClass, domainName, property);
 
-        qString = " FROM " + domainClass + " as " + domainName;
-        qString += " WHERE " + domainName + " in(:" + DOMAIN + ") ";   //TODO
-        qString += editor.isMultipleCardinality() ? domainName +" left join fetch " + domainName + "." + property : " ";
+
     }
+
+    private String constructQueryString(String domainClass, String domainName, String property) {
+        if (this.editor instanceof ObjectPropertyEditor)
+
+        {
+            String query = "SELECT DISTINCT " + domainName + "." + property;
+            query += " FROM " + domainClass + " as " + domainName;
+            query += " WHERE " + domainName + " in(:" + DOMAIN + ") ";
+            return query;
+        } else if (editor.isMultipleCardinality()) {
+            String query = "SELECT " + domainName;
+            query += " FROM " + domainClass + " as " + domainName;
+            query += " left outer join fetch " + domainName + "." + property;
+            query += " WHERE " + domainName + " in(:" + DOMAIN + ") ";
+            return query;
+        } else return "";
+    }
+
 
     private String processPropertyExceptions(Class<D> domain, String property) {
         if (domain.equals(Control.class) && property.equals("controller")) {
@@ -59,8 +77,10 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
     }
 
     public void init(Session session) {
-        query = session.createQuery(qString);
-        query.setReadOnly(true);
+        if (!qString.isEmpty()) {
+            query = session.createQuery(qString);
+            query.setReadOnly(true);
+        }
     }
 
     @Override
@@ -76,13 +96,30 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
     public Set<? extends R> getValueFromBeans(Collection<? extends D> beans)
             throws IllegalBioPAXArgumentException {
 
-        return editor.getValueFromBeans(fetch(beans));
-
+        HashSet<D> eligible = new HashSet<D>();
+        for (D bean : beans) {
+            if (editor.getDomain().isInstance(bean)) {
+                eligible.add(bean);
+            }
+        }
+        if (editor instanceof ObjectPropertyEditor) {
+            List fetched = fetch(eligible);
+            return new HashSet<R>(fetched);
+        } else {
+            HashSet<R> values = new HashSet<R>();
+            if (editor.isMultipleCardinality())
+                fetch(eligible);
+            for (D bpe : eligible) {
+                values.addAll(getValueFromBean(bpe));
+            }
+            return values;
+        }
     }
 
     public List fetch(Collection<? extends D> beans) {
+
         if (!beans.isEmpty()) {
-            query.setParameterList(DOMAIN, beans);
+            ;
             return query.list();
         } else return Collections.emptyList();
     }

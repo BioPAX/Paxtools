@@ -44,7 +44,7 @@ public class OrderedFetcher {
             layer.fetch(values);
         }
         if (fetchAttributes)
-            attributeLayer.fetchOnce(elements);
+            attributeLayer.fetchOnce(values);
         return values;
         //TODO handle non-object fields
     }
@@ -112,15 +112,17 @@ public class OrderedFetcher {
             Iterator<PropertyEditor> iter = editorMap.iterator();
             while (iter.hasNext()) {
                 PropertyEditor next = iter.next();
-                if (!(next instanceof ObjectPropertyEditor)) {
+                if (!(next instanceof ObjectPropertyEditor))
+                {
                     this.editors.add(next);
                 }
             }
         }
 
         public Set<BioPAXElement> fetchOnce(Set<? extends BioPAXElement> elements) {
-            for (PropertyEditor editor : editors) {
-                getValuesFromBeans(elements, editor);
+            for (PropertyEditor editor : editors)
+            {
+                    getValuesFromBeans(elements, editor);
             }
             return null;
         }
