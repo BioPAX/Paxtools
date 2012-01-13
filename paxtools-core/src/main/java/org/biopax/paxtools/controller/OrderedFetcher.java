@@ -109,12 +109,18 @@ public class OrderedFetcher {
     private class AttributeLayer extends Layer {
         public AttributeLayer() {
             SimpleEditorMap editorMap = SimpleEditorMap.get(BioPAXLevel.L3);
+            HashMap<String,PropertyEditor> tempmap = new HashMap<String, PropertyEditor>();
             Iterator<PropertyEditor> iter = editorMap.iterator();
             while (iter.hasNext()) {
                 PropertyEditor next = iter.next();
                 if (!(next instanceof ObjectPropertyEditor))
                 {
-                    this.editors.add(next);
+                    if(!tempmap.containsKey(next.getProperty()))
+                    {
+                        tempmap.put(next.getProperty(),next);
+                        this.editors.add(next);
+                    }
+                    
                 }
             }
         }
