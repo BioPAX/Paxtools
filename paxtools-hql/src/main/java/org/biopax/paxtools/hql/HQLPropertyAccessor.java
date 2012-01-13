@@ -121,7 +121,7 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 
     public List fetch(Collection<? extends D> beans) {
 
-
+        System.out.println("beans = " + beans);
         if (!beans.isEmpty())
         {
             query.setParameterList(DOMAIN,beans);
