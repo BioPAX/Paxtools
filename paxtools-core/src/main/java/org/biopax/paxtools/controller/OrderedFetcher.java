@@ -113,7 +113,7 @@ public class OrderedFetcher {
             Iterator<PropertyEditor> iter = editorMap.iterator();
             while (iter.hasNext()) {
                 PropertyEditor next = iter.next();
-                if (!(next instanceof ObjectPropertyEditor))
+                if (!(next instanceof ObjectPropertyEditor) && next.isMultipleCardinality())
                 {
                     if(!tempmap.containsKey(next.getProperty()))
                     {
