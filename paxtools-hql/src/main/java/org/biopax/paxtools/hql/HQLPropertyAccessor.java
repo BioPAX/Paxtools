@@ -102,10 +102,13 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
                 eligible.add(bean);
             }
         }
-        if (editor instanceof ObjectPropertyEditor) {
+        if (editor instanceof ObjectPropertyEditor)
+        {
             List fetched = fetch(eligible);
             return new HashSet<R>(fetched);
-        } else {
+        }
+        else
+        {
             HashSet<R> values = new HashSet<R>();
             if (editor.isMultipleCardinality())
                 fetch(eligible);
@@ -118,10 +121,13 @@ public class HQLPropertyAccessor<D extends BioPAXElement, R> extends PropertyAcc
 
     public List fetch(Collection<? extends D> beans) {
 
-        if (!beans.isEmpty()) {
-            ;
+
+        if (!beans.isEmpty())
+        {
+            query.setParameterList(DOMAIN,beans);
             return query.list();
-        } else return Collections.emptyList();
+        }
+        else return Collections.emptyList();
     }
 
     @Override
