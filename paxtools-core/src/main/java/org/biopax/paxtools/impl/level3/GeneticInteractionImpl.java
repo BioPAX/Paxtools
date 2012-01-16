@@ -3,9 +3,13 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.GeneticInteraction;
 import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 import org.biopax.paxtools.model.level3.Score;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -15,7 +19,7 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
- @Proxy(proxyClass= GeneticInteraction.class)
+@Proxy(proxyClass= GeneticInteraction.class)
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -36,6 +40,7 @@ public class GeneticInteractionImpl extends InteractionImpl
 
     private Score interactionScore;
 
+    @Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)
 	public PhenotypeVocabulary getPhenotype()
     {
@@ -47,7 +52,8 @@ public class GeneticInteractionImpl extends InteractionImpl
         this.phenotype = phenotype;
     }
 
-	@ManyToOne(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
+    @Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @ManyToOne(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
     public Score getInteractionScore()
     {
         return interactionScore;

@@ -22,11 +22,14 @@ public final class DataSourceFieldBridge implements FieldBridge {
 	public void set(String name, Object value, Document document, LuceneOptions luceneOptions) 
 	{
 		if (value instanceof Provenance) {
+			//save to index 
 			setForProvenance(name, (Provenance)value, document, luceneOptions);
 		} else if (value instanceof Entity) {
+			//Entities have dataSource property, use it
 			Entity ent = (Entity) value;
 			set(name, ent.getDataSource(), document, luceneOptions);
 		} else if (value instanceof EntityReference) {
+			// Let ERs inherit its dataSource from parent PEs or MERs:
 			EntityReference er = (EntityReference) value;
 			set(name, er.getEntityReferenceOf(), document, luceneOptions);
 			set(name, er.getMemberEntityReferenceOf(), document, luceneOptions);

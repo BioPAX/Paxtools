@@ -24,7 +24,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 {
 	private String uri;
 	
-	// anything extra can be stored in this map (not to persist in a DB though)
+	// anything extra can be stored in this map (not to persist in a DB usually)
 	private Map<String, Object> annotations;
 
    
@@ -86,5 +86,22 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     public Map<String, Object> getAnnotations() {
 		return annotations;
 	}
+    
+    
+    /* 
+     * TODO A non-biopax way to get/set/persist pathway membership.
+     * This requires (depends on) the annotations to be 
+     * somewhere pre-calculated.
+     */ 
+//    @Field(name="pathways")
+//    @FieldBridge(impl=ParentPathwayFieldBridge.class)
+//    @ManyToMany(targetEntity=PathwayImpl.class, fetch=FetchType.LAZY)
+//    protected Set<Pathway> getPathway() {
+//    	return (Set<Pathway>) annotations.get(AnnotationMapKey.PARENT_PATHWAYS.toString());
+//    }
+//    
+//    protected void setPathway(Set<Pathway> parentPathways) {
+//		annotations.put(AnnotationMapKey.PARENT_PATHWAYS.toString(), parentPathways);
+//	}
 }
 

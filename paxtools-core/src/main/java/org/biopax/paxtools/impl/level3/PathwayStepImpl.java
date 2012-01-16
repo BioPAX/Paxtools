@@ -4,9 +4,16 @@ import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -14,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
- @Proxy(proxyClass=PathwayStep.class)
+@Proxy(proxyClass=PathwayStep.class)
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -85,6 +92,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
@@ -114,6 +122,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.stepProcess = stepProcess;
 	}
 
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence") 	
@@ -139,6 +148,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = evidence;
 	}
 
+	@Fields({
+		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name="dataSource", index = Index.TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+	})
 	@ManyToOne(targetEntity = PathwayImpl.class)
 	public Pathway getPathwayOrderOf()
 	{

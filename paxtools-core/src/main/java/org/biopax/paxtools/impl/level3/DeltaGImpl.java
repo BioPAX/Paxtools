@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 import static java.lang.Float.compare;
 
 @Entity
- @Proxy(proxyClass= DeltaG.class)
+@Proxy(proxyClass= DeltaG.class)
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

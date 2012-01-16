@@ -6,13 +6,15 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.DataSourceFieldBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
 
 import javax.persistence.Entity;
@@ -112,10 +114,13 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityFeature = entityFeature;
 	}
 
-	@Field(name = "dataSource", index = Index.TOKENIZED)
-	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
+
+	@Fields({
+		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name="organism", index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name="dataSource", index = Index.TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ContainedIn
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
@@ -180,9 +185,13 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	}
 
+	@Fields({
+		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name="organism", index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name="dataSource", index = Index.TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
-    @ContainedIn
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
 		return ownerEntityReference;

@@ -16,7 +16,7 @@ import static java.lang.Float.floatToIntBits;
 /**
  */
 @Entity
- @Proxy(proxyClass=KPrime.class)
+@Proxy(proxyClass=KPrime.class)
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

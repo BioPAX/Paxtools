@@ -7,7 +7,8 @@ import org.hibernate.annotations.Proxy;
 
 import javax.persistence.Entity;
 
-@Entity @Proxy(proxyClass = NucleicAcid.class)
+@Entity
+@Proxy(proxyClass = NucleicAcid.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class NucleicAcidImpl extends SimplePhysicalEntityImpl implements NucleicAcid

@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.biopax.paxtools.model.level3.BioSource;
+import org.biopax.paxtools.model.level3.Gene;
+import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.SequenceEntityReference;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
@@ -18,7 +20,17 @@ import org.hibernate.search.bridge.LuceneOptions;
 /**
  * A muli-domain FieldBridge implementation 
  * for extracting and indexing organism names/ids
- * from other BioPAX properties (incl. some inverse properties)
+ * from other BioPAX properties (incl. some inverse properties),
+ * such as 'participant', 'component', etc. E.g., when applied to
+ * interaction.participant, it follows one of biopax property paths to get organisms:
+ * - participant:Complex/component:SimplePhysicalEntity/entityReference/organism
+ * - participant:SimplePhysicalEntity/entityReference/organism
+ * - participant:Gene/organism
+ * - participant:Pathway/organism
+ * - participant:Interaction/participant...
+ * etc.
+ * 
+ * (hope, there are no infinite loops :))
  * 
  * @author rodche
  *
@@ -31,10 +43,15 @@ public final class OrganismFieldBridge implements FieldBridge {
 			setOrganism(name, (BioSource)value, document, luceneOptions);
 		} else if (value instanceof Pathway) {
 			setOrganism(name, ((Pathway) value).getOrganism(), document, luceneOptions);
+		} else if (value instanceof Interaction) {
+			set(name, ((Interaction) value).getPathwayComponentOf(), document, luceneOptions); //go to Pathways
+			set(name, ((Interaction) value).getParticipant(), document, luceneOptions); // to controlled interactions
 		} else if (value instanceof SequenceEntityReference) {
 			setOrganism(name, ((SequenceEntityReference) value).getOrganism(), document, luceneOptions);
 		} else if (value instanceof SimplePhysicalEntity) {
 			set(name, ((SimplePhysicalEntity) value).getEntityReference(), document, luceneOptions);
+		} else if (value instanceof Gene) {
+			setOrganism(name, ((Gene) value).getOrganism(), document, luceneOptions);
 		} else if (value instanceof Set) {
 			for (Object o : (Set) value) {
 				set(name, o, document, luceneOptions);

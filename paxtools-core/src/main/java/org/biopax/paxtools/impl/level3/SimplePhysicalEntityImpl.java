@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -33,8 +34,8 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	}
 	
 	@Fields({
-		@Field(name="organism", index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
-		//TODO add "keyword" (include child name, xref, comment there - using another bridge impl.)
+		@Field(name="organism", index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
+		@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)

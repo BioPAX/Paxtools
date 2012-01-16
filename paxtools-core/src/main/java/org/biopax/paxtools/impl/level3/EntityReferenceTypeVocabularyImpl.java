@@ -12,7 +12,7 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
- @Proxy(proxyClass= EntityReferenceTypeVocabulary.class)
+@Proxy(proxyClass= EntityReferenceTypeVocabulary.class)
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

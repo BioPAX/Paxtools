@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
- @Proxy(proxyClass= Stoichiometry.class)
+@Proxy(proxyClass= Stoichiometry.class)
 @Indexed//(index = BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

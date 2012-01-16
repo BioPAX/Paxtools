@@ -36,7 +36,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 
 	
 	@Field(name = "name", index = Index.TOKENIZED)
-	@Boost(2.0f)
+	@Boost(2.5f)
 	@Column(columnDefinition="LONGTEXT")
 	protected String getStandardNameX()
 	{
@@ -59,7 +59,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 	
 	@Field(name = "name", index = Index.TOKENIZED)
-	@Boost(2.0f)
+	@Boost(2f)
 	@Column(columnDefinition="LONGTEXT")
 	protected String getDisplayNameX()
 	{
@@ -86,7 +86,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	@JoinTable(name="name")
 	@Field(name = "name", index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
-	@Boost(1.5f)
+	@Boost(2.0f)
 	@Column(columnDefinition="LONGTEXT")
 	public Set<String> getName()
 	{

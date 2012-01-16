@@ -15,6 +15,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process; //separate import required here!
+import org.biopax.paxtools.util.AnnotationMapKey;
 import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -36,15 +37,27 @@ public class ModelUtils {
 	 * and normally step processes are listed in the pathwayComponent
 	 * property as well.
 	 */
-	private static final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>() {
+	public static final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>() {
 		public boolean filter(PropertyEditor editor) {
 			return !editor.getProperty().equals("nextStep")
 				&& !editor.getProperty().equals("NEXT-STEP");
 		}
 	};
 	
+	public static final Filter<PropertyEditor> evidenceFilter = new Filter<PropertyEditor>() {
+		public boolean filter(PropertyEditor editor) {
+			return !editor.getProperty().equals("evidence")
+				&& !editor.getProperty().equals("EVIDENCE");
+		}
+	};
+	
+	public static final Filter<PropertyEditor> pathwayOrderFilter = new Filter<PropertyEditor>() {
+		public boolean filter(PropertyEditor editor) {
+			return !editor.getProperty().equals("pathwayOrder"); 
+		}
+	};
+	
 	private final Model model; // a model to hack ;)
-	private final EditorMap editorMap;
 	private final BioPAXIOHandler io;
 	
 	/**
@@ -131,8 +144,21 @@ public class ModelUtils {
 	public ModelUtils(Model model) 
 	{
 		this.model = model;
-		this.editorMap = SimpleEditorMap.get(model.getLevel());
 		this.io = new SimpleIOHandler(model.getLevel());
+		((SimpleIOHandler) this.io).mergeDuplicates(true);
+		((SimpleIOHandler) this.io).normalizeNameSpaces(false);
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param level
+	 */
+	public ModelUtils(BioPAXLevel level) 
+	{
+		this.model = level.getDefaultFactory().createModel();
+		this.io = new SimpleIOHandler(level);
 		((SimpleIOHandler) this.io).mergeDuplicates(true);
 		((SimpleIOHandler) this.io).normalizeNameSpaces(false);
 	}
@@ -277,8 +303,9 @@ public class ModelUtils {
      */
     public void removeDependentsIfDangling(BioPAXElement parent) 
     {	
-		// get the parent and all its children
-		Fetcher fetcher = new Fetcher(editorMap);
+		EditorMap em = SimpleEditorMap.get(model.getLevel());
+    	// get the parent and all its children
+		Fetcher fetcher = new Fetcher(em);
 		Model childModel = model.getLevel().getDefaultFactory().createModel();
 		fetcher.fetch(parent, childModel);
 		
@@ -293,7 +320,7 @@ public class ModelUtils {
 		for(BioPAXElement e : others) {
 			final BioPAXElement bpe = e;
 			// define a special 'visitor'
-			AbstractTraverser traverser = new AbstractTraverser(editorMap) 
+			AbstractTraverser traverser = new AbstractTraverser(em) 
 			{
 				@Override
 				protected void visit(Object value, BioPAXElement parent, 
@@ -409,7 +436,7 @@ public class ModelUtils {
 		// but we run from every element (all types)
 		for(BioPAXElement e : model.getObjects()) {
 			// define a special 'visitor'
-			AbstractTraverser traverser = new AbstractTraverser(editorMap) 
+			AbstractTraverser traverser = new AbstractTraverser(SimpleEditorMap.get(model.getLevel())) 
 			{
 				@Override
 				protected void visit(Object value, BioPAXElement parent, 
@@ -475,7 +502,8 @@ public class ModelUtils {
 		// for each ROOT element (puts a strict top-down order on the following)
 		Set<BioPAXElement> roots = getRootElements(BioPAXElement.class);
 		for(BioPAXElement bpe : roots) {
-			PropertyReasoner reasoner = new PropertyReasoner(property, editorMap);
+			PropertyReasoner reasoner = new PropertyReasoner(property, 
+					SimpleEditorMap.get(model.getLevel()));
 			reasoner.setDomains(forClasses);
 			reasoner.inferPropertyValue(bpe);
 		}
@@ -511,6 +539,7 @@ public class ModelUtils {
 	 */
 	public Model getAllChildren(BioPAXElement bpe, Filter<PropertyEditor>... filters) {
 		Model model = this.model.getLevel().getDefaultFactory().createModel();
+		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
 		if(filters.length == 0	) {
 			new Fetcher(editorMap, nextStepFilter).fetch(bpe, model);
 		} else {
@@ -534,7 +563,8 @@ public class ModelUtils {
 	{	
 		Model model = this.model.getLevel().getDefaultFactory().createModel();
 		
-		AbstractTraverser traverser = new AbstractTraverser(editorMap, nextStepFilter) {
+		AbstractTraverser traverser = new AbstractTraverser(
+				SimpleEditorMap.get(model.getLevel()), nextStepFilter) {
 			@Override
 			protected void visit(Object range, BioPAXElement domain,
 					Model model, PropertyEditor editor) {
@@ -563,6 +593,7 @@ public class ModelUtils {
 	 */
 	public Set<BioPAXElement> getAllChildrenAllowClones(BioPAXElement bpe, Filter<PropertyEditor>... filters) {
 		Set<BioPAXElement> toReturn = null;
+		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
 		if(filters.length == 0	) {
 			toReturn = new Fetcher(editorMap, nextStepFilter).fetch(bpe);
 		} else {
@@ -585,7 +616,8 @@ public class ModelUtils {
 	{	
 		final Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
 		
-		AbstractTraverser traverser = new AbstractTraverser(editorMap, nextStepFilter) {
+		AbstractTraverser traverser = new AbstractTraverser(
+				SimpleEditorMap.get(model.getLevel()), nextStepFilter) {
 			@Override
 			protected void visit(Object range, BioPAXElement domain,
 					Model model, PropertyEditor editor) {
@@ -616,7 +648,9 @@ public class ModelUtils {
 	 * 
 	 * @param <T>
 	 * @param processClass to relate entities with an interaction/pathway of this type 
+	 * @deprecated still ok for Pathway, but it is confusing, expensive and may be completely wrong to use with Interaction types
 	 */
+	@Deprecated
 	public <T extends Process> void generateEntityProcessXrefs(
 			Class<T> processClass) 
 	{	
@@ -637,27 +671,94 @@ public class ModelUtils {
 				rx.setRelationshipType(cv);
 			}
 			
-			// add the xref to all child entities
-			Model childModel = getAllChildren(ownerProc);
-			addRelationshipXref(childModel.getObjects(Entity.class), rx);
+			// add the xref to all (biologically) child entities
+			Model childModel = getAllChildren(ownerProc, pathwayOrderFilter, evidenceFilter);
+			saveRelationship(childModel.getObjects(Entity.class), rx, true, false);
 		}
 	}
 
 	
 	/**
-	 * Adds the relationship xref to every entity in the set.
+	 * Creates pathway membership relationship xrefs and
+	 * annotations for each child element if possible. 
+	 * This is Level3 specific. 
+	 * @see {@link BioPAXElement#getAnnotations()}
 	 * 
-	 * @param elements
-	 * @param x
+	 * For each child {@link XReferrable} of every pathway it creates a 
+	 * relationship xref with the following properties:
+	 * - db = provider (a name given by the second parameter)
+	 * - id = the rdfId (URI) of the parent process
+	 * - relationshipType = controlled vocabulary: "process" (MI:0359), urn:miriam:obo.mi:MI%3A0359
+	 * - comment = "Auto-generated by Paxtools" (also added to the CV and its unification xref)
+	 * And also adds parent pathways to child elements's annotation map 
+	 * using {@link AnnotationMapKey} "PARENT_PATHWAYS" as the key.
+	 * 
+	 *  @param forBiopaxType
+	 *  @param addRelationshipXrefs
+	 *  @param addPathwaysToAnnotations
+	 *  
 	 */
-	private void addRelationshipXref(Set<? extends Entity> elements, RelationshipXref x) 
-	{
-		//TODO shall we ignore entities within Evidence, ExperimentalForm, etc.?
-		for(Entity ent : elements) {
-				ent.addXref(x);
+	public void calculatePathwayMembership(Class<? extends BioPAXElement> forBiopaxType, 
+			boolean addRelationshipXrefs, boolean addPathwaysToAnnotations) 
+	{	
+		Set<Pathway> processes = new HashSet<Pathway>(model.getObjects(Pathway.class)); //to avoid concurr. mod. ex.
+		for(Pathway ownerProc : processes) 
+		{
+			// use a special relationship CV;
+			RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(RelationshipType.PROCESS);
+			
+			// prepare the xref to use in children
+			String relXrefId = generateURIForXref(COMMENT_FOR_GENERATED, ownerProc.getRDFId(), RelationshipXref.class);
+			RelationshipXref rx =  (RelationshipXref) model.getByID(relXrefId);
+			if (rx == null) {
+				rx = model.addNew(RelationshipXref.class, relXrefId);
+				rx.addComment(COMMENT_FOR_GENERATED);
+				rx.setDb(COMMENT_FOR_GENERATED);
+				rx.setId(ownerProc.getRDFId());
+				rx.setRelationshipType(cv);
+			}
+			
+			// add the xref to all (biologically) child entities
+			Model childModel = getAllChildren(ownerProc, pathwayOrderFilter, evidenceFilter);
+			saveRelationship(childModel.getObjects(forBiopaxType), rx, addRelationshipXrefs, addPathwaysToAnnotations);			
 		}
 	}
 	
+	
+	/**
+	 * Adds the relationship xref to every xreferrable entity in the set
+	 * (and optionally - the corresponding pathway to the annotations map) 
+	 * 
+	 * @param objects
+	 * @param rx
+	 * @param addRelationshipXrefs
+	 * @param addPathwaysToAnnotations
+	 */
+	private void saveRelationship(Set<? extends BioPAXElement> elements, RelationshipXref rx, 
+			boolean addRelationshipXrefs, boolean addPathwaysToAnnotations) 
+	{
+		if (addPathwaysToAnnotations || addRelationshipXrefs) {
+			for (BioPAXElement ent : elements) {
+				if (addRelationshipXrefs && ent instanceof XReferrable)
+					((XReferrable) ent).addXref(rx);
+
+				if (addPathwaysToAnnotations) {
+					final String key = AnnotationMapKey.PARENT_PATHWAYS
+							.toString();
+					Set<Pathway> ppw = (Set<Pathway>) ent.getAnnotations().get(
+							key);
+					if (ppw == null) {
+						ppw = new HashSet<Pathway>();
+						ent.getAnnotations().put(key, ppw);
+					}
+					ppw.add((Pathway) model.getByID(rx.getId()));
+				}
+			}
+		} else {
+			throw new IllegalArgumentException("Useless call or a bug: " +
+					"both boolean parameters are 'false'!");
+		}
+	}
 	
 	/**
 	 * Auto-generates organism relationship xrefs - 
@@ -731,14 +832,11 @@ public class ModelUtils {
 				// check in rel. xrefs
 				for(Xref x : e.getXref()) 
 				{
-					if(x instanceof RelationshipXref) {
-						RelationshipXref rx = (RelationshipXref) x;
-					
-						RelationshipTypeVocabulary cv = rx.getRelationshipType();
-						if(cv != null && cv.getTerm().contains(RelationshipType.ORGANISM.name())) {
+					if(x instanceof RelationshipXref) {	
+						if(isOrganismRelationshipXref((RelationshipXref) x))  {
 							//previously, xref.id was set to a BioSource' ID!
-							assert(rx.getId() != null);
-							BioSource bs = (BioSource) model.getByID(rx.getId());
+							assert(x.getId() != null);
+							BioSource bs = (BioSource) model.getByID(x.getId());
 							assert(bs != null);
 							organisms.add(bs);
 						}
@@ -788,8 +886,8 @@ public class ModelUtils {
 	 * @param organisms
 	 */
 	private void addOrganism(BioPAXElement entity, Set<BioSource> organisms) {
-		PropertyEditor editor = editorMap.getEditorForProperty("organism",
-				entity.getModelInterface());
+		PropertyEditor editor = SimpleEditorMap.get(model.getLevel())
+				.getEditorForProperty("organism", entity.getModelInterface());
 		if (editor != null) {
 			Object o = editor.getValueFromBean(entity);
 			if(o != null) {
@@ -960,5 +1058,30 @@ public class ModelUtils {
 			}
 			
 			return toReturn;
+	}
+
+	
+	/**
+	 * 
+	 * 
+	 * @param rx
+	 * @return
+	 */
+	public static boolean isOrganismRelationshipXref(RelationshipXref rx) {
+		RelationshipTypeVocabulary cv = rx.getRelationshipType();
+		return cv != null && cv.getRDFId().equalsIgnoreCase(
+			relationshipTypeVocabularyUri(RelationshipType.ORGANISM.name()));
+	}
+
+	
+	/**
+	 * 
+	 * @param rx
+	 * @return
+	 */
+	public static boolean isProcessRelationshipXref(RelationshipXref rx) {
+		RelationshipTypeVocabulary cv = rx.getRelationshipType();
+		return cv != null && cv.getRDFId().equalsIgnoreCase(
+			relationshipTypeVocabularyUri(RelationshipType.PROCESS.name()));
 	}
 }

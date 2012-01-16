@@ -3,10 +3,12 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ChemicalStructure;
 import org.biopax.paxtools.model.level3.StructureFormatType;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
@@ -67,6 +69,7 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
+	@Field(name="keyword", index=Index.TOKENIZED)
 	@Column(columnDefinition="LONGTEXT")
 	public String getStructureData()
 	{

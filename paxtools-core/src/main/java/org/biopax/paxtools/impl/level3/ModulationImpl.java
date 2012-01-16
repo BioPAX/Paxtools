@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 @Entity
- @Proxy(proxyClass= Modulation.class)
+@Proxy(proxyClass= Modulation.class)
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

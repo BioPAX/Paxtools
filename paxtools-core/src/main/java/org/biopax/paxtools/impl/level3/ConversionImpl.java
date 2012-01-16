@@ -5,9 +5,13 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -121,6 +125,8 @@ public class ConversionImpl extends InteractionImpl
 		this.spontaneous = spontaneous;
 	}
 
+// TODO not sure whether "data" search filed is required here (havin "data" from 'participant' property may be enough)...
+//	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
 	@JoinTable(name="conversionstoichiometry")		

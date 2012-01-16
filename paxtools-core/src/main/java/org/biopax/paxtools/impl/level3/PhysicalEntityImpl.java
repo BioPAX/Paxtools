@@ -2,18 +2,18 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.biopax.paxtools.util.DataSourceFilterFactory;
+import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.biopax.paxtools.util.OrganismFilterFactory;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.FullTextFilterDef;
-import org.hibernate.search.annotations.FullTextFilterDefs;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -25,6 +25,7 @@ import java.util.Set;
 @javax.persistence.Entity
 @Proxy(proxyClass=PhysicalEntity.class)
 @Indexed
+@Boost(1.3f)
 @FullTextFilterDefs( { //filters are global (must define on any @Indexed entity), names - unique!
     @FullTextFilterDef(name = "organism", impl = OrganismFilterFactory.class), 
     @FullTextFilterDef(name = "datasource", impl = DataSourceFilterFactory.class) 
@@ -58,15 +59,19 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		return PhysicalEntity.class;
 	}
 
-
+	@Fields({
+		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name="organism", index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		//this also associates (index) small molecules with organisms!
+	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
-	@ContainedIn
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
 	}
 
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
 	public CellularLocationVocabulary getCellularLocation()
 	{
@@ -78,7 +83,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="feature")
 	public Set<EntityFeature> getFeature()
@@ -108,7 +114,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.feature = feature;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="notfeature")
 	public Set<EntityFeature> getNotFeature()
@@ -139,7 +146,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="memberPhysicalEntity") 	
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
@@ -158,7 +166,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void removeMemberPhysicalEntity(PhysicalEntity oldMember)
 	{
 		if (oldMember != null) {
-			this.memberPhysicalEntity.remove(oldMember); // todo (what?)
+			this.memberPhysicalEntity.remove(oldMember); // TODO (what?)
 			oldMember.getMemberPhysicalEntityOf().remove(this);
 		}
 	}
@@ -168,6 +176,11 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.memberPhysicalEntity = memberPhysicalEntity; //TODO (what?)
 	}
 
+
+	@Fields({
+		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name="organism", index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()

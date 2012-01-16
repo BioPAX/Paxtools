@@ -5,14 +5,13 @@ import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.biopax.paxtools.util.ProcessFieldBridge;
 import org.biopax.paxtools.util.XrefFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
 
 import javax.persistence.Entity;
@@ -55,10 +54,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 // -------------------------- OTHER METHODS --------------------------
 
 	
-	@Fields({ //non-standard index fields:
-		@Field(name="xref", index=Index.UN_TOKENIZED, bridge = @FieldBridge(impl=XrefFieldBridge.class)),
-		@Field(name="process", index=Index.UN_TOKENIZED, bridge = @FieldBridge(impl=ProcessFieldBridge.class))
-	})
+	@Field(name="xref", index=Index.UN_TOKENIZED, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = XrefImpl.class)
 	@JoinTable(name="xref")

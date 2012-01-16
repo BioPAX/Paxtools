@@ -4,9 +4,13 @@ import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -16,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
- @Proxy(proxyClass= NucleicAcidReference.class)
+@Proxy(proxyClass= NucleicAcidReference.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenceImpl
@@ -50,6 +54,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 	}
 
 
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@ManyToOne(targetEntity = SequenceLocationImpl.class)
 	public SequenceLocation getAbsoluteRegion()
 	{
@@ -62,7 +67,8 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class)
 	@JoinTable(name = "regionType")
 	public Set<SequenceRegionVocabulary> getRegionType()

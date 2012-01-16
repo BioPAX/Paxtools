@@ -3,10 +3,13 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
 
 import javax.persistence.Column;
@@ -129,6 +132,9 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 
+	@Fields({
+		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
+	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()

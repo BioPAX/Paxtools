@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
- @Proxy(proxyClass= PublicationXref.class)
+@Proxy(proxyClass= PublicationXref.class)
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

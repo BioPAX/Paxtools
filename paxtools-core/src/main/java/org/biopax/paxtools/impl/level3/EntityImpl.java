@@ -2,15 +2,18 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.DataSourceFieldBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
 
 import javax.persistence.ElementCollection;
@@ -127,9 +130,13 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
+	@Fields({
+		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name="organism", index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
+		// the latter, in fact, associates organisms with small molecules as well!
+	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
-	@ContainedIn
 	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;
@@ -144,6 +151,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	// observable interface implementation
 	//
 	/////////////////////////////////////////////////////////////////////////////
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")

@@ -5,9 +5,16 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.JoinTable;
@@ -23,6 +30,7 @@ import java.util.Set;
 @javax.persistence.Entity
 @Proxy(proxyClass= Interaction.class)
 @Indexed
+@Boost(1.5f)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class InteractionImpl extends ProcessImpl implements Interaction
@@ -58,6 +66,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
+	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
 	@JoinTable(name="interactionType")
@@ -86,6 +95,10 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	   this.interactionType = interactionType;
 	}
 
+	@Fields({
+		@Field(name="organism", index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
+		@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityImpl.class)
 	@JoinTable(name="participant")

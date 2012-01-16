@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.annotations.Cache;
@@ -57,8 +58,8 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 // --------------------- ACCESORS and MUTATORS---------------------
 	
 	@Fields({
-		@Field(name="organism", index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
-		//TODO add "keyword" (include child name, xref, comment there - using another bridge impl.)
+		@Field(name="organism", index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
+		@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)

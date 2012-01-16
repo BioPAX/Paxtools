@@ -9,6 +9,7 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+@Proxy(proxyClass=TransportWithBiochemicalReaction.class)
 @Entity
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)

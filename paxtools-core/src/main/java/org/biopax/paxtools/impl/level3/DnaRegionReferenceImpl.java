@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 @Entity
- @Proxy(proxyClass= Entity.class)
+@Proxy(proxyClass= Entity.class)
 @Indexed//(index = BioPAXElementImpl.SEARCH_INDEX_NAME)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
