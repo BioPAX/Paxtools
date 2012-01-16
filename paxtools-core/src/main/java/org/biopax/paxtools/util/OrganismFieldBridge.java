@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.biopax.paxtools.model.level3.BioSource;
+import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.Gene;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.Pathway;
@@ -50,6 +51,8 @@ public final class OrganismFieldBridge implements FieldBridge {
 			setOrganism(name, ((SequenceEntityReference) value).getOrganism(), document, luceneOptions);
 		} else if (value instanceof SimplePhysicalEntity) {
 			set(name, ((SimplePhysicalEntity) value).getEntityReference(), document, luceneOptions);
+		} else if (value instanceof Complex) {
+			set(name, ((Complex) value).getComponent(), document, luceneOptions);
 		} else if (value instanceof Gene) {
 			setOrganism(name, ((Gene) value).getOrganism(), document, luceneOptions);
 		} else if (value instanceof Set) {

@@ -3,7 +3,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.BiochemicalReaction;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.KPrime;
-import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
