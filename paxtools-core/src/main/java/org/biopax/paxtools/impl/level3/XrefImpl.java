@@ -7,6 +7,7 @@ import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Fields;
@@ -77,7 +78,8 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 	
-	@Field(name="xrefdb", index=Index.TOKENIZED)
+	@Field(name=FIELD_XREFDB, index=Index.TOKENIZED)
+	@Boost(1.1f)
     public String getDb()
 	{
 		return db;
@@ -108,7 +110,8 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.idVersion = idVersion;
 	}
 
-    @Field(name="xrefid", index=Index.TOKENIZED) //Important! - using "id" as the search field name was causing exceptions in the indexer
+    @Field(name=FIELD_XREFID, index=Index.TOKENIZED) //Important! - using "id" as the search field name was causing exceptions in the indexer
+    @Boost(1.1f)
     @Column(name="id")
 	public String getIdx()
 	{
@@ -132,9 +135,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 
-	@Fields({
-		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
-	})
+	@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()

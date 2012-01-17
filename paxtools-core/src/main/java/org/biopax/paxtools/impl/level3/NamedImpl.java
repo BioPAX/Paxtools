@@ -35,7 +35,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 
 	
-	@Field(name = "name", index = Index.TOKENIZED)
+	@Field(name = FIELD_NAME, index = Index.TOKENIZED)
 	@Boost(2.5f)
 	@Column(columnDefinition="LONGTEXT")
 	protected String getStandardNameX()
@@ -58,7 +58,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 		addName(standardName = name);
 	}
 	
-	@Field(name = "name", index = Index.TOKENIZED)
+	@Field(name=FIELD_NAME, index = Index.TOKENIZED)
 	@Boost(2f)
 	@Column(columnDefinition="LONGTEXT")
 	protected String getDisplayNameX()
@@ -84,7 +84,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
 	@JoinTable(name="name")
-	@Field(name = "name", index = Index.TOKENIZED)
+	@Field(name=FIELD_NAME, index = Index.TOKENIZED)
 	@FieldBridge(impl = SetStringBridge.class)
 	@Boost(2.0f)
 	@Column(columnDefinition="LONGTEXT")

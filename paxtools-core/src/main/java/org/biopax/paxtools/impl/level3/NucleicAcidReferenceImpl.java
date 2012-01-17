@@ -29,7 +29,7 @@ public abstract class NucleicAcidReferenceImpl extends SequenceEntityReferenceIm
 		this.subRegion = new HashSet<NucleicAcidRegionReference>();
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class)
 	@JoinTable(name = "subRegion")

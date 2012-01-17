@@ -7,6 +7,7 @@ import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -44,7 +45,8 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 
     
     
-    @Field(name="keyword", index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Boost(1.1f)
     public String getChemicalFormula()
 	{
 		return chemicalFormula;
@@ -68,7 +70,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	}
 
     // Property structure
-    @Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = ChemicalStructureImpl.class)//, cascade={CascadeType.ALL})
     public ChemicalStructure getStructure()
 	{

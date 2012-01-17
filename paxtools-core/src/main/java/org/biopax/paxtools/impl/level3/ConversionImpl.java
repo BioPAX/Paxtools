@@ -126,7 +126,7 @@ public class ConversionImpl extends InteractionImpl
 	}
 
 // TODO not sure whether "data" search filed is required here (havin "data" from 'participant' property may be enough)...
-//	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+//	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
 	@JoinTable(name="conversionstoichiometry")		

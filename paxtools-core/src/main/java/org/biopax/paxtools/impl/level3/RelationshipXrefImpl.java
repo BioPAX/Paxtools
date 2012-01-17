@@ -45,7 +45,7 @@ public class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class)
 	public RelationshipTypeVocabulary getRelationshipType()
 	{

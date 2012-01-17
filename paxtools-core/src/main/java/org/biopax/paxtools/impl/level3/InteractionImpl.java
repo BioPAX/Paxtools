@@ -66,7 +66,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
 	@JoinTable(name="interactionType")
@@ -96,8 +96,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	}
 
 	@Fields({
-		@Field(name="organism", index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
-		@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+		@Field(name=FIELD_ORGANISM, index=Index.TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
+		@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityImpl.class)

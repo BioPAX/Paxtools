@@ -33,7 +33,7 @@ public class GeneImpl extends EntityImpl implements Gene
         return Gene.class;
     }
 
-    @Field(name="organism", index = Index.UN_TOKENIZED)
+    @Field(name=FIELD_ORGANISM, index = Index.TOKENIZED)
     @FieldBridge(impl=OrganismFieldBridge.class)
 	@ManyToOne(targetEntity = BioSourceImpl.class)
     public BioSource getOrganism()

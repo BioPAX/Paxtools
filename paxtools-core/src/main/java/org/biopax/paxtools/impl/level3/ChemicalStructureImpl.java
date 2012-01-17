@@ -69,7 +69,7 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
-	@Field(name="keyword", index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
 	@Column(columnDefinition="LONGTEXT")
 	public String getStructureData()
 	{
@@ -82,7 +82,7 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 	}
 
 	@Enumerated
-	@Field(name="keyword", index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
 	public StructureFormatType getStructureFormat()
 	{
 		return structureFormat;

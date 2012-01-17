@@ -77,7 +77,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="availability")
-	@Field(name="availability", index=Index.TOKENIZED)
+	@Field(name=FIELD_AVAILABILITY, index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAvailability()
 	{
@@ -131,8 +131,8 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 // --------------------- Interface entity ---------------------
 
 	@Fields({
-		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name="organism", index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
+		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, index=Index.TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
 		// the latter, in fact, associates organisms with small molecules as well!
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -151,7 +151,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	// observable interface implementation
 	//
 	/////////////////////////////////////////////////////////////////////////////
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")

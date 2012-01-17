@@ -22,6 +22,26 @@ import java.util.Map;
 })
 public abstract class BioPAXElementImpl implements BioPAXElement
 {
+	// Full-text search field names (case sensitive!)
+	public static final String FIELD_AVAILABILITY = "availability";
+	public static final String FIELD_COMMENT = "comment"; // biopax comments
+	public static final String FIELD_KEYWORD = "keyword"; //anything, e.g., names, terms, comments, incl. - from child elements 
+	public static final String FIELD_NAME = "name"; // standardName, displayName, other names
+	public static final String FIELD_TERM = "term"; // CV terms
+	public static final String FIELD_XREFDB = "xrefdb"; //xref.db
+	public static final String FIELD_XREFID = "xrefid"; //xref.id
+	public static final String FIELD_ECNUMBER = "ecnumber";
+	public static final String FIELD_SEQUENCE = "sequence";
+	// Full-text search / Filter field names (case sensitive!) -
+	public static final String FIELD_ORGANISM = "organism";
+	public static final String FIELD_DATASOURCE = "dataSource"; //(case sensitive)
+	public static final String FIELD_PATHWAY = "pathway";
+	
+	// Filter definitionnames (case sensitive!)
+	public static final String FILTER_BY_ORGANISM = "organism";
+	public static final String FILTER_BY_DATASOURCE = "datasource";
+	public static final String FILTER_BY_PATHWAY = "pathway";
+	
 	private String uri;
 	
 	// anything extra can be stored in this map (not to persist in a DB usually)

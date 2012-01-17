@@ -92,7 +92,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
@@ -122,7 +122,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.stepProcess = stepProcess;
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence") 	
@@ -149,8 +149,8 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 	@Fields({
-		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name="dataSource", index = Index.TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_DATASOURCE, index = Index.TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
 	})
 	@ManyToOne(targetEntity = PathwayImpl.class)
 	public Pathway getPathwayOrderOf()

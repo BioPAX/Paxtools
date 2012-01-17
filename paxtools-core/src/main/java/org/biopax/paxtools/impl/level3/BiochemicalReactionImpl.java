@@ -132,7 +132,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="ECNumber")	
-	@Field(name="ecnumber", index=Index.TOKENIZED)
+	@Field(name=FIELD_ECNUMBER, index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getECNumber()
 	{

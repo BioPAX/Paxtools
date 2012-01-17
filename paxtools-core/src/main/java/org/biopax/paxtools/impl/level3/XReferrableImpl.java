@@ -54,7 +54,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 // -------------------------- OTHER METHODS --------------------------
 
 	
-	@Field(name="xref", index=Index.UN_TOKENIZED, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f))
+	@Field(name=FIELD_XREFID, index=Index.UN_TOKENIZED, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = XrefImpl.class)
 	@JoinTable(name="xref")

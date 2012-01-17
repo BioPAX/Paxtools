@@ -73,7 +73,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
 	// sequenceInterval interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
 	public SequenceSite getSequenceIntervalBegin()
 	{
@@ -85,7 +85,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
 		this.sequenceIntervalBegin = sequenceIntervalBegin;
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
 	public SequenceSite getSequenceIntervalEnd()
 	{

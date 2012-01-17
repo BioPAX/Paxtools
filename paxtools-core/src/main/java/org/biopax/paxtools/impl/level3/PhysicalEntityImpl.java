@@ -7,6 +7,7 @@ import org.biopax.paxtools.util.DataSourceFilterFactory;
 import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.biopax.paxtools.util.OrganismFilterFactory;
 import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
@@ -27,8 +28,8 @@ import java.util.Set;
 @Indexed
 @Boost(1.3f)
 @FullTextFilterDefs( { //filters are global (must define on any @Indexed entity), names - unique!
-    @FullTextFilterDef(name = "organism", impl = OrganismFilterFactory.class), 
-    @FullTextFilterDef(name = "datasource", impl = DataSourceFilterFactory.class) 
+    @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_ORGANISM, impl = OrganismFilterFactory.class), 
+    @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_DATASOURCE, impl = DataSourceFilterFactory.class) 
 })
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -60,8 +61,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 	@Fields({
-		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name="organism", index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 		//this also associates (index) small molecules with organisms!
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -71,7 +72,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		return componentOf;
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
 	public CellularLocationVocabulary getCellularLocation()
 	{
@@ -83,7 +84,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="feature")
@@ -114,7 +115,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.feature = feature;
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="notfeature")
@@ -146,7 +147,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="memberPhysicalEntity") 	
@@ -178,8 +179,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 
 	@Fields({
-		@Field(name="pathway", index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name="organism", index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")

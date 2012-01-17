@@ -6,6 +6,7 @@ import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -53,7 +54,8 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="author")
-    @Field(name="keyword", index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAuthor()
 	{
@@ -80,7 +82,8 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="source")
-    @Field(name="keyword", index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getSource()
 	{
@@ -105,7 +108,8 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     
-    @Field(name="keyword", index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Boost(1.1f)
 	@Column(columnDefinition="LONGTEXT")
  	public String getTitle()
 	{
@@ -121,7 +125,8 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="url")
-    @Field(name="keyword", index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getUrl()
 	{
@@ -148,7 +153,8 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     // Property year
     
     @Column(name="published") //default one caused MySQLIntegrityConstraintViolationException: Column 'year' in field list is ambiguous
-    @Field(name="keyword", index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Boost(1.1f)
 	public int getYear()
 	{
 		return year;

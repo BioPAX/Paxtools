@@ -6,6 +6,7 @@ import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -38,7 +39,7 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="comment")
-	@Field(name = "comment", index = Index.TOKENIZED)
+	@Field(name = FIELD_COMMENT, index = Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	@Column(columnDefinition="LONGTEXT")
     public Set<String> getComment()

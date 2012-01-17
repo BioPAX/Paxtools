@@ -7,6 +7,7 @@ import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -34,7 +35,7 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     ////////////////////////////////////////////////////////////////////////////
 
     // Property organism
-    @Field(index=Index.UN_TOKENIZED)
+    @Field(name=FIELD_ORGANISM, index=Index.TOKENIZED)
     @FieldBridge(impl=OrganismFieldBridge.class)
 	@ManyToOne(targetEntity = BioSourceImpl.class)
     public BioSource getOrganism()
@@ -50,7 +51,7 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     // Property sequence
 
 	@Lob
-	@Field(name="sequence", index=Index.TOKENIZED)
+	@Field(name=FIELD_SEQUENCE, index=Index.TOKENIZED)
 	public String getSequence()
     {
         return sequence;

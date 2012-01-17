@@ -63,7 +63,7 @@ public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSi
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property POSITION-STATUS
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Enumerated
 	public PositionStatusType getPositionStatus()
 	{

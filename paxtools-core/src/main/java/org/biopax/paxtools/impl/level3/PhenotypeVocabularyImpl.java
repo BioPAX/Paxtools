@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -32,7 +33,8 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
     }
 
 	
-	@Field(name="keyword", index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+	@Boost(1.1f)
 	public String getPatoData()
 	{
 		return patoData;

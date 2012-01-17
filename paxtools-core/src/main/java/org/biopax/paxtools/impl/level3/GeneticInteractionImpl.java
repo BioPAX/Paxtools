@@ -40,7 +40,7 @@ public class GeneticInteractionImpl extends InteractionImpl
 
     private Score interactionScore;
 
-    @Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)
 	public PhenotypeVocabulary getPhenotype()
     {
@@ -52,7 +52,7 @@ public class GeneticInteractionImpl extends InteractionImpl
         this.phenotype = phenotype;
     }
 
-    @Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
     public Score getInteractionScore()
     {

@@ -49,7 +49,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 		return ExperimentalForm.class;
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ExperimentalFormVocabularyImpl.class)
 	@JoinTable(name="experimentalFormDescription")
@@ -97,7 +97,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
         }
 	}
 
-	@Field(name="data", index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ManyToMany(targetEntity = EntityFeatureImpl.class)
     @JoinTable(name="experimentalFeature")

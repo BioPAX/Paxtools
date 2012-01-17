@@ -11,6 +11,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.util.Version;
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.hibernate.search.annotations.Factory;
 import org.hibernate.search.annotations.Key;
 import org.hibernate.search.filter.FilterKey;
@@ -41,7 +42,8 @@ public class DataSourceFilterFactory {
 
 	@Factory
 	public Filter getFilter() {
-		QueryParser qParser = new QueryParser(Version.LUCENE_31, "organism", 
+		QueryParser qParser = new QueryParser(Version.LUCENE_31, 
+			BioPAXElementImpl.FIELD_DATASOURCE, 
 				new StandardAnalyzer(Version.LUCENE_31));
 		String q = StringUtils.join(datasources, " ");
 		try {
