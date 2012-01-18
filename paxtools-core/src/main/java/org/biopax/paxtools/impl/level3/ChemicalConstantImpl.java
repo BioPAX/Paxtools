@@ -9,6 +9,7 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 import static java.lang.Float.compare;
 
@@ -62,7 +63,7 @@ public abstract class ChemicalConstantImpl extends L3ElementImpl implements Chem
         this.temperature = temperature;
     }
 
-    @Override
+    @Transient
     public Class<? extends ChemicalConstant> getModelInterface() {
         return ChemicalConstant.class;
     }
