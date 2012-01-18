@@ -21,9 +21,4 @@ public interface NucleicAcidRegionReference
 
 	void removeRegionType(SequenceRegionVocabulary regionType);
 
-
-
-	NucleicAcidReference getContainerEntityReference();
-
-	void setContainerEntityReference(NucleicAcidReference containerEntityReference);
 }

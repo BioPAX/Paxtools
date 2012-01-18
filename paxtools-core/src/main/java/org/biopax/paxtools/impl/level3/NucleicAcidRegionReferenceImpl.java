@@ -91,15 +91,4 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 		this.regionType = regionType;
 	}
 
-	@ManyToOne(targetEntity = NucleicAcidReferenceImpl.class)
-	public NucleicAcidReference getContainerEntityReference()
-	{
-		return this.containerEntityReference;
-	}
-
-	public void setContainerEntityReference(NucleicAcidReference containerEntityReference)
-	{
-		this.containerEntityReference = containerEntityReference;
-	}
-
 }

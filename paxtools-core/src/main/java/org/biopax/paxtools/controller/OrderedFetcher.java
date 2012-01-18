@@ -51,7 +51,7 @@ public class OrderedFetcher {
 
     private class Layer {
         private boolean cyclic;
-        public List<PropertyEditor> editors = new ArrayList<PropertyEditor>();
+        public Set<PropertyEditor> editors = new HashSet<PropertyEditor>();
 
         public Layer(String line) {
             StringTokenizer st = new StringTokenizer(line);
@@ -93,6 +93,7 @@ public class OrderedFetcher {
         public Set<BioPAXElement> fetchOnce(Set<? extends BioPAXElement> elements) {
             Set<BioPAXElement> newElements = new HashSet<BioPAXElement>();
             for (PropertyEditor editor : editors) {
+                System.out.println("editor = " + editor);
                 newElements.addAll(getValuesFromBeans(elements, editor));
             }
             return newElements;
@@ -109,18 +110,12 @@ public class OrderedFetcher {
     private class AttributeLayer extends Layer {
         public AttributeLayer() {
             SimpleEditorMap editorMap = SimpleEditorMap.get(BioPAXLevel.L3);
-            HashMap<String,PropertyEditor> tempmap = new HashMap<String, PropertyEditor>();
             Iterator<PropertyEditor> iter = editorMap.iterator();
             while (iter.hasNext()) {
                 PropertyEditor next = iter.next();
                 if (!(next instanceof ObjectPropertyEditor) && next.isMultipleCardinality())
                 {
-                    if(!tempmap.containsKey(next.getProperty()))
-                    {
-                        tempmap.put(next.getProperty(),next);
-                        this.editors.add(next);
-                    }
-                    
+                   editors.add(next);
                 }
             }
         }
@@ -128,7 +123,7 @@ public class OrderedFetcher {
         public Set<BioPAXElement> fetchOnce(Set<? extends BioPAXElement> elements) {
             for (PropertyEditor editor : editors)
             {
-                    getValuesFromBeans(elements, editor);
+              getValuesFromBeans(elements, editor);
             }
             return null;
         }
