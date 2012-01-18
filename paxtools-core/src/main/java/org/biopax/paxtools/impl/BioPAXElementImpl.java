@@ -77,10 +77,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
     @Id
     @DocumentId
-    @Column(length=333)//, columnDefinition="BINARY(255)")
-    //@Column(length=255, nullable=false)
-    //@Column(unique=true, nullable=false)
-    //@Field(name = BioPAXElementImpl.SEARCH_FIELD_ID) // full-text search: better NOT to use rdfid!
+    @Column(length=333)
     public String getRDFId()
     {
         return uri;
