@@ -64,7 +64,7 @@ public abstract class ChemicalConstantImpl extends L3ElementImpl implements Chem
     }
 
     @Transient
-    public Class<? extends ChemicalConstant> getModelInterface() {
+        public Class<? extends ChemicalConstant> getModelInterface() {
         return ChemicalConstant.class;
     }
 

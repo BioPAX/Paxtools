@@ -75,16 +75,22 @@ public class Traverser
 			if (filter(editor))
 			{
 				Set valueSet = new HashSet(editor.getValueFromBean(element));
-				if (!valueSet.isEmpty()) for (Object value : valueSet)
-				{
-					visitor.visit(element, value, model, editor);
-				}
-			}
+				if (!valueSet.isEmpty())
+                    traverseElements(element, model, editor, valueSet);
+            }
 		}
 	}
 
+    protected void traverseElements(BioPAXElement element, Model model, PropertyEditor editor, Set valueSet)
+    {
+        for (Object value : valueSet)
+    {
+        visitor.visit(element, value, model, editor);
+    }
+    }
 
-	protected boolean filter(PropertyEditor editor)
+
+    protected boolean filter(PropertyEditor editor)
 	{
 		for (Filter<PropertyEditor> filter : filters)
 		{
