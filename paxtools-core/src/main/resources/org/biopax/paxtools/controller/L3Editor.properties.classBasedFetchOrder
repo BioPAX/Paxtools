@@ -1,9 +1,0 @@
-1* Pathway.pathwayComponent Pathway.pathwayOrder PathwayStep.stepProcess Interaction.participant
-2* Complex.component PhysicalEntity.memberPhysicalEntity
-3 Entity PathwayStep
-4* EntityReference.memberEntityReference NucleicAcidReference.subRegion
-5* EntityFeature.memberFeature BindingFeature.bindsTo
-6 EntityReference EntityFeature
-7 SequenceInterval Evidence
-8 Score BioSource ExperimentalForm
-9 Xref ChemicalConstant ChemicalStructure ControlledVocabulary Provenance SequenceLocation Stoichiometry
