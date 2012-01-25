@@ -51,7 +51,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 
 		return
 			(db != null ?
-				db.equals(anXref.getDb()) :
+				db.equalsIgnoreCase(anXref.getDb()) :
 				anXref.getDb() == null)
 				&&
 				(refId != null ?
@@ -59,7 +59,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 					anXref.getId() == null)
 				&&
 				(dbVersion != null ?
-					dbVersion.equals(anXref.getDbVersion()) :
+					dbVersion.equalsIgnoreCase(anXref.getDbVersion()) :
 					anXref.getDbVersion() == null)
 				&&
 				(idVersion != null ?
