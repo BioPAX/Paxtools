@@ -76,7 +76,7 @@ public class ProteinAnalyzer
    allProteinIds.addAll(ids);
 
    // Query the neighborhood of this protein
-   Model proteinNeighborhood = pc2.getNeighborhood(ids, PathwayCommons2Client.STREAM_DIRECTION.DOWNSTREAM);
+   Model proteinNeighborhood = pc2.getNeighborhood(ids);
    // And export the resultant network in BioPAX format
    FileOutputStream fileStream = new FileOutputStream(
      outputPath + protein + ".owl");
