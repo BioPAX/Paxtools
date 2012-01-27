@@ -8,7 +8,19 @@ package org.biopax.paxtools.query.algorithm;
  */
 public enum Direction
 {
-	UPSTREAM,
-	DOWNSTREAM,
-	BOTHSTREAM
+	UPSTREAM("Search direction backwards in the order of events"),
+	DOWNSTREAM("Search direction forward in the order of events"),
+	BOTHSTREAM("Search towards both directions");
+
+	private final String description;
+
+	private Direction(String description)
+	{
+		this.description = description;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
 }
