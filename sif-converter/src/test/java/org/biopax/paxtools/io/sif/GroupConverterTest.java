@@ -2,14 +2,13 @@ package org.biopax.paxtools.io.sif;
 
 import org.biopax.paxtools.fixer.Fixer;
 import org.biopax.paxtools.impl.level3.MockFactory;
+import org.biopax.paxtools.io.sif.level3.GroupMap;
 import org.biopax.paxtools.io.sif.level3.Grouper;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.junit.Test;
-
-import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -37,8 +36,8 @@ public class GroupConverterTest
 		p3.addMemberPhysicalEntity(p1);
 		p3.addMemberPhysicalEntity(p2);
 		Fixer.normalizeGenerics(model);
-		Map groupMap = Grouper.inferGroups(model);
+        GroupMap groupMap = Grouper.inferGroups(model);
 
-		assertThat(true, is(groupMap.size() == 1));
+        assertThat(true, is(groupMap.getMap().size() == 1));
 	}
 }

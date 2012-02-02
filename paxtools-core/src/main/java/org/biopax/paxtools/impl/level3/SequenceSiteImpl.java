@@ -27,7 +27,8 @@ public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSi
 	private PositionStatusType positionStatus;
 	private int sequencePosition = UNKNOWN_INT;
 
-	public SequenceSiteImpl() {
+	public SequenceSiteImpl()
+    {
 	}
 
 	@Transient
@@ -57,7 +58,13 @@ public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSi
 		return result;
 	}
 
-	//
+    @Override
+    public String toString()
+    {
+        return String.valueOf(this.getSequencePosition());
+    }
+
+    //
 	// sequenceSite interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////

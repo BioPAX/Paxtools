@@ -32,11 +32,11 @@ public class Grouper
 
 	Set<Complex> complexesToBeGrouped;
 
-	public static Map<BioPAXElement, Group> inferGroups(Model model)
+	public static GroupMap inferGroups(Model model)
 	{
 		Fixer.normalizeGenerics(model);
 		Grouper grouper =new Grouper();
-		return grouper.inferGroups(model, grouper);
+		return new GroupMap(grouper.inferGroups(model, grouper));
 	}
 
 	private Map<BioPAXElement, Group> inferGroups(Model model, Grouper grouper)

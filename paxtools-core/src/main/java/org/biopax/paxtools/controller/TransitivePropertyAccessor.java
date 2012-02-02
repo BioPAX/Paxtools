@@ -15,7 +15,7 @@ public class TransitivePropertyAccessor<D extends BioPAXElement, R> extends Deco
 	{
 
 		super(accessor);
-		if (!accessor.getRange().isAssignableFrom(accessor.getDomain()))
+		if (!accessor.getDomain().isAssignableFrom(accessor.getRange()))
 			throw new IllegalBioPAXArgumentException(); //TODO change exception
 
 	}

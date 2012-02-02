@@ -34,10 +34,9 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 
 	@Override public void initOptionsNotNull(Map options)
 	{
-		super.initOptionsNotNull(options);
-		skipConversions = options.containsKey(REACTS_WITH) && options.get(REACTS_WITH).equals(false);
+		skipConversions = checkOption(REACTS_WITH,Boolean.FALSE,options);
 
-		skipInteractions = options.containsKey(INTERACTS_WITH) && options.get(INTERACTS_WITH).equals(false);
+		skipInteractions = checkOption(INTERACTS_WITH,Boolean.FALSE,options);
 	}
 
 	public void inferInteractionsFromPE(InteractionSetL3 interactionSet, PhysicalEntity pe, Model model)
@@ -77,14 +76,14 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 	{
 		if (entity instanceof PhysicalEntity)
 		{
-			BioPAXElement source = interactionSet.getEntityReferenceOrGroup((PhysicalEntity) entity);
+			BioPAXElement source = interactionSet.getGroupMap().getEntityReferenceOrGroup(entity);
 
 			for (Entity participant : interaction.getParticipant())
 			{
 				if (participant instanceof PhysicalEntity)
 
 				{
-					BioPAXElement target = interactionSet.getEntityReferenceOrGroup((PhysicalEntity) participant);
+					BioPAXElement target = interactionSet.getGroupMap().getEntityReferenceOrGroup(participant);
 					createInteraction(source, target, interactionSet, type, interaction);
 				}
 			}

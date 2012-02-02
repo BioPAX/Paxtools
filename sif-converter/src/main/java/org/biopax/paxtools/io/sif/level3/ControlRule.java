@@ -29,13 +29,27 @@ public class ControlRule extends InteractionRuleL3Adaptor
 
 	private boolean mineStateChange;
 
-	private boolean mineMetabolicChange;
+    private boolean storeStateChange;
 
-	public void initOptionsNotNull(Map options)
+	private boolean mineMetabolicChange;
+    public static final String STORE_STATE_CHANGE = "StoreStateChange";
+
+    public HashMap<BioPAXElement, Set<PEStateChange>> getStateChanges()
+    {
+        return stateChanges;
+    }
+
+    private HashMap<BioPAXElement, Set<PEStateChange>> stateChanges;
+
+    public void initOptionsNotNull(Map options)
 	{
-		mineStateChange = !options.containsKey(STATE_CHANGE) || options.get(STATE_CHANGE).equals(Boolean.TRUE);
-		mineMetabolicChange =
-				!options.containsKey(METABOLIC_CATALYSIS) || options.get(METABOLIC_CATALYSIS).equals(Boolean.TRUE);
+		mineStateChange = !checkOption(STATE_CHANGE,Boolean.FALSE, options);
+		mineMetabolicChange =!checkOption(METABOLIC_CATALYSIS,Boolean.FALSE, options);
+        storeStateChange = checkOption(STORE_STATE_CHANGE,Boolean.TRUE, options);
+        if(storeStateChange)
+        {
+            stateChanges = new HashMap<BioPAXElement, Set<PEStateChange>>();
+        }
 	}
 
 	/**
@@ -46,7 +60,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 	 */
 	public void inferInteractionsFromPE(InteractionSetL3 is3, PhysicalEntity pe, Model model)
 	{
-		BioPAXElement source = is3.getEntityReferenceOrGroup(pe);
+		BioPAXElement source = is3.getGroupMap().getEntityReferenceOrGroup(pe);
 		for (Interaction inter : pe.getParticipantOf())
 		{
 			if (inter instanceof Control)
@@ -78,26 +92,20 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		// Try creating a rule for each physical entity in presence list.
 		for (BioPAXElement target : union)
 		{
-			processParticipatingEntities(source, target, is3, cont, conv, intersection);
-		}
-	}
-
-	private void processParticipatingEntities(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3,
-			Control cont, Conversion conv, Set<BioPAXElement> intersection)
-	{
-		if (source != target)
-		{
-			if (!(target instanceof Group) || ((Group) target).getType() != BinaryInteractionType.COMPONENT_OF)
-			{
-				mineTarget(source, target, is3, cont, conv, intersection);
-			}
+            if (source != target)
+            {
+                if (!(target instanceof Group) || ((Group) target).getType() != BinaryInteractionType.COMPONENT_OF)
+                {
+                    mineTarget(source, target, is3, cont, conv, intersection);
+                }
+            }
 		}
 	}
 
 	private void mineTarget(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3, Control cont,
 			Conversion conv, Set<BioPAXElement> intersection)
 	{
-		if (entityHasAChange(target, conv, is3))
+		if (Simplify.entityHasAChange(target, conv, is3.getGroupMap(),stateChanges))
 		{
 
 			// If it is simple, then we check if it is also on both sides, regarding the
@@ -156,62 +164,6 @@ public class ControlRule extends InteractionRuleL3Adaptor
 			}
 		}
 		return convList;
-	}
-
-	/**
-	 * Sometimes an entity is both an input and output to a conversion without any state change.
-	 * Normally this phenomena should be modeled using controller property of conversion. In other
-	 * cases this method detects entities that goes in and out without any change.
-	 * @param conv
-	 * @return true if entity has a change in conversion
-	 */
-
-	private boolean entityHasAChange(BioPAXElement element, Conversion conv, InteractionSetL3 l3)
-	{
-		Set<PhysicalEntity> left = getAssociatedStates(element, conv.getLeft(), l3);
-		Set<PhysicalEntity> right = getAssociatedStates(element, conv.getRight(), l3);
-
-		if (left.isEmpty() || right.isEmpty()) return true;
-
-		for (PhysicalEntity lpe : left)
-		{
-			for (PhysicalEntity rpe : right)
-			{
-				if (!lpe.equals(rpe)) return true;
-			}
-		}
-		return false;
-	}
-
-	private Set<PhysicalEntity> getAssociatedStates(BioPAXElement element, Set<PhysicalEntity> pes,
-			InteractionSetL3 l3)
-	{
-		Set<PhysicalEntity> set = new HashSet<PhysicalEntity>();
-
-		if (element == null)
-		{
-			if (log.isWarnEnabled()) log.warn("Skipping ");
-			return set; // empty
-		}
-
-		for (PhysicalEntity pe : pes)
-		{
-			addMappedElement(element, l3, set, pe);
-			if (pe instanceof Complex)
-			{
-				for (PhysicalEntity member : ((Complex) pe).getComponent())
-				{
-					addMappedElement(element, l3, set, member);
-				}
-			}
-		}
-		return set;
-	}
-
-	private void addMappedElement(BioPAXElement element, InteractionSetL3 l3, Set<PhysicalEntity> set,
-			PhysicalEntity pe)
-	{
-		if (element.equals(l3.getEntityReferenceOrGroup(pe))) set.add(pe);
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()

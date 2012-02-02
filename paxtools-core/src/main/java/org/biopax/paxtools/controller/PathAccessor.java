@@ -169,7 +169,12 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		{
 
 			String forwardName = property.substring(0, property.length() - 2);
-			for (ObjectPropertyEditor ope : SimpleEditorMap.get(level).getInverseEditorsOf(domain))
+            Set<ObjectPropertyEditor> iEds = SimpleEditorMap.get(level).getInverseEditorsOf(domain);
+            if(iEds == null)
+            {
+                throw  new IllegalBioPAXArgumentException("No inverse editors defined for "+ domain);
+            }
+            for (ObjectPropertyEditor ope : iEds)
 			{
 				if (ope.property.equals(forwardName))
 				{

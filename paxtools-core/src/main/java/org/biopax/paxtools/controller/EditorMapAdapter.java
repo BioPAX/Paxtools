@@ -117,7 +117,8 @@ public abstract class EditorMapAdapter implements EditorMap {
 
     protected void registerEditorsWithSubClasses(PropertyEditor editor, Class<? extends BioPAXElement> domain) {
 
-        for (Class<? extends BioPAXElement> c : classToEditorMap.keySet()) {
+        for (Class<? extends BioPAXElement> c : classToEditorMap.keySet())
+        {
             if (domain.isAssignableFrom(c)) {
                 //workaround for participants - can be replaced w/ a general
                 // annotation based system. For the time being, I am just handling it

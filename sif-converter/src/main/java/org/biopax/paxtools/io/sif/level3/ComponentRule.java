@@ -29,7 +29,7 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 	{
 		if (pe instanceof Complex)
 		{
-			Group group = interactionSet.getElementToGroupMap().get(pe);
+			Group group = interactionSet.getGroupMap().getMap().get(pe);
 			if (group != null)
 			{
 				Set<EntityReference> members = group.members;
@@ -59,16 +59,17 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 	private void addComponent(BioPAXElement component, Group group, InteractionSetL3 interactionSet)
 	{
 
-		interactionSet.add(new SimpleInteraction(interactionSet.getEntityReferenceOrGroup(component), group,
+		interactionSet.add(new SimpleInteraction(interactionSet.getGroupMap().getEntityReferenceOrGroup(component), group,
 		                                         BinaryInteractionType.COMPONENT_OF));
 	}
 
 
 	@Override public void initOptionsNotNull(Map options)
 	{
-		super.initOptionsNotNull(options);
-		inSameComponent = !options.containsKey(IN_SAME_COMPONENT) || (!options.get(IN_SAME_COMPONENT).equals(false));
-		componentOf = !options.containsKey(COMPONENT_OF) || (!options.get(COMPONENT_OF).equals(false));
+		inSameComponent =
+                !checkOption(IN_SAME_COMPONENT,Boolean.FALSE,options);
+		componentOf =
+                !checkOption(COMPONENT_OF,Boolean.FALSE,options);
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()

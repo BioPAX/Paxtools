@@ -48,7 +48,7 @@ public class ComponentRuleTest
 		SimpleInteractionConverter sic = new SimpleInteractionConverter(options, rule);
 		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(mock.model);
 
-		Map<BioPAXElement, Group> e2g = interactions.getElementToGroupMap();
+		Map<BioPAXElement, Group> e2g = interactions.getGroupMap().getMap();
 
 		List<SimpleInteraction> expected =
 				Arrays.asList(new SimpleInteraction(e2g.get(cp[2]), e2g.get(cp[1]), COMPONENT_OF),

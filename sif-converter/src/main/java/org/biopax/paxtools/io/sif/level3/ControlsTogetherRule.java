@@ -46,7 +46,7 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 
 	public void inferInteractionsFromPE(InteractionSetL3 l3, PhysicalEntity pe, Model model)
 	{
-		current = l3.getEntityReferenceOrGroup(pe);
+		current = l3.getGroupMap().getEntityReferenceOrGroup(pe);
 		if (current != null)
 		{
 			// Iterate over controls of A
@@ -137,7 +137,7 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 		{
 			if (pe instanceof PhysicalEntity)
 			{
-				BioPAXElement owner = interactionSet.getEntityReferenceOrGroup((PhysicalEntity) pe);
+				BioPAXElement owner = interactionSet.getGroupMap().getEntityReferenceOrGroup(pe);
 				if (!current.equals(owner))
 				{
 					interactionSet.add(new SimpleInteraction(current, owner, CO_CONTROL));

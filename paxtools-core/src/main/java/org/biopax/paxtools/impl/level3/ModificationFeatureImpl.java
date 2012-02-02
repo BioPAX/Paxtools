@@ -26,17 +26,24 @@ import javax.persistence.Transient;
 public class ModificationFeatureImpl extends EntityFeatureImpl
 		implements ModificationFeature
 {
+    private SequenceModificationVocabulary modificationType;
+
 	public ModificationFeatureImpl() {
 	}
-	
-	@Transient
+
+    @Override
+    public String toString()
+    {
+        return (modificationType==null?"?":modificationType.getTerm())+"@"+this.getFeatureLocation();
+    }
+
+    @Transient
 	public Class<? extends ModificationFeature> getModelInterface()
 	{
 		return ModificationFeature.class;
 	}
 
 
-	private SequenceModificationVocabulary modificationType;
 
 
 	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))

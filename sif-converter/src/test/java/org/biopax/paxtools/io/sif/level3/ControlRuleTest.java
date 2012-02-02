@@ -3,14 +3,12 @@ package org.biopax.paxtools.io.sif.level3;
 import org.biopax.paxtools.impl.level3.Mock;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static junit.framework.Assert.assertTrue;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.METABOLIC_CATALYSIS;
@@ -91,8 +89,6 @@ public class ControlRuleTest
 		ControlRule rule = new ControlRule();
 		SimpleInteractionConverter sic = new SimpleInteractionConverter(options, rule);
 		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(mock.model);
-
-		Map<BioPAXElement, Group> e2g = interactions.getElementToGroupMap();
 
 		List<SimpleInteraction> expected =
 				Arrays.asList(
