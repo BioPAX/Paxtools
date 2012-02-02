@@ -3,7 +3,6 @@ package org.biopax.paxtools.io.sif.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
-import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -140,7 +139,7 @@ public class ControlsTogetherRule extends InteractionRuleL3Adaptor
 				BioPAXElement owner = interactionSet.getGroupMap().getEntityReferenceOrGroup(pe);
 				if (!current.equals(owner))
 				{
-					interactionSet.add(new SimpleInteraction(current, owner, CO_CONTROL));
+					createAndAdd(current, owner, interactionSet,CO_CONTROL);
 				}
 			}
 		}

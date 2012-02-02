@@ -1,7 +1,6 @@
 package org.biopax.paxtools.io.sif.level3;
 
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
-import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Complex;
@@ -59,8 +58,9 @@ public class ComponentRule extends InteractionRuleL3Adaptor
 	private void addComponent(BioPAXElement component, Group group, InteractionSetL3 interactionSet)
 	{
 
-		interactionSet.add(new SimpleInteraction(interactionSet.getGroupMap().getEntityReferenceOrGroup(component), group,
-		                                         BinaryInteractionType.COMPONENT_OF));
+		createAndAdd(interactionSet.getGroupMap().getEntityReferenceOrGroup(component), group,interactionSet,
+                BinaryInteractionType.COMPONENT_OF);
+
 	}
 
 

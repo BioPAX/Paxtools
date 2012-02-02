@@ -3,8 +3,6 @@ package org.biopax.paxtools.io.sif.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
-import org.biopax.paxtools.io.sif.InteractionSet;
-import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -84,21 +82,9 @@ public class ParticipatesRule extends InteractionRuleL3Adaptor
 
 				{
 					BioPAXElement target = interactionSet.getGroupMap().getEntityReferenceOrGroup(participant);
-					createInteraction(source, target, interactionSet, type, interaction);
+					createAndAdd(source, target, interactionSet, type, interaction);
 				}
 			}
-		}
-	}
-
-	private void createInteraction(BioPAXElement er1, BioPAXElement er2, InteractionSet set,
-			BinaryInteractionType type,
-			Interaction interaction)
-	{
-		if (er2 != null && er1 != null && !er2.equals(er1))
-		{
-			SimpleInteraction si = new SimpleInteraction(er1, er2, type);
-			si.addMediator(interaction);
-			set.add(si);
 		}
 	}
 

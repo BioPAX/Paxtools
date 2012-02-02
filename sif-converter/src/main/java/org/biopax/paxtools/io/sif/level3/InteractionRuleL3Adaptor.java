@@ -79,15 +79,30 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 
 		for (int j = 0; j < components.size(); j++)
 		{
-			for (int i = 0; i < j; i++)
-			{
-                SimpleInteraction interaction =
-						new SimpleInteraction(groupMap.getEntityReferenceOrGroup(components.get(i)),
-						                      groupMap.getEntityReferenceOrGroup(components.get(j)),
-						                      type,
-						                      mediators);
-				interactionSet.add(interaction);
-			}
-		}
+			for (int i = 0; i < j; i++) {
+                createAndAdd(
+                        groupMap.getEntityReferenceOrGroup(components.get(i)),
+                        groupMap.getEntityReferenceOrGroup(components.get(j)), interactionSet,
+                        type,
+                        mediators);
+            }
+        }
 	}
+
+    protected void createAndAdd(
+            BioPAXElement source,
+            BioPAXElement target,
+            InteractionSetL3 is3,
+            BinaryInteractionType type,
+            BioPAXElement... mediators)
+    {
+        if(source!=null && target!=null && !source.equals(target))
+        {
+            SimpleInteraction sc = new SimpleInteraction(source, target, type);
+            for (BioPAXElement mediator : mediators) {
+                sc.addMediator(mediator);
+            }
+            is3.add(sc);
+        }
+    }
 }

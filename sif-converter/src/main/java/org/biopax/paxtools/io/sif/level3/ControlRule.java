@@ -3,7 +3,6 @@ package org.biopax.paxtools.io.sif.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
-import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -114,7 +113,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 			{
 				if (mineStateChange)
 				{
-					createAndAdd(source, target, is3, cont, conv, STATE_CHANGE);
+					createAndAdd(source, target, is3, STATE_CHANGE, cont, conv);
 				}
 			}
 			// Else it is a simple molecule appearing on one side of conversion. This means
@@ -123,20 +122,13 @@ public class ControlRule extends InteractionRuleL3Adaptor
 			{
 				if (mineMetabolicChange)
 				{
-					createAndAdd(source, target, is3, cont, conv, METABOLIC_CATALYSIS);
+					createAndAdd(source, target, is3, METABOLIC_CATALYSIS,cont, conv);
 				}
 			}
 		}
 	}
 
-	private void createAndAdd(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3, Control cont,
-			Conversion conv, BinaryInteractionType type)
-	{
-		SimpleInteraction sc = new SimpleInteraction(source, target, type);
-		sc.addMediator(cont);
-		sc.addMediator(conv);
-		is3.add(sc);
-	}
+
 
 
 	/**

@@ -13,11 +13,7 @@ public class TransitivePropertyAccessor<D extends BioPAXElement, R> extends Deco
 {
 	private TransitivePropertyAccessor(PropertyAccessor<D, R> accessor)
 	{
-
 		super(accessor);
-		if (!accessor.getDomain().isAssignableFrom(accessor.getRange()))
-			throw new IllegalBioPAXArgumentException(); //TODO change exception
-
 	}
 
 	@Override public Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
