@@ -1,15 +1,8 @@
 package org.biopax.paxtools.examples;
 
-import cpath.service.jaxb.ErrorResponse;
-import cpath.service.jaxb.SearchHit;
-import cpath.service.jaxb.SearchResponse;
-import cpath.service.jaxb.ServiceResponse;
-
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.io.pathwayCommons.PathwayCommons2Client;
-import org.biopax.paxtools.io.pathwayCommons.util.PathwayCommonsException;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -23,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -278,30 +270,6 @@ public class Tutorial
      }
     }
    }
-  }
- }
-
- public void accessPC() throws PathwayCommonsException
- {
-  PathwayCommons2Client pc2 = new PathwayCommons2Client();
-  pc2.setOrganisms(Collections.singleton("homo sapiens"));
-  pc2.setType("Control");
-
-  //Let's search for anything that starts with BRC
-  ServiceResponse serviceResponse = pc2.find("BRC*");
-  HashSet<String> uris = new HashSet<String>();
-  //For each search hit we got, get the uri for the resource at PC and add it
-  // to the set
-  if(!(serviceResponse instanceof ErrorResponse)) {
-	  SearchResponse result = (SearchResponse) serviceResponse;
-	  for (SearchHit hit : result.getSearchHit())
-	  {
-		  uris.add(hit.getUri());
-	  }
-	  //Create a model from this set of resources
-	  Model model = pc2.get(uris);
-  } else {
-	  System.out.println(serviceResponse.toString()); 
   }
  }
 

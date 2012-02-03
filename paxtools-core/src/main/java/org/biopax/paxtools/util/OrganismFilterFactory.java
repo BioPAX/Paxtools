@@ -47,7 +47,7 @@ public class OrganismFilterFactory {
 				new StandardAnalyzer(Version.LUCENE_31));
 		String q = StringUtils.join(organisms, " ");
 		try {
-			Query query = qParser.parse(q);
+			Query query = qParser.parse(QueryParser.escape(q)); // escape! (for URNs to be acceptable values)
 			return new CachingWrapperFilter( new QueryWrapperFilter(query) );
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
