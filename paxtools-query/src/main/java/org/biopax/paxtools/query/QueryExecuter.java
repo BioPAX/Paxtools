@@ -362,8 +362,7 @@ public class QueryExecuter
 	public static Map<BioPAXElement, Set<PhysicalEntity>> getRelatedPhysicalEntityMap(
 		Collection<BioPAXElement> elements)
 	{
-		Map<BioPAXElement, Set<PhysicalEntity>> map =
-			new HashMap<BioPAXElement, Set<PhysicalEntity>>();
+		Map<BioPAXElement, Set<PhysicalEntity>> map = new HashMap<BioPAXElement, Set<PhysicalEntity>>();
 
 		for (BioPAXElement ele : elements)
 		{
@@ -404,11 +403,21 @@ public class QueryExecuter
 		}
 		else if (element instanceof PhysicalEntity)
 		{
-			pes.add((PhysicalEntity) element);
-
-			for (Complex cmp : ((PhysicalEntity) element).getComponentOf())
+			PhysicalEntity pe = (PhysicalEntity) element;
+			if (!pes.contains(pe))
 			{
-				getRelatedPhysicalEntities(cmp, pes);
+				pes.add(pe);
+	
+				for (Complex cmp : pe.getComponentOf())
+				{
+					getRelatedPhysicalEntities(cmp, pes);
+				}
+
+				// This is a hack for BioPAX graph. Equivalence relations do not link members and
+				// complexes because members cannot be addressed. Below call makes sure that if the
+				// source node has a generic parents or children and they appear in a complex, we
+				// include the complex in the sources.
+				addEquivalentsComplexes(pe, pes);
 			}
 		}
 		else if (element instanceof Xref)
@@ -427,5 +436,28 @@ public class QueryExecuter
 		}
 
 		return pes;
+	}
+	
+	private static void addEquivalentsComplexes(PhysicalEntity pe, Set<PhysicalEntity> pes)
+	{
+		addEquivalentsComplexes(pe, true, pes);
+		addEquivalentsComplexes(pe, false, pes);
+	}
+
+	private static void addEquivalentsComplexes(PhysicalEntity pe, boolean outer,
+		Set<PhysicalEntity> pes)
+	{
+		Set<PhysicalEntity> set = outer ? 
+			pe.getMemberPhysicalEntityOf() : pe.getMemberPhysicalEntity();
+
+		for (PhysicalEntity related : set)
+		{
+			for (Complex cmp : related.getComponentOf())
+			{
+				getRelatedPhysicalEntities(cmp, pes);
+			}
+
+			addEquivalentsComplexes(related, outer, pes);
+		}
 	}
 }
