@@ -62,7 +62,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_ORGANISM, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 		//this also associates (index) small molecules with organisms!
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -180,7 +180,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_ORGANISM, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")

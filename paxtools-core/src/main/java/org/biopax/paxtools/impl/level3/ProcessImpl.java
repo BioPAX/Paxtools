@@ -49,7 +49,7 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_ORGANISM, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent")

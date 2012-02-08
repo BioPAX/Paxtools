@@ -29,7 +29,7 @@ public final class DataSourceFieldBridge implements FieldBridge {
 			Entity ent = (Entity) value;
 			set(name, ent.getDataSource(), document, luceneOptions);
 		} else if (value instanceof EntityReference) {
-			// Let ERs inherit its dataSource from parent PEs or MERs:
+			// Let ERs inherit its dataSource from parent PEs or ERs:
 			EntityReference er = (EntityReference) value;
 			set(name, er.getEntityReferenceOf(), document, luceneOptions);
 			set(name, er.getMemberEntityReferenceOf(), document, luceneOptions);

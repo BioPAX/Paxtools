@@ -43,18 +43,18 @@ public final class OrganismFieldBridge implements FieldBridge {
 		if (value instanceof BioSource) {
 			setOrganism(name, (BioSource)value, document, luceneOptions);
 		} else if (value instanceof Pathway) {
-			setOrganism(name, ((Pathway) value).getOrganism(), document, luceneOptions);
+			set(name, ((Pathway) value).getOrganism(), document, luceneOptions);
 		} else if (value instanceof Interaction) {
 			set(name, ((Interaction) value).getPathwayComponentOf(), document, luceneOptions); //go to Pathways
 			set(name, ((Interaction) value).getParticipant(), document, luceneOptions); // to controlled interactions
 		} else if (value instanceof SequenceEntityReference) {
-			setOrganism(name, ((SequenceEntityReference) value).getOrganism(), document, luceneOptions);
+			set(name, ((SequenceEntityReference) value).getOrganism(), document, luceneOptions);
 		} else if (value instanceof SimplePhysicalEntity) {
 			set(name, ((SimplePhysicalEntity) value).getEntityReference(), document, luceneOptions);
 		} else if (value instanceof Complex) {
 			set(name, ((Complex) value).getComponent(), document, luceneOptions);
 		} else if (value instanceof Gene) {
-			setOrganism(name, ((Gene) value).getOrganism(), document, luceneOptions);
+			set(name, ((Gene) value).getOrganism(), document, luceneOptions);
 		} else if (value instanceof Set) {
 			for (Object o : (Set) value) {
 				set(name, o, document, luceneOptions);

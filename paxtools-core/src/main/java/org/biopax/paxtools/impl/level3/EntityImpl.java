@@ -101,7 +101,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 			this.availability.remove(availability_text);
 	}
 
-	@Field(index = Index.TOKENIZED)
+	@Field(name=FIELD_DATASOURCE, index = Index.UN_TOKENIZED)
 	@FieldBridge(impl = DataSourceFieldBridge.class)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProvenanceImpl.class)//, cascade={CascadeType.ALL})
@@ -132,7 +132,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, index=Index.TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
+		@Field(name=FIELD_ORGANISM, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
 		// the latter, in fact, associates organisms with small molecules as well!
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

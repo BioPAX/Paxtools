@@ -117,8 +117,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
-		@Field(name=FIELD_DATASOURCE, index = Index.TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+		@Field(name=FIELD_ORGANISM, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name=FIELD_DATASOURCE, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
@@ -187,8 +187,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
-		@Field(name=FIELD_DATASOURCE, index = Index.TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+		@Field(name=FIELD_ORGANISM, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name=FIELD_DATASOURCE, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
 	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")

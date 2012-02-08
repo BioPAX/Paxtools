@@ -54,7 +54,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
-	@Field(name = FIELD_DATASOURCE, index = Index.TOKENIZED)
+	@Field(name = FIELD_DATASOURCE, index = Index.UN_TOKENIZED)
 	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	public EntityReference getEntityFeatureOf(){
@@ -64,7 +64,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		ownerEntityReference = entityReference;
 	}
 	
-	@Field(name = FIELD_DATASOURCE, index = Index.TOKENIZED)
+	@Field(name = FIELD_DATASOURCE, index = Index.UN_TOKENIZED)
 	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
@@ -73,7 +73,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return featureOf;
 	}
 
-	@Field(name = FIELD_DATASOURCE, index = Index.TOKENIZED)
+	@Field(name = FIELD_DATASOURCE, index = Index.UN_TOKENIZED)
 	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")
