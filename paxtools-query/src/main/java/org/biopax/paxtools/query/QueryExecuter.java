@@ -100,6 +100,7 @@ public class QueryExecuter
 
     /**
      * @see #runGOI(java.util.Set, org.biopax.paxtools.model.Model, int)
+	 * @deprecated Use runPathsBetween instead
      */
     public static Set<BioPAXElement> runGOI(
 		Set<BioPAXElement> sourceSet,
@@ -116,6 +117,7 @@ public class QueryExecuter
 	 * @param limit Length limit for the paths to be found
 	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
 	 * @return BioPAX elements in the result
+	 * @deprecated Use runPathsBetween instead
 	 */
 	public static Set<BioPAXElement> runGOI(
 		Set<BioPAXElement> sourceSet,
@@ -123,21 +125,21 @@ public class QueryExecuter
 		int limit,
 		Set<String> ubiqueIDs)
 	{
-		return runPOI(sourceSet, sourceSet, model, LimitType.NORMAL, limit, ubiqueIDs);
+		return runPathsFromTo(sourceSet, sourceSet, model, LimitType.NORMAL, limit, ubiqueIDs);
 	}
 
     /**
-     * @see #runPOI(java.util.Set, java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.LimitType, int)
+     * @see #runPathsFromTo
      *
      */
-    public static Set<BioPAXElement> runPOI(
+    public static Set<BioPAXElement> runPathsFromTo(
 		Set<BioPAXElement> sourceSet,
 		Set<BioPAXElement> targetSet,
 		Model model,
 		LimitType limitType,
 		int limit)
 	{
-        return runPOI(sourceSet, targetSet, model, limitType, limit, null);
+        return runPathsFromTo(sourceSet, targetSet, model, limitType, limit, null);
     }
 	/**
 	 * Gets paths the graph composed of the paths from a source node, and ends at a target node.
@@ -149,7 +151,7 @@ public class QueryExecuter
 	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runPOI(
+	public static Set<BioPAXElement> runPathsFromTo(
 		Set<BioPAXElement> sourceSet,
 		Set<BioPAXElement> targetSet,
 		Model model,
@@ -168,7 +170,7 @@ public class QueryExecuter
 		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
 		Set<Node> target = prepareSingleNodeSet(targetSet, graph);
 
-		PoIQuery query = new PoIQuery(source, target, limitType, limit, true);
+		PathsFromToQuery query = new PathsFromToQuery(source, target, limitType, limit, true);
 		Set<GraphObject> resultWrappers = query.run();
 		return convertQueryResult(resultWrappers, graph);
 	}
@@ -285,15 +287,15 @@ public class QueryExecuter
 
 		// Run a paths-of-interest query between source set and result set
 
-		PoIQuery poi;
+		PathsFromToQuery poi;
 
 		if (direction == Direction.DOWNSTREAM)
 		{
-			poi = new PoIQuery(source, target, LimitType.NORMAL, limit, true);
+			poi = new PathsFromToQuery(source, target, LimitType.NORMAL, limit, true);
 		}
 		else
 		{
-			poi = new PoIQuery(target, source, LimitType.NORMAL, limit, true);
+			poi = new PathsFromToQuery(target, source, LimitType.NORMAL, limit, true);
 		}
 
 		resultWrappers = poi.run();
@@ -437,7 +439,7 @@ public class QueryExecuter
 
 		return pes;
 	}
-	
+
 	private static void addEquivalentsComplexes(PhysicalEntity pe, Set<PhysicalEntity> pes)
 	{
 		addEquivalentsComplexes(pe, true, pes);

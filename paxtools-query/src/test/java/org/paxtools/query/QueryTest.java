@@ -43,10 +43,10 @@ public class QueryTest
 
 		assertTrue(result.size() > 0);
 
-		result = QueryExecuter.runPOI(source, target, model, LimitType.NORMAL, 2);
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2);
 		assertTrue(result.size() > 0);
 
-		result = QueryExecuter.runPOI(source, target, model, LimitType.NORMAL, 1);
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 1);
 		assertTrue(result.size() == 0);
 
 		source.addAll(target);

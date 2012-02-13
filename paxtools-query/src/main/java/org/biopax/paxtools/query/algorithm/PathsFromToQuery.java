@@ -20,7 +20,7 @@ import java.util.Set;
  * @author Ozgun Babur
  * @author Merve Cakir
  */
-public class PoIQuery
+public class PathsFromToQuery
 {
 	/**
 	 * The set of nodes from which the paths of interests should start.
@@ -61,11 +61,11 @@ public class PoIQuery
 	/**
 	 * Constructor
 	 */
-	public PoIQuery(Set<Node> sourceSet,
-		Set<Node> targetSet,
-		LimitType limitType,
-		int stopDistance,
-		boolean strict)
+	public PathsFromToQuery(Set<Node> sourceSet,
+							Set<Node> targetSet,
+							LimitType limitType,
+							int stopDistance,
+							boolean strict)
 	{
 		assert limitType != null : "limitType should be specified";
 
