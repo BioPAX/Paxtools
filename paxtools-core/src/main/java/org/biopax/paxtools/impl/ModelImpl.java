@@ -143,11 +143,7 @@ public class ModelImpl implements Model
 	 */
 	public boolean contains(BioPAXElement aBioPAXElement)
 	{
-		return this.idMap.containsValue(aBioPAXElement);
-		/*
-		String rdfid = aBioPAXElement.getRDFId();
-		return this.idMap.get(rdfid) == aBioPAXElement;
-		*/
+		return this.idMap.get(aBioPAXElement.getRDFId()) == aBioPAXElement;
 	}
 
 // -------------------------- OTHER METHODS --------------------------
