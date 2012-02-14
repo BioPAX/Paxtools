@@ -55,6 +55,16 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	 */
 	private final Map<Class, Integer> maxCardinalities = new HashMap<Class, Integer>();
 
+    public static ThreadLocal<Boolean> checkRestrictions = new ThreadLocal<Boolean>()
+    {
+        @Override
+        protected Boolean initialValue()
+        {
+            return true;
+        }
+    };
+
+
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public PropertyEditor(String property, Method getMethod, Class<D> domain, Class<R> range,
@@ -477,7 +487,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		}
 		try
 		{
-			if (value != null) checkRestrictions(value, bean);
+			if (value != null && checkRestrictions.get()) checkRestrictions(value, bean);
 			invokeMethod(this.getPrimarySetMethod(), bean, value);
 		}
 		catch (Exception e)

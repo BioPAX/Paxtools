@@ -53,14 +53,21 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
         this(level.getDefaultFactory(), level);
     }
 
-    public SimpleIOHandler(BioPAXFactory factory, BioPAXLevel level) {
+
+    public SimpleIOHandler(BioPAXFactory factory, BioPAXLevel level)
+    {
         super(factory, level);
         normalizeNameSpaces = true;
         mergeDuplicates = false;
     }
-
+    
     public void mergeDuplicates(boolean mergeDuplicates) {
         this.mergeDuplicates = mergeDuplicates;
+    }
+
+    public void checkRestrictions(boolean checkRestrictions)
+    {
+        PropertyEditor.checkRestrictions.set(checkRestrictions);
     }
     // -------------------------- OTHER METHODS --------------------------
 
