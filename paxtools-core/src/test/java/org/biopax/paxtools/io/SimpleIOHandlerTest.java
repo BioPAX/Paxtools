@@ -71,12 +71,12 @@ public class SimpleIOHandlerTest
 
 	public static Model getL3Model(BioPAXIOHandler io)
 	{
-		String s = "L3" + File.separator + "reactomeHS.owl";
+		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
 		System.out.println("file = " + s);
 		System.out.println("starting " + s);
 		InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
-        ((SimpleIOHandler) io).checkRestrictions(false);
-        return io.convertFromOWL(in);
+		
+		return io.convertFromOWL(in);
 	}
 
 	@Test
