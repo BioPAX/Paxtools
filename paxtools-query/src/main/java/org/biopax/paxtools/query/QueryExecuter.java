@@ -229,7 +229,7 @@ public class QueryExecuter
         Direction direction,
         int limit)
     {
-        return runCommonStream(sourceSet, model, direction, limit);
+        return runCommonStreamWithPOI(sourceSet, model, direction, limit, null);
     }
 
 	/**

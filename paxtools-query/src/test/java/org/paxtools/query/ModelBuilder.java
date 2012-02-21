@@ -6,7 +6,6 @@ import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.junit.Test;
 
 import java.io.FileOutputStream;
 
@@ -21,7 +20,6 @@ public class ModelBuilder
 	static final String ACTIV_ARROW = "_activates_";
 	static final String DIR = "../biopax/Level3/examples/";
 
-	@Test
 	public void generateModel1() throws Throwable
 	{
 		Model model = factory.createModel();

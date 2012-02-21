@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.query.model.AbstractNode;
 import org.biopax.paxtools.query.model.Edge;
+import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
 import java.util.Collection;
@@ -16,8 +17,6 @@ import java.util.Set;
 public class PhysicalEntityWrapper extends AbstractNode
 {
 	PhysicalEntity pe;
-	boolean upstreamInited;
-	boolean downstreamInited;
 	boolean equivalentInited;
 	boolean ubique;
 
@@ -25,8 +24,6 @@ public class PhysicalEntityWrapper extends AbstractNode
 	{
 		super(graph);
 		this.pe = pe;
-		this.upstreamInited = false;
-		this.downstreamInited = false;
 		this.equivalentInited = false;
 		this.ubique = false;
 	}
@@ -41,54 +38,43 @@ public class PhysicalEntityWrapper extends AbstractNode
 		this.ubique = ubique;
 	}
 
-	@Override
-	public Collection<Edge> getUpstream()
-	{
-		if (!upstreamInited)
-		{
-			initUpstreamInteractions();
-		}
-		return super.getUpstream();
-	}
-
-	@Override
-	public Collection<Edge> getDownstream()
-	{
-		if (!downstreamInited)
-		{
-			initDownstreamInteractions();
-		}
-		return super.getDownstream();
-	}
-
-	public Collection<Edge> getUpstreamNoInit()
-	{
-		return super.getUpstream();
-	}
-
-	public Collection<Edge> getDownstreamNoInit()
-	{
-		return super.getDownstream();
-	}
-
-	protected void initUpstreamInteractions()
+	public void initUpstream()
 	{
 		for (Conversion conv : getUpstreamConversions(pe.getParticipantOf()))
 		{
-			graph.getGraphObject(conv);
+			ConversionWrapper conW = (ConversionWrapper) graph.getGraphObject(conv);
+			if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
+				conv.getLeft().contains(pe))
+			{
+				conW = conW.getReverse();
+			}
+			Edge edge = new EdgeL3(conW, this, graph);
+			conW.getDownstreamNoInit().add(edge);
+			this.getUpstreamNoInit().add(edge);
 		}
-		
-		upstreamInited = true;
 	}
 
-	protected void initDownstreamInteractions()
+	public void initDownstream()
 	{
-		for (Conversion conv : getDownstreamConversions(pe.getParticipantOf()))
+		for (Interaction inter : getDownstreamInteractions(pe.getParticipantOf()))
 		{
-			graph.getGraphObject(conv);
+			AbstractNode node = (AbstractNode) graph.getGraphObject(inter);
+			
+			if (inter instanceof Conversion)
+			{
+				Conversion conv = (Conversion) inter;
+				ConversionWrapper conW = (ConversionWrapper) node;
+				if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
+					conv.getRight().contains(pe))
+				{
+					node = conW.getReverse();
+				}
+			}
+			
+			Edge edge = new EdgeL3(this, node, graph);
+			this.getDownstreamNoInit().add(edge);
+			node.getUpstreamNoInit().add(edge);
 		}
-		
-		downstreamInited = true;
 	}
 
 	//--- Upstream conversions --------------------------------------------------------------------|
@@ -116,50 +102,30 @@ public class PhysicalEntityWrapper extends AbstractNode
 		return set;
 	}
 
-	//--- Downstream conversions ------------------------------------------------------------------|
+	//--- Downstream interactions ------------------------------------------------------------------|
 
-	private Set<Conversion> getDownstreamConversions(Collection<Interaction> inters)
+	private Set<Interaction> getDownstreamInteractions(Collection<Interaction> inters)
 	{
-		Set<Conversion> set = new HashSet<Conversion>();
+		Set<Interaction> set = new HashSet<Interaction>();
 
 		for (Interaction inter : inters)
 		{
 			if (inter instanceof Conversion)
 			{
-				checkAndAddDownstreamConversion((Conversion) inter, set);
+				Conversion conv = (Conversion) inter;
+				ConversionDirectionType dir = conv.getConversionDirection();
+
+				if (dir == ConversionDirectionType.REVERSIBLE ||
+					(dir == ConversionDirectionType.RIGHT_TO_LEFT && conv.getRight().contains(pe)) ||
+					((dir == ConversionDirectionType.LEFT_TO_RIGHT || dir == null) &&
+						conv.getLeft().contains(pe)))
+				{
+					set.add(conv);
+				}
 			}
 			else if (inter instanceof Control)
 			{
-				getDownstreamConversions((Control) inter, set);
-			}
-		}
-		return set;
-	}
-
-	private void checkAndAddDownstreamConversion(Conversion conv, Set<Conversion> set)
-	{
-		ConversionDirectionType dir = conv.getConversionDirection();
-
-		if (dir == ConversionDirectionType.REVERSIBLE ||
-			(dir == ConversionDirectionType.RIGHT_TO_LEFT && conv.getRight().contains(pe)) ||
-			((dir == ConversionDirectionType.LEFT_TO_RIGHT || dir == null) &&
-				conv.getLeft().contains(pe)))
-		{
-			set.add(conv);
-		}
-	}
-
-	private Set<Conversion> getDownstreamConversions(Control ctrl, Set<Conversion> set)
-	{
-		for (Process process : ctrl.getControlled())
-		{
-			if (process instanceof Conversion)
-			{
-				set.add((Conversion) process);
-			}
-			else if (process instanceof Control)
-			{
-				getDownstreamConversions((Control) process, set);
+				set.add(inter);
 			}
 		}
 		return set;
@@ -201,6 +167,8 @@ public class PhysicalEntityWrapper extends AbstractNode
 		return set;
 	}
 
+	//----- Equivalence ---------------------------------------------------------------------------|
+
 	@Override
 	public Collection<Node> getUpperEquivalent()
 	{
@@ -224,40 +192,23 @@ public class PhysicalEntityWrapper extends AbstractNode
 	protected void initEquivalent()
 	{
 		this.upperEquivalent = new HashSet<Node>();
-		this.lowerEquivalent = new HashSet<Node>();
-		collectUpperEquivalent(pe);
-		collectLowerEquivalent(pe);
-		equivalentInited = true;
-	}
 
-	protected void collectUpperEquivalent(PhysicalEntity pe)
-	{
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntityOf())
 		{
 			this.upperEquivalent.add((Node) graph.getGraphObject(eq));
 		}
 
-//		for (PhysicalEntity eq : pe.getComponentOf())
-//		{
-//			this.upperEquivalent.add((Node) graph.getGraphObject(eq));
-//		}
-	}
-	
-	protected void collectLowerEquivalent(PhysicalEntity pe)
-	{
+		this.lowerEquivalent = new HashSet<Node>();
+
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntity())
 		{
 			this.lowerEquivalent.add((Node) graph.getGraphObject(eq));
 		}
 
-//		if (pe instanceof Complex)
-//		{
-//			for (PhysicalEntity eq : ((Complex) pe).getComponent())
-//			{
-//				this.lowerEquivalent.add((Node) graph.getGraphObject(eq));
-//			}
-//		}
+		equivalentInited = true;
 	}
+
+	//------ Other --------------------------------------------------------------------------------|
 
 	public boolean isBreadthNode()
 	{

@@ -11,6 +11,9 @@ public abstract class AbstractNode implements Node
 {
 	protected Graph graph;
 
+	protected boolean upstreamInited;
+	protected boolean downstreamInited;
+
 	protected Set<Node> upperEquivalent;
 	protected Set<Node> lowerEquivalent;
 
@@ -22,6 +25,8 @@ public abstract class AbstractNode implements Node
 		this.graph = graph;
 		this.upstream = new HashSet<Edge>();
 		this.downstream = new HashSet<Edge>();
+		this.upstreamInited = false;
+		this.downstreamInited = false;
 	}
 
 	public Graph getGraph()
@@ -31,13 +36,28 @@ public abstract class AbstractNode implements Node
 
 	public Collection<Edge> getUpstream()
 	{
+		if (!upstreamInited)
+		{
+			initUpstream();
+			upstreamInited = true;
+		}
 		return upstream;
 	}
 
 	public Collection<Edge> getDownstream()
 	{
+		if (!downstreamInited)
+		{
+			initDownstream();
+			downstreamInited = true;
+		}
 		return downstream;
 	}
+
+	// These two methods should be overriden if any upstream and downstream initing is required.
+
+	public void initUpstream(){}
+	public void initDownstream(){}
 
 	/**
 	 * This class gets the upstream links but does not initialize

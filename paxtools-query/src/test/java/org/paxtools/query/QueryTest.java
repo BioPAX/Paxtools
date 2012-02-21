@@ -69,6 +69,12 @@ public class QueryTest
 		result = QueryExecuter.runCommonStream(source, model, Direction.DOWNSTREAM, 3);
 		assertTrue(result.size() == 10);
 
+		source = findElements(model, "HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1630_1_9606"); //phospho-Cdc2
+		target = findElements(model, "HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1624_1_9606"); //MEK1
+
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 3);
+		assertTrue(result.size() == 7);
+
 		Model clonedModel = excise(model, result);
 		handler.convertToOWL(clonedModel, new FileOutputStream(
 			getClass().getResource("").getFile() + File.separator + "temp.owl"));

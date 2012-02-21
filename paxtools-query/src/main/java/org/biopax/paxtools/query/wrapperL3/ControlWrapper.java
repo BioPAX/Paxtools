@@ -2,6 +2,7 @@ package org.biopax.paxtools.query.wrapperL3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.query.model.AbstractNode;
 import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.Graph;
@@ -60,6 +61,19 @@ public class ControlWrapper extends AbstractNode
 			sign = NEGATIVE;
 		}
 
+	}
+
+	private void bindUpstream(BioPAXElement element)
+	{
+		AbstractNode node = (AbstractNode) graph.getGraphObject(element);
+		Edge edge = new EdgeL3(node, this, graph);
+		node.getDownstreamNoInit().add(edge);
+		this.getUpstreamNoInit().add(edge);
+	}
+
+	@Override
+	public void initUpstream()
+	{
 		for (Controller controller : ctrl.getController())
 		{
 			if (controller instanceof Pathway) continue;
@@ -74,19 +88,19 @@ public class ControlWrapper extends AbstractNode
 		}
 	}
 
-	private void bindUpstream(BioPAXElement element)
+	@Override
+	public void initDownstream()
 	{
-		Node node = (Node) graph.getGraphObject(element);
-
-		Edge edge = new EdgeL3(node, this, graph);
-
-		if (node instanceof PhysicalEntityWrapper)
+		for (Process prc : ctrl.getControlled())
 		{
-			((PhysicalEntityWrapper) node).getDownstreamNoInit().add(edge);
+			if (prc instanceof Conversion || prc instanceof Control)
+			{
+				AbstractNode node = (AbstractNode) graph.getGraphObject(prc);
+				Edge edge = new EdgeL3(this, node, graph);
+				node.getUpstreamNoInit().add(edge);
+				getDownstreamNoInit().add(edge);
+			}
 		}
-		else node.getDownstream().add(edge);
-
-		this.getUpstream().add(edge);
 	}
 
 	public Control getControl()
@@ -104,5 +118,5 @@ public class ControlWrapper extends AbstractNode
 	public Collection<Node> getLowerEquivalent()
 	{
 		return Collections.emptySet();
-	}	
+	}
 }

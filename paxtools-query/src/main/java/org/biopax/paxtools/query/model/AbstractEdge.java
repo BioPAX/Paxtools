@@ -35,4 +35,23 @@ public class AbstractEdge implements Edge
 	{
 		return source.getKey() + "|" + target.getKey();
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return source.hashCode() + target.hashCode() + graph.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof AbstractEdge)
+		{
+			AbstractEdge e = (AbstractEdge) obj;
+			return source == e.getSourceNode() &&
+				target == e.getTargetNode() &&
+				graph == e.getGraph();
+		}
+		return false;
+	}
 }
