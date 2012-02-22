@@ -344,30 +344,32 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
             } else {
                 r.next();
                 boolean found = false;
-                while (r.getEventType() != END_ELEMENT) {
-                    if (!found && r.getEventType() == CHARACTERS) {
-                        String text = StringEscapeUtils.unescapeXml(r.getText());
-                        if (resource != null) {
-                            resource += text;
-                        } else {
-                            resource = text;
+                while (r.getEventType() != END_ELEMENT) 
+                {
+                    if (!found && r.getEventType() == CHARACTERS) 
+                    {
+                        StringBuffer buff = new StringBuffer(r.getText());
+                        r.next();
+                        while(r.getEventType()==CHARACTERS)
+                        {
+                            buff.append(r.getText());
+                            r.next();
                         }
+                        resource = StringEscapeUtils.unescapeXml(buff.toString());
 
-                        if (log.isTraceEnabled()) {
-                            log.trace("text=" + text);
-                        }
-                    } else if (r.getEventType() == START_ELEMENT) {
+                    } 
+                    else if (r.getEventType() == START_ELEMENT) 
+                    {
                         propertyContext = false;
                         resource = processIndividual(model);
                         found = true;
+                        r.next();
                     }
-                    r.next();
+                    else r.next();
                 }
-                resource = (!found && resource != null) ? resource.replaceAll("[\n\r\t ]+", " ") :
+                resource = (!found && resource != null) ?
+                        resource.replaceAll("[\n\r\t ]+", " ") :
                         resource;
-                if (resource != null) {
-                    resource = resource.trim();
-                }
             }
 
             log.trace("setting = " + resource);
@@ -444,7 +446,8 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
      * Writes the XML representation of individual BioPAX element that
      * is BioPAX-like but only for display or debug purpose (incomplete).
      * <p/>
-     * Note: use {@link BioPAXIOHandler#convertToOWL(org.biopax.paxtools.model.Model, Object)} instead
+     * Note: use {@link BioPAXIOHandler#convertToOWL(org.biopax.paxtools.model.Model, java.io.OutputStream)}
+     * convertToOWL(org.biopax.paxtools.model.Model, Object)} instead
      * if you have a model and want to save and later restore it.
      *
      * @param out

@@ -1,12 +1,16 @@
 package org.biopax.paxtools.io;
 
-import static org.junit.Assert.*;
-
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
 import java.io.*;
+
+import static org.junit.Assert.*;
 
 public class SimpleIOHandlerTest
 {
@@ -290,4 +294,33 @@ public class SimpleIOHandlerTest
 		assertEquals(1, cat.getControlled().size());
 		assertEquals("Catalysis 1", cat.getDisplayName());
 	}
+
+    @Test
+    public final void testXMLEscapes() throws IOException {
+        BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
+
+
+        Mock mock = new Mock();
+        Protein[] pr = mock.create(Protein.class, 1);
+
+        String s = "\" \' < > & ";
+        System.out.println(s);
+        pr[0].getName().clear();
+        pr[0].addName(s);
+
+        // Write
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        io.convertToOWL(mock.model, outputStream);
+        outputStream.flush();
+
+        // Read
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+        outputStream.close();
+        Model newModel = io.convertFromOWL(inputStream);
+
+        Protein prot = (Protein) newModel.getObjects().iterator().next();
+        assertTrue(prot.getName().iterator().next().equals(s));
+
+
+    }
 }

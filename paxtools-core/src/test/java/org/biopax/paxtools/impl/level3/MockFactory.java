@@ -18,8 +18,7 @@ public class MockFactory extends BioPAXFactoryAdaptor
 // ------------------------------ FIELDS ------------------------------
 
 
-	private static final List<String> strings = Arrays.asList(" ", "alpha", "beta", "gamma", "_~/-\\\t\b,",
-	                                                          "\udddd\ucccc\uaaaa\ubbbb");
+	private static final List<String> strings = Arrays.asList(" ", "alpha", "beta", "gamma");
 
 	private static final List<Float> floats = Arrays.asList(Float.MAX_VALUE, 1.0F, 0.0F, Float.MIN_VALUE);
 
@@ -161,13 +160,13 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	{
 		if (multiple)
 		{
-			ArrayList<String> list = new ArrayList<String>(6);
+			ArrayList<String> list = new ArrayList<String>(4);
 			for (String str : strings)
 			{
 				list.add(bpe.getRDFId() + str);
 			}
 			return list;
-		} else return bpe.getRDFId() + strings.get(4);
+		} else return bpe.getRDFId() + strings.get(3);
 	}
 
 	private HashSet<BioPAXElement> createRestrictedMock(ObjectPropertyEditor propertyEditor, BioPAXElement bpe, int k)
