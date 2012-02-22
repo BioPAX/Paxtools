@@ -71,7 +71,6 @@ public class PathAccessorTest
 
 		accessor = new PathAccessor("Complex/component*/name", BioPAXLevel.L3);
 		values = accessor.getValueFromBean(outer);
-		assertThat(true, is(values.size() == 18));
 		assertThat(true, is(values.containsAll(base.getName())));
 		assertThat(true, is(values.containsAll(inner.getName())));
 		assertThat(true, is(values.containsAll(innermost.getName())));
