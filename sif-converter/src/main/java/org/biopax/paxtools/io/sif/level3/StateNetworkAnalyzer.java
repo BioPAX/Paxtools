@@ -65,8 +65,8 @@ public class StateNetworkAnalyzer {
         return result;
     }
 
-    public Set<PEStateChange> getAllStates(SimplePhysicalEntity spe) {
-        return stateChanges.get(spe);
+    public Set<PEStateChange> getAllStates(EntityReference er) {
+        return stateChanges.get(er);
     }
 
     public Set<SimplePhysicalEntity> getSucceedingStates(SimplePhysicalEntity spe) {

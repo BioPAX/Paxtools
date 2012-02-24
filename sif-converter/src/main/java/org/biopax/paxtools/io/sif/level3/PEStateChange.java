@@ -47,6 +47,22 @@ public class PEStateChange
         return true;
     }
 
+    public Map<EntityFeature, ChangeType> getDeltaFeatures() {
+        return deltaFeatures;
+    }
+
+    public Conversion getConv() {
+        return conv;
+    }
+
+    public SimplePhysicalEntity getLeft() {
+        return left;
+    }
+
+    public SimplePhysicalEntity getRight() {
+        return right;
+    }
+
     @Override
     public int hashCode() {
         int result = deltaFeatures != null ? deltaFeatures.hashCode() : 0;
