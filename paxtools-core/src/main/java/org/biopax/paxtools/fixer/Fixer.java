@@ -62,14 +62,18 @@ public class Fixer
 		EntityReference er = memberMap.get(members);
 		if (er == null)
 		{
-			er = (EntityReference) model.addNew(first.getEntityReference().getModelInterface(), syntheticId);
-			copySimplePointers(model, pe, er);
+            EntityReference firstEntityReference = first.getEntityReference();
+            if(firstEntityReference != null)
+            {
+                er = (EntityReference) model.addNew(firstEntityReference.getModelInterface(), syntheticId);
+                copySimplePointers(model, pe, er);
 
-			for (EntityReference member : members)
-			{
-				er.addMemberEntityReference(member);
-			}
-			memberMap.put(members, er);
+                for (EntityReference member : members)
+                {
+                    er.addMemberEntityReference(member);
+                }
+                memberMap.put(members, er);
+            }
 		}
 		pe.setEntityReference(er);
 
