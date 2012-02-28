@@ -278,7 +278,7 @@
 		</repository>
 	</repositories>
 
-	<!-- Maven 2.x site report plugins configuration (ignored by Maven 3.x..) -->
+	<!-- the following will be ignored by Maven 3.x unless maven-site-plugin 3.0 is used -->
 	<reporting>
 		<plugins>
 			<plugin>
@@ -292,7 +292,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.0.1</version> <!-- really important to specify the version here -->
+				<version>2.0.1</version>
 			</plugin>
 		</plugins>
 	</reporting>
