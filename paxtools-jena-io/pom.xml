@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.biopax.paxtools</groupId>
         <artifactId>paxtools</artifactId>
-        <version>4.1.1-SNAPSHOT</version>
+        <version>4.1.1</version>
     </parent>
     <artifactId>paxtools-jena-io</artifactId>
     <packaging>jar</packaging>
