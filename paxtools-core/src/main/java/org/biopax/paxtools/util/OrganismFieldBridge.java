@@ -3,6 +3,7 @@
  */
 package org.biopax.paxtools.util;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.apache.lucene.document.Document;
@@ -69,31 +70,30 @@ public final class OrganismFieldBridge implements FieldBridge {
 			Document document, LuceneOptions luceneOptions) 
 	{
 		// put id (e.g., urn:miriam:taxonomy:9606, if normalized...)
-		// (toLowerCase() is very important here and there...it's long to explain)
-		luceneOptions.addFieldToDocument(name, bs.getRDFId().toLowerCase(), document);
+		FieldBridgeUtils.addFieldToDocument(luceneOptions, name, bs.getRDFId(), document);
 		
 		// add organism names
 		for(String s : bs.getName()) {
-			luceneOptions.addFieldToDocument(name, s.toLowerCase(), document);
+			FieldBridgeUtils.addFieldToDocument(luceneOptions, name, s, document);
 		}
 		// add taxonomy
 		for(UnificationXref x : 
 			new ClassFilterSet<Xref,UnificationXref>(bs.getXref(), UnificationXref.class)) {
 			if(x.getId() != null)
-				luceneOptions.addFieldToDocument(name, x.getId().toLowerCase(), document);
+				FieldBridgeUtils.addFieldToDocument(luceneOptions, name, x.getId(), document);
 		}
 		// include tissue type terms
 		if (bs.getTissue() != null) {
 			for (String s : bs.getTissue().getTerm()) {
-				luceneOptions.addFieldToDocument(name, s.toLowerCase(), document);
+				FieldBridgeUtils.addFieldToDocument(luceneOptions, name, s, document);
 			}
 		}
 		// include cell type terms
 		if (bs.getCellType() != null) {
 			for (String s : bs.getCellType().getTerm()) {
-				luceneOptions.addFieldToDocument(name, s.toLowerCase(), document);
+				FieldBridgeUtils.addFieldToDocument(luceneOptions, name, s, document);
 			}
 		}
 	}
-
+	
 }

@@ -40,7 +40,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	// Filter definitionnames (case sensitive!)
 	public static final String FILTER_BY_ORGANISM = "organism";
 	public static final String FILTER_BY_DATASOURCE = "datasource";
-	public static final String FILTER_BY_PATHWAY = "pathway";
 	
 	private String uri;
 	

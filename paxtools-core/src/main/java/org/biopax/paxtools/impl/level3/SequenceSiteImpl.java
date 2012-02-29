@@ -11,6 +11,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -70,7 +71,7 @@ public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSi
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property POSITION-STATUS
-	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Enumerated
 	public PositionStatusType getPositionStatus()
 	{

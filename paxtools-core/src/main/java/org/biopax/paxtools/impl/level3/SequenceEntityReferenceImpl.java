@@ -11,6 +11,7 @@ import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -35,7 +36,7 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     ////////////////////////////////////////////////////////////////////////////
 
     // Property organism
-    @Field(name=FIELD_ORGANISM, index=Index.UN_TOKENIZED)
+    @Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED)
     @FieldBridge(impl=OrganismFieldBridge.class)
 	@ManyToOne(targetEntity = BioSourceImpl.class)
     public BioSource getOrganism()

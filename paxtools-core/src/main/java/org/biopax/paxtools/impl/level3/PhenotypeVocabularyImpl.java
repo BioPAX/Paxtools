@@ -8,6 +8,7 @@ import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -33,7 +34,7 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
     }
 
 	
-	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
 	@Boost(1.1f)
 	public String getPatoData()
 	{

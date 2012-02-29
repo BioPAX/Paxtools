@@ -8,7 +8,9 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -35,8 +37,10 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 
 	
-	@Field(name = FIELD_NAME, index = Index.TOKENIZED)
-	@Boost(2.5f)
+    @Fields({
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.5f)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    })
 	@Column(columnDefinition="LONGTEXT")
 	protected String getStandardNameX()
 	{
@@ -58,8 +62,10 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 		addName(standardName = name);
 	}
 	
-	@Field(name=FIELD_NAME, index = Index.TOKENIZED)
-	@Boost(2f)
+    @Fields({
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.0f)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    })
 	@Column(columnDefinition="LONGTEXT")
 	protected String getDisplayNameX()
 	{
@@ -84,9 +90,10 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
 	@JoinTable(name="name")
-	@Field(name=FIELD_NAME, index = Index.TOKENIZED)
-	@FieldBridge(impl = SetStringBridge.class)
-	@Boost(2.0f)
+    @Fields({
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.0f), bridge=@FieldBridge(impl=SetStringBridge.class)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=SetStringBridge.class))
+    })
 	@Column(columnDefinition="LONGTEXT")
 	public Set<String> getName()
 	{

@@ -10,6 +10,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -33,7 +34,7 @@ public class GeneImpl extends EntityImpl implements Gene
         return Gene.class;
     }
 
-    @Field(name=FIELD_ORGANISM, index = Index.UN_TOKENIZED)
+    @Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED)
     @FieldBridge(impl=OrganismFieldBridge.class)
 	@ManyToOne(targetEntity = BioSourceImpl.class)
     public BioSource getOrganism()

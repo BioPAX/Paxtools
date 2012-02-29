@@ -55,18 +55,17 @@ public final class ParentPathwayFieldBridge implements FieldBridge {
 	private void setForPathway(String name, Pathway pw,
 			Document document, LuceneOptions luceneOptions) 
 	{	
-		luceneOptions.addFieldToDocument(name, pw.getRDFId().toLowerCase(),
+		FieldBridgeUtils.addFieldToDocument(luceneOptions, name, pw.getRDFId(),
 				document);
 
 		for (String s : pw.getName()) {
-			luceneOptions.addFieldToDocument(name, s.toLowerCase(), document);
+			FieldBridgeUtils.addFieldToDocument(luceneOptions, name, s, document);
 		}
 
 		for (UnificationXref x : new ClassFilterSet<Xref, UnificationXref>(
 				pw.getXref(), UnificationXref.class)) {
 			if (x.getId() != null)
-				luceneOptions.addFieldToDocument(name, x.getId().toLowerCase(),
-						document);
+				FieldBridgeUtils.addFieldToDocument(luceneOptions, name, x.getId(), document);
 		}
 	}
 	

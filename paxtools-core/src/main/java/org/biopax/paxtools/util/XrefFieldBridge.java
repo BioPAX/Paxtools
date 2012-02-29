@@ -25,7 +25,7 @@ public final class XrefFieldBridge implements FieldBridge {
 				 * but - it's about the @Field(index=Index.UN_TOKENIZED,..), MultiFieldQueryParser, 
 				 * and StandardAnayzer to work well together... Rabbit's hole...
 				 */
-				luceneOptions.addFieldToDocument(name, x.getId().toLowerCase(), document);
+				FieldBridgeUtils.addFieldToDocument(luceneOptions, name, x.getId(), document);
 		}
 	}
 	
