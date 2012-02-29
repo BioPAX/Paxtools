@@ -18,8 +18,8 @@ import java.util.*;
 
 public class GraphL3 extends AbstractGraph 
 {
-	private Model model;
-	private Set<String> ubiqueIDs;
+	protected Model model;
+	protected Set<String> ubiqueIDs;
 
 	protected final Log log = LogFactory.getLog(GraphL3.class);
 

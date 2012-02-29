@@ -19,6 +19,8 @@ public abstract class AbstractNode implements Node
 
 	protected Set<Edge> upstream;
 	protected Set<Edge> downstream;
+	
+	int pathSign;
 
 	protected AbstractNode(Graph graph)
 	{
@@ -88,5 +90,15 @@ public abstract class AbstractNode implements Node
 	 */
 	public void init()
 	{
+	}
+
+	public int getPathSign()
+	{
+		return pathSign;
+	}
+
+	public void setPathSign(int pathSign)
+	{
+		this.pathSign = pathSign;
 	}
 }

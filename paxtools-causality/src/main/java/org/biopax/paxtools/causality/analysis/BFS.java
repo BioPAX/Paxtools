@@ -1,8 +1,9 @@
-package org.biopax.paxtools.query.algorithm;
+package org.biopax.paxtools.causality.analysis;
 
-import org.biopax.paxtools.query.model.Edge;
+import org.biopax.paxtools.causality.model.Edge;
+import org.biopax.paxtools.causality.model.Node;
+import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.model.GraphObject;
-import org.biopax.paxtools.query.model.Node;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,8 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Implements breadth-first search. Takes a set of source nodes, distance limit and labels nodes
- * towards one direction, with their breadth distances.
+ * Implements breadth-first search on the signed and directed graph.
  *
  * @author Ozgun Babur
  * @author Merve Cakir
@@ -90,9 +90,10 @@ public class BFS
 		{
 			setLabel(source, 0);
 			setColor(source, GRAY);
+			source.setPathSign(1);
 
-			labelEquivRecursive(source, UPWARD, 0, true, false);
-			labelEquivRecursive(source, DOWNWARD, 0, true, false);
+			labelEquivRecursive(source, UPWARD, 0, true, false, 1);
+			labelEquivRecursive(source, DOWNWARD, 0, true, false, 1);
 		}
 
 		// Process the queue
@@ -131,10 +132,12 @@ public class BFS
 
 		// Process edges towards the direction
 
-		for (Edge edge : direction == Direction.DOWNSTREAM ?
+		for (org.biopax.paxtools.query.model.Edge edge : direction == Direction.DOWNSTREAM ?
 			current.getDownstream() : current.getUpstream())
 		{
 			assert edge != null;
+
+			int edgeSign = edge instanceof Edge ? ((Edge) edge).getSign() : 1;
 
 			// Label the edge considering direction of traversal and type of current node
 
@@ -148,31 +151,28 @@ public class BFS
 			}
 
 			// Get the other end of the edge
-			Node neigh = direction == Direction.DOWNSTREAM ?
-				edge.getTargetNode() : edge.getSourceNode();
+			Node neigh = (Node) (direction == Direction.DOWNSTREAM ?
+				edge.getTargetNode() : edge.getSourceNode());
 
 			assert neigh != null;
+
+			int pathSign = current.getPathSign() * edgeSign * neigh.getSign();
+
+			// Decide neighbor label according to the search direction and node type
+			int dist = getLabel(current);
+			if (neigh.isBreadthNode() && direction == Direction.DOWNSTREAM)
+				dist++;
+
+			// Check if we need to stop traversing the neighbor, enqueue otherwise
+			boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
+				(!neigh.isBreadthNode() || getLabel(neigh) < limit) && !neigh.isUbique();
 
 			// Process the neighbor if not processed or not in queue
 
 			if (getColor(neigh) == WHITE)
 			{
-				// Label the neighbor according to the search direction and node type
-
-				if (!neigh.isBreadthNode() || direction == Direction.UPSTREAM)
-				{
-					setLabel(neigh, getLabel(edge));
-				}
-				else
-				{
-					setLabel(neigh, getLabel(current) + 1);
-				}
-
-				// Check if we need to stop traversing the neighbor, enqueue otherwise
-
-				boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
-					(!neigh.isBreadthNode() || getLabel(neigh) < limit) &&
-					!neigh.isUbique();
+				// Label the neighbor
+				setLabel(neigh, dist);
 
 				if (further)
 				{
@@ -189,6 +189,8 @@ public class BFS
 						// Non-breadth nodes are added in front of the queue
 						queue.addFirst(neigh);
 					}
+
+					recordBanned(neigh);
 				}
 				else
 				{
@@ -196,34 +198,64 @@ public class BFS
 					setColor(neigh, BLACK);
 				}
 
-				labelEquivRecursive(neigh, UPWARD, getLabel(neigh), further, !neigh.isBreadthNode());
-				labelEquivRecursive(neigh, DOWNWARD, getLabel(neigh), further, !neigh.isBreadthNode());
 			}
+			else if (getLabel(neigh) == dist)
+			{
+				if (neigh.getPathSign() != pathSign)
+				{
+					neigh.setPathSign(0);
+				}
+			}
+
+			labelEquivRecursive(neigh, UPWARD, dist, further, !neigh.isBreadthNode(), pathSign);
+			labelEquivRecursive(neigh, DOWNWARD, dist, further, !neigh.isBreadthNode(), pathSign);
 		}
 	}
 
-	protected void labelEquivRecursive(Node node, boolean up, int dist,
-		boolean enqueue, boolean head)
+	protected void recordBanned(Node node)
 	{
-		for (Node equiv : up ? node.getUpperEquivalent() : node.getLowerEquivalent())
+		for (Node b : node.getBanned())
 		{
-			if (getColor(equiv) != WHITE) continue;
-
-			setLabel(equiv, dist);
-
-			if (enqueue)
+			if (getColor(b) == WHITE) setColor(b, BLACK);
+		}
+	}
+	
+	protected void labelEquivRecursive(Node node, boolean up, int dist,
+		boolean enqueue, boolean head, int pathSign)
+	{
+		for (org.biopax.paxtools.query.model.Node equivalent : up ? 
+			node.getUpperEquivalent() : node.getLowerEquivalent())
+		{
+			Node equiv = (Node) equivalent;
+			
+			if (getColor(equiv) == WHITE)
 			{
-				setColor(equiv, GRAY);
+				setLabel(equiv, dist);
+				equiv.setPathSign(pathSign);
+	
+				if (enqueue)
+				{
+					setColor(equiv, GRAY);
+	
+					if (head) queue.addFirst(equiv);
+					else queue.add(equiv);
 
-				if (head) queue.addFirst(equiv);
-				else queue.add(equiv);
+					recordBanned(equiv);
+				}
+				else
+				{
+					setColor(equiv, BLACK);
+				}
 			}
-			else
+			else if (getLabel(equiv) == dist)
 			{
-				setColor(equiv, BLACK);
+				if (equiv.getPathSign() != pathSign)
+				{
+					equiv.setPathSign(0);
+				}				
 			}
 
-			labelEquivRecursive(equiv, up, dist, enqueue, head);
+			labelEquivRecursive(equiv, up, dist, enqueue, head, pathSign);
 		}
 	}
 
@@ -235,8 +267,10 @@ public class BFS
 
 	protected boolean isEquivalentInTheSet(Node node, boolean direction, Set<Node> set)
 	{
-		for (Node eq : direction == UPWARD ? node.getUpperEquivalent() : node.getLowerEquivalent())
+		for (org.biopax.paxtools.query.model.Node equivalent : direction == UPWARD ? 
+			node.getUpperEquivalent() : node.getLowerEquivalent())
 		{
+			Node eq = (Node) equivalent;
 			if (set.contains(eq)) return true;
 			boolean isIn = isEquivalentInTheSet(eq, direction, set);
 			if (isIn) return true;
@@ -281,22 +315,12 @@ public class BFS
 	}
 
 	/**
-	 * Forward traversal direction.
-	 */
-	public static final boolean FORWARD = true;
-
-	/**
-	 * Backward traversal direction.
-	 */
-	public static final boolean BACKWARD = false;
-
-	/**
-	 * Forward traversal direction.
+	 * Towards parents.
 	 */
 	public static final boolean UPWARD = true;
 
 	/**
-	 * Backward traversal direction.
+	 * Towards children.
 	 */
 	public static final boolean DOWNWARD = false;
 
@@ -306,7 +330,7 @@ public class BFS
 	public static final int WHITE = 0;
 
 	/**
-	 * Color gray indicates that the node is in queue waiting to be procecessed.
+	 * Color gray indicates that the node is in queue waiting to be processed.
 	 */
 	public static final int GRAY = 1;
 
