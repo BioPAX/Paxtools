@@ -7,7 +7,7 @@ import org.biopax.paxtools.query.wrapperL3.EdgeL3;
 /**
  * @author Ozgun Babur
  */
-public class Edge extends EdgeL3 implements org.biopax.paxtools.causality.model.Edge
+public class Edge extends EdgeL3
 {
 	private int sign;
 	

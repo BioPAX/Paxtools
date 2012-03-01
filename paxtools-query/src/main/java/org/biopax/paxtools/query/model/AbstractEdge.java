@@ -54,4 +54,10 @@ public class AbstractEdge implements Edge
 		}
 		return false;
 	}
+
+	@Override
+	public int getSign()
+	{
+		return 1;
+	}
 }

@@ -3,6 +3,7 @@ package org.biopax.paxtools.causality.wrapper;
 import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.model.level3.Conversion;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -16,6 +17,7 @@ public class ConversionWrapper extends org.biopax.paxtools.query.wrapperL3.Conve
 	protected ConversionWrapper(Conversion conv, Graph graph)
 	{
 		super(conv, graph);
+		banned = new HashSet<Node>();
 	}
 
 	@Override

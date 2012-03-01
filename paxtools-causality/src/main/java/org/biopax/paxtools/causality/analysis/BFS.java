@@ -1,7 +1,7 @@
 package org.biopax.paxtools.causality.analysis;
 
-import org.biopax.paxtools.causality.model.Edge;
 import org.biopax.paxtools.causality.model.Node;
+import org.biopax.paxtools.causality.wrapper.Edge;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.model.GraphObject;
 
