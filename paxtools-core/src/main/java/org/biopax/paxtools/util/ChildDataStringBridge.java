@@ -13,11 +13,17 @@ import org.hibernate.search.bridge.StringBridge;
 import java.util.Set;
 
 /**
- * Custom string bridge implementation to recursively 
- * add all child elements's names/keywords to the parent's full-text index.
- * Using this one perhaps creates the largest and least specific index field...
- * For better results, @Boost other (true properties) fields, 
- * such as 'name', 'xref', etc., to get proper search results ordering.
+ * Custom string bridge implementation. 
+ * Recursively index and store 
+ * (if Store.YES was specified in the corresponding field annotation) 
+ * all child elements's names/comments to parent's document (index).
+ * This perhaps creates the largest and least specific index field 
+ * (e.g., all children's sequence and comments will be processed/included)
+ * For better search results, @Boost other (true BioPAX properties) fields
+ * in the model, such as 'name', 'xref', etc. 
+ * 
+ * The generated index field can be used to find, e.g., a protein or 
+ * interaction by db identifier or entity reference/gene name!   
  */
 public class ChildDataStringBridge implements StringBridge {
 
@@ -55,17 +61,15 @@ public class ChildDataStringBridge implements StringBridge {
 	public void index(BioPAXElement bpe, StringBuffer sb) {
 		// all data type property values become (indexed) keywords
 		Set<PropertyEditor> props = editorMap.getEditorsOf(bpe);
-		for(PropertyEditor pe : props) {
-			if(pe instanceof ObjectPropertyEditor)
+		for (PropertyEditor pe : props) {
+			if (pe instanceof ObjectPropertyEditor)
 				continue;
 			Set values = pe.getValueFromBean(bpe);
-//			if (!pe.isUnknown(values)) { //- values is never null
-				for (Object v : values) {
-					if (!pe.isUnknown(v)) {
-						sb.append(v.toString()).append(" ");
-					}
+			for (Object v : values) {
+				if (!pe.isUnknown(v)) {
+					sb.append(v.toString()).append(" ");
 				}
-//			}
+			}
 		}
 	}
 	
