@@ -77,7 +77,6 @@ public class Path
 		edges.add(edge);
 
 		nodeSet.add(node);
-		sign *= node.getSign();
 		if (edge != null) sign *= edge.getSign();
 
 		if (node.isBreadthNode() && edge != null) length++;
@@ -91,7 +90,6 @@ public class Path
 		Node node = nodes.removeLast();
 		Edge edge = edges.removeLast();
 		nodeSet.remove(node);
-		sign *= node.getSign();
 		if (edge != null) sign *= edge.getSign();
 
 		if (node.isBreadthNode() && edge != null) length--;

@@ -1,8 +1,8 @@
 package org.biopax.paxtools.causality.analysis;
 
 import org.biopax.paxtools.causality.model.Node;
-import org.biopax.paxtools.causality.wrapper.Edge;
 import org.biopax.paxtools.query.algorithm.Direction;
+import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.GraphObject;
 
 import java.util.HashMap;
@@ -132,12 +132,10 @@ public class BFS
 
 		// Process edges towards the direction
 
-		for (org.biopax.paxtools.query.model.Edge edge : direction == Direction.DOWNSTREAM ?
+		for (Edge edge : direction == Direction.DOWNSTREAM ?
 			current.getDownstream() : current.getUpstream())
 		{
 			assert edge != null;
-
-			int edgeSign = edge instanceof Edge ? ((Edge) edge).getSign() : 1;
 
 			// Label the edge considering direction of traversal and type of current node
 
@@ -156,16 +154,15 @@ public class BFS
 
 			assert neigh != null;
 
-			int pathSign = current.getPathSign() * edgeSign * neigh.getSign();
+			int pathSign = current.getPathSign() * edge.getSign();
 
 			// Decide neighbor label according to the search direction and node type
-			int dist = getLabel(current);
-			if (neigh.isBreadthNode() && direction == Direction.DOWNSTREAM)
-				dist++;
+			int dist = getLabel(edge);
+			if (neigh.isBreadthNode() && direction == Direction.DOWNSTREAM) dist++;
 
 			// Check if we need to stop traversing the neighbor, enqueue otherwise
 			boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
-				(!neigh.isBreadthNode() || getLabel(neigh) < limit) && !neigh.isUbique();
+				(!neigh.isBreadthNode() || dist < limit) && !neigh.isUbique();
 
 			// Process the neighbor if not processed or not in queue
 
@@ -173,6 +170,7 @@ public class BFS
 			{
 				// Label the neighbor
 				setLabel(neigh, dist);
+				neigh.setPathSign(pathSign);
 
 				if (further)
 				{
@@ -189,8 +187,6 @@ public class BFS
 						// Non-breadth nodes are added in front of the queue
 						queue.addFirst(neigh);
 					}
-
-					recordBanned(neigh);
 				}
 				else
 				{
@@ -212,14 +208,6 @@ public class BFS
 		}
 	}
 
-	protected void recordBanned(Node node)
-	{
-		for (Node b : node.getBanned())
-		{
-			if (getColor(b) == WHITE) setColor(b, BLACK);
-		}
-	}
-	
 	protected void labelEquivRecursive(Node node, boolean up, int dist,
 		boolean enqueue, boolean head, int pathSign)
 	{
@@ -239,8 +227,6 @@ public class BFS
 	
 					if (head) queue.addFirst(equiv);
 					else queue.add(equiv);
-
-					recordBanned(equiv);
 				}
 				else
 				{

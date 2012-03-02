@@ -16,8 +16,8 @@ import java.util.Collections;
  */
 public class ControlWrapper extends AbstractNode
 {
-	private Control ctrl;
-	int sign;
+	protected Control ctrl;
+	protected int sign;
 
 	protected ControlWrapper(Control ctrl, Graph graph)
 	{

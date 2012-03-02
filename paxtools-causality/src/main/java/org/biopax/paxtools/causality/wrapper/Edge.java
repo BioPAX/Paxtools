@@ -1,6 +1,5 @@
 package org.biopax.paxtools.causality.wrapper;
 
-import org.apache.lucene.search.PositiveScoresOnlyCollector;
 import org.biopax.paxtools.query.model.*;
 import org.biopax.paxtools.query.wrapperL3.EdgeL3;
 
@@ -11,7 +10,7 @@ public class Edge extends EdgeL3
 {
 	private int sign;
 	
-	public Edge(Node source, Node target, org.biopax.paxtools.query.model.Graph graph)
+	public Edge(Node source, Node target, Graph graph)
 	{
 		super(source, target, graph);
 		this.sign = 1;
