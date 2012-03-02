@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 import org.hibernate.search.bridge.FieldBridge;
 import org.hibernate.search.bridge.LuceneOptions;
 
@@ -18,6 +19,10 @@ import org.hibernate.search.bridge.LuceneOptions;
  * such as pathwayComponentOf, participantOf, etc.
  * (hope, there are no infinite loops ;))
  * 
+ * This one, specifically, helps to infer and index parent pathways 
+ * (starting from various BioPAX properties, elements) and then use it
+ * to find a physical entity or process by pathway identifier or name.
+ * 
  * @author rodche
  */
 public final class ParentPathwayFieldBridge implements FieldBridge {
@@ -27,31 +32,34 @@ public final class ParentPathwayFieldBridge implements FieldBridge {
 		if(value instanceof Pathway) {
 			setForPathway(name, (Pathway)value, document, luceneOptions);
 			set(name, ((Pathway)value).getPathwayComponentOf(), document, luceneOptions);
+			set(name, ((Process)value).getControlledOf(), document, luceneOptions);
 // TODO does participation of a Pathway in a Control interaction mean being sub-pathway? so - stop!
-//			set(name, ((Pathway)value).getParticipantOf(), document, luceneOptions);
+//			set(name, ((Entity)value).getParticipantOf(), document, luceneOptions);
 		} else if(value instanceof Interaction) {
 			set(name, ((Interaction)value).getPathwayComponentOf(), document, luceneOptions);
+			set(name, ((Process)value).getControlledOf(), document, luceneOptions);
 // TODO getParticipantOf() usually leads to the same parent pathways as getPathwayComponentOf(), but can also cross into a peer pathway; so - stop!  
-//			set(name, ((Interaction)value).getParticipantOf(), document, luceneOptions);
+//			set(name, ((Entity)value).getParticipantOf(), document, luceneOptions);
 		} else if(value instanceof PhysicalEntity ) {
 			set(name, ((PhysicalEntity)value).getMemberPhysicalEntityOf(), document, luceneOptions);
-			set(name, ((PhysicalEntity)value).getParticipantOf(), document, luceneOptions);
+			set(name, ((Entity)value).getParticipantOf(), document, luceneOptions);
 			set(name, ((PhysicalEntity)value).getComponentOf(), document, luceneOptions);
 		} else if(value instanceof EntityReference) {
 			set(name, ((EntityReference)value).getMemberEntityReference(), document, luceneOptions);
 			set(name, ((EntityReference)value).getEntityReferenceOf(), document, luceneOptions);
-		} else if(value instanceof UnificationXref) {
-			set(name, ((UnificationXref)value).getXrefOf(), document, luceneOptions);
+// this seems was a mistake... (never/shouldn't call)
+//		} else if(value instanceof UnificationXref) {
+//			set(name, ((UnificationXref)value).getXrefOf(), document, luceneOptions);
 		} else if(value instanceof Set) {
 			for(Object e : (Set) value) {
 				set(name, e, document, luceneOptions);
 			}
-		} else if(value != null) {
-			// ignore (it's ok not to throw IAE here, because of the xrefOfs...)
-			//throw new IllegalArgumentException("Cannot use with: " + value.getClass());
 		}
 	}
-	
+
+	/*
+	 * Indexes pathway URI, names, identifiers
+	 */
 	private void setForPathway(String name, Pathway pw,
 			Document document, LuceneOptions luceneOptions) 
 	{	

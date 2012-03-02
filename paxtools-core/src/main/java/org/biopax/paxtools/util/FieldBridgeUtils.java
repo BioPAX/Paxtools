@@ -11,8 +11,12 @@ final class FieldBridgeUtils {
 	}
 	
 	public static void addFieldToDocument(LuceneOptions luceneOptions, String field, String value, Document document) {
-		value = value.toLowerCase(); // toLowerCase() is very important here and there...it's long to explain
-		if(!Arrays.asList(document.getValues(field)).contains(value))
-			luceneOptions.addFieldToDocument(field, value, document);
+		/* toLowerCase() is important here and there; it's long to explain in full,
+		 * but - it's about the @Field(index=Index.UN_TOKENIZED,..), MultiFieldQueryParser, 
+		 * and StandardAnayzer to work well together... Rabbit's hole...
+		 */
+		String v = value.toLowerCase();
+		if(!Arrays.asList(document.getValues(field)).contains(v))
+			luceneOptions.addFieldToDocument(field, v, document);
 	}
 }

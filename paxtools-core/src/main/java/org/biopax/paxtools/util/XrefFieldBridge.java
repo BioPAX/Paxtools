@@ -21,10 +21,6 @@ public final class XrefFieldBridge implements FieldBridge {
 		Set<Xref> refs = (Set<Xref>) value;	
 		for (Xref x : refs) {
 			if(x.getId() != null)
-				/* toLowerCase() is important here and there; it's long to explain in full,
-				 * but - it's about the @Field(index=Index.UN_TOKENIZED,..), MultiFieldQueryParser, 
-				 * and StandardAnayzer to work well together... Rabbit's hole...
-				 */
 				FieldBridgeUtils.addFieldToDocument(luceneOptions, name, x.getId(), document);
 		}
 	}
