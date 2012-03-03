@@ -63,8 +63,8 @@ public final class ParentPathwayFieldBridge implements FieldBridge {
 	private void setForPathway(String name, Pathway pw,
 			Document document, LuceneOptions luceneOptions) 
 	{	
-		FieldBridgeUtils.addFieldToDocument(luceneOptions, name, pw.getRDFId(),
-				document);
+		//adding URI as is (do not change the URI to lowercase!)
+		luceneOptions.addFieldToDocument(name, pw.getRDFId(), document);
 
 		for (String s : pw.getName()) {
 			FieldBridgeUtils.addFieldToDocument(luceneOptions, name, s, document);

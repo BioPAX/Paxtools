@@ -3,7 +3,6 @@
  */
 package org.biopax.paxtools.util;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import org.apache.lucene.document.Document;
@@ -70,7 +69,8 @@ public final class OrganismFieldBridge implements FieldBridge {
 			Document document, LuceneOptions luceneOptions) 
 	{
 		// put id (e.g., urn:miriam:taxonomy:9606, if normalized...)
-		FieldBridgeUtils.addFieldToDocument(luceneOptions, name, bs.getRDFId(), document);
+		// do not do .toLowerCase()!
+		luceneOptions.addFieldToDocument(name, bs.getRDFId(), document);
 		
 		// add organism names
 		for(String s : bs.getName()) {

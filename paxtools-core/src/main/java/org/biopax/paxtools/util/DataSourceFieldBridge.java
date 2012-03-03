@@ -46,7 +46,9 @@ public final class DataSourceFieldBridge implements FieldBridge {
 	private void setForProvenance(String name, Provenance value,
 			Document document, LuceneOptions luceneOptions) 
 	{
-		FieldBridgeUtils.addFieldToDocument(luceneOptions, name, value.getRDFId(), document);
+		// do not do .toLowerCase() for the URI!
+		luceneOptions.addFieldToDocument(name, value.getRDFId(), document);
+		
 		for (String s : value.getName()) {
 			FieldBridgeUtils.addFieldToDocument(luceneOptions, name, s, document);
 		}
