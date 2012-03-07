@@ -19,12 +19,6 @@ public class ControlWrapper extends org.biopax.paxtools.query.wrapperL3.ControlW
 	}
 
 	@Override
-	public Set<Node> getBanned()
-	{
-		return Collections.emptySet();
-	}
-
-	@Override
 	public void initDownstream()
 	{
 		for (org.biopax.paxtools.model.level3.Process prc : ctrl.getControlled())

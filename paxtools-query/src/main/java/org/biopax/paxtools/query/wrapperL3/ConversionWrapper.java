@@ -1,19 +1,11 @@
 package org.biopax.paxtools.query.wrapperL3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.query.model.AbstractNode;
-import org.biopax.paxtools.query.model.Edge;
-import org.biopax.paxtools.query.model.Graph;
-import org.biopax.paxtools.query.model.Node;
-
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author Ozgun Babur
  */
-public class ConversionWrapper extends AbstractNode
+public class ConversionWrapper extends EventWrapper
 {
 	private Conversion conv;
 	private boolean direction;
@@ -23,21 +15,6 @@ public class ConversionWrapper extends AbstractNode
 	{
 		super(graph);
 		this.conv = conv;
-	}
-
-	public boolean isBreadthNode()
-	{
-		return false;
-	}
-
-	public int getSign()
-	{
-		return POSITIVE;
-	}
-
-	public boolean isUbique()
-	{
-		return false;
 	}
 
 	public boolean getDirection()
@@ -124,25 +101,6 @@ public class ConversionWrapper extends AbstractNode
 		}
 	}
 
-	protected void addToUpstream(BioPAXElement ele, Graph graph)
-	{
-		AbstractNode node = (AbstractNode) graph.getGraphObject(ele);
-		Edge edge = new EdgeL3(node, this, graph);
-
-		node.getDownstreamNoInit().add(edge);
-		this.getUpstreamNoInit().add(edge);
-	}
-
-	protected void addToDownstream(PhysicalEntity pe, Graph graph)
-	{
-		AbstractNode node = (AbstractNode) graph.getGraphObject(pe);
-		Edge edge = new EdgeL3(this, node, graph);
-
-		node.getUpstreamNoInit().add(edge);
-		this.getDownstreamNoInit().add(edge);
-	}
-
-
 	public String getKey()
 	{
 		return conv.getRDFId() + "|" + direction;
@@ -151,18 +109,6 @@ public class ConversionWrapper extends AbstractNode
 	public Conversion getConversion()
 	{
 		return conv;
-	}
-
-	@Override
-	public Collection<Node> getUpperEquivalent()
-	{
-		return Collections.emptySet();
-	}
-
-	@Override
-	public Collection<Node> getLowerEquivalent()
-	{
-		return Collections.emptySet();
 	}
 
 	public static final boolean LEFT_TO_RIGHT = true;

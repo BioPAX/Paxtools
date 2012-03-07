@@ -13,7 +13,7 @@ public interface Node extends org.biopax.paxtools.query.model.Node
 	 * not grow with any activation reaction of A.
 	 * @return set of banned nodes after traversing this node
 	 */
-	public Set<Node> getBanned();
+	public Set<org.biopax.paxtools.query.model.Node> getBanned();
 
 	/**
 	 * Sign of current path of traversal.

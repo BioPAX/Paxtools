@@ -10,4 +10,6 @@ public interface Edge extends GraphObject
 	Node getSourceNode();
 
 	public int getSign();
+
+	public boolean isTranscription();
 }

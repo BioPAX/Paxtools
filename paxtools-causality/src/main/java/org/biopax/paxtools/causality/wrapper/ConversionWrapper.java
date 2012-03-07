@@ -12,17 +12,8 @@ import java.util.Set;
 public class ConversionWrapper extends org.biopax.paxtools.query.wrapperL3.ConversionWrapper
 	implements Node
 {
-	protected Set<Node> banned;
-
 	protected ConversionWrapper(Conversion conv, Graph graph)
 	{
 		super(conv, graph);
-		banned = new HashSet<Node>();
-	}
-
-	@Override
-	public Set<Node> getBanned()
-	{
-		return banned;
 	}
 }

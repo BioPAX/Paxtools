@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.query.model.Node;
+import org.biopax.paxtools.query.wrapperL3.EventWrapper;
 import org.biopax.paxtools.query.wrapperL3.GraphL3;
 
 import java.util.HashSet;
@@ -60,8 +61,8 @@ public class Graph extends GraphL3
 		for (EntityReference er : model.getObjects(EntityReference.class))
 		{
 			Set<PhysicalEntityWrapper> active = new HashSet<PhysicalEntityWrapper>();
-			Set<ConversionWrapper> activating = new HashSet<ConversionWrapper>();
-			Set<ConversionWrapper> inhibiting = new HashSet<ConversionWrapper>();
+			Set<EventWrapper> activating = new HashSet<EventWrapper>();
+			Set<EventWrapper> inhibiting = new HashSet<EventWrapper>();
 
 			// todo: create those sets using state network analyzer
 
@@ -69,29 +70,30 @@ public class Graph extends GraphL3
 			for (PhysicalEntityWrapper pe : active)
 			{
 				// Create negative edges from inactivating reactions to the active states
-				for (ConversionWrapper con : inhibiting)
+				for (EventWrapper ev : inhibiting)
 				{
-					Edge edge = new Edge(con, pe, this);
+					Edge edge = new Edge(ev, pe, this);
 					edge.setSign(-1);
 				}
 				
 				// Create positive edges from activating reactions to the active states
-				for (ConversionWrapper con: activating)
+				for (EventWrapper ev: activating)
 				{
-					Edge edge = new Edge(con, pe, this);
+					Edge edge = new Edge(ev, pe, this);
 					edge.setSign(1);
 				}
 			}
 
 			// Traversing one of these activating or inactivating reactions bans to traverse others
 
-			Set<ConversionWrapper> reac = new HashSet<ConversionWrapper>(activating);
+			Set<EventWrapper> reac = new HashSet<EventWrapper>(activating);
 			reac.addAll(inhibiting);
 
-			for (ConversionWrapper con : reac)
+			for (EventWrapper ev : reac)
 			{
-				con.getBanned().addAll(reac);
-				con.getBanned().remove(con);
+				ev.initBanned();
+				ev.getBanned().addAll(reac);
+				ev.getBanned().remove(ev);
 			}
 		}
 	}

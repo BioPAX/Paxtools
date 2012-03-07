@@ -7,14 +7,22 @@ import org.biopax.paxtools.causality.model.Path;
 import org.biopax.paxtools.causality.model.PathUser;
 import org.biopax.paxtools.causality.wrapper.Graph;
 import org.biopax.paxtools.causality.wrapper.PhysicalEntityWrapper;
+import org.biopax.paxtools.controller.Merger;
+import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.controller.SimpleMerger;
 import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.model.GraphObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.*;
 
 /**
@@ -146,4 +154,19 @@ public class CausalityTest
 
 		assertTrue(visit.size() == 3);
 	}
+
+	@Test
+	@Ignore
+	public void loadTest() throws FileNotFoundException
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model1 = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/nci_201201.owl"));
+		Model model2 = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/reactome_201201.owl"));
+
+		SimpleMerger m = new SimpleMerger(SimpleEditorMap.get(BioPAXLevel.L3));
+		m.merge(model1, model2);
+		
+		h.convertToOWL(model1, new FileOutputStream("/home/ozgun/Desktop/human_201201.owl"));
+	}
+
 }

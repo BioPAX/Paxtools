@@ -3,7 +3,7 @@ package org.biopax.paxtools.query.model;
 /**
  * @author Ozgun Babur
  */
-public class AbstractEdge implements Edge
+public abstract class AbstractEdge implements Edge
 {
 	private Node source;
 	private Node target;

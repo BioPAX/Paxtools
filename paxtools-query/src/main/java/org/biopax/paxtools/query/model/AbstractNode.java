@@ -1,6 +1,7 @@
 package org.biopax.paxtools.query.model;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,14 @@ public abstract class AbstractNode implements Node
 	protected Set<Edge> upstream;
 	protected Set<Edge> downstream;
 	
-	int pathSign;
+	protected int pathSign;
+
+	/**
+	 * For saying: "If the algorithm traverses this node, it cannot traverse those others". If this
+	 * set will be used, then initBanned() should be called. Otherwise getBanned() will return an
+	 * immutable empty set.
+	 */
+	protected Set<Node> banned;
 
 	protected AbstractNode(Graph graph)
 	{
@@ -34,6 +42,22 @@ public abstract class AbstractNode implements Node
 	public Graph getGraph()
 	{
 		return graph;
+	}
+
+	public Set<Node> getBanned()
+	{
+		if (banned == null) return Collections.emptySet();
+		return banned;
+	}
+
+	public void initBanned()
+	{
+		if (banned == null) banned = new HashSet<Node>();
+	}
+
+	public void setBanned(Set<Node> banned)
+	{
+		this.banned = banned;
 	}
 
 	public Collection<Edge> getUpstream()

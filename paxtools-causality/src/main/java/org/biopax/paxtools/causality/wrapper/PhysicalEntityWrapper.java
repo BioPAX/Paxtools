@@ -17,10 +17,4 @@ public class PhysicalEntityWrapper extends org.biopax.paxtools.query.wrapperL3.P
 	{
 		super(pe, graph);
 	}
-
-	@Override
-	public Set<Node> getBanned()
-	{
-		return Collections.emptySet();
-	}
 }
