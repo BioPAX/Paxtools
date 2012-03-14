@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality.model;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -9,7 +10,9 @@ import java.util.Set;
  */
 public interface AlterationProvider
 {
-	public boolean isAltered(Node node);
-
-	public Set<Alteration> getAlterations(Node node);
+	public List<Set<Alteration>> getAlterations(Node node);
+	
+	public boolean isAlteredMutuallyExclusive(Node n1, Node n2);
+	
+	public boolean isAlteredTogether(Node n1, Node n2);
 }

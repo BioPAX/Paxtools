@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class PhysicalEntityWrapper extends AbstractNode
 {
-	PhysicalEntity pe;
+	protected PhysicalEntity pe;
 	boolean equivalentInited;
 	boolean ubique;
 
@@ -104,7 +104,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	//--- Downstream interactions ------------------------------------------------------------------|
 
-	private Set<Interaction> getDownstreamInteractions(Collection<Interaction> inters)
+	protected Set<Interaction> getDownstreamInteractions(Collection<Interaction> inters)
 	{
 		Set<Interaction> set = new HashSet<Interaction>();
 

@@ -5,15 +5,17 @@ import org.biopax.paxtools.causality.analysis.Exhaustive;
 import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.causality.model.Path;
 import org.biopax.paxtools.causality.model.PathUser;
+import org.biopax.paxtools.causality.util.Histogram;
 import org.biopax.paxtools.causality.wrapper.Graph;
 import org.biopax.paxtools.causality.wrapper.PhysicalEntityWrapper;
 import org.biopax.paxtools.controller.Merger;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.SimpleMerger;
 import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.junit.Ignore;
@@ -169,4 +171,77 @@ public class CausalityTest
 		h.convertToOWL(model1, new FileOutputStream("/home/ozgun/Desktop/human_201201.owl"));
 	}
 
+	@Test
+	@Ignore
+	public void activityTest() throws FileNotFoundException
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/pc_fall2011.owl"));
+
+		Map<EntityReference, Integer> complexCount = new HashMap<EntityReference, Integer>();
+		Map<EntityReference, Integer> activityCount = new HashMap<EntityReference, Integer>();
+		
+		for (EntityReference er : model.getObjects(EntityReference.class))
+		{
+			for (SimplePhysicalEntity pe : er.getEntityReferenceOf())
+			{
+				for (Complex cmp : pe.getComponentOf())
+				{
+					if (associatedWithAConversion(cmp))
+					{
+						increaseCount(er, complexCount);
+						if (!cmp.getControllerOf().isEmpty())
+						{
+							increaseCount(er, activityCount);
+						}
+					}
+				}
+			}
+		}
+
+		Histogram hist = new Histogram(0.1);
+
+		for (EntityReference er : complexCount.keySet())
+		{
+			if (complexCount.get(er) < 3) continue;
+
+			double ratio;
+
+			if (!activityCount.containsKey(er))
+			{
+				ratio = 0;
+			}
+			else
+			{
+				ratio = activityCount.get(er) / (double) complexCount.get(er);
+			}
+
+			hist.count(ratio);
+
+			if (ratio == 0 && complexCount.get(er) > 5)
+			{
+				for (String s : er.getName())
+				{
+					System.out.println("s = " + s);
+				}
+			}
+		}
+
+		hist.print();
+	}
+	
+	private boolean associatedWithAConversion(PhysicalEntity pe)
+	{
+		for (Interaction inter : pe.getParticipantOf())
+		{
+			if (inter instanceof Conversion) return true;
+		}
+		return false;
+	}
+	
+	private void increaseCount(EntityReference er, Map<EntityReference, Integer> count)
+	{
+		if (!count.containsKey(er)) count.put(er, 0);
+		count.put(er, count.get(er) + 1);
+	}
 }

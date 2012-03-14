@@ -32,7 +32,7 @@ public class Exhaustive
 
 	/**
 	 * Tells if the limiting set also limits traversing edges. If the limiting set contains only the
-	 * nodes, then this flag should be false. Otherwise the search won't advance.
+	 * nodes, then this flag should be false. Otherwise the search won't advance. Default is true.
 	 */
 	boolean limitEdgesToo;
 

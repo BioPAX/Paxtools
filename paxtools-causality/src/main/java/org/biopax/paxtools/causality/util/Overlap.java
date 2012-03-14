@@ -1,7 +1,11 @@
 package org.biopax.paxtools.causality.util;
 
+import org.biopax.paxtools.causality.model.Alteration;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Ozgun Babur
@@ -33,7 +37,7 @@ public class Overlap
 
 		double pval = 0;
 
-		if (o > e)
+		if (o >= e)
 		{
 			for (int i = o; i <= b; i++)
 			{
@@ -41,7 +45,7 @@ public class Overlap
 			}
 			return pval;
 		}
-		else if (o < e)
+		else // (o < e)
 		{
 			for (int i = 0; i <= o; i++)
 			{
@@ -49,7 +53,6 @@ public class Overlap
 			}
 			return -pval;
 		}
-		else return 0.5;
 	}
 
 	/**
@@ -72,5 +75,35 @@ public class Overlap
 	public static void main(String[] args)
 	{
 		System.out.println("pval = " + calcPVal(100, 20, 20, 10));
+	}
+
+	public static double calcAlterationOverlapPval(
+		List<Set<Alteration>> alterList1, List<Set<Alteration>> alterList2)
+	{
+		assert alterList1.size() == alterList2.size();
+
+		int cnt1 = 0;
+		int cnt2 = 0;
+		int overlap = 0;
+
+		for (int i = 0; i < alterList1.size(); i++)
+		{
+			boolean a1 = !alterList1.get(i).isEmpty();
+			boolean a2 = !alterList2.get(i).isEmpty();
+
+			if (a1)
+			{
+				cnt1++;
+
+				if (a2)
+				{
+					cnt2++;
+					overlap++;
+				}
+			}
+			else if (a2) cnt2++;
+		}
+
+		return calcPVal(alterList1.size(), cnt1, cnt2, overlap);
 	}
 }
