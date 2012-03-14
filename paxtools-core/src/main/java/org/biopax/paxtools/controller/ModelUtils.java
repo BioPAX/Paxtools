@@ -435,8 +435,13 @@ public class ModelUtils {
 		
 		// but we run from every element (all types)
 		for(BioPAXElement e : model.getObjects()) {
-			// define a special 'visitor'
-			AbstractTraverser traverser = new AbstractTraverser(SimpleEditorMap.get(model.getLevel())) 
+			/* In order to visit all biopax properties of all elements 
+			 * and to remove those reachable guys from the 'result',
+			 * every time we create a fresh traverser, because, otherwise, 
+			 * it would remember the state (stacks) from the last run, which 
+			 * we would have to clear anyway;
+			 */
+			(new AbstractTraverser(SimpleEditorMap.get(model.getLevel())) 
 			{
 				@Override
 				protected void visit(Object value, BioPAXElement parent, 
@@ -444,9 +449,7 @@ public class ModelUtils {
 					if(filterClass.isInstance(value)) 
 						result.remove(value); 
 				}
-			};
-			// check all biopax properties
-			traverser.traverse(e, null);
+			}).traverse(e, null);
 		}
 		
 		return result;

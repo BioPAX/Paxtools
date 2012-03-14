@@ -25,7 +25,7 @@ public enum SimpleEditorMap implements EditorMap
 
 	private static final Log log = LogFactory.getLog(EditorMapAdapter.class);
 
-	SimpleEditorMapImpl impl;
+	private final SimpleEditorMapImpl impl;
 
 
 	SimpleEditorMap(BioPAXLevel level)
@@ -43,11 +43,12 @@ public enum SimpleEditorMap implements EditorMap
 		throw new IllegalBioPAXArgumentException("Unknown level:" + level);
 	}
 
-	class SimpleEditorMapImpl extends EditorMapAdapter implements EditorMap
+	// fixed: should be 'static' member class, to save memory, because it does not need to link and access SimpleEditorMap instance fields
+	static class SimpleEditorMapImpl extends EditorMapAdapter implements EditorMap
 	{
-		private BioPAXLevel level;
+		private final BioPAXLevel level;
 
-		private List<ObjectPropertyEditor> sorted;
+		private List<ObjectPropertyEditor> sorted; //TODO use it somewhere or remove!
 
 		SimpleEditorMapImpl(BioPAXLevel level)
 		{

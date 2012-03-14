@@ -55,8 +55,9 @@ public class Traverser
 	 * This method does not traverse iteratively to the values.
 	 * @param element BioPAX element to be traversed
 	 * @param model to be traversed, but not necessarily (depends on the Visitor implementation).
+	 * @param <D> actual BioPAX type which properties and inherited properties will be used
 	 */
-	public void traverse(BioPAXElement element, Model model)
+	public <D extends BioPAXElement> void traverse(D element, Model model)
 	{
 		if (element == null)
 		{
@@ -70,18 +71,18 @@ public class Traverser
 			if (log.isWarnEnabled()) log.warn("No editors for : " + element.getModelInterface());
 			return;
 		}
-		for (PropertyEditor editor : editors)
+		for (PropertyEditor<? super D,?> editor : editors)
 		{
 			if (filter(editor))
 			{
-				Set valueSet = new HashSet(editor.getValueFromBean(element));
+				Set<?> valueSet = new HashSet<Object>(editor.getValueFromBean(element));
 				if (!valueSet.isEmpty())
                     traverseElements(element, model, editor, valueSet);
             }
 		}
 	}
 
-    protected void traverseElements(BioPAXElement element, Model model, PropertyEditor editor, Set valueSet)
+    protected void traverseElements(BioPAXElement element, Model model, PropertyEditor<?,?> editor, Set<?> valueSet)
     {
         for (Object value : valueSet)
     {
@@ -90,7 +91,7 @@ public class Traverser
     }
 
 
-    protected boolean filter(PropertyEditor editor)
+    protected boolean filter(PropertyEditor<? extends BioPAXElement,?> editor)
 	{
 		for (Filter<PropertyEditor> filter : filters)
 		{

@@ -26,7 +26,8 @@ public abstract class AbstractTraverser extends Traverser
 	private final Stack<BioPAXElement> visited;
 	private final Stack<String> props;
 		
-	public AbstractTraverser(EditorMap editorMap, Filter<PropertyEditor>... filters)
+	public AbstractTraverser(EditorMap editorMap, 
+		@SuppressWarnings("rawtypes") Filter<PropertyEditor>... filters)
 	{
 		super(editorMap, null, filters);
 		visited = new Stack<BioPAXElement>();
@@ -52,7 +53,7 @@ public abstract class AbstractTraverser extends Traverser
 	 * @param domain is parent BioPAX element
 	 * @param editor is the property editor
 	 */
-	protected abstract void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor);
+	protected abstract void visit(Object range, BioPAXElement domain, Model model, PropertyEditor<?,?> editor);
 		
 	/**
 	 * Saves/restores the current "path" of the value in the model and 
@@ -64,7 +65,7 @@ public abstract class AbstractTraverser extends Traverser
 	 * @param model 
 	 * @param editor parent's property PropertyEditor
 	 */
-	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
+	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?,?> editor) {
 			final Stack<BioPAXElement> objPath = getVisited();
 			final Stack<String> propsPath = getProps();
 		
@@ -94,6 +95,15 @@ public abstract class AbstractTraverser extends Traverser
 			if(range instanceof BioPAXElement) {
 				objPath.pop();
 			}
+	}
+
+	
+	/**
+	 * Clears the state (traversed path and objects) from the last run.
+	 */
+	public void reset() {
+		visited.clear();
+		props.clear();
 	}
 	
 }
