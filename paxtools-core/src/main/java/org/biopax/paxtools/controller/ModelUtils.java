@@ -169,7 +169,7 @@ public class ModelUtils {
      * recursively updates all the references to it 
      * (parents' object properties).
      * 
-     * If you're actually replacing multiple objects inthe same model,
+     * If you're actually replacing multiple objects in the same model,
      * for better performance, consider using {@link #replace(Map)} method
      * instead.
      * 
@@ -178,67 +178,8 @@ public class ModelUtils {
      */
     public void replace(final BioPAXElement existing, final BioPAXElement replacement) 
     {
-    	if(replacement != null && 
-    		existing.getModelInterface() != replacement.getModelInterface()) {
-    		LOG.error("Cannot replace " + existing.getRDFId()
-    				+ " (" + existing.getModelInterface().getSimpleName() 
-    				+ ") with a different type object: "
-    				+ replacement.getRDFId() + " (" 
-    				+ replacement.getModelInterface().getSimpleName() + ")!");
-    		return;
-    	}
+    	replace(Collections.singletonMap(existing, replacement));
     	
-    	// first, check if "shortcut" is possible
-    	// nothing to replace?
-    	if(!model.contains(existing)) {
-    		if(LOG.isWarnEnabled())
-    			LOG.warn("Model does not contain element " + existing);
-    		return;
-    	}
-    	
-    	/* ( here goes a tough concern ;) )
-    	 * fail if the 'replacement' for 'existing' object
-    	 * (with different ID) uses the same ID as another,
-    	 * also different, model object! That means, 
-    	 */
-    	if(replacement != null) { 
-    		String newId = replacement.getRDFId();
-    		if(model.containsID(newId) // there is an object with the same ID,
-    			&& !newId.equals(existing.getRDFId()) // and it is not the one to be replaced,
-    			&& replacement != model.getByID(newId)) // and the replacement is not that, then - fail
-    		{
-    			throw new IllegalBioPAXArgumentException(
-    				"There is another object with the same ID as replacemet's," +
-    				" and it is not the same nor the one to be replaced! " +
-    				"Try (decide) either to replace/remove that one first, " +
-    				"or - get and use that one as the replacement instead.");
-    		}
-    	}
-    	
-    	// a visitor to replace the element in the model
-		Visitor visitor = new Visitor() {
-			@Override
-			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
-				if(range instanceof BioPAXElement && range.equals(existing)) //it's Object.equals (not just RDFId)!
-				{
-					if(editor.isMultipleCardinality()) {
-						if(replacement != null)
-							editor.setValueToBean(replacement, domain);
-						editor.removeValueFromBean(existing, domain);
-					} else {
-						editor.setValueToBean(replacement, domain);
-					}
-				}
-			}
-		};
-		
-		// run to update parent's properties with the new value ('replacement')
-		EditorMap em = SimpleEditorMap.get(model.getLevel());
-		Traverser traverser = new Traverser(em, visitor);
-		for(BioPAXElement bpe : model.getObjects()) {
-			traverser.traverse(bpe, null);
-		}
-		
 		// remove the old one from the model
 		model.remove(existing);
 
@@ -271,18 +212,25 @@ public class ModelUtils {
 				{
 					ObjectPropertyEditor e = (ObjectPropertyEditor) editor;
 					BioPAXElement replacement = subs.get(range);
+					final String logMessage = 
+						((BioPAXElement)range).getRDFId() + " (" +  range + "; " 
+						+ ((BioPAXElement)range).getModelInterface().getSimpleName() + ")"
+						+ " with " + ((replacement != null) ? replacement.getRDFId() : "") 
+						+ " (" +  replacement + "); for property: " + e.getProperty()
+						+ " of bean: " + domain.getRDFId() + " (" + domain + "; " 
+						+ domain.getModelInterface().getSimpleName() + ")";
+					
+					if(replacement != null && !editor.getRange().isInstance(replacement))
+						throw new IllegalBioPAXArgumentException("Incompatible type! " +
+							" Attempted to replace " + logMessage);
+					
 					if (e.isMultipleCardinality()) {
 						e.removeValueFromBean(range, domain);
 					}
 					e.setValueToBean(replacement, domain);
+					
 					if(LOG.isDebugEnabled())
-						LOG.debug("replace(subsMap): replaced - "
-							+ ((BioPAXElement)range).getRDFId() + " (" +  range + "; " 
-							+ ((UtilityClass) range).getModelInterface().getSimpleName() + ")"
-							+ " with " + replacement.getRDFId() + " (" +  replacement 
-							+ "); for property: " + e.getProperty()
-							+ " of bean: " + domain.getRDFId() + " (" + domain + "; " 
-							+ domain.getModelInterface().getSimpleName() + ")");
+						LOG.debug("Replaced " + logMessage);
 				}
 			}
 		};

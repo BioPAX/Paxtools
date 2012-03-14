@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -115,7 +116,13 @@ public class ModelUtilsTest {
 		assertFalse(m.contains(pr3)); // deleted!
 		assertFalse(m.contains(x2)); // deleted!
 		
-		m.replace(pr1, x1); // logs error, no effect on the model
+		try {
+			m.replace(pr1, x1); // logs error, no effect on the model
+			fail("Must fail!");
+		} catch (IllegalBioPAXArgumentException e) {
+			// fine!
+		}
+		// m is unchanged
 		assertTrue(m.contains(pr1));
 		assertEquals(pr1, p1.getEntityReference());
 	}
