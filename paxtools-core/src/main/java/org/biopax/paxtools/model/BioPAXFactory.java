@@ -30,8 +30,7 @@ public abstract class BioPAXFactory
     
     /*
      * Universal method that creates a new BioPAX object.
-     * (works with non-public, other package, implementations;
-     * so it's important to keep this method private)
+     * (works with non-public, other package, implementations)
      */
 	public <T extends BioPAXElement> T create(Class<T> aClass, String uri) {
 		T bpe = null;
