@@ -9,7 +9,6 @@ import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.BioPAXFactoryAdaptor;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
@@ -179,14 +178,6 @@ public class ModelUtils {
     public void replace(final BioPAXElement existing, final BioPAXElement replacement) 
     {
     	replace(Collections.singletonMap(existing, replacement));
-    	
-		// remove the old one from the model
-		model.remove(existing);
-
-		// add the replacement
-		if(replacement != null && !model.contains(replacement)) {
-			model.add(replacement);
-		}
     }
 
     
@@ -195,9 +186,9 @@ public class ModelUtils {
      * and recursively updates all the object references
      * (parents' object properties) in a single pass.
      * 
-     * It does not remove old or adds new elements to the model;
-     * so, one may want to do it or - consider using {@link Model#repair()} 
-     * and {@link #removeObjectsIfDangling(Class)} methods after all.
+     * It also removes old and adds new elements to the model;
+     * but consider using {@link Model#repair()} 
+     * and/or {@link #removeObjectsIfDangling(Class)} as needed.
      * 
      * @param subs
      */
@@ -238,6 +229,15 @@ public class ModelUtils {
 		Traverser traverser = new Traverser(SimpleEditorMap.get(model.getLevel()), visitor);
 		for (BioPAXElement bpe: new HashSet<BioPAXElement>(model.getObjects())) {	
 			traverser.traverse(bpe, model);
+		}
+		
+		// remove/add in the model's registry (separate loops are required)
+		for(BioPAXElement o : subs.keySet()) {
+			model.remove(o);
+		}
+		for(BioPAXElement o : subs.values()) {
+			if(o != null && !model.contains(o)) 
+				model.add(o);
 		}
     }
     
@@ -289,78 +289,12 @@ public class ModelUtils {
 			model.remove(o);
 		}
     }
-    
-    
-    /**
-     * Replaces the RDFId of the BioPAX element
-     * and in the current model. 
-     * 
-     * WARN: this hacker's method is to use with great care, 
-     * because, if more than one BioPAX models share 
-     * the (oldId) element, all these, except for current one,
-     * will be broken (contain the updated element under its oldId) 
-     * One can call {@link Model#repair()} to fix.
-     * 
-     * The method {@link #replace(BioPAXElement, BioPAXElement)} 
-     * is much safer but less efficient in special cases, such as when 
-     * one just needs to create/import one model, quickly update several or all
-     * IDs, and save it to a file. 
-     * 
-     * @param oldId
-     * @param newId
-     */
-    public void replaceID(String oldId, String newId) {
-    	// fail if object with the newId or anything stored under this map key exists
-		if(model.containsID(newId)) 
-			throw new IllegalBioPAXArgumentException("Model already has ID: " + newId);
 
-		InternalBioPAXFactory hackFactory = new InternalBioPAXFactory();
-		
-		BioPAXElement old = model.getByID(oldId);
-		if(old != null) {
-			// update if getById returns and object with the same ID
-			if(oldId.equals(old.getRDFId())) {
-				model.remove(old);
-				hackFactory.setId(old, newId);
-				model.add(old);
-			} else {
-				// for the broken model - skip
-				if(LOG.isWarnEnabled())
-					LOG.warn("Cannot replace ID. Element known by ID: " 
-						+ oldId + ", in fact, has another ID: " 
-						+ old.getRDFId());
-			}
-		} else {
-			if(LOG.isWarnEnabled())
-				LOG.warn("Cannot replace ID. Element is not found by ID: " + oldId);
-		}
-    }
-    
-    
-    /* 
-     * Extend the factory class to open up the setId method
+    /**
+     * Gets the BioPAX model object that we analyze or modify.
+     * 
+     * @return
      */
-	private class InternalBioPAXFactory extends BioPAXFactoryAdaptor {
-		@Override
-		public BioPAXLevel getLevel() {
-			return model.getLevel();
-		}
-		
-		@Override
-		protected <T extends BioPAXElement> T createInstance(Class<T> aClass,
-				String id) throws ClassNotFoundException, InstantiationException,
-				IllegalAccessException {
-			throw new UnsupportedOperationException();
-		}
-		
-		// this one we are going to need
-		@Override
-		public void setId(BioPAXElement bpe, String uri) {
-			super.setId(bpe, uri);
-		}
-	}
-	
-	
 	public Model getModel() {
 		return model;
 	}

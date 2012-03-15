@@ -109,21 +109,16 @@ public class ModelImpl implements Model
         	}
 		}
     }
-	
+
+    
 	public void remove(BioPAXElement aBioPAXElement)
 	{
-		this.idMap.values().remove(aBioPAXElement);
-		/*
-		// remove by ID:
-		BioPAXElement deleted = this.idMap.remove(aBioPAXElement.getRDFId());
-		// integrity check:
-		// model contains aBioPAXElement under a different ID?
-		assert !this.idMap.values().contains(aBioPAXElement);
-		if( deleted != null) {
-			// it actually deleted the aBioPAXElement, not another one with the same ID?
-			assert deleted == aBioPAXElement;
-		}
-		*/
+// wasn't the best way (see below)
+//		this.idMap.values().remove(aBioPAXElement);
+		
+		// should be now safe to remove by ID (since v4.1.3-SNAPSHOT) -
+		if(this.contains(aBioPAXElement))
+			this.idMap.remove(aBioPAXElement.getRDFId());
 	}
                             
 	public <T extends BioPAXElement> T addNew(Class<T> c, String id)
@@ -317,44 +312,46 @@ public class ModelImpl implements Model
      * - recursively adds lost "children" (not null object property values
      *   for which {@link Model#contains(BioPAXElement)} returns False)
      * - updates object properties (should refer to model's elements)
-     * - repairs the internal map so that a object returned 
-     *   by {@link #getByID(String)} does actually have this ID
 	 * 
 	 */
 	@Override
 	public synchronized void repair() {
-		// repair idMap
-		for(String id : idMap.keySet()) {
-			BioPAXElement o = getByID(id);
-			if(o == null) {
-				// delete null
-				idMap.remove(id);
-			} else {
-				// check its rdfid field
-				String oid = o.getRDFId();
-				// mismatch?
-				if(!id.equals(oid)) {
-					// id mismatch (broken model!)
-					if(containsID(oid)) {
-						// has another object under this one's id
-						if(o == getByID(oid)) {
-							// the same - simply remove current one
-							idMap.remove(id);
-						} else {
-							//sooner or later it will be fixed in next loops
-						}
-					} else {
-						// add with its real ID
-						idMap.remove(id);
-						idMap.put(oid, o);
-					}
-				}
-			}
-		}
+/* this precious code became useless altogether after 
+ * core internal refactoring (since 4.1.3-SNAPSHOT),
+ * which made almost impossible to break a model 
+ * (make its internal idMap inconsistent)
+ */
+//		// repair idMap
+//		for(String id : idMap.keySet()) {
+//			BioPAXElement o = getByID(id);
+//			if(o == null) {
+//				// delete null
+//				idMap.remove(id);
+//			} else {
+//				// check its rdfid field
+//				String oid = o.getRDFId();
+//				// mismatch?
+//				if(!id.equals(oid)) {
+//					// id mismatch (broken model!)
+//					if(containsID(oid)) {
+//						// has another object under this one's id
+//						if(o == getByID(oid)) {
+//							// the same - simply remove current one
+//							idMap.remove(id);
+//						} else {
+//							//sooner or later it will be fixed in next loops
+//						}
+//					} else {
+//						// add with its real ID
+//						idMap.remove(id);
+//						idMap.put(oid, o);
+//					}
+//				}
+//			}
+//		}
 		
 		// merge to itself - updates props and children
 		merge(this);
-		// TODO could use org.biopax.paxtools.controller.Completer instead (better performance?)...
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.controller.*;
-import org.biopax.paxtools.impl.BioPAXFactoryAdaptor;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * This factory returns decorated objects for testing.
  */
-public class MockFactory extends BioPAXFactoryAdaptor
+public class MockFactory extends BioPAXFactory
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -232,16 +232,13 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	}
 
 
-	@Override
-	public <T extends BioPAXElement> T createInstance(Class<T> aClass, String uri)
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException
-	{
-		throw new UnsupportedOperationException();
-	}
-
-
 	public BioPAXLevel getLevel()
 	{
 		return this.level;
+	}
+
+	@Override
+	public String mapClassName(Class<? extends BioPAXElement> aClass) {
+		return this.getLevel().getDefaultFactory().mapClassName(aClass);
 	}
 }

@@ -85,11 +85,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     protected void setRDFId(String id)
     {
         this.uri = id;
-//	    Set<Model> ownerModels = this.getOwnerModels();
-//	    for (Model ownerModel : ownerModels)
-//	    {
-//		    ownerModel.notifyIdChange();
-//	    }
     }
 
     public String toString()
@@ -103,21 +98,5 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 		return annotations;
 	}
     
-    
-    /* 
-     * TODO A non-biopax way to get/set/persist pathway membership.
-     * This requires (depends on) the annotations to be 
-     * somewhere pre-calculated.
-     */ 
-//    @Field(name="pathways")
-//    @FieldBridge(impl=ParentPathwayFieldBridge.class)
-//    @ManyToMany(targetEntity=PathwayImpl.class, fetch=FetchType.LAZY)
-//    protected Set<Pathway> getPathway() {
-//    	return (Set<Pathway>) annotations.get(AnnotationMapKey.PARENT_PATHWAYS.toString());
-//    }
-//    
-//    protected void setPathway(Set<Pathway> parentPathways) {
-//		annotations.put(AnnotationMapKey.PARENT_PATHWAYS.toString(), parentPathways);
-//	}
 }
 

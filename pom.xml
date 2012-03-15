@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
-	<version>4.1.2-SNAPSHOT</version>
+	<version>4.1.3-SNAPSHOT</version>
 
 	<name>Paxtools</name>
 	<packaging>pom</packaging>
