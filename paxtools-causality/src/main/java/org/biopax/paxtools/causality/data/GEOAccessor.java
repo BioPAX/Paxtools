@@ -3,11 +3,13 @@ package org.biopax.paxtools.causality.data;
 import org.biopax.paxtools.causality.model.Alteration;
 import org.biopax.paxtools.causality.model.Change;
 import org.biopax.paxtools.causality.model.Node;
+import org.biopax.paxtools.causality.util.EGUtil;
+import org.biopax.paxtools.causality.util.Summary;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -37,11 +39,37 @@ public class GEOAccessor extends AlterationProviderAdaptor
 
 	protected final static String PLATFORM_LINE_INDICATOR = "!Series_platform_id";
 
+	protected final static String[] EG_NAMES = new String[]{"ENTREZ_GENE_ID"};
+	protected final static String[] SYMBOL_NAMES = new String[]{"Gene Symbol"};
+	
+	static double changeThr = 1.5;
+	static double changeThrInverse = 1 / changeThr;
+
 	public GEOAccessor(String gseID, int[] testIndex, int[] controlIndex)
 	{
 		this.gseID = gseID;
 		this.testIndex = testIndex;
 		this.controlIndex = controlIndex;
+
+		try
+		{
+			parse();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	protected void parse() throws IOException
+	{
+		System.out.println("Getting data file");
+		File seriesFile = getSeriesFile();
+		System.out.println("Getting platform file");
+		File platformFile = getPlatformFile();
+		System.out.println("Reading data");
+		Map<String, List<String>> refMap = parsePlatform(platformFile);
+		dataMap = parseDataFile(seriesFile, refMap);
 	}
 
 	protected File getSeriesFile()
@@ -175,14 +203,199 @@ public class GEOAccessor extends AlterationProviderAdaptor
 		return platformName;
 	}
 
+	protected boolean ignoreLine(String line)
+	{
+		return line.startsWith("^") || line.startsWith("!") || line.startsWith("#") || line.trim().length() == 0;
+	}
 	
+	protected int indexOf(String[] array, String s)
+	{
+		for (int i = 0; i < array.length; i++)
+		{
+			if (array[i].equals(s)) return i;
+		}
+		return -1;
+	}
+	
+	protected int getColIndex(String[] cols, String[] possibleNames)
+	{
+		for (String name : possibleNames)
+		{
+			int ind = indexOf(cols, name);
+			if (ind > 0) return ind;
+		}
+		return -1;
+	}
+
+	protected String[] parseToken(String token)
+	{
+		return token.split("[/ ]+");
+	}
+
+	protected Set<String> getEGIDs(String egs, String syms)
+	{
+		Set<String> ids = new HashSet<String>();
+
+		if (egs != null) ids.addAll(Arrays.asList(parseToken(egs)));
+
+		for (String sym : parseToken(syms))
+		{
+			String id = EGUtil.getEGID(sym);
+			if (id != null) ids.add(id);
+		}
+		return ids;
+	}
+	
+	protected Map<String, List<String>> parsePlatform(File platformFile) throws IOException
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(platformFile));
+		
+		String line = reader.readLine();
+
+		while (ignoreLine(line)) line = reader.readLine();
+
+		String[] col = line.split("\t");
+
+		int egIndex = getColIndex(col, EG_NAMES);
+		int symIndex = getColIndex(col, SYMBOL_NAMES);
+
+		if (egIndex < 0 && symIndex < 0) throw new RuntimeException("Entrez Gene or Gene Symbol " +
+			"column not recognized. Header = " + line);
+
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+
+		for(line = reader.readLine(); line != null; line = reader.readLine())
+		{
+			if (ignoreLine(line)) continue;
+			
+			String[] s = line.split("\t");
+			if (s.length <= egIndex && s.length <= symIndex) continue;
+			
+			String id = s[0];
+			String eg = egIndex > 0 ? s[egIndex].trim() : null;
+			String sym = symIndex > 0 ? s[symIndex].trim() : null;
+
+			if ((eg == null || eg.length() == 0) && (sym == null || sym.length() == 0))
+			{
+				continue;
+			}
+
+			map.put(id, new ArrayList<String>(getEGIDs(eg, sym)));
+		}
+		
+		reader.close();
+		return map;
+	}
+	
+	protected double[] toNum(String[] valStr)
+	{
+		double[] v = new double[valStr.length];
+		for (int i = 0; i < v.length; i++)
+		{
+			try
+			{
+				v[i] = Double.parseDouble(valStr[i]);
+			}
+			catch (NumberFormatException e) { v[i] = Double.NaN; }
+		}
+		return v;
+	}
+	
+	protected Map<String, double[]> selectOne(Map<String, List<double[]>> eg2vals)
+	{
+		Map<String, double[]> eg2val = new HashMap<String, double[]>();
+
+		for (String eg : eg2vals.keySet())
+		{
+			double max = -Double.MAX_VALUE;
+			double[] maxV = null;
+			
+			for (double[] v : eg2vals.get(eg))
+			{
+				double mean = Summary.absoluteMean(v);
+				
+				if (mean > max)
+				{
+					max = mean;
+					maxV = v;
+				}
+			}
+			eg2val.put(eg, maxV);
+		}
+		return eg2val;
+	}
+	
+	protected Map<String, double[]> parseDataFile(File dataFile, Map<String, List<String>> refMap)
+		throws IOException
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(dataFile));
+
+		String line = reader.readLine();
+
+		while (ignoreLine(line)) line = reader.readLine();
+		reader.readLine(); // Skip header
+
+		Map<String, List<double[]>> eg2vals = new HashMap<String, List<double[]>>();
+
+		for(line = reader.readLine(); line != null; line = reader.readLine())
+		{
+			if (ignoreLine(line)) continue;
+
+			int tabind = line.indexOf("\t");
+			String id = line.substring(0, tabind);
+			if (id.startsWith("\"")) id = id.substring(1, id.length()-1);
+
+			String[] valStr = line.substring(tabind + 1).split("\t");
+
+			if (refMap.containsKey(id))
+			{
+				for (String eg : refMap.get(id))
+				{
+					if (!eg2vals.containsKey(id)) eg2vals.put(eg, new ArrayList<double[]>());
+					eg2vals.get(eg).add(toNum(valStr));
+				}
+			}
+		}
+
+		return selectOne(eg2vals);
+	}
+
 	@Override
 	public Map<Alteration, Change[]> getAlterations(Node node)
 	{
 		String id = getEntrezGeneID(node);
 
+		return getAlterations(id);
+	}
+
+	public Map<Alteration, Change[]> getAlterations(String id)
+	{
 		double[] value = dataMap.get(id);
 
-		return null;
+		double ctrlMean = Summary.mean(value, controlIndex);
+
+		Change[] ch = new Change[testIndex.length];
+
+		int index = 0;
+		for (int i : testIndex)
+		{
+			double ratio = value[i] / ctrlMean;
+
+			if (ratio > changeThr) ch[index] = Change.ACTIVATING;
+			else if (ratio < changeThrInverse) ch[index] = Change.INHIBITING;
+			else ch[index] = Change.NO_CHANGE;
+			index++;
+		}
+
+		Map<Alteration, Change[]> map = new HashMap<Alteration, Change[]>();
+		map.put(Alteration.EXPRESSION, ch);
+
+		return map;
+	}
+
+	static
+	{
+		File file = new File(dataDirectory);
+		if (!file.exists()) file.mkdirs();
 	}
 }

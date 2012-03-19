@@ -35,6 +35,19 @@ public class Summary
 		return total / x.length;
 	}
 
+	public static double absoluteMean(double[] x)
+	{
+		if (x.length == 0) return Double.NaN;
+
+		double total = 0;
+
+		for (double v : x)
+		{
+			total += Math.abs(v);
+		}
+		return total / x.length;
+	}
+
 	public static double meanOrderWeighted(double[] x)
 	{
 		if (x.length == 0) return Double.NaN;
@@ -48,25 +61,19 @@ public class Summary
 		return total / ((x.length * (x.length + 1)) / 2);
 	}
 
-	public static double mean(double[] x, boolean[] pos)
+	public static double mean(double[] x, int[] inds)
 	{
-		if (x.length == 0) return Double.NaN;
+		if (x.length == 0 || inds.length == 0) return Double.NaN;
+		assert x.length >= inds.length;
 
 		double total = 0;
-		int cnt = 0;
-		int  i = 0;
 
-		for (double v : x)
+		for (int ind : inds)
 		{
-			if (!pos[i++]) continue;
-
-			cnt++;
-			total += v;
+			total += x[ind];
 		}
 
-		if (cnt == 0) return Double.NaN;
-
-		return total / cnt;
+		return total / inds.length;
 	}
 
 	public static double max(double[] x)
@@ -139,11 +146,6 @@ public class Summary
 		return Math.sqrt(variance(x));
 	}
 
-	public static double stdev(double[] x, boolean[] pos)
-	{
-		return Math.sqrt(variance(x, pos));
-	}
-
 	public static double variance(double[] x)
 	{
 		double mean = Summary.mean(x);
@@ -156,26 +158,6 @@ public class Summary
 		}
 
 		var /= x.length;
-		return var;
-	}
-
-	public static double variance(double[] x, boolean[] pos)
-	{
-		double mean = Summary.mean(x, pos);
-		double var = 0;
-		int cnt = 0;
-		int i = 0;
-
-		for (double v : x)
-		{
-			if (!pos[i++]) continue;
-
-			cnt++;
-			double term = v - mean;
-			var += term * term;
-		}
-
-		var /= cnt;
 		return var;
 	}
 
