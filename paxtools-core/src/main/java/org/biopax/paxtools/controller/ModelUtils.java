@@ -185,10 +185,17 @@ public class ModelUtils {
      * Replaces existing BioPAX elements with ones from the map,
      * and recursively updates all the object references
      * (parents' object properties) in a single pass.
+     * At the end, it removes old and adds new elements to the model.
      * 
-     * It also removes old and adds new elements to the model;
-     * but consider using {@link Model#repair()} 
-     * and/or {@link #removeObjectsIfDangling(Class)} as needed.
+     * Even if current model is not self-consistent (is being currently modified, 
+     * i.e., some objects there refer to external, implicit children, via 
+     * BioPAX object properties or inverse properties), all BioPAX properties will be 
+     * recursively updated anyway (and objects replaced), but some inverse properties 
+     * may be or become dangling (still pointing to an external or replaced object); 
+     * so, consider using {@link Model#repair()} before or after this method 
+     * in such cases, as needed. Do not forget to write tests!
+     * Also consider using {@link #removeObjectsIfDangling(Class)} after 
+     * this method to also remove all dependents of the replaced objects.
      * 
      * @param subs
      */
@@ -414,30 +421,6 @@ public class ModelUtils {
 
 	
 	/**
-	 * Gets all the child BioPAX elements of a given BioPAX element
-	 * (using the "tuned" {@link Fetcher}) and adds them to a 
-	 * new model.
-	 * 
-	 * @param bpe
-	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
-	 * @return
-	 */
-	public Model getAllChildren(BioPAXElement bpe, Filter<PropertyEditor>... filters) {
-		Model model = this.model.getLevel().getDefaultFactory().createModel();
-		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
-		if(filters.length == 0	) {
-			new Fetcher(editorMap, nextStepFilter).fetch(bpe, model);
-		} else {
-			new Fetcher(editorMap, filters).fetch(bpe, model);
-		}
-		model.remove(bpe); // remove the parent
-		
-		return model;
-		//TODO limit to elements from this.model (add extra parameter)?
-	}
-	
-	
-	/**
 	 * Gets direct children of a given BioPAX element
 	 * and adds them to a new model.
 	 * 
@@ -449,7 +432,7 @@ public class ModelUtils {
 		Model model = this.model.getLevel().getDefaultFactory().createModel();
 		
 		AbstractTraverser traverser = new AbstractTraverser(
-				SimpleEditorMap.get(model.getLevel()), nextStepFilter) {
+				SimpleEditorMap.get(model.getLevel())) {
 			@Override
 			protected void visit(Object range, BioPAXElement domain,
 					Model model, PropertyEditor editor) {
@@ -468,46 +451,69 @@ public class ModelUtils {
 	
 	
 	/**
-	 * Collects all child BioPAX elements of a given BioPAX element
-	 * (using the "tuned" {@link Fetcher}), although some of them
-	 * might have the same ID (are "clones" - for a purpose of due to a mistake)
+	 * Gets all the child BioPAX elements of a given BioPAX element
+	 * (using the "tuned" {@link Fetcher}) and adds them to a 
+	 * new model.
 	 * 
 	 * @param bpe
 	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
 	 * @return
 	 */
-	public Set<BioPAXElement> getAllChildrenAllowClones(BioPAXElement bpe, Filter<PropertyEditor>... filters) {
+	public Model getAllChildren(BioPAXElement bpe,
+			Filter<PropertyEditor>... filters) {
+		Model model = this.model.getLevel().getDefaultFactory().createModel();
+		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
+		if (filters.length == 0) {
+			new Fetcher(editorMap, nextStepFilter).fetch(bpe, model);
+		} else {
+			new Fetcher(editorMap, filters).fetch(bpe, model);
+		}
+		model.remove(bpe); // remove the parent
+
+		return model;
+	}	
+
+	
+	/**
+	 * Collects all child BioPAX elements of a given BioPAX element
+	 * (using the "tuned" {@link Fetcher})
+	 * 
+	 * @param bpe
+	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
+	 * @return
+	 */
+	public Set<BioPAXElement> getAllChildrenAsSet(BioPAXElement bpe,
+			Filter<PropertyEditor>... filters) {
 		Set<BioPAXElement> toReturn = null;
 		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
-		if(filters.length == 0	) {
+		if (filters.length == 0) {
 			toReturn = new Fetcher(editorMap, nextStepFilter).fetch(bpe);
 		} else {
 			toReturn = new Fetcher(editorMap, filters).fetch(bpe);
 		}
-		
+
 		toReturn.remove(bpe); // remove the parent
+		
 		return toReturn;
 	}
 	
 	
 	/**
-	 * Collects direct children of a given BioPAX element, although some of them
-	 * might have the same ID (are "clones" - for a purpose of due to a mistake)
+	 * Collects direct children of a given BioPAX element
 	 * 
 	 * @param bpe
 	 * @return
 	 */
-	public Set<BioPAXElement> getDirectChildrenAllowClones(BioPAXElement bpe) 
+	public Set<BioPAXElement> getDirectChildrenAsSet(BioPAXElement bpe) 
 	{	
 		final Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
 		
 		AbstractTraverser traverser = new AbstractTraverser(
-				SimpleEditorMap.get(model.getLevel()), nextStepFilter) {
+				SimpleEditorMap.get(model.getLevel())) {
 			@Override
 			protected void visit(Object range, BioPAXElement domain,
 					Model model, PropertyEditor editor) {
-				if (range instanceof BioPAXElement 
-						&& !toReturn.contains((BioPAXElement) range)) {
+				if (range instanceof BioPAXElement) {
 					toReturn.add((BioPAXElement) range);
 				}
 			}

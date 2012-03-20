@@ -300,8 +300,12 @@ public class ModelImpl implements Model
 	 * @see Model#merge(Model)
 	 */
 	public void merge(Model source) {
-		new SimpleMerger(SimpleEditorMap.get(level))
-			.merge(this, source);
+		SimpleMerger merger = new SimpleMerger(
+			SimpleEditorMap.get(level));
+		if(source == null)
+			merger.merge(this); //repairs itself
+		else
+			merger.merge(this, source);
 	}
 
 	
@@ -350,8 +354,8 @@ public class ModelImpl implements Model
 //			}
 //		}
 		
-		// merge to itself - updates props and children
-		merge(this);
+		// updates props and children
+		merge(null);
 	}
 
 	@Override

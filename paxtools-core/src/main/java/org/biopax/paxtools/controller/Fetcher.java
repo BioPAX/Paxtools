@@ -64,12 +64,16 @@ public class Fetcher extends AbstractTraverser
     		model.add(element);
     	
         for(BioPAXElement e : children)
-        	if(!model.contains(e))
+        	if(!model.containsID(e.getRDFId())) {
         		model.add(e);
+        	} else if(!model.contains(e)) 
+        		log.warn("Found different child objects " +
+        		"with the same URI: " + e.getRDFId() +
+        		"(pick one and replace others, or use model.repair() to auto-fix)!"); 
 	}
     
     /**
-     * Returns the element and all its children set.
+     * Recursively finds and collects all child objects.
      * (This method can return different objects
      * with the same ID!)
      * 

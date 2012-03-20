@@ -88,20 +88,35 @@ public class SimpleMerger
 	 */
 	public void merge(Model target, Collection<? extends BioPAXElement> elements)
 	{
-		for (BioPAXElement bpe : elements)
+		// fix 'target' model: find implicit objects
+		// if there are different objects with the same URI, one will be used (no guarantee which one, no order)
+		@SuppressWarnings("unchecked") // safe, - no filters (empty array)
+		final Fetcher fetcher = new Fetcher(map);
+		for(BioPAXElement se :  new HashSet<BioPAXElement>(target.getObjects())) {
+			fetcher.fetch(se, target);
+		}
+		
+		// now, auto-complete source 'elements' by discovering all the implicit elements there
+		// copy all elements, as the collection can be immutable or unsafe to add elements there
+		final Set<BioPAXElement> sources = new HashSet<BioPAXElement>(elements);
+		for(BioPAXElement se : elements) {
+			sources.addAll(fetcher.fetch(se));
+		}
+		
+		
+		final Set<BioPAXElement> merged = new HashSet<BioPAXElement>();
+		// copy elements having new URIs
+		for (BioPAXElement bpe : sources)
 		{
-			BioPAXElement targetElement = target.getByID(bpe.getRDFId());
-			/*
-			 * if there is present the element with the same id, skip, do not
-			 * merge this one (see the warning below...)
+			/* if there is target element with the same id, 
+			 * do not copy it!
 			 */
-			if (targetElement == null)
+			if (!target.containsID(bpe.getRDFId()))
 			{
-				target.add(bpe);
 				/*
-				 * Warning: concrete target Model implementations may add 
-				 * child elements automatically (e.g., using jpa
-				 * cascades/recursion); it might also override target's
+				 * Warning: other than the default (ModelImpl) target Model 
+				 * implementations may add child elements recursively (e.g., 
+				 * using jpa cascades/recursion); it might also override target's
 				 * properties with the corresponding ones from the source, even
 				 * though SimpleMerger is not supposed to do this; also, is such cases,
 				 * the number of times this loop body is called can be less that
@@ -109,27 +124,17 @@ public class SimpleMerger
 				 * originally present in the target model, or - even equals to
 				 * one)
 				 */
-			}
+				target.add(bpe);
+				merged.add(bpe);
+			} 
 		}
 
-		/* 
-				 * Now that target model contains all source IDs,
-				 * although it might still refer to "external" child objects,
-				 * (i.e., such property values that were not listed in the
-				 * sources, thus - not in target model map yet),
-				 * let's update new objects' object fields to target's values:
-				 *
-				 * REM: here we iterate over all source elements!
-				 * But, things can be more tricky (when models already intersect
-				 * or the target refers to external child elements), in which
-				 * case, one may (but not necessarily have to) refresh the properties
-				 * (re-link everything to target's) by calling merge(target,target) -
-				 * i.e., merge to itself!
-				 */
-		for (BioPAXElement bpe : elements)
-		{
+		// update object references
+		for (BioPAXElement bpe : merged) {
 			updateObjectFields(bpe, target);
+			updateInverseObjectFields(bpe, target);
 		}
+		
 	}
 
 
@@ -164,8 +169,8 @@ public class SimpleMerger
 		{
 			if (editor instanceof ObjectPropertyEditor)
 			{
-				Set<BioPAXElement> values = new HashSet<BioPAXElement>((Set<BioPAXElement>) editor.getValueFromBean(
-						update));
+				Set<BioPAXElement> values = new HashSet<BioPAXElement>(
+					(Set<BioPAXElement>) editor.getValueFromBean(update));
 				for (BioPAXElement value : values) // threw concurrent modification exception here; fixed above.
 				{
 					migrateToTarget(update, target, editor, value);
@@ -175,32 +180,47 @@ public class SimpleMerger
 	}
 
 
+	private void updateInverseObjectFields(BioPAXElement bpe, Model target)
+	{
+		// get inverse prop. editors, e.g., for xrefOf(), entityReferenceOf(), etc..
+		// (in fact, they have same names as normal BioPAX properties, i.e., 'xref', etc..)
+		Set<ObjectPropertyEditor> editors = map.getInverseEditorsOf(bpe);
+		for (ObjectPropertyEditor editor : editors)
+		{
+			Set<BioPAXElement> values = new HashSet<BioPAXElement>(
+				(Set<BioPAXElement>) editor.getInverseAccessor().getValueFromBean(bpe));
+			for (BioPAXElement value : values) 
+			{
+				if(value != null && !target.contains(value)) {
+					log.warn("Updating inverse property " + editor.getProperty() + 
+						": value " + value.getRDFId() + "(" + value.getModelInterface().getSimpleName() 
+						+ ") " + " will be removed (not found in the merged model)");
+					if (editor.isInverseMultipleCardinality()) {
+						// mind the args order (it's reverse compared to "normal" editors use)!
+						editor.removeValueFromBean(bpe, value);
+					} else 
+						editor.setValueToBean(null, value);
+				}
+			}
+		}
+	}
+	
+
 	private void migrateToTarget(BioPAXElement update, Model target, PropertyEditor editor, BioPAXElement value)
 	{
 		if (value != null)
 		{
 			BioPAXElement newValue = target.getByID(value.getRDFId());
-
-			if (newValue == null) // not yet in the target model
-			{
-				if(log.isDebugEnabled())
-					log.debug("Target model does not have " + value.getRDFId() +
-				         " (i.e, a prop. value wasn't in the source model either);" 
-						+ " adding now... bean: "+ update.getRDFId() + " property: "
-						+ editor.getProperty());
-				target.add(value);
-				updateObjectFields(value, target); // recursion!
-			} else if (!value.equals(newValue))
-			{
+			if (!newValue.equals(value)) {
 				// newValue is a different, not null BioPAX element
-				if (!value.isEquivalent(newValue))
+				if (!newValue.isEquivalent(value))
 				{
-					String msg = "(Updating object fields) " + "the replacement (target) object " + newValue + " (" +
-					             newValue.getModelInterface().getSimpleName() + "), with the same RDFId (" +
-					             newValue.getRDFId() + "), " + " is not equivalent to the source: " + value + " (" +
-					             value.getModelInterface().getSimpleName() + ")!";
-					log.warn(msg); // we can live with it in some cases...
-					//(exception may be thrown below)
+					String msg = "Updating property " + editor.getProperty() +
+						"the replacement (target) object " + newValue + " (" +
+					    newValue.getModelInterface().getSimpleName() + "), with the same URI (" +
+					    newValue.getRDFId() + "), " + " is not equivalent to the source: " + 
+					    value + " (" + value.getModelInterface().getSimpleName() + ")!";
+					log.warn(msg); // we can live with it in some cases...(exception may be thrown below)
 				}
 
 				/* 
@@ -209,15 +229,10 @@ public class SimpleMerger
 				 * due to the property range error
 				 */
 				editor.setValueToBean(newValue, update);
-				if (editor.isMultipleCardinality())
-				{
+				if (editor.isMultipleCardinality()) {
 					editor.removeValueFromBean(value, update);
 				}
-			} else
-			{
-				// skip (same values)
-			}
-
+			} 
 		}
 	}
 
