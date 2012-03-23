@@ -146,6 +146,11 @@ public class Summary
 		return Math.sqrt(variance(x));
 	}
 
+	public static double stdev(double[] x, int[] ind)
+	{
+		return Math.sqrt(variance(x, ind));
+	}
+
 	public static double variance(double[] x)
 	{
 		double mean = Summary.mean(x);
@@ -158,6 +163,21 @@ public class Summary
 		}
 
 		var /= x.length;
+		return var;
+	}
+
+	public static double variance(double[] x, int[] ind)
+	{
+		double mean = Summary.mean(x, ind);
+		double var = 0;
+
+		for (int i : ind)
+		{
+			double term = x[i] - mean;
+			var += term * term;
+		}
+
+		var /= ind.length;
 		return var;
 	}
 

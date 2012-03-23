@@ -9,5 +9,5 @@ import java.util.Map;
  */
 public interface AlterationProvider
 {
-	public Map<Alteration, Change[]> getAlterations(Node node);
+	public AlterationPack getAlterations(Node node);
 }

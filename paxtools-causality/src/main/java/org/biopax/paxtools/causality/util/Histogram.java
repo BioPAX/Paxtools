@@ -133,6 +133,7 @@ public class Histogram
 			}
 
 			binMap.put(i, binMap.get(i) + h.binMap.get(i));
+			total += h.binMap.get(i);
 		}
 	}
 

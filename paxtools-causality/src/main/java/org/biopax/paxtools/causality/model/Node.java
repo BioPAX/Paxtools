@@ -26,4 +26,6 @@ public interface Node extends org.biopax.paxtools.query.model.Node
 	 * @return
 	 */
 	public void setPathSign(int pathSign);
+
+
 }

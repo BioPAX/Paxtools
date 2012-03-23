@@ -1,6 +1,7 @@
 package org.biopax.paxtools.causality.data;
 
 import org.biopax.paxtools.causality.model.Alteration;
+import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Change;
 import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.causality.util.EGUtil;
@@ -26,8 +27,10 @@ public class GEOAccessor extends AlterationProviderAdaptor
 	protected int[] controlIndex;
 
 	protected Map<String, double[]> dataMap;
+
+	protected Map<String, AlterationPack> memo;
 	
-	protected static String dataDirectory = "data";
+	protected static String dataDirectory = "geo_data";
 	
 	protected final static String SERIES_URL_PREFIX =
 		"ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SeriesMatrix/";
@@ -39,10 +42,11 @@ public class GEOAccessor extends AlterationProviderAdaptor
 
 	protected final static String PLATFORM_LINE_INDICATOR = "!Series_platform_id";
 
-	protected final static String[] EG_NAMES = new String[]{"ENTREZ_GENE_ID"};
-	protected final static String[] SYMBOL_NAMES = new String[]{"Gene Symbol"};
+	protected final static String[] EG_NAMES = new String[]{"ENTREZ_GENE_ID", "GENE"};
+	protected final static String[] SYMBOL_NAMES = new String[]{"Gene Symbol", "GENE_SYMBOL"};
 	
-	static double changeThr = 1.5;
+	static double devThr = 1;
+	static double changeThr = 2;
 	static double changeThrInverse = 1 / changeThr;
 
 	public GEOAccessor(String gseID, int[] testIndex, int[] controlIndex)
@@ -70,6 +74,7 @@ public class GEOAccessor extends AlterationProviderAdaptor
 		System.out.println("Reading data");
 		Map<String, List<String>> refMap = parsePlatform(platformFile);
 		dataMap = parseDataFile(seriesFile, refMap);
+		memo = new HashMap<String, AlterationPack>();
 	}
 
 	protected File getSeriesFile()
@@ -351,7 +356,7 @@ public class GEOAccessor extends AlterationProviderAdaptor
 			{
 				for (String eg : refMap.get(id))
 				{
-					if (!eg2vals.containsKey(id)) eg2vals.put(eg, new ArrayList<double[]>());
+					if (!eg2vals.containsKey(eg)) eg2vals.put(eg, new ArrayList<double[]>());
 					eg2vals.get(eg).add(toNum(valStr));
 				}
 			}
@@ -361,18 +366,24 @@ public class GEOAccessor extends AlterationProviderAdaptor
 	}
 
 	@Override
-	public Map<Alteration, Change[]> getAlterations(Node node)
+	public AlterationPack getAlterations(Node node)
 	{
 		String id = getEntrezGeneID(node);
 
-		return getAlterations(id);
+		if (memo.containsKey(id)) return memo.get(id);
+
+		AlterationPack alt = getAlterations(id);
+		memo.put(id, alt);
+
+		return alt;
 	}
 
-	public Map<Alteration, Change[]> getAlterations(String id)
+	public AlterationPack getAlterations(String id)
 	{
 		double[] value = dataMap.get(id);
 
 		double ctrlMean = Summary.mean(value, controlIndex);
+		double ctrlSD = Summary.stdev(value, controlIndex);
 
 		Change[] ch = new Change[testIndex.length];
 
@@ -380,17 +391,21 @@ public class GEOAccessor extends AlterationProviderAdaptor
 		for (int i : testIndex)
 		{
 			double ratio = value[i] / ctrlMean;
+			double dif = Math.abs(value[i] - ctrlMean);
 
-			if (ratio > changeThr) ch[index] = Change.ACTIVATING;
-			else if (ratio < changeThrInverse) ch[index] = Change.INHIBITING;
-			else ch[index] = Change.NO_CHANGE;
+			ch[index] = Change.NO_CHANGE;
+			if (dif > devThr * ctrlSD)
+			{
+				if (ratio > changeThr) ch[index] = Change.ACTIVATING;
+				else if (ratio < changeThrInverse) ch[index] = Change.INHIBITING;
+			}
 			index++;
 		}
 
-		Map<Alteration, Change[]> map = new HashMap<Alteration, Change[]>();
-		map.put(Alteration.EXPRESSION, ch);
+		AlterationPack pack = new AlterationPack();
+		pack.put(Alteration.EXPRESSION, ch);
 
-		return map;
+		return pack;
 	}
 
 	static
