@@ -82,6 +82,9 @@ public class ModelUtilsTest {
 		assertEquals(2, c.getComponent().size());
 		assertTrue(m.contains(p3)); // added!
 		assertFalse(m.contains(p2)); // removed!
+		assertTrue(c.getComponent().contains(p1)); // untouched!
+		assertTrue(c.getComponent().contains(p3)); // new!
+		assertFalse(c.getComponent().contains(p2)); 
 		
 		//old children are still there
 		assertTrue(m.contains(pr1));
@@ -90,10 +93,12 @@ public class ModelUtilsTest {
 		assertTrue(m.contains(x2));
 		
 		// new children - not yet
+		// (replace is 'shallow', does not affect children of replaced objects)
 		assertFalse(m.contains(pr3));
 		
-		// now - repair will add new children
+		// now - repair will find all new children
 		m.repair();
+		
 		assertEquals(8, m.getObjects().size()); // + pr3
 		assertTrue(m.contains(pr3)); // added!
 		assertTrue(m.contains(pr2)); // not deleted (may be dangling now)!
@@ -101,9 +106,9 @@ public class ModelUtilsTest {
 		assertTrue(m.contains(pr1)); // not deleted (may be dangling now)!
 		assertTrue(m.contains(x1)); // not deleted (may be dangling now)!
 		
-		// delete children of the replaced element if dangling
+		// delete dangling
 		ModelUtils mu = new ModelUtils(m);
-		mu.removeDependentsIfDangling(p2);
+		mu.removeObjectsIfDangling(ProteinReference.class);
 		
 		// pr2 - removed
 		assertEquals(7, m.getObjects().size());
@@ -112,7 +117,7 @@ public class ModelUtilsTest {
 		// ok to replace with null
 		m.replace(p3, null);
 		assertEquals(1, c.getComponent().size());
-		mu.removeDependentsIfDangling(p3);
+		mu.removeObjectsIfDangling(UtilityClass.class);
 		assertFalse(m.contains(pr3)); // deleted!
 		assertFalse(m.contains(x2)); // deleted!
 		

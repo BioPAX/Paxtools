@@ -67,9 +67,9 @@ public class Fetcher extends AbstractTraverser
         	if(!model.containsID(e.getRDFId())) {
         		model.add(e);
         	} else if(!model.contains(e)) 
-        		log.warn("Found different child objects " +
+        		throw new AssertionError("Found different child objects " +
         		"with the same URI: " + e.getRDFId() +
-        		"(pick one and replace others, or use model.repair() to auto-fix)!"); 
+        		"(pick one and do replace or merge others!)"); 
 	}
     
     /**

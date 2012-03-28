@@ -88,15 +88,17 @@ public class SimpleMerger
 	 */
 	public void merge(Model target, Collection<? extends BioPAXElement> elements)
 	{
-		// fix 'target' model: find implicit objects
-		// if there are different objects with the same URI, one will be used (no guarantee which one, no order)
+		// First, fix 'target' model: find implicit objects
+		// if there are different objects with the same URI, 
+		// only one will be added to the model (no guarantee which one),
+		// but next steps should fix it (update object references to the added one)
 		@SuppressWarnings("unchecked") // safe, - no filters (empty array)
 		final Fetcher fetcher = new Fetcher(map);
 		for(BioPAXElement se :  new HashSet<BioPAXElement>(target.getObjects())) {
 			fetcher.fetch(se, target);
 		}
 		
-		// now, auto-complete source 'elements' by discovering all the implicit elements there
+		// Second, auto-complete source 'elements' by discovering all the implicit elements there
 		// copy all elements, as the collection can be immutable or unsafe to add elements there
 		final Set<BioPAXElement> sources = new HashSet<BioPAXElement>(elements);
 		for(BioPAXElement se : elements) {
@@ -104,12 +106,14 @@ public class SimpleMerger
 		}
 		
 		
+		// Next, we only copy elements having new URIs -
 		final Set<BioPAXElement> merged = new HashSet<BioPAXElement>();
-		// copy elements having new URIs
 		for (BioPAXElement bpe : sources)
 		{
-			/* if there is target element with the same id, 
-			 * do not copy it!
+			/* if there exists target element with the same id, 
+			 * do not copy this one! (this 'source' element will 
+			 * be soon replaced with the target's, same id, one 
+			 * in all parent objects)
 			 */
 			if (!target.containsID(bpe.getRDFId()))
 			{
@@ -125,12 +129,14 @@ public class SimpleMerger
 				 * one)
 				 */
 				target.add(bpe);
-				merged.add(bpe);
 			} 
 		}
 
-		// update object references
-		for (BioPAXElement bpe : merged) {
+		// Finally, update object references -
+		// for all elements in the 'target', - because 'target' model 
+		// itself might have had issues as well, particularly, more 
+		// than one child object having the same URI (see comments above)
+		for (BioPAXElement bpe : target.getObjects()) {
 			updateObjectFields(bpe, target);
 			updateInverseObjectFields(bpe, target);
 		}
@@ -193,7 +199,7 @@ public class SimpleMerger
 			{
 				if(value != null && !target.contains(value)) {
 					log.warn("Updating inverse property " + editor.getProperty() + 
-						": value " + value.getRDFId() + "(" + value.getModelInterface().getSimpleName() 
+						"Of: value " + value.getRDFId() + "(" + value.getModelInterface().getSimpleName() 
 						+ ") " + " will be removed (not found in the merged model)");
 					if (editor.isInverseMultipleCardinality()) {
 						// mind the args order (it's reverse compared to "normal" editors use)!

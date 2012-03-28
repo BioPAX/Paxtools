@@ -199,7 +199,7 @@ public class ModelUtils {
      * 
      * @param subs
      */
-    public <E extends BioPAXElement> void replace(final Map<E,E> subs) 
+    public void replace(final Map<? extends BioPAXElement, ? extends BioPAXElement> subs) 
     {    	
 		Visitor visitor = new Visitor() {
 			@Override
@@ -255,7 +255,10 @@ public class ModelUtils {
      * element were (or already was) removed from the model.
      * 
      * @param parent
+     * 
+     * @deprecated use model.remove and more generic {@link #removeObjectsIfDangling(Class)} instead
      */
+    @Deprecated
     public void removeDependentsIfDangling(BioPAXElement parent) 
     {	
 		EditorMap em = SimpleEditorMap.get(model.getLevel());
