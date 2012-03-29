@@ -60,4 +60,9 @@ public abstract class AbstractEdge implements Edge
 	{
 		return 1;
 	}
+
+	public void clear()
+	{
+	}
+
 }

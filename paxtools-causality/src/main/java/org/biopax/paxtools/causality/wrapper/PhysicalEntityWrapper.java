@@ -1,16 +1,14 @@
 package org.biopax.paxtools.causality.wrapper;
 
+import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.model.level3.Xref;
-import org.biopax.paxtools.query.wrapperL3.GraphL3;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Ozgun Babur
@@ -19,6 +17,8 @@ public class PhysicalEntityWrapper extends org.biopax.paxtools.query.wrapperL3.P
 	implements Node
 {
 	protected List<Xref> xrefs;
+
+	AlterationPack alterations;
 
 	public PhysicalEntityWrapper(PhysicalEntity pe, Graph graph)
 	{
@@ -39,5 +39,24 @@ public class PhysicalEntityWrapper extends org.biopax.paxtools.query.wrapperL3.P
 			}
 		}
 		return xrefs;
+	}
+
+	public AlterationPack getAlterations()
+	{
+		if (alterations == null)
+		{
+			alterations = getGraph().getAlterationProvider().getAlterations(this);
+		}
+		return alterations;
+	}
+
+	public void setAlterations(AlterationPack pack)
+	{
+		this.alterations = pack;
+	}
+	
+	public Graph getGraph()
+	{
+		return (Graph) super.getGraph();
 	}
 }

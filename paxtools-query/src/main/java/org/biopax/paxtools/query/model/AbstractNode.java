@@ -125,4 +125,9 @@ public abstract class AbstractNode implements Node
 	{
 		this.pathSign = pathSign;
 	}
+
+	public void clear()
+	{
+		this.pathSign = 0;
+	}
 }

@@ -2,9 +2,7 @@ package org.biopax.paxtools.causality;
 
 import org.biopax.paxtools.causality.analysis.BFS;
 import org.biopax.paxtools.causality.analysis.Exhaustive;
-import org.biopax.paxtools.causality.model.Node;
-import org.biopax.paxtools.causality.model.Path;
-import org.biopax.paxtools.causality.model.PathUser;
+import org.biopax.paxtools.causality.model.*;
 import org.biopax.paxtools.causality.util.Histogram;
 import org.biopax.paxtools.causality.wrapper.Graph;
 import org.biopax.paxtools.causality.wrapper.PhysicalEntityWrapper;
@@ -156,6 +154,56 @@ public class CausalityTest
 	}
 
 	@Test
+	public void testCausativePathSearch()
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(getClass().getResourceAsStream("AR-TP53.owl"));
+
+		List<Path> paths = CausalityExecuter.findCausativePaths(model, new AlterationProvider()
+		{
+			final AlterationPack pack_AR = new AlterationPack();
+			final AlterationPack pack_TP53 = new AlterationPack();
+
+			@Override
+			public AlterationPack getAlterations(Node node)
+			{
+				if (node instanceof PhysicalEntityWrapper)
+				{
+					PhysicalEntityWrapper pew = (PhysicalEntityWrapper) node;
+					PhysicalEntity pe = pew.getPhysicalEntity();
+					
+					if (pe.getDisplayName().equals("AR"))
+					{
+						if (pack_AR.getSize() == 0)
+						{
+							pack_AR.put(Alteration.MUTATION,
+								new Change[]{Change.ACTIVATING, Change.ACTIVATING});
+							pack_AR.complete();
+						}
+						return pack_AR;
+					}
+					else if (pe.getDisplayName().equals("p53"))
+					{
+						if (pack_TP53.getSize() == 0)
+						{
+							pack_TP53.put(Alteration.PROTEIN_LEVEL,
+								new Change[]{Change.ACTIVATING, Change.ACTIVATING});
+							pack_TP53.complete();
+						}
+						return pack_TP53;
+					}
+				}
+				return null;
+			}
+		}, 3, 0.1, null);
+
+		for (Path path : paths)
+		{
+			System.out.println(path);
+		}
+	}
+
+	@Test
 	@Ignore
 	public void loadTest() throws FileNotFoundException
 	{
@@ -170,11 +218,11 @@ public class CausalityTest
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void activityTest() throws FileNotFoundException
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/pc_fall2011.owl"));
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc.owl"));
 
 		Map<EntityReference, Integer> complexCount = new HashMap<EntityReference, Integer>();
 		Map<EntityReference, Integer> activityCount = new HashMap<EntityReference, Integer>();
@@ -201,7 +249,7 @@ public class CausalityTest
 
 		for (EntityReference er : complexCount.keySet())
 		{
-			if (complexCount.get(er) < 3) continue;
+			if (complexCount.get(er) < 1) continue;
 
 			double ratio;
 
