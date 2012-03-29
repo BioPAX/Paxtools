@@ -12,61 +12,59 @@ import java.io.*;
 /**
 
  */
-public class ProteinStateNetworkAnalyzerTest {
+public class ProteinStateNetworkAnalyzerTest
+{
 
-        static BioPAXIOHandler handler = new SimpleIOHandler();
+    static BioPAXIOHandler handler = new SimpleIOHandler();
 
-        // test out - to target/test-classes dir:
-        static final String outFile =
-                StateNetworkAnalyzer.class.getResource("/").getPath() + "PSNAnalyzer.out" +
-                        ".txt";
+    // test out - to target/test-classes dir:
+    static final String outFile =
+            StateNetworkAnalyzer.class.getResource("/").getPath() + "PSNAnalyzer.out" +
+                    ".txt";
 
-        PrintStream out = null;
+    PrintStream out = null;
 
-        @Before
-        public void setupTest() throws IOException
+    @Before
+    public void setupTest() throws IOException
+    {
+        FileOutputStream out1 = new FileOutputStream(outFile, true);
+        FileDescriptor fd = out1.getFD();
+        System.out.println(outFile);
+        out = new PrintStream(out1);
+    }
+
+    @After
+    public void finishTest() throws IOException
+    {
+        out.flush();
+        out.close();
+    }
+
+    @Test
+    public void testProteinStateAnalysis() throws Exception
+    {
+        File testDir = new File(getClass().getResource("/L3").getFile());
+        StateNetworkAnalyzer analyzer = new StateNetworkAnalyzer();
+
+
+        for (String s : testDir.list(getFilter()))
         {
-            FileOutputStream out1 = new FileOutputStream(outFile, true);
-            FileDescriptor fd = out1.getFD();
-            System.out.println(outFile);
-            out = new PrintStream(out1);
+            InputStream in = getClass().getResourceAsStream("/L3/" + s);
+            Model model = handler.convertFromOWL(in);
+            analyzer.analyzeStates(model);
+            analyzer.writeStateNetworkAnalysis(out);
+            in.close();
         }
+    }
 
-        @After
-        public void finishTest() throws IOException
+    private FilenameFilter getFilter()
+    {
+        return new FilenameFilter()
         {
-            out.flush();
-            out.close();
-        }
-
-        @Test
-        public void testProteinStateAnalysis() throws Exception
-        {
-            File testDir = new File(getClass().getResource("/L3").getFile());
-            StateNetworkAnalyzer analyzer = new StateNetworkAnalyzer();
-
-
-            for (String s : testDir.list(getFilter()))
+            public boolean accept(File dir, String name)
             {
-                InputStream in = getClass().getResourceAsStream("/L3/" + s);
-                Model model = handler.convertFromOWL(in);
-                analyzer.analyzeStates(model);
-                analyzer.writeStateNetworkAnalysis(out);
-                in.close();
+                return (name.endsWith(".owl"));
             }
-        }
-
-        private FilenameFilter getFilter()
-        {
-            return new FilenameFilter()
-            {
-                public boolean accept(File dir, String name)
-                {
-                    return (name.endsWith(".owl"));
-                }
-            };
-        }
-
-
-
+        };
+    }
 }

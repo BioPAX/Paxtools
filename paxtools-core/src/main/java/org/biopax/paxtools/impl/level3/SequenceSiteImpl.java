@@ -44,11 +44,10 @@ public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSi
 			return false;
 		
 		final SequenceSite that = (SequenceSite) element;
-		return
-			(sequencePosition == that.getSequencePosition()) &&
-				(positionStatus != null ?
+		return sequencePosition == that.getSequencePosition() &&
+		    positionStatus != null ?
 					positionStatus.equals(that.getPositionStatus()) :
-					that.getPositionStatus() == null);
+					that.getPositionStatus() == null;
 	}
 
 	public int equivalenceCode()

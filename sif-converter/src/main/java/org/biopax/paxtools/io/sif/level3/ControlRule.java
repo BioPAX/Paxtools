@@ -104,7 +104,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 	private void mineTarget(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3, Control cont,
 			Conversion conv, Set<BioPAXElement> intersection)
 	{
-		if (Simplify.entityHasAChange(target, conv, is3.getGroupMap(),stateChanges))
+		if (Simplify.entityHasAChange(target, conv, is3.getGroupMap(),stateChanges.get(target)))
 		{
 
 			// If it is simple, then we check if it is also on both sides, regarding the

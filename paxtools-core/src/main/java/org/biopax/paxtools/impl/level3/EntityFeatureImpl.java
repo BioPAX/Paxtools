@@ -169,54 +169,51 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	{
 		this.memberFeatureOf = memberFeatureOf;
 	}
-	
-	@Transient
-	public boolean atEquivalentLocation(EntityFeature that)
-	{
-		return 
-			(getEntityFeatureOf() != null ?
-				getEntityFeatureOf().isEquivalent(that.getEntityFeatureOf())
-				: that.getEntityFeatureOf() == null)
-		    && 
-		    (getFeatureLocation() != null ?
-		    	getFeatureLocation().isEquivalent(that.getFeatureLocation())
-		    	: that.getFeatureLocation() == null);
-	}
 
-	@Transient
-	protected int locationCode()
-	{
-		int code = this.getEntityFeatureOf().equivalenceCode();
-		code=code+13*this.getFeatureLocation().equivalenceCode();
+    @Transient
+    /**
+     * This method returns true if and only if two entity features are on the same known location on a known ER.
+     * Unknown location or ER on any one of the features results in a false.
+     */
+    public boolean atEquivalentLocation(EntityFeature that) {
+        return getEntityFeatureOf() != null &&
+                getEntityFeatureOf().isEquivalent(that.getEntityFeatureOf()) &&
+                getFeatureLocation() != null &&
+                getFeatureLocation().isEquivalent(that.getFeatureLocation());
+    }
 
-		return code;
-	}
+    @Transient
+    protected int locationCode() {
+        if (this.getEntityFeatureOf() == null || this.getFeatureLocation()==null) return hashCode();
+        else {
+            return
+                    this.getEntityFeatureOf().equivalenceCode()+
+                            13 * this.getFeatureLocation().equivalenceCode();
+        }
+    }
 
-	@Override
-	protected boolean semanticallyEquivalent(BioPAXElement element)
-	{
-		if(!(element instanceof EntityFeature))
-			return false;
-		
-		EntityFeature that = (EntityFeature) element;
-		boolean value = atEquivalentLocation(that);
-		if (value)
-		{
-			SequenceRegionVocabulary myType = this.featureLocationType;
-			SequenceRegionVocabulary yourType = that.getFeatureLocationType();
-			value = (yourType == null) ?
-				myType == null : yourType.isEquivalent(myType);
-		}
-		return value;
-	}
+    @Override
+    protected boolean semanticallyEquivalent(BioPAXElement element) {
+        if (!(element instanceof EntityFeature))
+            return false;
 
-	@Override
-	public int equivalenceCode()
-	{
-		SequenceRegionVocabulary siteType = this.getFeatureLocationType();
-		int code = siteType == null ? 0 : siteType.hashCode();
-		return code + 13 * this.locationCode();
-	}
+        EntityFeature that = (EntityFeature) element;
+        boolean value = atEquivalentLocation(that);
+        if (value) {
+            SequenceRegionVocabulary myType = this.featureLocationType;
+            SequenceRegionVocabulary yourType = that.getFeatureLocationType();
+            value = (yourType == null) ?
+                    myType == null : yourType.isEquivalent(myType);
+        }
+        return value;
+    }
+
+    @Override
+    public int equivalenceCode() {
+        SequenceRegionVocabulary siteType = this.getFeatureLocationType();
+        int code = siteType == null ? 0 : siteType.hashCode();
+        return code + 13 * this.locationCode();
+    }
 
 	protected void setFeatureOf(Set<PhysicalEntity> featureOf)
 	{

@@ -7,7 +7,6 @@ import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
@@ -68,8 +67,17 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     	if(!(element instanceof SequenceEntityReference)) return false;
     	SequenceEntityReference that = (SequenceEntityReference) element;
     	
-    	return ((getOrganism() != null) ? getOrganism().isEquivalent(that.getOrganism()) : that.getOrganism()==null)
-    		&& ((getSequence() != null) ? getSequence().equalsIgnoreCase(that.getSequence()) : that.getSequence()==null)
-    		&& super.semanticallyEquivalent(element);
+    	return  getOrganism() != null
+                && getOrganism().isEquivalent(that.getOrganism())
+                && getSequence() != null
+                && getSequence().equalsIgnoreCase(that.getSequence());
+
+    }
+
+    @Override
+    public int equivalenceCode()
+    {
+        return this.organism==null || this.sequence==null? hashCode():
+                this.organism.equivalenceCode()+17*this.sequence.hashCode();
     }
 }

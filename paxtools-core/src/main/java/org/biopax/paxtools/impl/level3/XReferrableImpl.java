@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
@@ -84,16 +83,6 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 		}
 	}
 
-	@Override
-	protected boolean semanticallyEquivalent(BioPAXElement element)
-	{
-		boolean equivalence = false;
-		if (element instanceof XReferrable)
-		{
-			equivalence = hasCommonUnificationXref((XReferrable) element);
-		}
-		return equivalence;
-	}
 
 	@Override
 	public int equivalenceCode()

@@ -1,34 +1,48 @@
 package org.biopax.paxtools.io.sif.level3;
 
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Conversion;
-import org.biopax.paxtools.model.level3.EntityFeature;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
+import org.biopax.paxtools.model.level3.*;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  */
-public class PEStateChange
-{
-    Map<EntityFeature,ChangeType> deltaFeatures;
+public class PEStateChange {
+
+    Map<EntityFeature, ChangeType> deltaFeatures;
+    HashMap<Control, Boolean> deltaControls = new HashMap<Control, Boolean>();
+
+    private PhysicalEntity leftRoot;
+    private PhysicalEntity rightRoot;
     Conversion conv;
     SimplePhysicalEntity left;
     SimplePhysicalEntity right;
+    static PathAccessor controllers = new PathAccessor("Conversion/controlledOf/controller");
 
 
-    public PEStateChange(SimplePhysicalEntity left, SimplePhysicalEntity right, BioPAXElement element, Conversion conv)
-    {
+    public PEStateChange(
+            SimplePhysicalEntity left,
+            SimplePhysicalEntity right,
+            PhysicalEntity leftRoot,
+            PhysicalEntity rightRoot,
+            BioPAXElement element,
+            Conversion conv) {
         this.left = left;
-        this.right= right;
+        this.right = right;
+        this.leftRoot = leftRoot;
+        this.rightRoot = rightRoot;
         this.conv = conv;
-        this.deltaFeatures=ChangeType.getDeltaFeatures(left,right);
+        this.deltaFeatures = ChangeType.getDeltaFeatures(left, right, leftRoot, rightRoot);
+        calculateDeltaControls();
     }
 
+
     @Override
-    public String toString()
-    {
-        return this.left.getStandardName()+"--"+this.right.getDisplayName()+"("+this.deltaFeatures+")";
+    public String toString() {
+        return this.left.getStandardName() + "--" + this.right.getDisplayName() + "(" + this.deltaFeatures + ")";
     }
 
     @Override
@@ -63,6 +77,51 @@ public class PEStateChange
         return right;
     }
 
+    public SimplePhysicalEntity changedFrom(SimplePhysicalEntity source) {
+        if (this.left == source) return getFlow(true, true);
+        else if (this.right == source) return getFlow(false, false);
+        else return null;
+    }
+
+    public SimplePhysicalEntity changedInto(SimplePhysicalEntity source) {
+        if (this.left == source) return getFlow(true, false);
+        else if (this.right == source) return getFlow(false, true);
+        else return null;
+    }
+
+    private SimplePhysicalEntity getFlow(boolean onLeft, boolean forward) {
+        boolean flow = canFlow(onLeft, forward);
+
+        return flow ? onLeft ? this.right : this.left : null;
+    }
+
+    /**
+     * This method returns true iff conversion can go from/to the side specified by the first parameter in the direction
+     * specified by the second parameter
+     *
+     * @param targetSide true if flow needs to be checked from/to the left side false otherwise
+     * @param forward    true if we are asking if a flow can start from the targetSide, false if we are asking if a flow
+     *                   can go to the targetSide.
+     * @return
+     */
+    private boolean canFlow(boolean targetSide, boolean forward) {
+        boolean flow = true;
+        ConversionDirectionType cd = conv.getConversionDirection();
+        if (cd != null)
+            switch (cd) {
+                case LEFT_TO_RIGHT:
+                    flow = !(targetSide ^ forward);
+                    break;
+                case RIGHT_TO_LEFT:
+                    flow = (targetSide ^ forward);
+                    break;
+                default:
+                    flow = true;
+
+            }
+        return flow;
+    }
+
     @Override
     public int hashCode() {
         int result = deltaFeatures != null ? deltaFeatures.hashCode() : 0;
@@ -70,5 +129,47 @@ public class PEStateChange
         result = 31 * result + (left != null ? left.hashCode() : 0);
         result = 31 * result + (right != null ? right.hashCode() : 0);
         return result;
+    }
+
+    public PhysicalEntity getLeftRoot() {
+        return leftRoot;
+    }
+
+    public PhysicalEntity getRightRoot() {
+        return rightRoot;
+    }
+
+    public Map<Control, Boolean> getDeltaControls() {
+        return deltaControls;
+
+    }
+
+    private void calculateDeltaControls() {
+        Set<Control> left = this.leftRoot == null ? null : this.getLeftRoot().getControllerOf();
+        Set<Control> right = this.rightRoot == null ? null : this.getRightRoot().getControllerOf();
+
+        if (left != null)
+            for (Control control : left) {
+                deltaControls.put(control, true);
+            }
+        if (right != null)
+            for (Control control : right) {
+                if (deltaControls.containsKey(control)) {
+                    deltaControls.remove(control);
+                } else
+                    deltaControls.put(control, false);
+
+            }
+
+    }
+
+    public String getControllersAsString() {
+        Set valueFromBean = controllers.getValueFromBean(conv);
+        StringBuilder value = new StringBuilder();
+        for (Object o : valueFromBean) {
+            Controller controller = (Controller) o;
+            value.append(controller.getName() + "[" + controller.getXref() + "] ");
+        }
+        return value.toString();
     }
 }

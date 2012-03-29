@@ -1,6 +1,10 @@
 package org.biopax.paxtools.fixer;
 
 import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandlerTest;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.junit.Test;
@@ -15,7 +19,7 @@ import static org.junit.Assert.assertThat;
  */
 public class FixerTest
 {
-	@Test
+
 	public void testGenericNormalization()
 	{
 		Mock mock = new Mock();
@@ -37,4 +41,12 @@ public class FixerTest
 
 
 	}
+
+    @Test
+    public void testFixEquivalentObjects()
+    {
+        Model model = SimpleIOHandlerTest.getL3Model(new SimpleIOHandler(BioPAXLevel.L3));
+        Fixer fixer = new Fixer();
+        fixer.replaceEquivalentFeatures(model);
+    }
 }

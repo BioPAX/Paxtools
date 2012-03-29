@@ -46,22 +46,17 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
 
         final SequenceInterval that = (SequenceInterval) element;
         return
-                (sequenceIntervalBegin != null ?
-                        sequenceIntervalBegin.equals(
-                                that.getSequenceIntervalBegin()) :
-                        that.getSequenceIntervalBegin() == null)
-                        &&
-                        (sequenceIntervalEnd != null ?
-                                sequenceIntervalEnd.equals(
-                                        that.getSequenceIntervalEnd()) :
-                                that.getSequenceIntervalEnd() == null);
+          sequenceIntervalBegin != null &&
+          sequenceIntervalBegin.isEquivalent(that.getSequenceIntervalBegin()) &&
+          sequenceIntervalEnd != null &&
+          sequenceIntervalEnd.isEquivalent(that.getSequenceIntervalEnd());
     }
 
     public int equivalenceCode() {
         int result = 29 + (sequenceIntervalBegin != null ?
-                sequenceIntervalBegin.hashCode() : 0);
+                sequenceIntervalBegin.equivalenceCode() : 0);
         result = 29 * result +
-                (sequenceIntervalEnd != null ? sequenceIntervalEnd.hashCode() :
+                (sequenceIntervalEnd != null ? sequenceIntervalEnd.equivalenceCode() :
                         0);
         return result;
     }

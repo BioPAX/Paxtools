@@ -59,8 +59,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     @Transient
     public boolean isEquivalent(BioPAXElement element)
     {
-        return this.equals(element) || this.getModelInterface().isInstance(element) &&
-                this.semanticallyEquivalent(element);
+        return this.equals(element) || this.semanticallyEquivalent(element);
     }
 
     protected boolean semanticallyEquivalent(BioPAXElement element)

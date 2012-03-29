@@ -2,81 +2,89 @@ package org.biopax.paxtools.io.sif.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
  */
-public class Simplify
-{
-    private static Log log= LogFactory.getLog(Simplify.class);
+public class Simplify {
+    private static Log log = LogFactory.getLog(Simplify.class);
+    private static PathAccessor complexPath = new PathAccessor("Complex/component*");
 
     public static boolean entityHasAChange(
-        BioPAXElement element,
-        Conversion conv,
-        GroupMap map,
-        Map<BioPAXElement, Set<PEStateChange>> stateChanges)
-    {
-        Set<SimplePhysicalEntity> left = getAssociatedStates(element, conv.getLeft(), map);
-        Set<SimplePhysicalEntity> right = getAssociatedStates(element, conv.getRight(), map);
+            BioPAXElement element,
+            Conversion conv,
+            GroupMap map,
+            Set<PEStateChange> changeSet) {
+        SimplePhysicalEntity left = null;
+        SimplePhysicalEntity right = null;
+        PhysicalEntity leftRoot = null;
+        PhysicalEntity rightRoot = null;
 
-        if (left.isEmpty() || right.isEmpty()) return true;
+        if (element == null) {
+            if (log.isWarnEnabled()) log.warn("Skipping ");
+            return false;
+        }
 
-        for (SimplePhysicalEntity lpe : left) {
-            for (SimplePhysicalEntity rpe : right) {
-                if (!lpe.equals(rpe)) {
-                    if (stateChanges!=null)
-                    {
-                        Set<PEStateChange> changeSet = stateChanges.get(element);
-                        if (changeSet == null)
-                        {
-                            changeSet = new HashSet<PEStateChange>();
-                            stateChanges.put(element, changeSet);
-                        }
-                        changeSet.add(new PEStateChange(lpe, rpe, element, conv));
-                    }
-                }
-                return true;
+        for (PhysicalEntity pe : conv.getLeft()) {
+            left = getAssociatedState(element, pe, map);
+            if (left != null) {
+                leftRoot = pe;
+                break;
             }
+        }
+        for (PhysicalEntity pe : conv.getRight()) {
+            right = getAssociatedState(element, pe, map);
+            if (right != null) {
+                rightRoot = pe;
+                break;
+            }
+        }
+
+        if (left == null || right == null || !leftRoot.equals(rightRoot)) {
+            if (changeSet != null) {
+                changeSet.add(new PEStateChange(left, right, leftRoot, rightRoot, element, conv));
+                //TODO three things
+                //If in complex - match complex.memberPE
+                //If not in complex- match pe.memberPE
+                //Match ER-level generics. - do not exist in Reactome -so TODO for now.
+
+
+            }
+
+            return true;
         }
         return false;
     }
 
-    private static Set<SimplePhysicalEntity> getAssociatedStates(BioPAXElement element, Set<PhysicalEntity> pes,
-                                                           GroupMap map) {
-        Set<SimplePhysicalEntity> set = new HashSet<SimplePhysicalEntity>();
 
-        if (element == null) {
-            if (log.isWarnEnabled()) log.warn("Skipping ");
-            return set; // empty
-        }
-
-        for (PhysicalEntity pe : pes)
-        {
-            addMappedElement(element, map, set, pe);
-            if (pe instanceof Complex) {
-                for (PhysicalEntity member : ((Complex) pe).getComponent()) {
-                    addMappedElement(element, map, set, member);
+    private static SimplePhysicalEntity getAssociatedState(BioPAXElement element, PhysicalEntity pe, GroupMap map) {
+        if (pe instanceof Complex) {
+            for (PhysicalEntity component : ((Complex) pe).getComponent()) {
+                SimplePhysicalEntity viaComplex = getAssociatedState(element, component, map);
+                if (viaComplex != null) {
+                    return viaComplex;
                 }
             }
         }
-        return set;
-    }
-
-    private static void addMappedElement(BioPAXElement element, GroupMap map, Set<SimplePhysicalEntity> set,
-                                         PhysicalEntity pe)
-    {
-        if ((element.equals(map.getEntityReferenceOrGroup(pe))) && pe instanceof SimplePhysicalEntity) 
-        {
-            set.add((SimplePhysicalEntity) pe);
+        if (checkEntity(map, pe, element)) return (SimplePhysicalEntity) pe;
+        else {
+            for (PhysicalEntity member : pe.getMemberPhysicalEntity()) {
+                SimplePhysicalEntity viaGeneric = getAssociatedState(element, member, map);
+                if (viaGeneric != null) return viaGeneric;
+            }
         }
+        return null;
     }
 
+    private static boolean checkEntity(GroupMap map, PhysicalEntity pe, BioPAXElement element) {
+        return pe instanceof SimplePhysicalEntity && (element.equals(((SimplePhysicalEntity) pe).getEntityReference()))
+                || element.equals(map.getEntityReferenceOrGroup(pe));
+    }
 }

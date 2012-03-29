@@ -3,12 +3,10 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.DataSourceFieldBridge;
 import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.biopax.paxtools.util.ParentPathwayFieldBridge;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -240,12 +238,4 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.memberEntity = memberEntity;
 	}
 
-	
-    @Override
-    protected boolean semanticallyEquivalent(BioPAXElement element) {
-    	if(!(element instanceof EntityReference)) return false;
-    	EntityReference that = (EntityReference) element;
-    	return  SetEquivalanceChecker.isEquivalent(this.getMemberEntityReference(), that.getMemberEntityReference())
-			&& super.semanticallyEquivalent(element);
-    }
 }
