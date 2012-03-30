@@ -218,7 +218,7 @@ public class CausalityTest
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void activityTest() throws FileNotFoundException
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
