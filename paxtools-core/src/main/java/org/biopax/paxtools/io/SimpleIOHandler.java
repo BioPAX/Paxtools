@@ -313,9 +313,10 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
                 id = base + id.substring(1, id.length());
 
             }
-        } else {
+        } else if( base != null ){
             id = base + id;
         }
+
         return id;
     }
 
