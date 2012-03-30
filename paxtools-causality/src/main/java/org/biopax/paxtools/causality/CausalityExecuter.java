@@ -36,13 +36,14 @@ public class CausalityExecuter
 		{
 			for (SimplePhysicalEntity pe : er.getEntityReferenceOf())
 			{
-				Node node = (Node) graph.getGraphObject(pe);
-
-				AlterationPack pack = ap.getAlterations(node);
-
-				if (pack != null && pack.getAlteredRatio() > alterationThr)
+				for (Node node : graph.getAllWrappers(pe))
 				{
-					result.addAll(cps.search(node, limit, alterationThr));
+					AlterationPack pack = ap.getAlterations(node);
+
+					if (pack != null && pack.getAlteredRatio() > alterationThr)
+					{
+						result.addAll(cps.search(node, limit, alterationThr));
+					}
 				}
 			}
 		}

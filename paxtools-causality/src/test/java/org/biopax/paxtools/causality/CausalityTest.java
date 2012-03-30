@@ -81,7 +81,10 @@ public class CausalityTest
 	final static List<String> ar_p53_visitList = Arrays.asList(
 		"http://pid.nci.nih.gov/biopaxpid_21741", //GNB1/GNG2
 		"http://pid.nci.nih.gov/biopaxpid_31826", //Gi family/GTP
+		"http://pid.nci.nih.gov/biopaxpid_623", //Gi family
+		"http://pid.nci.nih.gov/biopaxpid_685", //GTP
 		"http://pid.nci.nih.gov/biopaxpid_678", //GDP
+		"http://pid.nci.nih.gov/biopaxpid_641", //GNAZ
 		"http://pid.nci.nih.gov/biopaxpid_17089", //p38alpha-beta-active
 		"http://pid.nci.nih.gov/biopaxpid_17092", //p38 beta
 		"http://pid.nci.nih.gov/biopaxpid_3848", //p38 alpha
@@ -91,7 +94,6 @@ public class CausalityTest
 	);
 
 	final static List<String> ar_p53_noVisitList = Arrays.asList(
-		"http://pid.nci.nih.gov/biopaxpid_685", //GTP
 		"http://pid.nci.nih.gov/biopaxpid_35409", //Gi family/GNB1/GNG2/GDP
 		"http://pid.nci.nih.gov/biopaxpid_21151", //p38alpha-beta
 		"http://pid.nci.nih.gov/biopaxpid_2166", //p53
@@ -163,6 +165,7 @@ public class CausalityTest
 		{
 			final AlterationPack pack_AR = new AlterationPack();
 			final AlterationPack pack_TP53 = new AlterationPack();
+			final AlterationPack pack_GNAZ = new AlterationPack();
 
 			@Override
 			public AlterationPack getAlterations(Node node)
@@ -192,10 +195,22 @@ public class CausalityTest
 						}
 						return pack_TP53;
 					}
+					else if (pe.getDisplayName().equals("GNAZ"))
+					{
+						if (pack_GNAZ.getSize() == 0)
+						{
+							pack_GNAZ.put(Alteration.PROTEIN_LEVEL,
+								new Change[]{Change.ACTIVATING, Change.ACTIVATING});
+							pack_GNAZ.complete();
+						}
+						return pack_GNAZ;
+					}
 				}
 				return null;
 			}
-		}, 3, 0.1, null);
+		}, 3, 0.5, null);
+
+		assertTrue(paths.size() == 7);
 
 		for (Path path : paths)
 		{

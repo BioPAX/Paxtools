@@ -17,14 +17,16 @@ import java.util.Set;
 public class PhysicalEntityWrapper extends AbstractNode
 {
 	protected PhysicalEntity pe;
-	boolean equivalentInited;
-	boolean ubique;
+	protected boolean upperEquivalentInited;
+	protected boolean lowerEquivalentInited;
+	protected boolean ubique;
 
 	public PhysicalEntityWrapper(PhysicalEntity pe, GraphL3 graph)
 	{
 		super(graph);
 		this.pe = pe;
-		this.equivalentInited = false;
+		this.upperEquivalentInited = false;
+		this.lowerEquivalentInited = false;
 		this.ubique = false;
 	}
 
@@ -172,9 +174,9 @@ public class PhysicalEntityWrapper extends AbstractNode
 	@Override
 	public Collection<Node> getUpperEquivalent()
 	{
-		if (!equivalentInited)
+		if (!upperEquivalentInited)
 		{
-			initEquivalent();
+			initUpperEquivalent();
 		}
 		return super.getUpperEquivalent();
 	}
@@ -182,14 +184,14 @@ public class PhysicalEntityWrapper extends AbstractNode
 	@Override
 	public Collection<Node> getLowerEquivalent()
 	{
-		if (!equivalentInited)
+		if (!lowerEquivalentInited)
 		{
-			initEquivalent();
+			initLowerEquivalent();
 		}
 		return super.getLowerEquivalent();
 	}
 
-	protected void initEquivalent()
+	protected void initUpperEquivalent()
 	{
 		this.upperEquivalent = new HashSet<Node>();
 
@@ -198,6 +200,11 @@ public class PhysicalEntityWrapper extends AbstractNode
 			this.upperEquivalent.add((Node) graph.getGraphObject(eq));
 		}
 
+		upperEquivalentInited = true;
+	}
+
+	protected void initLowerEquivalent()
+	{
 		this.lowerEquivalent = new HashSet<Node>();
 
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntity())
@@ -205,7 +212,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 			this.lowerEquivalent.add((Node) graph.getGraphObject(eq));
 		}
 
-		equivalentInited = true;
+		lowerEquivalentInited = true;
 	}
 
 	//------ Other --------------------------------------------------------------------------------|

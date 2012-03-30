@@ -1,5 +1,9 @@
 package org.biopax.paxtools.causality.model;
 
+import org.biopax.paxtools.causality.wrapper.ControlWrapper;
+import org.biopax.paxtools.causality.wrapper.ConversionWrapper;
+import org.biopax.paxtools.causality.wrapper.PhysicalEntityWrapper;
+import org.biopax.paxtools.causality.wrapper.TemplateReactionWrapper;
 import org.biopax.paxtools.query.model.Edge;
 
 import java.util.HashSet;
@@ -139,5 +143,27 @@ public class Path implements Cloneable
 	public int getLength()
 	{
 		return length;
+	}
+
+	@Override
+	public String toString()
+	{
+		String s = nodes.get(reverse ? nodes.size()-1 : 0).toString();
+		
+		for (int i = reverse ? edges.size()-1 : 0; 
+			 reverse ? i >= 0 : i < edges.size(); 
+			 i = reverse ? i-1 : i+1)
+		{
+			Edge e = edges.get(i);
+			if (e == null) s += " --- ";
+			else s += e.getSign() == 1 ? " --> " : " --| ";
+			
+			Node n = nodes.get(reverse ? i : i+1);
+			if (n instanceof PhysicalEntityWrapper) s += n.toString();
+			else if (n instanceof ConversionWrapper || n instanceof TemplateReactionWrapper) 
+				s += "[]";
+			else if (n instanceof ControlWrapper) s += n.getSign() == 1 ? "<+>" : "<->";
+		}
+		return s;
 	}
 }

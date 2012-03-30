@@ -73,7 +73,7 @@ public class CausativePathSearch
 					{
 						try
 						{
-							result.add((Path) clone());
+							result.add((Path) path.clone());
 						}
 						catch (CloneNotSupportedException e)
 						{
