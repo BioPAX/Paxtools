@@ -338,8 +338,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
             String resource = r.getAttributeValue(rdf, "resource");
             if (resource != null) {
                 if (resource.startsWith("#")) {
-                    resource = base + resource.substring(1, resource.length());
-
+                    resource = (base == null ? "" : base) + resource.substring(1, resource.length());
                 }
                 gotoEndElement();
             } else {
