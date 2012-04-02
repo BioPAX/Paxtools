@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import org.apache.commons.logging.Log;
@@ -55,6 +57,17 @@ public class ModelUtils {
 			return !editor.getProperty().equals("pathwayOrder"); 
 		}
 	};
+	
+	
+	public static final MessageDigest MD5_DIGEST; //to calculate the PK from URI
+	static {
+		try {
+			MD5_DIGEST = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("Cannot instantiate MD5 MessageDigest!", e);
+		}
+	}
+	
 	
 	private final Model model; // a model to hack ;)
 	private final BioPAXIOHandler io;
@@ -977,5 +990,22 @@ public class ModelUtils {
 		RelationshipTypeVocabulary cv = rx.getRelationshipType();
 		return cv != null && cv.getRDFId().equalsIgnoreCase(
 			relationshipTypeVocabularyUri(RelationshipType.PROCESS.name()));
+	}
+
+
+	/**
+	 * Calculates MD5 hash code (as 32-byte hex. string).
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static String md5hex(String id) {
+		byte[] digest = MD5_DIGEST.digest(id.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (byte b : digest) {
+			sb.append(Integer.toHexString((int) (b & 0xff) | 0x100).substring(1, 3));
+		}
+		String hex = sb.toString();
+        return hex;
 	}
 }

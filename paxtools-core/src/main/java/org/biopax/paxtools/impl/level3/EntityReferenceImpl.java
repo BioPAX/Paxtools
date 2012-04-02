@@ -36,7 +36,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	private Set<SimplePhysicalEntity> entityReferenceOf;
 	private Set<Evidence> evidence;
 	Set<EntityReferenceTypeVocabulary> entityReferenceType;
-	Set<EntityReference> memberEntity;
+	Set<EntityReference> memberEntityReference;
 	private Set<EntityReference> ownerEntityReference;
 
 	/**
@@ -48,7 +48,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityReferenceOf = new HashSet<SimplePhysicalEntity>();
 		this.evidence = new HashSet<Evidence>();
 		this.entityReferenceType = new HashSet<EntityReferenceTypeVocabulary>();
-		this.memberEntity = new HashSet<EntityReference>();
+		this.memberEntityReference = new HashSet<EntityReference>();
 		this.ownerEntityReference= new HashSet<EntityReference>();
 	}
 
@@ -162,13 +162,13 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	@JoinTable(name="memberEntityReference")
 	public Set<EntityReference> getMemberEntityReference()
 	{
-		return memberEntity;
+		return memberEntityReference;
 	}
 
 	public void addMemberEntityReference(EntityReference memberEntity)
 	{
 		if (memberEntity != null) {
-			this.memberEntity.add(memberEntity);
+			this.memberEntityReference.add(memberEntity);
 			memberEntity.getMemberEntityReferenceOf().add(this);
 		}
 	}
@@ -176,14 +176,14 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	public void removeMemberEntityReference(EntityReference memberEntity)
 	{
 		if (memberEntity != null) {
-			this.memberEntity.remove(memberEntity);
+			this.memberEntityReference.remove(memberEntity);
 			memberEntity.getMemberEntityReferenceOf().remove(this);
 		}
 	}
 
 	public void setMemberEntityReference(Set<EntityReference> memberEntity)
 	{
-		this.memberEntity = memberEntity;
+		this.memberEntityReference = memberEntity;
 
 	}
 
@@ -237,7 +237,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	protected void setMemberEntity(Set<EntityReference> memberEntity)
 	{
-		this.memberEntity = memberEntity;
+		this.memberEntityReference = memberEntity;
 	}
 
 	
