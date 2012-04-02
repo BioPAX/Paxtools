@@ -2,6 +2,7 @@ package org.biopax.paxtools.causality.wrapper;
 
 import org.biopax.paxtools.causality.model.AlterationProvider;
 import org.biopax.paxtools.causality.model.Node;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Conversion;
@@ -112,6 +113,16 @@ public class Graph extends GraphL3
 		this.alterationProvider = alterationProvider;
 	}
 
+	public Set<Node> getBreadthNodes()
+	{
+		Set<Node> nodes = new HashSet<Node>();
+		for (PhysicalEntity pe : model.getObjects(PhysicalEntity.class))
+		{
+			nodes.add((Node) getGraphObject(pe));
+		}
+		return nodes;
+	}
+	
 	public void configureNetworkToActivity()
 	{
 		for (EntityReference er : model.getObjects(EntityReference.class))
