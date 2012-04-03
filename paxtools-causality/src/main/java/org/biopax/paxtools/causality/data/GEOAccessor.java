@@ -30,7 +30,7 @@ public class GEOAccessor extends AlterationProviderAdaptor
 
 	protected Map<String, AlterationPack> memo;
 	
-	protected static String dataDirectory = "geo_data";
+	protected static String dataDirectory = "target/geo_data";
 	
 	protected final static String SERIES_URL_PREFIX =
 		"ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SeriesMatrix/";
