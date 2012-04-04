@@ -14,20 +14,6 @@ import java.util.Map;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(length=40)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-//@NamedQueries({
-//	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfId",
-//		query="from org.biopax.paxtools.model.BioPAXElement as el where upper(el.RDFId) = upper(:rdfid)"),
-//	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfIdEager",
-//		query="from org.biopax.paxtools.model.BioPAXElement as el fetch all properties where upper(el.RDFId) = upper(:rdfid)")
-//
-//})
-@NamedQueries({
-	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfId",
-		query="from org.biopax.paxtools.model.BioPAXElement as el where el.RDFId = :rdfid"),
-	@NamedQuery(name="org.biopax.paxtools.impl.elementByRdfIdEager",
-		query="from org.biopax.paxtools.model.BioPAXElement as el fetch all properties where el.RDFId = :rdfid")
-
-})
 public abstract class BioPAXElementImpl implements BioPAXElement
 {
 	// Full-text search field names (case sensitive!)
@@ -70,12 +56,14 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	// Primary Key
 	// could not use names like: 'key' (SQL conflict), 'id', 'idx' (conflicts with the existing prop. in a child class), etc...
 	// @GeneratedValue did not work (stateless session is unable to save/resolve object references and inverse props)
+	@SuppressWarnings("unused") //is used by Hibernate
 	@Id
 	@Column(name="pk", length=32) // enough to save MD5 digest Hex.
 	private String getPk() {
 		return _pk;
 	}
 
+	@SuppressWarnings("unused")
 	private void setPk(String pk) {
 		this._pk = pk;
 	}
@@ -118,7 +106,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
      * 
      * @param id
      */
-    private void setRDFId(String id)
+    @SuppressWarnings("unused")
+	private void setRDFId(String id)
     {
         this.uri = id;
         this._pk = ModelUtils.md5hex(id);
