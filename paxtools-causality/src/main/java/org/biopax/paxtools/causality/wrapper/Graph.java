@@ -1,29 +1,30 @@
 package org.biopax.paxtools.causality.wrapper;
 
 import org.biopax.paxtools.causality.model.AlterationProvider;
+import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
-import org.biopax.paxtools.query.model.Node;
 import org.biopax.paxtools.query.wrapperL3.EventWrapper;
 import org.biopax.paxtools.query.wrapperL3.GraphL3;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
  */
 public class Graph extends GraphL3
 {
-	AlterationProvider alterationProvider;
+	protected AlterationProvider alterationProvider;
+	protected Map<String, ComplexMember> memberMap;
 
 	public Graph(Model model, Set<String> ubiqueIDs)
 	{
 		super(model, ubiqueIDs);
+		this.memberMap = new HashMap<String, ComplexMember>();
 	}
 
 	@Override
@@ -59,6 +60,49 @@ public class Graph extends GraphL3
 		}
 	}
 
+	public ComplexMember wrapMember(PhysicalEntity pe)
+	{
+		ComplexMember cm = new ComplexMember(pe, this);
+		if (ubiqueIDs != null && ubiqueIDs.contains(pe.getRDFId()))
+		{
+			cm.setUbique(true);
+		}
+		return cm;
+	}
+
+	public ComplexMember getMember(PhysicalEntity pe)
+	{
+//		if (pe.getComponentOf().isEmpty()) return null;
+		
+		String key = getKey(pe);
+		ComplexMember mem = memberMap.get(key);
+
+		if (mem == null)
+		{
+			mem = wrapMember(pe);
+
+			assert (mem != null);
+
+			memberMap.put(key, mem);
+			mem.init();
+		}
+
+		return memberMap.get(key);
+	}
+
+	public Set<Node> getAllWrappers(PhysicalEntity pe)
+	{
+		ComplexMember mem = getMember(pe);
+		if (mem != null)
+		{
+			Set<Node> set = new HashSet<Node>();
+			set.add(mem);
+			set.add((Node) getGraphObject(pe));
+			return set;
+		}
+		return Collections.singleton((Node) getGraphObject(pe));
+	}
+	
 	public AlterationProvider getAlterationProvider()
 	{
 		return alterationProvider;
@@ -69,6 +113,16 @@ public class Graph extends GraphL3
 		this.alterationProvider = alterationProvider;
 	}
 
+	public Set<Node> getBreadthNodes()
+	{
+		Set<Node> nodes = new HashSet<Node>();
+		for (PhysicalEntity pe : model.getObjects(PhysicalEntity.class))
+		{
+			nodes.add((Node) getGraphObject(pe));
+		}
+		return nodes;
+	}
+	
 	public void configureNetworkToActivity()
 	{
 		for (EntityReference er : model.getObjects(EntityReference.class))

@@ -7,7 +7,6 @@ import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Change;
 import org.biopax.paxtools.causality.model.Node;
 
-import javax.naming.NameNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -43,8 +42,8 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     }
 
     public AlterationPack getAlterations(Node node, Collection<GeneticProfile> geneticProfiles) {
-        AlterationPack alterationPack = new AlterationPack();
         String entrezGeneId = getEntrezGeneID(node);
+		AlterationPack alterationPack = new AlterationPack(entrezGeneId);
 
         CaseList allCaseList = null;
         try {
@@ -97,7 +96,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         for(int i=0; i < changes1.length; i++) {
             Change c1 = changes1[i];
             Change c2 = changes2[i];
-            Change consensus = Change.NO_DATA;
+            Change consensus;
 
             if(c1.equals(Change.NO_DATA))
                 consensus = c2;
@@ -217,8 +216,8 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
             geneticProfiles = getGeneticProfilesForCurrentStudy();
             return getAlterations(node, geneticProfiles);
         } catch (IOException e) {
-            log.error("Could not parse genetic profiles. Returning an empty alteration map.");
-            return new AlterationPack();
+            log.error("Could not parse genetic profiles. Returning null.");
+            return null;
         }
     }
 

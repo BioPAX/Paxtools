@@ -1,10 +1,12 @@
 package org.biopax.paxtools.causality.model;
 
+import org.biopax.paxtools.causality.wrapper.ControlWrapper;
+import org.biopax.paxtools.causality.wrapper.ConversionWrapper;
+import org.biopax.paxtools.causality.wrapper.PhysicalEntityWrapper;
+import org.biopax.paxtools.causality.wrapper.TemplateReactionWrapper;
 import org.biopax.paxtools.query.model.Edge;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This a signed and directed path.
@@ -121,6 +123,11 @@ public class Path implements Cloneable
 		return true;
 	}
 
+	public Node getFirstNode()
+	{
+		return nodes.getFirst();
+	}
+
 	public Node getLastNode()
 	{
 		return nodes.getLast();
@@ -139,5 +146,70 @@ public class Path implements Cloneable
 	public int getLength()
 	{
 		return length;
+	}
+
+	@Override
+	public String toString()
+	{
+		String s = nodes.get(reverse ? nodes.size()-1 : 0).toString();
+		
+		for (int i = reverse ? edges.size()-1 : 0; 
+			 reverse ? i >= 0 : i < edges.size(); 
+			 i = reverse ? i-1 : i+1)
+		{
+			Edge e = edges.get(i);
+			if (e == null) s += " --- ";
+			else s += e.getSign() == 1 ? " --> " : " --| ";
+			
+			Node n = nodes.get(reverse ? i : i+1);
+			if (n instanceof PhysicalEntityWrapper) s += n.toString();
+			else if (n instanceof ConversionWrapper || n instanceof TemplateReactionWrapper) 
+				s += "[]";
+			else if (n instanceof ControlWrapper) s += "<>";
+		}
+		return s;
+	}
+	
+	public Map<Node, Integer> getSignMapping(Integer firstNodeSign)
+	{
+		Map<Node, Integer> map = new HashMap<Node, Integer>();
+		map.put(nodes.getFirst(), firstNodeSign);
+
+		int sign = firstNodeSign;
+		
+		for (int i = 0; i < edges.size(); i++)
+		{
+			Node node = nodes.get(i + 1);
+			Edge edge = edges.get(i);
+			
+			if (edge != null) sign *= edge.getSign();
+			
+			if (node.isBreadthNode())
+			{
+				map.put(node, sign);
+			}
+		}
+		return map;
+	}
+
+	public Map<Node, Integer> getIntermediateSignMapping(Integer firstNodeSign)
+	{
+		Map<Node, Integer> map = new HashMap<Node, Integer>();
+
+		int sign = firstNodeSign;
+
+		for (int i = 0; i < edges.size()-1; i++)
+		{
+			Node node = nodes.get(i + 1);
+			Edge edge = edges.get(i);
+
+			if (edge != null) sign *= edge.getSign();
+
+			if (node.isBreadthNode())
+			{
+				map.put(node, sign);
+			}
+		}
+		return map;
 	}
 }

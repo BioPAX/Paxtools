@@ -2,10 +2,7 @@ package org.biopax.paxtools.causality.wrapper;
 
 import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Node;
-import org.biopax.paxtools.model.level3.EntityReference;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
-import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.model.level3.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +20,26 @@ public class PhysicalEntityWrapper extends org.biopax.paxtools.query.wrapperL3.P
 	public PhysicalEntityWrapper(PhysicalEntity pe, Graph graph)
 	{
 		super(pe, graph);
+	}
+
+	@Override
+	protected void initLowerEquivalent()
+	{
+		super.initLowerEquivalent();
+
+		initComplexMemberEqs();
+	}
+
+	protected void initComplexMemberEqs()
+	{
+		if (pe instanceof Complex)
+		{
+			for (PhysicalEntity memPE : ((Complex) pe).getComponent())
+			{
+				ComplexMember mem = ((Graph) graph).getMember(memPE);
+				lowerEquivalent.add(mem);
+			}
+		}
 	}
 
 	public List<Xref> getXRefs()
@@ -58,5 +75,11 @@ public class PhysicalEntityWrapper extends org.biopax.paxtools.query.wrapperL3.P
 	public Graph getGraph()
 	{
 		return (Graph) super.getGraph();
+	}
+
+	@Override
+	public String toString()
+	{
+		return pe.getDisplayName();
 	}
 }

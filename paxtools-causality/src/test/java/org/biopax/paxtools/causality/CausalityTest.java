@@ -81,7 +81,10 @@ public class CausalityTest
 	final static List<String> ar_p53_visitList = Arrays.asList(
 		"http://pid.nci.nih.gov/biopaxpid_21741", //GNB1/GNG2
 		"http://pid.nci.nih.gov/biopaxpid_31826", //Gi family/GTP
+		"http://pid.nci.nih.gov/biopaxpid_623", //Gi family
+		"http://pid.nci.nih.gov/biopaxpid_685", //GTP
 		"http://pid.nci.nih.gov/biopaxpid_678", //GDP
+		"http://pid.nci.nih.gov/biopaxpid_641", //GNAZ
 		"http://pid.nci.nih.gov/biopaxpid_17089", //p38alpha-beta-active
 		"http://pid.nci.nih.gov/biopaxpid_17092", //p38 beta
 		"http://pid.nci.nih.gov/biopaxpid_3848", //p38 alpha
@@ -91,7 +94,6 @@ public class CausalityTest
 	);
 
 	final static List<String> ar_p53_noVisitList = Arrays.asList(
-		"http://pid.nci.nih.gov/biopaxpid_685", //GTP
 		"http://pid.nci.nih.gov/biopaxpid_35409", //Gi family/GNB1/GNG2/GDP
 		"http://pid.nci.nih.gov/biopaxpid_21151", //p38alpha-beta
 		"http://pid.nci.nih.gov/biopaxpid_2166", //p53
@@ -153,53 +155,80 @@ public class CausalityTest
 		assertTrue(visit.size() == 3);
 	}
 
+	class AltProv implements AlterationProvider
+	{
+		final AlterationPack pack_AR = new AlterationPack("AR");
+		final AlterationPack pack_TP53 = new AlterationPack("TP53");
+		final AlterationPack pack_GNAZ = new AlterationPack("GNAZ");
+
+		AltProv()
+		{
+			pack_AR.put(Alteration.MUTATION, new Change[]{Change.ACTIVATING, Change.ACTIVATING});
+			pack_AR.complete();
+			pack_TP53.put(Alteration.PROTEIN_LEVEL,
+				new Change[]{Change.ACTIVATING, Change.ACTIVATING});
+			pack_TP53.complete();
+			pack_GNAZ.put(Alteration.PROTEIN_LEVEL,
+				new Change[]{Change.ACTIVATING, Change.NO_CHANGE});
+			pack_GNAZ.complete();
+		}
+
+		@Override
+		public AlterationPack getAlterations(Node node)
+		{
+			if (node instanceof PhysicalEntityWrapper)
+			{
+				PhysicalEntityWrapper pew = (PhysicalEntityWrapper) node;
+				PhysicalEntity pe = pew.getPhysicalEntity();
+
+				if (pe.getDisplayName().equals("AR"))
+				{
+					return pack_AR;
+				}
+				else if (pe.getDisplayName().equals("p53"))
+				{
+					return pack_TP53;
+				}
+				else if (pe.getDisplayName().equals("GNAZ"))
+				{
+					return pack_GNAZ;
+				}
+			}
+			return null;
+		}
+	}
+
 	@Test
 	public void testCausativePathSearch()
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(getClass().getResourceAsStream("AR-TP53.owl"));
 
-		List<Path> paths = CausalityExecuter.findCausativePaths(model, new AlterationProvider()
-		{
-			final AlterationPack pack_AR = new AlterationPack();
-			final AlterationPack pack_TP53 = new AlterationPack();
+		List<Path> paths = CausalityExecuter.findCausativePaths(model, new AltProv(), 3, 0.5, null);
 
-			@Override
-			public AlterationPack getAlterations(Node node)
-			{
-				if (node instanceof PhysicalEntityWrapper)
-				{
-					PhysicalEntityWrapper pew = (PhysicalEntityWrapper) node;
-					PhysicalEntity pe = pew.getPhysicalEntity();
-					
-					if (pe.getDisplayName().equals("AR"))
-					{
-						if (pack_AR.getSize() == 0)
-						{
-							pack_AR.put(Alteration.MUTATION,
-								new Change[]{Change.ACTIVATING, Change.ACTIVATING});
-							pack_AR.complete();
-						}
-						return pack_AR;
-					}
-					else if (pe.getDisplayName().equals("p53"))
-					{
-						if (pack_TP53.getSize() == 0)
-						{
-							pack_TP53.put(Alteration.PROTEIN_LEVEL,
-								new Change[]{Change.ACTIVATING, Change.ACTIVATING});
-							pack_TP53.complete();
-						}
-						return pack_TP53;
-					}
-				}
-				return null;
-			}
-		}, 3, 0.1, null);
+		assertTrue(paths.size() == 7);
 
 		for (Path path : paths)
 		{
 			System.out.println(path);
+		}
+	}
+
+	@Test
+	public void testCausativePathLabeling()
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(getClass().getResourceAsStream("AR-TP53.owl"));
+
+		Map<PhysicalEntity, Map<Integer, Integer>[]> label =
+			CausalityExecuter.labelGraph(model, new AltProv(), 3, 0.5, null);
+
+		assertTrue(label.size() == 5);
+
+		for (PhysicalEntity pe : label.keySet())
+		{
+			System.out.print(pe.getDisplayName());
+			System.out.println(" = " + (label.get(pe)[0].size() + label.get(pe)[1].size()));
 		}
 	}
 

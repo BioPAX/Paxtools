@@ -2,7 +2,9 @@ package org.biopax.paxtools.causality.model;
 
 import org.biopax.paxtools.causality.util.Summary;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,19 +15,22 @@ public class AlterationPack
 	protected Map<Alteration, Change[]> map;
 
 	protected int size;
+	
+	protected String id;
 
 	public static final Alteration[] priority_nonGenomic = new Alteration[]{
 		Alteration.PROTEIN_LEVEL, Alteration.EXPRESSION};
 
-	public static final Alteration[] priority_genomic = new Alteration[]{
-		Alteration.MUTATION, Alteration.COPY_NUMBER, Alteration.METHYLATION};
+//	public static final Alteration[] priority_genomic = new Alteration[]{
+//		Alteration.MUTATION, Alteration.COPY_NUMBER, Alteration.METHYLATION};
 
 	public static final Alteration[] priority = new Alteration[]{
 		Alteration.MUTATION, Alteration.PROTEIN_LEVEL, Alteration.EXPRESSION,
 		Alteration.COPY_NUMBER, Alteration.METHYLATION};
 
-	public AlterationPack()
+	public AlterationPack(String id)
 	{
+		this.id = id;
 		map = new HashMap<Alteration, Change[]>();
 		size = 0;
 	}
@@ -33,6 +38,11 @@ public class AlterationPack
 	public int getSize()
 	{
 		return size;
+	}
+
+	public String getId()
+	{
+		return id;
 	}
 
 	public void put(Alteration alt, Change[] changes)
@@ -145,15 +155,27 @@ public class AlterationPack
 		}
 
 		map.put(Alteration.ANY, changes);
-		
-		changes = new Change[changes.length];
 
-		for (int i = 0; i < changes.length; i++)
+		if (containsAlterationType(priority_nonGenomic))
 		{
-			changes[i] = getCumulativeChange(priority_nonGenomic, i);
-		}
+			changes = new Change[changes.length];
 
-		map.put(Alteration.NON_GENOMIC, changes);
+			for (int i = 0; i < changes.length; i++)
+			{
+				changes[i] = getCumulativeChange(priority_nonGenomic, i);
+			}
+
+			map.put(Alteration.NON_GENOMIC, changes);
+		}
+	}
+	
+	protected boolean containsAlterationType(Alteration[] alts)
+	{
+		for (Alteration alt : alts)
+		{
+			if (map.containsKey(alt)) return true;
+		}
+		return false;
 	}
 	
 	public double getParallelChangeRatio(AlterationPack pack, boolean similar)
@@ -170,5 +192,28 @@ public class AlterationPack
 		}
 
 		return count / (double) size;
+	}
+
+	public List<Integer> getParallelChangedIndexes(AlterationPack pack, boolean similar,
+		boolean thisIsUp)
+	{
+		List<Integer> inds = new ArrayList<Integer>();
+
+		for (int i = 0; i < size; i++)
+		{
+			Change ch1 = getChange(Alteration.ANY, i);
+
+			if ((thisIsUp && ch1 == Change.INHIBITING) || (!thisIsUp && ch1 == Change.ACTIVATING))
+				continue;
+
+			Change ch2 = pack.getChange(Alteration.ANY, i);
+
+			if (ch1.isAltered() && ch2.isAltered() &&
+				((similar && ch1 == ch2) || (!similar && ch1 != ch2)))
+			{
+				inds.add(i);
+			}
+		}
+		return inds;
 	}
 }

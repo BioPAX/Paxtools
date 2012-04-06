@@ -1,14 +1,13 @@
 package org.biopax.paxtools.causality;
 
 import org.biopax.paxtools.causality.analysis.BFS;
-import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.model.AbstractNode;
 import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.GraphObject;
-import org.biopax.paxtools.query.model.Node;
 import org.biopax.paxtools.query.wrapperL3.ConversionWrapper;
 import org.biopax.paxtools.query.wrapperL3.EdgeL3;
 
@@ -33,8 +32,7 @@ public class ConversionTypeLabeler
 		
 		Graph graph = new Graph(model);
 
-		Set<org.biopax.paxtools.causality.model.Node> source =
-			new HashSet<org.biopax.paxtools.causality.model.Node>();
+		Set<Node> source = new HashSet<org.biopax.paxtools.causality.model.Node>();
 
 		for (PhysicalEntity pe : active)
 		{

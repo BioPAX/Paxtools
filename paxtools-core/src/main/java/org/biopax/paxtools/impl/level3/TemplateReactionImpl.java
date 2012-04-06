@@ -71,13 +71,14 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 		this.template = template;
 	}
     
-    public NucleicAcid getTemplate()
+    @Transient
+	public NucleicAcid getTemplate()
      {
          return this.template;
      }
 
-     public void setTemplate(NucleicAcid template)
-     {
+    public void setTemplate(NucleicAcid template)
+    {
          if(this.template!= null)
          {
             super.removeParticipant(this.template);
@@ -86,7 +87,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
         	 this.template=template;
         	 super.addParticipant(template);
          }
-     }
+    }
 
     @Enumerated
 	public TemplateDirectionType getTemplateDirection()
