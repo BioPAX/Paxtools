@@ -32,7 +32,7 @@ public class ConsecutiveCatalysisRuleTest
 	*/
 
 	@Test
-	public void testComponentRule()
+	public void testCompzzonentRule()
 	{
 		Mock mock = new Mock();
 

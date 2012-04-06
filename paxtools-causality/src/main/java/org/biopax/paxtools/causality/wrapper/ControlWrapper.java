@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality.wrapper;
 
+import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.model.AbstractNode;
@@ -34,4 +35,9 @@ public class ControlWrapper extends org.biopax.paxtools.query.wrapperL3.ControlW
 		}
 	}
 
+	@Override
+	public AlterationPack getAlterations()
+	{
+		return null;
+	}
 }

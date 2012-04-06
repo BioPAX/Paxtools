@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality.wrapper;
 
+import org.biopax.paxtools.causality.model.AlterationProvider;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Control;
@@ -18,6 +19,8 @@ import java.util.Set;
  */
 public class Graph extends GraphL3
 {
+	AlterationProvider alterationProvider;
+
 	public Graph(Model model, Set<String> ubiqueIDs)
 	{
 		super(model, ubiqueIDs);
@@ -54,6 +57,16 @@ public class Graph extends GraphL3
 			}
 			return null;
 		}
+	}
+
+	public AlterationProvider getAlterationProvider()
+	{
+		return alterationProvider;
+	}
+
+	public void setAlterationProvider(AlterationProvider alterationProvider)
+	{
+		this.alterationProvider = alterationProvider;
 	}
 
 	public void configureNetworkToActivity()

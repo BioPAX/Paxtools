@@ -9,6 +9,7 @@ import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
+import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
@@ -20,10 +21,8 @@ import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * A command line accessible utility for basic Paxtools operations.
@@ -334,6 +333,113 @@ public class PaxtoolsMain {
         return io.convertFromOWL(file);
     }
 
+	public static void summarize(String[] argv) throws IOException {
+
+		Model model = getModel(io, argv[1]);
+
+		if (model.getLevel() != BioPAXLevel.L3)
+		{
+			System.out.println("Summarize function only works for level 3");
+			return;
+		}
+
+		SimpleEditorMap em = SimpleEditorMap.L3;
+
+		for (Class<BioPAXElement> clazz : em.getKnownSubClassesOf(BioPAXElement.class))
+		{
+			Set<BioPAXElement> set = model.getObjects(clazz);
+
+			final String prefix = "org.biopax.paxtools.model.level3.";
+			System.out.println(clazz.getCanonicalName().replace(prefix, "") + " = " + set.size());
+
+			Set<PropertyEditor> editors = em.getEditorsOf(clazz);
+			for (PropertyEditor editor : editors)
+			{
+				Method getMethod = editor.getGetMethod();
+				Class<?> returnType = getMethod.getReturnType();
+
+				Map<Object, Integer> cnt = new HashMap<Object, Integer>();
+
+				if (returnType.isEnum() ||
+					implementsInterface(returnType, ControlledVocabulary.class))
+				{
+					for (BioPAXElement ele : set)
+					{
+						Set values = editor.getValueFromBean(ele);
+						if (values.isEmpty())
+						{
+							increaseCnt(cnt, NULL);
+						}
+						else
+						{
+							increaseCnt(cnt, values.iterator().next());
+						}
+					}
+				}
+				else if (returnType.equals(Set.class) &&
+					implementsInterface(editor.getRange(), ControlledVocabulary.class))
+				{
+					for (BioPAXElement ele : set)
+					{
+						Set values = editor.getValueFromBean(ele);
+						if (values.isEmpty())
+						{
+							increaseCnt(cnt, EMPTY);
+						}
+						for (Object val : values)
+						{
+							increaseCnt(cnt, val);
+						}
+					}
+				}
+
+				if (!cnt.isEmpty())
+				{
+					String name = returnType.equals(Set.class) ?
+						editor.getRange().getCanonicalName() : returnType.getCanonicalName();
+					name = name.replace(prefix, "-");
+
+					System.out.print("\t" + name + ":");
+					for (Object key : cnt.keySet())
+					{
+						System.out.print("\t" + key + " = " + cnt.get(key));
+					}
+					System.out.println();
+				}
+			}
+		}
+	}
+
+	private static final Object NULL = new Object(){
+		@Override
+		public String toString()
+		{
+			return "NULL";
+		}
+	};
+	private static final Object EMPTY = new Object(){
+		@Override
+		public String toString()
+		{
+			return "EMPTY";
+		}
+	};
+
+	private static boolean implementsInterface(Class clazz, Class inter)
+	{
+		for (Class anInter : clazz.getInterfaces())
+		{
+			if (anInter.equals(inter)) return true;
+		}
+		return false;
+	}
+
+	private static void increaseCnt(Map<Object, Integer> cnt, Object key)
+	{
+		if (!cnt.containsKey(key)) cnt.put(key, 0);
+		cnt.put(key, cnt.get(key) + 1);
+	}
+
     enum Command {
         merge("file1 file2 output\t\tmerges file2 into file1 and writes it into output", 3)
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
@@ -361,6 +467,8 @@ public class PaxtoolsMain {
 		        {public void run(String[] argv) throws IOException{fetch(argv);} },
         getNeighbors("file1 id1,id2,.. output\t\tnearest neighborhood graph query (id1,id2 - of Entity sub-class only)", 3)
 		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
+        summarize("file\t\tprints a summary of the contents of the model", 1)
+		        {public void run(String[] argv) throws IOException{summarize(argv);} },
         help("\t\t\t\t\t\tprints this screen and exits", Integer.MAX_VALUE)
 		        {public void run(String[] argv) throws IOException{help();} };
 

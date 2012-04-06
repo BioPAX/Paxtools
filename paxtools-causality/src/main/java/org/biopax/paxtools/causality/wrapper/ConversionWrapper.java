@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality.wrapper;
 
+import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.model.level3.Conversion;
 
@@ -15,5 +16,11 @@ public class ConversionWrapper extends org.biopax.paxtools.query.wrapperL3.Conve
 	protected ConversionWrapper(Conversion conv, Graph graph)
 	{
 		super(conv, graph);
+	}
+
+	@Override
+	public AlterationPack getAlterations()
+	{
+		return null;
 	}
 }

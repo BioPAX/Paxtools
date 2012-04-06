@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author Ozgun Babur
  */
-public class Path
+public class Path implements Cloneable
 {
 	protected LinkedList<Node> nodes;
 	protected LinkedList<Edge> edges;
@@ -22,7 +22,7 @@ public class Path
 	
 	protected int length;
 
-	Set<Node> nodeSet = new HashSet<Node>();
+	HashSet<Node> nodeSet = new HashSet<Node>();
 
 	protected PathUser user;
 
@@ -41,6 +41,16 @@ public class Path
 		sign = 1;
 		length = 0;
 		this.user = user;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		Path clone = (Path) super.clone();
+		clone.nodes = (LinkedList<Node>) this.nodes.clone();
+		clone.edges = (LinkedList<Edge>) this.edges.clone();
+		clone.nodeSet = (HashSet<Node>) this.nodeSet.clone();
+		return clone;
 	}
 
 	public int getSign()

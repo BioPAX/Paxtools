@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality.wrapper;
 
+import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.model.level3.TemplateReaction;
 import org.biopax.paxtools.query.wrapperL3.GraphL3;
@@ -13,5 +14,11 @@ public class TemplateReactionWrapper extends
 	protected TemplateReactionWrapper(TemplateReaction tempReac, GraphL3 graph)
 	{
 		super(tempReac, graph);
+	}
+
+	@Override
+	public AlterationPack getAlterations()
+	{
+		return null;
 	}
 }
