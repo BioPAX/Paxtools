@@ -142,10 +142,14 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		return values;
 	}
 
+	@Override public Class<BioPAXElement> getDomain()
+	{
+		return this.objectAccessors.isEmpty()?lastStep.getDomain():objectAccessors.get(0).getDomain();
+	}
+
 	public Set getValueFromModel(Model model) throws IllegalBioPAXArgumentException
 	{
-		Set<? extends BioPAXElement> domains = new HashSet<BioPAXElement>(model.getObjects(this.objectAccessors.get
-				(0).getDomain()));
+		Set<? extends BioPAXElement> domains = new HashSet<BioPAXElement>(model.getObjects(this.getDomain()));
 		return getValueFromBeans(domains);
 	}
 
