@@ -28,27 +28,16 @@ public class ControlRule extends InteractionRuleL3Adaptor
 
 	private boolean mineStateChange;
 
-    private boolean storeStateChange;
-
 	private boolean mineMetabolicChange;
-    public static final String STORE_STATE_CHANGE = "StoreStateChange";
 
-    public HashMap<BioPAXElement, Set<PEStateChange>> getStateChanges()
-    {
-        return stateChanges;
-    }
 
-    private HashMap<BioPAXElement, Set<PEStateChange>> stateChanges;
+	private HashMap<BioPAXElement, Set<PEStateChange>> stateChanges = new HashMap<BioPAXElement,
+			Set<PEStateChange>>();
 
-    public void initOptionsNotNull(Map options)
+	public void initOptionsNotNull(Map options)
 	{
-		mineStateChange = !checkOption(STATE_CHANGE,Boolean.FALSE, options);
-		mineMetabolicChange =!checkOption(METABOLIC_CATALYSIS,Boolean.FALSE, options);
-        storeStateChange = checkOption(STORE_STATE_CHANGE,Boolean.TRUE, options);
-        if(storeStateChange)
-        {
-            stateChanges = new HashMap<BioPAXElement, Set<PEStateChange>>();
-        }
+		mineStateChange = !checkOption(STATE_CHANGE, Boolean.FALSE, options);
+		mineMetabolicChange = !checkOption(METABOLIC_CATALYSIS, Boolean.FALSE, options);
 	}
 
 	/**
@@ -91,20 +80,20 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		// Try creating a rule for each physical entity in presence list.
 		for (BioPAXElement target : union)
 		{
-            if (source != target)
-            {
-                if (!(target instanceof Group) || ((Group) target).getType() != BinaryInteractionType.COMPONENT_OF)
-                {
-                    mineTarget(source, target, is3, cont, conv, intersection);
-                }
-            }
+			if (source != target)
+			{
+				if (!(target instanceof Group) || ((Group) target).getType() != BinaryInteractionType.COMPONENT_OF)
+				{
+					mineTarget(source, target, is3, cont, conv, intersection);
+				}
+			}
 		}
 	}
 
 	private void mineTarget(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3, Control cont,
 			Conversion conv, Set<BioPAXElement> intersection)
 	{
-		if (Simplify.entityHasAChange(target, conv, is3.getGroupMap(),stateChanges.get(target)))
+		if (Simplify.entityHasAChange(target, conv, is3.getGroupMap(), stateChanges.get(target)))
 		{
 
 			// If it is simple, then we check if it is also on both sides, regarding the
@@ -122,13 +111,11 @@ public class ControlRule extends InteractionRuleL3Adaptor
 			{
 				if (mineMetabolicChange)
 				{
-					createAndAdd(source, target, is3, METABOLIC_CATALYSIS,cont, conv);
+					createAndAdd(source, target, is3, METABOLIC_CATALYSIS, cont, conv);
 				}
 			}
 		}
 	}
-
-
 
 
 	/**
