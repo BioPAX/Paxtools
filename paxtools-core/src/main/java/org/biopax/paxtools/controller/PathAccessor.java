@@ -1,6 +1,8 @@
 package org.biopax.paxtools.controller;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -19,6 +21,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	PropertyAccessor lastStep;
 
 	Class<BioPAXElement> domain;
+
+	public static final Log log = LogFactory.getLog(PathAccessor.class);
 
 	public PathAccessor(List<PropertyAccessor<? extends BioPAXElement, ? extends BioPAXElement>> objectAccessors,
 	                    PropertyAccessor lastStep)
@@ -123,25 +127,31 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 		for (PropertyAccessor objectAccessor : objectAccessors)
 		{
+			log.trace(objectAccessor);
 			HashSet<BioPAXElement> nextBpes = new HashSet<BioPAXElement>();
 			for (BioPAXElement bpe : bpes)
 			{
+				log.trace("\t"+bpe);
 				Set valueFromBean = objectAccessor.getValueFromBean(bpe);
 				if (valueFromBean != null || valueFromBean.isEmpty())
 				{
+					log.trace("\t\tv:"+valueFromBean);
 					nextBpes.addAll(valueFromBean);
+					log.trace("\t\tn:"+nextBpes);
 				}
 			}
 			bpes = nextBpes;
 		}
 		HashSet values = new HashSet();
+		log.trace(lastStep);
 		for (BioPAXElement bpe : bpes)
 		{
-
+			log.trace("\t"+bpe);
 			Set valueFromBean = lastStep.getValueFromBean(bpe);
 			if (valueFromBean != null || valueFromBean.isEmpty())
 			{
 				values.addAll(lastStep.getValueFromBean(bpe));
+				log.trace("\t"+values);
 			}
 		}
 		return values;

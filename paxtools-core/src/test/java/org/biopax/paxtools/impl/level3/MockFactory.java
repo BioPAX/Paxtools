@@ -4,7 +4,6 @@ import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.lang.reflect.Field;
@@ -120,17 +119,17 @@ public class MockFactory extends BioPAXFactory
 					}
 				} else
 				{
-					if (!Entity.class.isAssignableFrom(range))
-					{
-						if (multiple)
-						{
-							value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe, 3);
-						} else
-						{
-							value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe,
-							                             1).iterator().next();
-						}
-					}
+//					if (!Entity.class.isAssignableFrom(range))
+//					{
+//						if (multiple)
+//						{
+//							value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe, 3);
+//						} else
+//						{
+//							value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe,
+//							                             1).iterator().next();
+//						}
+//					}
 				}
 			}
 			if (value != null)
