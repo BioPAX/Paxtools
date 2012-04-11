@@ -27,11 +27,11 @@ public class PathAccessorTest
 		PublicationXref[] px = mock.create(PublicationXref.class, 2);
 		Complex[] c = mock.create(Complex.class, 3);
 		SmallMoleculeReference smr[] = mock.create(SmallMoleculeReference.class,1);
-
+		SmallMolecule sm[] = mock.create(SmallMolecule.class,1);
 
 		mock.bindArrays(mock.editor("entityReference", Protein.class), p, pr);
+		mock.bindArrays(mock.editor("entityReference", SmallMolecule.class), sm, smr);
 		mock.bindArrays(mock.editor("xref",ProteinReference.class),pr,px);
-
 
 		mock.bindInPairs(mock.editor("component",Complex.class),
 		                 c[0],c[1],

@@ -18,6 +18,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 	PropertyAccessor lastStep;
 
+	Class<BioPAXElement> domain;
+
 	public PathAccessor(List<PropertyAccessor<? extends BioPAXElement, ? extends BioPAXElement>> objectAccessors,
 	                    PropertyAccessor lastStep)
 	{
@@ -31,8 +33,11 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		super(BioPAXElement.class, Object.class, true);
 
 		StringTokenizer st = new StringTokenizer(path, "/");
-		String domainstr = st.nextToken();
-		Class<? extends BioPAXElement> intermediate = getClass(level, domainstr);
+
+		domain = (Class<BioPAXElement>) getClass(level, st.nextToken());
+
+		Class<? extends BioPAXElement> intermediate;
+		intermediate=domain;
 
 		this.objectAccessors = new ArrayList<PropertyAccessor<? extends BioPAXElement, ? extends BioPAXElement>>(
 				st.countTokens() - 1);
@@ -144,7 +149,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 	@Override public Class<BioPAXElement> getDomain()
 	{
-		return this.objectAccessors.isEmpty()?lastStep.getDomain():objectAccessors.get(0).getDomain();
+		return domain;
 	}
 
 	public Set getValueFromModel(Model model) throws IllegalBioPAXArgumentException
