@@ -8,8 +8,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Set;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -42,13 +41,13 @@ public class PathAccessorTest
 
 		PathAccessor accessor = new PathAccessor("Protein/entityReference/xref:PublicationXref", BioPAXLevel.L3);
 		Set values = accessor.getValueFromBean(p[0]);
-		assertThat(true,is(values.contains(px[0]) && values.size()==1));
+		assertTrue(values.contains(px[0]) && values.size() == 1);
 		values = accessor.getValueFromModel(mock.model);
-		assertThat(true,is(values.containsAll(Arrays.asList(px)) && values.size()==2));
+		assertTrue(values.containsAll(Arrays.asList(px)) && values.size() == 2);
 
 		accessor = new PathAccessor("Protein/entityReference/xref:RelationshipXref", BioPAXLevel.L3);
 		values = accessor.getValueFromBean(p[1]);
-		assertThat(false, is(values.contains(px[1]) && values.size() == 1));
+		assertFalse(values.contains(px[1]) && values.size() == 1);
 
 
 		accessor = new PathAccessor("PublicationXref/xrefOf", BioPAXLevel.L3);
@@ -57,9 +56,9 @@ public class PathAccessorTest
 
 		accessor = new PathAccessor("Complex/component*/name", BioPAXLevel.L3);
 		values = accessor.getValueFromBean(c[0]);
-		assertThat(true, is(values.containsAll(c[1].getName())));
-		assertThat(true, is(values.containsAll(c[2].getName())));
-		assertThat(true, is(values.containsAll(member[0].getName())));
+		assertTrue(values.containsAll(c[1].getName()));
+		assertTrue(values.containsAll(c[2].getName()));
+		assertTrue(values.containsAll(member[0].getName()));
 
 
 		accessor = new PathAccessor("Protein/cellularLocation", BioPAXLevel.L3);
