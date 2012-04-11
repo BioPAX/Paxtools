@@ -2,6 +2,7 @@ package org.biopax.paxtools.fixer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.controller.ShallowCopy;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -233,14 +234,10 @@ public class Fixer {
             Set<EntityFeature> features = new HashSet<EntityFeature>(physicalEntity.getFeature());
             for (EntityFeature feature : features) {
                 EntityFeature that = mapped.get(feature);
-                if (that != null && !that.equals(feature)) {
-                    if (log.isWarnEnabled())
-                        log.warn(
-                                " replacing " + feature +
-                                        "{" + feature.getRDFId() + "} with " +
-                                        that + "{" + that.getRDFId() + "}");
-                    physicalEntity.removeFeature(feature);
-                    physicalEntity.addFeature(that);
+                if (that != null && !that.equals(feature))
+                {
+	                ModelUtils mo = new ModelUtils(model);
+	                mo.replace(feature,that);
                 }
             }
         }
