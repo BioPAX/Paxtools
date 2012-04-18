@@ -69,12 +69,6 @@ public class SimpleIOHandlerTest
 		System.out.println("Model has " + model.getObjects().size()
 				+ " objects)");
 		
-		// test if tailing spaces are removed from values
-		Xref x = (Xref) model.getByID("http://www.biopax.org/examples/myExample#taxon_562");
-		assertNotNull(x);
-		assertEquals("562", x.getId());
-		assertEquals("taxonomy", x.getDb());
-		
 		FileOutputStream out = new FileOutputStream(getClass().getResource("")
 				.getFile() + File.separator + "simpleReadWrite.owl");
 		io.convertToOWL(model, out);
