@@ -2,6 +2,7 @@ package org.biopax.paxtools.causality.data;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.causality.model.AlterationPack;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class CBioPortalAccessorTest {
             }
         }
 
-        CancerStudy cancerStudy = cBioPortalAccessor.getCancerStudies().get(0);
+        CancerStudy cancerStudy = cBioPortalAccessor.getCancerStudies().get(16);
 
         // Should not throw any exceptions
         cBioPortalAccessor.setCurrentCancerStudy(cancerStudy);
@@ -60,6 +61,10 @@ public class CBioPortalAccessorTest {
         // We also need to have an "ALL" case list for each cancer study
         assertNotNull(allCases);
 
-    }
+		AlterationPack alt = cBioPortalAccessor.getAlterations("7157");
+		alt.complete();
+		System.out.println("alt.size = " + alt.getSize());
+
+	}
 
 }

@@ -41,8 +41,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         }
     }
 
-    public AlterationPack getAlterations(Node node, Collection<GeneticProfile> geneticProfiles) {
-        String entrezGeneId = getEntrezGeneID(node);
+    public AlterationPack getAlterations(String entrezGeneId, Collection<GeneticProfile> geneticProfiles) {
 		AlterationPack alterationPack = new AlterationPack(entrezGeneId);
 
         CaseList allCaseList = null;
@@ -78,6 +77,12 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
             }
 
             Alteration alteration = GeneticProfile.GENETIC_PROFILE_TYPE.convertToAlteration(geneticProfile.getType());
+
+			if (alteration == null)
+			{
+				System.err.println("unsupported alteration = " + geneticProfile.getType());
+			}
+
             Change[] altChanges = alterationPack.get(alteration);
             if(altChanges == null)
                 alterationPack.put(alteration, changes);
@@ -153,6 +158,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 
     private Change inferChange(GeneticProfile geneticProfile, String dataPoint) {
         final String NaN = "NaN";
+        final String NA = "NA";
         // TODO: Discuss these steps with Ozgun
         switch (GeneticProfile.GENETIC_PROFILE_TYPE.convertToAlteration(geneticProfile.getType())) {
             case MUTATION:
@@ -176,7 +182,8 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                 }
             case EXPRESSION:
                 // TODO: what to do with non Zscores?
-                if(dataPoint.equalsIgnoreCase(NaN) || !geneticProfile.getId().endsWith("Zscores"))
+                if(dataPoint.equalsIgnoreCase(NaN) || dataPoint.equalsIgnoreCase(NA) ||
+					!geneticProfile.getId().endsWith("Zscores"))
                     return Change.NO_DATA;
                 else {
                     Double value = Double.parseDouble(dataPoint);
@@ -210,11 +217,21 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     }
 
     @Override
-    public AlterationPack getAlterations(Node node) {
+    public AlterationPack getAlterations(Node node) 
+	{
+		String entrezGeneId = getEntrezGeneID(node);
+		if (entrezGeneId != null)
+		{
+			return getAlterations(entrezGeneId);
+		}
+		return null;
+	}
+	
+    public AlterationPack getAlterations(String entrezGeneId) {
         List<GeneticProfile> geneticProfiles;
         try {
             geneticProfiles = getGeneticProfilesForCurrentStudy();
-            return getAlterations(node, geneticProfiles);
+            return getAlterations(entrezGeneId, geneticProfiles);
         } catch (IOException e) {
             log.error("Could not parse genetic profiles. Returning null.");
             return null;

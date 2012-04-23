@@ -65,6 +65,7 @@ public class GeneticProfile {
         COPY_NUMBER_ALTERATION,
         MRNA_EXPRESSION,
         METHYLATION,
+        METHYLATION_BINARY,
         MUTATION_EXTENDED,
         PROTEIN_ARRAY_PROTEIN_LEVEL,
         PROTEIN_ARRAY_PHOSPHORYLATION;
@@ -77,14 +78,16 @@ public class GeneticProfile {
                     return Alteration.EXPRESSION;
                 case METHYLATION:
                     return Alteration.METHYLATION;
+                case METHYLATION_BINARY:
+                    return Alteration.METHYLATION;
                 case MUTATION_EXTENDED:
                     return Alteration.MUTATION;
                 case PROTEIN_ARRAY_PROTEIN_LEVEL:
                     return Alteration.PROTEIN_LEVEL;
                 case PROTEIN_ARRAY_PHOSPHORYLATION:
-                    return Alteration.NON_GENOMIC;
+                    return Alteration.PROTEIN_LEVEL;
                 default:
-                    return Alteration.ANY;
+                    return null;
             }
         }
     }

@@ -10,6 +10,7 @@ public enum Change
 	 */
 	ACTIVATING(true, false),
 	INHIBITING(true, false),
+	STAY_INACTIVE(false, false),
 	NO_CHANGE(false, false),
 	NO_DATA(false, true);
 

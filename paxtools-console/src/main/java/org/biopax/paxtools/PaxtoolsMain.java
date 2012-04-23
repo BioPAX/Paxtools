@@ -9,8 +9,7 @@ import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
-import org.biopax.paxtools.model.level3.ControlledVocabulary;
-import org.biopax.paxtools.model.level3.Entity;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.validator.BiopaxValidatorClient;
@@ -19,6 +18,7 @@ import org.biopax.validator.jaxb.Behavior;
 import org.mskcc.psibiopax.converter.PSIMIConverter;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 
+import java.awt.datatransfer.StringSelection;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -333,9 +333,13 @@ public class PaxtoolsMain {
         return io.convertFromOWL(file);
     }
 
+	//----- Section: Printing summary -------------------------------------------------------------|
+	
 	public static void summarize(String[] argv) throws IOException {
 
 		Model model = getModel(io, argv[1]);
+
+//		BioPAXElement byID = model.getByID("http://biocyc.org/biopax/biopax-level3ComplexAssembly175733");
 
 		if (model.getLevel() != BioPAXLevel.L3)
 		{
@@ -345,12 +349,16 @@ public class PaxtoolsMain {
 
 		SimpleEditorMap em = SimpleEditorMap.L3;
 
-		for (Class<BioPAXElement> clazz : em.getKnownSubClassesOf(BioPAXElement.class))
+		for (Class<BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
 		{
 			Set<BioPAXElement> set = model.getObjects(clazz);
-
+			int initialSize = set.size();
+			set = filterToExactClass(set, clazz);
+			
 			final String prefix = "org.biopax.paxtools.model.level3.";
-			System.out.println(clazz.getCanonicalName().replace(prefix, "") + " = " + set.size());
+			String s = clazz.getCanonicalName().replace(prefix, "") + " = " + set.size();
+			if (initialSize != set.size()) s += " (and " + (initialSize - set.size()) + " children)";
+			System.out.println(s);
 
 			Set<PropertyEditor> editors = em.getEditorsOf(clazz);
 			for (PropertyEditor editor : editors)
@@ -400,7 +408,7 @@ public class PaxtoolsMain {
 					name = name.replace(prefix, "-");
 
 					System.out.print("\t" + name + ":");
-					for (Object key : cnt.keySet())
+					for (Object key : getOrdering(cnt))
 					{
 						System.out.print("\t" + key + " = " + cnt.get(key));
 					}
@@ -408,6 +416,93 @@ public class PaxtoolsMain {
 				}
 			}
 		}
+
+		String[] props = new String[]{
+			"UnificationXref/db",
+			"RelationshipXref/db",
+		};
+
+		System.out.println("\nOther property counts\n");
+
+		for (String prop : props)
+		{
+			Map<Object, Integer> cnt = new HashMap<Object, Integer>();
+			List<String> valList = new ArrayList<String>();
+			PathAccessor acc = new PathAccessor(prop, BioPAXLevel.L3);
+			
+			boolean isString = false;
+			
+			for (Object o : acc.getValueFromModel(model))
+			{
+				if (o instanceof String) isString = true;
+				
+				String s = o.toString();
+				valList.add(s);
+				if (!cnt.containsKey(s)) cnt.put(s, 1);
+				else cnt.put(s, cnt.get(s) + 1);
+			}
+
+			System.out.println(prop + "\t(" + cnt.size() + " distinct values):");
+
+			// If the object is String, then all counts are 1, no need to print counts.
+			if (isString)
+			{
+				Collections.sort(valList);
+				for (String s : valList)
+				{
+					System.out.print("\t" + s);
+				}
+			}
+			else
+			{
+				for (Object key : getOrdering(cnt))
+				{
+					System.out.print("\t" + key + " = " + cnt.get(key));
+				}
+			}
+			System.out.println();
+		}
+	}
+
+	private static List<Class<BioPAXElement>> sortToName(Set<Class<BioPAXElement>> classes)
+	{
+		List<Class<BioPAXElement>> list = new ArrayList<Class<BioPAXElement>>(classes);
+		Collections.sort(list, new Comparator<Class<BioPAXElement>>()
+		{
+			public int compare(Class<BioPAXElement> clazz1, Class<BioPAXElement> clazz2)
+			{
+				return clazz1.getName().substring(clazz1.getName().lastIndexOf(".")+1).compareTo(
+					clazz2.getName().substring(clazz2.getName().lastIndexOf(".")+1));
+			}
+		});
+		return list;
+	}
+
+	private static List<Object> getOrdering(final Map<Object, Integer> map)
+	{
+		List<Object> list = new ArrayList<Object>(map.keySet());
+		Collections.sort(list, new Comparator<Object>()
+		{
+			public int compare(Object key1, Object key2)
+			{
+				int cnt1 = map.get(key1);
+				int cnt2 = map.get(key2);
+
+				if (cnt1 == cnt2) return key1.toString().compareTo(key2.toString());
+				else return cnt2 - cnt1;
+			}
+		});
+		return list;
+	}
+	
+	private static Set<BioPAXElement> filterToExactClass(Set<BioPAXElement> set, Class clazz)
+	{
+		Set<BioPAXElement> exact = new HashSet<BioPAXElement>();
+		for (BioPAXElement ele : set)
+		{
+			if (ele.getModelInterface().equals(clazz)) exact.add(ele);
+		}
+		return exact;
 	}
 
 	private static final Object NULL = new Object(){
@@ -417,6 +512,7 @@ public class PaxtoolsMain {
 			return "NULL";
 		}
 	};
+
 	private static final Object EMPTY = new Object(){
 		@Override
 		public String toString()
@@ -440,6 +536,8 @@ public class PaxtoolsMain {
 		cnt.put(key, cnt.get(key) + 1);
 	}
 
+	//-- End of Section; Printing summary ---------------------------------------------------------|
+	
     enum Command {
         merge("file1 file2 output\t\tmerges file2 into file1 and writes it into output", 3)
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
