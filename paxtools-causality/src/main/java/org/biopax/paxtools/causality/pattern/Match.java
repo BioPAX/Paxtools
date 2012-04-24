@@ -12,13 +12,6 @@ public class Match implements Cloneable
 {
 	private BioPAXElement[] variables;
 
-	/**
-	 * For cloning only.
-	 */
-	private Match()
-	{
-	}
-
 	public Match(int size)
 	{
 		this.variables = new BioPAXElement[size];
@@ -46,6 +39,8 @@ public class Match implements Cloneable
 	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
-		return super.clone();
+		Match m = new Match(variables.length);
+		System.arraycopy(variables, 0, m.variables, 0, variables.length);
+		return m;
 	}
 }

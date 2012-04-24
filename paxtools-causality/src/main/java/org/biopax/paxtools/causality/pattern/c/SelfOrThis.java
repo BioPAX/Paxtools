@@ -1,5 +1,7 @@
-package org.biopax.paxtools.causality.pattern;
+package org.biopax.paxtools.causality.pattern.c;
 
+import org.biopax.paxtools.causality.pattern.Constraint;
+import org.biopax.paxtools.causality.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.Collection;
@@ -10,11 +12,11 @@ import java.util.Collection;
  * 
  * @author Ozgun Babur
  */
-public class SelfOrThisConstraint extends ConstraintAdapter
+public class SelfOrThis extends ConstraintAdapter
 {
 	Constraint con;
 
-	public SelfOrThisConstraint(Constraint con)
+	public SelfOrThis(Constraint con)
 	{
 		this.con = con;
 		assert con.getVariableSize() == 2;
@@ -35,7 +37,7 @@ public class SelfOrThisConstraint extends ConstraintAdapter
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
-		Collection<BioPAXElement> gen = super.generate(match, ind);
+		Collection<BioPAXElement> gen = con.generate(match, ind);
 		gen.add(match.get(ind[0]));
 		return gen;
 	}

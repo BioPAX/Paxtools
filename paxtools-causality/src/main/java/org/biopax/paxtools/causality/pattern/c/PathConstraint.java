@@ -1,5 +1,6 @@
-package org.biopax.paxtools.causality.pattern;
+package org.biopax.paxtools.causality.pattern.c;
 
+import org.biopax.paxtools.causality.pattern.Match;
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;

@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality.pattern;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,15 +11,15 @@ public class Pattern
 	int variableSize;
 	List<MappedConst> constraints;
 
-	public Pattern(int variableSize)
-	{
-		this.variableSize = variableSize;
-	}
-
 	public Pattern(int variableSize, List<MappedConst> constraints)
 	{
 		this.variableSize = variableSize;
 		this.constraints = constraints;
+	}
+
+	public Pattern(int variableSize)
+	{
+		this(variableSize, new ArrayList<MappedConst>());
 	}
 
 	public void addConstraint(Constraint constr, int ... ind)

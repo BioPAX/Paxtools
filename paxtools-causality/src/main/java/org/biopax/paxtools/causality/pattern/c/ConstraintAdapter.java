@@ -1,5 +1,7 @@
-package org.biopax.paxtools.causality.pattern;
+package org.biopax.paxtools.causality.pattern.c;
 
+import org.biopax.paxtools.causality.pattern.Constraint;
+import org.biopax.paxtools.causality.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.Collection;

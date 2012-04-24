@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Searcher
 {
-	public List<Match> search(BioPAXElement ele, Pattern pattern)
+	public static List<Match> search(BioPAXElement ele, Pattern pattern)
 	{
 		Match m = new Match(pattern.getVariableSize());
 		m.set(ele, 0);
