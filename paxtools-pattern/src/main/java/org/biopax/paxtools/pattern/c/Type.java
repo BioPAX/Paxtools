@@ -1,6 +1,6 @@
-package org.biopax.paxtools.causality.pattern.c;
+package org.biopax.paxtools.pattern.c;
 
-import org.biopax.paxtools.causality.pattern.Match;
+import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
 
 /**
@@ -20,7 +20,9 @@ public class Type extends ConstraintAdapter
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
-		return match.get(ind[0]).getModelInterface().isAssignableFrom(clazz);
+		assert ind.length == 1;
+
+		return clazz.isAssignableFrom(match.get(ind[0]).getModelInterface());
 	}
 
 	@Override

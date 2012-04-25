@@ -1,6 +1,6 @@
-package org.biopax.paxtools.causality.pattern.c;
+package org.biopax.paxtools.pattern.c;
 
-import org.biopax.paxtools.causality.pattern.Constraint;
+import org.biopax.paxtools.pattern.Constraint;
 
 /**
  * Some predefined constraints.
@@ -83,5 +83,10 @@ public class ConBox
 	public static Constraint right()
 	{
 		return new PathConstraint("Conversion/right");
+	}
+
+	public static Constraint participatesInConv()
+	{
+		return new PathConstraint("PhysicalEntity/participantOf:Conversion");
 	}
 }

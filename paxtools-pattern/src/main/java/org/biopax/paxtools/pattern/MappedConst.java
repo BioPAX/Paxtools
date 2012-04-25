@@ -1,4 +1,4 @@
-package org.biopax.paxtools.causality.pattern;
+package org.biopax.paxtools.pattern;
 
 /**
  * @author Ozgun Babur

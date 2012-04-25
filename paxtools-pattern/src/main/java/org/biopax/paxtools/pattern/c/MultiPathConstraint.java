@@ -1,6 +1,6 @@
-package org.biopax.paxtools.causality.pattern.c;
+package org.biopax.paxtools.pattern.c;
 
-import org.biopax.paxtools.causality.pattern.Match;
+import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.Collection;

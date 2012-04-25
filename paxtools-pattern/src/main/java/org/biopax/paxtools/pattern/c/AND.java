@@ -1,7 +1,7 @@
-package org.biopax.paxtools.causality.pattern.c;
+package org.biopax.paxtools.pattern.c;
 
-import org.biopax.paxtools.causality.pattern.Constraint;
-import org.biopax.paxtools.causality.pattern.Match;
+import org.biopax.paxtools.pattern.Constraint;
+import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.Collection;
@@ -12,6 +12,11 @@ import java.util.HashSet;
  */
 public class AND extends OR
 {
+	public AND(Constraint... con)
+	{
+		super(con);
+	}
+
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{

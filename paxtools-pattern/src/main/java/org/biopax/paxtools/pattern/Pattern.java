@@ -1,4 +1,4 @@
-package org.biopax.paxtools.causality.pattern;
+package org.biopax.paxtools.pattern;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ public class Pattern
 
 	public void addConstraint(Constraint constr, int ... ind)
 	{
+		assert ind.length > 0;
 		assert checkIndsInRange(ind);
 		constraints.add(new MappedConst(constr, ind));
 	}

@@ -1,8 +1,8 @@
-package org.biopax.paxtools.causality.pattern;
+package org.biopax.paxtools.pattern;
 
-import org.biopax.paxtools.causality.pattern.c.ConBox;
-import org.biopax.paxtools.causality.pattern.c.Equality;
-import org.biopax.paxtools.causality.pattern.c.Type;
+import org.biopax.paxtools.pattern.c.ConBox;
+import org.biopax.paxtools.pattern.c.Equality;
+import org.biopax.paxtools.pattern.c.Type;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 
 /**
@@ -36,8 +36,8 @@ public class PatternBox
 		p.addConstraint(new Equality(false), i-1, i);
 		p.addConstraint(ConBox.withSimpleMembers(), i-1, ++i);
 		p.addConstraint(ConBox.withSimpleMembers(), i-1, ++i);
-		if (considerGenerics) p.addConstraint(ConBox.genericEquiv(), i-1, i++);
-		if (considerGenerics) p.addConstraint(ConBox.genericEquiv(), i-1, i++);
+		if (considerGenerics) p.addConstraint(ConBox.genericEquiv(), i-1, ++i);
+		if (considerGenerics) p.addConstraint(ConBox.genericEquiv(), i-1, ++i);
 		p.addConstraint(ConBox.peToER(), i-1, ++i);
 		p.addConstraint(ConBox.peToER(), i-1, ++i);
 		p.addConstraint(new Equality(true), i-1, i);

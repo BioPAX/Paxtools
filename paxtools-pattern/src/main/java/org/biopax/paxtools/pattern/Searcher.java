@@ -1,11 +1,9 @@
-package org.biopax.paxtools.causality.pattern;
+package org.biopax.paxtools.pattern;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.Model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
@@ -53,5 +51,22 @@ public class Searcher
 			}			
 		}
 		return list;
+	}
+	
+	public static Map<BioPAXElement, List<Match>> search(Model model, 
+		Class<? extends BioPAXElement> clazz, Pattern pattern)
+	{
+		Map<BioPAXElement, List<Match>> map = new HashMap<BioPAXElement, List<Match>>();
+
+		for (BioPAXElement ele : model.getObjects(clazz))
+		{
+			List<Match> matches = search(ele, pattern);
+			
+			if (!matches.isEmpty())
+			{
+				map.put(ele, matches);
+			}
+		}
+		return map;
 	}
 }

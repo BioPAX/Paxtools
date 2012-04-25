@@ -1,9 +1,9 @@
-package org.biopax.paxtools.causality.pattern.c;
+package org.biopax.paxtools.pattern.c;
 
-import org.biopax.paxtools.causality.pattern.MappedConst;
-import org.biopax.paxtools.causality.pattern.Match;
-import org.biopax.paxtools.causality.pattern.Pattern;
-import org.biopax.paxtools.causality.pattern.Searcher;
+import org.biopax.paxtools.pattern.MappedConst;
+import org.biopax.paxtools.pattern.Match;
+import org.biopax.paxtools.pattern.Pattern;
+import org.biopax.paxtools.pattern.Searcher;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
@@ -19,17 +19,8 @@ import java.util.Set;
 /**
  * @author Ozgun Babur
  */
-public class ConBoxTest
+public class ConBoxTest extends TestParent
 {
-	Model model;
-
-	@Before
-	public void setUp() throws Exception
-	{
-		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(getClass().getResourceAsStream("../../AR-TP53.owl"));
-	}
-
 	@Test
 	public void testErToPE() throws Exception
 	{
@@ -184,15 +175,14 @@ public class ConBoxTest
 		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_21741")));
 		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_31826")));
 	}
-	
-	private Set<BioPAXElement> collect(List<Match> list, int index)
-	{
-		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
 
-		for (Match match : list)
-		{
-			set.add(match.get(index));
-		}
-		return set;
+	@Test
+	public void testParticipatesInConv() throws Exception
+	{
+		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_31826"), // Gi family/GTP
+			new Pattern(2, Collections.singletonList(new MappedConst(ConBox.participatesInConv(), 0, 1))));
+
+		Assert.assertTrue(list.size() == 1);
+		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_35537")));
 	}
 }

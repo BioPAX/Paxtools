@@ -1,6 +1,6 @@
-package org.biopax.paxtools.causality.pattern.c;
+package org.biopax.paxtools.pattern.c;
 
-import org.biopax.paxtools.causality.pattern.Match;
+import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
@@ -16,11 +16,11 @@ import java.util.HashSet;
  *
  * @author Ozgun Babur
  */
-public class ParticipatedInConv extends ConstraintAdapter
+public class ParticipatesInConv extends ConstraintAdapter
 {
 	Type type;
 
-	public ParticipatedInConv(Type type)
+	public ParticipatesInConv(Type type)
 	{
 		this.type = type;
 	}
@@ -49,7 +49,7 @@ public class ParticipatedInConv extends ConstraintAdapter
 					result.add(cnv);
 				}
 				else if (cnv.getConversionDirection() == ConversionDirectionType.RIGHT_TO_LEFT &&
-					type == Type.INPUT ? cnv.getRight().contains(pe) : cnv.getLeft().contains(pe))
+					(type == Type.INPUT ? cnv.getRight().contains(pe) : cnv.getLeft().contains(pe)))
 				{
 					result.add(cnv);
 				}
@@ -57,7 +57,7 @@ public class ParticipatedInConv extends ConstraintAdapter
 				// but it is the best approximation.
 				else if ((cnv.getConversionDirection() == ConversionDirectionType.LEFT_TO_RIGHT ||
 					cnv.getConversionDirection() == null) &&
-					type == Type.INPUT ? cnv.getLeft().contains(pe) : cnv.getRight().contains(pe))
+					(type == Type.INPUT ? cnv.getLeft().contains(pe) : cnv.getRight().contains(pe)))
 				{
 					result.add(cnv);
 				}

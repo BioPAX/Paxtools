@@ -26,6 +26,7 @@
 		<module>paxtools-console</module>
 		<module>paxtools-query</module>
 		<module>paxtools-hql</module>
+        <module>paxtools-pattern</module>
         <module>paxtools-causality</module>
     </modules>
 
