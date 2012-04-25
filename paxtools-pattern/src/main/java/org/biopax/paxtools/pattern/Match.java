@@ -3,9 +3,6 @@ package org.biopax.paxtools.pattern;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Named;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author Ozgun Babur
  */

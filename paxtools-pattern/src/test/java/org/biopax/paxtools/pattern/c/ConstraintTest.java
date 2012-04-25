@@ -1,18 +1,13 @@
 package org.biopax.paxtools.pattern.c;
 
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Complex;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.model.level3.SmallMolecule;
-import org.biopax.paxtools.pattern.MappedConst;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.Searcher;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
