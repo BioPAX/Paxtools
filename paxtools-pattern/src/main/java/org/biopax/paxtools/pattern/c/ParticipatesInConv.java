@@ -18,9 +18,9 @@ import java.util.HashSet;
  */
 public class ParticipatesInConv extends ConstraintAdapter
 {
-	Type type;
+	RelType type;
 
-	public ParticipatesInConv(Type type)
+	public ParticipatesInConv(RelType type)
 	{
 		this.type = type;
 	}
@@ -49,7 +49,7 @@ public class ParticipatesInConv extends ConstraintAdapter
 					result.add(cnv);
 				}
 				else if (cnv.getConversionDirection() == ConversionDirectionType.RIGHT_TO_LEFT &&
-					(type == Type.INPUT ? cnv.getRight().contains(pe) : cnv.getLeft().contains(pe)))
+					(type == RelType.INPUT ? cnv.getRight().contains(pe) : cnv.getLeft().contains(pe)))
 				{
 					result.add(cnv);
 				}
@@ -57,7 +57,7 @@ public class ParticipatesInConv extends ConstraintAdapter
 				// but it is the best approximation.
 				else if ((cnv.getConversionDirection() == ConversionDirectionType.LEFT_TO_RIGHT ||
 					cnv.getConversionDirection() == null) &&
-					(type == Type.INPUT ? cnv.getLeft().contains(pe) : cnv.getRight().contains(pe)))
+					(type == RelType.INPUT ? cnv.getLeft().contains(pe) : cnv.getRight().contains(pe)))
 				{
 					result.add(cnv);
 				}
@@ -71,11 +71,5 @@ public class ParticipatesInConv extends ConstraintAdapter
 	public int getVariableSize()
 	{
 		return 2;
-	}
-	
-	public enum Type
-	{
-		INPUT,
-		OUTPUT
 	}
 }

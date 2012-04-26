@@ -112,7 +112,7 @@ public class ConstraintTest extends TestParent
 	public void testParticipatesInConv() throws Exception
 	{
 		Pattern p = new Pattern(2);
-		p.addConstraint(new ParticipatesInConv(ParticipatesInConv.Type.INPUT), 0, 1);
+		p.addConstraint(new ParticipatesInConv(RelType.INPUT), 0, 1);
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -120,7 +120,7 @@ public class ConstraintTest extends TestParent
 		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_50156")));
 
 		p = new Pattern(2);
-		p.addConstraint(new ParticipatesInConv(ParticipatesInConv.Type.OUTPUT), 0, 1);
+		p.addConstraint(new ParticipatesInConv(RelType.OUTPUT), 0, 1);
 
 		list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -131,7 +131,7 @@ public class ConstraintTest extends TestParent
 	public void testSelfOrThis() throws Exception
 	{
 		Pattern p = new Pattern(2);
-		p.addConstraint(new SelfOrThis(new ParticipatesInConv(ParticipatesInConv.Type.INPUT)), 0, 1);
+		p.addConstraint(new SelfOrThis(new ParticipatesInConv(RelType.INPUT)), 0, 1);
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 

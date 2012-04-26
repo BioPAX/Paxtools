@@ -19,12 +19,14 @@ import java.util.Map;
 public class PatternBoxTest
 {
 	Model model;
+	Model model_urea;
 
 	@Before
 	public void setUp() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
 		model = h.convertFromOWL(getClass().getResourceAsStream("AR-TP53.owl"));
+		model_urea = h.convertFromOWL(getClass().getResourceAsStream("UreaCycle.owl"));
 	}
 
 	@Test
@@ -68,6 +70,20 @@ public class PatternBoxTest
 		for (BioPAXElement ele : map.keySet())
 		{
 //			printMatches(map.get(ele));
+		}
+	}
+
+	@Test
+	public void testConsecutiveCatalysis() throws Exception
+	{
+		Map<BioPAXElement,List<Match>> map = Searcher.search(
+			model_urea, EntityReference.class, PatternBox.consecutiveCatalysis());
+
+		Assert.assertTrue(map.size() > 0);
+
+		for (BioPAXElement ele : map.keySet())
+		{
+			printMatches(map.get(ele));
 		}
 	}
 

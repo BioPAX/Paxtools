@@ -29,9 +29,19 @@ public class ConBox
 		return new PathConstraint("Control/controlled");
 	}
 
+	public static Constraint controllerPE()
+	{
+		return new PathConstraint("Control/controller:PhysicalEntity");
+	}
+
 	public static Constraint controlToConv()
 	{
 		return new PathConstraint("Control/controlled*:Conversion");
+	}
+
+	public static Constraint convToControl()
+	{
+		return new PathConstraint("Conversion/controlledOf*");
 	}
 
 	public static Constraint controlsConv()
@@ -88,5 +98,11 @@ public class ConBox
 	public static Constraint participatesInConv()
 	{
 		return new PathConstraint("PhysicalEntity/participantOf:Conversion");
+	}
+
+	public static Constraint compToER()
+	{
+		return new MultiPathConstraint("Complex/component*:SimplePhysicalEntity/entityReference",
+			"SimplePhysicalEntity/entityReference");
 	}
 }

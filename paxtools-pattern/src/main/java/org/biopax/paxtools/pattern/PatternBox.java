@@ -1,8 +1,6 @@
 package org.biopax.paxtools.pattern;
 
-import org.biopax.paxtools.pattern.c.ConBox;
-import org.biopax.paxtools.pattern.c.Equality;
-import org.biopax.paxtools.pattern.c.Type;
+import org.biopax.paxtools.pattern.c.*;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 
 /**
@@ -41,6 +39,24 @@ public class PatternBox
 		p.addConstraint(ConBox.peToER(), i-1, ++i);
 		p.addConstraint(ConBox.peToER(), i-1, ++i);
 		p.addConstraint(new Equality(true), i-1, i);
+		return p;
+	}
+
+	public static Pattern consecutiveCatalysis()
+	{
+		Pattern p = new Pattern(11);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(ConBox.withComplexes(), i, ++i);
+		p.addConstraint(ConBox.downControl(), i, ++i);
+		p.addConstraint(ConBox.controlToConv(), i, ++i);
+		p.addConstraint(new ParticipatingPE(RelType.OUTPUT), i-1, i, ++i);
+		p.addConstraint(new ParticipatesInConv(RelType.INPUT), i, ++i);
+		p.addConstraint(new RelatedControl(RelType.INPUT), i-1, i, ++i);
+		p.addConstraint(ConBox.controllerPE(), i, ++i);
+		p.addConstraint(new NOT(ConBox.compToER()), i, 0);
+		p.addConstraint(ConBox.withSimpleMembers(), i, ++i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
 		return p;
 	}
 }

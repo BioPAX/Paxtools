@@ -19,7 +19,7 @@ import java.util.Set;
 @Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ControlImpl extends InteractionImpl
+public class  ControlImpl extends InteractionImpl
 		implements Control
 {
 // ------------------------------ FIELDS ------------------------------
