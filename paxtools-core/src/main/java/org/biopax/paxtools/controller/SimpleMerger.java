@@ -3,6 +3,7 @@ package org.biopax.paxtools.controller;
 import org.apache.commons.collections15.set.CompositeSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 
@@ -107,7 +108,6 @@ public class SimpleMerger
 		
 		
 		// Next, we only copy elements having new URIs -
-		final Set<BioPAXElement> merged = new HashSet<BioPAXElement>();
 		for (BioPAXElement bpe : sources)
 		{
 			/* if there exists target element with the same id, 
@@ -197,8 +197,9 @@ public class SimpleMerger
 				(Set<BioPAXElement>) editor.getInverseAccessor().getValueFromBean(bpe));
 			for (BioPAXElement value : values) 
 			{
-				if(value != null && !target.contains(value)) {
-					log.warn("Updating inverse property " + editor.getProperty() + 
+				//extra fix for the default (in-memory) Model implementation only
+				if(value != null && target instanceof ModelImpl && !target.contains(value)) {
+					log.info("Updating inverse property " + editor.getProperty() + 
 						"Of: value " + value.getRDFId() + "(" + value.getModelInterface().getSimpleName() 
 						+ ") " + " will be removed (not found in the merged model)");
 					if (editor.isInverseMultipleCardinality()) {
@@ -219,14 +220,14 @@ public class SimpleMerger
 			BioPAXElement newValue = target.getByID(value.getRDFId());
 			if (!newValue.equals(value)) {
 				// newValue is a different, not null BioPAX element
-				if (!newValue.isEquivalent(value))
+				if (log.isDebugEnabled() && !newValue.isEquivalent(value))
 				{
 					String msg = "Updating property " + editor.getProperty() +
 						"the replacement (target) object " + newValue + " (" +
 					    newValue.getModelInterface().getSimpleName() + "), with the same URI (" +
 					    newValue.getRDFId() + "), " + " is not equivalent to the source: " + 
 					    value + " (" + value.getModelInterface().getSimpleName() + ")!";
-					log.warn(msg); // we can live with it in some cases...(exception may be thrown below)
+					log.debug(msg); // we can live with it in some cases...(exception may be thrown below)
 				}
 
 				/* 

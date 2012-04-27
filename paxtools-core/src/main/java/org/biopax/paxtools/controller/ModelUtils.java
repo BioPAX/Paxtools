@@ -462,7 +462,6 @@ public class ModelUtils {
 		traverser.traverse(bpe, model);
 		
 		return model;
-		//TODO limit to elements from this.model (add extra parameter)?
 	}
 	
 	

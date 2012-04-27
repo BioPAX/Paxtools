@@ -11,7 +11,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -101,17 +100,18 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	@Override
 	public String toString() {
 		try {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append(getRDFId()).append(" ");
 			sb.append(getName().toString());
 			if (tissue != null)
 				sb.append(" tissue: ").append(tissue.getTerm().toString());
 			if (celltype != null)
 				sb.append(" celltype: ").append(celltype.getTerm().toString());
+			sb.append(" xrefs: ").append(getXref().toString());
 			return sb.toString();
 		} catch (Exception e) {
 			// possible issues - when in a persistent context (e.g., lazy collections init...)
-			LOG.warn("toString(): ", e);
+			LOG.warn("Error in toString(): ", e);
 			return getRDFId();
 		}
 	}
