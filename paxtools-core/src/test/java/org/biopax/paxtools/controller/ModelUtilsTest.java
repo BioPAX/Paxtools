@@ -122,7 +122,7 @@ public class ModelUtilsTest {
 		assertFalse(m.contains(x2)); // deleted!
 		
 		try {
-			m.replace(pr1, x1); // logs error, no effect on the model
+			m.replace(pr1, x1); // fails, no effect on the model
 			fail("Must fail!");
 		} catch (IllegalBioPAXArgumentException e) {
 			// fine!

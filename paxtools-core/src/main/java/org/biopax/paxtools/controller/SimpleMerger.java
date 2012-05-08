@@ -199,7 +199,7 @@ public class SimpleMerger
 			{
 				//extra fix for the default (in-memory) Model implementation only
 				if(value != null && target instanceof ModelImpl && !target.contains(value)) {
-					log.info("Updating inverse property " + editor.getProperty() + 
+					log.warn("Updating inverse property " + editor.getProperty() + 
 						"Of: value " + value.getRDFId() + "(" + value.getModelInterface().getSimpleName() 
 						+ ") " + " will be removed (not found in the merged model)");
 					if (editor.isInverseMultipleCardinality()) {

@@ -11,6 +11,7 @@ import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
@@ -71,6 +72,7 @@ public class ModelUtils {
 	
 	private final Model model; // a model to hack ;)
 	private final BioPAXIOHandler io;
+	private final EditorMap em;
 	
 	/**
 	 * Controlled vocabulary terms for the RelationshipType 
@@ -159,6 +161,7 @@ public class ModelUtils {
 		this.io = new SimpleIOHandler(model.getLevel());
 		((SimpleIOHandler) this.io).mergeDuplicates(true);
 		((SimpleIOHandler) this.io).normalizeNameSpaces(false);
+		this.em = SimpleEditorMap.get(model.getLevel());
 	}
 	
 	
@@ -173,6 +176,7 @@ public class ModelUtils {
 		this.io = new SimpleIOHandler(level);
 		((SimpleIOHandler) this.io).mergeDuplicates(true);
 		((SimpleIOHandler) this.io).normalizeNameSpaces(false);
+		this.em = SimpleEditorMap.get(level);
 	}
 	
     /**
@@ -196,59 +200,41 @@ public class ModelUtils {
     
     /**
      * Replaces existing BioPAX elements with ones from the map,
-     * and recursively updates all the object references
-     * (parents' object properties) in a single pass.
-     * At the end, it removes old and adds new elements to the model.
+     * recursively updates corresponding BioPAX object references, 
+     * and removes old and adds new elements in the model.
      * 
-     * Even if current model is not self-consistent (is being currently modified, 
-     * i.e., some objects there refer to external, implicit children, via 
-     * BioPAX object properties or inverse properties), all BioPAX properties will be 
-     * recursively updated anyway (and objects replaced), but some inverse properties 
-     * may be or become dangling (still pointing to an external or replaced object); 
-     * so, consider using {@link Model#repair()} before or after this method 
-     * in such cases, as needed. Do not forget to write tests!
-     * Also consider using {@link #removeObjectsIfDangling(Class)} after 
-     * this method to also remove all dependents of the replaced objects.
+     * This does not automatically move/migrate old (replaced) object's
+     * children to new objects though (the replacement ones are supposed to have 
+     * their own properties already set or to be set shortly)
      * 
-     * @param subs
+     * As the result, some object properties will refer to new (replacement) values, 
+     * none - to old ones, and no inverse object properties should contain any old objects;
+     * therefore, some of the replaced/removed objects will lost their children 
+     * (where there exists a property, inverse property pair), and such
+     * child objects, in turn, can become dangling (if not used by other BioPAX elements).
+     * 
+     * For best results, when unsure, or when performance is not a worry, 
+     * consider using {@link Model#repair()} before and {@link #removeObjectsIfDangling(Class)}
+     * after this method (and always write tests)!
+     * 
+     * @param subs the replacements map (many-to-one, old-to-new)
+     * @throws IllegalBioPAXArgumentException if there is an incompatible type replacement object
      */
     public void replace(final Map<? extends BioPAXElement, ? extends BioPAXElement> subs) 
     {    	
-		Visitor visitor = new Visitor() {
-			@Override
-			public void visit(BioPAXElement domain, Object range, Model model,
-					PropertyEditor editor) 
-			{
-				if(editor instanceof ObjectPropertyEditor && subs.containsKey(range)) 
-				{
-					ObjectPropertyEditor e = (ObjectPropertyEditor) editor;
-					BioPAXElement replacement = subs.get(range);
-					final String logMessage = 
-						((BioPAXElement)range).getRDFId() + " (" +  range + "; " 
-						+ ((BioPAXElement)range).getModelInterface().getSimpleName() + ")"
-						+ " with " + ((replacement != null) ? replacement.getRDFId() : "") 
-						+ " (" +  replacement + "); for property: " + e.getProperty()
-						+ " of bean: " + domain.getRDFId() + " (" + domain + "; " 
-						+ domain.getModelInterface().getSimpleName() + ")";
-					
-					if(replacement != null && !editor.getRange().isInstance(replacement))
-						throw new IllegalBioPAXArgumentException("Incompatible type! " +
-							" Attempted to replace " + logMessage);
-					
-					if (e.isMultipleCardinality()) {
-						e.removeValueFromBean(range, domain);
-					}
-					e.setValueToBean(replacement, domain);
-					
-					if(LOG.isDebugEnabled())
-						LOG.debug("Replaced " + logMessage);
-				}
-			}
-		};
-		
-		Traverser traverser = new Traverser(SimpleEditorMap.get(model.getLevel()), visitor);
 		for (BioPAXElement bpe: new HashSet<BioPAXElement>(model.getObjects())) {	
-			traverser.traverse(bpe, model);
+			// skip, if it's itself to be replaced
+			if(subs.containsKey(bpe)) // TODO this may be unnecessary...
+				continue;
+			
+			// update object properties using the ('subs') map
+			updateObjectProperties(bpe, subs);
+			/* also, find and update object properties (e.g., 'xref') 
+			 * of those other elements set to be replaced if this element 
+			 * has corresponding inverse property 
+			 * (e.g., xrefOf, which contains one of objects to be replaced)
+			 */
+			updateInverseObjectProperties(bpe, subs);
 		}
 		
 		// remove/add in the model's registry (separate loops are required)
@@ -256,12 +242,69 @@ public class ModelUtils {
 			model.remove(o);
 		}
 		for(BioPAXElement o : subs.values()) {
-			if(o != null && !model.contains(o)) 
+			// subs is 'many-to-one' (the same value is possible for different keys)
+			if(o != null && !model.contains(o))
 				model.add(o);
 		}
     }
     
-    /**
+    
+    private void updateObjectProperties(BioPAXElement bpe, 
+			final Map<? extends BioPAXElement, ? extends BioPAXElement> subs) {
+		
+		Set<PropertyEditor> editors = em.getEditorsOf(bpe);
+		for (PropertyEditor editor : editors) {
+			if (editor instanceof ObjectPropertyEditor) {
+				Set<BioPAXElement> values = new HashSet<BioPAXElement>(
+					(Set<BioPAXElement>) editor.getValueFromBean(bpe));
+				for (BioPAXElement value : values) {
+					if(subs.containsKey(value))  {
+						// 'value' is to be replaced with the 'replacement'
+						BioPAXElement replacement = subs.get(value);
+						
+						if(replacement != null && !editor.getRange().isInstance(replacement))
+							throw new IllegalBioPAXArgumentException(
+							"Incompatible type! Attempted to replace " + 
+							value.getRDFId() + " (" +  value + "; " 
+							+ value.getModelInterface().getSimpleName() + ")"
+							+ " with " + ((replacement != null) ? replacement.getRDFId() : "") 
+							+ " (" +  replacement + "); for property: " + editor.getProperty()
+							+ " of bean: " + bpe.getRDFId() + " (" + bpe + "; " 
+							+ bpe.getModelInterface().getSimpleName() + ")");
+						
+						if (editor.isMultipleCardinality()) {
+							editor.removeValueFromBean(value, bpe);
+						}
+						editor.setValueToBean(replacement, bpe);
+					}	
+				}
+			}
+		}
+	}
+	
+    private void updateInverseObjectProperties(BioPAXElement bpe, 
+    		final Map<? extends BioPAXElement, ? extends BioPAXElement> subs) {
+    	Set<ObjectPropertyEditor> editors = em.getInverseEditorsOf(bpe);
+		for (ObjectPropertyEditor editor : editors)
+		{
+			Set<BioPAXElement> values = new HashSet<BioPAXElement>(
+				(Set<BioPAXElement>) editor.getInverseAccessor().getValueFromBean(bpe));
+			for (BioPAXElement value : values) 
+			{
+				if(subs.containsKey(value))  {
+					//do: e.g., 'bpe.xrefOf' won't contain the replaced 'value' 
+					// (e.g., a ProteinReference) anymore, and so the 'value.xref' won't contain bpe either! 
+					if (editor.isInverseMultipleCardinality()) {
+						editor.removeValueFromBean(bpe, value); 
+					} else
+						editor.setValueToBean(null, value);
+				}
+			}
+		}
+	}
+
+    
+	/**
      * Deletes (recursively from the current model) 
      * only those child elements that would become "dangling" 
      * (not a property value of anything) if the parent 
@@ -274,7 +317,6 @@ public class ModelUtils {
     @Deprecated
     public void removeDependentsIfDangling(BioPAXElement parent) 
     {	
-		EditorMap em = SimpleEditorMap.get(model.getLevel());
     	// get the parent and all its children
 		Fetcher fetcher = new Fetcher(em);
 		Model childModel = model.getLevel().getDefaultFactory().createModel();
@@ -346,7 +388,7 @@ public class ModelUtils {
 			 * it would remember the state (stacks) from the last run, which 
 			 * we would have to clear anyway;
 			 */
-			(new AbstractTraverser(SimpleEditorMap.get(model.getLevel())) 
+			(new AbstractTraverser(em) 
 			{
 				@Override
 				protected void visit(Object value, BioPAXElement parent, 
@@ -410,8 +452,7 @@ public class ModelUtils {
 		// for each ROOT element (puts a strict top-down order on the following)
 		Set<BioPAXElement> roots = getRootElements(BioPAXElement.class);
 		for(BioPAXElement bpe : roots) {
-			PropertyReasoner reasoner = new PropertyReasoner(property, 
-					SimpleEditorMap.get(model.getLevel()));
+			PropertyReasoner reasoner = new PropertyReasoner(property, em);
 			reasoner.setDomains(forClasses);
 			reasoner.inferPropertyValue(bpe);
 		}
@@ -447,8 +488,7 @@ public class ModelUtils {
 	{	
 		Model model = this.model.getLevel().getDefaultFactory().createModel();
 		
-		AbstractTraverser traverser = new AbstractTraverser(
-				SimpleEditorMap.get(model.getLevel())) {
+		AbstractTraverser traverser = new AbstractTraverser(em) {
 			@Override
 			protected void visit(Object range, BioPAXElement domain,
 					Model model, PropertyEditor editor) {
@@ -477,11 +517,10 @@ public class ModelUtils {
 	public Model getAllChildren(BioPAXElement bpe,
 			Filter<PropertyEditor>... filters) {
 		Model model = this.model.getLevel().getDefaultFactory().createModel();
-		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
 		if (filters.length == 0) {
-			new Fetcher(editorMap, nextStepFilter).fetch(bpe, model);
+			new Fetcher(em, nextStepFilter).fetch(bpe, model);
 		} else {
-			new Fetcher(editorMap, filters).fetch(bpe, model);
+			new Fetcher(em, filters).fetch(bpe, model);
 		}
 		model.remove(bpe); // remove the parent
 
@@ -500,11 +539,10 @@ public class ModelUtils {
 	public Set<BioPAXElement> getAllChildrenAsSet(BioPAXElement bpe,
 			Filter<PropertyEditor>... filters) {
 		Set<BioPAXElement> toReturn = null;
-		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
 		if (filters.length == 0) {
-			toReturn = new Fetcher(editorMap, nextStepFilter).fetch(bpe);
+			toReturn = new Fetcher(em, nextStepFilter).fetch(bpe);
 		} else {
-			toReturn = new Fetcher(editorMap, filters).fetch(bpe);
+			toReturn = new Fetcher(em, filters).fetch(bpe);
 		}
 
 		toReturn.remove(bpe); // remove the parent
@@ -523,8 +561,7 @@ public class ModelUtils {
 	{	
 		final Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
 		
-		AbstractTraverser traverser = new AbstractTraverser(
-				SimpleEditorMap.get(model.getLevel())) {
+		AbstractTraverser traverser = new AbstractTraverser(em) {
 			@Override
 			protected void visit(Object range, BioPAXElement domain,
 					Model model, PropertyEditor editor) {
@@ -792,8 +829,7 @@ public class ModelUtils {
 	 * @param organisms
 	 */
 	private void addOrganism(BioPAXElement entity, Set<BioSource> organisms) {
-		PropertyEditor editor = SimpleEditorMap.get(model.getLevel())
-				.getEditorForProperty("organism", entity.getModelInterface());
+		PropertyEditor editor = em.getEditorForProperty("organism", entity.getModelInterface());
 		if (editor != null) {
 			Object o = editor.getValueFromBean(entity);
 			if(o != null) {
