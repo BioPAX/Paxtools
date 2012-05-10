@@ -34,6 +34,7 @@ public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements 
 	 */
 	public int size()
 	{
+		//TODO this set is immutable by design (as the javadoc says); why not to calculate size once and then reuse?
 		int i = 0;
 		for (E e : this)
 		{

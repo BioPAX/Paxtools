@@ -366,7 +366,11 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 
 
 	/**
-	 * Removes the <em>value</em> from the <em>bean</em> using the default {@link #removeMethod}.
+	 * Removes the <em>value</em> from the <em>bean</em> using the default {@link #removeMethod},
+	 * if such method is defined (i.e., it's a multiple cardinality property), 
+	 * otherwise sets <em>unknown</em> value using {@link #setValueToBean(Object, BioPAXElement)} 
+	 * (but only if )
+	 * 
 	 * @param value to be removed from the bean
 	 * @param bean bean from which the value is going to be removed
 	 */
@@ -377,16 +381,23 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 			if (removeMethod != null)
 			{
 				invokeMethod(removeMethod, bean, value);
-			} else
-			{
+			} else {
+				assert !isMultipleCardinality() : "removeMethod is not defined " +
+						"for the multiple cardinality property: " + property +
+						". Here, this might add 'unknown' value while keeping exisiting one as well!";
+				
 				if(this.getValueFromBean(bean).contains(value))
 				{
 					this.setValueToBean(this.getUnknown(),bean);
 				}
-				else
-					log.error("Given value :" +value +"is not equal to the existing value. " +
-					          "remove value is ignored");
-
+				else { 
+					//TODO throw an exception if range is violated rather than always log the following message
+					log.error("Given value :" + value + 
+						" is not equal to the existing value. " +
+					         "remove value is ignored");
+					assert getRange().isInstance(value) : "Range violation!";
+					assert getDomain().isInstance(bean) : "Domain violation!";
+				}
 			}
 		}
 		catch (Exception e)

@@ -9,19 +9,15 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Map;
 
 import static org.junit.Assert.*;
 
 public class ModelUtilsTest {
-
-	@Before
-	public void setUp() throws Exception {
-	}
 
 	@Test
 	public final void testMergeAndReplace() {
@@ -263,5 +259,44 @@ public class ModelUtilsTest {
 				mu.generateClassMetrics();
 		System.out.println("metrics = " + metrics);
 
+	}
+	
+	
+	@Test
+	public final void testRemoveObjectsIfDangling() {
+		Model model = (new SimpleIOHandler()).convertFromOWL(
+			getClass().getClassLoader().getResourceAsStream("L3" + File.separator + "hcyc.owl"));
+		ModelUtils mu = new ModelUtils(model);
+		assertEquals(6, model.getObjects().size());
+		
+		//there is no dangling util. class objects at the beginning
+		mu.removeObjectsIfDangling(UtilityClass.class);
+		assertEquals(6, model.getObjects().size());
+		
+		SmallMolecule sm1 = (SmallMolecule) model.getByID("SM1");
+		SmallMoleculeReference smr1 = (SmallMoleculeReference) model.getByID("SMR1");
+		SmallMoleculeReference a = (SmallMoleculeReference) model.getByID("A");
+		
+		assertNotNull(smr1);
+		assertTrue(smr1.getMemberEntityReference().contains(a));
+		
+		// removing just SMR1 from SM1 and model makes both it and A dangling (though A is still member of SMR1)!
+		sm1.setEntityReference(null); //unklinks SMR1
+		model.remove(smr1);
+		assertTrue(smr1.getEntityReferenceOf().isEmpty());
+		
+		// call to remove dangling things (but not B, which also belongs from SMR2, SM2)
+		mu.removeObjectsIfDangling(UtilityClass.class);
+		
+		assertNull(model.getByID("SMR1"));		
+		assertNull(model.getByID("A"));	
+		SmallMoleculeReference b = (SmallMoleculeReference) model.getByID("B");
+		assertNotNull(b);
+		assertEquals(4, model.getObjects().size());
+		
+		// IMPORTANT to understand is that removed SMR1 and A still have B:
+		assertEquals(3, b.getMemberEntityReferenceOf().size());
+		assertTrue(a.getMemberEntityReference().contains(b));
+		assertTrue(smr1.getMemberEntityReference().contains(b));
 	}
 }

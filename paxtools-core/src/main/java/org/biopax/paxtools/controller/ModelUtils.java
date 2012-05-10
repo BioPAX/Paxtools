@@ -11,7 +11,6 @@ import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
@@ -224,8 +223,8 @@ public class ModelUtils {
     {    	
 		for (BioPAXElement bpe: new HashSet<BioPAXElement>(model.getObjects())) {	
 			// skip, if it's itself to be replaced
-			if(subs.containsKey(bpe)) // TODO this may be unnecessary...
-				continue;
+//			if(subs.containsKey(bpe)) // TODO this may be unnecessary or bug...
+//				continue;
 			
 			// update object properties using the ('subs') map
 			updateObjectProperties(bpe, subs);
@@ -272,9 +271,8 @@ public class ModelUtils {
 							+ " of bean: " + bpe.getRDFId() + " (" + bpe + "; " 
 							+ bpe.getModelInterface().getSimpleName() + ")");
 						
-						if (editor.isMultipleCardinality()) {
+						if(editor.isMultipleCardinality())
 							editor.removeValueFromBean(value, bpe);
-						}
 						editor.setValueToBean(replacement, bpe);
 					}	
 				}
@@ -294,10 +292,7 @@ public class ModelUtils {
 				if(subs.containsKey(value))  {
 					//do: e.g., 'bpe.xrefOf' won't contain the replaced 'value' 
 					// (e.g., a ProteinReference) anymore, and so the 'value.xref' won't contain bpe either! 
-					if (editor.isInverseMultipleCardinality()) {
-						editor.removeValueFromBean(bpe, value); 
-					} else
-						editor.setValueToBean(null, value);
+					editor.removeValueFromBean(bpe, value); 
 				}
 			}
 		}
@@ -403,9 +398,14 @@ public class ModelUtils {
 	}
 	
 	/**
-	 * Iteratively removes dangling elements
-	 * of given type, e.g., utility class,  
-	 * from current model.
+	 * Iteratively removes "dangling" elements
+	 * of the type, e.g., all utility class objects 
+	 * not used by others, from current model.
+	 * 
+	 * This, however, does not change relationships
+	 * among objects, particularly, some inverse properties,
+	 * such as entityReferenceOf or xrefOf, may still 
+	 * refer to a removed object.
 	 */
 	public <T extends BioPAXElement> void removeObjectsIfDangling(Class<T> clazz) 
 	{
@@ -413,9 +413,8 @@ public class ModelUtils {
 		// get rid of dangling objects
 		if(!dangling.isEmpty()) {
 			if(LOG.isInfoEnabled()) 
-				LOG.info(dangling.size() + " BioPAX utility objects " +
-						"were/became dangling, and they "
-						+ " will be deleted...");
+				LOG.info(dangling.size() + " " + clazz.getSimpleName() +
+					" dangling objects will be deleted...");
 			
 
 			for(BioPAXElement thing : dangling) {

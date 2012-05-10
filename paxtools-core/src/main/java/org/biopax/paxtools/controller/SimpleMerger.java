@@ -202,11 +202,9 @@ public class SimpleMerger
 					log.warn("Updating inverse property " + editor.getProperty() + 
 						"Of: value " + value.getRDFId() + "(" + value.getModelInterface().getSimpleName() 
 						+ ") " + " will be removed (not found in the merged model)");
-					if (editor.isInverseMultipleCardinality()) {
-						// mind the args order (it's reverse compared to "normal" editors use)!
-						editor.removeValueFromBean(bpe, value);
-					} else 
-						editor.setValueToBean(null, value);
+
+					// mind the args order (it's reverse compared to "normal" editors use)!
+					editor.removeValueFromBean(bpe, value);
 				}
 			}
 		}
@@ -233,12 +231,11 @@ public class SimpleMerger
 				/* 
 				 * "setValueToBean" comes first to prevent deleting of current value 
 				 * even though it cannot be replaced with newValue 
-				 * due to the property range error
+				 * due to the property range error (setValueToBean throws exception)
 				 */
 				editor.setValueToBean(newValue, update);
-				if (editor.isMultipleCardinality()) {
+				if(editor.isMultipleCardinality())
 					editor.removeValueFromBean(value, update);
-				}
 			} 
 		}
 	}
