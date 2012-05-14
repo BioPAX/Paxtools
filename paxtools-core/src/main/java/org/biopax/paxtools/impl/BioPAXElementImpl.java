@@ -16,8 +16,8 @@ import java.util.Map;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 @NamedQueries({
 	@NamedQuery(name="org.biopax.paxtools.impl.BioPAXElementExists",
-				query="select 1 from BioPAXElementImpl where pk=:md5uri"),
-})
+				query="select 1 from BioPAXElementImpl where pk=:md5uri")
+	})
 public abstract class BioPAXElementImpl implements BioPAXElement
 {
 	// Full-text search field names (case sensitive!)
