@@ -1,6 +1,6 @@
 package org.biopax.paxtools.io.sif.level3;
 
-import org.biopax.paxtools.fixer.Fixer;
+import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -26,7 +26,7 @@ public class StateNetworkAnalyzer {
 
 
         GroupMap groupMap = Grouper.inferGroups(model);
-        Fixer.replaceEquivalentFeatures(model);
+        ModelUtils.replaceEquivalentFeatures(model);
 
         stateChangeMap = new HashMap<BioPAXElement, Set<PEStateChange>>();
         stateActivityMap = new HashMap<SimplePhysicalEntity, Integer>();

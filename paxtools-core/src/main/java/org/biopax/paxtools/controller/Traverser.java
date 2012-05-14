@@ -85,9 +85,9 @@ public class Traverser
     protected void traverseElements(BioPAXElement element, Model model, PropertyEditor<?,?> editor, Set<?> valueSet)
     {
         for (Object value : valueSet)
-    {
-        visitor.visit(element, value, model, editor);
-    }
+        {
+        	visitor.visit(element, value, model, editor);
+        }
     }
 
 

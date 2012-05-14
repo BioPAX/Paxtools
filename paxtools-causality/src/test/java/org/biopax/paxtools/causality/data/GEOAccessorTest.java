@@ -3,13 +3,13 @@ package org.biopax.paxtools.causality.data;
 import org.biopax.paxtools.causality.model.Alteration;
 import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Change;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * @author Ozgun Babur
  */
+@Ignore //TODO it failed sometimes (NPE, file is null), sometimes - not... Should not depend on non-standard file path or internet connection (classpath locations can be used...)
 public class GEOAccessorTest
 {
 	@Test

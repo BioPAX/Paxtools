@@ -2,7 +2,7 @@ package org.biopax.paxtools.io.sif.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.fixer.Fixer;
+import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
@@ -34,7 +34,7 @@ public class Grouper
 
 	public static GroupMap inferGroups(Model model)
 	{
-		Fixer.normalizeGenerics(model);
+		ModelUtils.normalizeGenerics(model);
 		Grouper grouper =new Grouper();
 		return new GroupMap(grouper.inferGroups(model, grouper));
 	}
@@ -134,7 +134,7 @@ public class Grouper
 				owner.addSubgroup(group);
 			}
 		}
-		Fixer.copySimplePointers(model, complex, group);
+		ModelUtils.copySimplePointers(model, complex, group);
 		return group;
 	}
 
@@ -175,7 +175,7 @@ public class Grouper
 				owner.addSubgroup(group);
 			}
 		}
-		Fixer.copySimplePointers(model, element, group);
+		ModelUtils.copySimplePointers(model, element, group);
 		return group.isEmpty() ? null : group;
 	}
 }

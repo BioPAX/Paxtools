@@ -1,6 +1,5 @@
 package org.biopax.paxtools.io.sif;
 
-import org.biopax.paxtools.fixer.Fixer;
 import org.biopax.paxtools.impl.level3.MockFactory;
 import org.biopax.paxtools.io.sif.level3.GroupMap;
 import org.biopax.paxtools.io.sif.level3.Grouper;
@@ -35,8 +34,7 @@ public class GroupConverterTest
 
 		p3.addMemberPhysicalEntity(p1);
 		p3.addMemberPhysicalEntity(p2);
-		Fixer.normalizeGenerics(model);
-        GroupMap groupMap = Grouper.inferGroups(model);
+        GroupMap groupMap = Grouper.inferGroups(model); //this calls normalizeGenerics
 
         assertThat(true, is(groupMap.getMap().size() == 1));
 	}

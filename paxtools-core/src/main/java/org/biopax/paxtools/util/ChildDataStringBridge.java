@@ -27,7 +27,6 @@ import java.util.Set;
  */
 public class ChildDataStringBridge implements StringBridge {
 
-	ModelUtils modelUtils = new ModelUtils(BioPAXLevel.L3);
 	EditorMap editorMap = SimpleEditorMap.get(BioPAXLevel.L3);
 	
 	public String objectToString(Object object) {
@@ -51,7 +50,7 @@ public class ChildDataStringBridge implements StringBridge {
 	public void indexWithAllChildren(BioPAXElement value, StringBuffer sb) {
 		index(value, sb);
 		// collect this and its child biopax objects
-		Set<BioPAXElement> elms = modelUtils.getAllChildren(value).getObjects();
+		Set<BioPAXElement> elms = ModelUtils.getAllChildren(value).getObjects();
 		for(BioPAXElement bpe : elms) {
 			index(bpe, sb);
 		}	

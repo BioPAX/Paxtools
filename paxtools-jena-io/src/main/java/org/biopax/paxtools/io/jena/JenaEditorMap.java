@@ -26,7 +26,7 @@ import java.util.Set;
  * This editor map is extensively used for I/O, modification, and querying operations applied on the
  * model.
  */
-public class JenaEditorMap extends EditorMapAdapter {
+public final class JenaEditorMap extends EditorMapAdapter {
 // ------------------------------ FIELDS ------------------------------
 
     private static final Log log = LogFactory.getLog(JenaEditorMap.class);

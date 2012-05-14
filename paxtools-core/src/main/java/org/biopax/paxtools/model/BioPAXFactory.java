@@ -24,7 +24,8 @@ public abstract class BioPAXFactory
     
     public BioPAXElement create(String localName, String uri)
     {
-        return this.create((this.getLevel().getInterfaceForName(localName)), uri);
+        Class<? extends BioPAXElement> type = getLevel().getInterfaceForName(localName);
+    	return create(type, uri);
     }
 
     

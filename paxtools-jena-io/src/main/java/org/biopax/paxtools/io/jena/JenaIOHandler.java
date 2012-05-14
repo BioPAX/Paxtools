@@ -28,7 +28,7 @@ import static org.biopax.paxtools.model.BioPAXLevel.isInBioPAXNameSpace;
  * Provides I/O support for BioPAX models presented in OWL format using the {@link com.hp.hpl.jena}
  * package.
  */
-public class JenaIOHandler extends BioPAXIOHandlerAdapter
+public final class JenaIOHandler extends BioPAXIOHandlerAdapter
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -60,7 +60,6 @@ public class JenaIOHandler extends BioPAXIOHandlerAdapter
 	public JenaIOHandler(BioPAXFactory factory, BioPAXLevel level)
 	{
 		super(factory, level);
-		resetEditorMap();
 	}
 
 	// -------------------------- OTHER METHODS --------------------------

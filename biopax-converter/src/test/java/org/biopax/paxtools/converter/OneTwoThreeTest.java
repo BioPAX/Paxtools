@@ -14,7 +14,9 @@ public class OneTwoThreeTest {
 		Model model = io.convertFromOWL(
 			getClass().getClassLoader()
 				.getResourceAsStream("biopax-example-short-pathway.owl"));
+		
 		model = (new OneTwoThree()).filter(model);
+		
 		if (model != null) {
 			io.convertToOWL(model, new FileOutputStream(
 					getClass().getClassLoader().getResource("").getFile() 

@@ -24,7 +24,7 @@ import static javax.xml.stream.XMLStreamConstants.*;
 /**
  * Simple BioPAX reader/writer.
  */
-public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
+public final class SimpleIOHandler extends BioPAXIOHandlerAdapter {
     private static final Log log = LogFactory.getLog(SimpleIOHandler.class);
 
     private XMLStreamReader r;
@@ -72,7 +72,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
     // -------------------------- OTHER METHODS --------------------------
 
     @Override
-    final protected void resetEditorMap() {
+    protected void resetEditorMap() {
         setEditorMap(SimpleEditorMap.get(this.getLevel())); // was 'level' - bug!
     }
 
@@ -177,7 +177,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
                                 processIndividual(model);
                             } else {
                                 if (log.isTraceEnabled()) {
-                                    log.trace("Ignoring element: " + r.getLocalName());
+                                    log.trace("Ignoring element: " + lname);
                                 }
                                 skip();
                             }
@@ -257,7 +257,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
                             + s + ". rdf:ID or rdf:about not found!", e);
         }
 
-        if (this.getFactory().canInstantiate((this.getLevel().getInterfaceForName(s)))) {
+        if (factory.canInstantiate((level.getInterfaceForName(s)))) {
 
             if (!mergeDuplicates || (model.getByID(id)) == null) {
                 createBpe(s, id, model);
@@ -286,7 +286,7 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
     }
 
     private void createBpe(String s, String id, Model model) {
-        BioPAXElement bpe = this.getFactory().create(s, id);
+        BioPAXElement bpe = factory.create(s, id);
         model.add(bpe);
     }
 
@@ -573,8 +573,9 @@ public class SimpleIOHandler extends BioPAXIOHandlerAdapter {
             model.getNameSpacePrefixMap().putAll(namespaces);
         }
 
-        level = model.getLevel();
-        resetEditorMap();
+        BioPAXLevel lev = model.getLevel();
+        if(lev != this.level)
+        	resetLevel(lev, lev.getDefaultFactory());
     }
 
 

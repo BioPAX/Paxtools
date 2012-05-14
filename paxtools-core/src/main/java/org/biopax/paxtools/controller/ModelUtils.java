@@ -17,22 +17,30 @@ import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process; //separate import required here!
 import org.biopax.paxtools.util.AnnotationMapKey;
+import org.biopax.paxtools.util.EquivalenceWrapper;
 import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.biopax.paxtools.util.SetEquivalanceChecker;
 
 /**
  * An advanced BioPAX utility class that implements
  * several useful algorithms to extract root or child 
- * BioPAX elements, remove dangling, replace elements 
+ * BioPAX L3 elements, remove dangling, replace elements 
  * or identifiers, etc.
  * 
- * @author rodche
+ * @author rodche, Arman,..
  *
  */
-public class ModelUtils {
+public final class ModelUtils {
 	private static final Log LOG = LogFactory.getLog(ModelUtils.class);
 	
-	/* 
+	//protected constructor
+	ModelUtils() {
+		throw new AssertionError("Not instantiable");
+	}
+	
+	
+	/** 
 	 * To ignore 'nextStep' property (in most algorithms),
 	 * because it can eventually lead us outside current pathway,
 	 * and normally step processes are listed in the pathwayComponent
@@ -68,10 +76,9 @@ public class ModelUtils {
 		}
 	}
 	
-	
-	private final Model model; // a model to hack ;)
-	private final BioPAXIOHandler io;
-	private final EditorMap em;
+	private final static BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+	private final static EditorMap em = SimpleEditorMap.L3;
+	private final static BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
 	
 	/**
 	 * Controlled vocabulary terms for the RelationshipType 
@@ -148,216 +155,78 @@ public class ModelUtils {
 	}
 	
 	
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param model
-	 */
-	public ModelUtils(Model model) 
-	{
-		this.model = model;
-		this.io = new SimpleIOHandler(model.getLevel());
-		((SimpleIOHandler) this.io).mergeDuplicates(true);
-		((SimpleIOHandler) this.io).normalizeNameSpaces(false);
-		this.em = SimpleEditorMap.get(model.getLevel());
+	static{
+		((SimpleIOHandler)io).mergeDuplicates(true);
+		((SimpleIOHandler) io).normalizeNameSpaces(false);
 	}
 	
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param level
-	 */
-	public ModelUtils(BioPAXLevel level) 
-	{
-		this.model = level.getDefaultFactory().createModel();
-		this.io = new SimpleIOHandler(level);
-		((SimpleIOHandler) this.io).mergeDuplicates(true);
-		((SimpleIOHandler) this.io).normalizeNameSpaces(false);
-		this.em = SimpleEditorMap.get(level);
-	}
-	
-    /**
-     * Replaces an existing BioPAX element with another one,
-     * of the same or possibly equivalent type (or null),
-     * recursively updates all the references to it 
-     * (parents' object properties).
-     * 
-     * If you're actually replacing multiple objects in the same model,
-     * for better performance, consider using {@link #replace(Map)} method
-     * instead.
-     * 
-     * @param existing
-     * @param replacement
-     */
-    public void replace(final BioPAXElement existing, final BioPAXElement replacement) 
-    {
-    	replace(Collections.singletonMap(existing, replacement));
-    }
-
     
     /**
-     * Replaces existing BioPAX elements with ones from the map,
-     * recursively updates corresponding BioPAX object references, 
-     * and removes old and adds new elements in the model.
+     * Replaces BioPAX elements in the model with ones from the map,
+     * updates corresponding BioPAX object references.
+     *  
+     * It does neither remove the old nor add new elements in the model
+     * (if required, one can do this before/after this method, e.g., using 
+     * the same 'subs' map)
+     * 
+     * This does visit all object properties of each "explicit" element 
+     * in the model, but does traverse deeper into one's sub-properties
+     * to replace something there as well (e.g., nested member entity references
+     * are not replaced unless parent entity reference present in the model)
      * 
      * This does not automatically move/migrate old (replaced) object's
-     * children to new objects though (the replacement ones are supposed to have 
-     * their own properties already set or to be set shortly)
+     * children to new objects (the replacement ones are supposed to have 
+     * their own properties already set or to be set shortly; otherwise,
+     * consider using of something like {@link #fixDanglingInverseProperties(BioPAXElement, Model)} after.
      * 
-     * As the result, some object properties will refer to new (replacement) values, 
-     * none - to old ones, and no inverse object properties should contain any old objects;
-     * therefore, some of the replaced/removed objects will lost their children 
+     * As the result, corresponding object properties will mostly refer to new (replacement) values, 
+     * others to old ones (rare, if nested implicit object referred to the replaced value);
+     * therefore, some of the replaced/removed objects will lost their nested children 
      * (where there exists a property, inverse property pair), and such
-     * child objects, in turn, can become dangling (if not used by other BioPAX elements).
+     * child objects, in turn, eventually become dangling (if not used by other BioPAX elements).
      * 
-     * For best results, when unsure, or when performance is not a worry, 
-     * consider using {@link Model#repair()} before and {@link #removeObjectsIfDangling(Class)}
-     * after this method (and always write tests)!
-     * 
+     * @param model
      * @param subs the replacements map (many-to-one, old-to-new)
      * @throws IllegalBioPAXArgumentException if there is an incompatible type replacement object
      */
-    public void replace(final Map<? extends BioPAXElement, ? extends BioPAXElement> subs) 
+    public static void replace(Model model, final Map<? extends BioPAXElement, ? extends BioPAXElement> subs) 
     {    	
-		for (BioPAXElement bpe: new HashSet<BioPAXElement>(model.getObjects())) {	
-			// skip, if it's itself to be replaced
-//			if(subs.containsKey(bpe)) // TODO this may be unnecessary or bug...
-//				continue;
-			
-			// update object properties using the ('subs') map
-			updateObjectProperties(bpe, subs);
-			/* also, find and update object properties (e.g., 'xref') 
-			 * of those other elements set to be replaced if this element 
-			 * has corresponding inverse property 
-			 * (e.g., xrefOf, which contains one of objects to be replaced)
-			 */
-			updateInverseObjectProperties(bpe, subs);
-		}
-		
-		// remove/add in the model's registry (separate loops are required)
-		for(BioPAXElement o : subs.keySet()) {
-			model.remove(o);
-		}
-		for(BioPAXElement o : subs.values()) {
-			// subs is 'many-to-one' (the same value is possible for different keys)
-			if(o != null && !model.contains(o))
-				model.add(o);
-		}
-    }
-    
-    
-    private void updateObjectProperties(BioPAXElement bpe, 
-			final Map<? extends BioPAXElement, ? extends BioPAXElement> subs) {
-		
-		Set<PropertyEditor> editors = em.getEditorsOf(bpe);
-		for (PropertyEditor editor : editors) {
-			if (editor instanceof ObjectPropertyEditor) {
-				Set<BioPAXElement> values = new HashSet<BioPAXElement>(
-					(Set<BioPAXElement>) editor.getValueFromBean(bpe));
-				for (BioPAXElement value : values) {
-					if(subs.containsKey(value))  {
-						// 'value' is to be replaced with the 'replacement'
-						BioPAXElement replacement = subs.get(value);
-						
-						if(replacement != null && !editor.getRange().isInstance(replacement))
-							throw new IllegalBioPAXArgumentException(
-							"Incompatible type! Attempted to replace " + 
-							value.getRDFId() + " (" +  value + "; " 
-							+ value.getModelInterface().getSimpleName() + ")"
-							+ " with " + ((replacement != null) ? replacement.getRDFId() : "") 
-							+ " (" +  replacement + "); for property: " + editor.getProperty()
-							+ " of bean: " + bpe.getRDFId() + " (" + bpe + "; " 
-							+ bpe.getModelInterface().getSimpleName() + ")");
-						
-						if(editor.isMultipleCardinality())
-							editor.removeValueFromBean(value, bpe);
-						editor.setValueToBean(replacement, bpe);
-					}	
-				}
-			}
-		}
-	}
-	
-    private void updateInverseObjectProperties(BioPAXElement bpe, 
-    		final Map<? extends BioPAXElement, ? extends BioPAXElement> subs) {
-    	Set<ObjectPropertyEditor> editors = em.getInverseEditorsOf(bpe);
-		for (ObjectPropertyEditor editor : editors)
-		{
-			Set<BioPAXElement> values = new HashSet<BioPAXElement>(
-				(Set<BioPAXElement>) editor.getInverseAccessor().getValueFromBean(bpe));
-			for (BioPAXElement value : values) 
+		// update properties
+    	
+    	Visitor visitor = new Visitor() {
+			@Override
+			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) 
 			{
-				if(subs.containsKey(value))  {
-					//do: e.g., 'bpe.xrefOf' won't contain the replaced 'value' 
-					// (e.g., a ProteinReference) anymore, and so the 'value.xref' won't contain bpe either! 
-					editor.removeValueFromBean(bpe, value); 
-				}
-			}
-		}
-	}
-
-    
-	/**
-     * Deletes (recursively from the current model) 
-     * only those child elements that would become "dangling" 
-     * (not a property value of anything) if the parent 
-     * element were (or already was) removed from the model.
-     * 
-     * @param parent
-     * 
-     * @deprecated use model.remove and more generic {@link #removeObjectsIfDangling(Class)} instead
-     */
-    @Deprecated
-    public void removeDependentsIfDangling(BioPAXElement parent) 
-    {	
-    	// get the parent and all its children
-		Fetcher fetcher = new Fetcher(em);
-		Model childModel = model.getLevel().getDefaultFactory().createModel();
-		fetcher.fetch(parent, childModel);
-		
-		// copy all elements
-		Set<BioPAXElement> others = new HashSet<BioPAXElement>(model.getObjects());
-		
-		// retain only those not the parent nor its child
-		// (asymmetric difference)
-		others.removeAll(childModel.getObjects());
-		
-		// traverse from each of "others" to exclude those from "children" that are used
-		for(BioPAXElement e : others) {
-			final BioPAXElement bpe = e;
-			// define a special 'visitor'
-			AbstractTraverser traverser = new AbstractTraverser(em) 
-			{
-				@Override
-				protected void visit(Object value, BioPAXElement parent, 
-						Model m, PropertyEditor editor) 
+				if(editor instanceof ObjectPropertyEditor && range != null 
+						&& subs.containsKey(range)) 
 				{
-					if(value instanceof BioPAXElement 
-							&& m.contains((BioPAXElement) value)) {
-						m.remove((BioPAXElement) value); 
-					}
+					BioPAXElement value = (BioPAXElement) range;
+					// 'value' is to be replaced with the 'replacement'
+					BioPAXElement replacement = subs.get(range);
+					// normal biopax property -
+					if(replacement != null && !editor.getRange().isInstance(replacement))
+						throw new IllegalBioPAXArgumentException(
+						"Incompatible type! Attempted to replace " + 
+								value.getRDFId() + " (" +  value + "; " 
+						+ value.getModelInterface().getSimpleName() + ")"
+						+ " with " + ((replacement != null) ? replacement.getRDFId() : "") 
+						+ " (" +  replacement + "); for property: " + editor.getProperty()
+						+ " of bean: " + domain.getRDFId() + " (" + domain + "; " 
+						+ domain.getModelInterface().getSimpleName() + ")");
+					
+					if(editor.isMultipleCardinality())
+						editor.removeValueFromBean(value, domain);
+					editor.setValueToBean(replacement, domain);
 				}
-			};
-			// check all biopax properties
-			traverser.traverse(e, childModel);
-		}
-			
-		// remove those left (would be dangling if parent were removed)!
-		for (BioPAXElement o : childModel.getObjects()) {
-			model.remove(o);
+			}
+		};
+				
+	  	Traverser traverser = new Traverser(em, visitor);   	
+    	for (BioPAXElement bpe: new HashSet<BioPAXElement>(model.getObjects())) {	
+			// update object properties and clear inverse properties using 'subs' map	
+			traverser.traverse(bpe, null); //model is not needed
 		}
     }
-
-    /**
-     * Gets the BioPAX model object that we analyze or modify.
-     * 
-     * @return
-     */
-	public Model getModel() {
-		return model;
-	}
 	
 	
 	/**
@@ -366,10 +235,11 @@ public class ModelUtils {
 	 * Note: however, such "root" elements may or may not be, a property of other
 	 * elements, not included in the model.
 	 * 
+	 * @param model
 	 * @param filterClass 
 	 * @return
 	 */
-	public <T extends BioPAXElement> Set<T> getRootElements(final Class<T> filterClass) 
+	public static <T extends BioPAXElement> Set<T> getRootElements(final Model model, final Class<T> filterClass) 
 	{
 		// copy all such elements (initially, we think all are roots...)
 		final Set<T> result = new HashSet<T>();
@@ -406,10 +276,14 @@ public class ModelUtils {
 	 * among objects, particularly, some inverse properties,
 	 * such as entityReferenceOf or xrefOf, may still 
 	 * refer to a removed object.
+	 * 
+	 * @param model
+	 * @param clazz filter-class
+	 * 
 	 */
-	public <T extends BioPAXElement> void removeObjectsIfDangling(Class<T> clazz) 
+	public static <T extends BioPAXElement> void removeObjectsIfDangling(Model model, Class<T> clazz) 
 	{
-		Set<T> dangling = getRootElements(clazz);
+		Set<T> dangling = getRootElements(model, clazz);
 		// get rid of dangling objects
 		if(!dangling.isEmpty()) {
 			if(LOG.isInfoEnabled()) 
@@ -427,13 +301,13 @@ public class ModelUtils {
 			}
 			
 			// some may have become dangling now, so check again...
-			removeObjectsIfDangling(clazz);
+			removeObjectsIfDangling(model, clazz);
 		}
 	}
 	
 
 	/**
-	 * For the current (internal) model, this method 
+	 * For the specified model, this method 
 	 * iteratively copies given property values 
 	 * from parent BioPAX elements to children.
 	 * If the property is multiple cardinality property, it will add
@@ -442,14 +316,15 @@ public class ModelUtils {
 	 * 
 	 * @see PropertyReasoner
 	 * 
+	 * @param model
 	 * @param property property name
 	 * @param forClasses (optional) infer/set the property for these types only
 	 */
-	public void inferPropertyFromParent(final String property, 
+	public static void inferPropertyFromParent(Model model, final String property, 
 			final Class<? extends BioPAXElement>... forClasses) 
 	{		
 		// for each ROOT element (puts a strict top-down order on the following)
-		Set<BioPAXElement> roots = getRootElements(BioPAXElement.class);
+		Set<BioPAXElement> roots = getRootElements(model, BioPAXElement.class);
 		for(BioPAXElement bpe : roots) {
 			PropertyReasoner reasoner = new PropertyReasoner(property, em);
 			reasoner.setDomains(forClasses);
@@ -465,11 +340,13 @@ public class ModelUtils {
 	 * become null/empty, and inverse properties (e.g. xrefOf)
 	 * re-calculated. The original model is unchanged.
 	 * 
+	 * @param model
 	 * @return copy of the model
 	 * @throws IOException 
 	 */
-	public Model writeRead()
+	public static Model writeRead(Model model)
 	{
+		BioPAXIOHandler io = new SimpleIOHandler(model.getLevel());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		io.convertToOWL(model, baos);
 		return io.convertFromOWL(new ByteArrayInputStream(baos.toByteArray()));
@@ -481,26 +358,25 @@ public class ModelUtils {
 	 * and adds them to a new model.
 	 * 
 	 * @param bpe
-	 * @return
+	 * @return new model 
 	 */
-	public Model getDirectChildren(BioPAXElement bpe) 
+	public static Model getDirectChildren(BioPAXElement bpe) 
 	{	
-		Model model = this.model.getLevel().getDefaultFactory().createModel();
+		Model m = factory.createModel();
 		
-		AbstractTraverser traverser = new AbstractTraverser(em) {
+		final AbstractTraverser traverser = new AbstractTraverser(em) {
 			@Override
 			protected void visit(Object range, BioPAXElement domain,
 					Model model, PropertyEditor editor) {
 				if (range instanceof BioPAXElement 
-						&& !model.contains((BioPAXElement) range)) {
-					model.add((BioPAXElement) range);
-				}
+					&& !model.containsID(((BioPAXElement) range).getRDFId())) 
+						model.add((BioPAXElement) range);
 			}
 		};
 		
-		traverser.traverse(bpe, model);
+		traverser.traverse(bpe, m);
 		
-		return model;
+		return m;
 	}
 	
 	
@@ -513,17 +389,18 @@ public class ModelUtils {
 	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
 	 * @return
 	 */
-	public Model getAllChildren(BioPAXElement bpe,
+	public static Model getAllChildren(BioPAXElement bpe,
 			Filter<PropertyEditor>... filters) {
-		Model model = this.model.getLevel().getDefaultFactory().createModel();
+		
+		Model m = factory.createModel();
 		if (filters.length == 0) {
-			new Fetcher(em, nextStepFilter).fetch(bpe, model);
+			new Fetcher(em, nextStepFilter).fetch(bpe, m);
 		} else {
-			new Fetcher(em, filters).fetch(bpe, model);
+			new Fetcher(em, filters).fetch(bpe, m);
 		}
-		model.remove(bpe); // remove the parent
+		m.remove(bpe); // remove the parent
 
-		return model;
+		return m;
 	}	
 
 	
@@ -531,12 +408,14 @@ public class ModelUtils {
 	 * Collects all child BioPAX elements of a given BioPAX element
 	 * (using the "tuned" {@link Fetcher})
 	 * 
+	 * @param model
 	 * @param bpe
 	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
 	 * @return
 	 */
-	public Set<BioPAXElement> getAllChildrenAsSet(BioPAXElement bpe,
+	public static Set<BioPAXElement> getAllChildrenAsSet(Model model, BioPAXElement bpe,
 			Filter<PropertyEditor>... filters) {
+		
 		Set<BioPAXElement> toReturn = null;
 		if (filters.length == 0) {
 			toReturn = new Fetcher(em, nextStepFilter).fetch(bpe);
@@ -553,14 +432,15 @@ public class ModelUtils {
 	/**
 	 * Collects direct children of a given BioPAX element
 	 * 
+	 * @param model
 	 * @param bpe
 	 * @return
 	 */
-	public Set<BioPAXElement> getDirectChildrenAsSet(BioPAXElement bpe) 
+	public static Set<BioPAXElement> getDirectChildrenAsSet(Model model, BioPAXElement bpe) 
 	{	
 		final Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
 		
-		AbstractTraverser traverser = new AbstractTraverser(em) {
+		final AbstractTraverser traverser = new AbstractTraverser(em) {
 			@Override
 			protected void visit(Object range, BioPAXElement domain,
 					Model model, PropertyEditor editor) {
@@ -578,7 +458,6 @@ public class ModelUtils {
 	/**
 	 * Creates "process" (membership) relationship xrefs 
 	 * for each child {@link Entity} if possible. 
-	 * This is Level3 specific.
 	 * 
 	 * For each child {@link Entity} of every process 
 	 * (of the type given by the second argument), creates a 
@@ -588,16 +467,18 @@ public class ModelUtils {
 	 * - relationshipType = controlled vocabulary: "process" (MI:0359), urn:miriam:obo.mi:MI%3A0359
 	 * - comment = "Auto-generated by Paxtools" (also added to the CV and its unification xref)
 	 * 
+	 * Note: ok for Pathway, but confusing, expensive / wrong with Interaction types
+	 * 
+	 * @param model
 	 * @param <T>
 	 * @param processClass to relate entities with an interaction/pathway of this type 
-	 * @deprecated still ok for Pathway, but it is confusing, expensive and may be completely wrong to use with Interaction types
+	 *  
 	 */
-	@Deprecated
-	public <T extends Process> void generateEntityProcessXrefs(
+	public static <T extends Process> void generateEntityProcessXrefs(Model model,
 			Class<T> processClass) 
 	{	
 		// use a special relationship CV;
-		RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(RelationshipType.PROCESS);
+		RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(model, RelationshipType.PROCESS);
 		
 		Set<T> processes = new HashSet<T>(model.getObjects(processClass)); //to avoid concurr. mod. ex.
 		for(T ownerProc : processes) 
@@ -615,7 +496,8 @@ public class ModelUtils {
 			
 			// add the xref to all (biologically) child entities
 			Model childModel = getAllChildren(ownerProc, pathwayOrderFilter, evidenceFilter);
-			saveRelationship(childModel.getObjects(Entity.class), rx, true, false);
+			saveRelationship(model, childModel.getObjects(Entity.class), 
+					rx, true, false);
 		}
 	}
 
@@ -635,19 +517,20 @@ public class ModelUtils {
 	 * And also adds parent pathways to child elements's annotation map 
 	 * using {@link AnnotationMapKey} "PARENT_PATHWAYS" as the key.
 	 * 
+	 *  @param model
 	 *  @param forBiopaxType
 	 *  @param addRelationshipXrefs
 	 *  @param addPathwaysToAnnotations
 	 *  
 	 */
-	public void calculatePathwayMembership(Class<? extends BioPAXElement> forBiopaxType, 
+	public static void calculatePathwayMembership(Model model, Class<? extends BioPAXElement> forBiopaxType, 
 			boolean addRelationshipXrefs, boolean addPathwaysToAnnotations) 
 	{	
 		Set<Pathway> processes = new HashSet<Pathway>(model.getObjects(Pathway.class)); //to avoid concurr. mod. ex.
 		for(Pathway ownerProc : processes) 
 		{
 			// use a special relationship CV;
-			RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(RelationshipType.PROCESS);
+			RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(model, RelationshipType.PROCESS);
 			
 			// prepare the xref to use in children
 			String relXrefId = generateURIForXref(COMMENT_FOR_GENERATED, ownerProc.getRDFId(), RelationshipXref.class);
@@ -662,7 +545,8 @@ public class ModelUtils {
 			
 			// add the xref to all (biologically) child entities
 			Model childModel = getAllChildren(ownerProc, pathwayOrderFilter, evidenceFilter);
-			saveRelationship(childModel.getObjects(forBiopaxType), rx, addRelationshipXrefs, addPathwaysToAnnotations);			
+			saveRelationship(model, childModel.getObjects(forBiopaxType), 
+					rx, addRelationshipXrefs, addPathwaysToAnnotations);			
 		}
 	}
 	
@@ -671,12 +555,13 @@ public class ModelUtils {
 	 * Adds the relationship xref to every xreferrable entity in the set
 	 * (and optionally - the corresponding pathway to the annotations map) 
 	 * 
+	 * @param model
 	 * @param objects
 	 * @param rx
 	 * @param addRelationshipXrefs
 	 * @param addPathwaysToAnnotations
 	 */
-	private void saveRelationship(Set<? extends BioPAXElement> elements, RelationshipXref rx, 
+	private static void saveRelationship(Model model, Set<? extends BioPAXElement> elements, RelationshipXref rx, 
 			boolean addRelationshipXrefs, boolean addPathwaysToAnnotations) 
 	{
 		if (addPathwaysToAnnotations || addRelationshipXrefs) {
@@ -701,6 +586,7 @@ public class ModelUtils {
 					"both boolean parameters are 'false'!");
 		}
 	}
+
 	
 	/**
 	 * Auto-generates organism relationship xrefs - 
@@ -717,8 +603,9 @@ public class ModelUtils {
 	 *    (equivalently, this can be achieved by collecting all the children first, 
 	 *     though not visiting properties who's range is a sub-class of UtilityClass)
 	 * 
+	 * @param model
 	 */
-	public void generateEntityOrganismXrefs() 
+	public static void generateEntityOrganismXrefs(Model model) 
 	{
 		// The first pass (physical entities)
 		Set<SimplePhysicalEntity> simplePEs = // prevents concurrent mod. exceptions
@@ -728,7 +615,7 @@ public class ModelUtils {
 			EntityReference er = spe.getEntityReference();
 			// er can be generic (member ers), so -
 			Set<BioSource> organisms = getOrganismsFromER(er);
-			addOrganismXrefs(spe, organisms);
+			addOrganismXrefs(model, spe, organisms);
 		}
 		
 		// use a special filter for the (child elements) fetcher
@@ -787,7 +674,7 @@ public class ModelUtils {
 			}
 			
 			// add all the organisms (xrefs) to this entity
-			addOrganismXrefs(entity, organisms);
+			addOrganismXrefs(model, entity, organisms);
 		}
 	}
 
@@ -801,7 +688,7 @@ public class ModelUtils {
 	 * @param er
 	 * @return
 	 */
-	private Set<BioSource> getOrganismsFromER(EntityReference er) {
+	private static Set<BioSource> getOrganismsFromER(EntityReference er) {
 		Set<BioSource> organisms = new HashSet<BioSource>();
 		if(er instanceof SequenceEntityReference) {
 			BioSource organism = ((SequenceEntityReference) er).getOrganism();
@@ -827,7 +714,7 @@ public class ModelUtils {
 	 * @param entity
 	 * @param organisms
 	 */
-	private void addOrganism(BioPAXElement entity, Set<BioSource> organisms) {
+	private static void addOrganism(BioPAXElement entity, Set<BioSource> organisms) {
 		PropertyEditor editor = em.getEditorForProperty("organism", entity.getModelInterface());
 		if (editor != null) {
 			Object o = editor.getValueFromBean(entity);
@@ -843,12 +730,13 @@ public class ModelUtils {
 	 * Generates a relationship xref for each 
 	 * organism (BioSource) in the list and adds them to the entity.
 	 * 
+	 * @param model
 	 * @param entity
 	 * @param organisms
 	 */
-	private void addOrganismXrefs(Entity entity, Set<BioSource> organisms) {
+	private static void addOrganismXrefs(Model model, Entity entity, Set<BioSource> organisms) {
 		// create/find a RelationshipTypeVocabulary with term="ORGANISM"
-		RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(RelationshipType.ORGANISM);
+		RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(model, RelationshipType.ORGANISM);
 		// add xref(s) to the entity
 		for(BioSource organism : organisms) {
 			String db = COMMENT_FOR_GENERATED; 
@@ -871,10 +759,11 @@ public class ModelUtils {
 	 * Finds in the model or creates a new special RelationshipTypeVocabulary 
 	 * controlled vocabulary with the term value defined by the argument (enum).
 	 * 
+	 * @param model
 	 * @param relationshipType
 	 * @return
 	 */
-	private RelationshipTypeVocabulary getTheRelatioshipTypeCV(RelationshipType relationshipType) 
+	private static RelationshipTypeVocabulary getTheRelatioshipTypeCV(Model model, RelationshipType relationshipType) 
 	{
 		String cvId = relationshipTypeVocabularyUri(relationshipType.name());
 		// try to get from the model first
@@ -932,11 +821,18 @@ public class ModelUtils {
 		return rdfid;
 	}
 
-	public Map<Class<? extends BioPAXElement>, Integer> generateClassMetrics()
+	
+	/**
+	 * TODO
+	 * 
+	 * @param model
+	 * @return
+	 */
+	public static Map<Class<? extends BioPAXElement>, Integer> generateClassMetrics(Model model)
 	{
 		Map<Class<? extends BioPAXElement>, Integer> metrics =
 				new HashMap<Class<? extends BioPAXElement>, Integer>();
-		for (BioPAXElement bpe : this.model.getObjects())
+		for (BioPAXElement bpe : model.getObjects())
 		{
 			Integer count = metrics.get(bpe.getModelInterface());
 			if(count == null)
@@ -953,7 +849,15 @@ public class ModelUtils {
 	}
 	
 	
-	public <T extends BioPAXElement> T getObject(String urn, Class<T> clazz) 
+	/**
+	 * TODO
+	 * 
+	 * @param model
+	 * @param urn
+	 * @param clazz
+	 * @return
+	 */
+	public static <T extends BioPAXElement> T getObject(Model model, String urn, Class<T> clazz) 
 	{
 		BioPAXElement bpe = model.getByID(urn);
 		if(clazz.isInstance(bpe)) {
@@ -963,17 +867,19 @@ public class ModelUtils {
 		}
 	}
 
+	
 	/**
 	 * This is a special (not always applicable) utility method.
 	 * It finds the list of IDs of objects in the model
 	 * that have a NORMALIZED xref equivalent (same db,id,type) 
 	 * to at least one of the specified xrefs.
 	 * 
+	 * @param model
 	 * @param xrefs
 	 * @param clazz
 	 * @return
 	 */
-	public Set<String> getByXref(Set<? extends Xref> xrefs, 
+	public static Set<String> getByXref(Model model, Set<? extends Xref> xrefs, 
 			Class<? extends XReferrable> clazz) 
 	{
 			Set<String> toReturn = new HashSet<String>();
@@ -1002,25 +908,13 @@ public class ModelUtils {
 	}
 
 	
-	/**
-	 * 
-	 * 
-	 * @param rx
-	 * @return
-	 */
-	public static boolean isOrganismRelationshipXref(RelationshipXref rx) {
+	private static boolean isOrganismRelationshipXref(RelationshipXref rx) {
 		RelationshipTypeVocabulary cv = rx.getRelationshipType();
 		return cv != null && cv.getRDFId().equalsIgnoreCase(
 			relationshipTypeVocabularyUri(RelationshipType.ORGANISM.name()));
 	}
 
-	
-	/**
-	 * 
-	 * @param rx
-	 * @return
-	 */
-	public static boolean isProcessRelationshipXref(RelationshipXref rx) {
+	private static boolean isProcessRelationshipXref(RelationshipXref rx) {
 		RelationshipTypeVocabulary cv = rx.getRelationshipType();
 		return cv != null && cv.getRDFId().equalsIgnoreCase(
 			relationshipTypeVocabularyUri(RelationshipType.PROCESS.name()));
@@ -1041,5 +935,525 @@ public class ModelUtils {
 		}
 		String hex = sb.toString();
         return hex;
+	}
+	
+	
+    /**
+     * Unlinks <em>object properties</em> of the BioPAX object 
+     * from values the model does not have.
+     * 
+     * @param bpe a biopax object
+     * @param model the model to look for objects in
+     */
+	public static void fixDanglingObjectProperties(BioPAXElement bpe, Model model) 
+    {    	
+		final Visitor visitor = new Visitor() {
+			@Override
+			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) 
+			{
+				if(editor instanceof ObjectPropertyEditor) {
+					BioPAXElement value = (BioPAXElement) range;
+					if(value != null && !model.containsID(value.getRDFId()))
+						editor.removeValueFromBean(value, domain);
+				}
+			}
+		};
+    	
+    	Traverser traverser = new Traverser(em, visitor);	
+	    traverser.traverse(bpe, model);
+    }
+
+	
+    /**
+     * Unlinks <em>inverse properties</em> of the BioPAX object 
+     * from values the other model does not have.
+     * 
+     * @param bpe BioPAX object
+     * @param model where to look for other objects
+     */
+	public static void fixDanglingInverseProperties(BioPAXElement bpe, Model model) 
+    {    	
+		final Visitor visitor = new Visitor() {
+			@Override
+			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) 
+			{
+				BioPAXElement value = (BioPAXElement) range;
+				if(value != null && !model.containsID(value.getRDFId()))
+					editor.removeValueFromBean(domain, value); //right order!
+			}
+		};
+    	
+    	TraverserBilinked traverser = new TraverserBilinked(em, visitor);
+    	traverser.setInverseOnly(true);
+	    traverser.traverse(bpe, model); 
+    }
+	
+	
+	//*****
+	// Moved from Fixer -
+	
+	/**
+	 * Normalizes generic {@link SimplePhysicalEntity} objects, 
+	 * i.e., for those having members, it creates and adds 
+	 * new generic {@link EntityReference} objects 
+	 * to them and to the model.
+	 * 
+	 * @param model
+	 */
+	public static void normalizeGenerics(Model model) {
+
+		HashMap<Set<EntityReference>, EntityReference> memberMap 
+			= new HashMap<Set<EntityReference>, EntityReference>();
+		Set<SimplePhysicalEntity> pes = model
+				.getObjects(SimplePhysicalEntity.class);
+		Set<SimplePhysicalEntity> pesToBeNormalized = new HashSet<SimplePhysicalEntity>();
+		for (SimplePhysicalEntity pe : pes) {
+			if (pe.getEntityReference() == null) {
+				if (!pe.getMemberPhysicalEntity().isEmpty()) {
+					pesToBeNormalized.add(pe);
+				}
+			}
+		}
+		for (SimplePhysicalEntity pe : pesToBeNormalized) {
+			try {
+				createNewGenericEntityReference(model, pe, memberMap);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	private static void createNewGenericEntityReference(
+			Model model, SimplePhysicalEntity pe, 
+			HashMap<Set<EntityReference>, EntityReference> memberMap) {
+
+		SimplePhysicalEntity first = (SimplePhysicalEntity) pe
+				.getMemberPhysicalEntity().iterator().next();
+		String syntheticId = "http://biopax.org/generated/fixer/normalizeGenerics/"
+				+ pe.getRDFId();
+		Set<EntityReference> members = pe.getGenericEntityReferences();
+		EntityReference er = memberMap.get(members);
+		if (er == null) {
+			EntityReference firstEntityReference = first.getEntityReference();
+			if (firstEntityReference != null) {
+				er = (EntityReference) model.addNew(
+						firstEntityReference.getModelInterface(), syntheticId);
+				copySimplePointers(model, pe, er);
+
+				for (EntityReference member : members) {
+					er.addMemberEntityReference(member);
+				}
+				memberMap.put(members, er);
+			}
+		}
+		pe.setEntityReference(er);
+
+	}
+
+	
+	/**
+	 * TODO
+	 * 
+	 * @param model
+	 * @param pe
+	 * @param generic
+	 */
+	public static void copySimplePointers(Model model, Named pe, Named generic) {
+		generic.setDisplayName(pe.getDisplayName());
+		generic.setStandardName(pe.getStandardName());
+		for (String name : pe.getName()) {
+			generic.addName(name);
+		}
+		for (Xref xref : pe.getXref()) {
+			if ((xref instanceof UnificationXref)) {
+				String id = "http://biopax.org/generated/fixer/copySimplePointers/"
+						+ xref.getRDFId();
+				BioPAXElement byID = model.getByID(id);
+				if (byID == null) {
+					RelationshipXref rref = model.addNew(
+							RelationshipXref.class, id);
+					rref.setDb(xref.getDb());
+					rref.setId(xref.getId());
+					rref.setDbVersion(xref.getDbVersion());
+					rref.setIdVersion(xref.getDbVersion());
+					xref = rref;
+				} else {
+					xref = (Xref) byID;
+				}
+			}
+			generic.addXref(xref);
+		}
+	}
+
+	
+	/**
+	 * TODO
+	 * 
+	 * @param model
+	 */
+	public static void resolveFeatures(Model model) {
+		if (!model.getLevel().equals(BioPAXLevel.L3)) {
+			LOG.error("Unsupported BioPAX Level " + model.getLevel()
+				+ " (only Level 3 is supported)");
+		} else {
+			resolveBindingFeatures(model);
+
+			// For each entity reference:
+			for (EntityReference er : model.getObjects(EntityReference.class)) {
+				for (SimplePhysicalEntity spe : er.getEntityReferenceOf()) {
+					for (Interaction interaction : spe.getParticipantOf()) {
+						// we will do this left to right
+						if (interaction instanceof Conversion) {
+							Conversion cnv = (Conversion) (interaction);
+							if (cnv.getLeft().contains(spe)) {
+								for (PhysicalEntity physicalEntity : cnv
+										.getRight()) {
+									if (physicalEntity instanceof SimplePhysicalEntity) {
+										SimplePhysicalEntity otherSPE = (SimplePhysicalEntity) (physicalEntity);
+										if (otherSPE.getEntityReference()
+												.equals(spe
+														.getEntityReference())) {
+											Set<EntityFeature> added = findFeaturesAddedToSecond(
+													physicalEntity, otherSPE,
+													true);
+											Set<EntityFeature> removed = findFeaturesAddedToSecond(
+													otherSPE, physicalEntity,
+													true);
+										}
+									}
+								}
+								// TODO HANDLE complexes?
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static void resolveBindingFeatures(Model model) {
+		ShallowCopy copier = new ShallowCopy(BioPAXLevel.L3);
+
+		// For each Complex
+		Set<Complex> complexes = model.getObjects(Complex.class);
+		for (Complex complex : complexes) {
+			resolveBindingFeatures(model, complex, copier);
+
+		}
+	}
+
+	private static void resolveBindingFeatures(Model model, Complex complex,
+			ShallowCopy copier) {
+		Set<PhysicalEntity> components = complex.getComponent();
+		for (PhysicalEntity component : components) {
+			resolveFeaturesOfComponent(model, complex, component, copier);
+		}
+	}
+
+	private static void resolveFeaturesOfComponent(Model model, Complex complex,
+			PhysicalEntity component, ShallowCopy copier) {
+		boolean connected = false;
+		Set<EntityFeature> feature = component.getFeature();
+		for (EntityFeature ef : feature) {
+			if (ef instanceof BindingFeature) {
+				BindingFeature bindsTo = ((BindingFeature) ef).getBindsTo();
+				Set<PhysicalEntity> featureOf = bindsTo.getFeatureOf();
+				if (!SetEquivalanceChecker.isEquivalentIntersection(
+						complex.getComponent(), featureOf)) {
+					System.err.println("The Complex" + complex.getName() + "("
+							+ complex.getRDFId() + ") has  component"
+							+ component.getDisplayName() + "("
+							+ component.getRDFId() + ") which has"
+							+ "a binding feature (" + ef.getRDFId()
+							+ "), but none of the bound "
+							+ "participants are in this complex");
+					// TODO This is an error - fail.
+					return;
+				} else {
+					connected = true;
+
+				}
+			}
+		}
+		if (!connected) {
+			Set<Interaction> participantOf = component.getParticipantOf();
+			for (Interaction interaction : participantOf) {
+				// It is ok for complex members to control a participant
+				if (!(interaction instanceof Control)) {
+					component = createCopy(model, complex, component, copier);
+					break;
+				}
+			}
+
+			BindingFeature bf = model.addNew(
+					BindingFeature.class,
+					component.getRDFId() + "bond" + "in_Complex_"
+							+ complex.getRDFId());
+			component.addFeature(bf);
+			if (component instanceof SimplePhysicalEntity) {
+				((SimplePhysicalEntity) component).getEntityReference()
+						.addEntityFeature(bf);
+			}
+		}
+	}
+
+	private static PhysicalEntity createCopy(Model model, Complex complex,
+			PhysicalEntity component, ShallowCopy copier) {
+		// This is an aggressive fix - if a complex member is present in both an
+		// interaction that is not a control
+		// and a complex, we are creating clone, adding it a binding feature to
+		// mark it and put it into the
+		// complex and remove the old one.
+		complex.removeComponent(component);
+		component = copier.copy(model, component, component.getRDFId()
+				+ "in_Complex_" + complex.getRDFId());
+		complex.addComponent(component);
+		return component;
+	}
+
+	/**
+	 * This method iterates over the features in a model and tries to find
+	 * equivalent objects and merges them.
+	 * 
+	 * @param model to be fixed
+	 */
+	public static void replaceEquivalentFeatures(Model model) {
+
+		HashSet<EquivalenceWrapper> equivalents = new HashSet<EquivalenceWrapper>();
+		HashMap<EntityFeature, EntityFeature> mapped = new HashMap<EntityFeature, EntityFeature>();
+		HashSet<EntityFeature> scheduled = new HashSet<EntityFeature>();
+
+		for (EntityFeature ef : model.getObjects(EntityFeature.class)) {
+			if (ef.getEntityFeatureOf() == null) {
+				inferEntityFromPE(ef, ef.getFeatureOf());
+				if (ef.getEntityFeatureOf() == null)
+					inferEntityFromPE(ef, ef.getNotFeatureOf());
+			}
+			EquivalenceWrapper wrapper = new EquivalenceWrapper(ef);
+			if (equivalents.contains(wrapper)) {
+				if (LOG.isWarnEnabled())
+					LOG.warn("removing: " + wrapper.getEqBpe() + "{"
+							+ wrapper.getEqBpe().getRDFId() + "}");
+				scheduled.add(ef);
+				mapped.put(ef, (EntityFeature) wrapper.getEqBpe());
+			} else
+				equivalents.add(wrapper);
+		}
+		for (EntityFeature entityFeature : scheduled) {
+			model.remove(entityFeature);
+		}
+		for (PhysicalEntity physicalEntity : model
+				.getObjects(PhysicalEntity.class)) {
+			Set<EntityFeature> features = new HashSet<EntityFeature>(
+					physicalEntity.getFeature());
+			for (EntityFeature feature : features) {
+				EntityFeature that = mapped.get(feature);
+				if (that != null && !that.equals(feature)) {
+					ModelUtils.replace(model, Collections.singletonMap(feature, that));
+					model.remove(feature);
+					if (that != null)
+						model.add(that);
+				}
+			}
+		}
+	}
+
+	private static void inferEntityFromPE(EntityFeature ef,
+			Set<PhysicalEntity> pes) {
+
+		for (PhysicalEntity physicalEntity : pes) {
+			if (physicalEntity instanceof SimplePhysicalEntity) {
+				EntityReference er = ((SimplePhysicalEntity) physicalEntity)
+						.getEntityReference();
+				if (er != null) {
+					er.addEntityFeature(ef);
+					if (LOG.isWarnEnabled())
+						LOG.warn("Inferred the ER of " + ef.getRDFId() + " as "
+								+ er.getRDFId());
+					return;
+				}
+			}
+		}
+	}
+
+	
+	// moved from FeatureUtils; provides operations for comparing features of physical entities.
+	
+	static enum FeatureType {
+		FEATURE,
+		NOT_FEATURE,
+		UNKNOWN_FEATURE;
+	}
+
+	
+	/**
+	 * TODO
+	 * 
+	 * @param first
+	 * @param firstClass
+	 * @param second
+	 * @param secondClass
+	 * @return
+	 */
+	public static Set<EntityFeature> getFeatureIntersection(
+			PhysicalEntity first, FeatureType firstClass, PhysicalEntity second,
+			FeatureType secondClass) {
+		Set<EntityFeature> intersection = getFeatureSetByType(first, firstClass);
+		intersection.removeAll(getFeatureSetByType(second, secondClass));
+		return intersection;
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * 
+	 * @param pe
+	 * @param type
+	 * @return
+	 */
+	public static Set<EntityFeature> getFeatureSetByType(PhysicalEntity pe,
+			FeatureType type) {
+
+		Set<EntityFeature> modifiableSet = new HashSet<EntityFeature>();
+
+		switch (type) {
+		case FEATURE:
+			modifiableSet.addAll(pe.getFeature());
+			break;
+		case NOT_FEATURE:
+			modifiableSet.addAll(pe.getNotFeature());
+			break;
+		case UNKNOWN_FEATURE: {
+			if (pe instanceof SimplePhysicalEntity) {
+				modifiableSet.addAll(((SimplePhysicalEntity) pe)
+						.getEntityReference().getEntityFeature());
+				modifiableSet.removeAll(pe.getFeature());
+				modifiableSet.removeAll(pe.getNotFeature());
+			}
+		}
+		}
+		return modifiableSet;
+	}
+
+	
+	/**
+	 * TODO
+	 * 
+	 * @param er
+	 * @param fix
+	 * @return
+	 */
+	public static boolean checkERFeatureSet(EntityReference er, boolean fix) {
+		boolean check = true;
+		for (SimplePhysicalEntity spe : er.getEntityReferenceOf()) {
+			for (EntityFeature ef : spe.getFeature()) {
+				check = scanAndAddToFeatureSet(er, fix, check, ef);
+				// if not fixing return at first fail, otherwise go on;
+				if (!fix && !check)
+					return check;
+			}
+			for (EntityFeature ef : spe.getNotFeature()) {
+				check = scanAndAddToFeatureSet(er, fix, check, ef);
+				// if not fixing return at first fail, otherwise go on;
+				if (!fix && !check)
+					return check;
+			}
+		}
+		return check;
+	}
+
+	
+	/**
+	 * TODO
+	 * 
+	 * @param pe
+	 * @return
+	 */
+	public static boolean checkMutuallyExclusiveSets(PhysicalEntity pe) {
+		if (pe.getFeature().isEmpty() || pe.getNotFeature().isEmpty())
+			return true;
+		else {
+			Set<EntityFeature> test = new HashSet<EntityFeature>(
+					pe.getFeature());
+			test.retainAll(pe.getNotFeature());
+			return test.size() == 0;
+		}
+	}
+
+	private static boolean scanAndAddToFeatureSet(EntityReference er,
+			boolean fix, boolean check, EntityFeature ef) {
+		if (!er.getEntityFeature().contains(ef)) {
+			check = false;
+			if (fix) {
+				er.addEntityFeature(ef);
+			}
+		}
+		return check;
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param first
+	 * @param second
+	 * @param fix
+	 * @return
+	 */
+	public static Set<EntityFeature> findFeaturesAddedToSecond(
+			PhysicalEntity first, PhysicalEntity second, boolean fix) {
+
+		if (checkCommonEntityReferenceForTwoPEs(first, second, fix))
+			return null;
+		Set<EntityFeature> explicit = getFeatureIntersection(first,
+				FeatureType.NOT_FEATURE, second, FeatureType.FEATURE);
+		Set<EntityFeature> implicit = getFeatureIntersection(first,
+				FeatureType.UNKNOWN_FEATURE, second, FeatureType.FEATURE);
+		Set<EntityFeature> negativeImplicit = getFeatureIntersection(first,
+				FeatureType.NOT_FEATURE, second, FeatureType.UNKNOWN_FEATURE);
+
+		if (fix) {
+			for (EntityFeature implied : implicit) {
+				LOG.info("The feature " + implied
+						+ "implied as a not-feature of " + first + ". "
+						+ "Adding it to the not-feature list");
+				first.addNotFeature(implied);
+			}
+
+			for (EntityFeature implied : negativeImplicit) {
+				LOG.info("The feature " + implied + "implied as a feature of "
+						+ second + ". " + "Adding it to the feature list");
+				second.addFeature(implied);
+			}
+
+		}
+		explicit.retainAll(implicit);
+		explicit.retainAll(negativeImplicit);
+		return explicit;
+	}
+
+	private static boolean checkCommonEntityReferenceForTwoPEs(
+			PhysicalEntity first, PhysicalEntity second, boolean fix) {
+		if (first instanceof SimplePhysicalEntity) {
+			EntityReference er = ((SimplePhysicalEntity) first)
+					.getEntityReference();
+			if (!er.getEntityReferenceOf().contains(second)) {
+				LOG.warn("These two physicalEntities do not share an EntityReference. They can not be compared! Skipping");
+				return false;
+			} else if (!checkERFeatureSet(er, fix)) {
+				LOG.warn("ER feature set is incomplete!");
+				if (!fix) {
+					LOG.warn("fixing...");
+				} else {
+					LOG.warn("skipping");
+					return false;
+				}
+			}
+			return true;
+		} else {
+			LOG.warn("These two physicalEntities do not share an EntityReference. They can not be compared! Skipping");
+			return false;
+		}
+
 	}
 }

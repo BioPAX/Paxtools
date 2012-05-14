@@ -112,7 +112,8 @@ public class GEOAccessor extends AlterationProviderAdaptor
 			}
 		}
 		
-		File file = new File(dataDirectory + File.separator + platformID);
+		String fname = dataDirectory + File.separator + platformID;
+		File file = new File(fname);
 		
 		if (!file.exists())
 		{
@@ -126,6 +127,8 @@ public class GEOAccessor extends AlterationProviderAdaptor
 				return null;
 			}
 		}
+		
+		assert file != null : "Failed to download the file: " + fname;
 		
 		return file;
 	}

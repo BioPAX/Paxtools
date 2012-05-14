@@ -283,8 +283,10 @@ public class ModelImpl implements Model
      */
 	public synchronized void replace(final BioPAXElement existing, final BioPAXElement replacement) 
 	{
-		 new ModelUtils(this)
-		 	.replace(existing, replacement);
+		 ModelUtils.replace(this, Collections.singletonMap(existing, replacement));
+		 remove(existing);
+		 if(replacement != null)
+			 add(replacement);
 	}
 	
 	
@@ -320,40 +322,6 @@ public class ModelImpl implements Model
 	 */
 	@Override
 	public synchronized void repair() {
-/* this precious code became useless altogether after 
- * core internal refactoring (since 4.1.3-SNAPSHOT),
- * which made almost impossible to break a model 
- * (make its internal idMap inconsistent)
- */
-//		// repair idMap
-//		for(String id : idMap.keySet()) {
-//			BioPAXElement o = getByID(id);
-//			if(o == null) {
-//				// delete null
-//				idMap.remove(id);
-//			} else {
-//				// check its rdfid field
-//				String oid = o.getRDFId();
-//				// mismatch?
-//				if(!id.equals(oid)) {
-//					// id mismatch (broken model!)
-//					if(containsID(oid)) {
-//						// has another object under this one's id
-//						if(o == getByID(oid)) {
-//							// the same - simply remove current one
-//							idMap.remove(id);
-//						} else {
-//							//sooner or later it will be fixed in next loops
-//						}
-//					} else {
-//						// add with its real ID
-//						idMap.remove(id);
-//						idMap.put(oid, o);
-//					}
-//				}
-//			}
-//		}
-		
 		// updates props and children
 		merge(null);
 	}
