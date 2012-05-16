@@ -3,7 +3,6 @@ package org.biopax.paxtools.controller;
 import org.apache.commons.collections15.set.CompositeSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 
@@ -20,19 +19,17 @@ import java.util.Set;
  * (though it depends on the application).
  * <p/>
  * One can also "merge" a model to itself, i.e.: merge(target,target),
- * which adds those missing child elements that were not added
- * (explicitly) to the model (via model.add*) and makes it more integral.
+ * which adds those implicit child elements that were not added
+ * yet to the model (via model.add*) and makes it more integral.
  * <p/>
  * Note, "RDFId (URI) identity" means that it skips, i.e., does not copy
- * a source's element to the target model, if the target already contains the element 
- * with the same RDFId. However, after all,
- * it does update (re-wire) all the object properties of source elements
+ * a source's element to the target model, if the target already contains an element 
+ * with the same RDFId. However, it does update (re-wire) all the object properties
  * to make sure they do not refer to the skipped objects (from the "source") anymore
- * (if something is missing, it will be added at this second pass).
  * <p/>
  * Note also that this merger does not guarantee the integrity of the passed models:
  * 'target' will be the merged model (often, "more integral"), and the 'source'
- * may be trashed (in fact, - still somewhat usable, but modified for sure,
+ * may be trashed (in fact, - still somewhat usable,
  * with some of its object properties now refer to target's elements).
  * <p/>
  * Finally, although called Simple Merger, it is in fact an advanced BioPAX utility,
@@ -138,7 +135,6 @@ public class SimpleMerger
 		// than one child object having the same URI (see comments above)
 		for (BioPAXElement bpe : target.getObjects()) {
 			updateObjectFields(bpe, target);
-			updateInverseObjectFields(bpe, target);
 		}
 		
 	}
@@ -180,31 +176,6 @@ public class SimpleMerger
 				for (BioPAXElement value : values) // threw concurrent modification exception here; fixed above.
 				{
 					migrateToTarget(update, target, editor, value);
-				}
-			}
-		}
-	}
-
-
-	private void updateInverseObjectFields(BioPAXElement bpe, Model target)
-	{
-		// get inverse prop. editors, e.g., for xrefOf(), entityReferenceOf(), etc..
-		// (in fact, they have same names as normal BioPAX properties, i.e., 'xref', etc..)
-		Set<ObjectPropertyEditor> editors = map.getInverseEditorsOf(bpe);
-		for (ObjectPropertyEditor editor : editors)
-		{
-			Set<BioPAXElement> values = new HashSet<BioPAXElement>(
-				(Set<BioPAXElement>) editor.getInverseAccessor().getValueFromBean(bpe));
-			for (BioPAXElement value : values) 
-			{
-				//extra fix for the default (in-memory) Model implementation only
-				if(value != null && target instanceof ModelImpl && !target.contains(value)) {
-					log.warn("Updating inverse property " + editor.getProperty() + 
-						"Of: value " + value.getRDFId() + "(" + value.getModelInterface().getSimpleName() 
-						+ ") " + " will be removed (not found in the merged model)");
-
-					// mind the args order (it's reverse compared to "normal" editors use)!
-					editor.removeValueFromBean(bpe, value);
 				}
 			}
 		}
