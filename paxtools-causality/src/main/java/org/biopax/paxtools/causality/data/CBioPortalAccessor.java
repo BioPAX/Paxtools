@@ -25,6 +25,8 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private Map<CancerStudy, List<GeneticProfile>> geneticProfilesCache
             = new HashMap<CancerStudy, List<GeneticProfile>>();
     private Map<CancerStudy, List<CaseList>> caseListCache = new HashMap<CancerStudy, List<CaseList>>();
+    private CaseList currentCaseList = null;
+    private List<GeneticProfile> currentGeneticProfiles = new ArrayList<GeneticProfile>();
 
     public CBioPortalAccessor() throws IOException {
         initializeStudies();
@@ -41,58 +43,6 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         }
     }
 
-    public AlterationPack getAlterations(String entrezGeneId, Collection<GeneticProfile> geneticProfiles) {
-		AlterationPack alterationPack = new AlterationPack(entrezGeneId);
-
-        CaseList allCaseList = null;
-        try {
-            allCaseList = getAllCasesForCurrentStudy();
-        } catch (IOException e) {
-            log.error("Could not parse case lists for this study. Returning an empty alteration map.");
-            return alterationPack;
-        }
-
-        List<GeneticProfile> geneticProfilesForCurrentStudy;
-        try {
-            geneticProfilesForCurrentStudy = getGeneticProfilesForCurrentStudy();
-        } catch (IOException e) {
-            geneticProfilesForCurrentStudy = new ArrayList<GeneticProfile>();
-        }
-
-        for (GeneticProfile geneticProfile : geneticProfiles) {
-            if(!geneticProfilesForCurrentStudy.contains(geneticProfile)) {
-                log.warn("the genetic profile "
-                        + geneticProfile.getId() + " is not in the available profiles list. Skipping.");
-                continue;
-            }
-
-            Change[] changes;
-
-            try {
-                changes = getDataForCurrentStudy(geneticProfile, entrezGeneId, allCaseList);
-            } catch (IOException e) {
-                log.error("Could not get data for genetic profile " + geneticProfile.getId()
-                        + ". Skipping...");
-                continue;
-            }
-
-            Alteration alteration = GeneticProfile.GENETIC_PROFILE_TYPE.convertToAlteration(geneticProfile.getType());
-
-			if (alteration == null)
-			{
-				System.err.println("unsupported alteration = " + geneticProfile.getType());
-			}
-
-            Change[] altChanges = alterationPack.get(alteration);
-            if(altChanges == null)
-                alterationPack.put(alteration, changes);
-            else
-                alterationPack.put(alteration, mergeChanges(altChanges, changes));
-        }
-
-        return alterationPack;
-    }
-
     private Change[] mergeChanges(Change[] changes1, Change[] changes2) {
         assert changes1.length == changes2.length;
 
@@ -103,7 +53,9 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
             Change c2 = changes2[i];
             Change consensus;
 
-            if(c1.equals(Change.NO_DATA))
+            if(c1.equals(c2))
+                consensus = c1;
+            else if(c1.equals(Change.NO_DATA))
                 consensus = c2;
             else if(c2.equals(Change.NO_DATA))
                 consensus = c1;
@@ -217,43 +169,69 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     }
 
     @Override
-    public AlterationPack getAlterations(Node node) 
-	{
+    public AlterationPack getAlterations(Node node) {
 		String entrezGeneId = getEntrezGeneID(node);
-		if (entrezGeneId != null)
-		{
+		if (entrezGeneId != null) {
 			return getAlterations(entrezGeneId);
 		}
+
 		return null;
 	}
 	
     public AlterationPack getAlterations(String entrezGeneId) {
-        List<GeneticProfile> geneticProfiles;
-        try {
-            geneticProfiles = getGeneticProfilesForCurrentStudy();
-            return getAlterations(entrezGeneId, geneticProfiles);
-        } catch (IOException e) {
-            log.error("Could not parse genetic profiles. Returning null.");
-            return null;
-        }
-    }
+        AlterationPack alterationPack = new AlterationPack(entrezGeneId);
 
-
-    public CaseList getAllCasesForCurrentStudy() throws IOException {
-        final String allPostFix = "_all";
-        List<CaseList> caseLists = getCaseListsForCurrentStudy();
-        for (CaseList caseList : caseLists) {
-            if(caseList.getId().endsWith(allPostFix)) {
-                return caseList;
+        // A few sanity checks
+        CancerStudy cancerStudy = currentCancerStudy;
+        if(!getCancerStudies().contains(cancerStudy)) {
+            String message = "Current cancer study is not valid: "
+                    + (cancerStudy == null ? "null" : cancerStudy.getName());
+            log.error(message);
+            throw new IllegalArgumentException(message);
+        } else try {
+            if(!getCaseListsForCurrentStudy().contains(getCurrentCaseList())) {
+                CaseList caseList = getCurrentCaseList();
+                String message = "Current case list is not valid :"
+                        + (caseList == null ? "null" : caseList.getDescription());
+                log.error(message);
+                throw new IllegalArgumentException(message);
+            } else if(getCurrentGeneticProfiles().isEmpty()) {
+                log.warn("Current genetic profiles do not have any elements in it!");
             }
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
 
-        log.warn("Could not find the case list: "
-                + getCurrentCancerStudy().getStudyId()
-                + allPostFix
-                + ". Returning null");
+        // Now to the genetic profile analyses
+        for (GeneticProfile geneticProfile : currentGeneticProfiles) {
+            if(!getCurrentGeneticProfiles().contains(geneticProfile)) {
+              log.warn("the genetic profile "
+                      + geneticProfile.getId() + " is not in the available profiles list. Skipping.");
+              continue;
+            }
 
-        return null;
+            Change[] changes;
+            try {
+              changes = getDataForCurrentStudy(geneticProfile, entrezGeneId, currentCaseList);
+            } catch (IOException e) {
+              log.error("Could not get data for genetic profile " + geneticProfile.getId()
+                      + ". Skipping...");
+              continue;
+            }
+
+            Alteration alteration = GeneticProfile.GENETIC_PROFILE_TYPE.convertToAlteration(geneticProfile.getType());
+            if (alteration == null) {
+                System.err.println("Unsupported alteration = " + geneticProfile.getType());
+            }
+
+            Change[] altChanges = alterationPack.get(alteration);
+            if(altChanges == null)
+               alterationPack.put(alteration, changes);
+            else
+                alterationPack.put(alteration, mergeChanges(altChanges, changes));
+        }
+
+        return alterationPack;
     }
 
     public List<CaseList> getCaseListsForCurrentStudy() throws IOException {
@@ -314,6 +292,8 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
             throw new IllegalArgumentException("This cancer study is not available through the initialized list.");
 
         this.currentCancerStudy = currentCancerStudy;
+        setCurrentCaseList(null);
+        getCurrentGeneticProfiles().clear();
     }
 
     public List<GeneticProfile> getGeneticProfilesForCurrentStudy() throws IOException {
@@ -332,5 +312,30 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         assert !geneticProfiles.isEmpty();
         geneticProfilesCache.put(getCurrentCancerStudy(), geneticProfiles);
         return geneticProfiles;
+    }
+
+    public void setCurrentCaseList(CaseList caseList) {
+        try {
+            List<CaseList> caseListsForCurrentStudy = getCaseListsForCurrentStudy();
+            if(caseList == null || caseListsForCurrentStudy.contains(caseList)) {
+                currentCaseList = caseList;
+            } else {
+                throw new IllegalArgumentException("The case list is not available for current cancer study.");
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Cannot obtain the case lists for the current study.");
+        }
+    }
+
+    public CaseList getCurrentCaseList() {
+        return currentCaseList;
+    }
+
+    public void setCurrentGeneticProfiles(List<GeneticProfile> geneticProfiles) {
+        currentGeneticProfiles = geneticProfiles;
+    }
+
+    public List<GeneticProfile> getCurrentGeneticProfiles() {
+        return currentGeneticProfiles;
     }
 }
