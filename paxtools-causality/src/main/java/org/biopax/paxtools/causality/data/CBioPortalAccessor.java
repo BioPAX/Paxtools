@@ -34,10 +34,10 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private List<GeneticProfile> currentGeneticProfiles = new ArrayList<GeneticProfile>();
 
     public CBioPortalAccessor() throws IOException {
+		memory = new HashMap<String, AlterationPack>();
         initializeStudies();
         assert !cancerStudies.isEmpty();
         setCurrentCancerStudy(cancerStudies.get(0));
-		memory = new HashMap<String, AlterationPack>();
     }
 
     private void initializeStudies() throws IOException {

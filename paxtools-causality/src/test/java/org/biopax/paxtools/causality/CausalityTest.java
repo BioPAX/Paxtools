@@ -217,7 +217,7 @@ public class CausalityTest
 
 		List<Path> paths = CausalityExecuter.findCausativePaths(model, new AltProv(), 3, 0.5, null);
 
-		assertTrue(paths.size() == 7);
+		assertTrue(paths.size() == 4);
 
 		for (Path path : paths)
 		{
@@ -234,7 +234,7 @@ public class CausalityTest
 		Map<PhysicalEntity, Map<Integer, Integer>[]> label =
 			CausalityExecuter.labelGraph(model, new AltProv(), 3, 0.5, null);
 
-		assertTrue(label.size() == 5);
+		assertTrue(label.size() == 4);
 
 		for (PhysicalEntity pe : label.keySet())
 		{
