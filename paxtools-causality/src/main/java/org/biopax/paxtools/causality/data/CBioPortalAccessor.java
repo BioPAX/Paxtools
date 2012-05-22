@@ -185,7 +185,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 	}
 	
     public AlterationPack getAlterations(String symbol) {
-		
+		// Use cached value if there is any
         AlterationPack alterationPack = getFromMemory(symbol);
 		if (alterationPack != null) return alterationPack;
 
@@ -306,6 +306,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         this.currentCancerStudy = currentCancerStudy;
         setCurrentCaseList(null);
         getCurrentGeneticProfiles().clear();
+        memory.clear();
     }
 
     public List<GeneticProfile> getGeneticProfilesForCurrentStudy() throws IOException {
