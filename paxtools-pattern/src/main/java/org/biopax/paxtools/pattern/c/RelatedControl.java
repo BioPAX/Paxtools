@@ -15,6 +15,7 @@ import java.util.Set;
 public class RelatedControl extends ConstraintAdapter
 {
 	RelType peType;
+	PathAccessor controlledOf = new PathAccessor("Control/controlledOf*:Control");
 
 	public RelatedControl(RelType peType)
 	{
@@ -52,8 +53,7 @@ public class RelatedControl extends ConstraintAdapter
 
 		if (leftContains && rightContains)
 		{
-			result.addAll(new PathAccessor("Conversion/controlledOf*:Control").getValueFromBean(conv));
-			// Return all controls
+			result.addAll(controlledOf.getValueFromBean(conv));
 			return result;
 		}
 
@@ -71,9 +71,10 @@ public class RelatedControl extends ConstraintAdapter
 				}
 
 				result.add(ctrl);
-				result.addAll(new PathAccessor("Control/controlledOf*:Control").getValueFromBean(ctrl));
+				result.addAll(controlledOf.getValueFromBean(conv));
 			}
 		}
 		return result;
 	}
+
 }

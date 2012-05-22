@@ -2,6 +2,9 @@ package org.biopax.paxtools.util;
 
 import org.biopax.paxtools.model.BioPAXElement;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Utility class for switching to the equivalence based comparison of  BioPAXElement.
  *
@@ -53,5 +56,26 @@ public class EquivalenceWrapper
     public BioPAXElement getBpe() {
         return bpe;
     }
+
+	public static Set<EquivalenceWrapper> getEquivalenceMap(Set elements)
+	{
+		HashSet<EquivalenceWrapper> value = new HashSet<EquivalenceWrapper>();
+		for (Object element : elements)
+		{
+			try
+			{
+				if(!value.add(new EquivalenceWrapper((BioPAXElement) element)))
+				{
+					throw  new IllegalBioPAXArgumentException("Value set contains equivalent elements");
+				}
+			}
+			catch (ClassCastException e)
+			{
+				throw new IllegalBioPAXArgumentException("Value set contains objects that are not biopax elements");
+			}
+
+		}
+		return value;
+	}
 
 }
