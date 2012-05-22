@@ -5,11 +5,13 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.Named;
+import org.biopax.paxtools.pattern.c.ConBox;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +40,7 @@ public class PatternBoxTest
 		Assert.assertTrue(list.size() == 1);
 
 
-
-		Map<BioPAXElement,List<Match>> map = Searcher.search(
-			model, EntityReference.class, PatternBox.inSameComplex());
+		Map<BioPAXElement,List<Match>> map = Searcher.search(model, PatternBox.inSameComplex());
 
 		for (BioPAXElement ele : map.keySet())
 		{
@@ -51,8 +51,8 @@ public class PatternBoxTest
 	@Test
 	public void testControlsStateChange() throws Exception
 	{
-		Map<BioPAXElement,List<Match>> map = Searcher.search(
-			model, EntityReference.class, PatternBox.controlsStateChange(false));
+		Map<BioPAXElement,List<Match>> map = Searcher.search(model,
+			PatternBox.controlsStateChange(false));
 
 		Assert.assertTrue(map.size() > 0);
 		
@@ -63,7 +63,7 @@ public class PatternBoxTest
 
 //		System.out.println("-------");
 
-		map = Searcher.search(model, EntityReference.class, PatternBox.controlsStateChange(true));
+		map = Searcher.search(model, PatternBox.controlsStateChange(true));
 
 		Assert.assertTrue(map.size() > 0);
 
@@ -76,31 +76,36 @@ public class PatternBoxTest
 	@Test
 	public void testConsecutiveCatalysis() throws Exception
 	{
-		Map<BioPAXElement,List<Match>> map = Searcher.search(
-			model_urea, EntityReference.class, PatternBox.consecutiveCatalysis());
+		Pattern p = PatternBox.consecutiveCatalysis(null);
+		p.insertPointConstraint(ConBox.notUbique(Collections.singleton("http://www.reactome.org/biopax/68322SmallMolecule19")), 5);
+
+		Map<BioPAXElement,List<Match>> map = Searcher.search(model_urea, p);
 
 		Assert.assertTrue(map.size() > 0);
 
 		for (BioPAXElement ele : map.keySet())
 		{
-			printMatches(map.get(ele));
+			printMatches(map.get(ele), 0, 5, 10);
 		}
 	}
 
 
 	protected void printMatches(Collection<Match> matches)
 	{
-		for (Match match : matches)
-		{
-			System.out.println(name(match.get(0)) + " ---> " + name(match.getLast()));
-		}
+		if (matches.isEmpty()) return;
+		printMatches(matches, 0, matches.iterator().next().varSize()-1);
 	}
 	
-	protected void printMatches(Collection<Match> matches, int i, int j)
+	protected void printMatches(Collection<Match> matches, int ... ind)
 	{
 		for (Match match : matches)
 		{
-			System.out.println(name(match.get(i)) + " ---> " + name(match.get(j)));
+			System.out.print(name(match.get(ind[0])));
+			for (int i = 1; i < ind.length; i++)
+			{
+				System.out.print(" --- " + name(match.get(ind[i])));
+			}
+			System.out.println();
 		}
 	}
 

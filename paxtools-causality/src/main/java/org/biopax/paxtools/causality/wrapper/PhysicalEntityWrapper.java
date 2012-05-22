@@ -4,8 +4,7 @@ import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.model.level3.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
@@ -56,6 +55,20 @@ public class PhysicalEntityWrapper extends org.biopax.paxtools.query.wrapperL3.P
 			}
 		}
 		return xrefs;
+	}
+
+	protected Set<Interaction> getDownstreamInteractions(Collection<Interaction> inters)
+	{
+		Set<Interaction> set = new HashSet<Interaction>();
+
+		for (Interaction inter : inters)
+		{
+			if (inter instanceof Control)
+			{
+				set.add(inter);
+			}
+		}
+		return set;
 	}
 
 	public AlterationPack getAlterations()

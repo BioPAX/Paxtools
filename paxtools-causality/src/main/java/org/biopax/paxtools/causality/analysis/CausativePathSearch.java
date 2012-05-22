@@ -112,14 +112,14 @@ public class CausativePathSearch
 		
 		if (alt_prot)
 		{
-			bfs = new BFS(Collections.singleton(target), null, Direction.UPSTREAM, distance);
+			bfs = new BFS(Collections.singleton(target), null, Direction.UPSTREAM, distance, false);
 		}
 		else
 		{
 			Set<Node> t = getTranscriptionReactions(target);
 			if (t.isEmpty()) return Collections.emptyList();
 
-			bfs = new BFS(t, null, Direction.UPSTREAM, distance);
+			bfs = new BFS(t, null, Direction.UPSTREAM, distance, false);
 		}
 
 		Map<GraphObject,Integer> distMap = bfs.run();

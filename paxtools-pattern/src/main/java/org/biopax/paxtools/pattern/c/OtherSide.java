@@ -35,6 +35,8 @@ public class OtherSide extends ConstraintAdapter
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
+		assertIndLength(ind);
+
 		PhysicalEntity pe1 = (PhysicalEntity) match.get(ind[0]);
 		Conversion conv = (Conversion) match.get(ind[1]);
 

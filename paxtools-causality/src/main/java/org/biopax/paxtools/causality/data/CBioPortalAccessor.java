@@ -6,11 +6,16 @@ import org.biopax.paxtools.causality.model.Alteration;
 import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Change;
 import org.biopax.paxtools.causality.model.Node;
+import org.biopax.paxtools.causality.util.EGUtil;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
+
+/**
+ * @author Arman Aksoy
+ */
 
 public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private static Log log = LogFactory.getLog(CBioPortalAccessor.class);
@@ -32,6 +37,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         initializeStudies();
         assert !cancerStudies.isEmpty();
         setCurrentCancerStudy(cancerStudies.get(0));
+		memory = new HashMap<String, AlterationPack>();
     }
 
     private void initializeStudies() throws IOException {
@@ -84,7 +90,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                 + "gene_list=" + entrezGeneId;
 
         List<String[]> results = parseURL(url, false);
-        assert results.size() > 1;
+//        assert results.size() > 1; // todo check this assertion
         String[] header = results.get(0);
 
         for(int i=1; i < results.size(); i++) {
@@ -170,16 +176,20 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 
     @Override
     public AlterationPack getAlterations(Node node) {
-		String entrezGeneId = getEntrezGeneID(node);
-		if (entrezGeneId != null) {
-			return getAlterations(entrezGeneId);
+		String symbol = getGeneSymbol(node);
+		if (symbol != null) {
+			return getAlterations(symbol);
 		}
 
 		return null;
 	}
 	
-    public AlterationPack getAlterations(String entrezGeneId) {
-        AlterationPack alterationPack = new AlterationPack(entrezGeneId);
+    public AlterationPack getAlterations(String symbol) {
+		
+        AlterationPack alterationPack = getFromMemory(symbol);
+		if (alterationPack != null) return alterationPack;
+
+		alterationPack = new AlterationPack(symbol);
 
         // A few sanity checks
         CancerStudy cancerStudy = currentCancerStudy;
@@ -212,7 +222,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 
             Change[] changes;
             try {
-              changes = getDataForCurrentStudy(geneticProfile, entrezGeneId, currentCaseList);
+              changes = getDataForCurrentStudy(geneticProfile, symbol, currentCaseList);
             } catch (IOException e) {
               log.error("Could not get data for genetic profile " + geneticProfile.getId()
                       + ". Skipping...");
@@ -231,6 +241,8 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                 alterationPack.put(alteration, mergeChanges(altChanges, changes));
         }
 
+		memorize(symbol, alterationPack);
+		alterationPack.complete();
         return alterationPack;
     }
 
@@ -338,4 +350,11 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     public List<GeneticProfile> getCurrentGeneticProfiles() {
         return currentGeneticProfiles;
     }
+	
+	protected String getGeneSymbol(Node node)
+	{
+		String egid = getEntrezGeneID(node);
+		if (egid != null) return EGUtil.getSymbol(egid);
+		return null;
+	}
 }

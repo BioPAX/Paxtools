@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public abstract class AbstractGraph implements Graph
 {
-	private Map<String, GraphObject> objectMap;
+	protected Map<String, GraphObject> objectMap;
 
 	protected AbstractGraph()
 	{

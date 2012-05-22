@@ -35,11 +35,21 @@ public abstract class EventWrapper extends AbstractNode
 		return false;
 	}
 
+	public abstract boolean isTranscription();
+	
 	protected void addToUpstream(BioPAXElement ele, Graph graph)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(ele);
 		Edge edge = new EdgeL3(node, this, graph);
-
+		
+		if (isTranscription())
+		{
+			if (node instanceof ControlWrapper)
+			{
+				((ControlWrapper) node).setTranscription(true);
+			}
+		}
+		
 		node.getDownstreamNoInit().add(edge);
 		this.getUpstreamNoInit().add(edge);
 	}

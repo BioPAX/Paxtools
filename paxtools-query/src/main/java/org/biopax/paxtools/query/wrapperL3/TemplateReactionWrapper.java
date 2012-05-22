@@ -45,6 +45,12 @@ public class TemplateReactionWrapper extends EventWrapper
 		}
 	}
 
+	@Override
+	public boolean isTranscription()
+	{
+		return true;
+	}
+
 	protected void addToDownstream(PhysicalEntity pe, Graph graph)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(pe);
@@ -53,6 +59,23 @@ public class TemplateReactionWrapper extends EventWrapper
 
 		node.getUpstreamNoInit().add(edge);
 		this.getDownstreamNoInit().add(edge);
+	}
+
+	protected void addToUpstream(BioPAXElement ele, org.biopax.paxtools.query.model.Graph graph)
+	{
+		AbstractNode node = (AbstractNode) graph.getGraphObject(ele);
+		Edge edge = new EdgeL3(node, this, graph);
+
+		if (isTranscription())
+		{
+			if (node instanceof ControlWrapper)
+			{
+				((ControlWrapper) node).setTranscription(true);
+			}
+		}
+
+		node.getDownstreamNoInit().add(edge);
+		this.getUpstreamNoInit().add(edge);
 	}
 
 

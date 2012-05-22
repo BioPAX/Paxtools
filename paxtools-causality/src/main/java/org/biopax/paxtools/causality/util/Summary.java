@@ -63,6 +63,9 @@ public class Summary
 
 	public static double mean(double[] x, int[] inds)
 	{
+		assert x != null;
+		assert inds != null;
+
 		if (x.length == 0 || inds.length == 0) return Double.NaN;
 		assert x.length >= inds.length;
 

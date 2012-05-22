@@ -2,6 +2,8 @@ package org.biopax.paxtools.causality;
 
 import org.biopax.paxtools.causality.analysis.BFS;
 import org.biopax.paxtools.causality.analysis.Exhaustive;
+import org.biopax.paxtools.causality.data.CBioPortalAccessor;
+import org.biopax.paxtools.causality.data.GEOAccessor;
 import org.biopax.paxtools.causality.model.*;
 import org.biopax.paxtools.causality.util.Histogram;
 import org.biopax.paxtools.causality.wrapper.Graph;
@@ -21,6 +23,7 @@ import static org.junit.Assert.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -111,7 +114,7 @@ public class CausalityTest
 
 		Node source = (Node) graph.getGraphObject(model.getByID(ar_p53_sourceID));
 
-		BFS bfs = new BFS(Collections.singleton(source), null, Direction.DOWNSTREAM, 3);
+		BFS bfs = new BFS(Collections.singleton(source), null, Direction.DOWNSTREAM, 3, false);
 		Map<GraphObject, Integer> res = bfs.run();
 
 		Set<String> visit = new HashSet<String>(ar_p53_visitList);
@@ -133,7 +136,7 @@ public class CausalityTest
 		for (String s : visit) System.out.println("failed to visit = " + s);
 		assertTrue(visit.isEmpty());
 
-		bfs = new BFS(Collections.singleton(source), null, Direction.DOWNSTREAM, 2);
+		bfs = new BFS(Collections.singleton(source), null, Direction.DOWNSTREAM, 2, false);
 		res = bfs.run();
 
 		visit = new HashSet<String>(ar_p53_visitList);
@@ -181,18 +184,26 @@ public class CausalityTest
 				PhysicalEntityWrapper pew = (PhysicalEntityWrapper) node;
 				PhysicalEntity pe = pew.getPhysicalEntity();
 
-				if (pe.getDisplayName().equals("AR"))
-				{
-					return pack_AR;
-				}
-				else if (pe.getDisplayName().equals("p53"))
-				{
-					return pack_TP53;
-				}
-				else if (pe.getDisplayName().equals("GNAZ"))
-				{
-					return pack_GNAZ;
-				}
+				String id = pe.getDisplayName();
+				return getAlterations(id);
+			}
+			return null;
+		}
+
+		@Override
+		public AlterationPack getAlterations(String id)
+		{
+			if (id.equals("AR"))
+			{
+				return pack_AR;
+			}
+			else if (id.equals("p53"))
+			{
+				return pack_TP53;
+			}
+			else if (id.equals("GNAZ"))
+			{
+				return pack_GNAZ;
 			}
 			return null;
 		}
@@ -318,5 +329,44 @@ public class CausalityTest
 	{
 		if (!count.containsKey(er)) count.put(er, 0);
 		count.put(er, count.get(er) + 1);
+	}
+
+	@Test
+	@Ignore
+	public void predictFromDownstreamTest() throws IOException
+	{
+		SimpleIOHandler handler = new SimpleIOHandler();
+		Model model = handler.convertFromOWL(new FileInputStream(
+			"/home/ozgun/Desktop/cpath2_prepared.owl"));
+
+//		CBioPortalAccessor ap = new CBioPortalAccessor();
+//		ap.setCurrentCancerStudy(ap.getCancerStudies().get(16));
+//		ap.setCurrentCaseList(ap.getCaseListsForCurrentStudy().get(18));
+//		ap.setCurrentGeneticProfiles(Collections.singletonList(ap.getGeneticProfilesForCurrentStudy().get(7)));
+
+		int[][] inds = prepareTwoIndexSets(11, 66);
+		GEOAccessor ap = new GEOAccessor("GSE29431", inds[1], inds[0]);
+
+		CausalityExecuter.predictActivityFromDownstream(model, ConversionLabelerTest.ubiq, ap);
+	}
+	
+	private static int[][] prepareTwoIndexSets(int sizeOfFirst, int total)
+	{
+		int[][] x = new int[2][];
+		x[0] = new int[sizeOfFirst];
+		x[1] = new int[total - sizeOfFirst];
+
+		for (int i = 0; i < total; i++)
+		{
+			if (i < sizeOfFirst)
+			{
+				x[0][i] = i;
+			}
+			else
+			{
+				x[1][i - sizeOfFirst] = i;
+			}
+		}
+		return x;
 	}
 }

@@ -46,7 +46,7 @@ public class GEOAccessor extends AlterationProviderAdaptor
 	protected final static String[] SYMBOL_NAMES = new String[]{"Gene Symbol", "GENE_SYMBOL"};
 	
 	static double devThr = 1;
-	static double changeThr = 2;
+	static double changeThr = 1;
 	static double changeThrInverse = 1 / changeThr;
 
 	public GEOAccessor(String gseID, int[] testIndex, int[] controlIndex)
@@ -385,6 +385,8 @@ public class GEOAccessor extends AlterationProviderAdaptor
 	{
 		double[] value = dataMap.get(id);
 
+		if (value == null) return null;
+		
 		double ctrlMean = Summary.mean(value, controlIndex);
 		double ctrlSD = Summary.stdev(value, controlIndex);
 
@@ -407,7 +409,7 @@ public class GEOAccessor extends AlterationProviderAdaptor
 
 		AlterationPack pack = new AlterationPack(id);
 		pack.put(Alteration.EXPRESSION, ch);
-
+		pack.complete();
 		return pack;
 	}
 

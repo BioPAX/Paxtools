@@ -28,6 +28,8 @@ public interface Node extends GraphObject
 	int getSign();
 
 	boolean isUbique();
+	
+	boolean isTranscription();
 
 	void init();
 

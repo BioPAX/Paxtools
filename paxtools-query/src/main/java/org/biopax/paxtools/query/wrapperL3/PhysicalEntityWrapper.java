@@ -54,6 +54,22 @@ public class PhysicalEntityWrapper extends AbstractNode
 			conW.getDownstreamNoInit().add(edge);
 			this.getUpstreamNoInit().add(edge);
 		}
+
+		for (Interaction inter : pe.getParticipantOf())
+		{
+			if (inter instanceof TemplateReaction)
+			{
+				TemplateReaction tr = (TemplateReaction) inter;
+				TemplateReactionWrapper trw = (TemplateReactionWrapper) graph.getGraphObject(tr);
+				Edge edge = new EdgeL3(trw, this, graph);
+
+				assert trw != null;
+				assert trw.getDownstreamNoInit() != null;
+
+				trw.getDownstreamNoInit().add(edge);
+				this.getUpstreamNoInit().add(edge);
+			}
+		}
 	}
 
 	public void initDownstream()
@@ -81,7 +97,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	//--- Upstream conversions --------------------------------------------------------------------|
 
-	private Set<Conversion> getUpstreamConversions(Collection<Interaction> inters)
+	protected Set<Conversion> getUpstreamConversions(Collection<Interaction> inters)
 	{
 		Set<Conversion> set = new HashSet<Conversion>();
 

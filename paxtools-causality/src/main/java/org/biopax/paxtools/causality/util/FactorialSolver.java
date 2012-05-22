@@ -25,6 +25,12 @@ public class FactorialSolver
 		clearOverlap(nom, denom);
 	}
 	
+	public static double solve(List<Integer> nom, List<Integer> denom)
+	{
+		FactorialSolver solver = new FactorialSolver(nom, denom);
+		return solver.solve();
+	}
+	
 	public double solve()
 	{
 		// Comparator for reverse sorting

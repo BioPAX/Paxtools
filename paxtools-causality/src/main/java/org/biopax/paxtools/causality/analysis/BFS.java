@@ -50,15 +50,22 @@ public class BFS
 
 	protected LinkedList<Node> queue;
 
-	public BFS(Set<Node> sourceSet, Set<Node> stopSet, Direction direction, int limit)
+	protected boolean startFromTranscription;
+	
+	public BFS(Set<Node> sourceSet, Set<Node> stopSet, Direction direction, int limit,
+		boolean startFromTranscription)
 	{
 		if (direction == Direction.BOTHSTREAM)
 			throw new IllegalArgumentException("BOTHSTREAM is not a valid parameter in BFS");
+
+		if (startFromTranscription && direction == Direction.DOWNSTREAM)
+			throw new IllegalArgumentException("Cannot start from transcription when going downstream");
 
 		this.sourceSet = sourceSet;
 		this.stopSet = stopSet;
 		this.direction = direction;
 		this.limit = limit;
+		this.startFromTranscription = startFromTranscription;
 	}
 
 	/**
@@ -162,7 +169,8 @@ public class BFS
 
 			// Check if we need to stop traversing the neighbor, enqueue otherwise
 			boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
-				(!neigh.isBreadthNode() || dist < limit) && !neigh.isUbique();
+				(!neigh.isBreadthNode() || dist < limit) && !neigh.isUbique() &&
+				(!startFromTranscription || dist > 1 || neigh.isTranscription());
 
 			// Process the neighbor if not processed or not in queue
 

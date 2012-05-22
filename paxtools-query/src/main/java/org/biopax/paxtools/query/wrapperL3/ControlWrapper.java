@@ -18,11 +18,13 @@ public class ControlWrapper extends AbstractNode
 {
 	protected Control ctrl;
 	protected int sign;
+	protected boolean transcription;
 
 	protected ControlWrapper(Control ctrl, Graph graph)
 	{
 		super(graph);
 		this.ctrl = ctrl;
+		this.transcription = false;
 	}
 
 	public boolean isBreadthNode()
@@ -49,16 +51,14 @@ public class ControlWrapper extends AbstractNode
 	public void init()
 	{
 		ControlType type = ctrl.getControlType();
-		if (type == ControlType.ACTIVATION ||
-			type == ControlType.ACTIVATION_ALLOSTERIC ||
-			type == ControlType.ACTIVATION_NONALLOSTERIC ||
-			type == ControlType.ACTIVATION_UNKMECH)
+
+		if (type != null && type.toString().startsWith("I"))
 		{
-			sign = POSITIVE;
+			sign = NEGATIVE;
 		}
 		else
 		{
-			sign = NEGATIVE;
+			sign = POSITIVE;
 		}
 
 	}
@@ -118,5 +118,15 @@ public class ControlWrapper extends AbstractNode
 	public Collection<Node> getLowerEquivalent()
 	{
 		return Collections.emptySet();
+	}
+
+	public boolean isTranscription()
+	{
+		return transcription;
+	}
+
+	public void setTranscription(boolean transcription)
+	{
+		this.transcription = transcription;
 	}
 }

@@ -15,6 +15,11 @@ public class Match implements Cloneable
 		this.variables = new BioPAXElement[size];
 	}
 
+	public BioPAXElement[] getVariables()
+	{
+		return variables;
+	}
+
 	public BioPAXElement get(int index)
 	{
 		return variables[index];
@@ -25,6 +30,11 @@ public class Match implements Cloneable
 		return variables[variables.length - 1];
 	}
 
+	public int varSize()
+	{
+		return variables.length;
+	}
+	
 	public void set(BioPAXElement ele, int index)
 	{
 		variables[index] = ele;

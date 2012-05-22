@@ -1,6 +1,7 @@
 package org.biopax.paxtools.pattern.c;
 
 import org.biopax.paxtools.pattern.Constraint;
+import org.biopax.paxtools.pattern.MappedConst;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
 
@@ -16,9 +17,9 @@ import java.util.HashSet;
  */
 public class OR extends ConstraintAdapter
 {
-	Constraint[] con;
+	MappedConst[] con;
 
-	public OR(Constraint... con)
+	public OR(MappedConst... con)
 	{
 		this.con = con;
 	}
@@ -26,33 +27,63 @@ public class OR extends ConstraintAdapter
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
-		for (Constraint constr : con)
+		for (MappedConst mc : con)
 		{
-			if (constr.satisfies(match, ind)) return true;
+			if (mc.getConstr().satisfies(match, translate(mc.getInds(), ind))) return true;
 		}
 		return false;
+	}
+	
+	protected int[] translate(int[] first, int[] second)
+	{
+		int[] t = new int[first.length];
+		for (int i = 0; i < t.length; i++)
+		{
+			t[i] = second[first[i]];
+		}
+		return t;
 	}
 
 	@Override
 	public boolean canGenerate()
 	{
-		return con[0].canGenerate();
+		for (MappedConst mc : con)
+		{
+			if (!mc.getConstr().canGenerate()) return false;
+		}
+		return true;
 	}
 
 	@Override
 	public int getVariableSize()
 	{
-		return con[0].getVariableSize();
+		int size = 0;
+		for (MappedConst mc : con)
+		{
+			int m = max(mc.getInds());
+			if (m > size) size = m;
+		}
+		return size + 1;
 	}
 
+	protected int max(int[] v)
+	{
+		int x = 0;
+		for (int i : v)
+		{
+			if (i > x) x = i;
+		}
+		return x;
+	}
+	
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
 		Collection<BioPAXElement> gen = new HashSet<BioPAXElement>();
 
-		for (Constraint aCon : con)
+		for (MappedConst mc : con)
 		{
-			gen.addAll(aCon.generate(match, ind));
+			gen.addAll(mc.getConstr().generate(match, translate(mc.getInds(), ind)));
 		}
 		return gen;
 	}

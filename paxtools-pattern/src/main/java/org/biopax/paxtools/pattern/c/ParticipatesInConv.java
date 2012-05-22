@@ -19,10 +19,12 @@ import java.util.HashSet;
 public class ParticipatesInConv extends ConstraintAdapter
 {
 	RelType type;
+	boolean treatReversibleAsLeftToRight;
 
-	public ParticipatesInConv(RelType type)
+	public ParticipatesInConv(RelType type, boolean treatReversibleAsLeftToRight)
 	{
 		this.type = type;
+		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
 	}
 
 	@Override
@@ -44,7 +46,8 @@ public class ParticipatesInConv extends ConstraintAdapter
 			{
 				Conversion cnv = (Conversion) inter;
 
-				if (cnv.getConversionDirection() == ConversionDirectionType.REVERSIBLE)
+				if (cnv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
+					!treatReversibleAsLeftToRight)
 				{
 					result.add(cnv);
 				}
@@ -56,7 +59,9 @@ public class ParticipatesInConv extends ConstraintAdapter
 				// Note that null direction is treated as if LEFT_TO_RIGHT. This is not proper,
 				// but it is the best approximation.
 				else if ((cnv.getConversionDirection() == ConversionDirectionType.LEFT_TO_RIGHT ||
-					cnv.getConversionDirection() == null) &&
+					cnv.getConversionDirection() == null ||
+					(cnv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
+						treatReversibleAsLeftToRight)) &&
 					(type == RelType.INPUT ? cnv.getLeft().contains(pe) : cnv.getRight().contains(pe)))
 				{
 					result.add(cnv);

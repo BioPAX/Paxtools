@@ -130,4 +130,10 @@ public abstract class AbstractNode implements Node
 	{
 		this.pathSign = 0;
 	}
+
+	@Override
+	public boolean isTranscription()
+	{
+		return false;
+	}
 }

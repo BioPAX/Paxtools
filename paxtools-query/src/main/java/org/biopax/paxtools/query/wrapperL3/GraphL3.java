@@ -146,4 +146,9 @@ public class GraphL3 extends AbstractGraph
 		}
 		return objects;
 	}
+
+	public Model getModel()
+	{
+		return model;
+	}
 }

@@ -1,6 +1,7 @@
 package org.biopax.paxtools.pattern.c;
 
 import org.biopax.paxtools.pattern.Constraint;
+import org.biopax.paxtools.pattern.MappedConst;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
 
@@ -12,7 +13,7 @@ import java.util.HashSet;
  */
 public class AND extends OR
 {
-	public AND(Constraint... con)
+	public AND(MappedConst... con)
 	{
 		super(con);
 	}
@@ -20,9 +21,9 @@ public class AND extends OR
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
-		for (Constraint constr : con)
+		for (MappedConst mc : con)
 		{
-			if (!constr.satisfies(match, ind)) return false;
+			if (!mc.getConstr().satisfies(match, translate(mc.getInds(), ind))) return false;
 		}
 		return true;
 	}
@@ -30,13 +31,14 @@ public class AND extends OR
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
-		Collection<BioPAXElement> gen = new HashSet<BioPAXElement> (con[0].generate(match, ind));
+		Collection<BioPAXElement> gen = new HashSet<BioPAXElement> (
+			con[0].getConstr().generate(match, translate(con[0].getInds(), ind)));
 
 		for (int i = 1; i < con.length; i++)
 		{
 			if (gen.isEmpty()) break;
 
-			gen.retainAll(con[i].generate(match, ind));
+			gen.retainAll(con[i].getConstr().generate(match, translate(con[i].getInds(), ind)));
 		}
 		return gen;
 	}

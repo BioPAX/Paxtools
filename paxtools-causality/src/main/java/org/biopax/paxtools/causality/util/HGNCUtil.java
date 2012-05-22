@@ -1,24 +1,22 @@
 package org.biopax.paxtools.causality.util;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Performs HGNC related conversions. Database updated at Jan 25, 2012.
+ *
  * @author Ozgun Babur
  */
-public class EGUtil
+public class HGNCUtil
 {
-	private static Map<String, String> id2sym;
-	private static Map<String, String> sym2id;
+	private static Map<String, Integer> sym2id;
+	private static Map<Integer, String> id2sym;
 
 	public static void main(String[] args)
 	{
-		System.out.println(getEGID("BAX"));
-		System.out.println(getSymbol("367"));
+		System.out.println(getHGNCID("BAX"));
 	}
 
 	/**
@@ -26,45 +24,38 @@ public class EGUtil
 	 * @param symbol
 	 * @return
 	 */
-	public static String getEGID(String symbol)
+	public static Integer getHGNCID(String symbol)
 	{
 		return sym2id.get(symbol);
 	}
-
-	/**
-	 * Provides HGNC ID of the given approved gene symbol.
-	 * @param egid
-	 * @return
-	 */
-	public static String getSymbol(String egid)
+	
+	public static String getSymbol(Integer hgncID)
 	{
-		return id2sym.get(egid);
+		return id2sym.get(hgncID);
 	}
 
 	static
 	{
 		try
 		{
-			sym2id = new HashMap<String, String>();
-
+			sym2id = new HashMap<String, Integer>();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
-				EGUtil.class.getResourceAsStream("EntrezGene.txt")));
-
+				HGNCUtil.class.getResourceAsStream("hgnc.txt")));
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 			{
 				String[] token = line.split("\t");
-				if (token.length < 2) continue;
-				String sym = token[0];
-				String id = token[1];
+				String sym = token[1];
+				Integer id = Integer.parseInt(token[0]);
 				sym2id.put(sym, id);
 			}
 			reader.close();
 
-			id2sym = new HashMap<String, String>();
+			id2sym = new HashMap<Integer, String>();
 			for (String key : sym2id.keySet())
 			{
 				id2sym.put(sym2id.get(key), key);
 			}
+			
 		}
 		catch (FileNotFoundException e)
 		{

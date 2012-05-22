@@ -7,9 +7,10 @@ import org.biopax.paxtools.model.level3.*;
  */
 public class ConversionWrapper extends EventWrapper
 {
-	private Conversion conv;
-	private boolean direction;
+	protected Conversion conv;
+	protected boolean direction;
 	private ConversionWrapper reverse;
+	protected boolean transcription;
 
 	protected ConversionWrapper(Conversion conv, GraphL3 graph)
 	{
@@ -99,6 +100,11 @@ public class ConversionWrapper extends EventWrapper
 				addToDownstream(pe, getGraph());
 			}
 		}
+	}
+
+	public boolean isTranscription()
+	{
+		return transcription;
 	}
 
 	public String getKey()

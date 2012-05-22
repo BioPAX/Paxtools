@@ -1,5 +1,7 @@
 package org.biopax.paxtools.pattern;
 
+import org.biopax.paxtools.model.BioPAXElement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,23 +11,27 @@ import java.util.List;
 public class Pattern
 {
 	protected int variableSize;
+	protected Class<? extends BioPAXElement> startingClass;
 	protected List<MappedConst> constraints;
 
-	public Pattern(int variableSize, List<MappedConst> constraints)
+	public Pattern(int variableSize, Class<? extends BioPAXElement> startingClass,
+		List<MappedConst> constraints)
 	{
 		this.variableSize = variableSize;
+		this.startingClass = startingClass;
 		this.constraints = constraints;
 	}
 
-	public Pattern(int variableSize)
+	public Pattern(int variableSize, Class<? extends BioPAXElement> startingClass)
 	{
-		this(variableSize, new ArrayList<MappedConst>());
+		this(variableSize, startingClass, new ArrayList<MappedConst>());
 	}
 
 	public void addConstraint(Constraint constr, int ... ind)
 	{
 		assert ind.length > 0;
 		assert checkIndsInRange(ind);
+		assert constr.getVariableSize() == ind.length;
 		constraints.add(new MappedConst(constr, ind));
 	}
 
@@ -59,6 +65,23 @@ public class Pattern
 		}
 	}
 	
+	public void insertPointConstraint(Constraint con, int ... ind)
+	{
+		assert con.getVariableSize() == 1;
+
+		for (int i : ind)
+		{
+			for (int j = 0; j < constraints.size(); j++)
+			{
+				int[] index = constraints.get(j).getInds();
+				if (index[index.length-1] == i)
+				{
+					constraints.add(j + 1, new MappedConst(con, i));
+					break;
+				}
+			}
+		}
+	}
 
 	public List<MappedConst> getConstraints()
 	{
@@ -74,5 +97,15 @@ public class Pattern
 	public int getVariableSize()
 	{
 		return variableSize;
+	}
+
+	public void setVariableSize(int variableSize)
+	{
+		this.variableSize = variableSize;
+	}
+
+	public Class<? extends BioPAXElement> getStartingClass()
+	{
+		return startingClass;
 	}
 }

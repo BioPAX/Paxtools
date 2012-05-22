@@ -8,13 +8,17 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.SmallMolecule;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.algorithm.LimitType;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -140,4 +144,63 @@ public class QueryTest
 		Model ex = excise(model, result);
 		handler.convertToOWL(ex, new FileOutputStream("QueryResult.owl"));		
 	}
+
+	@Test
+	@Ignore
+	public void testLevel2Neighborhood() throws Throwable
+	{
+		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc_premerge.owl"));
+
+		Set<BioPAXElement> source = findElements(model,
+			"http://biocyc.org/biopax/biopax-level3ProteinReference155353");
+
+		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(source, model, 2, Direction.BOTHSTREAM, HCUbiq);
+		System.out.println("result.size() = " + result.size());
+	}
+
+	static Set<String> HCUbiq = new HashSet<String>(Arrays.asList(
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule159666",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule135584",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule131446",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule131465",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule131548",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule131525",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule132137",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule127479",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule132532",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule137847",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule137835",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule137826",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule137582",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule126025",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule125519",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule165158",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule165340",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule129851",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule129842",
+		"http://biocyc.org/biopax/biopax-level3SmallMolecule129864"
+	));
+	
+	@Test
+	@Ignore
+	public void getUbiques() throws Throwable
+	{
+		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc.owl.txt"));
+
+		BioPAXElement ele = model.getByID("http://biocyc.org/biopax/biopax-level3SmallMolecule173158");
+
+		int i = 0;
+		for (PhysicalEntity pe : model.getObjects(SmallMolecule.class))
+		{
+			if (pe.getParticipantOf().size() > 30)
+			{
+				i++;
+//				System.out.println(pe.getDisplayName());
+				System.out.println("\"" + pe.getRDFId() + "\",");
+			}
+		}
+		System.out.println("i = " + i);
+	}
+	
+
 }

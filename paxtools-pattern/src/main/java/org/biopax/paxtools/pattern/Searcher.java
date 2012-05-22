@@ -1,8 +1,19 @@
 package org.biopax.paxtools.pattern;
 
+import org.biopax.paxtools.controller.Cloner;
+import org.biopax.paxtools.controller.Completer;
+import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.pattern.c.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.*;
 
 /**
@@ -10,8 +21,10 @@ import java.util.*;
  */
 public class Searcher
 {
-	public static List<Match> search(BioPAXElement ele, Pattern pattern)
+	public static List<Match> search_old(BioPAXElement ele, Pattern pattern)
 	{
+		assert pattern.getStartingClass().isAssignableFrom(ele.getModelInterface());
+
 		Match m = new Match(pattern.getVariableSize());
 		m.set(ele, 0);
 		
@@ -20,6 +33,7 @@ public class Searcher
 
 		for (MappedConst mc : pattern.getConstraints())
 		{
+			System.out.println("list.size() = " + list.size());
 			Constraint constr = mc.getConstr();
 			int[] ind = mc.getInds();
 			int lastInd = ind[ind.length-1];
@@ -29,6 +43,7 @@ public class Searcher
 				if (constr.canGenerate() && match.get(lastInd) == null)
 				{
 					Collection<BioPAXElement> elements = constr.generate(match, ind);
+					if (elements.size() > 100) System.out.println("generated = " + elements.size());
 					
 					for (BioPAXElement el : elements)
 					{
@@ -52,14 +67,108 @@ public class Searcher
 		}
 		return list;
 	}
+
+	public static List<Match> search(Match m, Pattern pattern)
+	{
+		assert pattern.getStartingClass().isAssignableFrom(m.get(0).getModelInterface());
+
+		try
+		{
+			return searchRecursive(m, pattern.getConstraints(), 0);
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
-	public static Map<BioPAXElement, List<Match>> search(Model model, 
-		Class<? extends BioPAXElement> clazz, Pattern pattern)
+	public static List<Match> search(BioPAXElement ele, Pattern pattern)
+	{
+		assert pattern.getStartingClass().isAssignableFrom(ele.getModelInterface());
+
+		Match m = new Match(pattern.getVariableSize());
+		m.set(ele, 0);
+		return search(m, pattern);
+	}
+
+	public static List<Match> searchRecursive(Match match, List<MappedConst> mc, int index) 
+		throws CloneNotSupportedException
+	{
+		List<Match> result = new ArrayList<Match>();
+
+		Constraint con = mc.get(index).getConstr();
+		int[] ind = mc.get(index).getInds();
+		int lastInd = ind[ind.length-1];
+
+		if (con.canGenerate() && match.get(lastInd) == null)
+		{
+			Collection<BioPAXElement> elements = con.generate(match, ind);
+
+			for (BioPAXElement ele : elements)
+			{
+				match.set(ele, lastInd);
+				
+				if (mc.size() == index + 1)
+				{
+					result.add((Match) match.clone());
+				}
+				else
+				{
+					result.addAll(searchRecursive(match, mc, index + 1));
+				}
+				
+				match.set(null, lastInd);
+			}
+		}
+		else
+		{
+			if (con.satisfies(match, ind))
+			{
+				if (mc.size() == index + 1)
+				{
+					result.add((Match) match.clone());
+				}
+				else
+				{
+					result.addAll(searchRecursive(match, mc, index + 1));
+				}
+			}
+		}
+		return result;
+	}
+	
+	public static List<Match> searchPlain(Model model, Pattern pattern)
+	{
+		List<Match> list = new LinkedList<Match>();
+
+		Map<BioPAXElement, List<Match>> map = search(model, pattern);
+		for (List<Match> matches : map.values())
+		{
+			list.addAll(matches);
+		}
+		return list;
+	}
+
+	public static List<Match> searchPlain(Collection<? extends BioPAXElement> eles, Pattern pattern)
+	{
+		List<Match> list = new LinkedList<Match>();
+
+		Map<BioPAXElement, List<Match>> map = search(eles, pattern);
+		for (List<Match> matches : map.values())
+		{
+			list.addAll(matches);
+		}
+		return list;
+	}
+
+	public static Map<BioPAXElement, List<Match>> search(Model model, Pattern pattern)
 	{
 		Map<BioPAXElement, List<Match>> map = new HashMap<BioPAXElement, List<Match>>();
 
-		for (BioPAXElement ele : model.getObjects(clazz))
+		for (BioPAXElement ele : model.getObjects(pattern.getStartingClass()))
 		{
+//			System.out.println(((Named) ele).getDisplayName() + "\t" + ele.getRDFId());
 			List<Match> matches = search(ele, pattern);
 			
 			if (!matches.isEmpty())
@@ -68,5 +177,170 @@ public class Searcher
 			}
 		}
 		return map;
+	}
+	
+	public static Map<BioPAXElement, List<Match>> search(Collection<? extends BioPAXElement> eles,
+		Pattern pattern)
+	{
+		Map<BioPAXElement, List<Match>> map = new HashMap<BioPAXElement, List<Match>>();
+
+		for (BioPAXElement ele : eles)
+		{
+			if (!pattern.getStartingClass().isAssignableFrom(ele.getModelInterface())) continue;
+			
+			List<Match> matches = search(ele, pattern);
+			
+			if (!matches.isEmpty())
+			{
+				map.put(ele, matches);
+			}
+		}
+		return map;
+	}
+
+	public static <T extends BioPAXElement> Set<T> searchAndCollect(
+		Collection<? extends BioPAXElement> eles, Pattern pattern, int index, Class<T> c)
+	{
+		Set<T> set = new HashSet<T>();
+
+		for (Match match : searchPlain(eles, pattern))
+		{
+			set.add((T) match.get(index));
+		}
+		return set;
+	}
+
+	public static <T extends BioPAXElement> Set<T> searchAndCollect(
+		BioPAXElement ele, Pattern pattern, int index, Class<T> c)
+	{
+		Set<T> set = new HashSet<T>();
+
+		for (Match match : search(ele, pattern))
+		{
+			set.add((T) match.get(index));
+		}
+		return set;
+	}
+
+	
+	public boolean hasSolution(Pattern p, BioPAXElement ... ele)
+	{
+		Match m = new Match(p.getVariableSize());
+		for (int i = 0; i < ele.length; i++)
+		{
+			m.set(ele[i], i);
+		}
+
+		return !search(m, p).isEmpty();
+	}
+	
+	public static void searcInFile(Pattern p, String inFile, String outFile) throws FileNotFoundException
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(new FileInputStream(inFile));
+
+		Map<BioPAXElement,List<Match>> matchMap = Searcher.search(model, p);
+
+		System.out.println("matching groups size = " + matchMap.size());
+
+		List<Set<Interaction>> inters = new LinkedList<Set<Interaction>>();
+		Set<Integer> encountered = new HashSet<Integer>();
+
+		Set<BioPAXElement> toExise = new HashSet<BioPAXElement>();
+
+		for (BioPAXElement ele : matchMap.keySet())
+		{
+//			// Prevent large results.
+//			if (inters.size() > 1000) break;
+
+			for (Match match : matchMap.get(ele))
+			{
+				toExise.addAll(Arrays.asList(match.getVariables()));
+
+				Set<Interaction> ints = getInter(match);
+				Integer hash = hashSum(ints);
+				if (!encountered.contains(hash))
+				{
+					encountered.add(hash);
+					inters.add(ints);
+				}
+			}
+		}
+
+		System.out.println("created pathways = " + inters.size());
+
+		Model clonedModel = excise(model, toExise);
+
+		int i = 0;
+		for (Set<Interaction> ints : inters)
+		{
+			Pathway pathway = clonedModel.addNew(Pathway.class,
+				System.currentTimeMillis() + "PaxtoolsPatternGeneratedMatch" + (++i));
+
+			pathway.setDisplayName("Match " + getLeadingZeros(i, inters.size()) + i);
+
+			for (Interaction anInt : ints)
+			{
+				pathway.addPathwayComponent(anInt);
+			}
+		}
+
+		handler.convertToOWL(clonedModel, new FileOutputStream(outFile));
+	}
+
+	private static String getLeadingZeros(int i, int size)
+	{
+		assert i <= size;
+		int w1 = (int) Math.floor(Math.log10(size));
+		int w2 = (int) Math.floor(Math.log10(i));
+		
+		String s = "";
+
+		for (int j = w2; j < w1; j++)
+		{
+			s += "0";
+		}
+		return s;
+	}
+	
+	static BioPAXIOHandler handler =  new SimpleIOHandler();
+	static final SimpleEditorMap EM = SimpleEditorMap.L3;
+	private static Model excise(Model model, Set<BioPAXElement> result)
+	{
+		Completer c = new Completer(EM);
+
+		result = c.complete(result, model);
+
+		Cloner cln = new Cloner(EM, BioPAXLevel.L3.getDefaultFactory());
+
+		return cln.clone(model, result);
+	}
+
+	private static Set<Interaction> getInter(Match match)
+	{
+		Set<Interaction> set = new HashSet<Interaction>();
+		for (BioPAXElement ele : match.getVariables())
+		{
+			if (ele instanceof Interaction) 
+			{
+				set.add((Interaction) ele);
+
+				for (Control control : ((Interaction) ele).getControlledOf())
+				{
+					set.add(control);
+				}
+			}
+		}
+		return set;
+	}
+
+	private static Integer hashSum(Set<Interaction> set)
+	{
+		int x = 0;
+		for (Interaction inter : set)
+		{
+			x += inter.hashCode();
+		}
+		return x;
 	}
 }
