@@ -35,7 +35,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public static final String FIELD_DATASOURCE = "dataSource"; //(case sensitive)
 	public static final String FIELD_PATHWAY = "pathway";
 	
-	// Filter definitionnames (case sensitive!)
+	// Global search filter definitions in the (paxtools-core PhysicalEntityImpl, case sensitive!)
 	public static final String FILTER_BY_ORGANISM = "organism";
 	public static final String FILTER_BY_DATASOURCE = "datasource";
 	
