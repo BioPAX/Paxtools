@@ -145,7 +145,7 @@ public class Simplify
 				}
 			}
 		}
-		if (checkEntity(map, pe, element)) return (SimplePhysicalEntity) pe;
+		else if (checkEntity(map, pe, element)) return (SimplePhysicalEntity) pe;
 		else
 		{
 			for (PhysicalEntity member : pe.getMemberPhysicalEntity())
