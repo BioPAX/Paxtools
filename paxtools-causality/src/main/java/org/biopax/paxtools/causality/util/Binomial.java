@@ -46,8 +46,8 @@ public class Binomial
 
 	public static void main(String[] args)
 	{
-		int k1 = 200;
-		int k2 = 225;
+		int k1 = 0;
+		int k2 = 6;
 
 		double pval = getPval(k1, k2);
 		System.out.println("pval = " + pval);
@@ -64,15 +64,21 @@ public class Binomial
 
 		for (int i = 0; i < trials; i++)
 		{
-			int h = 0;
-			for (int j = 0; j < tosses; j++)
-			{
-				if (Math.random() < .5) h++;
-			}
+			int h = generateRand(tosses);
 			if (h > mid) h = tosses - h;
 			if (h <= heads) count++;
 		}
 
 		return count / (double) trials;
+	}
+
+	public static int generateRand(int tosses)
+	{
+		int h = 0;
+		for (int j = 0; j < tosses; j++)
+		{
+			if (Math.random() < .5) h++;
+		}
+		return h;
 	}
 }

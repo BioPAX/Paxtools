@@ -45,7 +45,7 @@ public class GEOAccessor extends AlterationProviderAdaptor
 	protected final static String[] EG_NAMES = new String[]{"ENTREZ_GENE_ID", "GENE"};
 	protected final static String[] SYMBOL_NAMES = new String[]{"Gene Symbol", "GENE_SYMBOL"};
 	
-	static double devThr = 1;
+	static double devThr = 2;
 	static double changeThr = 1;
 	static double changeThrInverse = 1 / changeThr;
 

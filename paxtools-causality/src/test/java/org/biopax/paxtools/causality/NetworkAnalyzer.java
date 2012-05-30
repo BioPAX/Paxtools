@@ -68,15 +68,36 @@ public class NetworkAnalyzer
 	@Ignore
 	public void clip() throws FileNotFoundException
 	{
-		Pattern p = prepareLoop(3);
+		Pattern p = prepareModifierConv();
 
-		Searcher.searcInFile(p, "/home/ozgun/Desktop/cpath2_prepared.owl", "/home/ozgun/Desktop/pattern-matches/Loop3_2.owl");
+		Searcher.searcInFile(p, "/home/ozgun/Desktop/cpath2.owl", "/home/ozgun/Desktop/pattern-matches/modifier_with_generics_and_complexes.owl");
 
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
 //
 //		List<Match> mathes = Searcher.search(model.getByID("urn:miriam:uniprot:Q01094"), p);
 //		System.out.println("mathes.size() = " + mathes.size());
+	}
+
+
+
+	private Pattern prepareModifierConv()
+	{
+		Pattern p = new Pattern(9, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(ConBox.complexes(), i, ++i);
+		p.addConstraint(ConBox.genericEquiv(), i, ++i);
+		p.addConstraint(new Equality(false), i-1, i);
+		p.addConstraint(new ParticipatesInConv(RelType.INPUT, true), i, ++i);
+		p.addConstraint(new OtherSide(), i-1, i, ++i);
+		p.addConstraint(new Equality(false), i-2, i);
+		p.addConstraint(ConBox.complexMembers(), i, ++i);
+		p.addConstraint(ConBox.genericEquiv(), i, ++i);
+		p.addConstraint(new Equality(false), i-1, i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(true), 0, i);
+		return p;
 	}
 
 	private Pattern prepareLoop(int loopLength)

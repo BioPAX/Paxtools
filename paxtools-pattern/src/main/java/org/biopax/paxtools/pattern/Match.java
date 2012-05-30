@@ -4,6 +4,9 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Named;
 
 /**
+ * A pattern match is an array of biopax elements that satisfies the list of mapped constraints in a
+ * pattern.
+ *
  * @author Ozgun Babur
  */
 public class Match implements Cloneable

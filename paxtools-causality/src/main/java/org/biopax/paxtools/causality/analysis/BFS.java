@@ -170,7 +170,7 @@ public class BFS
 			// Check if we need to stop traversing the neighbor, enqueue otherwise
 			boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
 				(!neigh.isBreadthNode() || dist < limit) && !neigh.isUbique() &&
-				(!startFromTranscription || dist > 1 || neigh.isTranscription());
+				(!startFromTranscription || neigh.isBreadthNode() || dist > 1 || neigh.isTranscription()); // this line if for starting from transcriptions
 
 			// Process the neighbor if not processed or not in queue
 

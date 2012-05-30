@@ -3,7 +3,9 @@ package org.biopax.paxtools.causality;
 import org.biopax.paxtools.causality.analysis.BFS;
 import org.biopax.paxtools.causality.analysis.CausativePathSearch;
 import org.biopax.paxtools.causality.model.*;
+import org.biopax.paxtools.causality.model.Node;
 import org.biopax.paxtools.causality.util.Binomial;
+import org.biopax.paxtools.causality.util.Histogram;
 import org.biopax.paxtools.causality.util.Summary;
 import org.biopax.paxtools.causality.wrapper.ComplexMember;
 import org.biopax.paxtools.causality.wrapper.Graph;
@@ -12,7 +14,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.algorithm.Direction;
-import org.biopax.paxtools.query.model.GraphObject;
+import org.biopax.paxtools.query.model.*;
 
 import java.util.*;
 
@@ -200,7 +202,12 @@ public class CausalityExecuter
 		int expSize = ap.getAlterations("367").get(Alteration.ANY).length;
 		System.out.println("expSize = " + expSize);
 
+		Histogram h1 = new Histogram(0.02);
+		Histogram h2 = new Histogram(0.02);
+		
 		Map<EntityReference, int[]> count = new HashMap<EntityReference, int[]>();
+		int cnt_total = 0;
+		int cnt_result = 0;
 		
 		for (int i = 0; i < expSize; i++)
 		{
@@ -219,28 +226,63 @@ public class CausalityExecuter
 					{
 						int act = pred.get(er)[0];
 						int inh = pred.get(er)[1];
-						
-						if (Binomial.getPval(act, inh) < 0.5)
+
+						int total = act + inh;
+						if (total > 5)
 						{
-								 if (ch == Change.ACTIVATING && act > inh) count.get(er)[0]++;
-							else if (ch == Change.ACTIVATING && act < inh) count.get(er)[1]++;
-							else if (ch == Change.INHIBITING && act > inh) count.get(er)[2]++;
-							else if (ch == Change.INHIBITING && act < inh) count.get(er)[3]++;
+							cnt_total++;
+							double pval = Binomial.getPval(act, inh);
+							h1.count(pval);
+
+							int randHeads = 0;
+							int randTrials = 1;
+							for (int j = 0; j < randTrials; j++)
+							{
+								randHeads += Binomial.generateRand(total);
+							}
+							randHeads /= randTrials;
+
+							double pvRand = Binomial.getPval(randHeads, total - randHeads);
+							h2.count(pvRand);
+
+							if (pval < 0.05)
+							{
+								cnt_result++;
+									 if (ch == Change.ACTIVATING && act > inh) count.get(er)[0]++;
+								else if (ch == Change.ACTIVATING && act < inh) count.get(er)[1]++;
+								else if (ch == Change.INHIBITING && act > inh) count.get(er)[2]++;
+								else if (ch == Change.INHIBITING && act < inh) count.get(er)[3]++;
+							}
 						}
 					}
 				}
 			}
 		}
 
+		h1.printTogether(h2);
+
+		System.out.println("Expected result by chance = " + (cnt_total * 0.05));
+		System.out.println("Result size = " + cnt_result);
+		
+		int hold = 0;
+		int donthold = 0;
+		int geneCount = 0;
 		for (EntityReference er : count.keySet())
 		{
 			int[] c = count.get(er);
-			
+
 			if (Summary.sum(c) > 1)
 			{
+				geneCount++;
 				System.out.println(er.getDisplayName() + "\t" + c[0] + "\t" + c[1] + "\t" + c[2] + "\t" + c[3]);
+				hold += c[0] + c[3];
+				donthold += c[1] + c[2];
 			}
 		}
+
+		System.out.println("hold = " + hold);
+		System.out.println("donthold = " + donthold);
+		System.out.println("geneCount = " + geneCount);
 	}
 	
 	private static AlterationPack getAPack(AlterationProvider ap)
@@ -252,5 +294,42 @@ public class CausalityExecuter
 			if (pack != null) break;
 		}
 		return pack;
+	}
+	
+	public int[][][] searchDistances(Model model, List<ProteinReference> prs, int limit,
+		Set<String> ubiques)
+	{
+		int[][][] d = new int[2][prs.size()][prs.size()];
+		
+		Graph graph = new Graph(model, ubiques);
+		int ind1 = 0;
+		for (ProteinReference pr : prs)
+		{
+			Set<Node> source = graph.getForAll(pr.getEntityReferenceOf());
+			BFS bfs = new BFS(source, null, Direction.DOWNSTREAM, limit, false);
+			Map<GraphObject, Integer> labelMap = bfs.run();
+			for (GraphObject go : labelMap.keySet())
+			{
+				if (go instanceof PhysicalEntityWrapper)
+				{
+					PhysicalEntity pe = ((PhysicalEntityWrapper) go).getPhysicalEntity();
+					if (pe instanceof SimplePhysicalEntity)
+					{
+						EntityReference er = ((SimplePhysicalEntity) pe).getEntityReference();
+						if (er instanceof ProteinReference && er != pr)
+						{
+							int dist = labelMap.get(go);
+							int sign = ((PhysicalEntityWrapper) go).getPathSign();
+
+							int ind2 = prs.indexOf(er);
+							d[0][ind1][ind2] = dist;
+							d[1][ind1][ind2] = sign;
+						}
+					}
+				}
+			}
+			ind1++;
+		}
+		return d;
 	}
 }

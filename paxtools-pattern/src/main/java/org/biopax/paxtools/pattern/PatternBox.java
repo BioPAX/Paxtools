@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * This class contains several pre-defined patterns.
+ *
  * @author Ozgun Babur
  */
 public class PatternBox
@@ -122,16 +124,14 @@ public class PatternBox
 
 	public static Pattern peInOut()
 	{
-		Pattern p = new Pattern(9, EntityReference.class);
+		Pattern p = new Pattern(7, EntityReference.class);
 		int i = 0;
 		p.addConstraint(ConBox.erToPE(), i, ++i);
-		p.addConstraint(ConBox.genericEquiv(), i, ++i);
-		p.addConstraint(ConBox.withComplexes(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
 		p.addConstraint(new ParticipatesInConv(RelType.INPUT, true), i, ++i);
 		p.addConstraint(new OtherSide(), i-1, i, ++i);
 		p.addConstraint(new Equality(false), i-2, i);
-		p.addConstraint(ConBox.withSimpleMembers(), i, ++i);
-		p.addConstraint(ConBox.genericEquiv(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
 		p.addConstraint(ConBox.peToER(), i, ++i);
 		p.addConstraint(new Equality(true), 0, i);
 		return p;

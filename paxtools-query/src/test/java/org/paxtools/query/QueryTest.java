@@ -149,13 +149,15 @@ public class QueryTest
 	@Ignore
 	public void testLevel2Neighborhood() throws Throwable
 	{
-		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc_premerge.owl"));
+		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
 
 		Set<BioPAXElement> source = findElements(model,
-			"http://biocyc.org/biopax/biopax-level3ProteinReference155353");
+			"http://pid.nci.nih.gov/biopaxpid_75022");
 
-		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(source, model, 2, Direction.BOTHSTREAM, HCUbiq);
+		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(source, model, 1, Direction.UPSTREAM, HCUbiq);
 		System.out.println("result.size() = " + result.size());
+		Model ex = excise(model, result);
+		handler.convertToOWL(ex, new FileOutputStream("/home/ozgun/Desktop/temp.owl"));
 	}
 
 	static Set<String> HCUbiq = new HashSet<String>(Arrays.asList(

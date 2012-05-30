@@ -344,7 +344,7 @@ public class CausalityTest
 //		ap.setCurrentCaseList(ap.getCaseListsForCurrentStudy().get(18));
 //		ap.setCurrentGeneticProfiles(Collections.singletonList(ap.getGeneticProfilesForCurrentStudy().get(7)));
 
-		int[][] inds = prepareTwoIndexSets(11, 66);
+		int[][] inds = prepareTwoIndexSets(12, 66);
 		GEOAccessor ap = new GEOAccessor("GSE29431", inds[1], inds[0]);
 
 		CausalityExecuter.predictActivityFromDownstream(model, ConversionLabelerTest.ubiq, ap);
@@ -369,4 +369,5 @@ public class CausalityTest
 		}
 		return x;
 	}
+
 }
