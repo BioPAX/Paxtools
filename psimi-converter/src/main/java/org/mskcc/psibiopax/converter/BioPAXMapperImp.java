@@ -1078,40 +1078,19 @@ public class BioPAXMapperImp implements BioPAXMapper
 	                                                               String name,
 	                                                               Set<? extends BioPAXElement> bpXrefs)
 	{
-
 		if (bpLevel == BioPAXLevel.L2)
 		{
-			dataSource dSource = bpModel.addNew(dataSource.class, id);
-			if (name != null)
-			{
-				dSource.addNAME(name);
-			}
-			if (bpXrefs != null && bpXrefs.size() > 0)
-			{
-				dSource.setXREF((Set<xref>) bpXrefs);
-			}
-			if (interaction != null)
-			{
-				((physicalInteraction) interaction).addDATA_SOURCE(dSource);
-			}
+            for (BioPAXElement bpXref : bpXrefs) {
+                if(bpXref instanceof xref)
+                    ((physicalInteraction) interaction).addXREF((xref) bpXref);
+            }
 		}
 		else if (bpLevel == BioPAXLevel.L3)
 		{
-			Provenance provenance = bpModel.addNew(Provenance.class, id);
-			if (name != null)
-			{
-				provenance.addName(name);
-			}
-			if (bpXrefs != null && bpXrefs.size() > 0)
-			{
-				for (BioPAXElement xref : bpXrefs) {
-					provenance.addXref((Xref)xref);
-				}
-			}
-			if (interaction != null)
-			{
-				((MolecularInteraction) interaction).addDataSource(provenance);
-			}
+            for (BioPAXElement bpXref : bpXrefs) {
+                if(bpXref instanceof Xref)
+                    ((MolecularInteraction) interaction).addXref((Xref) bpXref);
+            }
 		}
 	}
 

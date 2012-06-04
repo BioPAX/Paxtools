@@ -171,7 +171,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 
 		// get the element list
 		Set<BioPAXElement> biopaxElements = bpModel.getObjects();
-		Assert.assertEquals(145, biopaxElements.size());
+		Assert.assertEquals(135, biopaxElements.size());
 
 		// get the element
 		BioPAXElement bpElement = null;
