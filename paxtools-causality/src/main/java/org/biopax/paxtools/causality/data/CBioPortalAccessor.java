@@ -133,7 +133,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                     Double value = Double.parseDouble(dataPoint);
                     if(value < -1)
                         return Change.INHIBITING;
-                    else if(value > 0.5)
+                    else if(value > 1)
                         return Change.ACTIVATING;
                     else
                         return Change.NO_CHANGE;
