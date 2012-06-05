@@ -129,6 +129,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 					                                                                             1);
 					accessors.add(FilteredPropertyAccessor.create(lastAccessor, restricted));
 				}
+                		intermediate = restricted;
 			} else if (s.equals("|"))
 			{
 				throw new UnsupportedOperationException("Not implemented yet");
