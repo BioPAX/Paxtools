@@ -465,10 +465,12 @@ public class ActivityRecognizer
 				if (activeMap.get(pr).contains(pe))
 				{
 					pr.addComment(Graph.ACTIVE_STATE + pe.getRDFId());
+					pe.addComment(Graph.ACTIVE_STATE + pr.getRDFId());
 				}
 				else if (inactiveMap.get(pr).contains(pe))
 				{
 					pr.addComment(Graph.INACTIVE_STATE + pe.getRDFId());
+					pe.addComment(Graph.INACTIVE_STATE + pr.getRDFId());
 				}
 			}
 		}
@@ -478,6 +480,7 @@ public class ActivityRecognizer
 			for (Conversion cnv : activatingConv.get(pr))
 			{
 				pr.addComment(Graph.ACTIVATING_CONV + cnv.getRDFId());
+				cnv.addComment(Graph.ACTIVATING_CONV + pr.getRDFId());
 			}
 		}
 		for (ProteinReference pr : inactivatingConv.keySet())
@@ -485,6 +488,7 @@ public class ActivityRecognizer
 			for (Conversion cnv : inactivatingConv.get(pr))
 			{
 				pr.addComment(Graph.INACTIVATING_CONV + cnv.getRDFId());
+				cnv.addComment(Graph.INACTIVATING_CONV + pr.getRDFId());
 			}
 		}
 

@@ -5,6 +5,7 @@ import org.biopax.paxtools.causality.analysis.Exhaustive;
 import org.biopax.paxtools.causality.data.CBioPortalAccessor;
 import org.biopax.paxtools.causality.data.GEOAccessor;
 import org.biopax.paxtools.causality.model.*;
+import org.biopax.paxtools.causality.util.HGNCUtil;
 import org.biopax.paxtools.causality.util.Histogram;
 import org.biopax.paxtools.causality.wrapper.Graph;
 import org.biopax.paxtools.causality.wrapper.PhysicalEntityWrapper;
@@ -20,10 +21,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -370,4 +368,65 @@ public class CausalityTest
 		return x;
 	}
 
+	@Test
+	@Ignore
+	public void testSearchDistances() throws IOException
+	{
+		SimpleIOHandler handler = new SimpleIOHandler();
+		Model model = handler.convertFromOWL(new FileInputStream(
+			"/home/ozgun/Desktop/cpath2_prepared.owl"));
+
+		ArrayList<ProteinReference> prs = new ArrayList<ProteinReference>(
+			model.getObjects(ProteinReference.class));
+
+		filterOutNonHGNC(prs);
+		
+		int[][][] res = CausalityExecuter.searchDistances(model, prs, 4, ConversionLabelerTest.ubiq);
+
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/ozgun/Desktop/dist.txt"));
+
+
+
+		for (ProteinReference pr : prs)
+		{
+			writer.write("\t" + pr.getDisplayName());
+		}
+
+		int j = 0;
+		for (ProteinReference pr : prs)
+		{
+			writer.write("\n" + pr.getDisplayName());
+
+			for (int i = 0; i < res[0][j].length; i++)
+			{
+				writer.write("\t" + res[0][j][i]);
+			}
+
+			j++;
+		}
+
+		writer.close();
+
+	}
+
+	private String getSymbol(ProteinReference pr)
+	{
+		String id = null;
+		for (Xref xref : pr.getXref())
+		{
+			if (xref.getDb().startsWith("HGNC")) id = xref.getId();
+		}
+		if (id != null) return HGNCUtil.getSymbol(Integer.parseInt(id));
+		return null;
+	}
+
+	private void filterOutNonHGNC(List<ProteinReference> list)
+	{
+		System.out.println("initial pr size = " + list.size());
+		for (ProteinReference pr : new ArrayList<ProteinReference>(list))
+		{
+			if (getSymbol(pr) == null) list.remove(pr);
+		}
+		System.out.println("filtered pr size = " + list.size());
+	}
 }

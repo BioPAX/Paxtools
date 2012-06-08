@@ -296,7 +296,7 @@ public class CausalityExecuter
 		return pack;
 	}
 	
-	public int[][][] searchDistances(Model model, List<ProteinReference> prs, int limit,
+	public static int[][][] searchDistances(Model model, List<ProteinReference> prs, int limit,
 		Set<String> ubiques)
 	{
 		int[][][] d = new int[2][prs.size()][prs.size()];
@@ -305,6 +305,9 @@ public class CausalityExecuter
 		int ind1 = 0;
 		for (ProteinReference pr : prs)
 		{
+			System.out.print(".");
+			if ((ind1+1) % 150 == 0) System.out.println();
+
 			Set<Node> source = graph.getForAll(pr.getEntityReferenceOf());
 			BFS bfs = new BFS(source, null, Direction.DOWNSTREAM, limit, false);
 			Map<GraphObject, Integer> labelMap = bfs.run();
@@ -329,6 +332,7 @@ public class CausalityExecuter
 				}
 			}
 			ind1++;
+			graph.clear();
 		}
 		return d;
 	}

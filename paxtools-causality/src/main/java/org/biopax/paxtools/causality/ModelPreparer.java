@@ -55,11 +55,11 @@ public class ModelPreparer
 	public static void main(String[] args) throws FileNotFoundException
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/P53_neighborhood.owl"));
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2.owl"));
 		prepare(model);
 		ActivityRecognizer ar = new ActivityRecognizer(model);
 		ar.run();
-		h.convertToOWL(model, new FileOutputStream("/home/ozgun/Desktop/p53_prepared.owl"));
+		h.convertToOWL(model, new FileOutputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
 	}
 	
 	private static String generateID()

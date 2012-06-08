@@ -339,7 +339,33 @@ public class PaxtoolsMain {
 
 		Model model = getModel(io, argv[1]);
 
+
+//---- Debug code
+//		for (Complex c : model.getObjects(Complex.class))
+//		{
+//			if (c.getComponent().size() == 1 &&
+//				c.getComponent().iterator().next() instanceof SimplePhysicalEntity &&
+//				c.getComponentStoichiometry().size() == 1 &&
+//				c.getComponentStoichiometry().iterator().next().getStoichiometricCoefficient() > 1)
+//			{
+//				for (PhysicalEntity pe : c.getComponent())
+//				{
+//					if (pe instanceof SimplePhysicalEntity)
+//					{
+//						for (Xref xref : ((SimplePhysicalEntity) pe).getEntityReference().getXref())
+//						{
+//							if (xref.getDb().startsWith("HGNC"))
+//							{
+//								System.out.println(xref.getId());
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 //		BioPAXElement byID = model.getByID("http://biocyc.org/biopax/biopax-level3ComplexAssembly175733");
+//---- Debug code
+
 
 		if (model.getLevel() != BioPAXLevel.L3)
 		{
