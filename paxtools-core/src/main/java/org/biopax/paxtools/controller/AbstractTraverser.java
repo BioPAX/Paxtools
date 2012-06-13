@@ -78,11 +78,6 @@ public abstract class AbstractTraverser extends Traverser
 				}
  
 				objPath.push((BioPAXElement) range);
-				
-				if(log.isTraceEnabled())
-					log.trace("visits " + domain + "." 
-						+ editor.getProperty() +
-						"=>" + objPath.toString());
 			}
 			
 			propsPath.push(editor.getProperty());
