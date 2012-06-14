@@ -20,6 +20,10 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * An advanced BioPAX utility class that implements
@@ -32,15 +36,12 @@ public final class ModelUtils
 {
 	private static final Log LOG = LogFactory.getLog(ModelUtils.class);
 
-
-
 	//protected constructor
-	ModelUtils()
-	{
+	ModelUtils() {
 		throw new AssertionError("Not instantiable");
 	}
 
-
+	
 	/**
 	 * To ignore 'nextStep' property (in most algorithms),
 	 * because it can eventually lead us outside current pathway,
@@ -253,26 +254,33 @@ public final class ModelUtils
 	public static <T extends BioPAXElement> Set<T> getRootElements(final Model model, final Class<T> filterClass)
 	{
 		// copy all such elements (initially, we think all are roots...)
-		final Set<T> result = new HashSet<T>();
+		final Set<T> result = Collections.newSetFromMap(new ConcurrentHashMap<T, Boolean>());
 		result.addAll(model.getObjects(filterClass));
 
+		ExecutorService exe = Executors.newCachedThreadPool();
 		// but we run from every element (all types)
-		for (BioPAXElement e : model.getObjects())
-		{
-			/* In order to visit all biopax properties of all elements 
-			 * and to remove those reachable guys from the 'result',
-			 * every time we create a fresh traverser, because, otherwise, 
-			 * it would remember the state (stacks) from the last run, which 
-			 * we would have to clear anyway;
-			 */
-			(new AbstractTraverser(em)
-			{
+		for (final BioPAXElement e : model.getObjects()) {
+			exe.submit(new Runnable() {
 				@Override
-				protected void visit(Object value, BioPAXElement parent, Model model, PropertyEditor editor)
-				{
-					if (filterClass.isInstance(value)) result.remove(value);
+				public void run() {
+					//new "shallow" traverser (visits direct properties, i.e., visitor does not call traverse again) 
+					new Traverser(em, new Visitor() {
+							@Override
+							public void visit(BioPAXElement parent, Object value, Model model,
+									PropertyEditor<?, ?> editor) {
+								if (filterClass.isInstance(value)) result.remove(value);
+							}
+						}
+					).traverse(e, null);
 				}
-			}).traverse(e, null);
+			});
+		}
+		
+		exe.shutdown();
+		try {
+			exe.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+		} catch (InterruptedException e1) {
+			throw new RuntimeException("Interrupted!",e1);
 		}
 
 		return result;
@@ -330,15 +338,72 @@ public final class ModelUtils
 			final Class<? extends BioPAXElement>... forClasses)
 	{
 		// for each ROOT element (puts a strict top-down order on the following)
+		ExecutorService exec = Executors.newCachedThreadPool();		
 		Set<BioPAXElement> roots = getRootElements(model, BioPAXElement.class);
-		for (BioPAXElement bpe : roots)
-		{
-			PropertyReasoner reasoner = new PropertyReasoner(property, em);
-			reasoner.setDomains(forClasses);
-			reasoner.inferPropertyValue(bpe);
+		for (final BioPAXElement bpe : roots) {
+			exec.submit(new Runnable() {
+						@Override
+						public void run() {
+							PropertyReasoner reasoner = new PropertyReasoner(property, em);
+							reasoner.setDomains(forClasses);
+							reasoner.inferPropertyValue(bpe);
+						}
+					}	
+			);
+		}
+		exec.shutdown();
+		try {
+			exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			throw new RuntimeException("Interrupted!", e);
 		}
 	}
 
+	
+	/**
+	 * Iteratively copies given property values
+	 * from parent BioPAX elements to children.
+	 * 
+	 * If the property is multiple cardinality property, it will add
+	 * new values, otherwise - it will set it only if it was empty;
+	 * in both cases it won't delete/override existing values!
+	 * 
+	 * @param model
+	 * @param properties BioPAX properties (names) to infer values of
+	 * @param forClasses (optional) infer/set the property for these types only
+	 * @throws InterruptedException 
+	 * @see PropertyReasoner
+	 */
+	public static void inferPropertiesFromParent(Model model, final Set<String> properties,
+			final Class<? extends BioPAXElement>... forClasses)
+	{
+		ExecutorService exec = Executors.newCachedThreadPool();
+
+		Set<BioPAXElement> roots = getRootElements(model, BioPAXElement.class);
+		for (final BioPAXElement bpe : roots) {	
+			for(String property : properties) {
+				final String p = property;
+				exec.submit(new Runnable() {
+							@Override
+							public void run() {
+								PropertyReasoner reasoner = new PropertyReasoner(p, em);
+								reasoner.setDomains(forClasses);
+								reasoner.inferPropertyValue(bpe);
+							}
+						}	
+				);
+			}
+		}
+		
+		exec.shutdown();
+		try {
+			exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			throw new RuntimeException("Interrupted!", e);
+		}
+	}
+	
+	
 	/**
 	 * Cuts the BioPAX model off other models and BioPAX objects
 	 * by essentially performing write/read to/from OWL.

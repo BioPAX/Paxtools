@@ -7,8 +7,11 @@ import org.biopax.paxtools.util.Filter;
 import java.util.Stack;
 
 /**
- * This is a convenience all-in-one Traverser/Visitor that
- * keeps track in the model and prevents infinite loops.
+ * This is an all-in-one Traverser/Visitor combination 
+ * to use when deep recursive visiting is required. 
+ * Unlike {@link Traverser}, it keeps track of where current 
+ * object is in the model and whether it's been already visited, 
+ * which helps prevent infinite loops.
  * Like it's for the {@link Traverser}, there is no any 
  * particular order in which it processes properties.
  * 

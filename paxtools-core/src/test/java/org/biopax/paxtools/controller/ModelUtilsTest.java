@@ -15,6 +15,8 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
@@ -339,4 +341,15 @@ public class ModelUtilsTest {
 	    ModelUtils.replaceEquivalentFeatures(mock.model);
 	    assertTrue(mock.model.getObjects(ModificationFeature.class).size()==1);
     }
+    
+	
+//
+//	@SuppressWarnings("unchecked")
+//	@Test
+//	public final void testForEndlessLoopOrOutOfMemory() {
+//		Model model = new SimpleIOHandler()
+//			.convertFromOWL(getClass().getResourceAsStream("/pathway812.owl"));		
+//		ModelUtils.inferPropertiesFromParent(model, 
+//				new HashSet<String>(Arrays.asList("dataSource", "organism","organism")));	
+//	}
 }
