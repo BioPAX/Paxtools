@@ -40,7 +40,7 @@ public class HGNCUtil
 		{
 			sym2id = new HashMap<String, Integer>();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
-				HGNCUtil.class.getResourceAsStream("hgnc.txt")));
+				HGNCUtil.class.getResourceAsStream("HGNC.txt")));
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 			{
 				String[] token = line.split("\t");

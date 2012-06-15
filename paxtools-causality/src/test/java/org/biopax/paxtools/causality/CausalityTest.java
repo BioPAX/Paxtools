@@ -384,29 +384,23 @@ public class CausalityTest
 		int[][][] res = CausalityExecuter.searchDistances(model, prs, 4, ConversionLabelerTest.ubiq);
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/ozgun/Desktop/dist.txt"));
+		writer.write("From\tTo\tDistance\tSign");
 
-
-
-		for (ProteinReference pr : prs)
+		for (int j = 0; j < res[0].length; j++)
 		{
-			writer.write("\t" + pr.getDisplayName());
-		}
-
-		int j = 0;
-		for (ProteinReference pr : prs)
-		{
-			writer.write("\n" + pr.getDisplayName());
-
-			for (int i = 0; i < res[0][j].length; i++)
+			for (int k = 0; k < res[0][j].length; k++)
 			{
-				writer.write("\t" + res[0][j][i]);
+				if (res[0][j][k] < Integer.MAX_VALUE)
+				{
+					assert res[1][j][k] < Integer.MAX_VALUE;
+					
+					writer.write("\n" + getSymbol(prs.get(j)) + "\t" + getSymbol(prs.get(k)) +
+						"\t" + res[0][j][k] + "\t" + res[1][j][k]);
+				}
 			}
-
-			j++;
 		}
 
 		writer.close();
-
 	}
 
 	private String getSymbol(ProteinReference pr)
@@ -416,7 +410,8 @@ public class CausalityTest
 		{
 			if (xref.getDb().startsWith("HGNC")) id = xref.getId();
 		}
-		if (id != null) return HGNCUtil.getSymbol(Integer.parseInt(id));
+		if (id != null && id.length() > 0)
+			return HGNCUtil.getSymbol(Integer.parseInt(id.substring(id.indexOf(":")+1)));
 		return null;
 	}
 

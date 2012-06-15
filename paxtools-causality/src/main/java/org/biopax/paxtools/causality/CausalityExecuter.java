@@ -300,7 +300,16 @@ public class CausalityExecuter
 		Set<String> ubiques)
 	{
 		int[][][] d = new int[2][prs.size()][prs.size()];
-		
+
+		for (int j = 0; j < d[0].length; j++)
+		{
+			for (int k = 0; k < d[0][j].length; k++)
+			{
+				d[0][j][k] = Integer.MAX_VALUE;
+				d[1][j][k] = Integer.MAX_VALUE;
+			}
+		}
+
 		Graph graph = new Graph(model, ubiques);
 		int ind1 = 0;
 		for (ProteinReference pr : prs)
@@ -325,8 +334,17 @@ public class CausalityExecuter
 							int sign = ((PhysicalEntityWrapper) go).getPathSign();
 
 							int ind2 = prs.indexOf(er);
-							d[0][ind1][ind2] = dist;
-							d[1][ind1][ind2] = sign;
+							if (ind2 < 0) continue;
+							
+							if (d[0][ind1][ind2] > dist)
+							{
+								d[0][ind1][ind2] = dist;
+								d[1][ind1][ind2] = sign;
+							}
+							else if (d[1][ind1][ind2] != sign)
+							{
+								d[1][ind1][ind2] = 0;
+							}
 						}
 					}
 				}

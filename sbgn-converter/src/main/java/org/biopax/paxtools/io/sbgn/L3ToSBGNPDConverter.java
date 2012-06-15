@@ -6,9 +6,11 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.sbgn.Language;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.*;
 
+import javax.print.attribute.standard.PDLOverrideSupported;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
@@ -58,6 +60,8 @@ public class L3ToSBGNPDConverter
 	public static final String STATE_VARIABLE = "state variable";
 	public static final String INFO = "unit of information";
 
+	private int IDCounter = 1;
+	
 	/**
 	 * A matching between physical entities and SBGN classes.
 	 */
@@ -151,8 +155,8 @@ public class L3ToSBGNPDConverter
 
 		Sbgn sbgn = factory.createSbgn();
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
-		// todo set the language here when libSBGN supports
 		sbgn.setMap(map);
+		map.setLanguage(Language.PD.toString());
 		map.getGlyph().addAll(glyphMap.values());
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
@@ -511,6 +515,7 @@ public class L3ToSBGNPDConverter
 		comp.setId(name);
 		Label label = factory.createLabel();
 		label.setText(name);
+		comp.setLabel(label);
 		comp.setClazz(COMPARTMENT);
 
 		compartmentMap.put(name, comp);
@@ -952,8 +957,8 @@ public class L3ToSBGNPDConverter
 	 */
 	private static void addPorts(Glyph g)
 	{
-		Glyph.Port inputPort = factory.createGlyphPort();
-		Glyph.Port outputPort = factory.createGlyphPort();
+		Port inputPort = factory.createPort();
+		Port outputPort = factory.createPort();
 		inputPort.setId(g.getId() + ".input");
 		outputPort.setId(g.getId() + ".output");
 		g.getPort().add(inputPort);
@@ -974,13 +979,20 @@ public class L3ToSBGNPDConverter
 	private static void createArc(Object source, Object target, String clazz,
 		Map<String, Arc> arcMap)
 	{
-		assert source instanceof Glyph || source instanceof Glyph.Port : "source = " + source;
-		assert target instanceof Glyph || target instanceof Glyph.Port : "target = " + target;
+		assert source instanceof Glyph || source instanceof Port : "source = " + source;
+		assert target instanceof Glyph || target instanceof Port : "target = " + target;
 
 		Arc arc = factory.createArc();
 		arc.setSource(source);
 		arc.setTarget(target);
 		arc.setClazz(clazz);
+		
+		String sourceID = source instanceof Glyph ?
+			((Glyph) source).getId() : ((Port) source).getId();
+		String targetID = target instanceof Glyph ?
+			((Glyph) target).getId() : ((Port) target).getId();
+
+		arc.setId(sourceID + "--to--" + targetID);
 		arcMap.put(getID(arc), arc);
 	}
 
