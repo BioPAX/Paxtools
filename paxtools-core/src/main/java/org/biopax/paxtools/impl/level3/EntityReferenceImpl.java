@@ -115,8 +115,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 
 	@Fields({
-		//here, won't store "pathway" field in the index to avoid field become huge
-		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		//TODO think of removing "store=Store.YES" for "pathway" field here, as it can become HUGE (ubiquitous small mol.refs belong to hundreds pathways!)
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
 		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
 		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
 	})
@@ -186,8 +186,8 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 	@Fields({
-		//here, won't store "pathway" field in the index to avoid field become huge
-		@Field(name=FIELD_PATHWAY, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		//TODO think of removing "store=Store.YES" for "pathway" field here, as it can become HUGE (ubiquitous small mol.refs belong to hundreds pathways!)
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
 		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
 		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
 	})

@@ -10,13 +10,24 @@ final class FieldBridgeUtils {
 		throw new AssertionError();
 	}
 	
-	public static void addFieldToDocument(LuceneOptions luceneOptions, String field, String value, Document document) {
-		/* toLowerCase() is important here and there; it's long to explain in full,
+	private static void addFieldToDocument(LuceneOptions luceneOptions, String field, 
+			String value, Document document, boolean lowercase) {
+		/* merely in all cases, lowercase must be TRUE (though it's hard to explain here why,
 		 * but - it's about the @Field(index=Index.UN_TOKENIZED,..), MultiFieldQueryParser, 
-		 * and StandardAnayzer to work well together... Rabbit's hole...
+		 * and StandardAnayzer to work well together... Rabbit's hole...)
 		 */
-		String v = value.toLowerCase();
+		String v = (lowercase) ?  value.toLowerCase() : value;
 		if(!Arrays.asList(document.getValues(field)).contains(v))
 			luceneOptions.addFieldToDocument(field, v, document);
+	}
+	
+	public static void addFieldToDocument(LuceneOptions luceneOptions, String field, 
+			String value, Document document) {
+		addFieldToDocument(luceneOptions, field, value, document, true);
+	}
+	
+	public static void addFieldToDocumentAsIs(LuceneOptions luceneOptions, String field, 
+			String value, Document document) {
+		addFieldToDocument(luceneOptions, field, value, document, false);
 	}
 }

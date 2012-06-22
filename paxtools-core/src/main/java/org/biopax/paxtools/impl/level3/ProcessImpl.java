@@ -63,6 +63,7 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess")
+    @Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
 	public Set<PathwayStep> getStepProcessOf()
 	{
 		return stepProcessOf;

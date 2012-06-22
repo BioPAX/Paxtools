@@ -27,7 +27,7 @@ import java.util.Set;
 @Proxy(proxyClass=PhysicalEntity.class)
 @Indexed
 @Boost(1.3f)
-@FullTextFilterDefs( { //filters are global (must define on any @Indexed entity), names - unique!
+@FullTextFilterDefs( { //these filters are global (can be defined on any @Indexed entity), names - unique!
     @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_ORGANISM, impl = OrganismFilterFactory.class), 
     @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_DATASOURCE, impl = DataSourceFilterFactory.class) 
 })
@@ -63,7 +63,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	@Fields({
 		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
 		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
-		//this also associates (index) small molecules with organisms!
+		//- can even associate small molecules with organisms (impossible to do explicitly in BioPAX)!
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
@@ -147,13 +147,19 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Fields({
+		//using memberPhysicalEntity in addition to other props to generate "pathway" index field helps
+		//in rare cases when this one does not participate in any interaction or complex but some of its members do
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="memberPhysicalEntity") 	
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
-		return this.memberPhysicalEntity;    //TODO
+		return this.memberPhysicalEntity;    //TODO (what?)
 	}
 
 	public void addMemberPhysicalEntity(PhysicalEntity newMember)
@@ -271,6 +277,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
+	//not indexed (organism, pathway fields) here, as it's done via EntityImpl participantOf super-property
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
 	public Set<Control> getControllerOf()
 	{

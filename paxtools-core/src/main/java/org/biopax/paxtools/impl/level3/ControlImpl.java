@@ -142,6 +142,12 @@ public class  ControlImpl extends InteractionImpl
 		return true;
 	}
 
+	
+	/* Control is a Interaction and Process; so some of search index fields 
+	 * are already defined on those super classes and properties.
+	 * E.g., 'controller' is a sub-property of 'participant'.
+	 * Thus, we do not need to define @Field for this column and below.
+	 */
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="pathwayController")

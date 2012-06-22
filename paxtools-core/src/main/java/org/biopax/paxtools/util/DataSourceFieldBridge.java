@@ -47,7 +47,7 @@ public final class DataSourceFieldBridge implements FieldBridge {
 			Document document, LuceneOptions luceneOptions) 
 	{
 		// do not do .toLowerCase() for the URI!
-		luceneOptions.addFieldToDocument(name, value.getRDFId(), document);
+		FieldBridgeUtils.addFieldToDocumentAsIs(luceneOptions, name, value.getRDFId(), document);
 		
 		for (String s : value.getName()) {
 			FieldBridgeUtils.addFieldToDocument(luceneOptions, name, s, document);

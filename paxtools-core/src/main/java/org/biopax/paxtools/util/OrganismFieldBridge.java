@@ -70,7 +70,7 @@ public final class OrganismFieldBridge implements FieldBridge {
 	{
 		// put id (e.g., urn:miriam:taxonomy:9606, if normalized...)
 		// do not do .toLowerCase()!
-		luceneOptions.addFieldToDocument(name, bs.getRDFId(), document);
+		FieldBridgeUtils.addFieldToDocumentAsIs(luceneOptions, name, bs.getRDFId(), document);
 		
 		// add organism names
 		for(String s : bs.getName()) {

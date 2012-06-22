@@ -134,7 +134,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	@Fields({
 		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
 		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
-		// the latter, in fact, associates organisms with small molecules as well!
+		// - associates organisms with small molecules as well (which is impossible to do explicitly, using BioPAX L3 properties)!
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
