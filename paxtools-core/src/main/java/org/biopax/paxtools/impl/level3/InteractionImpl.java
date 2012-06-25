@@ -7,7 +7,6 @@ import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.biopax.paxtools.util.OrganismFieldBridge;
-import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -100,11 +99,10 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	@Fields({
 		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
 		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class)),
-		/* Interaction is a Process; so parent pathways can be inferred (indexed) via its pathwayComponentOf and stepProcessOf props.
-		 * In addition, this here infers pathways also from this interaction's participants, e.g., controller...
-		 * TODO disable if it makes indexing time or index size too large
+		/* In addition to pathwayComponentOf, stepProcessOf props, we could infer parent pathways from participants (e.g. for a Controller...) 
+		 * Wrong! - because having ubiquitous small molecule participants there results in most pathways will be parent for this interaction :)
 		 */
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
+//		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityImpl.class)

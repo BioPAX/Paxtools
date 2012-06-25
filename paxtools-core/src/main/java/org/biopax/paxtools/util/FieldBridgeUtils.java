@@ -1,7 +1,8 @@
 package org.biopax.paxtools.util;
 
-import java.util.Arrays;
 
+//import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.document.Document;
 import org.hibernate.search.bridge.LuceneOptions;
 
@@ -17,8 +18,9 @@ final class FieldBridgeUtils {
 		 * and StandardAnayzer to work well together... Rabbit's hole...)
 		 */
 		String v = (lowercase) ?  value.toLowerCase() : value;
-		if(!Arrays.asList(document.getValues(field)).contains(v))
+		if(!ArrayUtils.contains(document.getValues(field), v))
 			luceneOptions.addFieldToDocument(field, v, document);
+
 	}
 	
 	public static void addFieldToDocument(LuceneOptions luceneOptions, String field, 

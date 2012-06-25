@@ -260,7 +260,7 @@ public final class ModelUtils
 		ExecutorService exe = Executors.newCachedThreadPool();
 		// but we run from every element (all types)
 		for (final BioPAXElement e : model.getObjects()) {
-			exe.submit(new Runnable() {
+			exe.execute(new Runnable() {
 				@Override
 				public void run() {
 					//new "shallow" traverser (visits direct properties, i.e., visitor does not call traverse again) 
@@ -341,7 +341,7 @@ public final class ModelUtils
 		ExecutorService exec = Executors.newCachedThreadPool();		
 		Set<BioPAXElement> roots = getRootElements(model, BioPAXElement.class);
 		for (final BioPAXElement bpe : roots) {
-			exec.submit(new Runnable() {
+			exec.execute(new Runnable() {
 						@Override
 						public void run() {
 							PropertyReasoner reasoner = new PropertyReasoner(property, em);
@@ -383,7 +383,7 @@ public final class ModelUtils
 		for (final BioPAXElement bpe : roots) {	
 			for(String property : properties) {
 				final String p = property;
-				exec.submit(new Runnable() {
+				exec.execute(new Runnable() {
 							@Override
 							public void run() {
 								PropertyReasoner reasoner = new PropertyReasoner(p, em);

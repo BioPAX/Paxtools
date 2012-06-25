@@ -25,4 +25,10 @@
 
 <bp3:Conversion rdf:about="reaction1">
 </bp3:Conversion>
+
+<!-- BUG! will fail if uncommented -->
+<!-- <sbx3:SBVocabulary rdf:about="http://sabio.h-its.org/biopax#sabiotermHill coefficient"> -->
+<!-- 	<bp3:xref rdf:resource="http://sabio.h-its.org/biopax#xrefsabio_Hill coefficient"/> -->
+<!-- </sbx3:SBVocabulary> -->
+
 </rdf:RDF>
