@@ -12,14 +12,14 @@ import java.io.*;
 /**
 
  */
-public class ProteinStateNetworkAnalyzerTest
+public class ActivityNetworkAnalyzerTest
 {
 
     static BioPAXIOHandler handler = new SimpleIOHandler();
 
     // test out - to target/test-classes dir:
     static final String outFile =
-            StateNetworkAnalyzer.class.getResource("/").getPath() + "PSNAnalyzer.out" +
+            ActivityNetworkAnalyzer.class.getResource("/").getPath() + "PSNAnalyzer.out" +
                     ".txt";
 
     PrintStream out = null;
@@ -50,7 +50,7 @@ public class ProteinStateNetworkAnalyzerTest
         {
             InputStream in = getClass().getResourceAsStream("/L3/" + s);
             Model model = handler.convertFromOWL(in);
-	        StateNetworkAnalyzer analyzer = new StateNetworkAnalyzer();
+	        ActivityNetworkAnalyzer analyzer = new ActivityNetworkAnalyzer();
 	        analyzer.analyzeStates(model);
             analyzer.writeStateNetworkAnalysis(out);
             in.close();

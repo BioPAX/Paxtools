@@ -18,7 +18,7 @@ import java.util.Set;
 
 /**
  */
-public class StateNetworkAnalyzer
+public class ActivityNetworkAnalyzer
 {
 	Map<BioPAXElement, Set<PEStateChange>> stateChangeMap;
 
