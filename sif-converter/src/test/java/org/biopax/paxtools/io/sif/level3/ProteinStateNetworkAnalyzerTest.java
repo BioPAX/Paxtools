@@ -44,14 +44,14 @@ public class ProteinStateNetworkAnalyzerTest
     public void testProteinStateAnalysis() throws Exception
     {
         File testDir = new File(getClass().getResource("/L3").getFile());
-        StateNetworkAnalyzer analyzer = new StateNetworkAnalyzer();
 
 
         for (String s : testDir.list(getFilter()))
         {
             InputStream in = getClass().getResourceAsStream("/L3/" + s);
             Model model = handler.convertFromOWL(in);
-            analyzer.analyzeStates(model);
+	        StateNetworkAnalyzer analyzer = new StateNetworkAnalyzer();
+	        analyzer.analyzeStates(model);
             analyzer.writeStateNetworkAnalysis(out);
             in.close();
         }

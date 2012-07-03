@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -168,8 +169,22 @@ public class PEStateChange {
         StringBuilder value = new StringBuilder();
         for (Object o : valueFromBean) {
             Controller controller = (Controller) o;
-            value.append(controller.getName() + "[" + controller.getXref() + "] ");
+            value.append(controller.getName()).append( "[");
+	        appendXrefs(controller, value);
+	        value.append( "] ");
         }
         return value.toString();
     }
+
+	private void appendXrefs(Controller controller, StringBuilder builder)
+	{
+		HashSet<SimplePhysicalEntity> simple = new HashSet<SimplePhysicalEntity>();
+
+		Simplify.getSimpleMembers((PhysicalEntity) controller, simple);
+		for (SimplePhysicalEntity spe : simple)
+		{
+
+			builder.append("(").append(spe.getEntityReference().getXref()).append(")");
+		}
+	}
 }

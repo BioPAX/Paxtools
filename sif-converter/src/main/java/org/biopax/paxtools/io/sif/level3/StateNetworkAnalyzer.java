@@ -189,10 +189,10 @@ public class StateNetworkAnalyzer
 	private Map<Control, Boolean> getDeltaControl(PEStateChange sChange)
 	{
 		Map<Control, Boolean> dc = sChange.getDeltaControls();
-		if (!dc.isEmpty())
+		if (!dc.isEmpty() || sChange.getRight() == null)
 		{
 			return dc;
-		} else if (sChange.getRight() == null) return dc;
+		}
 		else
 		{
 			//Look ahead:

@@ -27,6 +27,7 @@ public enum ChangeType {
         Map<EntityFeature, ChangeType> result = new HashMap<EntityFeature, ChangeType>();
         if (left == null) {
             result.put(EXISTENCE, NOT_EXIST_TO_EXIST);
+
             for (EntityFeature entityFeature : right.getFeature()) {
                 result.put(entityFeature, NOT_EXIST_TO_EXIST);
             }

@@ -102,7 +102,7 @@ public class Simplify
 	}
 
 
-	public  static void getSimpleMembers(PhysicalEntity root, Set<SimplePhysicalEntity> value)
+	public static void getSimpleMembers(PhysicalEntity root, Set<SimplePhysicalEntity> value)
 	{
 		if (root != null)
 		{
@@ -114,20 +114,20 @@ public class Simplify
 					getSimpleMembers(component, value);
 				}
 			}
-			if (root instanceof SimplePhysicalEntity)
+
+			if (root.getMemberPhysicalEntity().isEmpty())
 			{
-				if (root.getMemberPhysicalEntity().isEmpty())
-				{
+				if(root instanceof SimplePhysicalEntity)
 					value.add((SimplePhysicalEntity) root);
-					return;
-				}
-			} else
+			}
+			else
 			{
 				for (PhysicalEntity generic : root.getMemberPhysicalEntity())
 				{
 					getSimpleMembers(generic, value);
 				}
 			}
+
 		}
 	}
 
@@ -144,15 +144,11 @@ public class Simplify
 					return viaComplex;
 				}
 			}
-		}
-		else if (checkEntity(map, pe, element)) return (SimplePhysicalEntity) pe;
-		else
+		} else if (checkEntity(map, pe, element)) return (SimplePhysicalEntity) pe;
+		for (PhysicalEntity member : pe.getMemberPhysicalEntity())
 		{
-			for (PhysicalEntity member : pe.getMemberPhysicalEntity())
-			{
-				SimplePhysicalEntity viaGeneric = getAssociatedState(element, member, map);
-				if (viaGeneric != null) return viaGeneric;
-			}
+			SimplePhysicalEntity viaGeneric = getAssociatedState(element, member, map);
+			if (viaGeneric != null) return viaGeneric;
 		}
 		return null;
 	}
