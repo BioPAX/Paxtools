@@ -56,6 +56,15 @@ public enum BinaryInteractionType
 	INTERACTS_WITH(
 			"The entities participate in an interaction.  Controllers are not included.  " +
 			"This interaction is undirected.", false),
+
+	UPREGULATE_EXPRESSION(
+			"The first entity upregulates the expression of the second entity. " +
+			"This interaction is directed.", true),
+
+	DOWNREGULATE_EXPRESSION(
+			"The first entity downregulates the expression of the second entity. " +
+			"This interaction is directed.", true),
+
 	GENERIC_OF(
 			"The first entity is a generic form of the second entity.This interaction is directed",true);
 

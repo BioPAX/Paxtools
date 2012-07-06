@@ -337,7 +337,14 @@ public class QueryExecuter
 			pes.addAll(valueSet);
 		}
 
-		return graph.getWrapperSet(pes);
+		Set<Node> nodes = graph.getWrapperSet(pes);
+
+		// If there are interactions in the seed add them too
+
+		Set<Node> inters = getSeedInteractions(elements, graph);
+		nodes.addAll(inters);
+
+		return nodes;
 	}
 
 	private static Collection<Set<Node>> prepareNodeSets(Set<BioPAXElement> elements, Graph graph)
@@ -352,6 +359,15 @@ public class QueryExecuter
 
 			if (!set.isEmpty()) sets.add(set);
 		}
+		
+		// Add interactions in the seed as single node set
+
+		Set<Node> inters = getSeedInteractions(elements, graph);
+		for (Node node : inters)
+		{
+			sets.add(Collections.singleton(node));
+		}
+
 		return sets;
 	}
 
@@ -462,4 +478,31 @@ public class QueryExecuter
 			addEquivalentsComplexes(related, outer, pes);
 		}
 	}
+
+	/**
+	 * Extracts the queryable interactions from the elements.
+	 *
+	 * @param elements
+	 * @return
+	 */
+	public static Set<Node> getSeedInteractions(Collection<BioPAXElement> elements, Graph graph)
+	{
+		Set<Node> nodes = new HashSet<Node>();
+
+		for (BioPAXElement ele : elements)
+		{
+			if (ele instanceof Conversion || ele instanceof TemplateReaction ||
+				ele instanceof Control)
+			{
+				GraphObject go = graph.getGraphObject(ele);
+
+				if (go instanceof Node)
+				{
+					nodes.add((Node) go);
+				}
+			}
+		}
+		return nodes;
+	}
+
 }

@@ -750,9 +750,10 @@ public class ActivityRecognizer
 	
 	public static void main(String[] args) throws FileNotFoundException
 	{
-		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
-		ActivityRecognizer ar = new ActivityRecognizer(model);
-		ar.run();
+		ActivityRecognizer ar = new ActivityRecognizer(null);
+//		ar.degradingConvPattern.setVariableSize(3);
+//		ar.degradingConvPattern.addConstraint(ConBox.convToControl(), 1, 2);
+		Searcher.searchInFile(ar.transcriptionConvPattern, "/home/ozgun/Desktop/cpath2.owl",
+			"/home/ozgun/Desktop/pattern-matches/transcriptionConvPattern.owl", 100, 1);
 	}
 }

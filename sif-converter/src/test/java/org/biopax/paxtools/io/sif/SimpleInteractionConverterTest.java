@@ -155,7 +155,8 @@ public class SimpleInteractionConverterTest
 		                                      new org.biopax.paxtools.io.sif.level3.ParticipatesRule(),
 		                                      new org.biopax.paxtools.io.sif.level3.ComponentRule(),
 		                                      new org.biopax.paxtools.io.sif.level3.ConsecutiveCatalysisRule(),
-		                                      new org.biopax.paxtools.io.sif.level3.ControlsTogetherRule());
+		                                      new org.biopax.paxtools.io.sif.level3.ControlsTogetherRule(),
+											  new org.biopax.paxtools.io.sif.level3.ExpressionRule());
 	}
 
 

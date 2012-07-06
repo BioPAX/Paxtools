@@ -171,6 +171,8 @@ public class ConBox
 
 	public static Constraint isHuman()
 	{
-		return new Field(new PathAccessor("SequenceEntityReference/organism/displayName"), "Homo sapiens");
+		return new OR(
+			new MappedConst(new Field(new PathAccessor("SequenceEntityReference/organism/displayName"), "Homo sapiens"), 0),
+			new MappedConst(new Field(new PathAccessor("PhysicalEntity/entityReference/organism/displayName"), "Homo sapiens"), 0));
 	}
 }

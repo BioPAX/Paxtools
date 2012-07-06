@@ -58,7 +58,7 @@ public class QueryTest
 		assertTrue(result.size() > 0);
 
 		result = QueryExecuter.runPathsBetween(source, model, 1);
-//		assertTrue(result.size() == 0);
+		assertTrue(result.size() == 0);
 
 		source = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1630_1_9606", //phospho-Cdc2

@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality;
 
+import org.biopax.paxtools.causality.util.HGNCUtil;
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -70,7 +71,7 @@ public class NetworkAnalyzer
 	{
 		Pattern p = prepareModifierConv();
 
-		Searcher.searcInFile(p, "/home/ozgun/Desktop/cpath2.owl", "/home/ozgun/Desktop/pattern-matches/modifier_with_generics_and_complexes.owl");
+		Searcher.searchInFile(p, "/home/ozgun/Desktop/cpath2.owl", "/home/ozgun/Desktop/pattern-matches/modifier_with_generics_and_complexes.owl");
 
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
@@ -79,7 +80,83 @@ public class NetworkAnalyzer
 //		System.out.println("mathes.size() = " + mathes.size());
 	}
 
+	@Test
+	@Ignore
+	public void searchSummary() throws FileNotFoundException
+	{
+		Pattern p = prepareTransEffectorPattern();
 
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2.owl"));
+
+		System.out.println("PC_Pathway_ID\tPathway_Name\tPathway_Source_Name\t" +
+			"Transcriptional_Gene\tDownstream_Gene\tRegulation_Type");
+
+		Set<String> memory = new HashSet<String>();
+		
+		for (ProteinReference pr : model.getObjects(ProteinReference.class))
+		{
+			String sym = getSymbol(pr);
+			
+			if (sym == null) continue;
+
+			for (Match match : Searcher.search(pr, p))
+			{
+				if (!(match.get(6) instanceof ProteinReference)) continue;
+
+				ProteinReference targ = (ProteinReference) match.get(6);
+				String tarSym = getSymbol(targ);
+				
+				if (tarSym == null) continue;
+
+				Control ctrl = (Control) match.get(3);
+
+				String reg = sym + "\t" + tarSym + "\t" + (ctrl.getControlType() != null && 
+					ctrl.getControlType().toString().startsWith("I") ? "Inhibition" : "Activation");
+
+				if (memory.contains(reg)) continue;
+				else memory.add(reg);
+				
+				Set<Pathway> pathways = ctrl.getPathwayComponentOf();
+				if (pathways.isEmpty())
+				{
+					TemplateReaction tr = (TemplateReaction) match.get(4);
+					pathways = tr.getPathwayComponentOf();
+				}
+				
+				if (pathways.isEmpty())
+				{
+					System.out.println("\t\t\t" + reg);
+				}
+				else
+				{
+					Pathway pat = pathways.iterator().next();
+					System.out.println(pat.getRDFId() + "\t" + pat.getDisplayName() + "\t" +
+						pat.getDataSource().iterator().next().toString() + "\t" + reg);
+				}
+			}
+			
+//			Set<ProteinReference> prs = Searcher.searchAndCollect(pr, p, 6, ProteinReference.class);
+//
+//			if (prs.size() > 0)
+//			{
+//				System.out.println(sym + "\t" + prs.size());
+//			}
+		}
+	}
+
+	private String getSymbol(ProteinReference pr)
+	{
+		for (Xref xref : pr.getXref())
+		{
+			if (xref.getDb().equals("HGNC"))
+			{
+				String id = xref.getId().substring(xref.getId().indexOf(":") + 1);
+				return HGNCUtil.getSymbol(Integer.parseInt(id));
+			}
+		}
+		return null;
+	}
 
 	private Pattern prepareModifierConv()
 	{
@@ -225,6 +302,20 @@ public class NetworkAnalyzer
 		p.addConstraint(ConBox.peToER(), i, ++i);
 		p.addConstraint(new Equality(true), i, 1);
 		p.addConstraint(ConBox.peToControl(), 0, ++i);
+		return p;
+	}
+	
+	private Pattern prepareTransEffectorPattern()
+	{
+		Pattern p = new Pattern(7, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(ConBox.peToControl(), i, ++i);
+		p.addConstraint(ConBox.controlToTempReac(), i, ++i);
+		p.addConstraint(ConBox.product(), i, ++i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(false), i, 0);
 		return p;
 	}
 }

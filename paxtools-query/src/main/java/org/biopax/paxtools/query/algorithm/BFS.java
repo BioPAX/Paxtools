@@ -129,6 +129,8 @@ public class BFS
 			return;
 		}
 
+//		System.out.println("processing = " + current);
+
 		// Process edges towards the direction
 
 		for (Edge edge : direction == Direction.DOWNSTREAM ?
@@ -273,6 +275,7 @@ public class BFS
 
 	protected void setLabel(GraphObject go, int label)
 	{
+//		System.out.println("Labeling(" + label + "): " + go);
 		dist.put(go, label);
 	}
 

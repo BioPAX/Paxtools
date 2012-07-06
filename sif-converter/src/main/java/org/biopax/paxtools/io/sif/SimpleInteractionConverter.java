@@ -332,6 +332,7 @@ public class SimpleInteractionConverter
 			list.add(new org.biopax.paxtools.io.sif.level3.ControlRule());
 			list.add(new org.biopax.paxtools.io.sif.level3.ControlsTogetherRule());
 			list.add(new org.biopax.paxtools.io.sif.level3.ParticipatesRule());
+			list.add(new org.biopax.paxtools.io.sif.level3.ExpressionRule());
 		}
 		return list;
 	}

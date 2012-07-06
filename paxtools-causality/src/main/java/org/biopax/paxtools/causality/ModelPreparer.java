@@ -61,7 +61,13 @@ public class ModelPreparer
 		ar.run();
 		h.convertToOWL(model, new FileOutputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
 	}
-	
+
+	public static void writePatternMatches() throws FileNotFoundException
+	{
+		Searcher.searchInFile(BOTH_INPUT_AND_OUTPUT_PATTERN, "/home/ozgun/Desktop/cpath2.owl",
+			"/home/ozgun/Desktop/pattern-matches/BOTH_INPUT_AND_OUTPUT_PATTERN.owl");
+	}
+
 	private static String generateID()
 	{
 		return "ModelPreparer-" + System.currentTimeMillis() + "-" + rand.nextDouble();
@@ -286,6 +292,7 @@ public class ModelPreparer
 	{
 		Pattern p = new Pattern(3, Conversion.class);
 		p.addConstraint(ConBox.left(), 0 , 1);
+		p.addConstraint(ConBox.isHuman(), 1);
 		p.addConstraint(ConBox.right(), 0, 2);
 		p.addConstraint(new Equality(true), 1 , 2);
 		return p;

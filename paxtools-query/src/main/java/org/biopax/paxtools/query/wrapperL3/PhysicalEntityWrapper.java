@@ -252,4 +252,10 @@ public class PhysicalEntityWrapper extends AbstractNode
 	{
 		return pe;
 	}
+
+	@Override
+	public String toString()
+	{
+		return pe.getDisplayName() + " -- "+ pe.getRDFId();
+	}
 }

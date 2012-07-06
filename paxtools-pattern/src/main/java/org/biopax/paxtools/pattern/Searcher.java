@@ -21,6 +21,13 @@ import java.util.*;
  */
 public class Searcher
 {
+	/**
+	 * This method consumes a lot of memory, and it is not practical to use on big graphs. This is
+	 * replaced with the recursive alternative. I left this method here in case someday we need it.
+	 *
+	 * @deprecated
+	 * @see Searcher#search(BioPAXElement, Pattern)
+	 */
 	public static List<Match> search_old(BioPAXElement ele, Pattern pattern)
 	{
 		assert pattern.getStartingClass().isAssignableFrom(ele.getModelInterface());
@@ -33,7 +40,6 @@ public class Searcher
 
 		for (MappedConst mc : pattern.getConstraints())
 		{
-			System.out.println("list.size() = " + list.size());
 			Constraint constr = mc.getConstr();
 			int[] ind = mc.getInds();
 			int lastInd = ind[ind.length-1];
@@ -43,8 +49,7 @@ public class Searcher
 				if (constr.canGenerate() && match.get(lastInd) == null)
 				{
 					Collection<BioPAXElement> elements = constr.generate(match, ind);
-					if (elements.size() > 100) System.out.println("generated = " + elements.size());
-					
+
 					for (BioPAXElement el : elements)
 					{
 						try {
@@ -234,7 +239,13 @@ public class Searcher
 		return !search(m, p).isEmpty();
 	}
 	
-	public static void searcInFile(Pattern p, String inFile, String outFile) throws FileNotFoundException
+	public static void searchInFile(Pattern p, String inFile, String outFile) throws FileNotFoundException
+	{
+		searchInFile(p, inFile, outFile, Integer.MAX_VALUE, Integer.MAX_VALUE);
+	}
+
+	public static void searchInFile(Pattern p, String inFile, String outFile, int seedLimit,
+		int graphPerSeed) throws FileNotFoundException
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream(inFile));
@@ -248,13 +259,21 @@ public class Searcher
 
 		Set<BioPAXElement> toExise = new HashSet<BioPAXElement>();
 
+		int seedCounter = 0;
 		for (BioPAXElement ele : matchMap.keySet())
 		{
-//			// Prevent large results.
-//			if (inters.size() > 1000) break;
+			seedCounter++;
+			
+			if (seedCounter > seedLimit) break;
 
+			int matchCounter = 0;
+			
 			for (Match match : matchMap.get(ele))
 			{
+				matchCounter++;
+				
+				if (matchCounter > graphPerSeed) break;
+				
 				toExise.addAll(Arrays.asList(match.getVariables()));
 
 				Set<Interaction> ints = getInter(match);
@@ -324,16 +343,21 @@ public class Searcher
 			if (ele instanceof Interaction) 
 			{
 				set.add((Interaction) ele);
-
-				for (Control control : ((Interaction) ele).getControlledOf())
-				{
-					set.add(control);
-				}
+				addControlsRecursive((Interaction) ele, set);
 			}
 		}
 		return set;
 	}
 
+	private static void addControlsRecursive(Interaction inter, Set<Interaction> set)
+	{
+		for (Control ctrl : inter.getControlledOf())
+		{
+			set.add(ctrl);
+			addControlsRecursive(ctrl, set);
+		}
+	}
+	
 	private static Integer hashSum(Set<Interaction> set)
 	{
 		int x = 0;

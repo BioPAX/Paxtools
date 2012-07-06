@@ -117,6 +117,12 @@ public class ConversionWrapper extends EventWrapper
 		return conv;
 	}
 
+	@Override
+	public String toString()
+	{
+		return conv.getDisplayName() + " -- " + conv.getRDFId();
+	}
+
 	public static final boolean LEFT_TO_RIGHT = true;
 	public static final boolean RIGHT_TO_LEFT = false;
 }
