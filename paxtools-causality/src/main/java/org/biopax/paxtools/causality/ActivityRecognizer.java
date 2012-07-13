@@ -100,6 +100,13 @@ public class ActivityRecognizer
 		}
 	}
 
+	private boolean contains(ProteinReference pr, Map map1, Map map2, Object obj)
+	{
+		Set set1 = (Set) map1.get(pr);
+		Set set2 = (Set) map2.get(pr);
+		return set1.contains(obj) || set2.contains(obj);
+	}
+	
 	public void run()
 	{
 		initMaps();
@@ -107,18 +114,24 @@ public class ActivityRecognizer
 		System.out.println("inited effecting");
 		initWithNCIActivityLabels();
 		System.out.println("inited nci labels");
+		processHiddenTranscriptions();
+		System.out.println("processed hidden transcriptions");
 		processDegradingReactions();
 		System.out.println("processed degrading");
-		extractAffectingLocAndBinding();
-		System.out.println("extracteed effective loc and binding");
-		assesConversions();
-		System.out.println("assessed conversion");
-		decideToTheTypeOfTheEffecting();
-		System.out.println("decided to the type of affecting");
-		extractAffectingLocAndBinding();
-		System.out.println("extracted effecting loc and binding");
-		assesConversions();
-		System.out.println("assesed conversions");
+
+		boolean loop = true;
+
+		while(loop)
+		{
+			extractAffectingLocAndBinding();
+			System.out.println("extracted effective loc and binding");
+			loop = assesConversions();
+			System.out.println("assessed conversion");
+			loop = decideToTheTypeOfTheEffecting() || loop;
+			System.out.println("categorized effecting");
+		}
+		categorizeRemainingEffectorAsActive();
+		System.out.println("made remaining effectors active");
 		sanityCheck();
 		embedRecognitionsInModel();
 	}
@@ -150,6 +163,24 @@ public class ActivityRecognizer
 		}
 	}
 
+	private void processHiddenTranscriptions()
+	{
+		for (ProteinReference pr : effectingMap.keySet())
+		{
+			// Label the conversions that are used instead of template reactions
+
+			for (Conversion cnv : Searcher.searchAndCollect(
+				pr.getEntityReferenceOf(), transcriptionConvPattern, 1, Conversion.class))
+			{
+				if (!activatingConv.get(pr).contains(cnv))
+				{
+					activatingConv.get(pr).add(cnv);
+					cnv.addComment(Graph.IS_TRANSCRIPTION);
+				}
+			}
+		}
+	}
+
 	private void processDegradingReactions()
 	{
 		for (ProteinReference pr : effectingMap.keySet())
@@ -167,7 +198,9 @@ public class ActivityRecognizer
 			}
 		}
 	}
-	
+
+
+
 	private void initEffecting()
 	{
 		for (ProteinReference pr : effectingMap.keySet())
@@ -220,22 +253,12 @@ public class ActivityRecognizer
 		}
 	}
 	
-	private void assesConversions()
+	private boolean assesConversions()
 	{
+		boolean predictedNew = false;
+
 		for (ProteinReference pr : effectingMap.keySet())
 		{
-			// Label the conversions that are used instead of template reactions
-
-			for (Conversion cnv : Searcher.searchAndCollect(
-				pr.getEntityReferenceOf(), transcriptionConvPattern, 1, Conversion.class))
-			{
-				if (!activatingConv.get(pr).contains(cnv))
-				{
-					activatingConv.get(pr).add(cnv);
-					cnv.addComment(Graph.IS_TRANSCRIPTION);
-				}
-			}
-
 			// Label the conversions that produce active and inactive states
 
 			if (hasCommon(activeMap.get(pr), inactiveMap.get(pr)))
@@ -246,15 +269,22 @@ public class ActivityRecognizer
 			for (Conversion cnv : Searcher.searchAndCollect(
 				activeMap.get(pr), producingConvPattern, 1, Conversion.class))
 			{
+				if (contains(pr, activatingConv, inactivatingConv, cnv)) continue;
+
 				activatingConv.get(pr).add(cnv);
-				if (inactivatingConv.get(pr).contains(cnv)) inactivatingConv.get(pr).remove(cnv);
+//				if (inactivatingConv.get(pr).contains(cnv)) inactivatingConv.get(pr).remove(cnv);
+				predictedNew = true;
 			}
 
 			for (Conversion cnv : Searcher.searchAndCollect(
 				inactiveMap.get(pr), producingConvPattern, 1, Conversion.class))
 			{
+				if (contains(pr, activatingConv, inactivatingConv, cnv)) continue;
+
 				inactivatingConv.get(pr).add(cnv);
-				if (activatingConv.get(pr).contains(cnv)) activatingConv.get(pr).remove(cnv);
+//				if (activatingConv.get(pr).contains(cnv)) activatingConv.get(pr).remove(cnv);
+				
+				predictedNew = true;
 			}
 
 			// Predict other conversions from features, binding, and location.
@@ -266,12 +296,7 @@ public class ActivityRecognizer
 				Conversion conv = (Conversion) match.get(3);
 				
 				// Skip if already predicted
-				
-				if (activatingConv.get(pr).contains(conv) || 
-					inactivatingConv.get(pr).contains(conv))
-				{
-					continue;
-				}
+				if (contains(pr, activatingConv, inactivatingConv, conv)) continue;
 
 				// Predict by feature change
 
@@ -284,8 +309,12 @@ public class ActivityRecognizer
 					int pred = predictByFeature(pr, gained, lost);
 					if (pred == 1) activatingConv.get(pr).add(conv);
 					else if (pred == -1) inactivatingConv.get(pr).add(conv);
-					
-					if (pred != 0) continue;
+										
+					if (pred != 0) 
+					{
+						predictedNew = true;
+						continue;
+					}
 				}
 
 				// Predict by binding change
@@ -301,7 +330,11 @@ public class ActivityRecognizer
 				if (pred == 1) activatingConv.get(pr).add(conv);
 				else if (pred == -1) inactivatingConv.get(pr).add(conv);
 
-				if (pred != 0) continue;
+				if (pred != 0)
+				{
+					predictedNew = true;
+					continue;
+				}
 
 				// Predict by location change
 
@@ -313,8 +346,15 @@ public class ActivityRecognizer
 				pred = predictByLocation(pr, gainLoc, lostLoc);
 				if (pred == 1) activatingConv.get(pr).add(conv);
 				else if (pred == -1) inactivatingConv.get(pr).add(conv);
+
+				if (pred != 0)
+				{
+					predictedNew = true;
+				}
 			}
 		}
+
+		return predictedNew;
 	}
 
 	private int predictByFeature(ProteinReference pr,
@@ -400,15 +440,18 @@ public class ActivityRecognizer
 		return 0;
 	}
 
-	private void decideToTheTypeOfTheEffecting()
+	private boolean decideToTheTypeOfTheEffecting()
 	{
+		boolean predictedNew = false;
+
 		for (ProteinReference pr : effectingMap.keySet())
 		{
 			for (PhysicalEntity pe : effectingMap.get(pr))
 			{
-				if (activeMap.get(pr).contains(pe) || inactiveMap.get(pr).contains(pe)) continue;
+				if (contains(pr, activeMap, inactiveMap, pe)) continue;
 				
 				boolean inactive = false;
+				boolean active = false;
 				
 				for (Conversion cnv : Searcher.searchAndCollect(
 					pe, producingConvPattern, 1, Conversion.class))
@@ -416,20 +459,41 @@ public class ActivityRecognizer
 					if (inactivatingConv.get(pr).contains(cnv))
 					{
 						inactive = true;
-						break;
+					}
+					if (activatingConv.get(pr).contains(cnv))
+					{
+						active = true;
 					}
 				}
 
-				if (!inactive)
+				if (!inactive && !active)
 				{
 					Set<EntityReference> friends = Searcher.searchAndCollect(
 						pe, linkedPEToMemberERPattern, 2, EntityReference.class);
 					
-					if (hasCommon(friends, inactivatingBindingMap.get(pr))) inactive = true;
+					if (hasCommon(friends, inactiveMap.get(pr))) inactive = true;
+					if (hasCommon(friends, activeMap.get(pr))) active = true;
 				}
 				
-				if (inactive) inactiveMap.get(pr).add(pe);
-				else activeMap.get(pr).add(pe);
+				if (inactive && !active) inactiveMap.get(pr).add(pe);
+				else if (active && !inactive) activeMap.get(pr).add(pe);
+				
+				if ((active || inactive) && !(active && inactive)) predictedNew = true;
+			}
+		}
+		return predictedNew;
+	}
+	
+	private void categorizeRemainingEffectorAsActive()
+	{
+		for (ProteinReference pr : effectingMap.keySet())
+		{
+			for (PhysicalEntity pe : effectingMap.get(pr))
+			{
+				if (!contains(pr, activeMap, inactiveMap, pe))
+				{
+					activeMap.get(pr).add(pe);
+				}
 			}
 		}
 	}

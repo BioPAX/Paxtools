@@ -75,12 +75,18 @@ public class Overlap
 
 	public static void main(String[] args)
 	{
-		System.out.println("pval = " + calcPVal(3, 3, 1, 1));
+		System.out.println("pval = " + calcPVal(3, 2, 1, 0));
 	}
 
 	public static double calcAlterationOverlapPval(Change[] alt1, Change[] alt2)
 	{
+		return calcAlterationOverlapPval(alt1, alt2, null);
+	}
+
+	public static double calcAlterationOverlapPval(Change[] alt1, Change[] alt2, boolean[] use)
+	{
 		assert alt1.length == alt2.length;
+		assert use == null || use.length == alt1.length;
 
 		int n = 0;
 		int cnt1 = 0;
@@ -89,6 +95,7 @@ public class Overlap
 
 		for (int i = 0; i < alt1.length; i++)
 		{
+			if (use != null && !use[i]) continue;
 			if (alt1[i].isAbsent() || alt2[i].isAbsent()) continue;
 
 			n++;

@@ -3,6 +3,7 @@ package org.biopax.paxtools.causality.util;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Performs HGNC related conversions. Database updated at Jan 25, 2012.
@@ -32,6 +33,11 @@ public class HGNCUtil
 	public static String getSymbol(Integer hgncID)
 	{
 		return id2sym.get(hgncID);
+	}
+
+	public static Set<String> getSymbols()
+	{
+		return sym2id.keySet();
 	}
 
 	static

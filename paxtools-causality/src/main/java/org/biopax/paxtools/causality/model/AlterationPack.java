@@ -15,7 +15,7 @@ public class AlterationPack
 	protected Map<Alteration, Change[]> map;
 
 	protected int size;
-	
+
 	protected String id;
 
 	public static final Alteration[] priority_nonGenomic = new Alteration[]{
@@ -126,6 +126,16 @@ public class AlterationPack
 		
 		return changes[index];
 	}
+	
+	public int countAltered(Alteration key)
+	{
+		int cnt = 0;
+		for (Change ch : get(key))
+		{
+			if (ch.isAltered()) cnt++;
+		}
+		return cnt;
+	}
 
 	/**
 	 *
@@ -215,5 +225,70 @@ public class AlterationPack
 			}
 		}
 		return inds;
+	}
+	
+	public Change[] getChangesMissingRemoved(AlterationPack pack, Alteration alt)
+	{
+		Change[] ch1 = map.get(alt);
+		Change[] ch2 = pack.get(alt);
+		
+		assert ch1.length == ch2.length;
+
+		boolean[] b = new boolean[ch1.length];
+		int x = 0;
+		for (int i = 0; i < ch1.length; i++)
+		{
+			if (!ch1[i].isAbsent() && !ch2[i].isAbsent())
+			{
+				x++;
+				b[i] = true;
+			}
+			else b[i] = false;
+		}
+		Change[] ch = new Change[x];
+
+		int j = 0;
+		for (int i = 0; i < ch1.length; i++)
+		{
+			if (b[i])
+			{
+				ch[j++] = ch1[i];
+				assert !(ch1[i].isAbsent() || ch2[i].isAbsent());
+			}
+		}
+
+		assert j == ch.length;
+		
+		return ch;
+	}
+	
+	public String getPrint(Alteration key)
+	{
+		Change[] ch = get(key);
+		StringBuilder buf = new StringBuilder();
+		for (Change c : ch)
+		{
+			buf.append(c.isAltered() ? "x" : c.isAbsent() ? " " : ".");
+		}
+		buf.append("  ").append(id);
+		return buf.toString();
+	}
+
+	public String getPrint(Alteration key, List<Integer> order)
+	{
+		Change[] ch = get(key);
+		StringBuilder buf = new StringBuilder();
+		for (Integer o : order)
+		{
+			buf.append(ch[o].isAltered() ? "x" : ch[o].isAbsent() ? " " : ".");
+		}
+		for (int i = 0; i < ch.length; i++)
+		{
+			if (!order.contains(i)) buf.append(ch[i].isAbsent() ? " " : ".");
+		}
+
+
+		buf.append("  ").append(id);
+		return buf.toString();
 	}
 }

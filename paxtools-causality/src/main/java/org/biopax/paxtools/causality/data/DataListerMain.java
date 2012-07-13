@@ -36,7 +36,7 @@ public class DataListerMain {
 
 		// Select a random cancer study and then list case lists associated with this study
 //		CancerStudy cancerStudy = cancerStudies.get(random.nextInt(cancerStudies.size()));
-		CancerStudy cancerStudy = cancerStudies.get(16);
+		CancerStudy cancerStudy = cancerStudies.get(5);
 		System.out.println("Using cancerStudy = " + cancerStudy.getName());
 		cBioPortalAccessor.setCurrentCancerStudy(cancerStudy);
 
@@ -52,7 +52,7 @@ public class DataListerMain {
 
 		// Now use the first one on the list
 //		cBioPortalAccessor.setCurrentCaseList(caseListsForCurrentStudy.get(random.nextInt(caseListsForCurrentStudy.size())));
-		cBioPortalAccessor.setCurrentCaseList(caseListsForCurrentStudy.get(18));
+		cBioPortalAccessor.setCurrentCaseList(caseListsForCurrentStudy.get(0));
 		System.out.println("**");
 		System.out.println("Current case list: " + cBioPortalAccessor.getCurrentCaseList().getDescription());
 
@@ -71,6 +71,8 @@ public class DataListerMain {
 		List<GeneticProfile> geneticProfiles = new ArrayList<GeneticProfile>();
 //		geneticProfiles.add(geneticProfilesForCurrentStudy.get(random.nextInt(geneticProfilesForCurrentStudy.size())));
 		geneticProfiles.add(geneticProfilesForCurrentStudy.get(7));
+		geneticProfiles.add(geneticProfilesForCurrentStudy.get(6));
+		geneticProfiles.add(geneticProfilesForCurrentStudy.get(10));
 
 		cBioPortalAccessor.setCurrentGeneticProfiles(geneticProfiles);
 		System.out.println("**");
@@ -96,14 +98,17 @@ public class DataListerMain {
 			AlterationPack alterations = cBioPortalAccessor.getAlterations(gene);
 
 			StringBuilder oncoPrint = new StringBuilder();
-			Change[] changes = alterations.get(alteration);
+//			Change[] changes = alterations.get(alteration);
+			Change[] changes = alterations.get(Alteration.ANY);
 			assert numOfCases == alterations.getSize();
 
 			for (Change change : changes) {
 				if(change.isAltered())
 					oncoPrint.append("*");
-				else
+				else if (!change.isAbsent())
 					oncoPrint.append(".");
+				else
+					oncoPrint.append(" ");
 			}
 
 			System.out.println("\t" + gene + (gene.length() < 3 ? "  " : "") + "\t"

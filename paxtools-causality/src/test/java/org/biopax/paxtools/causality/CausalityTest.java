@@ -374,7 +374,7 @@ public class CausalityTest
 	{
 		SimpleIOHandler handler = new SimpleIOHandler();
 		Model model = handler.convertFromOWL(new FileInputStream(
-			"/home/ozgun/Desktop/cpath2_prepared.owl"));
+			"/home/ozgun/Desktop/MDM2-TP53-Neigh-prepared.owl"));
 
 		ArrayList<ProteinReference> prs = new ArrayList<ProteinReference>(
 			model.getObjects(ProteinReference.class));
@@ -383,7 +383,7 @@ public class CausalityTest
 		
 		int[][][] res = CausalityExecuter.searchDistances(model, prs, 4, ConversionLabelerTest.ubiq);
 
-		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/ozgun/Desktop/dist.txt"));
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/ozgun/Desktop/dist2.txt"));
 		writer.write("From\tTo\tDistance\tSign");
 
 		for (int j = 0; j < res[0].length; j++)
