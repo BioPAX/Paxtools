@@ -2,10 +2,7 @@ package org.biopax.paxtools.causality.model;
 
 import org.biopax.paxtools.causality.util.Summary;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
@@ -75,6 +72,11 @@ public class AlterationPack
 	public Change[] get(Alteration alt)
 	{
 		return map.get(alt);
+	}
+	
+	public Set<Alteration> getAlterationTypes()
+	{
+		return map.keySet();
 	}
 	
 	public boolean isAltered()

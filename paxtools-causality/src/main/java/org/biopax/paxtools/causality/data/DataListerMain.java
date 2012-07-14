@@ -70,9 +70,9 @@ public class DataListerMain {
 		// Pick a random genetic profile from the list and set it.
 		List<GeneticProfile> geneticProfiles = new ArrayList<GeneticProfile>();
 //		geneticProfiles.add(geneticProfilesForCurrentStudy.get(random.nextInt(geneticProfilesForCurrentStudy.size())));
-		geneticProfiles.add(geneticProfilesForCurrentStudy.get(7));
-		geneticProfiles.add(geneticProfilesForCurrentStudy.get(6));
-		geneticProfiles.add(geneticProfilesForCurrentStudy.get(10));
+//		geneticProfiles.add(geneticProfilesForCurrentStudy.get(7));
+		geneticProfiles.add(geneticProfilesForCurrentStudy.get(0));
+//		geneticProfiles.add(geneticProfilesForCurrentStudy.get(10));
 
 		cBioPortalAccessor.setCurrentGeneticProfiles(geneticProfiles);
 		System.out.println("**");

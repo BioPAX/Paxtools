@@ -127,7 +127,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                         : (Double.parseDouble(dataPoint) > .5 ? Change.INHIBITING : Change.NO_CHANGE);
             case COPY_NUMBER:
                 // TODO: what to do with log2CNA?
-                if(dataPoint.equalsIgnoreCase(NaN) || geneticProfile.getId().endsWith("log2CNA"))
+                if(dataPoint.equalsIgnoreCase(NA) || dataPoint.equalsIgnoreCase(NaN) || geneticProfile.getId().endsWith("log2CNA"))
                     return Change.NO_DATA;
                 else {
                     Double value = Double.parseDouble(dataPoint);
