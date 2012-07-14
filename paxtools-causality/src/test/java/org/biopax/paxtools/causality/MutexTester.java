@@ -102,9 +102,36 @@ public class MutexTester
 		}
 
 		System.out.println("map.size() = " + map.size());
-		List<AltBundle> bundles = new ArrayList<AltBundle>();
 
 		double thr = 0.05;
+		List<AltBundle> mutex = formBundles(map, true, thr);
+		List<AltBundle> coocu = formBundles(map, false, thr);
+
+		a = 0;
+		System.out.println("Mutex bundles\n--------\n");
+		for (AltBundle bundle : mutex)
+		{
+//			if (a++ > 10) break;
+			System.out.println(bundle);
+			System.out.println(bundle.getPrint());
+			System.out.println();
+		}
+		a = 0;
+		System.out.println("\nCo-occurred bundles\n--------\n");
+		for (AltBundle bundle : coocu)
+		{
+//			if (a++ > 10) break;
+			System.out.println(bundle);
+			System.out.println(bundle.getPrint());
+			System.out.println();
+		}
+	}
+
+	private List<AltBundle> formBundles(Map<String, AlterationPack> map, boolean mutex, double thr)
+		throws CloneNotSupportedException
+	{
+		List<AltBundle> bundles = new ArrayList<AltBundle>();
+
 		for (String s1 : map.keySet())
 		{
 			for (String s2 : map.keySet())
@@ -112,7 +139,7 @@ public class MutexTester
 				if (s1.compareTo(s2) < 0)
 				{
 					
-					AltBundle bun = new AltBundle(map.get(s1), map.get(s2), Alteration.ANY, true);
+					AltBundle bun = new AltBundle(map.get(s1), map.get(s2), Alteration.ANY, mutex);
 					if (bun.absPVal() < thr)
 					{
 						bundles.add(bun);
@@ -125,7 +152,7 @@ public class MutexTester
 
 		boolean loop = true;
 		Set<AltBundle> processed = new HashSet<AltBundle>();
-		
+
 		while (loop)
 		{
 			loop = false;
@@ -152,15 +179,7 @@ public class MutexTester
 
 		Collections.sort(bundles);
 		System.out.println("bundles.size() = " + bundles.size());
-
-		a = 0;
-		for (AltBundle bundle : bundles)
-		{
-//			if (a++ > 10) break;
-			System.out.println(bundle);
-			System.out.println(bundle.getPrint());
-			System.out.println();
-		}
+		return bundles;
 	}
 
 	private Set<String> readSymbols() throws IOException
@@ -258,18 +277,49 @@ public class MutexTester
 
 			for (int i = 0; i < alts.size() - 1; i++)
 			{
-				for (int j = i + 1; j < alts.size(); j++)
+				if (mutex)
 				{
-					// Update use array with other alterations
-
+					for (int j = i + 1; j < alts.size(); j++)
+					{
+						// Update use array with other alterations
+	
+						for (int k = 0; k < use.length; k++)
+						{
+							use[k] = true;
+	
+							for (int l = 0; l < alts.size(); l++)
+							{
+								if (l == i || l == j) continue;
+								if (alts.get(l).get(key)[k].isAltered()) 
+								{
+									use[k] = false;
+									break;
+								}
+							}
+						}
+	
+						// Calc pval for the pair
+						
+						double pv = Overlap.calcAlterationOverlapPval(
+							alts.get(i).get(key), alts.get(j).get(key), use);
+						
+						if (pv > 0) return 1;
+						
+						if (pv < pval) pval = pv;
+					}
+				}
+				else
+				{
+					// Get intersection of others
+					
 					for (int k = 0; k < use.length; k++)
 					{
 						use[k] = true;
 
 						for (int l = 0; l < alts.size(); l++)
 						{
-							if (l == i || l == j) continue;
-							if (alts.get(l).get(key)[k].isAltered()) 
+							if (l == i) continue;
+							if (!alts.get(l).get(key)[k].isAltered())
 							{
 								use[k] = false;
 								break;
@@ -278,21 +328,28 @@ public class MutexTester
 					}
 
 					// Calc pval for the pair
-					
+
 					double pv = Overlap.calcAlterationOverlapPval(
-						alts.get(i).get(key), alts.get(j).get(key), use);
-					
-					if ((isMutex() && pv > 0) || (!isMutex() && pv < 0))
-					{
-						return 1;
-					}
-					
-					if (Math.abs(pv) > Math.abs(pval)) pval = pv;
+						alts.get(i).get(key), convert(use));
+
+					if (pv < 0) return 1;
+
+					if (pv > pval) pval = pv;
 				}
 			}
 			return pval;
 		}
 
+		private Change[] convert(boolean[] b)
+		{
+			Change[] c = new Change[b.length];
+			for (int i = 0; i < c.length; i++)
+			{
+				c[i] = b[i] ? Change.ACTIVATING : Change.NO_CHANGE;
+			}
+			return c;
+		}
+		
 		@Override
 		public int compareTo(Object o)
 		{
