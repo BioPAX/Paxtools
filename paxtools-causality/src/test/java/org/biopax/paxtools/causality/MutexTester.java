@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality;
 
+import org.apache.lucene.analysis.Tokenizer;
 import org.biopax.paxtools.causality.data.CBioPortalAccessor;
 import org.biopax.paxtools.causality.data.CancerStudy;
 import org.biopax.paxtools.causality.data.CaseList;
@@ -15,6 +16,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -28,92 +30,29 @@ public class MutexTester
 	@Ignore
 	public void exploreCBioPortalMutex() throws IOException, CloneNotSupportedException
 	{
-		// cBio portal configuration
-
-		CBioPortalAccessor cBioPortalAccessor = new CBioPortalAccessor();
-		CancerStudy cancerStudy = cBioPortalAccessor.getCancerStudies().get(5); // GBM
-		cBioPortalAccessor.setCurrentCancerStudy(cancerStudy);
-
-		List<GeneticProfile> geneticProfilesForCurrentStudy =
-			cBioPortalAccessor.getGeneticProfilesForCurrentStudy();
-		List<GeneticProfile> gp = new ArrayList<GeneticProfile>();
-		gp.add(geneticProfilesForCurrentStudy.get(7)); //expression
-		gp.add(geneticProfilesForCurrentStudy.get(0)); // copy number
-		gp.add(geneticProfilesForCurrentStudy.get(10)); // mutation
-		cBioPortalAccessor.setCurrentGeneticProfiles(gp);
-
-		List<CaseList> caseLists = cBioPortalAccessor.getCaseListsForCurrentStudy();
-		cBioPortalAccessor.setCurrentCaseList(caseLists.get(0));
-
 		// Load network
 
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2.owl"));
 
-//		Set<String> pass = new HashSet<String>();
-//		
-//		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/dist.txt"));
-//
-//		for (String line = reader.readLine(); line != null; line = reader.readLine())
-//		{
-//			String[] token = line.split("\t");
-//			
-//			String s1 = token[0];
-//			String s2 = token[1];
-//
-//			if (pass.contains(s1) || pass.contains(s2)) continue;
-//
-//			AlterationPack alt1 = cBioPortalAccessor.getAlterations(s1);
-//			AlterationPack alt2 = cBioPortalAccessor.getAlterations(s2);
-//
-//			if (!alt1.isAltered()) { pass.add(s1); continue;}
-//			if (!alt2.isAltered()) { pass.add(s2); continue;}
-//
-//			Change[] ch1 = alt1.getChangesMissingRemoved(alt2, Alteration.ANY);
-//			if (ch1.length == 0) continue;
-//			Change[] ch2 = alt2.getChangesMissingRemoved(alt1, Alteration.ANY);
-//
-//			double pval = Overlap.calcAlterationOverlapPval(ch1, ch2);
-//
-//			if (pval < 0 && Math.abs(pval) < 0.05)
-//			{
-//				System.out.println(s1 + "\t" + s2 + "\t" + pval);
-//			}
-//		}
-//
-//		reader.close();
-		
-		Set<String> syms = readSymbols();
-
-		System.out.println("syms.size() = " + syms.size());
-		long time = System.currentTimeMillis();
-
-		Map<String, AlterationPack> map = new HashMap<String, AlterationPack>();
-
-		int a = 0;
-		for (String sym : syms)
-		{
-//			if (a++ > 150) break;
-
-			AlterationPack alt = cBioPortalAccessor.getAlterations(sym);
-			if (alt.isAltered())
-			{
-				map.put(sym, alt);
-			}
-		}
-		System.out.println("map.size() = " + map.size());
-		time = System.currentTimeMillis() - time;
-		System.out.println("read in " + (time / 1000D) + " seconds");
+		Map<String, AlterationPack> map = readAlterations();
 
 		double thr = 0.05;
 		List<AltBundle> mutex = formBundles(map, true, thr);
+		for (AltBundle bundle : mutex) bundle.sortToMostAltered();
+
+		Map<AlterationPack, List<AlterationPack>> coocMap = getCoocMap(map, Alteration.ANY, 0.01);
+		addAlternatives(mutex, coocMap, 2*thr);
+		clearRedundancies(mutex);
+		System.out.println("bundles size = " + mutex.size());
+
 //		List<AltBundle> coocu = formBundles(map, false, thr);
 
 //		AltBundle b = mutex.get(1);
 //		List<AlterationPack> sorted = b.sortToMostAltered(b.alts);
 //		List<Integer> order = b.getPrintOrdering(sorted);
 
-		a = 0;
+		int a = 0;
 		System.out.println("Mutex bundles\n--------\n");
 		for (AltBundle bundle : mutex)
 		{
@@ -131,6 +70,81 @@ public class MutexTester
 //			System.out.println(bundle.getPrint());
 //			System.out.println();
 //		}
+	}
+
+	private Map<AlterationPack, List<AlterationPack>> getCoocMap(Map<String, AlterationPack> map, 
+		Alteration key, double thr)
+	{
+		Map<AlterationPack, List<AlterationPack>> cooc = 
+			new HashMap<AlterationPack, List<AlterationPack>>();
+
+		for (AlterationPack pack1 : map.values())
+		{
+			for (AlterationPack pack2 : map.values())
+			{
+				if (pack1 == pack2) continue;
+
+				double pv = Overlap.calcAlterationOverlapPval(pack1.get(key), pack2.get(key));
+				if (pv >= +0 && pv < thr)
+				{
+					if (!cooc.containsKey(pack1)) cooc.put(pack1, new ArrayList<AlterationPack>());
+					cooc.get(pack1).add(pack2);
+				}
+			}
+		}
+		return cooc;
+	}
+	
+	private Map<String, AlterationPack> readAlterations() throws IOException
+	{
+		// cBio portal configuration
+		
+		Dataset data = glioblastoma;
+		
+		if (new File(data.filename).exists())
+		{
+			return AlterationPack.readFromFile(data.filename);
+		}
+		
+		CBioPortalAccessor cBioPortalAccessor = new CBioPortalAccessor();
+		CancerStudy cancerStudy = cBioPortalAccessor.getCancerStudies().get(data.study); // GBM
+		cBioPortalAccessor.setCurrentCancerStudy(cancerStudy);
+
+		List<GeneticProfile> geneticProfilesForCurrentStudy =
+			cBioPortalAccessor.getGeneticProfilesForCurrentStudy();
+		List<GeneticProfile> gp = new ArrayList<GeneticProfile>();
+		for (int prof : data.profile)
+		{
+			gp.add(geneticProfilesForCurrentStudy.get(prof));
+		}
+		cBioPortalAccessor.setCurrentGeneticProfiles(gp);
+
+		List<CaseList> caseLists = cBioPortalAccessor.getCaseListsForCurrentStudy();
+		cBioPortalAccessor.setCurrentCaseList(caseLists.get(data.caseList));
+
+//		Set<String> syms = readSymbols();
+		Set<String> syms = readSymbolsTemp();
+
+		System.out.println("syms.size() = " + syms.size());
+		long time = System.currentTimeMillis();
+
+		Map<String, AlterationPack> map = new HashMap<String, AlterationPack>();
+
+		for (String sym : syms)
+		{
+			AlterationPack alt = cBioPortalAccessor.getAlterations(sym);
+			if (alt.isAltered())
+			{
+				map.put(sym, alt);
+			}
+		}
+		System.out.println("map.size() = " + map.size());
+		time = System.currentTimeMillis() - time;
+		System.out.println("read in " + (time / 1000D) + " seconds");
+		
+		AlterationPack.writeToFile(map, data.filename);
+		
+		return map;
 	}
 
 	private List<AltBundle> formBundles(Map<String, AlterationPack> map, boolean mutex, double thr)
@@ -164,6 +178,7 @@ public class MutexTester
 			loop = false;
 
 			Set<AltBundle> toAdd = new HashSet<AltBundle>();
+			Set<AltBundle> toRem = new HashSet<AltBundle>();
 
 			for (AltBundle bundle : bundles)
 			{
@@ -176,12 +191,17 @@ public class MutexTester
 					AltBundle b = (AltBundle) bundle.clone();
 					b.add(map.get(sym));
 					
-					if (b.absPVal() < thr) toAdd.add(b);
+					if (b.absPVal() < thr)
+					{
+						toAdd.add(b);
+						toRem.add(bundle);
+					}
 				}
 				processed.add(bundle);
 				if (!toAdd.isEmpty()) loop = true;
 			}
 			bundles.addAll(toAdd);
+			bundles.removeAll(toRem);
 			System.out.println("added = " + toAdd.size());
 		}
 
@@ -190,6 +210,34 @@ public class MutexTester
 		return bundles;
 	}
 
+	private void clearRedundancies(List<AltBundle> bundles)
+	{
+		Set<AltBundle> toRem = new HashSet<AltBundle>();
+		int i = 0;
+		while (i < bundles.size() - 1)
+		{
+			AltBundle bun = bundles.get(i);
+			Set<AlterationPack> set = new HashSet<AlterationPack>(bun.alts);
+			if (bun.other != null) 
+			{
+				for (int k = 0; k < bun.other.length; k++)
+				{
+					if (bun.other[k] != null)
+					{
+						set.addAll(bun.other[k]);
+					}
+				}
+			}
+			for (int j = i + 1; j < bundles.size(); j++)
+			{
+				if (set.containsAll(bundles.get(j).alts)) toRem.add(bundles.get(j));
+			}
+
+			bundles.removeAll(toRem);
+			i++;
+		}
+	}
+	
 	private Set<String> readSymbols() throws IOException
 	{
 		Set<String> set = new HashSet<String>();
@@ -207,6 +255,30 @@ public class MutexTester
 		return set;
 	}
 	
+	private Set<String> readSymbolsTemp() throws IOException
+	{
+		Set<String> set = new HashSet<String>();
+		BufferedReader reader = new BufferedReader(new FileReader(
+			"C:\\Users\\ozgun\\Desktop\\genes.txt"));
+
+		reader.readLine();
+		for (String line = reader.readLine(); line != null; line = reader.readLine())
+		{
+			StringTokenizer tokenizer = new StringTokenizer(line);
+			while(tokenizer.hasMoreTokens())
+			{
+				String token = tokenizer.nextToken();
+				if (!token.startsWith("0"))
+				{
+					set.add(token);
+				}
+			}
+		}
+
+		reader.close();
+		return set;
+	}
+
 	private String getSymbol(ProteinReference pr)
 	{
 		for (Xref xref : pr.getXref())
@@ -259,17 +331,45 @@ public class MutexTester
 		}
 	}
 	
+	private void addAlternatives(List<AltBundle> bundles, 
+		Map<AlterationPack, List<AlterationPack>> cooc, double thr)
+	{
+		for (AltBundle bundle : bundles)
+		{
+			int i = 0;
+			for (AlterationPack pack : new ArrayList<AlterationPack>(bundle.alts))
+			{
+				if (cooc.containsKey(pack))
+				{
+					for (AlterationPack other : cooc.get(pack))
+					{
+						double pv = bundle.calcPVal(i, other);
+						if (pv <= -0 && pv > -thr)
+						{
+							if (bundle.other == null) bundle.other = new List[bundle.alts.size()];
+							if (bundle.other[i] == null) 
+								bundle.other[i] = new ArrayList<AlterationPack>();
+							bundle.other[i].add(other);
+						}
+					}
+				}
+				i++;
+			}
+		}
+	}
+	
 	class AltBundle implements Comparable, Cloneable
 	{
 		String id;
 		List<AlterationPack> alts;
+		List<AlterationPack>[] other;
 		Alteration key;
 		double pval;
 		boolean mutex;
 
 		public AltBundle(AlterationPack alt1, AlterationPack alt2, Alteration key, boolean mutex)
 		{
-			id = alt1.getId() + " - " + alt2.getId();
+			id = alt1.getId() + "  " + alt2.getId();
 			this.mutex = mutex;
 
 			this.alts = new ArrayList<AlterationPack>();
@@ -282,6 +382,8 @@ public class MutexTester
 
 		public void add(AlterationPack pack)
 		{
+			assert other == null;
+
 			alts.add(pack);
 			Collections.sort(alts, new Comparator<AlterationPack>()
 			{
@@ -298,8 +400,18 @@ public class MutexTester
 			this.id = alts.get(0).getId();
 			for (int i = 1; i < alts.size(); i++)
 			{
-				this.id += " - " + alts.get(i).getId();
+				this.id += "  " + alts.get(i).getId();
 			}
+		}
+		
+		private double calcPVal(int replace, AlterationPack with)
+		{
+			AlterationPack orig = alts.remove(replace);
+			alts.add(replace, with);
+			double pval = calcPVal();
+			alts.remove(replace);
+			alts.add(replace, orig);
+			return pval;
 		}
 		
 		private double calcPVal()
@@ -393,32 +505,34 @@ public class MutexTester
 			return id + "\t" + pval;
 		}
 
-		public String getPrint(List<Integer> order)
-		{
-			return getPrint(order, sortToMostAltered(alts));
-		}
-		
 		public String getPrint()
 		{
-			List<AlterationPack> sorted = sortToMostAltered(alts);
-			return getPrint(getPrintOrdering(sorted), sorted);
+			return getPrint(getPrintOrdering(alts));
 		}
 		
-		public String getPrint(List<Integer> order, List<AlterationPack> sorted)
+		public String getPrint(List<Integer> order)
 		{
+			int i = 0;
 			StringBuilder s = new StringBuilder();
-			for (AlterationPack alt : sorted)
+			for (AlterationPack alt : alts)
 			{
 				if (s.length() > 0) s.append("\n");
 				s.append(alt.getPrint(key, order));
+				if (other != null && other[i] != null)
+				{
+					for (AlterationPack pack : other[i])
+					{
+						s.append("\n").append(pack.getPrint(key, order)).append(" *");
+					}
+				}
+				i++;
 			}
 			return s.toString();
 		}
 
-		protected List<AlterationPack> sortToMostAltered(List<AlterationPack> alts)
+		protected void sortToMostAltered()
 		{
-			List<AlterationPack> sorted = new ArrayList<AlterationPack>(alts);
-			Collections.sort(sorted, new Comparator<AlterationPack>()
+			Collections.sort(alts, new Comparator<AlterationPack>()
 			{
 				@Override
 				public int compare(AlterationPack alt1, AlterationPack alt2)
@@ -426,7 +540,6 @@ public class MutexTester
 					return new Integer(alt2.countAltered(key)).compareTo(alt1.countAltered(key));
 				}
 			});
-			return sorted;
 		}
 		
 		private List<Integer> getPrintOrdering(List<AlterationPack> alts)
@@ -487,4 +600,23 @@ public class MutexTester
 			return this.alts.contains(pack);
 		}
 	}
+	
+	static class Dataset
+	{
+		public Dataset(String filename, int study, int caseList, int[] profile)
+		{
+			this.filename = filename;
+			this.study = study;
+			this.caseList = caseList;
+			this.profile = profile;
+		}
+
+		String filename;
+		int study;
+		int caseList;
+		int[] profile;
+	}
+	
+	public static final Dataset glioblastoma = new Dataset(
+		"Glioblastoma.txt", 5, 0, new int[]{0, 7, 10});
 }

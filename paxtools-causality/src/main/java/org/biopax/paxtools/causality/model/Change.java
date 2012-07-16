@@ -8,19 +8,21 @@ public enum Change
 	/**
 	 * The alteration has the potential to increase the activity of
 	 */
-	ACTIVATING(true, false),
-	INHIBITING(true, false),
-	STAY_INACTIVE(false, false),
-	NO_CHANGE(false, false),
-	NO_DATA(false, true);
+	ACTIVATING("a", true, false),
+	INHIBITING("i", true, false),
+	STAY_INACTIVE("s", false, false),
+	NO_CHANGE(".", false, false),
+	NO_DATA("-", false, true);
 
 	boolean absent;
 	boolean altered;
+	String letter;
 
-	private Change(boolean altered, boolean absent)
+	private Change(String letter, boolean altered, boolean absent)
 	{
 		this.absent = absent;
 		this.altered = altered;
+		this.letter = letter;
 	}
 
 	public boolean isAbsent()
@@ -31,5 +33,19 @@ public enum Change
 	public boolean isAltered()
 	{
 		return altered;
+	}
+
+	public String getLetter()
+	{
+		return letter;
+	}
+	
+	public static Change getChange(String letter)
+	{
+		for (Change c : values())
+		{
+			if (c.getLetter().equals(letter)) return c;
+		}
+		return null;
 	}
 }

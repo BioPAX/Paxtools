@@ -2,6 +2,7 @@ package org.biopax.paxtools.causality.model;
 
 import org.biopax.paxtools.causality.util.Summary;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -278,6 +279,8 @@ public class AlterationPack
 
 	public String getPrint(Alteration key, List<Integer> order)
 	{
+		assert new HashSet<Integer>(order).size() == order.size();
+
 		Change[] ch = get(key);
 		StringBuilder buf = new StringBuilder();
 		for (Integer o : order)
@@ -286,11 +289,65 @@ public class AlterationPack
 		}
 		for (int i = 0; i < ch.length; i++)
 		{
-			if (!order.contains(i)) buf.append(ch[i].isAbsent() ? " " : ".");
+			if (!order.contains(i))
+				buf.append(ch[i].isAltered() ? "x" : ch[i].isAbsent() ? " " : ".");
 		}
 
 
 		buf.append("  ").append(id);
 		return buf.toString();
+	}
+	
+	public static void writeToFile(Map<String, AlterationPack> map, String filename) throws IOException
+	{
+		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+
+		for (AlterationPack pack : map.values())
+		{
+			for (Alteration alt : pack.getAlterationTypes())
+			{
+				if (alt.isSummary()) continue;
+				writer.write(pack.getId() + "\t" + alt);
+				for (Change c : pack.get(alt))
+				{
+					writer.write("\t" + c.getLetter());
+				}
+				writer.write("\n");
+			}
+		}
+		
+		writer.close();
+	}
+	
+	public static Map<String, AlterationPack> readFromFile(String filename) throws IOException
+	{
+		Map<String, AlterationPack> map = new HashMap<String, AlterationPack>();
+
+		BufferedReader reader = new BufferedReader(new FileReader(filename));
+
+		for (String line = reader.readLine(); line != null; line = reader.readLine())
+		{
+			String[] token = line.split("\t");
+			if (token.length < 3) continue;
+			if (!map.containsKey(token[0])) map.put(token[0], new AlterationPack(token[0]));
+			Change[] c = new Change[token.length - 2];
+
+			for (int i = 2; i < token.length; i++)
+			{
+				c[i-2] = Change.getChange(token[i]);
+			}
+			Alteration type = Alteration.valueOf(token[1]);
+//			if (type == Alteration.COPY_NUMBER) continue;
+//			if (type == Alteration.EXPRESSION) continue;
+			map.get(token[0]).put(type, c);
+		}
+
+		reader.close();
+
+		for (AlterationPack pack : map.values())
+		{
+			pack.complete();
+		}
+		return map;
 	}
 }
