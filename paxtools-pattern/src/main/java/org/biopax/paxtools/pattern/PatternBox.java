@@ -171,5 +171,101 @@ public class PatternBox
 		p.addConstraint(ConBox.controlToInter(), i, ++i);
 		p.addConstraint(new NOT(ConBox.participantER()), i, 1);
 		return p;
-	}	
+	}
+
+	// Patterns for PSB
+
+	public static Pattern changesStateOf()
+	{
+		Pattern p = new Pattern(11, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(ConBox.peToControl(), i, ++i);
+		p.addConstraint(ConBox.controlToConv(), i, ++i);
+		p.addConstraint(ConBox.left(), i, ++i); // PE_L
+		p.addConstraint(ConBox.right(), i-1, ++i); // PE_R
+		p.addConstraint(new Equality(false), i-1, i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i-1, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i-1, ++i);
+		p.addConstraint(ConBox.peToER(), i-1, ++i);
+		p.addConstraint(ConBox.peToER(), i-1, ++i);
+		p.addConstraint(new Equality(true), i-1, i);
+		return p;
+	}
+
+	public static Pattern bindsTo()
+	{
+		Pattern p = new Pattern(7, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(ConBox.complexes(), i, ++i);
+		p.addConstraint(ConBox.complexMembers(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(false), 0, i);
+		return p;
+	}
+
+	public static Pattern physicallyInteracts()
+	{
+		Pattern p = new Pattern(7, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(ConBox.molecularInteraction(), i, ++i);
+		p.addConstraint(ConBox.participant(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(false), 0, i);
+		return p;
+	}
+
+	public static Pattern transcriptionWithTemplateReac()
+	{
+		Pattern p = new Pattern(8, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(ConBox.peToControl(), i, ++i);
+		p.addConstraint(ConBox.controlToTempReac(), i, ++i);
+		p.addConstraint(ConBox.product(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(false), 0, i);
+		return p;
+	}
+
+	public static Pattern transcriptionWithConversion()
+	{
+		Pattern p = new Pattern(8, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(ConBox.peToControl(), i, ++i);
+		p.addConstraint(ConBox.controlToConv(), i, ++i);
+		p.addConstraint(new Empty(ConBox.left()), i);
+		p.addConstraint(ConBox.right(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(false), 0, i);
+		return p;
+	}
+
+	public static Pattern degradation()
+	{
+		Pattern p = new Pattern(8, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(ConBox.peToControl(), i, ++i);
+		p.addConstraint(ConBox.controlToConv(), i, ++i);
+		p.addConstraint(new Empty(ConBox.right()), i);
+		p.addConstraint(ConBox.left(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(false), 0, i);
+		return p;
+	}
 }

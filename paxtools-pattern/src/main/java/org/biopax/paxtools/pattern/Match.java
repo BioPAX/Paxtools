@@ -28,6 +28,11 @@ public class Match implements Cloneable
 		return variables[index];
 	}
 
+	public BioPAXElement getFirst()
+	{
+		return variables[0];
+	}
+
 	public BioPAXElement getLast()
 	{
 		return variables[variables.length - 1];

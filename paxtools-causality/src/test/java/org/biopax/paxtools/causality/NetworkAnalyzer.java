@@ -11,8 +11,7 @@ import org.biopax.paxtools.pattern.c.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -69,9 +68,9 @@ public class NetworkAnalyzer
 	@Ignore
 	public void clip() throws FileNotFoundException
 	{
-		Pattern p = prepareModifierConv();
+		Pattern p = prepareInactiveEffectorPattern();
 
-		Searcher.searchInFile(p, "/home/ozgun/Desktop/cpath2.owl", "/home/ozgun/Desktop/pattern-matches/modifier_with_generics_and_complexes.owl");
+		Searcher.searchInFile(p, "/home/ozgun/Desktop/cpath2.owl", "/home/ozgun/Desktop/pattern-matches/inactive-effector-double-action.owl");
 
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
@@ -142,6 +141,76 @@ public class NetworkAnalyzer
 //			{
 //				System.out.println(sym + "\t" + prs.size());
 //			}
+		}
+	}
+
+	@Test
+	@Ignore
+	public void createSIF() throws IOException
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_with_HPRD.owl"));
+
+		Pattern bindPattern = PatternBox.bindsTo();
+		Pattern stChPattern = PatternBox.changesStateOf();
+		Pattern ppiPattern = PatternBox.physicallyInteracts();
+		Pattern trConvPattern = PatternBox.transcriptionWithConversion();
+		Pattern trTempPattern = PatternBox.transcriptionWithTemplateReac();
+		Pattern degredPattern = PatternBox.degradation();
+
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/ozgun/Desktop/SIF.txt"));
+
+		int i = 0;
+		for (ProteinReference pr : model.getObjects(ProteinReference.class))
+		{
+			if (++i % 10 == 0) System.out.print(".");
+			if (i % 1000 == 0) System.out.println();
+
+			if (getSymbol(pr) == null) continue;
+			
+			List<Match> matches = Searcher.search(pr, bindPattern);
+			matches.addAll(Searcher.search(pr, ppiPattern));
+			recordSIF(matches, "BINDS_TO", writer);
+
+			matches = Searcher.search(pr, stChPattern);
+			recordSIF(matches, "STATE_CHANGE", writer);
+
+			matches = Searcher.search(pr, trConvPattern);
+			matches.addAll(Searcher.search(pr, trTempPattern));
+			recordSIF(matches, "TRANSCRIPTION", writer);
+
+			matches = Searcher.search(pr, degredPattern);
+			recordSIF(matches, "DEGRADATION", writer);
+		}
+		
+		writer.close();
+	}
+
+	private void recordSIF(List<Match> matchMap, String type, BufferedWriter writer) 
+		throws IOException
+	{
+		Set<String> existing = new HashSet<String>();
+
+		for (Match match : matchMap)
+		{
+			ProteinReference pr = (ProteinReference) match.getFirst();
+			String s1 = getSymbol(pr);
+
+			EntityReference er = (EntityReference) match.getLast();
+			if (er instanceof ProteinReference)
+			{
+				String s2 = getSymbol((ProteinReference) er);
+				if (s2 != null)
+				{
+					String line = s1 + "\t" + type + "\t" + s2;
+					
+					if (!existing.contains(line))
+					{
+						writer.write(line + "\n");
+						existing.add(line);
+					}
+				}
+			}
 		}
 	}
 
@@ -316,6 +385,27 @@ public class NetworkAnalyzer
 		p.addConstraint(ConBox.product(), i, ++i);
 		p.addConstraint(ConBox.peToER(), i, ++i);
 		p.addConstraint(new Equality(false), i, 0);
+		return p;
+	}
+	
+	private Pattern prepareInactiveEffectorPattern()
+	{
+		Pattern p = new Pattern(8, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new ModificationConstraint(Collections.singleton("residue modification, inactive")), i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(ConBox.controlsInteraction(), i, ++i);
+		p.addConstraint(ConBox.interToControl(), i, ++i);
+		p.addConstraint(ConBox.controllerPE(), i, ++i);
+		p.addConstraint(new Equality(false), i, 1);
+		p.addConstraint(new Equality(false), i, 2);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(new Equality(false), i, 1);
+		p.addConstraint(new Equality(false), i, 2);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(true), i, 0);
+
 		return p;
 	}
 }

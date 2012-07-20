@@ -9,6 +9,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.pattern.c.*;
 
 import java.io.FileInputStream;
@@ -273,10 +274,12 @@ public class Searcher
 				matchCounter++;
 				
 				if (matchCounter > graphPerSeed) break;
-				
-				toExise.addAll(Arrays.asList(match.getVariables()));
 
 				Set<Interaction> ints = getInter(match);
+
+				toExise.addAll(Arrays.asList(match.getVariables()));
+				toExise.addAll(ints);
+
 				Integer hash = hashSum(ints);
 				if (!encountered.contains(hash))
 				{
@@ -300,7 +303,7 @@ public class Searcher
 
 			for (Interaction anInt : ints)
 			{
-				pathway.addPathwayComponent(anInt);
+				pathway.addPathwayComponent((Process) clonedModel.getByID(anInt.getRDFId()));
 			}
 		}
 

@@ -337,7 +337,7 @@ public class AlterationPack
 				c[i-2] = Change.getChange(token[i]);
 			}
 			Alteration type = Alteration.valueOf(token[1]);
-//			if (type == Alteration.COPY_NUMBER) continue;
+//			if (type == Alteration.MUTATION) continue;
 //			if (type == Alteration.EXPRESSION) continue;
 			map.get(token[0]).put(type, c);
 		}

@@ -20,7 +20,7 @@ public class ModificationMatcherTest
 	public void testModificationOverlap() throws FileNotFoundException
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_with_HPRD.owl"));
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2.owl"));
 
 		ModificationMatcher mm = new ModificationMatcher();
 		Histogram hist = mm.getModificationFeatureOverlapHistogram(model);

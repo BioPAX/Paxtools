@@ -36,7 +36,7 @@ public class DataListerMain {
 
 		// Select a random cancer study and then list case lists associated with this study
 //		CancerStudy cancerStudy = cancerStudies.get(random.nextInt(cancerStudies.size()));
-		CancerStudy cancerStudy = cancerStudies.get(5);
+		CancerStudy cancerStudy = cancerStudies.get(3);
 		System.out.println("Using cancerStudy = " + cancerStudy.getName());
 		cBioPortalAccessor.setCurrentCancerStudy(cancerStudy);
 
@@ -71,7 +71,7 @@ public class DataListerMain {
 		List<GeneticProfile> geneticProfiles = new ArrayList<GeneticProfile>();
 //		geneticProfiles.add(geneticProfilesForCurrentStudy.get(random.nextInt(geneticProfilesForCurrentStudy.size())));
 //		geneticProfiles.add(geneticProfilesForCurrentStudy.get(7));
-		geneticProfiles.add(geneticProfilesForCurrentStudy.get(0));
+		geneticProfiles.add(geneticProfilesForCurrentStudy.get(10));
 //		geneticProfiles.add(geneticProfilesForCurrentStudy.get(10));
 
 		cBioPortalAccessor.setCurrentGeneticProfiles(geneticProfiles);

@@ -122,7 +122,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
             case MUTATION:
                 return dataPoint.equalsIgnoreCase(NaN) ? Change.NO_CHANGE : Change.INHIBITING;
             case METHYLATION:
-                return dataPoint.equalsIgnoreCase(NaN)
+                return dataPoint.equalsIgnoreCase(NaN) || dataPoint.equalsIgnoreCase(NA)
                         ? Change.NO_DATA
                         : (Double.parseDouble(dataPoint) > .5 ? Change.INHIBITING : Change.NO_CHANGE);
             case COPY_NUMBER:

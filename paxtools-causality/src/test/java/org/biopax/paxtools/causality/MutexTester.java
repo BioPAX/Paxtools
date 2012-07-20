@@ -37,12 +37,12 @@ public class MutexTester
 
 		Map<String, AlterationPack> map = readAlterations();
 
-		double thr = 0.05;
+		double thr = 0.01;
 		List<AltBundle> mutex = formBundles(map, true, thr);
 		for (AltBundle bundle : mutex) bundle.sortToMostAltered();
 
 		Map<AlterationPack, List<AlterationPack>> coocMap = getCoocMap(map, Alteration.ANY, 0.01);
-		addAlternatives(mutex, coocMap, 2*thr);
+		addAlternatives(mutex, coocMap, thr);
 		clearRedundancies(mutex);
 		System.out.println("bundles size = " + mutex.size());
 
@@ -56,6 +56,8 @@ public class MutexTester
 		System.out.println("Mutex bundles\n--------\n");
 		for (AltBundle bundle : mutex)
 		{
+			if (bundle.alts.size() < 3) continue;
+
 //			if (a++ > 10) break;
 			System.out.println(bundle);
 			System.out.println(bundle.getPrint());
@@ -99,7 +101,7 @@ public class MutexTester
 	{
 		// cBio portal configuration
 		
-		Dataset data = glioblastoma;
+		Dataset data = breast;
 		
 		if (new File(data.filename).exists())
 		{
@@ -122,8 +124,8 @@ public class MutexTester
 		List<CaseList> caseLists = cBioPortalAccessor.getCaseListsForCurrentStudy();
 		cBioPortalAccessor.setCurrentCaseList(caseLists.get(data.caseList));
 
-//		Set<String> syms = readSymbols();
-		Set<String> syms = readSymbolsTemp();
+		Set<String> syms = readSymbols();
+//		Set<String> syms = readSymbolsTemp();
 
 		System.out.println("syms.size() = " + syms.size());
 		long time = System.currentTimeMillis();
@@ -150,15 +152,17 @@ public class MutexTester
 	private List<AltBundle> formBundles(Map<String, AlterationPack> map, boolean mutex, double thr)
 		throws CloneNotSupportedException
 	{
+		System.out.println("Forming bundles with " + map.size() + " genes");
 		List<AltBundle> bundles = new ArrayList<AltBundle>();
 
+		int i = 0;
 		for (String s1 : map.keySet())
 		{
+			i++;
 			for (String s2 : map.keySet())
 			{
 				if (s1.compareTo(s2) < 0)
 				{
-					
 					AltBundle bun = new AltBundle(map.get(s1), map.get(s2), Alteration.ANY, mutex);
 					if (bun.absPVal() < thr)
 					{
@@ -259,7 +263,7 @@ public class MutexTester
 	{
 		Set<String> set = new HashSet<String>();
 		BufferedReader reader = new BufferedReader(new FileReader(
-			"C:\\Users\\ozgun\\Desktop\\genes.txt"));
+			"/home/ozgun/Desktop/temp.txt"));
 
 		reader.readLine();
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
@@ -619,4 +623,8 @@ public class MutexTester
 	
 	public static final Dataset glioblastoma = new Dataset(
 		"Glioblastoma.txt", 5, 0, new int[]{0, 7, 10});
+	public static final Dataset ovarian = new Dataset(
+		"Ovarian.txt", 16, 0, new int[]{0, 7, 12});
+	public static final Dataset breast = new Dataset(
+		"Breast.txt", 3, 0, new int[]{0, 7, 10});
 }

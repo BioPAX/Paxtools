@@ -59,9 +59,19 @@ public class ConBox
 		return new PathConstraint("Conversion/controlledOf*");
 	}
 
+	public static Constraint interToControl()
+	{
+		return new PathConstraint("Interaction/controlledOf*");
+	}
+
 	public static Constraint controlsConv()
 	{
 		return new PathConstraint("PhysicalEntity/controllerOf/controlled*:Conversion");
+	}
+
+	public static Constraint controlsInteraction()
+	{
+		return new PathConstraint("PhysicalEntity/controllerOf/controlled*:Interaction");
 	}
 
 	public static Constraint genericEquiv()
@@ -174,5 +184,10 @@ public class ConBox
 		return new OR(
 			new MappedConst(new Field(new PathAccessor("SequenceEntityReference/organism/displayName"), "Homo sapiens"), 0),
 			new MappedConst(new Field(new PathAccessor("PhysicalEntity/entityReference/organism/displayName"), "Homo sapiens"), 0));
+	}
+
+	public static Constraint molecularInteraction()
+	{
+		return new PathConstraint("PhysicalEntity/participantOf:MolecularInteraction");
 	}
 }
