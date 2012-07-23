@@ -70,9 +70,10 @@ public class SIFLinker
 	public static void main(String[] args)
 	{
 		SIFLinker linker = new SIFLinker();
-		linker.load("/home/ozgun/Desktop/SIF.txt");
+//		linker.load("/home/ozgun/Desktop/SIF.txt");
+		linker.load("C:/Users/ozgun/Downloads/SIF.txt");
 		HashSet<String> set = new HashSet<String>(Arrays.asList("CDKN2A", "RB1", "CDK2", "PPARG"));
-		List<String> rels = linker.link(set, set, 0);
+		List<String> rels = linker.link(set, set, 2);
 		for (String rel : rels)
 		{
 			System.out.println(rel.replaceAll("STATE_CHANGE","-->").replaceAll("BINDS_TO","---").replaceAll("TRANSCRIPTION","-t>").replaceAll("DEGRADATION","-d>"));
