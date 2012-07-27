@@ -1,14 +1,12 @@
 package org.biopax.paxtools.causality.analysis;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
  * @author Ozgun Babur
  */
-public class SimpleTraverse
+public class Traverse
 {
 	protected Map<String, Set<String>> dwMap;
 	protected Map<String, Set<String>> upMap;
@@ -103,13 +101,126 @@ public class SimpleTraverse
 		}
 	}
 	
+	public List<CommPoint> getCommonDownstream(Set<String> seed, int limit)
+	{
+		Map<String, Set<String>> reachMap = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> breadthMap = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> visitedMap = new HashMap<String, Set<String>>();
+
+		Set<CommPoint> points = new HashSet<CommPoint>();
+		
+		for (String s : seed)
+		{
+			reachMap.put(s, new HashSet<String>(Arrays.asList(s)));
+			breadthMap.put(s, new HashSet<String>(Arrays.asList(s)));
+			visitedMap.put(s, new HashSet<String>(Arrays.asList(s)));
+		}
+
+		for (int i = 1; i < limit; i++)
+		{
+			for (String s : seed)
+			{
+				Set<String> neigh = goBFS(breadthMap.get(s), visitedMap.get(s), true);
+				for (String n : neigh)
+				{
+					if (!reachMap.containsKey(n))
+						reachMap.put(n, new HashSet<String>(Arrays.asList(s)));
+					else reachMap.get(n).add(s);
+				}
+				breadthMap.put(s, neigh);
+				visitedMap.get(s).addAll(neigh);
+			}
+
+			for (String r : reachMap.keySet())
+			{
+				if (reachMap.get(r).size() > 1)
+				{
+					CommPoint p = new CommPoint(r, reachMap.get(r), i);
+					if (!containsBetter(points, p)) points.add(p);
+				}
+			}
+		}
+
+		List<CommPoint> list = new ArrayList<CommPoint>(points);
+		Collections.sort(list);
+		return list;
+	}
+	
+	private boolean containsBetter(Set<CommPoint> set, CommPoint p)
+	{
+		if (set.contains(p)) return true;
+		for (CommPoint cp : set)
+		{
+			if (cp.dist < p.dist && cp.upstr.containsAll(p.upstr)) return true;
+		}
+		return false;
+	}
+	
+	public Set<String> getSymbols()
+	{
+		Set<String> merge = new HashSet<String>(upMap.keySet());
+		merge.addAll(dwMap.keySet());
+		return merge;
+	}
+	
+	class CommPoint implements Comparable
+	{
+		String s;
+		Set<String> upstr;
+		int dist;
+
+		CommPoint(String s, Set<String> upstr, int dist)
+		{
+			this.s = s;
+			this.upstr = upstr;
+			this.dist = dist;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (o instanceof CommPoint)
+			{
+				CommPoint p = (CommPoint) o;
+				if (p.s.equals(s) && p.upstr.containsAll(upstr) && upstr.containsAll(p.upstr) && 
+					p.dist == dist) return true;
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return s.hashCode();
+		}
+
+		@Override
+		public int compareTo(Object o)
+		{
+			if (o instanceof CommPoint)
+			{
+				CommPoint p = (CommPoint) o;
+				new Integer(p.upstr.size()).compareTo(upstr.size());
+			}
+			return 0;
+		}
+	}
+	
 	public static void main(String[] args)
 	{
-		SimpleTraverse traverse = new SimpleTraverse();
+		Traverse traverse = new Traverse();
 		traverse.load("/home/ozgun/Desktop/SIF.txt", new HashSet<String>(Arrays.asList("BINDS_TO")),
 			new HashSet<String>(Arrays.asList("STATE_CHANGE", "TRANSCRIPTION", "DEGRADATION")));
 		System.out.println("traverse.upMap.size() = " + traverse.upMap.size());
 		System.out.println("traverse.dwMap.size() = " + traverse.dwMap.size());
+		Set<String> merge = new HashSet<String>(traverse.upMap.keySet());
+		merge.addAll(traverse.dwMap.keySet());
+		System.out.println("merge.size() = " + merge.size());
 		System.out.println("traverse.ppMap.size() = " + traverse.ppMap.size());
+
+		for (String n : traverse.dwMap.get("EP300"))
+		{
+			System.out.println(n);
+		}
 	}
 }

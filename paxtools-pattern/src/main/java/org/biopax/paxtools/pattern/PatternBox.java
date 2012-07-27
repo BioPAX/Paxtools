@@ -186,11 +186,20 @@ public class PatternBox
 		p.addConstraint(ConBox.left(), i, ++i); // PE_L
 		p.addConstraint(ConBox.right(), i-1, ++i); // PE_R
 		p.addConstraint(new Equality(false), i-1, i);
+		p.addConstraint(new Equality(false), i-1, 1);
+		p.addConstraint(new Equality(false), i-1, 2);
+		p.addConstraint(new Equality(false), i, 1);
+		p.addConstraint(new Equality(false), i, 2);
 		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i-1, ++i);
 		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i-1, ++i);
+		p.addConstraint(new Equality(false), i-1, 1);
+		p.addConstraint(new Equality(false), i-1, 2);
+		p.addConstraint(new Equality(false), i, 1);
+		p.addConstraint(new Equality(false), i, 2);
 		p.addConstraint(ConBox.peToER(), i-1, ++i);
 		p.addConstraint(ConBox.peToER(), i-1, ++i);
 		p.addConstraint(new Equality(true), i-1, i);
+		p.addConstraint(new Equality(false), 0, i);
 		return p;
 	}
 

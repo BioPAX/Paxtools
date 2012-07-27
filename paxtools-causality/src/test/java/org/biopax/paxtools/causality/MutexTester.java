@@ -1,6 +1,8 @@
 package org.biopax.paxtools.causality;
 
 import org.apache.lucene.analysis.Tokenizer;
+import org.biopax.paxtools.causality.analysis.SIFLinker;
+import org.biopax.paxtools.causality.analysis.Traverse;
 import org.biopax.paxtools.causality.data.CBioPortalAccessor;
 import org.biopax.paxtools.causality.data.CancerStudy;
 import org.biopax.paxtools.causality.data.CaseList;
@@ -36,13 +38,40 @@ public class MutexTester
 //		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2.owl"));
 
 		Map<String, AlterationPack> map = readAlterations();
+		SIFLinker linker = new SIFLinker();
+		linker.load("/home/ozgun/Desktop/SIF.txt");
 
-		double thr = 0.01;
+		Traverse trav = linker.traverse;
+		
+		double thr = -0.05;
+
+		List<AltBundle> pairs = getMutexPairs(map, trav, thr);
+		Set<String> encountered = new HashSet<String>();
+		for (AltBundle bun : pairs)
+		{
+			growGroup(bun, map, trav, thr, 3);
+			if (bun.alts.size() < 4) continue;
+			if (encountered.contains(bun.id)) continue;
+			else encountered.add(bun.id);
+
+			Set<String> genes = bun.getAllGenes();
+			genes.remove(bun.seed);
+			List<String> rels = linker.linkProgressive(genes, Collections.singleton(bun.seed), 3);
+			if (rels.isEmpty()) continue;
+
+			System.out.println(bun);
+			System.out.println(bun.getPrint());
+			for (String rel : rels) System.out.println(rel);
+			System.out.println();
+		}
+
+		if (true) return;
+		
 		List<AltBundle> mutex = formBundles(map, true, thr);
 		for (AltBundle bundle : mutex) bundle.sortToMostAltered();
 
 		Map<AlterationPack, List<AlterationPack>> coocMap = getCoocMap(map, Alteration.ANY, 0.01);
-		addAlternatives(mutex, coocMap, thr);
+//		addAlternatives(mutex, coocMap, thr);
 		clearRedundancies(mutex);
 		System.out.println("bundles size = " + mutex.size());
 
@@ -52,16 +81,22 @@ public class MutexTester
 //		List<AlterationPack> sorted = b.sortToMostAltered(b.alts);
 //		List<Integer> order = b.getPrintOrdering(sorted);
 
+
 		int a = 0;
 		System.out.println("Mutex bundles\n--------\n");
 		for (AltBundle bundle : mutex)
 		{
-			if (bundle.alts.size() < 3) continue;
+			Set<String> genes = bundle.getAllGenes();
+			List<String> rels = linker.linkCommonDownstream(genes, 2);
+//			if (bundle.alts.size() < 3) continue;
+			if (rels.isEmpty()) continue;
 
 //			if (a++ > 10) break;
 			System.out.println(bundle);
 			System.out.println(bundle.getPrint());
+			for (String rel : rels) System.out.println(rel);
 			System.out.println();
+
 		}
 //		a = 0;
 //		System.out.println("\nCo-occurred bundles\n--------\n");
@@ -370,6 +405,7 @@ public class MutexTester
 		Alteration key;
 		double pval;
 		boolean mutex;
+		String seed;
 
 		public AltBundle(AlterationPack alt1, AlterationPack alt2, Alteration key, boolean mutex)
 		{
@@ -407,7 +443,12 @@ public class MutexTester
 				this.id += "  " + alts.get(i).getId();
 			}
 		}
-		
+
+		public void setSeed(String seed)
+		{
+			this.seed = seed;
+		}
+
 		private double calcPVal(int replace, AlterationPack with)
 		{
 			AlterationPack orig = alts.remove(replace);
@@ -506,7 +547,7 @@ public class MutexTester
 		@Override
 		public String toString()
 		{
-			return id + "\t" + pval;
+			return id + "\t" + pval + "\tseed: " + seed;
 		}
 
 		public String getPrint()
@@ -562,6 +603,25 @@ public class MutexTester
 			return order;
 		}
 
+		public Set<String> getAllGenes()
+		{
+			Set<String> set = new HashSet<String>();
+			int i = 0;
+			for (AlterationPack alt : alts)
+			{
+				set.add(alt.getId());
+
+				if (other != null && other[i] != null)
+				for (AlterationPack ot : other[i])
+				{
+					set.add(ot.getId());
+				}
+				
+				i++;
+			}
+			return set;
+		}
+		
 		@Override
 		public int hashCode()
 		{
@@ -604,7 +664,107 @@ public class MutexTester
 			return this.alts.contains(pack);
 		}
 	}
+
+	private List<AltBundle> getMutexPairs(Map<String, AlterationPack> altMap, Traverse trav, 
+		double thr)
+	{
+		List<AltBundle> pairs = new ArrayList<AltBundle>();
+
+		for (String seed : altMap.keySet())
+		{
+			Set<String> neigh = 
+				trav.goBFS(Collections.singleton(seed), Collections.EMPTY_SET, false);
+			
+			for (String n : neigh)
+			{
+				if (altMap.containsKey(n))
+				{
+					AltBundle bun = 
+						new AltBundle(altMap.get(seed), altMap.get(n), Alteration.ANY, true);
+					
+					if (bun.pval < 0 && bun.pval > thr)
+					{
+						bun.seed = seed;
+						pairs.add(bun);
+					}
+				}
+			}
+		}
+		Collections.sort(pairs);
+		return pairs;
+	}
+
+	private void growGroup(AltBundle bun, Map<String, AlterationPack> altMap,
+		Traverse trav, double thr, int limit)
+	{
+		Set<String> breadth = new HashSet<String>();
+		breadth.add(bun.seed);
+		Set<String> visited = new HashSet<String>();
+		for (AlterationPack alt : bun.alts)
+		{
+			visited.add(alt.getId());
+		}
+
+		for (int i = 1; i <= limit; i++)
+		{
+			breadth = trav.goBFS(breadth, visited, false);
+			
+			Set<AlterationPack> alts = new HashSet<AlterationPack>();
+			for (String n : breadth)
+			{
+				if (altMap.containsKey(n))
+				{
+					alts.add(altMap.get(n));
+				}
+			}
+
+			Set<String> newBreadth = new HashSet<String>();
+
+			boolean loop = true;
+			while (loop)
+			{
+				AlterationPack ap = enlarge(bun, alts, thr);
+				if (ap != null)
+				{
+					alts.remove(altMap.get(ap.getId()));
+					newBreadth.add(ap.getId());
+				}
+				else loop = false;
+			}
+			visited.addAll(breadth);
+			breadth = newBreadth;
+		}
+	}
 	
+	private AlterationPack enlarge(AltBundle bun, Collection<AlterationPack> candidates, double thr)
+	{
+		AlterationPack bestPack = null;
+		double bestPval = -1;
+		for (AlterationPack can : candidates)
+		{
+			AltBundle cp = null;
+			try	{
+				cp = (AltBundle) bun.clone();
+			} catch (CloneNotSupportedException e) { e.printStackTrace(); }
+			
+			cp.add(can);
+			if (cp.pval < 0)
+			{
+				if (cp.pval > bestPval)
+				{
+					bestPval = cp.pval;
+					bestPack = can;
+				}
+			}
+		}
+		if (bestPval > thr)
+		{
+			bun.add(bestPack);
+			return bestPack;
+		}
+		else return null;
+	}
+
 	static class Dataset
 	{
 		public Dataset(String filename, int study, int caseList, int[] profile)

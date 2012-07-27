@@ -6,7 +6,7 @@ import java.util.*;
  */
 public class ScorePropagator
 {
-	public Map<String, Double> propagate(Map<String, Double> init, SimpleTraverse st, int limit,
+	public Map<String, Double> propagate(Map<String, Double> init, Traverse st, int limit,
 		double propagationMultiplier)
 	{
 		Map<String, Double> score = new HashMap<String, Double>();

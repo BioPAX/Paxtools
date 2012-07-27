@@ -149,7 +149,7 @@ public class NetworkAnalyzer
 	public void createSIF() throws IOException
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_with_HPRD.owl"));
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_igor.owl"));
 
 		Pattern bindPattern = PatternBox.bindsTo();
 		Pattern stChPattern = PatternBox.changesStateOf();
