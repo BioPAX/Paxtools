@@ -367,6 +367,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 
     public void setCurrentGeneticProfiles(List<GeneticProfile> geneticProfiles) {
         currentGeneticProfiles = geneticProfiles;
+        memory.clear();
     }
 
     public List<GeneticProfile> getCurrentGeneticProfiles() {
@@ -379,4 +380,8 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 		if (egid != null) return EGUtil.getSymbol(egid);
 		return null;
 	}
+
+    public void clearAlterationCache() {
+        memory.clear();
+    }
 }
