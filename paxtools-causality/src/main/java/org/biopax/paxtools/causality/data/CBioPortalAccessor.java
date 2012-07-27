@@ -20,7 +20,7 @@ import java.util.*;
 public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private static Log log = LogFactory.getLog(CBioPortalAccessor.class);
 
-    protected final static String PORTAL_URL = "http://www.cbioportal.org/public-portal/webservice.do?";
+    private String portalURL = "http://www.cbioportal.org/public-portal/webservice.do?";
     protected final static String COMMAND = "cmd=";
     protected final static String DELIMITER = "\t";
 
@@ -32,9 +32,11 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private Map<CancerStudy, List<CaseList>> caseListCache = new HashMap<CancerStudy, List<CaseList>>();
     private CaseList currentCaseList = null;
     private List<GeneticProfile> currentGeneticProfiles = new ArrayList<GeneticProfile>();
+    private CBioPortalOptions options;
 
     public CBioPortalAccessor() throws IOException {
 		memory = new HashMap<String, AlterationPack>();
+        setOptions(new CBioPortalOptions());
         initializeStudies();
         assert !cancerStudies.isEmpty();
         setCurrentCancerStudy(cancerStudies.get(0));
@@ -47,6 +49,22 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
             assert result.length == 3;
             cancerStudies.add(new CancerStudy(result[0], result[1], result[2]));
         }
+    }
+
+    private void setOptions(CBioPortalOptions cBioPortalOptions) {
+        this.options = cBioPortalOptions;
+    }
+
+    public CBioPortalOptions getOptions() {
+        return options;
+    }
+
+    public String getPortalURL() {
+        return portalURL;
+    }
+
+    public void setPortalURL(String portalURL) {
+        this.portalURL = portalURL;
     }
 
     private Change[] mergeChanges(Change[] changes1, Change[] changes2) {
@@ -122,18 +140,21 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
             case MUTATION:
                 return dataPoint.equalsIgnoreCase(NaN) ? Change.NO_CHANGE : Change.INHIBITING;
             case METHYLATION:
+                Double methylationThreshold = options.get(CBioPortalOptions.PORTAL_OPTIONS.METHYLATION_THRESHOLD);
                 return dataPoint.equalsIgnoreCase(NaN) || dataPoint.equalsIgnoreCase(NA)
                         ? Change.NO_DATA
-                        : (Double.parseDouble(dataPoint) > .5 ? Change.INHIBITING : Change.NO_CHANGE);
+                        : (Double.parseDouble(dataPoint) > methylationThreshold ? Change.INHIBITING : Change.NO_CHANGE);
             case COPY_NUMBER:
                 // TODO: what to do with log2CNA?
-                if(dataPoint.equalsIgnoreCase(NA) || dataPoint.equalsIgnoreCase(NaN) || geneticProfile.getId().endsWith("log2CNA"))
+                if(dataPoint.equalsIgnoreCase(NA)
+                        || dataPoint.equalsIgnoreCase(NaN)
+                        || geneticProfile.getId().endsWith("log2CNA"))
                     return Change.NO_DATA;
                 else {
                     Double value = Double.parseDouble(dataPoint);
-                    if(value < -1)
+                    if(value < options.get(CBioPortalOptions.PORTAL_OPTIONS.CNA_LOWER_THRESHOLD))
                         return Change.INHIBITING;
-                    else if(value > 1)
+                    else if(value > options.get(CBioPortalOptions.PORTAL_OPTIONS.CNA_UPPER_THRESHOLD))
                         return Change.ACTIVATING;
                     else
                         return Change.NO_CHANGE;
@@ -146,9 +167,9 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                 else {
                     Double value = Double.parseDouble(dataPoint);
 
-                    if(value > 2)
+                    if(value > options.get(CBioPortalOptions.PORTAL_OPTIONS.EXP_UPPER_THRESHOLD))
                         return Change.ACTIVATING;
-                    else if(value < -2)
+                    else if(value < options.get(CBioPortalOptions.PORTAL_OPTIONS.EXP_LOWER_THRESHOLD))
                         return Change.INHIBITING;
                     else
                         return Change.NO_CHANGE;
@@ -159,9 +180,9 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                 } else {
                     Double value = Double.parseDouble(dataPoint);
 
-                    if(value > 1)
+                    if(value > options.get(CBioPortalOptions.PORTAL_OPTIONS.RPPA_UPPER_THRESHOLD))
                         return Change.ACTIVATING;
-                    else if(value < -1)
+                    else if(value < options.get(CBioPortalOptions.PORTAL_OPTIONS.RPPA_LOWER_THRESHOLD))
                         return Change.INHIBITING;
                     else
                         return Change.NO_CHANGE;
@@ -272,7 +293,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private List<String[]> parseURL(String urlPostFix, boolean skipHeader) throws IOException {
         List<String[]> list = new ArrayList<String[]>();
 
-        String urlStr = PORTAL_URL + COMMAND + urlPostFix;
+        String urlStr = portalURL + COMMAND + urlPostFix;
         URL url = new URL(urlStr);
         URLConnection urlConnection = url.openConnection();
         Scanner scanner = new Scanner(urlConnection.getInputStream());
