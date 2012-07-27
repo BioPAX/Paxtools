@@ -20,7 +20,7 @@ import java.util.*;
 public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private static Log log = LogFactory.getLog(CBioPortalAccessor.class);
 
-    private String portalURL = "http://www.cbioportal.org/public-portal/webservice.do?";
+    private static String portalURL = "http://www.cbioportal.org/public-portal/webservice.do?";
     protected final static String COMMAND = "cmd=";
     protected final static String DELIMITER = "\t";
 
@@ -59,12 +59,12 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         return options;
     }
 
-    public String getPortalURL() {
-        return portalURL;
+    public static String getPortalURL() {
+        return CBioPortalAccessor.portalURL;
     }
 
-    public void setPortalURL(String portalURL) {
-        this.portalURL = portalURL;
+    public static void setPortalURL(String portalURL) {
+        CBioPortalAccessor.portalURL = portalURL;
     }
 
     private Change[] mergeChanges(Change[] changes1, Change[] changes2) {
