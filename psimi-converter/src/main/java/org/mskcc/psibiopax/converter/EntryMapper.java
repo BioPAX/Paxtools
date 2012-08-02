@@ -588,10 +588,10 @@ public class EntryMapper extends Thread {
 	 * Given a psi xref, returns a paxtools xref.
 	 *
 	 * @param psiXREF Xref
-	 * @param forOCVORDS boolean
+	 * @param forOCVorInteraction boolean
 	 * @return Set<BioPAXElement>
 	 */
-	private Set<BioPAXElement> getUnificationXref(Xref psiXREF, boolean forOCVORDS) {
+	private Set<BioPAXElement> getUnificationXref(Xref psiXREF, boolean forOCVorInteraction) {
 
 		// set to return
 		Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
@@ -627,7 +627,7 @@ public class EntryMapper extends Thread {
                     }
                     bpXref = bpMapper.getUnificationXref(id);
                 }
-                else if (!forOCVORDS) {
+                else if (!forOCVorInteraction) {
                     String id = RDF_ID_PREFIX + "RXR-" + validateDBID(dbRefId);
                     bpXref = bpMapper.getBioPAXElement(id);
                     if (bpXref != null) {
@@ -636,7 +636,10 @@ public class EntryMapper extends Thread {
                     }
                     bpXref = (refType != null) ?
                         bpMapper.getRelationshipXref(id, refType, genRdfId()) :
-                        bpMapper.getRelationshipXref(id, null, null);
+                        (psiDBRef.getDb().toLowerCase().equals("uniprot")
+                            ? bpMapper.getUnificationXref(id)
+                            : bpMapper.getRelationshipXref(id, null, null)
+                        );
                 }
 
                 if (bpXref != null) {

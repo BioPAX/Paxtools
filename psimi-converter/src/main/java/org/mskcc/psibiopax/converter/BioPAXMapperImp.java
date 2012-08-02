@@ -732,24 +732,29 @@ public class BioPAXMapperImp implements BioPAXMapper
 				toReturn = bpModel.addNew(Protein.class, id);
 				er = bpModel.addNew(ProteinReference.class, entityRefId);
 			}
+
+
 			if (name != null)
 			{
+                er.setStandardName(name);
 				toReturn.setStandardName(name);
 			}
 			if (shortName != null)
 			{
+                er.setDisplayName(shortName);
 				toReturn.setDisplayName(shortName);
 			}
 			if (synonyms != null && synonyms.size() > 0)
 			{
 				for (String synonym : synonyms) {
+                    er.addName(synonym);
 					toReturn.addName(synonym);
 				}
 			}
 			if (bpXrefs != null && bpXrefs.size() > 0)
 			{
 				for (BioPAXElement xref : bpXrefs) {
-					toReturn.addXref((Xref)xref);
+                    er.addXref((Xref) xref);
 				}
 			}
 			// set sequence entity ref props

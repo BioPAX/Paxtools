@@ -75,7 +75,7 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 	 * @return String
      */
     public String getName() {
-        return "TestMapping: Tests the proper mapping of a PSI-MI XML file (level 2-compact) to an in memory Paxtools Model";
+        return "TestMapping: Tests the proper mapping of a PSI-MI XML file (level 3-compact) to an in memory Paxtools Model";
     }
 
 	/**
@@ -258,7 +258,7 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 		Assert.assertEquals("Prim1", participant.getName().iterator().next());
 		
 		// get physical entity xref list
-		Set<Xref> physicalEntityXRefList = participant.getXref();
+		Set<Xref> physicalEntityXRefList = participant.getEntityReference().getXref();
 		Assert.assertEquals(4, physicalEntityXRefList.size());
 
 		// get physical entity xref
