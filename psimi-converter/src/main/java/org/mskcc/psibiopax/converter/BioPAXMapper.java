@@ -281,15 +281,6 @@ public interface BioPAXMapper {
 	void setNamespace(String namespace);
 
 	/**
-	 * Creates a data source on the model.
-	 *
-	 * @param id String
-	 * @param name String
-	 * @param xrefs Set<BioPAXElement>
-	 */
-	void setModelDataSource(String id, String name, Set<? extends BioPAXElement> xrefs);
-
-	/**
 	 * Creates a data source and adds to given interaction.
 	 *
 	 * @parma interaction Object

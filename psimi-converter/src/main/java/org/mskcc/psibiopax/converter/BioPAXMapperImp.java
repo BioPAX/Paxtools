@@ -1056,18 +1056,6 @@ public class BioPAXMapperImp implements BioPAXMapper
 	}
 
 	/**
-	 * Creates a data source on the model.
-	 *
-	 * @param id      String
-	 * @param name    String
-	 * @param bpXrefs Set<? extends BioPAXElement>
-	 */
-	public void setModelDataSource(String id, String name, Set<? extends BioPAXElement> bpXrefs)
-	{
-		setInteractionDataSource(null, id, name, bpXrefs);
-	}
-
-	/**
 	 * Creates a data source and adds to given interaction.
 	 *
 	 * @param id      String

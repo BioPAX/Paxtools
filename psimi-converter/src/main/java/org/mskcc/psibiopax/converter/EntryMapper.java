@@ -151,14 +151,6 @@ public class EntryMapper extends Thread {
 		// create set of experiment information (evidence)
 		experimentMap = createExperimentMap(entry);
 		
-		// entry unification xref - map to biopax data source
-		Set<BioPAXElement> bpEntryUnificationXRef = (entry.getSource() != null) ?
-			getUnificationXref(entry.getSource().getXref(), true) : null;
-		if (bpEntryUnificationXRef != null && bpEntryUnificationXRef.size() > 0) {
-			// create data source
-			bpMapper.setModelDataSource(genRdfId(), null, bpEntryUnificationXRef);
-		}
-
 		// get entry source name to add to interactions
 		String entryDataSourceName = null;
 		if (entry.hasSource() && entry.getSource().hasNames()) {
@@ -937,8 +929,7 @@ public class EntryMapper extends Thread {
 	 * @return String
 	 */
 	private String genRdfId() {
-
-		// return 
+		// return
 		return RDF_ID_PREFIX + "_" + Long.toString(Math.abs(random.nextLong()));
 	}
 
