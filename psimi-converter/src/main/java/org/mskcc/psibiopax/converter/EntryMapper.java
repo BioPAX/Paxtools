@@ -622,31 +622,38 @@ public class EntryMapper extends Thread {
 			// process ref type
 			BioPAXElement bpXref = null;
 			String refType = (psiDBRef.hasRefType()) ? psiDBRef.getRefType() : null;
-			if (refType != null && (refType.equals("identity") || refType.equals("identical object"))) {
-				String id = RDF_ID_PREFIX + "UXR-" + validateDBID(psiDBRef.getId());
-				bpXref = bpMapper.getBioPAXElement(id);
-				if (bpXref != null) {
-					toReturn.add(bpXref);
-					continue;
-				}
-				bpXref = bpMapper.getUnificationXref(id);
-			}
-			else if (!forOCVORDS) {
-				String id = RDF_ID_PREFIX + "RXR-" + validateDBID(psiDBRef.getId());
-				bpXref = bpMapper.getBioPAXElement(id);
-				if (bpXref != null) {
-					toReturn.add(bpXref);
-					continue;
-				}
-				bpXref = (refType != null) ? 
-					bpMapper.getRelationshipXref(id, refType, genRdfId()) :
-					bpMapper.getRelationshipXref(id, null, null);
-			}
-			if (bpXref != null) {
-				bpMapper.setXrefDBAndID(bpXref, psiDBRef.getDb(), psiDBRef.getId());
-				toReturn.add(bpXref);
-			}
-		}
+            String psiDBRefId = psiDBRef.getId();
+
+            // If multiple ids given with comma separated values, then split them.
+            for (String dbRefId : psiDBRefId.split(",")) {
+                if (refType != null && (refType.equals("identity") || refType.equals("identical object"))) {
+                    String id = RDF_ID_PREFIX + "UXR-" + validateDBID(dbRefId);
+                    bpXref = bpMapper.getBioPAXElement(id);
+                    if (bpXref != null) {
+                        toReturn.add(bpXref);
+                        continue;
+                    }
+                    bpXref = bpMapper.getUnificationXref(id);
+                }
+                else if (!forOCVORDS) {
+                    String id = RDF_ID_PREFIX + "RXR-" + validateDBID(dbRefId);
+                    bpXref = bpMapper.getBioPAXElement(id);
+                    if (bpXref != null) {
+                        toReturn.add(bpXref);
+                        continue;
+                    }
+                    bpXref = (refType != null) ?
+                        bpMapper.getRelationshipXref(id, refType, genRdfId()) :
+                        bpMapper.getRelationshipXref(id, null, null);
+                }
+
+                if (bpXref != null) {
+                    bpMapper.setXrefDBAndID(bpXref, psiDBRef.getDb(), dbRefId);
+                    toReturn.add(bpXref);
+                }
+            }
+
+        }
 
 		// outta here
 		return toReturn;
