@@ -80,7 +80,7 @@ public interface BioPAXMapper {
 	 * @param id String
 	 * @param bpXrefs Set<? extends BioPAXElement>
 	 * @param evidenceCodes Set<? extends BioPAXElement>
-	 * @param scoresOrConfidences Set<? extends BioPAXElement>
+	 * @param scoresOrConfidence Set<? extends BioPAXElement>
 	 * @param comments Set<String>
 	 * @param experimentalForms Set<BioPAXElement>
 	 * @return <T extends BioPAXElement>
@@ -215,7 +215,7 @@ public interface BioPAXMapper {
 	/**
 	 * Used to add feature attributes to given sequence or entity feature.
 	 *
-	 * @param bpSequenceFeature BioPAXElement
+	 * @param bpFeature BioPAXElement
 	 * @param bpXrefs Set<? extends BioPAXElement>
 	 * @param featureLocations Set<? extends BioPAXElement>
 	 * @param featureType BioPAXElement
@@ -267,7 +267,7 @@ public interface BioPAXMapper {
 	/**
 	 * Sets given xref's db and id.
 	 *
-	 * @param xrefType BioPAXElement
+	 * @param bpXref BioPAXElement
 	 * @param db String
 	 * @param id String
 	 */

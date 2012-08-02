@@ -550,7 +550,7 @@ public class EntryMapper extends Thread {
 	/**
 	 * Given an OpenCvType, return a paxtools openControlledVocabulary.
 	 * 
-	 * @param onpenCvType OpenCvType
+	 * @param openCvType OpenCvType
 	 * @return BioPAXElement
 	 */
 	private BioPAXElement getOpenControlledVocabulary(OpenCvType openCvType) {
@@ -938,7 +938,7 @@ public class EntryMapper extends Thread {
 	/**
 	 * Given a Names object, returns a name string.
 	 *
-	 * @param names Names
+	 * @param name Names
 	 * @return String
 	 */
 	private String getName(Names name) {
