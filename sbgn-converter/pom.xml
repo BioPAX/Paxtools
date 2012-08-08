@@ -25,6 +25,11 @@
         	<artifactId>libsbgn</artifactId>
         	<version>0.2</version>
         </dependency>
+        <dependency>
+        	<groupId>org.ivis</groupId>
+        	<artifactId>chilay</artifactId>
+        	<version>2.0</version>
+        </dependency>
     </dependencies>
 
 </project>
