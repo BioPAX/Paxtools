@@ -31,7 +31,9 @@ public class SBGNConverterTest
 
 		System.out.println("level3.getObjects().size() = " + level3.getObjects().size());
 
-		String out = "target" + input + ".sbgn";
+		String out = "target/" + input + ".sbgn";
+		// Above path does not work with my laptop, windows vista
+//		String out = "C:/Users/ozgun/Desktop/" + input + ".sbgn";
 		L3ToSBGNPDConverter.writeSBGN(level3, out);
 
 		File outFile = new File(out);

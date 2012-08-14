@@ -211,15 +211,15 @@ public class L3ToSBGNPDConverter
 		Glyph g = createGlyph(pe);
 		glyphMap.put(g.getId(), g);
 
+		rootSet.add(g);
+
 		// Create compartment -- add this inside the compartment
 
 		Glyph loc = getCompartment(getCompartment(pe), compartmentMap);
 		if (loc != null) 
 		{
-			loc.getGlyph().add(g);
 			g.setCompartmentRef(loc);
 		}
-		else rootSet.add(g);
 
 		// Fill-in the complex members if this is a complex
 
