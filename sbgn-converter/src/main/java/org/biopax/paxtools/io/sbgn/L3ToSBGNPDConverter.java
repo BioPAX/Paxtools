@@ -110,6 +110,7 @@ public class L3ToSBGNPDConverter
 		Map<String, Glyph> glyphMap = new HashMap<String, Glyph>();
 		Map<String, Glyph> compartmentMap = new HashMap<String, Glyph>();
 		Map<String, Arc> arcMap = new HashMap<String, Arc>();
+		Set<Glyph> rootSet = new HashSet<Glyph>();
 
 		// Create glyphs for Physical Entities
 
@@ -117,7 +118,7 @@ public class L3ToSBGNPDConverter
 		{
 			if (needsToBeRepresented(entity))
 			{
-				createGlyph(entity, glyphMap, compartmentMap);
+				createGlyph(entity, glyphMap, compartmentMap, rootSet);
 			}
 		}
 
@@ -157,7 +158,7 @@ public class L3ToSBGNPDConverter
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
 		sbgn.setMap(map);
 		map.setLanguage(Language.PD.toString());
-		map.getGlyph().addAll(glyphMap.values());
+		map.getGlyph().addAll(rootSet);
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 		return sbgn;
@@ -201,7 +202,7 @@ public class L3ToSBGNPDConverter
 	 * @return the created glyph
 	 */
 	private static Glyph createGlyph(PhysicalEntity pe, Map<String, Glyph> glyphMap, Map<String,
-		Glyph> compartmentMap)
+		Glyph> compartmentMap, Set<Glyph> rootSet)
 	{
 		if (glyphMap.containsKey(pe.getRDFId())) return glyphMap.get(pe.getRDFId());
 
@@ -213,7 +214,12 @@ public class L3ToSBGNPDConverter
 		// Create compartment -- add this inside the compartment
 
 		Glyph loc = getCompartment(getCompartment(pe), compartmentMap);
-		if (loc != null) loc.getGlyph().add(g);
+		if (loc != null) 
+		{
+			loc.getGlyph().add(g);
+			g.setCompartmentRef(loc);
+		}
+		else rootSet.add(g);
 
 		// Fill-in the complex members if this is a complex
 
