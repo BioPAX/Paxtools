@@ -366,14 +366,8 @@ public class PaxtoolsMain {
 //		BioPAXElement byID = model.getByID("http://biocyc.org/biopax/biopax-level3ComplexAssembly175733");
 //---- Debug code
 
-
-		if (model.getLevel() != BioPAXLevel.L3)
-		{
-			System.out.println("Summarize function only works for level 3");
-			return;
-		}
-
-		SimpleEditorMap em = SimpleEditorMap.L3;
+		final SimpleEditorMap em = (model.getLevel() == BioPAXLevel.L3) 
+				? SimpleEditorMap.L3 : SimpleEditorMap.L2;
 
 		for (Class<BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
 		{
@@ -381,8 +375,7 @@ public class PaxtoolsMain {
 			int initialSize = set.size();
 			set = filterToExactClass(set, clazz);
 			
-			final String prefix = "org.biopax.paxtools.model.level3.";
-			String s = clazz.getCanonicalName().replace(prefix, "") + " = " + set.size();
+			String s = clazz.getSimpleName() + " = " + set.size();
 			if (initialSize != set.size()) s += " (and " + (initialSize - set.size()) + " children)";
 			System.out.println(s);
 
@@ -429,9 +422,8 @@ public class PaxtoolsMain {
 
 				if (!cnt.isEmpty())
 				{
-					String name = returnType.equals(Set.class) ?
-						editor.getRange().getCanonicalName() : returnType.getCanonicalName();
-					name = name.replace(prefix, "-");
+					String name = "-" 
+						+ (returnType.equals(Set.class) ? editor.getRange().getSimpleName() : returnType.getSimpleName());
 
 					System.out.print("\t" + name + ":");
 					for (Object key : getOrdering(cnt))
@@ -443,10 +435,9 @@ public class PaxtoolsMain {
 			}
 		}
 
-		String[] props = new String[]{
-			"UnificationXref/db",
-			"RelationshipXref/db",
-		};
+		String[] props = (model.getLevel() == BioPAXLevel.L3) 
+			? new String[]{"UnificationXref/db","RelationshipXref/db"}
+			: new String[]{"unificationXref/DB","relationshipXref/DB"};
 
 		System.out.println("\nOther property counts\n");
 
@@ -454,7 +445,7 @@ public class PaxtoolsMain {
 		{
 			Map<Object, Integer> cnt = new HashMap<Object, Integer>();
 			List<String> valList = new ArrayList<String>();
-			PathAccessor acc = new PathAccessor(prop, BioPAXLevel.L3);
+			PathAccessor acc = new PathAccessor(prop, model.getLevel());
 			
 			boolean isString = false;
 			
