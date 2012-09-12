@@ -172,7 +172,13 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter {
                         if (BioPAXLevel.isInBioPAXNameSpace(r.getName().getNamespaceURI())) {
                             String lname = r.getLocalName();
                             BioPAXLevel level = getLevel();
-                            Class<? extends BioPAXElement> clazz = level.getInterfaceForName(lname);
+                            Class<? extends BioPAXElement> clazz = null;
+                            try {
+                            	clazz = level.getInterfaceForName(lname);
+                            } catch (IllegalBioPAXArgumentException e) {
+								log.fatal("Unknown BioPAX element location " + lname + " at " + r.getLocation());
+								throw e; // for backward compatibility
+							}
                             if (this.getFactory().canInstantiate(clazz)) {
                                 processIndividual(model);
                             } else {
