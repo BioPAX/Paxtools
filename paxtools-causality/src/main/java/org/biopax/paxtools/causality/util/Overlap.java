@@ -75,7 +75,7 @@ public class Overlap
 
 	public static void main(String[] args)
 	{
-		System.out.println("pval = " + calcPVal(3, 2, 1, 0));
+		System.out.println("pval = " + calcPVal(30, 20, 5, 0));
 	}
 
 	public static double calcAlterationOverlapPval(Change[] alt1, Change[] alt2)

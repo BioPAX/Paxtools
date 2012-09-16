@@ -140,6 +140,12 @@ public class AlterationPack
 		return cnt;
 	}
 
+	public double calcAlteredRatio(Alteration key)
+	{
+		double cnt = countAltered(key);
+		return cnt / get(key).length;
+	}
+	
 	/**
 	 *
 	 * @param priority
@@ -180,6 +186,40 @@ public class AlterationPack
 
 			map.put(Alteration.NON_GENOMIC, changes);
 		}
+
+		Change[] changesAct = new Change[changes.length];
+		Change[] changesInh = new Change[changes.length];
+		Change[] mut = get(Alteration.MUTATION);
+		Change[] cnc = get(Alteration.COPY_NUMBER);
+		Change[] exp = get(Alteration.EXPRESSION);
+
+		for (int i = 0; i < changes.length; i++)
+		{
+			if (mut != null && mut[i].isAltered()) 
+			{
+				changesAct[i] = Change.ACTIVATING;
+				changesInh[i] = Change.INHIBITING;
+			}
+			else if (cnc != null && cnc[i].isAltered())
+			{
+				if (!(exp != null && cnc[i].isOpposing(exp[i])))
+				{					
+					if (cnc[i] == Change.ACTIVATING) changesAct[i] = Change.ACTIVATING;
+					else if (cnc[i] == Change.INHIBITING) changesInh[i] = Change.INHIBITING;
+				}
+			}
+			else if (exp != null && exp[i].isAltered())
+			{
+				if (exp[i] == Change.ACTIVATING) changesAct[i] = Change.ACTIVATING;
+				else if (exp[i] == Change.INHIBITING) changesInh[i] = Change.INHIBITING;
+			}
+			
+			if (changesAct[i] == null) changesAct[i] = Change.NO_CHANGE;
+			if (changesInh[i] == null) changesInh[i] = Change.NO_CHANGE;
+		}
+		
+		map.put(Alteration.ACTIVATING, changesAct);
+		map.put(Alteration.INHIBITING, changesInh);
 	}
 	
 	protected boolean containsAlterationType(Alteration[] alts)
@@ -285,12 +325,12 @@ public class AlterationPack
 		StringBuilder buf = new StringBuilder();
 		for (Integer o : order)
 		{
-			buf.append(ch[o].isAltered() ? "x" : ch[o].isAbsent() ? " " : ".");
+			buf.append(ch[o].isAltered() ? "x" : ch[o].isAbsent() ? " " : ((key == Alteration.ACTIVATING && get(Alteration.INHIBITING)[o].isAltered()) || (key == Alteration.INHIBITING && get(Alteration.ACTIVATING)[o].isAltered())) ? ":" : ".");
 		}
 		for (int i = 0; i < ch.length; i++)
 		{
 			if (!order.contains(i))
-				buf.append(ch[i].isAltered() ? "x" : ch[i].isAbsent() ? " " : ".");
+				buf.append(ch[i].isAltered() ? "x" : ch[i].isAbsent() ? " " : ((key == Alteration.ACTIVATING && get(Alteration.INHIBITING)[i].isAltered()) || (key == Alteration.INHIBITING && get(Alteration.ACTIVATING)[i].isAltered())) ? ":" : ".");
 		}
 
 

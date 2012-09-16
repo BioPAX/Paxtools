@@ -40,6 +40,11 @@ public enum Change
 		return letter;
 	}
 	
+	public boolean isOpposing(Change ch)
+	{
+		return (this == ACTIVATING && ch == INHIBITING) || (this == INHIBITING && ch == ACTIVATING);
+	}
+	
 	public static Change getChange(String letter)
 	{
 		for (Change c : values())

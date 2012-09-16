@@ -78,6 +78,18 @@ public class Traverse
 		return neigh;
 	}
 
+	public Set<String> getNeighbors(String gene)
+	{
+		Set<String> n = new HashSet<String>(upMap.get(gene));
+		n.addAll(dwMap.get(gene));
+		return n;
+	}
+	
+	public int getDegree(String gene)
+	{
+		return getNeighbors(gene).size();
+	}
+	
 	public Set<String> getPathElements(String from, Set<String> to, int limit)
 	{
 		Set<String> result = new HashSet<String>();

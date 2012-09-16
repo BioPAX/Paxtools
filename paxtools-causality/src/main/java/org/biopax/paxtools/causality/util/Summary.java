@@ -48,6 +48,19 @@ public class Summary
 		return total / x.length;
 	}
 
+	public static double geometricMean(double[] x)
+	{
+		if (x.length == 0) return Double.NaN;
+
+		double mult = 1;
+
+		for (double v : x)
+		{
+			mult *= Math.abs(v);
+		}
+		return Math.pow(mult, 1D / x.length);
+	}
+
 	public static double meanOrderWeighted(double[] x)
 	{
 		if (x.length == 0) return Double.NaN;

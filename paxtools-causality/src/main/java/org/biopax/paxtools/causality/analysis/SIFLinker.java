@@ -16,8 +16,10 @@ public class SIFLinker
 	public boolean load(String filename)
 	{
 		traverse = new Traverse();
-		traverse.load(filename, new HashSet<String>(Arrays.asList("BINDS_TO")),
-			new HashSet<String>(Arrays.asList("STATE_CHANGE", "TRANSCRIPTION", "DEGRADATION")));
+//		traverse.load(filename, new HashSet<String>(Arrays.asList("BINDS_TO")),
+		traverse.load(filename, new HashSet<String>(),
+//			new HashSet<String>(Arrays.asList("STATE_CHANGE", "TRANSCRIPTION", "DEGRADATION")));
+			new HashSet<String>(Arrays.asList("STATE_CHANGE", "DEGRADATION")));
 		try
 		{
 			sif = new HashMap<String, Map<String, Set<String>>>();
@@ -86,7 +88,7 @@ public class SIFLinker
 
 					if (!rel.isEmpty())
 					{
-						rels.addAll(rel);
+						for (String s : rel) if (!rels.contains(s)) rels.add(s);
 						break;
 					}
 				}
@@ -108,6 +110,8 @@ public class SIFLinker
 				if (sif.containsKey(ele))
 				for (String type : sif.get(ele).keySet())
 				{
+					if (type.equals("BINDS_TO")) continue;
+
 					for (String tar : sif.get(ele).get(type))
 					{
 						if (eles.contains(tar) && !tar.equals(ele))
