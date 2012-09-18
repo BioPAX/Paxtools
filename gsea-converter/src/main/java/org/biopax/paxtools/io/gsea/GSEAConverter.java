@@ -159,18 +159,19 @@ public class GSEAConverter
 		name = (name == null) ? "NAME" : name;
 		toReturn.setName(name);
 		// tax id
-		String taxID = getTaxID(aPathway.getOrganism().getXref());
-		taxID = (taxID == null) ? "TAX-ID" : taxID;
+		String taxID = null;
+		if(aPathway.getOrganism() != null)
+			taxID = getTaxID(aPathway.getOrganism().getXref());
+		if(taxID == null) 
+			taxID = "TAX-ID";
 		toReturn.setTaxID(taxID);
 		// data source
 		String dataSource = getDataSource(aPathway.getDataSource());
 		dataSource = (dataSource == null) ? "N/A" : dataSource;
 		toReturn.setDataSource(dataSource);
 
-
 		toReturn.setRDFToGeneMap(processProteinReferences(ers, checkDatabase, taxID));
 
-		// outta here
 		return toReturn;
 	}
 
@@ -185,9 +186,15 @@ public class GSEAConverter
 			{
 				ProteinReference aProteinRef = (ProteinReference) er;
 				// we only process protein refs that are same species as pathway
-				if (!crossSpeciesCheck || taxID.isEmpty() ||
-				    getTaxID(aProteinRef.getOrganism().getXref()).equals(taxID))
-				{
+				if (
+						!crossSpeciesCheck 
+						|| taxID.isEmpty() 
+						|| (
+								aProteinRef.getOrganism() != null 
+								&& 
+								getTaxID(aProteinRef.getOrganism().getXref()).equals(taxID)
+							)
+				) {
 					if (checkDatabase)
 					{
 						// short circuit if we are converting for pathway commons
@@ -222,16 +229,23 @@ public class GSEAConverter
 
 	private String getDataSource(Set<Provenance> provenances)
 	{
-
+		StringBuilder s = new StringBuilder();
+		
 		for (Provenance provenance : provenances)
 		{
 			String name = provenance.getDisplayName();
-			name = (name == null) ? provenance.getStandardName() : name;
-			if (name != null && name.length() > 0) return name;
+			if(name == null) 
+				name = provenance.getStandardName();
+			if(name == null && !provenance.getName().isEmpty()) 
+				name = provenance.getName().iterator().next();
+			if (name != null && name.length() > 0)
+				s.append(name).append(";");
 		}
+		
+		if(s.length() > 0)
+			s.deleteCharAt(s.length()-1);
 
-		// outta here
-		return "";
+		return s.toString();
 	}
 
 	private boolean sameSpecies(Protein aProtein, String taxID)
@@ -242,9 +256,7 @@ public class GSEAConverter
 		{
 			BioSource bs = pRef.getOrganism();
 			if (bs.getXref() != null)
-			{
 				return (getTaxID(bs.getXref()).equals(taxID));
-			}
 		}
 
 		// outta here

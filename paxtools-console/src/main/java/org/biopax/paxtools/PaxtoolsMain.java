@@ -18,7 +18,6 @@ import org.biopax.validator.jaxb.Behavior;
 import org.mskcc.psibiopax.converter.PSIMIConverter;
 import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 
-import java.awt.datatransfer.StringSelection;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

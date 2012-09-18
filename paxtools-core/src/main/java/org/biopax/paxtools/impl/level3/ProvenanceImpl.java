@@ -12,7 +12,9 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 @Proxy(proxyClass= Provenance.class)
@@ -32,26 +34,37 @@ public class ProvenanceImpl extends NamedImpl implements Provenance
 		return Provenance.class;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.biopax.paxtools.impl.BioPAXElementImpl#toString()
+	 * 
+	 * TODO this probably makes inconsistent strings (on different systems); fix, if it matters....
+	 * 
+	 */
 	@Override public String toString()
 	{
 		try {
-			String s = "";
+			StringBuilder s = new StringBuilder();
 
-			for (String name : this.getName()) {
-				if (s.length() > 0)
-					s += "; ";
-				s += name;
+			for (String name : new TreeSet<String>(this.getName())) 
+				s.append(name).append(";");
+			
+			if (!getXref().isEmpty()) 
+			{
+				Set<Xref> xref = new TreeSet<Xref>(new Comparator<Xref>() {
+					@Override
+					public int compare(Xref o1, Xref o2) {
+						return o1.toString().compareTo(o2.toString());
+					}					
+				});
+				
+				s.append(" (");
+				for (Xref anXref : xref)
+					s.append(anXref).append(";");
+				s.append(")");
 			}
-			Set<Xref> xref = this.getXref();
-			if (!xref.isEmpty()) {
-				s += " (";
-				for (Xref anXref : xref) {
-
-					s += anXref;
-				}
-				s += ")";
-			}
-			return s;
+			
+			return s.toString();
 
 		} catch (Exception e) {
 			// possible issues - when in a persistent context (e.g., lazy

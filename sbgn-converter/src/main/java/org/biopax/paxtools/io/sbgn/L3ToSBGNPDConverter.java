@@ -10,7 +10,6 @@ import org.sbgn.Language;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.*;
 
-import javax.print.attribute.standard.PDLOverrideSupported;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
@@ -460,7 +459,7 @@ public class L3ToSBGNPDConverter
 				if (feature instanceof ModificationFeature)
 				{
 					ModificationFeature mf = (ModificationFeature) feature;
-					state.setVariable(mf.getModificationType().toString());
+					state.setVariable(String.valueOf(mf.getModificationType()));
 				}
 				else
 				{
@@ -479,22 +478,7 @@ public class L3ToSBGNPDConverter
 				SequenceLocation loc = feature.getFeatureLocation();
 				if (loc != null)
 				{
-					String value;
-					if (loc instanceof SequenceSite)
-					{
-						SequenceSite site = (SequenceSite) loc;
-						value = "" + site.getSequencePosition();
-					}
-					else if (loc instanceof SequenceInterval)
-					{
-						SequenceInterval itv = (SequenceInterval) loc;
-						value = itv.getSequenceIntervalBegin().getSequencePosition() + "-" +
-							itv.getSequenceIntervalEnd().getSequencePosition();
-					}
-					else
-					{
-						value = loc.toString();
-					}
+					String value = loc.toString();
 					state.setValue(value);
 				}
 
@@ -714,14 +698,16 @@ public class L3ToSBGNPDConverter
 			// Bundle controllers if necessary
 
 			Glyph gg = handlePEGroup(controllers, glyphMap, arcMap);
-			toConnect.add(gg);
+			if(gg != null)
+				toConnect.add(gg);
 
 			// Create handles for each controller
 
 			for (Control ctrl2 : ctrl.getControlledOf())
 			{
 				Glyph g = createControlStructure(ctrl2, glyphMap, arcMap);
-				if (g != null) toConnect.add(g);
+				if (g != null) 
+					toConnect.add(g);
 			}
 
 			// Handle co-factors of catalysis
@@ -730,10 +716,12 @@ public class L3ToSBGNPDConverter
 			{
 				Set<PhysicalEntity> cofs = ((Catalysis) ctrl).getCofactor();
 				Glyph g = handlePEGroup(cofs, glyphMap, arcMap);
-				toConnect.add(g);
+				if (g != null) 
+					toConnect.add(g);
 			}
 
-			if (toConnect.isEmpty()) return null;
+			if (toConnect.isEmpty()) 
+				return null;
 			else if (toConnect.size() == 1)
 			{
 				cg = toConnect.iterator().next();
@@ -766,15 +754,18 @@ public class L3ToSBGNPDConverter
 	private static Glyph handlePEGroup(Set<PhysicalEntity> pes, Map<String, Glyph> glyphMap,
 		Map<String, Arc> arcMap)
 	{
-		if (pes.size() > 1)
+		int sz = pes.size();		
+		if (sz > 1)
 		{
 			List<Glyph> gs = getGlyphsOfPEs(pes, glyphMap);
 			return connectWithAND(gs, glyphMap, arcMap);
 		}
-		else if (glyphMap.containsKey(pes.iterator().next().getRDFId()))
+		else if (sz == 1 && glyphMap.containsKey(pes.iterator().next().getRDFId()))
 		{
 			return glyphMap.get(pes.iterator().next().getRDFId());
 		}
+		
+		//'pes' was empty
 		return null;
 	}
 	
