@@ -163,7 +163,8 @@ public class GSEAConverter
 		if(aPathway.getOrganism() != null)
 			taxID = getTaxID(aPathway.getOrganism().getXref());
 		if(taxID == null) 
-			taxID = "TAX-ID";
+			taxID = "";
+		
 		toReturn.setTaxID(taxID);
 		// data source
 		String dataSource = getDataSource(aPathway.getDataSource());
