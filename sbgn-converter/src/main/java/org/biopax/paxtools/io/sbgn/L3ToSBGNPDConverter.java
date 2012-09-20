@@ -459,7 +459,10 @@ public class L3ToSBGNPDConverter
 				if (feature instanceof ModificationFeature)
 				{
 					ModificationFeature mf = (ModificationFeature) feature;
-					state.setVariable(String.valueOf(mf.getModificationType()));
+                    SequenceModificationVocabulary modificationType = mf.getModificationType();
+                    if(modificationType != null) {
+                        state.setVariable(String.valueOf(modificationType));
+                    }
 				}
 				else
 				{
