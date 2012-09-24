@@ -1,5 +1,7 @@
 package org.biopax.paxtools.io.gsea;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.solr.common.util.StrUtils;
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.converter.OneTwoThree;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -116,10 +118,26 @@ public class GSEAConverter
 			l3Model = model;
 		}
 
-		for (Pathway pathway : l3Model.getObjects(Pathway.class))
-		{
-			toReturn.add(getGSEAEntry(l3Model, pathway, database));
+		Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
+		if(!pathways.isEmpty()) {	
+			for (Pathway pathway : pathways)
+				toReturn.add(getGSEAEntry(l3Model, pathway, database));
+		} else {
+			Set<ProteinReference> ers = l3Model.getObjects(ProteinReference.class);
+			GSEAEntry gseaEntry = new GSEAEntry();
+			gseaEntry.setName("A set of protein references");
+			gseaEntry.setTaxID("");			
+			Set<String> dsNames = new TreeSet<String>();
+			for(Provenance ds: l3Model.getObjects(Provenance.class))
+				dsNames.add(ds.getDisplayName().toLowerCase());
+			gseaEntry.setDataSource("a BioPAX sub-model; datasources: " 
+				+ StringUtils.join(dsNames, ", "));
+			gseaEntry.setRDFToGeneMap(processProteinReferences(ers, checkDatabase, ""));
+			toReturn.add(gseaEntry);
 		}
+		
+		 //TODO what about Gene objects?
+				
 		// outta here
 		return toReturn;
 	}
@@ -138,12 +156,9 @@ public class GSEAConverter
 
 	private GSEAEntry getGSEAEntry(final Model model, final Pathway aPathway, final String database)
 	{
-
 		Set participants = participantPath.getValueFromBean(aPathway);
 
-		//Component/memberEntity cycle can't be handled by PathAccessors although there should not be any deep
-		// nestings:
-
+		//Component/memberEntity cycle can't be handled by PathAccessors although there should not be any deep nestings...
 		iterateComponentMemberPECycle(participants);
 
 		Set ers = PRPath.getValueFromBeans(participants);
@@ -175,8 +190,8 @@ public class GSEAConverter
 
 		return toReturn;
 	}
-
-
+	
+	
 	Map<String, String> processProteinReferences(Set prs, boolean checkDatabase, String taxID)
 	{
 
@@ -198,18 +213,33 @@ public class GSEAConverter
 				) {
 					if (checkDatabase)
 					{
-						// short circuit if we are converting for pathway commons
-						// Also ensure we get back primary accession - which is built into the rdf id of the
-						// protein  ref
-						if (database.equalsIgnoreCase("uniprot") &&
-						    aProteinRef.getRDFId().startsWith("urn:miriam:uniprot:"))
+						// short circuit if we are converting new Pathway Commons or another normalized data;
+						// we get back the primary accession number, which is built into the URI of the
+						// ProteinReference.
+						final String lowcaseUri = aProteinRef.getRDFId().toLowerCase();
+						if (lowcaseUri.startsWith("urn:miriam:" + database.toLowerCase()))
 						{
 							String accession = aProteinRef.getRDFId();
 							accession = accession.substring(accession.lastIndexOf(":") + 1);
 							rdfToGenes.put(aProteinRef.getRDFId(), accession);
-						} else
+						} 
+						else if (lowcaseUri.startsWith("http://identifiers.org/")
+							&& lowcaseUri.contains(database.toLowerCase()))
 						{
-							for (Xref aXref : aProteinRef.getXref())
+							String accession = aProteinRef.getRDFId();
+							accession = accession.substring(accession.lastIndexOf("/") + 1);
+							rdfToGenes.put(aProteinRef.getRDFId(), accession);
+						} 
+						else {
+							TreeSet<Xref> orderedXrefs = new TreeSet<Xref>(new Comparator<Xref>() {
+								@Override
+								public int compare(Xref o1, Xref o2) {
+									return o1.toString().compareTo(o2.toString());
+								}
+							});
+							
+							orderedXrefs.addAll(aProteinRef.getXref());
+							for (Xref aXref : orderedXrefs)
 							{
 								if (aXref.getDb() != null && aXref.getDb().equalsIgnoreCase(database))
 								{
