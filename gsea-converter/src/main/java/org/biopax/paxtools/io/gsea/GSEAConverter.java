@@ -1,7 +1,6 @@
 package org.biopax.paxtools.io.gsea;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.solr.common.util.StrUtils;
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.converter.OneTwoThree;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -103,7 +102,6 @@ public class GSEAConverter
 	 */
 	public Collection<? extends GSEAEntry> convert(final Model model)
 	{
-
 		// setup some vars
 		Model l3Model = null;
 
@@ -120,26 +118,87 @@ public class GSEAConverter
 
 		Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
 		if(!pathways.isEmpty()) {	
-			for (Pathway pathway : pathways)
-				toReturn.add(getGSEAEntry(l3Model, pathway, database));
+			for (Pathway pathway : pathways) {
+				Set participants = participantPath.getValueFromBean(pathway);
+				//Component/memberEntity cycle can't be handled by PathAccessors although there should not be any deep nestings...
+				iterateComponentMemberPECycle(participants);
+
+				Set<ProteinReference> pathwayProteinRefs = PRPath.getValueFromBeans(participants);
+				pathwayProteinRefs.addAll(memberERPath.getValueFromBeans(pathwayProteinRefs));
+				
+				// define gsea entry name
+				String name = pathway.getDisplayName();
+				name = (name == null) ? pathway.getStandardName() : name;
+				name = (name == null) ? "NO NAME Pathway" : name;
+				// data source
+				String dataSource = getDataSource(pathway.getDataSource());
+				dataSource = (dataSource == null) ? "N/A" : dataSource;
+				// taxonomy id
+				String pathwayTaxonomyID = null;
+				if(pathway.getOrganism() != null)
+					pathwayTaxonomyID = getTaxID(pathway.getOrganism().getXref());
+				if(pathwayTaxonomyID == null) pathwayTaxonomyID = "";
+
+				// when pathwayTaxonomyID is empty, split all PRs by species, if crossSpeciesCheck==true
+				if(crossSpeciesCheck && pathwayTaxonomyID.isEmpty()) 
+				{
+					Map<BioSource,Set<ProteinReference>> orgToPrsMap = bioSourceToPrsMap(pathwayProteinRefs);
+					// create one GSEA/GMT entry per organism (null organism also makes one) 
+					for (BioSource org : orgToPrsMap.keySet()) {
+						GSEAEntry gseaEntry = new GSEAEntry();
+						gseaEntry.setName(name);
+						String taxid = (org != null) ? getTaxID(org.getXref()) : "";
+						gseaEntry.setTaxID(taxid);
+						gseaEntry.setDataSource(dataSource);
+						gseaEntry.setRDFToGeneMap(processProteinReferences(orgToPrsMap.get(org), checkDatabase, taxid));
+						toReturn.add(gseaEntry);
+					}
+				} else {
+					GSEAEntry gseaEntry = new GSEAEntry();
+					gseaEntry.setName(name);
+					gseaEntry.setTaxID(pathwayTaxonomyID);
+					gseaEntry.setDataSource(dataSource);
+					gseaEntry.setRDFToGeneMap(processProteinReferences(pathwayProteinRefs, checkDatabase, pathwayTaxonomyID));
+					toReturn.add(gseaEntry);
+				}
+			}
 		} else {
-			Set<ProteinReference> ers = l3Model.getObjects(ProteinReference.class);
-			GSEAEntry gseaEntry = new GSEAEntry();
-			gseaEntry.setName("A set of protein references");
-			gseaEntry.setTaxID("");			
-			Set<String> dsNames = new TreeSet<String>();
-			for(Provenance ds: l3Model.getObjects(Provenance.class))
-				dsNames.add(ds.getDisplayName().toLowerCase());
-			gseaEntry.setDataSource("a BioPAX sub-model; datasources: " 
-				+ StringUtils.join(dsNames, ", "));
-			gseaEntry.setRDFToGeneMap(processProteinReferences(ers, checkDatabase, ""));
-			toReturn.add(gseaEntry);
+			Set<ProteinReference> allProteinRefs = l3Model.getObjects(ProteinReference.class);
+			//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
+			Map<BioSource,Set<ProteinReference>> orgToPrsMap = bioSourceToPrsMap(allProteinRefs);
+			// create one GSEA/GMT entry per organism (null organism also makes one) 
+			for (BioSource org : orgToPrsMap.keySet()) {
+				GSEAEntry gseaEntry = new GSEAEntry();
+				gseaEntry.setName("A set of protein references");
+				final String taxid = (org != null) ? getTaxID(org.getXref()) : "";
+				gseaEntry.setTaxID(taxid);
+				gseaEntry.setDataSource("a BioPAX sub-model; datasources: "
+						+ getDataSource(l3Model.getObjects(Provenance.class)));
+				gseaEntry.setRDFToGeneMap(
+					processProteinReferences(orgToPrsMap.get(org), checkDatabase, taxid)
+				);
+				toReturn.add(gseaEntry);
+			}			
 		}
 		
 		 //TODO what about Gene objects?
 				
-		// outta here
 		return toReturn;
+	}
+
+	private Map<BioSource, Set<ProteinReference>> bioSourceToPrsMap(
+			Set<ProteinReference> proteinRefs) {
+		Map<BioSource,Set<ProteinReference>> map = new HashMap<BioSource, Set<ProteinReference>>();
+		for(ProteinReference r : proteinRefs) {
+			BioSource org = r.getOrganism(); //'null' is perfectly legal key
+			Set<ProteinReference> prs = map.get(org);
+			if(prs == null)  {
+				prs = new HashSet<ProteinReference>();
+				map.put(org, prs);
+			}
+			prs.add(r);
+		}
+		return map;
 	}
 
 	private void iterateComponentMemberPECycle(Set participants)
@@ -153,49 +212,11 @@ public class GSEAConverter
 		participants.addAll(newPes);
 	}
 
-
-	private GSEAEntry getGSEAEntry(final Model model, final Pathway aPathway, final String database)
-	{
-		Set participants = participantPath.getValueFromBean(aPathway);
-
-		//Component/memberEntity cycle can't be handled by PathAccessors although there should not be any deep nestings...
-		iterateComponentMemberPECycle(participants);
-
-		Set ers = PRPath.getValueFromBeans(participants);
-		ers.addAll(memberERPath.getValueFromBeans(ers));
-
-
-		// the GSEAEntry to return
-		final GSEAEntry toReturn = new GSEAEntry();
-
-		// set name
-		String name = aPathway.getDisplayName();
-		name = (name == null) ? aPathway.getStandardName() : name;
-		name = (name == null) ? "NAME" : name;
-		toReturn.setName(name);
-		// tax id
-		String taxID = null;
-		if(aPathway.getOrganism() != null)
-			taxID = getTaxID(aPathway.getOrganism().getXref());
-		if(taxID == null) 
-			taxID = "";
-		
-		toReturn.setTaxID(taxID);
-		// data source
-		String dataSource = getDataSource(aPathway.getDataSource());
-		dataSource = (dataSource == null) ? "N/A" : dataSource;
-		toReturn.setDataSource(dataSource);
-
-		toReturn.setRDFToGeneMap(processProteinReferences(ers, checkDatabase, taxID));
-
-		return toReturn;
-	}
-	
 	
 	Map<String, String> processProteinReferences(Set prs, boolean checkDatabase, String taxID)
 	{
-
 		Map<String, String> rdfToGenes = new HashMap<String, String>();
+
 		for (Object er : prs)
 		{
 			if (er instanceof ProteinReference)
@@ -258,10 +279,12 @@ public class GSEAConverter
 		return rdfToGenes;
 	}
 
+	/*
+	 * Gets datasource names, if any, in a consistent way/order, excl. duplicates
+	 */
 	private String getDataSource(Set<Provenance> provenances)
 	{
-		StringBuilder s = new StringBuilder();
-		
+		Set<String> dsNames = new TreeSet<String>();
 		for (Provenance provenance : provenances)
 		{
 			String name = provenance.getDisplayName();
@@ -270,13 +293,10 @@ public class GSEAConverter
 			if(name == null && !provenance.getName().isEmpty()) 
 				name = provenance.getName().iterator().next();
 			if (name != null && name.length() > 0)
-				s.append(name).append(";");
+				dsNames.add(name.toLowerCase());
 		}
 		
-		if(s.length() > 0)
-			s.deleteCharAt(s.length()-1);
-
-		return s.toString();
+		return StringUtils.join(dsNames, ";");
 	}
 
 	private boolean sameSpecies(Protein aProtein, String taxID)

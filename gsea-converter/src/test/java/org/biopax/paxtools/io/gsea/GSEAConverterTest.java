@@ -58,7 +58,7 @@ public class GSEAConverterTest {
 			assertEquals(1, entries.size());
 			GSEAEntry entry = entries.iterator().next();
 			assertEquals("mTOR signaling pathway", entry.getName());
-			assertEquals("Pathway Interaction Database NCI-Nature Curated Data", entry.getDataSource());
+			assertEquals("pathway interaction database nci-nature curated data", entry.getDataSource());
 			assertEquals("9606", entry.getTaxID());
 			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
 			assertEquals(27, rdfToGenes.size());

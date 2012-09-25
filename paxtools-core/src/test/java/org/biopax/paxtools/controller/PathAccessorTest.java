@@ -1,15 +1,19 @@
 package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -68,7 +72,14 @@ public class PathAccessorTest
 		PathAccessor mwAccessor = new PathAccessor("SmallMoleculeReference/molecularWeight", BioPAXLevel.L3);
 		values = mwAccessor.getValueFromBean(smr[0]);
 		assertTrue(mwAccessor.isUnknown(values));
-
-
+		
+		accessor = new PathAccessor("Protein/entityReference", BioPAXLevel.L3);
+		Collection<BioPAXElement> beans = new ArrayList<BioPAXElement>();
+		beans.add(p[0]);
+		beans.add(sm[0]);
+		values = accessor.getValueFromBeans(beans);
+		assertEquals(1, values.size());
+		assertTrue(values.contains(pr[0]));
+		
 	}
 }

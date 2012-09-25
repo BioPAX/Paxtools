@@ -1,5 +1,6 @@
 package org.biopax.paxtools.io.sif;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.PathAccessor;
@@ -213,7 +214,6 @@ public class SimpleInteractionConverter
 			throws IOException
 	{
 		Set<SimpleInteraction> interactions = inferInteractions(model);
-		Writer writer = new OutputStreamWriter(edgeStream);
 		Set<BioPAXElement> entities = new HashSet<BioPAXElement>();
 		List<PathAccessor> interactorAccessors = null;
 		List<PathAccessor> mediatorAccessors = null;
@@ -235,10 +235,10 @@ public class SimpleInteractionConverter
 			}
 		}
 
-
+		Set<String> lines = new TreeSet<String>(); //this is also to avoid duplicate records
 		for (SimpleInteraction si : interactions)
 		{
-			writer.write(si.toString());
+			StringBuilder sb = new StringBuilder(si.toString());
 			entities.add(si.getSource());
 			entities.add(si.getTarget());
 			if (mediatorAccessors != null)
@@ -255,14 +255,17 @@ public class SimpleInteractionConverter
 							values.add(valuesToString(mediatorAccessor.getValueFromBean(mediator)));
 						}
 					}
-
-					writer.write("\t"+ (values.isEmpty()?"not applicable":valuesToString(values)));
+					sb.append("\t").append(values.isEmpty() ? "not applicable" : valuesToString(values));
 				}
 			}
-			writer.write("\n");
+			lines.add(sb.toString());
 		}
 
+		Writer writer = new OutputStreamWriter(edgeStream);
+		writer.write(StringUtils.join(lines, "\n"));
 		writer.flush();
+		
+		// now write nodes info
 		writer = new OutputStreamWriter(nodeStream);
 		for (BioPAXElement entity : entities)
 		{
