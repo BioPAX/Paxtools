@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.Collection;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * GSEA conversion test.
@@ -58,7 +58,7 @@ public class GSEAConverterTest {
 			assertEquals(1, entries.size());
 			GSEAEntry entry = entries.iterator().next();
 			assertEquals("mTOR signaling pathway", entry.getName());
-			assertEquals("pathway interaction database nci-nature curated data", entry.getDataSource());
+			assertTrue(entry.getDescription().contains("nci-nature"));
 			assertEquals("9606", entry.getTaxID());
 			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
 			assertEquals(27, rdfToGenes.size());

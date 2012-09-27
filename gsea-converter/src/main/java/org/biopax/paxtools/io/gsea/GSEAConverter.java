@@ -6,6 +6,7 @@ import org.biopax.paxtools.converter.OneTwoThree;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.ClassFilterSet;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -46,7 +47,7 @@ public class GSEAConverter
 
 	static PathAccessor participantPath = new PathAccessor("Pathway/pathwayComponent*/participant*");
 
-	static PathAccessor componentPath = new PathAccessor("Complex/component*");
+	static PathAccessor complexComponentPath = new PathAccessor("Complex/component*");
 
 	static PathAccessor memberPEPath = new PathAccessor("PhysicalEntity/memberPhysicalEntity");
 
@@ -119,11 +120,17 @@ public class GSEAConverter
 		Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
 		if(!pathways.isEmpty()) {	
 			for (Pathway pathway : pathways) {
-				Set participants = participantPath.getValueFromBean(pathway);
+				// collect all physical entities only; also, - need a modifiable collection here
+				Set<PhysicalEntity> participants = new HashSet<PhysicalEntity>(
+					new ClassFilterSet<Entity, PhysicalEntity>(participantPath.getValueFromBean(pathway), PhysicalEntity.class));
 				//Component/memberEntity cycle can't be handled by PathAccessors although there should not be any deep nestings...
 				iterateComponentMemberPECycle(participants);
-
-				Set<ProteinReference> pathwayProteinRefs = PRPath.getValueFromBeans(participants);
+				
+				// collect all PRs from proteins;
+				// (using pathwayProteins tmp set - is a work around a bug in PathAccessor (as on 2012/09/26 paxtools), 
+				// which for when 'Protein/entityReference' path applied to a mixed set of PEs also returns also SMRs...)
+				Set<Protein> pathwayProteins = new ClassFilterSet<PhysicalEntity, Protein>(participants, Protein.class);
+				Set<ProteinReference> pathwayProteinRefs = PRPath.getValueFromBeans(pathwayProteins);
 				pathwayProteinRefs.addAll(memberERPath.getValueFromBeans(pathwayProteinRefs));
 				
 				// define gsea entry name
@@ -149,7 +156,8 @@ public class GSEAConverter
 						gseaEntry.setName(name);
 						String taxid = (org != null) ? getTaxID(org.getXref()) : "";
 						gseaEntry.setTaxID(taxid);
-						gseaEntry.setDataSource(dataSource);
+						gseaEntry.setDescription("datasource: " + dataSource + "; taxonomy: " 
+								+ ((pathwayTaxonomyID.isEmpty()) ? "N/A" : pathwayTaxonomyID));
 						gseaEntry.setRDFToGeneMap(processProteinReferences(orgToPrsMap.get(org), checkDatabase, taxid));
 						toReturn.add(gseaEntry);
 					}
@@ -157,7 +165,8 @@ public class GSEAConverter
 					GSEAEntry gseaEntry = new GSEAEntry();
 					gseaEntry.setName(name);
 					gseaEntry.setTaxID(pathwayTaxonomyID);
-					gseaEntry.setDataSource(dataSource);
+					gseaEntry.setDescription("datasource: " + dataSource + "; taxonomy: " 
+							+ ((pathwayTaxonomyID.isEmpty()) ? "N/A" : pathwayTaxonomyID));
 					gseaEntry.setRDFToGeneMap(processProteinReferences(pathwayProteinRefs, checkDatabase, pathwayTaxonomyID));
 					toReturn.add(gseaEntry);
 				}
@@ -172,8 +181,10 @@ public class GSEAConverter
 				gseaEntry.setName("A set of protein references");
 				final String taxid = (org != null) ? getTaxID(org.getXref()) : "";
 				gseaEntry.setTaxID(taxid);
-				gseaEntry.setDataSource("a BioPAX sub-model; datasources: "
-						+ getDataSource(l3Model.getObjects(Provenance.class)));
+				gseaEntry.setDescription("a BioPAX sub-model; datasources: "
+						+ getDataSource(l3Model.getObjects(Provenance.class))
+						+ "; taxonomy: " + ((taxid.isEmpty()) ? "N/A" : taxid)
+				);
 				gseaEntry.setRDFToGeneMap(
 					processProteinReferences(orgToPrsMap.get(org), checkDatabase, taxid)
 				);
@@ -201,9 +212,9 @@ public class GSEAConverter
 		return map;
 	}
 
-	private void iterateComponentMemberPECycle(Set participants)
+	private void iterateComponentMemberPECycle(Set<PhysicalEntity> participants)
 	{
-		Set newPes = componentPath.getValueFromBeans(participants);
+		Set<PhysicalEntity> newPes = complexComponentPath.getValueFromBeans(participants);
 		newPes.addAll(memberPEPath.getValueFromBeans(participants));
 		if (!newPes.isEmpty())
 		{

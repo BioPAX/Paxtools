@@ -13,7 +13,7 @@ public class GSEAEntry {
 
     private String name;
     private String taxID;
-    private String datasource;
+    private String description;
     private Map<String,String> rdfToGenes;
 
     public String getName() {
@@ -32,12 +32,12 @@ public class GSEAEntry {
     	this.taxID = taxID;
     }
 
-    public String getDataSource() {
-        return datasource;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDataSource(String datasource) {
-        this.datasource = datasource;
+    public void setDescription(String descr) {
+        this.description = descr;
     }
 
     public Map<String, String> getRDFToGeneMap() {
@@ -55,14 +55,13 @@ public class GSEAEntry {
     public String toString() {
  
     	String toReturn = "";
-    	if (name != null && datasource != null && rdfToGenes != null) {
-    		toReturn = name + "\t" + datasource;
+    	if (name != null && description != null && rdfToGenes != null) {
+    		toReturn = name + "\t" + description;
     		for (String gene : rdfToGenes.values()) {
     			toReturn += "\t" + gene;
     		}
     	}
 
-    	// outta here
         return toReturn;
     }
 }
