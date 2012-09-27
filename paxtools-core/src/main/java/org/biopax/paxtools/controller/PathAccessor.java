@@ -32,6 +32,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	List<PropertyAccessor<? extends BioPAXElement, ?>> accessors;
 
 	Class<? extends BioPAXElement> domain;
+    List<Class<? extends BioPAXElement>> domainOrder
+            = new ArrayList<Class<? extends BioPAXElement>>();
 
 	public static final Log log = LogFactory.getLog(PathAccessor.class);
 
@@ -91,6 +93,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		if (st.nextToken().equals("/"))
 		{
 			accessors.add(getStepAccessor(level, st, domain));
+            domainOrder.add(domain);
 		}
 		else throw new IllegalArgumentException();
 		return iterateTheRemainingPath(depth, st);
@@ -105,7 +108,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			if (s.equals("("))
 			{
 				PathAccessor subPath = new PathAccessor(st, level, intermediate, depth++);
-				this.accessors.add(subPath);
+				accessors.add(subPath);
+                domainOrder.add(intermediate);
 				intermediate = getNextDomain();
 			} else if (s.equals(")"))
 			{
@@ -113,6 +117,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			} else if (s.equals("/"))
 			{
 				accessors.add(getStepAccessor(level, st, intermediate));
+                domainOrder.add(intermediate);
 				intermediate= getNextDomain();
 
 			} else if (s.equals("*"))
@@ -125,8 +130,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 				Class<? extends BioPAXElement> restricted = getClass(st.nextToken());
 				if (restricted != null)
 				{
-					PropertyAccessor<? extends BioPAXElement, ?> lastAccessor = accessors.remove(accessors.size() -
-					                                                                             1);
+					PropertyAccessor<? extends BioPAXElement, ?> lastAccessor
+                            = accessors.remove(accessors.size() - 1);
 					accessors.add(FilteredPropertyAccessor.create(lastAccessor, restricted));
 				}
                 		intermediate = restricted;
@@ -178,11 +183,11 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		for (int i = 0; i < accessors.size() - 1; i++)
 		{
 			PropertyAccessor accessor = accessors.get(i);
-			if (log.isTraceEnabled()) log.trace(accessor);
+            if (log.isTraceEnabled()) log.trace(accessor);
 			HashSet<BioPAXElement> nextBpes = new HashSet<BioPAXElement>();
 			for (BioPAXElement bpe : bpes)
 			{
-				if (log.isTraceEnabled()) log.trace("\t" + bpe);
+                if (log.isTraceEnabled()) log.trace("\t" + bpe);
 				Set valueFromBean = accessor.getValueFromBean(bpe);
 				if (valueFromBean != null || valueFromBean.isEmpty())
 				{
@@ -195,10 +200,13 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		}
 		HashSet values = new HashSet();
 		PropertyAccessor lastStep = accessors.get(accessors.size() - 1);
+        Class<? extends BioPAXElement> lastDomain = domainOrder.get(domainOrder.size() - 1);
 		log.trace(lastStep);
 		for (BioPAXElement bpe : bpes)
 		{
-			log.trace("\t" + bpe);
+            if (!lastDomain.isInstance(bpe)) continue;
+
+            log.trace("\t" + bpe);
 			Set valueFromBean = lastStep.getValueFromBean(bpe);
 			if (valueFromBean != null || valueFromBean.isEmpty())
 			{

@@ -33,6 +33,7 @@ public class PathAccessorTest
 		SmallMoleculeReference smr[] = mock.create(SmallMoleculeReference.class,1);
 		SmallMolecule sm[] = mock.create(SmallMolecule.class,1);
 
+
 		mock.bindArrays(mock.editor("entityReference", Protein.class), p, pr);
 		mock.bindArrays(mock.editor("entityReference", SmallMolecule.class), sm, smr);
 		mock.bindArrays(mock.editor("xref",ProteinReference.class),pr,px);
@@ -80,6 +81,10 @@ public class PathAccessorTest
 		values = accessor.getValueFromBeans(beans);
 		assertEquals(1, values.size());
 		assertTrue(values.contains(pr[0]));
-		
+
+        accessor = new PathAccessor("SmallMolecule/entityReference", BioPAXLevel.L3);
+        values = accessor.getValueFromBeans(beans);
+        assertEquals(1, values.size());
+        assertTrue(values.contains(smr[0]));
 	}
 }
