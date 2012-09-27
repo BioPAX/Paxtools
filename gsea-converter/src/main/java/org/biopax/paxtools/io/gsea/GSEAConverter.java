@@ -106,7 +106,12 @@ public class GSEAConverter
 		// setup some vars
 		Model l3Model = null;
 
-		Collection<GSEAEntry> toReturn = new HashSet<GSEAEntry>();
+		Collection<GSEAEntry> toReturn = new TreeSet<GSEAEntry>(new Comparator<GSEAEntry>() {
+			@Override
+			public int compare(GSEAEntry o1, GSEAEntry o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
 
 		// convert to level 3 in necessary
 		if (model.getLevel() == BioPAXLevel.L1 || model.getLevel() == BioPAXLevel.L2)
