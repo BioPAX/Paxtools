@@ -82,9 +82,9 @@ public class PathAccessorTest
 		assertEquals(1, values.size());
 		assertTrue(values.contains(pr[0]));
 
-        accessor = new PathAccessor("SmallMolecule/entityReference", BioPAXLevel.L3);
-        values = accessor.getValueFromBeans(beans);
-        assertEquals(1, values.size());
-        assertTrue(values.contains(smr[0]));
+        	accessor = new PathAccessor("SmallMolecule/entityReference", BioPAXLevel.L3);
+	        values = accessor.getValueFromBeans(beans);
+	        assertEquals(1, values.size());
+	        assertTrue(values.contains(smr[0]));
 	}
 }

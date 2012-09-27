@@ -141,10 +141,9 @@ public class GSEAConverter
 				String dataSource = getDataSource(pathway.getDataSource());
 				dataSource = (dataSource == null) ? "N/A" : dataSource;
 				// taxonomy id
-				String pathwayTaxonomyID = null;
+				String pathwayTaxonomyID = "";
 				if(pathway.getOrganism() != null)
 					pathwayTaxonomyID = getTaxID(pathway.getOrganism().getXref());
-				if(pathwayTaxonomyID == null) pathwayTaxonomyID = "";
 
 				// when pathwayTaxonomyID is empty, split all PRs by species, if crossSpeciesCheck==true
 				if(crossSpeciesCheck && pathwayTaxonomyID.isEmpty()) 
@@ -157,7 +156,7 @@ public class GSEAConverter
 						String taxid = (org != null) ? getTaxID(org.getXref()) : "";
 						gseaEntry.setTaxID(taxid);
 						gseaEntry.setDescription("datasource: " + dataSource + "; taxonomy: " 
-								+ ((pathwayTaxonomyID.isEmpty()) ? "N/A" : pathwayTaxonomyID));
+								+ ((taxid.isEmpty()) ? "N/A" : taxid));
 						gseaEntry.setRDFToGeneMap(processProteinReferences(orgToPrsMap.get(org), checkDatabase, taxid));
 						toReturn.add(gseaEntry);
 					}
