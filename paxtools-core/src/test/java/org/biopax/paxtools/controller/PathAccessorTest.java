@@ -73,13 +73,13 @@ public class PathAccessorTest
 		values = mwAccessor.getValueFromBean(smr[0]);
 		assertTrue(mwAccessor.isUnknown(values));
 		
-		accessor = new PathAccessor("Protein/entityReference", BioPAXLevel.L3);
-		Collection<BioPAXElement> beans = new ArrayList<BioPAXElement>();
-		beans.add(p[0]);
-		beans.add(sm[0]);
-		values = accessor.getValueFromBeans(beans);
-		assertEquals(1, values.size());
-		assertTrue(values.contains(pr[0]));
+//		accessor = new PathAccessor("Protein/entityReference", BioPAXLevel.L3);
+//		Collection<BioPAXElement> beans = new ArrayList<BioPAXElement>();
+//		beans.add(p[0]);
+//		beans.add(sm[0]);
+//		values = accessor.getValueFromBeans(beans);
+//		assertEquals(1, values.size());
+//		assertTrue(values.contains(pr[0]));
 		
 	}
 }
