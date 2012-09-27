@@ -51,15 +51,16 @@ public class ProvenanceImpl extends NamedImpl implements Provenance
 			
 			if (!getXref().isEmpty()) 
 			{
-				Set<Xref> xref = new TreeSet<Xref>(new Comparator<Xref>() {
+				TreeSet<Xref> xrefs = new TreeSet<Xref>(new Comparator<Xref>() {
 					@Override
 					public int compare(Xref o1, Xref o2) {
 						return o1.toString().compareTo(o2.toString());
 					}					
 				});
+				xrefs.addAll(getXref());
 				
 				s.append(" (");
-				for (Xref anXref : xref)
+				for (Xref anXref : xrefs)
 					s.append(anXref).append(";");
 				s.append(")");
 			}

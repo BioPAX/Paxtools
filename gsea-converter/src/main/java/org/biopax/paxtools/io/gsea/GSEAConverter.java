@@ -109,7 +109,7 @@ public class GSEAConverter
 		Collection<GSEAEntry> toReturn = new TreeSet<GSEAEntry>(new Comparator<GSEAEntry>() {
 			@Override
 			public int compare(GSEAEntry o1, GSEAEntry o2) {
-				return o1.getName().compareTo(o2.getName());
+				return o1.toString().compareTo(o2.toString());
 			}
 		});
 
@@ -132,10 +132,11 @@ public class GSEAConverter
 				iterateComponentMemberPECycle(participants);
 				
 				// collect all PRs from proteins;
-				// (using pathwayProteins tmp set - is a work around a bug in PathAccessor (as on 2012/09/26 paxtools), 
-				// which for when 'Protein/entityReference' path applied to a mixed set of PEs also returns also SMRs...)
-				Set<Protein> pathwayProteins = new ClassFilterSet<PhysicalEntity, Protein>(participants, Protein.class);
-				Set<ProteinReference> pathwayProteinRefs = PRPath.getValueFromBeans(pathwayProteins);
+//				// (using pathwayProteins tmp set - is a work around a bug in PathAccessor (as on 2012/09/26 paxtools), 
+//				// which shows off itself at run time, for when 'Protein/entityReference' path is applied to a mixed set of PEs, it also returns SMRs...)
+//				Set<Protein> pathwayProteins = new ClassFilterSet<PhysicalEntity, Protein>(participants, Protein.class);
+//				Set<ProteinReference> pathwayProteinRefs = PRPath.getValueFromBeans(pathwayProteins);
+				Set<ProteinReference> pathwayProteinRefs = PRPath.getValueFromBeans(participants);
 				pathwayProteinRefs.addAll(memberERPath.getValueFromBeans(pathwayProteinRefs));
 				
 				// define gsea entry name
