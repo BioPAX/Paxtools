@@ -135,7 +135,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private Change inferChange(GeneticProfile geneticProfile, String dataPoint) {
         final String NaN = "NaN";
         final String NA = "NA";
-        // TODO: Discuss these steps with Ozgun
+        // TODO: Discuss these steps further
         switch (GeneticProfile.GENETIC_PROFILE_TYPE.convertToAlteration(geneticProfile.getType())) {
             case MUTATION:
                 return dataPoint.equalsIgnoreCase(NaN) ? Change.NO_CHANGE : Change.INHIBITING;
@@ -145,12 +145,9 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                         ? Change.NO_DATA
                         : (Double.parseDouble(dataPoint) > methylationThreshold ? Change.INHIBITING : Change.NO_CHANGE);
             case COPY_NUMBER:
-                // TODO: what to do with log2CNA?
-                if(dataPoint.equalsIgnoreCase(NA)
-                        || dataPoint.equalsIgnoreCase(NaN)
-                        || geneticProfile.getId().endsWith("log2CNA"))
+                if(dataPoint.equalsIgnoreCase(NA) || dataPoint.equalsIgnoreCase(NaN)) {
                     return Change.NO_DATA;
-                else {
+                } else {
                     Double value = Double.parseDouble(dataPoint);
                     if(value < options.get(CBioPortalOptions.PORTAL_OPTIONS.CNA_LOWER_THRESHOLD))
                         return Change.INHIBITING;
@@ -160,11 +157,9 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                         return Change.NO_CHANGE;
                 }
             case EXPRESSION:
-                // TODO: what to do with non Zscores?
-                if(dataPoint.equalsIgnoreCase(NaN) || dataPoint.equalsIgnoreCase(NA) ||
-					!geneticProfile.getId().endsWith("Zscores"))
+                if(dataPoint.equalsIgnoreCase(NaN) || dataPoint.equalsIgnoreCase(NA) ) {
                     return Change.NO_DATA;
-                else {
+                } else {
                     Double value = Double.parseDouble(dataPoint);
 
                     if(value > options.get(CBioPortalOptions.PORTAL_OPTIONS.EXP_UPPER_THRESHOLD))
