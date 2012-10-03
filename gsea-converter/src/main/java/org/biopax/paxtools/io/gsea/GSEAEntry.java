@@ -1,67 +1,69 @@
 package org.biopax.paxtools.io.gsea;
 
-// imports
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
- * This class represents an entry found in a GSEA (GMT format) file.
+ * This package-private class represents an entry found in a GSEA (GMT format) file.
+ * 
+ * Thread-safe.
  */
-public class GSEAEntry {
+class GSEAEntry {
 
-    private String name;
-    private String taxID;
-    private String description;
-    private Map<String,String> rdfToGenes;
+    final private String name;
+    final private String taxID;
+    final private String idType;
+    final private String description;
+    private final Set<String> identifiers;
 
-    public String getName() {
+    public GSEAEntry(String name, String taxID, String idType, String description) {
+    	if(name == null || taxID == null || idType == null || description == null) 
+    		throw new IllegalArgumentException("Null paraneter (not allowed)");
+    	
+		this.name = name;
+		this.taxID = taxID;
+		this.idType = idType;
+		this.description = description;
+		
+		this.identifiers = new ConcurrentSkipListSet<String>();
+	}
+    
+    
+    public String name() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public String getTaxID() {
+    public String taxID() {
     	return taxID;
-    }
-    
-    public void setTaxID(String taxID) {
-    	this.taxID = taxID;
-    }
+    }   
 
-    public String getDescription() {
+    public String description() {
         return description;
     }
-
-    public void setDescription(String descr) {
-        this.description = descr;
+   
+    Collection<String> getIdentifiers() {
+    	return identifiers; 
     }
 
-    public Map<String, String> getRDFToGeneMap() {
-        return rdfToGenes;
-    }
+    public String idType() {
+		return idType;
+	}
     
-    public void setRDFToGeneMap(Map<String, String> rdfToGenes) {
-    	this.rdfToGenes = rdfToGenes;
-    }
     
-    public Collection<String> getGenes() {
-    	return (rdfToGenes != null) ? rdfToGenes.values() : new HashSet<String>(); 
-    }
-
     public String toString() {
- 
-    	String toReturn = "";
-    	if (name != null && description != null && rdfToGenes != null) {
-    		toReturn = name + "\t" + description;
-    		for (String gene : rdfToGenes.values()) {
-    			toReturn += "\t" + gene;
+    	StringBuilder toReturn = new StringBuilder();
+    	
+    	if (!identifiers.isEmpty()) {
+    		toReturn.append(name).append("\t").append(description)
+    			.append("; taxonomy: ").append(((taxID.isEmpty()) ? "N/A" : taxID))
+    			.append("; id type: ").append(idType);
+    		for (String id : identifiers) {
+    			toReturn.append("\t").append(id);
     		}
     	}
 
-        return toReturn;
+        return toReturn.toString();
     }
 }
