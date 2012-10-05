@@ -109,7 +109,6 @@ public class L3ToSBGNPDConverter
 		Map<String, Glyph> glyphMap = new HashMap<String, Glyph>();
 		Map<String, Glyph> compartmentMap = new HashMap<String, Glyph>();
 		Map<String, Arc> arcMap = new HashMap<String, Arc>();
-		Set<Glyph> rootSet = new HashSet<Glyph>();
 
 		// Create glyphs for Physical Entities
 
@@ -117,7 +116,7 @@ public class L3ToSBGNPDConverter
 		{
 			if (needsToBeRepresented(entity))
 			{
-				createGlyph(entity, glyphMap, compartmentMap, rootSet);
+				createGlyph(entity, glyphMap, compartmentMap);
 			}
 		}
 
@@ -157,7 +156,8 @@ public class L3ToSBGNPDConverter
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
 		sbgn.setMap(map);
 		map.setLanguage(Language.PD.toString());
-		map.getGlyph().addAll(rootSet);
+		
+		map.getGlyph().addAll(getRootGlyphs(glyphMap.values()));
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 		return sbgn;
@@ -201,7 +201,7 @@ public class L3ToSBGNPDConverter
 	 * @return the created glyph
 	 */
 	private static Glyph createGlyph(PhysicalEntity pe, Map<String, Glyph> glyphMap, Map<String,
-		Glyph> compartmentMap, Set<Glyph> rootSet)
+		Glyph> compartmentMap)
 	{
 		if (glyphMap.containsKey(pe.getRDFId())) return glyphMap.get(pe.getRDFId());
 
@@ -209,8 +209,6 @@ public class L3ToSBGNPDConverter
 
 		Glyph g = createGlyph(pe);
 		glyphMap.put(g.getId(), g);
-
-		rootSet.add(g);
 
 		// Create compartment -- add this inside the compartment
 
@@ -1008,6 +1006,39 @@ public class L3ToSBGNPDConverter
 		return arc.getSource().toString() + arc.getTarget().toString();
 	}
 
+	/**
+	 * Collects root-level glyphs in the given glyph collection.
+	 *
+	 * @param glyphCol glyph collection to search
+	 * @return set of roots
+	 */
+	private static Set<Glyph> getRootGlyphs(Collection<Glyph> glyphCol)
+	{
+		Set<Glyph> root = new HashSet<Glyph>(glyphCol);
+		Set<Glyph> children = new HashSet<Glyph>();
+
+		for (Glyph glyph : glyphCol)
+		{
+			addChildren(glyph, children);
+		}
+		root.removeAll(children);
+		return root;
+	}
+
+	/**
+	 * Adds children of this glyph to the specified set recursively.
+	 * @param glyph to collect children
+	 * @param set to add
+	 */
+	private static void addChildren(Glyph glyph, Set<Glyph> set)
+	{
+		for (Glyph child : glyph.getGlyph())
+		{
+			set.add(child);
+			addChildren(child, set);
+		}
+	}
+	
 	//-- Section: Static initialization -----------------------------------------------------------|
 
 	static

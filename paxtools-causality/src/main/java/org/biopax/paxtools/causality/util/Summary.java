@@ -48,6 +48,38 @@ public class Summary
 		return total / x.length;
 	}
 
+	public static int minIndex(double[] v)
+	{
+		double min = Double.MAX_VALUE;
+		int ind = -1;
+
+		for (int i = 0; i < v.length; i++)
+		{
+			if (v[i] < min)
+			{
+				min = v[i];
+				ind = i;
+			}
+		}
+		return ind;
+	}
+	
+	public static int maxIndex(double[] v)
+	{
+		double max = -Double.MAX_VALUE;
+		int ind = -1;
+
+		for (int i = 0; i < v.length; i++)
+		{
+			if (v[i] > max)
+			{
+				max = v[i];
+				ind = i;
+			}
+		}
+		return ind;
+	}
+
 	public static double geometricMean(double[] x)
 	{
 		if (x.length == 0) return Double.NaN;

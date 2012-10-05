@@ -118,6 +118,18 @@ public class AlterationPack
 		return Summary.mean(cases);
 	}
 	
+	public double getAlteredRatio(Alteration alt)
+	{
+		int cnt = 0;
+
+		for (Change change : map.get(alt))
+		{
+			if (change.isAltered()) cnt++;
+		}
+
+		return cnt / (double) size;
+	}
+	
 	public Change getChange(Alteration alt, int index)
 	{
 		if (!map.containsKey(alt)) return Change.NO_DATA;

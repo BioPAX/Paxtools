@@ -47,17 +47,18 @@ public class MutexTester
 
 		Traverse trav = linker.traverse;
 		
-		double thr = -0.05;
+		double thr = 0.1;
 
-		List<AltBundle> pairs = getMutexPairs(map, trav, thr);
+		List<AltBundle> pairs = getMutexPairs(map, trav, 0.3);
 		List<AltBundle> modules = new ArrayList<AltBundle>();
 
 		Set<String> encountered = new HashSet<String>();
 		for (AltBundle bun : pairs)
 		{
-			growGroup(bun, map, trav, thr, 1);
-			if (bun.alts.size() < 3) continue;
-			if (bun.calcAveragePValScore() > 0.05) continue;
+			growGroup(bun, map, trav, 0.3, 1);
+			shrinkGroup(bun, thr);
+			if (bun.alts.size() < 2) continue;
+			if (bun.pval > 0.05) continue;
 //			if (bun.calcCoverage() < 0.5) continue;
 
 			if (encountered.contains(bun.id)) continue;
@@ -75,32 +76,33 @@ public class MutexTester
 //				return new Double(b2.calcAveragePValScore()).compareTo(b1.calcAveragePValScore());
 			}
 		});
-		
-		for (AltBundle bun : modules)
-		{				
-			Set<String> genes = new HashSet<String>(bun.getAllGenes());
-//			genes.remove(bun.seed);
-//			List<String> rels = linker.linkProgressive(genes, Collections.singleton(bun.seed), 3);
-			List<String> rels = linker.linkProgressive(genes, genes, 0);
-			if (rels.isEmpty()) continue;
 
-			bun.sortToMostAltered();
-			System.out.println(bun.getGeneNamesInString());
-			System.out.println(bun);
-			System.out.println(bun.getPrint());
+		System.out.println(getGraph(modules, linker));
 
-			for (double v : bun.calcPVals()) System.out.println(fmt.format(v));
-
-			for (String rel : rels) if (!rel.contains("TRANSCRIPTION")) System.out.println(rel);
-			System.out.println();
-		}
+//		for (AltBundle bun : modules)
+//		{
+//			Set<String> genes = new HashSet<String>(bun.getAllGenes());
+////			genes.remove(bun.seed);
+////			List<String> rels = linker.linkProgressive(genes, Collections.singleton(bun.seed), 3);
+//			List<String> rels = linker.linkProgressive(genes, genes, 0);
+//			if (rels.isEmpty()) continue;
+//
+////			bun.sortToMostAltered();
+////			System.out.println(bun);
+////			System.out.println(bun.getPrint());
+//
+////			for (double v : bun.calcPVals()) System.out.println(fmt.format(v));
+//
+//			for (String rel : rels) if (!rel.contains("TRANSCRIPTION")) System.out.println(rel);
+//			System.out.println();
+//		}
 	}
 
 	private Map<String, AlterationPack> readAlterations() throws IOException
 	{
 		// cBio portal configuration
 		
-		Dataset data = breast;
+		Dataset data = glioblastoma;
 		
 		if (new File(data.filename).exists())
 		{
@@ -273,24 +275,23 @@ public class MutexTester
 		String id;
 		List<AlterationPack> alts;
 		List<AlterationPack>[] other;
-		Alteration key;
 		double pval;
-		boolean mutex;
 		String seed;
 		Map<AlterationPack, Alteration> useMap;
+		int candidateSize;
 
-		public AltBundle(AlterationPack alt1, AlterationPack alt2, Alteration key1, Alteration key2, Alteration key, boolean mutex)
+		public AltBundle(AlterationPack alt1, AlterationPack alt2, Alteration key1, Alteration key2, 
+			int candidateSize)
 		{
 			useMap = new HashMap<AlterationPack, Alteration>();
 			useMap.put(alt1, key1);
 			useMap.put(alt2, key2);
-			this.mutex = mutex;
 
 			this.alts = new ArrayList<AlterationPack>();
 			this.alts.add(alt1);
 			this.alts.add(alt2);
-			this.key = key;
 			this.seed = alt1.getId();
+			this.candidateSize = candidateSize;
 
 			updateID();
 			pval = calcPVal();
@@ -302,14 +303,19 @@ public class MutexTester
 
 			alts.add(pack);
 			useMap.put(pack, addKey);
-			Collections.sort(alts, new Comparator<AlterationPack>()
-			{
-				@Override
-				public int compare(AlterationPack alt1, AlterationPack alt2)
-				{
-					return alt1.getId().compareTo(alt2.getId());
-				}
-			});
+
+			pval = calcPVal();
+
+			// Update ID
+			updateID();
+		}
+
+		public void remove(AlterationPack pack)
+		{
+			assert other == null;
+
+			alts.remove(pack);
+			useMap.remove(pack);
 
 			pval = calcPVal();
 
@@ -322,15 +328,9 @@ public class MutexTester
 			id = "";
 			for (int i = 0; i < alts.size(); i++)
 			{
-				id += "  " + alts.get(i).getId();
-				id += (useMap.get(alts.get(i)) == Alteration.ACTIVATING) ? "+" : "-";
+				id += " " + alts.get(i).getId();
 			}
 			id = id.trim();
-		}
-
-		public void setSeed(String seed)
-		{
-			this.seed = seed;
 		}
 
 		private double calcPVal(int replace, AlterationPack with)
@@ -348,16 +348,6 @@ public class MutexTester
 			return getWorstPval(calcPVals());
 		}
 		
-//		public double[] getPValScores()
-//		{
-//			double[] pval = calcPVals();
-//			for (int i = 0; i < pval.length; i++)
-//			{
-//				pval[i] = -Math.log(-pval[i]);
-//			}
-//			return pval;
-//		}
-		
 		public double calcAveragePValScore()
 		{
 			return Summary.geometricMean(calcPVals());
@@ -371,8 +361,6 @@ public class MutexTester
 					alts.get(0).get(useMap.get(alts.get(0))), 
 					alts.get(1).get(useMap.get(alts.get(1))));
 
-				if ((isMutex() && pval > 0) || (!isMutex() && pval < 0)) pval = -1;
-				
 				return new double[]{pval};
 			}
 			
@@ -461,30 +449,21 @@ public class MutexTester
 
 			for (double pv : pval)
 			{
-				if (mutex)
-				{
-					if (pv > 0) return 1;
-					if (w > pv) w = pv;
-				}
-				else
-				{
-					if (pv < 0) return 1;
-					if (w < pv) w = pv;
-				}
+				if (w < pv) w = pv;
 			}
 			return w;
 		}
 
 		public double calcCoverage()
 		{
-			int total = alts.get(0).get(key).length;
+			int total = alts.get(0).get(useMap.get(alts.get(0))).length;
 			int altered = 0;
 			
 			for (int i = 0; i < total; i++)
 			{
 				for (AlterationPack alt : alts)
 				{
-					if (alt.get(key)[i].isAltered())
+					if (alt.get(useMap.get(alt))[i].isAltered())
 					{
 						altered++;
 						break;
@@ -511,17 +490,13 @@ public class MutexTester
 		{
 			return Math.abs(pval);
 		}
-		
-		public boolean isMutex()
-		{
-			return mutex;
-		}
 
 		@Override
 		public String toString()
 		{
-			return id + "\t" + fmt.format(calcAveragePValScore()) + "\tseed: " + seed + "\t coverage: " +
-				fmt.format(getSeed().calcAlteredRatio(key)) + " --> " +  fmt.format(calcCoverage());
+			return id + "\t" + fmt.format(calcAveragePValScore()) + "\tseed: " + seed + 
+				"\t coverage: " + fmt.format(getSeed().calcAlteredRatio(useMap.get(getSeed()))) +
+				" --> " + fmt.format(calcCoverage());
 		}
 
 		public String getPrint()
@@ -531,13 +506,28 @@ public class MutexTester
 		
 		public AlterationPack getSeed()
 		{
+			return getAltPack(seed);
+		}
+		
+		public AlterationPack getAltPack(String id)
+		{
 			for (AlterationPack alt : alts)
 			{
-				if (alt.getId().equals(seed)) return alt;
+				if (alt.getId().equals(id)) return alt;
 			}
 			return null;
 		}
 		
+		public int getSeedIndex()
+		{
+			for (int i = 0; i < alts.size(); i++)
+			{
+				if (alts.get(i).getId().equals(seed)) return i;
+
+			}
+			return -1;
+		}
+
 		public String getPrint(List<Integer> order)
 		{
 			int i = 0;
@@ -545,12 +535,16 @@ public class MutexTester
 			for (AlterationPack alt : alts)
 			{
 				if (s.length() > 0) s.append("\n");
-				s.append(alt.getPrint(useMap.get(alt), order));
+				s.append(alt.getPrint(useMap.get(alt), order)).
+					append((alt.getId().length() < 4) ? "  \t" : "\t").
+					append((useMap.get(alt) == Alteration.ACTIVATING) ? "+" : "-").append("\t").
+					append(fmt.format(getGenePVal(alt, useMap.get(alt))));
+
 				if (other != null && other[i] != null)
 				{
 					for (AlterationPack pack : other[i])
 					{
-						s.append("\n").append(pack.getPrint(key, order)).append(" *");
+						s.append("\n").append(pack.getPrint(useMap.get(pack), order)).append(" *");
 					}
 				}
 				i++;
@@ -558,6 +552,36 @@ public class MutexTester
 			return s.toString();
 		}
 
+		protected double getGenePVal(AlterationPack alt, Alteration key)
+		{
+			int a = 0;
+			int b = 0;
+			int o = 0;
+			int n = alt.get(key).length;
+			
+			for (int i = 0; i < n; i++)
+			{
+				if (alt.get(key)[i].isAltered()) a++;
+				
+				for (AlterationPack ap : alts)
+				{
+					if (ap != alt)
+					{
+						if (ap.get(useMap.get(ap))[i].isAltered())
+						{
+							b++;
+
+							if (alt.get(key)[i].isAltered()) o++;
+							
+							break;
+						}
+					}
+				}
+			}
+
+			return Overlap.calcPVal(n, a, b, o);
+		}
+		
 		protected void sortToMostAltered()
 		{
 			Collections.sort(alts, new Comparator<AlterationPack>()
@@ -635,12 +659,9 @@ public class MutexTester
 			{
 				AltBundle bundle = (AltBundle) o;
 				
-				if (bundle.isMutex() == isMutex())
+				if (alts.size() == bundle.alts.size())
 				{
-					if (alts.size() == bundle.alts.size())
-					{
-						if (alts.containsAll(bundle.alts)) return true;
-					}
+					if (alts.containsAll(bundle.alts)) return true;
 				}
 			}
 			return false;
@@ -677,10 +698,10 @@ public class MutexTester
 			{
 				if (altMap.containsKey(n))
 				{
-					best = tryAndPutPair(altMap, thr, seed, best, n, Alteration.ACTIVATING, Alteration.ACTIVATING);
-					best = tryAndPutPair(altMap, thr, seed, best, n, Alteration.INHIBITING, Alteration.ACTIVATING);
-					best = tryAndPutPair(altMap, thr, seed, best, n, Alteration.INHIBITING, Alteration.INHIBITING);
-					best = tryAndPutPair(altMap, thr, seed, best, n, Alteration.ACTIVATING, Alteration.INHIBITING);
+					best = tryAndPutPair(altMap, thr, seed, best, n, Alteration.ACTIVATING, Alteration.ACTIVATING, neigh.size());
+					best = tryAndPutPair(altMap, thr, seed, best, n, Alteration.INHIBITING, Alteration.ACTIVATING, neigh.size());
+					best = tryAndPutPair(altMap, thr, seed, best, n, Alteration.INHIBITING, Alteration.INHIBITING, neigh.size());
+					best = tryAndPutPair(altMap, thr, seed, best, n, Alteration.ACTIVATING, Alteration.INHIBITING, neigh.size());
 				}
 			}
 
@@ -692,16 +713,30 @@ public class MutexTester
 	}
 
 	private AltBundle tryAndPutPair(Map<String, AlterationPack> altMap, double thr, String seed,
-		AltBundle best, String n, Alteration seedKey, Alteration neighKey)
+		AltBundle best, String n, Alteration seedKey, Alteration neighKey, int candidateSize)
 	{
-		AltBundle bun =
-			new AltBundle(altMap.get(seed), altMap.get(n), seedKey, neighKey, Alteration.ANY, true);
+		AltBundle bun = new AltBundle(altMap.get(seed), altMap.get(n), 
+			seedKey, neighKey, candidateSize);
 
-		if (bun.pval < 0 && bun.pval > thr)
+		if (bun.pval < thr)
 		{
-			if (best == null || best.pval < bun.pval) best = bun;
+			if (best == null || best.pval > bun.pval) best = bun;
 		}
 		return best;
+	}
+
+	private void shrinkGroup(AltBundle bun, double thr)
+	{
+		double[] pvs = bun.calcPVals();
+		pvs[bun.getSeedIndex()] = 0;
+		int ind = Summary.maxIndex(pvs);
+		if (1 - Math.pow(1 - pvs[ind], bun.candidateSize) > thr)
+		{
+			bun.remove(bun.alts.get(bun.alts.size() - 1));
+			bun.candidateSize++;
+
+			if (bun.alts.size() > 2) shrinkGroup(bun, thr);
+		}
 	}
 
 	private void growGroup(AltBundle bun, Map<String, AlterationPack> altMap,
@@ -749,7 +784,7 @@ public class MutexTester
 	private AlterationPack enlarge(AltBundle bun, Collection<AlterationPack> candidates, double thr)
 	{
 		AlterationPack bestPack = null;
-		double bestPval = -1;
+		double bestPval = 1;
 		Alteration bestKey = null;
 		
 		for (AlterationPack can : candidates)
@@ -760,38 +795,87 @@ public class MutexTester
 			} catch (CloneNotSupportedException e) { e.printStackTrace(); }
 
 			cp.add(can, Alteration.ACTIVATING);
-			if (cp.pval < 0)
+
+			if (cp.pval < bestPval)
 			{
-				if (cp.pval > bestPval)
-				{
-					bestPval = cp.pval;
-					bestPack = can;
-					bestKey = Alteration.ACTIVATING;
-				}
+				bestPval = cp.pval;
+				bestPack = can;
+				bestKey = Alteration.ACTIVATING;
 			}
+
 			try	{
 				cp = (AltBundle) bun.clone();
 			} catch (CloneNotSupportedException e) { e.printStackTrace(); }
 
 			cp.add(can, Alteration.INHIBITING);
-			if (cp.pval < 0)
+			if (cp.pval < bestPval)
 			{
-				if (cp.pval > bestPval)
-				{
-					bestPval = cp.pval;
-					bestPack = can;
-					bestKey = Alteration.INHIBITING;
-				}
+				bestPval = cp.pval;
+				bestPack = can;
+				bestKey = Alteration.INHIBITING;
 			}
 		}
-		if (bestPval > thr)
+		if (bestPval <= thr)
 		{
 			bun.add(bestPack, bestKey);
+			bun.candidateSize = candidates.size();
 			return bestPack;
 		}
 		else return null;
 	}
 
+	private String getGraph(List<AltBundle> bundles, SIFLinker linker)
+	{
+		String s = "type:graph\ttext:mutex";
+		Set<String> nodes = new HashSet<String>();
+		Set<String> edges = new HashSet<String>();
+
+		for (AltBundle bundle : bundles)
+		{
+			for (AlterationPack pack : bundle.alts)
+			{
+
+				if (!nodes.contains(pack.getId()))
+				{
+					s += "\ntype:node\tid:" + pack.getId() + "\ttext:" + pack.getId();
+					Alteration alt = bundle.useMap.get(pack);
+					double rat = pack.getAlteredRatio(alt);
+					int v = 255 - (int) (rat * 255);
+					String color = alt == Alteration.ACTIVATING ? 
+						"255 " + v + " " + v : v + " " + v + " 255";
+					s += "\tbgcolor:" + color + "\ttooltip:" + fmt.format(rat);
+					nodes.add(pack.getId());
+				}
+			}
+
+			Set<String> genes = new HashSet<String>(bundle.getAllGenes());
+			List<String> relations = linker.linkProgressive(genes, genes, 0);
+			for (String rel : relations)
+			{
+				if (!edges.contains(rel))
+				{
+					String[] tok = rel.split("\t");
+					AlterationPack src = bundle.getAltPack(tok[0]);
+					AlterationPack trg = bundle.getAltPack(tok[2]);
+					
+					s+= "\ntype:edge\tid:" + rel.replaceAll("\t", " ") + "\tsource:" + src.getId() +
+						"\ttarget:" + trg.getId() + "\tarrow:Target";
+					
+					double pv = Overlap.calcAlterationOverlapPval(
+						src.get(bundle.useMap.get(src)), trg.get(bundle.useMap.get(trg)));
+					
+					int v = (int) Math.max(0, 255 - (-Math.log(pv) * 55.4));
+					String color = v + " " + v + " " + v;
+					s += "\tlinecolor:" + color;
+					
+					edges.add(rel);
+				}				
+			}
+		}
+		return s;
+	}
+	
+	
 	static class Dataset
 	{
 		public Dataset(String filename, int study, int caseList, int[] profile)
@@ -816,4 +900,8 @@ public class MutexTester
 		"Breast.txt", 2, 0, new int[]{0, 7, 10});
 	public static final Dataset colon = new Dataset(
 		"Colon.txt", 4, 0, new int[]{0, 7, 10});
+	public static final Dataset lung_squamous = new Dataset(
+		"Lung-squamous.txt", 11, 0, new int[]{0, 4, 10});
+	public static final Dataset prostate = new Dataset(
+		"Prostate.txt", 14, 0, new int[]{0, 2, 4});
 }

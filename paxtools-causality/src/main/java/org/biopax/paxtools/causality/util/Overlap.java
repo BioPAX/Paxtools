@@ -10,6 +10,15 @@ import java.util.*;
  */
 public class Overlap
 {
+	/**
+	 * Calculates the p-value for getting o or less overlaps by chance.
+	 *
+	 * @param n
+	 * @param a
+	 * @param b
+	 * @param o
+	 * @return
+	 */
 	public static double calcPVal(int n, int a, int b, int o)
 	{
 		// Make sure that all parameters are non-negative
@@ -34,26 +43,13 @@ public class Overlap
 			a = t;
 		}
 
-		double e = (a * b) / (double) n;
-
 		double pval = 0;
 
-		if (o >= e)
+		for (int i = 0; i <= o; i++)
 		{
-			for (int i = o; i <= b; i++)
-			{
-				pval += calcProb(n, a, b, i);
-			}
-			return pval;
+			pval += calcProb(n, a, b, i);
 		}
-		else // (o < e)
-		{
-			for (int i = 0; i <= o; i++)
-			{
-				pval += calcProb(n, a, b, i);
-			}
-			return -pval;
-		}
+		return pval;
 	}
 
 	/**
@@ -75,7 +71,7 @@ public class Overlap
 
 	public static void main(String[] args)
 	{
-		System.out.println("pval = " + calcPVal(30, 20, 5, 0));
+		System.out.println("pval = " + calcPVal(9, 6, 6, 3));
 	}
 
 	public static double calcAlterationOverlapPval(Change[] alt1, Change[] alt2)
