@@ -254,18 +254,18 @@ public class VNode implements Updatable
 		
 		for (int i = 0; i < numOfInfos; i++) 
 		{
-			Glyph tmpglyph = stateGlyphs.get(i);
+			Glyph tmpglyph = infoGlyphs.get(i);
 			Bbox b = new Bbox();
 			tmpglyph.setBbox(b);
 			
 			//set dummy id
 			tmpglyph.setId(parentID + ".info." + (i+1) );
 			
-			tmpglyph.getBbox().setX(parent_x_up+(i+1)*offset + i*STATE_BOUND.getWidth());
+			tmpglyph.getBbox().setX(parent_x_up+(i+1)*offset + i*INFO_BOUND.getWidth());
 			tmpglyph.getBbox().setY(parent_y_up);
 			
-			tmpglyph.getBbox().setW(STATE_BOUND.width);
-			tmpglyph.getBbox().setH(STATE_BOUND.height);
+			tmpglyph.getBbox().setW(INFO_BOUND.width);
+			tmpglyph.getBbox().setH(INFO_BOUND.height);
 		}
 	}
 	
