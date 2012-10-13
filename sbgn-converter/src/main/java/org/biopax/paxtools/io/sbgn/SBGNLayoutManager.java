@@ -67,18 +67,7 @@ public class SBGNLayoutManager
 		graphMan.updateBounds();
 		
 		// Apply layout
-		this.layout.rimport java.util.ArrayList;
-		import java.util.HashMap;
-		import java.util.Iterator;
-		import java.util.List;
-
-		import org.ivis.layout.*;
-		import org.ivis.layout.cose.CoSELayout;
-		import org.sbgn.bindings.Arc;
-		import org.sbgn.bindings.Port;
-		import org.sbgn.bindings.Glyph;
-		import org.sbgn.bindings.Sbgn;
-		import org.sbgn.bindings.Bbox;unLayout();
+		this.layout.runLayout();
 		
 		return sbgn;
 	}
@@ -99,8 +88,6 @@ public class SBGNLayoutManager
 				VCompound v = new VCompound();
 				
 				v.glyph = glyph;
-				
-				System.out.println(glyph.getId());
 				
 				/*
 				 * need to add bbox objects
