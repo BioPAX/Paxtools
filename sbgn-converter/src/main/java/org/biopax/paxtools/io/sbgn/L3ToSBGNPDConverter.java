@@ -160,6 +160,12 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(getRootGlyphs(glyphMap.values()));
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
+		
+		/*------------------ChiLay layout modification ----------------------------*/
+		//Apply Layout to SBGN objects
+		SBGNLayoutManager coseLayoutManager = new SBGNLayoutManager();
+		sbgn = coseLayoutManager.createLayout(sbgn);
+		
 		return sbgn;
 	}
 
