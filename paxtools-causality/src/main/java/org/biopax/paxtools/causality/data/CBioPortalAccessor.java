@@ -27,6 +27,10 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     private List<CancerStudy> cancerStudies = new ArrayList<CancerStudy>();
     private CancerStudy currentCancerStudy = null;
 
+    private Map<String, CancerStudy> cancerStudiesById = null;
+    private Map<String, GeneticProfile> geneticProfilesById = null;
+    private Map<String, CaseList> caseListsById = null;
+
     private Map<CancerStudy, List<GeneticProfile>> geneticProfilesCache
             = new HashMap<CancerStudy, List<GeneticProfile>>();
     private Map<CancerStudy, List<CaseList>> caseListCache = new HashMap<CancerStudy, List<CaseList>>();
@@ -43,11 +47,14 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     }
 
     private void initializeStudies() throws IOException {
-        String urlStr = "getCancerStudies";
+        cancerStudiesById = new HashMap<String, CancerStudy>();
 
+        String urlStr = "getCancerStudies";
         for (String[] result : parseURL(urlStr)) {
             assert result.length == 3;
-            cancerStudies.add(new CancerStudy(result[0], result[1], result[2]));
+            CancerStudy cancerStudy = new CancerStudy(result[0], result[1], result[2]);
+            cancerStudies.add(cancerStudy);
+            cancerStudiesById.put(cancerStudy.getStudyId(), cancerStudy);
         }
     }
 
@@ -65,6 +72,18 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 
     public static void setPortalURL(String portalURL) {
         CBioPortalAccessor.portalURL = portalURL;
+    }
+
+    public GeneticProfile getGeneticProfileById(String id) {
+        return geneticProfilesById.get(id);
+    }
+
+    public CaseList getCaseListById(String id) {
+        return caseListsById.get(id);
+    }
+
+    public CancerStudy getCancerStudyById(String id) {
+        return cancerStudiesById.get(id);
     }
 
     private Change[] mergeChanges(Change[] changes1, Change[] changes2) {
@@ -263,9 +282,13 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
     }
 
     public List<CaseList> getCaseListsForCurrentStudy() throws IOException {
+        caseListsById = new HashMap<String, CaseList>();
         List<CaseList> caseLists = caseListCache.get(getCurrentCancerStudy());
-        if(caseLists != null)
+        if(caseLists != null) {
+            for (CaseList caseList : caseLists)
+                caseListsById.put(caseList.getId(), caseList);
             return caseLists;
+        }
 
         caseLists = new ArrayList<CaseList>();
         String url = "getCaseLists&cancer_study_id=" + getCurrentCancerStudy().getStudyId();
@@ -274,7 +297,9 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
             String[] cases = results[4].split(" ");
             assert cases.length > 1;
 
-            caseLists.add(new CaseList(results[0], results[1], cases));
+            CaseList caseList = new CaseList(results[0], results[1], cases);
+            caseLists.add(caseList);
+            caseListsById.put(caseList.getId(), caseList);
         }
 
         caseListCache.put(getCurrentCancerStudy(), caseLists);
@@ -321,21 +346,41 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 
         this.currentCancerStudy = currentCancerStudy;
         setCurrentCaseList(null);
+        if(caseListsById != null)
+            caseListsById.clear();
         getCurrentGeneticProfiles().clear();
+        if(geneticProfilesById != null)
+            geneticProfilesById.clear();
+
         memory.clear();
+
+        // Try to load the associated genetic profiles and case lists for fast loading.
+        try {
+            getCaseListsForCurrentStudy();
+            getGeneticProfilesForCurrentStudy();
+        } catch (IOException e) {
+            log.warn("Could not buffer case lists/genetic profiles for the current study:"
+                    + currentCancerStudy.getStudyId());
+        }
     }
 
     public List<GeneticProfile> getGeneticProfilesForCurrentStudy() throws IOException {
+        geneticProfilesById = new HashMap<String, GeneticProfile>();
         List<GeneticProfile> geneticProfiles = geneticProfilesCache.get(getCurrentCancerStudy());
-        if(geneticProfiles != null)
+        if(geneticProfiles != null) {
+            for (GeneticProfile geneticProfile : geneticProfiles)
+                geneticProfilesById.put(geneticProfile.getId(), geneticProfile);
             return geneticProfiles;
+        }
 
         geneticProfiles = new ArrayList<GeneticProfile>();
 
         String url = "getGeneticProfiles" + "&cancer_study_id=" + getCurrentCancerStudy().getStudyId();
         for (String[] results : parseURL(url)) {
             assert results.length == 6;
-            geneticProfiles.add(new GeneticProfile(results[0], results[1], results[2], results[4]));
+            GeneticProfile geneticProfile = new GeneticProfile(results[0], results[1], results[2], results[4]);
+            geneticProfiles.add(geneticProfile);
+            geneticProfilesById.put(geneticProfile.getId(), geneticProfile);
         }
 
         assert !geneticProfiles.isEmpty();
