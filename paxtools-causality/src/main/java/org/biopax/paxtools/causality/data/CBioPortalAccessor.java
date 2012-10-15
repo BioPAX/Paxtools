@@ -6,7 +6,7 @@ import org.biopax.paxtools.causality.model.Alteration;
 import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Change;
 import org.biopax.paxtools.causality.model.Node;
-import org.biopax.paxtools.causality.util.EGUtil;
+import org.biopax.paxtools.conversion.EntrezGene;
 
 import java.io.IOException;
 import java.net.URL;
@@ -417,7 +417,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
 	protected String getGeneSymbol(Node node)
 	{
 		String egid = getEntrezGeneID(node);
-		if (egid != null) return EGUtil.getSymbol(egid);
+		if (egid != null) return EntrezGene.getSymbol(egid);
 		return null;
 	}
 

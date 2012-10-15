@@ -1,23 +1,26 @@
-package org.biopax.paxtools.causality.util;
+package org.biopax.paxtools.conversion;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Performs HGNC related conversions. Database updated at Jan 25, 2012.
+ * This class provides a mapping between HGNC IDs and approved gene symbols.
  *
  * @author Ozgun Babur
  */
-public class HGNCUtil
+public class HGNC
 {
-	private static Map<String, Integer> sym2id;
-	private static Map<Integer, String> id2sym;
+	private static Map<String, String> sym2id;
+	private static Map<String, String> id2sym;
 
 	public static void main(String[] args)
 	{
-		System.out.println(getHGNCID("BAX"));
+		System.out.println(getID("BAX"));
 	}
 
 	/**
@@ -25,14 +28,24 @@ public class HGNCUtil
 	 * @param symbol
 	 * @return
 	 */
-	public static Integer getHGNCID(String symbol)
+	public static String getID(String symbol)
 	{
 		return sym2id.get(symbol);
 	}
-	
-	public static String getSymbol(Integer hgncID)
+
+	public static String getSymbol(String hgncID)
 	{
 		return id2sym.get(hgncID);
+	}
+
+	public static boolean containsID(String id)
+	{
+		return id2sym.containsKey(id);
+	}
+
+	public static boolean containsSymbol(String symbol)
+	{
+		return sym2id.containsKey(symbol);
 	}
 
 	public static Set<String> getSymbols()
@@ -44,24 +57,24 @@ public class HGNCUtil
 	{
 		try
 		{
-			sym2id = new HashMap<String, Integer>();
+			sym2id = new HashMap<String, String>();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
-				HGNCUtil.class.getResourceAsStream("HGNC.txt")));
+				HGNC.class.getResourceAsStream("HGNC.txt")));
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 			{
 				String[] token = line.split("\t");
 				String sym = token[1];
-				Integer id = Integer.parseInt(token[0]);
+				String id = token[0];
 				sym2id.put(sym, id);
 			}
 			reader.close();
 
-			id2sym = new HashMap<Integer, String>();
+			id2sym = new HashMap<String, String>();
 			for (String key : sym2id.keySet())
 			{
 				id2sym.put(sym2id.get(key), key);
 			}
-			
+
 		}
 		catch (FileNotFoundException e)
 		{

@@ -38,7 +38,7 @@ public class OverlapTest
 			if (e > o) hit = -hit;
 
 			double sim = hit / (double) trial;
-			double calc = Overlap.calcPVal(n, a, b, o);
+			double calc = Overlap.calcMutexPVal(n, a, b, o);
 			double dif = sim - calc;
 			System.out.println(o + "\t" + sim + "\t" + calc + "\t" + dif);
 			Assert.assertTrue(Math.abs(dif) < 0.01 || Math.abs(dif / calc) < 0.01);

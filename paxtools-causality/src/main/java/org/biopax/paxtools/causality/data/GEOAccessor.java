@@ -4,8 +4,8 @@ import org.biopax.paxtools.causality.model.Alteration;
 import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Change;
 import org.biopax.paxtools.causality.model.Node;
-import org.biopax.paxtools.causality.util.EGUtil;
 import org.biopax.paxtools.causality.util.Summary;
+import org.biopax.paxtools.conversion.EntrezGene;
 
 import java.io.*;
 import java.net.URL;
@@ -248,7 +248,7 @@ public class GEOAccessor extends AlterationProviderAdaptor
 
 		for (String sym : parseToken(syms))
 		{
-			String id = EGUtil.getEGID(sym);
+			String id = EntrezGene.getID(sym);
 			if (id != null) ids.add(id);
 		}
 		return ids;

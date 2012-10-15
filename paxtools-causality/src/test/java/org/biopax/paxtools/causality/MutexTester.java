@@ -1,6 +1,5 @@
 package org.biopax.paxtools.causality;
 
-import org.apache.lucene.analysis.Tokenizer;
 import org.biopax.paxtools.causality.analysis.SIFLinker;
 import org.biopax.paxtools.causality.analysis.Traverse;
 import org.biopax.paxtools.causality.data.CBioPortalAccessor;
@@ -10,9 +9,10 @@ import org.biopax.paxtools.causality.data.GeneticProfile;
 import org.biopax.paxtools.causality.model.Alteration;
 import org.biopax.paxtools.causality.model.AlterationPack;
 import org.biopax.paxtools.causality.model.Change;
-import org.biopax.paxtools.causality.util.HGNCUtil;
 import org.biopax.paxtools.causality.util.Overlap;
+import org.biopax.paxtools.causality.util.Progress;
 import org.biopax.paxtools.causality.util.Summary;
+import org.biopax.paxtools.conversion.HGNC;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.model.level3.Xref;
 import org.junit.Ignore;
@@ -30,7 +30,7 @@ import java.util.*;
  */
 public class MutexTester
 {
-	public static final DecimalFormat fmt = new DecimalFormat("0.0000");
+	public static final DecimalFormat fmt = new DecimalFormat("0.00");
 
 	@Test
 	@Ignore
@@ -50,13 +50,18 @@ public class MutexTester
 		double thr = 0.1;
 
 		List<AltBundle> pairs = getMutexPairs(map, trav, 0.3);
+		System.out.println("initial pairs.size() = " + pairs.size());
 		List<AltBundle> modules = new ArrayList<AltBundle>();
 
+		Progress p = new Progress(pairs.size());
 		Set<String> encountered = new HashSet<String>();
 		for (AltBundle bun : pairs)
 		{
-			growGroup(bun, map, trav, 0.3, 1);
+			growGroup(bun, map, trav, 0.5, 1);
 			shrinkGroup(bun, thr);
+
+			p.tick();
+
 			if (bun.alts.size() < 2) continue;
 			if (bun.pval > 0.05) continue;
 //			if (bun.calcCoverage() < 0.5) continue;
@@ -167,30 +172,6 @@ public class MutexTester
 		return set;
 	}
 	
-	private Set<String> readSymbolsTemp() throws IOException
-	{
-		Set<String> set = new HashSet<String>();
-		BufferedReader reader = new BufferedReader(new FileReader(
-			"/home/ozgun/Desktop/temp.txt"));
-
-		reader.readLine();
-		for (String line = reader.readLine(); line != null; line = reader.readLine())
-		{
-			StringTokenizer tokenizer = new StringTokenizer(line);
-			while(tokenizer.hasMoreTokens())
-			{
-				String token = tokenizer.nextToken();
-				if (!token.startsWith("0"))
-				{
-					set.add(token);
-				}
-			}
-		}
-
-		reader.close();
-		return set;
-	}
-
 	private String getSymbol(ProteinReference pr)
 	{
 		for (Xref xref : pr.getXref())
@@ -198,7 +179,7 @@ public class MutexTester
 			if (xref.getDb().equals("HGNC"))
 			{
 				String id = xref.getId().substring(xref.getId().indexOf(":") + 1);
-				return HGNCUtil.getSymbol(Integer.parseInt(id));
+				return HGNC.getSymbol(id);
 			}
 		}
 		return null;
@@ -243,38 +224,10 @@ public class MutexTester
 		}
 	}
 	
-	private void addAlternatives(List<AltBundle> bundles, 
-		Map<AlterationPack, List<AlterationPack>> cooc, double thr)
-	{
-		for (AltBundle bundle : bundles)
-		{
-			int i = 0;
-			for (AlterationPack pack : new ArrayList<AlterationPack>(bundle.alts))
-			{
-				if (cooc.containsKey(pack))
-				{
-					for (AlterationPack other : cooc.get(pack))
-					{
-						double pv = bundle.calcPVal(i, other);
-						if (pv <= -0 && pv > -thr)
-						{
-							if (bundle.other == null) bundle.other = new List[bundle.alts.size()];
-							if (bundle.other[i] == null) 
-								bundle.other[i] = new ArrayList<AlterationPack>();
-							bundle.other[i].add(other);
-						}
-					}
-				}
-				i++;
-			}
-		}
-	}
-	
 	class AltBundle implements Comparable, Cloneable
 	{
 		String id;
 		List<AlterationPack> alts;
-		List<AlterationPack>[] other;
 		double pval;
 		String seed;
 		Map<AlterationPack, Alteration> useMap;
@@ -299,27 +252,21 @@ public class MutexTester
 
 		public void add(AlterationPack pack, Alteration addKey)
 		{
-			assert other == null;
-
 			alts.add(pack);
 			useMap.put(pack, addKey);
 
 			pval = calcPVal();
 
-			// Update ID
 			updateID();
 		}
 
 		public void remove(AlterationPack pack)
 		{
-			assert other == null;
-
 			alts.remove(pack);
 			useMap.remove(pack);
 
 			pval = calcPVal();
 
-			// Update ID
 			updateID();
 		}
 
@@ -357,16 +304,14 @@ public class MutexTester
 		{
 			if (alts.size() == 2)
 			{
-				double pval = Overlap.calcAlterationOverlapPval(
-					alts.get(0).get(useMap.get(alts.get(0))), 
+				double pval = Overlap.calcAlterationMutexPval(
+					alts.get(0).get(useMap.get(alts.get(0))),
 					alts.get(1).get(useMap.get(alts.get(1))));
 
 				return new double[]{pval};
 			}
 			
 			double[] pval = new double[alts.size()];
-//			double[] pval = new double[(alts.size() * (alts.size() - 1)) / 2];
-//			boolean[] use = new boolean[alts.get(0).getSize()];
 
 			int x = 0;
 			
@@ -390,50 +335,8 @@ public class MutexTester
 					}
 				}
 
-				pval[x++] = Overlap.calcAlterationOverlapPval(
+				pval[x++] = Overlap.calcAlterationMutexPval(
 					alts.get(i).get(useMap.get(alts.get(i))), others);
-
-				
-//				for (int j = i + 1; j < alts.size(); j++)
-//				{
-//					if (mutex)
-//					{
-//						// Update use array with other alterations
-//	
-//						for (int k = 0; k < use.length; k++)
-//						{
-//							use[k] = true;
-//							
-//							for (int l = 0; l < alts.size(); l++)
-//							{
-//								if (l == i || l == j) continue;
-//								if (alts.get(l).get(useMap.get(alts.get(l)))[k].isAltered())
-//								{
-//									use[k] = false;
-//									break;
-//								}
-//							}
-//						}
-//	
-//						// Calc pval for the pair
-//						
-//						double pv = Overlap.calcAlterationOverlapPval(
-//							alts.get(i).get(useMap.get(alts.get(i))), 
-//							alts.get(j).get(useMap.get(alts.get(j))), use);
-////							alts.get(i).get(key), alts.get(j).get(key));
-//
-//						pval[x++] = pv;
-//					}
-//					else
-//					{
-//						// Calc pval for the pair
-//
-//						double pv = Overlap.calcAlterationOverlapPval(
-//							alts.get(i).get(key), alts.get(j).get(key));
-//
-//						pval[x++] = pv;
-//					}
-//				}
 			}
 
 			assert x == pval.length;
@@ -540,13 +443,6 @@ public class MutexTester
 					append((useMap.get(alt) == Alteration.ACTIVATING) ? "+" : "-").append("\t").
 					append(fmt.format(getGenePVal(alt, useMap.get(alt))));
 
-				if (other != null && other[i] != null)
-				{
-					for (AlterationPack pack : other[i])
-					{
-						s.append("\n").append(pack.getPrint(useMap.get(pack), order)).append(" *");
-					}
-				}
 				i++;
 			}
 			return s.toString();
@@ -579,7 +475,7 @@ public class MutexTester
 				}
 			}
 
-			return Overlap.calcPVal(n, a, b, o);
+			return Overlap.calcMutexPVal(n, a, b, o);
 		}
 		
 		protected void sortToMostAltered()
@@ -619,13 +515,6 @@ public class MutexTester
 			for (AlterationPack alt : alts)
 			{
 				list.add(alt.getId());
-
-				if (other != null && other[i] != null)
-				for (AlterationPack ot : other[i])
-				{
-					list.add(ot.getId());
-				}
-				
 				i++;
 			}
 			return list;
@@ -708,7 +597,7 @@ public class MutexTester
 			if (best != null) pairs.add(best);
 
 		}
-		Collections.sort(pairs);
+//		Collections.sort(pairs);
 		return pairs;
 	}
 
@@ -832,9 +721,21 @@ public class MutexTester
 
 		for (AltBundle bundle : bundles)
 		{
+			if (bundle.alts.size() > 2)
+			{
+				s += "\ntype:compound\tid:" + bundle.getGeneNamesInString() + "\tmembers";
+
+				for (AlterationPack pack : bundle.alts)
+				{
+					s += ":" + pack.getId();
+				}
+
+				s += "\ttext:" + "cov: " + fmt.format(bundle.calcCoverage());
+				s += "\ttextcolor:0 0 0\tbgcolor:255 255 255";
+			}
+			
 			for (AlterationPack pack : bundle.alts)
 			{
-
 				if (!nodes.contains(pack.getId()))
 				{
 					s += "\ntype:node\tid:" + pack.getId() + "\ttext:" + pack.getId();
@@ -861,7 +762,7 @@ public class MutexTester
 					s+= "\ntype:edge\tid:" + rel.replaceAll("\t", " ") + "\tsource:" + src.getId() +
 						"\ttarget:" + trg.getId() + "\tarrow:Target";
 					
-					double pv = Overlap.calcAlterationOverlapPval(
+					double pv = Overlap.calcAlterationMutexPval(
 						src.get(bundle.useMap.get(src)), trg.get(bundle.useMap.get(trg)));
 					
 					int v = (int) Math.max(0, 255 - (-Math.log(pv) * 55.4));
@@ -872,10 +773,44 @@ public class MutexTester
 				}				
 			}
 		}
+		
+		// Put the co-occurrence relations
+		
+		Set<AlterationPack> set = new HashSet<AlterationPack>();
+		Map<AlterationPack, Alteration> useMap = new HashMap<AlterationPack, Alteration>();
+		Collections.reverse(bundles);
+		for (AltBundle bundle : bundles)
+		{
+			set.addAll(bundle.alts);
+			useMap.putAll(bundle.useMap);
+		}
+		for (AlterationPack pack1 : set)
+		{
+			for (AlterationPack pack2 : set)
+			{
+				if (pack1.getId().compareTo(pack2.getId()) > 0)
+				{
+					double pv = Overlap.calcAlterationCoocPval(
+						pack1.get(useMap.get(pack1)), pack2.get(useMap.get(pack2)));
+
+					if (pv < 0.05)
+					{
+						s += "\ntype:edge\tid:" + pack1.getId() + " co-occur " + pack2.getId();
+						s += "\tsource:" + pack1.getId() + "\ttarget:" + pack2.getId();
+
+						int v = (int) Math.max(0, 255 - (-Math.log(pv) * 10));
+						String color = v + " " + v + " " + v;
+						s += "\tlinecolor:" + color + "\tstyle:Dashed";
+
+						s += "\tarrow:None";
+					}
+				}
+			}
+		}
+		Collections.reverse(bundles);
 		return s;
 	}
-	
-	
+
 	static class Dataset
 	{
 		public Dataset(String filename, int study, int caseList, int[] profile)

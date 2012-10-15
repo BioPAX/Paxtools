@@ -391,6 +391,7 @@ public class AlterationPack
 			Alteration type = Alteration.valueOf(token[1]);
 //			if (type == Alteration.MUTATION) continue;
 //			if (type == Alteration.EXPRESSION) continue;
+//			if (type == Alteration.COPY_NUMBER) continue;
 			map.get(token[0]).put(type, c);
 		}
 

@@ -2,15 +2,14 @@ package org.biopax.paxtools.causality;
 
 import org.biopax.paxtools.causality.analysis.BFS;
 import org.biopax.paxtools.causality.analysis.Exhaustive;
-import org.biopax.paxtools.causality.data.CBioPortalAccessor;
 import org.biopax.paxtools.causality.data.GEOAccessor;
 import org.biopax.paxtools.causality.model.*;
-import org.biopax.paxtools.causality.util.HGNCUtil;
 import org.biopax.paxtools.causality.util.Histogram;
 import org.biopax.paxtools.causality.wrapper.Graph;
 import org.biopax.paxtools.causality.wrapper.PhysicalEntityWrapper;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.SimpleMerger;
+import org.biopax.paxtools.conversion.HGNC;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -411,7 +410,7 @@ public class CausalityTest
 			if (xref.getDb().startsWith("HGNC")) id = xref.getId();
 		}
 		if (id != null && id.length() > 0)
-			return HGNCUtil.getSymbol(Integer.parseInt(id.substring(id.indexOf(":")+1)));
+			return HGNC.getSymbol(id.substring(id.indexOf(":") + 1));
 		return null;
 	}
 

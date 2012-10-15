@@ -2,6 +2,7 @@ package org.biopax.paxtools.io.sbgn;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.conversion.HGNC;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -351,18 +352,37 @@ public class L3ToSBGNPDConverter
 	 */
 	private static String findALabelForMolecule(PhysicalEntity pe)
 	{
+		// Use gene symbol of PE
+
+		for (Xref xref : pe.getXref())
+		{
+			String sym = extractGeneSymbol(xref);
+			if (sym != null) return sym;
+		}
+
+		// Use gene symbol of ER
+
+		EntityReference er = null;
+
+		if (pe instanceof SimplePhysicalEntity)
+		{
+			er = ((SimplePhysicalEntity) pe).getEntityReference();
+		}
+
+		if (er != null)
+		{
+			for (Xref xref : er.getXref())
+			{
+				String sym = extractGeneSymbol(xref);
+				if (sym != null) return sym;
+			}
+		}
+		
 		// Use display name of entity
 		String name = pe.getDisplayName();
 
 		if (name == null)
 		{
-			EntityReference er = null;
-
-			if (pe instanceof SimplePhysicalEntity)
-			{
-				er = ((SimplePhysicalEntity) pe).getEntityReference();
-			}
-
 			if (er != null)
 			{
 				// Use display name of reference
@@ -407,6 +427,30 @@ public class L3ToSBGNPDConverter
 		return name;
 	}
 
+	private static String extractGeneSymbol(Xref xref)
+	{
+		if (xref.getDb() != null && (
+			xref.getDb().equals("HGNC") ||
+			xref.getDb().equals("Gene Symbol")))
+		{
+			String ref = xref.getId();
+
+			if (ref != null)
+			{
+				ref = ref.trim();
+				if (ref.contains(":")) ref = ref.substring(ref.indexOf(":") + 1);
+				if (ref.contains("_")) ref = ref.substring(ref.indexOf("_") + 1);
+
+				if (!HGNC.containsSymbol(ref))
+				{
+					ref = HGNC.getSymbol(ref);
+				}
+			}
+			return ref;
+		}
+		return null;
+	}
+	
 	/**
 	 * Adds molecule type, and iterates over features of the entity and creates corresponding state
 	 * variables. Ignores binding features and covalent-binding features.

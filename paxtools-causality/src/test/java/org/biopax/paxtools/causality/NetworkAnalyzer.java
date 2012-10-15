@@ -1,7 +1,7 @@
 package org.biopax.paxtools.causality;
 
-import org.biopax.paxtools.causality.util.HGNCUtil;
 import org.biopax.paxtools.controller.PathAccessor;
+import org.biopax.paxtools.conversion.HGNC;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
@@ -221,7 +221,7 @@ public class NetworkAnalyzer
 			if (xref.getDb().equals("HGNC"))
 			{
 				String id = xref.getId().substring(xref.getId().indexOf(":") + 1);
-				return HGNCUtil.getSymbol(Integer.parseInt(id));
+				return HGNC.getSymbol(id);
 			}
 		}
 		return null;
