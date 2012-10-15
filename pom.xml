@@ -16,8 +16,9 @@
 	<url>http://www.biopax.org/paxtools</url>
 
 	<modules>
-		<module>paxtools-core</module>
-		<module>paxtools-jena-io</module>
+        <module>id-conversion</module>
+        <module>paxtools-core</module>
+        <module>paxtools-jena-io</module>
 		<module>sif-converter</module>
 		<module>gsea-converter</module>
 		<module>biopax-converter</module>
