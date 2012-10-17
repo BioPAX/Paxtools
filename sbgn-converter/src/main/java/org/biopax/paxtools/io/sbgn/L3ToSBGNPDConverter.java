@@ -757,8 +757,17 @@ public class L3ToSBGNPDConverter
 			for (Control ctrl2 : ctrl.getControlledOf())
 			{
 				Glyph g = createControlStructure(ctrl2, glyphMap, arcMap);
-				if (g != null) 
+				if (g != null)
+				{
+					// If the control is negative, add a NOT in front of it
+
+					if (getControlType(ctrl2).equals(INHIBITION))
+					{
+						g = addNOT(g, glyphMap, arcMap);
+					}
+
 					toConnect.add(g);
+				}
 			}
 
 			// Handle co-factors of catalysis
@@ -781,13 +790,6 @@ public class L3ToSBGNPDConverter
 			{
 				cg = connectWithAND(toConnect, glyphMap, arcMap);
 			}
-		}
-
-		// If the control is negative, add a NOT in front of it
-
-		if (cg != null && getControlType(ctrl).equals(INHIBITION))
-		{
-			cg = addNOT(cg, glyphMap, arcMap);
 		}
 
 		return cg;

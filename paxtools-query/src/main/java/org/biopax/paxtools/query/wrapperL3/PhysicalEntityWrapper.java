@@ -88,7 +88,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 					node = conW.getReverse();
 				}
 			}
-			
+
 			Edge edge = new EdgeL3(this, node, graph);
 			this.getDownstreamNoInit().add(edge);
 			node.getUpstreamNoInit().add(edge);

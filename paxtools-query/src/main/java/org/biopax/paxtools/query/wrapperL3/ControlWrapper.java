@@ -61,6 +61,8 @@ public class ControlWrapper extends AbstractNode
 			sign = POSITIVE;
 		}
 
+		if (ctrl instanceof TemplateReactionRegulation)
+			transcription = true;
 	}
 
 	private void bindUpstream(BioPAXElement element)
@@ -93,7 +95,9 @@ public class ControlWrapper extends AbstractNode
 	{
 		for (Process prc : ctrl.getControlled())
 		{
-			if (prc instanceof Conversion || prc instanceof Control)
+			if (prc instanceof Conversion ||
+				prc instanceof Control ||
+				prc instanceof TemplateReaction)
 			{
 				AbstractNode node = (AbstractNode) graph.getGraphObject(prc);
 				Edge edge = new EdgeL3(this, node, graph);

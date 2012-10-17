@@ -203,6 +203,27 @@ public class QueryTest
 		}
 		System.out.println("i = " + i);
 	}
-	
+
+	@Test
+	@Ignore
+	/**
+	 * Below method is for using during debugging queries.
+	 */
+	public void testForDebug() throws Throwable
+	{
+		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/temp.owl"));
+
+		Set<BioPAXElement> source = new HashSet<BioPAXElement>();
+		source.add(model.getByID("http://pid.nci.nih.gov/biopaxpid_163509"));
+
+		Set<BioPAXElement> target = new HashSet<BioPAXElement>();
+		target.add(model.getByID("http://pid.nci.nih.gov/biopaxpid_52469"));
+
+		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
+			source, target, model, LimitType.NORMAL, 1);
+
+		System.out.println("result.size() = " + result.size());
+	}
+
 
 }
