@@ -3,6 +3,7 @@ package org.biopax.paxtools.io.sbgn;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.Sbgn;
@@ -11,9 +12,7 @@ import org.xml.sax.SAXException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * @author Ozgun Babur
@@ -51,5 +50,14 @@ public class SBGNConverterTest
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
 
 		System.out.println("result = " + result);
+	}
+	
+	@Test
+	@Ignore
+	public void testDebug() throws Throwable
+	{
+		String file = "/home/ozgun/Desktop/temp";
+		Model model = handler.convertFromOWL(new FileInputStream(file + ".owl"));
+		L3ToSBGNPDConverter.writeSBGN(model, file + ".sbgn");
 	}
 }
