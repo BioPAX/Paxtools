@@ -52,12 +52,18 @@ class GSEAEntry {
 	}
     
     
+    /**
+     * Creates GSEA (.gmt) file entry (line):
+     * 
+     *  
+     */
     public String toString() {
     	StringBuilder toReturn = new StringBuilder();
     	
     	if (!identifiers.isEmpty()) {
-    		toReturn.append(name).append("\t").append(description)
-    			.append("; taxonomy: ").append(((taxID.isEmpty()) ? "N/A" : taxID))
+    		String tax = ((taxID.isEmpty()) ? "unknown" : taxID);
+    		toReturn.append(tax).append(" (taxonomy); ").append(name)
+    			.append("\t").append(description)
     			.append("; id type: ").append(idType);
     		for (String id : identifiers) {
     			toReturn.append("\t").append(id);

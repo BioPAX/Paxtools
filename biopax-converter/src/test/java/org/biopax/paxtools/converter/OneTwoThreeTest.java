@@ -2,7 +2,13 @@ package org.biopax.paxtools.converter;
 
 import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level2.physicalEntityParticipant;
+import org.biopax.paxtools.model.level2.protein;
+import org.biopax.paxtools.model.level3.Protein;
+import org.biopax.paxtools.model.level3.SmallMolecule;
+import org.junit.Assert;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.*;
 
@@ -15,6 +21,11 @@ public class OneTwoThreeTest {
 			getClass().getClassLoader()
 				.getResourceAsStream("biopax-example-short-pathway.owl"));
 		
+		physicalEntityParticipant pep31 = (physicalEntityParticipant) model.getByID(model.getXmlBase() + "physicalEntityParticipant31");
+		assertTrue(pep31 instanceof physicalEntityParticipant);
+		assertTrue(pep31.getPHYSICAL_ENTITY() instanceof protein);
+		assertNotNull(pep31.getCELLULAR_LOCATION());
+		
 		model = (new OneTwoThree()).filter(model);
 		
 		if (model != null) {
@@ -22,6 +33,15 @@ public class OneTwoThreeTest {
 					getClass().getClassLoader().getResource("").getFile() 
 	        		+ File.separator + "converted.owl"));
 		}
+		
+		
+		SmallMolecule p9 = (SmallMolecule) model.getByID(model.getXmlBase() + "physicalEntityParticipant9");
+		Protein p31 = (Protein) model.getByID(model.getXmlBase() + "physicalEntityParticipant31");
+		assertTrue(p9 instanceof SmallMolecule);
+		assertTrue(p31 instanceof Protein);
+		assertNotNull(p9.getCellularLocation());
+		assertNotNull(p31.getCellularLocation());
+		assertEquals(p9.getCellularLocation(), p31.getCellularLocation());
 	}
 
     @Test
