@@ -164,7 +164,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                         ? Change.NO_DATA
                         : (Double.parseDouble(dataPoint) > methylationThreshold ? Change.INHIBITING : Change.NO_CHANGE);
             case COPY_NUMBER:
-                if(dataPoint.equalsIgnoreCase(NA) || dataPoint.equalsIgnoreCase(NaN)) {
+                if(dataPoint.equalsIgnoreCase(NA) || dataPoint.equalsIgnoreCase(NaN) || dataPoint.isEmpty()) {
                     return Change.NO_DATA;
                 } else {
                     Double value = Double.parseDouble(dataPoint);
@@ -176,7 +176,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
                         return Change.NO_CHANGE;
                 }
             case EXPRESSION:
-                if(dataPoint.equalsIgnoreCase(NaN) || dataPoint.equalsIgnoreCase(NA) ) {
+                if(dataPoint.equalsIgnoreCase(NaN) || dataPoint.equalsIgnoreCase(NA) || dataPoint.isEmpty()) {
                     return Change.NO_DATA;
                 } else {
                     Double value = Double.parseDouble(dataPoint);
