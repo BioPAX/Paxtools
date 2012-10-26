@@ -58,18 +58,58 @@ public class SBGNLayoutManager
 		{ 
 			this.createNode(vNode, null, this.layout); 
 		} 
-	
+		
+		for (VNode vNode: this.root.children) 
+		{ 
+			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
+		} 
 		
 		// Create LEdges for ChiLay layout component
 		createLedges(sbgn.getMap().getArc(), this.layout);
 		
-		// Update bounds
-		graphMan.updateBounds();
-		
 		// Apply layout
 		this.layout.runLayout();
-		
+					
 		return sbgn;
+	}
+	
+	public void updateCompoundBounds(Glyph parent,List<Glyph> childGlyphs)
+	{		
+		float PAD = (float) 2.0;
+		float minX = Float.MAX_VALUE; float minY = Float.MAX_VALUE;
+		float maxX = Float.MIN_VALUE; float maxY = Float.MIN_VALUE;
+		
+		for (Glyph tmpGlyph:childGlyphs) 
+		{
+			if(tmpGlyph.getClazz() != "unit of information" && tmpGlyph.getClazz() != "state variable" )
+			{
+				if(tmpGlyph.getGlyph().size() > 0)
+					updateCompoundBounds(tmpGlyph, tmpGlyph.getGlyph());
+				
+	            float w = tmpGlyph.getBbox().getW();
+				float h = tmpGlyph.getBbox().getH();
+				float w2 = w/2;
+				float h2 = h/2;
+				
+	            // Verify MIN and MAX x/y again:
+	            minX = Math.min(minX, (tmpGlyph.getBbox().getX() - w2));
+	            minY = Math.min(minY, (tmpGlyph.getBbox().getY() - h2));
+	            maxX = Math.max(maxX, (tmpGlyph.getBbox().getX() + w2));
+	            maxY = Math.max(maxY, (tmpGlyph.getBbox().getY() + h2));
+	            
+	            if (minX == Float.MAX_VALUE) minX = 0;
+	            if (minY == Float.MAX_VALUE) minY = 0;
+	            if (maxX == Float.MIN_VALUE) maxX = 0;
+	            if (maxY == Float.MIN_VALUE) maxY = 0;
+	            
+	            parent.getBbox().setX(minX - PAD);
+	            parent.getBbox().setY(minY - PAD);
+	            parent.getBbox().setW(maxX -  parent.getBbox().getX() + PAD);
+	            parent.getBbox().setH(maxY -  parent.getBbox().getY() + PAD);
+			}
+			
+
+		}
 	}
 	
 	/**
@@ -88,13 +128,7 @@ public class SBGNLayoutManager
 				VCompound v = new VCompound();
 				
 				v.glyph = glyph;
-				
-				/*
-				 * need to add bbox objects
-				 * */
-				Bbox b = new Bbox();
-				glyph.setBbox(b);
-				
+					
 				v.setSizeAccordingToClass();
 				
 				idToGLyph.put(glyph.getId(), glyph);
@@ -191,9 +225,9 @@ public class SBGNLayoutManager
 	public void createNode(VNode vNode,VNode parent,Layout layout)
 	{
 		LNode lNode = layout.newNode(vNode); 
-		
-		lNode.getRect().setWidth(vNode.glyph.getBbox().getW());
-		lNode.getRect().setHeight(vNode.glyph.getBbox().getH());
+		lNode.setWidth(vNode.glyph.getBbox().getW());
+		lNode.setHeight(vNode.glyph.getBbox().getH());
+		lNode.setLocation(vNode.glyph.getBbox().getX(), vNode.glyph.getBbox().getY());
 		
 		LGraph rootLGraph = layout.getGraphManager().getRoot();
 		
@@ -206,6 +240,7 @@ public class SBGNLayoutManager
 		{ 
 			LNode parentLNode = this.viewToLayout.get(parent); 
 			parentLNode.getChild().add(lNode); 
+			
 		} 
 		else 
 		{ 
@@ -224,8 +259,8 @@ public class SBGNLayoutManager
 				this.createNode(vNode2, vCompound, layout); 
 				
 			} 
-			
+				
 			lNode.updateBounds();
-		}		
+		}
 	}
 }

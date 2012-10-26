@@ -22,6 +22,9 @@ public class VNode implements Updatable
 	public Glyph glyph;
 	public int clusterID;
 	
+	ArrayList<Glyph> stateGlyphs;
+	ArrayList<Glyph> infoGlyphs;
+	
 	
 	/*Glyph class types*/
 	private static final String MACROMOLECULE = "macromolecule";
@@ -44,6 +47,17 @@ public class VNode implements Updatable
 	private static final  String NUCLEIC_ACID_FEATURE = "nucleic acid feature";
 	private static final  String UNSPECIFIED_ENTITY = "unspecified entity";
 	
+	// Constats used for determining "state of information" and "unit of information" glyph widths according to
+	// their labels
+	private static final  int LOWERCASE_LETTER_PIXEL_WIDTH = 6;
+	private static final  int UPPERCASE_LETTER_PIXEL_WIDTH = 9;
+
+	private static final  int MAX_STATE_AND_INFO_WIDTH = 60;
+	
+	private static final  int MAX_STATE_AND_INFO_HEIGHT = 20;
+	
+	private static final  int OFFSET_BTW_INFO_GLYPHS = 10;
+
 	/*Glyph Size Constants for layout*/
 	private Bound  SOURCE_AND_SINK_BOUND;
 	private Bound  LOGICAL_OPERATOR_BOUND;
@@ -55,30 +69,33 @@ public class VNode implements Updatable
 	private Bound  PHENOTYPE_BOUND;
 	private Bound  PERTURBING_AGENT_BOUND;
 	private Bound  TAG_BOUND;
-	
 	private Bound  INFO_BOUND;
 	private Bound  STATE_BOUND;
 	
+		
 	/**
 	 * Default Constructor, sets the geometry of the bounds which are attributes of this class
 	 * */
 	public VNode()
 	{
 		SOURCE_AND_SINK_BOUND = new Bound(60,60);
-		LOGICAL_OPERATOR_BOUND = new Bound(40,40);
+		LOGICAL_OPERATOR_BOUND = new Bound(30,30);
 		PROCESS_NODES_BOUND = new Bound(20,20);
 		
-		MACROMOLECULE_BOUND = new Bound(140,60);
+		MACROMOLECULE_BOUND = new Bound(60,40);
 		NUCLEIC_ACID_FEATURE_BOUND = new Bound(140,60);
 		
-		SIMPLE_CHEMICAL_BOUND = new Bound(60,60);
+		SIMPLE_CHEMICAL_BOUND = new Bound(40,40);
 		UNSPECIFIED_ENTITY_BOUND = new Bound(100,60);
 		PHENOTYPE_BOUND = new Bound(140,60);
 		TAG_BOUND = new Bound(140,60);
 		PERTURBING_AGENT_BOUND = new Bound(140,60);
 		
-		INFO_BOUND = new Bound(60,20);
-		STATE_BOUND = new Bound(180,30);
+		INFO_BOUND = new Bound(MAX_STATE_AND_INFO_WIDTH,MAX_STATE_AND_INFO_HEIGHT);
+		STATE_BOUND = new Bound(MAX_STATE_AND_INFO_WIDTH,MAX_STATE_AND_INFO_HEIGHT);
+		
+		stateGlyphs = new <Glyph> ArrayList();
+		infoGlyphs = new <Glyph> ArrayList();
 		
 	}
 	
@@ -100,7 +117,7 @@ public class VNode implements Updatable
 		this.glyph.getBbox().setX((float) lNode.getRect().getX());
 		this.glyph.getBbox().setY((float) lNode.getRect().getY()); 
 		
-		updateSizeForStateAndInfo();
+		placeStateAndInfoGlyphs();
 	}
 	
 	/**
@@ -120,6 +137,16 @@ public class VNode implements Updatable
 	public void setSizeAccordingToClass()
 	{
 		String glyphClass = this.glyph.getClazz();
+		
+		/*
+		 * need to add bbox objects
+		 * */
+		 
+		Bbox b = new Bbox();
+		this.glyph.setBbox(b);
+		
+		this.glyph.getBbox().setX(300);
+		this.glyph.getBbox().setY(300);
 		
 		if (glyphClass == SOURCE_AND_SINK) 
 		{
@@ -192,22 +219,57 @@ public class VNode implements Updatable
 		
 	}
 	
+	public int setInfoGlyphSizeAccordingToLabel(ArrayList stateList)
+	{
+		int wholeSize = 0;
+		for (Iterator iterator = stateList.iterator(); iterator.hasNext();) 
+		{
+			Glyph tmpGlyph = (Glyph) iterator.next();
+			
+			String tmpStr = tmpGlyph.getState().getValue();
+			
+			if(tmpGlyph.getState().getVariable() != "")
+				tmpStr += "@" +tmpGlyph.getState().getVariable(); 
+			
+			int numOfUpper = 0;
+			int numOfLower = 0;
+			     
+		    for(int i=0; i < tmpStr.length(); i++) 
+		    {
+		        if(Character.isLowerCase(tmpStr.charAt(i))) 
+		        {
+		        	numOfLower++;
+
+		        }
+		        else
+		            numOfUpper++;
+		    }
+		    
+			Bbox b = new Bbox();
+			tmpGlyph.setBbox(b);
+		    
+		    float requiredSize = numOfLower * LOWERCASE_LETTER_PIXEL_WIDTH + numOfUpper * UPPERCASE_LETTER_PIXEL_WIDTH;
+		    
+		    if(requiredSize < MAX_STATE_AND_INFO_HEIGHT )
+				tmpGlyph.getBbox().setW(requiredSize);
+		    else
+		    	tmpGlyph.getBbox().setW(STATE_BOUND.width);
+		    
+		    tmpGlyph.getBbox().setH(MAX_STATE_AND_INFO_HEIGHT);
+		    
+		    wholeSize += tmpGlyph.getBbox().getW();
+				
+		}
+		
+	    return wholeSize;
+	}
+	
 	/**
 	 * 	If glyph attribute of this VNode object includes any "state of information" or "unit of information" glyphs, this method updates the
 	 * size of VNode accordingly.
 	 * */
 	public void updateSizeForStateAndInfo()
 	{
-		int offset = 10;
-		float parent_y_up = this.glyph.getBbox().getY()-INFO_BOUND.height/2;
-		float parent_y_bot = this.glyph.getBbox().getY()+this.glyph.getBbox().getH()-STATE_BOUND.height/2;
-		float parent_x_up = this.glyph.getBbox().getX();
-		String parentID = this.glyph.getId();
-		
-		
-		
-		ArrayList<Glyph> stateGlyphs = new ArrayList();
-		ArrayList<Glyph> infoGlyphs = new ArrayList();
 		
 		// Find all state and info glyphs
 		for (Iterator iterator = this.glyph.getGlyph().iterator(); iterator.hasNext();)
@@ -225,33 +287,49 @@ public class VNode implements Updatable
 			}		
 		}
 		
+		//Calculate "state of information" glyphs' sizes
+		int wholeWidthOfStates = setInfoGlyphSizeAccordingToLabel(stateGlyphs);
+		int wholeWidthOfInfos  = setInfoGlyphSizeAccordingToLabel(infoGlyphs);
+		
 		// Calculate  positions
 		int numOfStates = stateGlyphs.size();
 		int numOfInfos = infoGlyphs.size();
 		
-		float requiredWidthForStates = (numOfStates+1) * offset + numOfStates*STATE_BOUND.width;
-		float requiredWidthForInfos = (numOfStates+1) * offset + numOfStates*STATE_BOUND.width;
+		float requiredWidthForStates = (numOfStates+1) * OFFSET_BTW_INFO_GLYPHS + wholeWidthOfStates;
+		float requiredWidthForInfos = (numOfStates+1) * OFFSET_BTW_INFO_GLYPHS + wholeWidthOfInfos;
 		
-		if (this.glyph.getBbox().getW() < requiredWidthForInfos || this.glyph.getBbox().getW() < requiredWidthForInfos ) 
+		
+		if (this.glyph.getBbox().getW() < requiredWidthForStates || this.glyph.getBbox().getW() < requiredWidthForInfos ) 
 		{
 			this.glyph.getBbox().setW(Math.max(requiredWidthForStates, requiredWidthForInfos));
-		}
+		}		
+	}
+	
+	public void placeStateAndInfoGlyphs()
+	{
+		int numOfStates = stateGlyphs.size();
+		int numOfInfos = infoGlyphs.size();
 		
+		float parent_y_up = this.glyph.getBbox().getY()-INFO_BOUND.height/2;
+		float parent_y_bot = this.glyph.getBbox().getY()+this.glyph.getBbox().getH()-STATE_BOUND.height/2;
+		float parent_x_up = this.glyph.getBbox().getX();
+		String parentID = this.glyph.getId();
+		
+		int usedWidth = 0;
 		for (int i = 0; i < numOfStates; i++) 
 		{
 			Glyph tmpglyph = stateGlyphs.get(i);
-			Bbox b = new Bbox();
-			tmpglyph.setBbox(b);
 			//set dummy id
 			tmpglyph.setId(parentID + ".state." + (i+1) );
 			
-			tmpglyph.getBbox().setX(parent_x_up+(i+1)*offset + i*STATE_BOUND.getWidth());
+			tmpglyph.getBbox().setX(parent_x_up+(i+1)*OFFSET_BTW_INFO_GLYPHS + usedWidth);
 			tmpglyph.getBbox().setY(parent_y_bot);
 			
-			tmpglyph.getBbox().setW(STATE_BOUND.width);
-			tmpglyph.getBbox().setH(STATE_BOUND.height);
+			usedWidth += tmpglyph.getBbox().getW();
+			
 		}
 		
+		usedWidth = 0;
 		for (int i = 0; i < numOfInfos; i++) 
 		{
 			Glyph tmpglyph = infoGlyphs.get(i);
@@ -261,11 +339,10 @@ public class VNode implements Updatable
 			//set dummy id
 			tmpglyph.setId(parentID + ".info." + (i+1) );
 			
-			tmpglyph.getBbox().setX(parent_x_up+(i+1)*offset + i*INFO_BOUND.getWidth());
+			tmpglyph.getBbox().setX(parent_x_up+(i+1)*OFFSET_BTW_INFO_GLYPHS + usedWidth);
 			tmpglyph.getBbox().setY(parent_y_up);
 			
-			tmpglyph.getBbox().setW(INFO_BOUND.width);
-			tmpglyph.getBbox().setH(INFO_BOUND.height);
+			usedWidth += tmpglyph.getBbox().getW();
 		}
 	}
 	
