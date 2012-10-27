@@ -2,10 +2,12 @@ package org.biopax.paxtools.io.sbgn;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.conversion.HGNC;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.sbgn.GlyphClazz;
 import org.sbgn.Language;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.*;
@@ -14,6 +16,9 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
 import java.util.Map;
+
+import static org.sbgn.GlyphClazz.*;
+import static org.sbgn.ArcClazz.*;
 
 /**
  * This class converts BioPAX L3 model into SBGN PD. It does not layout the objects, leaves location
@@ -41,26 +46,6 @@ public class L3ToSBGNPDConverter
 {
 	private static final Log log = LogFactory.getLog(L3ToSBGNPDConverter.class);
 
-	// Values for SBGN classes
-
-	private static final String COMPARTMENT = "compartment";
-	public static final String PROCESS = "process";
-
-	public static final String CONSUMPTION = "consumption";
-	public static final String PRODUCTION = "production";
-	private static final String CATALYSIS = "catalysis";
-	private static final String STIMULATION = "stimulation";
-	private static final String INHIBITION = "inhibition";
-	private static final String LOGIC_ARC = "logic arc";
-
-	private static final String AND = "and";
-	private static final String NOT = "not";
-
-	public static final String STATE_VARIABLE = "state variable";
-	public static final String INFO = "unit of information";
-
-	private int IDCounter = 1;
-	
 	/**
 	 * A matching between physical entities and SBGN classes.
 	 */
@@ -351,18 +336,37 @@ public class L3ToSBGNPDConverter
 	 */
 	private static String findALabelForMolecule(PhysicalEntity pe)
 	{
+		// Use gene symbol of PE
+
+		for (Xref xref : pe.getXref())
+		{
+			String sym = extractGeneSymbol(xref);
+			if (sym != null) return sym;
+		}
+
+		// Use gene symbol of ER
+
+		EntityReference er = null;
+
+		if (pe instanceof SimplePhysicalEntity)
+		{
+			er = ((SimplePhysicalEntity) pe).getEntityReference();
+		}
+
+		if (er != null)
+		{
+			for (Xref xref : er.getXref())
+			{
+				String sym = extractGeneSymbol(xref);
+				if (sym != null) return sym;
+			}
+		}
+		
 		// Use display name of entity
 		String name = pe.getDisplayName();
 
 		if (name == null)
 		{
-			EntityReference er = null;
-
-			if (pe instanceof SimplePhysicalEntity)
-			{
-				er = ((SimplePhysicalEntity) pe).getEntityReference();
-			}
-
 			if (er != null)
 			{
 				// Use display name of reference
@@ -407,6 +411,30 @@ public class L3ToSBGNPDConverter
 		return name;
 	}
 
+	private static String extractGeneSymbol(Xref xref)
+	{
+		if (xref.getDb() != null && (
+			xref.getDb().equals("HGNC") ||
+			xref.getDb().equals("Gene Symbol")))
+		{
+			String ref = xref.getId();
+
+			if (ref != null)
+			{
+				ref = ref.trim();
+				if (ref.contains(":")) ref = ref.substring(ref.indexOf(":") + 1);
+				if (ref.contains("_")) ref = ref.substring(ref.indexOf("_") + 1);
+
+				if (!HGNC.containsSymbol(ref))
+				{
+					ref = HGNC.getSymbol(ref);
+				}
+			}
+			return ref;
+		}
+		return null;
+	}
+	
 	/**
 	 * Adds molecule type, and iterates over features of the entity and creates corresponding state
 	 * variables. Ignores binding features and covalent-binding features.
@@ -423,7 +451,7 @@ public class L3ToSBGNPDConverter
 		if (pe instanceof NucleicAcid)
 		{
 			Glyph g = factory.createGlyph();
-			g.setClazz(INFO);
+			g.setClazz(UNIT_OF_INFORMATION.getClazz());
 			Glyph.State s = factory.createGlyphState();
 			s.setVariable("mt");
 			s.setValue((pe instanceof Dna || pe instanceof DnaRegion) ? "DNA" :
@@ -456,7 +484,7 @@ public class L3ToSBGNPDConverter
 			if (feature instanceof ModificationFeature || feature instanceof FragmentFeature)
 			{
 				Glyph stvar = factory.createGlyph();
-				stvar.setClazz(STATE_VARIABLE);
+				stvar.setClazz(STATE_VARIABLE.getClazz());
 				Glyph.State state = factory.createGlyphState();
 				stvar.setState(state);
 
@@ -513,7 +541,7 @@ public class L3ToSBGNPDConverter
 		Label label = factory.createLabel();
 		label.setText(name);
 		comp.setLabel(label);
-		comp.setClazz(COMPARTMENT);
+		comp.setClazz(COMPARTMENT.getClazz());
 
 		compartmentMap.put(name, comp);
 		return comp;
@@ -561,7 +589,7 @@ public class L3ToSBGNPDConverter
 		// create the process for the conversion in that direction
 
 		Glyph process = factory.createGlyph();
-		process.setClazz(PROCESS);
+		process.setClazz(PROCESS.getClazz());
 		process.setId(cnv.getRDFId() + direction);
 		glyphMap.put(process.getId(), process);
 
@@ -580,7 +608,7 @@ public class L3ToSBGNPDConverter
 		for (PhysicalEntity pe : input)
 		{
 			Glyph g = glyphMap.get(pe.getRDFId());
-			createArc(g, process.getPort().get(0), CONSUMPTION, arcMap);
+			createArc(g, process.getPort().get(0), CONSUMPTION.getClazz(), arcMap);
 		}
 
 		// Associate outputs to output port
@@ -588,7 +616,7 @@ public class L3ToSBGNPDConverter
 		for (PhysicalEntity pe : output)
 		{
 			Glyph g = glyphMap.get(pe.getRDFId());
-			createArc(process.getPort().get(1), g, PRODUCTION, arcMap);
+			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), arcMap);
 		}
 
 		// Associate controllers
@@ -641,7 +669,7 @@ public class L3ToSBGNPDConverter
 		// create the process for the reaction
 
 		Glyph process = factory.createGlyph();
-		process.setClazz(PROCESS);
+		process.setClazz(PROCESS.getClazz());
 		process.setId(tr.getRDFId());
 		glyphMap.put(process.getId(), process);
 
@@ -651,16 +679,17 @@ public class L3ToSBGNPDConverter
 		// Create a source-and-sink as the input
 
 		Glyph sas = factory.createGlyph();
+		sas.setClazz(SOURCE_AND_SINK.getClazz());
 		sas.setId("SAS_For_" + tr.getRDFId());
 		glyphMap.put(sas.getId(), sas);
-		createArc(sas, process.getPort().get(0), CONSUMPTION, arcMap);
+		createArc(sas, process.getPort().get(0), CONSUMPTION.getClazz(), arcMap);
 
 		// Associate products
 
 		for (PhysicalEntity pe : tr.getProduct())
 		{
 			Glyph g = glyphMap.get(pe.getRDFId());
-			createArc(process.getPort().get(1), g, PRODUCTION, arcMap);
+			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), arcMap);
 		}
 
 		// Associate controllers
@@ -713,8 +742,17 @@ public class L3ToSBGNPDConverter
 			for (Control ctrl2 : ctrl.getControlledOf())
 			{
 				Glyph g = createControlStructure(ctrl2, glyphMap, arcMap);
-				if (g != null) 
+				if (g != null)
+				{
+					// If the control is negative, add a NOT in front of it
+
+					if (getControlType(ctrl2).equals(INHIBITION))
+					{
+						g = addNOT(g, glyphMap, arcMap);
+					}
+
 					toConnect.add(g);
+				}
 			}
 
 			// Handle co-factors of catalysis
@@ -737,13 +775,6 @@ public class L3ToSBGNPDConverter
 			{
 				cg = connectWithAND(toConnect, glyphMap, arcMap);
 			}
-		}
-
-		// If the control is negative, add a NOT in front of it
-
-		if (cg != null && getControlType(ctrl).equals(INHIBITION))
-		{
-			cg = addNOT(cg, glyphMap, arcMap);
 		}
 
 		return cg;
@@ -822,7 +853,7 @@ public class L3ToSBGNPDConverter
 		if (!glyphMap.containsKey(id))
 		{
 			and = factory.createGlyph();
-			and.setClazz(AND);
+			and.setClazz(AND.getClazz());
 			and.setId(id);
 			glyphMap.put(and.getId(), and);
 		}
@@ -835,7 +866,7 @@ public class L3ToSBGNPDConverter
 
 		for (Glyph g : gs)
 		{
-			createArc(g, and, LOGIC_ARC, arcMap);
+			createArc(g, and, LOGIC_ARC.getClazz(), arcMap);
 		}
 		return and;
 	}
@@ -861,7 +892,7 @@ public class L3ToSBGNPDConverter
 		{
 			not = factory.createGlyph();
 			not.setId(id);
-			not.setClazz(NOT);
+			not.setClazz(NOT.getClazz());
 			glyphMap.put(not.getId(), not);
 		}
 		else
@@ -870,7 +901,7 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Connect the glyph and NOT
-		createArc(g, not, LOGIC_ARC, arcMap);
+		createArc(g, not, LOGIC_ARC.getClazz(), arcMap);
 
 		return not;
 	}
@@ -886,14 +917,14 @@ public class L3ToSBGNPDConverter
 		if (ctrl instanceof Catalysis)
 		{
 			// Catalysis has its own class
-			return CATALYSIS;
+			return CATALYSIS.getClazz();
 		}
 
 		ControlType type = ctrl.getControlType();
 		if (type == null)
 		{
 			// Use stimulation as the default control type
-			return STIMULATION;
+			return STIMULATION.getClazz();
 		}
 
 		// Map control type to stimulation or inhibition
@@ -903,7 +934,7 @@ public class L3ToSBGNPDConverter
 			case ACTIVATION:
 			case ACTIVATION_ALLOSTERIC:
 			case ACTIVATION_NONALLOSTERIC:
-			case ACTIVATION_UNKMECH: return STIMULATION;
+			case ACTIVATION_UNKMECH: return STIMULATION.getClazz();
 			case INHIBITION:
 			case INHIBITION_ALLOSTERIC:
 			case INHIBITION_OTHER:
@@ -911,7 +942,7 @@ public class L3ToSBGNPDConverter
 			case INHIBITION_COMPETITIVE:
 			case INHIBITION_IRREVERSIBLE:
 			case INHIBITION_UNCOMPETITIVE:
-			case INHIBITION_NONCOMPETITIVE: return INHIBITION;
+			case INHIBITION_NONCOMPETITIVE: return INHIBITION.getClazz();
 		}
 		throw new RuntimeException("Invalid control type: " + type);
 	}
@@ -997,19 +1028,7 @@ public class L3ToSBGNPDConverter
 			((Glyph) target).getId() : ((Port) target).getId();
 
 		arc.setId(sourceID + "--to--" + targetID);
-		arcMap.put(getID(arc), arc);
-	}
-
-	/**
-	 * Arcs do not have an ID in libSBGN. So, we need to generate mock ID for arcs just to be able
-	 * to store them in maps.
-	 *
-	 * @param arc arc to get its ID
-	 * @return ID
-	 */
-	private static String getID(Arc arc)
-	{
-		return arc.getSource().toString() + arc.getTarget().toString();
+		arcMap.put(arc.getId(), arc);
 	}
 
 	/**
