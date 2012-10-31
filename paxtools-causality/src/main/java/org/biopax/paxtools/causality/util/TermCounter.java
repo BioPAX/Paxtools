@@ -67,13 +67,13 @@ public class TermCounter
 
 	public String toString()
 	{
-		return toString(Integer.MAX_VALUE);
+		return toString(-1);
 	}
 
 	public String toString(int minCnt)
 	{
 		String s = "Total terms = " + termMap.size() + ", samples = " + samples + "\n";
-		Item[] items = termMap.values().toArray(new Item[termMap.size()]);
+		Item[] items = termMap.values().toArray(new Item[termMap.values().size()]);
 		Arrays.sort(items);
 
 		for (Item item : items)

@@ -214,10 +214,10 @@ public class QueryTest
 		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/temp.owl"));
 
 		Set<BioPAXElement> source = new HashSet<BioPAXElement>();
-		source.add(model.getByID("http://pid.nci.nih.gov/biopaxpid_163509"));
+		source.add(model.getByID("http://pid.nci.nih.gov/biopaxpid_7379"));
 
 		Set<BioPAXElement> target = new HashSet<BioPAXElement>();
-		target.add(model.getByID("http://pid.nci.nih.gov/biopaxpid_52469"));
+		target.add(model.getByID("http://pid.nci.nih.gov/biopaxpid_73642"));
 
 		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
 			source, target, model, LimitType.NORMAL, 1);

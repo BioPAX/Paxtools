@@ -7,13 +7,16 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.sbgn.GlyphClazz;
 import org.sbgn.Language;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.*;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.io.File;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.Map;
 
@@ -44,7 +47,11 @@ import static org.sbgn.ArcClazz.*;
  */
 public class L3ToSBGNPDConverter
 {
+	//-- Section: Static fields -------------------------------------------------------------------|
+
 	private static final Log log = LogFactory.getLog(L3ToSBGNPDConverter.class);
+
+	public static final String IS_UBIQUE = "IS_UBIQUE";
 
 	/**
 	 * A matching between physical entities and SBGN classes.
@@ -56,7 +63,63 @@ public class L3ToSBGNPDConverter
 	 */
 	private static ObjectFactory factory;
 
+	//-- Section: Instance variables --------------------------------------------------------------|
+
+	/**
+	 * This class is used for detecting ubiques.
+	 */
+	protected UbiqueDetector ubiqueDet;
+
+	/**
+	 * This class is used for generating short printable strings (text in info boxes) from
+	 * recognized entity features.
+	 */
+	protected FeatureDecorator featStrGen;
+
+	/**
+	 * Flag to run a layout before writing down the sbgn.
+	 */
+	protected boolean doLayout;
+
+
+	/**
+	 * ID to glyph map.
+	 */
+	Map<String, Glyph> glyphMap;
+
+	/**
+	 * ID to Arc map
+	 */
+	Map<String, Arc> arcMap;
+
+	/**
+	 * ID to compartment map.
+	 */
+	Map<String, Glyph> compartmentMap;
+
+	/**
+	 * Set of ubiquitous molecules.
+	 */
+	Set<Glyph> ubiqueSet;
+
 	//-- Section: Public methods ------------------------------------------------------------------|
+
+
+	public L3ToSBGNPDConverter()
+	{
+		this(null, null, true);
+	}
+
+	public L3ToSBGNPDConverter(UbiqueDetector ubiqueDet, FeatureDecorator featStrGen,
+		boolean doLayout)
+	{
+		this.ubiqueDet = ubiqueDet;		
+		this.featStrGen = featStrGen;
+		this.doLayout = doLayout;
+		
+		if (this.featStrGen == null)
+			this.featStrGen = new CommonFeatureStringGenerator();
+	}
 
 	/**
 	 * Converts the given model to SBGN, and writes in the specified file.
@@ -64,7 +127,7 @@ public class L3ToSBGNPDConverter
 	 * @param model model to convert
 	 * @param file file to write
 	 */
-	public static void writeSBGN(Model model, String file)
+	public void writeSBGN(Model model, String file)
 	{
 		// Create the model
 		Sbgn sbgn = createSBGN(model);
@@ -82,26 +145,55 @@ public class L3ToSBGNPDConverter
 	}
 
 	/**
+	 * Converts the given model to SBGN, and writes in the specified output stream.
+	 *
+	 * @param model model to convert
+	 * @param stream output stream to write
+	 */
+	public void writeSBGN(Model model, OutputStream stream)
+	{
+		// Create the model
+		Sbgn sbgn = createSBGN(model);
+
+		// Write in file
+
+		try
+		{
+			sbgn.toString();
+			JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			marshaller.marshal(sbgn, stream);
+		}
+		catch (JAXBException e)
+		{
+			if (log.isErrorEnabled()) log.error(e.getCause(), e);
+			e.printStackTrace(new PrintWriter(stream));
+		}
+	}
+
+	/**
 	 * Creates an Sbgn object from the given model.
 	 *
 	 * @param model model to convert to SBGN
 	 * @return SBGN representation of the model
 	 */
-	public static Sbgn createSBGN(Model model)
+	public Sbgn createSBGN(Model model)
 	{
 		assert model.getLevel().equals(BioPAXLevel.L3) : "This method only supports L3 graphs";
 
-		Map<String, Glyph> glyphMap = new HashMap<String, Glyph>();
-		Map<String, Glyph> compartmentMap = new HashMap<String, Glyph>();
-		Map<String, Arc> arcMap = new HashMap<String, Arc>();
+		glyphMap = new HashMap<String, Glyph>();
+		compartmentMap = new HashMap<String, Glyph>();
+		arcMap = new HashMap<String, Arc>();
+		ubiqueSet = new HashSet<Glyph>();
 
 		// Create glyphs for Physical Entities
 
 		for (PhysicalEntity entity : model.getObjects(PhysicalEntity.class))
 		{
-			if (needsToBeRepresented(entity))
+			if (needsToBeCreatedInitially(entity))
 			{
-				createGlyph(entity, glyphMap, compartmentMap);
+				createGlyph(entity);
 			}
 		}
 
@@ -116,15 +208,13 @@ public class L3ToSBGNPDConverter
 				conv.getConversionDirection().equals(ConversionDirectionType.LEFT_TO_RIGHT) ||
 				conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE))
 			{
-				createProcessAndConnections(conv, ConversionDirectionType.LEFT_TO_RIGHT,
-					glyphMap, arcMap);
+				createProcessAndConnections(conv, ConversionDirectionType.LEFT_TO_RIGHT);
 			}
 			else if (conv.getConversionDirection() != null &&
 				(conv.getConversionDirection().equals(ConversionDirectionType.RIGHT_TO_LEFT) ||
 				conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE)))
 			{
-				createProcessAndConnections(conv, ConversionDirectionType.RIGHT_TO_LEFT,
-					glyphMap, arcMap);
+				createProcessAndConnections(conv, ConversionDirectionType.RIGHT_TO_LEFT);
 			}
 		}
 
@@ -132,7 +222,7 @@ public class L3ToSBGNPDConverter
 
 		for (TemplateReaction tr : model.getObjects(TemplateReaction.class))
 		{
-			createProcessAndConnections(tr, glyphMap, arcMap);
+			createProcessAndConnections(tr);
 		}
 
 		// Register created objects into sbgn construct
@@ -143,13 +233,17 @@ public class L3ToSBGNPDConverter
 		map.setLanguage(Language.PD.toString());
 		
 		map.getGlyph().addAll(getRootGlyphs(glyphMap.values()));
+		map.getGlyph().addAll(getRootGlyphs(ubiqueSet));
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
-		
-		/*------------------ChiLay layout modification ----------------------------*/
-		//Apply Layout to SBGN objects
-		SBGNLayoutManager coseLayoutManager = new SBGNLayoutManager();
-		sbgn = coseLayoutManager.createLayout(sbgn);
+
+		if (doLayout)
+		{
+			/*------------------ChiLay layout modification ----------------------------*/
+			//Apply Layout to SBGN objects
+			SBGNLayoutManager coseLayoutManager = new SBGNLayoutManager();
+			sbgn = coseLayoutManager.createLayout(sbgn);
+		}
 		
 		return sbgn;
 	}
@@ -164,7 +258,7 @@ public class L3ToSBGNPDConverter
 	 * @param entity physical entity to check
 	 * @return true if we will draw this entity in SBGN
 	 */
-	private static boolean needsToBeRepresented(PhysicalEntity entity)
+	private boolean needsToBeCreatedInitially(PhysicalEntity entity)
 	{
 		// We are flatting complex members -- thus inner complexes will not be represented
 		if (entity instanceof Complex)
@@ -180,6 +274,11 @@ public class L3ToSBGNPDConverter
 		{
 			return false;
 		}
+		// Ubiques will be created when they are used
+		else if (ubiqueDet != null && ubiqueDet.isUbique(entity))
+		{
+			return false;
+		}
 		return true;
 	}
 
@@ -187,36 +286,39 @@ public class L3ToSBGNPDConverter
 	 * Creates a glyph representing the given PhysicalEntity.
 	 *
 	 * @param pe PhysicalEntity to represent
-	 * @param glyphMap glyph registry
-	 * @param compartmentMap compartment repository
 	 * @return the created glyph
 	 */
-	private static Glyph createGlyph(PhysicalEntity pe, Map<String, Glyph> glyphMap, Map<String,
-		Glyph> compartmentMap)
+	private Glyph createGlyph(PhysicalEntity pe)
 	{
 		if (glyphMap.containsKey(pe.getRDFId())) return glyphMap.get(pe.getRDFId());
 
 		// Create its glyph and register
 
-		Glyph g = createGlyph(pe);
+		Glyph g = createGlyphBasics(pe);
 		glyphMap.put(g.getId(), g);
-
-		// Create compartment -- add this inside the compartment
-
-		Glyph loc = getCompartment(getCompartment(pe), compartmentMap);
-		if (loc != null) 
-		{
-			g.setCompartmentRef(loc);
-		}
+		if (g.getClone() != null) ubiqueSet.add(g);
+		
+		assignLocation(pe, g);
 
 		// Fill-in the complex members if this is a complex
 
 		if (pe instanceof Complex)
 		{
-			createComplexContent((Complex) pe, glyphMap);
+			createComplexContent((Complex) pe);
 		}
 
 		return g;
+	}
+
+	private void assignLocation(PhysicalEntity pe, Glyph g)
+	{
+		// Create compartment -- add this inside the compartment
+
+		Glyph loc = getCompartment(getCompartment(pe));
+		if (loc != null) 
+		{
+			g.setCompartmentRef(loc);
+		}
 	}
 
 	/**
@@ -226,7 +328,7 @@ public class L3ToSBGNPDConverter
 	 * @param pe PhysicalEntity to represent
 	 * @return the glyph
 	 */
-	private static Glyph createGlyph(PhysicalEntity pe)
+	private Glyph createGlyphBasics(PhysicalEntity pe)
 	{
 		String s = typeMatchMap.get(pe.getModelInterface());
 
@@ -240,6 +342,13 @@ public class L3ToSBGNPDConverter
 		label.setText(findALabelForMolecule(pe));
 		g.setLabel(label);
 
+		// Detect if ubique
+
+		if (ubiqueDet != null && ubiqueDet.isUbique(pe))
+		{
+			g.setClone(factory.createGlyphClone());
+		}
+
 		// Put on state variables
 
 		List<Glyph> states = getInformation(pe);
@@ -248,13 +357,29 @@ public class L3ToSBGNPDConverter
 		return g;
 	}
 
+	private Glyph getGlyphToLink(PhysicalEntity pe, String linkID)
+	{
+		if (ubiqueDet != null && !ubiqueDet.isUbique(pe))
+		{
+			return glyphMap.get(pe.getRDFId());
+		}
+		else
+		{
+			// Create a new glyph for each use of ubique
+			Glyph g = createGlyphBasics(pe);
+			g.setId(pe.getRDFId() + linkID);
+			assignLocation(pe, g);
+			ubiqueSet.add(g);
+			return g;
+		}
+	}
+	
 	/**
 	 * Fills in the content of a complex.
 	 *
 	 * @param cx Complex to be filled
-	 * @param glyphMap glyph repository
 	 */
-	private static void createComplexContent(Complex cx, Map<String, Glyph> glyphMap)
+	private void createComplexContent(Complex cx)
 	{
 		Glyph cg = glyphMap.get(cx.getRDFId());
 
@@ -262,11 +387,11 @@ public class L3ToSBGNPDConverter
 		{
 			if (mem instanceof Complex)
 			{
-				addComplexAsMember((Complex) mem, cg, glyphMap);
+				addComplexAsMember((Complex) mem, cg);
 			}
 			else
 			{
-				createComplexMember(mem, cg, glyphMap);
+				createComplexMember(mem, cg);
 			}
 		}
 	}
@@ -279,14 +404,13 @@ public class L3ToSBGNPDConverter
 	 *
 	 * @param cx inner complex to add as member
 	 * @param container glyph for most outer complex
-	 * @param glyphMap glyph repository
 	 */
-	private static void addComplexAsMember(Complex cx, Glyph container, Map<String, Glyph> glyphMap)
+	private void addComplexAsMember(Complex cx, Glyph container)
 	{
 		if (cx.getComponent().isEmpty())
 		{
 			// Put a glyph for empty inner complex
-			createComplexMember(cx, container, glyphMap);
+			createComplexMember(cx, container);
 		}
 		else
 		{
@@ -295,11 +419,11 @@ public class L3ToSBGNPDConverter
 				if (mem instanceof Complex)
 				{
 					// Recursive call for inner complexes
-					addComplexAsMember((Complex) mem, container, glyphMap);
+					addComplexAsMember((Complex) mem, container);
 				}
 				else
 				{
-					createComplexMember(mem, container, glyphMap);
+					createComplexMember(mem, container);
 				}
 			}
 		}
@@ -310,12 +434,10 @@ public class L3ToSBGNPDConverter
 	 *
 	 * @param pe PhysicalEntity to represent as complex member
 	 * @param container Glyph for the complex shell
-	 * @param glyphMap glyph repository
 	 */
-	private static void createComplexMember(PhysicalEntity pe, Glyph container,
-		Map<String, Glyph> glyphMap)
+	private void createComplexMember(PhysicalEntity pe, Glyph container)
 	{
-		Glyph g = createGlyph(pe);
+		Glyph g = createGlyphBasics(pe);
 		container.getGlyph().add(g);
 
 		// A PhysicalEntity may appear in many complexes -- we identify the member using its complex
@@ -334,7 +456,7 @@ public class L3ToSBGNPDConverter
 	 * @param pe PhysicalEntity to find a name
 	 * @return a name for labeling
 	 */
-	private static String findALabelForMolecule(PhysicalEntity pe)
+	private String findALabelForMolecule(PhysicalEntity pe)
 	{
 		// Use gene symbol of PE
 
@@ -411,7 +533,7 @@ public class L3ToSBGNPDConverter
 		return name;
 	}
 
-	private static String extractGeneSymbol(Xref xref)
+	private String extractGeneSymbol(Xref xref)
 	{
 		if (xref.getDb() != null && (
 			xref.getDb().equals("HGNC") ||
@@ -442,7 +564,7 @@ public class L3ToSBGNPDConverter
 	 * @param pe entity to collect features
 	 * @return list of state variables
 	 */
-	private static List<Glyph> getInformation(PhysicalEntity pe)
+	private List<Glyph> getInformation(PhysicalEntity pe)
 	{
 		List<Glyph> list = new ArrayList<Glyph>();
 
@@ -476,7 +598,7 @@ public class L3ToSBGNPDConverter
 	 * 		  NOT feature = false
 	 * @param list state variables
 	 */
-	private static void extractFeatures(Set<EntityFeature> features, boolean normalFeature,
+	private void extractFeatures(Set<EntityFeature> features, boolean normalFeature,
 		List<Glyph> list)
 	{
 		for (EntityFeature feature : features)
@@ -488,33 +610,15 @@ public class L3ToSBGNPDConverter
 				Glyph.State state = factory.createGlyphState();
 				stvar.setState(state);
 
-				if (feature instanceof ModificationFeature)
-				{
-					ModificationFeature mf = (ModificationFeature) feature;
-                    SequenceModificationVocabulary modificationType = mf.getModificationType();
-                    if(modificationType != null) {
-                        state.setVariable(String.valueOf(modificationType));
-                    }
-				}
-				else
-				{
-					state.setVariable("Fragment");
-				}
+				String str = featStrGen.getStringFor(feature);
+
+				if (str != null) state.setValue(str);
 
 				// Add a "!" in front of NOT features
 
 				if (!normalFeature)
 				{
 					state.setVariable("!" + state.getVariable());
-				}
-
-				// Add feature location as state value if exists
-
-				SequenceLocation loc = feature.getFeatureLocation();
-				if (loc != null)
-				{
-					String value = loc.toString();
-					state.setValue(value);
 				}
 
 				list.add(stvar);
@@ -528,10 +632,9 @@ public class L3ToSBGNPDConverter
 	 * Creates or gets the compartment with the given name.
 	 *
 	 * @param name name of the compartment
-	 * @param compartmentMap compartment registry
 	 * @return the compartment glyph
 	 */
-	private static Glyph getCompartment(String name, Map<String, Glyph> compartmentMap)
+	private Glyph getCompartment(String name)
 	{
 		if (name == null) return null;
 		if (compartmentMap.containsKey(name)) return compartmentMap.get(name);
@@ -553,7 +656,7 @@ public class L3ToSBGNPDConverter
 	 * @param pe PhysicalEntity to look for its compartment
 	 * @return name of compartment or null if there is none
 	 */
-	private static String getCompartment(PhysicalEntity pe)
+	private String getCompartment(PhysicalEntity pe)
 	{
 		CellularLocationVocabulary cl = pe.getCellularLocation();
 		if (cl != null)
@@ -573,11 +676,9 @@ public class L3ToSBGNPDConverter
 	 *
 	 * @param cnv the conversion
 	 * @param direction direction of the conversion to create
-	 * @param glyphMap glyph repository
-	 * @param arcMap arc repository
 	 */
-	private static void createProcessAndConnections(Conversion cnv,
-		ConversionDirectionType direction, Map<String, Glyph> glyphMap, Map<String, Arc> arcMap)
+	private void createProcessAndConnections(Conversion cnv,
+		ConversionDirectionType direction)
 	{
 		assert direction.equals(ConversionDirectionType.LEFT_TO_RIGHT) ||
 			direction.equals(ConversionDirectionType.RIGHT_TO_LEFT);
@@ -607,16 +708,16 @@ public class L3ToSBGNPDConverter
 
 		for (PhysicalEntity pe : input)
 		{
-			Glyph g = glyphMap.get(pe.getRDFId());
-			createArc(g, process.getPort().get(0), CONSUMPTION.getClazz(), arcMap);
+			Glyph g = getGlyphToLink(pe, process.getId());
+			createArc(g, process.getPort().get(0), CONSUMPTION.getClazz());
 		}
 
 		// Associate outputs to output port
 
 		for (PhysicalEntity pe : output)
 		{
-			Glyph g = glyphMap.get(pe.getRDFId());
-			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), arcMap);
+			Glyph g = getGlyphToLink(pe, process.getId());
+			createArc(process.getPort().get(1), g, PRODUCTION.getClazz());
 		}
 
 		// Associate controllers
@@ -651,8 +752,8 @@ public class L3ToSBGNPDConverter
 				}
 			}
 
-			Glyph g = createControlStructure(ctrl, glyphMap, arcMap);
-			if (g != null) createArc(g, process, getControlType(ctrl), arcMap);
+			Glyph g = createControlStructure(ctrl);
+			if (g != null) createArc(g, process, getControlType(ctrl));
 		}
 	}
 
@@ -660,11 +761,8 @@ public class L3ToSBGNPDConverter
 	 * Creates a representation for TemplateReaction.
 	 *
 	 * @param tr template reaction
-	 * @param glyphMap glyph repository
-	 * @param arcMap arc repository
 	 */
-	private static void createProcessAndConnections(TemplateReaction tr,
-		Map<String, Glyph> glyphMap, Map<String, Arc> arcMap)
+	private void createProcessAndConnections(TemplateReaction tr)
 	{
 		// create the process for the reaction
 
@@ -682,22 +780,22 @@ public class L3ToSBGNPDConverter
 		sas.setClazz(SOURCE_AND_SINK.getClazz());
 		sas.setId("SAS_For_" + tr.getRDFId());
 		glyphMap.put(sas.getId(), sas);
-		createArc(sas, process.getPort().get(0), CONSUMPTION.getClazz(), arcMap);
+		createArc(sas, process.getPort().get(0), CONSUMPTION.getClazz());
 
 		// Associate products
 
 		for (PhysicalEntity pe : tr.getProduct())
 		{
-			Glyph g = glyphMap.get(pe.getRDFId());
-			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), arcMap);
+			Glyph g = getGlyphToLink(pe, process.getId());
+			createArc(process.getPort().get(1), g, PRODUCTION.getClazz());
 		}
 
 		// Associate controllers
 
 		for (Control ctrl : tr.getControlledOf())
 		{
-			Glyph g = createControlStructure(ctrl, glyphMap, arcMap);
-			if (g != null) createArc(g, process, getControlType(ctrl), arcMap);
+			Glyph g = createControlStructure(ctrl);
+			if (g != null) createArc(g, process, getControlType(ctrl));
 		}
 	}
 
@@ -705,25 +803,22 @@ public class L3ToSBGNPDConverter
 	 * Creates or gets the glyph to connect to the control arc.
 	 *
 	 * @param ctrl Control to represent
-	 * @param glyphMap glyph repository
-	 * @param arcMap arc repository
 	 * @return glyph representing the controller tree
 	 */
-	private static Glyph createControlStructure(Control ctrl, Map<String, Glyph> glyphMap,
-		Map<String, Arc> arcMap)
+	private Glyph createControlStructure(Control ctrl)
 	{
 		Glyph cg;
 
-		Set<PhysicalEntity> controllers = getControllers(ctrl, glyphMap);
+		Set<PhysicalEntity> controllers = getControllers(ctrl);
 
 		// If no representable controller found, skip this control
 		if (controllers.isEmpty()) cg = null;
 
 		// If there is only one controller with no modulator, put an arc for controller
 
-		else if (controllers.size() == 1 && getControllerSize(ctrl.getControlledOf(), glyphMap) == 0)
+		else if (controllers.size() == 1 && getControllerSize(ctrl.getControlledOf()) == 0)
 		{
-			cg = glyphMap.get(controllers.iterator().next().getRDFId());
+			cg = getGlyphToLink(controllers.iterator().next(), ctrl.getRDFId());
 		}
 
 		else
@@ -733,7 +828,7 @@ public class L3ToSBGNPDConverter
 
 			// Bundle controllers if necessary
 
-			Glyph gg = handlePEGroup(controllers, glyphMap, arcMap);
+			Glyph gg = handlePEGroup(controllers, ctrl.getRDFId());
 			if(gg != null)
 				toConnect.add(gg);
 
@@ -741,14 +836,14 @@ public class L3ToSBGNPDConverter
 
 			for (Control ctrl2 : ctrl.getControlledOf())
 			{
-				Glyph g = createControlStructure(ctrl2, glyphMap, arcMap);
+				Glyph g = createControlStructure(ctrl2);
 				if (g != null)
 				{
 					// If the control is negative, add a NOT in front of it
 
 					if (getControlType(ctrl2).equals(INHIBITION))
 					{
-						g = addNOT(g, glyphMap, arcMap);
+						g = addNOT(g);
 					}
 
 					toConnect.add(g);
@@ -760,7 +855,7 @@ public class L3ToSBGNPDConverter
 			if (ctrl instanceof Catalysis)
 			{
 				Set<PhysicalEntity> cofs = ((Catalysis) ctrl).getCofactor();
-				Glyph g = handlePEGroup(cofs, glyphMap, arcMap);
+				Glyph g = handlePEGroup(cofs, ctrl.getRDFId());
 				if (g != null) 
 					toConnect.add(g);
 			}
@@ -773,7 +868,7 @@ public class L3ToSBGNPDConverter
 			}
 			else
 			{
-				cg = connectWithAND(toConnect, glyphMap, arcMap);
+				cg = connectWithAND(toConnect);
 			}
 		}
 
@@ -785,22 +880,19 @@ public class L3ToSBGNPDConverter
 	 * being drawn.
 	 *
 	 * @param pes entities to use in control
-	 * @param glyphMap glyph repository
-	 * @param arcMap arc repository
 	 * @return the glyph to connect to the appropriate place
 	 */
-	private static Glyph handlePEGroup(Set<PhysicalEntity> pes, Map<String, Glyph> glyphMap,
-		Map<String, Arc> arcMap)
+	private Glyph handlePEGroup(Set<PhysicalEntity> pes, String context)
 	{
 		int sz = pes.size();		
 		if (sz > 1)
 		{
-			List<Glyph> gs = getGlyphsOfPEs(pes, glyphMap);
-			return connectWithAND(gs, glyphMap, arcMap);
+			List<Glyph> gs = getGlyphsOfPEs(pes, context);
+			return connectWithAND(gs);
 		}
 		else if (sz == 1 && glyphMap.containsKey(pes.iterator().next().getRDFId()))
 		{
-			return glyphMap.get(pes.iterator().next().getRDFId());
+			return getGlyphToLink(pes.iterator().next(), context);
 		}
 		
 		//'pes' was empty
@@ -811,17 +903,16 @@ public class L3ToSBGNPDConverter
 	 * Gets the glyphs of the given set of PhysicalEntity objects. Does not create anything.
 	 *
 	 * @param pes entities to get their glyphs
-	 * @param glyphMap glyph repository
 	 * @return glyphs of entities
 	 */
-	private static List<Glyph> getGlyphsOfPEs(Set<PhysicalEntity> pes, Map<String, Glyph> glyphMap)
+	private List<Glyph> getGlyphsOfPEs(Set<PhysicalEntity> pes, String context)
 	{
 		List<Glyph> gs = new ArrayList<Glyph>();
 		for (PhysicalEntity pe : pes)
 		{
 			if (glyphMap.containsKey(pe.getRDFId()))
 			{
-				gs.add(glyphMap.get(pe.getRDFId()));
+				gs.add(getGlyphToLink(pe, context));
 			}
 		}
 		return gs;
@@ -831,12 +922,9 @@ public class L3ToSBGNPDConverter
 	 * Creates an AND glyph downstream of the given glyphs.
 	 *
 	 * @param gs upstream glyph list
-	 * @param glyphMap glyph repository
-	 * @param arcMap arc repository
 	 * @return AND glyph
 	 */
-	private static Glyph connectWithAND(List<Glyph> gs, Map<String, Glyph> glyphMap,
-		Map<String, Arc> arcMap)
+	private Glyph connectWithAND(List<Glyph> gs)
 	{
 		// Compose an ID for the AND glyph
 
@@ -866,7 +954,7 @@ public class L3ToSBGNPDConverter
 
 		for (Glyph g : gs)
 		{
-			createArc(g, and, LOGIC_ARC.getClazz(), arcMap);
+			createArc(g, and, LOGIC_ARC.getClazz());
 		}
 		return and;
 	}
@@ -875,11 +963,9 @@ public class L3ToSBGNPDConverter
 	 * Adds a NOT glyph next to the given glyph.
 	 *
 	 * @param g glyph to add NOT
-	 * @param glyphMap glyph repository
-	 * @param arcMap arc repository
 	 * @return NOT glyph
 	 */
-	private static Glyph addNOT(Glyph g, Map<String, Glyph> glyphMap, Map<String, Arc> arcMap)
+	private Glyph addNOT(Glyph g)
 	{
 		// Assemble an ID for the NOT glyph
 
@@ -901,7 +987,7 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Connect the glyph and NOT
-		createArc(g, not, LOGIC_ARC.getClazz(), arcMap);
+		createArc(g, not, LOGIC_ARC.getClazz());
 
 		return not;
 	}
@@ -912,7 +998,7 @@ public class L3ToSBGNPDConverter
 	 * @param ctrl Control to get its type
 	 * @return SBGN type of the Control
 	 */
-	private static String getControlType(Control ctrl)
+	private String getControlType(Control ctrl)
 	{
 		if (ctrl instanceof Catalysis)
 		{
@@ -951,15 +1037,14 @@ public class L3ToSBGNPDConverter
 	 * Gets the size of representable Controller of this set of Controls.
 	 *
 	 * @param ctrlSet Controls to check their controllers
-	 * @param glyphMap glyph repository
 	 * @return size of representable controllers
 	 */
-	private static int getControllerSize(Set<Control> ctrlSet, Map<String, Glyph> glyphMap)
+	private int getControllerSize(Set<Control> ctrlSet)
 	{
 		int size = 0;
 		for (Control ctrl : ctrlSet)
 		{
-			size += getControllers(ctrl, glyphMap).size();
+			size += getControllers(ctrl).size();
 		}
 		return size;
 	}
@@ -968,10 +1053,9 @@ public class L3ToSBGNPDConverter
 	 * Gets the size of representable Controller of this Control.
 	 *
 	 * @param ctrl Control to check its controllers
-	 * @param glyphMap glyph repository
 	 * @return size of representable controllers
 	 */
-	private static Set<PhysicalEntity> getControllers(Control ctrl, Map<String, Glyph> glyphMap)
+	private Set<PhysicalEntity> getControllers(Control ctrl)
 	{
 		Set<PhysicalEntity> controllers = new HashSet<PhysicalEntity>();
 		for (Controller clr : ctrl.getController())
@@ -990,7 +1074,7 @@ public class L3ToSBGNPDConverter
 	 *
 	 * @param g glyph to add ports
 	 */
-	private static void addPorts(Glyph g)
+	private void addPorts(Glyph g)
 	{
 		Port inputPort = factory.createPort();
 		Port outputPort = factory.createPort();
@@ -1009,10 +1093,8 @@ public class L3ToSBGNPDConverter
 	 * @param source source of the arc -- either Glyph or Port
 	 * @param target target of the arc -- either Glyph or Port
 	 * @param clazz class of the arc
-	 * @param arcMap arc registry
 	 */
-	private static void createArc(Object source, Object target, String clazz,
-		Map<String, Arc> arcMap)
+	private void createArc(Object source, Object target, String clazz)
 	{
 		assert source instanceof Glyph || source instanceof Port : "source = " + source;
 		assert target instanceof Glyph || target instanceof Port : "target = " + target;
@@ -1037,7 +1119,7 @@ public class L3ToSBGNPDConverter
 	 * @param glyphCol glyph collection to search
 	 * @return set of roots
 	 */
-	private static Set<Glyph> getRootGlyphs(Collection<Glyph> glyphCol)
+	private Set<Glyph> getRootGlyphs(Collection<Glyph> glyphCol)
 	{
 		Set<Glyph> root = new HashSet<Glyph>(glyphCol);
 		Set<Glyph> children = new HashSet<Glyph>();
@@ -1055,7 +1137,7 @@ public class L3ToSBGNPDConverter
 	 * @param glyph to collect children
 	 * @param set to add
 	 */
-	private static void addChildren(Glyph glyph, Set<Glyph> set)
+	private void addChildren(Glyph glyph, Set<Glyph> set)
 	{
 		for (Glyph child : glyph.getGlyph())
 		{
@@ -1071,15 +1153,15 @@ public class L3ToSBGNPDConverter
 		factory = new ObjectFactory();
 
 		typeMatchMap = new HashMap<Class<? extends BioPAXElement>, String>();
-		typeMatchMap.put(Protein.class, "macromolecule");
-		typeMatchMap.put(SmallMolecule.class, "simple chemical");
-		typeMatchMap.put(Dna.class, "nucleic acid feature");
-		typeMatchMap.put(Rna.class, "nucleic acid feature");
-		typeMatchMap.put(DnaRegion.class, "nucleic acid feature");
-		typeMatchMap.put(RnaRegion.class, "nucleic acid feature");
-		typeMatchMap.put(NucleicAcid.class, "nucleic acid feature");
-		typeMatchMap.put(PhysicalEntity.class, "unspecified entity");
-		typeMatchMap.put(SimplePhysicalEntity.class, "unspecified entity");
-		typeMatchMap.put(Complex.class, "complex");
+		typeMatchMap.put(Protein.class, MACROMOLECULE.getClazz());
+		typeMatchMap.put(SmallMolecule.class, SIMPLE_CHEMICAL.getClazz());
+		typeMatchMap.put(Dna.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(Rna.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(DnaRegion.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(RnaRegion.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(NucleicAcid.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(PhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());
+		typeMatchMap.put(SimplePhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());
+		typeMatchMap.put(Complex.class, COMPLEX.getClazz());
 	}
 }

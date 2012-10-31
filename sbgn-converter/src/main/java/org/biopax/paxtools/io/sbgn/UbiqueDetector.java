@@ -10,5 +10,5 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
  */
 public interface UbiqueDetector
 {
-	public boolean isUbique(PhysicalEntity pe, Model model);
+	public boolean isUbique(PhysicalEntity pe);
 }
