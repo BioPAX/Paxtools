@@ -21,9 +21,9 @@ public class VNode implements Updatable
 	//Glyph attribute of this VNode
 	public Glyph glyph;
 	public int clusterID;
-	
-	ArrayList<Glyph> stateGlyphs;
-	ArrayList<Glyph> infoGlyphs;
+
+	ArrayList <Glyph> stateGlyphs;
+	ArrayList <Glyph> infoGlyphs;
 	
 	
 	/*Glyph class types*/
@@ -94,8 +94,8 @@ public class VNode implements Updatable
 		INFO_BOUND = new Bound(MAX_STATE_AND_INFO_WIDTH,MAX_STATE_AND_INFO_HEIGHT);
 		STATE_BOUND = new Bound(MAX_STATE_AND_INFO_WIDTH,MAX_STATE_AND_INFO_HEIGHT);
 		
-		stateGlyphs = new <Glyph> ArrayList();
-		infoGlyphs = new <Glyph> ArrayList();
+		stateGlyphs = new ArrayList<Glyph>();
+		infoGlyphs = new  ArrayList<Glyph>();
 		
 		
 		this.glyph = g;
