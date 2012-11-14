@@ -129,15 +129,18 @@ public final class ModelUtils
 		 */
 	public static final String BIOPAX_URI_PREFIX = "urn:biopax:";
 
-
 	/**
 	 * This is to consistently create URI prefixes for
 	 * auto-generated/inferred Xref objects
 	 * (except for PublicationXref, where creating of
 	 * something like, e.g., 'urn:miriam:pubmed:' is recommended).
+	 * 
 	 * @param clazz
 	 * @return
+	 * 
+	 * @deprecated not a universal method; use your own xml:base
 	 */
+	@Deprecated
 	public static String uriPrefixForGeneratedXref(Class<? extends Xref> clazz)
 	{
 		String prefix = BIOPAX_URI_PREFIX + clazz.getSimpleName() + ":";
@@ -545,6 +548,8 @@ public final class ModelUtils
 	 * @param model
 	 * @param <T>
 	 * @param processClass to relate entities with an interaction/pathway of this type
+	 * 
+	 * @deprecated probably, not very useful method
 	 */
 	public static <T extends Process> void generateEntityProcessXrefs(Model model, Class<T> processClass)
 	{
@@ -675,6 +680,8 @@ public final class ModelUtils
 	 * (equivalently, this can be achieved by collecting all the children first,
 	 * though not visiting properties who's range is a sub-class of UtilityClass)
 	 * @param model
+	 * 
+	 * @deprecated probably, not very useful method
 	 */
 	public static void generateEntityOrganismXrefs(Model model)
 	{
@@ -813,7 +820,10 @@ public final class ModelUtils
 	 * @param model
 	 * @param entity
 	 * @param organisms
+	 * 
+	 * @deprecated not a universal method
 	 */
+	@Deprecated
 	private static void addOrganismXrefs(Model model, Entity entity, Set<BioSource> organisms)
 	{
 		// create/find a RelationshipTypeVocabulary with term="ORGANISM"
@@ -875,12 +885,15 @@ public final class ModelUtils
 
 
 	/**
-	 * Builds a "normalized" RelationshipXref URI.
+	 * Builds a "normalized" Xref URI.
 	 * @param db
 	 * @param id
-	 * @param type TODO
+	 * @param type
 	 * @return new ID (URI); not null (unless it's a bug :))
+	 * 
+	 * @deprecated not a universal method; use your own xml:base and approach instead
 	 */
+	@Deprecated
 	public static String generateURIForXref(String db, String id, Class<? extends Xref> type)
 	{
 		String rdfid;
@@ -901,7 +914,7 @@ public final class ModelUtils
 		return rdfid;
 	}
 
-
+	
 	/**
 	 * TODO
 	 * @param model
@@ -996,18 +1009,17 @@ public final class ModelUtils
 		       cv.getRDFId().equalsIgnoreCase(relationshipTypeVocabularyUri(RelationshipType.ORGANISM.name()));
 	}
 
-	private static boolean isProcessRelationshipXref(RelationshipXref rx)
-	{
-		RelationshipTypeVocabulary cv = rx.getRelationshipType();
-		return cv != null &&
-		       cv.getRDFId().equalsIgnoreCase(relationshipTypeVocabularyUri(RelationshipType.PROCESS.name()));
-	}
-
 
 	/**
 	 * Calculates MD5 hash code (as 32-byte hex. string).
+	 * 
+	 * This method is not BioPAX specific. Can be
+	 * used for many purposes, such as generating 
+	 * new unique URIs, database primary keys, etc.
+	 * 
+	 * 
 	 * @param id
-	 * @return
+	 * @return the 32-byte digest string
 	 */
 	public static String md5hex(String id)
 	{
@@ -1343,8 +1355,9 @@ public final class ModelUtils
 		{
 			if ((xref instanceof UnificationXref))
 			{
+				//TODO generate URI using model's xml:base and xref's properties
 				String id = "http://biopax.org/generated/fixer/copySimplePointers/" + xref.getRDFId();
-				BioPAXElement byID = model.getByID(id);
+				Xref byID = (Xref) model.getByID(id);
 				if (byID == null)
 				{
 					RelationshipXref rref = model.addNew(RelationshipXref.class, id);
@@ -1355,9 +1368,10 @@ public final class ModelUtils
 					xref = rref;
 				} else
 				{
-					xref = (Xref) byID;
+					xref = byID;
 				}
 			}
+			
 			generic.addXref(xref);
 		}
 	}
