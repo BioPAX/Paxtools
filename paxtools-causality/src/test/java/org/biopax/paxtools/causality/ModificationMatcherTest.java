@@ -1,19 +1,21 @@
 package org.biopax.paxtools.causality;
 
 import org.biopax.paxtools.causality.util.Histogram;
+import org.biopax.paxtools.causality.util.Kronometre;
 import org.biopax.paxtools.causality.util.TermCounter;
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.ModificationFeature;
-import org.biopax.paxtools.model.level3.Provenance;
-import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
+import org.biopax.paxtools.model.level3.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -79,5 +81,51 @@ public class ModificationMatcherTest
 			if (!voc.getTerm().isEmpty())
 				System.out.println(voc.getTerm().iterator().next() + "\t" + voc.getRDFId());
 		}
+	}
+
+	@Test
+	@Ignore
+	public void testDebug() throws FileNotFoundException
+	{
+		Kronometre k = new Kronometre();
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/PC.owl"));
+		System.out.print("Model loaded in");
+		k.stop();
+		k.print();
+		k.start();
+
+		Map<Provenance, Set<BioSource>> map = new HashMap<Provenance, Set<BioSource>>();
+		for (ProteinReference prt : model.getObjects(ProteinReference.class))
+		{
+			BioSource organism = prt.getOrganism();
+			for (SimplePhysicalEntity spe : prt.getEntityReferenceOf())
+			{
+				for (Provenance prov : spe.getDataSource())
+				{
+					if (prov.getDisplayName() != null && prov.getDisplayName().equals("panther"))
+					{
+						System.out.print("");
+					}
+
+					if (!map.containsKey(prov)) map.put(prov, new HashSet<BioSource>());
+					map.get(prov).add(organism);
+				}
+			}
+		}
+
+		for (Provenance prov : map.keySet())
+		{
+			System.out.println("Provenance = " + prov.getDisplayName());
+
+			System.out.print("Organisms:");
+			for (BioSource src : map.get(prov))
+			{
+				if (src != null) System.out.print(" " + src.getDisplayName() + ",");
+				else System.out.print(" null,");
+			}
+			System.out.println("\n");
+		}
+
 	}
 }

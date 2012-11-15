@@ -2,6 +2,7 @@ package org.biopax.paxtools.causality;
 
 import org.biopax.paxtools.causality.util.Histogram;
 import org.biopax.paxtools.causality.util.TermCounter;
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -18,15 +19,51 @@ public class ModificationMatcher
 {
 	public Histogram getModificationFeatureOverlapHistogram(Model model)
 	{
+		for (Provenance pro : model.getObjects(Provenance.class))
+		{
+			System.out.println("pro.getDisplayName() = " + pro.getDisplayName());
+		}
+
+//		PathAccessor pa = new PathAccessor("");
+
 		Histogram hist = new Histogram(1);
+
+		int totalSeqEnt = 0;
+		int seqEntWithMod = 0;
+		
+		TermCounter provCnt = new TermCounter();
 
 		for (EntityReference er : model.getObjects(ProteinReference.class))
 		{
-			Map<Provenance, Set<ModificationFeature>> modif = collectModifications(er);
-			Histogram h = getOverlapHistogram(modif);
-			hist.add(h);
+			if (er instanceof SequenceEntityReference)// && isHuman((SequenceEntityReference) er))
+			{
+				totalSeqEnt++;
+
+				Map<Provenance, Set<ModificationFeature>> modif = collectModifications(er);
+
+				if (!modif.isEmpty())
+				{
+					seqEntWithMod++;
+
+					for (Provenance prov : modif.keySet())
+					{
+						provCnt.addTerm(prov.getDisplayName());
+					}
+					
+					Histogram h = getOverlapHistogram(modif);
+					hist.add(h);
+				}
+			}
 		}
+		System.out.println("totalSeqEnt = " + totalSeqEnt);
+		System.out.println("seqEntWithMod = " + seqEntWithMod);
+		provCnt.print();
 		return hist;
+	}
+
+	private boolean isHuman(SequenceEntityReference pr)
+	{
+		return pr.getOrganism() != null && pr.getOrganism().getDisplayName().equals("Homo sapiens");
 	}
 
 	static Map<Provenance, TermCounter> tc = new HashMap<Provenance, TermCounter>();

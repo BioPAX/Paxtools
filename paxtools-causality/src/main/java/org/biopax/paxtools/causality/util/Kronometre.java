@@ -16,6 +16,11 @@ public class Kronometre
 		start();
 	}
 
+	public void reset()
+	{
+		start();
+	}
+	
 	public void start()
 	{
 		startedAt = System.currentTimeMillis();

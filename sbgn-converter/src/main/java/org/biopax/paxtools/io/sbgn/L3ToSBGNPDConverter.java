@@ -607,21 +607,22 @@ public class L3ToSBGNPDConverter
 			{
 				Glyph stvar = factory.createGlyph();
 				stvar.setClazz(STATE_VARIABLE.getClazz());
-				Glyph.State state = factory.createGlyphState();
-				stvar.setState(state);
 
-				String str = featStrGen.getStringFor(feature);
+				Glyph.State state = featStrGen.createStateVar(feature, factory);
 
-				if (str != null) state.setValue(str);
-
-				// Add a "!" in front of NOT features
-
-				if (!normalFeature)
+				if (state.getValue() != null)
 				{
-					state.setVariable("!" + state.getVariable());
-				}
+					// Add a "!" in front of NOT features
 
-				list.add(stvar);
+					if (!normalFeature)
+					{
+						state.setValue("!" + state.getValue());
+					}
+
+					stvar.setState(state);
+
+					list.add(stvar);
+				}
 			}
 		}
 	}

@@ -447,9 +447,16 @@ public class QueryExecuter
 		}
 		else if (element instanceof EntityReference)
 		{
-			for (SimplePhysicalEntity spe : ((EntityReference) element).getEntityReferenceOf())
+			EntityReference er = (EntityReference) element;
+
+			for (SimplePhysicalEntity spe : er.getEntityReferenceOf())
 			{
 				getRelatedPhysicalEntities(spe, pes);
+			}
+
+			for (EntityReference parentEr : er.getMemberEntityReferenceOf())
+			{
+				getRelatedPhysicalEntities(parentEr, pes);
 			}
 		}
 
