@@ -3,12 +3,6 @@ package org.biopax.paxtools.io.sbgn;
 import java.util.List;
 import java.util.ArrayList;
 import org.ivis.layout.LGraphObject;
-import org.ivis.layout.LGraphObject;
-import org.ivis.layout.LNode;
-import org.ivis.layout.Updatable;
-import org.sbgn.bindings.Glyph;
-import org.sbgn.bindings.Bbox;
-import org.ivis.layout.cose.CoSEGraph;
 
 
 /**
@@ -17,13 +11,11 @@ import org.ivis.layout.cose.CoSEGraph;
  * */
  
 
-public class VCompound extends VNode implements Updatable
+public class VCompound extends VNode
 {
-	public List<VNode> children;
-	
-	public VCompound(Glyph g)
+	public VCompound()
 	{
-		super(g);
+		super();
 		this.children = new ArrayList();
 	}
 	
@@ -32,27 +24,5 @@ public class VCompound extends VNode implements Updatable
 		return children;
 	}
 	
-	/**
-	 *
-	 *  Function that will take place when VNode objects will update in layout process of ChiLay
-	 * @Override
-	 * @param lGraphObj LGraphObject for whom the update will take place.
-	 * */
-	public void update(LGraphObject lGraphObj) 
-	{
-		if (lGraphObj instanceof CoSEGraph) 
-		{
-			return;
-		}
-		
-		LNode lNode = (LNode)lGraphObj;
-		
-		this.glyph.getBbox().setX((float) lNode.getLeft());
-		this.glyph.getBbox().setY((float) lNode.getTop()); 
-		
-		this.placeStateAndInfoGlyphs();
-		
-	}
-	
-	
+	public List<VNode> children;
 }
