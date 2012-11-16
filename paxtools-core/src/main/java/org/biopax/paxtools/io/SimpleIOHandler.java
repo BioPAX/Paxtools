@@ -679,6 +679,30 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter {
     public boolean isMergeDuplicates() {
         return this.mergeDuplicates;
     }
+    
+    
+    /**
+     * Serializes a BioPAX model to the RDF/XML (OWL) format.
+     * 
+     * @param model
+     * @return 
+     * 
+     * @throws IllegalArgumentException if model is null
+     */
+	public static String convertToOwl(Model model) {
+		if (model == null) 
+			throw new IllegalArgumentException();
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		(new SimpleIOHandler(model.getLevel())).convertToOWL(model, outputStream);
+			
+		try {
+			return outputStream.toString("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			log.error(e);
+			return outputStream.toString();
+		}
+	}
 
 }
 
