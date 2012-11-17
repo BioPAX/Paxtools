@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ivis.layout.*;
+import org.ivis.layout.util.*;
 import org.ivis.layout.cose.CoSELayout;
 import org.sbgn.bindings.Arc;
 import org.sbgn.bindings.Port;
@@ -30,6 +31,8 @@ public class SBGNLayoutManager
 	private HashMap <Glyph,VNode>  glyphToVNode;
 	private HashMap <String, Glyph> idToGLyph;
 	
+	private HashMap<String, Glyph> idToCompartmentGlyphs;
+	
 	/**
 	 * Converts the given model to SBGN, and writes in the specified file.
 	 *
@@ -42,35 +45,90 @@ public class SBGNLayoutManager
 		layoutToView = new HashMap();
 		glyphToVNode = new HashMap();
 		idToGLyph = new HashMap();
+		idToCompartmentGlyphs = new HashMap();
 		
 		// Using Compound spring  embedder layout
 		this.layout = new CoSELayout();
 		
 		LGraphManager graphMan = this.layout.getGraphManager(); 
 		LGraph lRoot = graphMan.addRoot();
-		root = new VCompound();
+		this.root = new VCompound(new Glyph());
 		lRoot.vGraphObject = this.root;
 		
 		// Create Vnodes for ChiLay layout component
 		createVNodes(root, sbgn.getMap().getGlyph());
 		
-		for (VNode vNode: this.root.children) 
-		{ 
-			this.createNode(vNode, null, this.layout); 
-		} 
+		
 		
 		for (VNode vNode: this.root.children) 
 		{ 
-			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
-		} 
+			this.createNode(vNode, null, this.layout); 
+		}
+		
+		for (VNode vNode: this.root.children) 
+		{
+			Glyph tmpGlyph = vNode.glyph;
+			
+			if(tmpGlyph.getCompartmentRef() != null)
+			{
+				Glyph containerCompartment = (Glyph)tmpGlyph.getCompartmentRef();
+				idToCompartmentGlyphs.get(containerCompartment.getId()).getGlyph().add(tmpGlyph);
+			}
+				
+		}
+		
 		
 		// Create LEdges for ChiLay layout component
 		createLedges(sbgn.getMap().getArc(), this.layout);
 		
+
+		
 		// Apply layout
 		this.layout.runLayout();
-					
+		
+		for (VNode vNode: this.root.children) 
+		{ 
+			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
+			/*LNode tmpLNode = viewToLayout.get(vNode);
+			
+			tmpLNode.setWidth(vNode.glyph.getBbox().getW());
+			tmpLNode.setHeight(vNode.glyph.getBbox().getH());*/
+		}
+		
+
+		for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
+		{
+			compGlyph.getGlyph().clear();
+		}
+		
+		/*GraphMLWriter writer = new GraphMLWriter("output.graphml");
+		writer.saveGraph(this.layout.getGraphManager());*/
+		
 		return sbgn;
+	}
+	
+	void printAllMap(Glyph parent, int nestingLevel)
+	{
+		boolean  isContainerGlyph = true;
+		
+		for(int i = 0; i < nestingLevel; i++)
+			System.out.print(" ");
+		if(isContainerGlyph)
+		{
+			System.out.println(parent.getId());
+			nestingLevel++;
+			isContainerGlyph = false;
+		}
+
+		for(Glyph glyph: parent.getGlyph())
+		{
+			for(int i = 0; i < nestingLevel; i++)
+				System.out.print(" ");
+			
+			
+			printAllMap(glyph,nestingLevel);
+				
+		}
 	}
 	
 	public void updateCompoundBounds(Glyph parent,List<Glyph> childGlyphs)
@@ -88,14 +146,12 @@ public class SBGNLayoutManager
 				
 	            float w = tmpGlyph.getBbox().getW();
 				float h = tmpGlyph.getBbox().getH();
-				float w2 = w/2;
-				float h2 = h/2;
 				
 	            // Verify MIN and MAX x/y again:
-	            minX = Math.min(minX, (tmpGlyph.getBbox().getX() - w2));
-	            minY = Math.min(minY, (tmpGlyph.getBbox().getY() - h2));
-	            maxX = Math.max(maxX, (tmpGlyph.getBbox().getX() + w2));
-	            maxY = Math.max(maxY, (tmpGlyph.getBbox().getY() + h2));
+	            minX = Math.min(minX, (tmpGlyph.getBbox().getX()));
+	            minY = Math.min(minY, (tmpGlyph.getBbox().getY()));
+	            maxX = Math.max(maxX, (tmpGlyph.getBbox().getX())+w);
+	            maxY = Math.max(maxY, (tmpGlyph.getBbox().getY())+h);
 	            
 	            if (minX == Float.MAX_VALUE) minX = 0;
 	            if (minY == Float.MAX_VALUE) minY = 0;
@@ -112,6 +168,20 @@ public class SBGNLayoutManager
 		}
 	}
 	
+	public boolean isChildless(Glyph tmpGlyph)
+	{
+		boolean checker = true;
+		for(Glyph glyph: tmpGlyph.getGlyph() )
+		{
+			if (glyph.getClazz() !=  "state variable" && glyph.getClazz() !=  "unit of information"  ) 
+			{
+				checker = false;
+				break;
+			}
+		}
+		return checker;
+	}
+	
 	/**
 	 * Recursively creates VNodes from Glyphs of Sbgn. 
 	 * 
@@ -125,17 +195,34 @@ public class SBGNLayoutManager
 		{	
 			if (glyph.getClazz() !=  "state variable" && glyph.getClazz() !=  "unit of information"  ) 
 			{
-				VCompound v = new VCompound();
 				
-				v.glyph = glyph;
+				if(glyph.getClazz() == "compartment")
+				{
+					idToCompartmentGlyphs.put(glyph.getId(), glyph);
+				}
+				
+				if(!this.isChildless(glyph))
+				{
+					VCompound v = new VCompound(glyph);
+
+					idToGLyph.put(glyph.getId(), glyph);
+					glyphToVNode.put(glyph, v);
+		
+					parent.children.add(v);
 					
-				v.setSizeAccordingToClass();
+					createVNodes(v, glyph.getGlyph());
+				}
 				
-				idToGLyph.put(glyph.getId(), glyph);
-				glyphToVNode.put(glyph, v);
-				parent.children.add(v);
+				else
+				{
+					VNode v = new VNode(glyph);
+
+					idToGLyph.put(glyph.getId(), glyph);
+					glyphToVNode.put(glyph, v);
+					
+					parent.children.add(v);
+				}
 				
-				createVNodes(v, glyph.getGlyph());
 			}
 		}
 	}
