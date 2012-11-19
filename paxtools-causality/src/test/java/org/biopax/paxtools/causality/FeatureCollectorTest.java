@@ -2,8 +2,7 @@ package org.biopax.paxtools.causality;
 
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.EntityReference;
-import org.biopax.paxtools.model.level3.ModificationFeature;
+import org.biopax.paxtools.model.level3.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -17,6 +16,7 @@ import java.util.Set;
 /**
  * @author Ozgun Babur
  */
+@Ignore
 public class FeatureCollectorTest
 {
 	@Test
@@ -81,4 +81,33 @@ public class FeatureCollectorTest
 		}
 		return types;
 	}
+
+	// Displaying modifications
+
+	private class Feature implements Comparable
+	{
+		ModificationFeature mf;
+		Provenance prov;
+		SequenceSite site;
+
+		private Feature(ModificationFeature mf, Provenance prov, SequenceSite site)
+		{
+			this.mf = mf;
+			this.prov = prov;
+			this.site = site;
+		}
+
+		@Override
+		public int compareTo(Object o)
+		{
+			Feature feat = (Feature) o;
+			
+			Integer loc1 = site == null ? 0 : site.getSequencePosition();
+			Integer loc2 = feat.site == null ? 0 : feat.site.getSequencePosition();
+
+			return loc1.compareTo(loc2);
+		}
+	}
+
+
 }

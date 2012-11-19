@@ -7,10 +7,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
@@ -19,6 +16,9 @@ public class ModificationMatcher
 {
 	public Histogram getModificationFeatureOverlapHistogram(Model model)
 	{
+		Set<String> useProv = new HashSet<String>(Arrays.asList(
+			"PhosphoSitePlus", "pid", "Reactome", "panther", "HumanCyc"));
+		
 		for (Provenance pro : model.getObjects(Provenance.class))
 		{
 			System.out.println("pro.getDisplayName() = " + pro.getDisplayName());
@@ -41,6 +41,11 @@ public class ModificationMatcher
 
 				Map<Provenance, Set<ModificationFeature>> modif = collectModifications(er);
 
+				for (Provenance prov : new HashSet<Provenance>(modif.keySet()))
+				{
+					if (!useProv.contains(prov.getDisplayName())) modif.remove(prov);
+				}
+				
 				if (!modif.isEmpty())
 				{
 					seqEntWithMod++;

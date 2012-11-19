@@ -525,10 +525,42 @@ public class L3ToSBGNPDConverter
 			}
 		}
 
+		// Search for the shortest name of chemicals
+		if (pe instanceof SmallMolecule)
+		{
+			String shortName = getShortestName((SmallMolecule) pe);
+
+			if (shortName != null)
+			{
+				if (name == null || shortName.length() < name.length()) name = shortName;
+			}
+		}
+		
 		if (name == null)
 		{
 			// Don't leave it without a name
 			name = "noname";
+		}
+		return name;
+	}
+
+	private String getShortestName(SimplePhysicalEntity spe)
+	{
+		String name = null;
+
+		for (String s : spe.getName())
+		{
+			if (name == null || s.length() > name.length()) name = s;
+		}
+
+		EntityReference er = spe.getEntityReference();
+		
+		if (er != null)
+		{
+			for (String s : er.getName())
+			{
+				if (name == null || s.length() > name.length()) name = s;				
+			}
 		}
 		return name;
 	}
@@ -610,7 +642,7 @@ public class L3ToSBGNPDConverter
 
 				Glyph.State state = featStrGen.createStateVar(feature, factory);
 
-				if (state.getValue() != null)
+				if (state != null)
 				{
 					// Add a "!" in front of NOT features
 
