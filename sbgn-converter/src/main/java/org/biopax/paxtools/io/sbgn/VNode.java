@@ -57,6 +57,9 @@ public class VNode implements Updatable
 	private static final  int MAX_STATE_AND_INFO_HEIGHT = 20;
 	
 	private static final  int OFFSET_BTW_INFO_GLYPHS = 10;
+	
+	private static final  int MAX_INFO_BOX_NUMBER = 4;
+	
 
 	/*Glyph Size Constants for layout*/
 	private static Bound  SOURCE_AND_SINK_BOUND;
@@ -149,8 +152,6 @@ public class VNode implements Updatable
 		Bbox b = new Bbox();
 		this.glyph.setBbox(b);
 		
-		this.glyph.getBbox().setX(300);
-		this.glyph.getBbox().setY(300);
 		
 		if (glyphClass == SOURCE_AND_SINK) 
 		{
@@ -223,8 +224,9 @@ public class VNode implements Updatable
 	public int setInfoGlyphSizeAccordingToLabel(ArrayList stateList)
 	{
 		int wholeSize = 0;
+		int count = 0;
 		for (Iterator iterator = stateList.iterator(); iterator.hasNext();) 
-		{
+		{	
 			Glyph tmpGlyph = (Glyph) iterator.next();
 			
 			String tmpStr = tmpGlyph.getState().getValue();
@@ -258,7 +260,10 @@ public class VNode implements Updatable
 		    
 		    tmpGlyph.getBbox().setH(MAX_STATE_AND_INFO_HEIGHT);
 		    
-		    wholeSize += tmpGlyph.getBbox().getW();
+			if(count < MAX_INFO_BOX_NUMBER/2)
+			    wholeSize += tmpGlyph.getBbox().getW();
+
+		    count++;
 				
 		}
 		
@@ -271,7 +276,6 @@ public class VNode implements Updatable
 	 * */
 	public void updateSizeForStateAndInfo()
 	{
-		
 		
 		// Find all state and info glyphs
 		for (Iterator iterator = this.glyph.getGlyph().iterator(); iterator.hasNext();)
@@ -299,8 +303,11 @@ public class VNode implements Updatable
 		int numOfStates = stateGlyphs.size();
 		int numOfInfos = infoGlyphs.size();
 		
+		numOfStates = (numOfStates >= MAX_INFO_BOX_NUMBER/2) ? MAX_INFO_BOX_NUMBER/2 : numOfStates;
+		numOfInfos  = (numOfInfos  >= MAX_INFO_BOX_NUMBER/2) ? MAX_INFO_BOX_NUMBER/2 : numOfInfos;
+
 		float requiredWidthForStates = (numOfStates+1) * OFFSET_BTW_INFO_GLYPHS + wholeWidthOfStates;
-		float requiredWidthForInfos = (numOfStates+1) * OFFSET_BTW_INFO_GLYPHS + wholeWidthOfInfos;
+		float requiredWidthForInfos =  (numOfInfos+1)  * OFFSET_BTW_INFO_GLYPHS + wholeWidthOfInfos;
 		
 		
 		if (this.glyph.getBbox().getW() < requiredWidthForStates || this.glyph.getBbox().getW() < requiredWidthForInfos ) 
@@ -314,9 +321,11 @@ public class VNode implements Updatable
 		int numOfStates = stateGlyphs.size();
 		int numOfInfos = infoGlyphs.size();
 		
+		/*numOfStates = (numOfStates >= MAX_INFO_BOX_NUMBER/2) ? MAX_INFO_BOX_NUMBER/2 : numOfStates;
+		numOfInfos  = (numOfInfos  >= MAX_INFO_BOX_NUMBER/2)  ? MAX_INFO_BOX_NUMBER/2 : numOfInfos;*/
 		
 		float parent_y_up = this.glyph.getBbox().getY()-INFO_BOUND.height/2;
-		float parent_y_bot = this.glyph.getBbox().getY()+this.glyph.getBbox().getH()-STATE_BOUND.height/2;
+		float parent_y_bot = this.glyph.getBbox().getY()+this.glyph.getBbox().getH()-INFO_BOUND.height/2;;
 		float parent_x_up = this.glyph.getBbox().getX();
 		String parentID = this.glyph.getId();
 		

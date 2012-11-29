@@ -30,8 +30,8 @@ public class SBGNLayoutManager
 	private HashMap <LNode, VNode> layoutToView;
 	private HashMap <Glyph,VNode>  glyphToVNode;
 	private HashMap <String, Glyph> idToGLyph;
-	
 	private HashMap<String, Glyph> idToCompartmentGlyphs;
+	
 	
 	/**
 	 * Converts the given model to SBGN, and writes in the specified file.
@@ -55,54 +55,63 @@ public class SBGNLayoutManager
 		this.root = new VCompound(new Glyph());
 		lRoot.vGraphObject = this.root;
 		
+		
+		for (Glyph g: sbgn.getMap().getGlyph()) 
+		{
+			if(g.getClazz() == "compartment")
+			{
+				idToCompartmentGlyphs.put(g.getId(), g);
+			}
+				
+		}
+		
+		ArrayList <Glyph> deletedList = new ArrayList<Glyph>();
+		for (Glyph g: sbgn.getMap().getGlyph()) 
+		{	
+			if(g.getCompartmentRef() != null)
+			{
+				Glyph containerCompartment = (Glyph)g.getCompartmentRef();
+				idToCompartmentGlyphs.get(containerCompartment.getId()).getGlyph().add(g);
+				deletedList.add(g);	
+			}	
+		}
+		
+		for (Glyph g: deletedList) 
+		{	
+			sbgn.getMap().getGlyph().remove(g);
+		}
+		
+				
 		// Create Vnodes for ChiLay layout component
 		createVNodes(root, sbgn.getMap().getGlyph());
 		
-		
+		for (VNode vNode: this.root.children) 
+		{ 
+			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
+		}
+
 		
 		for (VNode vNode: this.root.children) 
 		{ 
 			this.createNode(vNode, null, this.layout); 
 		}
 		
-		for (VNode vNode: this.root.children) 
-		{
-			Glyph tmpGlyph = vNode.glyph;
-			
-			if(tmpGlyph.getCompartmentRef() != null)
-			{
-				Glyph containerCompartment = (Glyph)tmpGlyph.getCompartmentRef();
-				idToCompartmentGlyphs.get(containerCompartment.getId()).getGlyph().add(tmpGlyph);
-			}
-				
-		}
-		
 		
 		// Create LEdges for ChiLay layout component
 		createLedges(sbgn.getMap().getArc(), this.layout);
 		
-
 		
 		// Apply layout
 		this.layout.runLayout();
-		
-		for (VNode vNode: this.root.children) 
-		{ 
-			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
-			/*LNode tmpLNode = viewToLayout.get(vNode);
-			
-			tmpLNode.setWidth(vNode.glyph.getBbox().getW());
-			tmpLNode.setHeight(vNode.glyph.getBbox().getH());*/
-		}
-		
 
-		for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
+		/*for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
 		{
 			compGlyph.getGlyph().clear();
-		}
+		}*/
 		
-		/*GraphMLWriter writer = new GraphMLWriter("output.graphml");
-		writer.saveGraph(this.layout.getGraphManager());*/
+		
+		GraphMLWriter writer = new GraphMLWriter("output.graphml");
+		writer.saveGraph(this.layout.getGraphManager());
 		
 		return sbgn;
 	}
@@ -195,11 +204,6 @@ public class SBGNLayoutManager
 		{	
 			if (glyph.getClazz() !=  "state variable" && glyph.getClazz() !=  "unit of information"  ) 
 			{
-				
-				if(glyph.getClazz() == "compartment")
-				{
-					idToCompartmentGlyphs.put(glyph.getId(), glyph);
-				}
 				
 				if(!this.isChildless(glyph))
 				{
@@ -314,7 +318,6 @@ public class SBGNLayoutManager
 		LNode lNode = layout.newNode(vNode); 
 		lNode.setWidth(vNode.glyph.getBbox().getW());
 		lNode.setHeight(vNode.glyph.getBbox().getH());
-		lNode.setLocation(vNode.glyph.getBbox().getX(), vNode.glyph.getBbox().getY());
 		
 		LGraph rootLGraph = layout.getGraphManager().getRoot();
 		
