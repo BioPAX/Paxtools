@@ -34,10 +34,10 @@ public class SBGNLayoutManager
 	
 	
 	/**
-	 * Converts the given model to SBGN, and writes in the specified file.
-	 *
+	 * Applies CoSE layout to the given SBGN model.
+	 * 
 	 * @param  Sbgn sbgn object to which layout will be applied
-	 * @return Layout applied sbgn object
+	 * @return Laid out sbgn object
 	 */
 	public Sbgn createLayout(Sbgn sbgn)
 	{
@@ -50,10 +50,10 @@ public class SBGNLayoutManager
 		// Using Compound spring  embedder layout
 		this.layout = new CoSELayout();
 		
-		LGraphManager graphMan = this.layout.getGraphManager(); 
-		LGraph lRoot = graphMan.addRoot();
+		LGraphManager graphMgr = this.layout.getGraphManager(); 
+		LGraph lRoot = graphMgr.addRoot();
 		this.root = new VCompound(new Glyph());
-		lRoot.vGraphObject = this.root;
+		//lRoot.vGraphObject = this.root;
 		
 		
 		for (Glyph g: sbgn.getMap().getGlyph()) 
@@ -80,35 +80,34 @@ public class SBGNLayoutManager
 		{	
 			sbgn.getMap().getGlyph().remove(g);
 		}
-		
-				
+					
 		// Create Vnodes for ChiLay layout component
 		createVNodes(root, sbgn.getMap().getGlyph());
 		
 		for (VNode vNode: this.root.children) 
 		{ 
-			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
+			this.createLNode(vNode, null, this.layout); 
 		}
-
-		
-		for (VNode vNode: this.root.children) 
-		{ 
-			this.createNode(vNode, null, this.layout); 
-		}
-		
 		
 		// Create LEdges for ChiLay layout component
-		createLedges(sbgn.getMap().getArc(), this.layout);
+		createLEdges(sbgn.getMap().getArc(), this.layout);
 		
+		graphMgr.updateBounds();
 		
 		// Apply layout
 		this.layout.runLayout();
+		
+		graphMgr.updateBounds();
 
+		for (VNode vNode: this.root.children) 
+		{ 
+			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
+		}
+		
 		/*for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
 		{
 			compGlyph.getGlyph().clear();
 		}*/
-		
 		
 		GraphMLWriter writer = new GraphMLWriter("output.graphml");
 		writer.saveGraph(this.layout.getGraphManager());
@@ -267,7 +266,7 @@ public class SBGNLayoutManager
 	 * @param layout layout object to which the created LEdges added.
 	 * 
 	 * */
-	public void createLedges(List<Arc> arcs, Layout layout)
+	public void createLEdges(List<Arc> arcs, Layout layout)
 	{
 		for(Arc arc: arcs )
 		{
@@ -313,12 +312,10 @@ public class SBGNLayoutManager
 	 * @param layout layout object to which the created LNodes added.
 	 * */
 	
-	public void createNode(VNode vNode,VNode parent,Layout layout)
+	public void createLNode(VNode vNode,VNode parent,Layout layout)
 	{
 		LNode lNode = layout.newNode(vNode); 
-		lNode.setWidth(vNode.glyph.getBbox().getW());
-		lNode.setHeight(vNode.glyph.getBbox().getH());
-		
+
 		LGraph rootLGraph = layout.getGraphManager().getRoot();
 		
 		this.viewToLayout.put(vNode, lNode); 
@@ -330,27 +327,30 @@ public class SBGNLayoutManager
 		{ 
 			LNode parentLNode = this.viewToLayout.get(parent); 
 			parentLNode.getChild().add(lNode); 
-			
 		} 
 		else 
 		{ 
 			rootLGraph.add(lNode); 
 		}		
 		
-		
+		lNode.setLocation(vNode.glyph.getBbox().getX(),vNode.glyph.getBbox().getY());
+			
 		if (vNode instanceof VCompound) 
 		{ 
 			VCompound vCompound = (VCompound) vNode; 
 			// add new LGraph to the graph manager for the compound node 
 			layout.getGraphManager().add(layout.newGraph(null), lNode); 
 			// for each VNode in the node set create an LNode 
-			for (VNode vNode2: vCompound.getChildren()) 
+			for (VNode vChildNode: vCompound.getChildren()) 
 			{ 
-				this.createNode(vNode2, vCompound, layout); 
+				this.createLNode(vChildNode, vCompound, layout); 
 				
-			} 
-				
-			lNode.updateBounds();
+			} 		
+		}
+		else
+		{
+			lNode.setWidth(vNode.glyph.getBbox().getW());
+			lNode.setHeight(vNode.glyph.getBbox().getH());
 		}
 	}
 }
