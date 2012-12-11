@@ -23,7 +23,7 @@ public class AND extends OR
 	{
 		for (MappedConst mc : con)
 		{
-			if (!mc.getConstr().satisfies(match, translate(mc.getInds(), ind))) return false;
+			if (!mc.satisfies(match, ind)) return false;
 		}
 		return true;
 	}
@@ -32,13 +32,13 @@ public class AND extends OR
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
 		Collection<BioPAXElement> gen = new HashSet<BioPAXElement> (
-			con[0].getConstr().generate(match, translate(con[0].getInds(), ind)));
+			con[0].generate(match, ind));
 
 		for (int i = 1; i < con.length; i++)
 		{
 			if (gen.isEmpty()) break;
 
-			gen.retainAll(con[i].getConstr().generate(match, translate(con[i].getInds(), ind)));
+			gen.retainAll(con[i].generate(match, ind));
 		}
 		return gen;
 	}

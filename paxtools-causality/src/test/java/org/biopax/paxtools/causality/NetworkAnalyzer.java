@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality;
 
+import org.biopax.paxtools.causality.util.Kronometre;
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.conversion.HGNC;
 import org.biopax.paxtools.io.SimpleIOHandler;
@@ -68,10 +69,15 @@ public class NetworkAnalyzer
 	@Ignore
 	public void clip() throws FileNotFoundException
 	{
-		Pattern p = prepareInactiveEffectorPattern();
+		Kronometre k = new Kronometre();
+		
+		Pattern p = prepareChangedToEffectPattern();
 
-		Searcher.searchInFile(p, "/home/ozgun/Desktop/cpath2.owl", "/home/ozgun/Desktop/pattern-matches/inactive-effector-double-action.owl");
+		Searcher.searchInFile(p, "/home/ozgun/Desktop/PC.owl", "/home/ozgun/Desktop/pattern-matches/ChangedToEffect.owl", 100, 2);
 
+		k.stop();
+		k.print();
+		
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
 //
@@ -289,14 +295,13 @@ public class NetworkAnalyzer
 
 	private Pattern prepareConflictingControl()
 	{
-		Pattern p = new Pattern(15, EntityReference.class);
+		Pattern p = new Pattern(15, ProteinReference.class);
 		int i = 0;
 		p.addConstraint(ConBox.erToPE(), i, ++i);
 		p.addConstraint(ConBox.erToPE(), i-1, ++i);
-		p.addConstraint(ConBox.notUbique(ConversionLabelerTest.ubiq), i);
 		p.addConstraint(new Equality(false), i-1, i);
-		p.addConstraint(ConBox.withComplexes(), i-1, ++i);
-		p.addConstraint(ConBox.withComplexes(), i-1, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i-1, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i-1, ++i);
 		p.addConstraint(ConBox.peToControl(), i-1, ++i);
 		p.addConstraint(ConBox.peToControl(), i-1, ++i);
 		p.addConstraint(new Constraint()
@@ -330,12 +335,14 @@ public class NetworkAnalyzer
 			}
 		}, i-1, i);
 		p.addConstraint(ConBox.controlToConv(), i-1, ++i);
+		p.addConstraint(ConBox.notAParticipant(), i, i-4);
 		p.addConstraint(ConBox.controlToConv(), i-1, ++i);
+		p.addConstraint(ConBox.notAParticipant(), i, i-4);
 		p.addConstraint(new ParticipatingPE(RelType.OUTPUT), i-3, i-1, ++i);
 		p.addConstraint(new ParticipatingPE(RelType.OUTPUT), i-3, i-1, ++i);
-		p.addConstraint(ConBox.withSimpleMembers(), i-1, ++i);
-		p.addConstraint(ConBox.withSimpleMembers(), i-1, ++i);
-		p.addConstraint(ConBox.notUbique(ConversionLabelerTest.ubiq), i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i-1, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i-1, ++i);
+		p.addConstraint(new Type(Protein.class), i);
 		p.addConstraint(ConBox.peToER(), i-1, ++i);
 		p.addConstraint(ConBox.peToER(), i-1, ++i);
 		p.addConstraint(new Equality(true), i-1, i);
@@ -406,6 +413,26 @@ public class NetworkAnalyzer
 		p.addConstraint(ConBox.peToER(), i, ++i);
 		p.addConstraint(new Equality(true), i, 0);
 
+		return p;
+	}
+
+	private Pattern prepareChangedToEffectPattern()
+	{
+		Pattern p = new Pattern(8, ProteinReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.isHuman(), i);
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(new ParticipatesInConv(RelType.INPUT, true), i, ++i);
+		p.addConstraint(new OtherSide(), i-1, i, ++i);
+		p.addConstraint(new Equality(false), i, i-2);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new Equality(true), i, 0);
+		p.addConstraint(ConBox.peToControl(), i-2, ++i);
+		p.addConstraint(ConBox.notControlsThis(), i, i-4);
+		p.addConstraint(ConBox.notLabeledInactive(), i-3);
+		p.addConstraint(new ControlNotParticipant(), i);
 		return p;
 	}
 }

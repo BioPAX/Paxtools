@@ -29,27 +29,18 @@ public class OR extends ConstraintAdapter
 	{
 		for (MappedConst mc : con)
 		{
-			if (mc.getConstr().satisfies(match, translate(mc.getInds(), ind))) return true;
+			if (mc.satisfies(match, ind)) return true;
 		}
 		return false;
 	}
 	
-	protected int[] translate(int[] first, int[] second)
-	{
-		int[] t = new int[first.length];
-		for (int i = 0; i < t.length; i++)
-		{
-			t[i] = second[first[i]];
-		}
-		return t;
-	}
 
 	@Override
 	public boolean canGenerate()
 	{
 		for (MappedConst mc : con)
 		{
-			if (!mc.getConstr().canGenerate()) return false;
+			if (!mc.canGenerate()) return false;
 		}
 		return true;
 	}
@@ -83,7 +74,7 @@ public class OR extends ConstraintAdapter
 
 		for (MappedConst mc : con)
 		{
-			gen.addAll(mc.getConstr().generate(match, translate(mc.getInds(), ind)));
+			gen.addAll(mc.generate(match, ind));
 		}
 		return gen;
 	}

@@ -606,11 +606,12 @@ public class L3ToSBGNPDConverter
 		{
 			Glyph g = factory.createGlyph();
 			g.setClazz(UNIT_OF_INFORMATION.getClazz());
-			Glyph.State s = factory.createGlyphState();
-			s.setVariable("mt");
-			s.setValue((pe instanceof Dna || pe instanceof DnaRegion) ? "DNA" :
-				(pe instanceof Rna || pe instanceof RnaRegion) ? "RNA" : "NucleicAcid");
-			g.setState(s);
+			Label label = factory.createLabel();
+			String s = "mt:";
+			s += ((pe instanceof Dna || pe instanceof DnaRegion) ? "DNA" :
+				(pe instanceof Rna || pe instanceof RnaRegion) ? "RNA" : "NuclAc");
+			label.setText(s);
+			g.setLabel(label);
 			list.add(g);
 		}
 

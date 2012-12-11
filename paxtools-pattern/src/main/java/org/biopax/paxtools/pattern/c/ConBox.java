@@ -4,7 +4,9 @@ import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.pattern.Constraint;
 import org.biopax.paxtools.pattern.MappedConst;
 
+import java.io.FileDescriptor;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -189,5 +191,23 @@ public class ConBox
 	public static Constraint molecularInteraction()
 	{
 		return new PathConstraint("PhysicalEntity/participantOf:MolecularInteraction");
+	}
+	
+	public static Constraint notAParticipant()
+	{
+		return new NOT(new Field(new PathAccessor("Interaction/participant"), Field.USE_SECOND_ARG));
+	}
+
+	public static Constraint notControlsThis()
+	{
+		// Asserts the control (first variable), does not control the conversion (second variable)
+		return new NOT(new Satisfies(new MappedConst(ConBox.controlToConv(), 0, 1)));
+	}
+
+	public static Constraint notLabeledInactive()
+	{
+		// Asserts the PE (and lower equivalent) are not labeled inactive
+		return new NOT(new ModificationConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER),
+			Collections.singleton("residue modification, inactive")));
 	}
 }

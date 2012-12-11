@@ -65,6 +65,14 @@ public class TermCounter
 		return terms;
 	}
 
+	public String getMostFrequentTerm()
+	{
+		List<Item> items = new ArrayList<Item>(termMap.values());
+		Collections.sort(items);
+		if (items.isEmpty()) return null;
+		else return items.get(0).term;
+	}
+
 	public String toString()
 	{
 		return toString(-1);

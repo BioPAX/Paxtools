@@ -172,8 +172,13 @@ public class Searcher
 	{
 		Map<BioPAXElement, List<Match>> map = new HashMap<BioPAXElement, List<Match>>();
 
+		int i = 1;
+
 		for (BioPAXElement ele : model.getObjects(pattern.getStartingClass()))
 		{
+			System.out.print(".");
+			if (i%200==0) System.out.println();
+
 //			System.out.println(((Named) ele).getDisplayName() + "\t" + ele.getRDFId());
 			List<Match> matches = search(ele, pattern);
 			
@@ -181,7 +186,9 @@ public class Searcher
 			{
 				map.put(ele, matches);
 			}
+			i++;
 		}
+		System.out.println();
 		return map;
 	}
 	

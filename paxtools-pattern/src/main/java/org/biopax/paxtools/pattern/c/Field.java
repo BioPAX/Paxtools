@@ -15,6 +15,7 @@ import java.util.Set;
 public class Field extends ConstraintAdapter
 {
 	public static final Object EMPTY = new Object();
+	public static final Object USE_SECOND_ARG = new Object();
 	
 	Object value;
 	PathAccessor pa;
@@ -28,7 +29,7 @@ public class Field extends ConstraintAdapter
 	@Override
 	public int getVariableSize()
 	{
-		return 1;
+		return value == USE_SECOND_ARG ? 2 : 1;
 	}
 
 	@Override
@@ -41,6 +42,11 @@ public class Field extends ConstraintAdapter
 		Set values = pa.getValueFromBean(ele);
 		
 		if (value == EMPTY) return values.isEmpty();
+		else if (value == USE_SECOND_ARG)
+		{
+			BioPAXElement q = match.get(ind[1]);
+			return values.contains(q);
+		}
 		else return values.contains(value);
 	}
 }
