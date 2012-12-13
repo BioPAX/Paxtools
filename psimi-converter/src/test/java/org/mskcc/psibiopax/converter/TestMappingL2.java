@@ -112,7 +112,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 
 			// create a biopax mapper
 			BioPAXMapper bpMapper = new BioPAXMapperImp(BioPAXLevel.L2);
-			bpMapper.setNamespace(EntryMapper.RDF_ID_PREFIX);
+			bpMapper.setNamespace("");
 
 			// get entry
 			Entry entry = (Entry)entries.iterator().next();
@@ -176,7 +176,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 		// get the element
 		BioPAXElement bpElement = null;
 		for (BioPAXElement biopaxElement : biopaxElements) {
-			if (biopaxElement.getRDFId().equals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_3323281832130706316")) {
+			if (biopaxElement.getRDFId().equals("3323281832130706316")) {
 				bpElement = biopaxElement;
 				break;
 			}
@@ -193,7 +193,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 		// get participant
 		sequenceParticipant participant = null;
 		for (InteractionParticipant interactionParticipant : interactionParticipants) {
-			if (interactionParticipant.getRDFId().equals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_5767007948877890882")) {
+			if (interactionParticipant.getRDFId().equals("5767007948877890882")) {
 				participant = (sequenceParticipant)interactionParticipant;
 			}
 		}
@@ -222,7 +222,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 		boolean featureFound = false;
 		sequenceFeature bpSequenceFeature = null;
 		for (sequenceFeature sf : sequenceFeatureList) {
-			if (sf.getRDFId().equals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_2681741952554656410")) {
+			if (sf.getRDFId().equals("2681741952554656410")) {
 				featureFound = true;
 				bpSequenceFeature = sf;
 				break;
@@ -256,7 +256,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 
 		// get physical entity
 		physicalEntity bpPhysicalEntity = participant.getPHYSICAL_ENTITY();
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_8", bpPhysicalEntity.getRDFId());
+		Assert.assertEquals("8", bpPhysicalEntity.getRDFId());
 		Assert.assertEquals("DNA primase small subunit", bpPhysicalEntity.getNAME());
 		Assert.assertEquals("pri1_mouse", bpPhysicalEntity.getSHORT_NAME());
 
@@ -276,16 +276,16 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 			fail("no unification xrefs found!");
 		}
 		
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#UXR-P20664", physicalEntityXRef.getRDFId());
+		Assert.assertEquals("UXR-P20664", physicalEntityXRef.getRDFId());
 		Assert.assertEquals("uniprotkb", physicalEntityXRef.getDB());
 		Assert.assertEquals("P20664", physicalEntityXRef.getID());
 
 		// organism
 		bioSource bpBioSource = ((sequenceEntity)bpPhysicalEntity).getORGANISM();
 		Assert.assertEquals("Mus musculus", bpBioSource.getNAME());
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#BS-10090", bpBioSource.getRDFId());
+		Assert.assertEquals("BS-10090", bpBioSource.getRDFId());
 		unificationXref bioSourceXRef = bpBioSource.getTAXON_XREF();
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_8992476572203004810", bioSourceXRef.getRDFId());
+		Assert.assertEquals("8992476572203004810", bioSourceXRef.getRDFId());
 		Assert.assertEquals("TAXONOMY", bioSourceXRef.getDB());
 		Assert.assertEquals("10090", bioSourceXRef.getID());
 

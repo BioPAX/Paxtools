@@ -1,5 +1,3 @@
-// $Id: BioPAXMapper.java,v 1.2 2009/11/23 13:59:42 rodche Exp $
-//------------------------------------------------------------------------------
 /** Copyright (c) 2009 Memorial Sloan-Kettering Cancer Center.
  **
  ** This library is free software; you can redistribute it and/or modify it
@@ -141,10 +139,10 @@ public interface BioPAXMapper {
 	/**
 	 * Given an RDF ID, returns a matching model element
 	 *
-	 * @param rdfID
+	 * @param uri
 	 * @return BioPAXElement
 	 */
-	BioPAXElement getBioPAXElement(String rdfID);
+	BioPAXElement getBioPAXElement(String uri);
 
 	/**
 	 * Gets an interaction.
@@ -274,11 +272,17 @@ public interface BioPAXMapper {
 	void setXrefDBAndID(BioPAXElement bpXref, String db, String id);
 
 	/**
-	 * Sets biopax model namespace.
+	 * Sets the biopax model namespace (xml:base).
 	 *
 	 * @param namespace String
 	 */
 	void setNamespace(String namespace);
+	
+	/**
+	 * Gets the biopax model namespace (xml:base).
+	 *
+	 */
+	String getNamespace();
 
 	/**
 	 * Creates a data source and adds to given interaction.

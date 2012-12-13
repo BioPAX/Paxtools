@@ -1050,14 +1050,16 @@ public class BioPAXMapperImp implements BioPAXMapper
 		}
 	}
 
-	/**
-	 * Sets biopax model namespace.
-	 *
-	 * @param namespace String
-	 */
+
 	public void setNamespace(String namespace)
 	{
 		bpModel.setXmlBase(namespace);
+	}
+	
+	
+	public String getNamespace()
+	{
+		return bpModel.getXmlBase();
 	}
 
 	/**

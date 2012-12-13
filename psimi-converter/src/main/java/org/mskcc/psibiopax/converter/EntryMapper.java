@@ -45,11 +45,6 @@ import java.util.*;
 public class EntryMapper extends Thread {
 
 	/**
-	 * rdf id prefix.
-	 */
-	public static final String RDF_ID_PREFIX = "HTTP://PATHWAYCOMMONS.ORG/PSI2BP#";
-
-	/**
 	 * Genetic Interactions.
 	 */
 	private static final ArrayList<String> GENETIC_INTERACTIONS;
@@ -350,7 +345,7 @@ public class EntryMapper extends Thread {
 										interactor.getOrganism().getCompartment() : null);
 
 		// create the physical entity which is contained within the participant, if it does not already exist
-		String physicalEntityRdfId = RDF_ID_PREFIX + "_" + interactorRef;
+		String physicalEntityRdfId = bpMapper.getNamespace() + interactorRef;
 		BioPAXElement bpPhysicalEntity = bpMapper.getBioPAXElement(physicalEntityRdfId);
 		bpPhysicalEntity = (bpPhysicalEntity == null) ?
 			createPhysicalEntity(physicalEntityRdfId, interactor) : bpPhysicalEntity;
@@ -439,7 +434,7 @@ public class EntryMapper extends Thread {
 			Set<BioPAXElement> bpSequenceFeatureXref = getUnificationXref(psiFeatureXref, false);
 			if (bpSequenceFeatureXref != null && bpSequenceFeatureXref.size() > 0) {
 				// lets use xref id as id for feature - to eliminate duplicate features
-				String id = RDF_ID_PREFIX + "SF-" + bpMapper.getXrefID(bpSequenceFeatureXref.iterator().next());
+				String id = bpMapper.getNamespace() + "SF-" + bpMapper.getXrefID(bpSequenceFeatureXref.iterator().next());
 				if (id != null && id.length() > 0) {
 					BioPAXElement bpSequenceFeature = bpMapper.getBioPAXElement(id);
 					if (bpSequenceFeature == null) {
@@ -512,7 +507,7 @@ public class EntryMapper extends Thread {
 
 		// set BioPXElement rdf id and taxon xref id
 		String ncbiId = Integer.toString(organism.getNcbiTaxId());
-		String rdfID = RDF_ID_PREFIX + "BS-" + ncbiId;
+		String rdfID = bpMapper.getNamespace() + "BS-" + ncbiId;
 
 		// outta here if element already exists in model
 		BioPAXElement bpBioSource = bpMapper.getBioPAXElement(rdfID);
@@ -619,7 +614,7 @@ public class EntryMapper extends Thread {
             // If multiple ids given with comma separated values, then split them.
             for (String dbRefId : psiDBRefId.split(",")) {
                 if (refType != null && (refType.equals("identity") || refType.equals("identical object"))) {
-                    String id = RDF_ID_PREFIX + "UXR-" + validateDBID(dbRefId);
+                    String id = bpMapper.getNamespace() + "UXR-" + validateDBID(dbRefId);
                     bpXref = bpMapper.getBioPAXElement(id);
                     if (bpXref != null) {
                         toReturn.add(bpXref);
@@ -628,7 +623,7 @@ public class EntryMapper extends Thread {
                     bpXref = bpMapper.getUnificationXref(id);
                 }
                 else if (!forOCVorInteraction) {
-                    String id = RDF_ID_PREFIX + "RXR-" + validateDBID(dbRefId);
+                    String id = bpMapper.getNamespace() + "RXR-" + validateDBID(dbRefId);
                     bpXref = bpMapper.getBioPAXElement(id);
                     if (bpXref != null) {
                         toReturn.add(bpXref);
@@ -672,7 +667,7 @@ public class EntryMapper extends Thread {
 		if (psiDBRef == null) return toReturn;
 
 		// create publication ref
-		String id = RDF_ID_PREFIX + "PXR-" + validateDBID(psiDBRef.getId());
+		String id = bpMapper.getNamespace() + "PXR-" + validateDBID(psiDBRef.getId());
 		BioPAXElement bpXref = bpMapper.getBioPAXElement(id);
 		// outta here if element already exists in model
 		if (bpXref != null) {
@@ -932,8 +927,7 @@ public class EntryMapper extends Thread {
 	 * @return String
 	 */
 	private String genRdfId() {
-		// return
-		return RDF_ID_PREFIX + "_" + Long.toString(Math.abs(random.nextLong()));
+		return bpMapper.getNamespace() + Long.toString(Math.abs(random.nextLong()));
 	}
 
 	/**

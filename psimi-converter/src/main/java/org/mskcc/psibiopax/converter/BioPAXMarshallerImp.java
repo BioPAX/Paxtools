@@ -53,12 +53,7 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
     /**
 	 * Ref to PSIMIBioPAXConverter.
 	 */
-	private PSIMIBioPAXConverter converter;
-
-	/**
-	 * Ref to biopax level.
-	 */
-	private BioPAXLevel bpLevel;
+	private final PSIMIBioPAXConverter converter;
 
 	/**
 	 * Used for synchronization.
@@ -85,18 +80,16 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 	 */
 	private List<Model> bpModelList;
 
-	/*
+	/**
 	 * Constructor.
 	 *
 	 * @param converter PSIMIBioPAXConverter
-	 * @parma bpLevel BioPAXLevel 
 	 * @param outputStream OutputStream - will be closed by this class
 	 * @param numEntries int
+	 * @parma bpLevel BioPAXLevel 
 	 */
-	public BioPAXMarshallerImp(PSIMIBioPAXConverter converter, BioPAXLevel bpLevel, OutputStream outputStream, int numEntries) {
-
+	public BioPAXMarshallerImp(PSIMIBioPAXConverter converter, OutputStream outputStream, int numEntries) {
 		this.converter = converter;
-		this.bpLevel = bpLevel;
 		this.numEntries = numEntries;
 		this.synObj = new Object();
 		this.bpModelList = new ArrayList<Model>();
@@ -154,15 +147,9 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 	private void marshallData() {
 
 		// combine all models into a single model
-		Model completeModel = null;
-		if (bpLevel == BioPAXLevel.L2) {
-			completeModel = BioPAXLevel.L2.getDefaultFactory().createModel();
-		}
-		else if (bpLevel == BioPAXLevel.L3) {
-			completeModel = BioPAXLevel.L3.getDefaultFactory().createModel();
-		}
-
-		completeModel.setXmlBase(EntryMapper.RDF_ID_PREFIX);
+		Model completeModel = converter.getBpLevel().getDefaultFactory().createModel();
+		completeModel.setXmlBase(converter.getXmlBase());
+		
 		for (Model bpModel : bpModelList) {
 			Set<BioPAXElement> elementList = bpModel.getObjects();
 			for (BioPAXElement elementInstance : elementList) {
