@@ -214,6 +214,13 @@ public class VNode implements Updatable
 			setBounds(TAG_BOUND.getWidth(), TAG_BOUND.getHeight());
 		}
 		
+		/*if( this.glyph.getClone() != null )
+		{
+			Bbox glyphBbox = this.glyph.getBbox();
+			setBounds(glyphBbox.getW()/2, glyphBbox.getH()/2 );
+		}*/
+		
+		
 		if (glyphClass == MACROMOLECULE || glyphClass == NUCLEIC_ACID_FEATURE || glyphClass == SIMPLE_CHEMICAL || glyphClass == COMPLEX) 
 		{
 			updateSizeForStateAndInfo();
@@ -321,8 +328,6 @@ public class VNode implements Updatable
 		int numOfStates = stateGlyphs.size();
 		int numOfInfos = infoGlyphs.size();
 		
-		/*numOfStates = (numOfStates >= MAX_INFO_BOX_NUMBER/2) ? MAX_INFO_BOX_NUMBER/2 : numOfStates;
-		numOfInfos  = (numOfInfos  >= MAX_INFO_BOX_NUMBER/2)  ? MAX_INFO_BOX_NUMBER/2 : numOfInfos;*/
 		
 		float parent_y_up = this.glyph.getBbox().getY()-INFO_BOUND.height/2;
 		float parent_y_bot = this.glyph.getBbox().getY()+this.glyph.getBbox().getH()-INFO_BOUND.height/2;;
