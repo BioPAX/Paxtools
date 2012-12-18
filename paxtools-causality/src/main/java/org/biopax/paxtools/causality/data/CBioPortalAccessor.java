@@ -295,7 +295,7 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         for (String[] results : parseURL(url)) {
             assert results.length == 5;
             String[] cases = results[4].split(" ");
-            assert cases.length > 1;
+            assert cases.length > 0;
 
             CaseList caseList = new CaseList(results[0], results[1], cases);
             caseLists.add(caseList);
