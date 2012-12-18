@@ -138,9 +138,9 @@ public class ConBox
 			"SimplePhysicalEntity/entityReference");
 	}
 
-	public static Constraint nameEquals(Collection names)
+	public static Constraint nameEquals(String name)
 	{
-		return new FieldConstraint("Named/name", names);
+		return new Field(new PathAccessor("Named/name"), name);
 	}
 
 	public static Constraint notUbique(Set<String> ubiques)
@@ -166,7 +166,6 @@ public class ConBox
 
 	public static Constraint participantER()
 	{
-		new PathAccessor("Interaction/participant:PhysicalEntity/entityReference");
 		return new MultiPathConstraint("Interaction/participant:PhysicalEntity/entityReference",
 			"Interaction/participant:PhysicalEntity/component*/entityReference");
 	}

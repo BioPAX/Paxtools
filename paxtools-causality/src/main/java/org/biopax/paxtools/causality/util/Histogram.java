@@ -137,6 +137,15 @@ public class Histogram
 		}
 	}
 
+	public void multiply(int x)
+	{
+		for (Integer i : binMap.keySet())
+		{
+			binMap.put(i, binMap.get(i) * x);
+			total += binMap.get(i) * (x - 1);
+		}
+	}
+
 	public int getPositiveTotal()
 	{
 		int t = 0;

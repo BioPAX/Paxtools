@@ -317,7 +317,7 @@ public class Searcher
 		handler.convertToOWL(clonedModel, new FileOutputStream(outFile));
 	}
 
-	private static String getLeadingZeros(int i, int size)
+	public static String getLeadingZeros(int i, int size)
 	{
 		assert i <= size;
 		int w1 = (int) Math.floor(Math.log10(size));
@@ -334,7 +334,7 @@ public class Searcher
 	
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
 	static final SimpleEditorMap EM = SimpleEditorMap.L3;
-	private static Model excise(Model model, Set<BioPAXElement> result)
+	public static Model excise(Model model, Set<BioPAXElement> result)
 	{
 		Completer c = new Completer(EM);
 

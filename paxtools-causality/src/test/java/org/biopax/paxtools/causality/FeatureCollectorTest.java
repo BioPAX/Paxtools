@@ -1,5 +1,6 @@
 package org.biopax.paxtools.causality;
 
+import org.biopax.paxtools.causality.util.Histogram;
 import org.biopax.paxtools.causality.util.TermCounter;
 import org.biopax.paxtools.conversion.HGNC;
 import org.biopax.paxtools.impl.level3.ProvenanceImpl;
@@ -161,6 +162,8 @@ public class FeatureCollectorTest
 		Map<String, String> resMatch = getResidueMatching(model);
 		Map<String, Set<String>> matching = loadFeatureTermMatching();
 
+		Map<String, Histogram> norm = new HashMap<String, Histogram>();
+		Map<String, Histogram> rand = new HashMap<String, Histogram>();
 
 		for (ProteinReference pr : model.getObjects(ProteinReference.class))
 		{
@@ -170,7 +173,8 @@ public class FeatureCollectorTest
 			Set<String> res_provs = new HashSet<String>();
 
 			List<Feature> feats = extractFeatures(pr);
-//			List<Feature> nomatch_feats = new ArrayList<Feature>();
+			matchResidues(feats, resMatch);
+			List<Feature> nomatch_feats = new ArrayList<Feature>();
 
 			for (Feature f : feats)
 			{
@@ -183,7 +187,7 @@ public class FeatureCollectorTest
 					else if (f.seq != null)
 					{
 						count(f.getSource(), nomatch);
-//						nomatch_feats.add(f);
+						nomatch_feats.add(f);
 					}
 					else count(f.getSource(), noseq);
 				}
@@ -192,8 +196,11 @@ public class FeatureCollectorTest
 				if (f.hasLocation()) res_provs.add(f.getSource());
 				provs.add(f.getSource());
 			}
-			
-			countOverlaps(feats, overlaps, matching);
+
+//			leaveNCIOnly(nomatch_feats);
+//			recordMatchDistances(nomatch_feats, resMatch, norm, rand);
+
+			countOverlaps(nomatch_feats, overlaps, matching);
 
 			count(provs, prots);
 			count(res_provs, resProts);
@@ -205,6 +212,15 @@ public class FeatureCollectorTest
 		printCounts("No match", nomatch);
 		printCounts("No sequence", noseq);
 		printCounts("Overlaps", overlaps);
+
+//		for (String prov : norm.keySet())
+//		{
+//			System.out.println("match dist for prov = " + prov);
+//			Histogram hn = norm.get(prov);
+//			Histogram hr = rand.get(prov);
+//			hn.multiply(10);
+//			hn.printTogether(hr);
+//		}
 	}
 
 	private Map<String, Set<String>> loadFeatureTermMatching() throws IOException
@@ -336,11 +352,15 @@ public class FeatureCollectorTest
 
 	private void printCounts(String name, Map<String, Integer> map)
 	{
+		int total = 0;
 		System.out.println("\nCounts for " + name);
 		for (String prov : map.keySet())
 		{
-			System.out.println(prov + "\t" + map.get(prov));
+			int x = map.get(prov);
+			System.out.println(prov + "\t" + x);
+			total += x;
 		}
+		System.out.println("total = " + total);
 	}
 	
 	public Map<String, String> getResidueMatching(Model model) throws IOException
@@ -517,6 +537,108 @@ public class FeatureCollectorTest
 	}
 	
 
+	// Searching for the missing residue
+
+	private void recordMatchDistances(List<Feature> feats, Map<String, String> resMatch,
+		Map<String, Histogram> normal, Map<String, Histogram> random)
+	{
+		for (Feature f : feats)
+		{
+			String exp = resMatch.get(f.getTerm());
+			String prov = f.getSource();
+			
+			if (!normal.containsKey(prov)) normal.put(prov, new Histogram(1));
+			if (!random.containsKey(prov)) random.put(prov, new Histogram(1));
+			
+			int d = getMatchDistance(f, exp, f.getLocation());
+			normal.get(prov).count(d);
+
+			for (int i = 0; i < 10; i++)
+			{
+				int rloc = getRandomNonMatchingResidue(f, exp);
+				d = getMatchDistance(f, exp, rloc);
+				random.get(prov).count(d);
+			}
+		}
+	}
+
+	private static final Random rand = new Random();
+
+	private int getRandomNonMatchingResidue(Feature f, String match)
+	{
+		int length = f.seq.length();
+
+		int r;
+
+		do
+		{
+			r = rand.nextInt(length);
+		}
+		while (f.seq.substring(r, r+1).equals(match));
+
+		return r+1;
+	}
+	
+	private int getMatchDistance(Feature f, String expected, int startLoc)
+	{
+		int length = Math.min(f.seq.length(), 20);
+		for (int i = 0; i < length; i++)
+		{
+			String r1 = f.getResidue(startLoc + i);
+			String r2 = f.getResidue(startLoc - i);
+			
+			if ((r1 != null && r1.equals(expected)) || 
+				(r2 != null && r2.equals(expected))) 
+			{
+				return i;
+			}
+			if (r1 == null && r2 == null) break;
+		}
+		return -1;
+	}
+
+	private void leaveNCIOnly(List<Feature> list)
+	{
+		List<Feature> keep = new ArrayList<Feature>();
+
+		for (int i = 0; i < list.size(); i++)
+		{
+			Feature f1 = list.get(i);
+			boolean intersects = false;
+			if (f1.getSource().equals("pid"))
+			{
+				for (int j = 0; j < list.size(); j++)
+				{
+					if (i != j)
+					{
+						Feature f2 = list.get(j);
+						if (f1.getLocation() == f2.getLocation() && 
+							f1.getTerm().equals(f2.getTerm()) && 
+							!f1.getSource().equals(f2.getSource()))
+						{
+							intersects = true;
+						}
+					}
+				}
+				if (!intersects) keep.add(f1);
+			}
+		}
+		list.retainAll(keep);
+	}
+	
+	private void matchResidues(List<Feature> feats, Map<String, String> resMatch)
+	{
+		for (Feature f : feats)
+		{
+			String exp = resMatch.get(f.getTerm());
+			if (exp != null) f.shiftToMatch(exp);
+		}
+		Set<Feature> set = new HashSet<Feature>(feats);
+		feats.clear();
+		feats.addAll(set);
+		Collections.sort(feats);
+	}
+
 	// Displaying modifications
 
 	private class Feature implements Comparable
@@ -524,6 +646,7 @@ public class FeatureCollectorTest
 		ModificationFeature mf;
 		Provenance prov;
 		String seq;
+		int shift;
 
 		private Feature(ModificationFeature mf, Provenance prov, String seq)
 		{
@@ -549,7 +672,7 @@ public class FeatureCollectorTest
 		public int getLocation()
 		{
 			return mf.getFeatureLocation() == null ? -1 :
-				((SequenceSite) mf.getFeatureLocation()).getSequencePosition();
+				((SequenceSite) mf.getFeatureLocation()).getSequencePosition() + shift;
 		}
 
 		public String getTerm()
@@ -574,8 +697,12 @@ public class FeatureCollectorTest
 
 		public String getResidue()
 		{
-			int loc = getLocation();
-			if (hasLocation() && seq != null && seq.length() >= loc)
+			return getResidue(getLocation());
+		}
+		
+		public String getResidue(int loc)
+		{
+			if (hasLocation() && seq != null && seq.length() >= loc && loc > 0)
 			{
 				return seq.substring(loc-1, loc);
 			}
@@ -612,6 +739,31 @@ public class FeatureCollectorTest
 
 			return (loc <= 0 ? "  " : loc) + "\t" + aa + "\t" + getTerm() + "\t" +
 				prov.getDisplayName();
+		}
+		
+		public void shiftToMatch(String expectedResidue)
+		{
+			String source = getSource();
+			String r = getResidue();
+			if (r != null && !r.equals(expectedResidue) &&
+				(source.equals("Reactome") || source.equals("pid")))
+			{
+				if (!tryShifting(-1, expectedResidue))
+					if (!tryShifting(1, expectedResidue) && source.equals("Reactome"))
+						if (!tryShifting(-2, expectedResidue))
+							tryShifting(2, expectedResidue);
+			}
+		}
+		
+		private boolean tryShifting(int shift, String expected)
+		{
+			String r = getResidue(getLocation() + shift);
+			if (r != null && r.equals(expected))
+			{
+				this.shift += shift;
+				return true;
+			}
+			return false;
 		}
 	}
 

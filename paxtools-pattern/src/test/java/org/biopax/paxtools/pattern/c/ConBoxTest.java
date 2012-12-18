@@ -188,7 +188,7 @@ public class ConBoxTest extends TestParent
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			new Pattern(2, Complex.class, Arrays.asList(
 				new MappedConst(ConBox.complexMembers(), 0, 1),
-				new MappedConst(ConBox.nameEquals(Collections.singleton("GDP")), 1))));
+				new MappedConst(ConBox.nameEquals("GDP"), 1))));
 
 		Assert.assertTrue(list.size() == 1);
 		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678")));

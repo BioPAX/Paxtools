@@ -134,6 +134,11 @@ public class Pattern
 	{
 		this.variableSize = variableSize;
 	}
+	
+	public void increaseVariableSizeBy(int inc)
+	{
+		this.variableSize += inc;
+	}
 
 	/**
 	 * @return The class of first element in a match
