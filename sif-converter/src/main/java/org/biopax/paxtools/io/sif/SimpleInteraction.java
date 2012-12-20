@@ -140,8 +140,15 @@ public class SimpleInteraction
 	 */
 	public int hashCode()
 	{
-
-		return (type.hashCode()+(type.isDirected()?2:1)*source.hashCode()+target.hashCode())/17;
+		// could threw a NPE:
+		//return (type.hashCode()+(type.isDirected()?2:1)*source.hashCode()+target.hashCode())/17;
+		
+		int result = 31 + (type != null ? type.hashCode() : 0);
+		if(type != null)
+			result = 31 * result + (type.isDirected() ? 2 : 1);
+		result = 31 * result + (source != null ? source.hashCode() : 0);
+		result = 31 * result + (target != null ? target.hashCode() : 0);
+		return result;
 	}
 
 	public String toString()
@@ -154,7 +161,7 @@ public class SimpleInteraction
 //		String from = getANameForSIF(source);
 //		String to = getANameForSIF(target);
 
-		return from + "\t" + type.toString() + "\t" + to;
+		return from + "\t" + type + "\t" + to;
 	}
 
 	public String getANameForSIF(BioPAXElement element)

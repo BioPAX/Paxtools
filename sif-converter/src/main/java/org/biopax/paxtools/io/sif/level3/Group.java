@@ -7,14 +7,11 @@ import org.biopax.paxtools.model.level3.EntityReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- *
- */
+
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 public class Group extends EntityReferenceImpl
 {
