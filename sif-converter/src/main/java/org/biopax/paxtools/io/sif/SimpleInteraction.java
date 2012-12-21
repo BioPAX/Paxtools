@@ -140,14 +140,34 @@ public class SimpleInteraction
 	 */
 	public int hashCode()
 	{
-		// could threw a NPE:
-		//return (type.hashCode()+(type.isDirected()?2:1)*source.hashCode()+target.hashCode())/17;
+        int srcHash = source != null ? source.hashCode() : 0;
+        int trgtHash = target != null ? target.hashCode() : 0;
 		
 		int result = 31 + (type != null ? type.hashCode() : 0);
+
 		if(type != null)
-			result = 31 * result + (type.isDirected() ? 2 : 1);
-		result = 31 * result + (source != null ? source.hashCode() : 0);
-		result = 31 * result + (target != null ? target.hashCode() : 0);
+        {
+            int directionHash = 1;
+            if(!type.isDirected())
+            {
+                // If it is not directional,
+                // then A <-> B and B <-> A should produce
+                // the same hash, so order them first
+                if(srcHash < trgtHash)
+                {
+                    int tmpHash = srcHash;
+                    srcHash = trgtHash;
+                    trgtHash = tmpHash;
+                }
+
+                directionHash = 2;
+            }
+
+            result = 31 * result + directionHash;
+        }
+
+		result = 31 * result + srcHash;
+		result = 31 * result + trgtHash;
 		return result;
 	}
 
@@ -155,11 +175,6 @@ public class SimpleInteraction
 	{
 		String from = source.getRDFId();
 		String to = target == null ? "null" : target.getRDFId();
-
-// These lines are for creating a SIF with readable names instead of rdf ids.
-//
-//		String from = getANameForSIF(source);
-//		String to = getANameForSIF(target);
 
 		return from + "\t" + type + "\t" + to;
 	}
