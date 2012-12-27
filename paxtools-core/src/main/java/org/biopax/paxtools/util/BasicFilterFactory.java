@@ -47,7 +47,7 @@ public abstract class BasicFilterFactory {
 	public Filter getFilter() {		
 		/* a simpler, stricter, less confusing way filter search results:
 		 * e.g., only full standard biopax names and IDs will work as filter values,
-		 * while others will return empty result set (and the searchField is UN_TOKENIZED)
+		 * while others will return empty result set (and the searchField is TOKENIZED)
 		 */
 		BooleanQuery query = new BooleanQuery();
 		for(String fv : values) {

@@ -62,7 +62,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 		//- can even associate small molecules with organisms (impossible to do explicitly in BioPAX)!
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -151,7 +151,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		//using memberPhysicalEntity in addition to other props to generate "pathway" index field helps
 		//in rare cases when this one does not participate in any interaction or complex but some of its members do
 		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
 		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -186,7 +186,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")

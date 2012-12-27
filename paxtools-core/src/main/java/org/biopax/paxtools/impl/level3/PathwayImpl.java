@@ -119,7 +119,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-    @Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED)
+    @Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.TOKENIZED)
     @FieldBridge(impl=OrganismFieldBridge.class)
 	@ManyToOne(targetEntity = BioSourceImpl.class)
 	public BioSource getOrganism()

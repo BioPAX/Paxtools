@@ -57,7 +57,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	
 	@Fields({
-		@Field(name=FIELD_XREFID, index=Index.UN_TOKENIZED, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f)),
+		@Field(name=FIELD_XREFID, index=Index.TOKENIZED, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f)),
 		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
