@@ -151,7 +151,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 
 	@Fields({
 		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
 	})
 	@ManyToOne(targetEntity = PathwayImpl.class)
 	public Pathway getPathwayOrderOf()
