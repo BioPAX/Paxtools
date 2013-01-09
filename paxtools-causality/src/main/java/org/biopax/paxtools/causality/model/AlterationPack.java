@@ -19,8 +19,8 @@ public class AlterationPack
 	public static final Alteration[] priority_nonGenomic = new Alteration[]{
 		Alteration.PROTEIN_LEVEL, Alteration.EXPRESSION};
 
-//	public static final Alteration[] priority_genomic = new Alteration[]{
-//		Alteration.MUTATION, Alteration.COPY_NUMBER, Alteration.METHYLATION};
+	public static final Alteration[] priority_genomic = new Alteration[]{
+		Alteration.MUTATION, Alteration.COPY_NUMBER, Alteration.METHYLATION};
 
 	public static final Alteration[] priority = new Alteration[]{
 		Alteration.MUTATION, Alteration.PROTEIN_LEVEL, Alteration.EXPRESSION,
@@ -100,6 +100,18 @@ public class AlterationPack
 			if (ch.isAltered()) return true;
 		}
 		return false;
+	}
+
+	public int getAlteredCount(Alteration alt)
+	{
+		if (!map.containsKey(alt)) return 0;
+
+		int i = 0;
+		for (Change ch : map.get(alt))
+		{
+			if (ch.isAltered()) i++;
+		}
+		return i;
 	}
 
 	public double getAlteredRatio()
@@ -199,6 +211,18 @@ public class AlterationPack
 			map.put(Alteration.NON_GENOMIC, changes);
 		}
 
+		if (containsAlterationType(priority_genomic))
+		{
+			changes = new Change[changes.length];
+
+			for (int i = 0; i < changes.length; i++)
+			{
+				changes[i] = getCumulativeChange(priority_genomic, i);
+			}
+
+			map.put(Alteration.GENOMIC, changes);
+		}
+
 		Change[] changesAct = new Change[changes.length];
 		Change[] changesInh = new Change[changes.length];
 		Change[] mut = get(Alteration.MUTATION);
@@ -209,7 +233,7 @@ public class AlterationPack
 		{
 			if (mut != null && mut[i].isAltered()) 
 			{
-				changesAct[i] = Change.ACTIVATING;
+				if (mut[i] != Change.INHIBITING) changesAct[i] = Change.ACTIVATING;
 				changesInh[i] = Change.INHIBITING;
 			}
 			else if (cnc != null && cnc[i].isAltered())

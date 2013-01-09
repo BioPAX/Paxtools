@@ -157,7 +157,12 @@ public class CBioPortalAccessor extends AlterationProviderAdaptor {
         // TODO: Discuss these steps further
         switch (GeneticProfile.GENETIC_PROFILE_TYPE.convertToAlteration(geneticProfile.getType())) {
             case MUTATION:
-                return dataPoint.equalsIgnoreCase(NaN) ? Change.NO_CHANGE : Change.INHIBITING;
+                return dataPoint.equalsIgnoreCase(NaN) ? Change.NO_CHANGE :
+					dataPoint.contains("fs") || dataPoint.contains("splice") ||
+						dataPoint.contains(">") || dataPoint.contains("del") ||
+						dataPoint.contains("-") || dataPoint.contains("+") ||
+						dataPoint.contains("*")? Change.INHIBITING :
+					 Change.UNKNOWN_CHANGE;
             case METHYLATION:
                 Double methylationThreshold = options.get(CBioPortalOptions.PORTAL_OPTIONS.METHYLATION_THRESHOLD);
                 return dataPoint.equalsIgnoreCase(NaN) || dataPoint.equalsIgnoreCase(NA)

@@ -10,7 +10,6 @@ import java.util.*;
  */
 public class Overlap
 {
-//	private static Map<String, Double> mem = loadMemory();
 	/**
 	 * Calculates the p-value for getting o or less overlaps by chance.
 	 *
@@ -44,27 +43,12 @@ public class Overlap
 			a = t;
 		}
 
-//		String s = "" + n + "" + a + "" + b + "" + o;
-//		if (mem.containsKey(s)) return mem.get(s);
-
 		double pval = 0;
 
-		if (o < b/2)
+		for (int i = 0; i <= o; i++)
 		{
-			for (int i = 0; i <= o; i++)
-			{
-				pval += calcProb(n, a, b, i);
-			}
+			pval += calcProb(n, a, b, i);
 		}
-		else
-		{
-			for (int i = o+1; i <= b; i++)
-			{
-				pval += calcProb(n, a, b, i);
-			}
-			pval = 1 - pval;
-		}
-//		mem.put(s, pval);
 		return pval;
 	}
 
@@ -103,20 +87,9 @@ public class Overlap
 
 		double pval = 0;
 
-		if (o < b/2)
+		for (int i = o; i <= b; i++)
 		{
-			for (int i = 0; i < o; i++)
-			{
-				pval += calcProb(n, a, b, i);
-			}
-			pval = 1 - pval;
-		}
-		else
-		{
-			for (int i = o; i <= b; i++)
-			{
-				pval += calcProb(n, a, b, i);
-			}
+			pval += calcProb(n, a, b, i);
 		}
 
 		return pval;
@@ -220,56 +193,4 @@ public class Overlap
 
 		return new int[]{n, cnt1, cnt2, overlap};
 	}
-
-//	private static Map<String, Double> loadMemory()
-//	{
-//		Map<String, Double> mem = new HashMap<String, Double>(1000);
-//		try
-//		{
-//			File file = new File(MEMORY_FILE);
-//			if (file.exists())
-//			{
-//				BufferedReader reader = new BufferedReader(new FileReader(file));
-//
-//				for (String line = reader.readLine(); line != null; line = reader.readLine())
-//				{
-//					String[] token = line.split("\t");
-//					mem.put(token[0], Double.parseDouble(token[1]));
-//				}
-//
-//				reader.close();
-//			}
-//		} catch (IOException e){e.printStackTrace();}
-//		return mem;
-//	}
-//
-//	public static void writeMemory()
-//	{
-//		writeMemory(mem);
-//	}
-//
-//	private static void writeMemory(Map<String, Double> mem)
-//	{
-//		try
-//		{
-//			File file = new File(MEMORY_FILE);
-//			if (file.exists())
-//			{
-//				Map<String, Double> map = loadMemory();
-//				map.putAll(mem);
-//				mem = map;
-//			}
-//
-//			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-//
-//			for (String s : mem.keySet())
-//			{
-//				writer.write(s + "\t" + mem.get(s) + "\n");
-//			}
-//
-//			writer.close();
-//
-//		} catch (IOException e){e.printStackTrace();}
-//	}
-//	public static final String MEMORY_FILE = "memory.txt";
 }

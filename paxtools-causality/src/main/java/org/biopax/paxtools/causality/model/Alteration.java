@@ -11,6 +11,7 @@ public enum Alteration
 	EXPRESSION(false, false),
 	PROTEIN_LEVEL(false, false),
 	NON_GENOMIC(false, true),
+	GENOMIC(true, true),
 	ANY(false, true),
 	ACTIVATING(false, true),
 	INHIBITING(false, true);
