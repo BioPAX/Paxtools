@@ -2,6 +2,7 @@ package org.biopax.paxtools.io.sbgn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.ivis.layout.LGraphObject;
 import org.ivis.layout.LNode;
@@ -228,50 +229,66 @@ public class VNode implements Updatable
 		
 	}
 	
-	public int setInfoGlyphSizeAccordingToLabel(ArrayList stateList)
+	public int setInfoGlyphSizeAccordingToLabel(List<Glyph> infoList)
 	{
 		int wholeSize = 0;
 		int count = 0;
-		for (Iterator iterator = stateList.iterator(); iterator.hasNext();) 
-		{	
-			Glyph tmpGlyph = (Glyph) iterator.next();
-			
-			String tmpStr = tmpGlyph.getState().getValue();
-			
-			if(tmpGlyph.getState().getVariable() != "")
-				tmpStr += "@" +tmpGlyph.getState().getVariable(); 
-			
+
+		for (Glyph infoGlyph: infoList)
+		{
+			String text;
+
+			if (infoGlyph.getState() != null)
+			{
+				text = infoGlyph.getState().getValue();
+
+				if (infoGlyph.getState().getVariable() != null &&
+					infoGlyph.getState().getVariable().length() > 0)
+				{
+					text += "@" + infoGlyph.getState().getVariable();
+				}
+			}
+			else if (infoGlyph.getLabel() != null)
+			{
+				text = infoGlyph.getLabel().getText();
+			}
+			else
+			{
+				throw new RuntimeException("Encountered an information glyph with no state " +
+					"variable (as modification boxes should have) and no label (as molecule type " +
+					"boxed should have). glyph = " + infoGlyph);
+			}
+
 			int numOfUpper = 0;
 			int numOfLower = 0;
-			     
-		    for(int i=0; i < tmpStr.length(); i++) 
-		    {
-		        if(Character.isLowerCase(tmpStr.charAt(i))) 
-		        {
-		        	numOfLower++;
 
-		        }
-		        else
-		            numOfUpper++;
-		    }
-		    
+			for (int i = 0; i < text.length(); i++)
+			{
+				if (Character.isLowerCase(text.charAt(i)))
+				{
+					numOfLower++;
+
+				} else
+					numOfUpper++;
+			}
+
 			Bbox b = new Bbox();
-			tmpGlyph.setBbox(b);
-		    
-		    float requiredSize = numOfLower * LOWERCASE_LETTER_PIXEL_WIDTH + numOfUpper * UPPERCASE_LETTER_PIXEL_WIDTH;
-		    
-		    if(requiredSize < MAX_STATE_AND_INFO_HEIGHT )
-				tmpGlyph.getBbox().setW(requiredSize);
-		    else
-		    	tmpGlyph.getBbox().setW(STATE_BOUND.width);
-		    
-		    tmpGlyph.getBbox().setH(MAX_STATE_AND_INFO_HEIGHT);
-		    
-			if(count < MAX_INFO_BOX_NUMBER/2)
-			    wholeSize += tmpGlyph.getBbox().getW();
+			infoGlyph.setBbox(b);
 
-		    count++;
-				
+			float requiredSize = numOfLower * LOWERCASE_LETTER_PIXEL_WIDTH + numOfUpper * UPPERCASE_LETTER_PIXEL_WIDTH;
+
+			if (requiredSize < MAX_STATE_AND_INFO_HEIGHT)
+				infoGlyph.getBbox().setW(requiredSize);
+			else
+				infoGlyph.getBbox().setW(STATE_BOUND.width);
+
+			infoGlyph.getBbox().setH(MAX_STATE_AND_INFO_HEIGHT);
+
+			if (count < MAX_INFO_BOX_NUMBER / 2)
+				wholeSize += infoGlyph.getBbox().getW();
+
+			count++;
+
 		}
 		
 	    return wholeSize;
@@ -285,21 +302,16 @@ public class VNode implements Updatable
 	{
 		
 		// Find all state and info glyphs
-		for (Iterator iterator = this.glyph.getGlyph().iterator(); iterator.hasNext();)
+		for (Glyph glyph : this.glyph.getGlyph())
 		{
-			
-			
-			Glyph glyph = (Glyph) iterator.next();
-			
-			if (glyph.getClazz() == STATE_VARIABLE) 
+			if (glyph.getClazz() == STATE_VARIABLE)
 			{
 				stateGlyphs.add(glyph);
 			}
-			
 			else if (glyph.getClazz() == UNIT_OF_INFORMATION)
 			{
 				infoGlyphs.add(glyph);
-			}		
+			}
 		}
 		
 		//Calculate "state of information" glyphs' sizes

@@ -14,13 +14,26 @@ public class Traverse
 
 	public boolean load(String filename, Set<String> ppiTypes, Set<String> signalTypes)
 	{
+		try
+		{
+			return load(new FileReader(filename), ppiTypes, signalTypes);
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean load(Reader rdr, Set<String> ppiTypes, Set<String> signalTypes)
+	{
 		dwMap = new HashMap<String, Set<String>>();
 		upMap = new HashMap<String, Set<String>>();
 		ppMap = new HashMap<String, Set<String>>();
 
 		try
 		{
-			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			BufferedReader reader = new BufferedReader(rdr);
 
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 			{

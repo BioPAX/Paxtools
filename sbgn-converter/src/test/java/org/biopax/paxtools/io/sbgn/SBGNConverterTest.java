@@ -67,7 +67,7 @@ public class SBGNConverterTest
 	@Ignore
 	public void testDebug() throws Throwable
 	{
-		String file = "/home/ozgun/Desktop/TP53";
+		String file = "/home/ozgun/Desktop/temp";
 		Model model = handler.convertFromOWL(new FileInputStream(file + ".owl"));
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.writeSBGN(model, file + ".sbgn");

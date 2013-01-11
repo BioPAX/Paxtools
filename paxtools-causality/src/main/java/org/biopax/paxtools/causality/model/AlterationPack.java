@@ -397,9 +397,14 @@ public class AlterationPack
 	
 	public static Map<String, AlterationPack> readFromFile(String filename) throws IOException
 	{
+		return readFromFile(new FileReader(filename));
+	}
+	
+	public static Map<String, AlterationPack> readFromFile(Reader rdr) throws IOException
+	{
 		Map<String, AlterationPack> map = new HashMap<String, AlterationPack>();
 
-		BufferedReader reader = new BufferedReader(new FileReader(filename));
+		BufferedReader reader = new BufferedReader(rdr);
 
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
 		{

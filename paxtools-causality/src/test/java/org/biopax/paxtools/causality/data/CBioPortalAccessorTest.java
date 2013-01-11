@@ -3,6 +3,7 @@ package org.biopax.paxtools.causality.data;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.causality.model.AlterationPack;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@Ignore // This test depends on cBio Portal, so it shouldn't be part of the routine tests.
 public class CBioPortalAccessorTest {
     private static Log log = LogFactory.getLog(CBioPortalAccessorTest.class);
 

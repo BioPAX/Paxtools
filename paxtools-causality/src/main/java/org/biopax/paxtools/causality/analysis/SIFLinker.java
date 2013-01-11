@@ -1,8 +1,6 @@
 package org.biopax.paxtools.causality.analysis;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -15,16 +13,29 @@ public class SIFLinker
 	
 	public boolean load(String filename)
 	{
+		try
+		{
+			return load(new FileReader(filename), new FileReader(filename));
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean load(Reader rdr, Reader rdr2nd)
+	{
 		traverse = new Traverse();
 //		traverse.load(filename, new HashSet<String>(Arrays.asList("BINDS_TO")),
-		traverse.load(filename, new HashSet<String>(),
+		traverse.load(rdr, new HashSet<String>(),
 //			new HashSet<String>(Arrays.asList("STATE_CHANGE", "TRANSCRIPTION", "DEGRADATION")));
 			new HashSet<String>(Arrays.asList("STATE_CHANGE", "DEGRADATION")));
 		try
 		{
 			sif = new HashMap<String, Map<String, Set<String>>>();
 	
-			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			BufferedReader reader = new BufferedReader(rdr2nd);
 	
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 			{
