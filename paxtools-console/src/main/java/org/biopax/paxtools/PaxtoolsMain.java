@@ -5,6 +5,7 @@ import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.OneTwoThree;
 import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
+import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
 import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.*;
@@ -163,6 +164,19 @@ public class PaxtoolsMain {
             io.setFactory(model.getLevel().getDefaultFactory());
             io.convertToOWL(model, new FileOutputStream(argv[2]));
         }
+    }
+
+    /**
+     *  Converts a BioPAX file to SBGN and saves it in a file.
+     */
+    public static void toSBGN(String[] argv) throws IOException
+    {
+        String input = argv[1];
+        String output = argv[2];
+
+        Model model = io.convertFromOWL(new FileInputStream(input));
+        L3ToSBGNPDConverter l3ToSBGNPDConverter = new L3ToSBGNPDConverter();
+        l3ToSBGNPDConverter.writeSBGN(model, output);
     }
 
     
@@ -562,6 +576,8 @@ public class PaxtoolsMain {
         toSifnx("file1 outEdges outNodes node-prop1,node-prop2,.. edge-prop1,edge-prop2,...\tconverts model " +
         		"to the extendent simple interaction format", 4)
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
+        toSbgn("biopax.owl output.sbgn\t\tconverts model to the SBGN format.", 2)
+                {public void run(String[] argv) throws IOException { toSBGN(argv); } },
         validate("path out [xml|html|biopax] [auto-fix] [normalize] [only-errors] [maxerrors=n]\t\t" +
         		"validates the BioPAX file (or all the files in the directory); " +
         		"writes the html report, xml report (including fixed xml-escaped biopax), " +

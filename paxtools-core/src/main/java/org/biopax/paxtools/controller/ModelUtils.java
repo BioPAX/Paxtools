@@ -248,7 +248,8 @@ public final class ModelUtils
 
 
 	/**
-	 * Finds a subset of "root" BioPAX objects of specific class (incl. sub-classes)
+	 * Finds "root" BioPAX objects that belong to a particular class (incl. sub-classes)
+	 * in the model.
 	 * <p/>
 	 * Note: however, such "root" elements may or may not be, a property of other
 	 * elements, not included in the model.
@@ -291,10 +292,17 @@ public final class ModelUtils
 		return result;
 	}
 
+	
 	/**
-	 * Iteratively removes "dangling" elements
-	 * of the type, e.g., all utility class objects
-	 * not used by others, from current model.
+	 * Iteratively removes "dangling" elements of given type and its sub-types,
+	 * e.g. Xref.class objects, from the BioPAX model. 
+	 * 
+	 * If the "model" does not contain any root Entity class objects,
+	 * and the second parameter is basic UtilityClass.class (i.e., not its sub-class), 
+	 * then it simply logs a warning and quits shortly (otherwise, it would 
+	 * remove everything from the model). Do not use basic Entity.class either
+	 * (but a sub-class is OK) for the same reason (it would delete everything).
+	 * 
 	 * <p/>
 	 * This, however, does not change relationships
 	 * among objects, particularly, some inverse properties,
@@ -305,7 +313,22 @@ public final class ModelUtils
 	 */
 	public static <T extends BioPAXElement> void removeObjectsIfDangling(Model model, Class<T> clazz)
 	{
-		Set<T> dangling = getRootElements(model, clazz);
+		// 'equals' below is used intentionally (isAssignableFrom() would be incorrect)
+		if(Entity.class.equals(clazz)) {
+			LOG.warn("Ignored removeObjectsIfDangling call for: " +
+					"Entity.class (it would delete all)");
+			return;
+		}
+		if(UtilityClass.class.equals(clazz) 
+				&& getRootElements(model, Entity.class).isEmpty()) 
+		{
+			LOG.warn("Ignored removeObjectsIfDangling call: " +
+					"no root entities model; UtilityClass.class");
+			return;
+		}
+		
+		Set<T> dangling = getRootElements(model, clazz);	
+		
 		// get rid of dangling objects
 		if (!dangling.isEmpty())
 		{
