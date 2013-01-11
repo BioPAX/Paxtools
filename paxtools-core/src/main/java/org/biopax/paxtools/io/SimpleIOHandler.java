@@ -127,7 +127,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter {
                 throw new BioPaxIOException("Unexpected element at start");
             }
 
-            // Skip any comment before we read it
+            // Skip any comment before we read the RDF headers
             while(r.getEventType() == COMMENT) {
                 r.next();
             }
