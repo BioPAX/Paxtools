@@ -4,15 +4,15 @@ import org.biopax.paxtools.impl.level3.EntityReferenceImpl;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+//import org.hibernate.annotations.Cache;
+//import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 
-@Cache(usage = CacheConcurrencyStrategy.NONE)
+//@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class Group extends EntityReferenceImpl
 {
 	Set<EntityReference> members = new HashSet<EntityReference>();
