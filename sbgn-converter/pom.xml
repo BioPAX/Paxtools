@@ -21,11 +21,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.biopax.paxtools</groupId>
-            <artifactId>id-conversion</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
         	<groupId>org.sbgn</groupId>
         	<artifactId>libsbgn</artifactId>
         	<version>0.2</version>

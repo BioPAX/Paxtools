@@ -16,7 +16,6 @@
 	<url>http://www.biopax.org/paxtools</url>
 
 	<modules>
-        <module>id-conversion</module>
         <module>paxtools-core</module>
         <module>paxtools-jena-io</module>
 		<module>sif-converter</module>
@@ -27,7 +26,6 @@
 		<module>paxtools-query</module>
 		<module>paxtools-hql</module>
         <module>paxtools-pattern</module>
-        <module>paxtools-causality</module>
     </modules>
 
 	<properties>

@@ -2,7 +2,7 @@ package org.biopax.paxtools.io.sbgn;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.conversion.HGNC;
+import org.biopax.paxtools.io.sbgn.idmapping.HGNC;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
