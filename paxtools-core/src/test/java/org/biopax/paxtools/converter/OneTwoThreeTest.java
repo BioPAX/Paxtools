@@ -6,7 +6,6 @@ import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.model.level2.protein;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.SmallMolecule;
-import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -19,7 +18,7 @@ public class OneTwoThreeTest {
 		SimpleIOHandler io = new SimpleIOHandler();
 		Model model = io.convertFromOWL(
 			getClass().getClassLoader()
-				.getResourceAsStream("biopax-example-short-pathway.owl"));
+				.getResourceAsStream("L2/biopax-example-short-pathway.owl"));
 		
 		physicalEntityParticipant pep31 = (physicalEntityParticipant) model.getByID(model.getXmlBase() + "physicalEntityParticipant31");
 		assertTrue(pep31 instanceof physicalEntityParticipant);
@@ -49,24 +48,12 @@ public class OneTwoThreeTest {
 		SimpleIOHandler io = new SimpleIOHandler();
 		Model model = io.convertFromOWL(
 			getClass().getClassLoader()
-				.getResourceAsStream("biopax-example-ecocyc-glycolysis.owl"));
+				.getResourceAsStream("L2/biopax-example-ecocyc-glycolysis.owl"));
 		model = (new OneTwoThree()).filter(model);
 		if (model != null) {
 			io.convertToOWL(model, new FileOutputStream(
 					getClass().getClassLoader().getResource("").getFile() 
 	        		+ File.separator + "converted-big.owl"));
-		}
-	}
-	
-	//@Test
-	public final void testFilterOthers() throws Throwable
-	{
-		SimpleIOHandler io = new SimpleIOHandler();
-		Model model = io.convertFromOWL(new FileInputStream(
-			"/D:/Ozgun/chibe1x/samples/biopax-files/NGF-independant TRKA activation.owl"));
-		model = (new OneTwoThree()).filter(model);
-		if (model != null) {
-			io.convertToOWL(model, new FileOutputStream("/D:/Ozgun/temp/temp.owl"));
 		}
 	}
 }

@@ -83,11 +83,6 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>biopax-converter</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>psimi-converter</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -21,7 +21,6 @@
         <module>paxtools-jena-io</module>
 		<module>sif-converter</module>
 		<module>gsea-converter</module>
-		<module>biopax-converter</module>
 		<module>psimi-converter</module>
 		<module>sbgn-converter</module>
 		<module>paxtools-console</module>

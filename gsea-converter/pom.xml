@@ -14,10 +14,5 @@
     	<artifactId>paxtools-core</artifactId>
     	<version>${project.version}</version>
     </dependency> 
-    <dependency>
-    	<groupId>org.biopax.paxtools</groupId>
-    	<artifactId>biopax-converter</artifactId>
-    	<version>${project.version}</version>
-    </dependency>
  </dependencies>
 </project>
