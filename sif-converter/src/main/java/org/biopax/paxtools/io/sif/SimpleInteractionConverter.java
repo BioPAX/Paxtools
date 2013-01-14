@@ -1,14 +1,17 @@
 package org.biopax.paxtools.io.sif;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.PathAccessor;
+import org.biopax.paxtools.io.sif.level3.Group;
+import org.biopax.paxtools.io.sif.level3.InteractionSetL3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.interaction;
 import org.biopax.paxtools.model.level2.physicalEntity;
-import org.biopax.paxtools.model.level3.EntityReference;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -56,9 +59,14 @@ public class SimpleInteractionConverter
 	 */
 	public SimpleInteractionConverter(Map options, Set<String> blackList, InteractionRule... rules)
 	{
-		this.options = options;
+
 		this.blackList = blackList;
 		this.rules = rules;
+		this.options = options;
+		for (InteractionRule rule : rules)
+		{
+			rule.initOptions(options);
+		}
 	}
 
 	/**
@@ -69,84 +77,94 @@ public class SimpleInteractionConverter
 	 */
 	public Set<SimpleInteraction> inferInteractions(Model model)
 	{
-		Set<SimpleInteraction> interactions = new MergingSet();
-		if (model.getLevel() == BioPAXLevel.L2)
+
+		switch (model.getLevel())
 		{
-
-			Set<physicalEntity> bioPAXElements = model.getObjects(physicalEntity.class);
-
-			for (physicalEntity pe : bioPAXElements)
-			{
-				for (InteractionRule rule : rules)
-				{
-					try
-					{
-						rule.inferInteractions(interactions, pe, model, options);
-					}
-					catch (Exception e)
-					{
-						log.error("Exception while applying rule :" + this.getClass().getSimpleName() +
-						          "to the element: " + pe.getRDFId(), e);
-						if (e instanceof MaximumInteractionThresholdExceedException)
-						{
-							throw (MaximumInteractionThresholdExceedException) e;
-						}
-					}
-				}
-			}
-			if (this.options.containsKey(REDUCE_COMPLEXES))
-			{
-				Set<SimpleInteraction> reduced = new HashSet<SimpleInteraction>();
-				for (SimpleInteraction si : interactions)
-				{
-					si.reduceComplexes(reduced);
-				}
-				interactions = reduced;
-			}
-			log.info(interactions.size() + " interactions inferred");
-			return interactions;
-		} else if (model.getLevel() == BioPAXLevel.L3)
-		{
-
-			Set<EntityReference> bioPAXElements = model.getObjects(EntityReference.class);
-			for (EntityReference er : bioPAXElements)
-			{
-				for (InteractionRule rule : rules)
-				{
-					try
-					{
-						rule.inferInteractions(interactions, er, model, options);
-					}
-					catch (Exception e)
-					{
-						log.error("Exception while applying rule :" + this.getClass().getSimpleName() +
-						          "to the element: " + er.getRDFId(), e);
-						if (e instanceof MaximumInteractionThresholdExceedException)
-						{
-							throw (MaximumInteractionThresholdExceedException) e;
-						}
-					}
-				}
-			}
-
-			if (blackList != null)
-			{
-				removeInteractionsWithBlackListMolecules(interactions, blackList);
-			}
-
-			return interactions;
-		} else return null;
+			case L1:
+			case L2:
+				return inferL2(model);
+			case L3:
+				return inferL3(model);
+			default:
+				throw new IllegalBioPAXArgumentException("Unknown BioPAX Level");
+		}
 	}
 
+	private Set<SimpleInteraction> inferL3(Model model)
+	{
+		InteractionSetL3 interactions = new InteractionSetL3(model);
+
+		Set<PhysicalEntity> bioPAXElements = model.getObjects(PhysicalEntity.class);
+		for (PhysicalEntity er : bioPAXElements)
+		{
+			for (InteractionRule rule : rules)
+			{
+				tryInferringRule(model, interactions, er, rule);
+			}
+		}
+
+        	interactions.convertGroupsToInteractions();
+
+		if (blackList != null)
+		{
+			removeInteractionsWithBlackListMolecules(interactions, blackList);
+		}
+		return interactions;
+	}
+
+	private void tryInferringRule(Model model, InteractionSet interactions, BioPAXElement bpe,
+			InteractionRule rule)
+	{
+		try
+		{
+			rule.inferInteractions(interactions, bpe, model);
+		}
+		catch (MaximumInteractionThresholdExceedException e)
+		{
+				throw e;
+		}
+		catch (Exception e)
+		{
+			log.error("Exception while applying rule :" + this.getClass().getSimpleName() + "to the element: " +
+			          bpe.getRDFId(), e);
+		}
+	}
+
+	private Set<SimpleInteraction> inferL2(Model model)
+	{
+		InteractionSet interactions = new InteractionSet();
+		Set<physicalEntity> bioPAXElements = model.getObjects(physicalEntity.class);
+
+		for (physicalEntity pe : bioPAXElements)
+		{
+			for (InteractionRule rule : rules)
+			{
+				tryInferringRule(model, interactions, pe, rule);
+			}
+		}
+		if (this.options.containsKey(REDUCE_COMPLEXES))
+		{
+			InteractionSet reduced = new InteractionSet();
+			for (SimpleInteraction si : interactions)
+			{
+				si.reduceComplexes(reduced);
+			}
+			interactions = reduced;
+		}
+
+		log.info(interactions.size() + " interactions inferred");
+		return interactions;
+	}
+
+
 	protected void removeInteractionsWithBlackListMolecules(Set<SimpleInteraction> interactions,
-		Set<String> blackList)
+			Set<String> blackList)
 	{
 		Iterator<SimpleInteraction> iter = interactions.iterator();
 		while (iter.hasNext())
 		{
-			SimpleInteraction inter =  iter.next();
-			if (blackList.contains(inter.getSource().getRDFId()) ||
-				blackList.contains(inter.getTarget().getRDFId()))
+			SimpleInteraction inter = iter.next();
+			if (blackList.contains(inter.getSource().getRDFId()) || blackList.contains(inter.getTarget().getRDFId()))
 			{
 				iter.remove();
 			}
@@ -162,9 +180,9 @@ public class SimpleInteractionConverter
 	 */
 	public void writeInteractionsInSIF(Model model, OutputStream out) throws IOException
 	{
-		Set<SimpleInteraction> interactionSet = inferInteractions(model);
+		Set<SimpleInteraction> interactions = inferInteractions(model);
 		Writer writer = new OutputStreamWriter(out);
-		for (SimpleInteraction simpleInteraction : interactionSet)
+		for (SimpleInteraction simpleInteraction : interactions)
 		{
 			writer.write(simpleInteraction.toString() + "\n");
 		}
@@ -192,12 +210,10 @@ public class SimpleInteractionConverter
 	 * @exception IOException
 	 */
 	public void writeInteractionsInSIFNX(Model model, OutputStream edgeStream, OutputStream nodeStream,
-	                                     List<String> interactorPropertyPaths, List<String> mediatorPropertyPaths,
-	                                     boolean writeEntityTypes)
+			List<String> interactorPropertyPaths, List<String> mediatorPropertyPaths, boolean writeEntityTypes)
 			throws IOException
 	{
-		Set<SimpleInteraction> interactionSet = inferInteractions(model);
-		Writer writer = new OutputStreamWriter(edgeStream);
+		Set<SimpleInteraction> interactions = inferInteractions(model);
 		Set<BioPAXElement> entities = new HashSet<BioPAXElement>();
 		List<PathAccessor> interactorAccessors = null;
 		List<PathAccessor> mediatorAccessors = null;
@@ -219,60 +235,75 @@ public class SimpleInteractionConverter
 			}
 		}
 
-
-		for (SimpleInteraction si : interactionSet)
+		Set<String> lines = new TreeSet<String>(); //this is also to avoid duplicate records
+		for (SimpleInteraction si : interactions)
 		{
-			writer.write(si.toString());
+			StringBuilder sb = new StringBuilder(si.toString());
 			entities.add(si.getSource());
 			entities.add(si.getTarget());
 			if (mediatorAccessors != null)
 			{
 				for (PathAccessor mediatorAccessor : mediatorAccessors)
 				{
-                    StringBuilder cell = new StringBuilder("\t");
-                    HashSet values = new HashSet();
+
+					HashSet values = new HashSet();
 
 					for (BioPAXElement mediator : si.getMediators())
 					{
-						if (mediatorAccessor.getDomain().isInstance(mediator))
+						if (mediatorAccessor.applies(mediator))
 						{
-                            values.addAll(mediatorAccessor.getValueFromBean(mediator));
-						} else values.add("not applicable");
+							values.add(valuesToString(mediatorAccessor.getValueFromBean(mediator)));
+						}
 					}
-
-                    cell.append(valuesToString(values));
-                    writer.write(cell.toString());
+					sb.append("\t").append(values.isEmpty() ? "not applicable" : valuesToString(values));
 				}
 			}
-			writer.write("\n");
+			lines.add(sb.toString());
 		}
+
+		Writer writer = new OutputStreamWriter(edgeStream);
+		writer.write(StringUtils.join(lines, "\n"));
 		writer.flush();
+		
+		// now write nodes info
 		writer = new OutputStreamWriter(nodeStream);
 		for (BioPAXElement entity : entities)
 		{
-			if (entity == null) continue;
-			
-			writer.write(entity.getRDFId());
-			if(writeEntityTypes)
-			writer.write("\t" + entity.getModelInterface().getSimpleName());
-			if (interactorAccessors != null)
+			if (entity != null)
 			{
-				for (PathAccessor accessor : interactorAccessors)
+
+				writer.write(entity.getRDFId());
+				if (writeEntityTypes) writer.write("\t" + getEntityTypeString(entity));
+				if (interactorAccessors != null)
 				{
-					writer.write("\t");
-					if (accessor == null) writer.write("(not applicable)");
-					else if (accessor.isUnknown(entity)) writer.write("(not specified)");
-					else
+					for (PathAccessor accessor : interactorAccessors)
 					{
-						Set values = accessor.getValueFromBean(entity);
-						writer.write(valuesToString(values));
+						writer.write("\t");
+						if (accessor == null ||!accessor.applies(entity)) writer.write("(not applicable)");
+						else if (accessor.isUnknown(entity)) writer.write("(not specified)");
+						else
+						{
+							Set values = accessor.getValueFromBean(entity);
+							writer.write(valuesToString(values));
+						}
 					}
 				}
-			}
 
-			writer.write("\n");
+				writer.write("\n");
+			}
 		}
+
 		writer.close();
+	}
+
+	private String getEntityTypeString(BioPAXElement entity)
+	{
+		if(entity instanceof Group)
+		{
+			return ((Group) entity).groupTypeToString();
+		}
+		else
+			return entity.getModelInterface().getSimpleName();
 	}
 
 	private String valuesToString(Set values)
@@ -304,6 +335,7 @@ public class SimpleInteractionConverter
 			list.add(new org.biopax.paxtools.io.sif.level3.ControlRule());
 			list.add(new org.biopax.paxtools.io.sif.level3.ControlsTogetherRule());
 			list.add(new org.biopax.paxtools.io.sif.level3.ParticipatesRule());
+			list.add(new org.biopax.paxtools.io.sif.level3.ExpressionRule());
 		}
 		return list;
 	}

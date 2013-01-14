@@ -3,16 +3,19 @@ package org.biopax.paxtools.io.gsea;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Collection;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * GSEA conversion test.
@@ -20,21 +23,22 @@ import static org.junit.Assert.assertTrue;
  */
 public class GSEAConverterTest {
 
-	PrintStream out = null;
+	static PrintStream out = null;
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
-	static final String outFile = "target" + File.separator + "gseaConverterTest.out.txt";
+	static final String outFile = GSEAConverterTest.class
+			.getResource("/").getFile() + File.separator + "gseaConverterTest.out.txt";
 	
 	
-	@Before
-	public void setupTest() throws IOException {
-		out = new PrintStream(new FileOutputStream(outFile, true));
+	@BeforeClass
+	public static void setupTest() throws IOException {
+		out = new PrintStream(new FileOutputStream(outFile, false));
 	}
 	
-	@After
-	public void finishTest() throws IOException {
-		out.flush();
+	@AfterClass
+	public static void endTest() throws IOException {
 		out.close();
 	}
+	
 	
 	@Test
 	public void testWriteL2GSEA() throws Exception {
@@ -53,17 +57,34 @@ public class GSEAConverterTest {
 			InputStream in = getClass().getResourceAsStream("/L2/" + testFile); // this is classpath - no need to use a "separator"
 			Model level2 = handler.convertFromOWL(in);
 			GSEAConverter gseaConverter = new GSEAConverter("GENE_SYMBOL", true);
-			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level2);
+			Collection<GSEAEntry> entries = gseaConverter.convert(level2);
 			// assert some things
 			assertEquals(1, entries.size());
 			GSEAEntry entry = entries.iterator().next();
-			assertEquals("mTOR signaling pathway", entry.getName());
-			assertEquals("Pathway Interaction Database NCI-Nature Curated Data", entry.getDataSource());
-			assertEquals("9606", entry.getTaxID());
-			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
-			assertEquals(27, rdfToGenes.size());
+			assertEquals("mTOR signaling pathway", entry.name());
+			assertTrue(entry.description().contains("nci-nature"));
+			assertEquals("9606", entry.taxID());
+			assertEquals("GENE_SYMBOL", entry.idType());
+			assertEquals(27, entry.getIdentifiers().size());
+			
 			// dump the output
 			(new GSEAConverter("GENE_SYMBOL", true)).writeToGSEA(level2, out);
+			
+			// test a small hack that allows using sometimes non-standard DB names, like NP, GO, if they are part of xref.id ;)
+			gseaConverter = new GSEAConverter("NP", true);
+			entries.clear();
+			entries = gseaConverter.convert(level2);
+			// assert some things
+			assertEquals(1, entries.size());
+			entry = entries.iterator().next();
+			assertEquals("mTOR signaling pathway", entry.name());
+			assertTrue(entry.description().contains("nci-nature"));
+			assertEquals("9606", entry.taxID());
+			assertEquals("NP", entry.idType());
+			assertEquals(25, entry.getIdentifiers().size());
+		
+			(new GSEAConverter("NP", true)).writeToGSEA(level2, out);
+			
 			in.close();
 		}
 	}
@@ -86,18 +107,7 @@ public class GSEAConverterTest {
 			Model level3 = handler.convertFromOWL(in);
 			GSEAConverter gseaConverter = new GSEAConverter("uniprot", true);
 			Collection<? extends GSEAEntry> entries = gseaConverter.convert(level3);
-			// assert some things
-			assertEquals(1, entries.size());
-			GSEAEntry entry = entries.iterator().next();
-			assertEquals("Glycolysis Pathway", entry.getName() );
-			//FIXME it can return either aMAZE or "KEGG" below; - because the order is not defined in gseaConverter.convert!
-			assertTrue("aMAZE".equals(entry.getDataSource()) || "KEGG".equals(entry.getDataSource()));
-			assertEquals("562", entry.getTaxID());
-			Map<String,String> rdfToGenes = entry.getRDFToGeneMap();
-			assertEquals(2, rdfToGenes.size());
-			for (String aSymbol : rdfToGenes.values()) {
-				assertTrue(aSymbol.equals("P46880") || aSymbol.equals("Q9KH85"));
-			}
+			//TODO check anything?
 			// dump the output
 			(new GSEAConverter("uniprot", true)).writeToGSEA(level3, out);
 			in.close();

@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public abstract class AbstractGraph implements Graph
 {
-	private Map<String, GraphObject> objectMap;
+	protected Map<String, GraphObject> objectMap;
 
 	protected AbstractGraph()
 	{
@@ -51,6 +51,14 @@ public abstract class AbstractGraph implements Graph
 		return objectMap;
 	}
 
+	public void clear()
+	{
+		for (GraphObject go : objectMap.values())
+		{
+			go.clear();
+		}
+	}
+	
 	public abstract String getKey(Object wrapped);
 
 	public abstract Node wrap(Object obj);

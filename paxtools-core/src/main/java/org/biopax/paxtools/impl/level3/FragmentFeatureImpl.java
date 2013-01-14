@@ -1,19 +1,25 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.FragmentFeature;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= FragmentFeature.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFeature
 {
-	public FragmentFeatureImpl() {
+	public FragmentFeatureImpl()
+    {
+
 	}
 	
 	@Override @Transient
@@ -26,7 +32,7 @@ public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFe
 	@Override
 	public int equivalenceCode()
 	{
-		return super.locationCode();
+		return this.getEntityFeatureOf().equivalenceCode() + super.locationCode();
 	}
 
 
@@ -38,4 +44,10 @@ public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFe
 		else
 			return super.atEquivalentLocation(((FragmentFeature) element));
 	}
+
+    @Override
+    public String toString()
+    {
+        return "Fragment:"+this.getFeatureLocation();
+    }
 }

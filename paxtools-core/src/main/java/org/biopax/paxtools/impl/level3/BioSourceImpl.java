@@ -1,22 +1,29 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.TissueVocabulary;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= BioSource.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BioSourceImpl extends NamedImpl implements BioSource
 {
+	private final static Log LOG = LogFactory.getLog(BioSourceImpl.class);
+	
 	private CellVocabulary celltype;
 	private TissueVocabulary tissue;
 
@@ -67,7 +74,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @ManyToOne(targetEntity = CellVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = CellVocabularyImpl.class)
 	public CellVocabulary getCellType()
 	{
 		return celltype;
@@ -78,7 +85,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 		this.celltype = celltype;
 	}
 
-	@ManyToOne(targetEntity = TissueVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = TissueVocabularyImpl.class)
 	public TissueVocabulary getTissue()
 	{
 		return tissue;
@@ -92,11 +99,20 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(getRDFId()).append(" ");
-		sb.append(getName().toString());
-		if(tissue != null) sb.append(" tissue: ").append(tissue.getTerm().toString());
-		if(celltype != null) sb.append(" celltype: ").append(celltype.getTerm().toString());
-		return sb.toString();
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append(getRDFId()).append(" ");
+			sb.append(getName().toString());
+			if (tissue != null)
+				sb.append(" tissue: ").append(tissue.getTerm().toString());
+			if (celltype != null)
+				sb.append(" celltype: ").append(celltype.getTerm().toString());
+			sb.append(" xrefs: ").append(getXref().toString());
+			return sb.toString();
+		} catch (Exception e) {
+			// possible issues - when in a persistent context (e.g., lazy collections init...)
+			LOG.warn("Error in toString(): ", e);
+			return getRDFId();
+		}
 	}
 }

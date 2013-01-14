@@ -19,19 +19,17 @@ import java.util.Set;
  * (though it depends on the application).
  * <p/>
  * One can also "merge" a model to itself, i.e.: merge(target,target),
- * which adds those missing child elements that were not added
- * (explicitly) to the model (via model.add*) and makes it more integral.
+ * which adds those implicit child elements that were not added
+ * yet to the model (via model.add*) and makes it more integral.
  * <p/>
  * Note, "RDFId (URI) identity" means that it skips, i.e., does not copy
- * a source's element to the target model, if the target already contains the element 
- * with the same RDFId. However, after all,
- * it does update (re-wire) all the object properties of source elements
+ * a source's element to the target model, if the target already contains an element 
+ * with the same RDFId. However, it does update (re-wire) all the object properties
  * to make sure they do not refer to the skipped objects (from the "source") anymore
- * (if something is missing, it will be added at this second pass).
  * <p/>
  * Note also that this merger does not guarantee the integrity of the passed models:
  * 'target' will be the merged model (often, "more integral"), and the 'source'
- * may be trashed (in fact, - still somewhat usable, but modified for sure,
+ * may be trashed (in fact, - still somewhat usable,
  * with some of its object properties now refer to target's elements).
  * <p/>
  * Finally, although called Simple Merger, it is in fact an advanced BioPAX utility,
@@ -88,20 +86,38 @@ public class SimpleMerger
 	 */
 	public void merge(Model target, Collection<? extends BioPAXElement> elements)
 	{
-		for (BioPAXElement bpe : elements)
+		// First, fix 'target' model: find implicit objects
+		// if there are different objects with the same URI, 
+		// only one will be added to the model (no guarantee which one),
+		// but next steps should fix it (update object references to the added one)
+		@SuppressWarnings("unchecked") // safe, - no filters (empty array)
+		final Fetcher fetcher = new Fetcher(map);
+		for(BioPAXElement se :  new HashSet<BioPAXElement>(target.getObjects())) {
+			fetcher.fetch(se, target);
+		}
+		
+		// Second, auto-complete source 'elements' by discovering all the implicit elements there
+		// copy all elements, as the collection can be immutable or unsafe to add elements there
+		final Set<BioPAXElement> sources = new HashSet<BioPAXElement>(elements);
+		for(BioPAXElement se : elements) {
+			sources.addAll(fetcher.fetch(se));
+		}
+		
+		
+		// Next, we only copy elements having new URIs -
+		for (BioPAXElement bpe : sources)
 		{
-			BioPAXElement targetElement = target.getByID(bpe.getRDFId());
-			/*
-			 * if there is present the element with the same id, skip, do not
-			 * merge this one (see the warning below...)
+			/* if there exists target element with the same id, 
+			 * do not copy this one! (this 'source' element will 
+			 * be soon replaced with the target's, same id, one 
+			 * in all parent objects)
 			 */
-			if (targetElement == null)
+			if (!target.containsID(bpe.getRDFId()))
 			{
-				target.add(bpe);
 				/*
-				 * Warning: concrete target Model implementations may add 
-				 * child elements automatically (e.g., using jpa
-				 * cascades/recursion); it might also override target's
+				 * Warning: other than the default (ModelImpl) target Model 
+				 * implementations may add child elements recursively (e.g., 
+				 * using jpa cascades/recursion); it might also override target's
 				 * properties with the corresponding ones from the source, even
 				 * though SimpleMerger is not supposed to do this; also, is such cases,
 				 * the number of times this loop body is called can be less that
@@ -109,27 +125,18 @@ public class SimpleMerger
 				 * originally present in the target model, or - even equals to
 				 * one)
 				 */
-			}
+				target.add(bpe);
+			} 
 		}
 
-		/* 
-				 * Now that target model contains all source IDs,
-				 * although it might still refer to "external" child objects,
-				 * (i.e., such property values that were not listed in the
-				 * sources, thus - not in target model map yet),
-				 * let's update new objects' object fields to target's values:
-				 *
-				 * REM: here we iterate over all source elements!
-				 * But, things can be more tricky (when models already intersect
-				 * or the target refers to external child elements), in which
-				 * case, one may (but not necessarily have to) refresh the properties
-				 * (re-link everything to target's) by calling merge(target,target) -
-				 * i.e., merge to itself!
-				 */
-		for (BioPAXElement bpe : elements)
-		{
+		// Finally, update object references -
+		// for all elements in the 'target', - because 'target' model 
+		// itself might have had issues as well, particularly, more 
+		// than one child object having the same URI (see comments above)
+		for (BioPAXElement bpe : target.getObjects()) {
 			updateObjectFields(bpe, target);
 		}
+		
 	}
 
 
@@ -164,8 +171,8 @@ public class SimpleMerger
 		{
 			if (editor instanceof ObjectPropertyEditor)
 			{
-				Set<BioPAXElement> values = new HashSet<BioPAXElement>((Set<BioPAXElement>) editor.getValueFromBean(
-						update));
+				Set<BioPAXElement> values = new HashSet<BioPAXElement>(
+					(Set<BioPAXElement>) editor.getValueFromBean(update));
 				for (BioPAXElement value : values) // threw concurrent modification exception here; fixed above.
 				{
 					migrateToTarget(update, target, editor, value);
@@ -173,51 +180,34 @@ public class SimpleMerger
 			}
 		}
 	}
-
+	
 
 	private void migrateToTarget(BioPAXElement update, Model target, PropertyEditor editor, BioPAXElement value)
 	{
 		if (value != null)
 		{
 			BioPAXElement newValue = target.getByID(value.getRDFId());
-
-			if (newValue == null) // not yet in the target model
-			{
-				if(log.isDebugEnabled())
-					log.debug("Target model does not have " + value.getRDFId() +
-				         " (i.e, a prop. value wasn't in the source model either);" 
-						+ " adding now... bean: "+ update.getRDFId() + " property: "
-						+ editor.getProperty());
-				target.add(value);
-				updateObjectFields(value, target); // recursion!
-			} else if (!value.equals(newValue))
-			{
+			if (!newValue.equals(value)) {
 				// newValue is a different, not null BioPAX element
-				if (!value.isEquivalent(newValue))
+				if (log.isDebugEnabled() && !newValue.isEquivalent(value))
 				{
-					String msg = "(Updating object fields) " + "the replacement (target) object " + newValue + " (" +
-					             newValue.getModelInterface().getSimpleName() + "), with the same RDFId (" +
-					             newValue.getRDFId() + "), " + " is not equivalent to the source: " + value + " (" +
-					             value.getModelInterface().getSimpleName() + ")!";
-					log.warn(msg); // we can live with it in some cases...
-					//(exception may be thrown below)
+					String msg = "Updating property " + editor.getProperty() +
+						"the replacement (target) object " + newValue + " (" +
+					    newValue.getModelInterface().getSimpleName() + "), with the same URI (" +
+					    newValue.getRDFId() + "), " + " is not equivalent to the source: " + 
+					    value + " (" + value.getModelInterface().getSimpleName() + ")!";
+					log.debug(msg); // we can live with it in some cases...(exception may be thrown below)
 				}
 
 				/* 
 				 * "setValueToBean" comes first to prevent deleting of current value 
 				 * even though it cannot be replaced with newValue 
-				 * due to the property range error
+				 * due to the property range error (setValueToBean throws exception)
 				 */
 				editor.setValueToBean(newValue, update);
-				if (editor.isMultipleCardinality())
-				{
+				if(editor.isMultipleCardinality())
 					editor.removeValueFromBean(value, update);
-				}
-			} else
-			{
-				// skip (same values)
-			}
-
+			} 
 		}
 	}
 

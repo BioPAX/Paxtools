@@ -1,13 +1,21 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.biopax.paxtools.util.SetStringBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.JoinTable;
@@ -18,8 +26,11 @@ import java.util.Set;
 import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
 
 
+
 @javax.persistence.Entity
+@Proxy(proxyClass= Entity.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class EntityImpl extends NamedImpl implements Entity
 {
 // ------------------------------ FIELDS ------------------------------
@@ -64,8 +75,10 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_AVAILABILITY, index=Index.TOKENIZED)
+	@JoinTable(name="availability")
+	@Field(name=FIELD_AVAILABILITY, index=Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAvailability()
 	{
@@ -89,6 +102,9 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 			this.availability.remove(availability_text);
 	}
 
+	@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProvenanceImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="dataSource")
 	public Set<Provenance> getDataSource()
@@ -115,6 +131,12 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
+	@Fields({
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class))
+		// - associates organisms with small molecules as well (which is impossible to do explicitly, using BioPAX L3 properties)!
+	})
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
 	public Set<Interaction> getParticipantOf()
 	{
@@ -130,7 +152,8 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	// observable interface implementation
 	//
 	/////////////////////////////////////////////////////////////////////////////
-
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()

@@ -1,6 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
@@ -8,28 +9,31 @@ import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
 import org.biopax.paxtools.util.SetStringBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= ControlledVocabulary.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {
-
+	private final static Log LOG = LogFactory.getLog(CellVocabularyImpl.class);
+	
 	private Set<String> term;
-	private static final Pattern PATTERN =
-			Pattern.compile("\\]|\\[");
+	private static final Pattern PATTERN = Pattern.compile("\\]|\\[");
 
 	/**
 	 * Constructor.
@@ -59,8 +63,10 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 
 	// Property term
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
-	@Field(name = BioPAXElementImpl.SEARCH_FIELD_TERM, index = Index.TOKENIZED)
+	@JoinTable(name="term")
+	@Field(name = FIELD_TERM, index = Index.TOKENIZED)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getTerm()
 	{
@@ -105,6 +111,13 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	@Override
 	public String toString()
 	{
-		return PATTERN.matcher(term.toString()).replaceAll("");
+		try {
+			return PATTERN.matcher(term.toString()).replaceAll("");
+		} catch (Exception e) {
+			// in a persistent context, there might be 
+			// a lazy collection initialization issue with this method...
+			LOG.warn("toString(): ", e);
+			return getRDFId();
+		}
 	}
 }

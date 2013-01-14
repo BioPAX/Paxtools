@@ -1,9 +1,9 @@
 package org.biopax.paxtools.examples;
 
-import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.model.level3.UnificationXref;
@@ -35,9 +35,7 @@ public final class SimpleIOExample {
 
 		// Well, let's do something with a (new) BioPAX model
 		
-		BioPAXFactory bioPAXFactory = new Level3FactoryImpl(); 
-		// - one can also use "other implementations" or the level's default:
-		// BioPAXFactory bioPAXFactory = BioPAXLevel.L3.getDefaultFactory()
+		BioPAXFactory bioPAXFactory = BioPAXLevel.L3.getDefaultFactory();
 		
 		Model model2 = bioPAXFactory.createModel();
 		

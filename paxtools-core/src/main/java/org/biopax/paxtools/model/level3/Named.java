@@ -28,6 +28,12 @@ public interface Named extends XReferrable
 
 
 	/**
+	 * This method is reserved for batch operations and should not be used for normal use. Use add/remove name
+	 * methods to manipulate the names instead.
+	 */
+	public void setName(Set<String> names);
+
+	/**
 	 * This method adds the given value to the name set.
 	 *
 	 * @param name a new name to be added

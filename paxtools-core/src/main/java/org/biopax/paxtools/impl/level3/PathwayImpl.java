@@ -1,18 +1,29 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @javax.persistence.Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= Pathway.class)
+@Indexed
+@Boost(1.7f)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PathwayImpl extends ProcessImpl implements Pathway
 {
 // ------------------------------ FIELDS ------------------------------
@@ -29,7 +40,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		this.pathwayComponent = new HashSet<Process>();
 		this.pathwayOrder = new HashSet<PathwayStep>();
 		this.controllerOf = new HashSet<Control>();
-
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -48,9 +58,10 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
-	@JoinTable(name="pathwayComponent") 		
+	@JoinTable(name="pathwayComponent")
 	public Set<Process> getPathwayComponent()
 	{
 		return this.pathwayComponent;
@@ -77,7 +88,10 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		}
 	}
 
-	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")//, cascade = {CascadeType.ALL})
+	// TODO not sure whether "data" index should be generated following pathwayOrder property (may have processes from other pathways)
+	//	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")
 	public Set<PathwayStep> getPathwayOrder()
 	{
 		return pathwayOrder;
@@ -105,7 +119,9 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-	@ManyToOne(targetEntity = BioSourceImpl.class)//, cascade = {CascadeType.ALL})
+    @Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED)
+    @FieldBridge(impl=OrganismFieldBridge.class)
+	@ManyToOne(targetEntity = BioSourceImpl.class)
 	public BioSource getOrganism()
 	{
 		return organism;
@@ -116,6 +132,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		this.organism = organism;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "pathwayController")
 	public Set<Control> getControllerOf()
 	{

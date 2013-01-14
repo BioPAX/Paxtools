@@ -32,8 +32,11 @@ public class EnumeratedPropertyEditor<D extends BioPAXElement, R extends Enum>
 	protected R parseValueFromString(String value)
 	{
 
-		value = value.replaceAll("-", "_");
-		return (R) Enum.valueOf(this.getRange(), value);
+
+        value = value.replaceAll("-", "_");
+        value = value.replaceAll("^\\s+","");
+        value = value.replaceAll("\\s+$","");
+		return (R)Enum.valueOf(this.getRange(), value);
 	}
 }
 

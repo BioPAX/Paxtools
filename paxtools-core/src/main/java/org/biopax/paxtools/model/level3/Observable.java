@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * User: demir Date: Aug 17, 2007 Time: 5:47:27 PM
  */
-public interface Observable
+public interface Observable extends Level3Element
 {
 
 	  Set<Evidence> getEvidence();

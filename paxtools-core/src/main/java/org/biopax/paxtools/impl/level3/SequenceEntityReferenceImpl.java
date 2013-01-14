@@ -1,19 +1,25 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.SequenceEntityReference;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Proxy(proxyClass=SequenceEntityReference.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
         implements SequenceEntityReference
 {
@@ -29,7 +35,9 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     ////////////////////////////////////////////////////////////////////////////
 
     // Property organism
-	@ManyToOne(targetEntity = BioSourceImpl.class)//, cascade = {CascadeType.ALL})
+    @Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED)
+    @FieldBridge(impl=OrganismFieldBridge.class)
+	@ManyToOne(targetEntity = BioSourceImpl.class)
     public BioSource getOrganism()
     {
         return organism;
@@ -43,7 +51,7 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     // Property sequence
 
 	@Lob
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_SEQUENCE, index=Index.TOKENIZED)
+	@Field(name=FIELD_SEQUENCE, index=Index.TOKENIZED)
 	public String getSequence()
     {
         return sequence;
@@ -59,8 +67,17 @@ public abstract class SequenceEntityReferenceImpl extends EntityReferenceImpl
     	if(!(element instanceof SequenceEntityReference)) return false;
     	SequenceEntityReference that = (SequenceEntityReference) element;
     	
-    	return ((getOrganism() != null) ? getOrganism().isEquivalent(that.getOrganism()) : that.getOrganism()==null)
-    		&& ((getSequence() != null) ? getSequence().equalsIgnoreCase(that.getSequence()) : that.getSequence()==null)
-    		&& super.semanticallyEquivalent(element);
+    	return  getOrganism() != null
+                && getOrganism().isEquivalent(that.getOrganism())
+                && getSequence() != null
+                && getSequence().equalsIgnoreCase(that.getSequence());
+
+    }
+
+    @Override
+    public int equivalenceCode()
+    {
+        return this.organism==null || this.sequence==null? hashCode():
+                this.organism.equivalenceCode()+17*this.sequence.hashCode();
     }
 }

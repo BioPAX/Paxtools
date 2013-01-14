@@ -1,12 +1,18 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.GeneticInteraction;
 import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 import org.biopax.paxtools.model.level3.Score;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -14,8 +20,10 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= GeneticInteraction.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class GeneticInteractionImpl extends InteractionImpl
         implements GeneticInteraction
 {
@@ -33,7 +41,8 @@ public class GeneticInteractionImpl extends InteractionImpl
 
     private Score interactionScore;
 
-    @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)
 	public PhenotypeVocabulary getPhenotype()
     {
         return phenotype;
@@ -44,7 +53,8 @@ public class GeneticInteractionImpl extends InteractionImpl
         this.phenotype = phenotype;
     }
 
-	@ManyToOne(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
+    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @ManyToOne(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
     public Score getInteractionScore()
     {
         return interactionScore;

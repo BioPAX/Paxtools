@@ -4,11 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.*;
-import org.biopax.paxtools.model.level3.Entity;
-import org.biopax.paxtools.model.level3.Evidence;
-import org.biopax.paxtools.model.level3.Xref;
-import org.biopax.paxtools.util.ClassFilterSet;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,13 +42,25 @@ public class SimpleInteraction
 
 	private Set<BioPAXElement> mediators;
 
-	public SimpleInteraction(BioPAXElement source, BioPAXElement target,
-	                         BinaryInteractionType type)
+	public SimpleInteraction(BioPAXElement source, BioPAXElement target, BinaryInteractionType type)
 	{
 		this.source = source;
 		this.target = target;
 		this.type = type;
 		this.mediators = new HashSet<BioPAXElement>();
+	}
+
+	public SimpleInteraction(BioPAXElement source, BioPAXElement target, BinaryInteractionType type,
+			BioPAXElement... mediator)
+	{
+		this(source,target,type,Arrays.asList(mediator));
+	}
+
+	public SimpleInteraction(BioPAXElement source, BioPAXElement target, BinaryInteractionType type,
+			Collection<BioPAXElement> mediator)
+	{
+		this(source,target,type);
+		this.mediators.addAll(mediator);
 	}
 
 	public BioPAXElement getSource()
@@ -86,7 +96,6 @@ public class SimpleInteraction
 	/**
 	 * This method checks for source, target and type equality. Provenance and target equality is based
 	 * on rdfIDs.
-	 *
 	 * @param o
 	 * @return true if o is a simple interaction and its source, target and type is equal to this'.
 	 */
@@ -104,8 +113,7 @@ public class SimpleInteraction
 
 		SimpleInteraction that = (SimpleInteraction) o;
 
-		return checkNullOrEquals(this.type, that.type) &&
-		       checkParticipants(that);
+		return checkNullOrEquals(this.type, that.type) && checkParticipants(that);
 
 
 	}
@@ -113,34 +121,53 @@ public class SimpleInteraction
 	private boolean checkParticipants(SimpleInteraction that)
 	{
 		boolean equal;
-		equal = (checkNullOrEquals(this.source, that.source) &&
-		         checkNullOrEquals(this.target, that.target));
+		equal = (checkNullOrEquals(this.source, that.source) && checkNullOrEquals(this.target, that.target));
 		if (!equal && (type == null || !type.isDirected()))
 		{
-			equal = (checkNullOrEquals(this.source, that.target) &&
-			         checkNullOrEquals(this.target, that.source));
+			equal = (checkNullOrEquals(this.source, that.target) && checkNullOrEquals(this.target, that.source));
 		}
 		return equal;
 	}
 
 	private boolean checkNullOrEquals(Object thisObject, Object thatObject)
 	{
-		return thisObject == null ? thatObject == null :
-		       thisObject.equals(thatObject);
+		return thisObject == null ? thatObject == null : thisObject.equals(thatObject);
 	}
 
 	/**
 	 * This method returns a hashcode based on the source, target and types hashcodes.
-	 *
 	 * @return a hashcode based on the source, target and types hashcodes.
 	 */
 	public int hashCode()
 	{
-		int result;
-		result = (source != null ? source.hashCode() : 0);
-		result = (type == null ? 0 : type.isDirected() ? type.hashCode() * 31 : type.hashCode()) *
-		         result +
-		         (target != null ? target.hashCode() : 0);
+        int srcHash = source != null ? source.hashCode() : 0;
+        int trgtHash = target != null ? target.hashCode() : 0;
+		
+		int result = 31 + (type != null ? type.hashCode() : 0);
+
+		if(type != null)
+        {
+            int directionHash = 1;
+            if(!type.isDirected())
+            {
+                // If it is not directional,
+                // then A <-> B and B <-> A should produce
+                // the same hash, so order them first
+                if(srcHash < trgtHash)
+                {
+                    int tmpHash = srcHash;
+                    srcHash = trgtHash;
+                    trgtHash = tmpHash;
+                }
+
+                directionHash = 2;
+            }
+
+            result = 31 * result + directionHash;
+        }
+
+		result = 31 * result + srcHash;
+		result = 31 * result + trgtHash;
 		return result;
 	}
 
@@ -149,12 +176,7 @@ public class SimpleInteraction
 		String from = source.getRDFId();
 		String to = target == null ? "null" : target.getRDFId();
 
-// These lines are for creating a SIF with readable names instead of rdf ids.
-//
-//		String from = getANameForSIF(source);
-//		String to = getANameForSIF(target);
-
-		return from + "\t" + type.toString() + "\t" + to;
+		return from + "\t" + type + "\t" + to;
 	}
 
 	public String getANameForSIF(BioPAXElement element)
@@ -228,8 +250,7 @@ public class SimpleInteraction
 		if (bpe instanceof physicalEntityParticipant)
 		{
 			recursivelyReduce(((physicalEntityParticipant) bpe).getPHYSICAL_ENTITY(), reduced);
-		}
-		else
+		} else
 		{
 			if (bpe instanceof complex)
 			{
@@ -240,8 +261,7 @@ public class SimpleInteraction
 
 				}
 
-			}
-			else if (bpe instanceof physicalEntity)
+			} else if (bpe instanceof physicalEntity)
 			{
 				reduced.add((physicalEntity) bpe);
 			}

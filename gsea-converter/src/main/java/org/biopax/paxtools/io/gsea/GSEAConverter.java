@@ -1,277 +1,283 @@
 package org.biopax.paxtools.io.gsea;
 
-import org.biopax.paxtools.controller.AbstractTraverser;
-import org.biopax.paxtools.controller.PropertyEditor;
-import org.biopax.paxtools.controller.SimpleEditorMap;
-import org.biopax.paxtools.controller.Traverser;
+import org.apache.commons.lang.StringUtils;
+import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.converter.OneTwoThree;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.Filter;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 /**
  * Converts a BioPAX model to GSEA (GMT format).
- * 
- * Creates GSEA entries from the pathways contained in the model.
- * 
- * Pathway members are derived by finding the xref who's
- * database name matches the database constructor argument and returning
- * the respective database id.  If database id is empty, 
- * the rdf id of the protein is returned.
- * 
- * Note, to properly enforce cross-species violations, bio-sources must
- * be annotated with "taxonomy" database name.
- * 
- * Note this code assumes that the model has successfully been validated
- * (e.g., using the BioPAX validator for Level3 data). L1 and L2 models
- * are first converted to L3 (this however does not fix BioPAX errors 
- * if any present in the L1/L2 data but rather adds new; so - double-check)
+ * <p/>
+ * Creates GSEA entries from the protein references's xrefs contained in the BioPAX model. 
+ * One entry (id-list) per pathway per organism. If there are no pathways,
+ * then simply - per organism (i.e., all available protein types are considered).
+ * - One identifier per protein reference (not guaranteed to be the primary one).
+ * All identifiers can only be of the same type, e.g., UniProt,
+ * and the converter does not do any id-mapping; so a protein without 
+ * the required identifier type will not be listed.
+ * <p/>
+ * Note, to effectively enforce cross-species violation, bio-sources must
+ * be annotated (have a unification xref) with "taxonomy" database name 
+ * and id, and pathways's, protein references's "organism" property - not empty. 
+ * <p/>
+ * Note, this code assumes that the model has successfully been validated
+ * and normalized (e.g., using the BioPAX Validator for Level3 data). 
+ * L1 and L2 models are first converted to L3 (this however does not 
+ * fix BioPAX errors, if any present, but possibly adds new)
  */
-public class GSEAConverter {
-	
-	// following vars used during traversal
-	final String database;
-	boolean crossSpeciesCheck;
-	boolean visitProtein; // true we visit proteins, false we visit ProteinReference
-	Map<String, String> rdfToGenes; // map of member proteins of the pathway rdf id to gene symbol
-	Set<BioPAXElement> visited; // helps during traversal
-	String taxID;
-	Traverser traverser;
-	
+public class GSEAConverter
+{
+	private final String database;
+	private final boolean crossSpeciesCheckEnabled;
+
 	/**
 	 * Constructor.
 	 */
-	public GSEAConverter() {
+	public GSEAConverter()
+	{
 		this("", true);
 	}
-	
+
 	/**
 	 * Constructor.
-	 * 
+	 * <p/>
 	 * See class declaration for more information.
-	 * 
 	 * @param database String: the database/xref to use for grabbing participants
-	 * @param crossSpeciesCheck - if true, enforces no cross species participants in output
-	 * 
+	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 */
-	public GSEAConverter(final String database, boolean crossSpeciesCheck) {
+	public GSEAConverter(final String database, boolean crossSpeciesCheckEnabled)
+	{
 		this.database = database;
-    	this.crossSpeciesCheck = crossSpeciesCheck;
-    	
-    	/* a traverser that skips 'nextStep' property, because it is
-    	 * always misleading for the purpose of getting proteins of a process
-    	 * (it visits all pathwayOrder (step processes) and pathwayComponent sets anyway!)
-    	 */
-    	this.traverser = new AbstractTraverser(SimpleEditorMap.L3, 
-    		new Filter<PropertyEditor>() {
-				public boolean filter(PropertyEditor editor) {
-					return !editor.getProperty().equals("nextStep");
-				}
-    		}
-    	) {
-			@Override
-			protected void visit(Object range, BioPAXElement domain, Model model,
-					PropertyEditor editor) {
-		    	boolean checkDatabase = (database != null && database.length() > 0 && !database.equals("NONE"));
-		    	
-		    	if (range != null && range instanceof BioPAXElement && !visited.contains(range)) {
-		    		if (visitProtein) {
-		    			visitProtein(range, checkDatabase);
-		    		}
-		    		else {
-		    			visitProteinReference(range, checkDatabase);
-		    		}
-		    		visited.add((BioPAXElement)range);
-					traverse((BioPAXElement)range, model);
-		    	}
-				
-			}
-		};
+		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
 	}
-		
+
 	/**
 	 * Converts model to GSEA and writes to out.  See class declaration for more information.
-	 * 
 	 * @param model Model
 	 */
-	public void writeToGSEA(final Model model, OutputStream out) throws IOException {
-	
-		Collection<? extends GSEAEntry> entries = convert(model);
-    	if (entries.size() > 0) {
-    		Writer writer = new OutputStreamWriter(out);
-    		for (GSEAEntry entry : entries) {
-    			writer.write(entry.toString() + "\n");
-    		}
-    		writer.close();
-    	}
+	public void writeToGSEA(final Model model, OutputStream out) throws IOException
+	{
+
+		Collection<GSEAEntry> entries = convert(model);
+		if (entries.size() > 0)
+		{
+			Writer writer = new OutputStreamWriter(out);
+			for (GSEAEntry entry : entries)
+			{
+				writer.write(entry.toString() + "\n");
+			}
+			writer.flush();
+		}
 	}
 
 	/**
-     * Creates GSEA entries from the pathways contained in the model.
-     *	
-     * @param model Model
-     * @return a set of GSEA entries
-     */
-    public Collection<? extends GSEAEntry> convert(final Model model) {
-    	
-    	// setup some vars
-    	Model l3Model = null;
-    	
-    	Collection<GSEAEntry> toReturn = new HashSet<GSEAEntry>();
-    	    	    	
-    	// convert to level 3 in necessary
-        if (model.getLevel() == BioPAXLevel.L1 ||
-        	model.getLevel() == BioPAXLevel.L2) {
-        	l3Model = (new OneTwoThree()).filter(model);
-        }
-        else if (model.getLevel() == BioPAXLevel.L3) {
-        	l3Model = model;
-        }
+	 * Creates GSEA entries from the pathways contained in the model.
+	 * @param model Model
+	 * @return a set of GSEA entries
+	 */
+	public Collection<GSEAEntry> convert(final Model model)
+	{
+		Collection<GSEAEntry> toReturn = new TreeSet<GSEAEntry>(new Comparator<GSEAEntry>() {
+			@Override
+			public int compare(GSEAEntry o1, GSEAEntry o2) {
+				return o1.toString().compareTo(o2.toString());
+			}
+		});
 
-        // iterate over all pathways in the model
-        for (Pathway aPathway : l3Model.getObjects(Pathway.class)) {
-        	toReturn.add(getGSEAEntry(model, aPathway, database));
-        }
-        
-        // outta here
-        return toReturn;
-    }
-    
-  
-	private GSEAEntry getGSEAEntry(final Model model, final Pathway aPathway, final String database) {
-		
-		// the GSEAEntry to return
-		final GSEAEntry toReturn = new GSEAEntry();
-		
-		// set name
-		String name = aPathway.getDisplayName();
-		name = (name == null) ? aPathway.getStandardName() : name;
-		name = (name == null) ? "NAME" : name;
-		toReturn.setName(name);
-		// tax id
-		String taxID = getTaxID(aPathway.getOrganism().getXref());
-		taxID = (taxID == null) ? "TAX-ID" : taxID;
-		toReturn.setTaxID(taxID);
-		// data source
-		String dataSource = getDataSource(aPathway.getDataSource());
-		dataSource = (dataSource == null) ? "N/A" : dataSource;
-		toReturn.setDataSource(dataSource);
-		// genes
-		this.taxID = taxID;
-		this.visitProtein = true;
-		this.rdfToGenes = new HashMap<String, String>();
-		this.visited = new HashSet<BioPAXElement>();
-		this.traverser.traverse(aPathway, model);
-		if (this.rdfToGenes.size() == 0) {
-			this.visitProtein = false;
-			this.visited = new HashSet<BioPAXElement>();
-			this.traverser.traverse(aPathway, model);
+		Model l3Model = null;
+		// convert to level 3 in necessary
+		if (model.getLevel() == BioPAXLevel.L1 || model.getLevel() == BioPAXLevel.L2)
+			l3Model = (new OneTwoThree()).filter(model);
+		else
+			l3Model = model;
+
+		Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
+		if(!pathways.isEmpty()) {	
+			for (Pathway pathway : pathways) 
+			{
+				String name = pathway.getDisplayName();
+				name = (name == null) ? pathway.getStandardName() : name;
+				name = (name == null) ? pathway.getRDFId() : name;
+				
+				String dataSource = getDataSource(pathway.getDataSource());
+				
+				Set<ProteinReference> pathwayProteinRefs = ModelUtils
+					.getAllChildren(pathway).getObjects(ProteinReference.class);
+				if(!pathwayProteinRefs.isEmpty()) {
+					Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(pathwayProteinRefs);			
+					// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
+					Collection<GSEAEntry> entries = createGseaEntries(name, dataSource, orgToPrsMap);
+					toReturn.addAll(entries);
+				}
+			}
+		} else {
+			//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
+			Set<ProteinReference> allProteinRefs = l3Model.getObjects(ProteinReference.class);
+			Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(allProteinRefs);
+			if(!orgToPrsMap.isEmpty()) {
+				// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
+				toReturn.addAll(createGseaEntries("From a BioPAX sub-model (protein references, no pathways)", 
+						getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));	
+			}
 		}
-		toReturn.setRDFToGeneMap(this.rdfToGenes);
-	 	
-		// outta here
+					
 		return toReturn;
 	}
+
 	
-	private void visitProtein(Object range, boolean checkDatabase) {
-    	
-    	if (range instanceof Protein) {
-    		Protein aProtein = (Protein)range;
-    		// we only process proteins that are same species as pathway
-    		if (crossSpeciesCheck && this.taxID.length() > 0 && !sameSpecies(aProtein, this.taxID)) {
-    			return;
-    		}
-    		// if we are not checking database, just return rdf id
-    		if (checkDatabase) {
-			    for (Xref aXref : aProtein.getXref())
-			    {
-    				if (aXref.getDb() != null && aXref.getDb().equalsIgnoreCase(this.database)) {
-    					this.rdfToGenes.put(aProtein.getRDFId(), aXref.getId());
-    					break;
-    				}
-    			}
-    		}
-    		else {
-    			this.rdfToGenes.put(aProtein.getRDFId(), aProtein.getRDFId());
-    		}
-    	}
-	}
-    
-    private void visitProteinReference(Object range, boolean checkDatabase) {
-    	
-    	if (range instanceof ProteinReference) {
-    		ProteinReference aProteinRef = (ProteinReference)range;
-    		// we only process protein refs that are same species as pathway
-    		if (crossSpeciesCheck && this.taxID.length() > 0 && !getTaxID(aProteinRef.getOrganism().getXref()).equals(this.taxID)) {
-    			return;
-    		}
-    		if (checkDatabase) {
-				// short circuit if we are converting for pathway commons
-				// Also ensure we get back primary accession - which is built into the rdf id of the protein  ref
-				if (database.equalsIgnoreCase("uniprot") && aProteinRef.getRDFId().startsWith("urn:miriam:uniprot:")) {
-					String accession = aProteinRef.getRDFId();
-					accession = accession.substring(accession.lastIndexOf(":")+1);
-					this.rdfToGenes.put(aProteinRef.getRDFId(), accession);
+	private Collection<GSEAEntry> createGseaEntries(final String name, final String dataSource, 
+			final Map<String, Set<ProteinReference>> orgToPrsMap) 
+	{
+		// generate GSEA entries for each taxId in parallel threads; await till all done (before returning)
+		final Collection<GSEAEntry> toReturn = Collections.synchronizedList(new ArrayList<GSEAEntry>());
+		ExecutorService exe = Executors.newFixedThreadPool(orgToPrsMap.keySet().size());
+		for (final String org : orgToPrsMap.keySet()) {
+			exe.submit(new Runnable() {
+				@Override
+				public void run() {
+					GSEAEntry gseaEntry = new GSEAEntry(name, org, database, "datasource: " + dataSource);
+					processProteinReferences(orgToPrsMap.get(org), gseaEntry);
+					toReturn.add(gseaEntry);
 				}
-				else {
-					for (Xref aXref: aProteinRef.getXref()) {
-						if (aXref.getDb() != null && aXref.getDb().equalsIgnoreCase(database)) {
-							this.rdfToGenes.put(aProteinRef.getRDFId(), aXref.getId());
+			});
+		}
+		exe.shutdown();
+		try {
+			exe.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			throw new RuntimeException("Interrupted unexpectedly!");
+		}
+		
+		return toReturn;
+	}
+
+	
+	//warn: there can be many equivalent BioSource objects (same taxonomy id, different URIs)
+	private Map<String, Set<ProteinReference>> organismToProteinRefsMap(
+			Set<ProteinReference> proteinRefs) 
+	{
+		Map<String,Set<ProteinReference>> map = new HashMap<String, Set<ProteinReference>>();
+
+		if(proteinRefs.isEmpty())
+			throw new IllegalArgumentException("Empty set");
+		
+		if (crossSpeciesCheckEnabled) {
+			for (ProteinReference r : proteinRefs) {
+				String key = getTaxID(r.getOrganism()); // null also works (key == "")
+				Set<ProteinReference> prs = map.get(key);
+				if (prs == null) {
+					prs = new HashSet<ProteinReference>();
+					map.put(key, prs);
+				}
+				prs.add(r);
+			}
+		} else {
+			map.put("", proteinRefs); //all PRs
+		}
+				
+		return map;
+	}
+
+
+	void processProteinReferences(Set<ProteinReference> prs, GSEAEntry targetEntry)
+	{
+
+		for (ProteinReference aProteinRef : prs)
+		{
+			// we only process PRs that belong to the same species (as for targetEntry) if crossSpeciesCheckEnabled==true
+			if (crossSpeciesCheckEnabled && !targetEntry.taxID().equals(getTaxID(aProteinRef.getOrganism())))
+				continue;
+				
+			if (database != null && !database.isEmpty())
+			{
+				// short circuit if we are converting new Pathway Commons or another normalized data;
+				// we get back the primary accession number, which is built into the URI of the
+				// ProteinReference.
+				final String lowcaseUri = aProteinRef.getRDFId().toLowerCase();
+				if (lowcaseUri.startsWith("urn:miriam:" + database.toLowerCase()))
+				{
+					String accession = aProteinRef.getRDFId();
+					accession = accession.substring(accession.lastIndexOf(":") + 1);
+					targetEntry.getIdentifiers().add(accession);
+				} 
+				else if (lowcaseUri.startsWith("http://identifiers.org/")
+					&& lowcaseUri.contains(database.toLowerCase()))
+				{
+					String accession = aProteinRef.getRDFId();
+					accession = accession.substring(accession.lastIndexOf("/") + 1);
+					targetEntry.getIdentifiers().add(accession);
+				} 
+				else { // simply pick one xref with matching db value (any one)
+					TreeSet<Xref> orderedXrefs = new TreeSet<Xref>(new Comparator<Xref>() {
+						@Override
+						public int compare(Xref o1, Xref o2) {
+							return o1.toString().compareTo(o2.toString());
+						}
+					});
+					
+					orderedXrefs.addAll(aProteinRef.getXref());
+					for (Xref aXref : orderedXrefs)
+					{
+						if (aXref.getId() != null && aXref.getDb() != null && 
+							(aXref.getDb().equalsIgnoreCase(database) 
+									|| aXref.getId().toLowerCase().startsWith(database.toLowerCase()+":")
+									|| aXref.getId().toLowerCase().startsWith(database.toLowerCase()+"_"))
+						) {
+							targetEntry.getIdentifiers().add(aXref.getId());
 							break;
 						}
 					}
 				}
-    		}
-    		else {
-    			this.rdfToGenes.put(aProteinRef.getRDFId(), aProteinRef.getRDFId());
-    		}
-    	}
+			} else // use URI (not really useful for GSEA software, but good for testing/hacking...)
+			{
+				targetEntry.getIdentifiers().add(aProteinRef.getRDFId());
+			}
+		}
+		
 	}
 
-    private String getDataSource(Set<Provenance> provenances) {
-
-		for (Provenance provenance : provenances) {
+	/*
+	 * Gets datasource names, if any, in a consistent way/order, excl. duplicates
+	 */
+	private String getDataSource(Set<Provenance> provenances)
+	{
+		if(provenances.isEmpty()) return "N/A";
+		
+		Set<String> dsNames = new TreeSet<String>();
+		for (Provenance provenance : provenances)
+		{
 			String name = provenance.getDisplayName();
-			name = (name == null) ? provenance.getStandardName() : name;
-			if (name != null && name.length() > 0) return name;
+			if(name == null) 
+				name = provenance.getStandardName();
+			if(name == null && !provenance.getName().isEmpty()) 
+				name = provenance.getName().iterator().next();
+			if (name != null && name.length() > 0)
+				dsNames.add(name.toLowerCase());
 		}
 		
-		// outta here
-		return "";
+		return StringUtils.join(dsNames, ";");
 	}
-    
-	private boolean sameSpecies(Protein aProtein, String taxID) {
 
-		ProteinReference pRef = (ProteinReference)aProtein.getEntityReference();
-		if (pRef != null && pRef.getOrganism() != null) {
-			BioSource bs = pRef.getOrganism();
-			if (bs.getXref() != null) {
-				return (getTaxID(bs.getXref()).equals(taxID));
-			}
-		}
-
-		// outta here
-		return false;
-	}
 	
-	private String getTaxID(Set<Xref> xrefs) {
-
-		for (Xref xref : xrefs) {
-			if (xref.getDb().equalsIgnoreCase("taxonomy")) {
-				return xref.getId();
-			}
+	private String getTaxID(BioSource org) {
+		if (org != null) {
+			for (Xref xref : org.getXref()) 
+				if (xref.getDb().equalsIgnoreCase("taxonomy"))
+					return xref.getId();
 		}
-		
-		// outta here
-		return "";
+
+		return ""; //unspecified/all species
 	}
 }

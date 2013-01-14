@@ -1,10 +1,14 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -12,8 +16,10 @@ import javax.persistence.Transient;
 /**
  */
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= PhenotypeVocabulary.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
 	implements PhenotypeVocabulary
 {
@@ -28,7 +34,8 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
     }
 
 	
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+	@Boost(1.1f)
 	public String getPatoData()
 	{
 		return patoData;

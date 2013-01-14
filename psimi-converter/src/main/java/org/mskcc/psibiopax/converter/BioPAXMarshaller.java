@@ -1,5 +1,3 @@
-// $Id: BioPAXMarshaller.java,v 1.1 2009/11/22 15:50:28 rodche Exp $
-//------------------------------------------------------------------------------
 /** Copyright (c) 2009 Memorial Sloan-Kettering Cancer Center.
  **
  ** This library is free software; you can redistribute it and/or modify it

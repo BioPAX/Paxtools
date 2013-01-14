@@ -6,6 +6,16 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -14,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Proxy(proxyClass= SimplePhysicalEntity.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 		implements SimplePhysicalEntity
@@ -23,12 +34,17 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	public SimplePhysicalEntityImpl() {
 	}
 	
+	@Fields({
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
+		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	})
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
-	protected EntityReference getEntityReferenceX()
+	public EntityReference getEntityReferenceX()
 	{
 		return entityReference;
 	}
-	protected void setEntityReferenceX(EntityReference entityReference) {
+	public void setEntityReferenceX(EntityReference entityReference) {
 		this.entityReference = entityReference;
 	}
 
@@ -75,8 +91,9 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	@Override
 	public int equivalenceCode()
 	{
-		return 31 * super.locationAndFeatureCode() +
-		       this.entityReference.equivalenceCode();
+       
+        return this.entityReference==null? hashCode():31 * super.locationAndFeatureCode() +
+		       entityReference.equivalenceCode();
 	}
 
 	@Override

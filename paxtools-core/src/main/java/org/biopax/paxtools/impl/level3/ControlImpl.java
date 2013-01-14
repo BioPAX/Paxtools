@@ -1,22 +1,30 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.FieldBridge;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
-
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= Control.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-public class ControlImpl extends InteractionImpl
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class  ControlImpl extends InteractionImpl
 		implements Control
 {
 // ------------------------------ FIELDS ------------------------------
@@ -58,6 +66,7 @@ public class ControlImpl extends InteractionImpl
 		this.controlType = ControlType;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="controlled")
 	public Set<Process> getControlled()
@@ -100,8 +109,8 @@ public class ControlImpl extends InteractionImpl
 	@Transient
 	public Set<Controller> getController()
 	{
-		Set<Controller> controller = new HashSet<Controller>(peController);
-		controller.addAll(pathwayController);
+		Set<Controller> controller = new HashSet<Controller>(getPeController());
+		controller.addAll(getPathwayController());
 		return Collections.unmodifiableSet(controller);
 	}
 
@@ -138,6 +147,9 @@ public class ControlImpl extends InteractionImpl
 		return true;
 	}
 
+	
+	@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="pathwayController")
 	protected Set<Pathway> getPathwayController()
@@ -150,6 +162,7 @@ public class ControlImpl extends InteractionImpl
 		this.pathwayController = pathwayController;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="peController")
 	protected Set<PhysicalEntity> getPeController()

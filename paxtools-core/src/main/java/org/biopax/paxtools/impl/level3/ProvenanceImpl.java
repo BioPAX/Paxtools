@@ -1,19 +1,30 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.Xref;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= Provenance.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProvenanceImpl extends NamedImpl implements Provenance
 {
+	private final static Log LOG = LogFactory.getLog(ProvenanceImpl.class);
+	
 	public ProvenanceImpl() {
 	}
 
@@ -23,26 +34,44 @@ public class ProvenanceImpl extends NamedImpl implements Provenance
 		return Provenance.class;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.biopax.paxtools.impl.BioPAXElementImpl#toString()
+	 * 
+	 * TODO this probably makes inconsistent strings (on different systems); fix, if it matters....
+	 * 
+	 */
 	@Override public String toString()
 	{
-		String s = "";
+		try {
+			StringBuilder s = new StringBuilder();
 
-		for (String name : this.getName())
-		{
-			if (s.length() > 0) s += "; ";
-			s += name;
-		}
-		Set<Xref> xref = this.getXref();
-		if (!xref.isEmpty())
-		{
-			s += " (";
-			for (Xref anXref : xref)
+			for (String name : new TreeSet<String>(this.getName())) 
+				s.append(name).append(";");
+			
+			if (!getXref().isEmpty()) 
 			{
-
-				s += anXref ;
+				TreeSet<Xref> xrefs = new TreeSet<Xref>(new Comparator<Xref>() {
+					@Override
+					public int compare(Xref o1, Xref o2) {
+						return o1.toString().compareTo(o2.toString());
+					}					
+				});
+				xrefs.addAll(getXref());
+				
+				s.append(" (");
+				for (Xref anXref : xrefs)
+					s.append(anXref).append(";");
+				s.append(")");
 			}
-			s += ")";
+			
+			return s.toString();
+
+		} catch (Exception e) {
+			// possible issues - when in a persistent context (e.g., lazy
+			// collections init...)
+			LOG.warn("toString: ", e);
+			return getRDFId();
 		}
-		return s;
 	}
 }

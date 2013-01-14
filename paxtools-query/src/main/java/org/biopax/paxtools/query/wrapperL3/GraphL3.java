@@ -5,10 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.Control;
-import org.biopax.paxtools.model.level3.Conversion;
-import org.biopax.paxtools.model.level3.EntityReference;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.model.AbstractGraph;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
@@ -18,8 +15,8 @@ import java.util.*;
 
 public class GraphL3 extends AbstractGraph 
 {
-	private Model model;
-	private Set<String> ubiqueIDs;
+	protected Model model;
+	protected Set<String> ubiqueIDs;
 
 	protected final Log log = LogFactory.getLog(GraphL3.class);
 
@@ -53,6 +50,10 @@ public class GraphL3 extends AbstractGraph
 		else if (obj instanceof Conversion)
 		{
 			return new ConversionWrapper((Conversion) obj, this);
+		}
+		else if (obj instanceof TemplateReaction)
+		{
+			return new TemplateReactionWrapper((TemplateReaction) obj, this);
 		}
 		else if (obj instanceof Control)
 		{
@@ -134,11 +135,20 @@ public class GraphL3 extends AbstractGraph
 			{
 				objects.add(((ConversionWrapper) wrapper).getConversion());
 			}
+			else if (wrapper instanceof TemplateReactionWrapper)
+			{
+				objects.add(((TemplateReactionWrapper) wrapper).getTempReac());
+			}
 			else if (wrapper instanceof ControlWrapper)
 			{
 				objects.add(((ControlWrapper) wrapper).getControl());
 			}
 		}
 		return objects;
+	}
+
+	public Model getModel()
+	{
+		return model;
 	}
 }

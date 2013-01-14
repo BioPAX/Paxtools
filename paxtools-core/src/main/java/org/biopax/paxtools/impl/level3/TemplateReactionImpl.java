@@ -1,10 +1,12 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.NucleicAcid;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.TemplateDirectionType;
 import org.biopax.paxtools.model.level3.TemplateReaction;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -12,14 +14,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= TemplateReaction.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
     private NucleicAcid template;
 	private TemplateDirectionType templateDirection;
 
-	public TemplateReactionImpl() {
+	public TemplateReactionImpl()
+	{
         this.product = new HashSet<PhysicalEntity>();
     }
 	
@@ -29,6 +34,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 		return TemplateReaction.class;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ManyToMany(targetEntity = PhysicalEntityImpl.class) //TODO: make sequence entity?
     @JoinTable(name="product") 	
     public Set<PhysicalEntity> getProduct()
@@ -65,13 +71,14 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 		this.template = template;
 	}
     
-    public NucleicAcid getTemplate()
+    @Transient
+	public NucleicAcid getTemplate()
      {
          return this.template;
      }
 
-     public void setTemplate(NucleicAcid template)
-     {
+    public void setTemplate(NucleicAcid template)
+    {
          if(this.template!= null)
          {
             super.removeParticipant(this.template);
@@ -80,7 +87,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
         	 this.template=template;
         	 super.addParticipant(template);
          }
-     }
+    }
 
     @Enumerated
 	public TemplateDirectionType getTemplateDirection()

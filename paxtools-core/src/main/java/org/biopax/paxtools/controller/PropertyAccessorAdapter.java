@@ -1,11 +1,16 @@
 package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Adapter class for all property accessors.
  */
-abstract class PropertyAccessorAdapter<D extends BioPAXElement, R> implements PropertyAccessor<D,R>
+public abstract class PropertyAccessorAdapter<D extends BioPAXElement, R> implements PropertyAccessor<D,R>
 {
 
 	/**
@@ -21,7 +26,7 @@ abstract class PropertyAccessorAdapter<D extends BioPAXElement, R> implements Pr
 	/**
 	 * This is false if there is a cardinality restriction of one on the property.
 	 */
-	protected final boolean multipleCardinality;
+	protected boolean multipleCardinality;
 
 
 	protected PropertyAccessorAdapter(Class<D> domain, Class<R> range, boolean multipleCardinality)
@@ -56,6 +61,17 @@ abstract class PropertyAccessorAdapter<D extends BioPAXElement, R> implements Pr
 	public boolean isMultipleCardinality()
 	{
 		return multipleCardinality;
+	}
+
+	@Override public Set<? extends R> getValueFromBeans(Collection<? extends D> beans) throws
+	                                                                               IllegalBioPAXArgumentException
+	{
+	    Set<R> aggregate = new HashSet<R>();
+		for (D bean : beans)
+		{
+			aggregate.addAll(this.getValueFromBean(bean));
+		}
+		return aggregate;
 	}
 
 }

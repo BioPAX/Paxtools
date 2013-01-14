@@ -2,17 +2,31 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= Complex.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
 // ------------------------------ FIELDS ------------------------------
@@ -44,8 +58,13 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------- ACCESORS and MUTATORS---------------------
 	
+	@Fields({
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
+		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	})
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="component") 
+	@JoinTable(name="component")
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;
@@ -72,6 +91,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		this.component = component;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
 	@JoinTable(name="complexstoichiometry")		
 	public Set<Stoichiometry> getComponentStoichiometry()

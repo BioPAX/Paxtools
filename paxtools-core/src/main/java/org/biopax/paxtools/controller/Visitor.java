@@ -23,5 +23,5 @@ public interface Visitor
      * @param model model on which the visiting operation will be done
      * @param editor editor
      */
-    public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor);
+    public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?,?> editor); //TODO looks, using of <?,?> makes editor "read-only"...
 }

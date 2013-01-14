@@ -1,5 +1,3 @@
-// $Id: BioPAXMapper.java,v 1.2 2009/11/23 13:59:42 rodche Exp $
-//------------------------------------------------------------------------------
 /** Copyright (c) 2009 Memorial Sloan-Kettering Cancer Center.
  **
  ** This library is free software; you can redistribute it and/or modify it
@@ -80,7 +78,7 @@ public interface BioPAXMapper {
 	 * @param id String
 	 * @param bpXrefs Set<? extends BioPAXElement>
 	 * @param evidenceCodes Set<? extends BioPAXElement>
-	 * @param scoresOrConfidences Set<? extends BioPAXElement>
+	 * @param scoresOrConfidence Set<? extends BioPAXElement>
 	 * @param comments Set<String>
 	 * @param experimentalForms Set<BioPAXElement>
 	 * @return <T extends BioPAXElement>
@@ -141,10 +139,10 @@ public interface BioPAXMapper {
 	/**
 	 * Given an RDF ID, returns a matching model element
 	 *
-	 * @param rdfID
+	 * @param uri
 	 * @return BioPAXElement
 	 */
-	BioPAXElement getBioPAXElement(String rdfID);
+	BioPAXElement getBioPAXElement(String uri);
 
 	/**
 	 * Gets an interaction.
@@ -215,7 +213,7 @@ public interface BioPAXMapper {
 	/**
 	 * Used to add feature attributes to given sequence or entity feature.
 	 *
-	 * @param bpSequenceFeature BioPAXElement
+	 * @param bpFeature BioPAXElement
 	 * @param bpXrefs Set<? extends BioPAXElement>
 	 * @param featureLocations Set<? extends BioPAXElement>
 	 * @param featureType BioPAXElement
@@ -267,27 +265,24 @@ public interface BioPAXMapper {
 	/**
 	 * Sets given xref's db and id.
 	 *
-	 * @param xrefType BioPAXElement
+	 * @param bpXref BioPAXElement
 	 * @param db String
 	 * @param id String
 	 */
 	void setXrefDBAndID(BioPAXElement bpXref, String db, String id);
 
 	/**
-	 * Sets biopax model namespace.
+	 * Sets the biopax model namespace (xml:base).
 	 *
 	 * @param namespace String
 	 */
 	void setNamespace(String namespace);
-
+	
 	/**
-	 * Creates a data source on the model.
+	 * Gets the biopax model namespace (xml:base).
 	 *
-	 * @param id String
-	 * @param name String
-	 * @param xrefs Set<BioPAXElement>
 	 */
-	void setModelDataSource(String id, String name, Set<? extends BioPAXElement> xrefs);
+	String getNamespace();
 
 	/**
 	 * Creates a data source and adds to given interaction.

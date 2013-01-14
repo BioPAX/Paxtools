@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#">
+<owl:Ontology rdf:about="">
+<!-- Modified/simplified HumanCyc data test case (same xrefs attached both to Protein and its PR) -->
+ <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+</owl:Ontology>
+
+<!-- To test:
+if SMR1 is removed or replaced, then
+ A - must become dangling and must be removed by ModelUtils.removeObjectsIfDangling(UtilityClass.class) method,
+ and A.memberEntityReference() must NOT contain B (must be empty set);
+ B - will stay (it's still used by SM2), but must NOT have A in its memberEntityReferenceOf() list!
+ -->
+
+<bp:SmallMolecule rdf:about="SM1">
+ <bp:entityReference rdf:resource="SMR1" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SM1</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:SmallMoleculeReference rdf:about="SMR1"> 
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMR1</bp:displayName>
+ <bp:memberEntityReference rdf:resource="B" />
+ <bp:memberEntityReference rdf:resource="A" />
+</bp:SmallMoleculeReference>
+
+<bp:SmallMoleculeReference rdf:about="A">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A</bp:displayName>
+ <bp:memberEntityReference rdf:resource="B" />
+</bp:SmallMoleculeReference>
+
+<bp:SmallMoleculeReference rdf:about="B">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B</bp:displayName>
+</bp:SmallMoleculeReference>
+
+<bp:SmallMolecule rdf:about="SM2">
+ <bp:entityReference rdf:resource="SMR2" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SM2</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:SmallMoleculeReference rdf:about="SMR2">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMR2</bp:displayName>
+ <bp:memberEntityReference rdf:resource="B" />
+</bp:SmallMoleculeReference>
+
+</rdf:RDF>

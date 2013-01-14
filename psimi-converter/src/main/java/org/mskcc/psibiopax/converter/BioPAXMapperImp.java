@@ -732,24 +732,29 @@ public class BioPAXMapperImp implements BioPAXMapper
 				toReturn = bpModel.addNew(Protein.class, id);
 				er = bpModel.addNew(ProteinReference.class, entityRefId);
 			}
+
+
 			if (name != null)
 			{
+                er.setStandardName(name);
 				toReturn.setStandardName(name);
 			}
 			if (shortName != null)
 			{
+                er.setDisplayName(shortName);
 				toReturn.setDisplayName(shortName);
 			}
 			if (synonyms != null && synonyms.size() > 0)
 			{
 				for (String synonym : synonyms) {
+                    er.addName(synonym);
 					toReturn.addName(synonym);
 				}
 			}
 			if (bpXrefs != null && bpXrefs.size() > 0)
 			{
 				for (BioPAXElement xref : bpXrefs) {
-					toReturn.addXref((Xref)xref);
+                    er.addXref((Xref) xref);
 				}
 			}
 			// set sequence entity ref props
@@ -1045,26 +1050,16 @@ public class BioPAXMapperImp implements BioPAXMapper
 		}
 	}
 
-	/**
-	 * Sets biopax model namespace.
-	 *
-	 * @param namespace String
-	 */
+
 	public void setNamespace(String namespace)
 	{
 		bpModel.setXmlBase(namespace);
 	}
-
-	/**
-	 * Creates a data source on the model.
-	 *
-	 * @param id      String
-	 * @param name    String
-	 * @param bpXrefs Set<? extends BioPAXElement>
-	 */
-	public void setModelDataSource(String id, String name, Set<? extends BioPAXElement> bpXrefs)
+	
+	
+	public String getNamespace()
 	{
-		setInteractionDataSource(null, id, name, bpXrefs);
+		return bpModel.getXmlBase();
 	}
 
 	/**
@@ -1078,40 +1073,19 @@ public class BioPAXMapperImp implements BioPAXMapper
 	                                                               String name,
 	                                                               Set<? extends BioPAXElement> bpXrefs)
 	{
-
 		if (bpLevel == BioPAXLevel.L2)
 		{
-			dataSource dSource = bpModel.addNew(dataSource.class, id);
-			if (name != null)
-			{
-				dSource.addNAME(name);
-			}
-			if (bpXrefs != null && bpXrefs.size() > 0)
-			{
-				dSource.setXREF((Set<xref>) bpXrefs);
-			}
-			if (interaction != null)
-			{
-				((physicalInteraction) interaction).addDATA_SOURCE(dSource);
-			}
+            for (BioPAXElement bpXref : bpXrefs) {
+                if(bpXref instanceof xref)
+                    ((physicalInteraction) interaction).addXREF((xref) bpXref);
+            }
 		}
 		else if (bpLevel == BioPAXLevel.L3)
 		{
-			Provenance provenance = bpModel.addNew(Provenance.class, id);
-			if (name != null)
-			{
-				provenance.addName(name);
-			}
-			if (bpXrefs != null && bpXrefs.size() > 0)
-			{
-				for (BioPAXElement xref : bpXrefs) {
-					provenance.addXref((Xref)xref);
-				}
-			}
-			if (interaction != null)
-			{
-				((MolecularInteraction) interaction).addDataSource(provenance);
-			}
+            for (BioPAXElement bpXref : bpXrefs) {
+                if(bpXref instanceof Xref)
+                    ((MolecularInteraction) interaction).addXref((Xref) bpXref);
+            }
 		}
 	}
 

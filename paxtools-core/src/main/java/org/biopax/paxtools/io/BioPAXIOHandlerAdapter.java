@@ -31,7 +31,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	private static final Log log = LogFactory.getLog(BioPAXIOHandlerAdapter.class);
 
-	protected BioPAXLevel level = BioPAXLevel.L3;
+	protected BioPAXLevel level;
 
 	protected BioPAXFactory factory;
 
@@ -43,7 +43,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected static final String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 
-	protected static String bp;
+	protected String bp; //current BioPAX namespace prefix value
 
 	protected static final String xsd = "http://www.w3.org/2001/XMLSchema#";
 
@@ -66,12 +66,16 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		resetLevel(level, factory);
 	}
 
-	protected void resetLevel(BioPAXLevel level, BioPAXFactory factory)
+	/**
+	 * Updates the level and factory for this I/O
+	 * (final - because used in the constructor)
+	 * 
+	 * @param level
+	 * @param factory
+	 */
+	protected final void resetLevel(BioPAXLevel level, BioPAXFactory factory)
 	{
-		if (level != null)
-		{
-			this.level = level;
-		}
+		this.level = (level != null) ? level : BioPAXLevel.L3;
 		this.factory = (factory != null) ? factory : this.level.getDefaultFactory();
 
 		// default flags
@@ -86,7 +90,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 		bp = this.level.getNameSpace();
 
-		resetEditorMap();
+		resetEditorMap(); //implemented by concrete subclasses
 	}
 
 	/**
@@ -213,7 +217,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 		autodetectBiopaxLevel(); // this may update level, editorMap and factory!
 
-		bp = level.getNameSpace();
+//		bp = level.getNameSpace();
 
 		Model model = factory.createModel();
 		
@@ -256,7 +260,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			log.error("Cannot detect biopax level.");
 			throw new BioPaxIOException("Cannot detect biopax level.");
-		} else if (level != filelevel || filelevel != factory.getLevel())
+		} else if (level != filelevel)
 		{
 			if (log.isDebugEnabled()) log.debug("Reset to the default factory for the detected BioPAX level.");
 			resetLevel(filelevel, filelevel.getDefaultFactory());
@@ -266,19 +270,19 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected void createAndAdd(Model model, String id, String localName)
 	{
-		BioPAXElement bp = this.getFactory().create(localName, id);
+		BioPAXElement bpe = this.getFactory().create(localName, id);
 
 		if (log.isTraceEnabled())
 		{
-			log.trace("id:" + id + " " + localName + " : " + bp);
+			log.trace("id:" + id + " " + localName + " : " + bpe);
 		}
 		/* null might occur here,
 		 * so the following is to prevent the NullPointerException
 		 * and to continue the model assembling.
 		 */
-		if (bp != null)
+		if (bpe != null)
 		{
-			model.add(bp);
+			model.add(bpe);
 		}
 	}
 

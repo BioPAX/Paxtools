@@ -1,0 +1,1850 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#">
+<owl:Ontology rdf:about="">
+ <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+</owl:Ontology>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_2781">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2781</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_2782">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2782</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9UBI2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9UBI2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P04637">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Tumor suppressor p53</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phosphoprotein p53</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TP53</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Antigen NY-CO-13</bp:name>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q86UG1" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001119585" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001119588" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9NPJ2" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9NP68" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001119589" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9HAQ8" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q3LRW1" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001119584" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9NZD0" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q3LRW4" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001119587" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9UQ61" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_7157" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q16808" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_000537" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q3LRW3" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q16807" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q16810" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q3LRW2" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q15086" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A11998" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9BTM4" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q16848" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001119586" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q2XN98" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q3LRW5" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q15088" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q16809" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P04637" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q16535" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q16811" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q15087" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q99659" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q8J016" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9UBI2" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P53_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cellular tumor antigen p53</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Acts as a tumor suppressor in many tumor types; induces growth arrest or apoptosis depending on the physiological circumstances and cell type. Involved in cell cycle regulation as a trans-activator that acts to negatively regulate cell division by controlling a set of genes required for this process. One of the activated genes is an inhibitor of cyclin-dependent kinases. Apoptosis induction seems to be mediated either by stimulation of BAX and FAS antigen expression, or by repression of Bcl-2 expression. Implicated in Notch signaling cross-over. Prevents CDK7 kinase activity when associated to CAK complex in response to DNA damage, thus stopping cell cycle progression. Isoform 2 enhances the transactivation activity of isoform 1 from some but not all TP53-inducible promoters. Isoform 4 suppresses transactivation activity and impairs growth suppression mediated by isoform 1. Isoform 7 inhibits isoform 1-mediated apoptosis. COFACTOR: Binds 1 zinc ion per subunit. SUBUNIT: Interacts with AXIN1. Probably part of a complex consisting of TP53, HIPK2 and AXIN1 (By similarity). Binds DNA as a homotetramer. Interacts with histone acetyltransferases EP300 and methyltransferases HRMT1L2 and CARM1, and recruits them to promoters. In vitro, the interaction of TP53 with cancer- associated/HPV (E6) viral proteins leads to ubiquitination and degradation of TP53 giving a possible model for cell growth regulation. This complex formation requires an additional factor, E6-AP, which stably associates with TP53 in the presence of E6. Interacts (via C-terminus) with TAF1; when TAF1 is part of the TFIID complex. Interacts with ING4; this interaction may be indirect. Found in a complex with CABLES1 and TP73. Interacts with HIPK1, HIPK2, and P53DINP1. Interacts with WWOX. May interact with HCV core protein. Interacts with USP7 and SYVN1. Interacts with HSP90AB1. Interacts with CHD8; leading to recruit histone H1 and prevent transactivation activity (By similarity). Interacts with ARMC10, BANP, CDKN2AIP, NUAK1, STK11/LKB1 and E4F1. Interacts with YWHAZ; the interaction enhances TP53 transcriptional activity. Phosphorylation of YWHAZ on &apos;Ser-58&apos; inhibits this interaction. Interacts (via DNA-binding domain) with MAML1 (via N-terminus). Interacts with MKRN1. Interacts with PML (via C-terminus). Interacts with MDM2; leading to ubiquitination and proteasomal degradation of TP53. Directly interacts with FBXO42; leading to ubiquination and degradation of TP53. Interacts (phosphorylated at Ser-15 by ATM) with the phosphatase PP2A-PPP2R5C holoenzyme; regulates stress-induced TP53-dependent inhibition of cell proliferation. Interacts with PPP2R2A. Interacts with AURKA, DAXX, BRD7 and TRIM24. Interacts (when monomethylated at Lys-382) with L3MBTL1. Isoform 1 interacts with isoform 2 and with isoform 4. Interacts with GRK5. Binds to the CAK complex (CDK7, cyclin H and MAT1) in response to DNA damage. Interacts with CDK5 in neurons. SUBCELLULAR LOCATION: Cytoplasm. Nucleus. Nucleus, PML body. Endoplasmic reticulum. Note=Interaction with BANP promotes nuclear localization. Recruited into PML bodies together with CHEK2. SUBCELLULAR LOCATION: Isoform 1: Nucleus. Cytoplasm. Note=Predominantly nuclear but localizes to the cytoplasm when expressed with isoform 4. SUBCELLULAR LOCATION: Isoform 2: Nucleus. Cytoplasm. Note=Localized mainly in the nucleus with minor staining in the cytoplasm. SUBCELLULAR LOCATION: Isoform 3: Nucleus. Cytoplasm. Note=Localized in the nucleus in most cells but found in the cytoplasm in some cells. SUBCELLULAR LOCATION: Isoform 4: Nucleus. Cytoplasm. Note=Predominantly nuclear but translocates to the cytoplasm following cell stress. SUBCELLULAR LOCATION: Isoform 7: Nucleus. Cytoplasm. Note=Localized mainly in the nucleus with minor staining in the cytoplasm. SUBCELLULAR LOCATION: Isoform 8: Nucleus. Cytoplasm. Note=Localized in both nucleus and cytoplasm in most cells. In some cells, forms foci in the nucleus that are different from nucleoli. SUBCELLULAR LOCATION: Isoform 9: Cytoplasm. ALTERNATIVE PRODUCTS: Event=Alternative promoter usage, Alternative splicing; Named isoforms=9; Name=1; Synonyms=p53, p53alpha; IsoId=P04637-1; Sequence=Displayed; Name=2; Synonyms=I9RET, p53beta; IsoId=P04637-2; Sequence=VSP_006535, VSP_006536; Note=Expressed in quiescent lymphocytes. Seems to be non-functional. May be produced at very low levels due to a premature stop codon in the mRNA, leading to nonsense-mediated mRNA decay; Name=3; Synonyms=p53gamma; IsoId=P04637-3; Sequence=VSP_040560, VSP_040561; Note=Expressed in quiescent lymphocytes. Seems to be non-functional. May be produced at very low levels due to a premature stop codon in the mRNA, leading to nonsense-mediated mRNA decay; Name=4; Synonyms=Del40-p53, Del40-p53alpha, p47; IsoId=P04637-4; Sequence=VSP_040832; Name=5; Synonyms=Del40-p53beta; IsoId=P04637-5; Sequence=VSP_040832, VSP_006535, VSP_006536; Name=6; Synonyms=Del40-p53gamma; IsoId=P04637-6; Sequence=VSP_040832, VSP_040560, VSP_040561; Name=7; Synonyms=Del133-p53, Del133-p53alpha; IsoId=P04637-7; Sequence=VSP_040833; Note=Produced by alternative promoter usage; Name=8; Synonyms=Del133-p53beta; IsoId=P04637-8; Sequence=VSP_040833, VSP_006535, VSP_006536; Note=Produced by alternative promoter usage and alternative splicing; Name=9; Synonyms=Del133-p53gamma; IsoId=P04637-9; Sequence=VSP_040833, VSP_040560, VSP_040561; Note=Produced by alternative promoter usage and alternative splicing; TISSUE SPECIFICITY: Ubiquitous. Isoforms are expressed in a wide range of normal tissues but in a tissue-dependent manner. Isoform 2 is expressed in most normal tissues but is not detected in brain, lung, prostate, muscle, fetal brain, spinal cord and fetal liver. Isoform 3 is expressed in most normal tissues but is not detected in lung, spleen, testis, fetal brain, spinal cord and fetal liver. Isoform 7 is expressed in most normal tissues but is not detected in prostate, uterus, skeletal muscle and breast. Isoform 8 is detected only in colon, bone marrow, testis, fetal brain and intestine. Isoform 9 is expressed in most normal tissues but is not detected in brain, heart, lung, fetal liver, salivary gland, breast or intestine. INDUCTION: Up-regulated in response to DNA damage. Isoform 2 is not induced in tumor cells in response to stress. DOMAIN: The nuclear export signal acts as a transcriptional repression domain. The TADI and TADII motifs (residues 17 to 25 and 48 to 56) correspond both to 9aaTAD motifs which are transactivation domains present in a large number of yeast and animal transcription factors. PTM: Acetylated. Acetylation of Lys-382 by CREBBP enhances transcriptional activity. Deacetylation of Lys-382 by SIRT1 impairs its ability to induce proapoptotic program and modulate cell senescence. PTM: Phosphorylation on Ser residues mediates transcriptional activation. Phosphorylated by HIPK1 (By similarity). Phosphorylation at Ser-9 by HIPK4 increases repression activity on BIRC5 promoter. Phosphorylated on Thr-18 by VRK1. Phosphorylated on Ser-20 by CHEK2 in response to DNA damage, which prevents ubiquitination by MDM2. Phosphorylated on Ser-20 by PLK3 in response to reactive oxygen species (ROS), promoting p53/TP53- mediated apoptosis. Phosphorylated on Thr-55 by TAF1, which promotes MDM2-mediated degradation. Phosphorylated on Ser-33 by CDK7 in a CAK complex in response to DNA damage. Phosphorylated on Ser-46 by HIPK2 upon UV irradiation. Phosphorylation on Ser-46 is required for acetylation by CREBBP. Phosphorylated on Ser-392 following UV but not gamma irradiation. Phosphorylated upon DNA damage, probably by ATM or ATR. Phosphorylated on Ser-15 upon ultraviolet irradiation; which is enhanced by interaction with BANP. Phosphorylated by NUAK1 at Ser-15 and Ser-392; was intially thought to be mediated by STK11/LKB1 but it was later shown that it is indirect and that STK11/LKB1-dependent phosphorylation is probably mediated by downstream NUAK1 (PubMed:21317932). It is unclear whether AMP directly mediates phosphorylation at Ser-15. Phosphorylated on Thr-18 by isoform 1 and isoform 2 of VRK2. Phosphorylation on Thr-18 by isoform 2 of VRK2 results in a reduction in ubiquitination by MDM2 and an increase in acetylation by EP300. Stabilized by CDK5-mediated phosphorylation in response to genotoxic and oxidative stresses at Ser-15, Ser-33 and Ser-46, leading to accumulation of p53/TP53, particularly in the nucleus, thus inducing the transactivation of p53/TP53 target genes. Phosphorylated at Ser-315 and Ser-392 by CDK2 in response to DNA- damage. PTM: Dephosphorylated by PP2A-PPP2R5C holoenzyme at Thr-55. SV40 small T antigen inhibits the dephosphorylation by the AC form of PP2A. PTM: May be O-glycosylated in the C-terminal basic region. Studied in EB-1 cell line. PTM: Ubiquitinated by MDM2 and SYVN1, which leads to proteasomal degradation. Ubiquitinated by RFWD3, which works in cooperation with MDM2 and may catalyze the formation of short polyubiquitin chains on p53/TP53 that are not targeted to the proteasome. Ubiquitinated by MKRN1 at Lys-291 and Lys-292, which leads to proteasomal degradation. Deubiquitinated by USP10, leading to its stabilization. Ubiquitinated by TRIM24, which leads to proteasomal degradation. Ubiquitination by TOPORS induces degradation. Deubiquitination by USP7, leading to stabilization. Isoform 4 is monoubiquitinated in an MDM2-independent manner. PTM: Monomethylated at Lys-372 by SETD7, leading to stabilization and increased transcriptional activation. Monomethylated at Lys- 370 by SMYD2, leading to decreased DNA-binding activity and subsequent transcriptional regulation activity. Lys-372 monomethylation prevents interaction with SMYD2 and subsequent monomethylation at Lys-370. Dimethylated at Lys-373 by EHMT1 and EHMT2. Monomethylated at Lys-382 by SETD8, promoting interaction with L3MBTL1 and leading to repress transcriptional activity. Demethylation of dimethylated Lys-370 by KDM1A prevents interaction with TP53BP1 and represses TP53-mediated transcriptional activation. PTM: Sumoylated by SUMO1. DISEASE: Note=TP53 is found in increased amounts in a wide variety of transformed cells. TP53 is frequently mutated or inactivated in about 60% of cancers. TP53 defects are found in Barrett metaplasia a condition in which the normally stratified squamous epithelium of the lower esophagus is replaced by a metaplastic columnar epithelium. The condition develops as a complication in approximately 10% of patients with chronic gastroesophageal reflux disease and predisposes to the development of esophageal adenocarcinoma. DISEASE: Defects in TP53 are a cause of esophageal cancer (ESCR) [MIM:133239]. DISEASE: Defects in TP53 are a cause of Li-Fraumeni syndrome (LFS) [MIM:151623]. LFS is an autosomal dominant familial cancer syndrome that in its classic form is defined by the existence of a proband affected by a sarcoma before 45 years with a first degree relative affected by any tumor before 45 years and another first degree relative with any tumor before 45 years or a sarcoma at any age. Other clinical definitions for LFS have been proposed (PubMed:8118819 and PubMed:8718514) and called Li-Fraumeni like syndrome (LFL). In these families affected relatives develop a diverse set of malignancies at unusually early ages. Four types of cancers account for 80% of tumors occurring in TP53 germline mutation carriers: breast cancers, soft tissue and bone sarcomas, brain tumors (astrocytomas) and adrenocortical carcinomas. Less frequent tumors include choroid plexus carcinoma or papilloma before the age of 15, rhabdomyosarcoma before the age of 5, leukemia, Wilms tumor, malignant phyllodes tumor, colorectal and gastric cancers. DISEASE: Defects in TP53 are involved in head and neck squamous cell carcinomas (HNSCC) [MIM:275355]; also known as squamous cell carcinoma of the head and neck. DISEASE: Defects in TP53 are a cause of lung cancer (LNCR) [MIM:211980]. DISEASE: Defects in TP53 are a cause of choroid plexus papilloma (CPLPA) [MIM:260500]. Choroid plexus papilloma is a slow-growing benign tumor of the choroid plexus that often invades the leptomeninges. In children it is usually in a lateral ventricle but in adults it is more often in the fourth ventricle. Hydrocephalus is common, either from obstruction or from tumor secretion of cerebrospinal fluid. If it undergoes malignant transformation it is called a choroid plexus carcinoma. Primary choroid plexus tumors are rare and usually occur in early childhood. DISEASE: Defects in TP53 are a cause of adrenocortical carcinoma (ADCC) [MIM:202300]. ADCC is a rare childhood tumor of the adrenal cortex. It occurs with increased frequency in patients with the Beckwith-Wiedemann syndrome and is a component tumor in Li- Fraumeni syndrome. SIMILARITY: Belongs to the p53 family. WEB RESOURCE: Name=IARC TP53 mutation database; Note=Somatic and germline TP53 mutations in human cancers; URL=&quot;http://www-p53.iarc.fr/&quot;; WEB RESOURCE: Name=p53 web site at the Institut Curie; URL=&quot;http://p53.free.fr/&quot;; WEB RESOURCE: Name=Atlas of Genetics and Cytogenetics in Oncology and Haematology; URL=&quot;http://atlasgeneticsoncology.org/Genes/P53ID88.html&quot;; WEB RESOURCE: Name=GeneReviews; URL=&quot;http://www.ncbi.nlm.nih.gov/sites/GeneTests/lab/gene/TP53&quot;; WEB RESOURCE: Name=NIEHS-SNPs; URL=&quot;http://egp.gs.washington.edu/data/tp53/&quot;; WEB RESOURCE: Name=SHMPD; Note=The Singapore human mutation and polymorphism database; URL=&quot;http://shmpd.bii.a-star.edu.sg/gene.php?genestart=A&amp;genename=TP53&quot;; WEB RESOURCE: Name=Wikipedia; Note=P53 entry; URL=&quot;http://en.wikipedia.org/wiki/P53&quot;; GENE SYNONYMS: P53. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:CAS_146-91-8">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">146-91-8</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CAS</bp:db>
+</bp:UnificationXref>
+
+<bp:CellularLocationVocabulary rdf:about="urn:miriam:obo.go:GO%3A0005634">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">nucleus</bp:term>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005634" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
+</bp:CellularLocationVocabulary>
+
+<bp:CellularLocationVocabulary rdf:about="urn:miriam:obo.go:GO%3A0005737">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cytoplasm</bp:term>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005737" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
+</bp:CellularLocationVocabulary>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A6873">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:6873</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_367">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">367</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A6876">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:6876</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_444292">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_444292</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:10581258">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">10581258</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_A2RUN2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A2RUN2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q16811">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16811</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001306">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001306</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q16810">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16810</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_O60776">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O60776</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P04899">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P04899</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q2XNF2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q2XNF2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Provenance rdf:about="urn:miriam:pid.pathway">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PID</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCI_Nature curated</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCI-Nature PID</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCI_Nature</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCI-Nature Pathway Interaction Database</bp:name>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pathway Interaction Database NCI-Nature Curated Data</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCI Pathway Interaction Database: Pathway</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated. Data (internal) id: NCI_NATURE</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated. Data loaded from: ftp://ftp1.nci.nih.gov/pub/PID/BioPAX_Level_3/NCI-Nature_Curated.bp3.owl.gz</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated. Data type: BIOPAX</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated. Data version: 20120112, January 12, 2012</bp:comment>
+</bp:Provenance>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P04898">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P04898</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:about="http://pid.nci.nih.gov/biopaxpid_7261">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">81</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_50162">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_72" />
+</bp:Evidence>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q16848">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16848</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q8IZ71">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q8IZ71</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Complex rdf:about="http://pid.nci.nih.gov/biopaxpid_42384">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_42385" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_2166" />
+ <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005634" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53 (tetramer)</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53 (tetramer)</bp:standardName>
+</bp:Complex>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_42385">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_2166" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">4.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A11998">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:11998</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:about="http://pid.nci.nih.gov/biopaxpid_13144">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">46</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:16728719">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">16728719</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:SequenceSite rdf:about="http://pid.nci.nih.gov/biopaxpid_2691">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">180</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_5511">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P62873" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_5511http://pid.nci.nih.gov/biopaxpid_35409@Layout@http://chisiobiopaxeditor/#1329762833361@620@276</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_5511http://pid.nci.nih.gov/biopaxpid_21741@Layout@http://chisiobiopaxeditor/#1329762833361@330@133</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNB1</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNB1</bp:displayName>
+</bp:Protein>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_5514">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P59768" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_5514http://pid.nci.nih.gov/biopaxpid_35409@Layout@http://chisiobiopaxeditor/#1329762833361@571@301</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_5514http://pid.nci.nih.gov/biopaxpid_21741@Layout@http://chisiobiopaxeditor/#1329762833361@375@133</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNG2</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNG2</bp:displayName>
+</bp:Protein>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P59768">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P59768</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P11015">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P11015</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P08754">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P08754</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P17539">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P17539</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_2770">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2770</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_2771">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2771</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:about="http://pid.nci.nih.gov/biopaxpid_6356">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">33</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:CellularLocationVocabulary rdf:about="urn:miriam:obo.go:GO%3A0005886">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">plasma membrane</bp:term>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005886" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
+</bp:CellularLocationVocabulary>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P04637">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P04637</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9NPJ2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9NPJ2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_2775">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2775</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_A8KA88">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A8KA88</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_2773">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2773</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P63096">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P63096</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005886">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005886</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q8J016">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q8J016</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:SmallMolecule rdf:about="http://pid.nci.nih.gov/biopaxpid_33441">
+ <bp:entityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_33442" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_33448" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_33447" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_33441http://pid.nci.nih.gov/biopaxpid_35449@Layout@http://chisiobiopaxeditor/#1329762833361@398@303</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">T-DHT</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">T-DHT</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P19086">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P19086</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:SmallMoleculeReference rdf:about="http://pid.nci.nih.gov/biopaxpid_33443">
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:CAS_521-18-6" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">DHT</bp:displayName>
+</bp:SmallMoleculeReference>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:11283254">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">11283254</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:SmallMoleculeReference rdf:about="http://pid.nci.nih.gov/biopaxpid_33442">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">T-DHT</bp:displayName>
+ <bp:memberEntityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_33445" />
+ <bp:memberEntityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_33443" />
+</bp:SmallMoleculeReference>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q5JPE2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q5JPE2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:SmallMolecule rdf:about="http://pid.nci.nih.gov/biopaxpid_33448">
+ <bp:entityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_33445" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_33448@Layout@http://chisiobiopaxeditor/#1329762833361@462@268</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">testosterone</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">testosterone</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_33449">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P10275" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_33449http://pid.nci.nih.gov/biopaxpid_35449@Layout@http://chisiobiopaxeditor/#1329762833361@353@303</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AR</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AR</bp:displayName>
+</bp:Protein>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:10212189">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">10212189</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:SmallMoleculeReference rdf:about="http://pid.nci.nih.gov/biopaxpid_33445">
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:CAS_58-22-0" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">testosterone</bp:displayName>
+</bp:SmallMoleculeReference>
+
+<bp:SmallMolecule rdf:about="http://pid.nci.nih.gov/biopaxpid_33447">
+ <bp:entityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_33443" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_33447@Layout@http://chisiobiopaxeditor/#1329762833361@478@321</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">DHT</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">DHT</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_A8K6P4">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A8K6P4</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_620581">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_620581</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_620582">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_620582</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P31871">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P31871</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_620583">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_620583</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_620073">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_620073</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P19086">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAZ</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gz-alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">G(x) alpha chain</bp:name>
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_2781" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_002064" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P19086" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q4QRJ6" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A4395" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_B2R6C1" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAZ_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Guanine nucleotide-binding protein G(z) subunit alpha</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Guanine nucleotide-binding proteins (G proteins) are involved as modulators or transducers in various transmembrane signaling systems. SUBUNIT: G proteins are composed of 3 units; alpha, beta and gamma. The alpha chain contains the guanine nucleotide binding site. SUBCELLULAR LOCATION: Membrane; Lipid-anchor. SIMILARITY: Belongs to the G-alpha family. G(i/o/t/z) subfamily. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_11114">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_9195" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00046" />
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_006487">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_006487</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9NP68">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9NP68</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Complex rdf:about="http://pid.nci.nih.gov/biopaxpid_42438">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_42441" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_42439" />
+ <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005634" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53 (tetramer)</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53 (tetramer)</bp:standardName>
+</bp:Complex>
+
+<bp:SequenceModificationVocabulary rdf:about="http://pid.nci.nih.gov/biopaxpid_100">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">residue modification, active</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:1883394">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1883394</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_42439">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P04637" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_42440" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_42439http://pid.nci.nih.gov/biopaxpid_42438@Layout@http://chisiobiopaxeditor/#1329762833361@245@133</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:displayName>
+</bp:Protein>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q16535">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16535</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_62326">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_62292" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_62325">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_2166" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_5600">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">5600</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:BiochemicalReaction rdf:about="http://pid.nci.nih.gov/biopaxpid_62324">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_62329" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_62330" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:10212189" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_62325" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_62326" />
+ <bp:left rdf:resource="http://pid.nci.nih.gov/biopaxpid_2166" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_62324true@Layout@http://chisiobiopaxeditor/#1329762833361@348@38</bp:comment>
+ <bp:right rdf:resource="http://pid.nci.nih.gov/biopaxpid_62292" />
+</bp:BiochemicalReaction>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q99659">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q99659</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005634">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005634</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_62329">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_23" />
+</bp:Evidence>
+
+<bp:Catalysis rdf:about="http://pid.nci.nih.gov/biopaxpid_62327">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:catalysisDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:catalysisDirection>
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_62329" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_62330" />
+ <bp:controlled rdf:resource="http://pid.nci.nih.gov/biopaxpid_62324" />
+ <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+ <bp:xref rdf:resource="urn:miriam:pubmed:10212189" />
+ <bp:controller rdf:resource="http://pid.nci.nih.gov/biopaxpid_17089" />
+</bp:Catalysis>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_42441">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_42439" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">4.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q16807">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16807</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q16539">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16539</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_42440">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_13144" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00046" />
+</bp:ModificationFeature>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_3848">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:Q16539" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_3853" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_3852" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_3851" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_3848@Layout@http://chisiobiopaxeditor/#1329762833361@120@50</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38 alpha</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38 alpha</bp:displayName>
+</bp:Protein>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q16808">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16808</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q16809">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16809</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9UD95">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9UD95</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:TAXONOMY_9606">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">9606</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A644">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:644</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005737">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005737</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35451">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_33449" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:EvidenceCodeVocabulary rdf:about="http://pid.nci.nih.gov/biopaxpid_72">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">inferred from direct assay</bp:term>
+</bp:EvidenceCodeVocabulary>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35450">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_33441" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:ProteinReference rdf:about="http://pid.nci.nih.gov/biopaxpid_624">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family</bp:displayName>
+ <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:P63096" />
+ <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:P04899" />
+ <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:P09471" />
+ <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:P08754" />
+ <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:P19086" />
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P04899">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenylate cyclase-inhibiting G alpha protein</bp:name>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P04899" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_002061" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q8IZ71" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A4385" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_2771" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI2_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Guanine nucleotide-binding protein G(i) subunit alpha-2</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Guanine nucleotide-binding proteins (G proteins) are involved as modulators or transducers in various transmembrane signaling systems. The G(i) proteins are involved in hormonal regulation of adenylate cyclase: they inhibit the cyclase in response to beta-adrenergic stimuli. May play a role in cell division. SUBUNIT: G proteins are composed of 3 units; alpha, beta and gamma. The alpha chain contains the guanine nucleotide binding site. Interacts with GPSM1. Interacts with RGS12 and RGS14 (By similarity). Interacts with UNC5B. SUBCELLULAR LOCATION: Cytoplasm. Cytoplasm, cytoskeleton, centrosome. Cell membrane. Note=Localizes in the centrosomes of interphase and mitotic cells. Detected at the cleavage furrow and/or the midbody. ALTERNATIVE PRODUCTS: Event=Alternative splicing; Named isoforms=2; Name=1; IsoId=P04899-1; Sequence=Displayed; Name=2; IsoId=P04899-2; Sequence=VSP_017497; SIMILARITY: Belongs to the G-alpha family. G(i/o/t/z) subfamily. GENE SYNONYMS: GNAI2B. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_623">
+ <bp:entityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_624" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_637" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_642" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_640" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_641" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_639" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_638" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_623http://pid.nci.nih.gov/biopaxpid_35409@Layout@http://chisiobiopaxeditor/#1329762833361@571@276</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_623http://pid.nci.nih.gov/biopaxpid_31826@Layout@http://chisiobiopaxeditor/#1329762833361@567@188</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family</bp:displayName>
+</bp:Protein>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_62330">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_72" />
+</bp:Evidence>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001119585">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001119585</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001119584">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001119584</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001119587">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001119587</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_3851">
+ <bp:modificationType rdf:resource="http://pid.nci.nih.gov/biopaxpid_100" />
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001119586">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001119586</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001119589">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001119589</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_3853">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_2711" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00048" />
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001119588">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001119588</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_3852">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_2691" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00047" />
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_7157">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">7157</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P63096">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenylate cyclase-inhibiting G alpha protein</bp:name>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_A8KA88" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P11015" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q5U074" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9UGA4" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_002060" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q8TAN5" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P31871" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_2770" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P63096" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P04898" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A4384" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI1_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Guanine nucleotide-binding protein G(i) subunit alpha-1</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Guanine nucleotide-binding proteins (G proteins) are involved as modulators or transducers in various transmembrane signaling systems. The G(i) proteins are involved in hormonal regulation of adenylate cyclase: they inhibit the cyclase in response to beta-adrenergic stimuli. The inactive GDP-bound form prevents the association of RGS14 with centrosomes and is required for the translocation of RGS14 from the cytoplasm to the plasma membrane. May play a role in cell division. SUBUNIT: Interacts with GPSM1. Interacts with RGS12. Interacts (via active GTP- or inactive GDP-bound forms) with RGS14 (via RGS and GoLoco domains); the interaction occurs in the centrosomes. Interacts (GDP-bound form) with RIC8A (via C-terminus) (By similarity). Interacts with DRD2. G proteins are composed of 3 units; alpha, beta and gamma. The alpha chain contains the guanine nucleotide binding site. SUBCELLULAR LOCATION: Nucleus (By similarity). Cytoplasm. Cell membrane. Cytoplasm, cytoskeleton, centrosome. Note=Localized at the plasma membrane throughout mitosis. Colocalizes with RIC8A and RGS14 at the plasma membrane (By similarity). Localizes in the centrosomes of interphase and mitotic cells, but not in centrosomes during cytokinesis. Detected at the cleavage furrow or the midbody. SIMILARITY: Belongs to the G-alpha family. G(i/o/t/z) subfamily. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_639">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P04899" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_639@Layout@http://chisiobiopaxeditor/#1329762833361@542@110</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI2</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI2</bp:displayName>
+</bp:Protein>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_3992">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:Q16539" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_3992@Layout@http://chisiobiopaxeditor/#1329762833361@565@72</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38 alpha</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38 alpha</bp:displayName>
+</bp:Protein>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_638">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P09471" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_638@Layout@http://chisiobiopaxeditor/#1329762833361@491@110</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAO2</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAO2</bp:displayName>
+</bp:Protein>
+
+<bp:SequenceSite rdf:about="http://pid.nci.nih.gov/biopaxpid_2711">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">182</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_637">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P09471" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_637@Layout@http://chisiobiopaxeditor/#1329762833361@589@118</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAO1</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAO1</bp:displayName>
+</bp:Protein>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_002742">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_002742</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q8TAN5">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q8TAN5</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_17095">
+ <bp:modificationType rdf:resource="http://pid.nci.nih.gov/biopaxpid_100" />
+</bp:ModificationFeature>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_642">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P08754" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_642@Layout@http://chisiobiopaxeditor/#1329762833361@671@192</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI3</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI3</bp:displayName>
+</bp:Protein>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_17096">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_2691" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00047" />
+</bp:ModificationFeature>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_17097">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_2711" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00048" />
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_066268">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_066268</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9UMV4">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9UMV4</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q6P9A9">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q6P9A9</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:CAS_58-22-0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">58-22-0</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CAS</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_002061">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_002061</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_002064">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_002064</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:PROTEIN+MODIFICATION+ONTOLOGY_MOD%3A00048">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD:00048</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Protein Modification Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_002065">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_002065</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:PROTEIN+MODIFICATION+ONTOLOGY_MOD%3A00046">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD:00046</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Protein Modification Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:PROTEIN+MODIFICATION+ONTOLOGY_MOD%3A00047">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD:00047</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Protein Modification Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:CAS_86-01-1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">86-01-1</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CAS</bp:db>
+</bp:UnificationXref>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_17220">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P04637" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005634" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_17220@Layout@http://chisiobiopaxeditor/#1329762833361@78@206</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:displayName>
+</bp:Protein>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_641">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P19086" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_641@Layout@http://chisiobiopaxeditor/#1329762833361@638@123</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAZ</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAZ</bp:displayName>
+</bp:Protein>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P62873">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNB1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Transducin beta chain 1</bp:name>
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A4396" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P04901" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_002065" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_2782" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P04697" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_B1AJZ7" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P62873" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GBB1_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Guanine nucleotide-binding protein G(I)/G(S)/G(T) subunit beta-1</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Guanine nucleotide-binding proteins (G proteins) are involved as a modulator or transducer in various transmembrane signaling systems. The beta and gamma chains are required for the GTPase activity, for replacement of GDP by GTP, and for G protein- effector interaction. SUBUNIT: G proteins are composed of 3 units, alpha, beta and gamma. Interacts with ARHGEF18 and RASD2. The heterodimer formed by GNB1 and GNG2 interacts with PTH1R (via C-terminus). PTM: Phosphorylation at His-266 by NDKB contributes to G protein activation by increasing the high energetic phosphate transfer onto GDP (By similarity). SIMILARITY: Belongs to the WD repeat G protein beta family. SIMILARITY: Contains 7 WD repeats. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_640">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P63096" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_640@Layout@http://chisiobiopaxeditor/#1329762833361@679@134</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI1</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI1</bp:displayName>
+</bp:Protein>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_002060">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_002060</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9HAQ8">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9HAQ8</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q86UG1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q86UG1</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P04697">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P04697</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipTypeVocabulary rdf:about="urn:biopax:RelationshipTypeVocabulary:SEQUENCE">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SEQUENCE</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q5U074">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q5U074</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Complex rdf:about="http://pid.nci.nih.gov/biopaxpid_35449">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35451" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35450" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_33449" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_33441" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AR/T-DHT</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">T-DHT/AR/CDK6</bp:name>
+ <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005886" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">T-DHT/AR</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">T-DHT/AR</bp:standardName>
+</bp:Complex>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9NZD0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9NZD0</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:about="http://pid.nci.nih.gov/biopaxpid_7180">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">392</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q4QRJ6">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q4QRJ6</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35410">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_623" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:18375741">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">18375741</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35411">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_5514" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35412">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_5511" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_2166">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P04637" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_2166http://pid.nci.nih.gov/biopaxpid_42384@Layout@http://chisiobiopaxeditor/#1329762833361@149@173</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_2166@Layout@http://chisiobiopaxeditor/#1329762833361@362@3</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:displayName>
+</bp:Protein>
+
+<bp:SequenceModificationVocabulary rdf:about="urn:miriam:obo.psi-mod:MOD%3A00048">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O4&amp;apos;-phospho-L-tyrosine</bp:term>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:PROTEIN+MODIFICATION+ONTOLOGY_MOD%3A00048" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
+</bp:SequenceModificationVocabulary>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P62873">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P62873</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_42985">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_42438" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:Q15759">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAP kinase p38 beta</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Stress-activated protein kinase 2b</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38b</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAPK 11</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAP kinase 11</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.7.11.24</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SAPK2b</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAPK11</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38-2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mitogen-activated protein kinase p38 beta</bp:name>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q15759" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_O00284" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_B0LPG1" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A6873" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_5600" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_O15472" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_002742" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q2XNF2" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MK11_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mitogen-activated protein kinase 11</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Kinase involved in a signal transduction pathway that is activated by changes in the osmolarity of the extracellular environment, by cytokines, or by environmental stress. Phosphorylates preferentially transcription factor ATF2. Phosphorylates MKNK2. CATALYTIC ACTIVITY: ATP + a protein = ADP + a phosphoprotein. COFACTOR: Magnesium (By similarity). ENZYME REGULATION: Activated by phosphorylation on threonine and tyrosine by MKK6. Inhibited by pyridinyl-imidazole related compounds. TISSUE SPECIFICITY: Highest levels in the brain and heart. Also expressed in the placenta, lung, liver, skeletal muscle, kidney and pancreas. DOMAIN: The TXY motif contains the threonine and tyrosine residues whose phosphorylation activates the MAP kinases. PTM: Dually phosphorylated on Thr-180 and Tyr-182, which activates the enzyme (Probable). SIMILARITY: Belongs to the protein kinase superfamily. CMGC Ser/Thr protein kinase family. MAP kinase subfamily. SIMILARITY: Contains 1 protein kinase domain. WEB RESOURCE: Name=NIEHS-SNPs; URL=&quot;http://egp.gs.washington.edu/data/mapk11/&quot;; GENE SYNONYMS: PRKM11 SAPK2 SAPK2B. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:Catalysis rdf:about="http://pid.nci.nih.gov/biopaxpid_42708">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:catalysisDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:catalysisDirection>
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42716" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42714" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42715" />
+ <bp:controlled rdf:resource="http://pid.nci.nih.gov/biopaxpid_42701" />
+ <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+ <bp:xref rdf:resource="urn:miriam:pubmed:10581258" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:11078726" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:11283254" />
+ <bp:controller rdf:resource="http://pid.nci.nih.gov/biopaxpid_3848" />
+</bp:Catalysis>
+
+<bp:Catalysis rdf:about="http://pid.nci.nih.gov/biopaxpid_42987">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:catalysisDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:catalysisDirection>
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42990" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42989" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42991" />
+ <bp:controlled rdf:resource="http://pid.nci.nih.gov/biopaxpid_42983" />
+ <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+ <bp:xref rdf:resource="urn:miriam:pubmed:17906639" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:10581258" />
+ <bp:controller rdf:resource="http://pid.nci.nih.gov/biopaxpid_3848" />
+</bp:Catalysis>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_1432">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1432</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_42703">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_6356" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00046" />
+</bp:ModificationFeature>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_42704">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_7261" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00047" />
+</bp:ModificationFeature>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_42705">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_17220" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:BiochemicalReaction rdf:about="http://pid.nci.nih.gov/biopaxpid_42983">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42990" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42989" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42991" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:17906639" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:10581258" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_42985" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_42984" />
+ <bp:left rdf:resource="http://pid.nci.nih.gov/biopaxpid_42384" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_42983true@Layout@http://chisiobiopaxeditor/#1329762833361@166@129</bp:comment>
+ <bp:right rdf:resource="http://pid.nci.nih.gov/biopaxpid_42438" />
+</bp:BiochemicalReaction>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_42984">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_42384" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_42706">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_42702" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:EvidenceCodeVocabulary rdf:about="http://pid.nci.nih.gov/biopaxpid_26">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">inferred from physical interaction</bp:term>
+</bp:EvidenceCodeVocabulary>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35413">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_678" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:EvidenceCodeVocabulary rdf:about="http://pid.nci.nih.gov/biopaxpid_23">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">inferred from mutant phenotype</bp:term>
+</bp:EvidenceCodeVocabulary>
+
+<bp:BiochemicalReaction rdf:about="http://pid.nci.nih.gov/biopaxpid_42701">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42716" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42714" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_42715" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:10581258" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:11078726" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:11283254" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_42706" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_42705" />
+ <bp:left rdf:resource="http://pid.nci.nih.gov/biopaxpid_17220" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_42701true@Layout@http://chisiobiopaxeditor/#1329762833361@115@156</bp:comment>
+ <bp:right rdf:resource="http://pid.nci.nih.gov/biopaxpid_42702" />
+</bp:BiochemicalReaction>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_42702">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P04637" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_42703" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_42704" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_11114" />
+ <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005634" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_42702@Layout@http://chisiobiopaxeditor/#1329762833361@30@146</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:displayName>
+</bp:Protein>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_42989">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_23" />
+</bp:Evidence>
+
+<bp:SmallMoleculeReference rdf:about="http://pid.nci.nih.gov/biopaxpid_679">
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:CAS_146-91-8" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GDP</bp:displayName>
+</bp:SmallMoleculeReference>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_17089">
+ <bp:entityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_17090" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_17092" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_3848" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_17091" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_17089@Layout@http://chisiobiopaxeditor/#1329762833361@212@51</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38alpha-beta-active</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38alpha-beta-active</bp:displayName>
+</bp:Protein>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_5588">
+ <bp:modificationType rdf:resource="http://pid.nci.nih.gov/biopaxpid_100" />
+</bp:ModificationFeature>
+
+<bp:SmallMolecule rdf:about="http://pid.nci.nih.gov/biopaxpid_678">
+ <bp:entityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_679" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_678http://pid.nci.nih.gov/biopaxpid_35409@Layout@http://chisiobiopaxeditor/#1329762833361@616@301</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GDP</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GDP</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_42991">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_26" />
+</bp:Evidence>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_42990">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_72" />
+</bp:Evidence>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_B1AJZ7">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B1AJZ7</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_O00284">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O00284</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P08754">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI3</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">G(i) alpha-3</bp:name>
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_006487" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_2773" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P08754" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A4387" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P17539" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAI3_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Guanine nucleotide-binding protein G(k) subunit alpha</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Guanine nucleotide-binding proteins (G proteins) are involved as modulators or transducers in various transmembrane signaling systems. G(k) is the stimulatory G protein of receptor- regulated K(+) channels. The active GTP-bound form prevents the association of RGS14 with centrosomes and is required for the translocation of RGS14 from the cytoplasm to the plasma membrane. May play a role in cell division. SUBUNIT: G proteins are composed of 3 units; alpha, beta and gamma. The alpha chain contains the guanine nucleotide binding site. Interacts with GPSM1. Interacts (via active GTP- or inactive GDP-bound form) with RGS14 (By similarity). SUBCELLULAR LOCATION: Cytoplasm. Cell membrane. Cytoplasm, cytoskeleton, centrosome. Note=Localizes in the centrosomes of interphase and mitotic cells. Detected at the cleavage furrow and/or the midbody. SIMILARITY: Belongs to the G-alpha family. G(i/o/t/z) subfamily. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:SequenceModificationVocabulary rdf:about="urn:miriam:obo.psi-mod:MOD%3A00047">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O-phospho-L-threonine</bp:term>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:PROTEIN+MODIFICATION+ONTOLOGY_MOD%3A00047" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
+</bp:SequenceModificationVocabulary>
+
+<bp:SequenceModificationVocabulary rdf:about="urn:miriam:obo.psi-mod:MOD%3A00046">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O-phospho-L-serine</bp:term>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:PROTEIN+MODIFICATION+ONTOLOGY_MOD%3A00046" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
+</bp:SequenceModificationVocabulary>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_42716">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_26" />
+</bp:Evidence>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_42714">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_23" />
+</bp:Evidence>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_42715">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_72" />
+</bp:Evidence>
+
+<bp:ProteinReference rdf:about="http://pid.nci.nih.gov/biopaxpid_17090">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38alpha-beta-active</bp:displayName>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:Complex rdf:about="http://pid.nci.nih.gov/biopaxpid_31826">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_31827" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_31828" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_623" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_685" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_22902" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family/GTP</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family/GTP</bp:standardName>
+</bp:Complex>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_17092">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:Q15759" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_17097" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_17096" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_17095" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_17092@Layout@http://chisiobiopaxeditor/#1329762833361@207@7</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38 beta</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38 beta</bp:displayName>
+</bp:Protein>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q14084">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q14084</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_17091">
+ <bp:modificationType rdf:resource="http://pid.nci.nih.gov/biopaxpid_100" />
+</bp:ModificationFeature>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_31827">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_685" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_31828">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_623" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_000537">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_000537</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:ComplexAssembly rdf:about="http://pid.nci.nih.gov/biopaxpid_35537">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_35544" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:1883394" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:16728719" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35538" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35539" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35540" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35542" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35541" />
+ <bp:left rdf:resource="http://pid.nci.nih.gov/biopaxpid_35409" />
+ <bp:left rdf:resource="http://pid.nci.nih.gov/biopaxpid_685" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_35537true@Layout@http://chisiobiopaxeditor/#1329762833361@482@176</bp:comment>
+ <bp:right rdf:resource="http://pid.nci.nih.gov/biopaxpid_21741" />
+ <bp:right rdf:resource="http://pid.nci.nih.gov/biopaxpid_678" />
+ <bp:right rdf:resource="http://pid.nci.nih.gov/biopaxpid_31826" />
+</bp:ComplexAssembly>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_O15472">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O15472</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P09471">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P09471</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35539">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_685" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35538">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_35409" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:SmallMoleculeReference rdf:about="http://pid.nci.nih.gov/biopaxpid_686">
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:CAS_86-01-1" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GTP</bp:displayName>
+</bp:SmallMoleculeReference>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_B0LPG1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B0LPG1</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_54331">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">54331</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Entrez Gene</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q8TDX0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q8TDX0</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:SmallMolecule rdf:about="http://pid.nci.nih.gov/biopaxpid_685">
+ <bp:entityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_686" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_685http://pid.nci.nih.gov/biopaxpid_31826@Layout@http://chisiobiopaxeditor/#1329762833361@616@188</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GTP</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GTP</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P10275">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Nuclear receptor subfamily 3 group C member 4</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AR</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Dihydrotestosterone receptor</bp:name>
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_B1AKD7" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_A2RUN2" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A644" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P10275" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9UD95" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_000035" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_367" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ANDR_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Androgen receptor</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Steroid hormone receptors are ligand-activated transcription factors that regulate eukaryotic gene expression and affect cellular proliferation and differentiation in target tissues. Transcription factor activity is modulated by bound coactivator and corepressor proteins. Transcription activation is down-regulated by NR0B2. Activated, but not phosphorylated, by HIPK3 and ZIPK/DAPK3. ENZYME REGULATION: AIM-100 (4-amino-5,6-biaryl-furo[2,3- d]pyrimidine) suppresses TNK2-mediated phosphorylation at Tyr-267. Inhibits the binding of the Tyr-267 phosphorylated form to androgen-responsive enhancers (AREs) and its transcriptional activity. SUBUNIT: Binds DNA as a homodimer. Part of a ternary complex containing AR, EFCAB6/DJBP and PARK7. Interacts with HIPK3 and NR0B2 in the presence of androgen. The ligand binding domain interacts with KAT7/HBO1 in the presence of dihydrotestosterone. Interacts with EFCAB6/DJBP, PELP1, PQBP1, RANBP9, RBAK, SPDEF, SRA1, TGFB1I1, ZNF318 and RREB1. Interacts with ZMIZ1/ZIMP10 and ZMIZ2/ZMIP7 which both enhance its transactivation activity. Interacts with SLC30A9 and RAD54L2/ARIP4 (By similarity). Interacts via the ligand-binding domain with LXXLL and FXXLF motifs from NCOA1, NCOA2, NCOA3, NCOA4 and MAGEA11. The AR N- terminal poly-Gln region binds Ran resulting in enhancement of AR- mediated transactivation. Ran-binding decreases as the poly-Gln length increases. Interacts with HIP1 (via coiled coil domain). Interacts (via ligand-binding domain) with TRIM68. Interacts with TNK2. Interacts with USP26. Interacts with RNF6. Interacts (regulated by RNF6 probably through polyubiquitination) with RNF14; regulates AR transcriptional activity. Interacts with PRMT2 and TRIM24. Interacts with GNB2L1/RACK1. Interacts with RANBP10; this interaction enhances dihydrotestosterone-induced AR transcriptional activity. Interacts with PRPF6 in a hormone- independent way; this interaction enhances dihydrotestosterone- induced AR transcriptional activity. Interacts with STK4/MST1. Interacts with ZIPK/DAPK3. SUBCELLULAR LOCATION: Nucleus. Cytoplasm. Note=Predominantly cytoplasmic in unliganded form but translocates to the nucleus upon ligand-binding. Can also translocate to the nucleus in unliganded form in the presence of GNB2L1. ALTERNATIVE PRODUCTS: Event=Alternative splicing; Named isoforms=2; Name=1; Synonyms=AR-B; IsoId=P10275-1; Sequence=Displayed; Name=2; Synonyms=AR-A, Variant AR45; IsoId=P10275-2; Sequence=VSP_036889, VSP_036890; TISSUE SPECIFICITY: Isoform 2 is mainly expressed in heart and skeletal muscle. DOMAIN: Composed of three domains: a modulating N-terminal domain, a DNA-binding domain and a C-terminal ligand-binding domain. In the presence of bound steroid the ligand-binding domain interacts with the N-terminal modulating domain, and thereby activates AR transcription factor activity. Agonist binding is required for dimerization and binding to target DNA. The transcription factor activity of the complex formed by ligand-activated AR and DNA is modulated by interactions with coactivator and corepressor proteins. Interaction with RANBP9 is mediated by both the N- terminal domain and the DNA-binding domain. Interaction with EFCAB6/DJBP is mediated by the DNA-binding domain. PTM: Sumoylated on Lys-386 (major) and Lys-520. Ubiquitinated. Deubiquitinated by USP26. &apos;Lys-6&apos; and &apos;Lys-27&apos;-linked polyubiquitination by RNF6 modulates AR transcriptional activity and specificity. PTM: Phosphorylated in prostate cancer cells in response to several growth factors including EGF. Phosphorylation is induced by c-Src kinase (CSK). Tyr-534 is one of the major phosphorylation sites and an increase in phosphorylation and Src kinase activity is associated with prostate cancer progression. Phosphorylation by TNK2 enhances the DNA-binding and transcriptional activity and may be responsible for androgen-independent progression of prostate cancer. Phosphorylation at Ser-81 by CDK9 regulates AR promoter selectivity and cell growth. Phosphorylation by PAK6 leads to AR- mediated transcription inhibition. POLYMORPHISM: The poly-Gln region of AR is highly polymorphic and the number of Gln varies in the population (from 17 to 26). A smaller size of the poly-Gln region may be associated with the development of prostate cancer. POLYMORPHISM: The poly-Gly region of AR is polymorphic and ranges from 24 to 31 Gly. A poly-Gly region shorter or equal to 23 may be associated with the development of androgenetic alopecia. DISEASE: Defects in AR are the cause of androgen insensitivity syndrome (AIS) [MIM:300068]; previously known as testicular feminization syndrome (TFM). AIS is an X-linked recessive form of pseudohermaphroditism due end-organ resistance to androgen. Affected males have female external genitalia, female breast development, blind vagina, absent uterus and female adnexa, and abdominal or inguinal testes, despite a normal 46,XY karyotype. DISEASE: Defects in AR are the cause of spinal and bulbar muscular atrophy X-linked type 1 (SMAX1) [MIM:313200]; also known as Kennedy disease. SMAX1 is an X-linked recessive form of spinal muscular atrophy. Spinal muscular atrophy refers to a group of neuromuscular disorders characterized by degeneration of the anterior horn cells of the spinal cord, leading to symmetrical muscle weakness and atrophy. SMAX1 occurs only in men. Age at onset is usually in the third to fifth decade of life, but earlier involvement has been reported. It is characterized by slowly progressive limb and bulbar muscle weakness with fasciculations, muscle atrophy, and gynecomastia. The disorder is clinically similar to classic forms of autosomal spinal muscular atrophy. Note=Caused by trinucleotide CAG repeat expansion. In SMAX1 patients the number of Gln ranges from 38 to 62. Longer expansions result in earlier onset and more severe clinical manifestations of the disease. DISEASE: Note=Defects in AR may play a role in metastatic prostate cancer. The mutated receptor stimulates prostate growth and metastases development despite of androgen ablation. This treatment can reduce primary and metastatic lesions probably by inducing apoptosis of tumor cells when they express the wild-type receptor. DISEASE: Defects in AR are the cause of androgen insensitivity syndrome partial (PAIS) [MIM:312300]; also known as Reifenstein syndrome. PAIS is characterized by hypospadias, hypogonadism, gynecomastia, genital ambiguity, normal XY karyotype, and a pedigree pattern consistent with X-linked recessive inheritance. Some patients present azoospermia or severe oligospermia without other clinical manifestations. MISCELLANEOUS: In the absence of ligand, steroid hormone receptors are thought to be weakly associated with nuclear components; hormone binding greatly increases receptor affinity. The hormone- receptor complex appears to recognize discrete DNA sequences upstream of transcriptional start sites. MISCELLANEOUS: Transcriptional activity is enhanced by binding to RANBP9. MISCELLANEOUS: The level of tyrosine phosphorylation may serve as a diagnostic tool to predict patient outcome in response to hormone-ablation therapy. Inhibition of tyrosine phosphorylation may be an effective intervention target for hormone-refractory prostate cancer. SIMILARITY: Belongs to the nuclear hormone receptor family. NR3 subfamily. SIMILARITY: Contains 1 nuclear receptor DNA-binding domain. WEB RESOURCE: Name=Androgen receptor gene mutations database; URL=&quot;http://www.mcgill.ca/androgendb/&quot;; WEB RESOURCE: Name=Atlas of Genetics and Cytogenetics in Oncology and Haematology; URL=&quot;http://atlasgeneticsoncology.org/Genes/ARID685chXq12.html&quot;; WEB RESOURCE: Name=GeneReviews; URL=&quot;http://www.ncbi.nlm.nih.gov/sites/GeneTests/lab/gene/AR&quot;; WEB RESOURCE: Name=Wikipedia; Note=Androgen receptor entry; URL=&quot;http://en.wikipedia.org/wiki/Androgen_receptor&quot;; GENE SYNONYMS: DHTR NR3C4. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:BioSource rdf:about="urn:miriam:taxonomy:9606">
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:TAXONOMY_9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:standardName>
+</bp:BioSource>
+
+<bp:RelationshipTypeVocabulary rdf:about="urn:biopax:RelationshipTypeVocabulary:GENE">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GENE</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_62292">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:P04637" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_62293" />
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_62294" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_62292@Layout@http://chisiobiopaxeditor/#1329762833361@403@30</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p53</bp:displayName>
+</bp:Protein>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P29777">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P29777</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_62293">
+ <bp:modificationType rdf:resource="http://pid.nci.nih.gov/biopaxpid_100" />
+</bp:ModificationFeature>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_22902">
+ <bp:modificationType rdf:resource="http://pid.nci.nih.gov/biopaxpid_100" />
+</bp:ModificationFeature>
+
+<bp:ModificationFeature rdf:about="http://pid.nci.nih.gov/biopaxpid_62294">
+ <bp:featureLocation rdf:resource="http://pid.nci.nih.gov/biopaxpid_7180" />
+ <bp:modificationType rdf:resource="urn:miriam:obo.psi-mod:MOD%3A00046" />
+</bp:ModificationFeature>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P09471">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAO1</bp:name>
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_2775" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q9UMV4" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P09471" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q8TD72" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P29777" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_066268" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_620073" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A4389" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNAO_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Guanine nucleotide-binding protein G(o) subunit alpha</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Guanine nucleotide-binding proteins (G proteins) are involved as modulators or transducers in various transmembrane signaling systems. The G(o) protein function is not clear. Stimulated by RGS14. SUBUNIT: Interacts with RGS14 (By similarity). G proteins are composed of 3 units; alpha, beta and gamma. The alpha chain contains the guanine nucleotide binding site. ALTERNATIVE PRODUCTS: Event=Alternative splicing; Named isoforms=2; Name=Alpha-1; IsoId=P09471-1; Sequence=Displayed; Name=Alpha-2; IsoId=P09471-2, P29777-1; Sequence=VSP_031250; SIMILARITY: Belongs to the G-alpha family. G(i/o/t/z) subfamily. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:Complex rdf:about="http://pid.nci.nih.gov/biopaxpid_35409">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35412" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35411" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35410" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_35413" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_5511" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_623" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_678" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_5514" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family/GDP/G beta/gamma</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family/GDP/Gbeta gamma</bp:name>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family/GNB1/GNG2/GDP</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gi family/GNB1/GNG2/GDP</bp:standardName>
+</bp:Complex>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q2XN98">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q2XN98</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A4396">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:4396</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A4395">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:4395</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35540">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_21741" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9UGA4">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9UGA4</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_21151">
+ <bp:entityReference rdf:resource="http://pid.nci.nih.gov/biopaxpid_21152" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_21153" />
+ <bp:memberPhysicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_3992" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_21151@Layout@http://chisiobiopaxeditor/#1329762833361@471@41</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38alpha-beta</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38alpha-beta</bp:displayName>
+</bp:Protein>
+
+<bp:ProteinReference rdf:about="http://pid.nci.nih.gov/biopaxpid_21152">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38alpha-beta</bp:displayName>
+ <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:Q16539" />
+ <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:Q15759" />
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:Catalysis rdf:about="http://pid.nci.nih.gov/biopaxpid_35543">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:catalysisDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:catalysisDirection>
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_35544" />
+ <bp:controlled rdf:resource="http://pid.nci.nih.gov/biopaxpid_35537" />
+ <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+ <bp:xref rdf:resource="urn:miriam:pubmed:1883394" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:16728719" />
+ <bp:controller rdf:resource="http://pid.nci.nih.gov/biopaxpid_35449" />
+</bp:Catalysis>
+
+<bp:Protein rdf:about="http://pid.nci.nih.gov/biopaxpid_21153">
+ <bp:entityReference rdf:resource="urn:miriam:uniprot:Q15759" />
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_21153@Layout@http://chisiobiopaxeditor/#1329762833361@584@38</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38 beta</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p38 beta</bp:displayName>
+</bp:Protein>
+
+<bp:Evidence rdf:about="http://pid.nci.nih.gov/biopaxpid_35544">
+ <bp:evidenceCode rdf:resource="http://pid.nci.nih.gov/biopaxpid_23" />
+</bp:Evidence>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001230703">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001230703</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35541">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_678" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_35542">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_31826" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_001230702">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001230702</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:16467404">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">16467404</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:Complex rdf:about="http://pid.nci.nih.gov/biopaxpid_21741">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_21743" />
+ <bp:componentStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_21742" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_5511" />
+ <bp:component rdf:resource="http://pid.nci.nih.gov/biopaxpid_5514" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">G beta/gamma</bp:name>
+ <bp:feature rdf:resource="http://pid.nci.nih.gov/biopaxpid_5588" />
+ <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005737" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNB1/GNG2</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">dataSource ADDED by a reasoner: urn:miriam:pid.pathway</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNB1/GNG2</bp:standardName>
+</bp:Complex>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_21743">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_5511" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9UQ61">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9UQ61</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_21742">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_5514" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Pathway rdf:about="http://chisiobiopaxeditor/#1329762833361">
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_62324" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_50156" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_42708" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_42701" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_42987" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_42983" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_35543" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_50159" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_62327" />
+ <bp:pathwayComponent rdf:resource="http://pid.nci.nih.gov/biopaxpid_35537" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Query Paths Between</bp:displayName>
+</bp:Pathway>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A4387">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:4387</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A4385">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:4385</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A4384">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:4384</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:Q16539">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAP kinase p38 alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cytokine suppressive anti-inflammatory drug-binding protein</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.7.11.24</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SAPK2a</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAX-interacting protein 2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAP kinase MXI2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CSAID-binding protein</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAPK 14</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAP kinase 14</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MAPK14</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CSBP</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mitogen-activated protein kinase p38 alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Stress-activated protein kinase 2a</bp:name>
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_620583" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_620581" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001306" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_B0LPH0" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A6876" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q8TDX0" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_O60776" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_A6ZJ92" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_620582" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q14084" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_A8K6P4" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q16539" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_1432" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q13083" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MK14_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mitogen-activated protein kinase 14</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Responds to activation by environmental stress, pro- inflammatory cytokines and lipopolysaccharide (LPS) by phosphorylating a number of transcription factors, such as ELK1 and ATF2 and several downstream kinases, such as MAPKAPK2 and MAPKAPK5. Plays a critical role in the production of some cytokines, for example IL-6. May play a role in stabilization of EPO mRNA during hypoxic stress. Isoform Mxi2 activation is stimulated by mitogens and oxidative stress and only poorly phosphorylates ELK1 and ATF2. Isoform Exip may play a role in the early onset of apoptosis. Phosphorylates MKNK2. CATALYTIC ACTIVITY: ATP + a protein = ADP + a phosphoprotein. COFACTOR: Magnesium. ENZYME REGULATION: Activated by threonine and tyrosine phosphorylation by either of two dual specificity kinases, MAP2K3 or MAP2K6, and potentially also MAP2K4. Inhibited by dual specificity phosphatases, such as DUSP1. Specifically inhibited by the binding of pyridinyl-imidazole compounds, which are cytokine- suppressive anti-inflammatory drugs (CSAID). Isoform Mxi2 is 100- fold less sensitive to these agents than the other isoforms and is not inhibited by DUSP1. Isoform Exip is not activated by MAP2K6. SUBUNIT: Binds to a kinase interaction motif within the protein tyrosine phosphatase, PTPRR. This interaction retains MAPK14 in the cytoplasm and prevents nuclear accumulation. Interacts with SPAG9 (By similarity). Interacts with NP60 and FAM48A. SUBCELLULAR LOCATION: Cytoplasm (By similarity). Nucleus (By similarity). ALTERNATIVE PRODUCTS: Event=Alternative splicing; Named isoforms=4; Name=CSBP2; IsoId=Q16539-1; Sequence=Displayed; Name=CSBP1; IsoId=Q16539-2; Sequence=VSP_004842; Name=Mxi2; IsoId=Q16539-3; Sequence=VSP_004844; Name=Exip; Synonyms=Exon skip; IsoId=Q16539-4; Sequence=VSP_004843, VSP_004845; TISSUE SPECIFICITY: Brain, heart, placenta, pancreas and skeletal muscle. Expressed to a lesser extent in lung, liver and kidney. DOMAIN: The TXY motif contains the threonine and tyrosine residues whose phosphorylation activates the MAP kinases. PTM: Dually phosphorylated on Thr-180 and Tyr-182, which activates the enzyme. PTM: Phosphorylated upon DNA damage, probably by ATM or ATR. PTM: Acetylated at Lys-53 and Lys-152 by KAT2B and EP300. Acetylation at Lys-53 increases the affinity for ATP and enhances kinase activity. Lys-53 and Lys-152 are deacetylated by HDAC3. SIMILARITY: Belongs to the protein kinase superfamily. CMGC Ser/Thr protein kinase family. MAP kinase subfamily. SIMILARITY: Contains 1 protein kinase domain. WEB RESOURCE: Name=Wikipedia; Note=P38 mitogen-activated protein kinases entry; URL=&quot;http://en.wikipedia.org/wiki/P38_mitogen-activated_protein_kinases&quot;; GENE SYNONYMS: CSBP CSBP1 CSBP2 CSPB1 MXI2 SAPK2A. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q8TD72">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q8TD72</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_50157">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_21151" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Stoichiometry rdf:about="http://pid.nci.nih.gov/biopaxpid_50158">
+ <bp:physicalEntity rdf:resource="http://pid.nci.nih.gov/biopaxpid_17089" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Catalysis rdf:about="http://pid.nci.nih.gov/biopaxpid_50159">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:catalysisDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:catalysisDirection>
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_50162" />
+ <bp:controlled rdf:resource="http://pid.nci.nih.gov/biopaxpid_50156" />
+ <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+ <bp:xref rdf:resource="urn:miriam:pubmed:16467404" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:18375741" />
+ <bp:controller rdf:resource="http://pid.nci.nih.gov/biopaxpid_21741" />
+</bp:Catalysis>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REFSEQ_NP_000035">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_000035</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:SEQUENCE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q15759">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q15759</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_B2R6C1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B2R6C1</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A4389">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:4389</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:BiochemicalReaction rdf:about="http://pid.nci.nih.gov/biopaxpid_50156">
+ <bp:dataSource rdf:resource="urn:miriam:pid.pathway" />
+ <bp:evidence rdf:resource="http://pid.nci.nih.gov/biopaxpid_50162" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:16467404" />
+ <bp:xref rdf:resource="urn:miriam:pubmed:18375741" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_50157" />
+ <bp:participantStoichiometry rdf:resource="http://pid.nci.nih.gov/biopaxpid_50158" />
+ <bp:left rdf:resource="http://pid.nci.nih.gov/biopaxpid_21151" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://pid.nci.nih.gov/biopaxpid_50156true@Layout@http://chisiobiopaxeditor/#1329762833361@441@69</bp:comment>
+ <bp:right rdf:resource="http://pid.nci.nih.gov/biopaxpid_17089" />
+</bp:BiochemicalReaction>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q9BTM4">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9BTM4</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_B1AKD7">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B1AKD7</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:11078726">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">11078726</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_A6ZJ92">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A6ZJ92</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:CAS_521-18-6">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">521-18-6</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CAS</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:HGNC_HGNC%3A4404">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:4404</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+ <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q15086">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q15086</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q15087">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q15087</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="urn:miriam:uniprot:P59768">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GNG2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">G gamma-I</bp:name>
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_444292" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:ENTREZ+GENE_54331" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q6P9A9" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001230703" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:HGNC_HGNC%3A4404" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_P59768" />
+ <bp:xref rdf:resource="urn:biopax:RelationshipXref:REFSEQ_NP_001230702" />
+ <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_Q5JPE2" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GBG2_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Guanine nucleotide-binding protein G(I)/G(S)/G(O) subunit gamma-2</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Guanine nucleotide-binding proteins (G proteins) are involved as a modulator or transducer in various transmembrane signaling systems. The beta and gamma chains are required for the GTPase activity, for replacement of GDP by GTP, and for G protein- effector interaction (By similarity). SUBUNIT: G proteins are composed of 3 units, alpha, beta and gamma (By similarity). The heterodimer formed by GNB1 and GNG2 interacts with PTH1R (via C-terminus). SUBCELLULAR LOCATION: Cell membrane; Lipid-anchor; Cytoplasmic side (Potential). TISSUE SPECIFICITY: Expressed in fetal tissues, including testis, adrenal gland, brain, white blood cells and brain. SIMILARITY: Belongs to the G protein gamma family. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="urn:miriam:taxonomy:9606" />
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P04901">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P04901</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q15088">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q15088</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P10275">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P10275</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_B0LPH0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B0LPH0</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q3LRW2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q3LRW2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q3LRW1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q3LRW1</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q13083">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q13083</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:about="http://pid.nci.nih.gov/biopaxpid_9195">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">315</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:PublicationXref rdf:about="urn:miriam:pubmed:17906639">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">17906639</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
+</bp:PublicationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q3LRW4">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q3LRW4</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q3LRW3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q3LRW3</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_Q3LRW5">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q3LRW5</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+</rdf:RDF>

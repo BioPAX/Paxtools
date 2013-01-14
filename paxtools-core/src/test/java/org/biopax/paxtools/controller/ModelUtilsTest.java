@@ -1,23 +1,28 @@
 package org.biopax.paxtools.controller;
 
-import static org.junit.Assert.*;
-
-import java.io.ByteArrayOutputStream;
-import java.util.Map;
-
+import org.biopax.paxtools.impl.level3.Mock;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandlerTest;
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.junit.Before;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.junit.Test;
 
-public class ModelUtilsTest {
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
 
-	@Before
-	public void setUp() throws Exception {
-	}
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
+
+public class ModelUtilsTest {
 
 	@Test
 	public final void testMergeAndReplace() {
@@ -54,7 +59,7 @@ public class ModelUtilsTest {
 		m.add(p2);
 		assertEquals(3, m.getObjects().size());
 		assertEquals(2, c.getComponent().size());
-		System.out.println("(before) components: " + c.getComponent().toString());
+
 		
 		// only 3 elements were added explicitly, but they have dependents -
 		m.repair();
@@ -72,12 +77,15 @@ public class ModelUtilsTest {
 		
 		// do replace (replaces one element); 
 		m.replace(p2, p3);	
-		
-		System.out.println("(after) components: " + c.getComponent().toString());
+		assertTrue(m.contains(p3)); // added!
+		assertFalse(m.contains(p2)); // removed!		
+
 		assertEquals(7, m.getObjects().size()); // unchanged!
 		assertEquals(2, c.getComponent().size());
-		assertTrue(m.contains(p3)); // added!
-		assertFalse(m.contains(p2)); // removed!
+		
+		assertTrue(c.getComponent().contains(p1)); // untouched!
+		assertTrue(c.getComponent().contains(p3)); // new!
+		assertFalse(c.getComponent().contains(p2)); 
 		
 		//old children are still there
 		assertTrue(m.contains(pr1));
@@ -86,20 +94,22 @@ public class ModelUtilsTest {
 		assertTrue(m.contains(x2));
 		
 		// new children - not yet
+		// (replace is 'shallow', does not affect children of replaced objects)
 		assertFalse(m.contains(pr3));
 		
-		// now - repair will add new children
+		// now - repair will find all new children
 		m.repair();
+		
 		assertEquals(8, m.getObjects().size()); // + pr3
 		assertTrue(m.contains(pr3)); // added!
+		
 		assertTrue(m.contains(pr2)); // not deleted (may be dangling now)!
 		assertTrue(m.contains(x2)); // not deleted (may be dangling now)!
 		assertTrue(m.contains(pr1)); // not deleted (may be dangling now)!
 		assertTrue(m.contains(x1)); // not deleted (may be dangling now)!
 		
-		// delete children of the replaced element if dangling
-		ModelUtils mu = new ModelUtils(m);
-		mu.removeDependentsIfDangling(p2);
+		// delete dangling
+		ModelUtils.removeObjectsIfDangling(m, ProteinReference.class);
 		
 		// pr2 - removed
 		assertEquals(7, m.getObjects().size());
@@ -108,11 +118,17 @@ public class ModelUtilsTest {
 		// ok to replace with null
 		m.replace(p3, null);
 		assertEquals(1, c.getComponent().size());
-		mu.removeDependentsIfDangling(p3);
+		ModelUtils.removeObjectsIfDangling(m, UtilityClass.class);
 		assertFalse(m.contains(pr3)); // deleted!
 		assertFalse(m.contains(x2)); // deleted!
 		
-		m.replace(pr1, x1); // logs error, no effect on the model
+		try {
+			m.replace(pr1, x1); // fails, no effect on the model
+			fail("Must fail!");
+		} catch (IllegalBioPAXArgumentException e) {
+			// fine!
+		}
+		// m is unchanged
 		assertTrue(m.contains(pr1));
 		assertEquals(pr1, p1.getEntityReference());
 	}
@@ -138,15 +154,14 @@ public class ModelUtilsTest {
 		pw2.addPathwayComponent(conv1); //smoke/loop test: because hardly a conv1 (thus p1) can belong to 2 such pathways...
 		conv1.addLeft(p1);
 		
-		ModelUtils mu = new ModelUtils(model);
-		mu.inferPropertyFromParent("dataSource", Pathway.class); // apply to pathways only
+		ModelUtils.inferPropertyFromParent(model, "dataSource", Pathway.class); // apply to pathways only
 		
 		assertEquals(2, pw2.getDataSource().size());
 		assertEquals(1, pw1.getDataSource().size());
 		//a protein without dataSource must still have it empty (when Pathway.class used to filter)
 		assertEquals(0, p1.getDataSource().size());
 		
-		mu.inferPropertyFromParent("dataSource"); // no filters
+		ModelUtils.inferPropertyFromParent(model, "dataSource"); // no filters
 		
 		assertEquals(2, pw2.getDataSource().size());
 		assertEquals(1, pw1.getDataSource().size());
@@ -184,17 +199,15 @@ public class ModelUtilsTest {
 		s1.addStepProcess(ca1);
 		s1.addStepProcess(gi1);
 		
-		
-		ModelUtils mu = new ModelUtils(model);
-		mu.inferPropertyFromParent("organism", Gene.class, Pathway.class); // but not for SequenceEntityReference.class in this test ;)
+		ModelUtils.inferPropertyFromParent(model, "organism", Gene.class, Pathway.class); // but not for SequenceEntityReference.class in this test ;)
 		
 		assertEquals(hs, pr2.getOrganism()); // still human, because it wasn't empty!
 		assertEquals(mm, g1.getOrganism()); // inferred from the parent pathway!
 		assertEquals(1, g1.getComment().size()); // - he-he, and a new comment was generated!
 		assertNull(pr1.getOrganism()); // because ERs were filtered!
 		
-		mu.generateEntityOrganismXrefs();	
-		//printModel(mu.getModel());
+		ModelUtils.generateEntityOrganismXrefs(model);	
+		//printModel(model);
 	}
 	
 	
@@ -220,8 +233,7 @@ public class ModelUtilsTest {
 		pw2.addPathwayComponent(gi1);
 		gi1.addParticipant(g1);
 		
-		ModelUtils mu = new ModelUtils(model);
-		mu.generateEntityProcessXrefs(Process.class);
+		ModelUtils.generateEntityProcessXrefs(model, Process.class);
 		
 		//printModel(model);
 		
@@ -239,14 +251,105 @@ public class ModelUtilsTest {
 		System.out.println(bytes.toString());
 	}
 
-	@Test
+
 	public final void testMetrics()
 	{
 		Model model = SimpleIOHandlerTest.getL3Model(new SimpleIOHandler());
-		ModelUtils mu = new ModelUtils(model);
 		Map<Class<? extends BioPAXElement>,Integer> metrics =
-				mu.generateClassMetrics();
+				ModelUtils.generateClassMetrics(model);
 		System.out.println("metrics = " + metrics);
 
 	}
+	
+	
+	@Test
+	public final void testRemoveObjectsIfDangling() {
+		Model model = (new SimpleIOHandler()).convertFromOWL(
+			getClass().getClassLoader().getResourceAsStream("L3" + File.separator + "hcyc.owl"));
+		assertEquals(6, model.getObjects().size());
+		
+		//there is no dangling util. class objects at the beginning
+		ModelUtils.removeObjectsIfDangling(model, UtilityClass.class);
+		assertEquals(6, model.getObjects().size());
+		
+		SmallMolecule sm1 = (SmallMolecule) model.getByID("SM1");
+		SmallMoleculeReference smr1 = (SmallMoleculeReference) model.getByID("SMR1");
+		SmallMoleculeReference a = (SmallMoleculeReference) model.getByID("A");
+		
+		assertNotNull(smr1);
+		assertTrue(smr1.getMemberEntityReference().contains(a));
+		
+		// removing just SMR1 from SM1 and model makes both it and A dangling (though A is still member of SMR1)!
+		sm1.setEntityReference(null); //unklinks SMR1
+		model.remove(smr1);
+		assertTrue(smr1.getEntityReferenceOf().isEmpty());
+		
+		// call to remove dangling things (but not B, which also belongs from SMR2, SM2)
+		ModelUtils.removeObjectsIfDangling(model, UtilityClass.class);
+		
+		assertNull(model.getByID("SMR1"));		
+		assertNull(model.getByID("A"));	
+		SmallMoleculeReference b = (SmallMoleculeReference) model.getByID("B");
+		assertNotNull(b);
+		assertEquals(4, model.getObjects().size());
+		
+		// IMPORTANT to understand is that removed SMR1 and A still have B:
+		assertEquals(3, b.getMemberEntityReferenceOf().size());
+		assertTrue(a.getMemberEntityReference().contains(b));
+		assertTrue(smr1.getMemberEntityReference().contains(b));
+	}
+	
+	@Test
+	public void testGenericNormalization()
+	{
+		Mock mock = new Mock();
+		Protein[] p = mock.create(Protein.class, 3);
+		ProteinReference[] pr = mock.create(ProteinReference.class, 2);
+
+		mock.bindArrays("entityReference", Arrays.copyOfRange(p, 0, 2), pr);
+
+		mock.bindInPairs("memberPhysicalEntity",
+		                 p[2],p[0],
+		                 p[2],p[1]);
+
+		ModelUtils.normalizeGenerics(mock.model);
+
+		assertThat(true, is(p[2].getEntityReference()!=null));
+		assertThat(true, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[0])));
+		assertThat(true, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[1])));
+	}
+
+    @Test
+    public void testFixEquivalentFeatures()
+    {
+        Mock mock = new Mock();
+	    SequenceSite[] ss= mock.create(SequenceSite.class,1);
+	    ss[0].setSequencePosition(0);
+	    ss[0].setPositionStatus(PositionStatusType.EQUAL);
+
+	    ModificationFeature[] mf = mock.create(ModificationFeature.class, 2);
+	    mf[0].setFeatureLocation(ss[0]);
+	    mf[1].setFeatureLocation(ss[0]);
+
+	    mf[0].setFeatureLocation(ss[0]);
+	    mf[1].setFeatureLocation(ss[0]);
+
+	    ProteinReference[] pr = mock.create(ProteinReference.class, 1);
+	    pr[0].addEntityFeature(mf[0]);
+	    pr[0].addEntityFeature(mf[1]);
+
+	    ModelUtils.replaceEquivalentFeatures(mock.model);
+	    assertTrue(mock.model.getObjects(ModificationFeature.class).size()==1);
+    }
+    
+	
+//
+//	@SuppressWarnings("unchecked")
+//	@Test
+//	public final void testForEndlessLoopOrOutOfMemory() {
+//		Model model = new SimpleIOHandler()
+//			.convertFromOWL(getClass().getResourceAsStream("/pathway812.owl"));		
+//		ModelUtils.inferPropertiesFromParent(model, 
+//				new HashSet<String>(Arrays.asList("dataSource", "organism","organism")));	
+//	}
 }

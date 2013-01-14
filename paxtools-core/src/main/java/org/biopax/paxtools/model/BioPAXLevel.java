@@ -2,11 +2,9 @@ package org.biopax.paxtools.model;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.impl.level2.Level2FactoryImpl;
-import org.biopax.paxtools.impl.level3.Level3FactoryImpl;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  * Enumeration type for BioPAX levels.
@@ -14,13 +12,11 @@ import java.util.Arrays;
 
 public enum BioPAXLevel
 {
-
-	L1("biopax-level1.owl", Level2FactoryImpl.class,
-	   "org.biopax.paxtools.model.level2"),
-	L2("biopax-level2.owl", Level2FactoryImpl.class,
-	   "org.biopax.paxtools.model.level2"),
-	L3("biopax-level3.owl", Level3FactoryImpl.class,
-	   "org.biopax.paxtools.model.level3");
+	// define enum constants using default BioPAX factories
+	// (L1 is auto-upgraded and uses L2 factory)
+	L1("biopax-level1.owl", new Level2FactoryImpl(), "org.biopax.paxtools.model.level2"),
+	L2("biopax-level2.owl", new Level2FactoryImpl(), "org.biopax.paxtools.model.level2"),
+	L3("biopax-level3.owl", new Level3FactoryImpl(), "org.biopax.paxtools.model.level3");
 
 	// ------------------------------ FIELDS ------------------------------
 	private static Log log = LogFactory.getLog(BioPAXLevel.class);
@@ -30,8 +26,39 @@ public enum BioPAXLevel
 	private BioPAXFactory factory;
 
 	private final String packageName;
-
-
+	
+	// default L2 (also for L1) factory implementation
+	private static class Level2FactoryImpl extends BioPAXFactory {
+	    @Override
+	    public BioPAXLevel getLevel() {
+	    	return BioPAXLevel.L2;
+	    }
+	    
+	    public String mapClassName(Class<? extends BioPAXElement> aClass) 
+	    {
+	        String name = "org.biopax.paxtools.impl.level2."
+	                + aClass.getSimpleName()
+	                + "Impl";
+	        return name;
+	    }  
+	}
+	
+	// default L3 factory implementation
+	private static class Level3FactoryImpl extends BioPAXFactory {
+	    @Override
+	    public BioPAXLevel getLevel() {
+	    	return BioPAXLevel.L3;
+	    }
+	    
+	    public String mapClassName(Class<? extends BioPAXElement> aClass) 
+	    {
+	        String name = "org.biopax.paxtools.impl.level3."
+	                + aClass.getSimpleName()
+	                + "Impl";
+	        return name;
+	    }  
+	}
+	
 
 	/**
 	 * This is the prefix used for all biopax releases.
@@ -43,27 +70,14 @@ public enum BioPAXLevel
 	/**
 	 * Default constructor
 	 * @param filename File name of the owl file.
-	 * @param factoryClass default factory class
+	 * @param factory BioPAX factory implementation (default)
 	 * @param pm package name of the model implementation
 	 */
-	BioPAXLevel(String filename, Class<? extends BioPAXFactory> factoryClass, String pm)
+	BioPAXLevel(String filename, BioPAXFactory factory, String pm)
 	{
-
 		this.filename = filename;
 		this.packageName = pm;
-		try
-		{
-			this.factory = factoryClass.newInstance();
-		}
-		catch (InstantiationException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
-
+		this.factory = factory;
 	}
 
 // --------------------- GETTER / SETTER METHODS ---------------------
@@ -150,18 +164,23 @@ public enum BioPAXLevel
 
 	public Class<? extends BioPAXElement> getInterfaceForName(String localName)
 	{
-		try
-		{
-			return (Class<? extends BioPAXElement>) Class.forName(this.packageName + "." + localName);
+        try
+        {
+            Class modelInterface = Class.forName(this.packageName + "." + localName);
 
-		}
-		catch (ClassNotFoundException e)
-		{
-			log.error("Could not find the interface for " + localName);
-			log.error(Arrays.toString(e.getStackTrace()));
-			return null;
-		}
-	}
-
+            if (BioPAXElement.class.isAssignableFrom(modelInterface))
+            {
+                return modelInterface;
+            } else
+            {
+                throw new IllegalBioPAXArgumentException(
+                        "BioPAXElement is not assignable from class:" + modelInterface.getSimpleName());
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new IllegalBioPAXArgumentException("Could not locate interface for:" + localName);
+        }
+    }
 
 }

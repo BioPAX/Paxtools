@@ -1,83 +1,75 @@
 package org.biopax.paxtools.io.sif.level3;
 
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
-import org.biopax.paxtools.io.sif.SimpleInteraction;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.EntityReference;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
+import static org.biopax.paxtools.io.sif.BinaryInteractionType.COMPONENT_OF;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.IN_SAME_COMPONENT;
 
 /**
- * Component.InSame: A and B are components of same flattened complex structure,
- * A and B are simple. Component.Of: A is component of B, B is complex, A may be
- * nested multiple levels in B.
- * @author Ozgun Babur
+ * @author Emek Demir
  */
 public class ComponentRule extends InteractionRuleL3Adaptor
 {
 	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(IN_SAME_COMPONENT);
 
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, EntityReference A, Model model, Map options)
+	private boolean inSameComponent;
+
+	private boolean componentOf;
+
+	public void inferInteractionsFromPE(InteractionSetL3 interactionSet, PhysicalEntity pe, Model model)
 	{
-		// Iterate all PEs of A and process that goes into a complex
-		for (SimplePhysicalEntity pe : A.getEntityReferenceOf())
+		if (pe instanceof Complex)
 		{
-			if (!pe.getComponentOf().isEmpty())
+			Group group = interactionSet.getGroupMap().getMap().get(pe);
+			if (group != null)
 			{
-				for (Complex cmp : pe.getComponentOf())
+				Set<EntityReference> members = group.members;
+				Set<Group> subGroups = group.subgroups;
+				ArrayList<BioPAXElement> components = new ArrayList<BioPAXElement>(members.size() + subGroups.size());
+				components.addAll(members);
+				components.addAll(subGroups);
+
+				if (inSameComponent)
 				{
-					processComplex(interactionSet, A, cmp, options);
+					BioPAXElement[] sources = group.sources.toArray(
+							(BioPAXElement[]) Array.newInstance(BioPAXElement.class, group.sources.size()));
+					createClique(interactionSet, components, BinaryInteractionType.IN_SAME_COMPONENT, sources);
+				}
+				if (componentOf)
+				{
+					for (BioPAXElement component : components)
+					{
+
+						addComponent(component, group, interactionSet);
+					}
 				}
 			}
 		}
 	}
 
-	/**
-	 * This method is called for each complex that A is in, regardless of the level
-	 * of nesting. If it is also detected that this complex is the most outer
-	 * complex, then another recursive search is initiated for mining
-	 * Component.InSame rule.
-	 * @param interactionSet interaction repository
-	 * @param A first physical entity
-	 * @param options options map
-	 * @param comp complex being processed
-	 */
-	private void processComplex(Set<SimpleInteraction> interactionSet, EntityReference A,
-		Complex comp, Map options)
+	private void addComponent(BioPAXElement component, Group group, InteractionSetL3 interactionSet)
 	{
-		// Flag for detecting if this complex is most outer one.
-		boolean mostOuter = true;
 
-		// Iterate all PEPs of complex and process that goes into a complex
-		for (Complex outer : comp.getComponentOf())
-		{
-			mostOuter = false;
-			processComplex(interactionSet, A, outer, options);
-		}
+		createAndAdd(interactionSet.getGroupMap().getEntityReferenceOrGroup(component), group,interactionSet,
+                BinaryInteractionType.COMPONENT_OF);
 
-		// Search towards other members only if this is the most outer complex
-		// and if options let for sure
-		if (mostOuter && (!options.containsKey(IN_SAME_COMPONENT) ||
-			options.get(IN_SAME_COMPONENT).equals(Boolean.TRUE)))
-		{
-			// Iterate other members for components_of_same_complex rule
-			for (EntityReference B : comp.getMemberReferences())
-			{
-				if (B != null && !B.equals(A))
-				{
-					SimpleInteraction si = new SimpleInteraction(A, B, IN_SAME_COMPONENT);
-					si.addMediator(comp);
-					interactionSet.add(si);
-				}
-			}
-		}
+	}
+
+
+	@Override public void initOptionsNotNull(Map options)
+	{
+		inSameComponent =
+                !checkOption(IN_SAME_COMPONENT,Boolean.FALSE,options);
+		componentOf =
+                !checkOption(COMPONENT_OF,Boolean.FALSE,options);
 	}
 
 	public List<BinaryInteractionType> getRuleTypes()

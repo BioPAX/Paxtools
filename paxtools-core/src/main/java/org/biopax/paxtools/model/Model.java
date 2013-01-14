@@ -37,7 +37,14 @@ public interface Model extends Serializable
 
     /**
      * This method returns true if the parameter is contained within
-     * this model.
+     * this model. 
+     * 
+     * Note: the result can be 'false' when 
+     * {@link #containsID(String)} is 'true'
+     * (using the URI of the parameter) if, e.g., 
+     * model contains another object with the same URI.
+     * 
+     * @see #containsID(String)
      *
      * @param aBioPAXElement to be checked
      * @return true if the parameter is in the object set

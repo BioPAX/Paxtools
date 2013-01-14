@@ -3,6 +3,7 @@ package org.biopax.paxtools.controller;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -37,6 +38,18 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 
 	Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException;
 
+
+	/**
+	 * Returns the values for a collection of <em>beans</em> using the default {@link #getMethod}.
+	 *
+	 *
+	 * @param beans@return an object as the value
+	 */
+
+	Set<? extends R> getValueFromBeans(Collection<? extends D> beans) throws IllegalBioPAXArgumentException;
+
+
+
 	/**
 	 * Checks if the <em>value</em> is unkown. In this context a <em>value</em> is regarded to be
 	 * unknown if it is null (unset).
@@ -44,5 +57,7 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 	 * @return true if the value is unknown
 	 */
 	public boolean isUnknown(Object value);
+
+
 
 }

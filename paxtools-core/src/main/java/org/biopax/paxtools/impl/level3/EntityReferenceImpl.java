@@ -3,17 +3,28 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Proxy(proxyClass= EntityReference.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
 {
@@ -23,7 +34,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	private Set<SimplePhysicalEntity> entityReferenceOf;
 	private Set<Evidence> evidence;
 	Set<EntityReferenceTypeVocabulary> entityReferenceType;
-	Set<EntityReference> memberEntity;
+	Set<EntityReference> memberEntityReference;
 	private Set<EntityReference> ownerEntityReference;
 
 	/**
@@ -35,7 +46,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityReferenceOf = new HashSet<SimplePhysicalEntity>();
 		this.evidence = new HashSet<Evidence>();
 		this.entityReferenceType = new HashSet<EntityReferenceTypeVocabulary>();
-		this.memberEntity = new HashSet<EntityReference>();
+		this.memberEntityReference = new HashSet<EntityReference>();
 		this.ownerEntityReference= new HashSet<EntityReference>();
 	}
 
@@ -51,8 +62,9 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 *
 	 * @return A set of entity features for the reference entity.
 	 */
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = EntityFeatureImpl.class, 
-			mappedBy = "entityFeatureXOf")
+			mappedBy = "entityFeatureOf")
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
@@ -101,12 +113,21 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityFeature = entityFeature;
 	}
 
+
+	@Fields({
+		//TODO think of removing "store=Store.YES" for "pathway" field here, as it can become HUGE (ubiquitous small mol.refs belong to hundreds pathways!)
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+	})
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class)
 	@JoinTable(name="entityReferenceType")
 	public Set<EntityReferenceTypeVocabulary> getEntityReferenceType()
@@ -134,17 +155,18 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.entityReferenceType=entityReferenceType;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceImpl.class) //TODO generify?
 	@JoinTable(name="memberEntityReference")
 	public Set<EntityReference> getMemberEntityReference()
 	{
-		return memberEntity;
+		return memberEntityReference;
 	}
 
 	public void addMemberEntityReference(EntityReference memberEntity)
 	{
 		if (memberEntity != null) {
-			this.memberEntity.add(memberEntity);
+			this.memberEntityReference.add(memberEntity);
 			memberEntity.getMemberEntityReferenceOf().add(this);
 		}
 	}
@@ -152,17 +174,24 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	public void removeMemberEntityReference(EntityReference memberEntity)
 	{
 		if (memberEntity != null) {
-			this.memberEntity.remove(memberEntity);
+			this.memberEntityReference.remove(memberEntity);
 			memberEntity.getMemberEntityReferenceOf().remove(this);
 		}
 	}
 
 	public void setMemberEntityReference(Set<EntityReference> memberEntity)
 	{
-		this.memberEntity = memberEntity;
+		this.memberEntityReference = memberEntity;
 
 	}
 
+	@Fields({
+		//TODO think of removing "store=Store.YES" for "pathway" field here, as it can become HUGE (ubiquitous small mol.refs belong to hundreds pathways!)
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+	})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
@@ -174,7 +203,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.ownerEntityReference = newOwnerEntityReferenceSet;
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")	
 	public Set<Evidence> getEvidence()
@@ -206,15 +235,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	protected void setMemberEntity(Set<EntityReference> memberEntity)
 	{
-		this.memberEntity = memberEntity;
+		this.memberEntityReference = memberEntity;
 	}
 
-	
-    @Override
-    protected boolean semanticallyEquivalent(BioPAXElement element) {
-    	if(!(element instanceof EntityReference)) return false;
-    	EntityReference that = (EntityReference) element;
-    	return  SetEquivalanceChecker.isEquivalent(this.getMemberEntityReference(), that.getMemberEntityReference())
-			&& super.semanticallyEquivalent(element);
-    }
 }

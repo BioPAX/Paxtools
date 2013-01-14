@@ -4,12 +4,26 @@ import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Entity
+@Proxy(proxyClass= NucleicAcidReference.class)
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenceImpl
 		implements NucleicAcidRegionReference
 {
@@ -28,7 +42,7 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 		this.subRegionOf = new HashSet<NucleicAcidReference>();
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = NucleicAcidReferenceImpl.class, mappedBy = "subRegion")
 	public Set<NucleicAcidReference> getSubRegionOf()
 	{
@@ -41,7 +55,8 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 	}
 
 
-	@ManyToOne(targetEntity = SequenceLocationImpl.class)//, cascade = {CascadeType.ALL})
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@ManyToOne(targetEntity = SequenceLocationImpl.class)
 	public SequenceLocation getAbsoluteRegion()
 	{
 		return this.absoluteRegion;
@@ -53,6 +68,8 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	}
 
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = SequenceRegionVocabularyImpl.class)
 	@JoinTable(name = "regionType")
 	public Set<SequenceRegionVocabulary> getRegionType()
@@ -73,17 +90,6 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 	protected void setRegionType(Set<SequenceRegionVocabulary> regionType)
 	{
 		this.regionType = regionType;
-	}
-
-	@ManyToOne(targetEntity = NucleicAcidReferenceImpl.class)//, cascade = {CascadeType.ALL})
-	public NucleicAcidReference getContainerEntityReference()
-	{
-		return this.containerEntityReference;
-	}
-
-	public void setContainerEntityReference(NucleicAcidReference containerEntityReference)
-	{
-		this.containerEntityReference = containerEntityReference;
 	}
 
 }

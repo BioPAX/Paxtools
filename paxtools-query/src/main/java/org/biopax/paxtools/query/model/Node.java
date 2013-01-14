@@ -28,10 +28,12 @@ public interface Node extends GraphObject
 	int getSign();
 
 	boolean isUbique();
+	
+	boolean isTranscription();
 
 	void init();
 
-	static final int POSITIVE = 1;
-	static final int NEGATIVE = -1;
-	static final int NEUTRAL = 0;
+	public static final int POSITIVE = 1;
+	public static final int NEGATIVE = -1;
+	public static final int NEUTRAL = 0;
 }

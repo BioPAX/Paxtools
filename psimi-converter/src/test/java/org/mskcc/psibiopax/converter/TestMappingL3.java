@@ -75,7 +75,7 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 	 * @return String
      */
     public String getName() {
-        return "TestMapping: Tests the proper mapping of a PSI-MI XML file (level 2-compact) to an in memory Paxtools Model";
+        return "TestMapping: Tests the proper mapping of a PSI-MI XML file (level 3-compact) to an in memory Paxtools Model";
     }
 
 	/**
@@ -112,7 +112,7 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 
 			// create a biopax mapper
 			BioPAXMapper bpMapper = new BioPAXMapperImp(BioPAXLevel.L3);
-			bpMapper.setNamespace(EntryMapper.RDF_ID_PREFIX);
+			bpMapper.setNamespace("");
 
 			// get entry
 			Entry entry = (Entry)entries.iterator().next();
@@ -171,12 +171,12 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 
 		// get the element list
 		Set<BioPAXElement> biopaxElements = bpModel.getObjects();
-		Assert.assertEquals(122, biopaxElements.size());
+		Assert.assertEquals(112, biopaxElements.size());
 
 		// get the element
 		BioPAXElement bpElement = null;
 		for (BioPAXElement biopaxElement : biopaxElements) {
-			if (biopaxElement.getRDFId().equals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_8694781173405777161")) {
+			if (biopaxElement.getRDFId().equals("8694781173405777161")) {
 				bpElement = biopaxElement;
 				break;
 			}
@@ -193,7 +193,7 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 		// get participant
 		Protein participant = null;
 		for (PhysicalEntity interactionParticipant : (Set<PhysicalEntity>)interactionParticipants) {
-			if (interactionParticipant.getRDFId().equals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_8")) {
+			if (interactionParticipant.getRDFId().equals("8")) {
 				participant = (Protein)interactionParticipant;
 			}
 		}
@@ -222,7 +222,7 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 		boolean featureFound = false;
 		EntityFeature bpEntityFeature = null;
 		for (EntityFeature ef : entityFeatureList) {
-			if (ef.getRDFId().equals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_2681741952554656410")) {
+			if (ef.getRDFId().equals("2681741952554656410")) {
 				featureFound = true;
 				bpEntityFeature = ef;
 				break;
@@ -254,11 +254,11 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 	private void checkPhysicalEntity(Protein participant) {
 
 		// get physical entity
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_8", participant.getRDFId());
+		Assert.assertEquals("8", participant.getRDFId());
 		Assert.assertEquals("Prim1", participant.getName().iterator().next());
 		
 		// get physical entity xref list
-		Set<Xref> physicalEntityXRefList = participant.getXref();
+		Set<Xref> physicalEntityXRefList = participant.getEntityReference().getXref();
 		Assert.assertEquals(4, physicalEntityXRefList.size());
 
 		// get physical entity xref
@@ -273,7 +273,7 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 			fail("no unification xrefs found!");
 		}
 		
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#UXR-P20664", physicalEntityXRef.getRDFId());
+		Assert.assertEquals("UXR-P20664", physicalEntityXRef.getRDFId());
 		Assert.assertEquals("uniprotkb", physicalEntityXRef.getDb());
 		Assert.assertEquals("P20664", physicalEntityXRef.getId());
 
@@ -283,11 +283,11 @@ public class TestMappingL3 extends TestCase implements BioPAXMarshaller {
 		// organism
 		BioSource bpBioSource = proteinReference.getOrganism();
 		Assert.assertEquals("Mus musculus", bpBioSource.getName().iterator().next());
-		Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#BS-10090", bpBioSource.getRDFId());
+		Assert.assertEquals("BS-10090", bpBioSource.getRDFId());
 		Set<Xref> bioSourceXRef = bpBioSource.getXref();
 		Assert.assertEquals(1, bioSourceXRef.size());
 		for (Xref unificationXref : bioSourceXRef) {
-			Assert.assertEquals("HTTP://PATHWAYCOMMONS.ORG/PSI2BP#_8992476572203004810", unificationXref.getRDFId());
+			Assert.assertEquals("8992476572203004810", unificationXref.getRDFId());
 			Assert.assertEquals("TAXONOMY", unificationXref.getDb());
 			Assert.assertEquals("10090", unificationXref.getId());
 		}

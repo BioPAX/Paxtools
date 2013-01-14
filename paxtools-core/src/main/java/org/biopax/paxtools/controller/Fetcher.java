@@ -12,36 +12,23 @@ import org.biopax.paxtools.util.Filter;
  * its dependent elements) and to add this element into a model
  * using the visitor and traverse functions.
  *
- * FIXME may fail (StackOverFlow) when there is a cycle (see {@link AbstractTraverser}; use {@link org.biopax.paxtool
-  s.util.Filter})
+ * Must be thread safe if the property filters and {@link EditorMap} 
+ * passed to the constructor are safe.
  * 
  * @see org.biopax.paxtools.controller.Visitor
  * @see org.biopax.paxtools.controller.Traverser
  *
  */
-public class Fetcher extends AbstractTraverser
-{
-    private final Set<BioPAXElement> children;
+public class Fetcher {
+    
+	private final EditorMap editorMap;
+    private final Filter<PropertyEditor>[] filters;
 	
 	public Fetcher(EditorMap editorMap, Filter<PropertyEditor>... filters) {
-        super(editorMap, filters);
-        this.children = new HashSet<BioPAXElement>();
+        this.editorMap = editorMap;
+        this.filters = filters;
     }
 
-    /**
-     * Adds the BioPAX element into the model and traverses the element
-     * for its dependent elements.
-     */
-    @Override
-    protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
-	{
-		if (range instanceof BioPAXElement && !children.contains((BioPAXElement) range))
-		{
-			BioPAXElement bpe = (BioPAXElement) range;
-			children.add(bpe);
-			super.traverse(bpe, model);
-		}
-	}
 
     /**
      * Adds the element and all its children to the model.
@@ -57,19 +44,23 @@ public class Fetcher extends AbstractTraverser
      */
     public void fetch(BioPAXElement element, Model model)
 	{
-    	children.clear();
-    	super.traverse(element, null);
-    	
     	if(!model.containsID(element.getRDFId()))
     		model.add(element);
     	
+    	Set<BioPAXElement> children = fetch(element);
+    	
         for(BioPAXElement e : children)
-        	if(!model.contains(e))
+        	if(!model.containsID(e.getRDFId())) {
         		model.add(e);
+        	} else if(!model.contains(e)) 
+        		throw new AssertionError(
+        		"fetch(bioPAXElement, model): found different child objects " +
+        		"with the same URI: " + e.getRDFId() +
+        		"(replace/merge, or use fetch(bioPAXElement) instead!)"); 
 	}
     
     /**
-     * Returns the element and all its children set.
+     * Recursively finds and collects all child objects.
      * (This method can return different objects
      * with the same ID!)
      * 
@@ -78,8 +69,27 @@ public class Fetcher extends AbstractTraverser
      */
     public Set<BioPAXElement> fetch(BioPAXElement element)
 	{
-    	children.clear();
-    	super.traverse(element, null);
-        return new HashSet<BioPAXElement>(children);
+    	final Set<BioPAXElement> children = new HashSet<BioPAXElement>();
+    	
+    	Traverser traverser = new AbstractTraverser(editorMap, filters) {  		
+    	    /**
+    	     * Adds the BioPAX element into the model and traverses the element
+    	     * for its dependent elements.
+    	     */
+    	    @Override
+    	    protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
+    		{
+    			if (range instanceof BioPAXElement && !children.contains((BioPAXElement) range))
+    			{
+    				BioPAXElement bpe = (BioPAXElement) range;
+    				children.add(bpe);
+    				super.traverse(bpe, model);
+    			}
+    		}
+    	};
+
+    	traverser.traverse(element, null);
+    	
+    	return children;
 	}
 }

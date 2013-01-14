@@ -3,7 +3,7 @@ package org.biopax.paxtools.query.model;
 /**
  * @author Ozgun Babur
  */
-public class AbstractEdge implements Edge
+public abstract class AbstractEdge implements Edge
 {
 	private Node source;
 	private Node target;
@@ -35,4 +35,34 @@ public class AbstractEdge implements Edge
 	{
 		return source.getKey() + "|" + target.getKey();
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return source.hashCode() + target.hashCode() + graph.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof AbstractEdge)
+		{
+			AbstractEdge e = (AbstractEdge) obj;
+			return source == e.getSourceNode() &&
+				target == e.getTargetNode() &&
+				graph == e.getGraph();
+		}
+		return false;
+	}
+
+	@Override
+	public int getSign()
+	{
+		return 1;
+	}
+
+	public void clear()
+	{
+	}
+
 }

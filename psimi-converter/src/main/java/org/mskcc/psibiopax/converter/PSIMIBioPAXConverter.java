@@ -39,11 +39,6 @@ import psidev.psi.mi.xml.PsimiXmlReaderException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * The converter class. 
@@ -55,10 +50,9 @@ import java.util.regex.Pattern;
  */
 public class PSIMIBioPAXConverter implements PSIMIConverter {
 
-	/**
-	 * Ref to bp level
-	 */
-	private BioPAXLevel bpLevel;
+
+	private final BioPAXLevel bpLevel;	
+	private final String xmlBase;
 
 	/**
 	 * Ref to boolean which indicates conversion is complete.
@@ -71,11 +65,15 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 	 * @param bpLevel BioPAXLevel
 	 */
 	public PSIMIBioPAXConverter(BioPAXLevel bpLevel) {
-
-		// set member vars
 		this.bpLevel = bpLevel;
+		this.xmlBase = "HTTP://PATHWAYCOMMONS.ORG/PSI2BP#"; //older version default
 	}
 
+	public PSIMIBioPAXConverter(BioPAXLevel bpLevel, String xmlBase) {
+		this.bpLevel = bpLevel;
+		this.xmlBase = xmlBase;
+	}
+	
 	/**
 	 * Converts the psi data in inputStream and places into outputStream.
 	 * Streams will be closed by the converter.
@@ -132,7 +130,7 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 
 		// create, start a marshaller
 		BioPAXMarshallerImp biopaxMarshaller =
-			new BioPAXMarshallerImp(this, bpLevel, outputStream, entrySet.getEntries().size());
+			new BioPAXMarshallerImp(this, outputStream, entrySet.getEntries().size());
 		biopaxMarshaller.start();
 
 		// iterate through the list
@@ -140,8 +138,7 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 
 			// create a biopax mapper
 			BioPAXMapper bpMapper = new BioPAXMapperImp(bpLevel);
-			bpMapper.setNamespace(EntryMapper.RDF_ID_PREFIX);
-
+			bpMapper.setNamespace(xmlBase);
 			// create and start PSIMapper
             (new EntryMapper(bpMapper, biopaxMarshaller, entry)).start();
 		}
@@ -166,4 +163,19 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		// outta here
 		return true;
 	}
+
+	/**
+	 * @return the bpLevel
+	 */
+	public BioPAXLevel getBpLevel() {
+		return bpLevel;
+	}
+
+	/**
+	 * @return the xmlBase
+	 */
+	public String getXmlBase() {
+		return xmlBase;
+	}
+	
 }

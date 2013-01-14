@@ -50,8 +50,10 @@ public class TraverserBilinked extends Traverser
 					Set valueSet = new HashSet(editor.getInverseAccessor().getValueFromBean(element));
 					if (!valueSet.isEmpty()) for (Object value : valueSet)
 					{
-						if(value != null)
-							visitor.visit(element, value, model, editor);
+						if(value != null) {
+							//TODO design issue: how visitor will know whether it's called from inverse or normal property (e.g., to modify value)?
+							visitor.visit(element, value, model, editor); 
+						}
 					}
 			}
 		}

@@ -1,10 +1,9 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.controller.*;
-import org.biopax.paxtools.impl.BioPAXFactoryAdaptor;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
-import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.lang.reflect.Field;
@@ -13,13 +12,12 @@ import java.util.*;
 /**
  * This factory returns decorated objects for testing.
  */
-public class MockFactory extends BioPAXFactoryAdaptor
+public class MockFactory extends BioPAXFactory
 {
 // ------------------------------ FIELDS ------------------------------
 
 
-	private static final List<String> strings = Arrays.asList(" ", "alpha", "beta", "gamma", "_~/-\\\t\b,",
-	                                                          "\udddd\ucccc\uaaaa\ubbbb");
+	private static final List<String> strings = Arrays.asList(" ", "alpha", "beta", "gamma");
 
 	private static final List<Float> floats = Arrays.asList(Float.MAX_VALUE, 1.0F, 0.0F, Float.MIN_VALUE);
 
@@ -34,7 +32,7 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	private int id = 0;
 
 
-	private final EditorMap map = SimpleEditorMap.L3;
+	private EditorMap map;
 
 	private BioPAXLevel level;
 
@@ -43,6 +41,7 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	public MockFactory(BioPAXLevel level)
 	{
 		this.level = level;
+		this.map = SimpleEditorMap.get(level);
 	}
 
 	@Override
@@ -120,17 +119,17 @@ public class MockFactory extends BioPAXFactoryAdaptor
 					}
 				} else
 				{
-					if (!Entity.class.isAssignableFrom(range))
-					{
-						if (multiple)
-						{
-							value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe, 3);
-						} else
-						{
-							value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe,
-							                             1).iterator().next();
-						}
-					}
+//					if (!Entity.class.isAssignableFrom(range))
+//					{
+//						if (multiple)
+//						{
+//							value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe, 3);
+//						} else
+//						{
+//							value = createRestrictedMock((ObjectPropertyEditor) propertyEditor, bpe,
+//							                             1).iterator().next();
+//						}
+//					}
 				}
 			}
 			if (value != null)
@@ -160,13 +159,13 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	{
 		if (multiple)
 		{
-			ArrayList list = new ArrayList(6);
+			ArrayList<String> list = new ArrayList<String>(4);
 			for (String str : strings)
 			{
 				list.add(bpe.getRDFId() + str);
 			}
 			return list;
-		} else return bpe.getRDFId() + strings.get(4);
+		} else return bpe.getRDFId() + strings.get(3);
 	}
 
 	private HashSet<BioPAXElement> createRestrictedMock(ObjectPropertyEditor propertyEditor, BioPAXElement bpe, int k)
@@ -174,18 +173,18 @@ public class MockFactory extends BioPAXFactoryAdaptor
 		HashSet<BioPAXElement> hashSet = new HashSet<BioPAXElement>();
 
 
-		Set<Class<? extends BioPAXElement>> rranges = propertyEditor.getRestrictedRangesFor(bpe.getModelInterface());
-		for (Class<? extends BioPAXElement> rrange : rranges)
+		Set<Class<BioPAXElement>> rranges = propertyEditor.getRestrictedRangesFor(bpe.getModelInterface());
+		for (Class<BioPAXElement> rrange : rranges)
 		{
 			hashSet.add(createMock(rrange, bpe.getModelInterface()));
 		}
 		return hashSet;
 	}
 
-	private BioPAXElement createMock(Class toCreate, Class domain)
+	private BioPAXElement createMock(Class<BioPAXElement> toCreate, Class domain)
 	{
 		assert domain != null;
-		Class actual;
+		Class<BioPAXElement> actual;
 		actual = findConcreteMockClass(toCreate, domain);
 		if (actual != null)
 		{
@@ -194,16 +193,16 @@ public class MockFactory extends BioPAXFactoryAdaptor
 
 	}
 
-	private Class findConcreteMockClass(Class toCreate, Class domain)
+	private Class<BioPAXElement> findConcreteMockClass(Class<BioPAXElement> toCreate, Class domain)
 	{
-		Class actual = null;
+		Class<BioPAXElement> actual = null;
 		if (map.getLevel().getDefaultFactory().canInstantiate(toCreate) && !toCreate.isAssignableFrom(domain))
 		{
 			actual = toCreate;
 		} else
 		{
-			Set<Class<? extends BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
-			for (Class subclass : classesOf)
+			Set<Class<BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
+			for (Class<BioPAXElement> subclass : classesOf)
 			{
 				if (!subclass.isAssignableFrom(domain) && subclass != toCreate &&
 				    subclass.getPackage().getName().startsWith("org.biopax.paxtools.model"))
@@ -232,16 +231,13 @@ public class MockFactory extends BioPAXFactoryAdaptor
 	}
 
 
-	@Override
-	public <T extends BioPAXElement> T createInstance(Class<T> aClass, String uri)
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException
-	{
-		throw new UnsupportedOperationException();
-	}
-
-
 	public BioPAXLevel getLevel()
 	{
 		return this.level;
+	}
+
+	@Override
+	public String mapClassName(Class<? extends BioPAXElement> aClass) {
+		return this.getLevel().getDefaultFactory().mapClassName(aClass);
 	}
 }

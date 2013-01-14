@@ -26,7 +26,7 @@ import java.util.Set;
  * This editor map is extensively used for I/O, modification, and querying operations applied on the
  * model.
  */
-public class JenaEditorMap extends EditorMapAdapter {
+public final class JenaEditorMap extends EditorMapAdapter {
 // ------------------------------ FIELDS ------------------------------
 
     private static final Log log = LogFactory.getLog(JenaEditorMap.class);
@@ -42,7 +42,7 @@ public class JenaEditorMap extends EditorMapAdapter {
     public JenaEditorMap(BioPAXLevel level) {
         this.level = level;
         OntModel ontologyDefinition =
-                org.biopax.paxtools.io.jena.JenaHelper.createModel();
+                JenaIOHandler.createModel();
 
         ontologyDefinition.read(this.level.getLevelFileAsStream(),
                 this.level.getNameSpace());
@@ -204,7 +204,7 @@ public class JenaEditorMap extends EditorMapAdapter {
 
     protected Class<? extends BioPAXElement> extractClass(Resource resource) {
         String localName = getJavaName(resource);
-        return getModelInterface(localName);
+        return this.getLevel().getInterfaceForName(localName);
     }
 
     private String getJavaName(Resource resource) {

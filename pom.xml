@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
-	<version>4.0.2-SNAPSHOT</version>
+	<version>4.1.5-SNAPSHOT</version>
 
 	<name>Paxtools</name>
 	<packaging>pom</packaging>
@@ -16,16 +16,16 @@
 	<url>http://www.biopax.org/paxtools</url>
 
 	<modules>
-		<module>paxtools-core</module>
-		<module>paxtools-jena-io</module>
+        <module>paxtools-core</module>
+        <module>paxtools-jena-io</module>
 		<module>sif-converter</module>
 		<module>gsea-converter</module>
-		<module>biopax-converter</module>
 		<module>psimi-converter</module>
 		<module>sbgn-converter</module>
 		<module>paxtools-console</module>
 		<module>paxtools-query</module>
-	</modules>
+        <module>paxtools-pattern</module>
+    </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -105,11 +105,9 @@
 	</issueManagement>
 	
 	<!--
-
 	     See the following wiki document for details on how to do the setup for deploying/releasing
 	     http://sourceforge.net/apps/mediawiki/biopax/index.php?title=Deploying_Paxtools
-
-	     -->
+	-->
 
 	<profiles>
 		<profile>
@@ -125,6 +123,31 @@
 					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases
 				</biopax.release.url>
 			</properties>
+		</profile>
+		<profile>
+			<id>maven-3</id>
+			<activation>
+				<file>
+					<!-- This employs that the basedir expression is only recognized by 
+						Maven 3.x (see MNG-2363) -->
+					<exists>${basedir}</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-site-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-descriptor</id>
+								<goals>
+									<goal>attach-descriptor</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 
@@ -204,6 +227,15 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>false</testFailureIgnore>
+					<!-- enable assertions during the tests -->
+					<argLine>-ea</argLine>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -226,6 +258,24 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>1.0.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search</artifactId>
+            <version>3.4.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>3.6.3.Final</version>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 
 	<repositories>
@@ -252,20 +302,23 @@
 		</repository>
 	</repositories>
 
+	<!-- the following will be ignored by Maven 3.x unless maven-site-plugin 3.0 is used -->
 	<reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jxr-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.3</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.0.1</version>
+				<version>2.4</version>
 			</plugin>
 		</plugins>
 	</reporting>

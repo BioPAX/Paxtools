@@ -17,6 +17,7 @@ public class EditorMapAdapterTest
 	{
 		Set<PropertyEditor<? extends BioPAXElement,?>> organism = SimpleEditorMap.L3.getSubclassEditorsForProperty(
 				"organism", BioPAXElement.class);
-		assertTrue(organism.size() == 7);
+		assertTrue(organism.size() == 3);
 	}
+
 }

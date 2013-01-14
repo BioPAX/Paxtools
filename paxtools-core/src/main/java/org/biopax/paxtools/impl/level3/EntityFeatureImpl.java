@@ -4,17 +4,26 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BidirectionalLinkViolationException;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= EntityFeature.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
 	private final Log log = LogFactory.getLog(EntityFeatureImpl.class);
@@ -45,69 +54,36 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return EntityFeature.class;
 	}
 
-
-	/**
-	 * @return Reference entity that this feature belongs to.
-	 */
-	@Transient
-	public EntityReference getEntityFeatureOf()
-	{
-		return ownerEntityReference;
-	}
-
-	/**
-	 * This method sets the EntityReference for this feature. This method should only be used by the
-	 * new EntityReference for updating the bidirectional link.
-	 *
-	 * @param newEntityReference New owner of this feature.
-	 * TODO make it Set of EntityReference (consider, e.g., cloned ERs or what could happen during model merge, etc..)?
-	 */
-	protected void setEntityFeatureOf(EntityReference newEntityReference) {
-//		if (this.ownerEntityReference != null
-//				&& !this.ownerEntityReference.equals(newEntityReference)
-//				&& this.ownerEntityReference.getEntityFeature().contains(this)) 
-//		{
-//			// throw new BidirectionalLinkViolationException(this,
-//			// this.ownerEntityReference);
-//			log.warn("setEntityFeatureOf: "
-//					+ getModelInterface().getSimpleName() + " " + getRDFId()
-//					+ " changes its owner EntityReference from "
-//					+ this.ownerEntityReference.getModelInterface().getSimpleName()
-//					+ " " + this.ownerEntityReference.getRDFId()
-//					+ " to "
-//					+ newEntityReference.getModelInterface().getSimpleName()
-//					+ " " + newEntityReference.getRDFId());
-//		}
-
-		this.ownerEntityReference = newEntityReference;
-	}
-
-	
 	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
+	@Field(name = FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
-	protected EntityReference getEntityFeatureXOf(){
+	public EntityReference getEntityFeatureOf(){
 		return ownerEntityReference;
 	}
-	protected void setEntityFeatureXOf(EntityReference entityReference){
+	public void setEntityFeatureOf(EntityReference entityReference){
 		ownerEntityReference = entityReference;
 	}
 	
-
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, 
-			mappedBy = "feature")
+	@Field(name = FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
 	{
 		return featureOf;
 	}
 
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class,
-			mappedBy = "notFeature")
+	@Field(name = FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED)
+	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()
 	{
 		return notFeatureOf;
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()
@@ -143,7 +119,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocation = featureLocation;
 	}
 
-	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = SequenceRegionVocabularyImpl.class)
 	public SequenceRegionVocabulary getFeatureLocationType()
 	{
 		return featureLocationType;
@@ -154,7 +130,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		this.featureLocationType= regionVocabulary;
 	}
 
-	
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="memberFeature")
 	public Set<EntityFeature> getMemberFeature()
@@ -182,7 +158,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		}
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "memberFeature")
 	public Set<EntityFeature> getMemberFeatureOf()
 	{
@@ -193,54 +169,51 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	{
 		this.memberFeatureOf = memberFeatureOf;
 	}
-	
-	@Transient
-	public boolean atEquivalentLocation(EntityFeature that)
-	{
-		return 
-			(getEntityFeatureOf() != null ?
-				getEntityFeatureOf().isEquivalent(that.getEntityFeatureOf())
-				: that.getEntityFeatureOf() == null)
-		    && 
-		    (getFeatureLocation() != null ?
-		    	getFeatureLocation().isEquivalent(that.getFeatureLocation())
-		    	: that.getFeatureLocation() == null);
-	}
 
-	@Transient
-	protected int locationCode()
-	{
-		int code = this.getEntityFeatureOf().equivalenceCode();
-		code=code+13*this.getFeatureLocation().equivalenceCode();
+    @Transient
+    /**
+     * This method returns true if and only if two entity features are on the same known location on a known ER.
+     * Unknown location or ER on any one of the features results in a false.
+     */
+    public boolean atEquivalentLocation(EntityFeature that) {
+        return getEntityFeatureOf() != null &&
+                getEntityFeatureOf().isEquivalent(that.getEntityFeatureOf()) &&
+                getFeatureLocation() != null &&
+                getFeatureLocation().isEquivalent(that.getFeatureLocation());
+    }
 
-		return code;
-	}
+    @Transient
+    protected int locationCode() {
+        if (this.getEntityFeatureOf() == null || this.getFeatureLocation()==null) return hashCode();
+        else {
+            return
+                    this.getEntityFeatureOf().equivalenceCode()+
+                            13 * this.getFeatureLocation().equivalenceCode();
+        }
+    }
 
-	@Override
-	protected boolean semanticallyEquivalent(BioPAXElement element)
-	{
-		if(!(element instanceof EntityFeature))
-			return false;
-		
-		EntityFeature that = (EntityFeature) element;
-		boolean value = atEquivalentLocation(that);
-		if (value)
-		{
-			SequenceRegionVocabulary myType = this.featureLocationType;
-			SequenceRegionVocabulary yourType = that.getFeatureLocationType();
-			value = (yourType == null) ?
-				myType == null : yourType.isEquivalent(myType);
-		}
-		return value;
-	}
+    @Override
+    protected boolean semanticallyEquivalent(BioPAXElement element) {
+        if (!(element instanceof EntityFeature))
+            return false;
 
-	@Override
-	public int equivalenceCode()
-	{
-		SequenceRegionVocabulary siteType = this.getFeatureLocationType();
-		int code = siteType == null ? 0 : siteType.hashCode();
-		return code + 13 * this.locationCode();
-	}
+        EntityFeature that = (EntityFeature) element;
+        boolean value = atEquivalentLocation(that);
+        if (value) {
+            SequenceRegionVocabulary myType = this.featureLocationType;
+            SequenceRegionVocabulary yourType = that.getFeatureLocationType();
+            value = (yourType == null) ?
+                    myType == null : yourType.isEquivalent(myType);
+        }
+        return value;
+    }
+
+    @Override
+    public int equivalenceCode() {
+        SequenceRegionVocabulary siteType = this.getFeatureLocationType();
+        int code = siteType == null ? 0 : siteType.hashCode();
+        return code + 13 * this.locationCode();
+    }
 
 	protected void setFeatureOf(Set<PhysicalEntity> featureOf)
 	{

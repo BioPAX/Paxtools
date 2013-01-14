@@ -9,11 +9,11 @@ import java.util.Set;
 /**
 
  */
-public class FilteredPropertyAccessor<D extends BioPAXElement, R, F extends R> extends DecoratingPropertyAccessor<D,R>
+public class    FilteredPropertyAccessor<D extends BioPAXElement, R> extends DecoratingPropertyAccessor<D,R>
 {
-	private Class<F> filter;
+	private Class filter;
 
-	private FilteredPropertyAccessor(PropertyAccessor<D, R> impl, Class<F> filter)
+	private FilteredPropertyAccessor(PropertyAccessor<D, R> impl, Class filter)
 	{
 		super(impl);
 		this.filter=filter;
@@ -24,9 +24,9 @@ public class FilteredPropertyAccessor<D extends BioPAXElement, R, F extends R> e
 		return new ClassFilterSet(impl.getValueFromBean(bean), filter);
 	}
 
-	public static <D extends BioPAXElement, R, F extends R> PropertyAccessor<D,R> create(PropertyAccessor<D,R> pa,
-	                                                                                     Class<F> filter)
+	public static <D extends BioPAXElement, R> PropertyAccessor<D,R> create(PropertyAccessor<D,R> pa,
+	                                                                                     Class filter)
 	{
-		 return new FilteredPropertyAccessor<D, R, F>(pa, filter);
+		 return new FilteredPropertyAccessor<D, R>(pa, filter);
 	}
 }

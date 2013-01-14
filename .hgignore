@@ -7,4 +7,4 @@ syntax:regexp
 ?\.project
 ?\.DS_Store
 ?\.settings
-
+geo_data

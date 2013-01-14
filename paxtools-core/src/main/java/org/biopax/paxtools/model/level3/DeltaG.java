@@ -17,7 +17,7 @@ package org.biopax.paxtools.model.level3;
  * delta-G'<sup>o</sup> obtained under the different experimental conditions listed in the 5-tuple.
  * <p/>
  */
-public interface DeltaG extends UtilityClass
+public interface DeltaG extends ChemicalConstant
 {
 
 
@@ -53,63 +53,5 @@ public interface DeltaG extends UtilityClass
 	 */
 	void setDeltaGPrime0(float deltaGPrime0);
 
-	/**
-	 * The ionic strength is defined as half of the total sum of the concentration (ci) of every ionic species (i)
-	 * in the solution times the square of its charge (zi). For example, the ionic strength of a 0.1 M solution of
-	 * CaCl2 is 0.5 x (0.1 x 22 + 0.2 x 12) = 0.3 M
-	 * @return the ionic strength for this condition
-	 */
-	float getIonicStrength();
 
-	/**
-	 * The ionic strength is defined as half of the total sum of the concentration (ci) of every ionic species (i)
-	 * in the solution times the square of its charge (zi). For example, the ionic strength of a 0.1 M solution of
-	 * CaCl2 is 0.5 x (0.1 x 22 + 0.2 x 12) = 0.3 M
-	 * @param ionicStrength the ionic strength for this condition
-	 */
-	void setIonicStrength(float ionicStrength);
-
-	/**
-	 * A measure of acidity and alkalinity of a solution that is a number on a scale on which a value of 7
-	 * represents neutrality and lower numbers indicate increasing acidity and higher numbers increasing alkalinity
-	 * and on which each unit of change represents a tenfold change in acidity or alkalinity and that is the
-	 * negative logarithm of the effective hydrogen-ion concentration or hydrogen-ion activity in gram equivalents
-	 * per liter of the solution. (Definition from Merriam-Webster Dictionary)
-	 * @return pH for this condition
-	 */
-	float getPh();
-
-	/**
-	 * A measure of acidity and alkalinity of a solution that is a number on a scale on which a value of 7
-	 * represents neutrality and lower numbers indicate increasing acidity and higher numbers increasing alkalinity
-	 * and on which each unit of change represents a tenfold change in acidity or alkalinity and that is the
-	 * negative logarithm of the effective hydrogen-ion concentration or hydrogen-ion activity in gram equivalents
-	 * per liter of the solution. (Definition from Merriam-Webster Dictionary)
-	 * @param ph for this condition
-	 */
-	void setPh(float ph);
-
-	/**
-	 * A measure of the concentration of magnesium (Mg) in solution. (pMg = -log<sub>10</sub>[Mg<sup>2+</sup>])
-	 * @return pMG for this condition
-	 */
-	float getPMg();
-
-	/**
-	 * A measure of the concentration of magnesium (Mg) in solution. (pMg = -log<sub>10</sub>[Mg<sup>2+</sup>])
-	 * @param pmg for this condition
-	 */
-	void setPMg(float pmg);
-
-	/**
-	 * Temperature in Celsius
-	 * @return Temperature in Celsius for this condition
-	 */
-	float getTemperature();
-
-	/**
-	 * Temperature in Celsius
-	 * @return Temperature in Celsius for this condition
-	 */
-	void setTemperature(float temperature);
 }

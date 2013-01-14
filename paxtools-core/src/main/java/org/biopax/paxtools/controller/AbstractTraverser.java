@@ -7,8 +7,11 @@ import org.biopax.paxtools.util.Filter;
 import java.util.Stack;
 
 /**
- * This is a convenience all-in-one Traverser/Visitor that
- * keeps track in the model and prevents infinite loops.
+ * This is an all-in-one Traverser/Visitor combination 
+ * to use when deep recursive visiting is required. 
+ * Unlike {@link Traverser}, it keeps track of where current 
+ * object is in the model and whether it's been already visited, 
+ * which helps prevent infinite loops.
  * Like it's for the {@link Traverser}, there is no any 
  * particular order in which it processes properties.
  * 
@@ -26,7 +29,8 @@ public abstract class AbstractTraverser extends Traverser
 	private final Stack<BioPAXElement> visited;
 	private final Stack<String> props;
 		
-	public AbstractTraverser(EditorMap editorMap, Filter<PropertyEditor>... filters)
+	public AbstractTraverser(EditorMap editorMap, 
+		@SuppressWarnings("rawtypes") Filter<PropertyEditor>... filters)
 	{
 		super(editorMap, null, filters);
 		visited = new Stack<BioPAXElement>();
@@ -52,7 +56,7 @@ public abstract class AbstractTraverser extends Traverser
 	 * @param domain is parent BioPAX element
 	 * @param editor is the property editor
 	 */
-	protected abstract void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor);
+	protected abstract void visit(Object range, BioPAXElement domain, Model model, PropertyEditor<?,?> editor);
 		
 	/**
 	 * Saves/restores the current "path" of the value in the model and 
@@ -64,7 +68,7 @@ public abstract class AbstractTraverser extends Traverser
 	 * @param model 
 	 * @param editor parent's property PropertyEditor
 	 */
-	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor) {
+	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?,?> editor) {
 			final Stack<BioPAXElement> objPath = getVisited();
 			final Stack<String> propsPath = getProps();
 		
@@ -77,11 +81,6 @@ public abstract class AbstractTraverser extends Traverser
 				}
  
 				objPath.push((BioPAXElement) range);
-				
-				if(log.isTraceEnabled())
-					log.trace("visits " + domain + "." 
-						+ editor.getProperty() +
-						"=>" + objPath.toString());
 			}
 			
 			propsPath.push(editor.getProperty());
@@ -94,6 +93,15 @@ public abstract class AbstractTraverser extends Traverser
 			if(range instanceof BioPAXElement) {
 				objPath.pop();
 			}
+	}
+
+	
+	/**
+	 * Clears the state (traversed path and objects) from the last run.
+	 */
+	public void reset() {
+		visited.clear();
+		props.clear();
 	}
 	
 }

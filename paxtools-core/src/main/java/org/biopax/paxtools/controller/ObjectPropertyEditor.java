@@ -100,7 +100,7 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 
 	public PropertyAccessor<R, ? super D> getInverseAccessor()
 	{
-		return (PropertyAccessor<R, ? super D>) inverseAccessor;
+		return inverseAccessor;
 	}
 
 	// -------------------------- OTHER METHODS --------------------------

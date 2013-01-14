@@ -3,6 +3,7 @@ package org.biopax.paxtools.io.sif.level2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
+import org.biopax.paxtools.io.sif.InteractionSet;
 import org.biopax.paxtools.io.sif.MaximumInteractionThresholdExceedException;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.Model;
@@ -24,7 +25,7 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.IN_SAME_COMPONENT
  * nested multiple levels in B.
  * @author Ozgun Babur
  */
-public class ComponentRule implements InteractionRuleL2
+public class ComponentRule extends InteractionRuleL2Adaptor
 {
 	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(COMPONENT_OF,
 	                                                                                  IN_SAME_COMPONENT);
@@ -34,6 +35,10 @@ public class ComponentRule implements InteractionRuleL2
 	private static Log log = LogFactory.getLog(ComponentRule.class);
 
 	boolean suppressExceptions;
+
+	private boolean componentOf;
+
+	private boolean inSameComponent;
 
 	public ComponentRule()
 	{
@@ -51,29 +56,21 @@ public class ComponentRule implements InteractionRuleL2
 		this.suppressExceptions = suppressExceptions;
 	}
 
-
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, Object entity, Model model, Map options)
+	@Override public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity A, Model model)
 	{
-		inferInteractions(interactionSet, ((physicalEntity) entity), model, options);
-	}
-
-	public void inferInteractions(Set<SimpleInteraction> interactionSet, physicalEntity A, Model model, Map options)
-	{
-		if (A instanceof complex)
+		if (!(A instanceof complex))
 		{
-			// All rules are invalid when A is not simple, so just return.
-			return;
-		}
 
-		// Iterate all PEPs of A and process that goes into a complex
+			// Iterate all PEPs of A and process that goes into a complex
 
-		for (physicalEntityParticipant pep : A.isPHYSICAL_ENTITYof())
-		{
-			if (pep.isCOMPONENTof() != null)
+			for (physicalEntityParticipant pep : A.isPHYSICAL_ENTITYof())
 			{
-				complex comp = pep.isCOMPONENTof();
+				if (pep.isCOMPONENTof() != null)
+				{
+					complex comp = pep.isCOMPONENTof();
 
-				processComplex(interactionSet, A, comp, options);
+					processComplex(interactionSet, A, comp);
+				}
 			}
 		}
 	}
@@ -85,12 +82,12 @@ public class ComponentRule implements InteractionRuleL2
 	 * Component.InSame rule.
 	 * @param interactionSet interaction repository
 	 * @param A first physical entity
-	 * @param options options map
 	 * @param comp complex being processed
 	 */
-	private void processComplex(Set<SimpleInteraction> interactionSet, physicalEntity A, complex comp, Map options)
+	private void processComplex(InteractionSet interactionSet, physicalEntity A, complex comp)
 	{
-		if (!options.containsKey(COMPONENT_OF) || options.get(COMPONENT_OF).equals(Boolean.TRUE))
+
+		if (componentOf)
 		{
 			// Add Component.Of rule
 			SimpleInteraction si = new SimpleInteraction(A, comp, COMPONENT_OF);
@@ -109,15 +106,15 @@ public class ComponentRule implements InteractionRuleL2
 			{
 				complex outer = pep.isCOMPONENTof();
 				mostOuter = false;
-				processComplex(interactionSet, A, outer, options);
+				processComplex(interactionSet, A, outer);
 			}
 		}
 
 		// Search towards other members only if this is the most outer complex
 		// and if options let for sure
 
-		if (mostOuter && (!options.containsKey(IN_SAME_COMPONENT) || options.get(IN_SAME_COMPONENT).equals(
-				Boolean.TRUE)))
+
+		if (mostOuter && inSameComponent)
 		{
 			// Iterate other members for components_of_same_complex rule
 			processComplexMembers(interactionSet, A, comp, 0);
@@ -133,8 +130,7 @@ public class ComponentRule implements InteractionRuleL2
 	 * @param comp common complex
 	 * @param size threshold control
 	 */
-	private void processComplexMembers(Set<SimpleInteraction> interactionSet, physicalEntity pe, complex comp,
-	                                   int size)
+	private void processComplexMembers(InteractionSet interactionSet, physicalEntity pe, complex comp, int size)
 	{
 
 
@@ -169,6 +165,14 @@ public class ComponentRule implements InteractionRuleL2
 	public List<BinaryInteractionType> getRuleTypes()
 	{
 		return binaryInteractionTypes;
+	}
+
+	@Override public void initOptionsNotNull(Map options)
+	{
+		componentOf = !options.containsKey(COMPONENT_OF) || options.get(COMPONENT_OF).equals(Boolean.TRUE);
+		inSameComponent =
+				!options.containsKey(IN_SAME_COMPONENT) || options.get(IN_SAME_COMPONENT).equals(Boolean.TRUE);
+
 	}
 
 }

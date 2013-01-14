@@ -2,18 +2,37 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.DataSourceFilterFactory;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.biopax.paxtools.util.OrganismFilterFactory;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalanceChecker;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.*;
 
-import javax.persistence.*;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass=PhysicalEntity.class)
+@Indexed
+@Boost(1.3f)
+@FullTextFilterDefs( { //these filters are global (can be defined on any @Indexed entity), names - unique!
+    @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_ORGANISM, impl = OrganismFilterFactory.class), 
+    @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_DATASOURCE, impl = DataSourceFilterFactory.class) 
+})
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 {
 	private CellularLocationVocabulary cellularLocation;
@@ -41,14 +60,20 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		return PhysicalEntity.class;
 	}
 
-
+	@Fields({
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		//- can even associate small molecules with organisms (impossible to do explicitly in BioPAX)!
+	})
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
 	}
 
-	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)//, cascade = {CascadeType.ALL})
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
 	public CellularLocationVocabulary getCellularLocation()
 	{
 		return cellularLocation;
@@ -59,6 +84,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="feature")
 	public Set<EntityFeature> getFeature()
@@ -88,6 +115,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.feature = feature;
 	}
 
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="notfeature")
 	public Set<EntityFeature> getNotFeature()
@@ -118,11 +147,19 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
+	@Fields({
+		//using memberPhysicalEntity in addition to other props to generate "pathway" index field helps
+		//in rare cases when this one does not participate in any interaction or complex but some of its members do
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	})
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="memberPhysicalEntity") 	
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
-		return this.memberPhysicalEntity;    //TODO
+		return this.memberPhysicalEntity;    //TODO (what?)
 	}
 
 	public void addMemberPhysicalEntity(PhysicalEntity newMember)
@@ -136,7 +173,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void removeMemberPhysicalEntity(PhysicalEntity oldMember)
 	{
 		if (oldMember != null) {
-			this.memberPhysicalEntity.remove(oldMember); // todo (what?)
+			this.memberPhysicalEntity.remove(oldMember); // TODO (what?)
 			oldMember.getMemberPhysicalEntityOf().remove(this);
 		}
 	}
@@ -146,6 +183,12 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.memberPhysicalEntity = memberPhysicalEntity; //TODO (what?)
 	}
 
+
+	@Fields({
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+	})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
@@ -234,6 +277,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
+	//not indexed (organism, pathway fields) here, as it's done via EntityImpl participantOf super-property
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
 	public Set<Control> getControllerOf()
 	{

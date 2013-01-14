@@ -1,42 +1,21 @@
 package org.biopax.paxtools.query.wrapperL3;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.query.model.AbstractNode;
-import org.biopax.paxtools.query.model.Edge;
-import org.biopax.paxtools.query.model.Node;
-
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author Ozgun Babur
  */
-public class ConversionWrapper extends AbstractNode
+public class ConversionWrapper extends EventWrapper
 {
-	private Conversion conv;
-	private boolean direction;
+	protected Conversion conv;
+	protected boolean direction;
 	private ConversionWrapper reverse;
+	protected boolean transcription;
 
 	protected ConversionWrapper(Conversion conv, GraphL3 graph)
 	{
 		super(graph);
 		this.conv = conv;
-	}
-
-	public boolean isBreadthNode()
-	{
-		return false;
-	}
-
-	public int getSign()
-	{
-		return POSITIVE;
-	}
-
-	public boolean isUbique()
-	{
-		return false;
 	}
 
 	public boolean getDirection()
@@ -51,44 +30,42 @@ public class ConversionWrapper extends AbstractNode
 
 	public void init()
 	{
-		if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE)
+		if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
+			this.reverse == null)
 		{
 			reverse = new ConversionWrapper(conv, (GraphL3) graph);
 			this.direction = LEFT_TO_RIGHT;
 			reverse.direction = RIGHT_TO_LEFT;
 			reverse.reverse = this;
 		}
-		else if (conv.getConversionDirection() == ConversionDirectionType.LEFT_TO_RIGHT)
+		else if (conv.getConversionDirection() == ConversionDirectionType.RIGHT_TO_LEFT)
 		{
-			this.direction = LEFT_TO_RIGHT;
+			this.direction = RIGHT_TO_LEFT;
 		}
 		else
 		{
 			this.direction = LEFT_TO_RIGHT;
 		}
-
-		wrapAround();
-
-		if (reverse !=  null)
-		{
-			reverse.wrapAround();
-		}
 	}
 
-	protected void wrapAround()
+	@Override
+	public void initUpstream()
 	{
-		GraphL3 graph = (GraphL3) getGraph();
+		if (direction == LEFT_TO_RIGHT)
+		{
+			for (PhysicalEntity pe : conv.getLeft())
+			{
+				addToUpstream(pe, getGraph());
+			}
+		}
+		else
+		{
+			for (PhysicalEntity pe : conv.getRight())
+			{
+				addToUpstream(pe, getGraph());
+			}
+		}
 
-		for (PhysicalEntity pe : conv.getLeft())
-		{
-			if (direction == LEFT_TO_RIGHT) addToUpstream(pe, graph);
-			else addToDownstream(pe, graph);
-		}
-		for (PhysicalEntity pe : conv.getRight())
-		{
-			if (direction == RIGHT_TO_LEFT) addToUpstream(pe, graph);
-			else addToDownstream(pe, graph);
-		}
 		for (Control cont : conv.getControlledOf())
 		{
 			if (cont instanceof Catalysis)
@@ -106,35 +83,29 @@ public class ConversionWrapper extends AbstractNode
 		}
 	}
 
-	protected void addToUpstream(BioPAXElement ele, GraphL3 graph)
+	@Override
+	public void initDownstream()
 	{
-		Node node = (Node) graph.getGraphObject(ele);
-		Edge edge = new EdgeL3(node, this, graph);
-
-		if (node instanceof PhysicalEntityWrapper)
+		if (direction == RIGHT_TO_LEFT)
 		{
-			((PhysicalEntityWrapper) node).getDownstreamNoInit().add(edge);
+			for (PhysicalEntity pe : conv.getLeft())
+			{
+				addToDownstream(pe, getGraph());
+			}
 		}
-		else node.getDownstream().add(edge);
-
-		this.getUpstream().add(edge);
+		else
+		{
+			for (PhysicalEntity pe : conv.getRight())
+			{
+				addToDownstream(pe, getGraph());
+			}
+		}
 	}
 
-	protected void addToDownstream(PhysicalEntity pe, GraphL3 graph)
+	public boolean isTranscription()
 	{
-		Node node = (Node) graph.getGraphObject(pe);
-		Edge edge = new EdgeL3(this, node, graph);
-
-		if (node instanceof PhysicalEntityWrapper)
-		{
-			((PhysicalEntityWrapper) node).getUpstreamNoInit().add(edge);
-		}
-		else node.getUpstream().add(edge);
-
-
-		this.getDownstream().add(edge);
+		return transcription;
 	}
-
 
 	public String getKey()
 	{
@@ -147,15 +118,9 @@ public class ConversionWrapper extends AbstractNode
 	}
 
 	@Override
-	public Collection<Node> getUpperEquivalent()
+	public String toString()
 	{
-		return Collections.emptySet();
-	}
-
-	@Override
-	public Collection<Node> getLowerEquivalent()
-	{
-		return Collections.emptySet();
+		return conv.getDisplayName() + " -- " + conv.getRDFId();
 	}
 
 	public static final boolean LEFT_TO_RIGHT = true;

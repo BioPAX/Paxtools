@@ -1,20 +1,25 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.Score;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= Score.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ScoreImpl extends XReferrableImpl implements Score
 {
 
@@ -43,7 +48,8 @@ public class ScoreImpl extends XReferrableImpl implements Score
 	////////////////////////////////////////////////////////////////////////////
 
 	
-	@Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+	@Boost(1.1f)
     public String getValue()
 	{
 		return value;
@@ -54,7 +60,7 @@ public class ScoreImpl extends XReferrableImpl implements Score
 		this.value = value;
 	}
 
-    @ManyToOne(targetEntity = ProvenanceImpl.class)//, cascade = {CascadeType.ALL})
+    @ManyToOne(targetEntity = ProvenanceImpl.class)
     public Provenance getScoreSource()
     {
         return scoreSource;
@@ -64,7 +70,5 @@ public class ScoreImpl extends XReferrableImpl implements Score
     {
         this.scoreSource = scoreSource;
     }
-
-
 
 }

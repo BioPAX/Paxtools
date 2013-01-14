@@ -5,11 +5,12 @@ import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.OneTwoThree;
 import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
+import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
 import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
-import org.biopax.paxtools.model.level3.Entity;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.validator.BiopaxValidatorClient;
@@ -20,10 +21,8 @@ import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * A command line accessible utility for basic Paxtools operations.
@@ -165,6 +164,19 @@ public class PaxtoolsMain {
             io.setFactory(model.getLevel().getDefaultFactory());
             io.convertToOWL(model, new FileOutputStream(argv[2]));
         }
+    }
+
+    /**
+     *  Converts a BioPAX file to SBGN and saves it in a file.
+     */
+    public static void toSBGN(String[] argv) throws IOException
+    {
+        String input = argv[1];
+        String output = argv[2];
+
+        Model model = io.convertFromOWL(new FileInputStream(input));
+        L3ToSBGNPDConverter l3ToSBGNPDConverter = new L3ToSBGNPDConverter();
+        l3ToSBGNPDConverter.writeSBGN(model, output);
     }
 
     
@@ -334,6 +346,228 @@ public class PaxtoolsMain {
         return io.convertFromOWL(file);
     }
 
+	//----- Section: Printing summary -------------------------------------------------------------|
+	
+	public static void summarize(String[] argv) throws IOException {
+
+		Model model = getModel(io, argv[1]);
+
+
+//---- Debug code
+//		for (Complex c : model.getObjects(Complex.class))
+//		{
+//			if (c.getComponent().size() == 1 &&
+//				c.getComponent().iterator().next() instanceof SimplePhysicalEntity &&
+//				c.getComponentStoichiometry().size() == 1 &&
+//				c.getComponentStoichiometry().iterator().next().getStoichiometricCoefficient() > 1)
+//			{
+//				for (PhysicalEntity pe : c.getComponent())
+//				{
+//					if (pe instanceof SimplePhysicalEntity)
+//					{
+//						for (Xref xref : ((SimplePhysicalEntity) pe).getEntityReference().getXref())
+//						{
+//							if (xref.getDb().startsWith("HGNC"))
+//							{
+//								System.out.println(xref.getId());
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//		BioPAXElement byID = model.getByID("http://biocyc.org/biopax/biopax-level3ComplexAssembly175733");
+//---- Debug code
+
+		final SimpleEditorMap em = (model.getLevel() == BioPAXLevel.L3) 
+				? SimpleEditorMap.L3 : SimpleEditorMap.L2;
+
+		for (Class<BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
+		{
+			Set<BioPAXElement> set = model.getObjects(clazz);
+			int initialSize = set.size();
+			set = filterToExactClass(set, clazz);
+			
+			String s = clazz.getSimpleName() + " = " + set.size();
+			if (initialSize != set.size()) s += " (and " + (initialSize - set.size()) + " children)";
+			System.out.println(s);
+
+			Set<PropertyEditor> editors = em.getEditorsOf(clazz);
+			for (PropertyEditor editor : editors)
+			{
+				Method getMethod = editor.getGetMethod();
+				Class<?> returnType = getMethod.getReturnType();
+
+				Map<Object, Integer> cnt = new HashMap<Object, Integer>();
+
+				if (returnType.isEnum() ||
+					implementsInterface(returnType, ControlledVocabulary.class))
+				{
+					for (BioPAXElement ele : set)
+					{
+						Set values = editor.getValueFromBean(ele);
+						if (values.isEmpty())
+						{
+							increaseCnt(cnt, NULL);
+						}
+						else
+						{
+							increaseCnt(cnt, values.iterator().next());
+						}
+					}
+				}
+				else if (returnType.equals(Set.class) &&
+					implementsInterface(editor.getRange(), ControlledVocabulary.class))
+				{
+					for (BioPAXElement ele : set)
+					{
+						Set values = editor.getValueFromBean(ele);
+						if (values.isEmpty())
+						{
+							increaseCnt(cnt, EMPTY);
+						}
+						for (Object val : values)
+						{
+							increaseCnt(cnt, val);
+						}
+					}
+				}
+
+				if (!cnt.isEmpty())
+				{
+					String name = "-" 
+						+ (returnType.equals(Set.class) ? editor.getRange().getSimpleName() : returnType.getSimpleName());
+
+					System.out.print("\t" + name + ":");
+					for (Object key : getOrdering(cnt))
+					{
+						System.out.print("\t" + key + " = " + cnt.get(key));
+					}
+					System.out.println();
+				}
+			}
+		}
+
+		String[] props = (model.getLevel() == BioPAXLevel.L3) 
+			? new String[]{"UnificationXref/db","RelationshipXref/db"}
+			: new String[]{"unificationXref/DB","relationshipXref/DB"};
+
+		System.out.println("\nOther property counts\n");
+
+		for (String prop : props)
+		{
+			Map<Object, Integer> cnt = new HashMap<Object, Integer>();
+			List<String> valList = new ArrayList<String>();
+			PathAccessor acc = new PathAccessor(prop, model.getLevel());
+			
+			boolean isString = false;
+			
+			for (Object o : acc.getValueFromModel(model))
+			{
+				if (o instanceof String) isString = true;
+				
+				String s = o.toString();
+				valList.add(s);
+				if (!cnt.containsKey(s)) cnt.put(s, 1);
+				else cnt.put(s, cnt.get(s) + 1);
+			}
+
+			System.out.println(prop + "\t(" + cnt.size() + " distinct values):");
+
+			// If the object is String, then all counts are 1, no need to print counts.
+			if (isString)
+			{
+				Collections.sort(valList);
+				for (String s : valList)
+				{
+					System.out.print("\t" + s);
+				}
+			}
+			else
+			{
+				for (Object key : getOrdering(cnt))
+				{
+					System.out.print("\t" + key + " = " + cnt.get(key));
+				}
+			}
+			System.out.println();
+		}
+	}
+
+	private static List<Class<BioPAXElement>> sortToName(Set<Class<BioPAXElement>> classes)
+	{
+		List<Class<BioPAXElement>> list = new ArrayList<Class<BioPAXElement>>(classes);
+		Collections.sort(list, new Comparator<Class<BioPAXElement>>()
+		{
+			public int compare(Class<BioPAXElement> clazz1, Class<BioPAXElement> clazz2)
+			{
+				return clazz1.getName().substring(clazz1.getName().lastIndexOf(".")+1).compareTo(
+					clazz2.getName().substring(clazz2.getName().lastIndexOf(".")+1));
+			}
+		});
+		return list;
+	}
+
+	private static List<Object> getOrdering(final Map<Object, Integer> map)
+	{
+		List<Object> list = new ArrayList<Object>(map.keySet());
+		Collections.sort(list, new Comparator<Object>()
+		{
+			public int compare(Object key1, Object key2)
+			{
+				int cnt1 = map.get(key1);
+				int cnt2 = map.get(key2);
+
+				if (cnt1 == cnt2) return key1.toString().compareTo(key2.toString());
+				else return cnt2 - cnt1;
+			}
+		});
+		return list;
+	}
+	
+	private static Set<BioPAXElement> filterToExactClass(Set<BioPAXElement> set, Class clazz)
+	{
+		Set<BioPAXElement> exact = new HashSet<BioPAXElement>();
+		for (BioPAXElement ele : set)
+		{
+			if (ele.getModelInterface().equals(clazz)) exact.add(ele);
+		}
+		return exact;
+	}
+
+	private static final Object NULL = new Object(){
+		@Override
+		public String toString()
+		{
+			return "NULL";
+		}
+	};
+
+	private static final Object EMPTY = new Object(){
+		@Override
+		public String toString()
+		{
+			return "EMPTY";
+		}
+	};
+
+	private static boolean implementsInterface(Class clazz, Class inter)
+	{
+		for (Class anInter : clazz.getInterfaces())
+		{
+			if (anInter.equals(inter)) return true;
+		}
+		return false;
+	}
+
+	private static void increaseCnt(Map<Object, Integer> cnt, Object key)
+	{
+		if (!cnt.containsKey(key)) cnt.put(key, 0);
+		cnt.put(key, cnt.get(key) + 1);
+	}
+
+	//-- End of Section; Printing summary ---------------------------------------------------------|
+	
     enum Command {
         merge("file1 file2 output\t\tmerges file2 into file1 and writes it into output", 3)
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
@@ -342,6 +576,8 @@ public class PaxtoolsMain {
         toSifnx("file1 outEdges outNodes node-prop1,node-prop2,.. edge-prop1,edge-prop2,...\tconverts model " +
         		"to the extendent simple interaction format", 4)
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
+        toSbgn("biopax.owl output.sbgn\t\tconverts model to the SBGN format.", 2)
+                {public void run(String[] argv) throws IOException { toSBGN(argv); } },
         validate("path out [xml|html|biopax] [auto-fix] [normalize] [only-errors] [maxerrors=n]\t\t" +
         		"validates the BioPAX file (or all the files in the directory); " +
         		"writes the html report, xml report (including fixed xml-escaped biopax), " +
@@ -361,6 +597,8 @@ public class PaxtoolsMain {
 		        {public void run(String[] argv) throws IOException{fetch(argv);} },
         getNeighbors("file1 id1,id2,.. output\t\tnearest neighborhood graph query (id1,id2 - of Entity sub-class only)", 3)
 		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
+        summarize("file\t\tprints a summary of the contents of the model", 1)
+		        {public void run(String[] argv) throws IOException{summarize(argv);} },
         help("\t\t\t\t\t\tprints this screen and exits", Integer.MAX_VALUE)
 		        {public void run(String[] argv) throws IOException{help();} };
 

@@ -21,7 +21,7 @@ public class EvidenceImplTest {
 		EvidenceCodeVocabulary ecv = m.addNew(EvidenceCodeVocabulary.class, "EvidenceCodeVocab_1");
 		ecv.addTerm("in vitro");
 		ecv.addXref(x);
-    	Evidence inVitro = (Evidence) m.addNew(Evidence.class, "Evidence_InVitro");
+    	Evidence inVitro = m.addNew(Evidence.class, "Evidence_InVitro");
     	inVitro.addEvidenceCode(ecv);
 		
 		x = m.addNew(UnificationXref.class, "ExpType_MI_0493");
@@ -30,7 +30,7 @@ public class EvidenceImplTest {
 		ecv = m.addNew(EvidenceCodeVocabulary.class, "EvidenceCodeVocab_2");
 		ecv.addTerm("in vivo");
 		ecv.addXref(x);
-		Evidence inVivo = (Evidence) m.addNew(Evidence.class, "Evidence_InVivo");
+		Evidence inVivo = m.addNew(Evidence.class, "Evidence_InVivo");
       	
     	assertFalse(inVitro.isEquivalent(inVivo));
 	}

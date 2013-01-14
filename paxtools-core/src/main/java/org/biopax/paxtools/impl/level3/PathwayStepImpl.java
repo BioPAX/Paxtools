@@ -1,19 +1,31 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass=PathwayStep.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 {
 
@@ -40,7 +52,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		return PathwayStep.class;
 	}
 
-
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayStepImpl.class)
 	@JoinTable(name="nextStep")
 	public Set<PathwayStep> getNextStep()
@@ -69,6 +81,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStep = nextStep;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
 	public Set<PathwayStep> getNextStepOf()
 	{
@@ -80,6 +93,8 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
 	public Set<Process> getStepProcess()
@@ -108,6 +123,8 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.stepProcess = stepProcess;
 	}
 
+	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence") 	
 	public Set<Evidence> getEvidence()
@@ -132,6 +149,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = evidence;
 	}
 
+	@Fields({
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+	})
 	@ManyToOne(targetEntity = PathwayImpl.class)
 	public Pathway getPathwayOrderOf()
 	{

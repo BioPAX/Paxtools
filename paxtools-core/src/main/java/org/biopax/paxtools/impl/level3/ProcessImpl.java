@@ -4,15 +4,26 @@ import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Proxy(proxyClass= Process.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class ProcessImpl extends EntityImpl implements Process
 {
 // ------------------------------ FIELDS ------------------------------
@@ -37,6 +48,11 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 // --------------------- Interface PathwayComponent ---------------------
 
 
+	@Fields({
+		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+	})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayImpl.class, mappedBy = "pathwayComponent")
 	public Set<Pathway> getPathwayComponentOf()
 	{
@@ -45,13 +61,17 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 // --------------------- Interface process ---------------------
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess")
+    @Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
 	public Set<PathwayStep> getStepProcessOf()
 	{
 		return stepProcessOf;
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "controlled")
+    @Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
 	public Set<Control> getControlledOf()
 	{
 		return controlledOf;

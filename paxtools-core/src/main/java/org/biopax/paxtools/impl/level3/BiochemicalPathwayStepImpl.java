@@ -1,16 +1,20 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.StepDirection;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= BiochemicalPathwayStep.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
 	Conversion stepConversion;
@@ -35,7 +39,7 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property STEP-CONVERSION
-	@ManyToOne(targetEntity = ConversionImpl.class)//, cascade = {CascadeType.ALL})
+	@ManyToOne(targetEntity = ConversionImpl.class)
     public Conversion getStepConversion()
 	{
 		return stepConversion;

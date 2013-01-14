@@ -1,25 +1,28 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.util.SetStringBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
-
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  */
 @Entity
+@Proxy(proxyClass= Named.class)
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
-public abstract class NamedImpl extends XReferrableImpl
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public abstract class NamedImpl extends XReferrableImpl implements Named
 {
 
 	private String standardName;
@@ -34,8 +37,10 @@ public abstract class NamedImpl extends XReferrableImpl
 	}
 
 	
-	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
-	@Boost(2.0f)
+    @Fields({
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.5f)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    })
 	@Column(columnDefinition="LONGTEXT")
 	protected String getStandardNameX()
 	{
@@ -57,8 +62,10 @@ public abstract class NamedImpl extends XReferrableImpl
 		addName(standardName = name);
 	}
 	
-	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
-	@Boost(2.0f)
+    @Fields({
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.0f)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    })
 	@Column(columnDefinition="LONGTEXT")
 	protected String getDisplayNameX()
 	{
@@ -80,23 +87,14 @@ public abstract class NamedImpl extends XReferrableImpl
 		addName(this.displayName = displayName);
 	}
 	
-	
-	@ElementCollection
-	@Field(name = BioPAXElementImpl.SEARCH_FIELD_NAME, index = Index.TOKENIZED)
-	@FieldBridge(impl = SetStringBridge.class)
-	@Boost(1.0f)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @ElementCollection
+	@JoinTable(name="name")
+    @Fields({
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.0f), bridge=@FieldBridge(impl=SetStringBridge.class)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=SetStringBridge.class))
+    })
 	@Column(columnDefinition="LONGTEXT")
-	protected Set<String> getNameX()
-	{
-		return allNames;
-	}
-	protected void setNameX(Set<String> names)
-	{
-		allNames = names;
-	}
-	
-	
-	@Transient
 	public Set<String> getName()
 	{
 		return allNames;
@@ -105,17 +103,8 @@ public abstract class NamedImpl extends XReferrableImpl
 	public void setName(Set<String> names)
 	{
 		allNames = names;
-		
-		if (!names.contains(standardName))
-		{
-			standardName = null;
-		}
-		if (!names.contains(displayName))
-		{
-			displayName = null;
-		}
 	}
-
+	
 	public void addName(String name)
 	{
 		if (name != null && name.length() > 0)

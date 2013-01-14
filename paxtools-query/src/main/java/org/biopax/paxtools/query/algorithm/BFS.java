@@ -52,7 +52,8 @@ public class BFS
 
 	public BFS(Set<Node> sourceSet, Set<Node> stopSet, Direction direction, int limit)
 	{
-		assert direction != Direction.BOTHSTREAM : "BOTHSTREAM is not a valid parameter in BFS";
+		if (direction == Direction.BOTHSTREAM)
+			throw new IllegalArgumentException("BOTHSTREAM is not a valid parameter in BFS");
 
 		this.sourceSet = sourceSet;
 		this.stopSet = stopSet;
@@ -128,6 +129,8 @@ public class BFS
 			return;
 		}
 
+//		System.out.println("processing = " + current);
+
 		// Process edges towards the direction
 
 		for (Edge edge : direction == Direction.DOWNSTREAM ?
@@ -152,26 +155,20 @@ public class BFS
 
 			assert neigh != null;
 
+			// Decide neighbor label according to the search direction and node type
+			int dist = getLabel(edge);
+			if (neigh.isBreadthNode() && direction == Direction.DOWNSTREAM) dist++;
+
+			// Check if we need to stop traversing the neighbor, enqueue otherwise
+			boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
+				(!neigh.isBreadthNode() || dist < limit) && !neigh.isUbique();
+
 			// Process the neighbor if not processed or not in queue
 
 			if (getColor(neigh) == WHITE)
 			{
-				// Label the neighbor according to the search direction and node type
-
-				if (!neigh.isBreadthNode() || direction == Direction.UPSTREAM)
-				{
-					setLabel(neigh, getLabel(edge));
-				}
-				else
-				{
-					setLabel(neigh, getLabel(current) + 1);
-				}
-
-				// Check if we need to stop traversing the neighbor, enqueue otherwise
-
-				boolean further = (stopSet == null || !isEquivalentInTheSet(neigh, stopSet)) &&
-					(!neigh.isBreadthNode() || getLabel(neigh) < limit) &&
-					!neigh.isUbique();
+				// Label the neighbor
+				setLabel(neigh, dist);
 
 				if (further)
 				{
@@ -194,10 +191,11 @@ public class BFS
 					// If we do not want to traverse this neighbor, we paint it black
 					setColor(neigh, BLACK);
 				}
-
-				labelEquivRecursive(neigh, UPWARD, getLabel(neigh), further, !neigh.isBreadthNode());
-				labelEquivRecursive(neigh, DOWNWARD, getLabel(neigh), further, !neigh.isBreadthNode());
 			}
+
+
+			labelEquivRecursive(neigh, UPWARD, getLabel(neigh), further, !neigh.isBreadthNode());
+			labelEquivRecursive(neigh, DOWNWARD, getLabel(neigh), further, !neigh.isBreadthNode());
 		}
 	}
 
@@ -206,20 +204,21 @@ public class BFS
 	{
 		for (Node equiv : up ? node.getUpperEquivalent() : node.getLowerEquivalent())
 		{
-			if (getColor(equiv) != WHITE) continue;
-
-			setLabel(equiv, dist);
-
-			if (enqueue)
+			if (getColor(equiv) == WHITE)
 			{
-				setColor(equiv, GRAY);
+				setLabel(equiv, dist);
 
-				if (head) queue.addFirst(equiv);
-				else queue.add(equiv);
-			}
-			else
-			{
-				setColor(equiv, BLACK);
+				if (enqueue)
+				{
+					setColor(equiv, GRAY);
+
+					if (head) queue.addFirst(equiv);
+					else queue.add(equiv);
+				}
+				else
+				{
+					setColor(equiv, BLACK);
+				}
 			}
 
 			labelEquivRecursive(equiv, up, dist, enqueue, head);
@@ -276,6 +275,7 @@ public class BFS
 
 	protected void setLabel(GraphObject go, int label)
 	{
+//		System.out.println("Labeling(" + label + "): " + go);
 		dist.put(go, label);
 	}
 

@@ -1,68 +1,81 @@
 package org.biopax.paxtools.io.gsea;
 
-// imports
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
- * This class represents an entry found in a GSEA (GMT format) file.
+ * This package-private class represents an entry found in a GSEA (GMT format) file.
+ * 
+ * Thread-safe.
  */
-public class GSEAEntry {
+class GSEAEntry {
 
-    private String name;
-    private String taxID;
-    private String datasource;
-    private Map<String,String> rdfToGenes;
+    final private String name;
+    final private String taxID;
+    final private String idType;
+    final private String description;
+    private final Set<String> identifiers;
 
-    public String getName() {
+    public GSEAEntry(String name, String taxID, String idType, String description) {
+    	if(name == null || taxID == null || idType == null || description == null) 
+    		throw new IllegalArgumentException("Null paraneter (not allowed)");
+    	
+		this.name = name;
+		this.taxID = taxID;
+		this.idType = idType;
+		this.description = description;
+		
+		this.identifiers = new ConcurrentSkipListSet<String>();
+	}
+    
+    
+    public String name() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public String getTaxID() {
+    public String taxID() {
     	return taxID;
+    }   
+
+    public String description() {
+        return description;
     }
+   
+    Collection<String> getIdentifiers() {
+    	return identifiers; 
+    }
+
+    public String idType() {
+		return idType;
+	}
     
-    public void setTaxID(String taxID) {
-    	this.taxID = taxID;
-    }
-
-    public String getDataSource() {
-        return datasource;
-    }
-
-    public void setDataSource(String datasource) {
-        this.datasource = datasource;
-    }
-
-    public Map<String, String> getRDFToGeneMap() {
-        return rdfToGenes;
-    }
     
-    public void setRDFToGeneMap(Map<String, String> rdfToGenes) {
-    	this.rdfToGenes = rdfToGenes;
-    }
-    
-    public Collection<String> getGenes() {
-    	return (rdfToGenes != null) ? rdfToGenes.values() : new HashSet<String>(); 
-    }
-
+    /**
+     * Creates GSEA (.gmt) file entry (line):
+     * 
+     *  
+     */
     public String toString() {
- 
-    	String toReturn = "";
-    	if (name != null && datasource != null && rdfToGenes != null) {
-    		toReturn = name + "\t" + datasource;
-    		for (String gene : rdfToGenes.values()) {
-    			toReturn += "\t" + gene;
+    	StringBuilder toReturn = new StringBuilder();
+    	
+    	if (!identifiers.isEmpty()) {
+    		String tax = ((taxID.isEmpty()) ? "unspecified" : taxID);
+    		toReturn 
+    		// the (unique) 'name' column comes first
+    			.append(tax).append(": ").append(name)
+    			.append("\t")
+    		// next, comes the description column
+    			.append(description)
+    			.append("; organism: ").append(tax)
+    			.append("; id type: ").append(idType);
+    		// finally, - all data (identifiers) columns
+    		for (String id : identifiers) {
+    			toReturn.append("\t").append(id);
     		}
     	}
 
-    	// outta here
-        return toReturn;
+        return toReturn.toString();
     }
 }

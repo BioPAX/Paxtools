@@ -1,24 +1,27 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PublicationXref;
 import org.biopax.paxtools.util.SetStringBridge;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Indexed//(index=BioPAXElementImpl.SEARCH_INDEX_NAME)
+@Proxy(proxyClass= PublicationXref.class)
+@Indexed
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 {
 	private String title;
@@ -49,8 +52,11 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	////////////////////////////////////////////////////////////////////////////
 
     // Property author
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
-    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @JoinTable(name="author")
+    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAuthor()
 	{
@@ -74,8 +80,11 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 			this.author.remove(author);
 	}
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
-    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @JoinTable(name="source")
+    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getSource()
 	{
@@ -100,7 +109,8 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     
-    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Boost(1.1f)
 	@Column(columnDefinition="LONGTEXT")
  	public String getTitle()
 	{
@@ -113,8 +123,11 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
         // Property url
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
-    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @JoinTable(name="url")
+    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getUrl()
 	{
@@ -141,7 +154,8 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     // Property year
     
     @Column(name="published") //default one caused MySQLIntegrityConstraintViolationException: Column 'year' in field list is ambiguous
-    @Field(name=BioPAXElementImpl.SEARCH_FIELD_KEYWORD, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Boost(1.1f)
 	public int getYear()
 	{
 		return year;

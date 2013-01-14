@@ -1,15 +1,12 @@
 package org.biopax.paxtools.controller;
 
-import static org.junit.Assert.*;
-
-import java.io.ByteArrayOutputStream;
-
-import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class PropertyReasonerTest {
 
@@ -238,11 +235,5 @@ public class PropertyReasonerTest {
 		} catch (Exception e) {
 		}
 	}
-	
-	
-	void printModel() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		new SimpleIOHandler().convertToOWL(model, bytes);
-		System.out.println(bytes.toString());
-	}
+
 }

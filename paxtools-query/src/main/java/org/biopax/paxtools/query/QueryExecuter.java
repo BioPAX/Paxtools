@@ -100,6 +100,7 @@ public class QueryExecuter
 
     /**
      * @see #runGOI(java.util.Set, org.biopax.paxtools.model.Model, int)
+	 * @deprecated Use runPathsBetween instead
      */
     public static Set<BioPAXElement> runGOI(
 		Set<BioPAXElement> sourceSet,
@@ -116,6 +117,7 @@ public class QueryExecuter
 	 * @param limit Length limit for the paths to be found
 	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
 	 * @return BioPAX elements in the result
+	 * @deprecated Use runPathsBetween instead
 	 */
 	public static Set<BioPAXElement> runGOI(
 		Set<BioPAXElement> sourceSet,
@@ -123,21 +125,21 @@ public class QueryExecuter
 		int limit,
 		Set<String> ubiqueIDs)
 	{
-		return runPOI(sourceSet, sourceSet, model, LimitType.NORMAL, limit, ubiqueIDs);
+		return runPathsFromTo(sourceSet, sourceSet, model, LimitType.NORMAL, limit, ubiqueIDs);
 	}
 
     /**
-     * @see #runPOI(java.util.Set, java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.LimitType, int)
+     * @see #runPathsFromTo
      *
      */
-    public static Set<BioPAXElement> runPOI(
+    public static Set<BioPAXElement> runPathsFromTo(
 		Set<BioPAXElement> sourceSet,
 		Set<BioPAXElement> targetSet,
 		Model model,
 		LimitType limitType,
 		int limit)
 	{
-        return runPOI(sourceSet, targetSet, model, limitType, limit, null);
+        return runPathsFromTo(sourceSet, targetSet, model, limitType, limit, null);
     }
 	/**
 	 * Gets paths the graph composed of the paths from a source node, and ends at a target node.
@@ -149,7 +151,7 @@ public class QueryExecuter
 	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runPOI(
+	public static Set<BioPAXElement> runPathsFromTo(
 		Set<BioPAXElement> sourceSet,
 		Set<BioPAXElement> targetSet,
 		Model model,
@@ -168,7 +170,7 @@ public class QueryExecuter
 		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
 		Set<Node> target = prepareSingleNodeSet(targetSet, graph);
 
-		PoIQuery query = new PoIQuery(source, target, limitType, limit, true);
+		PathsFromToQuery query = new PathsFromToQuery(source, target, limitType, limit, true);
 		Set<GraphObject> resultWrappers = query.run();
 		return convertQueryResult(resultWrappers, graph);
 	}
@@ -227,7 +229,7 @@ public class QueryExecuter
         Direction direction,
         int limit)
     {
-        return runCommonStream(sourceSet, model, direction, limit);
+        return runCommonStreamWithPOI(sourceSet, model, direction, limit, null);
     }
 
 	/**
@@ -285,15 +287,15 @@ public class QueryExecuter
 
 		// Run a paths-of-interest query between source set and result set
 
-		PoIQuery poi;
+		PathsFromToQuery poi;
 
 		if (direction == Direction.DOWNSTREAM)
 		{
-			poi = new PoIQuery(source, target, LimitType.NORMAL, limit, true);
+			poi = new PathsFromToQuery(source, target, LimitType.NORMAL, limit, true);
 		}
 		else
 		{
-			poi = new PoIQuery(target, source, LimitType.NORMAL, limit, true);
+			poi = new PathsFromToQuery(target, source, LimitType.NORMAL, limit, true);
 		}
 
 		resultWrappers = poi.run();
@@ -335,7 +337,14 @@ public class QueryExecuter
 			pes.addAll(valueSet);
 		}
 
-		return graph.getWrapperSet(pes);
+		Set<Node> nodes = graph.getWrapperSet(pes);
+
+		// If there are interactions in the seed add them too
+
+		Set<Node> inters = getSeedInteractions(elements, graph);
+		nodes.addAll(inters);
+
+		return nodes;
 	}
 
 	private static Collection<Set<Node>> prepareNodeSets(Set<BioPAXElement> elements, Graph graph)
@@ -350,6 +359,15 @@ public class QueryExecuter
 
 			if (!set.isEmpty()) sets.add(set);
 		}
+		
+		// Add interactions in the seed as single node set
+
+		Set<Node> inters = getSeedInteractions(elements, graph);
+		for (Node node : inters)
+		{
+			sets.add(Collections.singleton(node));
+		}
+
 		return sets;
 	}
 
@@ -362,8 +380,7 @@ public class QueryExecuter
 	public static Map<BioPAXElement, Set<PhysicalEntity>> getRelatedPhysicalEntityMap(
 		Collection<BioPAXElement> elements)
 	{
-		Map<BioPAXElement, Set<PhysicalEntity>> map =
-			new HashMap<BioPAXElement, Set<PhysicalEntity>>();
+		Map<BioPAXElement, Set<PhysicalEntity>> map = new HashMap<BioPAXElement, Set<PhysicalEntity>>();
 
 		for (BioPAXElement ele : elements)
 		{
@@ -404,11 +421,21 @@ public class QueryExecuter
 		}
 		else if (element instanceof PhysicalEntity)
 		{
-			pes.add((PhysicalEntity) element);
-
-			for (Complex cmp : ((PhysicalEntity) element).getComponentOf())
+			PhysicalEntity pe = (PhysicalEntity) element;
+			if (!pes.contains(pe))
 			{
-				getRelatedPhysicalEntities(cmp, pes);
+				pes.add(pe);
+	
+				for (Complex cmp : pe.getComponentOf())
+				{
+					getRelatedPhysicalEntities(cmp, pes);
+				}
+
+				// This is a hack for BioPAX graph. Equivalence relations do not link members and
+				// complexes because members cannot be addressed. Below call makes sure that if the
+				// source node has a generic parents or children and they appear in a complex, we
+				// include the complex in the sources.
+				addEquivalentsComplexes(pe, pes);
 			}
 		}
 		else if (element instanceof Xref)
@@ -420,12 +447,69 @@ public class QueryExecuter
 		}
 		else if (element instanceof EntityReference)
 		{
-			for (SimplePhysicalEntity spe : ((EntityReference) element).getEntityReferenceOf())
+			EntityReference er = (EntityReference) element;
+
+			for (SimplePhysicalEntity spe : er.getEntityReferenceOf())
 			{
 				getRelatedPhysicalEntities(spe, pes);
+			}
+
+			for (EntityReference parentER : er.getMemberEntityReferenceOf())
+			{
+				getRelatedPhysicalEntities(parentER, pes);
 			}
 		}
 
 		return pes;
 	}
+
+	private static void addEquivalentsComplexes(PhysicalEntity pe, Set<PhysicalEntity> pes)
+	{
+		addEquivalentsComplexes(pe, true, pes);
+		addEquivalentsComplexes(pe, false, pes);
+	}
+
+	private static void addEquivalentsComplexes(PhysicalEntity pe, boolean outer,
+		Set<PhysicalEntity> pes)
+	{
+		Set<PhysicalEntity> set = outer ? 
+			pe.getMemberPhysicalEntityOf() : pe.getMemberPhysicalEntity();
+
+		for (PhysicalEntity related : set)
+		{
+			for (Complex cmp : related.getComponentOf())
+			{
+				getRelatedPhysicalEntities(cmp, pes);
+			}
+
+			addEquivalentsComplexes(related, outer, pes);
+		}
+	}
+
+	/**
+	 * Extracts the queryable interactions from the elements.
+	 *
+	 * @param elements
+	 * @return
+	 */
+	public static Set<Node> getSeedInteractions(Collection<BioPAXElement> elements, Graph graph)
+	{
+		Set<Node> nodes = new HashSet<Node>();
+
+		for (BioPAXElement ele : elements)
+		{
+			if (ele instanceof Conversion || ele instanceof TemplateReaction ||
+				ele instanceof Control)
+			{
+				GraphObject go = graph.getGraphObject(ele);
+
+				if (go instanceof Node)
+				{
+					nodes.add((Node) go);
+				}
+			}
+		}
+		return nodes;
+	}
+
 }

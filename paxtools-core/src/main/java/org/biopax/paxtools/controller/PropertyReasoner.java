@@ -170,10 +170,6 @@ public class PropertyReasoner extends AbstractTraverser
 		if (bpe == null)
 			return;
 		
-		if(LOG.isTraceEnabled())
-			LOG.trace(bpe + ", " + propertyName 
-					+ " stack: " + this.valueStack);
-		
 		PropertyEditor editor = editorMap
 			.getEditorForProperty(propertyName, bpe.getModelInterface());
 		

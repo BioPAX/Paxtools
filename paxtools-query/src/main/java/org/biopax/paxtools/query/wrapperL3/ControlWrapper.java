@@ -2,6 +2,7 @@ package org.biopax.paxtools.query.wrapperL3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.query.model.AbstractNode;
 import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.Graph;
@@ -15,13 +16,15 @@ import java.util.Collections;
  */
 public class ControlWrapper extends AbstractNode
 {
-	private Control ctrl;
-	int sign;
+	protected Control ctrl;
+	protected int sign;
+	protected boolean transcription;
 
 	protected ControlWrapper(Control ctrl, Graph graph)
 	{
 		super(graph);
 		this.ctrl = ctrl;
+		this.transcription = false;
 	}
 
 	public boolean isBreadthNode()
@@ -48,18 +51,31 @@ public class ControlWrapper extends AbstractNode
 	public void init()
 	{
 		ControlType type = ctrl.getControlType();
-		if (type == ControlType.ACTIVATION ||
-			type == ControlType.ACTIVATION_ALLOSTERIC ||
-			type == ControlType.ACTIVATION_NONALLOSTERIC ||
-			type == ControlType.ACTIVATION_UNKMECH)
-		{
-			sign = POSITIVE;
-		}
-		else
+
+		if (type != null && type.toString().startsWith("I"))
 		{
 			sign = NEGATIVE;
 		}
+		else
+		{
+			sign = POSITIVE;
+		}
 
+		if (ctrl instanceof TemplateReactionRegulation)
+			transcription = true;
+	}
+
+	private void bindUpstream(BioPAXElement element)
+	{
+		AbstractNode node = (AbstractNode) graph.getGraphObject(element);
+		Edge edge = new EdgeL3(node, this, graph);
+		node.getDownstreamNoInit().add(edge);
+		this.getUpstreamNoInit().add(edge);
+	}
+
+	@Override
+	public void initUpstream()
+	{
 		for (Controller controller : ctrl.getController())
 		{
 			if (controller instanceof Pathway) continue;
@@ -74,19 +90,21 @@ public class ControlWrapper extends AbstractNode
 		}
 	}
 
-	private void bindUpstream(BioPAXElement element)
+	@Override
+	public void initDownstream()
 	{
-		Node node = (Node) graph.getGraphObject(element);
-
-		Edge edge = new EdgeL3(node, this, graph);
-
-		if (node instanceof PhysicalEntityWrapper)
+		for (Process prc : ctrl.getControlled())
 		{
-			((PhysicalEntityWrapper) node).getDownstreamNoInit().add(edge);
+			if (prc instanceof Conversion ||
+				prc instanceof Control ||
+				prc instanceof TemplateReaction)
+			{
+				AbstractNode node = (AbstractNode) graph.getGraphObject(prc);
+				Edge edge = new EdgeL3(this, node, graph);
+				node.getUpstreamNoInit().add(edge);
+				getDownstreamNoInit().add(edge);
+			}
 		}
-		else node.getDownstream().add(edge);
-
-		this.getUpstream().add(edge);
 	}
 
 	public Control getControl()
@@ -104,5 +122,15 @@ public class ControlWrapper extends AbstractNode
 	public Collection<Node> getLowerEquivalent()
 	{
 		return Collections.emptySet();
-	}	
+	}
+
+	public boolean isTranscription()
+	{
+		return transcription;
+	}
+
+	public void setTranscription(boolean transcription)
+	{
+		this.transcription = transcription;
+	}
 }

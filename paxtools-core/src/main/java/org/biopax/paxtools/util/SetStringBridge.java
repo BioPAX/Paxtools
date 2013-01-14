@@ -18,11 +18,11 @@ public class SetStringBridge implements StringBridge {
 
 		// no way to do instanceof on generics.
 		// trust this bridge is used properly
-		Set<String> comments = (Set<String>)object;
+		Set<String> items = (Set<String>)object;
 
-		// interate over all comments and append (' ' delimit) to return string
-		for (String comment : comments) {
-			toReturn.append(comment + " ");
+		// interate over all strings and append (' ' delimit) to return string
+		for (String item : items) {
+			toReturn.append(item + " ");
 		}
 
 		return toReturn.toString();
