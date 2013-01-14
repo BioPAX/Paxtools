@@ -111,7 +111,8 @@ public class QueryTest
 		return set;
 	}
 	
-//	@Test
+	@Test
+	@Ignore
 	public void testQueryPerformance() throws IOException
 	{
 		long time = System.currentTimeMillis();
@@ -125,7 +126,6 @@ public class QueryTest
 		time = System.currentTimeMillis();
 
 		BioPAXElement s1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6022_1_9606");
-//		BioPAXElement s1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6017_1_9606");
 		BioPAXElement t1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6020_1_9606");
 
 		Set<BioPAXElement> source = new HashSet<BioPAXElement>();
@@ -144,86 +144,4 @@ public class QueryTest
 		Model ex = excise(model, result);
 		handler.convertToOWL(ex, new FileOutputStream("QueryResult.owl"));		
 	}
-
-	@Test
-	@Ignore
-	public void testLevel2Neighborhood() throws Throwable
-	{
-		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/cpath2_prepared.owl"));
-
-		Set<BioPAXElement> source = findElements(model,
-			"http://pid.nci.nih.gov/biopaxpid_75022");
-
-		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(source, model, 1, Direction.UPSTREAM, HCUbiq);
-		System.out.println("result.size() = " + result.size());
-		Model ex = excise(model, result);
-		handler.convertToOWL(ex, new FileOutputStream("/home/ozgun/Desktop/temp.owl"));
-	}
-
-	static Set<String> HCUbiq = new HashSet<String>(Arrays.asList(
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule159666",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule135584",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule131446",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule131465",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule131548",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule131525",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule132137",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule127479",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule132532",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule137847",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule137835",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule137826",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule137582",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule126025",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule125519",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule165158",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule165340",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule129851",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule129842",
-		"http://biocyc.org/biopax/biopax-level3SmallMolecule129864"
-	));
-	
-	@Test
-	@Ignore
-	public void getUbiques() throws Throwable
-	{
-		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc.owl.txt"));
-
-		BioPAXElement ele = model.getByID("http://biocyc.org/biopax/biopax-level3SmallMolecule173158");
-
-		int i = 0;
-		for (PhysicalEntity pe : model.getObjects(SmallMolecule.class))
-		{
-			if (pe.getParticipantOf().size() > 30)
-			{
-				i++;
-//				System.out.println(pe.getDisplayName());
-				System.out.println("\"" + pe.getRDFId() + "\",");
-			}
-		}
-		System.out.println("i = " + i);
-	}
-
-	@Test
-	@Ignore
-	/**
-	 * Below method is for using during debugging queries.
-	 */
-	public void testForDebug() throws Throwable
-	{
-		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/temp.owl"));
-
-		Set<BioPAXElement> source = new HashSet<BioPAXElement>();
-		source.add(model.getByID("http://pid.nci.nih.gov/biopaxpid_7379"));
-
-		Set<BioPAXElement> target = new HashSet<BioPAXElement>();
-		target.add(model.getByID("http://pid.nci.nih.gov/biopaxpid_73642"));
-
-		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
-			source, target, model, LimitType.NORMAL, 1);
-
-		System.out.println("result.size() = " + result.size());
-	}
-
-
 }

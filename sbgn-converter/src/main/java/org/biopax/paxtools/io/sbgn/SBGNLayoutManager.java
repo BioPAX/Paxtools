@@ -36,7 +36,7 @@ public class SBGNLayoutManager
 	/**
 	 * Applies CoSE layout to the given SBGN model.
 	 * 
-	 * @param  Sbgn sbgn object to which layout will be applied
+	 * @param sbgn Sbgn object to which layout will be applied
 	 * @return Laid out sbgn object
 	 */
 	public Sbgn createLayout(Sbgn sbgn)
@@ -108,10 +108,7 @@ public class SBGNLayoutManager
 		{
 			compGlyph.getGlyph().clear();
 		}*/
-		
-		GraphMLWriter writer = new GraphMLWriter("output.graphml");
-		writer.saveGraph(this.layout.getGraphManager());
-		
+
 		return sbgn;
 	}
 	
@@ -262,7 +259,7 @@ public class SBGNLayoutManager
 	/**
 	 * Creates LNodes from Arcs of Sbgn and adds it to the passed layout object. 
 	 * 
-	 * @param parent arcs list of arc objects from which the LEdges will be constructed for ChiLay Layout component. 
+	 * @param arcs List of arc objects from which the LEdges will be constructed for ChiLay Layout component.
 	 * @param layout layout object to which the created LEdges added.
 	 * 
 	 * */

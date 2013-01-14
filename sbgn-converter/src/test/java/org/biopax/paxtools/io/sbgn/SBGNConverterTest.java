@@ -38,8 +38,6 @@ public class SBGNConverterTest
 		System.out.println("level3.getObjects().size() = " + level3.getObjects().size());
 
 		String out = "target/" + input + ".sbgn";
-		// Above path does not work with my laptop, windows vista
-//		String out = "C:/Users/ozgun/Desktop/" + input + ".sbgn";
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(
 			new ListUbiqueDetector(blacklist), null, true);
@@ -61,15 +59,5 @@ public class SBGNConverterTest
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
 
 		System.out.println("result = " + result);
-	}
-	
-	@Test
-	@Ignore
-	public void testDebug() throws Throwable
-	{
-		String file = "/home/ozgun/Desktop/temp";
-		Model model = handler.convertFromOWL(new FileInputStream(file + ".owl"));
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
-		conv.writeSBGN(model, file + ".sbgn");
 	}
 }
