@@ -236,6 +236,16 @@
 					<argLine>-ea</argLine>
 				</configuration>
 			</plugin>
+     	 	<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-release-plugin</artifactId>
+        		<version>2.4</version>
+        		<configuration>
+        			<autoVersionSubmodules>true</autoVersionSubmodules>
+        			<branchName>stable</branchName>
+        			<tagNameFormat>v{project.version}</tagNameFormat>
+        		</configuration>
+      		</plugin>			
 		</plugins>
 	</build>
 
