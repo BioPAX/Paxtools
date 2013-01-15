@@ -243,7 +243,6 @@
         		<configuration>
         			<autoVersionSubmodules>true</autoVersionSubmodules>
         			<branchName>stable</branchName>
-        			<tagNameFormat>v${project.version}</tagNameFormat>
         		</configuration>
       		</plugin>			
 		</plugins>
