@@ -1,4 +1,4 @@
-<project name="PaxTools">
+<project name="Paxtools">
 
 <!--
 <bannerLeft>
@@ -20,7 +20,7 @@
 <links>
 <item name="Javadoc" href="apidocs/index.html"/>
 <item name="BioPAX" href="http://www.biopax.org/" />
-<item name="Wiki" href="http://sourceforge.net/apps/mediawiki/biopax/index.php?title=Paxtools" />
+<item name="Paxtools" href="http://www.biopax.org/paxtools" />
 <item name="Changelog" href="http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools/atom-log" />
 </links>
 
