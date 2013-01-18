@@ -20,10 +20,10 @@ public class Field extends ConstraintAdapter
 	Object value;
 	PathAccessor pa;
 
-	public Field(PathAccessor pa, Object value)
+	public Field(String accessorString, Object value)
 	{
 		this.value = value;
-		this.pa = pa;
+		this.pa = new PathAccessor(accessorString);
 	}
 
 	@Override

@@ -140,7 +140,7 @@ public class ConBox
 
 	public static Constraint nameEquals(String name)
 	{
-		return new Field(new PathAccessor("Named/name"), name);
+		return new Field("Named/name", name);
 	}
 
 	public static Constraint notUbique(Set<String> ubiques)
@@ -183,8 +183,8 @@ public class ConBox
 	public static Constraint isHuman()
 	{
 		return new OR(
-			new MappedConst(new Field(new PathAccessor("SequenceEntityReference/organism/displayName"), "Homo sapiens"), 0),
-			new MappedConst(new Field(new PathAccessor("PhysicalEntity/entityReference/organism/displayName"), "Homo sapiens"), 0));
+			new MappedConst(new Field("SequenceEntityReference/organism/displayName", "Homo sapiens"), 0),
+			new MappedConst(new Field("PhysicalEntity/entityReference/organism/displayName", "Homo sapiens"), 0));
 	}
 
 	public static Constraint molecularInteraction()
@@ -194,13 +194,13 @@ public class ConBox
 	
 	public static Constraint notAParticipant()
 	{
-		return new NOT(new Field(new PathAccessor("Interaction/participant"), Field.USE_SECOND_ARG));
+		return new NOT(new Field("Interaction/participant", Field.USE_SECOND_ARG));
 	}
 
 	public static Constraint notControlsThis()
 	{
 		// Asserts the control (first variable), does not control the conversion (second variable)
-		return new NOT(new Satisfies(new MappedConst(ConBox.controlToConv(), 0, 1)));
+		return new NOT(ConBox.controlToConv());
 	}
 
 	public static Constraint notLabeledInactive()

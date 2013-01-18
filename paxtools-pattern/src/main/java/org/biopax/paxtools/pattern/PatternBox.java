@@ -97,7 +97,7 @@ public class PatternBox
 		p.addConstraint(ConBox.withComplexes(), i, ++i);
 		p.addConstraint(ConBox.peToControl(), i, ++i);
 		p.addConstraint(ConBox.controlToConv(), i, ++i);
-		p.addConstraint(new ParticipatingPE(RelType.OUTPUT), i-1, i, ++i);
+		p.addConstraint(new ParticipatingPE(RelType.OUTPUT, false), i-1, i, ++i);
 		if (ubiqueIDs != null) p.addConstraint(ConBox.notUbique(ubiqueIDs), i);
 		p.addConstraint(new ParticipatesInConv(RelType.INPUT, false), i, ++i);
 		p.addConstraint(new RelatedControl(RelType.INPUT), i-1, i, ++i);
