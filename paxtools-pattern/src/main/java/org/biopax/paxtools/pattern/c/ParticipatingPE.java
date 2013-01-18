@@ -15,10 +15,12 @@ import java.util.*;
 public class ParticipatingPE extends ConstraintAdapter
 {
 	RelType type;
+	boolean treatReversibleAsLeftToRight;
 
-	public ParticipatingPE(RelType type)
+	public ParticipatingPE(RelType type, boolean treatReversibleAsLeftToRight)
 	{
 		this.type = type;
+		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
 	}
 
 	@Override
@@ -53,7 +55,8 @@ public class ParticipatingPE extends ConstraintAdapter
 		// No evidence for direction. Assuming LEFT_TO_RIGHT. 
 		if (dir == null) dir = ConversionDirectionType.LEFT_TO_RIGHT;
 
-		if (dir == ConversionDirectionType.LEFT_TO_RIGHT)
+		if (dir == ConversionDirectionType.LEFT_TO_RIGHT ||
+			(dir == ConversionDirectionType.REVERSIBLE && treatReversibleAsLeftToRight))
 		{
 			return new HashSet<BioPAXElement>(type == RelType.INPUT ? conv.getLeft() : conv.getRight());
 		}
@@ -61,7 +64,7 @@ public class ParticipatingPE extends ConstraintAdapter
 		{
 			return new HashSet<BioPAXElement>(type == RelType.OUTPUT ? conv.getLeft() : conv.getRight());
 		}
-		else
+		else // dir is reversible and we will go both sides
 		{
 			Set<BioPAXElement> result = new HashSet<BioPAXElement>(conv.getLeft());
 			result.addAll(conv.getRight());
