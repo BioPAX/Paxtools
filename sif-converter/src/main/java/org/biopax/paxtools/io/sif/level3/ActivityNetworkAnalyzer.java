@@ -28,8 +28,8 @@ public class ActivityNetworkAnalyzer
 
 	static
 	{
-		EXTENDED = BioPAXLevel.L3.getDefaultFactory().create(Control.class,
-		                                                     "http://biopax" + ".org/generated/ExtendedControl");
+		EXTENDED = BioPAXLevel.L3.getDefaultFactory().create(
+				Control.class,"http://biopax" + ".org/generated/ExtendedControl");
 		EXTENDED.setControlType(ControlType.ACTIVATION);
 		EXTENDED.addName("Inferred from complex binding");
 
