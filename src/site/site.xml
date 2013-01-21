@@ -21,11 +21,10 @@
 <item name="Javadoc" href="apidocs/index.html"/>
 <item name="BioPAX" href="http://www.biopax.org/" />
 <item name="Paxtools" href="http://www.biopax.org/paxtools" />
-<item name="Changelog" href="http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools/atom-log" />
+<item name="Changelog" href="http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools/shortlog/tip" />
 </links>
 
 <menu ref="reports" />
-<menu ref="modules" />
 
 </body>
 

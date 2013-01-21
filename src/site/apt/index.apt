@@ -1,3 +1,9 @@
+  Welcome to Paxtools, we hope you enjoy your time
+on this auto-generated project site.  We've tried to assemble some
+great user documentation and developer information, and we're really
+excited that you've taken the time to visit this site.
+
+What is Paxtools
 
   We present Paxtools a software library that contains algorithms, software 
 components and converters for biological pathways represented in the standard 
@@ -7,3 +13,11 @@ Paxtools is open source and is available under the Lesser GNU public license (LG
 which allows users to freely use the code in their software systems with a 
 requirement for attribution. 
 
+What is BioPAX
+
+  BioPAX is a community developed standard language for integration, 
+exchange and analysis of biological pathway data. BioPAX is defined 
+in Web Ontology Language (OWL) and can represent a broad spectrum 
+of biological processes including metabolic and signaling pathways, 
+molecular interactions and gene networks. Pathguide.org lists the 
+pathway databases and tools that support BioPAX.

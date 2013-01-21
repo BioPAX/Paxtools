@@ -1,15 +1,20 @@
 package org.biopax.paxtools.impl.level3;
 
+import java.util.Collection;
+
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.BindingFeature;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
-public class EvidenceImplTest {
+public class EquivalenceImplTest {
 
 	@Test
 	public final void testSemanticallyEquivalent() {
@@ -33,6 +38,16 @@ public class EvidenceImplTest {
 		Evidence inVivo = m.addNew(Evidence.class, "Evidence_InVivo");
       	
     	assertFalse(inVitro.isEquivalent(inVivo));
+	}
+	
+	
+	@Test
+	public final void testBindingFeatureEquivalentNPE() {
+		BioPAXIOHandler io = new SimpleIOHandler();
+		Model m = io.convertFromOWL(getClass().getResourceAsStream("test_bf_isequivalent-npe.owl"));
+		BindingFeature a = (BindingFeature) m.getByID(m.getXmlBase() + "id377153490_STAT3_p_bf3");
+		BindingFeature b = (BindingFeature) m.getByID(m.getXmlBase() + "id1300330108_R_smad_bf1_omitCE_unknownBindingSite");
+		a.isEquivalent(b); //used to fail with NPE right here!
 	}
 
 }

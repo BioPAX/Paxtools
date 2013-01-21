@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+ xml:base="http://www.inoh.org/biopax/">
+<owl:Ontology rdf:about="">
+ <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+</owl:Ontology>
+
+<bp:BindingFeature rdf:ID="id1300330108_R_smad_bf1_omitCE_unknownBindingSite">
+ <bp:bindsTo rdf:resource="#id837991759_Smad4_bf1_omitCE_unknownBindingSite" />
+</bp:BindingFeature>
+
+<bp:SequenceRegionVocabulary rdf:ID="DBD">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">DBD</bp:term>
+</bp:SequenceRegionVocabulary>
+
+<bp:BindingFeature rdf:ID="id837991759_Smad4_bf1_omitCE_unknownBindingSite">
+ <bp:bindsTo rdf:resource="#id1300330108_R_smad_bf1_omitCE_unknownBindingSite" />
+</bp:BindingFeature>
+
+<bp:BindingFeature rdf:ID="id377153490_STAT3_p_bf3">
+ <bp:featureLocationType rdf:resource="#DBD" />
+ <bp:featureLocation rdf:resource="#id377153490_STAT3_p_sl3" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Site:DBD</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AttributeSetNumber:3</bp:comment>
+</bp:BindingFeature>
+
+<bp:SequenceLocation rdf:ID="id377153490_STAT3_p_sl3">
+</bp:SequenceLocation>
+</rdf:RDF>
