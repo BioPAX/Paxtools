@@ -4,7 +4,7 @@ import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.pattern.Match;
-import org.biopax.paxtools.pattern.RelatedPEHandler;
+import org.biopax.paxtools.pattern.PhysicalEntityChain;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -51,9 +51,9 @@ public class LinkedPE extends ConstraintAdapter
 
 		for (BioPAXElement ele : set)
 		{
-			RelatedPEHandler peh = type == Type.TO_MEMBER ?
-				new RelatedPEHandler((PhysicalEntity) ele, (PhysicalEntity) match.get(ind[0])) :
-				new RelatedPEHandler((PhysicalEntity) match.get(ind[0]), (PhysicalEntity) ele) ;
+			PhysicalEntityChain peh = type == Type.TO_MEMBER ?
+				new PhysicalEntityChain((PhysicalEntity) ele, (PhysicalEntity) match.get(ind[0])) :
+				new PhysicalEntityChain((PhysicalEntity) match.get(ind[0]), (PhysicalEntity) ele) ;
 		}
 
 		return set;

@@ -15,12 +15,16 @@ public class PatternBox
 {
 	public static Pattern inSameComplex()
 	{
-		Pattern p = new Pattern(5, EntityReference.class);
+		Pattern p = new Pattern(7, EntityReference.class, "ER 1");
 		int i = 0;
 		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(ConBox.genericEquiv(), i, ++i);
 		p.addConstraint(ConBox.complexes(), i, ++i);
-		p.addConstraint(ConBox.simpleMembers(), i, ++i);
-		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(ConBox.complexMembers(), i, ++i);
+		p.addConstraint(ConBox.genericEquiv(), i, ++i);
+		p.addConstraint(new Type(SimplePhysicalEntity.class), i);
+		p.addConstraint(new PEChainsIntersect(false), i-4, i-3, i-1, i);
+		p.addConstraint(ConBox.peToER(), "ER 2", i, ++i);
 		p.addConstraint(new Equality(false), 0, i);
 		return p;
 	}
@@ -28,83 +32,86 @@ public class PatternBox
 	public static Pattern inSameActiveComplex()
 	{
 		Pattern p = inSameComplex();
-		p.addConstraint(new ActivityConstraint(true), 2);
+		p.addConstraint(new ActivityConstraint(true), 3);
 		return p;
 	}
 	
 	public static Pattern inSameComplexHavingTransActivity()
 	{
 		Pattern p = inSameComplex();
-		int i = p.getVariableSize() - 1;
-		p.setVariableSize(p.getVariableSize() + 2);
-		p.addConstraint(ConBox.peToControl(), 2, ++i);
-		p.addConstraint(ConBox.controlToTempReac(), i, ++i);
+		int i = p.getLastIndex();
+		p.increaseVariableSizeBy(2);
+
+		p.addConstraint(ConBox.peToControl(), 3, ++i);
+		p.addConstraint(ConBox.controlToTempReac(), "TemplateReaction", i, ++i);
 		p.addConstraint(new NOT(ConBox.participantER()), i, 0);
-		p.addConstraint(new NOT(ConBox.participantER()), i, 4);
+		p.addConstraint(new NOT(ConBox.participantER()), i, 6);
 		return p;
 	}
 
 	public static Pattern inSameComplexEffectingConversion()
 	{
 		Pattern p = inSameComplex();
-		int i = p.getVariableSize() - 1;
-		p.setVariableSize(p.getVariableSize() + 2);
-		p.addConstraint(ConBox.peToControl(), 2, ++i);
-		p.addConstraint(ConBox.controlToConv(), i, ++i);
-		p.addConstraint(new NOT(ConBox.participantER()), i, 0);
-		p.addConstraint(new NOT(ConBox.participantER()), i, 4);
-		return p;
-	}
+		int i = p.getLastIndex();
+		p.increaseVariableSizeBy(2);
 
-	public static Pattern hasActivity()
-	{
-		Pattern p = new Pattern(4, EntityReference.class);
-		int i = 0;
-		p.addConstraint(ConBox.erToPE(), i, ++i);
-		p.addConstraint(ConBox.withComplexes(), i, ++i);
-		p.addConstraint(ConBox.peToControl(), i, ++i);
+		p.addConstraint(ConBox.peToControl(), 3, ++i);
+		p.addConstraint(ConBox.controlToConv(), "Conversion", i, ++i);
+		p.addConstraint(new NOT(ConBox.participantER()), i, 0);
+		p.addConstraint(new NOT(ConBox.participantER()), i, 6);
 		return p;
 	}
-	
 
 	public static Pattern controlsStateChange(boolean considerGenerics)
 	{
-		Pattern p = new Pattern(considerGenerics ? 14 : 11, EntityReference.class);
+		Pattern p = new Pattern(5, EntityReference.class, "ER controller");
 		int i = 0;
 		p.addConstraint(ConBox.erToPE(), i, ++i);
-		if (considerGenerics) p.addConstraint(ConBox.genericEquiv(), i, ++i);
-		p.addConstraint(ConBox.withComplexes(), i, ++i);
+		if (considerGenerics) p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		else p.addConstraint(ConBox.withComplexes(), i, ++i);
 		p.addConstraint(ConBox.peToControl(), i, ++i);
 		p.addConstraint(ConBox.controlToConv(), i, ++i);
-		p.addConstraint(ConBox.left(), i, ++i); // PE_L
-		p.addConstraint(ConBox.right(), i-1, ++i); // PE_R
-		p.addConstraint(new Equality(false), i-1, i);
-		p.addConstraint(ConBox.withSimpleMembers(), i-1, ++i);
-		p.addConstraint(ConBox.withSimpleMembers(), i-1, ++i);
-		if (considerGenerics) p.addConstraint(ConBox.genericEquiv(), i-1, ++i);
-		if (considerGenerics) p.addConstraint(ConBox.genericEquiv(), i-1, ++i);
-		p.addConstraint(ConBox.peToER(), i-1, ++i);
-		p.addConstraint(ConBox.peToER(), i-1, ++i);
-		p.addConstraint(new Equality(true), i-1, i);
+
+		Pattern p2 = stateChange(considerGenerics);
+		p.addPattern(p2, i);
+
 		return p;
 	}
 
+	public static Pattern stateChange(boolean considerGenerics)
+	{
+		Pattern p = new Pattern(7, Conversion.class, "Conversion");
+		int i = 0;
+
+		p.addConstraint(ConBox.left(), "left PE", i, ++i);
+		if (considerGenerics) p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		else p.addConstraint(ConBox.withSimpleMembers(), i, ++i);
+		p.addConstraint(ConBox.peToER(), "ER left", i, ++i);
+		p.addConstraint(ConBox.right(), "right PE", p.indexOf("Conversion"), ++i);
+		if (considerGenerics) p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		else p.addConstraint(ConBox.withSimpleMembers(), i, ++i);
+		p.addConstraint(ConBox.peToER(), "ER right", i, ++i);
+		p.addConstraint(new Equality(false), p.indexOf("left PE"), p.indexOf("right PE"));
+		return p;
+	}
+
+
 	public static Pattern consecutiveCatalysis(Set<String> ubiqueIDs)
 	{
-		Pattern p = new Pattern(11, EntityReference.class);
+		Pattern p = new Pattern(11, EntityReference.class, "ER 1");
 		int i = 0;
 		p.addConstraint(ConBox.erToPE(), i, ++i);
-		p.addConstraint(ConBox.withComplexes(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
 		p.addConstraint(ConBox.peToControl(), i, ++i);
-		p.addConstraint(ConBox.controlToConv(), i, ++i);
+		p.addConstraint(ConBox.controlToConv(), "conv1", i, ++i);
 		p.addConstraint(new ParticipatingPE(RelType.OUTPUT, false), i-1, i, ++i);
 		if (ubiqueIDs != null) p.addConstraint(ConBox.notUbique(ubiqueIDs), i);
-		p.addConstraint(new ParticipatesInConv(RelType.INPUT, false), i, ++i);
+		p.addConstraint(new ParticipatesInConv(RelType.INPUT, false), "conv2", i, ++i);
 		p.addConstraint(new RelatedControl(RelType.INPUT), i-1, i, ++i);
 		p.addConstraint(ConBox.controllerPE(), i, ++i);
 		p.addConstraint(new NOT(ConBox.compToER()), i, 0);
-		p.addConstraint(ConBox.withSimpleMembers(), i, ++i);
-		p.addConstraint(ConBox.peToER(), i, ++i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(ConBox.peToER(), "ER 2", i, ++i);
 		return p;
 	}
 

@@ -4,18 +4,19 @@ import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.level3.*;
 
 /**
- * This class takes two equivalent PhysicalEntity, and prepares an array of PEs that link those.
+ * This class takes two PhysicalEntity objects linked with generic or complex member relationships,
+ * and prepares an array of PEs that link those.
  * 
  * @author Ozgun Babur
  */
-public class RelatedPEHandler
+public class PhysicalEntityChain
 {
 	public PhysicalEntity[] pes;
 
 	protected static final PathAccessor modifAcc = 
 		new PathAccessor("PhysicalEntity/feature:ModificationFeature/modificationType/term");
 
-	public RelatedPEHandler(PhysicalEntity small, PhysicalEntity big)
+	public PhysicalEntityChain(PhysicalEntity small, PhysicalEntity big)
 	{
 		pes = fillArray(big, small, 1, 0);
 		
@@ -24,19 +25,20 @@ public class RelatedPEHandler
 			throw new IllegalArgumentException("No link found between small PE = " +
 				small.getRDFId() + " and big PE = " + big.getRDFId());
 		}
+		assert !containsNull(pes);
+	}
 
-//		for (PhysicalEntity pe : pes)
-//		{
-//			if (pe == null)
-//			{
-//				System.out.println();
-//
-//				fillArray(big, small, 1, 0);
-//			}
-//		}
+	private boolean containsNull(PhysicalEntity[] pes)
+	{
+		for (PhysicalEntity pe : pes)
+		{
+			if (pe == null) return true;
+		}
+		return false;
 	}
 	
-	protected PhysicalEntity[] fillArray(PhysicalEntity parent, PhysicalEntity target, int depth, int dir)
+	protected PhysicalEntity[] fillArray(PhysicalEntity parent, PhysicalEntity target, int depth,
+		int dir)
 	{
 		if (parent == target)
 		{
@@ -99,7 +101,7 @@ public class RelatedPEHandler
 		return null;
 	}
 
-	public boolean intersects(RelatedPEHandler rpeh)
+	public boolean intersects(PhysicalEntityChain rpeh)
 	{
 		for (PhysicalEntity pe1 : pes)
 		{
