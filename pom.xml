@@ -31,6 +31,28 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<junit.version>4.10</junit.version>
+		<commons-logging.version>1.1.1</commons-logging.version>
+		<log4j.version>1.2.13</log4j.version>
+		<hibernate-core.version>3.6.9.Final</hibernate-core.version>
+		<hibernate-search.version>3.4.0.Final</hibernate-search.version>
+		<jpa.api.version>1.0.0-</jpa.api.version>
+		<commons-lang.version>2.4</commons-lang.version>
+		<collections-generic.version>4.01</collections-generic.version>
+		
+		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+		<maven-war-plugin.version>2.3</maven-war-plugin.version>
+		<maven-release-plugin.version>2.4</maven-release-plugin.version>
+		<wagon-ssh.version>2.0</wagon-ssh.version>
+		<maven-surefire-plugin.version>2.12</maven-surefire-plugin.version>
+		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
+		
+		<maven-site-plugin.version>3.1</maven-site-plugin.version>
+		<maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
+		<maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
+		<maven-project-info-reports-plugin.version>2.6</maven-project-info-reports-plugin.version>
 	</properties>
 
 	<developers>
@@ -140,7 +162,7 @@
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-site-plugin</artifactId>
-							<version>3.2</version>
+							<version>${maven-site-plugin.version}</version>
 						</plugin>
 					</plugins>
 				</pluginManagement>
@@ -198,7 +220,7 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>${maven-compiler-plugin.version}</version>
 					<configuration>
 						<source>1.6</source>
 						<target>1.6</target>
@@ -207,7 +229,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.2</version>
+					<version>${maven-jar-plugin.version}</version>
 					<executions>
 						<execution>
 							<goals>
@@ -216,13 +238,43 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${maven-source-plugin.version}</version>
+				</plugin>
+				<plugin>
+        			<groupId>org.apache.maven.plugins</groupId>
+        			<artifactId>maven-release-plugin</artifactId>
+        			<version>${maven-release-plugin.version}</version>
+      			</plugin>
+      			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven-javadoc-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jxr-plugin</artifactId>
+					<version>${maven-jxr-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>${maven-project-info-reports-plugin.version}</version>
+				</plugin>	
 			</plugins>
 		</pluginManagement>
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
-				<version>2.0</version>
+				<version>${wagon-ssh.version}</version>
 			</extension>
 		</extensions>
 		<plugins>
@@ -250,7 +302,6 @@
      	 	<plugin>
         		<groupId>org.apache.maven.plugins</groupId>
         		<artifactId>maven-release-plugin</artifactId>
-        		<version>2.4</version>
         		<configuration>
         			<autoVersionSubmodules>true</autoVersionSubmodules>
         			<branchName>stable</branchName>
@@ -259,23 +310,24 @@
 		</plugins>
 	</build>
 
+	<dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
+			<version>${commons-logging.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
+			<version>${log4j.version}</version>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
         <dependency>
@@ -287,13 +339,58 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search</artifactId>
-            <version>3.4.0.Final</version>
+            <version>${hibernate-search.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>3.6.3.Final</version>
+            <version>${hibernate-core.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        		<dependency>
+			<groupId>net.sourceforge.collections</groupId>
+			<artifactId>collections-generic</artifactId>
+			<version>${collections-generic.version}</version>
+		</dependency>
+         <dependency>
+         	<groupId>commons-lang</groupId>
+         	<artifactId>commons-lang</artifactId>
+         	<version>${commons-lang.version}</version>
+         </dependency>
+	</dependencies>	
+	</dependencyManagement>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
             <scope>provided</scope>
         </dependency>
 	</dependencies>
@@ -328,17 +425,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.3</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.6</version>
 			</plugin>
 		</plugins>
 	</reporting>

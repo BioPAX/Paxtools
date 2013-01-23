@@ -17,12 +17,10 @@
 		<dependency>
 			<groupId>net.sourceforge.collections</groupId>
 			<artifactId>collections-generic</artifactId>
-			<version>4.01</version>
 		</dependency>
          <dependency>
          	<groupId>commons-lang</groupId>
          	<artifactId>commons-lang</artifactId>
-         	<version>2.4</version>
          </dependency>
 	</dependencies>
 
@@ -39,4 +37,13 @@
 <!-- 			</plugin> -->
 <!-- 		</plugins> -->
 <!-- 	</build> -->
+
+	<distributionManagement>
+		<site>
+			<id>biopax.sf.net</id>
+			<name>BioPAX Sourceforge site</name>
+			<url>${biopax.site.url}/paxtools-${project.parent.version}/${project.artifactId}</url>
+		</site>
+	</distributionManagement>
+
 </project>

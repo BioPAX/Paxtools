@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.biopax.paxtools</groupId>
         <artifactId>paxtools</artifactId>
-        <version>4.1.5-SNAPSHOT</version>
+        <version>4.1.6-SNAPSHOT</version>
     </parent>
     <artifactId>paxtools-scripting</artifactId>
     <packaging>jar</packaging>
@@ -19,5 +19,14 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+	<distributionManagement>
+		<site>
+			<id>biopax.sf.net</id>
+			<name>BioPAX Sourceforge site</name>
+			<url>${biopax.site.url}/paxtools-${project.parent.version}/${project.artifactId}</url>
+		</site>
+	</distributionManagement>    
+    
 </project>
 

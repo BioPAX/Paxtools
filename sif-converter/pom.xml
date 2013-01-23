@@ -31,4 +31,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<distributionManagement>
+		<site>
+			<id>biopax.sf.net</id>
+			<name>BioPAX Sourceforge site</name>
+			<url>${biopax.site.url}/paxtools-${project.parent.version}/${project.artifactId}</url>
+		</site>
+	</distributionManagement>	
+	
 </project>
