@@ -49,7 +49,7 @@ public class PaxtoolsMain {
     public static void fromPsimi(String[] argv) throws IOException {
 
         // some utility info
-        System.out.println("PSI-MI to BioPAX Conversion Tool v2.0");
+        System.out.println("PSI-MI to BioPAX Conversion Tool");
         System.out.println("Supports PSI-MI Level 2.5 (compact) model and BioPAX Level 2 or 3.");
 
 
@@ -61,7 +61,8 @@ public class PaxtoolsMain {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
-            System.err.println("Incorrect BioPAX level specified: " + argv[1] + " .  Please select level 2 or 3.");
+            System.err.println("Incorrect BioPAX level specified: " + argv[1] 
+            	+ " .  Please select level 2 or 3.");
             System.exit(0);
         }
 
@@ -184,7 +185,7 @@ public class PaxtoolsMain {
      * Checks files by the online BioPAX validator 
      * using the validator client.
      * 
-     * @see <a href="http://www.biopax.org/biopax-validator/ws.html">BioPAX Validator Webservice</a>
+     * @see <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
      * 
      * @param argv
      * @throws IOException
@@ -196,9 +197,10 @@ public class PaxtoolsMain {
         // default options
         RetFormat outf = RetFormat.HTML;
         boolean fix = false;
-        boolean normalize = false;
         Integer maxErrs = null;
         Behavior level = null; //will report both errors and warnings
+        String profile = null;
+        
         // match optional args
 		for (int i = 3; i < argv.length; i++) {
 			if ("html".equalsIgnoreCase(argv[i])) {
@@ -207,8 +209,6 @@ public class PaxtoolsMain {
 				outf = RetFormat.XML;
 			} else if ("biopax".equalsIgnoreCase(argv[i])) {
 				outf = RetFormat.OWL;
-			} else if ("normalize".equalsIgnoreCase(argv[i])) {
-				normalize = true;
 			} else if ("auto-fix".equalsIgnoreCase(argv[i])) {
 				fix = true;
 			} else if ("only-errors".equalsIgnoreCase(argv[i])) {
@@ -216,6 +216,8 @@ public class PaxtoolsMain {
 			} else if ((argv[i]).toLowerCase().startsWith("maxerrors=")) {
 				String num = argv[i].substring(10);
 				maxErrs = Integer.valueOf(num);
+			} else if ("notstrict".equalsIgnoreCase(argv[i])) {
+				profile = "notstrict";
 			}
 		}
 
@@ -247,12 +249,8 @@ public class PaxtoolsMain {
         OutputStream os = new FileOutputStream(output);
         try {
             if (!files.isEmpty()) {
-                BiopaxValidatorClient val =
-                        new BiopaxValidatorClient();
-                // do not auto-fix, nor normalize, nor filter errors, etc..
-//                val.validate(fix, normalize, outf, level, maxErrs, null,
-// files.toArray(new File[]{}), os); //Todo ED>>Igor>>Does not compile on my
-// system. Prob. dep issue?
+                BiopaxValidatorClient val = new BiopaxValidatorClient();
+                val.validate(fix, profile, outf, level, maxErrs, null, files.toArray(new File[]{}), os);
             }
         } catch (Exception ex) {
             // fall-back: not using the remote validator; trying to read files
@@ -333,9 +331,9 @@ public class PaxtoolsMain {
 
     static void help() {
 
-        System.out.println("Available operations:");
+        System.out.println("(Paxtools Console) Available Operations:\n");
         for (Command cmd : Command.values()) {
-            System.out.println(cmd.name() + "\t" + cmd.description);
+            System.out.println(cmd.name() + " " + cmd.description);
         }
 
     }
@@ -569,37 +567,50 @@ public class PaxtoolsMain {
 	//-- End of Section; Printing summary ---------------------------------------------------------|
 	
     enum Command {
-        merge("file1 file2 output\t\tmerges file2 into file1 and writes it into output", 3)
+        merge("<file1> <file2> <output>\n" +
+        		"\t- merges file2 into file1 and writes it into output", 3)
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
-        toSif("file1 output\t\t\tconverts model to the simple interaction format", 2)
+        toSif("<file1> <output>\n" +
+        		"\t- converts model to the simple interaction format", 2)
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("file1 outEdges outNodes node-prop1,node-prop2,.. edge-prop1,edge-prop2,...\tconverts model " +
-        		"to the extendent simple interaction format", 4)
+        toSifnx("<file1> <outEdges> <outNodes> <node-prop1,node-prop2,..> <edge-prop1,edge-prop2,...>\n" +
+        		"\t- converts model to the extendent simple interaction format", 4)
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
-        toSbgn("biopax.owl output.sbgn\t\tconverts model to the SBGN format.", 2)
+        toSbgn("<biopax.owl> <output.sbgn>\n" +
+        		"\t- converts model to the SBGN format.", 2)
                 {public void run(String[] argv) throws IOException { toSBGN(argv); } },
-        validate("path out [xml|html|biopax] [auto-fix] [normalize] [only-errors] [maxerrors=n]\t\t" +
-        		"validates the BioPAX file (or all the files in the directory); " +
-        		"writes the html report, xml report (including fixed xml-escaped biopax), " +
-        		"or the biopax (fixed/normalized) only; see also: http://www.biopax.org/biopax-validator/ws.html", 3)
+        validate("<path> <out> [xml|html|biopax] [auto-fix] [only-errors] [maxerrors=n] [notstrict]\n" +
+        		"\t- validate BioPAX file/directory (up to ~25MB in total size, -\n" +
+        		"\totherwise download and run the stand-alone validator)\n" +
+        		"\tin the directory using the online validator service\n" +
+        		"\t(generates html or xml report, or gets the processed biopax\n" +
+        		"\t(cannot be perfect though) see http://www.biopax.org/validator)", 3)
 		        {public void run(String[] argv) throws IOException{validate(argv);} },
-        integrate("file1 file2 output\t\tintegrates file2 into file1 and writes it into output (experimental)", 3)
+        integrate("<file1> <file2> <output>\n" +
+        		"\t- integrates file2 into file1 and writes it into output (experimental)", 3)
 		        {public void run(String[] argv) throws IOException{integrate(argv);} },
-        toLevel3("file1 output\t\tconverts level 1 or 2 to the level 3 file", 2)
+        toLevel3("<file1> <output>\n" +
+        		"\t- converts level 1 or 2 to the level 3 file", 2)
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
-        fromPsimi("level file1 output\t\tconverts PSI-MI Level 2.5 to biopax level 2 or 3 file", 3)
+        fromPsimi("<level> <file1> <output>\n" +
+        		"\t- converts PSI-MI Level 2.5 to biopax level 2 or 3 file", 3)
 		        {public void run(String[] argv) throws IOException{fromPsimi(argv);} },
-        toGSEA("file1 output database crossSpeciesCheck\t\tconverts level 1 or 2 or 3 to GSEA output."
-                + "\t\tSearches database for participant id or uses biopax rdf id if database is \"NONE\"."
-                + "\t\tCross species check ensures participant protein is from same species as pathway (set to true or false).", 4)
+        toGSEA("<file1> <output> <database> [crossSpeciesCheck]\n" +
+        		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
+                + "\tUses that database identifier or the biopax URI if database is \"NONE\".\n"
+                + "\tCross species check ensures participant protein is from same species\n" +
+                "\tas pathway (set to true or false).", 4)
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
-        fetch("file1 id1,id2,.. output\t\textracts a sub-model from file1 and writes BioPAX to output", 3)
+        fetch("<file1> <id1,id2,..> <output>\n" +
+        		"\t- extracts a sub-model from file1 and writes BioPAX to output", 3)
 		        {public void run(String[] argv) throws IOException{fetch(argv);} },
-        getNeighbors("file1 id1,id2,.. output\t\tnearest neighborhood graph query (id1,id2 - of Entity sub-class only)", 3)
+        getNeighbors("<file1> <id1,id2,..> <output>\n" +
+        		"\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)", 3)
 		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
-        summarize("file\t\tprints a summary of the contents of the model", 1)
+        summarize("<file>\n" +
+        		"\t- prints a summary of the contents of the model", 1)
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
-        help("\t\t\t\t\t\tprints this screen and exits", Integer.MAX_VALUE)
+        help("\t- prints this screen and exits", Integer.MAX_VALUE)
 		        {public void run(String[] argv) throws IOException{help();} };
 
         String description;

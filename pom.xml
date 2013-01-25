@@ -14,7 +14,7 @@
 		independent to be easily embedded into applications.
 	</description>
 	
-	<url>http://biopax.sourceforge.net/paxtools-${project.version}</url>
+	<url>http://biopax.sourceforge.net/paxtools</url>
 
 	<modules>
         <module>paxtools-core</module>
@@ -137,7 +137,7 @@
 			<id>sourceforge</id>
 			<properties>
 				<biopax.site.url>
-					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/
+					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2site
 				</biopax.site.url>
 				<biopax.snapshot.url>
 					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots
@@ -196,7 +196,7 @@
 		<site>
 			<id>biopax.sf.net</id>
 			<name>BioPAX Sourceforge site</name>
-			<url>${biopax.site.url}/paxtools-${project.version}</url>
+			<url>${biopax.site.url}/paxtools</url>
 		</site>
 		<snapshotRepository>
 			<id>biopax.snapshots</id>
