@@ -31,4 +31,5 @@
         </dependency>
     </dependencies>
 
+    <description>To convert BioPAX L3 to SBGN-ML (SBGN PD) and optionally align.</description>
 </project>

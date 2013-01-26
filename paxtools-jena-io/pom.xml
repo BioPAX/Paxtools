@@ -24,4 +24,5 @@
         </dependency>
     </dependencies>
     
+    <description>Provides I/O support for BioPAX OWL models using Jena</description>
 </project>

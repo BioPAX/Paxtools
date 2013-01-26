@@ -14,7 +14,7 @@
 		independent to be easily embedded into applications.
 	</description>
 	
-	<url>http://biopax.sourceforge.net/paxtools</url>
+	<url>${siteUrl}</url>
 
 	<modules>
         <module>paxtools-core</module>
@@ -31,6 +31,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+<!-- with maven 3, unlike ${project.version}, the ${biopax.site.url} is somehow not resolved 
+ (from settings.xml) and thus 'modules' links suck; so - will use the firm URL prefix: -->
+<!-- <siteDeployUrl>${biopax.site.url}/paxtools-${project.version}</siteDeployUrl> -->
+		<siteDeployUrl>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2site/paxtools-${project.version}</siteDeployUrl>
+		<siteUrl>http://biopax.sourceforge.net/paxtools-${project.version}</siteUrl>	
 		
 		<junit.version>4.10</junit.version>
 		<commons-logging.version>1.1.1</commons-logging.version>
@@ -49,7 +55,7 @@
 		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
 		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
 		
-		<maven-site-plugin.version>3.1</maven-site-plugin.version>
+		<maven-site-plugin.version>3.2</maven-site-plugin.version>
 		<maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
 		<maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
 		<maven-project-info-reports-plugin.version>2.6</maven-project-info-reports-plugin.version>
@@ -126,33 +132,41 @@
 		<system>SF</system>
 		<url>https://sourceforge.net/tracker/?group_id=85345</url>
 	</issueManagement>
+
+	<ciManagement>
+		<system>jenkins</system>
+		<url>http://cbiojenkins.no-ip.org:8080/job/Paxtools</url>
+	</ciManagement>
 	
 	<!--
 	     See the following wiki document for details on how to do the setup for deploying/releasing
 	     http://sourceforge.net/apps/mediawiki/biopax/index.php?title=Deploying_Paxtools
 	-->
-
+	<!-- basically, two things: 
+	 1) for maven artifacts deployment (mvn deploy), e.g. by Jenkins, have biopax.snapshot.url 
+	 and biopax.release.url set in your .m2/settings.xml and point to a local directory, which
+	 then can be synchronized (rsync) with the remote public biopax repositories as needed 
+	 (recommended method, which is quick, does not require you start the remote shell service 
+	 in advance, and also respects your intranet/firewall/security policies). 
+	 So, do NOT: mvn deploy -Psourceforge, because it's slow, may violate network policy (brute force), etc.
+	 
+	 2) try: mvn clean site site:stage -DstagingDirectory=/some/local/path/paxtools-${version}
+	 (though some of resulting links won't be right), but not site-stage...; 
+	 finally, once satisfied, start sf.net shell and do: mvn clean site-deploy -Psourceforge 
+	 (this deploys directly to the public website, where all links should work)
+	-->
 	<profiles>
 		<profile>
 			<id>sourceforge</id>
 			<properties>
-				<biopax.site.url>
-					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2site
-				</biopax.site.url>
-				<biopax.snapshot.url>
-					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots
-				</biopax.snapshot.url>
-				<biopax.release.url>
-					scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases
-				</biopax.release.url>
+				<biopax.snapshot.url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots</biopax.snapshot.url>
+				<biopax.release.url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases</biopax.release.url>
 			</properties>
 		</profile>
 		<profile>
 			<id>maven-3</id>
 			<activation>
 				<file>
-					<!-- This employs that the basedir expression is only recognized by 
-						Maven 3.x (see MNG-2363) -->
 					<exists>${basedir}</exists>
 				</file>
 			</activation>
@@ -168,6 +182,7 @@
 				</pluginManagement>
 				<plugins>
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-site-plugin</artifactId>
 						<executions>
 							<execution>
@@ -189,14 +204,14 @@
 			scm:hg:ssh://${scm.username}@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
 		</developerConnection>
 		<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
-	  <tag>HEAD</tag>
-  </scm>
+	  	<tag>HEAD</tag>
+	</scm>
 
 	<distributionManagement>
 		<site>
 			<id>biopax.sf.net</id>
 			<name>BioPAX Sourceforge site</name>
-			<url>${biopax.site.url}/paxtools</url>
+			<url>${siteDeployUrl}</url>
 		</site>
 		<snapshotRepository>
 			<id>biopax.snapshots</id>
@@ -267,7 +282,13 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>${maven-project-info-reports-plugin.version}</version>
-				</plugin>	
+				</plugin>
+				<plugin>
+					<!-- when not using maven 3.x -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<extensions>
@@ -304,9 +325,8 @@
         		<artifactId>maven-release-plugin</artifactId>
         		<configuration>
         			<autoVersionSubmodules>true</autoVersionSubmodules>
-        			<branchName>stable</branchName>
         		</configuration>
-      		</plugin>			
+      		</plugin>  					
 		</plugins>
 	</build>
 
@@ -348,7 +368,7 @@
             <version>${hibernate-core.version}</version>
             <scope>provided</scope>
         </dependency>
-        		<dependency>
+        <dependency>
 			<groupId>net.sourceforge.collections</groupId>
 			<artifactId>collections-generic</artifactId>
 			<version>${collections-generic.version}</version>
@@ -415,6 +435,28 @@
 			<url>http://biopax.sourceforge.net/m2repo/releases/</url>
 			<snapshots>
 				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>ebi-repo</id>
+			<name>The EBI internal repository</name>
+			<url>http://www.ebi.ac.uk/~maven/m2repo</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>ebi-repo-snapshots</id>
+			<name>The EBI internal repository</name>
+			<url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 	</repositories>

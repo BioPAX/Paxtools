@@ -21,4 +21,5 @@
         </dependency>
     </dependencies>
 
+    <description>Paxtools pattern module lets users define subgraph structures (called pattern here) with BioPAX elements, and searches for matching subgraphs in a given BioPAX model.</description>
 </project>

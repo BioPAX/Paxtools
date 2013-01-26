@@ -32,4 +32,5 @@
 		</dependency>
 	</dependencies>
 	
+	<description>Converts a BioPAX model to binary SIF (simple interaction format) or extended binary SIF by inferring the interactions in the model and describing them in terms of simple interactions. This includes a set of BioPAX-specific inference rules implemented on top of paxtools-core.</description>
 </project>

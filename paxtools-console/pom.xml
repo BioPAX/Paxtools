@@ -8,7 +8,7 @@
 	<artifactId>paxtools-console</artifactId>
 	<packaging>jar</packaging>
 	<name>Paxtools Console Application</name>
-	<description>Paxtools Console Application (with dependencies)</description>
+	<description>Paxtools Console Application and Examples</description>
 	
 	<build>
 			<plugins>

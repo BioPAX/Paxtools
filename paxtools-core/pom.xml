@@ -11,7 +11,7 @@
 	<packaging>jar</packaging>	
 <!-- 	<packaging>bundle</packaging> -->
 
-	<name>Paxtools Core Library and BioPAX Model</name>
+	<name>Paxtools Core</name>
 	<dependencies>
 		<dependency>
 			<groupId>net.sourceforge.collections</groupId>
@@ -37,4 +37,5 @@
 <!-- 		</plugins> -->
 <!-- 	</build> -->
 
+	<description>Paxtools core library includes the BioPAX object model and interfaces and the default implementation (including persistence and indexing annotations and bridge classes), reflection-based class factories and property editors/accessors, traversal and file (I/O) utilities.</description>
 </project>

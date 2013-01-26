@@ -8,6 +8,4 @@ syntax:regexp
 ?\.DS_Store
 ?\.settings
 geo_data
-
-syntax: regexp
 ^target$

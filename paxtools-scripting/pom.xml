@@ -19,5 +19,6 @@
         </dependency>
     </dependencies>  
     
+    <description>experimental module, future work...</description>
 </project>
 
