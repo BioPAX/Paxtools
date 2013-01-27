@@ -82,19 +82,6 @@
 				</dependency>
 			</dependencies>
 		</profile>
-		<profile>
-			<id>query</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>${project.groupId}</groupId>
-					<artifactId>paxtools-query</artifactId>
-					<version>${project.version}</version>
-				</dependency>
-			</dependencies>
-		</profile>
 	</profiles>
 	
 	<dependencies>
@@ -119,10 +106,15 @@
 			<version>${project.version}</version>
 		</dependency>
         <dependency>
-            <groupId>org.biopax.paxtools</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>sbgn-converter</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>paxtools-query</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
