@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
-	<version>4.1.6-SNAPSHOT</version>
+	<version>4.1.6</version>
 
 	<name>Paxtools</name>
 	<packaging>pom</packaging>
@@ -204,7 +204,7 @@
 			scm:hg:ssh://${scm.username}@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
 		</developerConnection>
 		<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
-	  	<tag>HEAD</tag>
+	  	<tag>v4.1.6</tag>
 	</scm>
 
 	<distributionManagement>
