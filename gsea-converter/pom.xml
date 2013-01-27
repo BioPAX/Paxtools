@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>gsea-converter</artifactId>
   <name>GSEA Converter</name>
-  <description>Converts data to GESA format</description>
+  <description>Converts data to the GESA (.gmt) format</description>
   <dependencies>
    	<dependency>
     	<groupId>org.biopax.paxtools</groupId>
@@ -15,4 +15,5 @@
     	<version>${project.version}</version>
     </dependency> 
  </dependencies>
+ 
 </project>

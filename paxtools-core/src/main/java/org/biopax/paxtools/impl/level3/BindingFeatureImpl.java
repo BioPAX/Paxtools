@@ -99,11 +99,13 @@ public class BindingFeatureImpl extends EntityFeatureImpl
 			return false;
 		
 		BindingFeature that = (BindingFeature) element;
-		return super.semanticallyEquivalent(element) &&
-		                this.getIntraMolecular() == that.getIntraMolecular() 
-		                && (this.bindsTo == null) 
-		                	? that.getBindsTo()==null : 
-		                		this.bindsTo.equals(that.getBindsTo()); //todo check equivalence sem.
+		
+		return  super.semanticallyEquivalent(element) 
+				&& this.getIntraMolecular() == that.getIntraMolecular() 
+		        && ((this.bindsTo == null) 
+		        		? that.getBindsTo()==null 
+		                : this.bindsTo.equals(that.getBindsTo())
+		        	); //todo check equivalence sem.
 	}
 
 	@Override

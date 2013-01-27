@@ -1,39 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <parent>
-        <groupId>org.biopax.paxtools</groupId>
-        <artifactId>paxtools</artifactId>
-        <version>4.1.6-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.biopax.paxtools</groupId>
+		<artifactId>paxtools</artifactId>
+		<version>4.1.6-SNAPSHOT</version>
+	</parent>
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>psimi-converter</artifactId>
   <name>PSI-MI Converter</name>
-  <description>Converts PSI-MI v2.5 (compact) files to BioPAX Level 2 or 3</description>
-  <repositories>
-	<repository>
-	  <id>ebi-repo</id>
-	  <name>The EBI internal repository</name>
-	  <url>http://www.ebi.ac.uk/~maven/m2repo</url>
-	  <releases>
-		<enabled>true</enabled>
-	  </releases>
-	  <snapshots>
-		<enabled>false</enabled>
-	  </snapshots>
-	</repository>
-	<repository>
-	  <id>ebi-repo-snapshots</id>
-	  <name>The EBI internal repository</name>
-	  <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
-	  <releases>
-		<enabled>false</enabled>
-	  </releases>
-	  <snapshots>
-		<enabled>true</enabled>
-	  </snapshots>
-	</repository>
-	</repositories>
+  <description>Converts PSI-MI v2.5 (compact) files to BioPAX.</description>
+ 
   <dependencies>
    	<dependency>
     	<groupId>org.biopax.paxtools</groupId>
@@ -56,4 +33,5 @@
     	<version>1.7.7</version>
     </dependency>
   </dependencies>
+  
 </project>

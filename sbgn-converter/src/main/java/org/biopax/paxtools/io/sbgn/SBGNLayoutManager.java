@@ -31,6 +31,7 @@ public class SBGNLayoutManager
 	private HashMap <Glyph,VNode>  glyphToVNode;
 	private HashMap <String, Glyph> idToGLyph;
 	private HashMap<String, Glyph> idToCompartmentGlyphs;
+	private HashMap<String, Glyph> portIDToOwnerGlyph;
 	
 	
 	/**
@@ -46,6 +47,7 @@ public class SBGNLayoutManager
 		glyphToVNode = new HashMap();
 		idToGLyph = new HashMap();
 		idToCompartmentGlyphs = new HashMap();
+		portIDToOwnerGlyph = new HashMap();
 		
 		// Using Compound spring  embedder layout
 		this.layout = new CoSELayout();
@@ -61,8 +63,7 @@ public class SBGNLayoutManager
 			if(g.getClazz() == "compartment")
 			{
 				idToCompartmentGlyphs.put(g.getId(), g);
-			}
-				
+			}			
 		}
 		
 		ArrayList <Glyph> deletedList = new ArrayList<Glyph>();
@@ -112,29 +113,6 @@ public class SBGNLayoutManager
 		return sbgn;
 	}
 	
-	void printAllMap(Glyph parent, int nestingLevel)
-	{
-		boolean  isContainerGlyph = true;
-		
-		for(int i = 0; i < nestingLevel; i++)
-			System.out.print(" ");
-		if(isContainerGlyph)
-		{
-			System.out.println(parent.getId());
-			nestingLevel++;
-			isContainerGlyph = false;
-		}
-
-		for(Glyph glyph: parent.getGlyph())
-		{
-			for(int i = 0; i < nestingLevel; i++)
-				System.out.print(" ");
-			
-			
-			printAllMap(glyph,nestingLevel);
-				
-		}
-	}
 	
 	public void updateCompoundBounds(Glyph parent,List<Glyph> childGlyphs)
 	{		
@@ -168,8 +146,6 @@ public class SBGNLayoutManager
 	            parent.getBbox().setW(maxX -  parent.getBbox().getX() + PAD);
 	            parent.getBbox().setH(maxY -  parent.getBbox().getY() + PAD);
 			}
-			
-
 		}
 	}
 	
@@ -199,28 +175,28 @@ public class SBGNLayoutManager
 		for(Glyph glyph: glyphs )
 		{	
 			if (glyph.getClazz() !=  "state variable" && glyph.getClazz() !=  "unit of information"  ) 
-			{
-				
+			{			
 				if(!this.isChildless(glyph))
 				{
 					VCompound v = new VCompound(glyph);
 
 					idToGLyph.put(glyph.getId(), glyph);
 					glyphToVNode.put(glyph, v);
-		
 					parent.children.add(v);
-					
 					createVNodes(v, glyph.getGlyph());
 				}
 				
 				else
 				{
 					VNode v = new VNode(glyph);
-
 					idToGLyph.put(glyph.getId(), glyph);
-					glyphToVNode.put(glyph, v);
-					
+					glyphToVNode.put(glyph, v);		
 					parent.children.add(v);
+				}
+				
+				for(Port p: glyph.getPort())
+				{
+					portIDToOwnerGlyph.put(p.getId(), glyph );
 				}
 				
 			}
@@ -228,7 +204,7 @@ public class SBGNLayoutManager
 	}
 	
 	/**
-	 *  Clears the port indicator of ID of given port, and retrieves corresponding LNode for this ID. Briefly, finds the LNode which is parent of the VNode that 
+	 *  Briefly, finds the LNode which is parent of the VNode that 
 	 *  corresponds to the glyph object which is container of this port.
 	 * 
 	 * @param p port object that by its ID  the corresponding LNode will be retrieved.
@@ -237,23 +213,10 @@ public class SBGNLayoutManager
 	 * */
 	public LNode getLNodeByPort(Port p)
 	{
-		
 		String tmpStr = p.getId();
-		
-		// Clear port indicator. 
-		// ( CONVENTION: It is assumed that, ports are declared by prepending '.' at the end of the ID of container glyphs and also appending proper name e.g. "INPUT", ".1")
-		if (tmpStr.lastIndexOf(".") > -1) 
-		{
-			tmpStr = tmpStr.substring(0, tmpStr.lastIndexOf("."));
-		}
-		
-		
-		// Access hashmaps to first get corresponding container glyph and corresponding VNode
-		Glyph tmpG = idToGLyph.get(tmpStr);
-		VNode tmpV = glyphToVNode.get(tmpG);
-
+		VNode tmpVNode = glyphToVNode.get(portIDToOwnerGlyph.get(tmpStr));
 		// Return corresponding LNode
-		return viewToLayout.get(tmpV);
+		return viewToLayout.get(tmpVNode);
 	}
 	
 	/**

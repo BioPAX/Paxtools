@@ -55,9 +55,9 @@ public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements Co
 		
 		CovalentBindingFeature that = (CovalentBindingFeature) element;
 		SequenceModificationVocabulary type = that.getModificationType();
-		boolean value = (type == null) ?
+		boolean value = ((type == null) ?
 		                this.getModificationType() == null :
-		                this.getModificationType().equals(type);
+		                this.getModificationType().equals(type));
 		return value && super.semanticallyEquivalent(element);
 	}
 

@@ -3,7 +3,6 @@ package org.biopax.paxtools.pattern;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.pattern.c.ConBox;
 import org.junit.Assert;
