@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
-		<version>4.1.6</version>
+		<version>4.1.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>paxtools-console</artifactId>
 	<packaging>jar</packaging>
