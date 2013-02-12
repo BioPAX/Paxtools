@@ -66,6 +66,13 @@ public interface PhysicalEntity extends Entity, Controller
 
 	//Property memberPhysicalEntity
 
+	/**
+	 * Please avoid using this property in your BioPAX L3 models
+	 * unless absolutely sure/required, for there is an alternative way 
+	 * (using PhysicalEntity/entityReference/memberEntityReference), and 
+	 * this will probably be deprecated in the future BioPAX releases.
+	 * @return
+	 */
 	Set<PhysicalEntity> getMemberPhysicalEntity();
 
 	void addMemberPhysicalEntity(PhysicalEntity memberPhysicalEntity);

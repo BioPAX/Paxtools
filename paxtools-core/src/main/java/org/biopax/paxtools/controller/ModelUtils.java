@@ -1312,6 +1312,28 @@ public final class ModelUtils
 	}
 
 
+	/**
+	 * Converts generic simple physical entities, 
+	 * i.e., physical entities except Complexes 
+	 * that have not empty memberPhysicalEntity property,
+	 * into equivalent physical entities
+	 * with generic entity references (which have members);
+	 * this is a better and less error prone way to model
+	 * generic molecules in BioPAX L3. 
+	 * 
+	 * Notes:
+	 * Generic Complexes could be normalized in a similar way,
+	 * but they do not have entityReference property and might
+	 * contain generic (incl. not yet normalized) components, which
+	 * makes it complicated.
+	 * 
+	 * Please avoid using 'memberPhysicalEntity' in your BioPAX L3 models
+	 * unless absolutely sure/required, for there is an alternative way 
+	 * (using PhysicalEntity/entityReference/memberEntityReference), and 
+	 * this will probably be deprecated in the future BioPAX releases.
+	 * 
+	 * @param model
+	 */
 	public static void normalizeGenerics(Model model)
 	{
 
