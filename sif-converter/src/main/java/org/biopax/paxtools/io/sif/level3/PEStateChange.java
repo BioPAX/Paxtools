@@ -179,12 +179,13 @@ public class PEStateChange {
 	private void appendXrefs(Controller controller, StringBuilder builder)
 	{
 		HashSet<SimplePhysicalEntity> simple = new HashSet<SimplePhysicalEntity>();
+        if(controller instanceof PhysicalEntity) {
+            Simplify.getSimpleMembers((PhysicalEntity) controller, simple);
+            for (SimplePhysicalEntity spe : simple)
+            {
 
-		Simplify.getSimpleMembers((PhysicalEntity) controller, simple);
-		for (SimplePhysicalEntity spe : simple)
-		{
-
-			builder.append("(").append(spe.getEntityReference().getXref()).append(")");
-		}
+                builder.append("(").append(spe.getEntityReference().getXref()).append(")");
+            }
+        }
 	}
 }
