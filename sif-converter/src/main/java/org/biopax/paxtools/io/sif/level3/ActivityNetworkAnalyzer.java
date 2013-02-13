@@ -1,5 +1,7 @@
 package org.biopax.paxtools.io.sif.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -20,6 +22,8 @@ import java.util.Set;
  */
 public class ActivityNetworkAnalyzer
 {
+    private static final Log log = LogFactory.getLog(ActivityNetworkAnalyzer.class);
+
 	Map<BioPAXElement, Set<PEStateChange>> stateChangeMap;
 
 	Map<Conversion, Set<EntityReference>> extendedControls;
@@ -129,7 +133,7 @@ public class ActivityNetworkAnalyzer
 	public void writeStateNetworkAnalysis(OutputStream out) throws IOException
 	{
 		Writer writer = new OutputStreamWriter(out);
-		System.out.println("stateChangeMap.size = " + stateChangeMap.values().size());
+		log.debug("stateChangeMap.size = " + stateChangeMap.values().size());
 		int ineligible = 0;
 		int eligible = 0;
 		for (BioPAXElement bpe : stateChangeMap.keySet())
@@ -148,7 +152,7 @@ public class ActivityNetworkAnalyzer
 							String s = pathway.getName().toString();
 							if (s.isEmpty())
 							{
-								System.out.println("Empty name pathway = " + pathway);
+								log.debug("Empty name pathway = " + pathway);
 							}
 							writer.write(s + ";");
 						}
@@ -175,12 +179,12 @@ public class ActivityNetworkAnalyzer
 				}
 			} else
 			{
-				System.out.println("bpe = " + bpe);
+				log.debug("bpe = " + bpe);
 			}
 
 		}
-		System.out.println("ineligible = " + ineligible);
-		System.out.println("eligible = " + eligible);
+		log.debug("ineligible = " + ineligible);
+		log.debug("eligible = " + eligible);
 		writer.flush();
 
 
@@ -218,7 +222,7 @@ public class ActivityNetworkAnalyzer
 							Set<EntityReference> xC = extendedControls.get(next.getConv());
 							if (xC != null && xC.contains(sChange.getRight().getEntityReference()))
 							{
-								System.out.println("extended");
+								log.debug("extended");
 								dc.put(EXTENDED, false);
 							}
 						}
