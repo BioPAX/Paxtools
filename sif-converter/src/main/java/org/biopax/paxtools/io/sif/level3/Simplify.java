@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.EquivalenceWrapper;
+import org.biopax.paxtools.util.EquivalenceSet;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -79,22 +79,23 @@ public class Simplify
 			{
 				Set<SimplePhysicalEntity> leftSpe = new HashSet<SimplePhysicalEntity>();
 				getSimpleMembers(leftRoot, leftSpe);
-				Set<EquivalenceWrapper> leftComps = EquivalenceWrapper.getEquivalenceMap(leftSpe);
+				EquivalenceSet leftComps = new EquivalenceSet(leftSpe);
 
 				Set<SimplePhysicalEntity> rightSpe = new HashSet<SimplePhysicalEntity>();
 				getSimpleMembers(rightRoot, rightSpe);
-				Set<EquivalenceWrapper> rightComps = EquivalenceWrapper.getEquivalenceMap(rightSpe);
+				EquivalenceSet rightComps = new EquivalenceSet(rightSpe);
+
 				leftComps.retainAll(rightComps);
-				for (EquivalenceWrapper leftComp : leftComps)
+				for (BioPAXElement bpe:leftComps)
 				{
-					SimplePhysicalEntity bpe = ((SimplePhysicalEntity) leftComp.getBpe());
+					SimplePhysicalEntity pe = (SimplePhysicalEntity) bpe;
 					Set<EntityReference> erSet = extendedControls.get(conv);
 					if (erSet == null)
 					{
 						erSet = new HashSet<EntityReference>();
 						extendedControls.put(conv, erSet);
 					}
-					erSet.add(bpe.getEntityReference());
+					erSet.add(pe.getEntityReference());
 				}
 			}
 		}

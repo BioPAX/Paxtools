@@ -658,7 +658,6 @@ public final class ModelUtils
 	 * Adds the relationship xref to every xreferrable entity in the set
 	 * (and optionally - the corresponding pathway to the annotations map)
 	 * @param model
-	 * @param objects
 	 * @param rx
 	 * @param addRelationshipXrefs
 	 * @param addPathwaysToAnnotations
@@ -1542,7 +1541,7 @@ public final class ModelUtils
 	public static void replaceEquivalentFeatures(Model model)
 	{
 
-		HashSet<EquivalenceWrapper> equivalents = new HashSet<EquivalenceWrapper>();
+		EquivalenceSet equivalents = new EquivalenceSet();
 		HashMap<EntityFeature, EntityFeature> mapped = new HashMap<EntityFeature, EntityFeature>();
 		HashSet<EntityFeature> scheduled = new HashSet<EntityFeature>();
 
@@ -1553,14 +1552,17 @@ public final class ModelUtils
 				inferEntityFromPE(ef, ef.getFeatureOf());
 				if (ef.getEntityFeatureOf() == null) inferEntityFromPE(ef, ef.getNotFeatureOf());
 			}
-			EquivalenceWrapper wrapper = new EquivalenceWrapper(ef);
-			if (equivalents.contains(wrapper))
+			BioPAXElement existing = equivalents.getEquivalent(ef);
+
+			if (existing!=null)
 			{
 				if (LOG.isWarnEnabled())
-					LOG.warn("removing: " + wrapper.getEqBpe() + "{" + wrapper.getEqBpe().getRDFId() + "}");
+				{
+					LOG.warn("removing: " + existing + "{" + existing.getRDFId() + "}");
+				}
 				scheduled.add(ef);
-				mapped.put(ef, (EntityFeature) wrapper.getEqBpe());
-			} else equivalents.add(wrapper);
+				mapped.put(ef, (EntityFeature) existing);
+			} else equivalents.add(ef);
 		}
 		for (EntityFeature entityFeature : scheduled)
 		{
