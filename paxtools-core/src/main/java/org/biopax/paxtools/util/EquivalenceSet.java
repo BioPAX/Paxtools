@@ -1,5 +1,7 @@
 package org.biopax.paxtools.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.AbstractSet;
@@ -27,6 +29,8 @@ public class EquivalenceSet extends AbstractSet<BioPAXElement>
 	private HashMap<Integer, BioPAXElement> elementMap;
 
 	private boolean mergeEquivalents = false;
+
+	Log log = LogFactory.getLog(EquivalenceSet.class);
 
 	public EquivalenceSet(Set<? extends BioPAXElement> bpes)
 	{
@@ -77,9 +81,12 @@ public class EquivalenceSet extends AbstractSet<BioPAXElement>
 				if (equalO.equals(bpe)) return false;
 				else
 				{
+					log.error("Source: "+ bpe.getModelInterface()+" "+bpe.getRDFId()+ " " +bpe.hashCode());
+					log.error("Target: "+ equalO.getModelInterface()+" "+equalO.getRDFId()+ " " +equalO.hashCode());
 					throw new RuntimeException("Unexpected hash code");
 				}
-			} else
+			}
+			else
 			{
 				if (evcode != bpe.hashCode()) equalO = this.elementMap.get(evcode);
 				if (equalO == null)
