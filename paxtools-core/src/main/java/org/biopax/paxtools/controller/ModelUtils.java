@@ -1584,7 +1584,7 @@ public final class ModelUtils
 	public static void replaceEquivalentFeatures(Model model)
 	{
 
-		EquivalenceSet equivalents = new EquivalenceSet();
+		EquivalenceGrouper<EntityFeature> equivalents = new EquivalenceGrouper<EntityFeature>();
 		HashMap<EntityFeature, EntityFeature> mapped = new HashMap<EntityFeature, EntityFeature>();
 		HashSet<EntityFeature> scheduled = new HashSet<EntityFeature>();
 
@@ -1595,17 +1595,19 @@ public final class ModelUtils
 				inferEntityFromPE(ef, ef.getFeatureOf());
 				if (ef.getEntityFeatureOf() == null) inferEntityFromPE(ef, ef.getNotFeatureOf());
 			}
-			BioPAXElement existing = equivalents.getEquivalent(ef);
-
-			if (existing!=null)
+			equivalents.add(ef);
+		}
+		for (List<EntityFeature> bucket : equivalents.getBuckets())
+		{
+			for (int i = 1; i < bucket.size(); i++)
 			{
+				EntityFeature ef = bucket.get(i);
 				if (LOG.isWarnEnabled())
 				{
-					LOG.warn("removing: " + existing + "{" + existing.getRDFId() + "}");
+					LOG.warn("removing: "+ ef.getRDFId()+ " since it is equivalent to: "+ bucket.get(0));
 				}
 				scheduled.add(ef);
-				mapped.put(ef, (EntityFeature) existing);
-			} else equivalents.add(ef);
+			}
 		}
 		for (EntityFeature entityFeature : scheduled)
 		{
