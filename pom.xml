@@ -26,7 +26,8 @@
 		<module>paxtools-console</module>
 		<module>paxtools-query</module>
         <module>paxtools-pattern</module>
-    </modules>
+        <module>json-converter</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -378,6 +379,11 @@
          	<artifactId>commons-lang</artifactId>
          	<version>${commons-lang.version}</version>
          </dependency>
+         <dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.12</version>
+		</dependency>
 	</dependencies>	
 	</dependencyManagement>
 
@@ -398,21 +404,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
 	</dependencies>
 
 	<repositories>
@@ -459,6 +450,16 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>codehaus</id>
+			<url>http://repository.codehaus.org/org/codehaus</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>		
 	</repositories>
 
 	<!-- the following is used both by Maven 3.x and 2.x -->
