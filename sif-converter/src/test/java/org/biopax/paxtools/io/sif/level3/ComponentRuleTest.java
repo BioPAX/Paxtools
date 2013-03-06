@@ -1,9 +1,11 @@
 package org.biopax.paxtools.io.sif.level3;
 
-import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
@@ -26,14 +28,14 @@ public class ComponentRuleTest
 	@Test
 	public void testComponentRule()
 	{
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		final Model model = mock.createModel();
 
-		Mock mock = new Mock();
-
-		Protein[] p = mock.create(Protein.class, 3);
-		ProteinReference[] pr = mock.create(ProteinReference.class, 3);
+		Protein[] p = mock.create(model, Protein.class, 3);
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 3);
 		mock.bindArrays("entityReference",p,pr);
 
-		Complex[] cp = mock.create(Complex.class, 3);
+		Complex[] cp = mock.create(model, Complex.class, 3);
 
 		mock.bindInPairs("component",
 		                 cp[1],cp[2],
@@ -46,7 +48,7 @@ public class ComponentRuleTest
 
 		ComponentRule rule = new ComponentRule();
 		SimpleInteractionConverter sic = new SimpleInteractionConverter(options, rule);
-		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(mock.model);
+		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(model);
 
 		Map<BioPAXElement, Group> e2g = interactions.getGroupMap().getMap();
 

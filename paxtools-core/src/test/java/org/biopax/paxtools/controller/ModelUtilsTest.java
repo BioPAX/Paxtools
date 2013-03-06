@@ -1,6 +1,6 @@
 package org.biopax.paxtools.controller;
 
-import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandlerTest;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -15,8 +15,6 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
@@ -302,9 +300,10 @@ public class ModelUtilsTest {
 	@Test
 	public void testGenericNormalization()
 	{
-		Mock mock = new Mock();
-		Protein[] p = mock.create(Protein.class, 3);
-		ProteinReference[] pr = mock.create(ProteinReference.class, 2);
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		Model model = mock.createModel();
+		Protein[] p = mock.create(model, Protein.class, 3);
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
 
 		mock.bindArrays("entityReference", Arrays.copyOfRange(p, 0, 2), pr);
 
@@ -312,7 +311,7 @@ public class ModelUtilsTest {
 		                 p[2],p[0],
 		                 p[2],p[1]);
 
-		ModelUtils.normalizeGenerics(mock.model);
+		ModelUtils.normalizeGenerics(model);
 
 		assertThat(true, is(p[2].getEntityReference()!=null));
 		assertThat(true, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[0])));
@@ -322,24 +321,25 @@ public class ModelUtilsTest {
     @Test
     public void testFixEquivalentFeatures()
     {
-        Mock mock = new Mock();
-	    SequenceSite[] ss= mock.create(SequenceSite.class,1);
+        MockFactory mock = new MockFactory(BioPAXLevel.L3);
+        Model model = mock.createModel();
+	    SequenceSite[] ss= mock.create(model, SequenceSite.class,1);
 	    ss[0].setSequencePosition(0);
 	    ss[0].setPositionStatus(PositionStatusType.EQUAL);
 
-	    ModificationFeature[] mf = mock.create(ModificationFeature.class, 2);
+	    ModificationFeature[] mf = mock.create(model, ModificationFeature.class, 2);
 	    mf[0].setFeatureLocation(ss[0]);
 	    mf[1].setFeatureLocation(ss[0]);
 
 	    mf[0].setFeatureLocation(ss[0]);
 	    mf[1].setFeatureLocation(ss[0]);
 
-	    ProteinReference[] pr = mock.create(ProteinReference.class, 1);
+	    ProteinReference[] pr = mock.create(model, ProteinReference.class, 1);
 	    pr[0].addEntityFeature(mf[0]);
 	    pr[0].addEntityFeature(mf[1]);
 
-	    ModelUtils.replaceEquivalentFeatures(mock.model);
-	    assertTrue(mock.model.getObjects(ModificationFeature.class).size()==1);
+	    ModelUtils.replaceEquivalentFeatures(model);
+	    assertTrue(model.getObjects(ModificationFeature.class).size()==1);
     }
     
 	

@@ -1,9 +1,11 @@
 package org.biopax.paxtools.io.sif.level3;
 
-import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
@@ -21,19 +23,20 @@ public class ExpressionRuleTest
 	@Test
 	public void testExpressionRule()
 	{
-		Mock mock = new Mock();
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		final Model model = mock.createModel();
 
-		Protein[] p = mock.create(Protein.class, 4);
-		ProteinReference[] pr = mock.create(ProteinReference.class, 4);
+		Protein[] p = mock.create(model, Protein.class, 4);
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 4);
 		mock.bindArrays("entityReference", p, pr);
 
-		TemplateReaction[] tr = mock.create(TemplateReaction.class, 2);
+		TemplateReaction[] tr = mock.create(model, TemplateReaction.class, 2);
 
 		mock.bindInPairs("product",
 			tr[0], p[1],
 			tr[1], p[3]);
 
-		TemplateReactionRegulation[] trr = mock.create(TemplateReactionRegulation.class, 2);
+		TemplateReactionRegulation[] trr = mock.create(model, TemplateReactionRegulation.class, 2);
 		mock.bindInPairs("controller", 
 			trr[0], p[0],
 			trr[1], p[2]);
@@ -47,7 +50,7 @@ public class ExpressionRuleTest
 		options.put(BinaryInteractionType.DOWNREGULATE_EXPRESSION, true);
 		ExpressionRule rule = new ExpressionRule();
 		SimpleInteractionConverter sic = new SimpleInteractionConverter(options, rule);
-		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(mock.model);
+		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(model);
 
 		List<SimpleInteraction> expected =
 			Arrays.asList(
