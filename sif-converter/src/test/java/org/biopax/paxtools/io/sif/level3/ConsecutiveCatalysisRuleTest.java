@@ -1,8 +1,10 @@
 package org.biopax.paxtools.io.sif.level3;
 
-import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
@@ -34,14 +36,15 @@ public class ConsecutiveCatalysisRuleTest
 	@Test
 	public void testCompzzonentRule()
 	{
-		Mock mock = new Mock();
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		final Model model = mock.createModel();
 
-		Protein[] p = mock.create(Protein.class, 4);
-		ProteinReference[] pr = mock.create(ProteinReference.class, 4);
+		Protein[] p = mock.create(model, Protein.class, 4);
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 4);
 		mock.bindArrays(mock.editor("entityReference", Protein.class),p,pr);
 
-		SmallMolecule[] sm = mock.create(SmallMolecule.class,8);
-		BiochemicalReaction[] br = mock.create(BiochemicalReaction.class, 4);
+		SmallMolecule[] sm = mock.create(model, SmallMolecule.class,8);
+		BiochemicalReaction[] br = mock.create(model, BiochemicalReaction.class, 4);
 		br[0].setConversionDirection(ConversionDirectionType.LEFT_TO_RIGHT);
 		br[1].setConversionDirection(ConversionDirectionType.LEFT_TO_RIGHT);
 		br[2].setConversionDirection(ConversionDirectionType.RIGHT_TO_LEFT);
@@ -62,16 +65,14 @@ public class ConsecutiveCatalysisRuleTest
 		                 br[2],sm[5],
 		                 br[3],sm[7]);
 
-		Catalysis[] x = mock.create(Catalysis.class,4);
+		Catalysis[] x = mock.create(model, Catalysis.class,4);
 		mock.bindArrays(mock.editor("controlled",Catalysis.class),x,br);
 		mock.bindArrays(mock.editor("controller",Catalysis.class),x,p);
 
 		HashMap options = new HashMap();
-
-
 		ConsecutiveCatalysisRule rule = new ConsecutiveCatalysisRule();
 		SimpleInteractionConverter sic = new SimpleInteractionConverter(options, rule);
-		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(mock.model);
+		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(model);
 
 		List<SimpleInteraction> expected =
 				Arrays.asList(new SimpleInteraction(pr[0], pr[1],SEQUENTIAL_CATALYSIS),

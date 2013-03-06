@@ -1,6 +1,6 @@
 package org.biopax.paxtools.controller;
 
-import org.biopax.paxtools.impl.level3.MockFactory;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Complex;
