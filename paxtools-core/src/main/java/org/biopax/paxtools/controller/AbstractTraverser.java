@@ -1,5 +1,7 @@
 package org.biopax.paxtools.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
@@ -28,6 +30,7 @@ public abstract class AbstractTraverser extends Traverser
 {
 	private final Stack<BioPAXElement> visited;
 	private final Stack<String> props;
+	private final static Log log = LogFactory.getLog(AbstractTraverser.class);
 		
 	public AbstractTraverser(EditorMap editorMap, 
 		@SuppressWarnings("rawtypes") Filter<PropertyEditor>... filters)
@@ -74,8 +77,7 @@ public abstract class AbstractTraverser extends Traverser
 		
 			if(range instanceof BioPAXElement) {
 				if(objPath.contains(range)) {
-				    if(log.isInfoEnabled())
-				    	log.info(((BioPAXElement)range).getRDFId() 
+				    log.info(((BioPAXElement)range).getRDFId() 
 				    		+ " already visited (cycle!): " + objPath.toString());
 					return;
 				}

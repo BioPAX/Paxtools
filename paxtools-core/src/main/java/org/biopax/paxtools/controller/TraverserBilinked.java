@@ -1,5 +1,7 @@
 package org.biopax.paxtools.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
@@ -13,6 +15,7 @@ import java.util.Set;
 public class TraverserBilinked extends Traverser
 {
 	private boolean isInverseOnly = false;
+	private final static Log log = LogFactory.getLog(TraverserBilinked.class);
 	
 	
 	public TraverserBilinked(EditorMap editorMap, Visitor visitor, PropertyFilterBilinked... filters)
@@ -39,8 +42,7 @@ public class TraverserBilinked extends Traverser
 
 		if(editors == null)
 		{
-			if(log.isWarnEnabled())
-				log.warn("No editors for : " + element.getModelInterface());
+			log.warn("No editors for : " + element.getModelInterface());
 			return;
 		}
 		for (ObjectPropertyEditor editor : editors)
