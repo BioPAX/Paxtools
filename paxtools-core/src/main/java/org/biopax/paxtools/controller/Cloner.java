@@ -65,13 +65,11 @@ public class Cloner implements Visitor
 		if (range instanceof BioPAXElement)
 		{
 			BioPAXElement bpe = (BioPAXElement) range;
-			if (targetModel.containsID(bpe.getRDFId()))
+			BioPAXElement existing = targetModel.getByID(bpe.getRDFId());
+			if (existing != null)
 			{
-				editor.setValueToBean(targetModel.getByID(bpe.getRDFId()), targetDomain);
+				editor.setValueToBean(existing, targetDomain);
 			} 
-			else {
-				// ignore the element that is not in the source list
-			}
 		}
 		else
 		{
