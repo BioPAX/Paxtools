@@ -28,6 +28,7 @@ public class SBGNConverterTest
 	public void testSBGNConversion() throws JAXBException, IOException, SAXException
 	{
 		String input = "/AR-TP53";
+//		System.out.println("getClass().getResource(\"\") = " + getClass().getResource(""));
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
 
