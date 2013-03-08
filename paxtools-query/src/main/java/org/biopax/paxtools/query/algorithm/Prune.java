@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * This algorithm is used internally by PathsBetween and PathsFromTo algorithms. It detects objects
+ * in the result set that are not on a path from source to target (called dangling), and removes
+ * these nodes from the result set. Dangling objects appear after breaking cycles.
+ *
  * @author Ozgun Babur
  */
 public class Prune
@@ -20,12 +24,22 @@ public class Prune
 	private Set<Node> ST;
 
 
+	/**
+	 * Constructor with the input.
+	 *
+	 * @param result The result set
+	 * @param ST Source and target nodes
+	 */
 	public Prune(Set<GraphObject> result, Set<Node> ST)
 	{
 		this.result = result;
 		this.ST = ST;
 	}
 
+	/**
+	 * Executes the algorithm.
+	 * @return the pruned graph
+	 */
 	public Set<GraphObject> run()
 	{
 		for (GraphObject go : new HashSet<GraphObject>(result))
@@ -38,6 +52,10 @@ public class Prune
 		return result;
 	}
 
+	/**
+	 * Recursively checks if a node is dangling.
+	 * @param node Node to check
+	 */
 	private void checkNodeRecursive(Node node)
 	{
 		if (isDangling(node))
@@ -63,6 +81,10 @@ public class Prune
 		}
 	}
 
+	/**
+	 * Removes the dangling node and its edges.
+	 * @param node Node to remove
+	 */
 	private void removeNode(Node node)
 	{
 		result.remove(node);
@@ -78,6 +100,11 @@ public class Prune
 		}
 	}
 
+	/**
+	 * Checks if the node is dangling.
+	 * @param node Node to check
+	 * @return true if dangling
+	 */
 	private boolean isDangling(Node node)
 	{
 		if (!result.contains(node)) return false;
@@ -132,6 +159,5 @@ public class Prune
 		}
 
 		return !(hasChild && (hasIncoming || hasOutgoing || hasParent));
-
 	}
 }

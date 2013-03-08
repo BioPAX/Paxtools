@@ -49,8 +49,14 @@ public class L3ToSBGNPDConverter
 {
 	//-- Section: Static fields -------------------------------------------------------------------|
 
+	/**
+	 * Log for logging.
+	 */
 	private static final Log log = LogFactory.getLog(L3ToSBGNPDConverter.class);
 
+	/**
+	 * Ubique label.
+	 */
 	public static final String IS_UBIQUE = "IS_UBIQUE";
 
 	/**
@@ -104,12 +110,20 @@ public class L3ToSBGNPDConverter
 
 	//-- Section: Public methods ------------------------------------------------------------------|
 
-
+	/**
+	 * Empty constructor.
+	 */
 	public L3ToSBGNPDConverter()
 	{
 		this(null, null, true);
 	}
 
+	/**
+	 * Constructor with parameters.
+	 * @param ubiqueDet Ubique detector class
+	 * @param featStrGen feature string generator class
+	 * @param doLayout whether we want to perform layout after SBGN creation.
+	 */
 	public L3ToSBGNPDConverter(UbiqueDetector ubiqueDet, FeatureDecorator featStrGen,
 		boolean doLayout)
 	{
@@ -310,6 +324,11 @@ public class L3ToSBGNPDConverter
 		return g;
 	}
 
+	/**
+	 * Assigns compartmentRef of the glyph.
+	 * @param pe Related PhysicalEntity
+	 * @param g the glyph
+	 */
 	private void assignLocation(PhysicalEntity pe, Glyph g)
 	{
 		// Create compartment -- add this inside the compartment
@@ -357,6 +376,12 @@ public class L3ToSBGNPDConverter
 		return g;
 	}
 
+	/**
+	 * Gets the representing glyph of the PhysicalEntity.
+	 * @param pe PhysicalEntity to get its glyph
+	 * @param linkID Edge id, used if the PhysicalEntity is ubique
+	 * @return Representing glyph
+	 */
 	private Glyph getGlyphToLink(PhysicalEntity pe, String linkID)
 	{
 		if (ubiqueDet != null && !ubiqueDet.isUbique(pe))
@@ -544,6 +569,11 @@ public class L3ToSBGNPDConverter
 		return name;
 	}
 
+	/**
+	 * Searches for the shortest name of the PhysicalEntity.
+	 * @param spe entity to search in
+	 * @return the shortest name
+	 */
 	private String getShortestName(SimplePhysicalEntity spe)
 	{
 		String name = null;
@@ -565,6 +595,11 @@ public class L3ToSBGNPDConverter
 		return name;
 	}
 
+	/**
+	 * Searches for gene symbol in Xref.
+	 * @param xref Xref to search
+	 * @return gene symbol
+	 */
 	private String extractGeneSymbol(Xref xref)
 	{
 		if (xref.getDb() != null && (
@@ -1182,6 +1217,9 @@ public class L3ToSBGNPDConverter
 	
 	//-- Section: Static initialization -----------------------------------------------------------|
 
+	/**
+	 * Initializes resources.
+	 */
 	static
 	{
 		factory = new ObjectFactory();

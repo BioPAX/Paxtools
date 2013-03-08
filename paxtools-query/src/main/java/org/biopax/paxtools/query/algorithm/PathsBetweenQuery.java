@@ -27,7 +27,9 @@ public class PathsBetweenQuery
 	private int limit;
 
 	/**
-	 * Constructor
+	 * Constructor with parameters
+	 * @param sourceSet Seed to the query
+	 * @param limit Distance limit
 	 */
 	public PathsBetweenQuery(Collection<Set<Node>> sourceSet, int limit)
 	{
