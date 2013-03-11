@@ -1,11 +1,13 @@
 package org.biopax.paxtools.util;
 
 
-//import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.document.Document;
 import org.hibernate.search.bridge.LuceneOptions;
 
+/**
+ * @author rodche //TODO annotate
+ */
 final class FieldBridgeUtils {
 	private FieldBridgeUtils() {
 		throw new AssertionError();

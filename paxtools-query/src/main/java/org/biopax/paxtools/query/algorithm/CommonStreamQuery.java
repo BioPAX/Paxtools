@@ -44,6 +44,9 @@ public class CommonStreamQuery
 
 	/**
 	 * Constructor for Common Stream with Selected Nodes.
+	 * @param sourceNodeSet Source nodes
+	 * @param direction Common upstream or downstream. Cannot be bothstream
+	 * @param limit Search length limit
 	 */
 	public CommonStreamQuery(Set<Node> sourceNodeSet, Direction direction, int limit)
 	{
@@ -66,6 +69,9 @@ public class CommonStreamQuery
 	
 	/**
 	 * Constructor for Common Stream with Entity States.
+	 * @param sourceStateSet Collection of source node sets
+	 * @param direction Common upstream or downstream. Cannot be bothstream
+	 * @param limit Search length limit
 	 */
 	public CommonStreamQuery(Collection<Set<Node>> sourceStateSet, Direction direction, int limit)
 	{
@@ -78,7 +84,8 @@ public class CommonStreamQuery
 	}
 
 	/**
-	 * Method to run query
+	 * Method to run the query.
+	 * @return Common stream
 	 */
 	public Set<GraphObject> run()
 	{
@@ -130,6 +137,8 @@ public class CommonStreamQuery
 	/**
 	 * Method for getting Label of GraphObject.
 	 * If Label is absent, then it returns 0.
+	 * @param go Graph object to get its label
+	 * @return Label of the graph object
 	 */
 	private int getLabel(GraphObject go)
 	{
@@ -146,10 +155,11 @@ public class CommonStreamQuery
 
 	/**
 	 * Method for setting the Label of GraphObject
+	 * @param go Graph object to set its label
+	 * @param label New label of the graph object
 	 */
 	private void setLabel(GraphObject go, int label)
 	{
 		reachedCount.put(go, label);
 	}
-
 }

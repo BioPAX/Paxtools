@@ -12,13 +12,24 @@ public enum Direction
 	DOWNSTREAM("Search direction forward in the order of events"),
 	BOTHSTREAM("Search towards both directions");
 
+	/**
+	 * Description of the direction.
+	 */
 	private final String description;
 
+	/**
+	 * Constructor with description.
+	 * @param description Description
+	 */
 	private Direction(String description)
 	{
 		this.description = description;
 	}
 
+	/**
+	 * Gets the description.
+	 * @return description
+	 */
 	public String getDescription()
 	{
 		return description;

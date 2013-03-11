@@ -12,15 +12,37 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Wrapper for PhysicalEntity.
+ *
  * @author Ozgun Babur
  */
 public class PhysicalEntityWrapper extends AbstractNode
 {
+	/**
+	 * Wrapped PhysicalEntity.
+	 */
 	protected PhysicalEntity pe;
+
+	/**
+	 * Flag to remember if parent equivalents initialized.
+	 */
 	protected boolean upperEquivalentInited;
+
+	/**
+	 * Flag to remember if child equivalents initialized.
+	 */
 	protected boolean lowerEquivalentInited;
+
+	/**
+	 * Flag to say this is a ubiquitous molecule.
+	 */
 	protected boolean ubique;
 
+	/**
+	 * Constructor with the wrapped PhysicalEntity and the owner graph.
+	 * @param pe PhysicalEntity to wrap
+	 * @param graph Owner graph
+	 */
 	public PhysicalEntityWrapper(PhysicalEntity pe, GraphL3 graph)
 	{
 		super(graph);
@@ -30,16 +52,26 @@ public class PhysicalEntityWrapper extends AbstractNode
 		this.ubique = false;
 	}
 
+	/**
+	 * @return Whether this is ubique
+	 */
 	public boolean isUbique()
 	{
 		return ubique;
 	}
 
+	/**
+	 * Set the ubique flag.
+	 * @param ubique Whether this is a ubiquitous molecule
+	 */
 	public void setUbique(boolean ubique)
 	{
 		this.ubique = ubique;
 	}
 
+	/**
+	 * Binds to upstream interactions.
+	 */
 	public void initUpstream()
 	{
 		for (Conversion conv : getUpstreamConversions(pe.getParticipantOf()))
@@ -72,6 +104,9 @@ public class PhysicalEntityWrapper extends AbstractNode
 		}
 	}
 
+	/**
+	 * Binds to downstream interactions.
+	 */
 	public void initDownstream()
 	{
 		for (Interaction inter : getDownstreamInteractions(pe.getParticipantOf()))
@@ -97,6 +132,11 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	//--- Upstream conversions --------------------------------------------------------------------|
 
+	/**
+	 * Gets the conversions at the upstream of this PhysicalEntity.
+	 * @param inters Interactions to search for
+	 * @return Upstream conversions
+	 */
 	protected Set<Conversion> getUpstreamConversions(Collection<Interaction> inters)
 	{
 		Set<Conversion> set = new HashSet<Conversion>();
@@ -122,6 +162,11 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	//--- Downstream interactions ------------------------------------------------------------------|
 
+	/**
+	 * Gets the downstream interactions among the given set.
+	 * @param inters Interactions to search
+	 * @return Downstream interactions
+	 */
 	protected Set<Interaction> getDownstreamInteractions(Collection<Interaction> inters)
 	{
 		Set<Interaction> set = new HashSet<Interaction>();
@@ -151,6 +196,11 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	//--- Related conversions ---------------------------------------------------------------------|
 
+	/**
+	 * Get all related Conversions of the given Interaction set.
+	 * @param inters Interactions to query
+	 * @return Related Conversions
+	 */
 	private Set<Conversion> getRelatedConversions(Collection<Interaction> inters)
 	{
 		Set<Conversion> set = new HashSet<Conversion>();
@@ -169,6 +219,12 @@ public class PhysicalEntityWrapper extends AbstractNode
 		return set;
 	}
 
+	/**
+	 * Recursively searches the related Conversions of a Control.
+	 * @param ctrl Control to query
+	 * @param set Set to collect the related Conversions
+	 * @return The same set
+	 */
 	private Set<Conversion> getRelatedConversions(Control ctrl, Set<Conversion> set)
 	{
 		for (Process process : ctrl.getControlled())
@@ -187,6 +243,9 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	//----- Equivalence ---------------------------------------------------------------------------|
 
+	/**
+	 * @return Parent equivalent objects
+	 */
 	@Override
 	public Collection<Node> getUpperEquivalent()
 	{
@@ -197,6 +256,9 @@ public class PhysicalEntityWrapper extends AbstractNode
 		return super.getUpperEquivalent();
 	}
 
+	/**
+	 * @return Child equivalent objects
+	 */
 	@Override
 	public Collection<Node> getLowerEquivalent()
 	{
@@ -207,6 +269,9 @@ public class PhysicalEntityWrapper extends AbstractNode
 		return super.getLowerEquivalent();
 	}
 
+	/**
+	 * Finds homology parent.
+	 */
 	protected void initUpperEquivalent()
 	{
 		this.upperEquivalent = new HashSet<Node>();
@@ -219,6 +284,9 @@ public class PhysicalEntityWrapper extends AbstractNode
 		upperEquivalentInited = true;
 	}
 
+	/**
+	 * Finds member nodes if this is a homology node
+	 */
 	protected void initLowerEquivalent()
 	{
 		this.lowerEquivalent = new HashSet<Node>();
@@ -233,26 +301,44 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 	//------ Other --------------------------------------------------------------------------------|
 
+	/**
+	 * PhysicalEntity is a breadth node.
+	 * @return True
+	 */
 	public boolean isBreadthNode()
 	{
 		return true;
 	}
 
+	/**
+	 * PhysicalEntity have positive sign.
+	 * @return POSITIVE (1)
+	 */
 	public int getSign()
 	{
 		return POSITIVE;
 	}
 
+	/**
+	 * RDF ID of the PhysicalEntity is used as key.
+	 * @return Key
+	 */
 	public String getKey()
 	{
 		return pe.getRDFId();
 	}
 
+	/**
+	 * @return Wrapped PhysicalEntity
+	 */
 	public PhysicalEntity getPhysicalEntity()
 	{
 		return pe;
 	}
 
+	/**
+	 * @return display name with ID added
+	 */
 	@Override
 	public String toString()
 	{

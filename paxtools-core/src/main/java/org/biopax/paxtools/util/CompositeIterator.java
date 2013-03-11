@@ -4,12 +4,20 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class CompositeIterator<T> implements Iterator<T> 
+/**
+ * A composite iterator that iterates over multiple iterators.
+ * @param <T> Base class type which all subiterator's type must extend from.
+ */
+public class CompositeIterator<T> implements Iterator<T>
 {
     Iterator<? extends Collection<? extends T>> collectionIterator;
     Iterator<? extends T> currentIterator;
 
-    public CompositeIterator(Collection<? extends Collection<? extends T>> collections)
+	/**
+	 * This constructor creates an iterator instance from a set of collections
+	 * @param collections to be iterated over.
+	 */
+	public CompositeIterator(Collection<? extends Collection<? extends T>> collections)
     {
         collectionIterator = collections.iterator();
         currentIterator = getNextSet();

@@ -49,8 +49,14 @@ public class L3ToSBGNPDConverter
 {
 	//-- Section: Static fields -------------------------------------------------------------------|
 
+	/**
+	 * Log for logging.
+	 */
 	private static final Log log = LogFactory.getLog(L3ToSBGNPDConverter.class);
 
+	/**
+	 * Ubique label.
+	 */
 	public static final String IS_UBIQUE = "IS_UBIQUE";
 
 	/**
@@ -81,6 +87,20 @@ public class L3ToSBGNPDConverter
 	 */
 	protected boolean doLayout;
 
+	/**
+	 * SBGN process glyph can be used to show reversible reactions. In that case two ports of the
+	 * process will only have product glyphs. However, this creates an incompatibility with BioPAX:
+	 * reversible biochemical reactions can have catalysis with a direction. But if we use a single
+	 * glyph for the process and direct that catalysis to it, then the direction of the catalysis
+	 * will be lost. If we use two process nodes for the reversible reaction (one for left-to-right
+	 * and another for right-to-left), then we can direct the directed catalysis to only the
+	 * relevant process glyph.
+	 *
+	 * Also note that the layout do not support ports. If layout is run, the ports are removed. In
+	 * that case it will be impossible to distinguish left and right components of the reversible
+	 * process glyph because they will all be product edges.
+	 */
+	protected boolean useTwoGlyphsForReversibleConversion;
 
 	/**
 	 * ID to glyph map.
@@ -104,12 +124,20 @@ public class L3ToSBGNPDConverter
 
 	//-- Section: Public methods ------------------------------------------------------------------|
 
-
+	/**
+	 * Empty constructor.
+	 */
 	public L3ToSBGNPDConverter()
 	{
 		this(null, null, true);
 	}
 
+	/**
+	 * Constructor with parameters.
+	 * @param ubiqueDet Ubique detector class
+	 * @param featStrGen feature string generator class
+	 * @param doLayout whether we want to perform layout after SBGN creation.
+	 */
 	public L3ToSBGNPDConverter(UbiqueDetector ubiqueDet, FeatureDecorator featStrGen,
 		boolean doLayout)
 	{
@@ -119,6 +147,26 @@ public class L3ToSBGNPDConverter
 		
 		if (this.featStrGen == null)
 			this.featStrGen = new CommonFeatureStringGenerator();
+
+		this.useTwoGlyphsForReversibleConversion = true;
+	}
+
+	/**
+	 * Getter class for the parameter useTwoGlyphsForReversibleConversion.
+	 * @return whether use two glyphs for the reversible conversion
+	 */
+	public boolean isUseTwoGlyphsForReversibleConversion()
+	{
+		return useTwoGlyphsForReversibleConversion;
+	}
+
+	/**
+	 * Sets the option to use two glyphs for the reversible conversion.
+	 * @param useTwoGlyphsForReversibleConversion give true if use two glyphs
+	 */
+	public void setUseTwoGlyphsForReversibleConversion(boolean useTwoGlyphsForReversibleConversion)
+	{
+		this.useTwoGlyphsForReversibleConversion = useTwoGlyphsForReversibleConversion;
 	}
 
 	/**
@@ -206,15 +254,25 @@ public class L3ToSBGNPDConverter
 
 			if (conv.getConversionDirection() == null ||
 				conv.getConversionDirection().equals(ConversionDirectionType.LEFT_TO_RIGHT) ||
-				conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE))
+				(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
+				useTwoGlyphsForReversibleConversion))
 			{
 				createProcessAndConnections(conv, ConversionDirectionType.LEFT_TO_RIGHT);
 			}
-			else if (conv.getConversionDirection() != null &&
+
+			if (conv.getConversionDirection() != null &&
 				(conv.getConversionDirection().equals(ConversionDirectionType.RIGHT_TO_LEFT) ||
-				conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE)))
+				(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE)) &&
+				useTwoGlyphsForReversibleConversion))
 			{
 				createProcessAndConnections(conv, ConversionDirectionType.RIGHT_TO_LEFT);
+			}
+
+			if (conv.getConversionDirection() != null &&
+				conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
+				!useTwoGlyphsForReversibleConversion)
+			{
+				createProcessAndConnections(conv, ConversionDirectionType.REVERSIBLE);
 			}
 		}
 
@@ -310,6 +368,11 @@ public class L3ToSBGNPDConverter
 		return g;
 	}
 
+	/**
+	 * Assigns compartmentRef of the glyph.
+	 * @param pe Related PhysicalEntity
+	 * @param g the glyph
+	 */
 	private void assignLocation(PhysicalEntity pe, Glyph g)
 	{
 		// Create compartment -- add this inside the compartment
@@ -357,6 +420,12 @@ public class L3ToSBGNPDConverter
 		return g;
 	}
 
+	/**
+	 * Gets the representing glyph of the PhysicalEntity.
+	 * @param pe PhysicalEntity to get its glyph
+	 * @param linkID Edge id, used if the PhysicalEntity is ubique
+	 * @return Representing glyph
+	 */
 	private Glyph getGlyphToLink(PhysicalEntity pe, String linkID)
 	{
 		if (ubiqueDet != null && !ubiqueDet.isUbique(pe))
@@ -544,6 +613,11 @@ public class L3ToSBGNPDConverter
 		return name;
 	}
 
+	/**
+	 * Searches for the shortest name of the PhysicalEntity.
+	 * @param spe entity to search in
+	 * @return the shortest name
+	 */
 	private String getShortestName(SimplePhysicalEntity spe)
 	{
 		String name = null;
@@ -565,6 +639,11 @@ public class L3ToSBGNPDConverter
 		return name;
 	}
 
+	/**
+	 * Searches for gene symbol in Xref.
+	 * @param xref Xref to search
+	 * @return gene symbol
+	 */
 	private String extractGeneSymbol(Xref xref)
 	{
 		if (xref.getDb() != null && (
@@ -714,9 +793,6 @@ public class L3ToSBGNPDConverter
 	private void createProcessAndConnections(Conversion cnv,
 		ConversionDirectionType direction)
 	{
-		assert direction.equals(ConversionDirectionType.LEFT_TO_RIGHT) ||
-			direction.equals(ConversionDirectionType.RIGHT_TO_LEFT);
-
 		assert cnv.getConversionDirection() == null ||
 			cnv.getConversionDirection().equals(direction) ||
 			cnv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE);
@@ -730,8 +806,8 @@ public class L3ToSBGNPDConverter
 
 		// Determine input and output sets
 		
-		Set<PhysicalEntity> input = direction.equals(ConversionDirectionType.LEFT_TO_RIGHT) ?
-			cnv.getLeft() : cnv.getRight();
+		Set<PhysicalEntity> input = direction.equals(ConversionDirectionType.RIGHT_TO_LEFT) ?
+			cnv.getRight() : cnv.getLeft();
 		Set<PhysicalEntity> output = direction.equals(ConversionDirectionType.RIGHT_TO_LEFT) ?
 			cnv.getLeft() : cnv.getRight();
 
@@ -743,7 +819,8 @@ public class L3ToSBGNPDConverter
 		for (PhysicalEntity pe : input)
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
-			createArc(g, process.getPort().get(0), CONSUMPTION.getClazz());
+			createArc(g, process.getPort().get(0), direction == ConversionDirectionType.REVERSIBLE ?
+				PRODUCTION.getClazz() : CONSUMPTION.getClazz());
 		}
 
 		// Associate outputs to output port
@@ -770,17 +847,7 @@ public class L3ToSBGNPDConverter
 						(catDir.equals(CatalysisDirectionType.RIGHT_TO_LEFT) &&
 						direction.equals(ConversionDirectionType.LEFT_TO_RIGHT)))
 					{
-						// If the conversion is reversible, then this control belongs to the reverse
-						// conversion. Otherwise, it will be lost due to direction mismatch. In that
-						// case, log a warning.
-
-						if (!direction.equals(ConversionDirectionType.REVERSIBLE))
-						{
-							if (log.isWarnEnabled()) log.warn("A control is being lost due to " +
-								"direction mismatch.\nControl direction = " + catDir +
-								"\nConversion direction = " + direction);
-						}
-
+						// Skip
 						continue;
 					}
 				}
@@ -1182,6 +1249,9 @@ public class L3ToSBGNPDConverter
 	
 	//-- Section: Static initialization -----------------------------------------------------------|
 
+	/**
+	 * Initializes resources.
+	 */
 	static
 	{
 		factory = new ObjectFactory();

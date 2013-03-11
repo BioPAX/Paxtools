@@ -59,7 +59,12 @@ public class PathsFromToQuery
 	private static final int LIMIT_FOR_SP_SEARCH = 25;
 
 	/**
-	 * Constructor
+	 * Constructor with parameters.
+	 * @param sourceSet source set
+	 * @param targetSet target set
+	 * @param limitType normal limit or shortest + k type limit
+	 * @param stopDistance search limit
+	 * @param strict whether we want to extend and result path towards other source and targets
 	 */
 	public PathsFromToQuery(Set<Node> sourceSet,
 							Set<Node> targetSet,
@@ -76,6 +81,10 @@ public class PathsFromToQuery
 		this.strict = strict;
 	}
 
+	/**
+	 * Executes the algorithm.
+	 * @return paths from sources to targets
+	 */
 	public Set<GraphObject> run()
 	{
 		/**

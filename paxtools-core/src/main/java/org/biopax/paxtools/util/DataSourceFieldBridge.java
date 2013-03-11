@@ -3,8 +3,6 @@
  */
 package org.biopax.paxtools.util;
 
-import java.util.Set;
-
 import org.apache.lucene.document.Document;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.EntityReference;
@@ -12,8 +10,10 @@ import org.biopax.paxtools.model.level3.Provenance;
 import org.hibernate.search.bridge.FieldBridge;
 import org.hibernate.search.bridge.LuceneOptions;
 
+import java.util.Set;
+
 /**
- * @author rodche
+ * @author rodche //TODO annotate
  *
  */
 public final class DataSourceFieldBridge implements FieldBridge {

@@ -11,18 +11,31 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
+ * Wrapper for TemplateReaction class.
+ *
  * @author Ozgun Babur
  */
 public class TemplateReactionWrapper extends EventWrapper
 {
+	/**
+	 * Wrapped TemplateReaction.
+	 */
 	private TemplateReaction tempReac;
 
+	/**
+	 * Constructor with the TemplateReaction and the owner graph.
+	 * @param tempReac TemplateReaction to wrap
+	 * @param graph Owner graph
+	 */
 	protected TemplateReactionWrapper(TemplateReaction tempReac, GraphL3 graph)
 	{
 		super(graph);
 		this.tempReac = tempReac;
 	}
 
+	/**
+	 * Binds to template and controllers.
+	 */
 	@Override
 	public void initUpstream()
 	{
@@ -36,6 +49,9 @@ public class TemplateReactionWrapper extends EventWrapper
 		}
 	}
 
+	/**
+	 * Binds to products.
+	 */
 	@Override
 	public void initDownstream()
 	{
@@ -45,12 +61,21 @@ public class TemplateReactionWrapper extends EventWrapper
 		}
 	}
 
+	/**
+	 * This is transcription.
+	 * @return True
+	 */
 	@Override
 	public boolean isTranscription()
 	{
 		return true;
 	}
 
+	/**
+	 * Binds the given PhysicalEntity to the downstream.
+	 * @param pe PhysicalEntity to bind
+	 * @param graph Owner graph
+	 */
 	protected void addToDownstream(PhysicalEntity pe, Graph graph)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(pe);
@@ -61,6 +86,11 @@ public class TemplateReactionWrapper extends EventWrapper
 		this.getDownstreamNoInit().add(edge);
 	}
 
+	/**
+	 * Binds the given element to the upstream.
+	 * @param ele Element to bind
+	 * @param graph Owner graph
+	 */
 	protected void addToUpstream(BioPAXElement ele, org.biopax.paxtools.query.model.Graph graph)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(ele);
@@ -78,12 +108,19 @@ public class TemplateReactionWrapper extends EventWrapper
 		this.getUpstreamNoInit().add(edge);
 	}
 
-
+	/**
+	 * Uses RDF ID of TemplateReaction as key.
+	 * @return RDF ID of TemplateReaction
+	 */
 	public String getKey()
 	{
 		return tempReac.getRDFId();
 	}
 
+	/**
+	 * Gets the wrapped TemplateReaction
+	 * @return The wrapped TemplateReaction
+	 */
 	public TemplateReaction getTempReac()
 	{
 		return tempReac;
