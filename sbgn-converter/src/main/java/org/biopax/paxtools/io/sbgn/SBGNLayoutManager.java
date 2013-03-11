@@ -155,7 +155,7 @@ public class SBGNLayoutManager
 			{
 				// Add a new value to hash map and also store the node as target node
 				String processGlyphID = glyph.getId();
-				processNodetoNeighbours.put(processGlyphID, new TreeMap(Collections.reverseOrder()));
+				nodetoNeighbours.put(processGlyphID, new TreeMap(Collections.reverseOrder()));
 				targetNodes.add(glyph);
 				
 				// Iterate over arc list
@@ -183,13 +183,13 @@ public class SBGNLayoutManager
 						{
 							Glyph containerCompartment = (Glyph)target.getCompartmentRef();
 							
-							if(processNodetoNeighbours.get(processGlyphID).get(containerCompartment.getId()) != null )
+							if(nodetoNeighbours.get(processGlyphID).get(containerCompartment.getId()) != null )
 							{
-								Integer value = processNodetoNeighbours.get(processGlyphID).get(containerCompartment.getId());
-								processNodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), value+1 );
+								Integer value = nodetoNeighbours.get(processGlyphID).get(containerCompartment.getId());
+								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), value+1 );
 							}
 							else
-								processNodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), 1);
+								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), 1);
 						}
 					}	
 					
@@ -200,13 +200,13 @@ public class SBGNLayoutManager
 						{
 							Glyph containerCompartment = (Glyph)source.getCompartmentRef();
 							
-							if(processNodetoNeighbours.get(processGlyphID).get(source.getId()) != null )
+							if(nodetoNeighbours.get(processGlyphID).get(source.getId()) != null )
 							{
-								Integer value = processNodetoNeighbours.get(processGlyphID).get(containerCompartment.getId());
-								processNodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), value+1 );
+								Integer value = nodetoNeighbours.get(processGlyphID).get(containerCompartment.getId());
+								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), value+1 );
 							}
 							else
-								processNodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), 1);
+								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), 1);
 						}
 					}
 				}
@@ -217,7 +217,7 @@ public class SBGNLayoutManager
 		for(Glyph glyph: targetNodes)
 		{
 			String id = glyph.getId();
-			TreeMap <String, Integer> tMap = processNodetoNeighbours.get(id);
+			TreeMap <String, Integer> tMap = nodetoNeighbours.get(id);
 			if(tMap.size() > 0)
 			{
 				Glyph compartment = idToCompartmentGlyphs.get(tMap.firstKey());
