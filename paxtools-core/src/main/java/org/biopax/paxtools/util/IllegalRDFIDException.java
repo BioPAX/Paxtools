@@ -1,6 +1,7 @@
 package org.biopax.paxtools.util;
 
 /**
+ * This exception is thrown when an object does not have a proper, non-null, unique id.
  */
 public class IllegalRDFIDException extends IllegalArgumentException
 {

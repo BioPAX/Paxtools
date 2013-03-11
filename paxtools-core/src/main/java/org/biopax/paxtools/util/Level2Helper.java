@@ -10,13 +10,22 @@ import java.util.Set;
 /**
  * This class has static methods for doing some calculations on biopax level 2 model members. These
  * methods may be considered to be included in the utility methods of the model objects themselves.
- * However, most of these methods are based on very weak assumptions, and most times they work
+ * However, most of these methods are based on very weak assumptions, and most of the times they work
  * because of the common missuse of biopax by data providers.
  *
- * @author Ozgun Babur Date: Mar 27, 2008 Time: 4:33:57 PM
+ * Use with caution!
+ *
+ * @author Ozgun Babur //TODO annotate
  */
 public class Level2Helper
 {
+
+	/**
+	 *
+	 * @param conv
+	 * @param cont
+	 * @return
+	 */
 	public static boolean hasLeftToRightEvidence(conversion conv, control cont)
 	{
 

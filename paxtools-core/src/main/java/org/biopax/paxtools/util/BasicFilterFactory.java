@@ -13,14 +13,17 @@ import org.hibernate.search.filter.FilterKey;
 import org.hibernate.search.filter.StandardFilterKey;
 
 /**
- * 
+ * This class creates search filters based on a searchField.
  * @author rodche
  */
 public abstract class BasicFilterFactory {
 	
 	private String[] values;
 	private final String searchField;
-	
+
+	/**
+	 * @param searchField
+	 */
 	public BasicFilterFactory(String searchField) {
 		this.searchField = searchField;
 	}

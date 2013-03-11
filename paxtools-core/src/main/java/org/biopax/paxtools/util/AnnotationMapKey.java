@@ -6,7 +6,7 @@ package org.biopax.paxtools.util;
 import org.biopax.paxtools.model.BioPAXElement;
 
 /**
- * Use these constant names 
+ * Constant names to use
  * with {@link BioPAXElement#getAnnotations()} map.
  * 
  * @author rodche
