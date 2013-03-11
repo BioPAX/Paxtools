@@ -12,13 +12,29 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Prepares displayable Stat class to generate labels like "pY@123" for modification features and
+ * like x[30 - 122] for fragment features.
+ *
  * @author Ozgun Babur
  */
 public class CommonFeatureStringGenerator implements FeatureDecorator
 {
+	/**
+	 * Map from modification term to its symbol.
+	 */
 	private static Map<String, String> symbolMapping;
+
+	/**
+	 * Map from location term (amino acid name) to is symbol (letter).
+	 */
 	private static Map<String, String> locMapping;
-	
+
+	/**
+	 * Creates State to represent the entity feature.
+	 * @param ef feature to represent
+	 * @param factory factory that can create the State class
+	 * @return State representing the feature
+	 */
 	@Override
 	public Glyph.State createStateVar(EntityFeature ef, ObjectFactory factory)
 	{
@@ -80,7 +96,10 @@ public class CommonFeatureStringGenerator implements FeatureDecorator
 		// Binding features are ignored
 		return null;
 	}
-	
+
+	/**
+	 * Initializes resources.
+	 */
 	static
 	{
 		symbolMapping = new HashMap<String, String>();

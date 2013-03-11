@@ -106,7 +106,7 @@ public class Grouper
 			//If this is a reactome generic it should not have any components?
 			if (!complex.getComponent().isEmpty())
 			{
-				log.info("Generic complex with both membership types (" + complex.getRDFId() + "). Skipping.");
+				log.debug("Generic complex with both membership types (" + complex.getRDFId() + "). Skipping.");
 			} else
 			{
 				group = new Group(BinaryInteractionType.GENERIC_OF, complex);
@@ -118,7 +118,7 @@ public class Grouper
 						addOrDelegate(member, group);
 					} else
 					{
-						log.info("Non complex PE member for complex (" + member.getRDFId() + "->" + complex
+						log.debug("Non complex PE member for complex (" + member.getRDFId() + "->" + complex
 								.getRDFId() +
 						         "). Skipping");
 					}

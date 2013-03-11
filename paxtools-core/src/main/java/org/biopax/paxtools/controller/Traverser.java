@@ -24,7 +24,7 @@ public class Traverser
 
 	protected Filter<PropertyEditor>[] filters;
 
-	protected final Log log = LogFactory.getLog(Traverser.class);
+	private final static Log log = LogFactory.getLog(Traverser.class);
 
 
 // --------------------------- CONSTRUCTORS ---------------------------
@@ -68,7 +68,7 @@ public class Traverser
 
 		if (editors == null)
 		{
-			if (log.isWarnEnabled()) log.warn("No editors for : " + element.getModelInterface());
+			log.warn("No editors for : " + element.getModelInterface());
 			return;
 		}
 		for (PropertyEditor<? super D,?> editor : editors)

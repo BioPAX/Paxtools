@@ -144,6 +144,18 @@ public class PatternBox
 		return p;
 	}
 
+	public static Pattern modifiedPESimple()
+	{
+		Pattern p = new Pattern(4, EntityReference.class);
+		int i = 0;
+		p.addConstraint(ConBox.erToPE(), i, ++i);
+		p.addConstraint(ConBox.participatesInConv(), i, ++i);
+		p.addConstraint(new OtherSide(), i-1, i, ++i);
+		p.addConstraint(new Equality(false), i-2, i);
+		p.addConstraint(ConBox.peToER(), i, 0);
+		return p;
+	}
+
 	public static Pattern actChange(boolean activating,
 		Map<EntityReference, Set<ModificationFeature>> activityFeat,
 		Map<EntityReference, Set<ModificationFeature>> inactivityFeat)

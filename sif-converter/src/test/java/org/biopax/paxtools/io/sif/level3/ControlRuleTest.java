@@ -1,8 +1,11 @@
 package org.biopax.paxtools.io.sif.level3;
 
-import org.biopax.paxtools.impl.level3.Mock;
+
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
@@ -23,7 +26,8 @@ public class ControlRuleTest
 	public void testControlRule()
 	{
 
-		Mock mock = new Mock();
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		final Model model = mock.createModel();
 
 		/**
 		 * p0      p1     sm1
@@ -42,8 +46,8 @@ public class ControlRuleTest
 		 *
 		 */
 
-		Protein[] p = mock.create(Protein.class, 8);
-		ProteinReference[] pr = mock.create(ProteinReference.class, 5);
+		Protein[] p = mock.create(model, Protein.class, 8);
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 5);
 		mock.bindArrays("entityReference", Arrays.copyOfRange(p, 0, 5), pr);
 
 		mock.bindInPairs("entityReference",
@@ -52,17 +56,17 @@ public class ControlRuleTest
 		                 p[6], pr[3]);
 
 
-		SmallMolecule[] sm = mock.create(SmallMolecule.class, 2);
-		SmallMoleculeReference[] smr = mock.create(SmallMoleculeReference.class, 2);
+		SmallMolecule[] sm = mock.create(model, SmallMolecule.class, 2);
+		SmallMoleculeReference[] smr = mock.create(model, SmallMoleculeReference.class, 2);
 		mock.bindArrays("entityReference", sm, smr);
 
-		Complex[] c = mock.create(Complex.class, 1);
+		Complex[] c = mock.create(model, Complex.class, 1);
 		mock.bindInPairs("component",
 		                 c[0], p[5],
 		                 c[0], p[6]);
 
-		BiochemicalReaction[] br = mock.create(BiochemicalReaction.class, 1);
-		ComplexAssembly[] ca = mock.create(ComplexAssembly.class, 1);
+		BiochemicalReaction[] br = mock.create(model, BiochemicalReaction.class, 1);
+		ComplexAssembly[] ca = mock.create(model, ComplexAssembly.class, 1);
 
 		mock.bindInPairs(mock.editor("left", Conversion.class),
 		                 br[0], p[0],
@@ -74,7 +78,7 @@ public class ControlRuleTest
 		                 br[0], sm[1],
 		                 ca[0], c[0]);
 
-		Catalysis[] cx = mock.create(Catalysis.class, 2);
+		Catalysis[] cx = mock.create(model, Catalysis.class, 2);
 
 		mock.bindInPairs("controller",
 		                 cx[0], p[1],
@@ -88,7 +92,7 @@ public class ControlRuleTest
 		options.put(STATE_CHANGE, true);
 		ControlRule rule = new ControlRule();
 		SimpleInteractionConverter sic = new SimpleInteractionConverter(options, rule);
-		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(mock.model);
+		InteractionSetL3 interactions = (InteractionSetL3) sic.inferInteractions(model);
 
 		List<SimpleInteraction> expected =
 				Arrays.asList(

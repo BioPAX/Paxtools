@@ -1,4 +1,11 @@
 <?xml version="1.0"?>
+
+<!--
+     Some random comment for testing the parser
+-->
+
+<!-- Here is some more -->
+
 <rdf:RDF
     xmlns="http://www.biopax.org/examples/myExample#"
     xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
@@ -7,8 +14,8 @@
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
     xmlns:owl="http://www.w3.org/2002/07/owl#"
     xmlns:p1="http://www.owl-ontologies.com/assert.owl#"
-  xml:base="http://www.biopax.org/examples/myExample">
-  <owl:Ontology rdf:about="">
+  xml:base="http://www.biopax.org/examples/myExample#">
+  <owl:Ontology rdf:about=""><!--more comment parsing tests...-->
     <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl"/>
   </owl:Ontology>
   <bp:Protein rdf:ID="Protein_54">

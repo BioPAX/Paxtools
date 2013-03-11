@@ -1621,7 +1621,7 @@ public final class ModelUtils
 				EntityFeature that = mapped.get(feature);
 				if (that != null && !that.equals(feature))
 				{
-					if (LOG.isWarnEnabled()) LOG.warn(" replacing " + feature +
+					LOG.debug(" replacing " + feature +
 					                                  "{" + feature.getRDFId() + "} with " +
 					                                  that + "{" + that.getRDFId() + "}");
 					physicalEntity.removeFeature(feature);
@@ -1643,7 +1643,7 @@ public final class ModelUtils
 				if (er != null)
 				{
 					er.addEntityFeature(ef);
-					if (LOG.isWarnEnabled()) LOG.warn("Inferred the ER of " + ef.getRDFId() + " as " + er.getRDFId());
+					LOG.debug("Inferred the ER of " + ef.getRDFId() + " as " + er.getRDFId());
 					return;
 				}
 			}

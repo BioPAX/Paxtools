@@ -212,6 +212,12 @@ public class Searcher
 	}
 
 	public static <T extends BioPAXElement> Set<T> searchAndCollect(
+		Model model, Pattern pattern, int index, Class<T> c)
+	{
+		return searchAndCollect(model.getObjects(pattern.getStartingClass()), pattern, index, c);
+	}
+
+	public static <T extends BioPAXElement> Set<T> searchAndCollect(
 		Collection<? extends BioPAXElement> eles, Pattern pattern, int index, Class<T> c)
 	{
 		Set<T> set = new HashSet<T>();

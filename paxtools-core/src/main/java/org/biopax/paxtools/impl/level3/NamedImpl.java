@@ -38,7 +38,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 
 	
     @Fields({
-    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.5f)),
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(3.0f)),
     	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
     })
 	@Column(columnDefinition="LONGTEXT")
@@ -63,7 +63,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 	
     @Fields({
-    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.0f)),
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.5f)),
     	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
     })
 	@Column(columnDefinition="LONGTEXT")
@@ -91,7 +91,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
     @ElementCollection
 	@JoinTable(name="name")
     @Fields({
-    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.0f), bridge=@FieldBridge(impl=SetStringBridge.class)),
+    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.5f), bridge=@FieldBridge(impl=SetStringBridge.class)),
     	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=SetStringBridge.class))
     })
 	@Column(columnDefinition="LONGTEXT")

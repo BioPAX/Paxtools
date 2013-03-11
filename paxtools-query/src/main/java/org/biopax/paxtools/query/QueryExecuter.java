@@ -13,12 +13,22 @@ import org.biopax.paxtools.query.wrapperL3.GraphL3;
 import java.util.*;
 
 /**
+ * This class provides static methods to execute graph queries. These cover only the most frequent
+ * use cases. Users can use these methods as example for executing the query they need.
+ *
  * @author Ozgun Babur
  */
 public class QueryExecuter
 {
     /**
-     * @see #runNeighborhood(java.util.Set, org.biopax.paxtools.model.Model, int, org.biopax.paxtools.query.algorithm.Direction)
+	 * Gets neighborhood of the source set.
+	 *
+	 * @param sourceSet seed to the query
+	 * @param model BioPAX model
+	 * @param limit neigborhood distance to get
+	 * @param direction UPSTREAM, DOWNSTREAM or BOTHSTREAM
+	 * @return BioPAX elements in the result set
+     * @see #runNeighborhood(java.util.Set, org.biopax.paxtools.model.Model, int, org.biopax.paxtools.query.algorithm.Direction, java.util.Set)
      */
 	public static Set<BioPAXElement> runNeighborhood(
 		Set<BioPAXElement> sourceSet,
@@ -61,8 +71,13 @@ public class QueryExecuter
 	}
 
     /**
-     * @see #runPathsBetween(java.util.Set, org.biopax.paxtools.model.Model, int)
-     *
+	 * Gets the graph constructed by the paths between the given seed nodes. Does not get paths
+	 * between physical entities that belong the same entity reference.
+	 * @param sourceSet Seed to the query
+	 * @param model BioPAX model
+	 * @param limit Length limit for the paths to be found
+	 * @return BioPAX elements in the result
+     * @see #runPathsBetween(java.util.Set, org.biopax.paxtools.model.Model, int, java.util.Set)
      */
     public static Set<BioPAXElement> runPathsBetween(Set<BioPAXElement> sourceSet, Model model, int limit)
 	{
@@ -99,7 +114,12 @@ public class QueryExecuter
 	}
 
     /**
-     * @see #runGOI(java.util.Set, org.biopax.paxtools.model.Model, int)
+	 * Gets paths between the seed nodes.
+	 * @param sourceSet Seed to the query
+	 * @param model BioPAX model
+	 * @param limit Length limit for the paths to be found
+	 * @return BioPAX elements in the result
+     * @see #runGOI(java.util.Set, org.biopax.paxtools.model.Model, int, java.util.Set)
 	 * @deprecated Use runPathsBetween instead
      */
     public static Set<BioPAXElement> runGOI(
@@ -129,8 +149,14 @@ public class QueryExecuter
 	}
 
     /**
-     * @see #runPathsFromTo
-     *
+	 * Gets paths the graph composed of the paths from a source node, and ends at a target node.
+	 * @param sourceSet Seeds for start points of paths
+	 * @param targetSet Seeds for end points of paths
+	 * @param model BioPAX model
+	 * @param limitType either NORMAL or SHORTEST_PLUS_K
+	 * @param limit Length limit fothe paths to be found
+	 * @return BioPAX elements in the result
+     * @see #runPathsFromTo(java.util.Set, java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.LimitType, int, java.util.Set)
      */
     public static Set<BioPAXElement> runPathsFromTo(
 		Set<BioPAXElement> sourceSet,
@@ -176,7 +202,13 @@ public class QueryExecuter
 	}
 
     /**
-     * @see #runCommonStream(java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.Direction, int)
+	 * Gets the elements in the common upstream or downstream of the seed
+	 * @param sourceSet Seed to the query
+	 * @param model BioPAX model
+	 * @param direction UPSTREAM or DOWNSTREAM
+	 * @param limit Length limit for the search
+	 * @return BioPAX elements in the result
+     * @see #runCommonStream(java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.Direction, int, java.util.Set)
      */
     public static Set<BioPAXElement> runCommonStream(
 		Set<BioPAXElement> sourceSet,
@@ -220,8 +252,14 @@ public class QueryExecuter
 	}
 
     /**
+	 * First finds the common stream, then completes it with the paths between seed and common
+	 * stream.
+	 * @param sourceSet Seed to the query
+	 * @param model BioPAX model
+	 * @param direction UPSTREAM or DOWNSTREAM
+	 * @param limit Length limit for the search
+	 * @return BioPAX elements in the result
      * @see #runCommonStreamWithPOI(java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.Direction, int, java.util.Set)
-     *
      */
     public static Set<BioPAXElement> runCommonStreamWithPOI(
         Set<BioPAXElement> sourceSet,
@@ -303,10 +341,10 @@ public class QueryExecuter
 	}
 
 	/**
-	 * Converts the query result from wrappers to wrapped biopax elements.
-	 * @param resultWrappers
-	 * @param graph
-	 * @return
+	 * Converts the query result from wrappers to wrapped BioPAX elements.
+	 * @param resultWrappers Wrappers of the result set
+	 * @param graph Queried graph
+	 * @return Set of elements in the result
 	 */
 	private static HashSet<BioPAXElement> convertQueryResult(
 		Set<GraphObject> resultWrappers, Graph graph)
@@ -322,10 +360,10 @@ public class QueryExecuter
 	}
 
 	/**
-	 * Gets the related physical entities and wraps in a single node set.
-	 * @param elements
-	 * @param graph
-	 * @return
+	 * Gets the related wrappers of the given elements in a set.
+	 * @param elements Elements to get the related wrappers
+	 * @param graph Owner graph
+	 * @return Related wrappers in a set
 	 */
 	public static Set<Node> prepareSingleNodeSet(Set<BioPAXElement> elements, Graph graph)
 	{
@@ -347,6 +385,14 @@ public class QueryExecuter
 		return nodes;
 	}
 
+	/**
+	 * Gets the related wrappers of the given elements in individual sets. An object can be related
+	 * to more than one wrapper and they will appear in the same set. This method created a set for
+	 * each parameter element that has a related wrapper.
+	 * @param elements Elements to get the related wrappers
+	 * @param graph Owner graph
+	 * @return Related wrappers in individual sets
+	 */
 	private static Collection<Set<Node>> prepareNodeSets(Set<BioPAXElement> elements, Graph graph)
 	{
 		Collection<Set<Node>> sets = new HashSet<Set<Node>>();
@@ -374,8 +420,8 @@ public class QueryExecuter
 	/**
 	 * Maps each BioPAXElement to its related PhysicalEntity objects.
 	 *
-	 * @param elements
-	 * @return
+	 * @param elements Elements to map
+	 * @return The mapping
 	 */
 	public static Map<BioPAXElement, Set<PhysicalEntity>> getRelatedPhysicalEntityMap(
 		Collection<BioPAXElement> elements)
@@ -397,9 +443,9 @@ public class QueryExecuter
 	/**
 	 * Gets the related PhysicalEntity objects of the given BioPAXElement, in level 3 models.
 	 *
-	 * @param element to get related PhysicalEntity objects
-	 * @param pes result set. if not supplied, a new set will be initialized.
-	 * @return
+	 * @param element Element to get related PhysicalEntity objects
+	 * @param pes Result set. If not supplied, a new set will be initialized.
+	 * @return Related PhysicalEntity objects
 	 */
 	public static Set<PhysicalEntity> getRelatedPhysicalEntities(BioPAXElement element,
 		Set<PhysicalEntity> pes)
@@ -463,12 +509,25 @@ public class QueryExecuter
 		return pes;
 	}
 
+	/**
+	 * Adds equivalents and parent complexes of the given PhysicalEntity to the parameter set.
+	 * @param pe The PhysicalEntity to add its equivalents and complexes
+	 * @param pes Set to collect equivalents and complexes
+	 */
 	private static void addEquivalentsComplexes(PhysicalEntity pe, Set<PhysicalEntity> pes)
 	{
 		addEquivalentsComplexes(pe, true, pes);
 		addEquivalentsComplexes(pe, false, pes);
 	}
 
+	/**
+	 * Adds equivalents and parent complexes of the given PhysicalEntity to the parameter set. This
+	 * method traverses homologies only to one direction (either towards parents or to the
+	 * children).
+	 * @param pe The PhysicalEntity to add its equivalents and complexes
+	 * @param outer Give true if towards parents, false if to the children
+	 * @param pes Set to collect equivalents and complexes
+	 */
 	private static void addEquivalentsComplexes(PhysicalEntity pe, boolean outer,
 		Set<PhysicalEntity> pes)
 	{
@@ -487,10 +546,10 @@ public class QueryExecuter
 	}
 
 	/**
-	 * Extracts the queryable interactions from the elements.
+	 * Extracts the querible interactions from the elements.
 	 *
-	 * @param elements
-	 * @return
+	 * @param elements Elements to search
+	 * @return Querible Interactions
 	 */
 	public static Set<Node> getSeedInteractions(Collection<BioPAXElement> elements, Graph graph)
 	{
@@ -511,5 +570,4 @@ public class QueryExecuter
 		}
 		return nodes;
 	}
-
 }

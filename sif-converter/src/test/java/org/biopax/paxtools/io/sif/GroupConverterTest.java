@@ -1,6 +1,6 @@
 package org.biopax.paxtools.io.sif;
 
-import org.biopax.paxtools.impl.level3.MockFactory;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.sif.level3.GroupMap;
 import org.biopax.paxtools.io.sif.level3.Grouper;
 import org.biopax.paxtools.model.BioPAXLevel;

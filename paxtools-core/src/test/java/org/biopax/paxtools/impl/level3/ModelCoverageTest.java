@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.controller.EditorMap;
 import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.junit.Test;

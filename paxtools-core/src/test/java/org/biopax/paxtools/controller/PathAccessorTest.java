@@ -1,8 +1,9 @@
 package org.biopax.paxtools.controller;
 
-import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
@@ -23,15 +24,16 @@ public class PathAccessorTest
 	@Test
 	public void testPaths()
 	{
-		Mock mock= new Mock();
-
-		Protein[] p = mock.create(Protein.class, 2);
-		Protein[] member = mock.create(Protein.class, 1,"member");
-		ProteinReference[] pr = mock.create(ProteinReference.class, 2);
-		PublicationXref[] px = mock.create(PublicationXref.class, 2);
-		Complex[] c = mock.create(Complex.class, 3);
-		SmallMoleculeReference smr[] = mock.create(SmallMoleculeReference.class,1);
-		SmallMolecule sm[] = mock.create(SmallMolecule.class,1);
+		MockFactory mock= new MockFactory(BioPAXLevel.L3);
+		final Model model = mock.createModel();
+		
+		Protein[] p = mock.create(model, Protein.class, 2);
+		Protein[] member = mock.create(model, Protein.class, 1,"member");
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
+		PublicationXref[] px = mock.create(model, PublicationXref.class, 2);
+		Complex[] c = mock.create(model, Complex.class, 3);
+		SmallMoleculeReference smr[] = mock.create(model, SmallMoleculeReference.class,1);
+		SmallMolecule sm[] = mock.create(model, SmallMolecule.class,1);
 
 
 		mock.bindArrays(mock.editor("entityReference", Protein.class), p, pr);
@@ -47,7 +49,7 @@ public class PathAccessorTest
 		PathAccessor accessor = new PathAccessor("Protein/entityReference/xref:PublicationXref", BioPAXLevel.L3);
 		Set values = accessor.getValueFromBean(p[0]);
 		assertTrue(values.contains(px[0]) && values.size() == 1);
-		values = accessor.getValueFromModel(mock.model);
+		values = accessor.getValueFromModel(model);
 		assertTrue(values.containsAll(Arrays.asList(px)) && values.size() == 2);
 
 		accessor = new PathAccessor("Protein/entityReference/xref:RelationshipXref", BioPAXLevel.L3);
