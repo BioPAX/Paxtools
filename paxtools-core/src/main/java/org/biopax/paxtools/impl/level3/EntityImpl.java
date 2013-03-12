@@ -23,7 +23,7 @@ import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
+import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
 
 
@@ -187,13 +187,11 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 		{
 			Entity otherEntity = (Entity) element;
 
-			equivalance = isEquivalentIntersection(
-					dataSource, otherEntity.getDataSource())
-			              && isEquivalentIntersection(
-					new ClassFilterSet<Xref,UnificationXref>(getXref(), UnificationXref.class),
-					new ClassFilterSet<Xref,UnificationXref>(otherEntity.getXref(),
-							UnificationXref.class))
-			              && isEquivalentIntersection(evidence, otherEntity.getEvidence());
+			equivalance = hasEquivalentIntersection(dataSource, otherEntity.getDataSource())
+			              && hasEquivalentIntersection(
+					new ClassFilterSet<Xref, UnificationXref>(getXref(), UnificationXref.class),
+					new ClassFilterSet<Xref, UnificationXref>(otherEntity.getXref(), UnificationXref.class))
+			              && hasEquivalentIntersection(evidence, otherEntity.getEvidence());
 		}
 		return equivalance;
 	}

@@ -22,7 +22,7 @@ import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
+import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
 /**
  * This class helps with managing the bidirectional xref links.
@@ -105,9 +105,8 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	 */
 	protected boolean hasCommonUnificationXref(XReferrable xReferrable)
 	{
-		return isEquivalentIntersection(
-				new ClassFilterSet<Xref,UnificationXref>(xref, UnificationXref.class),
-				new ClassFilterSet<Xref,UnificationXref>(xReferrable.getXref(), UnificationXref.class)
-		);
+		return hasEquivalentIntersection(new ClassFilterSet<Xref, UnificationXref>(xref, UnificationXref.class),
+		                                 new ClassFilterSet<Xref, UnificationXref>(xReferrable.getXref(),
+		                                                                           UnificationXref.class));
 	}
 }

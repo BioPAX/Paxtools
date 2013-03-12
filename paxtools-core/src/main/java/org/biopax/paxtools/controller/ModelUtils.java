@@ -1526,7 +1526,7 @@ public final class ModelUtils
 			{
 				BindingFeature bindsTo = ((BindingFeature) ef).getBindsTo();
 				Set<PhysicalEntity> featureOf = bindsTo.getFeatureOf();
-				if (!SetEquivalanceChecker.isEquivalentIntersection(complex.getComponent(), featureOf))
+				if (!SetEquivalenceChecker.hasEquivalentIntersection(complex.getComponent(), featureOf))
 				{
 					System.err.println(
 							"The Complex" + complex.getName() + "(" + complex.getRDFId() + ") has  component" +
