@@ -2,15 +2,11 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.util.ChildDataStringBridge;
-import org.biopax.paxtools.util.DataSourceFilterFactory;
-import org.biopax.paxtools.util.OrganismFieldBridge;
-import org.biopax.paxtools.util.OrganismFilterFactory;
-import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.biopax.paxtools.util.*;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -232,7 +228,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		PhysicalEntity that = (PhysicalEntity) element;
 		return hasEquivalentCellularLocation(that)
 		       && hasEquivalentFeatures(that)
-		       && SetEquivalanceChecker
+		       && SetEquivalenceChecker
 				.isEquivalent(getMemberPhysicalEntity(), that.getMemberPhysicalEntity())
 		       &&
 		       super.semanticallyEquivalent(element); // StackOverflow BUG fixed: was isEquivalent !
@@ -262,8 +258,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		if (that != null)
 		{
 			equivalency =
-					SetEquivalanceChecker.isEquivalent(this.getFeature(), that.getFeature()) &&
-					SetEquivalanceChecker.isEquivalent(this.getNotFeature(), that.getNotFeature());
+					SetEquivalenceChecker.isEquivalent(this.getFeature(), that.getFeature()) &&
+					SetEquivalenceChecker.isEquivalent(this.getNotFeature(), that.getNotFeature());
 		}
 		return equivalency;
 	}

@@ -4,7 +4,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.biopax.paxtools.util.OrganismFieldBridge;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -175,7 +175,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		if (!(element instanceof Complex))
 			return false;
 		
-		return SetEquivalanceChecker
+		return SetEquivalenceChecker
 				.isEquivalent(this.getComponent(), ((Complex) element).getComponent())
 				&& super.semanticallyEquivalent(element);
 	}

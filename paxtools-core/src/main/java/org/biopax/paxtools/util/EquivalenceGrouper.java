@@ -28,11 +28,11 @@ public class EquivalenceGrouper<T extends BioPAXElement>
 {
 
 
-	private HashSet<EquivalanceBucket<T>> buckets;
+	HashSet<EquivalanceBucket<T>> buckets;
 
 	Log log = LogFactory.getLog(EquivalenceGrouper.class);
 
-	public EquivalenceGrouper(Set<T> bpes)
+	public EquivalenceGrouper(Set<? extends T> bpes)
 	{
 		this();
 		addAll(bpes);
@@ -43,7 +43,7 @@ public class EquivalenceGrouper<T extends BioPAXElement>
 		return buckets;
 	}
 
-	private void addAll(Set<T> bpes)
+	void addAll(Set<? extends T> bpes)
 	{
 		for (T bpe : bpes)
 		{
