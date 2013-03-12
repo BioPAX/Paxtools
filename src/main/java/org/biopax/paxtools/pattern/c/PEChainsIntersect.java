@@ -16,19 +16,53 @@ import org.biopax.paxtools.pattern.PhysicalEntityChain;
  */
 public class PEChainsIntersect extends ConstraintAdapter
 {
+	/**
+	 * Desired result.
+	 */
 	boolean intersectionDesired;
 
+	/**
+	 * Option to ignore intersection at the endpoints of the chains.
+	 */
+	boolean ignoreEndPoints;
+
+	/**
+	 * Constructor with the desired result.
+	 * @param intersectionDesired desired result
+	 */
 	public PEChainsIntersect(boolean intersectionDesired)
 	{
-		this.intersectionDesired = intersectionDesired;
+		this(intersectionDesired, false);
 	}
 
+	/**
+	 * Constructor with the desired result and endpoint ignore option.
+	 * @param intersectionDesired desired result
+	 * @param ignoreEndPoints option to ignore intersection at the endpoints of the chains
+	 */
+	public PEChainsIntersect(boolean intersectionDesired, boolean ignoreEndPoints)
+	{
+		this.intersectionDesired = intersectionDesired;
+		this.ignoreEndPoints = ignoreEndPoints;
+	}
+
+	/**
+	 * Works with 4 elements
+	 * @return 4
+	 */
 	@Override
 	public int getVariableSize()
 	{
 		return 4;
 	}
 
+	/**
+	 * Creates two PhysicalEntity chains with the given endpoints, and checks if they are
+	 * intersecting.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return true if the chains are intersecting or not intersecting as desired
+	 */
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
@@ -40,6 +74,6 @@ public class PEChainsIntersect extends ConstraintAdapter
 		PhysicalEntityChain ch1 = new PhysicalEntityChain(pe0, pe1);
 		PhysicalEntityChain ch2 = new PhysicalEntityChain(pe2, pe3);
 
-		return ch1.intersects(ch2) == intersectionDesired;
+		return ch1.intersects(ch2, ignoreEndPoints) == intersectionDesired;
 	}
 }

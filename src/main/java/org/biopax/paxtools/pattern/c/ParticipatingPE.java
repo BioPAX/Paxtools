@@ -10,31 +10,59 @@ import java.util.*;
 /**
  * This constraint is useful when we want traverse Control-Conversion-PE (input or output). Control
  * and Conversion are prerequisites, PE is generated.
+ *
  * @author Ozgun Babur
  */
 public class ParticipatingPE extends ConstraintAdapter
 {
+	/**
+	 * Desired direction after the Conversion.
+	 */
 	RelType type;
+
+	/**
+	 * If this is false then all participants of the Conversion is traversed.
+	 */
 	boolean treatReversibleAsLeftToRight;
 
+	/**
+	 * Constructor with parameters.
+	 * @param type direction from the Conversion
+	 * @param treatReversibleAsLeftToRight option to treat reversible Conversion as if left to right
+	 */
 	public ParticipatingPE(RelType type, boolean treatReversibleAsLeftToRight)
 	{
 		this.type = type;
 		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
 	}
 
+	/**
+	 * Works with 3 elements.
+	 * @return 3
+	 */
 	@Override
 	public int getVariableSize()
 	{
 		return 3;
 	}
 
+	/**
+	 * This is a generative constraint.
+	 * @return
+	 */
 	@Override
 	public boolean canGenerate()
 	{
 		return true;
 	}
 
+	/**
+	 * First evaluates the direction that the Control is affecting the Conversion, then gets the
+	 * related participants.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return related participants
+	 */
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{

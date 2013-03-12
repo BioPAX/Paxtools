@@ -8,32 +8,54 @@ import java.util.Collection;
 
 /**
  * When a constraint excludes the origin element, but it is needed to be among them, use this 
- * constraint.
+ * constraint. The wrapped constraint must have size 2.
  * 
  * @author Ozgun Babur
  */
 public class SelfOrThis extends ConstraintAdapter
 {
+	/**
+	 * Wrapped constraint.
+	 */
 	Constraint con;
 
+	/**
+	 * Constructor with the wrapped constraint.
+	 * @param con wrapped constraint
+	 */
 	public SelfOrThis(Constraint con)
 	{
 		this.con = con;
-		assert con.getVariableSize() == 2;
+		if (con.getVariableSize() != 2)
+			throw new IllegalArgumentException("Parameter constraint must be size 2.");
 	}
 
+	/**
+	 * Always 2.
+	 * @return 2
+	 */
 	@Override
 	public int getVariableSize()
 	{
 		return 2;
 	}
 
+	/**
+	 * This is a generative constraint.
+	 * @return true
+	 */
 	@Override
 	public boolean canGenerate()
 	{
 		return true;
 	}
 
+	/**
+	 * Gets the first mapped element along with the generated elements of wrapped constraint.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return first mapped element along with the generated elements of wrapped constraint
+	 */
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
@@ -42,6 +64,12 @@ public class SelfOrThis extends ConstraintAdapter
 		return gen;
 	}
 
+	/**
+	 * Checks if the last index is either generated or equal to the first element.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return true if the last index is either generated or equal to the first element
+	 */
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{

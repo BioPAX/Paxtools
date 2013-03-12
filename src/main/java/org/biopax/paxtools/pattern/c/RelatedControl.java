@@ -10,30 +10,60 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * After traversing a PhysicalEntity and the Conversion it participates, this constraint takes us to
+ * the Control. The given relation between PhysicalEntity and Conversion is used to filter out
+ * unrelated controls.
+ *
  * @author Ozgun Babur
  */
 public class RelatedControl extends ConstraintAdapter
 {
+	/**
+	 * Relation type between PhysicalEntity and Conversion.
+	 */
 	RelType peType;
+
+	/**
+	 * Accessor to controller of Control recursively.
+	 */
 	PathAccessor controlledOf = new PathAccessor("Control/controlledOf*:Control");
 
+	/**
+	 * Constructor with the relation type between PhysicalEntity and Conversion.
+	 * @param peType relation type between PhysicalEntity and Conversion
+	 */
 	public RelatedControl(RelType peType)
 	{
 		this.peType = peType;
 	}
 
+	/**
+	 * Works with 3 elements.
+	 * @return 3
+	 */
 	@Override
 	public int getVariableSize()
 	{
 		return 3;
 	}
 
+	/**
+	 * This is a generative constraint.
+	 * @return true
+	 */
 	@Override
 	public boolean canGenerate()
 	{
 		return true;
 	}
 
+	/**
+	 * According to the relation between PhysicalEntity and the Conversion, checks of the Control is
+	 * relevant. If relevant it is retrieved.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return related controls
+	 */
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{

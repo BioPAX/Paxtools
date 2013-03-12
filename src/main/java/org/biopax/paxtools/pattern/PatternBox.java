@@ -7,23 +7,25 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class contains several pre-defined patterns.
+ * This class contains several pattern samples.
  *
  * @author Ozgun Babur
  */
 public class PatternBox
 {
+	/**
+	 *
+	 * @return
+	 */
 	public static Pattern inSameComplex()
 	{
 		Pattern p = new Pattern(7, EntityReference.class, "ER 1");
 		int i = 0;
 		p.addConstraint(ConBox.erToPE(), i, ++i);
-		p.addConstraint(ConBox.genericEquiv(), i, ++i);
-		p.addConstraint(ConBox.complexes(), i, ++i);
-		p.addConstraint(ConBox.complexMembers(), i, ++i);
-		p.addConstraint(ConBox.genericEquiv(), i, ++i);
-		p.addConstraint(new Type(SimplePhysicalEntity.class), i);
-		p.addConstraint(new PEChainsIntersect(false), i-4, i-3, i-1, i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_COMPLEX), i, ++i);
+		p.addConstraint(new Type(Complex.class), i);
+		p.addConstraint(new LinkedPE(LinkedPE.Type.TO_MEMBER), i, ++i);
+		p.addConstraint(new PEChainsIntersect(false, true), i-2, i-1, i, i-1);
 		p.addConstraint(ConBox.peToER(), "ER 2", i, ++i);
 		p.addConstraint(new Equality(false), 0, i);
 		return p;
@@ -175,7 +177,7 @@ public class PatternBox
 		p.addConstraint(ConBox.erToPE(), i, ++i);
 		p.addConstraint(ConBox.genericEquiv(), i, ++i);
 		p.addConstraint(ConBox.withComplexes(), i, ++i);
-		p.addConstraint(ConBox.inOrOutConv(), i, ++i);
+		p.addConstraint(ConBox.participatesInConv(), i, ++i);
 		return p;
 	}
 

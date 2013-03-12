@@ -7,14 +7,33 @@ import org.biopax.paxtools.pattern.Match;
 import java.util.Collection;
 
 /**
+ * Checks the size of the generated elements of the wrapped constraint.
+ *
  * @author Ozgun Babur
  */
 public class Size extends ConstraintAdapter
 {
+	/**
+	 * Wrapped generative constraint.
+	 */
 	Constraint con;
+
+	/**
+	 * Size threshold.
+	 */
 	int size;
+
+	/**
+	 * Type of (in)equality.
+	 */
 	Type type;
 
+	/**
+	 * Constructor with parameters.
+	 * @param con wrapped generative constraint
+	 * @param size size threshold
+	 * @param type type of (in)equality
+	 */
 	public Size(Constraint con, int size, Type type)
 	{
 		if (!con.canGenerate()) throw new IllegalArgumentException(
@@ -25,12 +44,22 @@ public class Size extends ConstraintAdapter
 		this.type = type;
 	}
 
+	/**
+	 * Size is one less than the size of wrapped constraint.
+	 * @return one less than the size of wrapped constraint
+	 */
 	@Override
 	public int getVariableSize()
 	{
 		return con.getVariableSize() - 1;
 	}
 
+	/**
+	 * Checks if generated element size is in limits.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return true if generated element size is in limits
+	 */
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
@@ -48,6 +77,9 @@ public class Size extends ConstraintAdapter
 		}
 	}
 
+	/**
+	 * Type of the (in)equality.
+	 */
 	public enum Type
 	{
 		EQUAL,

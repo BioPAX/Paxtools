@@ -1,6 +1,5 @@
 package org.biopax.paxtools.pattern.c;
 
-import org.biopax.paxtools.pattern.Constraint;
 import org.biopax.paxtools.pattern.MappedConst;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -17,13 +16,26 @@ import java.util.HashSet;
  */
 public class OR extends ConstraintAdapter
 {
+	/**
+	 * Wrapped constraints.
+	 */
 	MappedConst[] con;
 
+	/**
+	 * Constructor with the array of mapped constraints.
+	 * @param con wrapped constraints
+	 */
 	public OR(MappedConst... con)
 	{
 		this.con = con;
 	}
 
+	/**
+	 * Checks if any of the wrapped constraints satisfy.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return true if any of the wrapped constraints satisfy
+	 */
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
@@ -33,8 +45,11 @@ public class OR extends ConstraintAdapter
 		}
 		return false;
 	}
-	
 
+	/**
+	 * Can generate only if all of the wrapped constraints are generative.
+	 * @return true if none of the wrapped constraints are non-generative
+	 */
 	@Override
 	public boolean canGenerate()
 	{
@@ -45,6 +60,10 @@ public class OR extends ConstraintAdapter
 		return true;
 	}
 
+	/**
+	 * Checks the inner mapping of the wrapped constraints and figures the size.
+	 * @return the size
+	 */
 	@Override
 	public int getVariableSize()
 	{
@@ -57,6 +76,11 @@ public class OR extends ConstraintAdapter
 		return size + 1;
 	}
 
+	/**
+	 * Gets the max value.
+	 * @param v array to check
+	 * @return max value
+	 */
 	protected int max(int[] v)
 	{
 		int x = 0;
@@ -66,7 +90,13 @@ public class OR extends ConstraintAdapter
 		}
 		return x;
 	}
-	
+
+	/**
+	 * Gets the intersection of the generated values of wrapped constraints.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return intersection of the generated values of wrapped constraints
+	 */
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
@@ -78,5 +108,4 @@ public class OR extends ConstraintAdapter
 		}
 		return gen;
 	}
-
 }

@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
+ * Gets input or output participants of a Conversion.
+ *
  * var0 is a PE
  * var1 is a Conversion
  *
@@ -18,21 +20,45 @@ import java.util.HashSet;
  */
 public class ParticipatesInConv extends ConstraintAdapter
 {
+	/**
+	 * Input or output.
+	 */
 	RelType type;
+
+	/**
+	 * Sometimes users may opt to treat reversible conversions as if left to right just to avoid to
+	 * traverse towards both sides.
+	 */
 	boolean treatReversibleAsLeftToRight;
 
+	/**
+	 * Constructor with parameters.
+	 * @param type input or output
+	 * @param treatReversibleAsLeftToRight option to not to traverse both sides of a reversible
+	 * conversion
+	 */
 	public ParticipatesInConv(RelType type, boolean treatReversibleAsLeftToRight)
 	{
 		this.type = type;
 		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
 	}
 
+	/**
+	 * This is a generative constraint.
+	 * @return true
+	 */
 	@Override
 	public boolean canGenerate()
 	{
 		return true;
 	}
 
+	/**
+	 * Identifies the conversion direction and gets the related participants.
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return input or output participants
+	 */
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{

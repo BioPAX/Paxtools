@@ -29,8 +29,17 @@ public class Pattern
 	 */
 	protected List<MappedConst> constraints;
 
+	/**
+	 * Indexes in a pattern can be labeled using this map.
+	 */
 	protected Map<String, Integer> labelMap;
-	
+
+	/**
+	 * Constructor with constraints.
+	 * @param variableSize size of the pattern
+	 * @param startingClass type of initial element
+	 * @param constraints the list of constraints
+	 */
 	public Pattern(int variableSize, Class<? extends BioPAXElement> startingClass,
 		List<MappedConst> constraints)
 	{
@@ -40,11 +49,22 @@ public class Pattern
 		this.labelMap = new HashMap<String, Integer>();
 	}
 
+	/**
+	 * Constructor without constraints.
+	 * @param variableSize size of the pattern
+	 * @param startingClass type of the initial element
+	 */
 	public Pattern(int variableSize, Class<? extends BioPAXElement> startingClass)
 	{
 		this(variableSize, startingClass, new ArrayList<MappedConst>());
 	}
 
+	/**
+	 * Constructor without constraints, and with a label for the element at index 0.
+	 * @param variableSize size of the pattern
+	 * @param startingClass type of the initial element
+	 * @param label a label for the initial element
+	 */
 	public Pattern(int variableSize, Class<? extends BioPAXElement> startingClass, String label)
 	{
 		this(variableSize, startingClass);
@@ -53,8 +73,8 @@ public class Pattern
 
 	/**
 	 * Creates a mapped constraint with the given constraint and the indexes it applies.
-	 * @param constr
-	 * @param ind
+	 * @param constr constraint to add
+	 * @param ind indices to map the constraint to the element in the pattern
 	 */
 	public void addConstraint(Constraint constr, int ... ind)
 	{
@@ -65,9 +85,11 @@ public class Pattern
 	}
 
 	/**
-	 * Creates a mapped constraint with the given constraint and the indexes it applies.
-	 * @param constr
-	 * @param ind
+	 * Creates a mapped constraint with the given constraint and the indexes it applies. Also labels
+	 * the last given index.
+	 * @param constr constraint to add
+	 * @param label a label for the last of the given indices
+	 * @param ind indices to map the constraint to the element in the pattern
 	 */
 	public void addConstraint(Constraint constr, String label, int ... ind)
 	{
@@ -157,8 +179,8 @@ public class Pattern
 	 * injects the parameter constraint multiple times among the list of mapped constraints, to the
 	 * specified indexes.
 	 *
-	 * @param con
-	 * @param ind
+	 * @param con constraint to add
+	 * @param ind indices to add this point constraint
 	 */
 	public void insertPointConstraint(Constraint con, int ... ind)
 	{
@@ -178,6 +200,10 @@ public class Pattern
 		}
 	}
 
+	/**
+	 * Getter for the constraint list.
+	 * @return constraints
+	 */
 	public List<MappedConst> getConstraints()
 	{
 		return constraints;
@@ -185,35 +211,57 @@ public class Pattern
 
 	/**
 	 * Checks if these indices are in the range of variable size.
-	 * @param ind
-	 * @return
+	 * @param ind indices to check
+	 * @return true if in the range
 	 */
 	private boolean checkIndsInRange(int ... ind)
 	{
 		for (int i : ind) if (i >= variableSize) return false;
 		return true;
 	}
-	
+
+	/**
+	 * Gets the size of the pattern.
+	 * @return size of the pattern
+	 */
 	public int getVariableSize()
 	{
 		return variableSize;
 	}
 
+	/**
+	 * Gets the index of last element in the pattern.
+	 * @return index of last element
+	 */
 	public int getLastIndex()
 	{
 		return variableSize - 1;
 	}
 
+	/**
+	 * This method changes the size of the pattern. Use with caution, especially if you are
+	 * decreasing it.
+	 * @param variableSize new pattern size
+	 */
 	public void setVariableSize(int variableSize)
 	{
 		this.variableSize = variableSize;
 	}
-	
+
+	/**
+	 * This method modifies the pattern size by the given amount. Use with caution, especially if
+	 * inc is negative.
+	 * @param inc amount to add to the size
+	 */
 	public void increaseVariableSizeBy(int inc)
 	{
 		this.variableSize += inc;
 	}
 
+	/**
+	 * Changes the pattern size, making room for the new pattern to add this pattern.
+	 * @param p pattern that will probably be added to this pattern
+	 */
 	public void increaseVariableSizeFor(Pattern p)
 	{
 		int cnt = 1;
@@ -225,13 +273,19 @@ public class Pattern
 	}
 
 	/**
-	 * @return The class of first element in a match
+	 * Gets the type of the initial element.
+	 * @return type of first element in a match
 	 */
 	public Class<? extends BioPAXElement> getStartingClass()
 	{
 		return startingClass;
 	}
-	
+
+	/**
+	 * Puts the given label for the given index.
+	 * @param labelText the label
+	 * @param index index to label
+	 */
 	public void label(String labelText, int index)
 	{
 		if (labelMap.containsKey(labelText)) throw new IllegalArgumentException(
@@ -242,17 +296,33 @@ public class Pattern
 
 		labelMap.put(labelText, index);
 	}
-	
+
+	/**
+	 * Checks if the label is already in use.
+	 * @param labelText label to check
+	 * @return true if label exists
+	 */
 	public boolean labelExists(String labelText)
 	{
 		return labelMap.containsKey(labelText);
 	}
-	
+
+	/**
+	 * Checks if the given location has a label.
+	 * @param index index to check
+	 * @return true if a label exists for the given index
+	 */
 	public boolean hasLabel(int index)
 	{
 		return labelMap.containsValue(index);
 	}
 
+	/**
+	 * Gets the index of the given label. The label must exist, otherwise a runtime exception is
+	 * thrown.
+	 * @param labelText label to check
+	 * @return index of the label
+	 */
 	public int indexOf(String labelText)
 	{
 		if (!labelMap.containsKey(labelText))

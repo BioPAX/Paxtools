@@ -9,6 +9,10 @@ import org.biopax.paxtools.pattern.MappedConst;
  */
 public class MultiPathConstraint extends OR
 {
+	/**
+	 * Constructor with specifier string of the path constraints.
+	 * @param paths constructor strings for the path constraints
+	 */
 	public MultiPathConstraint(String ... paths)
 	{
 		con = new MappedConst[paths.length];

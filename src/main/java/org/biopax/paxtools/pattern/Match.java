@@ -11,43 +11,81 @@ import org.biopax.paxtools.model.level3.Named;
  */
 public class Match implements Cloneable
 {
+	/**
+	 * Array of variables.
+	 */
 	private BioPAXElement[] variables;
 
+	/**
+	 * Constructor with size.
+	 * @param size array size
+	 */
 	public Match(int size)
 	{
 		this.variables = new BioPAXElement[size];
 	}
 
+	/**
+	 * Getter for the element array.
+	 * @return element array
+	 */
 	public BioPAXElement[] getVariables()
 	{
 		return variables;
 	}
 
+	/**
+	 * Gets element at the index
+	 * @param index index of the element to get
+	 * @return element at the index
+	 */
 	public BioPAXElement get(int index)
 	{
 		return variables[index];
 	}
 
+	/**
+	 * Gets first element of the match
+	 * @return first element
+	 */
 	public BioPAXElement getFirst()
 	{
 		return variables[0];
 	}
 
+	/**
+	 * Gets last element of the match.
+	 * @return last element
+	 */
 	public BioPAXElement getLast()
 	{
 		return variables[variables.length - 1];
 	}
 
+	/**
+	 * Gets the array size.
+	 * @return array size
+	 */
 	public int varSize()
 	{
 		return variables.length;
 	}
-	
+
+	/**
+	 * Sets the given element to the given index.
+	 * @param ele element to set
+	 * @param index index to set
+	 */
 	public void set(BioPAXElement ele, int index)
 	{
 		variables[index] = ele;
 	}
 
+	/**
+	 * Checks if all given indices are assigned.
+	 * @param ind indices to check
+	 * @return true if none of them are null
+	 */
 	public boolean varsPresent(int ... ind)
 	{
 		for (int i : ind)
@@ -57,15 +95,31 @@ public class Match implements Cloneable
 		return true;
 	}
 
+	/**
+	 * Clones a match.
+	 * @return clone of the match
+	 */
 	@Override
-	public Object clone() throws CloneNotSupportedException
+	public Object clone()
 	{
-		Match m = (Match) super.clone();
-		m.variables = new BioPAXElement[variables.length];
-		System.arraycopy(variables, 0, m.variables, 0, variables.length);
-		return m;
+		Match m = null;
+		try
+		{
+			m = (Match) super.clone();
+			m.variables = new BioPAXElement[variables.length];
+			System.arraycopy(variables, 0, m.variables, 0, variables.length);
+			return m;
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new RuntimeException("super.clone() not supported.");
+		}
 	}
 
+	/**
+	 * Gets name of variables.
+	 * @return names of variables
+	 */
 	@Override
 	public String toString()
 	{
@@ -79,7 +133,12 @@ public class Match implements Cloneable
 		}
 		return s;
 	}
-	
+
+	/**
+	 * Finds a name for the variable.
+	 * @param ele element to check
+	 * @return a name
+	 */
 	public String getAName(BioPAXElement ele)
 	{
 		String name = null;

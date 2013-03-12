@@ -11,11 +11,26 @@ import org.biopax.paxtools.model.level3.*;
  */
 public class PhysicalEntityChain
 {
+	/**
+	 * Array that links two ends of the chain.
+	 */
 	public PhysicalEntity[] pes;
 
+	/**
+	 * Accessor to the modification term.
+	 */
 	protected static final PathAccessor modifAcc = 
 		new PathAccessor("PhysicalEntity/feature:ModificationFeature/modificationType/term");
 
+	/**
+	 * Constructor with endpoints. The end points are differentiated with the terms small and big.
+	 * This refers to a hierarchy in the relation. Small means you will get to this end while going
+	 * towards MEMBER direction, and big means this end is at the COMPLEX direction. To understand
+	 * this please see the directions in LinkedPE.
+	 * @param small member end of the chain
+	 * @param big complex end of the chain
+	 * @see org.biopax.paxtools.pattern.c.LinkedPE
+	 */
 	public PhysicalEntityChain(PhysicalEntity small, PhysicalEntity big)
 	{
 		pes = fillArray(big, small, 1, 0);
@@ -28,6 +43,11 @@ public class PhysicalEntityChain
 		assert !containsNull(pes);
 	}
 
+	/**
+	 * Checks if any element in the chain is null.
+	 * @param pes element array
+	 * @return true if null found
+	 */
 	private boolean containsNull(PhysicalEntity[] pes)
 	{
 		for (PhysicalEntity pe : pes)
@@ -36,7 +56,15 @@ public class PhysicalEntityChain
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Creates the chain that links the given endpoints.
+	 * @param parent current element
+	 * @param target target at the member end
+	 * @param depth current depth
+	 * @param dir current direction to traverse homologies
+	 * @return
+	 */
 	protected PhysicalEntity[] fillArray(PhysicalEntity parent, PhysicalEntity target, int depth,
 		int dir)
 	{
@@ -84,7 +112,11 @@ public class PhysicalEntityChain
 
 		return null;
 	}
-	
+
+	/**
+	 * Retrieves the cellular location of the PhysicalEntity.
+	 * @return cellular location of the PhysicalEntity
+	 */
 	public String getCellularLocation()
 	{
 		for (PhysicalEntity pe : pes)
@@ -101,18 +133,50 @@ public class PhysicalEntityChain
 		return null;
 	}
 
+	/**
+	 * Checks if two chains intersect without ignoring endpoint intersection.
+	 * @param rpeh second chain
+	 * @return true if they intersect
+	 */
 	public boolean intersects(PhysicalEntityChain rpeh)
+	{
+		return intersects(rpeh, false);
+	}
+
+	/**
+	 * Checks if two chains intersect.
+	 * @param rpeh second chain
+	 * @param ignoreEndPoints flag to ignore intersections at the endpoints of the chains
+	 * @return true if they intersect
+	 */
+	public boolean intersects(PhysicalEntityChain rpeh, boolean ignoreEndPoints)
 	{
 		for (PhysicalEntity pe1 : pes)
 		{
 			for (PhysicalEntity pe2 : rpeh.pes)
 			{
-				if (pe1 == pe2) return true;
+				if (pe1 == pe2)
+				{
+					if (ignoreEndPoints)
+					{
+						if ((pes[0] == pe1 || pes[pes.length-1] == pe1) &&
+							(rpeh.pes[0] == pe2 || rpeh.pes[rpeh.pes.length-1] == pe2))
+						{
+							continue;
+						}
+					}
+
+					return true;
+				}
 			}
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Checks if the chain has a member with an activity label.
+	 * @return the activity status found
+	 */
 	public Activity checkActivityLabel()
 	{
 		boolean active = false;
@@ -137,7 +201,10 @@ public class PhysicalEntityChain
 		if (active) if (inactive) return Activity.BOTH; else return Activity.ACTIVE;
 		else if (inactive) return Activity.INACTIVE; else return Activity.NONE;
 	}
-	
+
+	/**
+	 * Values for activity.
+	 */
 	enum Activity
 	{
 		ACTIVE,

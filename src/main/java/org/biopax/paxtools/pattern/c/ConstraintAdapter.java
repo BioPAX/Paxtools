@@ -9,13 +9,15 @@ import org.biopax.paxtools.model.BioPAXElement;
 import java.util.*;
 
 /**
+ * This is a base class for a Constraint. Most constraints should typically extend this class.
+ *
  * @author Ozgun Babur
  */
 public abstract class ConstraintAdapter implements Constraint
 {
 	/**
-	 * If you override this method, then don't forget to also override getGeneratedInd, and generate
-	 * methods.
+	 * Specifies if the constraint is generative. If you override this method, then don't forget to
+	 * also override getGeneratedInd, and generate methods.
 	 */
 	@Override
 	public boolean canGenerate()
@@ -23,6 +25,13 @@ public abstract class ConstraintAdapter implements Constraint
 		return false;
 	}
 
+	/**
+	 * This method has to be overridden by generative constraints.
+	 *
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return elements that satisfy this constraint
+	 */
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int ... ind)
 	{
@@ -33,9 +42,9 @@ public abstract class ConstraintAdapter implements Constraint
 	/**
 	 * Use this method only if constraint canGenerate, and satisfaction criteria is that simple.
 	 *
-	 * @param match
-	 * @param ind
-	 * @return
+	 * @param match current pattern match
+	 * @param ind mapped indices
+	 * @return true if the match satisfies this constraint
 	 */
 	@Override
 	public boolean satisfies(Match match, int... ind)
@@ -43,6 +52,12 @@ public abstract class ConstraintAdapter implements Constraint
 		return generate(match, ind).contains(match.get(ind[ind.length - 1]));
 	}
 
+	/**
+	 * Gets the direction of the Control chain the the Interaction.
+	 * @param cont top control
+	 * @param inter controlled interaction
+	 * @return the direction of catalysis, if any found
+	 */
 	protected ConversionDirectionType getCatalysisDirection(Control cont, Interaction inter)
 	{
 		for (Control ctrl : getControlChain(cont, inter))
@@ -52,7 +67,12 @@ public abstract class ConstraintAdapter implements Constraint
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Gets the direction of the Control, if exists.
+	 * @param cont Control to get its direction
+	 * @return the direction of the Control
+	 */
 	protected ConversionDirectionType getCatalysisDirection(Control cont)
 	{
 		if (cont instanceof Catalysis)
@@ -71,43 +91,14 @@ public abstract class ConstraintAdapter implements Constraint
 		return null;
 	}
 
-	protected int getConversionEffect(Control ctrl, Conversion conv, EntityReference er, 
-		Map<EntityReference, Map<Conversion, Integer>> map)
-	{
-		assert map.containsKey(er);
-
-		Map<Conversion, Integer> m = map.get(er);
-		if (!m.containsKey(conv)) return 0;
-		
-		if (conv.getConversionDirection() != ConversionDirectionType.REVERSIBLE)
-			return m.get(conv);
-
-		ConversionDirectionType dir = getCatalysisDirection(ctrl, conv);
-		if (dir == ConversionDirectionType.RIGHT_TO_LEFT)
-		{
-			return m.get(conv) * -1;
-		}
-		else return m.get(conv);
-	}
-	
-	protected int getSignBetween(Control control, Interaction inter)
-	{
-		int sign = 1;
-		for (Control ctrl : getControlChain(control, inter))
-		{
-			sign *= ctrl.getControlType() == null ||
-				ctrl.getControlType().toString().startsWith("A") ? 1 : -1;
-		}
-		return sign;
-	}
-	
 	/**
+	 * Gets the chain of Control, staring from the given Control, leading to the given Interaction.
 	 * Use this method only if you are sure that there is a link from the control to conversion.
 	 * Otherwise a RuntimeException is thrown.
 	 *
-	 * @param control
-	 * @param inter
-	 * @return
+	 * @param control top level Control
+	 * @param inter target Interaction
+	 * @return Control chain controlling the Interaction
 	 */
 	protected List<Control> getControlChain(Control control, Interaction inter)
 	{
@@ -121,6 +112,12 @@ public abstract class ConstraintAdapter implements Constraint
 		return list;
 	}
 
+	/**
+	 * Checks if the control chain is actually controlling the Interaction.
+	 * @param list the Control chain
+	 * @param inter target Interaction
+	 * @return true if the chain controls the Interaction
+	 */
 	private boolean search(LinkedList<Control> list, Interaction inter)
 	{
 		if (list.getLast().getControlled().contains(inter)) return true;
@@ -137,6 +134,12 @@ public abstract class ConstraintAdapter implements Constraint
 		return false;
 	}
 
+	/**
+	 * Gets input ot output participants of the Conversion.
+	 * @param conv Conversion to get participants
+	 * @param type input or output
+	 * @return related participants
+	 */
 	protected Set<PhysicalEntity> getConvParticipants(Conversion conv, RelType type)
 	{
 		if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE)
@@ -153,6 +156,10 @@ public abstract class ConstraintAdapter implements Constraint
 		
 	}
 
+	/**
+	 * Asserts the size of teh parameter array is equal to the variable size.
+	 * @param ind index array to assert its size
+	 */
 	protected void assertIndLength(int[] ind)
 	{
 		assert ind.length == getVariableSize();
