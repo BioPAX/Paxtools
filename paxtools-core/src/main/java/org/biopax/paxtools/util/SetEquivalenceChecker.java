@@ -29,14 +29,11 @@ public class SetEquivalenceChecker
 				if (grouper.getBuckets().size() == size)
 				{
 					grouper.addAll(set2);
-					if (grouper.getBuckets().size() == size)
-					{
-						return true;
-					}
+					return (grouper.getBuckets().size() == size);
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -56,7 +53,7 @@ public class SetEquivalenceChecker
 				}
 			}
 		}
-	return false;
+		return false;
 	}
 
 	/**
@@ -113,16 +110,13 @@ public class SetEquivalenceChecker
 			if (grouper.getBuckets().size() == set1.size())
 			{
 				grouper.addAll(set2);
-				if (grouper.getBuckets().size() < set1.size() + set2.size())
-				{
-					return true;
-				}
+				return (grouper.getBuckets().size() < set1.size() + set2.size());
 			} else
 			{
 				throw new IllegalArgumentException("There should not be equivalent elements in a set");
 			}
 		}
-		return false;
+		return true;
 	}
 
 }
