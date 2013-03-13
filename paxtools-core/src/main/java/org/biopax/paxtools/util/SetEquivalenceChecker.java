@@ -103,6 +103,7 @@ public class SetEquivalenceChecker
 	public static <T extends BioPAXElement> boolean hasEquivalentIntersection(Set<? extends T> set1,
 			Set<? extends T> set2)
 	{
+
 		if (set1 != null && !set1.isEmpty() && set2 != null && !set2.isEmpty())
 		{
 			EquivalenceGrouper<T> grouper = new EquivalenceGrouper<T>();
