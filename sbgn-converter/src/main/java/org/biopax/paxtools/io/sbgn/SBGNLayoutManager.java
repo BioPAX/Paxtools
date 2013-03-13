@@ -2,8 +2,12 @@ package org.biopax.paxtools.io.sbgn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.SortedMap;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collections;
 
 import org.ivis.layout.*;
 import org.ivis.layout.util.*;
@@ -21,7 +25,7 @@ import org.sbgn.bindings.Bbox;
 
 public class SBGNLayoutManager
 {
-	
+	// Layout and root objects
 	private Layout layout;
 	private VCompound root;
 	
@@ -30,9 +34,8 @@ public class SBGNLayoutManager
 	private HashMap <LNode, VNode> layoutToView;
 	private HashMap <Glyph,VNode>  glyphToVNode;
 	private HashMap <String, Glyph> idToGLyph;
-	private HashMap<String, Glyph> idToCompartmentGlyphs;
-	private HashMap<String, Glyph> portIDToOwnerGlyph;
-	
+	private HashMap <String, Glyph> idToCompartmentGlyphs;
+	private HashMap <String, Glyph> portIDToOwnerGlyph;
 	
 	/**
 	 * Applies CoSE layout to the given SBGN model.
@@ -52,21 +55,31 @@ public class SBGNLayoutManager
 		// Using Compound spring  embedder layout
 		this.layout = new CoSELayout();
 		
+		// This list holds the glyphs that will be deleted after corresponding glyph is added to child glyph of another glyph.
+		ArrayList <Glyph> deletedList = new ArrayList<Glyph>();
+		
 		LGraphManager graphMgr = this.layout.getGraphManager(); 
 		LGraph lRoot = graphMgr.addRoot();
 		this.root = new VCompound(new Glyph());
-		//lRoot.vGraphObject = this.root;
 		
-		
+		// Detect compartment glyphs and put them in a hashmap, also set compartment glyphs of members of complexes.
 		for (Glyph g: sbgn.getMap().getGlyph()) 
 		{
 			if(g.getClazz() == "compartment")
 			{
 				idToCompartmentGlyphs.put(g.getId(), g);
-			}			
+			}
+			
+			//Add compartment ref to the all children of this node.
+			if(g.getCompartmentRef() != null)
+			{
+				Glyph compartment = (Glyph)g.getCompartmentRef();
+				setCompartmentRefForComplexMembers(g, compartment);
+			}
 		}
 		
-		ArrayList <Glyph> deletedList = new ArrayList<Glyph>();
+		
+		// Add glyphs to the compartment glyphs according to their "compartmentRef" field.
 		for (Glyph g: sbgn.getMap().getGlyph()) 
 		{	
 			if(g.getCompartmentRef() != null)
@@ -77,6 +90,7 @@ public class SBGNLayoutManager
 			}	
 		}
 		
+		// Delete the duplicate glyphs, after they are moved to corresponding compartment glyph.
 		for (Glyph g: deletedList) 
 		{	
 			sbgn.getMap().getGlyph().remove(g);
@@ -92,19 +106,22 @@ public class SBGNLayoutManager
 		
 		// Create LEdges for ChiLay layout component
 		createLEdges(sbgn.getMap().getArc(), this.layout);
-		
 		graphMgr.updateBounds();
+		
+		// Assign logical operator and Process nodes to compartment
+		assignProcessAndLogicOpNodesToCompartment(sbgn);
 		
 		// Apply layout
 		this.layout.runLayout();
-		
 		graphMgr.updateBounds();
 
+		// Update the bounds
 		for (VNode vNode: this.root.children) 
 		{ 
 			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
 		}
 		
+		// Clear inside of the compartmentGlyphs
 		/*for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
 		{
 			compGlyph.getGlyph().clear();
@@ -113,6 +130,104 @@ public class SBGNLayoutManager
 		return sbgn;
 	}
 	
+	/**
+	 * This method finds process nodes and logical operator nodes in sbgn map and assigns them to a compartment by using majority rule.
+	 * @param sbgn Given Sbgn map.
+	 * */
+	public void assignProcessAndLogicOpNodesToCompartment(Sbgn sbgn)
+	{
+		// Create a hashmap for keeping a node( generally logical operators and process nodes ) and its neighbours.
+		// TreeMap value of the hash map keeps track of compartment nodes that includes neighbours of the node by String id and 
+		// Integer value holds the number of occurences of that compartment among the neighbours of the node as parent.
+		HashMap <String, TreeMap<String,Integer>>  nodetoNeighbours = new HashMap<String, TreeMap<String,Integer>>();
+		List<Glyph> glyphList = sbgn.getMap().getGlyph();
+		List<Arc> 	arcList   = sbgn.getMap().getArc();
+		
+		// Keeps track of process and logical operator nodes that will be assigned to a compartment.
+		ArrayList<Glyph> targetNodes = new ArrayList<Glyph>();
+		
+		//Iterate over glyphs of sbgn map
+		for(Glyph glyph: glyphList)
+		{
+			// Here logical operator nodes and process nodes are interested !
+			if(glyph.getClazz() == "process"||glyph.getClazz() == "omitted process"||glyph.getClazz() == "uncertain process" || glyph.getClazz() == "phenotype"||
+			   glyph.getClazz() == "association" || glyph.getClazz() == "dissociation"||glyph.getClazz() == "and"||glyph.getClazz() == "or"||glyph.getClazz() == "not") 
+			{
+				// Add a new value to hash map and also store the node as target node
+				String processGlyphID = glyph.getId();
+				nodetoNeighbours.put(processGlyphID, new TreeMap(Collections.reverseOrder()));
+				targetNodes.add(glyph);
+				
+				// Iterate over arc list
+				for(Arc arc: arcList)
+				{
+					Glyph target = null;
+					Glyph source = null;
+					
+					// If source and target of node is port find its owner glyph ! else just assign it.
+					if(arc.getSource() instanceof Port)
+						source = portIDToOwnerGlyph.get(((Port)arc.getSource()).getId());
+					else
+						source = (Glyph)arc.getSource();
+					
+					if(arc.getTarget() instanceof Port)
+						target = portIDToOwnerGlyph.get(((Port)arc.getTarget()).getId());
+					else
+						target = (Glyph)arc.getTarget();
+					
+					// If source of any arc is our node, then target must be neighbour of this node !
+					if(source.getId().equals(processGlyphID))
+					{
+						// if compartment ref of neighbour node is not null, increment its occurence by 1
+						if(target.getCompartmentRef() != null)
+						{
+							Glyph containerCompartment = (Glyph)target.getCompartmentRef();
+							
+							if(nodetoNeighbours.get(processGlyphID).get(containerCompartment.getId()) != null )
+							{
+								Integer value = nodetoNeighbours.get(processGlyphID).get(containerCompartment.getId());
+								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), value+1 );
+							}
+							else
+								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), 1);
+						}
+					}	
+					
+					// same as source part !!
+					else if(target.getId().equals(processGlyphID))
+					{
+						if(target.getCompartmentRef() != null)
+						{
+							Glyph containerCompartment = (Glyph)source.getCompartmentRef();
+							
+							if(nodetoNeighbours.get(processGlyphID).get(source.getId()) != null )
+							{
+								Integer value = nodetoNeighbours.get(processGlyphID).get(containerCompartment.getId());
+								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), value+1 );
+							}
+							else
+								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), 1);
+						}
+					}
+				}
+			}
+		}
+		
+		//Finally assign nodes to compartments by majority rule
+		for(Glyph glyph: targetNodes)
+		{
+			String id = glyph.getId();
+			TreeMap <String, Integer> tMap = nodetoNeighbours.get(id);
+			if(tMap.size() > 0)
+			{
+				Glyph compartment = idToCompartmentGlyphs.get(tMap.firstKey());
+				compartment.getGlyph().add(glyph);
+				
+				//Remove it from sbgn also
+				sbgn.getMap().getGlyph().remove(glyph);
+			}
+		}
+	}
 	
 	public void updateCompoundBounds(Glyph parent,List<Glyph> childGlyphs)
 	{		
@@ -175,7 +290,12 @@ public class SBGNLayoutManager
 		for(Glyph glyph: glyphs )
 		{	
 			if (glyph.getClazz() !=  "state variable" && glyph.getClazz() !=  "unit of information"  ) 
-			{			
+			{	
+				if(glyph.getClazz() ==  "process")
+				{
+					VCompound v = new VCompound(glyph);
+				}
+				
 				if(!this.isChildless(glyph))
 				{
 					VCompound v = new VCompound(glyph);
@@ -245,7 +365,6 @@ public class SBGNLayoutManager
 				sourceLNode = this.viewToLayout.get(glyphToVNode.get(arc.getSource()));
 			}
 			
-			
 			// If target is port, first clear port indicators else retrieve it from hashmaps
 			if (arc.getTarget() instanceof Port) 
 			{
@@ -257,12 +376,10 @@ public class SBGNLayoutManager
 				targetLNode = this.viewToLayout.get(glyphToVNode.get(arc.getTarget()));
 			}
 			
-	
 			// Add edge to the layout
 			this.layout.getGraphManager().add(lEdge, sourceLNode, targetLNode);
 		}
 	}
-	
 	
 	/**
 	 * Helper function for creating LNode objects from VNode objects and adds them to the given layout.
@@ -312,5 +429,19 @@ public class SBGNLayoutManager
 			lNode.setWidth(vNode.glyph.getBbox().getW());
 			lNode.setHeight(vNode.glyph.getBbox().getH());
 		}
+	}
+	
+	/**
+	 * */
+	public void setCompartmentRefForComplexMembers(Glyph glyph, Glyph compartment)
+	{
+		glyph.setCompartmentRef(compartment);
+		if(glyph.getCompartmentRef() != null && glyph.getGlyph().size() > 0)
+		{
+			for(Glyph g: glyph.getGlyph() )
+			{
+				setCompartmentRefForComplexMembers(g, compartment);
+			}
+		}	
 	}
 }
