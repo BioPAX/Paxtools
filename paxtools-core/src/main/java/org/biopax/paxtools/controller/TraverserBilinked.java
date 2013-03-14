@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Ozgun Babur
+ * @author Ozgun Babur  //TODO annotate
  */
 public class TraverserBilinked extends Traverser
 {

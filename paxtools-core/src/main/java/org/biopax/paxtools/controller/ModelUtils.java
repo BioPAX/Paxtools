@@ -30,7 +30,8 @@ import java.util.concurrent.TimeUnit;
  * several useful algorithms to extract root or child
  * BioPAX L3 elements, remove dangling, replace elements
  * or identifiers, etc.
- * @author rodche, Arman,..
+ * @author rodche, Arman //TODO Annotate && Remove deprecated methods if not used - also this is too monolithic,
+ * //TODO consider breaking it down to several classes.
  */
 public final class ModelUtils
 {

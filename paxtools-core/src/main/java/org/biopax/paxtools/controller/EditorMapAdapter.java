@@ -22,16 +22,31 @@ import java.util.*;
  */
 public abstract class EditorMapAdapter implements EditorMap {
 
-    protected final Map<String, Set<PropertyEditor>> propertyToEditorMap = new HashMap<String, Set<PropertyEditor>>();
+	/**
+	 * A map from property names to actual property editors. Since EditorMap keeps a separate editor for each target
+	 * class( This is necessary to be able to validate class specific restrictions without instanceof checks),
+	 * values are set of editors.
+	 */
+	protected final Map<String, Set<PropertyEditor>> propertyToEditorMap = new HashMap<String, Set<PropertyEditor>>();
 
-    protected final Map<Class<? extends BioPAXElement>, Map<String, PropertyEditor>> classToEditorMap =
+	/**
+	 * A map from classes to their registered editors.
+	 */
+	protected final Map<Class<? extends BioPAXElement>, Map<String, PropertyEditor>> classToEditorMap =
 
             new HashMap<Class<? extends BioPAXElement>, Map<String, PropertyEditor>>();
 
-    protected final Map<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>> classToInverseEditorMap =
+	/**
+	 * A map from classes to their registered inverse editors
+	 */
+	protected final Map<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>> classToInverseEditorMap =
             new HashMap<Class<? extends BioPAXElement>, Set<ObjectPropertyEditor>>();
 
-    protected final Map<Class<? extends BioPAXElement>, Set<PropertyEditor>> classToEditorSet =
+	/**
+	 * Another map to keep editors as a set rather than a map. This is a small efficiency tweak as editors are create
+	 * once objects, query multiple times objects.
+	 */
+	protected final Map<Class<? extends BioPAXElement>, Set<PropertyEditor>> classToEditorSet =
             new HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>>();
 
 
@@ -115,6 +130,11 @@ public abstract class EditorMapAdapter implements EditorMap {
         return editor;
     }
 
+	/**
+	 * This method registers an editor with sub classes - i.e. inserts the editor to the proper value in editor maps.
+	 * @param editor to be registered
+	 * @param domain a subclass of the editor's original domain.
+	 */
     protected void registerEditorsWithSubClasses(PropertyEditor editor, Class<? extends BioPAXElement> domain) {
 
         for (Class<? extends BioPAXElement> c : classToEditorMap.keySet())
@@ -169,7 +189,10 @@ public abstract class EditorMapAdapter implements EditorMap {
         return false;
     }
 
-
+	/**
+	 * This method inserts the class into internal hashmaps and initializes the value collections.
+	 * @param localName of the BioPAX class.
+	 */
     protected void registerModelClass(String localName) {
         try {
             Class<? extends BioPAXElement> domain = this.getLevel().getInterfaceForName(localName);

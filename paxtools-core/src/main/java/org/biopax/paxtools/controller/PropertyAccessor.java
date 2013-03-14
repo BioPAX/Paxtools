@@ -30,7 +30,7 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 	boolean isMultipleCardinality();
 
 	/**
-	 * Returns the value of the <em>bean</em> using the default {@link #getMethod}.
+	 * Returns the value of the <em>bean</em> using the default getMethod.
 	 *
 	 * @param bean the object whose property is requested
 	 * @return an object as the value
@@ -40,7 +40,7 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 
 
 	/**
-	 * Returns the values for a collection of <em>beans</em> using the default {@link #getMethod}.
+	 * Returns the values for a collection of <em>beans</em> using the default getMethod.
 	 *
 	 *
 	 * @param beans@return an object as the value
