@@ -9,7 +9,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * @author Emek Demir // todo annotate
+ */
 public class Group extends EntityReferenceImpl
 {
 	Set<EntityReference> members = new HashSet<EntityReference>();

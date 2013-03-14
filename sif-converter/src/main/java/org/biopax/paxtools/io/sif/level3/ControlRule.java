@@ -21,19 +21,37 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.STATE_CHANGE;
  */
 public class ControlRule extends InteractionRuleL3Adaptor
 {
+	/**
+	 * Log for logging.
+	 */
 	private final Log log = LogFactory.getLog(ControlRule.class);
 
+	/**
+	 * Supported interaction types.
+	 */
 	private static List<BinaryInteractionType> binaryInteractionTypes =
 			Arrays.asList(METABOLIC_CATALYSIS, STATE_CHANGE);
 
+	/**
+	 * Option to mine STATE_CHANGE rule.
+	 */
 	private boolean mineStateChange;
 
+	/**
+	 * Option to mine METABOLIC_CHANGE rule.
+	 */
 	private boolean mineMetabolicChange;
 
-
+	/**
+	 * Map form the source element to the state change data.
+	 */
 	private HashMap<BioPAXElement, Set<PEStateChange>> stateChanges = new HashMap<BioPAXElement,
 			Set<PEStateChange>>();
 
+	/**
+	 * Initializes options.
+	 * @param options options map
+	 */
 	public void initOptionsNotNull(Map options)
 	{
 		mineStateChange = !checkOption(STATE_CHANGE, Boolean.FALSE, options);
@@ -63,6 +81,13 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		}
 	}
 
+	/**
+	 * Continue inference with the Control and the Conversion.
+	 * @param is3 mined interactions
+	 * @param source source of interaction
+	 * @param cont the control that source is controller
+	 * @param conv the conversion that control is controlling
+	 */
 	private void processConversion(InteractionSetL3 is3, BioPAXElement source, Control cont, Conversion conv)
 	{
 		// Collect left and right simple physical entities of conversion in lists
@@ -90,6 +115,15 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		}
 	}
 
+	/**
+	 * Create the interaction if the target is changing state.
+	 * @param source source of interaction
+	 * @param target target of interaction
+	 * @param is3 mined rules
+	 * @param cont the control that source is controller
+	 * @param conv the conversion that control is controlling
+	 * @param intersection elements that are both at left and right of the conversion
+	 */
 	private void mineTarget(BioPAXElement source, BioPAXElement target, InteractionSetL3 is3, Control cont,
 			Conversion conv, Set<BioPAXElement> intersection)
 	{
@@ -145,6 +179,10 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		return convList;
 	}
 
+	/**
+	 * Gets supported interaction types.
+	 * @return supported interaction types
+	 */
 	public List<BinaryInteractionType> getRuleTypes()
 	{
 		return binaryInteractionTypes;

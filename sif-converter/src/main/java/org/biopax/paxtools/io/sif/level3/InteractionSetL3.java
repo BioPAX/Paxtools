@@ -6,24 +6,36 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.EntityReference;
 
 /**
+ * Set of inferred interactions. This set handles grouping operations.
  */
 public class InteractionSetL3 extends InteractionSet
 {
-
-
-
+	/**
+	 * A map for the groups in the model.
+	 */
     private GroupMap groupMap;
 
+	/**
+	 * Constructor with the model.
+	 * @param model model to mine binary interactions
+	 */
     public InteractionSetL3(Model model)
 	{
 		this.groupMap = Grouper.inferGroups(model);
 	}
 
+	/**
+	 * Getter for the groupMap
+	 * @return groupMap
+	 */
 	public GroupMap getGroupMap()
 	{
 		return groupMap;
 	}
 
+	/**
+	 * Creates membership links between group nodes and members in the generated SIF graph.
+	 */
     public void convertGroupsToInteractions()
     {
         for (Group group : this.groupMap.getMap().values())
@@ -36,7 +48,6 @@ public class InteractionSetL3 extends InteractionSet
             {
                 this.add(new SimpleInteraction(subgroup,group,group.type,group.sources));
             }
-
         }
     }
 

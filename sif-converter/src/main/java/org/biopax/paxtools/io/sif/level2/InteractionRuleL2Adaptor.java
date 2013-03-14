@@ -8,8 +8,17 @@ import org.biopax.paxtools.model.level2.physicalEntity;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Base class for level 2 rules.
+ */
 public abstract class InteractionRuleL2Adaptor implements InteractionRuleL2
 {
+	/**
+	 * Uses physicalEntity as source of the interaction.
+	 * @param interactionSet to populate
+	 * @param entity this must be a physicalEntity for L2, and PhysicalEntity for L3
+	 * @param model BioPAX model
+	 */
 	public void inferInteractions(InteractionSet interactionSet, BioPAXElement entity, Model model)
 	{
 		if(entity instanceof physicalEntity)
@@ -18,6 +27,10 @@ public abstract class InteractionRuleL2Adaptor implements InteractionRuleL2
 		}
 	}
 
+	/**
+	 * Initializes options.
+	 * @param options options map
+	 */
 	@Override public void initOptions(Map options)
 	{
 		if(options==null)
@@ -27,6 +40,10 @@ public abstract class InteractionRuleL2Adaptor implements InteractionRuleL2
 		initOptionsNotNull(options);
 	}
 
+	/**
+	 * Does nothing here. Overridden in children. options is guaranteed to be not null.
+	 * @param options options map
+	 */
 	protected void initOptionsNotNull(Map options)
 	{
 		//do nothing

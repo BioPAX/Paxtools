@@ -17,17 +17,32 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * This rule mines the transctivation and transinhibition relations between entities.
+ *
  * @author Ozgun Babur
  */
 public class ExpressionRule extends InteractionRuleL3Adaptor
 {
+	/**
+	 * Log for logging.
+	 */
 	private final Log log = LogFactory.getLog(ParticipatesRule.class);
 
+	/**
+	 * Types of binary interactions that this class can generate.
+	 */
 	private static final List<BinaryInteractionType> binaryInteractionTypes =
 		Arrays.asList(BinaryInteractionType.UPREGULATE_EXPRESSION, 
 			BinaryInteractionType.DOWNREGULATE_EXPRESSION);
 
+	/**
+	 * Pattern used for searching the transcriptional relation.
+	 */
 	protected static Pattern pattern;
+
+	/**
+	 * Constructs the pattern.
+	 */
 	static
 	{
 		pattern = new Pattern(7, PhysicalEntity.class);
@@ -40,6 +55,13 @@ public class ExpressionRule extends InteractionRuleL3Adaptor
 		pattern.addConstraint(ConBox.peToER(), i, ++i);
 	}
 
+	/**
+	 * Searches the transcriptional relations using the pattern, then decides the interaction type
+	 * according to the type of the Control.
+	 * @param interactionSet to be populated
+	 * @param pe PhysicalEntity that will be the seed of the inference
+	 * @param model BioPAX model
+	 */
 	@Override
 	public void inferInteractionsFromPE(InteractionSetL3 interactionSet, PhysicalEntity pe, 
 		Model model)
@@ -57,6 +79,11 @@ public class ExpressionRule extends InteractionRuleL3Adaptor
 		}
 	}
 
+
+	/**
+	 * Gets a list of the rule types that this class implements.
+	 * @return supported rules
+	 */
 	@Override
 	public List<BinaryInteractionType> getRuleTypes()
 	{

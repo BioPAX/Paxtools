@@ -39,8 +39,17 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.CO_CONTROL;
  */
 public class ControlsTogetherRule extends InteractionRuleL2Adaptor
 {
+	/**
+	 * Supported interaction types.
+	 */
 	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(CO_CONTROL);
 
+	/**
+	 * Infers interactions using A as source.
+	 * @param interactionSet to be populated
+	 * @param A source
+	 * @param model BioPAX model
+	 */
 	public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity A, Model model)
 	{
 
@@ -144,11 +153,14 @@ public class ControlsTogetherRule extends InteractionRuleL2Adaptor
 		}
 	}
 
+	/**
+	 * Gets supported interaction types.
+	 * @return supported interaction types
+	 */
 	public List<BinaryInteractionType> getRuleTypes()
 	{
 		return binaryInteractionTypes;
 	}
-
 }
 
 	

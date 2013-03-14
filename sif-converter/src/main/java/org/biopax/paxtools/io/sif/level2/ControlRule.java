@@ -19,23 +19,33 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.STATE_CHANGE;
  */
 public class ControlRule extends InteractionRuleL2Adaptor
 {
+	/**
+	 * Supported interaction types.
+	 */
 	private static List<BinaryInteractionType> binaryInteractionTypes =
 			Arrays.asList(METABOLIC_CATALYSIS, STATE_CHANGE);
 
+	/**
+	 * Option to mine METABOLIC_CHANGE type.
+	 */
 	private boolean mineMetabolicChange;
 
-	private boolean mineStatetateChange;
+	/**
+	 * Option to mine STATE_CHANGE type.
+	 */
+	private boolean mineStateChange;
 
-
+	/**
+	 * Initializes option.
+	 * @param options options map
+	 */
 	@Override public void initOptionsNotNull(Map options)
 	{
+		mineStateChange = !options.containsKey(STATE_CHANGE) ||
+			options.get(STATE_CHANGE).equals(Boolean.TRUE);
 
-
-		mineStatetateChange = !options.containsKey(STATE_CHANGE) || options.get(STATE_CHANGE).equals(Boolean.TRUE);
-
-		mineMetabolicChange =
-				!options.containsKey(METABOLIC_CATALYSIS) || options.get(METABOLIC_CATALYSIS).equals(Boolean.TRUE);
-
+		mineMetabolicChange = !options.containsKey(METABOLIC_CATALYSIS) ||
+			options.get(METABOLIC_CATALYSIS).equals(Boolean.TRUE);
 	}
 
 	/**
@@ -93,7 +103,7 @@ public class ControlRule extends InteractionRuleL2Adaptor
 
 					if (B instanceof complex || bothsided.contains(B))
 					{
-						if (mineStatetateChange)
+						if (mineStateChange)
 						{
 							SimpleInteraction sc = new SimpleInteraction(A, B, STATE_CHANGE);
 							sc.addMediator(cont);
@@ -223,8 +233,8 @@ public class ControlRule extends InteractionRuleL2Adaptor
 	 * Sometimes an entity is both an input and output to a conversion without any state change.
 	 * Normally this phenomena should be modeled using controller property of conversion. In other
 	 * cases this method detects entities that goes in and out without any change.
-	 * @param entity
-	 * @param conv
+	 * @param entity entity to check
+	 * @param conv conversion that the entity is participant
 	 * @return true if entity has a change in conversion
 	 */
 	private boolean entityHasAChange(physicalEntity entity, conversion conv)
@@ -260,25 +270,48 @@ public class ControlRule extends InteractionRuleL2Adaptor
 		return !leftonly.isEmpty() || !rightonly.isEmpty();
 	}
 
+	/**
+	 * Gets supported interaction types.
+	 * @return supported interaction types
+	 */
 	public List<BinaryInteractionType> getRuleTypes()
 	{
 		return binaryInteractionTypes;
 	}
 
+	/**
+	 * This wrapper is used for using state equality of participants in sets.
+	 */
 	private class StateWrapper
 	{
+		/**
+		 * Wrapped participant.
+		 */
 		final physicalEntityParticipant pep;
 
+		/**
+		 * Constructor with the wrapped participant.
+		 * @param pep wrapped participant
+		 */
 		private StateWrapper(physicalEntityParticipant pep)
 		{
 			this.pep = pep;
 		}
 
+		/**
+		 * Generates hash code for the state of the participant.
+		 * @return hash code
+		 */
 		public int hashCode()
 		{
 			return pep.stateCode();
 		}
 
+		/**
+		 * Checks if two participants are in equivalent state.
+		 * @param obj other participant
+		 * @return true if they are in equivalent state
+		 */
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof StateWrapper)

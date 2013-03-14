@@ -20,9 +20,18 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.SEQUENTIAL_CATALY
  */
 public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 {
-	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(SEQUENTIAL_CATALYSIS);
+	/**
+	 * Supported interaction types.
+	 */
+	private static List<BinaryInteractionType> binaryInteractionTypes =
+		Arrays.asList(SEQUENTIAL_CATALYSIS);
 
-
+	/**
+	 * Infers using the given physicalEntity as source.
+	 * @param interactionSet to be populated
+	 * @param pe source of the interaction
+	 * @param model BioPAX model
+	 */
 	public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity pe, Model model)
 	{
 		Set<catalysis> catalyses = pe.getAllInteractions(catalysis.class);
@@ -32,6 +41,12 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 		}
 	}
 
+	/**
+	 * Continues inference through the given catalysis.
+	 * @param interactionSet to populate
+	 * @param pe source
+	 * @param aCatalysis catalysis to process
+	 */
 	private void processCatalysis(InteractionSet interactionSet, physicalEntity pe, catalysis aCatalysis)
 	{
 		//We have to consider two direction statements
@@ -53,10 +68,10 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 	}
 
 	/**
-	 * This method will find the compatible conversion and catalysis direction
+	 * This method finds the compatible conversion and catalysis direction.
 	 * @param direction1 type implied by catalysis
 	 * @param direction2 type of the conversion
-	 * @return
+	 * @return consensus direction
 	 */
 	private SpontaneousType findConsensusDirection(SpontaneousType direction1, SpontaneousType direction2)
 	{
@@ -88,13 +103,26 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 		return consensus;
 	}
 
+	/**
+	 * Checks if the direction can be treated as reversible.
+	 * @param direction1 direction to check
+	 * @return true if reversible or null
+	 */
 	private boolean isReversible(SpontaneousType direction1)
 	{
 		return direction1 == null || direction1.equals(SpontaneousType.NOT_SPONTANEOUS);
 	}
 
-	private void createInteractions(conversion centerConversion, SpontaneousType direction, physicalEntity pe,
-	                                catalysis aCatalysis, InteractionSet interactionSet)
+	/**
+	 * Continues inference with the given conversion, catalysis and direction.
+	 * @param centerConversion first conversion
+	 * @param direction direction of the center conversion traversed
+	 * @param pe source of interaction
+	 * @param aCatalysis catalysis where source is the controller
+	 * @param interactionSet
+	 */
+	private void createInteractions(conversion centerConversion, SpontaneousType direction,
+		physicalEntity pe, catalysis aCatalysis, InteractionSet interactionSet)
 	{
 		//get the peps at the correct side of the conversion.
 		Set<physicalEntityParticipant> peps = getCompatiblePEPs(direction, centerConversion);
@@ -109,10 +137,10 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 	}
 
 	/**
-	 * This method returns the PEPs that are on the correct side of the conversion
+	 * This method returns the PEPs that are on the correct side of the conversion.
 	 * @param direction determining the side
-	 * @param aConversion
-	 * @return
+	 * @param aConversion conversion to get PEPs
+	 * @return PEPs that are at the desired side
 	 */
 	private Set<physicalEntityParticipant> getCompatiblePEPs(SpontaneousType direction, conversion aConversion)
 	{
@@ -127,6 +155,11 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 		}
 	}
 
+	/**
+	 * Gets left and right participants of the conversion.
+	 * @param aConversion conversion to get left and right participants
+	 * @return left and right participants of the conversion
+	 */
 	private HashSet<physicalEntityParticipant> mergedSet(conversion aConversion)
 	{
 		HashSet<physicalEntityParticipant> hashSet = new HashSet<physicalEntityParticipant>();
@@ -135,6 +168,12 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 		return hashSet;
 	}
 
+	/**
+	 * Gets the second conversions compatible with the current elements already traversed.
+	 * @param peps PEP that are input or output to the conversion
+	 * @param direction traversed direction of the first conversion
+	 * @return compatible conversions
+	 */
 	private Set<conversion> getCompatibleConversions(Set<physicalEntityParticipant> peps, SpontaneousType direction)
 	{
 		Set<conversion> compatibleConversions = new HashSet<conversion>();
@@ -167,8 +206,15 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 		return compatibleConversions;
 	}
 
-	private boolean participantIsAtACompatibleSide(SpontaneousType direction, physicalEntityParticipant npep,
-	                                               conversion aConversion)
+	/**
+	 * Checks if the placement of participant is compatible with the traversal direction.
+	 * @param direction direction traversed
+	 * @param npep participant to check
+	 * @param aConversion the conversion
+	 * @return true if the participant is at a compatible side
+	 */
+	private boolean participantIsAtACompatibleSide(SpontaneousType direction,
+		physicalEntityParticipant npep, conversion aConversion)
 	{
 		switch (direction)
 		{
@@ -181,8 +227,16 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 		}
 	}
 
-	private void findAndAddCatalysts(conversion aConversion, SpontaneousType direction, physicalEntity pe,
-	                                 catalysis aCatalysis, InteractionSet interactionSet)
+	/**
+	 * Creates interactions with the catalysis of the second conversion.
+	 * @param aConversion second conversion
+	 * @param direction direction of the second conversion traversed
+	 * @param pe source
+	 * @param aCatalysis catalysis of the second conversion
+	 * @param interactionSet to populate
+	 */
+	private void findAndAddCatalysts(conversion aConversion, SpontaneousType direction,
+		physicalEntity pe, catalysis aCatalysis, InteractionSet interactionSet)
 	{
 		Set<control> controls = aConversion.isCONTROLLEDOf();
 		for (catalysis consequentCatalysis : new ClassFilterSet<control, catalysis>(controls, catalysis.class))
@@ -202,6 +256,11 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 		}
 	}
 
+	/**
+	 * Converts directions.
+	 * @param direction direction to convert
+	 * @return equivalent direction
+	 */
 	private SpontaneousType mapDirectionToSpontaneous(Direction direction)
 	{
 		if (direction != null)
@@ -219,9 +278,12 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL2Adaptor
 		return null;
 	}
 
+	/**
+	 * Gets supported interaction types.
+	 * @return supported interaction types
+	 */
 	public List<BinaryInteractionType> getRuleTypes()
 	{
 		return binaryInteractionTypes;
 	}
-
 }

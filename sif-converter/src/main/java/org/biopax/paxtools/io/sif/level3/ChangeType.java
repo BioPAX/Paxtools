@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @author Emek Demir // todo annotate
  */
 public enum ChangeType {
     EXIST_TO_NOT_EXIST,

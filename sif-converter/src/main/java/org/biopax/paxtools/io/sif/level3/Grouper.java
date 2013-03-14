@@ -15,7 +15,7 @@ import org.biopax.paxtools.util.AccessibleSet;
 import java.util.*;
 
 /**
-
+ * @author Emek Demir // todo annotate
  */
 public class Grouper
 {
