@@ -111,7 +111,11 @@ public class BindingFeatureImpl extends EntityFeatureImpl
 	@Override
 	public int equivalenceCode()
 	{
-		return super
-				.equivalenceCode()+(this.intramolecular?29:0);
+		int value = super.equivalenceCode();
+		if(this.intramolecular!=null)
+		{
+			value +=(this.intramolecular?29:17);
+		}
+		return value;
 	}
 }
