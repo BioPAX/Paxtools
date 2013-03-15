@@ -18,10 +18,21 @@ public class PrimitivePropertyEditor<D extends BioPAXElement, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
+	/**
+	 * When a value is not present in the OWL file
+	 */
 	private R unknownValue = null;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
+	/**
+	 *
+	 * @param property Name of the property, e.g. stoichiometricCoefficient.
+	 * @param getMethod A "Method" class that represents the getter method. e.g. getEntityReference()
+	 * @param domain name of the domain of this property. e.g. PhysicalEntity
+	 * @param range name of the range of this property. e.g. EntityReference.
+	 * @param multipleCardinality false if this property is functional, e.g. many-to-one or one-to-one.
+	 */
 	public PrimitivePropertyEditor(String property, Method getMethod,
 	                               Class<D> domain,
 	                               Class<R> range,
