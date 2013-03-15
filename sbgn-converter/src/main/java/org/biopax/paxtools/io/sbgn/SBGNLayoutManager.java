@@ -31,7 +31,6 @@ public class SBGNLayoutManager
 	
 	// mapping between view and layout level 
 	private HashMap <VNode, LNode> viewToLayout;
-	private HashMap <LNode, VNode> layoutToView;
 	private HashMap <Glyph,VNode>  glyphToVNode;
 	private HashMap <String, Glyph> idToGLyph;
 	private HashMap <String, Glyph> idToCompartmentGlyphs;
@@ -46,7 +45,6 @@ public class SBGNLayoutManager
 	public Sbgn createLayout(Sbgn sbgn)
 	{
 		viewToLayout = new HashMap();
-		layoutToView = new HashMap();
 		glyphToVNode = new HashMap();
 		idToGLyph = new HashMap();
 		idToCompartmentGlyphs = new HashMap();
@@ -95,6 +93,17 @@ public class SBGNLayoutManager
 		{	
 			sbgn.getMap().getGlyph().remove(g);
 		}
+		
+		// initialize the map for keeping ports and their owner glyphs
+		// with entries like: <portID, ownerGlyph>
+		initPortIdToGlyphMap(sbgn.getMap().getGlyph());
+		
+		//Remove ports from source and target field of ports
+		//replace them with owner glyphs of these ports
+		removePortsFromArcs(sbgn.getMap().getArc());
+		
+		// Assign logical operator and Process nodes to compartment
+		assignProcessAndLogicOpNodesToCompartment(sbgn);
 					
 		// Create Vnodes for ChiLay layout component
 		createVNodes(root, sbgn.getMap().getGlyph());
@@ -108,18 +117,16 @@ public class SBGNLayoutManager
 		createLEdges(sbgn.getMap().getArc(), this.layout);
 		graphMgr.updateBounds();
 		
-		// Assign logical operator and Process nodes to compartment
-		assignProcessAndLogicOpNodesToCompartment(sbgn);
 		
 		// Apply layout
 		this.layout.runLayout();
 		graphMgr.updateBounds();
 
 		// Update the bounds
-		for (VNode vNode: this.root.children) 
+		/*for (VNode vNode: this.root.children) 
 		{ 
 			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
-		}
+		}*/
 		
 		// Clear inside of the compartmentGlyphs
 		/*for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
@@ -229,6 +236,11 @@ public class SBGNLayoutManager
 		}
 	}
 	
+	/**
+	 * Updates bounds of a compound node ( i.e. complex glyph ) from its children .
+	 * @param parent compound glyph.
+	 * @param childGlyphs related children of parent .
+	 * */
 	public void updateCompoundBounds(Glyph parent,List<Glyph> childGlyphs)
 	{		
 		float PAD = (float) 2.0;
@@ -263,21 +275,7 @@ public class SBGNLayoutManager
 			}
 		}
 	}
-	
-	public boolean isChildless(Glyph tmpGlyph)
-	{
-		boolean checker = true;
-		for(Glyph glyph: tmpGlyph.getGlyph() )
-		{
-			if (glyph.getClazz() !=  "state variable" && glyph.getClazz() !=  "unit of information"  ) 
-			{
-				checker = false;
-				break;
-			}
-		}
-		return checker;
-	}
-	
+
 	/**
 	 * Recursively creates VNodes from Glyphs of Sbgn. 
 	 * 
@@ -313,32 +311,10 @@ public class SBGNLayoutManager
 					glyphToVNode.put(glyph, v);		
 					parent.children.add(v);
 				}
-				
-				for(Port p: glyph.getPort())
-				{
-					portIDToOwnerGlyph.put(p.getId(), glyph );
-				}
-				
 			}
 		}
 	}
-	
-	/**
-	 *  Briefly, finds the LNode which is parent of the VNode that 
-	 *  corresponds to the glyph object which is container of this port.
-	 * 
-	 * @param p port object that by its ID  the corresponding LNode will be retrieved.
-	 * @return  LNode which is parent of the VNode that corresponds to the glyph object which is container of this port p.
-	 * 
-	 * */
-	public LNode getLNodeByPort(Port p)
-	{
-		String tmpStr = p.getId();
-		VNode tmpVNode = glyphToVNode.get(portIDToOwnerGlyph.get(tmpStr));
-		// Return corresponding LNode
-		return viewToLayout.get(tmpVNode);
-	}
-	
+
 	/**
 	 * Creates LNodes from Arcs of Sbgn and adds it to the passed layout object. 
 	 * 
@@ -350,32 +326,9 @@ public class SBGNLayoutManager
 	{
 		for(Arc arc: arcs )
 		{
-			LEdge lEdge = layout.newEdge(null); 
-			LNode sourceLNode;
-			LNode targetLNode;
-			
-			// If source is port, first clear port indicators else retrieve it from hashmaps
-			if (arc.getSource() instanceof Port ) 
-			{
-				sourceLNode = getLNodeByPort((Port)arc.getSource());
-				arc.setSource(layoutToView.get(sourceLNode).glyph);
-			}
-			else
-			{
-				sourceLNode = this.viewToLayout.get(glyphToVNode.get(arc.getSource()));
-			}
-			
-			// If target is port, first clear port indicators else retrieve it from hashmaps
-			if (arc.getTarget() instanceof Port) 
-			{
-				targetLNode = getLNodeByPort((Port)arc.getTarget());
-				arc.setTarget(layoutToView.get(targetLNode).glyph);
-			}
-			else
-			{
-				targetLNode = this.viewToLayout.get(glyphToVNode.get(arc.getTarget()));
-			}
-			
+			LEdge lEdge = layout.newEdge(null);	
+			LNode sourceLNode = this.viewToLayout.get(glyphToVNode.get(arc.getSource()));
+			LNode targetLNode = this.viewToLayout.get(glyphToVNode.get(arc.getTarget()));
 			// Add edge to the layout
 			this.layout.getGraphManager().add(lEdge, sourceLNode, targetLNode);
 		}
@@ -391,12 +344,9 @@ public class SBGNLayoutManager
 	
 	public void createLNode(VNode vNode,VNode parent,Layout layout)
 	{
-		LNode lNode = layout.newNode(vNode); 
-
+		LNode lNode = layout.newNode(vNode);
 		LGraph rootLGraph = layout.getGraphManager().getRoot();
-		
 		this.viewToLayout.put(vNode, lNode); 
-		this.layoutToView.put(lNode, vNode);
 		
 		// if the vNode has a parent, add the lNode as a child of the parent l-node. 
 		// otherwise, add the node to the root graph. 
@@ -405,6 +355,7 @@ public class SBGNLayoutManager
 			LNode parentLNode = this.viewToLayout.get(parent); 
 			parentLNode.getChild().add(lNode); 
 		} 
+		
 		else 
 		{ 
 			rootLGraph.add(lNode); 
@@ -421,9 +372,9 @@ public class SBGNLayoutManager
 			for (VNode vChildNode: vCompound.getChildren()) 
 			{ 
 				this.createLNode(vChildNode, vCompound, layout); 
-				
 			} 		
 		}
+		
 		else
 		{
 			lNode.setWidth(vNode.glyph.getBbox().getW());
@@ -432,6 +383,11 @@ public class SBGNLayoutManager
 	}
 	
 	/**
+	 * This method recursively set compartmentRef fields of members of any complex glyphs 
+	 * as same as complex's compartmentRef
+	 * 
+	 * @params glyph target glyph whose compartmentRef(compartment parameter) will be set.
+	 * @params compartment compartmentRef value that will be set.
 	 * */
 	public void setCompartmentRefForComplexMembers(Glyph glyph, Glyph compartment)
 	{
@@ -443,5 +399,64 @@ public class SBGNLayoutManager
 				setCompartmentRefForComplexMembers(g, compartment);
 			}
 		}	
+	}
+	
+	/**
+	 * This method replaces ports of arc objects with their owners.
+	 * @params arcs Arc list of sbgn model 
+	 * */
+	public void removePortsFromArcs(List<Arc> arcs)
+	{
+		for(Arc arc: arcs )
+		{			
+			// If source is port, first clear port indicators else retrieve it from hashmaps
+			if (arc.getSource() instanceof Port ) 
+			{
+				Glyph source = portIDToOwnerGlyph.get(((Port)arc.getSource()).getId());
+				arc.setSource(source);
+			}
+			
+			// If target is port, first clear port indicators else retrieve it from hashmaps
+			if (arc.getTarget() instanceof Port) 
+			{
+				Glyph target = portIDToOwnerGlyph.get(((Port)arc.getTarget()).getId());
+				arc.setTarget(target);
+			}
+		}
+	}
+	
+	/**
+	 * This method initializes map for glyphs and their respective ports.
+	 * @params glyphs Glyph list of sbgn model 
+	 * */
+	public void initPortIdToGlyphMap(List<Glyph> glyphs)
+	{
+		for(Glyph glyph: glyphs)
+		{		
+				for(Port p: glyph.getPort())
+				{
+					portIDToOwnerGlyph.put(p.getId(), glyph );
+				}
+				if(glyph.getGlyph().size() > 0)
+					initPortIdToGlyphMap(glyph.getGlyph());
+		}
+	}
+	
+	/**
+	 * Returns true if a glyph includes child glyphs(state and info glyphs are out of count !)
+	 * @params targetGlyph target glyph that will be queried. 
+	 * */
+	public boolean isChildless(Glyph targetGlyph)
+	{
+		boolean checker = true;
+		for(Glyph glyph: targetGlyph.getGlyph() )
+		{
+			if (glyph.getClazz() !=  "state variable" && glyph.getClazz() !=  "unit of information"  ) 
+			{
+				checker = false;
+				break;
+			}
+		}
+		return checker;
 	}
 }
