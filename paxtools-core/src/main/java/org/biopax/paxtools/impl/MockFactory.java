@@ -175,18 +175,18 @@ public class MockFactory extends BioPAXFactory
 		HashSet<BioPAXElement> hashSet = new HashSet<BioPAXElement>();
 
 
-		Set<Class<BioPAXElement>> rranges = propertyEditor.getRestrictedRangesFor(bpe.getModelInterface());
-		for (Class<BioPAXElement> rrange : rranges)
+		Set<Class<? extends BioPAXElement>> rRanges = propertyEditor.getRestrictedRangesFor(bpe.getModelInterface());
+		for (Class<? extends BioPAXElement> rRange : rRanges)
 		{
-			hashSet.add(createMock(rrange, bpe.getModelInterface()));
+			hashSet.add(createMock(rRange, bpe.getModelInterface()));
 		}
 		return hashSet;
 	}
 
-	private BioPAXElement createMock(Class<BioPAXElement> toCreate, Class domain)
+	private BioPAXElement createMock(Class<? extends BioPAXElement> toCreate, Class domain)
 	{
 		assert domain != null;
-		Class<BioPAXElement> actual;
+		Class<? extends BioPAXElement> actual;
 		actual = findConcreteMockClass(toCreate, domain);
 		if (actual != null)
 		{
@@ -195,16 +195,16 @@ public class MockFactory extends BioPAXFactory
 
 	}
 
-	private Class<BioPAXElement> findConcreteMockClass(Class<BioPAXElement> toCreate, Class domain)
+	private Class<? extends BioPAXElement> findConcreteMockClass(Class<? extends BioPAXElement> toCreate, Class domain)
 	{
-		Class<BioPAXElement> actual = null;
+		Class<? extends BioPAXElement> actual = null;
 		if (map.getLevel().getDefaultFactory().canInstantiate(toCreate) && !toCreate.isAssignableFrom(domain))
 		{
 			actual = toCreate;
 		} else
 		{
-			Set<Class<BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
-			for (Class<BioPAXElement> subclass : classesOf)
+			Set<Class<? extends BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
+			for (Class<? extends BioPAXElement> subclass : classesOf)
 			{
 				if (!subclass.isAssignableFrom(domain) && subclass != toCreate &&
 				    subclass.getPackage().getName().startsWith("org.biopax.paxtools.model"))

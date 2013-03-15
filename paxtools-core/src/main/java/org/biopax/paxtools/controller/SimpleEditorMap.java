@@ -59,8 +59,6 @@ public enum SimpleEditorMap implements EditorMap
 	{
 		private final BioPAXLevel level;
 
-		private List<ObjectPropertyEditor> sorted; //TODO use it somewhere or remove!
-
 		SimpleEditorMapImpl(BioPAXLevel level)
 		{
 			this.level = level;
