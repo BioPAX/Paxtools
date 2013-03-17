@@ -29,7 +29,7 @@ public class PhysicalEntityChain
 	 * this please see the directions in LinkedPE.
 	 * @param small member end of the chain
 	 * @param big complex end of the chain
-	 * @see org.biopax.paxtools.pattern.c.LinkedPE
+	 * @see org.biopax.paxtools.pattern.constraint.LinkedPE
 	 */
 	public PhysicalEntityChain(PhysicalEntity small, PhysicalEntity big)
 	{

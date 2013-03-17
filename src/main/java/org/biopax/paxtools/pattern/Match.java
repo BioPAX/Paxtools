@@ -35,13 +35,25 @@ public class Match implements Cloneable
 	}
 
 	/**
-	 * Gets element at the index
+	 * Gets element at the index.
 	 * @param index index of the element to get
 	 * @return element at the index
 	 */
 	public BioPAXElement get(int index)
 	{
 		return variables[index];
+	}
+
+	/**
+	 * Gets element corresponding to the given label in the pattern.
+	 * @param label label of the element in the pattern
+	 * @param p related pattern
+	 * @return element of the given label
+	 * @throws IllegalArgumentException if the label not in the pattern
+	 */
+	public BioPAXElement get(String label, Pattern p)
+	{
+		return variables[p.indexOf(label)];
 	}
 
 	/**

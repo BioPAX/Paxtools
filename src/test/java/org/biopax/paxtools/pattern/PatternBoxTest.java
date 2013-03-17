@@ -4,7 +4,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Named;
-import org.biopax.paxtools.pattern.c.ConBox;
+import org.biopax.paxtools.pattern.constraint.ConBox;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

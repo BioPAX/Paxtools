@@ -2,10 +2,9 @@ package org.biopax.paxtools.pattern;
 
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.CatalysisDirectionType;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.Pathway;
-import org.biopax.paxtools.pattern.c.*;
+import org.biopax.paxtools.pattern.constraint.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,12 +31,12 @@ public class TempTests
 	@Test
 	public void namesOfPathwaysThatContainReversibleReactions()
 	{
-		Pattern p = new Pattern(3, Pathway.class);
-		p.addConstraint(new PathConstraint("Pathway/pathwayComponent:Conversion"), 0, 1);
-		p.addConstraint(new Field("Conversion/conversionDirection", ConversionDirectionType.REVERSIBLE), 1);
-		p.addConstraint(new PathConstraint("Conversion/controlledOf:Catalysis"), 1, 2);
-		p.addConstraint(new Empty(new PathConstraint("Catalysis/catalysisDirection")), 2);
-		p.addConstraint(new Empty(new PathConstraint("Pathway/pathwayComponent:Pathway")), 0);
+		Pattern p = new Pattern(Pathway.class, "Pathway");
+		p.addConstraint(new PathConstraint("Pathway/pathwayComponent:Conversion"), "Pathway", "Conv");
+		p.addConstraint(new Field("Conversion/conversionDirection", ConversionDirectionType.REVERSIBLE), "Conv");
+		p.addConstraint(new PathConstraint("Conversion/controlledOf:Catalysis"), "Conv", "Cat");
+		p.addConstraint(new Empty(new PathConstraint("Catalysis/catalysisDirection")), "Cat");
+		p.addConstraint(new Empty(new PathConstraint("Pathway/pathwayComponent:Pathway")), "Pathway");
 
 		List<Pathway> pats = new ArrayList<Pathway>(
 			Searcher.searchAndCollect(model, p, 0, Pathway.class));

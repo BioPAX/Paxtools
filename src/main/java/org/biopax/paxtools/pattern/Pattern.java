@@ -17,7 +17,7 @@ public class Pattern
 	/**
 	 * How many elements are there in a pattern match.
 	 */
-	protected int variableSize;
+	protected int lastIndex;
 
 	/**
 	 * Class of the first elements to match with this pattern.
@@ -35,39 +35,39 @@ public class Pattern
 	protected Map<String, Integer> labelMap;
 
 	/**
-	 * Constructor with constraints.
-	 * @param variableSize size of the pattern
-	 * @param startingClass type of initial element
-	 * @param constraints the list of constraints
+	 * Constructor with the starting class.
+	 * @param startingClass class of first element in the pattern
 	 */
-	public Pattern(int variableSize, Class<? extends BioPAXElement> startingClass,
-		List<MappedConst> constraints)
+	private Pattern(Class<? extends BioPAXElement> startingClass)
 	{
-		this.variableSize = variableSize;
 		this.startingClass = startingClass;
-		this.constraints = constraints;
 		this.labelMap = new HashMap<String, Integer>();
+		this.constraints = new ArrayList<MappedConst>();
+		this.lastIndex = 0;
 	}
 
 	/**
-	 * Constructor without constraints.
-	 * @param variableSize size of the pattern
-	 * @param startingClass type of the initial element
+	 * Constructor with the first constraint and labels it uses. This constructor is good for
+	 * patterns with a single constraint.
+	 * @param startingClass type of initial element
+	 * @param firstConstraint first constraint
+	 * @param label labels for the constraint
 	 */
-	public Pattern(int variableSize, Class<? extends BioPAXElement> startingClass)
+	public Pattern(Class<? extends BioPAXElement> startingClass, Constraint firstConstraint,
+		String... label)
 	{
-		this(variableSize, startingClass, new ArrayList<MappedConst>());
+		this(startingClass, label[0]);
+		addConstraint(firstConstraint, label);
 	}
 
 	/**
-	 * Constructor without constraints, and with a label for the element at index 0.
-	 * @param variableSize size of the pattern
+	 * Constructor with a label for the element at index 0.
 	 * @param startingClass type of the initial element
 	 * @param label a label for the initial element
 	 */
-	public Pattern(int variableSize, Class<? extends BioPAXElement> startingClass, String label)
+	public Pattern(Class<? extends BioPAXElement> startingClass, String label)
 	{
-		this(variableSize, startingClass);
+		this(startingClass);
 		label(label, 0);
 	}
 
@@ -76,25 +76,99 @@ public class Pattern
 	 * @param constr constraint to add
 	 * @param ind indices to map the constraint to the element in the pattern
 	 */
-	public void addConstraint(Constraint constr, int ... ind)
+	private void addConstraint(Constraint constr, int ... ind)
 	{
 		assert ind.length > 0;
-		assert checkIndsInRange(ind);
 		assert constr.getVariableSize() == ind.length;
+		for (int i = 0; i < (constr.canGenerate() ? ind.length - 1 : ind.length); i++)
+		{
+			assert ind[i] <= lastIndex;
+		}
+
 		constraints.add(new MappedConst(constr, ind));
+
+		if (constr.canGenerate() && ind[ind.length - 1] > lastIndex)
+		{
+			if (ind[ind.length - 1] - lastIndex > 1) throw new IllegalArgumentException(
+				"Generated index too large. Attempting to generate index " + ind[ind.length - 1] +
+					" while last index is " + lastIndex);
+
+			else lastIndex++;
+		}
 	}
 
 	/**
-	 * Creates a mapped constraint with the given constraint and the indexes it applies. Also labels
-	 * the last given index.
+	 * Creates a mapped constraint with the given generative constraint and the indexes it applies.
+	 * Also labels the last given index.
 	 * @param constr constraint to add
 	 * @param label a label for the last of the given indices
-	 * @param ind indices to map the constraint to the element in the pattern
 	 */
-	public void addConstraint(Constraint constr, String label, int ... ind)
+	public void addConstraint(Constraint constr, String... label)
 	{
+		checkLabels(constr.canGenerate(), label);
+
+		int[] ind = convertLabelsToInds(label);
+
+		// This will also increment lastIndex if necessary
 		addConstraint(constr, ind);
-		label(label, ind[ind.length - 1]);
+
+		if (!hasLabel(label[label.length - 1]) && constr.canGenerate())
+		{
+			label(label[label.length - 1], lastIndex);
+		}
+	}
+
+	/**
+	 * Converts the labels to the indexes. Assumes the sanity of the labels already checked and if
+	 * any new label exists, it is only one and it is the last one.
+	 * @param label labels
+	 * @return indexes for labels
+	 */
+	private int[] convertLabelsToInds(String... label)
+	{
+		int[] ind = new int[label.length];
+		for (int i = 0; i < label.length; i++)
+		{
+			if (hasLabel(label[i]))
+			{
+				ind[i] = indexOf(label[i]);
+			}
+			else ind[i] = lastIndex + 1;
+		}
+		return ind;
+	}
+
+	/**
+	 * Converts the indices to the labels. All indices must have an existing label.
+	 * @param ind indices
+	 * @return labels for indices
+	 */
+	private String[] convertIndsToLabels(int... ind)
+	{
+		String[] label = new String[ind.length];
+		for (int i = 0; i < ind.length; i++)
+		{
+			if (!hasLabel(ind[i])) throw new IllegalArgumentException(
+				"The index " + ind[i] + " does not have a label.");
+
+			label[i] = getLabel(ind[i]);
+		}
+		return label;
+	}
+
+	/**
+	 * Checks if all labels (other than the last if generative) exists.
+	 * @param forGenerative whether the check is performed for a generative constraint
+	 * @param label labels to check
+	 * @throws IllegalArgumentException when a necessary label is not found
+	 */
+	private void checkLabels(boolean forGenerative, String... label)
+	{
+		for (int i = 0; i < (forGenerative ? label.length - 1 : label.length); i++)
+		{
+			if (!hasLabel(label[i])) throw new IllegalArgumentException(
+				"Label neither found, nor generated: " + label[i]);
+		}
 	}
 
 	/**
@@ -105,73 +179,30 @@ public class Pattern
 	 * transferred to this pattern. If there are equivalent labels, then these slots are mapped.
 	 * 
 	 * @param p the parameter pattern
-	 * @param ind0 index 0 of the parameter pattern will map to this index of this pattern
 	 */
-	public void addPattern(Pattern p, int ind0)
+	public void addPattern(Pattern p)
 	{
-		int indAppend = this.getVariableSize();
+		if (!hasLabel(p.getLabel(0))) throw new IllegalArgumentException("The label of first " +
+			"element of parameter index \"" + p.getLabel(0) + "\" not found in this pattern.");
 
-		if (ind0 >= indAppend)
-			throw new IllegalArgumentException("indAppend should always be greater than ind0");
-
-		increaseVariableSizeFor(p);
-
-		Map<Integer, Integer> labTransMap = new HashMap<Integer, Integer>();
-
-		for (String key : p.labelMap.keySet())
+		for (MappedConst mc : p.getConstraints())
 		{
-			if (this.labelMap.containsKey(key))
-			{
-				labTransMap.put(p.labelMap.get(key), this.labelMap.get(key));
-			}
+			addConstraint(mc.getConstr(), p.convertIndsToLabels(mc.getInds()));
 		}
+	}
 
-		List<Integer> mappedIndexes = new ArrayList<Integer>(labTransMap.keySet());
-
-		for (MappedConst mc : p.constraints)
+	/**
+	 * Gets the label for the element at the specified index.
+	 * @param i index
+	 * @return label for the element at the specified index
+	 */
+	private String getLabel(int i)
+	{
+		for (String label : labelMap.keySet())
 		{
-			Constraint c = mc.getConstr();
-			int[] inds = mc.getInds();
-
-			int[] t = new int[inds.length];
-			for (int j = 0; j < t.length; j++)
-			{
-				if (inds[j] == 0)
-				{
-					t[j] =  ind0;
-				}
-				else if (mappedIndexes.contains(inds[j]))
-				{
-					t[j] = labTransMap.get(inds[j]);
-				}
-				else
-				{
-					// Find the number of mapped indexes smaller than current one
-					int mappedSmaller = 1; // 0 was mapped for sure
-					for (Integer ind : labTransMap.keySet())
-					{
-						if (ind < inds[j]) mappedSmaller++;
-					}
-
-					t[j] =  inds[j] + indAppend - mappedSmaller;
-				}
-			}
-
-			addConstraint(c, t);
+			if (labelMap.get(label) == i) return label;
 		}
-		
-		for (String key : p.labelMap.keySet())
-		{
-			// Skip equivalent labels. They were mapped already.
-			if (labelMap.containsKey(key)) continue;
-
-			int loc = p.indexOf(key);
-
-			// If ind0 already has a label, don not transfer
-			if (loc == 0 && labelMap.containsValue(ind0)) continue;
-
-			label(key, loc == 0 ? ind0 : loc + indAppend - 1);
-		}
+		return null;
 	}
 
 	/**
@@ -210,66 +241,12 @@ public class Pattern
 	}
 
 	/**
-	 * Checks if these indices are in the range of variable size.
-	 * @param ind indices to check
-	 * @return true if in the range
+	 * Gets the element size of the pattern.
+	 * @return size inferred from lastIndex
 	 */
-	private boolean checkIndsInRange(int ... ind)
+	public int size()
 	{
-		for (int i : ind) if (i >= variableSize) return false;
-		return true;
-	}
-
-	/**
-	 * Gets the size of the pattern.
-	 * @return size of the pattern
-	 */
-	public int getVariableSize()
-	{
-		return variableSize;
-	}
-
-	/**
-	 * Gets the index of last element in the pattern.
-	 * @return index of last element
-	 */
-	public int getLastIndex()
-	{
-		return variableSize - 1;
-	}
-
-	/**
-	 * This method changes the size of the pattern. Use with caution, especially if you are
-	 * decreasing it.
-	 * @param variableSize new pattern size
-	 */
-	public void setVariableSize(int variableSize)
-	{
-		this.variableSize = variableSize;
-	}
-
-	/**
-	 * This method modifies the pattern size by the given amount. Use with caution, especially if
-	 * inc is negative.
-	 * @param inc amount to add to the size
-	 */
-	public void increaseVariableSizeBy(int inc)
-	{
-		this.variableSize += inc;
-	}
-
-	/**
-	 * Changes the pattern size, making room for the new pattern to add this pattern.
-	 * @param p pattern that will probably be added to this pattern
-	 */
-	public void increaseVariableSizeFor(Pattern p)
-	{
-		int cnt = 1;
-		for (String key : p.labelMap.keySet())
-		{
-			if (labelMap.containsKey(key) && p.labelMap.get(key) != 0) cnt++;
-		}
-		this.variableSize += p.getVariableSize() - cnt;
+		return lastIndex + 1;
 	}
 
 	/**
@@ -302,7 +279,7 @@ public class Pattern
 	 * @param labelText label to check
 	 * @return true if label exists
 	 */
-	public boolean labelExists(String labelText)
+	public boolean hasLabel(String labelText)
 	{
 		return labelMap.containsKey(labelText);
 	}
@@ -326,8 +303,25 @@ public class Pattern
 	public int indexOf(String labelText)
 	{
 		if (!labelMap.containsKey(labelText))
-			throw new RuntimeException("The label \"" + labelText + "\" is absent.");
+			throw new IllegalArgumentException("The label \"" + labelText +
+				"\" is absent in pattern.");
 		
 		return labelMap.get(labelText);
+	}
+
+	/**
+	 * Changes a label. The oldLabel has to be an existing label and new label has to be a new
+	 * label.
+	 * @param oldLabel label to update
+	 * @param newLabel updated label
+	 */
+	public void updateLabel(String oldLabel, String newLabel)
+	{
+		if (hasLabel(newLabel)) throw new IllegalArgumentException(
+			"The label \"" + newLabel + "\" already exists.");
+
+		int i = indexOf(oldLabel);
+		labelMap.remove(oldLabel);
+		labelMap.put(newLabel, i);
 	}
 }

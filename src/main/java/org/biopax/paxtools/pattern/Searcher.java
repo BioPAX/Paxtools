@@ -10,7 +10,6 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.pattern.c.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +35,7 @@ public class Searcher
 	{
 		assert pattern.getStartingClass().isAssignableFrom(ele.getModelInterface());
 
-		Match m = new Match(pattern.getVariableSize());
+		Match m = new Match(pattern.size());
 		m.set(ele, 0);
 		
 		List<Match> list = new LinkedList<Match>();
@@ -99,7 +98,7 @@ public class Searcher
 	{
 		assert pattern.getStartingClass().isAssignableFrom(ele.getModelInterface());
 
-		Match m = new Match(pattern.getVariableSize());
+		Match m = new Match(pattern.size());
 		m.set(ele, 0);
 		return search(m, pattern);
 	}
@@ -314,7 +313,7 @@ public class Searcher
 	 */
 	public boolean hasSolution(Pattern p, BioPAXElement ... ele)
 	{
-		Match m = new Match(p.getVariableSize());
+		Match m = new Match(p.size());
 		for (int i = 0; i < ele.length; i++)
 		{
 			m.set(ele[i], i);
