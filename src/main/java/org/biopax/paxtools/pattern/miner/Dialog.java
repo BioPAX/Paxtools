@@ -6,15 +6,20 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.Searcher;
+import org.biopax.paxtools.pattern.util.ProgressWatcher;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryType;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -67,6 +72,16 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	private JButton runButton;
 
 	/**
+	 * Text for the progress.
+	 */
+	private JLabel prgLabel;
+
+	/**
+	 * The progress bar.
+	 */
+	private JProgressBar prgBar;
+
+	/**
 	 * URL of the Pathway Commons data.
 	 */
 	private static final String PC_DATA_URL =
@@ -76,6 +91,11 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 * Name of the Pathway Commons data file.
 	 */
 	private static final String PC_FILE = "PC.owl";
+
+	/**
+	 * Background color.
+	 */
+	private static final Color BACKGROUND = Color.WHITE;
 
 	/**
 	 * Runs the program showing the dialog.
@@ -94,7 +114,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	public Dialog() throws HeadlessException
 	{
 		super("Pattern Miner");
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		init();
 	}
 
@@ -105,33 +125,40 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	{
 		setSize(400, 400);
 		getContentPane().setLayout(new BorderLayout());
+		getContentPane().setBackground(BACKGROUND);
 
 		JPanel modelPanel = new JPanel(new BorderLayout());
 
 		pcBox = new JCheckBox(new File(PC_FILE).exists() ?
 			"Use Pathway Commons data" : "Download and use Pathway Commons data");
 		pcBox.addActionListener(this);
+		pcBox.setBackground(BACKGROUND);
 		modelPanel.add(pcBox, BorderLayout.NORTH);
 
 		JPanel modelChooserPanel = new JPanel(new FlowLayout());
 		modelField = new JTextField(20);
+		modelField.addKeyListener(this);
 		modelChooserPanel.add(modelField);
 		loadButton = new JButton("Load");
 		loadButton.addActionListener(this);
 		modelChooserPanel.add(loadButton);
+		modelChooserPanel.setBackground(BACKGROUND);
 		modelPanel.add(modelChooserPanel, BorderLayout.CENTER);
 
 		modelPanel.setBorder(BorderFactory.createTitledBorder("Source model"));
+		modelPanel.setBackground(BACKGROUND);
 
 		getContentPane().add(modelPanel, BorderLayout.NORTH);
 
-
 		JPanel minerPanel = new JPanel(new BorderLayout());
+		minerPanel.setBackground(BACKGROUND);
 		minerPanel.setBorder(BorderFactory.createTitledBorder("Pattern to search"));
 		JPanel comboPanel = new JPanel(new FlowLayout());
+		comboPanel.setBackground(BACKGROUND);
 		JLabel patternLabel = new JLabel("Pattern: ");
 		patternCombo = new JComboBox(getAvailablePatterns());
 		patternCombo.addActionListener(this);
+		patternCombo.setBackground(BACKGROUND);
 		comboPanel.add(patternLabel);
 		comboPanel.add(patternCombo);
 		minerPanel.add(comboPanel, BorderLayout.NORTH);
@@ -143,18 +170,37 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		descArea.setLineWrap(true);
 		descArea.setWrapStyleWord(true);
 		minerPanel.add(descArea, BorderLayout.CENTER);
+
+		JPanel progressPanel = new JPanel(new GridBagLayout());
+		progressPanel.setBackground(BACKGROUND);
+		prgLabel = new JLabel("                       ");
+		prgBar = new JProgressBar();
+		prgBar.setStringPainted(true);
+		prgBar.setVisible(false);
+		GridBagConstraints con = new GridBagConstraints();
+		con.gridx = 0;
+		con.anchor = GridBagConstraints.CENTER;
+		con.ipady = 12;
+		con.ipadx = 10;
+		progressPanel.add(prgLabel, con);
+		con = new GridBagConstraints();
+		con.gridx = 1;
+		con.anchor = GridBagConstraints.LINE_END;
+		progressPanel.add(prgBar, con);
+
+		minerPanel.add(progressPanel, BorderLayout.SOUTH);
+
 		getContentPane().add(minerPanel, BorderLayout.CENTER);
 
 		JPanel finishPanel = new JPanel(new BorderLayout());
 
-//		JPanel outPanel = new JPanel(new FlowLayout());
-//		outPanel.setBorder(BorderFactory.createTitledBorder("Output file"));
+		JPanel lowerPanel = new JPanel(new FlowLayout());
+		lowerPanel.setBackground(BACKGROUND);
 		outputField = new JTextField(20);
 		outputField.setBorder(BorderFactory.createTitledBorder("Output file"));
 		outputField.addActionListener(this);
 		outputField.addKeyListener(this);
 
-//		outPanel.add(outputField);
 		finishPanel.add(outputField, BorderLayout.WEST);
 
 		runButton = new JButton("Run");
@@ -162,7 +208,34 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		runButton.setEnabled(false);
 		finishPanel.add(runButton, BorderLayout.EAST);
 
-		getContentPane().add(finishPanel, BorderLayout.SOUTH);
+		JPanel bufferPanel = new JPanel(new FlowLayout());
+		bufferPanel.setMinimumSize(new Dimension(300, 10));
+		bufferPanel.setBackground(BACKGROUND);
+		bufferPanel.add(new JLabel("    "));
+		finishPanel.add(bufferPanel, BorderLayout.CENTER);
+		finishPanel.setBackground(BACKGROUND);
+
+		lowerPanel.add(finishPanel);
+
+		getContentPane().add(lowerPanel, BorderLayout.SOUTH);
+	}
+
+	/**
+	 * Gets the maximum memory heap size for the application. This size can be modified by passing
+	 * -Xmx option to the virtual machine, like "java -Xmx5G MyClass.java".
+	 * @return maximum memory heap size in megabytes
+	 */
+	private int getMaxMemory()
+	{
+		int total = 0;
+		for (MemoryPoolMXBean mpBean: ManagementFactory.getMemoryPoolMXBeans())
+		{
+			if (mpBean.getType() == MemoryType.HEAP)
+			{
+				total += mpBean.getUsage().getMax() >> 20;
+			}
+		}
+		return total;
 	}
 
 	/**
@@ -239,20 +312,57 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	}
 
 	/**
-	 * Executes the pattern search.
+	 * Executes the pattern search in a new thread.
 	 */
 	private void run()
 	{
+		Thread t = new Thread(new Runnable(){public void run(){mine();}});
+		t.start();
+	}
+
+	/**
+	 * Executes the pattern search.
+	 */
+	private void mine()
+	{
+		// Prepare progress bar
+
+		ProgressWatcher prg = new ProgressWatcher()
+		{
+			@Override
+			public void setTotalTicks(int total)
+			{
+				prgBar.setMaximum(total);
+			}
+
+			@Override
+			public void tick(int times)
+			{
+				prgBar.setValue(prgBar.getValue() + times);
+			}
+		};
+
+		prgBar.setVisible(true);
+
 		// Get the model file
 
 		File modFile;
 
 		if (pcBox.isSelected())
 		{
+			if (getMaxMemory() < 4000)
+			{
+				showMessageDialog(this, "Maximum memory not large enough for handling\n" +
+					"Pathway Commons data. But will try anyway.\n" +
+					"Please consider running this application with the\n" +
+					"virtual machine parameter \"-Xmx5G\".");
+			}
+
 			modFile = new File(PC_FILE);
 			if (!modFile.exists())
 			{
-				if (!downloadPC())
+				prgLabel.setText("Downloading model");
+				if (!downloadPC(prg))
 				{
 					showMessageDialog(this,
 						"Cannot download Pathway Commons data for some reason. Sorry.");
@@ -276,7 +386,8 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 			writer.write("x");
 			writer.close();
 			outFile.delete();
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 			showMessageDialog(this, "Cannot write to file: " + outFile.getPath());
@@ -285,12 +396,17 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 
 		// Load model
 
+		prgLabel.setText("Loading the model");
+		prgBar.setIndeterminate(true);
+		prgBar.setStringPainted(false);
 		SimpleIOHandler io = new SimpleIOHandler();
-		Model model = null;
+		Model model;
 
 		try
 		{
 			model = io.convertFromOWL(new FileInputStream(modFile));
+			prgBar.setIndeterminate(false);
+			prgBar.setStringPainted(true);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -304,11 +420,18 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		Miner min = (Miner) patternCombo.getSelectedItem();
 
 		Pattern p = min.getPattern();
-		Map<BioPAXElement,List<Match>> matches = Searcher.search(model, p);
+		prgLabel.setText("Searching the pattern");
+		prgBar.setValue(0);
+		Map<BioPAXElement,List<Match>> matches = Searcher.search(model, p, prg);
 
 		try
 		{
+			prgLabel.setText("Writing result");
+			prgBar.setValue(0);
+			prgBar.setStringPainted(false);
+			prgBar.setIndeterminate(true);
 			min.writeResult(matches, new FileOutputStream(outFile));
+			prgBar.setIndeterminate(false);
 		}
 		catch (IOException e)
 		{
@@ -317,15 +440,14 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 			return;
 		}
 
-		// Dispose if the search went through
-		dispose();
+		prgLabel.setText("Success!    ");
 	}
 
 	/**
 	 * Downloads the PC data.
 	 * @return true if download successful
 	 */
-	private boolean downloadPC()
+	private boolean downloadPC(ProgressWatcher prg)
 	{
 		try
 		{
@@ -333,19 +455,26 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 			URLConnection con = url.openConnection();
 			GZIPInputStream in = new GZIPInputStream(con.getInputStream());
 
+			prg.setTotalTicks(con.getContentLength() * 8);
+			System.out.println(con.getContentLength());
+
 			// Open the output file
 			OutputStream out = new FileOutputStream(PC_FILE);
 			// Transfer bytes from the compressed file to the output file
 			byte[] buf = new byte[1024];
 
+			int total = 0;
 			int lines = 0;
 			int len;
 			while ((len = in.read(buf)) > 0)
 			{
+				total += len;
+				prg.tick(len);
 				out.write(buf, 0, len);
 				lines++;
 			}
 
+			System.out.println("total = " + total);
 			// Close the file and stream
 			in.close();
 			out.close();

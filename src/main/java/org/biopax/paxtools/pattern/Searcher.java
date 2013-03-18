@@ -10,6 +10,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.pattern.util.ProgressWatcher;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -201,23 +202,35 @@ public class Searcher
 	 */
 	public static Map<BioPAXElement, List<Match>> search(Model model, Pattern pattern)
 	{
+		return search(model, pattern, null);
+	}
+
+	/**
+	 * Searches the given pattern in the given model.
+	 * @param model model to search in
+	 * @param pattern pattern to search for
+	 * @param prg progress watcher to keep track of the progress
+	 * @return map from starting elements to the list matching results
+	 */
+	public static Map<BioPAXElement, List<Match>> search(Model model, Pattern pattern,
+		ProgressWatcher prg)
+	{
 		Map<BioPAXElement, List<Match>> map = new HashMap<BioPAXElement, List<Match>>();
 
-		int i = 1;
+		Set<? extends BioPAXElement> eles = model.getObjects(pattern.getStartingClass());
 
-		for (BioPAXElement ele : model.getObjects(pattern.getStartingClass()))
+		if (prg != null) prg.setTotalTicks(eles.size());
+
+		for (BioPAXElement ele : eles)
 		{
-			System.out.print(".");
-			if (i%200==0) System.out.println();
-
-//			System.out.println(((Named) ele).getDisplayName() + "\t" + ele.getRDFId());
 			List<Match> matches = search(ele, pattern);
 			
 			if (!matches.isEmpty())
 			{
 				map.put(ele, matches);
 			}
-			i++;
+
+			if (prg != null) prg.tick(1);
 		}
 		System.out.println();
 		return map;

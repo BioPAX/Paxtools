@@ -26,7 +26,11 @@ public class ControlsStateChangeMiner extends MinerAdapter
 	 */
 	public ControlsStateChangeMiner()
 	{
-		super("Controls-state-change", "A is controlling a Conversion that modifies B.");
+		super("Controls-state-change", "Finds relations between proteins where the first one is " +
+			"controlling a reaction that changes the state of the second one. The reaction has " +
+			"to be a Conversion and modified Protein should be represented with different " +
+			"PhysicalEntity on each side. This pattern cannot determine the sign of the effect " +
+			"because it is hard to predict the effect of the modification.");
 	}
 
 	/**

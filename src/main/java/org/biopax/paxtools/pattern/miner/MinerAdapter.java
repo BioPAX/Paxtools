@@ -4,6 +4,7 @@ import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.pattern.Pattern;
+import org.biopax.paxtools.pattern.util.HGNC;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,12 +35,12 @@ public abstract class MinerAdapter implements Miner
 	/**
 	 * Accessor to the xref of EntityReference.
 	 */
-	private static final Set<String> symbolNames = new HashSet<String>(Arrays.asList("hgnc.symbol"));
+	private static final Set<String> symbolNames = new HashSet<String>(Arrays.asList("hgnc"));
 
 	/**
 	 * Constructor with name and description.
-	 * @param name
-	 * @param description
+	 * @param name name of the miner
+	 * @param description description of the miner
 	 */
 	protected MinerAdapter(String name, String description)
 	{
@@ -91,11 +92,27 @@ public abstract class MinerAdapter implements Miner
 	{
 		for (Xref xr : er.getXref())
 		{
-			if (symbolNames.contains(xr.getDb())) return xr.getId();
+			String db = xr.getDb();
+			if (db != null)
+			{
+				db = db.toLowerCase();
+				if (symbolNames.contains(db))
+				{
+					String id = xr.getId();
+					if (id != null)
+					{
+						String symbol = HGNC.getSymbol(id);
+						if (symbol != null && !symbol.isEmpty())
+						{
+							return symbol;
+						}
+					}
+				}
+			}
 		}
 
-		return er.getDisplayName();
-//		return null;
+//		return er.getDisplayName();
+		return null;
 	}
 
 	/**

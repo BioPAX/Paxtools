@@ -28,9 +28,11 @@ public class TranscriptionalRegulationMiner extends MinerAdapter
 	 */
 	public TranscriptionalRegulationMiner()
 	{
-		super("Transcriptional-regulation", "First entity is controlling transcriptional activity of " +
-			"the second entity. The output is either \"A -> B\" or \"A -| B\", where -> represents" +
-			"transactivation and -| represents transinhibition.");
+		super("Transcriptional-regulation", "This pattern finds relations where first protein " +
+			"is controlling transcriptional activity of the second protein. The output is either " +
+			"\"A -> B\" or \"A -| B\", where -> represents trans-activation and -| represents " +
+			"trans-inhibition. This pattern requires that transcription to be modeled with a " +
+			"TemplateReaction.");
 	}
 
 	/**
