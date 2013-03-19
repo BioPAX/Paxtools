@@ -203,8 +203,8 @@ public class MockFactory extends BioPAXFactory
 			actual = toCreate;
 		} else
 		{
-			Set<Class<? extends BioPAXElement>> classesOf = map.getKnownSubClassesOf(toCreate);
-			for (Class<? extends BioPAXElement> subclass : classesOf)
+			Set<? extends Class<? extends BioPAXElement>> knownSubClassesOf = map.getKnownSubClassesOf(toCreate);
+			for (Class<? extends BioPAXElement> subclass : knownSubClassesOf)
 			{
 				if (!subclass.isAssignableFrom(domain) && subclass != toCreate &&
 				    subclass.getPackage().getName().startsWith("org.biopax.paxtools.model"))

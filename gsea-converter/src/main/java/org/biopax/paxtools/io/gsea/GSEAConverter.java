@@ -2,7 +2,7 @@ package org.biopax.paxtools.io.gsea;
 
 import org.apache.commons.lang.StringUtils;
 import org.biopax.paxtools.controller.ModelUtils;
-import org.biopax.paxtools.converter.OneTwoThree;
+import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -99,7 +99,7 @@ public class GSEAConverter
 		Model l3Model = null;
 		// convert to level 3 in necessary
 		if (model.getLevel() == BioPAXLevel.L1 || model.getLevel() == BioPAXLevel.L2)
-			l3Model = (new OneTwoThree()).filter(model);
+			l3Model = (new LevelUpgrader()).filter(model);
 		else
 			l3Model = model;
 

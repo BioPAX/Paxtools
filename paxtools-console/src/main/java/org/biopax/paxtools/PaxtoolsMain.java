@@ -2,7 +2,7 @@ package org.biopax.paxtools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
-import org.biopax.paxtools.converter.OneTwoThree;
+import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
@@ -160,7 +160,7 @@ public class PaxtoolsMain {
     public static void toLevel3(String[] argv) throws IOException {
         Model model = io.convertFromOWL(new FileInputStream(
                 argv[1]));
-        model = (new OneTwoThree()).filter(model);
+        model = (new LevelUpgrader()).filter(model);
         if (model != null) {
             io.setFactory(model.getLevel().getDefaultFactory());
             io.convertToOWL(model, new FileOutputStream(argv[2]));
@@ -380,9 +380,9 @@ public class PaxtoolsMain {
 		final SimpleEditorMap em = (model.getLevel() == BioPAXLevel.L3) 
 				? SimpleEditorMap.L3 : SimpleEditorMap.L2;
 
-		for (Class<BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
+		for (Class<? extends BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
 		{
-			Set<BioPAXElement> set = model.getObjects(clazz);
+			Set<? extends BioPAXElement> set = model.getObjects(clazz);
 			int initialSize = set.size();
 			set = filterToExactClass(set, clazz);
 			
@@ -492,12 +492,15 @@ public class PaxtoolsMain {
 		}
 	}
 
-	private static List<Class<BioPAXElement>> sortToName(Set<Class<BioPAXElement>> classes)
+	private static List<Class<? extends BioPAXElement>> sortToName(Set<? extends Class<? extends BioPAXElement>>
+			classes)
 	{
-		List<Class<BioPAXElement>> list = new ArrayList<Class<BioPAXElement>>(classes);
-		Collections.sort(list, new Comparator<Class<BioPAXElement>>()
+		List<Class<? extends BioPAXElement>> list = new ArrayList<Class<? extends BioPAXElement>>(classes);
+
+		Collections.sort(
+				list, new Comparator<Class<? extends  BioPAXElement>>()
 		{
-			public int compare(Class<BioPAXElement> clazz1, Class<BioPAXElement> clazz2)
+			public int compare(Class<? extends BioPAXElement> clazz1, Class<? extends BioPAXElement> clazz2)
 			{
 				return clazz1.getName().substring(clazz1.getName().lastIndexOf(".")+1).compareTo(
 					clazz2.getName().substring(clazz2.getName().lastIndexOf(".")+1));
@@ -523,10 +526,10 @@ public class PaxtoolsMain {
 		return list;
 	}
 	
-	private static Set<BioPAXElement> filterToExactClass(Set<BioPAXElement> set, Class clazz)
+	private static Set<BioPAXElement> filterToExactClass(Set<? extends BioPAXElement> classSet, Class clazz)
 	{
 		Set<BioPAXElement> exact = new HashSet<BioPAXElement>();
-		for (BioPAXElement ele : set)
+		for (BioPAXElement ele : classSet)
 		{
 			if (ele.getModelInterface().equals(clazz)) exact.add(ele);
 		}

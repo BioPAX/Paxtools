@@ -22,20 +22,26 @@ package org.biopax.paxtools.client;
  * #L%
  */
 
-import java.io.*;
-import java.util.*;
-
-import javax.xml.bind.*;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.methods.multipart.*;
-import org.apache.commons.httpclient.methods.*;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.validator.jaxb.Behavior;
 import org.biopax.validator.jaxb.ValidatorResponse;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Simple (example) BioPAX Validator client 

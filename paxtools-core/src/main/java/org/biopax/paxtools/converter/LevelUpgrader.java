@@ -18,7 +18,7 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
- * Converts BioPAX L1 and L2 to Level 3.
+ * Upgrades BioPAX L1 and L2 to Level 3.
  * 
  * Notes:
  * - it does not fix existing BioPAX errors
@@ -28,8 +28,8 @@ import java.util.*;
  * @author rodch
  *
  */
-public final class OneTwoThree extends AbstractTraverser implements ModelFilter {
-	private static final Log log = LogFactory.getLog(OneTwoThree.class);
+public final class LevelUpgrader extends AbstractTraverser implements ModelFilter {
+	private static final Log log = LogFactory.getLog(LevelUpgrader.class);
 	private static final String l3PackageName = "org.biopax.paxtools.model.level3.";
 
 	private BioPAXFactory factory;
@@ -54,7 +54,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 * that also loads 'classesmap' and 'propsmap' 
 	 * from the properties files.
 	 */
-	public OneTwoThree() {
+	public LevelUpgrader() {
 		super(SimpleEditorMap.L2, new Filter<PropertyEditor>() {
 			public boolean filter(PropertyEditor editor) {
 				return !editor.getProperty().equals("STOICHIOMETRIC-COEFFICIENT"); 
@@ -93,7 +93,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 * @param factory
 	 * @throws IOException
 	 */
-	public OneTwoThree(BioPAXFactory factory) throws IOException{
+	public LevelUpgrader(BioPAXFactory factory) throws IOException{
 		this();
 		this.factory = factory;
 	}

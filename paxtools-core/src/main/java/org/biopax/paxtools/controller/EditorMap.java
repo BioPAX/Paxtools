@@ -101,7 +101,7 @@ public interface EditorMap
      * @param javaClass the class whose subclasses will be returned
      * @return an empty set if there are no such editors
      */
-    <E extends BioPAXElement> Set<Class<E>> getKnownSubClassesOf(Class<E> javaClass);
+    <E extends BioPAXElement> Set<? extends Class<E>> getKnownSubClassesOf(Class<E> javaClass);
 
 
     /**

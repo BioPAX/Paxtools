@@ -99,7 +99,7 @@ public abstract class EditorMapAdapter implements EditorMap {
         return this.propertyToEditorMap.get(property);
     }
 
-    public <E extends BioPAXElement> Set<Class<E>> getKnownSubClassesOf(Class<E> javaClass) {
+    public <E extends BioPAXElement> Set<? extends Class<E>> getKnownSubClassesOf(Class<E> javaClass) {
         return new SubClassFilterSet(classToEditorMap.keySet(), javaClass);
     }
 

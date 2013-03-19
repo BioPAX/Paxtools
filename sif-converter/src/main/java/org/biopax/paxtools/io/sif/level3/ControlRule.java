@@ -107,7 +107,7 @@ public class ControlRule extends InteractionRuleL3Adaptor
 		{
 			if (source != target)
 			{
-				if (!(target instanceof Group) || ((Group) target).getType() != BinaryInteractionType.COMPONENT_OF)
+				if (!(target instanceof Group) || !((Group) target).isComplex())
 				{
 					mineTarget(source, target, is3, cont, conv, intersection);
 				}

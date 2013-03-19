@@ -167,7 +167,7 @@ public enum SimpleEditorMap implements EditorMap
 		return impl.getInverseEditorsOf(bpe);
 	}
 
-	@Override public <E extends BioPAXElement> Set<Class<E>> getKnownSubClassesOf(Class<E> javaClass)
+	@Override public <E extends BioPAXElement> Set<? extends Class<E>> getKnownSubClassesOf(Class<E> javaClass)
 	{
 		return impl.getKnownSubClassesOf(javaClass);
 	}

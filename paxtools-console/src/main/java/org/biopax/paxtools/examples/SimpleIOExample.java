@@ -13,6 +13,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * A basic example that shows the basic IO operations.
+ */
 public final class SimpleIOExample {
 
 	public static void main(String[] args) throws IOException {
