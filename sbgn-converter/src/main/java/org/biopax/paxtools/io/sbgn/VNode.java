@@ -215,11 +215,11 @@ public class VNode implements Updatable
 			setBounds(TAG_BOUND.getWidth(), TAG_BOUND.getHeight());
 		}
 		
-		/*if( this.glyph.getClone() != null )
+		if( this.glyph.getClone() != null )
 		{
 			Bbox glyphBbox = this.glyph.getBbox();
 			setBounds(glyphBbox.getW()/2, glyphBbox.getH()/2 );
-		}*/
+		}
 		
 		
 		if (glyphClass == MACROMOLECULE || glyphClass == NUCLEIC_ACID_FEATURE || glyphClass == SIMPLE_CHEMICAL || glyphClass == COMPLEX) 

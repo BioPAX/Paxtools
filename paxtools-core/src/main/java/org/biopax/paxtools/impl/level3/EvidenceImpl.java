@@ -14,7 +14,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
+import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
 @Entity
 @Proxy(proxyClass=Evidence.class)
@@ -241,9 +241,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 		}
 		
 		//consider publication xrefs!
-		boolean hasCommonPublicationXref = isEquivalentIntersection(
-				new ClassFilterSet<Xref,PublicationXref>(getXref(), PublicationXref.class),
-				new ClassFilterSet<Xref,PublicationXref>(that.getXref(), PublicationXref.class));
+		boolean hasCommonPublicationXref = hasEquivalentIntersection(
+				new ClassFilterSet<Xref, PublicationXref>(getXref(), PublicationXref.class),
+				new ClassFilterSet<Xref, PublicationXref>(that.getXref(), PublicationXref.class));
 		
 		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes && hasAllEquivEvidenceCodes;
 	}

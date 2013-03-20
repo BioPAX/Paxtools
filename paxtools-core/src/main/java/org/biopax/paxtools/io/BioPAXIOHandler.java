@@ -86,7 +86,7 @@ public interface BioPAXIOHandler
  boolean isFixReusedPEPs();
 
  /**
-  * @return factory used for creating objects
+  * @return the factory that is used to create new BioPAX POJOs during a BioPAXIOHandler operation.
   */
  BioPAXFactory getFactory();
 

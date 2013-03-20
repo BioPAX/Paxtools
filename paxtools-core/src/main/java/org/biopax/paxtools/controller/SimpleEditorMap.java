@@ -14,6 +14,12 @@ import java.util.*;
 
 /**
  * Provides a simple editor map for a level with a given factory.
+ *
+ * This class initializes 3 singletons( 1 for each level) from a tab delimited text resources that lists the
+ * properties and their domains. This is done to remove any dependencies to Jena.
+ *
+ * The recommended usage is to use the {@link #get(org.biopax.paxtools.model.BioPAXLevel)} method.
+ *
  * @author Emek Demir
  */
 public enum SimpleEditorMap implements EditorMap
@@ -33,6 +39,11 @@ public enum SimpleEditorMap implements EditorMap
 		this.impl = new SimpleEditorMapImpl(level);
 	}
 
+	/**
+	 * To obtain a copy of the editor map for the corresponding level, use the
+	 * @param level
+	 * @return
+	 */
 	public static SimpleEditorMap get(BioPAXLevel level)
 	{
 		for (SimpleEditorMap value : values())
@@ -47,8 +58,6 @@ public enum SimpleEditorMap implements EditorMap
 	static class SimpleEditorMapImpl extends EditorMapAdapter implements EditorMap
 	{
 		private final BioPAXLevel level;
-
-		private List<ObjectPropertyEditor> sorted; //TODO use it somewhere or remove!
 
 		SimpleEditorMapImpl(BioPAXLevel level)
 		{
@@ -75,14 +84,10 @@ public enum SimpleEditorMap implements EditorMap
 					System.exit(1);
 				}
 			}
-			sortEditors();
 
 		}
 
-		private void sortEditors()
-		{
-			//TODO
-		}
+
 
 		private void readEditors(BioPAXLevel level, BufferedReader reader) throws IOException
 		{
@@ -162,7 +167,7 @@ public enum SimpleEditorMap implements EditorMap
 		return impl.getInverseEditorsOf(bpe);
 	}
 
-	@Override public <E extends BioPAXElement> Set<Class<E>> getKnownSubClassesOf(Class<E> javaClass)
+	@Override public <E extends BioPAXElement> Set<? extends Class<E>> getKnownSubClassesOf(Class<E> javaClass)
 	{
 		return impl.getKnownSubClassesOf(javaClass);
 	}

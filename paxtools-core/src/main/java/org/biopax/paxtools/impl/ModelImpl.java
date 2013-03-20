@@ -13,7 +13,7 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import java.util.*;
 
 /**
- * This is the default implementation of the {@link Model}.
+ * This is the default implementation of the {@link Model}. Use a factory to create a model.
  */
 public class ModelImpl implements Model
 {
@@ -35,7 +35,7 @@ public class ModelImpl implements Model
         nameSpacePrefixMap = new HashMap<String, String>();
         this.exposedObjectSet = new UnmodifiableImplicitSet(idMap.values());
 	}
-    
+
     protected ModelImpl(BioPAXLevel level)
 	{
 	   this(level.getDefaultFactory());

@@ -32,8 +32,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	List<PropertyAccessor<? extends BioPAXElement, ?>> accessors;
 
 	Class<? extends BioPAXElement> domain;
-    List<Class<? extends BioPAXElement>> domainOrder
-            = new ArrayList<Class<? extends BioPAXElement>>();
+
+	List<Class<? extends BioPAXElement>> domainOrder = new ArrayList<Class<? extends BioPAXElement>>();
 
 	public static final Log log = LogFactory.getLog(PathAccessor.class);
 
@@ -93,9 +93,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		if (st.nextToken().equals("/"))
 		{
 			accessors.add(getStepAccessor(level, st, domain));
-            domainOrder.add(domain);
-		}
-		else throw new IllegalArgumentException();
+			domainOrder.add(domain);
+		} else throw new IllegalArgumentException();
 		return iterateTheRemainingPath(depth, st);
 	}
 
@@ -109,7 +108,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			{
 				PathAccessor subPath = new PathAccessor(st, level, intermediate, depth++);
 				accessors.add(subPath);
-                domainOrder.add(intermediate);
+				domainOrder.add(intermediate);
 				intermediate = getNextDomain();
 			} else if (s.equals(")"))
 			{
@@ -117,8 +116,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			} else if (s.equals("/"))
 			{
 				accessors.add(getStepAccessor(level, st, intermediate));
-                domainOrder.add(intermediate);
-				intermediate= getNextDomain();
+				domainOrder.add(intermediate);
+				intermediate = getNextDomain();
 
 			} else if (s.equals("*"))
 			{
@@ -130,11 +129,10 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 				Class<? extends BioPAXElement> restricted = getClass(st.nextToken());
 				if (restricted != null)
 				{
-					PropertyAccessor<? extends BioPAXElement, ?> lastAccessor
-                            = accessors.remove(accessors.size() - 1);
+					PropertyAccessor<? extends BioPAXElement, ?> lastAccessor = accessors.remove(accessors.size() - 1);
 					accessors.add(FilteredPropertyAccessor.create(lastAccessor, restricted));
 				}
-                		intermediate = restricted;
+				intermediate = restricted;
 			} else if (s.equals("|"))
 			{
 				throw new UnsupportedOperationException("Not implemented yet");
@@ -154,6 +152,20 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		return (Class<? extends BioPAXElement>) accessors.get(accessors.size() - 1).getRange();
 	}
 
+	/**
+	 * This constructor defaults to BioPAX Level 3.
+	 * @param path The string defining the path. The following operators can be used:
+	 * <ul>
+	 * <li>The first token is the class name of the starting domain.</li>
+	 * <li>The next tokens are names of the properties, separated by "/"</li>
+	 * <li>A property step can be restricted to a domain by defining the restriction class with ":" after the
+	 * property </li>
+	 * <li>A property step can be declared transitive by adding a "*" at the end. </li>
+	 * <li>Two accessors can be joined by "|" (Currently not implemented)</li>
+	 * <li>A subpath can be defined by a substring enclosed in "(" ")"</li>
+	 * <li>Subpaths can also be restricted or made transitive</li>
+	 * </ul>
+	 */
 	public PathAccessor(String path)
 	{
 		this(path, BioPAXLevel.L3);
@@ -183,11 +195,11 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		for (int i = 0; i < accessors.size() - 1; i++)
 		{
 			PropertyAccessor accessor = accessors.get(i);
-            if (log.isTraceEnabled()) log.trace(accessor);
+			if (log.isTraceEnabled()) log.trace(accessor);
 			HashSet<BioPAXElement> nextBpes = new HashSet<BioPAXElement>();
 			for (BioPAXElement bpe : bpes)
 			{
-                if (log.isTraceEnabled()) log.trace("\t" + bpe);
+				if (log.isTraceEnabled()) log.trace("\t" + bpe);
 				Set valueFromBean = accessor.getValueFromBean(bpe);
 				if (valueFromBean != null || valueFromBean.isEmpty())
 				{
@@ -200,13 +212,13 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		}
 		HashSet values = new HashSet();
 		PropertyAccessor lastStep = accessors.get(accessors.size() - 1);
-        Class<? extends BioPAXElement> lastDomain = domainOrder.get(domainOrder.size() - 1);
+		Class<? extends BioPAXElement> lastDomain = domainOrder.get(domainOrder.size() - 1);
 		log.trace(lastStep);
 		for (BioPAXElement bpe : bpes)
 		{
-            if (!lastDomain.isInstance(bpe)) continue;
+			if (!lastDomain.isInstance(bpe)) continue;
 
-            log.trace("\t" + bpe);
+			log.trace("\t" + bpe);
 			Set valueFromBean = lastStep.getValueFromBean(bpe);
 			if (valueFromBean != null || valueFromBean.isEmpty())
 			{
@@ -217,6 +229,14 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		return values;
 	}
 
+	/**
+	 * This method runs the path query on all the elements within the model.
+	 * @param model to be queried
+	 * @return a merged set of all values that is reachable by the paths starting from all applicable objects in
+	 * the model. For example running ProteinReference/xref:UnificationXref on the model will get all the
+	 * unification xrefs of all ProteinReferences.
+	 * @throws IllegalBioPAXArgumentException
+	 */
 	public Set getValueFromModel(Model model) throws IllegalBioPAXArgumentException
 	{
 		Set<? extends BioPAXElement> domains = new HashSet<BioPAXElement>(model.getObjects(this.getDomain()));
@@ -275,10 +295,6 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		{
 			return isSingleUnknown(value);
 		}
-
-// was -
-//		return value == null || (value instanceof Set && ((Set) value).isEmpty());
-
 	}
 
 	private boolean isSingleUnknown(Object value)
@@ -287,6 +303,10 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		       BioPAXElement.UNKNOWN_FLOAT.equals(value) || BioPAXElement.UNKNOWN_INT.equals(value);
 	}
 
+	/**
+	 * @param bpe BioPAXElement to be checked.
+	 * @return true if bpe is an instance of the domain of this accessor.
+	 */
 	public boolean applies(BioPAXElement bpe)
 	{
 		Class domain = accessors.iterator().next().getDomain();

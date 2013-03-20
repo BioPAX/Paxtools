@@ -7,14 +7,16 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import java.util.Set;
 
 /**
-
+ *  In OWL a single property can have multiple domains. This is not supported in OO. This class amends this by
+ *  using a Facade pattern. A Union property will act like a OWL property with a union domain but in fact is composed
+ *  of multiple single domain properties.
  */
 public class UnionPropertyAccessor<D extends BioPAXElement,R> extends PropertyAccessorAdapter<D,R>
 {
+
 	Set<PropertyAccessor<? extends D, ? extends R>> union;
 
-
-	public UnionPropertyAccessor(Set<PropertyAccessor<? extends D, ? extends R>> union, Class<D> domain)
+		public UnionPropertyAccessor(Set<PropertyAccessor<? extends D, ? extends R>> union, Class<D> domain)
 	{
 		super(domain, (Class<R>) union.iterator().next().getRange(), true);
 		if(union == null || union.isEmpty())

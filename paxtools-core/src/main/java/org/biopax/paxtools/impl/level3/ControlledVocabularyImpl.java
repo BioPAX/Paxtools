@@ -7,7 +7,7 @@ import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -102,10 +102,9 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 		
 		return getModelInterface().equals(that.getModelInterface()) 
 				&& (term.isEmpty() && that.getTerm().isEmpty() || !terms.isEmpty() )
-				&& SetEquivalanceChecker.isEquivalentIntersection(
-						new ClassFilterSet<Xref,UnificationXref>(getXref(), UnificationXref.class),
-						new ClassFilterSet<Xref, UnificationXref>(that.getXref(), UnificationXref.class)
-					);		
+				&& SetEquivalenceChecker.hasEquivalentIntersection(
+				new ClassFilterSet<Xref, UnificationXref>(getXref(), UnificationXref.class),
+				new ClassFilterSet<Xref, UnificationXref>(that.getXref(), UnificationXref.class));
 	}
 	
 	@Override

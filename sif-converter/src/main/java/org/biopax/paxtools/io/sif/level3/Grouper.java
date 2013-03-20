@@ -3,7 +3,6 @@ package org.biopax.paxtools.io.sif.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.ModelUtils;
-import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Complex;
@@ -12,10 +11,13 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.util.AccessibleSet;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
-
+ * @author Emek Demir
  */
 public class Grouper
 {
@@ -77,7 +79,7 @@ public class Grouper
 
 	private Group inferGroupFromComplex(Complex complex, Model model)
 	{
-		Group group = new Group(BinaryInteractionType.COMPONENT_OF, complex);
+		Group group = new Group(true, complex);
 		Set<PhysicalEntity> PElvlMembers = complex.getMemberPhysicalEntity();
 		if (PElvlMembers.isEmpty())
 		{
@@ -109,8 +111,8 @@ public class Grouper
 				log.debug("Generic complex with both membership types (" + complex.getRDFId() + "). Skipping.");
 			} else
 			{
-				group = new Group(BinaryInteractionType.GENERIC_OF, complex);
-				group.genericType= Complex.class;
+				group = new Group(false, complex);
+				group.genericClass = Complex.class;
 				for (PhysicalEntity member : PElvlMembers)
 				{
 					if (member instanceof Complex)
@@ -156,13 +158,13 @@ public class Grouper
 
 	private Group inferGroupFromER(EntityReference element, Model model)
 	{
-		Group group = new Group(BinaryInteractionType.GENERIC_OF, element);
+		Group group = new Group(false, element);
 
 		for (EntityReference member : element.getMemberEntityReference())
 		{
-			if(group.type==null)
+			if(group.genericClass==null)
 			{
-				group.genericType = member.getModelInterface();
+				group.genericClass = member.getModelInterface();
 			}
 			group.addMember(member);
 		}

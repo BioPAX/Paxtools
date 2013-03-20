@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class used for a Paxtools Tutorial during Harmony 2010. It contains most of the examples in the user's guide.
+ */
 public class Tutorial
 {
 

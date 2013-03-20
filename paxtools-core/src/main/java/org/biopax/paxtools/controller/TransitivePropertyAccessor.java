@@ -7,7 +7,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class is a transitive decorator for PropertyAccessors
+ * This class is a transitive decorator for PropertyAccessors. BioPAX has three transitive properties:
+ * memberEntityReference, memberEntityFeature, component. These all represent nested containment
+ * relationships.
+ *
+ * When decorating a suitable property accessor this accessor will traverse the whole nesting hierarchy and bring all
+ * children( or if inverse parents). For example when used on a {@link org.biopax.paxtools.model.level3.Complex#getComponent()}
+ * it will not only return the immediate components but also the components of the components.
  */
 public class TransitivePropertyAccessor<D extends BioPAXElement, R> extends DecoratingPropertyAccessor<D, R>
 {

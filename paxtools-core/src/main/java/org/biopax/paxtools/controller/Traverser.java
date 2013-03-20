@@ -29,6 +29,12 @@ public class Traverser
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
+	/**
+	 * The full constructor.
+	 * @param editorMap is used for looking up properties to traverse
+	 * @param visitor is a visitor element that determines the action on reaching a biopax element during traversal
+	 * @param filters limits the type of properties that are traversed.
+	 */
 	public Traverser(EditorMap editorMap, Visitor visitor, Filter<PropertyEditor>... filters)
 	{
 		this.editorMap = editorMap;
@@ -37,6 +43,7 @@ public class Traverser
 	}
 
 // -------------------------- SETTERS/GETTERS ------------------------
+
 
 	public void setVisitor(Visitor visitor)
 	{
@@ -91,7 +98,7 @@ public class Traverser
     }
 
 
-    protected boolean filter(PropertyEditor<? extends BioPAXElement,?> editor)
+    protected boolean filter(PropertyEditor<?, ?> editor)
 	{
 		for (Filter<PropertyEditor> filter : filters)
 		{

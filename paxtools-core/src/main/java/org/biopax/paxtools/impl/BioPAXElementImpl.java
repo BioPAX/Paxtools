@@ -51,11 +51,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 		this.annotations = new HashMap<String, Object>();
 	}
 	
-	public BioPAXElementImpl(String uri) {
-		this();
-		this.uri = uri;
-	}
-
 
 	// Primary Key
 	// could not use names like: 'key' (SQL conflict), 'id', 'idx' (conflicts with the existing prop. in a child class), etc...

@@ -22,12 +22,23 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.SEQUENTIAL_CATALY
  *
  * @author Emek Demir
  */
-public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
-    private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(SEQUENTIAL_CATALYSIS);
+public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor
+{
+	/**
+	 * Supported interaction types.
+	 */
+    private static List<BinaryInteractionType> binaryInteractionTypes =
+		Arrays.asList(SEQUENTIAL_CATALYSIS);
 
-
-    public void inferInteractionsFromPE(InteractionSetL3 interactionSet, PhysicalEntity pe, Model model) {
-
+	/**
+	 * Infers interactions using the given PhysicalEntity as seed.
+	 * @param interactionSet to be populated
+	 * @param pe PhysicalEntity that will be the seed of the inference
+	 * @param model BioPAX model
+	 */
+    public void inferInteractionsFromPE(InteractionSetL3 interactionSet, PhysicalEntity pe,
+		Model model)
+	{
         for (Interaction inter : pe.getParticipantOf()) {
             if (inter instanceof Catalysis) {
                 BioPAXElement bpe = interactionSet.getGroupMap().getEntityReferenceOrGroup(pe);
@@ -36,7 +47,15 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
         }
     }
 
-    private void processCatalysis(InteractionSetL3 interactionSet, Catalysis aCatalysis, BioPAXElement bpe) {
+	/**
+	 * Continues the inference from the Catalysis of seed element.
+	 * @param interactionSet inferred interactions
+	 * @param aCatalysis the catalysis to follow
+	 * @param bpe source of the interaction
+	 */
+    private void processCatalysis(InteractionSetL3 interactionSet, Catalysis aCatalysis,
+		BioPAXElement bpe)
+	{
         //We have to consider two direction statements
         //Catalysis.direction and Conversion.spontaneous
         //This method maps the former to the compatible latter
@@ -62,14 +81,15 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
     }
 
     /**
-     * This method will find the compatible conversion and catalysis direction
+     * This method will find the compatible conversion and catalysis direction.
      *
      * @param direction1 type implied by catalysis
      * @param direction2 type of the conversion
-     * @return
+     * @return compatible direction
      */
     private ConversionDirectionType findConsensusDirection(ConversionDirectionType direction1,
-                                                           ConversionDirectionType direction2) {
+                                                           ConversionDirectionType direction2)
+	{
         ConversionDirectionType consensus;
         boolean first = isReversible(direction1);
         boolean second = isReversible(direction2);
@@ -93,12 +113,26 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
         return consensus;
     }
 
+	/**
+	 * Checks if the direction can be treated as reversible.
+	 * @param direction1 direction to check
+	 * @return true if direction is REVERSIBLE or null, false otherwise
+	 */
     private boolean isReversible(ConversionDirectionType direction1) {
         return direction1 == null || direction1.equals(ConversionDirectionType.REVERSIBLE);
     }
 
-    private void createInteractions(Conversion centerConversion, ConversionDirectionType dirA, Catalysis aCatalysis,
-                                    InteractionSetL3 interactionSet, BioPAXElement bpe) {
+	/**
+	 * Continues inference with the current elements.
+	 * @param centerConversion first Conversion
+	 * @param dirA current direction fot the Conversion
+	 * @param aCatalysis the traversed catalysis
+	 * @param interactionSet inferred interactions
+	 * @param bpe source of interaction
+	 */
+    private void createInteractions(Conversion centerConversion, ConversionDirectionType dirA,
+		Catalysis aCatalysis, InteractionSetL3 interactionSet, BioPAXElement bpe)
+	{
         //get the pes at the correct side of the conversion.
         Set<PhysicalEntity> pes = getOutputPEs(dirA, centerConversion);
 
@@ -113,8 +147,9 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
 
                     Set<Control> controls = nextConversion.getControlledOf();
 
-                    for (Catalysis consequentCatalysis : new ClassFilterSet<Control, Catalysis>(controls,
-                            Catalysis.class)) {
+                    for (Catalysis consequentCatalysis : new ClassFilterSet<Control, Catalysis>(
+						controls, Catalysis.class))
+					{
                         ConversionDirectionType direction2 =
                                 mapDirectionToConversion(consequentCatalysis.getCatalysisDirection());
                         ConversionDirectionType dirB =
@@ -136,8 +171,16 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
         }
     }
 
+	/**
+	 * Checks if the common substrate is an input to one and output of the other.
+	 * @param pe common substrate
+	 * @param nextConversion second conversion
+	 * @param dirB direction for the second conversion
+	 * @return true if the flow matches
+	 */
     private boolean commonSubstrateFollowsFlow(PhysicalEntity pe, Conversion nextConversion,
-                                               ConversionDirectionType dirB) {
+		ConversionDirectionType dirB)
+	{
         if (dirB == null) return true; //Assume reversible
         switch (dirB) {
             case REVERSIBLE:
@@ -157,8 +200,8 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
      * This method returns the PEPs that are on the correct side of the conversion
      *
      * @param direction   determining the side
-     * @param aConversion
-     * @return
+     * @param aConversion Conversion to get inputs or outputs
+     * @return inputs or outputs
      */
     private Set<PhysicalEntity> getOutputPEs(ConversionDirectionType direction, Conversion aConversion) {
         switch (direction) {
@@ -171,6 +214,11 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
         }
     }
 
+	/**
+	 * Gets all left and right participant of a conversion in a set.
+	 * @param aConversion Conversion to get participants
+	 * @return left and right participants of the conversion
+	 */
     private HashSet<PhysicalEntity> mergedSet(Conversion aConversion) {
         HashSet<PhysicalEntity> hashSet = new HashSet<PhysicalEntity>();
         hashSet.addAll(aConversion.getLeft());
@@ -178,6 +226,11 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
         return hashSet;
     }
 
+	/**
+	 * Converts catalysis direction to the conversion direction.
+	 * @param direction catalysis direction to convert
+	 * @return conversion direction
+	 */
     private ConversionDirectionType mapDirectionToConversion(CatalysisDirectionType direction) {
         if (direction != null) {
             switch (direction) {
@@ -190,6 +243,10 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor {
         return null;
     }
 
+	/**
+	 * Gets supported interaction types.
+	 * @return supported interaction types
+	 */
     public List<BinaryInteractionType> getRuleTypes() {
         return binaryInteractionTypes;
     }

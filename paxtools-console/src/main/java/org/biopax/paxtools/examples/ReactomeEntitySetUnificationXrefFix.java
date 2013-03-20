@@ -16,9 +16,12 @@ import java.util.Set;
 
 /**
  * This is a class I wrote for fixing the unification xref problem in Reactome entity sets. It
- * basically reads in the model, goes over physical entities and looks for the converted from
+ * reads in the model, goes over physical entities and looks for the converted from
  * reactome entity set comment. For each such generic entities it converts all of its unification
- * xrefs to relationship xrefs
+ * xrefs to relationship xrefs.
+ *
+ * NOTE: This method is now outdated as it is easier to do this now with the new PathAccessors. I did not remove this
+ * example, however, as it demonstrates many "low-level" operations of Paxtools.
  */
 public class ReactomeEntitySetUnificationXrefFix
 {

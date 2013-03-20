@@ -1,11 +1,9 @@
 package org.biopax.paxtools.examples;
 
-import org.biopax.paxtools.controller.EditorMap;
-import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.sif.InteractionRule;
 import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
-import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 
 import java.io.FileInputStream;
@@ -14,6 +12,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+/**
+ * This example exports A BioPAX model to sif using all the rules.
+ *
+ * To use specific rules uncomment the rule enumeration below.
+ */
 public final class SifnxExportExample {
 
 	public static void main(String[] args) throws IOException {
@@ -53,8 +56,6 @@ public final class SifnxExportExample {
 			System.exit(0);
 		}
 		*/
-		
-		EditorMap editorMap = SimpleEditorMap.get(model.getLevel());
 		OutputStream edgeStream = new FileOutputStream(args[1]);
 		OutputStream nodeStream = new FileOutputStream(args[2]);
         sic.writeInteractionsInSIFNX(model, edgeStream, nodeStream, 

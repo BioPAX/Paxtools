@@ -5,7 +5,12 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 
 
-public class PathwayComponentLister 
+/**
+ * This example shows how to list all components of a pathway.
+ *
+ *
+ */
+public class PathwayComponentLister
 {
     public static void printPathwayComponents(Model model)
     {

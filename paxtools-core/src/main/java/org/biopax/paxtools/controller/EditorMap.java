@@ -70,14 +70,27 @@ public interface EditorMap
 
 	/**
      * This method returns the set of <em>editor</em>s whose domain
-     * contains the class of given BioPAX element.
+     * subsumes the class of given BioPAX element.
      *
-     *
-	 * @param bpe BioPAX element for which the avaliable editors will be returned
+	 * @param bpe BioPAX element for which the available editors will be returned
 	 * @return empty set if there are no such editors
      */
     Set<PropertyEditor> getEditorsOf(BioPAXElement bpe);
 
+	/**
+	 * Properties in BioPAX specification is unidirectional. e.g. entityReference property that links a
+	 * PhysicalEntity to EntityReference has no defined corresponding inverse property that links
+	 * EntityReferences to their corresponding entities.
+	 *
+	 * Most OWL reasoners can query the inverse of a property at no additional cost, but for most OO implementations
+	 * this would require an expensive O(n) lookup.
+	 * An OO implementation requires keeping additional properties for efficiency purposes.
+
+	 * Inverse editors are read-only editors that captures these "inverse" part of the bidirectional properties
+	 * specifically implemented in Paxtools. They have the pattern <it>PropertyName</it>Of  e.g. entityReferenceOf.
+	 * @param bpe  BioPAX element for which the available inverse editors will be returned.
+	 * @return all inverse editors  for this entity's class type.
+	 */
 	Set<ObjectPropertyEditor> getInverseEditorsOf(BioPAXElement bpe);
 
 
@@ -88,7 +101,7 @@ public interface EditorMap
      * @param javaClass the class whose subclasses will be returned
      * @return an empty set if there are no such editors
      */
-    <E extends BioPAXElement> Set<Class<E>> getKnownSubClassesOf(Class<E> javaClass);
+    <E extends BioPAXElement> Set<? extends Class<E>> getKnownSubClassesOf(Class<E> javaClass);
 
 
     /**
@@ -99,10 +112,34 @@ public interface EditorMap
      */
     BioPAXLevel getLevel();
 
+	/**
+	 * This method returns the set of <em>editor</em>s whose domain
+	 * subsumes the given class
+	 *
+	 * @param domain BioPAX model interface for which the available editors will be returned
+	 * @return empty set if there are no such editors
+	 */
 	Set<PropertyEditor> getEditorsOf(Class<? extends BioPAXElement> domain);
 
+	/**
+	 * Properties in BioPAX specification is unidirectional. e.g. entityReference property that links a
+	 * PhysicalEntity to EntityReference has no defined corresponding inverse property that links
+	 * EntityReferences to their corresponding entities.
+	 *
+	 * Most OWL reasoners can query the inverse of a property at no additional cost, but for most OO implementations
+	 * this would require an expensive O(n) lookup.
+	 * An OO implementation requires keeping additional properties for efficiency purposes.
+
+	 * Inverse editors are read-only editors that captures these "inverse" part of the bidirectional properties
+	 * specifically implemented in Paxtools. They have the pattern <it>PropertyName</it>Of  e.g. entityReferenceOf.
+	 * @param domain of the inverse property
+	 * @return all inverse editors  for this class type.
+	 */
 	Set<ObjectPropertyEditor> getInverseEditorsOf(Class<? extends BioPAXElement> domain);
 
-    public Iterator<PropertyEditor> iterator();
+	/**
+	 * @return An iterator over all the properties in this EditorMap
+	 */
+	public Iterator<PropertyEditor> iterator();
 
 }

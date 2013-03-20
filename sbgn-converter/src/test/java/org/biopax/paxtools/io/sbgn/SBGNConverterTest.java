@@ -41,7 +41,7 @@ public class SBGNConverterTest
 		String out = "target/" + input + ".sbgn";
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(
-			new ListUbiqueDetector(blacklist), null, false);
+			new ListUbiqueDetector(blacklist), null, true);
 
 		conv.writeSBGN(level3, out);
 

@@ -31,5 +31,10 @@ public interface InteractionRule
 	 */
 	public List<BinaryInteractionType> getRuleTypes();
 
+	/**
+	 * Uses the parameter map as options for the rule. Each rule defines its possible keys for the
+	 * options map. Values are always Boolean.
+	 * @param options options map
+	 */
 	public void initOptions(Map options);
 }

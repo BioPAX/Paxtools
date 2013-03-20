@@ -9,7 +9,7 @@ import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import java.util.Map;
 
 /**
-
+ * @author Emek Demir // todo annotate
  */
 public class GroupMap 
 {

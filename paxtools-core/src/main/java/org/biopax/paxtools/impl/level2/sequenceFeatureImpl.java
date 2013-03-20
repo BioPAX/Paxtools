@@ -2,7 +2,7 @@ package org.biopax.paxtools.impl.level2;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level2.*;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,7 +49,7 @@ class sequenceFeatureImpl extends BioPAXLevel2ElementImpl
 	{
 		final sequenceFeature that = (sequenceFeature) o;
 		return
-			SetEquivalanceChecker.isEquivalent(this.FEATURE_LOCATION, that.getFEATURE_LOCATION())
+			SetEquivalenceChecker.isEquivalent(this.FEATURE_LOCATION, that.getFEATURE_LOCATION())
 				&&
 				(FEATURE_TYPE != null ? FEATURE_TYPE.isEquivalent(that.getFEATURE_TYPE()) :
 				that.getFEATURE_TYPE() == null);

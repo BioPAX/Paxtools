@@ -23,6 +23,7 @@ import java.util.Set;
  * In this example we get all the unification xrefs in the model
  * and check if they point to the Gene Ontology. If this is the case
  * we convert them to relationship xrefs.
+ *
  */
 public class GOUnificationXREFtoRelationshipXREFConverter
 {

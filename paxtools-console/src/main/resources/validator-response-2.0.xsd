@@ -1,34 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema version="1.0" targetNamespace="http://biopax.org/validator/2.0/schema" xmlns:tns="http://biopax.org/validator/2.0/schema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://biopax.org/validator/2.0/schema" targetNamespace="http://biopax.org/validator/2.0/schema" version="1.0">
 
   <xs:element name="validatorResponse" type="tns:ValidatorResponse"/>
 
-  <xs:complexType name="ErrorCaseType">
-    <xs:sequence>
-      <xs:element name="message" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
-    <xs:attribute name="object" type="xs:string"/>
-    <xs:attribute name="reportedBy" type="xs:string"/>
-    <xs:attribute name="fixed" type="xs:boolean" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="ErrorType">
-    <xs:sequence>
-      <xs:element name="errorCase" type="tns:ErrorCaseType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-    <xs:attribute name="category" type="tns:Category"/>
-    <xs:attribute name="code" type="xs:string"/>
-    <xs:attribute name="message" type="xs:string"/>
-    <xs:attribute name="notFixedCases" type="xs:int" use="required"/>
-    <xs:attribute name="totalCases" type="xs:int" use="required"/>
-    <xs:attribute name="type" type="tns:Behavior"/>
-  </xs:complexType>
-
   <xs:complexType name="Validation">
     <xs:sequence>
-      <xs:element name="comment" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="error" type="tns:ErrorType" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="modelSerialized" type="xs:string" minOccurs="0"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="comment" nillable="true" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="error" nillable="true" type="tns:ErrorType"/>
+      <xs:element minOccurs="0" name="modelData" type="xs:string"/>
     </xs:sequence>
     <xs:attribute name="description" type="xs:string"/>
     <xs:attribute name="fix" type="xs:boolean" use="required"/>
@@ -41,19 +19,32 @@
     <xs:attribute name="totalProblemsFound" type="xs:int" use="required"/>
   </xs:complexType>
 
-  <xs:complexType name="ValidatorResponse">
+  <xs:complexType name="ErrorType">
     <xs:sequence>
-      <xs:element name="validation" type="tns:Validation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="errorCase" nillable="true" type="tns:ErrorCaseType"/>
     </xs:sequence>
+    <xs:attribute name="category" type="tns:Category"/>
+    <xs:attribute name="code" type="xs:string"/>
+    <xs:attribute name="message" type="xs:string"/>
+    <xs:attribute name="notFixedCases" type="xs:int" use="required"/>
+    <xs:attribute name="totalCases" type="xs:int" use="required"/>
+    <xs:attribute name="type" type="tns:Behavior"/>
   </xs:complexType>
 
-  <xs:simpleType name="Behavior">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="IGNORE"/>
-      <xs:enumeration value="WARNING"/>
-      <xs:enumeration value="ERROR"/>
-    </xs:restriction>
-  </xs:simpleType>
+  <xs:complexType name="ErrorCaseType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="object" type="xs:string"/>
+    <xs:attribute name="reportedBy" type="xs:string"/>
+    <xs:attribute name="fixed" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ValidatorResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="validation" nillable="true" type="tns:Validation"/>
+    </xs:sequence>
+  </xs:complexType>
 
   <xs:simpleType name="Category">
     <xs:restriction base="xs:string">
@@ -63,5 +54,12 @@
       <xs:enumeration value="INFORMATION"/>
     </xs:restriction>
   </xs:simpleType>
-</xs:schema>
 
+  <xs:simpleType name="Behavior">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="IGNORE"/>
+      <xs:enumeration value="WARNING"/>
+      <xs:enumeration value="ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

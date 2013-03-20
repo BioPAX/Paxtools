@@ -16,7 +16,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 /**
- * User: root Date: Jan 18, 2007 Time: 4:56:53 PM
+ * A basic example that shows how to list all unification xrefs.
+ *
+ * NOTE: This method is now outdated as it is easier to do this now with the new PathAccessors. I did not remove this
+ * example, however, as it demonstrates many "low-level" operations of Paxtools.
+
  */
 public class UnificationIDtoRDFIDLister
 {

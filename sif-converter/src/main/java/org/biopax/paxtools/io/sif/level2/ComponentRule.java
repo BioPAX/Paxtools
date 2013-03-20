@@ -27,35 +27,72 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.IN_SAME_COMPONENT
  */
 public class ComponentRule extends InteractionRuleL2Adaptor
 {
-	private static List<BinaryInteractionType> binaryInteractionTypes = Arrays.asList(COMPONENT_OF,
-	                                                                                  IN_SAME_COMPONENT);
+	/**
+	 * Supported interaction types.
+	 */
+	private static List<BinaryInteractionType> binaryInteractionTypes =
+		Arrays.asList(COMPONENT_OF, IN_SAME_COMPONENT);
 
+	/**
+	 * Maximum number of members of a complex to process.
+	 */
 	private long threshold;
 
+	/**
+	 * Log for logging.
+	 */
 	private static Log log = LogFactory.getLog(ComponentRule.class);
 
+	/**
+	 * Option to just skip large complexes without throwing an exception.
+	 */
 	boolean suppressExceptions;
 
+	/**
+	 * Option to mine COMPONENT_OF type.
+	 */
 	private boolean componentOf;
 
+	/**
+	 * Option to mine IN_SAME_COMPONENT type.
+	 */
 	private boolean inSameComponent;
 
+	/**
+	 * Constructor with default values.
+	 */
 	public ComponentRule()
 	{
 		this(Integer.MAX_VALUE, false);
 	}
 
+	/**
+	 * Constructor with threshold
+	 * @param threshold limit for the member size of the complex to mine
+	 */
 	public ComponentRule(int threshold)
 	{
 		this(threshold, false);
 	}
 
+	/**
+	 * Constructor with threshold and exception suppressing option.
+	 * @param threshold limit for the member size of the complex to mine
+	 * @param suppressExceptions if true, does not throw exception for large complexes, just skips
+	 * them
+	 */
 	public ComponentRule(int threshold, boolean suppressExceptions)
 	{
 		this.threshold = threshold;
 		this.suppressExceptions = suppressExceptions;
 	}
 
+	/**
+	 * Infer starting from the given physicalEntity.
+	 * @param interactionSet to be populated
+	 * @param A source of the interaction
+	 * @param model BioPAX model
+	 */
 	@Override public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity A, Model model)
 	{
 		if (!(A instanceof complex))
@@ -162,11 +199,19 @@ public class ComponentRule extends InteractionRuleL2Adaptor
 		}
 	}
 
+	/**
+	 * Gets supported interaction types.
+	 * @return supported interaction types
+	 */
 	public List<BinaryInteractionType> getRuleTypes()
 	{
 		return binaryInteractionTypes;
 	}
 
+	/**
+	 * Initializes options.
+	 * @param options options map
+	 */
 	@Override public void initOptionsNotNull(Map options)
 	{
 		componentOf = !options.containsKey(COMPONENT_OF) || options.get(COMPONENT_OF).equals(Boolean.TRUE);
@@ -174,6 +219,5 @@ public class ComponentRule extends InteractionRuleL2Adaptor
 				!options.containsKey(IN_SAME_COMPONENT) || options.get(IN_SAME_COMPONENT).equals(Boolean.TRUE);
 
 	}
-
 }
 
