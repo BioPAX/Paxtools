@@ -25,9 +25,11 @@ import java.util.*;
  * - most but not all things are converted (e.g., complex.ORGANISM property cannot...)
  * - phy. entities "clones" - because, during L1 or L2 data read, all re-used pEPs are duplicated... (TODO filter after the conversion)
  * 
- * @author rodch
+ * @author rodche
  *
+ * @deprecated please use {@link LevelUpgrader} instead (renamed since 4.1.7)
  */
+@Deprecated
 public final class OneTwoThree extends AbstractTraverser implements ModelFilter {
 	private static final Log log = LogFactory.getLog(OneTwoThree.class);
 	private static final String l3PackageName = "org.biopax.paxtools.model.level3.";

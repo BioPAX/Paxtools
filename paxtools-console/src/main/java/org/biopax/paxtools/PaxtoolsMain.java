@@ -2,7 +2,7 @@ package org.biopax.paxtools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
-import org.biopax.paxtools.converter.OneTwoThree;
+import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
@@ -160,7 +160,7 @@ public class PaxtoolsMain {
     public static void toLevel3(String[] argv) throws IOException {
         Model model = io.convertFromOWL(new FileInputStream(
                 argv[1]));
-        model = (new OneTwoThree()).filter(model);
+        model = (new LevelUpgrader()).filter(model);
         if (model != null) {
             io.setFactory(model.getLevel().getDefaultFactory());
             io.convertToOWL(model, new FileOutputStream(argv[2]));

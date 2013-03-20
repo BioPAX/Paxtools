@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 import java.io.*;
 
-public class OneTwoThreeTest {
+public class LevelUpgraderTest {
 
     @Test
 	public final void testFilter() throws IOException {
@@ -25,7 +25,7 @@ public class OneTwoThreeTest {
 		assertTrue(pep31.getPHYSICAL_ENTITY() instanceof protein);
 		assertNotNull(pep31.getCELLULAR_LOCATION());
 		
-		model = (new OneTwoThree()).filter(model);
+		model = (new LevelUpgrader()).filter(model);
 		
 		if (model != null) {
 			io.convertToOWL(model, new FileOutputStream(
@@ -49,7 +49,7 @@ public class OneTwoThreeTest {
 		Model model = io.convertFromOWL(
 			getClass().getClassLoader()
 				.getResourceAsStream("L2/biopax-example-ecocyc-glycolysis.owl"));
-		model = (new OneTwoThree()).filter(model);
+		model = (new LevelUpgrader()).filter(model);
 		if (model != null) {
 			io.convertToOWL(model, new FileOutputStream(
 					getClass().getClassLoader().getResource("").getFile() 
