@@ -25,7 +25,7 @@ public class OneTwoThreeTest {
 		assertTrue(pep31.getPHYSICAL_ENTITY() instanceof protein);
 		assertNotNull(pep31.getCELLULAR_LOCATION());
 		
-		model = (new LevelUpgrader()).filter(model);
+		model = (new OneTwoThree()).filter(model);
 		
 		if (model != null) {
 			io.convertToOWL(model, new FileOutputStream(
@@ -49,7 +49,7 @@ public class OneTwoThreeTest {
 		Model model = io.convertFromOWL(
 			getClass().getClassLoader()
 				.getResourceAsStream("L2/biopax-example-ecocyc-glycolysis.owl"));
-		model = (new LevelUpgrader()).filter(model);
+		model = (new OneTwoThree()).filter(model);
 		if (model != null) {
 			io.convertToOWL(model, new FileOutputStream(
 					getClass().getClassLoader().getResource("").getFile() 
