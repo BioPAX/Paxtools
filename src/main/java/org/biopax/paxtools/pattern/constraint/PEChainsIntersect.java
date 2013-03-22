@@ -42,18 +42,9 @@ public class PEChainsIntersect extends ConstraintAdapter
 	 */
 	public PEChainsIntersect(boolean intersectionDesired, boolean ignoreEndPoints)
 	{
+		super(4);
 		this.intersectionDesired = intersectionDesired;
 		this.ignoreEndPoints = ignoreEndPoints;
-	}
-
-	/**
-	 * Works with 4 elements
-	 * @return 4
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 4;
 	}
 
 	/**

@@ -61,7 +61,7 @@ public class TranscriptionalRegulationMiner extends MinerAdapter
 		Set<String> mem = new HashSet<String>();
 
 		OutputStreamWriter writer = new OutputStreamWriter(out);
-		writer.write("upstream\tdownstream");
+		writer.write("Upstream\tRelation\tDownstream");
 
 		for (BioPAXElement ele : matches.keySet())
 		{
@@ -89,5 +89,7 @@ public class TranscriptionalRegulationMiner extends MinerAdapter
 				}
 			}
 		}
+
+		writer.flush();
 	}
 }

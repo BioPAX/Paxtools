@@ -52,6 +52,7 @@ public class Field extends ConstraintAdapter
 	 */
 	public Field(String accessorString, Object value)
 	{
+		super(value == USE_SECOND_ARG ? 2 : 1);
 		this.value = value;
 		this.pa1 = new PathAccessor(accessorString);
 	}
@@ -67,19 +68,9 @@ public class Field extends ConstraintAdapter
 	 */
 	public Field(String accessorString1, String accessorString2, Object randomObj)
 	{
+		super(accessorString2 == null ? 1 : 2);
 		this.pa1 = new PathAccessor(accessorString1);
 		this.pa2 = new PathAccessor(accessorString2);
-	}
-
-	/**
-	 * Size of this constraint is 1 if a value is given to check. It is 2 if the value is
-	 * USE_SECOND_ARG or two accessor
-	 * @return 1 or 2
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return value == USE_SECOND_ARG || pa2 != null ? 2 : 1;
 	}
 
 	/**

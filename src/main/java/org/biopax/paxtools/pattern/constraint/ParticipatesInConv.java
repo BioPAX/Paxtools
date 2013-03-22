@@ -39,6 +39,7 @@ public class ParticipatesInConv extends ConstraintAdapter
 	 */
 	public ParticipatesInConv(RelType type, boolean treatReversibleAsLeftToRight)
 	{
+		super(2);
 		this.type = type;
 		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
 	}
@@ -96,11 +97,5 @@ public class ParticipatesInConv extends ConstraintAdapter
 		}
 
 		return result;
-	}
-
-	@Override
-	public int getVariableSize()
-	{
-		return 2;
 	}
 }

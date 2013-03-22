@@ -47,8 +47,7 @@ public class ControlsStateChangeMiner extends MinerAdapter
 	}
 
 	/**
-	 * Writes the result as "A tab B", where A and B are gene symbols, and tab is the tab character
-	 * (\t).
+	 * Writes the result as "A B", where A and B are gene symbols, and whitespace is tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -56,33 +55,13 @@ public class ControlsStateChangeMiner extends MinerAdapter
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		// Memory for already written pairs.
-		Set<String> mem = new HashSet<String>();
-
-		OutputStreamWriter writer = new OutputStreamWriter(out);
-		writer.write("upstream\tdownstream");
-
-		for (BioPAXElement ele : matches.keySet())
+		// Update labels (if not already updated with a previous call of this method)
+		if (getPattern().hasLabel("controller ER"))
 		{
-			for (Match m : matches.get(ele))
-			{
-				ProteinReference pr1 = (ProteinReference) m.get("controller ER", getPattern());
-				ProteinReference pr2 = (ProteinReference) m.get("changed ER", getPattern());
-
-				String s1 = getGeneSymbol(pr1);
-				String s2 = getGeneSymbol(pr2);
-
-				if (s1 != null && s2 != null)
-				{
-					String s = s1 + "\t" + s2;
-
-					if (!mem.contains(s))
-					{
-						writer.write("\n" + s);
-						mem.add(s);
-					}
-				}
-			}
+			getPattern().updateLabel("controller ER", "Upstream");
+			getPattern().updateLabel("changed ER", "Downstream");
 		}
+
+		writeResultAsPair(matches, out, true, "Upstream", "Downstream");
 	}
 }

@@ -17,13 +17,11 @@ import java.util.Set;
 public class ControlNotParticipant extends ConstraintAdapter
 {
 	/**
-	 * This is a single element constraint
-	 * @return 1
+	 * Constructor.
 	 */
-	@Override
-	public int getVariableSize()
+	public ControlNotParticipant()
 	{
-		return 1;
+		super(1);
 	}
 
 	/**

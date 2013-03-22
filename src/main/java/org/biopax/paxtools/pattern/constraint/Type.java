@@ -21,6 +21,7 @@ public class Type extends ConstraintAdapter
 	 */
 	public Type(Class<? extends BioPAXElement> clazz)
 	{
+		super(1);
 		this.clazz = clazz;
 	}
 
@@ -36,15 +37,5 @@ public class Type extends ConstraintAdapter
 		assert ind.length == 1;
 
 		return clazz.isAssignableFrom(match.get(ind[0]).getModelInterface());
-	}
-
-	/**
-	 * This is a point constraint.
-	 * @return 1
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 1;
 	}
 }

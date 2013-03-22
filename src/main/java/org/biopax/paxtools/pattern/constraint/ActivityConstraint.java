@@ -21,17 +21,8 @@ public class ActivityConstraint extends ConstraintAdapter
 	 */
 	public ActivityConstraint(boolean active)
 	{
+		super(1);
 		this.active = active;
-	}
-
-	/**
-	 * This is a point constraint
-	 * @return 1
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 1;
 	}
 
 	/**

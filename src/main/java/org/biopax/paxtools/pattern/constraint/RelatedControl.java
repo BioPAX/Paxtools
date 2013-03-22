@@ -38,17 +38,8 @@ public class RelatedControl extends ConstraintAdapter
 	 */
 	public RelatedControl(RelType peType)
 	{
+		super(3);
 		this.peType = peType;
-	}
-
-	/**
-	 * Works with 3 elements.
-	 * @return 3
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 3;
 	}
 
 	/**

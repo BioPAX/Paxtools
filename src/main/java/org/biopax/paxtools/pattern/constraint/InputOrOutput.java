@@ -37,6 +37,7 @@ public class InputOrOutput extends ConstraintAdapter
 	 */
 	public InputOrOutput(RelType type, boolean treatReversibleAsLeftToRight)
 	{
+		super(2);
 		this.type = type;
 		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
 	}
@@ -85,15 +86,5 @@ public class InputOrOutput extends ConstraintAdapter
 		}
 
 		return result;
-	}
-
-	/**
-	 * Always 2
-	 * @return 2
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 2;
 	}
 }

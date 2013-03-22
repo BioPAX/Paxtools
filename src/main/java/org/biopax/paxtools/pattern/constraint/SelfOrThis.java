@@ -14,30 +14,47 @@ import java.util.Collection;
  */
 public class SelfOrThis extends ConstraintAdapter
 {
+	int selfIndex;
+
 	/**
 	 * Wrapped constraint.
 	 */
 	Constraint con;
 
 	/**
-	 * Constructor with the wrapped constraint.
+	 * Constructor with the wrapped constraint. Index of self is 0 by default.
 	 * @param con wrapped constraint
 	 */
 	public SelfOrThis(Constraint con)
 	{
-		this.con = con;
-		if (con.getVariableSize() != 2)
-			throw new IllegalArgumentException("Parameter constraint must be size 2.");
+		this(con, 0);
 	}
 
 	/**
-	 * Always 2.
-	 * @return 2
+	 * Constructor with the wrapped constraint and index of self. This index cannot map to the last
+	 * element, but has to map one of the previous ones.
+	 * @param con wrapped constraint
+	 * @param selfIndex index of self
+	 */
+	public SelfOrThis(Constraint con, int selfIndex)
+	{
+		this.selfIndex = selfIndex;
+		this.con = con;
+		if (!con.canGenerate()) throw new IllegalArgumentException(
+			"The wrapped constraint has to be generative");
+		if (selfIndex >= con.getVariableSize() - 1) throw new IllegalArgumentException(
+			"selfIndex has to be smaller than the index of last mapped element. selfIndex = " +
+				selfIndex + ", size = " + con.getVariableSize());
+	}
+
+	/**
+	 * Returns size of the wrapped constraint.
+	 * @return size of the wrapped constraint
 	 */
 	@Override
 	public int getVariableSize()
 	{
-		return 2;
+		return con.getVariableSize();
 	}
 
 	/**
@@ -60,7 +77,7 @@ public class SelfOrThis extends ConstraintAdapter
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
 		Collection<BioPAXElement> gen = con.generate(match, ind);
-		gen.add(match.get(ind[0]));
+		gen.add(match.get(ind[selfIndex]));
 		return gen;
 	}
 
@@ -73,6 +90,7 @@ public class SelfOrThis extends ConstraintAdapter
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
-		return match.get(ind[0]) == match.get(ind[1]) || super.satisfies(match, ind);
+		return match.get(ind[selfIndex]) == match.get(ind[ind.length-1]) ||
+			super.satisfies(match, ind);
 	}
 }

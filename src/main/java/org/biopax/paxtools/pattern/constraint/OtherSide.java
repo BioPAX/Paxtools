@@ -24,13 +24,11 @@ import java.util.HashSet;
 public class OtherSide extends ConstraintAdapter
 {
 	/**
-	 * 3 elements are involved.
-	 * @return 3
+	 * Constructor.
 	 */
-	@Override
-	public int getVariableSize()
+	public OtherSide()
 	{
-		return 3;
+		super(3);
 	}
 
 	/**

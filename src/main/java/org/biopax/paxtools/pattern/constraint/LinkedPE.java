@@ -61,17 +61,8 @@ public class LinkedPE extends ConstraintAdapter
 	 */
 	public LinkedPE(Type type)
 	{
+		super(2);
 		this.type = type;
-	}
-
-	/**
-	 * Always 2.
-	 * @return 2
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 2;
 	}
 
 	/**

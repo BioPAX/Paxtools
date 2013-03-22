@@ -35,18 +35,9 @@ public class ParticipatingPE extends ConstraintAdapter
 	 */
 	public ParticipatingPE(RelType type, boolean treatReversibleAsLeftToRight)
 	{
+		super(3);
 		this.type = type;
 		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
-	}
-
-	/**
-	 * Works with 3 elements.
-	 * @return 3
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 3;
 	}
 
 	/**

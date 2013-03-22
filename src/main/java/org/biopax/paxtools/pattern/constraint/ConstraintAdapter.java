@@ -16,6 +16,29 @@ import java.util.*;
 public abstract class ConstraintAdapter implements Constraint
 {
 	/**
+	 * Size of the constraint. This is defined by how many elements this constraint needs to be \
+	 * mapped to work.
+	 */
+	protected int size;
+
+	/**
+	 * Constructor with size.
+	 * @param size size if the constraint.
+	 */
+	protected ConstraintAdapter(int size)
+	{
+		this.size = size;
+	}
+
+	/**
+	 * Empty constructor. Note that specifying the size is not mandatory since the child constraint
+	 * can override <code>getVariableSize</code> instead of using the size variable.
+	 */
+	protected ConstraintAdapter()
+	{
+	}
+
+	/**
 	 * Specifies if the constraint is generative. If you override this method, then don't forget to
 	 * also override getGeneratedInd, and generate methods.
 	 */
@@ -163,5 +186,24 @@ public abstract class ConstraintAdapter implements Constraint
 	protected void assertIndLength(int[] ind)
 	{
 		assert ind.length == getVariableSize();
+	}
+
+	/**
+	 * Sets the size of the constraint.
+	 * @param size size of the constraint
+	 */
+	public void setSize(int size)
+	{
+		this.size = size;
+	}
+
+	/**
+	 * Gets the variable size of the constraint.
+	 * @return variable size
+	 */
+	@Override
+	public int getVariableSize()
+	{
+		return size;
 	}
 }

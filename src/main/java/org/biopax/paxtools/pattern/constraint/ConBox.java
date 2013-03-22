@@ -40,6 +40,15 @@ public class ConBox
 	}
 
 	/**
+	 * From PhysicalEntity to the downstream Conversion.
+	 * @return generative constraint to get the Conversion that the PhysicalEntity is a controller
+	 */
+	public static Constraint peToControlledConv()
+	{
+		return new PathConstraint("PhysicalEntity/controllerOf/controlled*:Conversion");
+	}
+
+	/**
 	 * From Control to the controlled Process
 	 * @return generative constraint to get the controlled Process of the Control
 	 */
@@ -92,6 +101,16 @@ public class ConBox
 	public static Constraint convToControl()
 	{
 		return new PathConstraint("Conversion/controlledOf*");
+	}
+
+	/**
+	 * From Conversion to the controller of the upstream Control (and its upstream Control
+	 * recursively).
+	 * @return the constraint
+	 */
+	public static Constraint convToController()
+	{
+		return new PathConstraint("Conversion/controlledOf*/controller");
 	}
 
 	/**

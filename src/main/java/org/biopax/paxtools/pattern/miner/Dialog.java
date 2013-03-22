@@ -10,7 +10,6 @@ import org.biopax.paxtools.pattern.util.ProgressWatcher;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,9 +36,19 @@ import static javax.swing.JOptionPane.*;
 public class Dialog extends JFrame implements ActionListener, KeyListener
 {
 	/**
+	 * User specified miners to use.
+	 */
+	private Miner[] miners;
+
+	/**
 	 * Checkbox for downloading and using PC data.
 	 */
-	private JCheckBox pcBox;
+	private JRadioButton pcRadio;
+
+	/**
+	 * Checkbox for downloading and using PC data.
+	 */
+	private JRadioButton customRadio;
 
 	/**
 	 * Text fiels for model filename.
@@ -50,6 +59,11 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 * Button for loading the model.
 	 */
 	private JButton loadButton;
+
+	/**
+	 * Combo box for pattern to use.
+	 */
+	private JComboBox pcCombo;
 
 	/**
 	 * Combo box for pattern to use.
@@ -82,20 +96,28 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	private JProgressBar prgBar;
 
 	/**
-	 * URL of the Pathway Commons data.
+	 * Prefix of URL of the Pathway Commons data.
 	 */
-	private static final String PC_DATA_URL =
-		"http://www.pathwaycommons.org/pc2/downloads/Pathway%20Commons%20all.BIOPAX.owl.gz";
+	private static final String PC_DATA_URL_PREFIX =
+		"http://www.pathwaycommons.org/pc2/downloads/Pathway%20Commons%20";
 
 	/**
-	 * Name of the Pathway Commons data file.
+	 * Suffix of URL of the Pathway Commons data.
 	 */
-	private static final String PC_FILE = "PC.owl";
+	private static final String PC_DATA_URL_SUFFIX = ".BIOPAX.owl.gz";
 
 	/**
 	 * Background color.
 	 */
 	private static final Color BACKGROUND = Color.WHITE;
+
+	private static final Object[] PC_RES_NAMES = new Object[]{
+		"All-Data", "Reactome", "NCI-PID", "HumanCyc", "PhosphositePlus", "Panther"};
+
+	private static final String[] PC_RES_URL = new String[]{
+		"all", "reactome", "nci_nature", "humancyc", "phosphositeplus", "panther"};
+
+
 
 	/**
 	 * Runs the program showing the dialog.
@@ -111,9 +133,10 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 * Constructor for the dialog.
 	 * @throws HeadlessException
 	 */
-	public Dialog() throws HeadlessException
+	public Dialog(Miner... miners) throws HeadlessException
 	{
 		super("Pattern Miner");
+		this.miners = miners;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		init();
 	}
@@ -123,27 +146,59 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private void init()
 	{
-		setSize(400, 400);
+		setSize(500, 400);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().setBackground(BACKGROUND);
 
-		JPanel modelPanel = new JPanel(new BorderLayout());
+		JPanel modelPanel = new JPanel(new GridBagLayout());
 
-		pcBox = new JCheckBox(new File(PC_FILE).exists() ?
-			"Use Pathway Commons data" : "Download and use Pathway Commons data");
-		pcBox.addActionListener(this);
-		pcBox.setBackground(BACKGROUND);
-		modelPanel.add(pcBox, BorderLayout.NORTH);
+		pcRadio = new JRadioButton("Use Pathway Commons");
+		pcRadio.addActionListener(this);
+		pcRadio.setBackground(BACKGROUND);
+		GridBagConstraints con = new GridBagConstraints();
+		con.gridx = 0;
+		con.gridy = 0;
+		con.anchor = GridBagConstraints.LINE_START;
+		modelPanel.add(pcRadio, con);
+
+		pcCombo = new JComboBox(PC_RES_NAMES);
+		pcCombo.setBackground(BACKGROUND);
+		con = new GridBagConstraints();
+		con.gridx = 1;
+		con.gridy = 0;
+		con.anchor = GridBagConstraints.CENTER;
+		con.ipadx = 5;
+		modelPanel.add(pcCombo, con);
+
+		customRadio = new JRadioButton("Use custom file");
+		customRadio.addActionListener(this);
+		customRadio.setBackground(BACKGROUND);
+		con = new GridBagConstraints();
+		con.gridx = 0;
+		con.gridy = 1;
+		con.anchor = GridBagConstraints.LINE_START;
+		modelPanel.add(customRadio, con);
+
+		ButtonGroup group = new ButtonGroup();
+		group.add(pcRadio);
+		group.add(customRadio);
+		group.setSelected(pcRadio.getModel(), true);
 
 		JPanel modelChooserPanel = new JPanel(new FlowLayout());
-		modelField = new JTextField(20);
+		modelField = new JTextField(15);
 		modelField.addKeyListener(this);
+		modelField.setEnabled(false);
 		modelChooserPanel.add(modelField);
 		loadButton = new JButton("Load");
 		loadButton.addActionListener(this);
+		loadButton.setEnabled(false);
 		modelChooserPanel.add(loadButton);
 		modelChooserPanel.setBackground(BACKGROUND);
-		modelPanel.add(modelChooserPanel, BorderLayout.CENTER);
+		con = new GridBagConstraints();
+		con.gridx = 1;
+		con.gridy = 1;
+		con.anchor = GridBagConstraints.CENTER;
+		modelPanel.add(modelChooserPanel, con);
 
 		modelPanel.setBorder(BorderFactory.createTitledBorder("Source model"));
 		modelPanel.setBackground(BACKGROUND);
@@ -177,7 +232,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		prgBar = new JProgressBar();
 		prgBar.setStringPainted(true);
 		prgBar.setVisible(false);
-		GridBagConstraints con = new GridBagConstraints();
+		con = new GridBagConstraints();
 		con.gridx = 0;
 		con.anchor = GridBagConstraints.CENTER;
 		con.ipady = 12;
@@ -245,10 +300,17 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (e.getSource() == pcBox)
+		if (e.getSource() == pcRadio)
 		{
-			modelField.setEnabled(!pcBox.isSelected());
-			loadButton.setEnabled(!pcBox.isSelected());
+			pcCombo.setEnabled(pcRadio.isSelected());
+			modelField.setEnabled(!pcRadio.isSelected());
+			loadButton.setEnabled(!pcRadio.isSelected());
+		}
+		else if (e.getSource() == customRadio)
+		{
+			pcCombo.setEnabled(!customRadio.isSelected());
+			modelField.setEnabled(customRadio.isSelected());
+			loadButton.setEnabled(customRadio.isSelected());
 		}
 		else if (e.getSource() == loadButton)
 		{
@@ -281,7 +343,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private void checkRunButton()
 	{
-		runButton.setEnabled((pcBox.isSelected() || !modelField.getText().trim().isEmpty()) &&
+		runButton.setEnabled((pcRadio.isSelected() || !modelField.getText().trim().isEmpty()) &&
 			!outputField.getText().trim().isEmpty());
 	}
 
@@ -301,14 +363,17 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	public void keyReleased(KeyEvent keyEvent){}
 
 	/**
-	 * Gets the available pattern miners.
+	 * Gets the available pattern miners. First lists the parameter miners, then adds the known
+	 * miners in the package.
 	 * @return pattern miners
 	 */
 	private Object[] getAvailablePatterns()
 	{
-		return new Object[]{
-			new ControlsStateChangeMiner(),
-			new TranscriptionalRegulationMiner()};
+		List<Miner> minerList = new ArrayList<Miner>();
+		if (miners != null) minerList.addAll(Arrays.asList(miners));
+		minerList.add(new ControlsStateChangeMiner());
+		minerList.add(new TranscriptionalRegulationMiner());
+		return minerList.toArray(new Object[minerList.size()]);
 	}
 
 	/**
@@ -348,7 +413,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 
 		File modFile;
 
-		if (pcBox.isSelected())
+		if (pcRadio.isSelected())
 		{
 			if (getMaxMemory() < 4000)
 			{
@@ -358,12 +423,13 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 					"virtual machine parameter \"-Xmx5G\".");
 			}
 
-			modFile = new File(PC_FILE);
+			modFile = new File(getPCFilename());
 			if (!modFile.exists())
 			{
 				prgLabel.setText("Downloading model");
 				if (!downloadPC(prg))
 				{
+					eraseProgressBar();
 					showMessageDialog(this,
 						"Cannot download Pathway Commons data for some reason. Sorry.");
 					return;
@@ -390,6 +456,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			eraseProgressBar();
 			showMessageDialog(this, "Cannot write to file: " + outFile.getPath());
 			return;
 		}
@@ -411,6 +478,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
+			eraseProgressBar();
 			showMessageDialog(this, "File not found: " + modFile.getPath());
 			return;
 		}
@@ -430,17 +498,44 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 			prgBar.setValue(0);
 			prgBar.setStringPainted(false);
 			prgBar.setIndeterminate(true);
-			min.writeResult(matches, new FileOutputStream(outFile));
+			FileOutputStream os = new FileOutputStream(outFile);
+			min.writeResult(matches, os);
+			os.close();
 			prgBar.setIndeterminate(false);
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			eraseProgressBar();
 			showMessageDialog(this, "Error occurred while writing the results");
 			return;
 		}
 
 		prgLabel.setText("Success!    ");
+	}
+
+	private void eraseProgressBar()
+	{
+		prgLabel.setText("             ");
+		prgBar.setVisible(false);
+	}
+
+	/**
+	 * Gets the url for the current selected PC resource.
+	 * @return the url
+	 */
+	private String getPCDataURL()
+	{
+		return PC_DATA_URL_PREFIX + PC_RES_URL[pcCombo.getSelectedIndex()] + PC_DATA_URL_SUFFIX;
+	}
+
+	/**
+	 * Gets the url for the current selected PC resource.
+	 * @return the url
+	 */
+	private String getPCFilename()
+	{
+		return PC_RES_NAMES[pcCombo.getSelectedIndex()].toString() + ".owl";
 	}
 
 	/**
@@ -451,7 +546,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	{
 		try
 		{
-			URL url = new URL(PC_DATA_URL);
+			URL url = new URL(getPCDataURL());
 			URLConnection con = url.openConnection();
 			GZIPInputStream in = new GZIPInputStream(con.getInputStream());
 
@@ -459,7 +554,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 			System.out.println(con.getContentLength());
 
 			// Open the output file
-			OutputStream out = new FileOutputStream(PC_FILE);
+			OutputStream out = new FileOutputStream(getPCFilename());
 			// Transfer bytes from the compressed file to the output file
 			byte[] buf = new byte[1024];
 

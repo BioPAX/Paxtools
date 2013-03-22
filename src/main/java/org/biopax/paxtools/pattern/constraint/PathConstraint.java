@@ -28,17 +28,8 @@ public class PathConstraint extends ConstraintAdapter
 	 */
 	public PathConstraint(String path)
 	{
+		super(2);
 		this.pa = new PathAccessor(path, BioPAXLevel.L3);
-	}
-
-	/**
-	 * Always 2.
-	 * @return 2
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 2;
 	}
 
 	/**

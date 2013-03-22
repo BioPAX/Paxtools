@@ -68,22 +68,13 @@ public class ModificationChangeConstraint extends ConstraintAdapter
 		Map<EntityReference, Set<ModificationFeature>> activityFeat,
 		Map<EntityReference, Set<ModificationFeature>> inactivityFeat)
 	{
+		super(2);
 		this.activating = activating;
 		this.activityFeat = activityFeat;
 		this.inactivityFeat = inactivityFeat;
 
 		activityStr = extractModifNames(activityFeat);
 		inactivityStr = extractModifNames(inactivityFeat);
-	}
-
-	/**
-	 * Compares two elements.
-	 * @return 2
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 2;
 	}
 
 	/**

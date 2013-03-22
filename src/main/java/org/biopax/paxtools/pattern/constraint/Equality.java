@@ -4,6 +4,8 @@ import org.biopax.paxtools.pattern.Match;
 
 /**
  * Checks identity of two elements.
+ * Size = 2.
+ * Checks if e1 == e2.
  *
  * @author Ozgun Babur
  */
@@ -20,6 +22,7 @@ public class Equality extends ConstraintAdapter
 	 */
 	public Equality(boolean equals)
 	{
+		super(2);
 		this.equals = equals;
 	}
 
@@ -35,15 +38,5 @@ public class Equality extends ConstraintAdapter
 		assert ind.length == 2;
 
 		return (match.get(ind[0]) == match.get(ind[1])) == equals;
-	}
-
-	/**
-	 * This constraint checks two elements.
-	 * @return 2
-	 */
-	@Override
-	public int getVariableSize()
-	{
-		return 2;
 	}
 }

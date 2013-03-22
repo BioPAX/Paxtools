@@ -131,7 +131,6 @@ public class PatternBox
 	public static Pattern consecutiveCatalysis(Set<String> ubiqueIDs)
 	{
 		Pattern p = new Pattern(EntityReference.class, "first ER");
-		int i = 0;
 		p.addConstraint(ConBox.erToPE(), "first ER", "first simple controller PE");
 		p.addConstraint(ConBox.linkToComplex(), "first simple controller PE", "first controller PE");
 		p.addConstraint(ConBox.peToControl(), "first controller PE", "first Control");

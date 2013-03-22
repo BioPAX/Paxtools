@@ -27,7 +27,7 @@ public class IDConstraint extends ConstraintAdapter
 	}
 
 	/**
-	 * This is a point constraint.
+	 * Returns 1.
 	 * @return 1
 	 */
 	@Override
