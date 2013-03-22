@@ -209,7 +209,8 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
     }
 
     @Override
-    public int equivalenceCode() {
+    public int equivalenceCode()
+    {
         SequenceRegionVocabulary siteType = this.getFeatureLocationType();
         int code = siteType == null ? 0 : siteType.hashCode();
         return code + 13 * this.locationCode();

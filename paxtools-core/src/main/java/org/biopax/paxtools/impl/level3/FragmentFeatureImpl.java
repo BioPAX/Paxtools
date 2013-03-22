@@ -28,14 +28,6 @@ public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFe
 		return FragmentFeature.class;
 	}
 
-
-	@Override
-	public int equivalenceCode()
-	{
-		return this.getEntityFeatureOf().equivalenceCode() + super.locationCode();
-	}
-
-
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
