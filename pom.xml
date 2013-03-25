@@ -44,7 +44,6 @@
 		<log4j.version>1.2.13</log4j.version>
 		<hibernate-core.version>3.6.9.Final</hibernate-core.version>
 		<hibernate-search.version>3.4.0.Final</hibernate-search.version>
-		<jpa.api.version>1.0.0-</jpa.api.version>
 		<commons-lang.version>2.4</commons-lang.version>
 		<collections-generic.version>4.01</collections-generic.version>
 		
@@ -327,7 +326,7 @@
         		<configuration>
         			<autoVersionSubmodules>true</autoVersionSubmodules>
         		</configuration>
-      		</plugin>  					
+      		</plugin> 
 		</plugins>
 	</build>
 
@@ -354,7 +353,7 @@
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.0.Final</version>
+            <version>1.0.1.Final</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -488,10 +487,36 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+              		<linksource>true</linksource>
+              		<notimestamp>true</notimestamp>
+              	<links combine.children="append">
+              		<link>http://docs.jboss.org/hibernate/search/3.4/api/</link>
+              		<link>http://docs.jboss.org/hibernate/core/3.6/javadocs/</link>
+              	</links>
+            	</configuration>
+            	<reportSets>
+              		<reportSet>
+                		<id>aggregate</id>
+                		<inherited>false</inherited>
+                		<reports>
+                  			<report>aggregate</report>
+                		</reports>
+              		</reportSet>
+            	</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
+				<reportSets>
+              		<reportSet>
+                		<id>aggregate</id>
+                		<inherited>false</inherited>
+                		<reports>
+                  			<report>aggregate</report>
+                		</reports>
+              		</reportSet>
+            	</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
