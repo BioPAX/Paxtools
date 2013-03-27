@@ -201,7 +201,7 @@
 	<scm>
 		<connection>scm:hg:http://hg.code.sf.net/p/biopax/paxtools</connection>
 		<developerConnection>scm:hg:ssh://${scm.username}@hg.code.sf.net/p/biopax/paxtools</developerConnection>
-		<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
+		<url>http://sourceforge.net/p/biopax/paxtools</url>
 	  	<tag>HEAD</tag>
 	</scm>
 
