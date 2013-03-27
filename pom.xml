@@ -130,7 +130,7 @@
 
 	<issueManagement>
 		<system>SF</system>
-		<url>https://sourceforge.net/tracker/?group_id=85345</url>
+		<url>http://sourceforge.net/p/biopax/bugs/</url>
 	</issueManagement>
 
 	<ciManagement>
@@ -199,10 +199,8 @@
 	</profiles>
 
 	<scm>
-		<connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
-		<developerConnection>
-			scm:hg:ssh://${scm.username}@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
-		</developerConnection>
+		<connection>scm:hg:http://hg.code.sf.net/p/biopax/paxtools</connection>
+		<developerConnection>scm:hg:ssh://${scm.username}@hg.code.sf.net/p/biopax/paxtools</developerConnection>
 		<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
 	  	<tag>HEAD</tag>
 	</scm>
