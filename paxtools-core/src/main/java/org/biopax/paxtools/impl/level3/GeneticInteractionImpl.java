@@ -7,9 +7,9 @@ import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -41,7 +41,7 @@ public class GeneticInteractionImpl extends InteractionImpl
 
     private Score interactionScore;
 
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)
 	public PhenotypeVocabulary getPhenotype()
     {
@@ -53,7 +53,7 @@ public class GeneticInteractionImpl extends InteractionImpl
         this.phenotype = phenotype;
     }
 
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
     public Score getInteractionScore()
     {

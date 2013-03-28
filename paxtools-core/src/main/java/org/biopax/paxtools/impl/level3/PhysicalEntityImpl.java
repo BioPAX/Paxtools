@@ -57,8 +57,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 	@Fields({
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_PATHWAY, store=Store.YES, analyze=Analyze.YES, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 		//- can even associate small molecules with organisms (impossible to do explicitly in BioPAX)!
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -68,7 +68,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		return componentOf;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
 	public CellularLocationVocabulary getCellularLocation()
 	{
@@ -80,7 +80,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="feature")
@@ -111,7 +111,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.feature = feature;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="notfeature")
@@ -146,9 +146,9 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	@Fields({
 		//using memberPhysicalEntity in addition to other props to generate "pathway" index field helps
 		//in rare cases when this one does not participate in any interaction or complex but some of its members do
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
-		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+		@Field(name=FIELD_PATHWAY, store=Store.YES, analyze=Analyze.YES, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
+		@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
@@ -181,8 +181,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 
 	@Fields({
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
+		@Field(name=FIELD_PATHWAY, store=Store.YES, analyze=Analyze.YES, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
 	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")

@@ -7,8 +7,8 @@ import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.FieldBridge;
@@ -148,7 +148,7 @@ public class  ControlImpl extends InteractionImpl
 	}
 
 	
-	@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
+	@Field(name=FIELD_PATHWAY, store=Store.YES, analyze=Analyze.YES, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PathwayImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="pathwayController")

@@ -16,7 +16,7 @@ final class FieldBridgeUtils {
 	private static void addFieldToDocument(LuceneOptions luceneOptions, String field, 
 			String value, Document document, boolean lowercase) {
 		/* merely in all cases, lowercase must be TRUE (though it's hard to explain here why,
-		 * but - it's about the @Field(index=Index.UN_TOKENIZED,..), MultiFieldQueryParser, 
+		 * but - it's about the @Field(analyze=Analyze.NO,..), MultiFieldQueryParser, 
 		 * and StandardAnayzer to work well together... Rabbit's hole...)
 		 */
 		String v = (lowercase) ?  value.toLowerCase() : value;

@@ -12,9 +12,9 @@ import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -66,7 +66,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="term")
-	@Field(name = FIELD_TERM, index = Index.TOKENIZED)
+	@Field(name = FIELD_TERM, analyze=Analyze.YES)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getTerm()
 	{

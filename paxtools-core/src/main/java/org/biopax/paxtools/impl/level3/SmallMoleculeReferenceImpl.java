@@ -10,7 +10,7 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -46,7 +46,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 
     
     
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     @Boost(1.1f)
     public String getChemicalFormula()
 	{
@@ -71,7 +71,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	}
 
     // Property structure
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = ChemicalStructureImpl.class)//, cascade={CascadeType.ALL})
     public ChemicalStructure getStructure()
 	{

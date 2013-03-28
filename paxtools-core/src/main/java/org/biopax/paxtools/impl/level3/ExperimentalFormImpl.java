@@ -7,9 +7,9 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -50,7 +50,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 		return ExperimentalForm.class;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ExperimentalFormVocabularyImpl.class)
 	@JoinTable(name="experimentalFormDescription")
@@ -98,7 +98,7 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
         }
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ManyToMany(targetEntity = EntityFeatureImpl.class)
     @JoinTable(name="experimentalFeature")

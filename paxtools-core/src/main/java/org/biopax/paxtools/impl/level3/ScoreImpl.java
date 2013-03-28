@@ -7,7 +7,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -48,7 +48,7 @@ public class ScoreImpl extends XReferrableImpl implements Score
 	////////////////////////////////////////////////////////////////////////////
 
 	
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
 	@Boost(1.1f)
     public String getValue()
 	{

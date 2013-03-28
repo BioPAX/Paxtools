@@ -9,7 +9,7 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -55,7 +55,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="author")
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAuthor()
@@ -83,7 +83,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="source")
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getSource()
@@ -109,7 +109,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     @Boost(1.1f)
 	@Column(columnDefinition="LONGTEXT")
  	public String getTitle()
@@ -126,7 +126,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="url")
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     @Boost(1.1f)
     @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getUrl()
@@ -154,7 +154,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
     // Property year
     
     @Column(name="published") //default one caused MySQLIntegrityConstraintViolationException: Column 'year' in field list is ambiguous
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     @Boost(1.1f)
 	public int getYear()
 	{

@@ -13,7 +13,7 @@ import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
@@ -57,8 +57,8 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	
 	@Fields({
-		@Field(name=FIELD_XREFID, index=Index.UN_TOKENIZED, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f)),
-		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+		@Field(name=FIELD_XREFID, analyze=Analyze.NO, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f)),
+		@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = XrefImpl.class)

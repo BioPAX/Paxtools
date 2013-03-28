@@ -9,7 +9,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -65,7 +65,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
     // sequenceInterval interface implementation
     //
     ////////////////////////////////////////////////////////////////////////////
-    @Field(name = FIELD_KEYWORD, store=Store.YES, index = Index.TOKENIZED, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name = FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
     public SequenceSite getSequenceIntervalBegin() {
         return sequenceIntervalBegin;
@@ -75,7 +75,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
         this.sequenceIntervalBegin = sequenceIntervalBegin;
     }
 
-    @Field(name = FIELD_KEYWORD, store=Store.YES, index = Index.TOKENIZED, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name = FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
     public SequenceSite getSequenceIntervalEnd() {
         return sequenceIntervalEnd;

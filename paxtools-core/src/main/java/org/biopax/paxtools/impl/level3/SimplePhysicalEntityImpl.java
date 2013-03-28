@@ -14,7 +14,7 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
@@ -35,8 +35,8 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	}
 	
 	@Fields({
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
-		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+		@Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
+		@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)

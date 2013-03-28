@@ -11,7 +11,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -126,7 +126,7 @@ public class ConversionImpl extends InteractionImpl
 	}
 
 // TODO not sure whether "data" search filed is required here (havin "data" from 'participant' property may be enough)...
-//	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+//	@Field(name=FIELD_KEYWORD, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
 	@JoinTable(name="conversionstoichiometry")		

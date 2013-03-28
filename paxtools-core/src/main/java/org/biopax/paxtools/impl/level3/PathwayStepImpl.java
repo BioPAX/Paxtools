@@ -13,7 +13,7 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -93,7 +93,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
@@ -123,7 +123,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.stepProcess = stepProcess;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence") 	
@@ -150,8 +150,8 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	}
 
 	@Fields({
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
+		@Field(name=FIELD_PATHWAY, store=Store.YES, analyze=Analyze.YES, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
+		@Field(name=FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
 	})
 	@ManyToOne(targetEntity = PathwayImpl.class)
 	public Pathway getPathwayOrderOf()

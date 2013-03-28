@@ -9,7 +9,7 @@ import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
@@ -38,8 +38,8 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 
 	
     @Fields({
-    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(3.0f)),
-    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    	@Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(3.0f)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     })
 	@Column(columnDefinition="LONGTEXT")
 	protected String getStandardNameX()
@@ -63,8 +63,8 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 	
     @Fields({
-    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.5f)),
-    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    	@Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(2.5f)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     })
 	@Column(columnDefinition="LONGTEXT")
 	protected String getDisplayNameX()
@@ -91,8 +91,8 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
     @ElementCollection
 	@JoinTable(name="name")
     @Fields({
-    	@Field(name=FIELD_NAME, index=Index.TOKENIZED, boost=@Boost(2.5f), bridge=@FieldBridge(impl=SetStringBridge.class)),
-    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=SetStringBridge.class))
+    	@Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(2.5f), bridge=@FieldBridge(impl=SetStringBridge.class)),
+    	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge=@FieldBridge(impl=SetStringBridge.class))
     })
 	@Column(columnDefinition="LONGTEXT")
 	public Set<String> getName()

@@ -6,9 +6,9 @@ import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -34,7 +34,7 @@ public class GeneImpl extends EntityImpl implements Gene
         return Gene.class;
     }
 
-    @Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED)
+    @Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO)
     @FieldBridge(impl=OrganismFieldBridge.class)
 	@ManyToOne(targetEntity = BioSourceImpl.class)
     public BioSource getOrganism()
