@@ -7,6 +7,8 @@ import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -19,7 +21,7 @@ import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentInters
 @Entity
 @Proxy(proxyClass=Evidence.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EvidenceImpl extends XReferrableImpl implements Evidence
 {

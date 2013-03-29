@@ -2,6 +2,8 @@ package org.biopax.paxtools.impl;
 
 import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -13,7 +15,8 @@ import java.util.Map;
 @Proxy(proxyClass= BioPAXElement.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(length=40)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate
+@DynamicInsert
 @NamedQueries({
 	@NamedQuery(name="org.biopax.paxtools.impl.BioPAXElementExists",
 				query="select 1 from BioPAXElementImpl where pk=:md5uri")
@@ -58,7 +61,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	@SuppressWarnings("unused") //is used by Hibernate
 	@Id
 	@Column(name="pk", length=32) // enough to save MD5 digest Hex.
-	private String getPk() {
+	@Override
+	public String getPk() {
 		return _pk;
 	}
 

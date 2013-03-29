@@ -11,6 +11,8 @@ import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -29,7 +31,7 @@ import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentInters
 
 @javax.persistence.Entity
 @Proxy(proxyClass= Entity.class)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class EntityImpl extends NamedImpl implements Entity
 {
@@ -105,7 +107,7 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	@Field(name=FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
 	@FieldBridge(impl = DataSourceFieldBridge.class)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = ProvenanceImpl.class)//, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ProvenanceImpl.class)
 	@JoinTable(name="dataSource")
 	public Set<Provenance> getDataSource()
 	{

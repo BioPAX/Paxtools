@@ -25,7 +25,7 @@ import static org.hibernate.annotations.FetchProfile.FetchOverride;
  */
 @Entity
 @Proxy(proxyClass= Level3Element.class)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 //Fetch Profiles
  @FetchProfile(name = "completer", fetchOverrides = {
