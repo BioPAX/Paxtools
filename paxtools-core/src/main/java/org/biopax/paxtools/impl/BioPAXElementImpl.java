@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl;
 
-import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -8,6 +7,8 @@ import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +59,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	// Primary Key
 	// could not use names like: 'key' (SQL conflict), 'id', 'idx' (conflicts with the existing prop. in a child class), etc...
 	// @GeneratedValue did not work (stateless session is unable to save/resolve object references and inverse props)
-	@SuppressWarnings("unused") //is used by Hibernate
 	@Id
 	@Column(name="pk", length=32) // enough to save MD5 digest Hex.
 	@Override
@@ -112,7 +112,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	private void setRDFId(String id)
     {
         this.uri = id;
-        this._pk = ModelUtils.md5hex(id);
+        this._pk = md5hex(id);
     }
 
     public String toString()
@@ -124,6 +124,37 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     @Transient
     public Map<String, Object> getAnnotations() {
 		return annotations;
+	}
+    
+
+    //to calculate the PK from URI
+    public static final MessageDigest MD5_DIGEST; 
+
+	static {
+		try {
+			MD5_DIGEST = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("Cannot instantiate MD5 MessageDigest!", e);
+		}
+	}
+    
+
+	/**
+	 * Utility method that is called once per object
+	 * to generate the primary key {@link #getPk()}
+	 * from URI. URIs can be long and are case sensitive,
+	 * and therefore would make bad DB primary key.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private static String md5hex(String id) {
+		byte[] digest = MD5_DIGEST.digest(id.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (byte b : digest)
+			sb.append(Integer.toHexString((int) (b & 0xff) | 0x100).substring(1, 3));
+		String hex = sb.toString();
+		return hex;
 	}
     
 }

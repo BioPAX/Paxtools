@@ -8,7 +8,6 @@ import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.junit.Test;
 
@@ -204,45 +203,9 @@ public class ModelUtilsTest {
 		assertEquals(1, g1.getComment().size()); // - he-he, and a new comment was generated!
 		assertNull(pr1.getOrganism()); // because ERs were filtered!
 		
-		ModelUtils.generateEntityOrganismXrefs(model);	
 		//printModel(model);
 	}
-	
-	
-	@Test
-	public final void testA() {
-		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
-		Provenance pro1 = model.addNew(Provenance.class, "urn:miriam:pid.pathway");
-		Protein p1 = model.addNew(Protein.class, "p1"); 
-		Pathway pw1 = model.addNew(Pathway.class, "pathway");
-		Pathway pw2 = model.addNew(Pathway.class, "sub_pathway");
-		Conversion conv1 = model.addNew(Conversion.class, "conv1");
-		GeneticInteraction gi1 = model.addNew(GeneticInteraction.class, "gi1");
-		Gene g1 = model.addNew(Gene.class, "gene1");
 		
-		pw1.addDataSource(pro1);
-		pw1.setStandardName("Pathway");
-		pw1.addPathwayComponent(pw2);
-		pw1.addPathwayComponent(conv1);
-		conv1.addLeft(p1);
-		
-		pw2.setStandardName("Sub-Pathway");
-		pw2.addDataSource(pro1);
-		pw2.addPathwayComponent(gi1);
-		gi1.addParticipant(g1);
-		
-		ModelUtils.generateEntityProcessXrefs(model, Process.class);
-		
-		//printModel(model);
-		
-		assertEquals(4, model.getObjects(RelationshipXref.class).size()); //- for 2 pathways and 2 interactions!
-		assertEquals(1, model.getObjects(RelationshipTypeVocabulary.class).size());
-		for(Entity e : model.getObjects(Entity.class)) {
-			if(!e.equals(pw1))
-				assertFalse(e.getXref().isEmpty());
-		}
-	}
-	
 	private void printModel(Model model) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		new SimpleIOHandler().convertToOWL(model, bytes);
