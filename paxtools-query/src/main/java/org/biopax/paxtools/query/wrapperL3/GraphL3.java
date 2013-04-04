@@ -24,10 +24,7 @@ public class GraphL3 extends AbstractGraph
 	 */
 	protected Model model;
 
-	/**
-	 * RDF IDs of the ubiquitous molecules.
-	 */
-	protected Set<String> ubiqueIDs;
+	protected List<Filter> filters;
 
 	/**
 	 * Log for logging.
@@ -38,21 +35,33 @@ public class GraphL3 extends AbstractGraph
 	 * Constructor with the model and the IDs of the ubiquitous molecules. IDs can be null, meaning
 	 * no labeling is desired.
 	 * @param model Model to wrap
-	 * @param ubiqueIDs RDF IDs of ubiques
+	 * @param filters for filtering graph elements
 	 */
-	public GraphL3(Model model, Set<String> ubiqueIDs)
+	public GraphL3(Model model, Filter... filters)
 	{
 		assert model.getLevel() == BioPAXLevel.L3;
 		this.model = model;
-		setUbiqueIDs(ubiqueIDs);
+
+		if (filters.length > 0)
+		{
+			this.filters = Arrays.asList(filters);
+		}
 	}
 
 	/**
-	 * @param ubiqueIDs IDs of ubiquitous molecules
+	 * There must be no filter opposing to traverse this object to traverse it.
+	 * @param ele element to check
+	 * @return true if ok to traverse
 	 */
-	public void setUbiqueIDs(Set<String> ubiqueIDs)
+	private boolean passesFilters(Level3Element ele)
 	{
-		this.ubiqueIDs = ubiqueIDs;
+		if (filters == null) return true;
+
+		for (Filter filter : filters)
+		{
+			if (!filter.okToTraverse(ele)) return false;
+		}
+		return true;
 	}
 
 	/**
@@ -63,17 +72,18 @@ public class GraphL3 extends AbstractGraph
 	@Override
 	public Node wrap(Object obj)
 	{
+		// Check if the object is level3
+		if (!(obj instanceof Level3Element)) throw new IllegalArgumentException(
+			"An object other than a Level3Element is trying to be wrapped: " + obj);
+
+		// Check if the object passes the filter
+		if (!passesFilters((Level3Element) obj)) return null;
+
+		// Wrap if traversible
+
 		if (obj instanceof PhysicalEntity)
 		{
-			PhysicalEntity pe = (PhysicalEntity) obj;
-			PhysicalEntityWrapper pew = new PhysicalEntityWrapper(pe, this);
-
-			if (ubiqueIDs != null && ubiqueIDs.contains(pe.getRDFId()))
-			{
-				pew.setUbique(true);
-			}
-
-			return pew;
+			return new PhysicalEntityWrapper((PhysicalEntity) obj, this);
 		}
 		else if (obj instanceof Conversion)
 		{
