@@ -111,13 +111,27 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private static final Color BACKGROUND = Color.WHITE;
 
+	/**
+	 * Names of Pathway Commons resources.
+	 */
 	private static final Object[] PC_RES_NAMES = new Object[]{
 		"All-Data", "Reactome", "NCI-PID", "HumanCyc", "PhosphositePlus", "Panther"};
 
+	/**
+	 * The URL components of the Pathway Commons resources.
+	 */
 	private static final String[] PC_RES_URL = new String[]{
 		"all", "reactome", "nci_nature", "humancyc", "phosphositeplus", "panther"};
 
+	/**
+	 * The name of the file for IDs of ubiquitous molecules.
+	 */
+	private static final String UBIQUE_FILE = "ubiquitous-ids.txt";
 
+	/**
+	 * Resource file for IDs of ubiquitous molecules.
+	 */
+	private static Set<String> ubiqueIDs;
 
 	/**
 	 * Runs the program showing the dialog.
@@ -372,7 +386,12 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		List<Miner> minerList = new ArrayList<Miner>();
 		if (miners != null) minerList.addAll(Arrays.asList(miners));
 		minerList.add(new ControlsStateChangeMiner());
+		minerList.add(new ControlsStateChangeDetailedMiner());
 		minerList.add(new TranscriptionalRegulationMiner());
+		minerList.add(new DegradesMiner());
+		minerList.add(new AffectsDegradationMiner());
+		minerList.add(new ConsecutiveCatalysisMiner(ubiqueIDs));
+		minerList.add(new UbiquitousIDMiner());
 		return minerList.toArray(new Object[minerList.size()]);
 	}
 
@@ -390,6 +409,11 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private void mine()
 	{
+		// Constructing the pattern before loading any model for a debug friendly code. Otherwise if
+		// loading model takes time and an exception occurs in pattern construction, it is just too
+		// much wait for nothing.
+		((Miner) patternCombo.getSelectedItem()).getPattern();
+
 		// Prepare progress bar
 
 		ProgressWatcher prg = new ProgressWatcher()
@@ -579,4 +603,30 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		catch (IOException e){return false;}
 	}
 
+	/**
+	 * Load ubique IDs if exists.
+	 */
+	static
+	{
+		try
+		{
+			File f = new File(UBIQUE_FILE);
+
+			if (f.exists())
+			{
+				ubiqueIDs = new HashSet<String>();
+				BufferedReader reader = new BufferedReader(new FileReader(f));
+
+				for (String line = reader.readLine(); line != null; line = reader.readLine())
+				{
+					ubiqueIDs.add(line);
+				}
+
+				reader.close();
+
+			}
+			else throw new IOException();
+		}
+		catch (IOException e){System.out.println("Warning: no ubiquitous id file is detected.");}
+	}
 }

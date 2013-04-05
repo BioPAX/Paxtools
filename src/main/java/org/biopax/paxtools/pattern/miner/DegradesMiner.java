@@ -1,7 +1,6 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Catalysis;
 import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
@@ -11,28 +10,23 @@ import org.biopax.paxtools.pattern.constraint.Type;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Miner for the transcriptional regulation pattern.
+ * Miner for the degradation pattern.
  * @author Ozgun Babur
  */
-public class TranscriptionalRegulationMiner extends MinerAdapter
+public class DegradesMiner extends MinerAdapter
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public TranscriptionalRegulationMiner()
+	public DegradesMiner()
 	{
-		super("Transcriptional-regulation", "This pattern finds relations where first protein " +
-			"is controlling transcriptional activity of the second protein. The output is either " +
-			"\"A -> B\" or \"A -| B\", where -> represents trans-activation and -| represents " +
-			"trans-inhibition. This pattern requires that transcription to be modeled with a " +
-			"TemplateReaction.");
+		super("Degrades-or-blocks-it", "This pattern finds relations where first protein " +
+			"is controlling a Conversion that degrades the second protein. If the Control is " +
+			"positive the relation is DEGRADES, else it is BLOCKS_DEGRADATION");
 	}
 
 	/**
@@ -42,14 +36,12 @@ public class TranscriptionalRegulationMiner extends MinerAdapter
 	@Override
 	public Pattern constructPattern()
 	{
-		Pattern p = PatternBox.transcriptionWithTemplateReac();
-		p.addConstraint(new Type(ProteinReference.class), "product ER");
-		return p;
+		return PatternBox.degradation();
 	}
 
 	/**
-	 * Writes the result as "A -> B" or "A -| B", where A and B are gene symbols, -> is
-	 * transctivation, -| is transinhibition, and whitespace is tab.
+	 * Writes the result as "A DEGRADES B" or "A BLOCKS_DEGRADATION B", where A and B are gene
+	 * symbols, and whitespace is tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -57,13 +49,13 @@ public class TranscriptionalRegulationMiner extends MinerAdapter
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		getPattern().updateLabel("TF PR", "Upstream");
-		getPattern().updateLabel("product ER", "Downstream");
+		getPattern().updateLabel("upstream PR", "Upstream");
+		getPattern().updateLabel("downstream PR", "Downstream");
 		writeResultAsSIF(matches, out, true, "Upstream", "Downstream");
 	}
 
 	/**
-	 * The relation can be either -> for transactivation, or -| for transinhibition.
+	 * The relation can be either DEGRADES or BLOCKS_DEGRADATION.
 	 * @param m the match
 	 * @return type
 	 */
@@ -72,6 +64,6 @@ public class TranscriptionalRegulationMiner extends MinerAdapter
 	{
 		Control con = (Control) m.get("Control", getPattern());
 		return con.getControlType() != null && con.getControlType().toString().startsWith("I") ?
-			"-|" : "->";
+			"BLOCKS_DEGRADATION" : "DEGRADES";
 	}
 }

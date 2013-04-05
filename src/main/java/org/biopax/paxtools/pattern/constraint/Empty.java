@@ -48,7 +48,7 @@ public class Empty extends ConstraintAdapter
 	}
 
 	/**
-	 * CHecks if the wrapped Constraint can generate any elements. THis satisfies if it cannot.
+	 * Checks if the wrapped Constraint can generate any elements. This satisfies if it cannot.
 	 * @param match current pattern match
 	 * @param ind mapped indices
 	 * @return true if the wrapped Constraint generates nothing

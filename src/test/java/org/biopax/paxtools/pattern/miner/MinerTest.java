@@ -1,14 +1,10 @@
 package org.biopax.paxtools.pattern.miner;
 
-import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.pattern.Constraint;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.constraint.ConBox;
-import org.biopax.paxtools.pattern.constraint.ConstraintAdapter;
 import org.biopax.paxtools.pattern.constraint.Type;
 
 import java.io.*;
@@ -59,7 +55,7 @@ public class MinerTest
 			public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 				throws IOException
 			{
-				writeResultAsPair(matches, out, false, "Protein 1", "Protein 2");
+				writeResultAsSIF(matches, out, false, "Protein 1", "Protein 2");
 			}
 		};
 

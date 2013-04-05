@@ -138,6 +138,7 @@ public class PatternBox
 		p.addConstraint(new ParticipatingPE(RelType.OUTPUT, false), "first Control", "first Conversion", "linker PE");
 		if (ubiqueIDs != null) p.addConstraint(ConBox.notUbique(ubiqueIDs), "linker PE");
 		p.addConstraint(new ParticipatesInConv(RelType.INPUT, false), "linker PE", "second Conversion");
+		p.addConstraint(ConBox.equal(false), "first Conversion", "second Conversion");
 		p.addConstraint(new RelatedControl(RelType.INPUT), "linker PE", "second Conversion", "second Control");
 		p.addConstraint(ConBox.controllerPE(), "second Control", "second controller PE");
 		p.addConstraint(new NOT(ConBox.compToER()), "second controller PE", "first ER");
@@ -302,16 +303,32 @@ public class PatternBox
 	 */
 	public static Pattern degradation()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "upstream ER");
-		p.addConstraint(ConBox.erToPE(), "upstream SPE");
+		Pattern p = new Pattern(ProteinReference.class, "upstream PR");
+		p.addConstraint(ConBox.erToPE(), "upstream PR", "upstream SPE");
 		p.addConstraint(ConBox.linkToComplex(), "upstream SPE", "upstream PE");
 		p.addConstraint(ConBox.peToControl(), "upstream PE", "Control");
 		p.addConstraint(ConBox.controlToConv(), "Control", "Conversion");
-		p.addConstraint(new Empty(ConBox.right()), "Conversion");
-		p.addConstraint(ConBox.left(), "Conversion", "left PE");
-		p.addConstraint(ConBox.linkToSimple(), "left PE", "left SPE");
-		p.addConstraint(ConBox.peToER(), "left SPE", "downstream ER");
-		p.addConstraint(ConBox.equal(false), "upstream ER", "downstream ER");
+		p.addConstraint(new Empty(new InputOrOutput(RelType.OUTPUT, true)), "Conversion");
+		p.addConstraint(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
+		p.addConstraint(ConBox.linkToSimple(), "input PE", "input SPE");
+		p.addConstraint(ConBox.peToER(), "input SPE", "downstream PR");
+		p.addConstraint(ConBox.equal(false), "upstream PR", "downstream PR");
+		p.addConstraint(ConBox.type(ProteinReference.class), "downstream PR");
+		return p;
+	}
+
+	/**
+	 * Finds cases where protein A changes state of B, and B is then degraded.
+	 * @return the pattern
+	 */
+	public static Pattern controlsDegradationIndirectly()
+	{
+		Pattern p = controlsStateChange(true);
+		p.addConstraint(new Type(ProteinReference.class), "controller ER");
+		p.addConstraint(new Type(ProteinReference.class), "changed ER");
+		p.addConstraint(new ParticipatesInConv(RelType.INPUT, true), "output PE", "degrading Conv");
+		p.addConstraint(new Empty(new InputOrOutput(RelType.OUTPUT, true)), "degrading Conv");
+		p.addConstraint(ConBox.equal(false), "degrading Conv", "Conversion");
 		return p;
 	}
 }

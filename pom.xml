@@ -6,10 +6,10 @@
 
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>pattern</artifactId>
-	<version>4.1.7-SNAPSHOT</version>
+	<version>1.0</version>
 
 	<properties>
-		<paxtools.version>4.1.7-SNAPSHOT</paxtools.version>
+		<paxtools.version>4.2.0-SNAPSHOT</paxtools.version>
 	</properties>
 
 	<repositories>
@@ -58,14 +58,14 @@
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.2-beta-5</version>
 					<configuration>
-						<finalName>biopax-pattern</finalName>
+						<finalName>biopax-pattern-${project.version}</finalName>
 						<appendAssemblyId>false</appendAssemblyId>
 						<descriptorRefs>
 							<descriptorRef>jar-with-dependencies</descriptorRef>
 						</descriptorRefs>
 						<archive>
 							<manifest>
-								<mainClass>org.biopax.paxtools.pattern.Main</mainClass>
+								<mainClass>org.biopax.paxtools.pattern.miner.Dialog</mainClass>
 								<addClasspath>true</addClasspath>
 							</manifest>
 						</archive>
@@ -105,10 +105,15 @@
 
     <distributionManagement>
         <repository>
-            <id>ozgun.repo</id>
-            <name>Ozgun's Repository</name>
-            <url>scp://cbio.mskcc.org/home/ozgun/public_html/m2repo</url>
+            <id>pattern.repo</id>
+            <name>Pattern repository</name>
+            <url>file://${basedir}/wiki/repository/</url>
         </repository>
+        <!--<repository>-->
+            <!--<id>ozgun.repo</id>-->
+            <!--<name>Ozgun's Repository</name>-->
+            <!--<url>scp://cbio.mskcc.org/home/ozgun/public_html/m2repo</url>-->
+        <!--</repository>-->
     </distributionManagement>
 
 </project>

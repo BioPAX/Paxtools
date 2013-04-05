@@ -1,5 +1,6 @@
 package org.biopax.paxtools.pattern.constraint;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.pattern.Constraint;
 import org.biopax.paxtools.pattern.MappedConst;
 
@@ -428,4 +429,12 @@ public class ConBox
 		return new Equality(equal);
 	}
 
+	/**
+	 * Creates an element type constraint.
+	 * @return the constraint
+	 */
+	public static Constraint type(Class<? extends BioPAXElement> clazz)
+	{
+		return new Type(clazz);
+	}
 }

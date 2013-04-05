@@ -80,6 +80,7 @@ public class Pattern
 	{
 		assert ind.length > 0;
 		assert constr.getVariableSize() == ind.length;
+
 		for (int i = 0; i < (constr.canGenerate() ? ind.length - 1 : ind.length); i++)
 		{
 			assert ind[i] <= lastIndex;
@@ -108,6 +109,11 @@ public class Pattern
 		checkLabels(constr.canGenerate(), label);
 
 		int[] ind = convertLabelsToInds(label);
+
+		if (ind.length != constr.getVariableSize())
+		{
+			throw new IllegalArgumentException("Mapped elements do not match the constraint size.");
+		}
 
 		// This will also increment lastIndex if necessary
 		addConstraint(constr, ind);

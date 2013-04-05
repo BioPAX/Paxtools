@@ -9,25 +9,31 @@ import org.biopax.paxtools.pattern.constraint.Type;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Miner for the controls-state-change pattern.
+ * Miner for the consecutive-catalysis pattern.
  * @author Ozgun Babur
  */
-public class ControlsStateChangeMiner extends MinerAdapter
+public class ConsecutiveCatalysisMiner extends MinerAdapter
 {
+	/**
+	 * IDs of ubiquitous molecules.
+	 */
+	Set<String> ubiqueIDs = new HashSet<String>();
+
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsStateChangeMiner()
+	public ConsecutiveCatalysisMiner(Set<String> ubiqueIDs)
 	{
-		super("Controls-state-change", "Finds relations between proteins where the first one is " +
-			"controlling a reaction that changes the state of the second one. The reaction has " +
-			"to be a Conversion and modified Protein should be represented with different " +
-			"PhysicalEntity on each side. This pattern cannot determine the sign of the effect " +
-			"because it is hard to predict the effect of the modification.");
+		super("Consecutive-catalysis", "Finds two proteins, catalyzing different reactions, where" +
+			" an output of first reaction is input to second reaction.");
+
+		this.ubiqueIDs = ubiqueIDs;
 	}
 
 	/**
@@ -37,9 +43,9 @@ public class ControlsStateChangeMiner extends MinerAdapter
 	@Override
 	public Pattern constructPattern()
 	{
-		Pattern p = PatternBox.controlsStateChange(true);
-		p.addConstraint(new Type(ProteinReference.class), "controller ER");
-		p.addConstraint(new Type(ProteinReference.class), "changed ER");
+		Pattern p = PatternBox.consecutiveCatalysis(ubiqueIDs);
+		p.addConstraint(new Type(ProteinReference.class), "first ER");
+		p.addConstraint(new Type(ProteinReference.class), "second ER");
 		return p;
 	}
 
@@ -53,12 +59,12 @@ public class ControlsStateChangeMiner extends MinerAdapter
 		throws IOException
 	{
 		// Update labels (if not already updated with a previous call of this method)
-		if (getPattern().hasLabel("controller ER"))
+		if (getPattern().hasLabel("first ER"))
 		{
-			getPattern().updateLabel("controller ER", "Upstream");
-			getPattern().updateLabel("changed ER", "Downstream");
+			getPattern().updateLabel("first ER", "First-protein");
+			getPattern().updateLabel("second ER", "Second-protein");
 		}
 
-		writeResultAsSIF(matches, out, true, "Upstream", "Downstream");
+		writeResultAsSIF(matches, out, true, "First-protein", "Second-protein");
 	}
 }

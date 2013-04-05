@@ -3,6 +3,9 @@ package org.biopax.paxtools.pattern;
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.level3.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * This class takes two PhysicalEntity objects linked with generic or complex member relationships,
  * and prepares an array of PEs that link those.
@@ -19,8 +22,14 @@ public class PhysicalEntityChain
 	/**
 	 * Accessor to the modification term.
 	 */
-	protected static final PathAccessor modifAcc = 
+	protected static final PathAccessor PE2TERM =
 		new PathAccessor("PhysicalEntity/feature:ModificationFeature/modificationType/term");
+
+	/**
+	 * Accessor to the modification term.
+	 */
+	protected static final PathAccessor PE2FEAT =
+		new PathAccessor("PhysicalEntity/feature:ModificationFeature");
 
 	/**
 	 * Constructor with endpoints. The end points are differentiated with the terms small and big.
@@ -63,7 +72,7 @@ public class PhysicalEntityChain
 	 * @param target target at the member end
 	 * @param depth current depth
 	 * @param dir current direction to traverse homologies
-	 * @return
+	 * @return array of entities
 	 */
 	protected PhysicalEntity[] fillArray(PhysicalEntity parent, PhysicalEntity target, int depth,
 		int dir)
@@ -184,7 +193,7 @@ public class PhysicalEntityChain
 
 		for (PhysicalEntity pe : pes)
 		{
-			for (Object o : modifAcc.getValueFromBean(pe))
+			for (Object o : PE2TERM.getValueFromBean(pe))
 			{
 				String s = (String) o;
 				if (s.contains("inactiv")) inactive = true;
@@ -211,5 +220,20 @@ public class PhysicalEntityChain
 		INACTIVE,
 		BOTH,
 		NONE
+	}
+
+	/**
+	 * Collects modifications from the elements of the chain.
+	 * @return modifications
+	 */
+	public Set<ModificationFeature> getModifications()
+	{
+		Set<ModificationFeature> set = new HashSet<ModificationFeature>();
+
+		for (PhysicalEntity pe : pes)
+		{
+			set.addAll(PE2FEAT.getValueFromBean(pe));
+		}
+		return set;
 	}
 }
