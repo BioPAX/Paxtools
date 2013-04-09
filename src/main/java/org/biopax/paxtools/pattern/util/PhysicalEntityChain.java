@@ -1,4 +1,4 @@
-package org.biopax.paxtools.pattern;
+package org.biopax.paxtools.pattern.util;
 
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.level3.*;

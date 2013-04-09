@@ -4,7 +4,7 @@ import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.pattern.Match;
-import org.biopax.paxtools.pattern.PhysicalEntityChain;
+import org.biopax.paxtools.pattern.util.PhysicalEntityChain;
 
 import java.util.Collection;
 import java.util.HashSet;

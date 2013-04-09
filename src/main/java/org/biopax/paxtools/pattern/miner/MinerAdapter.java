@@ -5,7 +5,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
-import org.biopax.paxtools.pattern.PhysicalEntityChain;
+import org.biopax.paxtools.pattern.util.PhysicalEntityChain;
 import org.biopax.paxtools.pattern.util.HGNC;
 
 import java.io.IOException;

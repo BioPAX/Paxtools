@@ -2,7 +2,7 @@ package org.biopax.paxtools.pattern.constraint;
 
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.pattern.Match;
-import org.biopax.paxtools.pattern.PhysicalEntityChain;
+import org.biopax.paxtools.pattern.util.PhysicalEntityChain;
 
 /**
  * This constraint checks if two chains of linked physical entities are intersecting or not.

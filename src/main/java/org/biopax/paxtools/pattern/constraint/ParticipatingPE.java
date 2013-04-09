@@ -42,7 +42,7 @@ public class ParticipatingPE extends ConstraintAdapter
 
 	/**
 	 * This is a generative constraint.
-	 * @return
+	 * @return true if the constraint can generate candidates
 	 */
 	@Override
 	public boolean canGenerate()
