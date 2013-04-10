@@ -130,6 +130,11 @@ public class SBGNLayoutManager
 		// Clear inside of the compartmentGlyphs
 		for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
 		{
+			//Again add the members of compartments
+			for(Glyph memberGlyph:compGlyph.getGlyph() )
+			{
+				sbgn.getMap().getGlyph().add(memberGlyph);
+			}
 			compGlyph.getGlyph().clear();
 		}
 
