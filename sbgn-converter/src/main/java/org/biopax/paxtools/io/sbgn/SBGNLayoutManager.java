@@ -122,10 +122,10 @@ public class SBGNLayoutManager
 		graphMgr.updateBounds();
 
 		// Update the bounds
-		/*for (VNode vNode: this.root.children) 
+		for (VNode vNode: this.root.children) 
 		{ 
 			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
-		}*/
+		}
 		
 		// Clear inside of the compartmentGlyphs
 		for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
