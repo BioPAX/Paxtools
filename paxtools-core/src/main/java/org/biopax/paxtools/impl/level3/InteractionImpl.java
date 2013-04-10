@@ -10,11 +10,13 @@ import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -32,7 +34,7 @@ import java.util.Set;
 @Proxy(proxyClass= Interaction.class)
 @Indexed
 @Boost(1.5f)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class InteractionImpl extends ProcessImpl implements Interaction
 {
@@ -67,7 +69,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
 	@JoinTable(name="interactionType")
@@ -100,8 +102,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	 * Wrong! - because having ubiquitous small molecule participants there results in most pathways will be parent for this interaction :)
 	 */
 	@Fields({
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
-		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+		@Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
+		@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityImpl.class)

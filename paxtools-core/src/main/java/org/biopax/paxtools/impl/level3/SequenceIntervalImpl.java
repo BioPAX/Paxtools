@@ -7,9 +7,11 @@ import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -20,7 +22,7 @@ import javax.persistence.Transient;
 @Entity
 @Proxy(proxyClass = SequenceInterval.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SequenceIntervalImpl extends SequenceLocationImpl
         implements SequenceInterval {
@@ -65,7 +67,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
     // sequenceInterval interface implementation
     //
     ////////////////////////////////////////////////////////////////////////////
-    @Field(name = FIELD_KEYWORD, store=Store.YES, index = Index.TOKENIZED, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name = FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
     public SequenceSite getSequenceIntervalBegin() {
         return sequenceIntervalBegin;
@@ -75,7 +77,7 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
         this.sequenceIntervalBegin = sequenceIntervalBegin;
     }
 
-    @Field(name = FIELD_KEYWORD, store=Store.YES, index = Index.TOKENIZED, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name = FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
     public SequenceSite getSequenceIntervalEnd() {
         return sequenceIntervalEnd;

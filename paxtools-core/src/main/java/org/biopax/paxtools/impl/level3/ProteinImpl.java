@@ -10,7 +10,7 @@ import javax.persistence.Transient;
 @Entity
 @Proxy(proxyClass= Protein.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 
 @FetchProfile(name = "query", fetchOverrides = {

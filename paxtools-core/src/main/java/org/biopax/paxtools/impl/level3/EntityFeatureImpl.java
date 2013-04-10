@@ -8,9 +8,11 @@ import org.biopax.paxtools.util.DataSourceFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -22,7 +24,7 @@ import java.util.Set;
 @Entity
 @Proxy(proxyClass= EntityFeature.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
@@ -55,7 +57,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
-	@Field(name = FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED)
+	@Field(name = FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
 	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	public EntityReference getEntityFeatureOf(){
@@ -65,7 +67,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		ownerEntityReference = entityReference;
 	}
 	
-	@Field(name = FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED)
+	@Field(name = FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
 	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
@@ -74,7 +76,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return featureOf;
 	}
 
-	@Field(name = FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED)
+	@Field(name = FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
 	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")

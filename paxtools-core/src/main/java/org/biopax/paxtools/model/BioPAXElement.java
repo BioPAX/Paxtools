@@ -77,5 +77,8 @@ public interface BioPAXElement extends Serializable, Cloneable
      * @return
      */
     public Map<String, Object> getAnnotations();
+    
+    
+    public String getPk();
 	
 }

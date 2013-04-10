@@ -7,10 +7,12 @@ import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -21,7 +23,7 @@ import javax.persistence.Transient;
 @Entity
 @Proxy(proxyClass= SmallMoleculeReference.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMoleculeReference
 {
@@ -46,7 +48,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 
     
     
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED)
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
     @Boost(1.1f)
     public String getChemicalFormula()
 	{
@@ -71,7 +73,7 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	}
 
     // Property structure
-    @Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = ChemicalStructureImpl.class)//, cascade={CascadeType.ALL})
     public ChemicalStructure getStructure()
 	{

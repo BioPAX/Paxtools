@@ -67,6 +67,8 @@ public abstract class EventWrapper extends AbstractNode
 	protected void addToUpstream(BioPAXElement ele, Graph graph)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(ele);
+		if (node == null) return;
+
 		Edge edge = new EdgeL3(node, this, graph);
 		
 		if (isTranscription())
@@ -89,6 +91,8 @@ public abstract class EventWrapper extends AbstractNode
 	protected void addToDownstream(PhysicalEntity pe, Graph graph)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(pe);
+		if (node == null) return;
+
 		Edge edge = new EdgeL3(this, node, graph);
 
 		node.getUpstreamNoInit().add(edge);

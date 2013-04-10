@@ -7,10 +7,12 @@ import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
@@ -22,7 +24,7 @@ import java.util.Set;
 @Proxy(proxyClass= Pathway.class)
 @Indexed
 @Boost(1.7f)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PathwayImpl extends ProcessImpl implements Pathway
 {
@@ -58,7 +60,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="pathwayComponent")
@@ -89,7 +91,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 	// TODO not sure whether "data" index should be generated following pathwayOrder property (may have processes from other pathways)
-	//	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
+	//	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")
 	public Set<PathwayStep> getPathwayOrder()
@@ -119,7 +121,7 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-    @Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED)
+    @Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO)
     @FieldBridge(impl=OrganismFieldBridge.class)
 	@ManyToOne(targetEntity = BioSourceImpl.class)
 	public BioSource getOrganism()
