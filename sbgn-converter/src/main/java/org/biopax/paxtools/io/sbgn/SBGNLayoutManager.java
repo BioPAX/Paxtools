@@ -117,7 +117,6 @@ public class SBGNLayoutManager
 		createLEdges(sbgn.getMap().getArc(), this.layout);
 		graphMgr.updateBounds();
 		
-		
 		// Apply layout
 		this.layout.runLayout();
 		graphMgr.updateBounds();
@@ -129,10 +128,10 @@ public class SBGNLayoutManager
 		}*/
 		
 		// Clear inside of the compartmentGlyphs
-		/*for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
+		for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
 		{
 			compGlyph.getGlyph().clear();
-		}*/
+		}
 
 		return sbgn;
 	}
