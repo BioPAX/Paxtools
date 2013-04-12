@@ -13,6 +13,18 @@
 
     <name>SBGN-ML Converter Module</name>
 
+    <repositories>
+    <repository>
+        <id>chilay-repo</id>
+        <name>Repository for chilay project</name>
+        <url>http://maven-repo.chilay.googlecode.com/hg/</url>
+        <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+        </snapshots>
+    </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.biopax.paxtools</groupId>
@@ -26,8 +38,8 @@
         </dependency>
         <dependency>
         	<groupId>org.ivis</groupId>
-        	<artifactId>chilay</artifactId>
-        	<version>2.0</version>
+        	<artifactId>chilay-sbgn</artifactId>
+        	<version>[2,)</version>
         </dependency>
     </dependencies>
 
