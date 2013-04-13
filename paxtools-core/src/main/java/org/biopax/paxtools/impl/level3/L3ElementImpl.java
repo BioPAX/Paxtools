@@ -86,7 +86,6 @@ import static org.hibernate.annotations.FetchProfile.FetchOverride;
  @FetchOverride(entity = BiochemicalReactionImpl.class, association = "deltaH", mode = FetchMode.JOIN)
  }),
 @FetchProfile(name = "inverse_mul_properties_join", fetchOverrides = {
- // Reverse properties
  @FetchProfile.FetchOverride(entity = PhysicalEntityImpl.class, association = "memberPhysicalEntityOf", mode = FetchMode.JOIN),
  @FetchProfile.FetchOverride(entity = PhysicalEntityImpl.class, association = "controllerOf", mode = FetchMode.JOIN),
  @FetchProfile.FetchOverride(entity = PhysicalEntityImpl.class, association = "componentOf", mode = FetchMode.JOIN),
@@ -96,7 +95,7 @@ import static org.hibernate.annotations.FetchProfile.FetchOverride;
  @FetchProfile.FetchOverride(entity = ProcessImpl.class, association = "pathwayComponentOf", mode = FetchMode.JOIN),
  @FetchProfile.FetchOverride(entity = ProcessImpl.class, association = "stepProcessOf", mode = FetchMode.JOIN),
  @FetchProfile.FetchOverride(entity = ProcessImpl.class, association = "controlledOf", mode = FetchMode.JOIN),
- @FetchProfile.FetchOverride(entity = PathwayImpl.class, association = "controllerOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = PathwayImpl.class, association = "controllerOf", mode = FetchMode.JOIN)
  })
 })
 public abstract class L3ElementImpl extends BioPAXElementImpl
