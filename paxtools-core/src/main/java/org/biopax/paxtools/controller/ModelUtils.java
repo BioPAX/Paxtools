@@ -1318,37 +1318,6 @@ public final class ModelUtils
 		
 		return pathways;
 	}
-	
-	
-	/**
-	 * Collects parent Pathways using the top-down approach 
-	 * (for each pathway, select if it contains the object,
-	 * skip otherwise)
-	 * 
-	 * @param biopaxElement
-	 * @return
-	 */
-	public static Set<Pathway> getParentPathways(BioPAXElement biopaxElement, Model model) {
-		
-		final Set<Pathway> pathways = new HashSet<Pathway>();
-		
-		//shortcut
-		if(biopaxElement == null)
-			return pathways;
-		
-		LOG.debug("getParentPathways called: " + biopaxElement.getRDFId());
-		
-		final Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
-		for(Pathway pw : model.getObjects(Pathway.class)) {
-			if(fetcher.subgraphContains(pw, 
-					biopaxElement.getRDFId(), biopaxElement.getModelInterface()))
-			{
-				pathways.add(pw);
-			}
-		}
-		
-		return pathways;
-	}
 
 }
 
