@@ -2,19 +2,13 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.util.ChildDataStringBridge;
-import org.biopax.paxtools.util.OrganismFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -60,7 +54,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="pathwayComponent")
@@ -90,8 +83,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		}
 	}
 
-	// TODO not sure whether "data" index should be generated following pathwayOrder property (may have processes from other pathways)
-	//	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity = PathwayStepImpl.class, mappedBy = "pathwayOrderOf")
 	public Set<PathwayStep> getPathwayOrder()
@@ -121,8 +112,6 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	}
 
 
-    @Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO)
-    @FieldBridge(impl=OrganismFieldBridge.class)
 	@ManyToOne(targetEntity = BioSourceImpl.class)
 	public BioSource getOrganism()
 	{

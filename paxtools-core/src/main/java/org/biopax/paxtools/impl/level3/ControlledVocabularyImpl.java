@@ -66,7 +66,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	// Property term
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	@JoinTable(name="term")
 	@Field(name = FIELD_TERM, analyze=Analyze.YES)
 	@FieldBridge(impl=SetStringBridge.class)

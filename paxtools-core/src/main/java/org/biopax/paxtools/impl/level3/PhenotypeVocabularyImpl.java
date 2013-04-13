@@ -48,5 +48,4 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
 		this.patoData  = patoData;
 	}
 
-
 }

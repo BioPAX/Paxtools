@@ -4,17 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.DataSourceFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -57,8 +52,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	}
 
 	// protected 'entityFeatureXOf' property for use by Hibernate (simple setter)
-	@Field(name = FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
-	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
 	@ManyToOne(targetEntity = EntityReferenceImpl.class)
 	public EntityReference getEntityFeatureOf(){
 		return ownerEntityReference;
@@ -67,8 +60,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		ownerEntityReference = entityReference;
 	}
 	
-	@Field(name = FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
-	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "feature")
 	public Set<PhysicalEntity> getFeatureOf()
@@ -76,8 +67,6 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 		return featureOf;
 	}
 
-	@Field(name = FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
-	@FieldBridge(impl = DataSourceFieldBridge.class) // this infers ds from parent entities!
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "notFeature")
 	public Set<PhysicalEntity> getNotFeatureOf()

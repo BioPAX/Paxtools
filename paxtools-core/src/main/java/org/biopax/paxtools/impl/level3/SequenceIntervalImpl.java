@@ -3,17 +3,12 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.SequenceInterval;
 import org.biopax.paxtools.model.level3.SequenceSite;
-import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -67,7 +62,6 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
     // sequenceInterval interface implementation
     //
     ////////////////////////////////////////////////////////////////////////////
-    @Field(name = FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
     public SequenceSite getSequenceIntervalBegin() {
         return sequenceIntervalBegin;
@@ -77,7 +71,6 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
         this.sequenceIntervalBegin = sequenceIntervalBegin;
     }
 
-    @Field(name = FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge = @FieldBridge(impl = ChildDataStringBridge.class))
     @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
     public SequenceSite getSequenceIntervalEnd() {
         return sequenceIntervalEnd;

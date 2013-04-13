@@ -32,11 +32,6 @@ public final class XrefFieldBridge implements FieldBridge {
 					FieldBridgeUtils.addFieldToDocument(luceneOptions, name,
 							x.getId(), document); //note: this actually saves value.toLowercase
 			}
-		} else if (value instanceof String) { //it is 'id' value of an xref, etc.
-			 //NOTE: this actually saves value.toLowercase (as it is usually 
-			 //for tokenized fields and done automatically; and this is what we want)
-			FieldBridgeUtils.addFieldToDocument(luceneOptions, name,
-					(String)value, document);
 		}
 	}
 	

@@ -10,9 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -39,10 +37,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 
 	
-    @Fields({
-    	@Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(3.0f)),
-    	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-    })
+    @Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(3.0f))
 	@Column(columnDefinition="LONGTEXT")
 	protected String getStandardNameX()
 	{
@@ -64,10 +59,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 		addName(standardName = name);
 	}
 	
-    @Fields({
-    	@Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(2.5f)),
-    	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-    })
+    @Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(2.5f))
 	@Column(columnDefinition="LONGTEXT")
 	protected String getDisplayNameX()
 	{
@@ -90,12 +82,9 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	}
 	
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @ElementCollection
+    @ElementCollection(fetch=FetchType.EAGER)
 	@JoinTable(name="name")
-    @Fields({
-    	@Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(2.5f), bridge=@FieldBridge(impl=SetStringBridge.class)),
-    	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES, bridge=@FieldBridge(impl=SetStringBridge.class))
-    })
+    @Field(name=FIELD_NAME, analyze=Analyze.YES, boost=@Boost(2.5f), bridge=@FieldBridge(impl=SetStringBridge.class))
 	@Column(columnDefinition="LONGTEXT")
 	public Set<String> getName()
 	{

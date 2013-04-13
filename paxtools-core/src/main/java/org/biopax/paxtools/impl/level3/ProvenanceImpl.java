@@ -15,7 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 import java.util.Comparator;
-import java.util.Set;
 import java.util.TreeSet;
 
 @Entity

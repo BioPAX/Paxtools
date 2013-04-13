@@ -9,6 +9,7 @@ import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.*;
 
 import java.io.ByteArrayInputStream;
@@ -28,7 +29,6 @@ import java.util.concurrent.TimeUnit;
  * BioPAX L3 elements, remove dangling, replace elements
  * or identifiers, etc.
  * @author rodche, Arman 
- * //TODO Annotate && Remove deprecated methods if not used - also this is too monolithic,
  * //TODO consider breaking it down to several classes.
  */
 public final class ModelUtils
@@ -44,39 +44,6 @@ public final class ModelUtils
 		throw new AssertionError("Not instantiable");
 	}
 
-	
-	/**
-	 * To ignore 'nextStep' property (in most algorithms),
-	 * because it can eventually lead us outside current pathway,
-	 * and normally step processes are listed in the pathwayComponent
-	 * property as well.
-	 */
-	@SuppressWarnings("rawtypes")
-	public static final Filter<PropertyEditor> nextStepFilter = new Filter<PropertyEditor>()
-	{
-		public boolean filter(PropertyEditor editor)
-		{
-			return !editor.getProperty().equals("nextStep") && !editor.getProperty().equals("NEXT-STEP");
-		}
-	};
-
-	@SuppressWarnings("rawtypes")
-	public static final Filter<PropertyEditor> evidenceFilter = new Filter<PropertyEditor>()
-	{
-		public boolean filter(PropertyEditor editor)
-		{
-			return !editor.getProperty().equals("evidence") && !editor.getProperty().equals("EVIDENCE");
-		}
-	};
-
-	@SuppressWarnings("rawtypes")
-	public static final Filter<PropertyEditor> pathwayOrderFilter = new Filter<PropertyEditor>()
-	{
-		public boolean filter(PropertyEditor editor)
-		{
-			return !editor.getProperty().equals("pathwayOrder");
-		}
-	};
 
 	public static final MessageDigest MD5_DIGEST; 
 
@@ -181,7 +148,7 @@ public final class ModelUtils
 				{
 					BioPAXElement value = (BioPAXElement) range;
 					// 'value' is to be replaced with the 'replacement'
-					BioPAXElement replacement = subs.get(range);
+					BioPAXElement replacement = subs.get(value);
 					// normal biopax property -
 					if (replacement != null && !editor.getRange().isInstance(replacement))
 						throw new IllegalBioPAXArgumentException("Incompatible type! Attempted to replace " +
@@ -457,7 +424,7 @@ public final class ModelUtils
 		Model m = factory.createModel();
 		if (filters.length == 0)
 		{
-			new Fetcher(em, nextStepFilter).fetch(bpe, m);
+			new Fetcher(em, Fetcher.nextStepFilter).fetch(bpe, m);
 		} else
 		{
 			new Fetcher(em, filters).fetch(bpe, m);
@@ -467,36 +434,9 @@ public final class ModelUtils
 		return m;
 	}
 
-
 	/**
-	 * Collects all child BioPAX elements of a given BioPAX element
-	 * (using the "tuned" {@link Fetcher})
-	 * @param model
-	 * @param bpe
-	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
-	 * @return
-	 */
-	public static Set<BioPAXElement> getAllChildrenAsSet(Model model, BioPAXElement bpe,
-			@SuppressWarnings("rawtypes") Filter<PropertyEditor>... filters)
-	{
-
-		Set<BioPAXElement> toReturn = null;
-		if (filters.length == 0)
-		{
-			toReturn = new Fetcher(em, nextStepFilter).fetch(bpe);
-		} else
-		{
-			toReturn = new Fetcher(em, filters).fetch(bpe);
-		}
-
-		toReturn.remove(bpe); // remove the parent
-
-		return toReturn;
-	}
-
-
-	/**
-	 * Collects direct children of a given BioPAX element
+	 * Collects direct children of a given BioPAX element.
+	 * 
 	 * @param model
 	 * @param bpe
 	 * @return
@@ -524,7 +464,9 @@ public final class ModelUtils
 	
 	
 	/**
-	 * TODO
+	 * Generates simple counts of different elements in the model.
+	 * 
+	 * 
 	 * @param model
 	 * @return
 	 */
@@ -548,15 +490,17 @@ public final class ModelUtils
 
 
 	/**
-	 * TODO
+	 * A more strict, type-safe way to ask for a biopax object
+	 * from the model, unlike {@link Model#getByID(String)}.
+	 * 
 	 * @param model
-	 * @param urn
+	 * @param uri
 	 * @param clazz
-	 * @return
+	 * @return the biopax object or null (if no such element, or element with this URI is of incompatible type)
 	 */
-	public static <T extends BioPAXElement> T getObject(Model model, String urn, Class<T> clazz)
+	public static <T extends BioPAXElement> T getObject(Model model, String uri, Class<T> clazz)
 	{
-		BioPAXElement bpe = model.getByID(urn);
+		BioPAXElement bpe = model.getByID(uri);
 		if (clazz.isInstance(bpe))
 		{
 			return (T) bpe;
@@ -643,13 +587,6 @@ public final class ModelUtils
 	}
 
 
-
-
-
-
-
-
-
 	// moved from FeatureUtils; provides operations for comparing features of physical entities.
 
 	static enum FeatureType
@@ -661,7 +598,8 @@ public final class ModelUtils
 
 
 	/**
-	 * TODO
+	 * TODO annotate
+	 * 
 	 * @param first
 	 * @param firstClass
 	 * @param second
@@ -677,7 +615,8 @@ public final class ModelUtils
 	}
 
 	/**
-	 * TODO
+	 * TODO annotate
+	 * 
 	 * @param pe
 	 * @param type
 	 * @return
@@ -710,7 +649,8 @@ public final class ModelUtils
 
 
 	/**
-	 * TODO
+	 * TODO annotate
+	 * 
 	 * @param er
 	 * @param fix
 	 * @return
@@ -738,7 +678,8 @@ public final class ModelUtils
 
 
 	/**
-	 * TODO
+	 * TODO annotate
+	 * 
 	 * @param pe
 	 * @return
 	 */
@@ -767,7 +708,8 @@ public final class ModelUtils
 	}
 
 	/**
-	 * TODO
+	 * TODO annotate
+	 * 
 	 * @param first
 	 * @param second
 	 * @param fix
@@ -807,6 +749,8 @@ public final class ModelUtils
 		return explicit;
 	}
 
+	
+	
 	private static boolean checkCommonEntityReferenceForTwoPEs(PhysicalEntity first, PhysicalEntity second,
 			boolean fix)
 	{
@@ -1180,6 +1124,231 @@ public final class ModelUtils
 		}
 	}
 
+
+	/**
+	 * Collects all data type (not object) property
+	 * values (can be then used for full-text indexing).
+	 * 
+	 * @param biopaxElement
+	 * @param depth 0 means use this objects' 
+	 *        data properties only, 1 - add child's data properties, etc.
+	 * @return
+	 */
+	public static Set<String> getKeywords(BioPAXElement biopaxElement, int depth) {
+		
+		LOG.debug("getKeywords called: " + biopaxElement.getRDFId());
+		
+		EditorMap em = SimpleEditorMap.L3;
+		Set<String> ss = new HashSet<String>();
+		
+		Set<BioPAXElement> elms = new Fetcher(em, Fetcher.nextStepFilter)
+			.fetch(biopaxElement, depth);
+		//add this one too
+		elms.add(biopaxElement);
+		
+		for (BioPAXElement bpe : elms) {
+			Set<PropertyEditor> props = em.getEditorsOf(bpe);
+			for (PropertyEditor pe : props) {
+				if (pe instanceof ObjectPropertyEditor)
+					continue; //skip object props
+				
+				Set values = pe.getValueFromBean(bpe);
+				for (Object v : values) {
+					if (!pe.isUnknown(v)) {
+						ss.add(v.toString());
+					}
+				}
+			}
+		}
+		
+		return ss;
+	}
+	
+	
+	/**
+	 * Collects BioSource objects from this or
+	 * related elements (where it makes sense;
+	 * though the biopax element might have no 
+	 * or empty 'organism' property at all.
+	 * 
+	 * The idea is to additionally associate with 
+	 * existing BioSource objects, and thus make 
+	 * filtering by organism possible, for at least 
+	 * Interaction, Protein, Complex, Dna, etc. 
+	 * biopax entities.
+ 	 * 
+	 * 
+	 * @param biopaxElement
+	 * @return
+	 */
+	public static Set<BioSource> getOrganisms(BioPAXElement biopaxElement) {		
+		final Set<BioSource> biosources = new HashSet<BioSource>();
+		//shortcut
+		if(biopaxElement == null)
+			return biosources;
+		
+		LOG.debug("getOrganisms called: " + biopaxElement.getRDFId());	
+				
+		if(biopaxElement instanceof BioSource) {
+			biosources.add((BioSource) biopaxElement);			
+		} else if (biopaxElement instanceof Pathway) {			
+			if(((Pathway)biopaxElement).getOrganism() != null)
+				biosources.add(((Pathway)biopaxElement).getOrganism());
+//			else 
+//				//if not set, - infer from children (expensive)
+//				biosources.addAll((new Fetcher(em, Fetcher.nextStepFilter))
+//					.fetch(biopaxElement, BioSource.class));
+			
+		} else if (biopaxElement instanceof Gene) {	
+			if(((Gene)biopaxElement).getOrganism() != null)
+				biosources.add(((Gene) biopaxElement).getOrganism());
+		} else if (biopaxElement instanceof PathwayStep) {
+			Pathway pw = ((PathwayStep) biopaxElement).getPathwayOrderOf();
+			if(pw != null && pw.getOrganism() != null)
+				biosources.add(pw.getOrganism());
+		} else if (biopaxElement instanceof Interaction 
+				|| biopaxElement instanceof EntityReference
+				|| biopaxElement instanceof PhysicalEntity) {
+			
+			if (biopaxElement instanceof SequenceEntityReference)
+				biosources.add(((SequenceEntityReference) biopaxElement).getOrganism());
+			
+			//get from children (members, participants, components, etc.)
+			biosources.addAll((new Fetcher(em, Fetcher.nextStepFilter))
+				.fetch(biopaxElement, BioSource.class));			
+		} 
+		
+		return biosources;
+	}
+
+
+	/**
+	 * Collects all Provenance objects 
+	 * associated with this one as follows:
+	 * - if the element is Entity (has 'dataSource' property) 
+	 *   or is Provenence itself, get the values and quit;
+	 * - if the biopax element is PathwayStep or EntityReference, 
+	 *   traverse into some of its object/inverse properties to collect 
+	 *   dataSource values from associated entities.
+	 * - return empty set for all other BioPAX types (it is less important 
+	 *   to associate common self-descriptive biopax utility classes with 
+	 *   particular pathway data sources)
+	 * 
+	 * @param biopaxElement
+	 * @return
+	 */
+	public static Set<Provenance> getDatasources(BioPAXElement biopaxElement) {
+		
+		final Set<Provenance> datasources = new HashSet<Provenance>();
+		
+		//shortcut
+		if(biopaxElement == null)
+			return datasources;
+
+		LOG.debug("getDatasources called: " + biopaxElement.getRDFId());
+		
+		if (biopaxElement instanceof Provenance) {			
+			datasources.add((Provenance) biopaxElement);			
+		} else if (biopaxElement instanceof Entity) {			
+			datasources.addAll(((Entity) biopaxElement).getDataSource());			
+		} else if (biopaxElement instanceof EntityReference) {
+			// Let ERs inherit its dataSource from parent PEs or ERs:			
+			for(SimplePhysicalEntity spe : ((EntityReference) biopaxElement).getEntityReferenceOf())
+				datasources.addAll(getDatasources(spe));			
+			for(EntityReference er : ((EntityReference) biopaxElement).getMemberEntityReferenceOf())
+				datasources.addAll(getDatasources(er));			
+		} else if (biopaxElement instanceof PathwayStep) {			
+			datasources.addAll(getDatasources(((PathwayStep) biopaxElement).getPathwayOrderOf()));				
+		} else {
+			// ignore
+		}
+				
+		return datasources;
+	}
+
+	
+	/**
+	 * Collects parent Pathway objects recursively
+	 * traversing inverse object properties of the
+	 * biopax element.
+	 * 
+	 * @param biopaxElement
+	 * @return
+	 */
+	public static Set<Pathway> getParentPathways(BioPAXElement biopaxElement) {
+		
+		final Set<Pathway> pathways = new HashSet<Pathway>();
+		
+		//shortcut
+		if(biopaxElement == null)
+			return pathways;
+		
+		LOG.debug("getParentPathways called: " + biopaxElement.getRDFId());
+				
+		if(biopaxElement instanceof Process) {
+			if(biopaxElement instanceof Pathway) // add itself
+				pathways.add((Pathway) biopaxElement);
+			// continue looking up to parent pathways (until all top ones reached)
+			for(Pathway pw : ((Process)biopaxElement).getPathwayComponentOf())
+				pathways.addAll(getParentPathways(pw));
+			for(Interaction it : ((Process)biopaxElement).getParticipantOf())
+				pathways.addAll(getParentPathways(it));
+			for(PathwayStep pt : ((Process)biopaxElement).getStepProcessOf())
+				pathways.addAll(getParentPathways(pt));
+		} else if(biopaxElement instanceof PathwayStep) {
+			pathways.addAll(getParentPathways(((PathwayStep)biopaxElement).getPathwayOrderOf()));
+		} else if(biopaxElement instanceof PhysicalEntity ) {
+			for(PhysicalEntity pe : ((PhysicalEntity)biopaxElement).getMemberPhysicalEntityOf())
+				pathways.addAll(getParentPathways(pe));
+			for(Interaction it : ((Entity)biopaxElement).getParticipantOf())
+				pathways.addAll(getParentPathways(it));
+			for(Complex c : ((PhysicalEntity)biopaxElement).getComponentOf())
+				pathways.addAll(getParentPathways(c));
+		} else if(biopaxElement instanceof EntityReference) {
+			for(EntityReference er : ((EntityReference) biopaxElement).getMemberEntityReferenceOf())
+				pathways.addAll(getParentPathways(er));
+			for(SimplePhysicalEntity spe : ((EntityReference) biopaxElement).getEntityReferenceOf())
+				pathways.addAll(getParentPathways(spe));
+		} else if (biopaxElement instanceof Gene ) { 
+			for(Interaction it : ((Entity) biopaxElement).getParticipantOf())
+				pathways.addAll(getParentPathways(it));
+		} else {
+			// ignore
+		}
+		
+		return pathways;
+	}
+	
+	
+	/**
+	 * Collects parent Pathways using the top-down approach 
+	 * (for each pathway, select if it contains the object,
+	 * skip otherwise)
+	 * 
+	 * @param biopaxElement
+	 * @return
+	 */
+	public static Set<Pathway> getParentPathways(BioPAXElement biopaxElement, Model model) {
+		
+		final Set<Pathway> pathways = new HashSet<Pathway>();
+		
+		//shortcut
+		if(biopaxElement == null)
+			return pathways;
+		
+		LOG.debug("getParentPathways called: " + biopaxElement.getRDFId());
+		
+		final Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
+		for(Pathway pw : model.getObjects(Pathway.class)) {
+			if(fetcher.subgraphContains(pw, 
+					biopaxElement.getRDFId(), biopaxElement.getModelInterface()))
+			{
+				pathways.add(pw);
+			}
+		}
+		
+		return pathways;
+	}
 
 }
 

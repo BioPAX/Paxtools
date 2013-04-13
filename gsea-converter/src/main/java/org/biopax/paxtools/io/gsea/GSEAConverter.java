@@ -1,7 +1,8 @@
 package org.biopax.paxtools.io.gsea;
 
 import org.apache.commons.lang.StringUtils;
-import org.biopax.paxtools.controller.ModelUtils;
+import org.biopax.paxtools.controller.Fetcher;
+import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -113,8 +114,10 @@ public class GSEAConverter
 				
 				String dataSource = getDataSource(pathway.getDataSource());
 				
-				Set<ProteinReference> pathwayProteinRefs = ModelUtils
-					.getAllChildren(pathway).getObjects(ProteinReference.class);
+				Set<ProteinReference> pathwayProteinRefs = 
+					(new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter))
+						.fetch(pathway, ProteinReference.class);
+				
 				if(!pathwayProteinRefs.isEmpty()) {
 					Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(pathwayProteinRefs);			
 					// create GSEA/GMT entries - one entry per organism (null organism also makes one) 

@@ -11,10 +11,10 @@ import org.biopax.paxtools.util.Filter;
  * A tool to set or infer a particular BioPAX
  * property for an object and all its children.
  * For best (consistent) results, it's recommended
- * to generally start from a "root" element, or, at least,
- * - the parent-most one that have given propertyName. 
+ * to generally start from a "root" element, or at least
+ * form the parent-most one, that have given property. 
  * 
- * However, for some (if not - most) BioPAX properties, except for, 
+ * However, for some (if not most of) BioPAX properties, except for, 
  * e.g., 'dataSource', 'xref', 'organism', 'cellularLocation', -
  * using of this tool does NOT make sense; i.e., one should not normally
  * "infer" (apply to children elements) such properties as 'displayName', 'ph',
@@ -28,7 +28,7 @@ public class PropertyReasoner extends AbstractTraverser
 {
 	private static final Log LOG = LogFactory.getLog(PropertyReasoner.class);
 	
-	private String propertyName;
+	private String property;
     private final Set<Class<? extends BioPAXElement>> domains;
     private boolean override;
     private final Stack<Set> valueStack;
@@ -38,7 +38,7 @@ public class PropertyReasoner extends AbstractTraverser
 			Filter<PropertyEditor>... propertyFilters)
 	{
         super(editorMap, propertyFilters);
-        this.propertyName = propertyName;
+        this.property = propertyName;
         this.domains = new HashSet<Class<? extends BioPAXElement>>();
         this.domains.add(BioPAXElement.class); // default - any
         this.override = false; // do not replace existing values 
@@ -75,22 +75,22 @@ public class PropertyReasoner extends AbstractTraverser
 	 * @return the BioPAX property name
 	 */
 	public String getPropertyName() {
-		return propertyName;
+		return property;
 	}
 
 
 	/**
-	 * @param propertyName the BioPAX property name to use
+	 * @param property the BioPAX property name to use
 	 */
 	public void setPropertyName(String propertyName) {
-		this.propertyName = propertyName;
+		this.property = propertyName;
 	}
 
 
 	/**
 	 * When set (not empty list), only instances of the listed types can be
 	 * updated by {@link #run(BioPAXElement, Object)} method, although the 
-	 * {@link #propertyName} property valueStack of every element (where apply)
+	 * {@link #property} property value of every element (where apply)
 	 * can be still considered for its children (of the specified type).
 	 * 
 	 * @param domains (optional) the types to modify (others won't be affected)
@@ -121,15 +121,15 @@ public class PropertyReasoner extends AbstractTraverser
 	 * Following the A,B,C example in the {@link #run(BioPAXElement, Object)}
 	 * method:
 	 * 
-	 * - when {@link #override} is true, and {@link #propertyName} is
-	 * a functional BioPAX property: A, B and C all get the X valueStack
-	 * TODO ???(if default {@link #valueStack} was null, otherwise - they get the default valueStack).
+	 * - when {@link #override} is true, and {@link #property} is
+	 * a functional BioPAX property: A, B and C all get the X value
+	 * (unless {@link #valueStack} was not null, and they are to get the default values).
 	 * 
-	 * - when {@link #override} is false, and {@link #propertyName} is
-	 * a functional BioPAX property: A, B - stay unmodified, C acquires Y valueStack (B's).
+	 * - when {@link #override} is false, and {@link #property} is
+	 * a functional BioPAX property: A, B - stay unmodified, C acquires Y values (B's).
 	 * 
-	 * - when {@link #override} is false, and {@link #propertyName} is
-	 * a multiple cardinality property: - B and C will have both X and Y values!
+	 * - when {@link #override} is false, and {@link #property} is
+	 * a multiple cardinality property: - B and C will have both X and Y values.
 	 * 
 	 * @param override the override mode to set (see the above explanation)
 	 * 
@@ -158,7 +158,7 @@ public class PropertyReasoner extends AbstractTraverser
 
 	/**
 	 * This traverse method, first, takes care about the 
-	 * {@link #propertyName} we are interested in, then proceeds- 
+	 * {@link #property} we are interested in, then proceeds- 
 	 * as the basic {@link Traverser#traverse(BioPAXElement, Model)}
 	 * would normally do (i.e., - delivering to the method  
 	 * {@link #visit(Object, BioPAXElement, Model, PropertyEditor)}
@@ -171,7 +171,7 @@ public class PropertyReasoner extends AbstractTraverser
 			return;
 		
 		PropertyEditor editor = editorMap
-			.getEditorForProperty(propertyName, bpe.getModelInterface());
+			.getEditorForProperty(property, bpe.getModelInterface());
 		
 		if (editor != null) { // so, property values may be considered for children...
 			if (isInstanceofOneOf(domains, bpe)) { // when is allowed to modify
@@ -221,7 +221,7 @@ public class PropertyReasoner extends AbstractTraverser
 			} 
 
 			if (!override) {
-				// save current valueStack (does not matter modified or not)
+				// save current values (does not matter modified or not)
 				this.valueStack.push(editor.getValueFromBean(bpe));
 			} else {
 				// just repeat the same
@@ -229,11 +229,11 @@ public class PropertyReasoner extends AbstractTraverser
 			}
 		}
 		
-		// continue as usual (to visit every propertyName)
+		// continue as usual (to visit every property)
 		super.traverse(bpe, model);
 		
 		if(editor != null) {
-			// return to previous parent valueStack/state
+			// return to previous parent values/state
 			this.valueStack.pop();
 		}
 	}
@@ -241,7 +241,7 @@ public class PropertyReasoner extends AbstractTraverser
 
 	/**
 	 * Simply, calls {@link #traverse(BioPAXElement, Model)} 
-	 * and goes deeper when the propertyName's range/valueStack is a BioPAX object.
+	 * and goes deeper when the {@link #property} range/values is a BioPAX object.
 	 */
 	@Override
     protected void visit(Object range, BioPAXElement bpe, 
@@ -256,12 +256,12 @@ public class PropertyReasoner extends AbstractTraverser
 	
 	/**
 	 * Adds a special comment for a BioPAX element 
-	 * when one of its propertyName values was
+	 * when one of its {@link #property} values was
 	 * inferred from parent's.
 	 * 
 	 * @param bpe BioPAX object
 	 * @param v value
-	 * @param unset whether it's about removed/added valueStack (true/false)
+	 * @param unset whether it's about removed/added values (true/false)
 	 */
 	private void comment(BioPAXElement bpe, Object v, boolean unset) 
 	{
@@ -289,9 +289,9 @@ public class PropertyReasoner extends AbstractTraverser
 				? ((Set)v).iterator().next() : v;
 			
 			if(unset){ // unset==true, v is not 'unknown'
-				msg = propertyName + " REMOVED by a reasoner: " + list(val);
+				msg = property + " REMOVED by a reasoner: " + list(val);
 			} else {
-				msg = propertyName + " ADDED by a reasoner: " + list(val);
+				msg = property + " ADDED by a reasoner: " + list(val);
 			}
 			
 			pe.setValueToBean(msg, bpe);
@@ -334,36 +334,36 @@ public class PropertyReasoner extends AbstractTraverser
    
 	/**
 	 * Basic, universal method (used by others in this class) -
-	 * 
-	 * updates the {@link #propertyName} valueStack of a BioPAX element
+	 * updates the {@link #property} values of a BioPAX element
 	 * and its children. The root element (first parameter) does not
-	 * necessarily have the propertyName though.
+	 * necessarily have the property though.
 	 * 
-	 * For example, if X is the {@link #propertyName} valueStack of A; Y - of B;
-	 * and C has unknown valueStack; and A has "child" B, which in turn has C
-	 * (not necessarily immediate); and A, B, C are instances of 
-	 * one of classes listed in {@link #domains} (if any), then 
+	 * For example, if X is the {@link #property} value(s) of A, Y - value of B,
+	 * and C has no value (unknown); A has a child B, which in turn has child C
+	 * (not necessarily direct child); A, B, C are instances of 
+	 * one of classes listed in {@link #domains} (if any). Then 
 	 * the following results are expected
 	 * (note: even if, e.g., B would not pass the domains filter, 
 	 * the results for A and C will be the same):
 	 * 
-	 * - valueStack X will be considered a replacement/addition to Y for B,
-	 * and both X and Y - for C. The result depends on {@link #override}, 
-	 * the default {@link #valueStack} and the propertyName's cardinality.
+	 * - X will be considered a replacement/addition to Y for B,
+	 * and both X and Y values - for C. The result also depends 
+	 * on {@link #override}, the default {@link #valueStack} 
+	 * and the property's cardinality.
 	 * 
-	 * A default valueStack (or a {@link Set} or values, object or primitive)
-	 * is to apply when both current and parent's propertyName values are
+	 * The default value (a {@link Set} of values, object or primitive)
+	 * is to be applied when both current and parent's property values are
 	 * yet unknown. However, if {@link #override} is true, the default
-	 * valueStack, if given, will unconditionally replace all existing.
+	 * values, if given, will unconditionally replace all existing ones.
 	 * 
-	 * Warning: when defaultValue is null or empty set, and override==true, 
-	 * it will clear the propertyName values of all corresponding elements.
+	 * Warning: when the defaultValue is null or empty set, and override==true, 
+	 * this will clear the {@link #property} values of all corresponding elements.
 	 * 
 	 * @see #setDomains(Class...)
 	 * @see #setOverride(boolean)
 	 *  
 	 * @param element
-	 * @param defaultValue a default valueStack or set of values
+	 * @param defaultValue a default values or set of values
 	 */
     protected void run(BioPAXElement element, Object defaultValue)
 	{
@@ -389,7 +389,7 @@ public class PropertyReasoner extends AbstractTraverser
     /**
      * For the element and its children,
      * where it's desired (in {@link #domains}) and possible, 
-     * it sets the {@link #propertyName} values to "unknown".
+     * it sets the {@link #property} values to "unknown".
      * 
      * @see PropertyReasoner#run(BioPAXElement, Object)
      * 
@@ -407,7 +407,7 @@ public class PropertyReasoner extends AbstractTraverser
     /**
      * For the element and its children,
      * where it's desired (in {@link #domains}) and allowed (by BioPAX), 
-     * it forces the given {@link #propertyName} valueStack replace existing ones.
+     * it forces the given {@link #property} values replace existing ones.
      *  
      * @see PropertyReasoner#run(BioPAXElement, Object)
      *  
@@ -419,7 +419,7 @@ public class PropertyReasoner extends AbstractTraverser
     	if(defaultValue == null) {
     		throw new NullPointerException("Consider using " +
     			"clearProperty() instead if you really want " +
-    			"to set this propertyName to null/unknown for the " +
+    			"to set this property to null/unknown for the " +
     			"object and its children!");
     	}
     	
@@ -433,9 +433,9 @@ public class PropertyReasoner extends AbstractTraverser
     /**
      * For the element and its children,
      * where it's empty, desired (in {@link #domains}) and allowed, 
-     * it adds or sets the {@link #propertyName} from parents's 
-     * (if the top-most, a parent element that has this propertyName,
-     * does not have any valueStack, then given valueStack will be set, and
+     * it adds or sets the {@link #property} from parents's 
+     * (if the top-most, a parent element that has this property,
+     * does not have any values, then given values will be set, and
      * children may inherit it)
      * 
      * @see PropertyReasoner#run(BioPAXElement, Object)
@@ -455,8 +455,8 @@ public class PropertyReasoner extends AbstractTraverser
     /**
      * For the element and its children,
      * where it's empty, desired (in {@link #domains}) and allowed, 
-     * it adds or sets the {@link #propertyName} from parents's 
-     * (if they have any valueStack)
+     * it adds or sets the {@link #property} from parents's 
+     * (if they have any values)
      * 
      * @see PropertyReasoner#run(BioPAXElement, Object)
      * 

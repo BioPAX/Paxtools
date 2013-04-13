@@ -8,12 +8,19 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermQuery;
 import org.hibernate.search.annotations.Factory;
+import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Key;
 import org.hibernate.search.filter.FilterKey;
 import org.hibernate.search.filter.StandardFilterKey;
 
 /**
- * This class creates search filters based on a searchField.
+ * Basic filter factory implementation class.
+ * (See Hibernate Search documentation for more details)
+ * 
+ * @see Factory
+ * @see Key
+ * @see FullTextFilterDef
+ * 
  * @author rodche
  */
 public abstract class BasicFilterFactory {

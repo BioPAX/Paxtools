@@ -3,7 +3,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
-import org.biopax.paxtools.util.XrefFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -11,7 +10,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Analyze;
 
 import javax.persistence.Column;
@@ -79,8 +77,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	}
 
 	
-	@Field(name=FIELD_XREFDB, analyze=Analyze.NO, bridge = @FieldBridge(impl=XrefFieldBridge.class))
-	@Boost(1.1f)
+	@Field(name=FIELD_XREFDB, analyze=Analyze.YES)
     public String getDb()
 	{
 		return db;
@@ -111,9 +108,8 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.idVersion = idVersion;
 	}
 
-	//Important! - using "id" as the search field name was causing exceptions in the indexer
-	// using UN_TOKENIZED without a custom bridge also caused search problems (no result in trivial cases, where there should be one)
-    @Field(name=FIELD_XREFID, analyze=Analyze.NO, bridge = @FieldBridge(impl=XrefFieldBridge.class))
+	//getId() caused exceptions in the indexer; so we changed to getIdx/setIdx pair
+    @Field(name=FIELD_XREFID, analyze=Analyze.YES)
     @Boost(1.1f)
     @Column(name="id")
 	public String getIdx()
