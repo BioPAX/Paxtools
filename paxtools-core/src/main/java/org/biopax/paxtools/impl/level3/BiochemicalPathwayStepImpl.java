@@ -40,8 +40,19 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	// Property STEP-CONVERSION
+	// hidden property 'stepConversion' for persistence
 	@ManyToOne(targetEntity = ConversionImpl.class)
+    Conversion getStepConversionX()
+	{
+		return stepConversion;
+	}
+    void setStepConversionX(Conversion newSTEP_CONVERSION)
+	{
+		stepConversion = newSTEP_CONVERSION;
+	}
+
+	// Property stepConversion
+    @Transient
     public Conversion getStepConversion()
 	{
 		return stepConversion;
@@ -49,9 +60,18 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 
     public void setStepConversion(Conversion newSTEP_CONVERSION)
 	{
-		stepConversion = newSTEP_CONVERSION;
+		if (this.stepConversion != null)
+		{
+			this.stepConversion.getStepProcessOf().remove(this);
+		}
+		this.stepConversion = newSTEP_CONVERSION;
+		if (this.stepConversion != null)
+		{
+			this.stepConversion.getStepProcessOf().add(this);
+		}
 	}
-
+    
+    
     // Property STEP-DIRECTION
 
 	@Enumerated(EnumType.STRING)
