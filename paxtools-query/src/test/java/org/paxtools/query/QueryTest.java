@@ -171,6 +171,12 @@ public class QueryTest
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(result.isEmpty());
 
+		
+		f = new OrganismFilter(new String[]{"9606"});
+		result = QueryExecuter.runPathsFromTo(
+			source, target, model, LimitType.NORMAL, 2, f);
+		assertTrue(!result.isEmpty());
+		
 		// test data source filter
 
 		f = new DataSourceFilter(new String[]{"Reactome"});

@@ -28,5 +28,7 @@ public class OrganismFilter extends StringFieldFilter
 	{
 		addAccessor(new PathAccessor("PhysicalEntity/entityReference/organism/name"),
 			PhysicalEntity.class);
+		addAccessor(new PathAccessor("PhysicalEntity/entityReference/organism/xref:UnificationXref/id"),
+			PhysicalEntity.class);
 	}
 }
