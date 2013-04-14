@@ -162,29 +162,30 @@ public class QueryTest
 
 		// test organism filter
 
-		Filter f = new OrganismFilter("Homo sapiens");
+		Filter f = new OrganismFilter(new String[]{"Homo sapiens"});
 		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
 			source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(!result.isEmpty());
 
-		f = new OrganismFilter("Non-existing organism");
+		f = new OrganismFilter(new String[]{"Non-existing organism"});
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(result.isEmpty());
 
 		// test data source filter
 
-		f = new DataSourceFilter("Reactome");
+		f = new DataSourceFilter(new String[]{"Reactome"});
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(!result.isEmpty());
 
-		f = new DataSourceFilter("Some DB");
+		f = new DataSourceFilter(new String[]{"Some DB"});
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(result.isEmpty());
 
 		// test both
 
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2,
-			new OrganismFilter("Homo sapiens"), new DataSourceFilter("Reactome"));
+			new OrganismFilter(new String[]{"Homo sapiens"}), 
+			new DataSourceFilter(new String[]{"Reactome"}));
 		assertTrue(!result.isEmpty());
 
 		// test ubique filter

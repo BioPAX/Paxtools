@@ -31,13 +31,20 @@ public abstract class StringFieldFilter extends Filter
 
 	/**
 	 * Constructor.
-	 * @param emptyOK parameter to accept empty filed
+	 * 
+	 * @param emptyOK whether to always accept empty field when traversing the graph or reject
 	 */
-	protected StringFieldFilter(boolean emptyOK, String... valid)
+	protected StringFieldFilter(boolean emptyOK, String[] valid)
 	{
 		setEmptyOK(emptyOK);
 		accessors = new HashMap<PathAccessor, Class<? extends BioPAXElement>>();
-		validValues = new HashSet<String>(Arrays.asList(valid));
+		
+		if(valid == null || valid.length == 0) {
+			validValues = Collections.EMPTY_SET;
+			//TODO log warning - the filter does not make any sense
+		} else 
+			validValues = new HashSet<String>(Arrays.asList(valid));
+		
 		createFieldAccessors();
 	}
 
@@ -94,6 +101,9 @@ public abstract class StringFieldFilter extends Filter
 	@Override
 	public boolean okToTraverse(Level3Element ele)
 	{
+		if(validValues.isEmpty())
+			return true;
+		
 		boolean empty = true;
 		boolean objectRelevant = false;
 

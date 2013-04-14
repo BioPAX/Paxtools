@@ -15,7 +15,7 @@ public class OrganismFilter extends StringFieldFilter
 	 * Constructor.
 	 * @param organism organisms to select
 	 */
-	public OrganismFilter(String... organism)
+	public OrganismFilter(String[] organism)
 	{
 		super(true, organism);
 	}
