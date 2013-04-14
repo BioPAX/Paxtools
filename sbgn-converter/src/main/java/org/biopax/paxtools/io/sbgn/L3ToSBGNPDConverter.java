@@ -318,7 +318,7 @@ public class L3ToSBGNPDConverter
 	 */
 	private boolean needsToBeCreatedInitially(PhysicalEntity entity)
 	{
-		// We are flatting complex members -- thus inner complexes will not be represented
+		// Inner complexes will be created during creation of the top complex
 		if (entity instanceof Complex)
 		{
 			Complex c = (Complex) entity;
@@ -476,24 +476,19 @@ public class L3ToSBGNPDConverter
 	 */
 	private void addComplexAsMember(Complex cx, Glyph container)
 	{
-		if (cx.getComponent().isEmpty())
+		// Create a glyph for the inner complex
+		Glyph inner = createComplexMember(cx, container);
+
+		for (PhysicalEntity mem : cx.getComponent())
 		{
-			// Put a glyph for empty inner complex
-			createComplexMember(cx, container);
-		}
-		else
-		{
-			for (PhysicalEntity mem : cx.getComponent())
+			if (mem instanceof Complex)
 			{
-				if (mem instanceof Complex)
-				{
-					// Recursive call for inner complexes
-					addComplexAsMember((Complex) mem, container);
-				}
-				else
-				{
-					createComplexMember(mem, container);
-				}
+				// Recursive call for inner complexes
+				addComplexAsMember((Complex) mem, inner);
+			}
+			else
+			{
+				createComplexMember(mem, inner);
 			}
 		}
 	}
@@ -504,7 +499,7 @@ public class L3ToSBGNPDConverter
 	 * @param pe PhysicalEntity to represent as complex member
 	 * @param container Glyph for the complex shell
 	 */
-	private void createComplexMember(PhysicalEntity pe, Glyph container)
+	private Glyph createComplexMember(PhysicalEntity pe, Glyph container)
 	{
 		Glyph g = createGlyphBasics(pe);
 		container.getGlyph().add(g);
@@ -513,6 +508,7 @@ public class L3ToSBGNPDConverter
 		g.setId(g.getId() + "|" + container.getId());
 
 		glyphMap.put(g.getId(), g);
+		return g;
 	}
 
 	/**

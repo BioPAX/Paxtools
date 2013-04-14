@@ -1,19 +1,26 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.impl.BioPAXElementImpl;
+import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.Level3Element;
+import org.biopax.paxtools.model.level3.Pathway;
+import org.biopax.paxtools.model.level3.Provenance;
+import org.biopax.paxtools.util.DataSourceFieldBridge;
+import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.biopax.paxtools.util.ParentPathwayFieldBridge;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.*;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
+import javax.persistence.Transient;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,10 +32,10 @@ import static org.hibernate.annotations.FetchProfile.FetchOverride;
  */
 @Entity
 @Proxy(proxyClass= Level3Element.class)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-//Fetch Profiles
- @FetchProfile(name = "completer", fetchOverrides = {
+@FetchProfiles({
+@FetchProfile(name = "mul_properties_join", fetchOverrides = {
  @FetchOverride(entity = EvidenceImpl.class, association = "experimentalForm", mode = FetchMode.JOIN),
  @FetchOverride(entity = EntityFeatureImpl.class, association = "memberFeature", mode = FetchMode.JOIN),
  @FetchOverride(entity = CatalysisImpl.class, association = "cofactor", mode = FetchMode.JOIN),
@@ -77,25 +84,43 @@ import static org.hibernate.annotations.FetchProfile.FetchOverride;
  @FetchOverride(entity = ControlledVocabularyImpl.class, association = "term", mode = FetchMode.JOIN),
  @FetchOverride(entity = XReferrableImpl.class, association = "xref", mode = FetchMode.JOIN),
  @FetchOverride(entity = BiochemicalReactionImpl.class, association = "deltaH", mode = FetchMode.JOIN)
+ }),
+@FetchProfile(name = "inverse_mul_properties_join", fetchOverrides = {
+ @FetchProfile.FetchOverride(entity = PhysicalEntityImpl.class, association = "memberPhysicalEntityOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = PhysicalEntityImpl.class, association = "controllerOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = PhysicalEntityImpl.class, association = "componentOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = EntityImpl.class, association = "participantOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = EntityReferenceImpl.class, association = "memberEntityReferenceOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = EntityReferenceImpl.class, association = "entityReferenceOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = ProcessImpl.class, association = "pathwayComponentOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = ProcessImpl.class, association = "stepProcessOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = ProcessImpl.class, association = "controlledOf", mode = FetchMode.JOIN),
+ @FetchProfile.FetchOverride(entity = PathwayImpl.class, association = "controllerOf", mode = FetchMode.JOIN)
+ })
 })
-
 public abstract class L3ElementImpl extends BioPAXElementImpl
         implements Level3Element
 {
     private Set<String> comment;
+    
+    private final Set<Pathway> pathways;
+    private final Set<Provenance> datasources;
+    private final Set<BioSource> organisms;
+    private final Set<String> keywords;
 
     public L3ElementImpl()
     {
         this.comment = new HashSet<String>();
+        this.pathways = new HashSet<Pathway>();
+        this.datasources = new HashSet<Provenance>();
+        this.organisms = new HashSet<BioSource>();
+        this.keywords = new HashSet<String>();
     }
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ElementCollection
     @JoinTable(name="comment")
-    @Fields({
-    	@Field(name=FIELD_COMMENT, index=Index.TOKENIZED, bridge=@FieldBridge(impl=SetStringBridge.class)),
-    	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=SetStringBridge.class))
-    })
+    @Field(name=FIELD_COMMENT, analyze=Analyze.YES, bridge=@FieldBridge(impl=SetStringBridge.class))
 	@Column(columnDefinition="LONGTEXT")
     public Set<String> getComment()
     {
@@ -119,4 +144,83 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
     		this.comment.remove(COMMENT);
     }
 
+	
+    /**
+     * A non-public transient method (not stored in the db table)
+	 * to create the 'keyword' full-text index field by aggregating 
+	 * biopax data field values from all child elements.
+	 * 
+	 * This method may be called once per biopax element
+	 * by the Hibernate Search framework (indexer), if it is used, 
+	 * or never called.
+     * 
+     * @return
+     */
+	@Transient
+	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
+	@FieldBridge(impl=SetStringBridge.class)
+	public Set<String> getKeywords() {
+		return this.keywords;
+	}
+	
+    /**
+     * A transient method (not stored in the db table)
+	 * to create the 'organism' full-text index field 
+	 * used then both for searching and filtering (important).
+	 * 
+	 * This method may be called once per biopax element
+	 * by the Hibernate Search framework (indexer),
+	 * or never called.
+     * 
+     * @return
+     */
+	@Transient
+	@Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO)
+	@FieldBridge(impl=OrganismFieldBridge.class)
+	public Set<BioSource> getOrganisms() {
+		return this.organisms;
+	}
+	
+    /**
+     * A transient method (not stored in the db table)
+	 * to create the 'datasource' full-text index field 
+	 * used then both for searching and filtering (important).
+	 * 
+	 * This method may be called once per biopax element
+	 * by the Hibernate Search framework (indexer), if used, 
+	 * or never called otherwise.
+	 *   
+     * @return
+     */
+	@Transient
+	@Field(name=FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
+	@FieldBridge(impl=DataSourceFieldBridge.class)
+	public Set<Provenance> getDatasources() {
+		return this.datasources;
+	}
+
+	
+    /**
+     * An transient method (not stored in the db table),
+     * not trivial one, to create the 'pathway' full-text index field
+	 * used then both for searching and especially annotating search
+	 * hits. 
+	 * 
+	 * Parent pathways can be inferred and updated once the BioPAX model
+	 * is built and complete.
+	 * 
+	 * This method may be called once per biopax element
+	 * by the Hibernate Search framework (indexer), 
+	 * or never called.
+	 *   
+     * @return
+     */
+	@Transient
+	@Field(name=FIELD_PATHWAY, store=Store.YES, analyze=Analyze.NO)
+	//this bridge simply adds pathways URIs and names to the 'pathway' index field.
+	@FieldBridge(impl=ParentPathwayFieldBridge.class)
+	public Set<Pathway> getParentPathways() {
+		return this.pathways;
+	}
+	
 }

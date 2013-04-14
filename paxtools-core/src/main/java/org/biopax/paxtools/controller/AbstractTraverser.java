@@ -72,28 +72,25 @@ public abstract class AbstractTraverser extends Traverser
 	 * @param editor parent's property PropertyEditor
 	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?,?> editor) {
-			final Stack<BioPAXElement> objPath = getVisited();
-			final Stack<String> propsPath = getProps();
-		
 			if(range instanceof BioPAXElement) {
-				if(objPath.contains(range)) {
+				if(visited.contains(range)) {
 				    log.info(((BioPAXElement)range).getRDFId() 
-				    		+ " already visited (cycle!): " + objPath.toString());
+				    		+ " already visited (cycle!): " + visited.toString());
 					return;
 				}
  
-				objPath.push((BioPAXElement) range);
+				visited.push((BioPAXElement) range);
 			}
 			
-			propsPath.push(editor.getProperty());
+			props.push(editor.getProperty());
 			
 			// actions
 			visit(range, domain, model, editor);
 			
-			propsPath.pop();
+			props.pop();
 			
 			if(range instanceof BioPAXElement) {
-				objPath.pop();
+				visited.pop();
 			}
 	}
 

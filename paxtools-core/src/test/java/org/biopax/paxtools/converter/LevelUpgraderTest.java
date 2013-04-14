@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 import java.io.*;
 
-public class OneTwoThreeTest {
+public class LevelUpgraderTest {
 
     @Test
 	public final void testFilter() throws IOException {

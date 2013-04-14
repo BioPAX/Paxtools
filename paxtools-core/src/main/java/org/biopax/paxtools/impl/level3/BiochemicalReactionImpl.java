@@ -6,10 +6,12 @@ import org.biopax.paxtools.model.level3.KPrime;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -19,7 +21,7 @@ import java.util.Set;
 @Entity
 @Proxy(proxyClass= BiochemicalReaction.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BiochemicalReactionImpl extends ConversionImpl
 	implements BiochemicalReaction
@@ -132,7 +134,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ElementCollection
 	@JoinTable(name="ECNumber")	
-	@Field(name=FIELD_ECNUMBER, index=Index.TOKENIZED)
+	@Field(name=FIELD_ECNUMBER, analyze=Analyze.YES)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getECNumber()
 	{

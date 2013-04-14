@@ -117,22 +117,26 @@ public class SBGNLayoutManager
 		createLEdges(sbgn.getMap().getArc(), this.layout);
 		graphMgr.updateBounds();
 		
-		
 		// Apply layout
 		this.layout.runLayout();
 		graphMgr.updateBounds();
 
 		// Update the bounds
-		/*for (VNode vNode: this.root.children) 
+		for (VNode vNode: this.root.children) 
 		{ 
 			updateCompoundBounds(vNode.glyph, vNode.glyph.getGlyph()); 
-		}*/
+		}
 		
 		// Clear inside of the compartmentGlyphs
-		/*for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
+		for (Glyph compGlyph: idToCompartmentGlyphs.values()) 
 		{
+			//Again add the members of compartments
+			for(Glyph memberGlyph:compGlyph.getGlyph() )
+			{
+				sbgn.getMap().getGlyph().add(memberGlyph);
+			}
 			compGlyph.getGlyph().clear();
-		}*/
+		}
 
 		return sbgn;
 	}

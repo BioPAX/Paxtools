@@ -5,9 +5,11 @@ import org.biopax.paxtools.model.level3.ChemicalStructure;
 import org.biopax.paxtools.model.level3.StructureFormatType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Column;
@@ -18,7 +20,7 @@ import javax.persistence.Transient;
 @Entity
 @Proxy(proxyClass= ChemicalStructure.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStructure
 {
@@ -67,7 +69,7 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 	//
 	/////////////////////////////////////////////////////////////////////////////
 
-	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, analyze=Analyze.YES)
 	@Column(columnDefinition="LONGTEXT")
 	public String getStructureData()
 	{
@@ -80,7 +82,7 @@ public class ChemicalStructureImpl extends L3ElementImpl implements ChemicalStru
 	}
 
 	@Enumerated
-	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED)
+	@Field(name=FIELD_KEYWORD, analyze=Analyze.YES)
 	public StructureFormatType getStructureFormat()
 	{
 		return structureFormat;

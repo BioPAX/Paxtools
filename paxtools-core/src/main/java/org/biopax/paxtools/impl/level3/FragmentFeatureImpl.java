@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.level3.FragmentFeature;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -13,7 +15,7 @@ import javax.persistence.Transient;
 @Entity
 @Proxy(proxyClass= FragmentFeature.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFeature
 {
@@ -27,14 +29,6 @@ public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFe
 	{
 		return FragmentFeature.class;
 	}
-
-
-	@Override
-	public int equivalenceCode()
-	{
-		return this.getEntityFeatureOf().equivalenceCode() + super.locationCode();
-	}
-
 
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)

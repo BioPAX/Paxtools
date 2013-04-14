@@ -37,9 +37,13 @@ public interface BioPAXElement extends Serializable, Cloneable
     Class<? extends BioPAXElement> getModelInterface();
 
     /**
-     * This method returns the RDF Id of the element. All data providers are
-     * responsible for generating unique ids.
-     * @return the unique rdf Id for this object.
+     * This method returns the full URI of the element
+     * (despite it is called RDFId). 
+     * BioPAX data providers are responsible 
+     * for generating globally unique and standard URIs
+     * for their BioPAX elements.
+     * 
+     * @return the unique URI for this object.
      */
     String getRDFId();
 
@@ -69,7 +73,7 @@ public interface BioPAXElement extends Serializable, Cloneable
 
 
     /**
-     * A general-purpose map to optionallly 
+     * A general-purpose map to optionally 
      * store additional application-specific information 
      * about the BioPAX element, such as statistics,
      * inferred fields, etc.
@@ -77,5 +81,5 @@ public interface BioPAXElement extends Serializable, Cloneable
      * @return
      */
     public Map<String, Object> getAnnotations();
-	
+    	
 }

@@ -1,11 +1,12 @@
 package org.biopax.paxtools.io.sbgn;
 
+import static junit.framework.Assert.*;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.sbgn.SbgnUtil;
+import org.sbgn.bindings.Glyph;
 import org.sbgn.bindings.Sbgn;
 import org.xml.sax.SAXException;
 
@@ -28,7 +29,6 @@ public class SBGNConverterTest
 	public void testSBGNConversion() throws JAXBException, IOException, SAXException
 	{
 		String input = "/AR-TP53";
-//		System.out.println("getClass().getResource(\"\") = " + getClass().getResource(""));
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
 
@@ -59,6 +59,66 @@ public class SBGNConverterTest
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
 
-		System.out.println("result = " + result);
+		// Assert that the sbgn result contains glyphs
+		assertTrue(!result.getMap().getGlyph().isEmpty());
+
+		// Assert that compartments do not contain members inside
+		for (Glyph g : result.getMap().getGlyph())
+		{
+			if (g.getClazz().equals("compartment"))
+			{
+				assertTrue(g.getGlyph().isEmpty());
+			}
+		}
+	}
+
+	@Test
+	public void testNestedComplexes() throws JAXBException, IOException, SAXException
+	{
+		String input = "/translation-initiation-complex-formation";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+
+		System.out.println("level3.getObjects().size() = " + level3.getObjects().size());
+
+		String out = "target/" + input + ".sbgn";
+
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, true);
+
+		conv.writeSBGN(level3, out);
+
+		File outFile = new File(out);
+		System.out.println("outFile.getPath() = " + outFile.getAbsolutePath());
+		boolean isValid = SbgnUtil.isValid(outFile);
+
+		if (isValid)
+			System.out.println ("Validation succeeded");
+		else
+			System.out.println ("Validation failed");
+
+		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		// Now read from "f" and put the result in "sbgn"
+		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
+
+		boolean hasNestedComplex = false;
+		for (Glyph g : result.getMap().getGlyph())
+		{
+			if (g.getClazz().equals("complex"))
+			{
+				for (Glyph mem : g.getGlyph())
+				{
+					if (mem.getClazz().equals("complex"))
+					{
+						hasNestedComplex = true;
+						break;
+					}
+				}
+				if (hasNestedComplex) break;
+			}
+		}
+
+		assertTrue(hasNestedComplex);
 	}
 }
