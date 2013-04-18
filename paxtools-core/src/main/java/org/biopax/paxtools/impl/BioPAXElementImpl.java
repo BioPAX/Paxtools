@@ -123,7 +123,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     public int equivalenceCode()
     {
         return uri.hashCode();
-        // return uri == null ? super.hashCode() : uri.hashCode();
     }
 
 
