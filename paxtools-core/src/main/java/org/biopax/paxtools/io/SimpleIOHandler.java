@@ -57,6 +57,8 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	private boolean normalizeNameSpaces;
 
+	private boolean absoluteUris;
+
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
@@ -154,7 +156,11 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	{
 		try
 		{
-			r = XMLInputFactory.newInstance().createXMLStreamReader(in);
+			XMLInputFactory xmlf = XMLInputFactory.newInstance();
+			//this is to return string with encoded chars as one event (not splitting)
+			xmlf.setProperty("javax.xml.stream.isCoalescing", true);
+			r = xmlf.createXMLStreamReader(in);
+			
 			triples = new LinkedList<Triple>();
 
 		}
@@ -429,7 +435,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			PropertyEditor commentor = getRDFCommentEditor(paxElement);
 			r.next();
 			assert r.getEventType() == CHARACTERS;
-			String text = StringEscapeUtils.unescapeXml(r.getText());
+			String text = r.getText();
 			commentor.setValueToBean(text, paxElement);
 			log.warn("rdfs:comment is converted into the bp:comment; " +
 			         "however, this can be overridden " +
@@ -457,12 +463,12 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 					{
 						StringBuffer buff = new StringBuffer(r.getText());
 						r.next();
-						while (r.getEventType() == CHARACTERS)
+						while (r.getEventType() == CHARACTERS) 
 						{
 							buff.append(r.getText());
 							r.next();
 						}
-						resource = StringEscapeUtils.unescapeXml(buff.toString());
+						resource = buff.toString();
 
 					} else if (r.getEventType() == START_ELEMENT)
 					{
@@ -627,9 +633,8 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			String id = ((BioPAXElement) value).getRDFId();
 			assert id != null;
-			if (base != null && id.startsWith(base))
+			if (!absoluteUris && base != null && id.startsWith(base))
 			{
-				//id = id.substring(id.lastIndexOf('#'));
 				id = '#' + id.substring(base.length());
 			}
 			out.write(" rdf:resource=\"" + id + "\" />");
@@ -675,7 +680,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		out.write(newline + newline + "<" + name + " ");
 		String s = bpe.getRDFId();
-		if (base != null && s.startsWith(base))
+		if (!absoluteUris &&  base != null && s.startsWith(base))
 		{
 			String id = s.substring(base.length());
 			out.write(RDF_ID + id + close);
@@ -786,6 +791,30 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		out.write(newline + "</owl:Ontology>");
 	}
 
+	
+	/**
+	 * Sets the flag used when exporting a BioPAX model to RDF/XML:
+	 * true - to always write full URI in rdf:resource and use 
+	 * rdf:about instead rdf:ID (does not matter xml:base is set or not).
+	 * This is good for the data loading a RDF/SPARQL servers, such as Virtuoso,
+	 * so they generate correct and resolvable links from biopax URIs
+	 * (use of rdf:ID="localId" and rdf:resource="#localID" is known to make
+	 * them insert extra '#' between xml:base and localId).
+	 * 
+	 * @param absoluteUris
+	 */
+	public void absoluteUris(boolean absoluteUris) {
+		this.absoluteUris = absoluteUris;
+	}
+		
+	/**
+	 * @see #absoluteUris()
+	 */
+	public boolean isAbsoluteUris()
+	{
+		return this.absoluteUris;
+	}
+	
 
 	/**
 	 * Sets the flag used when exporting a BioPAX model to RDF/XML:

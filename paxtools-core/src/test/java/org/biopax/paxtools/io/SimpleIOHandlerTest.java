@@ -303,7 +303,7 @@ public class SimpleIOHandlerTest
         final Model model = mock.createModel();
         Protein[] pr = mock.create(model, Protein.class, 1);
 
-        String s = "\" \' < > & ";
+        String s = "\" \' < > & % : + && #";
         System.out.println(s);
         pr[0].getName().clear();
         pr[0].addName(s);
