@@ -240,21 +240,24 @@ public final class ModelUtils
 	 * refer to a removed object.
 	 * @param model
 	 * @param clazz filter-class
+	 * @return removed objects
 	 */
-	public static <T extends BioPAXElement> void removeObjectsIfDangling(Model model, Class<T> clazz)
+	public static <T extends BioPAXElement> Set<BioPAXElement> removeObjectsIfDangling(Model model, Class<T> clazz)
 	{
+		final Set<BioPAXElement> removed = new HashSet<BioPAXElement>();
+		
 		// 'equals' below is used intentionally (isAssignableFrom() would be incorrect)
 		if(Entity.class.equals(clazz)) {
 			LOG.warn("Ignored removeObjectsIfDangling call for: " +
 					"Entity.class (it would delete all)");
-			return;
+			return removed;
 		}
 		if(UtilityClass.class.equals(clazz) 
 				&& getRootElements(model, Entity.class).isEmpty()) 
 		{
 			LOG.warn("Ignored removeObjectsIfDangling call: " +
 					"no root entities model; UtilityClass.class");
-			return;
+			return removed;
 		}
 		
 		Set<T> dangling = getRootElements(model, clazz);	
@@ -269,14 +272,17 @@ public final class ModelUtils
 			for (BioPAXElement thing : dangling)
 			{
 				model.remove(thing);
+				removed.add(thing);
 				if (LOG.isDebugEnabled()) LOG.debug(
-						"removed (dangling) " + thing.getRDFId() + " (" + thing.getModelInterface().getSimpleName() +
-						") " + thing);
+					"removed (dangling) " + thing.getRDFId() + " (" 
+					+ thing.getModelInterface().getSimpleName() + ") " + thing);
 			}
 
 			// some may have become dangling now, so check again...
-			removeObjectsIfDangling(model, clazz);
+			removed.addAll(removeObjectsIfDangling(model, clazz));
 		}
+		
+		return removed;
 	}
 
 
