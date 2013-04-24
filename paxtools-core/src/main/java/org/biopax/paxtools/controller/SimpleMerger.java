@@ -1,6 +1,5 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.collections15.set.CompositeSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
