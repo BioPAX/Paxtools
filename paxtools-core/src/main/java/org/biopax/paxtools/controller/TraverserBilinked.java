@@ -49,8 +49,8 @@ public class TraverserBilinked extends Traverser
 		{
 			if (filterInverse(editor))
 			{
-					Set valueSet = new HashSet(editor.getInverseAccessor().getValueFromBean(element));
-					if (!valueSet.isEmpty()) for (Object value : valueSet)
+					Set<BioPAXElement> valueSet = new HashSet(editor.getInverseAccessor().getValueFromBean(element));
+					if (!valueSet.isEmpty()) for (BioPAXElement value : valueSet)
 					{
 						if(value != null) {
 							//TODO design issue: how visitor will know whether it's called from inverse or normal property (e.g., to modify value)?

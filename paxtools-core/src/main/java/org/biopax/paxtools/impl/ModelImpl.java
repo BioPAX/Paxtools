@@ -305,7 +305,7 @@ public class ModelImpl implements Model
 		SimpleMerger merger = new SimpleMerger(
 			SimpleEditorMap.get(level));
 		if(source == null)
-			merger.merge(this); //repairs itself
+			merger.merge(this, this); //repairs itself
 		else
 			merger.merge(this, source);
 	}

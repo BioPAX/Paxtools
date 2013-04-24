@@ -54,56 +54,50 @@ public class SimpleMerger
 
 
 	/**
-	 * Merges the <em>source</em> models into <em>target</em> model.
-	 * <p/>
-	 * Note: both target and source models are not necessarily self-consistent,
-	 * i.e., they may already contain external and dangling elements...
+	 * Merges the <em>source</em> models into <em>target</em> model,
+	 * one after another (in the order they are listed).
+	 * 
+	 * If the target model is self-integral (complete) or empty, then
+	 * the result of the merge will be also a complete model (contain 
+	 * unique objects with unique URIs, all objects referenced from 
+	 * any other object in the model).
+	 * 
+	 * Source models do not necessarily have to be complete and may even
+	 * indirectly contain different objects of the same type with the same 
+	 * URI. Though, in most cases, one probably wants target model be complete
+	 * or empty for the best results. So, if your target is incomplete or you are
+	 * not quite sure, do simply merge it as the first source to a new empty model.
+	 *       
 	 * @param target model into which merging process will be done
-	 * @param sources models, if any, that are going to be merged/updated to <em>target</em>
+	 * @param sources models to be merged/updated to <em>target</em>; order can be important
 	 */
 	public void merge(Model target, Model... sources)
 	{
-		CompositeSet<BioPAXElement> objects = new CompositeSet<BioPAXElement>();
-		/* collect all the objects and then merge at once 
-		 * (do not merge for each model separately: this is not only less expensive 
-		 * but also more reliable approach, because models may in fact overlap!)
-		 */
 		for (Model source : sources)
-		{
 			if (source != null)
-			{
-				objects.addComposited(source.getObjects());
-			}
-		}
-		merge(target, objects.toCollection());
+				merge(target, source.getObjects());
 	}
 
 
 	/**
-	 * Merges the <em>elements</em> into <em>target</em> model.
-	 * @param target model into which merging process will be done
-	 * @param elements elements, if any, that are going to be merged/updated to <em>target</em>
+	 * Merges the <em>elements</em> and all other (child) biopax objects
+	 * they refer to into the <em>target</em> model.
+	 * 
+	 * @param target
+	 * @param elements elements that are going to be merged/updated to <em>target</em>
 	 */
 	public void merge(Model target, Collection<? extends BioPAXElement> elements)
 	{
-		// First, fix 'target' model: find implicit objects
-		// if there are different objects with the same URI, 
-		// only one will be added to the model (no guarantee which one),
-		// but next steps should fix it (update object references to the added one)
-		@SuppressWarnings("unchecked") // safe, - no filters (empty array)
+		@SuppressWarnings("unchecked")
 		final Fetcher fetcher = new Fetcher(map);
-		for(BioPAXElement se :  new HashSet<BioPAXElement>(target.getObjects())) {
-			fetcher.fetch(se, target);
-		}
 		
-		// Second, auto-complete source 'elements' by discovering all the implicit elements there
-		// copy all elements, as the collection can be immutable or unsafe to add elements there
+		// Auto-complete source 'elements' by discovering all the implicit elements there
+		// copy all elements, as the collection can be immutable or unsafe to add elements to
 		final Set<BioPAXElement> sources = new HashSet<BioPAXElement>(elements);
 		for(BioPAXElement se : elements) {
 			sources.addAll(fetcher.fetch(se));
 		}
-		
-		
+				
 		// Next, we only copy elements having new URIs -
 		for (BioPAXElement bpe : sources)
 		{
