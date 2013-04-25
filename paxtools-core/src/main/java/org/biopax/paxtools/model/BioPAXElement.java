@@ -62,14 +62,14 @@ public interface BioPAXElement extends Serializable, Cloneable
      * @return true if the element equals to this, or has equivalent critical
      * properties.
      */
-        boolean isEquivalent(BioPAXElement element);
+    boolean isEquivalent(BioPAXElement element);
 
     /**
      * If two elements are equivalent, then their equivalence code should be the
      * same.
      * @return an integer that is same across all equivalent entities.
      */
-     int equivalenceCode();
+    int equivalenceCode();
 
 
     /**

@@ -54,12 +54,12 @@ public class UnificationXrefImplTest {
     	assertTrue(x1.equals(x6));
     	
     	assertFalse(x1 == x4);
-    	assertFalse(x1.equals(x4));
+    	assertFalse(x1 == x3);   	
+    	assertTrue(x1.equals(x4)); //same URI (see hashCode/equals in the basic class)
+    	assertTrue(x1.equals(x3)); //same URI (see hashCode/equals in the basic class)
     	assertTrue(x1.isEquivalent(x4)); // x4 is a copy of x1
-    	
     	assertTrue(x1.isEquivalent(x5)); // x5 has different rdfId but same db/id
-    	
-    	assertFalse(x1.isEquivalent(x3)); // not the same db/id
+    	assertTrue(x1.isEquivalent(x3)); // not the same db/id but same URI - equivalent
 	}
 	
 }
