@@ -173,19 +173,8 @@ public class SimpleMerger
 		if (value != null)
 		{
 			BioPAXElement newValue = target.getByID(value.getRDFId());			
-			assert newValue!=null : "null should never be here (a bug in the calling method)";			
-			if (!newValue.equals(value)) {
-				// newValue is a different, not null BioPAX element
-				if (log.isDebugEnabled() && !newValue.isEquivalent(value))
-				{
-					String msg = "Updating property " + editor.getProperty() +
-						"the replacement (target) object " + newValue + " (" +
-					    newValue.getModelInterface().getSimpleName() + "), with the same URI (" +
-					    newValue.getRDFId() + "), " + " is not equivalent to the source: " + 
-					    value + " (" + value.getModelInterface().getSimpleName() + ")!";
-					log.debug(msg); // we can live with it in some cases...(exception may be thrown below)
-				}
-
+			assert newValue != null : "null should never be here (a bug in the calling method)";			
+			if (newValue != null && newValue != value) {//using 'equals' would be mistake (BioPAXElementImpl now overrides 'equals')
 				/* 
 				 * "setValueToBean" comes first to prevent deleting of current value 
 				 * even though it cannot be replaced with newValue 
