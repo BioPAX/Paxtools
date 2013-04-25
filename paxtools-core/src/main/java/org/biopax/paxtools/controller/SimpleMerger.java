@@ -13,24 +13,22 @@ import java.util.Set;
 /**
  * This is a "simple" BioPAX merger, a utility class to merge
  * 'source' BioPAX models or a set of elements into the target model,
- * using the RDFId (URI) identity only. Merging of normalized,
- * self-consistent models normally gives "better" results
- * (though it depends on the application).
- * <p/>
+ * using the RDFId (URI) identity only. Merging into a normalized,
+ * self-consistent model normally gives "better" results 
+ * (it depends on the application though).
+ * 
  * One can also "merge" a model to itself, i.e.: merge(target,target),
- * which adds those implicit child elements that were not added
- * yet to the model (via model.add*) and makes it more integral.
- * <p/>
+ * or to an empty one, which adds all implicit child elements 
+ * to the model and makes it complete.
+ * 
  * Note, "RDFId (URI) identity" means that it skips, i.e., does not copy
- * a source's element to the target model, if the target already contains an element 
- * with the same RDFId. However, it does update (re-wire) all the object properties
- * to make sure they do not refer to the skipped objects (from the "source") anymore
- * <p/>
- * Note also that this merger does not guarantee the integrity of the passed models:
- * 'target' will be the merged model (often, "more integral"), and the 'source'
- * may be trashed (in fact, - still somewhat usable,
- * with some of its object properties now refer to target's elements).
- * <p/>
+ * a source's element to the target model, if the target already contains the element 
+ * with the same URI. However, it will update (re-wire) all the object properties
+ * to make sure they do not refer to objects outside the updated target model anymore.
+ * 
+ * We not guarantee the integrity of the source models after the merge is done
+ * (those may be still usable; all object properties will refer to target's elements).
+ * 
  * Finally, although called Simple Merger, it is in fact an advanced BioPAX utility,
  * which should be used wisely. Otherwise, it can actually waste resources.
  * So, consider using model.add(..), model.addNew(..) approach first (or instead),
@@ -64,8 +62,9 @@ public class SimpleMerger
 	 * Source models do not necessarily have to be complete and may even
 	 * indirectly contain different objects of the same type with the same 
 	 * URI. Though, in most cases, one probably wants target model be complete
-	 * or empty for the best results. So, if your target is incomplete or you are
-	 * not quite sure, do simply merge it as the first source to a new empty model.
+	 * or empty for the best possible results. So, if your target is incomplete, 
+	 * or you are not quite sure, then do simply merge it as the first source 
+	 * to a new empty model or itself (or call {@link Model#repair()} first).
 	 *       
 	 * @param target model into which merging process will be done
 	 * @param sources models to be merged/updated to <em>target</em>; order can be important
@@ -79,10 +78,12 @@ public class SimpleMerger
 
 
 	/**
-	 * Merges the <em>elements</em> and all other (child) biopax objects
-	 * they refer to into the <em>target</em> model.
+	 * Merges the <em>elements</em> and all their child biopax objects
+	 * into the <em>target</em> model.
 	 * 
-	 * @param target
+	 * @see #merge(Model, Model...) for details about the target model.
+	 * 
+	 * @param target model into which merging will be done
 	 * @param elements elements that are going to be merged/updated to <em>target</em>
 	 */
 	public void merge(Model target, Collection<? extends BioPAXElement> elements)
@@ -122,11 +123,8 @@ public class SimpleMerger
 			} 
 		}
 
-		// Finally, update object references -
-		// for all elements in the 'target', - because 'target' model 
-		// itself might have had issues as well, particularly, more 
-		// than one child object having the same URI (see comments above)
-		for (BioPAXElement bpe : target.getObjects()) {
+		// Finally, update object references
+		for (BioPAXElement bpe : sources) {
 			updateObjectFields(bpe, target);
 		}
 		
@@ -135,15 +133,10 @@ public class SimpleMerger
 
 	/**
 	 * Merges the <em>source</em> element (and its "downstream" dependents)
-	 * into <em>target</em> model if its RDFId is not yet there.
-	 * <p/>
-	 * Dependents, though, are not explicitly added to the target model,
-	 * but the corresponding object properties of the element either
-	 * become magically 'fixed' (point to target's elements if found)
-	 * or "dangling" (not null though, but still refer to external objects,
-	 * which simply will be skipped if one exports to OWL using
-	 * e.g. SimpleIO).
-	 * The same apply to other merge methods in this class.
+	 * into <em>target</em> model.
+	 * 
+	 * @see #merge(Model, Collection)
+	 * 
 	 * @param target
 	 * @param source
 	 */
@@ -179,7 +172,8 @@ public class SimpleMerger
 	{
 		if (value != null)
 		{
-			BioPAXElement newValue = target.getByID(value.getRDFId());
+			BioPAXElement newValue = target.getByID(value.getRDFId());			
+			assert newValue!=null : "null should never be here (a bug in the calling method)";			
 			if (!newValue.equals(value)) {
 				// newValue is a different, not null BioPAX element
 				if (log.isDebugEnabled() && !newValue.isEquivalent(value))
