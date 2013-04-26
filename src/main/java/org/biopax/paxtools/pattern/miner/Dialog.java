@@ -386,11 +386,13 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		List<Miner> minerList = new ArrayList<Miner>();
 		if (miners != null) minerList.addAll(Arrays.asList(miners));
 		minerList.add(new ControlsStateChangeMiner());
+		minerList.add(new ControlsStateChangeButIsParticipantMiner());
 		minerList.add(new ControlsStateChangeDetailedMiner());
 		minerList.add(new TranscriptionalRegulationMiner());
 		minerList.add(new DegradesMiner());
 		minerList.add(new AffectsDegradationMiner());
 		minerList.add(new ConsecutiveCatalysisMiner(ubiqueIDs));
+		minerList.add(new InSameComplexMiner());
 		minerList.add(new UbiquitousIDMiner());
 		return minerList.toArray(new Object[minerList.size()]);
 	}

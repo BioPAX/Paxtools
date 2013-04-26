@@ -18,7 +18,7 @@ import java.util.Set;
  * Miner for the consecutive-catalysis pattern.
  * @author Ozgun Babur
  */
-public class ConsecutiveCatalysisMiner extends MinerAdapter
+public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * IDs of ubiquitous molecules.
@@ -58,13 +58,40 @@ public class ConsecutiveCatalysisMiner extends MinerAdapter
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		// Update labels (if not already updated with a previous call of this method)
-		if (getPattern().hasLabel("first ER"))
-		{
-			getPattern().updateLabel("first ER", "First-protein");
-			getPattern().updateLabel("second ER", "Second-protein");
-		}
+		writeResultAsSIF(matches, out, true, getSourceLabel(), getTargetLabel());
+	}
 
-		writeResultAsSIF(matches, out, true, "First-protein", "Second-protein");
+	/**
+	 * Sets header of the output.
+	 * @return header
+	 */
+	@Override
+	public String getHeader()
+	{
+		return "First-protein\tSecond-protein";
+	}
+
+	@Override
+	public String getSourceLabel()
+	{
+		return "first ER";
+	}
+
+	@Override
+	public String getTargetLabel()
+	{
+		return "second ER";
+	}
+
+	@Override
+	public String getRelationType(Match m)
+	{
+		return "consecutive-catalysis";
+	}
+
+	@Override
+	public boolean isDirected()
+	{
+		return true;
 	}
 }

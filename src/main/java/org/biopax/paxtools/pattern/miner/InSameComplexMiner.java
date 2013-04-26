@@ -1,12 +1,9 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Control;
-import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.constraint.Type;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,16 +14,15 @@ import java.util.Map;
  * Miner for the degradation pattern.
  * @author Ozgun Babur
  */
-public class DegradesMiner extends MinerAdapter implements SIFMiner
+public class InSameComplexMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public DegradesMiner()
+	public InSameComplexMiner()
 	{
-		super("Degrades-or-blocks-it", "This pattern finds relations where first protein " +
-			"is controlling a Conversion that degrades the second protein. If the Control is " +
-			"positive the relation is DEGRADES, else it is BLOCKS_DEGRADATION");
+		super("Members-of-same-complex", "This miner finds cases where two genes have states " +
+			"that are members of the same complex.");
 	}
 
 	/**
@@ -36,7 +32,7 @@ public class DegradesMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.degradation();
+		return PatternBox.appearInSameComplex();
 	}
 
 	/**
@@ -49,29 +45,19 @@ public class DegradesMiner extends MinerAdapter implements SIFMiner
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		writeResultAsSIF(matches, out, true, getSourceLabel(), getTargetLabel());
-	}
-
-	/**
-	 * Sets header of the output.
-	 * @return header
-	 */
-	@Override
-	public String getHeader()
-	{
-		return "Upstream\ttype\tDownstream";
+		writeResultAsSIF(matches, out, false, getSourceLabel(), getTargetLabel());
 	}
 
 	@Override
 	public String getSourceLabel()
 	{
-		return "upstream PR";
+		return "Protein 1";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "downstream PR";
+		return "Protein 2";
 	}
 
 	/**
@@ -82,14 +68,12 @@ public class DegradesMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getRelationType(Match m)
 	{
-		Control con = (Control) m.get("Control", getPattern());
-		return con.getControlType() != null && con.getControlType().toString().startsWith("I") ?
-			"blocks-degradation" : "degrades";
+		return "in-same-complex";
 	}
 
 	@Override
 	public boolean isDirected()
 	{
-		return true;
+		return false;
 	}
 }

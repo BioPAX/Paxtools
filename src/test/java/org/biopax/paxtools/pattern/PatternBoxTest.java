@@ -5,29 +5,29 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.pattern.constraint.ConBox;
+import org.biopax.paxtools.pattern.miner.ControlsStateChangeMiner;
+import org.biopax.paxtools.pattern.miner.SIFInteraction;
+import org.biopax.paxtools.pattern.miner.SIFSearcher;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
  */
 public class PatternBoxTest
 {
-	Model model;
-	Model model_urea;
+	protected Model model;
+	protected Model model_urea;
 
 	@Before
 	public void setUp() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(getClass().getResourceAsStream("AR-TP53.owl"));
-		model_urea = h.convertFromOWL(getClass().getResourceAsStream("UreaCycle.owl"));
+		model = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("AR-TP53.owl"));
+		model_urea = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("UreaCycle.owl"));
 	}
 
 	@Test

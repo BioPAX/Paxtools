@@ -102,6 +102,34 @@ public class PatternBox
 	}
 
 	/**
+	 * Pattern for a EntityReference has a member PhysicalEntity that is controlling a state change
+	 * reaction of another EntityReference. This pattern is different from the original
+	 * controls-state-change. The controller in this case is not modeled as a controller, but as a
+	 * participant of the conversion, and it is at both sides.
+	 * @param considerGenerics option to handle generic memberships in the pattern
+	 * @return the pattern
+	 */
+	public static Pattern controlsStateChangeButIsParticipant(boolean considerGenerics)
+	{
+		Pattern p = new Pattern(EntityReference.class, "controller ER");
+		p.addConstraint(ConBox.erToPE(), "controller ER", "controller simple PE");
+		Constraint c = considerGenerics ? ConBox.linkToComplex() : ConBox.withComplexes();
+		p.addConstraint(c,"controller simple PE", "controller PE");
+		p.addConstraint(ConBox.participatesInConv(), "controller PE", "Conversion");
+		p.addConstraint(ConBox.left(), "Conversion", "controller PE");
+		p.addConstraint(ConBox.right(), "Conversion", "controller PE");
+
+		Pattern p2 = stateChange(considerGenerics);
+		p.addPattern(p2);
+
+		p.addConstraint(ConBox.equal(false), "controller ER", "changed ER");
+		p.addConstraint(ConBox.equal(false), "controller PE", "input PE");
+		p.addConstraint(ConBox.equal(false), "controller PE", "output PE");
+
+		return p;
+	}
+
+	/**
 	 * Pattern for a Conversion has an input PhysicalEntity and another output PhysicalEntity that
 	 * belongs to the same EntityReference.
 	 * @param considerGenerics option to handle generic memberships in the pattern
@@ -329,6 +357,27 @@ public class PatternBox
 		p.addConstraint(new ParticipatesInConv(RelType.INPUT, true), "output PE", "degrading Conv");
 		p.addConstraint(new Empty(new InputOrOutput(RelType.OUTPUT, true)), "degrading Conv");
 		p.addConstraint(ConBox.equal(false), "degrading Conv", "Conversion");
+		return p;
+	}
+
+	/**
+	 * Two proteins have states that are members of the same complex. Handles nested complexes and
+	 * homologies. Also guarantees that relationship to the complex is through different direct
+	 * complex members.
+	 * @return pattern
+	 */
+	public static Pattern appearInSameComplex()
+	{
+		Pattern p = new Pattern(ProteinReference.class, "Protein 1");
+		p.addConstraint(ConBox.erToPE(), "Protein 1", "SPE1");
+		p.addConstraint(ConBox.linkToComplex(), "SPE1", "PE1");
+		p.addConstraint(new PathConstraint("PhysicalEntity/componentOf"), "PE1", "Complex");
+		p.addConstraint(new PathConstraint("Complex/component"), "Complex", "PE2");
+		p.addConstraint(ConBox.equal(false), "PE1", "PE2");
+		p.addConstraint(ConBox.linkToSimple(), "PE2", "SPE2");
+		p.addConstraint(ConBox.peToER(), "SPE2", "Protein 2");
+		p.addConstraint(ConBox.equal(false), "Protein 1", "Protein 2");
+		p.addConstraint(new Type(ProteinReference.class), "Protein 2");
 		return p;
 	}
 }

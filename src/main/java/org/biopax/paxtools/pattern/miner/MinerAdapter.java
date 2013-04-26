@@ -38,7 +38,12 @@ public abstract class MinerAdapter implements Miner
 	/**
 	 * Accessor to the xref of EntityReference.
 	 */
-	private static final Set<String> symbolNames = new HashSet<String>(Arrays.asList("hgnc"));
+	private static final Set<String> symbolIDNames = new HashSet<String>(Arrays.asList("hgnc"));
+
+	/**
+	 * Accessor to the xref of EntityReference.
+	 */
+	private static final Set<String> symbolNames = new HashSet<String>(Arrays.asList("HGNC Symbol"));
 
 	/**
 	 * Constructor with name and description.
@@ -111,7 +116,7 @@ public abstract class MinerAdapter implements Miner
 			if (db != null)
 			{
 				db = db.toLowerCase();
-				if (symbolNames.contains(db))
+				if (symbolIDNames.contains(db))
 				{
 					String id = xr.getId();
 					if (id != null)
@@ -121,6 +126,14 @@ public abstract class MinerAdapter implements Miner
 						{
 							return symbol;
 						}
+					}
+				}
+				if (symbolNames.contains(db))
+				{
+					String id = xr.getId();
+					if (id != null && !id.isEmpty())
+					{
+						return id;
 					}
 				}
 			}
@@ -540,6 +553,29 @@ public abstract class MinerAdapter implements Miner
 	 */
 	public String getValue(Match m, int col)
 	{
+		return null;
+	}
+
+	/**
+	 * Creates a SIF interaction for the given match.
+	 * @param m match to use for SIF creation
+	 * @return SIF interaction
+	 */
+	public SIFInteraction createSIFInteraction(Match m)
+	{
+		if (this instanceof SIFMiner)
+		{
+			String source = getGeneSymbol(m, ((SIFMiner) this).getSourceLabel());
+			String target = getGeneSymbol(m, ((SIFMiner) this).getTargetLabel());
+
+			if (source != null && target != null)
+			{
+				return new SIFInteraction(source, target, this.getRelationType(m),
+					((SIFMiner) this).isDirected());
+
+			}
+		}
+
 		return null;
 	}
 }

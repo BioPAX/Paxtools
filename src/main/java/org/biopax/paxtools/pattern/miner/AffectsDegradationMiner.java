@@ -48,9 +48,17 @@ public class AffectsDegradationMiner extends MinerAdapter
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		getPattern().updateLabel("controller ER", "Upstream");
-		getPattern().updateLabel("changed ER", "Downstream");
-		writeResultAsSIF(matches, out, true, "Upstream", "Downstream");
+		writeResultAsSIF(matches, out, true, "controller ER", "changed ER");
+	}
+
+	/**
+	 * Sets header of the output.
+	 * @return header
+	 */
+	@Override
+	public String getHeader()
+	{
+		return "Upstream\ttype\tDownstream";
 	}
 
 	/**

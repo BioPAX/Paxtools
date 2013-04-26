@@ -16,8 +16,18 @@ import java.util.Map;
  * Miner for the controls-state-change pattern.
  * @author Ozgun Babur
  */
-public class ControlsStateChangeMiner extends MinerAdapter
+public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 {
+	/**
+	 * Constructor for extending purposes.
+	 * @param name name of the miner
+	 * @param description description of the miner
+	 */
+	public ControlsStateChangeMiner(String name, String description)
+	{
+		super(name, description);
+	}
+
 	/**
 	 * Constructor that sets name and description.
 	 */
@@ -52,13 +62,40 @@ public class ControlsStateChangeMiner extends MinerAdapter
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		// Update labels (if not already updated with a previous call of this method)
-		if (getPattern().hasLabel("controller ER"))
-		{
-			getPattern().updateLabel("controller ER", "Upstream");
-			getPattern().updateLabel("changed ER", "Downstream");
-		}
+		writeResultAsSIF(matches, out, true, getSourceLabel(), getTargetLabel());
+	}
 
-		writeResultAsSIF(matches, out, true, "Upstream", "Downstream");
+	/**
+	 * Sets header of the output.
+	 * @return header
+	 */
+	@Override
+	public String getHeader()
+	{
+		return "Upstream\tDownstream";
+	}
+
+	@Override
+	public String getSourceLabel()
+	{
+		return "controller ER";
+	}
+
+	@Override
+	public String getTargetLabel()
+	{
+		return "changed ER";
+	}
+
+	@Override
+	public String getRelationType(Match m)
+	{
+		return "state-change";
+	}
+
+	@Override
+	public boolean isDirected()
+	{
+		return true;
 	}
 }

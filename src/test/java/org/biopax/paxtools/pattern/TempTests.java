@@ -6,17 +6,18 @@ import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.pattern.constraint.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.FileReader;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
  */
+@Ignore
 public class TempTests
 {
 	Model model;
@@ -25,7 +26,7 @@ public class TempTests
 	public void setUp() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/PC.owl"));
+//		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
 	}
 
 	@Test
@@ -56,5 +57,24 @@ public class TempTests
 			System.out.println(pat.getPathwayComponent().size() + "\t" + pat.getDisplayName());
 			System.out.println(pat.getRDFId());
 		}
+	}
+
+	@Test
+	public void captureConseqCataSamples() throws Throwable
+	{
+		Set<String> ubiq = new HashSet<String>();
+		BufferedReader reader = new BufferedReader(new FileReader("ubiquitous-ids.txt"));
+
+		for (String line = reader.readLine(); line != null; line = reader.readLine())
+		{
+			ubiq.add(line);
+		}
+
+		reader.close();
+
+
+		Pattern p = PatternBox.consecutiveCatalysis(ubiq);
+
+		Searcher.searchInFile(p, "All-Data.owl", "Captured.owl", 100, 1);
 	}
 }

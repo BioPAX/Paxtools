@@ -1,7 +1,6 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Catalysis;
 import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
@@ -11,17 +10,14 @@ import org.biopax.paxtools.pattern.constraint.Type;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Miner for the transcriptional regulation pattern.
  * @author Ozgun Babur
  */
-public class TranscriptionalRegulationMiner extends MinerAdapter
+public class TranscriptionalRegulationMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
@@ -57,9 +53,19 @@ public class TranscriptionalRegulationMiner extends MinerAdapter
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		getPattern().updateLabel("TF PR", "Upstream");
-		getPattern().updateLabel("product ER", "Downstream");
-		writeResultAsSIF(matches, out, true, "Upstream", "Downstream");
+		writeResultAsSIF(matches, out, true, getSourceLabel(), getTargetLabel());
+	}
+
+	@Override
+	public String getSourceLabel()
+	{
+		return "TF PR";
+	}
+
+	@Override
+	public String getTargetLabel()
+	{
+		return "product ER";
 	}
 
 	/**
@@ -73,5 +79,21 @@ public class TranscriptionalRegulationMiner extends MinerAdapter
 		Control con = (Control) m.get("Control", getPattern());
 		return con.getControlType() != null && con.getControlType().toString().startsWith("I") ?
 			"-|" : "->";
+	}
+
+	@Override
+	public boolean isDirected()
+	{
+		return true;
+	}
+
+	/**
+	 * Sets header of the output.
+	 * @return header
+	 */
+	@Override
+	public String getHeader()
+	{
+		return "Upstream\ttype\tDownstream";
 	}
 }

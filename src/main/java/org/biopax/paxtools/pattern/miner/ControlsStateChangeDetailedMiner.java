@@ -76,15 +76,6 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 	@Override
 	public String getValue(Match m, int col)
 	{
-		String u = getGeneSymbol(m, "controller ER");
-		String d = getGeneSymbol(m, "changed ER");
-
-		if (u != null && d != null && u.equals("MAPK1") && d.equals("SHC1"))
-		{
-			System.out.print("");
-		}
-
-
 		switch(col)
 		{
 			case 0:

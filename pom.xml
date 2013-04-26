@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>pattern</artifactId>
-	<version>1.0</version>
-
-	<properties>
-		<paxtools.version>4.2.0-SNAPSHOT</paxtools.version>
-	</properties>
+	<version>1.0.0</version>
 
 	<repositories>
 		<repository>
@@ -29,18 +23,14 @@
         </repository>
         <repository>
             <id>biopax.releases</id>
-            <name>BioPAX Snapshots Repository at Sourceforge</name>
+            <name>BioPAX Releases Repository at Sourceforge</name>
             <url>http://biopax.sourceforge.net/m2repo/releases/</url>
         </repository>
 		<repository>
 			<id>biopax.snapshots</id>
 			<name>BioPAX Snapshots Repository at Sourceforge</name>
 			<url>http://biopax.sourceforge.net/m2repo/snapshots/</url>
-		</repository>
-		<repository>
-			<id>ozgun.repo</id>
-			<name>Ozgun Repo</name>
-			<url>http://cbio.mskcc.org/~ozgun/m2repo/</url>
+            <snapshots><enabled>true</enabled></snapshots>
 		</repository>
 	</repositories>
 
@@ -56,7 +46,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.2-beta-5</version>
+					<version>2.4</version>
 					<configuration>
 						<finalName>biopax-pattern-${project.version}</finalName>
 						<appendAssemblyId>false</appendAssemblyId>
@@ -86,19 +76,19 @@
 		<dependency>
 			<groupId>org.biopax.paxtools</groupId>
 			<artifactId>paxtools-core</artifactId>
-			<version>${paxtools.version}</version>
+			<version>4.1.6</version>
 		</dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.13</version>
+            <version>1.2.17</version>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.7</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -107,13 +97,7 @@
         <repository>
             <id>pattern.repo</id>
             <name>Pattern repository</name>
-            <url>file://${basedir}/wiki/repository/</url>
+            <url>file://${basedir}/maven-repo/</url>
         </repository>
-        <!--<repository>-->
-            <!--<id>ozgun.repo</id>-->
-            <!--<name>Ozgun's Repository</name>-->
-            <!--<url>scp://cbio.mskcc.org/home/ozgun/public_html/m2repo</url>-->
-        <!--</repository>-->
     </distributionManagement>
-
 </project>
