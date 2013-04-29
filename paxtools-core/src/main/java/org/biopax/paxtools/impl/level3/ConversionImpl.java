@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -36,9 +37,9 @@ public class ConversionImpl extends InteractionImpl
 
 	public ConversionImpl()
 	{
-		left = new HashSet<PhysicalEntity>();
-		right = new HashSet<PhysicalEntity>();
-		participantStoichiometry = new HashSet<Stoichiometry>();
+		left = new BiopaxSafeSet<PhysicalEntity>();
+		right = new BiopaxSafeSet<PhysicalEntity>();
+		participantStoichiometry = new BiopaxSafeSet<Stoichiometry>();
 	}
 
 

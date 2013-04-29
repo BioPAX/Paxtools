@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -23,7 +24,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
-	private final Log log = LogFactory.getLog(EntityFeatureImpl.class);
+	private final Log LOG = LogFactory.getLog(EntityFeatureImpl.class);
 	
 	private Set<Evidence> evidence;
 	private EntityReference ownerEntityReference;
@@ -37,11 +38,11 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	public EntityFeatureImpl()
 	{
-		evidence = new HashSet<Evidence>();
-		featureOf = new HashSet<PhysicalEntity>();
-		notFeatureOf = new HashSet<PhysicalEntity>();
-		memberFeatureOf = new HashSet<EntityFeature>();
-		memberFeature = new HashSet<EntityFeature>();
+		evidence = new BiopaxSafeSet<Evidence>();
+		featureOf = new BiopaxSafeSet<PhysicalEntity>();
+		notFeatureOf = new BiopaxSafeSet<PhysicalEntity>();
+		memberFeatureOf = new BiopaxSafeSet<EntityFeature>();
+		memberFeature = new BiopaxSafeSet<EntityFeature>();
 	}
 
 

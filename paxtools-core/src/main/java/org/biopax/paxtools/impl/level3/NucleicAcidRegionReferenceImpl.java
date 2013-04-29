@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -35,8 +36,8 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	public NucleicAcidRegionReferenceImpl()
 	{
-		regionType = new HashSet<SequenceRegionVocabulary>();
-		this.subRegionOf = new HashSet<NucleicAcidReference>();
+		regionType = new BiopaxSafeSet<SequenceRegionVocabulary>();
+		subRegionOf = new BiopaxSafeSet<NucleicAcidReference>();
 	}
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -36,10 +37,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	 */
 	public PathwayStepImpl()
 	{
-		this.nextStep = new HashSet<PathwayStep>();
-		this.nextStepOf = new HashSet<PathwayStep>();
-		this.stepProcess = new HashSet<Process>();
-		this.evidence = new HashSet<Evidence>();
+		this.nextStep = new BiopaxSafeSet<PathwayStep>();
+		this.nextStepOf = new BiopaxSafeSet<PathwayStep>();
+		this.stepProcess = new BiopaxSafeSet<Process>();
+		this.evidence = new BiopaxSafeSet<Evidence>();
 	}
 
 	@Transient

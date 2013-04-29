@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -33,8 +34,8 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 	public ComplexImpl()
 	{
-		this.component = new HashSet<PhysicalEntity>();
-		this.componentStoichiometry = new HashSet<Stoichiometry>();
+		this.component = new BiopaxSafeSet<PhysicalEntity>();
+		this.componentStoichiometry = new BiopaxSafeSet<Stoichiometry>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

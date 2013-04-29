@@ -1173,7 +1173,7 @@ public class BioPAXMapperImp implements BioPAXMapper
 			current.addTerm(term);
 		}
 		for (Xref xref : previous.getXref()) {
-			current.addXref(xref);
+			current.addXref(xref); //TODO: warn: attempts to add duplicate (URI) xrefs, which is ignored quietly...
 		}
 		if (vocabularyL3.contains(previous))
 		{

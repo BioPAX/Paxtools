@@ -53,7 +53,6 @@ public class PropertyReasonerTest {
 		p1.setEntityReference(pr1);
 		p2.setEntityReference(pr2);
 		pr2.setOrganism(hs);
-		pw1.addPathwayComponent(conv1);
 		pw1.setStandardName("Pathway1");
 		ca1.addControlled(conv1);
 		ca1.addController(p2);

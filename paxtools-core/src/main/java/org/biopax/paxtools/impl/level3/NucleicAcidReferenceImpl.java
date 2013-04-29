@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -24,7 +25,7 @@ public abstract class NucleicAcidReferenceImpl extends SequenceEntityReferenceIm
 
 	public NucleicAcidReferenceImpl()
 	{
-		this.subRegion = new HashSet<NucleicAcidRegionReference>();
+		this.subRegion = new BiopaxSafeSet<NucleicAcidRegionReference>();
 	}
 
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

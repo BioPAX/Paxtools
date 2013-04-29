@@ -4,6 +4,7 @@ package org.biopax.paxtools.impl.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -36,12 +37,12 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 */
 	public EntityReferenceImpl()
 	{
-		this.entityFeature = new HashSet<EntityFeature>();
-		this.entityReferenceOf = new HashSet<SimplePhysicalEntity>();
-		this.evidence = new HashSet<Evidence>();
-		this.entityReferenceType = new HashSet<EntityReferenceTypeVocabulary>();
-		this.memberEntityReference = new HashSet<EntityReference>();
-		this.ownerEntityReference= new HashSet<EntityReference>();
+		this.entityFeature = new BiopaxSafeSet<EntityFeature>();
+		this.entityReferenceOf = new BiopaxSafeSet<SimplePhysicalEntity>();
+		this.evidence = new BiopaxSafeSet<Evidence>();
+		this.entityReferenceType = new BiopaxSafeSet<EntityReferenceTypeVocabulary>();
+		this.memberEntityReference = new BiopaxSafeSet<EntityReference>();
+		this.ownerEntityReference= new BiopaxSafeSet<EntityReference>();
 	}
 
 	@Transient

@@ -19,10 +19,7 @@ import javax.persistence.Transient;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFeature
 {
-	public FragmentFeatureImpl()
-    {
-
-	}
+	public FragmentFeatureImpl() {}
 	
 	@Override @Transient
 	public Class<? extends FragmentFeature> getModelInterface()

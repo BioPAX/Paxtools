@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -41,8 +42,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	public InteractionImpl()
 	{
-		this.interactionType = new HashSet<InteractionVocabulary>();
-		this.participant = new HashSet<Entity>();
+		this.interactionType = new BiopaxSafeSet<InteractionVocabulary>();
+		this.participant = new BiopaxSafeSet<Entity>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

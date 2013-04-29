@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -32,9 +33,9 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 	public ProcessImpl()
 	{
-		this.controlledOf = new HashSet<Control>();
-		this.stepProcessOf = new HashSet<PathwayStep>();
-		this.pathwayComponentOf = new HashSet<Pathway>();
+		this.controlledOf = new BiopaxSafeSet<Control>();
+		this.stepProcessOf = new BiopaxSafeSet<PathwayStep>();
+		this.pathwayComponentOf = new BiopaxSafeSet<Pathway>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
