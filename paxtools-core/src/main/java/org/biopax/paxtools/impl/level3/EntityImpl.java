@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.DataSourceFieldBridge;
 import org.biopax.paxtools.util.SetStringBridge;
@@ -63,9 +64,9 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	public EntityImpl()
 	{
 		this.availability = new HashSet<String>();
-		this.dataSource = new HashSet<Provenance>();
-		this.participantOf = new HashSet<Interaction>();
-		this.evidence = new HashSet<Evidence>();
+		this.dataSource = new BiopaxSafeSet<Provenance>();
+		this.participantOf = new BiopaxSafeSet<Interaction>();
+		this.evidence = new BiopaxSafeSet<Evidence>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

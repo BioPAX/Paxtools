@@ -30,19 +30,27 @@ package org.mskcc.psibiopax.converter;
 
 // imports
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
 import org.biopax.paxtools.model.BioPAXElement;
 import psidev.psi.mi.xml.model.*;
 
-import java.util.*;
 
 /**
  * A thread class which processes an entry in a psi xml doc.
  * This class returns a paxtools model to a BioPAXMarshaller,
  * whose ref is passed during object construction.
  *
- * @author Benjamin Gross
+ * @author Benjamin Gross, rodche (re-factored to Runnable)
  */
-public class EntryMapper extends Thread {
+public class EntryMapper implements Runnable {
 
 	/**
 	 * Genetic Interactions.
@@ -706,7 +714,7 @@ public class EntryMapper extends Thread {
 		Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
 
 		// get experiment list
-		Collection experimentList = new ArrayList<Object>();
+		Collection<?> experimentList = new ArrayList<Object>();
 		if (interaction.hasExperiments()) {
 			experimentList = interaction.getExperiments();
 		}

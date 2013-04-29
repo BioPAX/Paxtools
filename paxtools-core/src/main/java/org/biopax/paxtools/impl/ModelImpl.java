@@ -112,11 +112,7 @@ public class ModelImpl implements Model
 
     
 	public void remove(BioPAXElement aBioPAXElement)
-	{
-// wasn't the best way (see below)
-//		this.idMap.values().remove(aBioPAXElement);
-		
-		// should be now safe to remove by ID (since v4.1.3-SNAPSHOT) -
+	{		
 		if(this.contains(aBioPAXElement))
 			this.idMap.remove(aBioPAXElement.getRDFId());
 	}

@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -38,7 +39,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	 */
 	public XrefImpl()
 	{
-		this.xrefOf = new HashSet<XReferrable>();
+		this.xrefOf = new BiopaxSafeSet<XReferrable>();
 	}
 
 	@Override

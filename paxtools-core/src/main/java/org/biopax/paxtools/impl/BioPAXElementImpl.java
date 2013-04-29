@@ -50,6 +50,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
 	private String _pk; // Primary Key
 
+	@Version
+	private long version;
 	
 	public BioPAXElementImpl() {
 		this.annotations = new HashMap<String, Object>();
@@ -199,53 +201,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 		String hex = sb.toString();
 		return hex;
 	}
-	
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * For the sake of BioPAX Model integrity and completeness,
-	 * BioPAX objects having the same URI will have
-	 * same hash code. This therefore prevents accidentally adding
-	 * different BioPAX elements with the same URI to a 
-	 * multiple cardinality object property, such as xref,
-	 * feature, dataSource, etc (one will have to explicitly 
-	 * replace instead).
-	 * 
-	 * @param o
-	 * @return
-	 */
-	@Override
-	public int hashCode() {
-        return uri == null ? super.hashCode() : uri.hashCode();
-    }
-
-	
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * For the sake of BioPAX Model integrity and completeness,
-	 * BioPAX objects having the same URI are considered
-	 * equal (and equivalent) always.
-	 * 
-	 * @param o
-	 * @return
-	 */
-	@Override
-    public boolean equals(Object o)
-    {
-        boolean value = false;
-
-        if (this == o) {
-            value = true;
-        }
-        else if (o instanceof BioPAXElement) {
-            final BioPAXElement that = (BioPAXElement) o;
-            value = this.uri.equals(that.getRDFId());
-        }
-        
-        return value;
-    }
     
 }
 

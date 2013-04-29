@@ -37,7 +37,7 @@ import java.util.Set;
  */
 public class SimpleMerger
 {
-	private static final Log log = LogFactory.getLog(SimpleMerger.class);
+	private static final Log LOG = LogFactory.getLog(SimpleMerger.class);
 
 	private final EditorMap map;
 
@@ -174,7 +174,7 @@ public class SimpleMerger
 		{
 			BioPAXElement newValue = target.getByID(value.getRDFId());			
 			assert newValue != null : "null should never be here (a bug in the calling method)";			
-			if (newValue != null && newValue != value) {//using 'equals' would be mistake (BioPAXElementImpl now overrides 'equals')
+			if (newValue != null && newValue != value) {//using 'equals' can be wrong if e.g. BioPAXElementImpl overrides 'equals' method)
 				/* 
 				 * "setValueToBean" comes first to prevent deleting of current value 
 				 * even though it cannot be replaced with newValue 

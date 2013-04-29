@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.BiochemicalReaction;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.KPrime;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -40,11 +41,11 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 	public BiochemicalReactionImpl()
 	{
-		this.deltaG = new HashSet<DeltaG>();
+		this.deltaG = new BiopaxSafeSet<DeltaG>();
 		this.deltaH = new HashSet<Float>();
 		this.deltaS = new HashSet<Float>();
 		this.eCNumber = new HashSet<String>();
-		this.kEQ = new HashSet<KPrime>();
+		this.kEQ = new BiopaxSafeSet<KPrime>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

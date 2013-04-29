@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -112,12 +111,12 @@ public final class ModelUtils
 	 * Replaces BioPAX elements in the model with ones from the map,
 	 * updates corresponding BioPAX object references.
 	 * <p/>
-	 * It does neither remove the old nor add new elements in the model
+	 * It does not neither remove the old nor add new elements in the model
 	 * (if required, one can do this before/after this method, e.g., using
 	 * the same 'subs' map)
 	 * <p/>
 	 * This does visit all object properties of each "explicit" element
-	 * in the model, but does traverse deeper into one's sub-properties
+	 * in the model, but does not traverse deeper into one's sub-properties
 	 * to replace something there as well (e.g., nested member entity references
 	 * are not replaced unless parent entity reference present in the model)
 	 * <p/>
@@ -125,12 +124,7 @@ public final class ModelUtils
 	 * children to new objects (the replacement ones are supposed to have
 	 * their own properties already set or to be set shortly; otherwise,
 	 * consider using of something like {@link #fixDanglingInverseProperties(BioPAXElement, Model)} after.
-	 * <p/>
-	 * As the result, corresponding object properties will mostly refer to new (replacement) values,
-	 * others to old ones (rare, if nested implicit object referred to the replaced value);
-	 * therefore, some of the replaced/removed objects will lost their nested children
-	 * (where there exists a property, inverse property pair), and such
-	 * child objects, in turn, eventually become dangling (if not used by other BioPAX elements).
+	 * 
 	 * @param model
 	 * @param subs the replacements map (many-to-one, old-to-new)
 	 * @exception IllegalBioPAXArgumentException if there is an incompatible type replacement object
@@ -138,7 +132,6 @@ public final class ModelUtils
 	public static void replace(Model model, final Map<? extends BioPAXElement, ? extends BioPAXElement> subs)
 	{
 		// update properties
-
 		Visitor visitor = new Visitor()
 		{
 			@Override
@@ -148,22 +141,29 @@ public final class ModelUtils
 				{
 					BioPAXElement value = (BioPAXElement) range;
 					// 'value' is to be replaced with the 'replacement'
-					BioPAXElement replacement = subs.get(value);
+					BioPAXElement replacement = subs.get(range); //can get null (ok)
+					
 					// normal biopax property -
 					if (replacement != null && !editor.getRange().isInstance(replacement))
-						throw new IllegalBioPAXArgumentException("Incompatible type! Attempted to replace " +
-						                                         value.getRDFId() + " (" + value + "; " +
-						                                         value.getModelInterface().getSimpleName() + ")" +
-						                                         " with " +
-						                                         ((replacement != null) ? replacement.getRDFId() :
-								                                         "") +
-						                                         " (" + replacement + "); for property: " +
-						                                         editor.getProperty() + " of bean: " +
-						                                         domain.getRDFId() + " (" + domain + "; " +
-						                                         domain.getModelInterface().getSimpleName() + ")");
+					{
+						throw new IllegalBioPAXArgumentException(
+							"Incompatible type! Attempted to replace " 
+							+ value.getRDFId() + " (" + value + "; "
+							+ value.getModelInterface().getSimpleName() + ") with "
+							+ ((replacement != null) ? replacement.getRDFId() :
+							"") + " (" + replacement + "); for property: " 
+							+ editor.getProperty() + " of bean: " 
+							+ domain.getRDFId() + " (" + domain + "; " 
+							+ domain.getModelInterface().getSimpleName() + ")");
+					}
 
-					if (editor.isMultipleCardinality()) editor.removeValueFromBean(value, domain);
-					editor.setValueToBean(replacement, domain);
+					if (replacement != value) 
+					{
+						editor.removeValueFromBean(value, domain);
+						editor.setValueToBean(replacement, domain);
+					} else {
+						LOG.debug("replace: skipped the identical: " + replacement.getRDFId());
+					}
 				}
 			}
 		};
@@ -190,34 +190,29 @@ public final class ModelUtils
 	public static <T extends BioPAXElement> Set<T> getRootElements(final Model model, final Class<T> filterClass)
 	{
 		// copy all such elements (initially, we think all are roots...)
-		final Set<T> result = Collections.newSetFromMap(new ConcurrentHashMap<T, Boolean>());
-		result.addAll(model.getObjects(filterClass));
+		final Set<T> result = new HashSet<T>(model.getObjects(filterClass));
 
-		ExecutorService exe = Executors.newCachedThreadPool();
-		// but we run from every element (all types)
-		for (final BioPAXElement e : model.getObjects()) {
-			exe.execute(new Runnable() {
+		//"shallow" traverser (direct object properties only - Visitor.visit does not call traverse again) 
+		@SuppressWarnings("unchecked")
+		Traverser traverser = new Traverser(em, 
+			new Visitor() {
 				@Override
-				public void run() {
-					//new "shallow" traverser (visits direct properties, i.e., visitor does not call traverse again) 
-					new Traverser(em, new Visitor() {
-							@Override
-							public void visit(BioPAXElement parent, Object value, Model model,
-									PropertyEditor<?, ?> editor) {
-								if (filterClass.isInstance(value)) result.remove(value);
-							}
-						}
-					).traverse(e, null);
+				public void visit(BioPAXElement parent, Object value, Model model,
+					PropertyEditor<?, ?> editor) 
+				{
+					if (filterClass.isInstance(value)) result.remove(value);
 				}
-			});
-		}
+			}, 
+			new Filter<PropertyEditor>() {
+				@Override
+				public boolean filter(PropertyEditor pe) {
+					return (pe instanceof ObjectPropertyEditor);
+				}
+		});
 		
-		exe.shutdown();
-		try {
-			exe.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-		} catch (InterruptedException e1) {
-			throw new RuntimeException("Interrupted!",e1);
-		}
+		// but we run from every element (all types)
+		for(BioPAXElement e : model.getObjects())
+			traverser.traverse(e, null);
 
 		return result;
 	}
@@ -265,16 +260,14 @@ public final class ModelUtils
 		// get rid of dangling objects
 		if (!dangling.isEmpty())
 		{
-			if (LOG.isInfoEnabled()) LOG.info(dangling.size() + " " + clazz.getSimpleName() +
-			                                  " dangling objects will be deleted...");
-
+			LOG.info(dangling.size() + " " + clazz.getSimpleName() +
+				" dangling objects will be deleted...");
 
 			for (BioPAXElement thing : dangling)
 			{
 				model.remove(thing);
 				removed.add(thing);
-				if (LOG.isDebugEnabled()) LOG.debug(
-					"removed (dangling) " + thing.getRDFId() + " (" 
+				LOG.debug("removed (dangling) " + thing.getRDFId() + " (" 
 					+ thing.getModelInterface().getSimpleName() + ") " + thing);
 			}
 
@@ -557,8 +550,8 @@ public final class ModelUtils
 				if (editor instanceof ObjectPropertyEditor)
 				{
 					BioPAXElement value = (BioPAXElement) range;
-					if (value != null && !model.containsID(value.getRDFId())) editor.removeValueFromBean(value,
-					                                                                                     domain);
+					if (value != null && !model.containsID(value.getRDFId())) 
+						editor.removeValueFromBean(value, domain);
 				}
 			}
 		};

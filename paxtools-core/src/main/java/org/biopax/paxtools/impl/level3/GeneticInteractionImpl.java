@@ -24,7 +24,10 @@ import javax.persistence.Transient;
 public class GeneticInteractionImpl extends InteractionImpl
         implements GeneticInteraction
 {
+	private PhenotypeVocabulary phenotype;
 
+    private Score interactionScore;
+	
 	public GeneticInteractionImpl() {
 	}
 	
@@ -33,10 +36,6 @@ public class GeneticInteractionImpl extends InteractionImpl
 	{
 		return GeneticInteraction.class;
 	}
-
-	private PhenotypeVocabulary phenotype;
-
-    private Score interactionScore;
 
     @ManyToOne(targetEntity = PhenotypeVocabularyImpl.class)
 	public PhenotypeVocabulary getPhenotype()
