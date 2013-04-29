@@ -74,7 +74,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	{
 		if (component != null) {
 			this.component.remove(component);
-			component.getComponentOf().add(null);
+			component.getComponentOf().remove(this);
 		}
 	}
 
