@@ -12,6 +12,7 @@ import java.util.Collections;
 import org.ivis.layout.*;
 import org.ivis.layout.util.*;
 import org.ivis.layout.cose.CoSELayout;
+import org.ivis.layout.sbgn.SbgnPDLayout;
 import org.sbgn.bindings.Arc;
 import org.sbgn.bindings.Port;
 import org.sbgn.bindings.Glyph;
@@ -51,7 +52,7 @@ public class SBGNLayoutManager
 		portIDToOwnerGlyph = new HashMap();
 		
 		// Using Compound spring  embedder layout
-		this.layout = new CoSELayout();
+		this.layout = new SbgnPDLayout();
 		
 		// This list holds the glyphs that will be deleted after corresponding glyph is added to child glyph of another glyph.
 		ArrayList <Glyph> deletedList = new ArrayList<Glyph>();
