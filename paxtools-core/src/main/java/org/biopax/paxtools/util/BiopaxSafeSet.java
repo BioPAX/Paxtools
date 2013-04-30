@@ -43,10 +43,11 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 		if(!map.containsKey(uri)) {
 			map.put(uri, bpe);
 			return true;
-		} else {
-//			throw new IllegalBioPAXArgumentException(
-//				"duplicate element:" + bpe);
-			LOG.warn("ignored a duplicate element:" + bpe.getRDFId());
+		} else { 
+			//do not throw an ex., because duplicate attempts occur naturally 
+			// (e.g., same PE on both left and right sides of a reaction 
+			// causes same participant/participantOf is touched twice) 
+			LOG.debug("ignored duplicate:" + bpe.getRDFId());
 			return false;
 		}
 	}

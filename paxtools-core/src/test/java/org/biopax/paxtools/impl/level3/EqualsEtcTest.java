@@ -10,7 +10,6 @@ import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.BiopaxSafeSet;
-import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.junit.Ignore;
 import org.junit.Test;
 
