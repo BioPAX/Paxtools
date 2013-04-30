@@ -349,7 +349,7 @@ public class SBGNLayoutManager
 	
 	public void createLNode(VNode vNode,VNode parent,Layout layout)
 	{
-		LNode lNode = layout.newNode(vNode);
+		LNode lNode = ((SbgnPDLayout)layout).newNode(vNode, vNode.glyph.getClazz());
 		LGraph rootLGraph = layout.getGraphManager().getRoot();
 		this.viewToLayout.put(vNode, lNode); 
 		
