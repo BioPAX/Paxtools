@@ -1209,8 +1209,10 @@ public final class ModelUtils
 				|| biopaxElement instanceof EntityReference
 				|| biopaxElement instanceof PhysicalEntity) {
 			
-			if (biopaxElement instanceof SequenceEntityReference)
-				biosources.add(((SequenceEntityReference) biopaxElement).getOrganism());
+			if (biopaxElement instanceof SequenceEntityReference) {
+				if(((SequenceEntityReference) biopaxElement).getOrganism() != null)
+					biosources.add(((SequenceEntityReference) biopaxElement).getOrganism());
+			}
 			
 			//get from children (members, participants, components, etc.)
 			biosources.addAll((new Fetcher(em, Fetcher.nextStepFilter))
