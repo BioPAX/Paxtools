@@ -99,7 +99,7 @@ public class QueryTest
 		return cln.clone(model, result);
 	}
 
-	private static Set<BioPAXElement> findElements(Model model, String... ids)
+	protected static Set<BioPAXElement> findElements(Model model, String... ids)
 	{
 		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
 
