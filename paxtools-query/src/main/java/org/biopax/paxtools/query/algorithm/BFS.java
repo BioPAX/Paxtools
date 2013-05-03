@@ -1,9 +1,12 @@
 package org.biopax.paxtools.query.algorithm;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,6 +21,8 @@ import java.util.Set;
  */
 public class BFS
 {
+	private static Log LOG = LogFactory.getLog(BFS.class); 
+	
 	/**
 	 * Distance labels. Missing label interpreted as infinitive.
 	 */
@@ -226,6 +231,11 @@ public class BFS
 	protected void labelEquivRecursive(Node node, boolean up, int dist,
 		boolean enqueue, boolean head)
 	{
+		if(node == null) {
+			LOG.error("labelEquivRecursive: null (Node)");
+			return;
+		}
+		
 		for (Node equiv : up ? node.getUpperEquivalent() : node.getLowerEquivalent())
 		{
 			if (getColor(equiv) == WHITE)
