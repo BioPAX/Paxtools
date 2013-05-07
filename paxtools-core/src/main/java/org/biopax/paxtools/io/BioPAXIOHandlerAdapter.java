@@ -11,7 +11,6 @@ import org.biopax.paxtools.model.level2.deltaGprimeO;
 import org.biopax.paxtools.model.level2.kPrime;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.util.BioPaxIOException;
-import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.io.*;
@@ -492,19 +491,11 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		} else
 		{
 			Model m = model.getLevel().getDefaultFactory().createModel();
-
 			m.setXmlBase(model.getXmlBase());
 
 			//to avoid 'nextStep' that may lead to infinite loops -
-			Filter<PropertyEditor> filter = new Filter<PropertyEditor>()
-			{
-				public boolean filter(PropertyEditor editor)
-				{
-					return !"nextStep".equalsIgnoreCase(editor.getProperty()) &&
-					       !"NEXT-STEP".equalsIgnoreCase(editor.getProperty());
-				}
-			};
-			Fetcher fetcher = new Fetcher(SimpleEditorMap.get(model.getLevel()), filter);
+			Fetcher fetcher = new Fetcher(SimpleEditorMap.get(model.getLevel()), 
+					Fetcher.nextStepFilter);
 
 			for (String uri : ids)
 			{
