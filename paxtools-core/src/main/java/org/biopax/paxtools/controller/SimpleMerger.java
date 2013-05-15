@@ -180,9 +180,8 @@ public class SimpleMerger
 				 * even though it cannot be replaced with newValue 
 				 * due to the property range error (setValueToBean throws exception)
 				 */
+				editor.removeValueFromBean(value, update);
 				editor.setValueToBean(newValue, update);
-				if(editor.isMultipleCardinality())
-					editor.removeValueFromBean(value, update);
 			} 
 		}
 	}

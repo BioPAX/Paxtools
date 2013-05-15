@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Utility class for equivalence based comparison of a set of BioPAXElements.
  * <p/>
- * BioPAXElement by default uses equals and hash code methods are inherited from Object.
+ * BioPAXElement by default uses equals and hash code methods based on the type and URI.
  * On the other hand for many elements it is possible to determine semantic equivalence
  * among elements. For example two entityFeatures with exactly the same type and location
  * are equivalent. This logic is implemented in isEquivalent() and equivalenceCode()

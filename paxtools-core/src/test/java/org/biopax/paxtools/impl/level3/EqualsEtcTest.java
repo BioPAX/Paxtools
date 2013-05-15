@@ -62,21 +62,21 @@ public class EqualsEtcTest {
     	assertTrue(x1.equals(x7));
     	assertTrue(x1.equals(x6));
     	
-    	assertFalse(x1 == x4);
     	assertFalse(x1 == x3);   	
-    	assertFalse(x1.equals(x4));
-    	assertFalse(x1.equals(x3));
+    	assertTrue(x1.equals(x3)); //same type and URI (prop. are ignored)
+    	assertTrue(x1.isEquivalent(x3)); // not the same db/id, same URI - equivalent because equals (above)
+    	
+    	assertFalse(x1 == x4);
+    	assertTrue(x1.equals(x4)); //same type and URI
     	assertTrue(x1.isEquivalent(x4)); // x4 is a copy of x1
+    	
     	assertTrue(x1.isEquivalent(x5)); // x5 has different rdfId but same db/id
-    	assertFalse(x1.isEquivalent(x3)); // not the same db/id but same URI - NOT equivalent
 	}
 
 	
 	
-	// If we override 'equals' and 'hashCode' methods only in BioPAXElementImpl
-	// and only based upon URI as we once had already in 2010 (paxtools 2.0 and before), 
-	// then the following test PASS (FUNNY, but it's our contract...)
-	@Ignore //fails if basic 'equals' and 'hashCode' were not touched (inherited from Object)
+	// we override 'equals' and 'hashCode' methods in BioPAXElementImpl (base class); 
+	// the must PASS
 	@Test
 	public final void testCollectionOfBiopaxElementsCustom() {
 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
@@ -91,60 +91,23 @@ public class EqualsEtcTest {
 		Set<BioPAXElement> col = new HashSet<BioPAXElement>();
 		col.add(x1);
 		assertTrue(col.contains(x1));
-		assertTrue(col.contains(x2)); // different xref, same URI!!
+		assertTrue(col.contains(x2)); // different xref, same URI and type!
 		col.add(x2); //silently ignored
-		assertFalse(col.size() == 2);
+		assertTrue(col.size() == 1);
 		
-		col.remove(x2); //actually removes x1 too!!
-		assertTrue(col.isEmpty()); //rediculous...
+		col.remove(x2); //actually removes x1 (equal object)
+		assertTrue(col.isEmpty());
 		
-		// even more funny results
-		Xref x3 = factory.create(RelationshipXref.class, "x1");
+		//add back
 		col.add(x2);
-		assertTrue(col.contains(x3)); // different xref class, properties, but same URI!!!
-	}
 
-	
-	//@Ignore //fails if basic 'equals' and 'hashCode' were overridden in BioPAXElementImpl only (based on the URI string)
-	@Test 
-	public final void testCollectionOfBiopaxElementsStandard() {
-		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
-
-		UnificationXref x1 = factory.create(UnificationXref.class, "x1");
-		x1.setDb("foo");
-		x1.setId("foo");		
-    	UnificationXref x2 = factory.create(UnificationXref.class, "x1");
-		x2.setDb("bar");
-		x2.setId("bar");
-		
-		// with a standard collection (NOT a mul. cardinality biopax property value)
-		Set<BioPAXElement> col = new HashSet<BioPAXElement>();
-		col.add(x1);
-		assertTrue(col.contains(x1));
-		assertFalse(col.contains(x2)); //if 'equals' and 'hashCode' were overridden, this might fail
-		col.add(x2); //if 'equals' and 'hashCode' were overridden, this be ignored
-		assertTrue(col.size() == 2);
-		assertTrue(col.contains(x2)); // contains two xrefs with the same URI - OK
 		Xref x3 = factory.create(RelationshipXref.class, "x1");
-		assertFalse(col.contains(x3));//if 'equals' and 'hashCode' were overridden, this might fail too
-			
-		//now test a collection that is also a biopax property (using BiopaxSafeSet class)
-		XReferrable owner = factory.create(Protein.class, "p1");
-		owner.addXref(x1);
-		owner.addXref(x2); //ignored
-		assertTrue(owner.getXref().size() == 1);
+		// x3 is of different xref type than x1
+		assertFalse(col.contains(x3)); 
 		
-		UnificationXref x4 = factory.create(UnificationXref.class, "x1");
-		x4.setDb("foo");
-		x4.setId("foo");
-		owner.addXref(x4); //ignored
-		assertTrue(owner.getXref().size() == 1);
-		
-		UnificationXref x5 = factory.create(UnificationXref.class, "x5");
-		x5.setDb("foo");
-		x5.setId("foo");
-		owner.addXref(x5);
-		assertTrue(owner.getXref().size() == 2);
+		Xref x4 = factory.create(UnificationXref.class, "x1");
+		// same xref class, properties, same URI as x1 - equals x1 -
+		assertTrue(col.contains(x4)); 
 	}
 	
 	
