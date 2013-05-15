@@ -40,18 +40,53 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	// Property STEP-CONVERSION
+	// hidden property 'stepConversion' for persistence
 	@ManyToOne(targetEntity = ConversionImpl.class)
+    Conversion getStepConversionX()
+	{
+		return stepConversion;
+	}
+    void setStepConversionX(Conversion newSTEP_CONVERSION)
+	{
+		stepConversion = newSTEP_CONVERSION;
+	}
+
+	// Property stepConversion
+    @Transient
     public Conversion getStepConversion()
 	{
 		return stepConversion;
 	}
 
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * Also, note that this method does not
+     * automatically add the Conversion to the 
+     * stepPprocess property despite stepProcess
+     * is super-property for stepConversion; this
+     * is because BiochemicalPathwayStep is 
+     * defined as a sub-class of PathwayStep with
+     * additional constraint that stepProcess can
+     * contain only Control interactions (neither Pathway 
+     * nor Conversion processes are allowed).
+     * 
+     */
     public void setStepConversion(Conversion newSTEP_CONVERSION)
 	{
-		stepConversion = newSTEP_CONVERSION;
+		if (this.stepConversion != null)
+		{
+			this.stepConversion.getStepProcessOf().remove(this);
+		}
+		this.stepConversion = newSTEP_CONVERSION;
+		if (this.stepConversion != null)
+		{
+			this.stepConversion.getStepProcessOf().add(this);
+		}
 	}
-
+    
+    
     // Property STEP-DIRECTION
 
 	@Enumerated(EnumType.STRING)

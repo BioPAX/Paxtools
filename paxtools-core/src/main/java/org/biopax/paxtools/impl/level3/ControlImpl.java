@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -35,9 +36,9 @@ public class  ControlImpl extends InteractionImpl
 
 	public ControlImpl()
 	{
-		pathwayController = new HashSet<Pathway>();
-		peController = new HashSet<PhysicalEntity>();
-		controlled = new HashSet<Process>();
+		pathwayController = new BiopaxSafeSet<Pathway>();
+		peController = new BiopaxSafeSet<PhysicalEntity>();
+		controlled = new BiopaxSafeSet<Process>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

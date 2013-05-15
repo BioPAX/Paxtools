@@ -26,6 +26,7 @@ public final class DataSourceFieldBridge implements FieldBridge {
 	{
 		if (value instanceof Set) {
 			for (Provenance p : (Set<Provenance>) value) {
+				if(p == null) continue;
 				// do not do .toLowerCase() for the URI!
 				FieldBridgeUtils.addFieldToDocumentAsIs(luceneOptions, searchFieldName, p.getRDFId(), document);
 				// index names as well

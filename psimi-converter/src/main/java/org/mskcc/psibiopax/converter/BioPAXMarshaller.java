@@ -33,7 +33,7 @@ import org.biopax.paxtools.model.Model;
  * Definition of the BioPAXMarshaller interface.
  * Used by the EntryMapper class to return a processed PSI Entry object.
  *
- * @author Benjamin Gross
+ * @author Benjamin Gross, rodche
  */
 public interface BioPAXMarshaller {
 
@@ -43,4 +43,10 @@ public interface BioPAXMarshaller {
 	 * @param bpModel Model
 	 */
 	void addModel(Model bpModel);
+	
+	
+	/**
+	 * Combines set of Model(s) into single Paxtools Model.
+	 */
+	public void marshallData();
 }

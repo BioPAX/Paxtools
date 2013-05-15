@@ -26,7 +26,8 @@ public final class OrganismFieldBridge implements FieldBridge {
 	public void set(String searchFieldName, Object value, Document document, LuceneOptions luceneOptions) {
 		if (value instanceof Set) {
 			for (BioSource o : (Set<BioSource>) value) {
-				setOrganism(searchFieldName, o, document, luceneOptions);
+				if(o != null)
+					setOrganism(searchFieldName, o, document, luceneOptions);
 			}
 		} else {
 			throw new AssertionError("bug!");

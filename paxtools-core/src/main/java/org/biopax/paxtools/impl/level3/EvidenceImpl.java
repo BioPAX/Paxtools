@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -35,9 +36,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	public EvidenceImpl()
 	{
-		this.confidence = new HashSet<Score>();
-		this.evidenceCode = new HashSet<EvidenceCodeVocabulary>();
-		this.experimentalForm = new HashSet<ExperimentalForm>();
+		this.confidence = new BiopaxSafeSet<Score>();
+		this.evidenceCode = new BiopaxSafeSet<EvidenceCodeVocabulary>();
+		this.experimentalForm = new BiopaxSafeSet<ExperimentalForm>();
 	}
 
 	//

@@ -27,4 +27,5 @@ public class UnificationXrefImpl extends XrefImpl implements UnificationXref {
     public Class<? extends UnificationXref> getModelInterface() {
         return UnificationXref.class;
     }
+    
 }

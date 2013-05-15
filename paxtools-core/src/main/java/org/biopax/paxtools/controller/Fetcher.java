@@ -147,7 +147,7 @@ public class Fetcher {
     				BioPAXElement bpe = (BioPAXElement) range;
     				children.add(bpe);
     				if(depth < 1 || depth > getVisited().size())
-    					super.traverse(bpe, model);
+    					traverse(bpe, model);
     			}
     		}
     	};
@@ -189,7 +189,7 @@ public class Fetcher {
     				if(filterByType.isInstance(bpe))
     					children.add((T) bpe);
     				//continue deeper...
-    				super.traverse(bpe, model);
+    				traverse(bpe, model);
     			}
     		}
     	};
@@ -227,7 +227,7 @@ public class Fetcher {
     				if( ((BioPAXElement) range).getRDFId().equals(uri) )
     					found.set(true); //set global flag; done.
     				else
-    					super.traverse((BioPAXElement)range, model);
+    					traverse((BioPAXElement)range, model);
     			}
     		}
     	};

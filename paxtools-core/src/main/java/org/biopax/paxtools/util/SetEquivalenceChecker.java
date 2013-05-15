@@ -32,8 +32,17 @@ public class SetEquivalenceChecker
 					return (grouper.getBuckets().size() == size);
 				}
 			}
+		} 
+		
+		//now, only if both null or both empty - return true 
+		if( set1 == null && set2 == null //both null
+			|| // or both not null but empty
+			set1 != null && set1.isEmpty() && set2 != null && set2.isEmpty()) 
+		{ 
+			return true;
 		}
-		return true;
+		
+		return false;	
 	}
 
 	/**

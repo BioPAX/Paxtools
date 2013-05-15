@@ -1,6 +1,5 @@
 package org.biopax.paxtools.impl.level3;
 
-import java.util.Collection;
 
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;

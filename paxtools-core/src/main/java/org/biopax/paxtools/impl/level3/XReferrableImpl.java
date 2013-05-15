@@ -3,6 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.XrefFieldBridge;
 import org.hibernate.annotations.Cache;
@@ -16,7 +17,6 @@ import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Analyze;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import java.util.HashSet;
@@ -50,7 +50,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	public XReferrableImpl()
 	{
-		this.xref = new HashSet<Xref>();
+		this.xref = new BiopaxSafeSet<Xref>();
 	}
 
 // -------------------------- OTHER METHODS --------------------------
@@ -58,7 +58,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	
 	@Field(name=FIELD_XREFID, analyze=Analyze.NO, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = XrefImpl.class, fetch=FetchType.EAGER)
+	@ManyToMany(targetEntity = XrefImpl.class)
 	@JoinTable(name="xref")
 	public Set<Xref> getXref()
 	{

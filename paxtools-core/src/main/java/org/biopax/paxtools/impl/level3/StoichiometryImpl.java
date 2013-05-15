@@ -25,9 +25,7 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	private PhysicalEntity physicalEntity;
 
 
-	public StoichiometryImpl()
-	{
-	}
+	public StoichiometryImpl() {}
 
 	@Transient
 	public Class<? extends Stoichiometry> getModelInterface()

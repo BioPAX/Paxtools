@@ -2,7 +2,6 @@ package org.biopax.paxtools.query.wrapperL3;
 
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.level3.Entity;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
 
 /**
  * Filter by data source. Applied to Entity.
@@ -15,7 +14,7 @@ public class DataSourceFilter extends StringFieldFilter
 	 * Constructor.
 	 * @param sources organisms to select
 	 */
-	public DataSourceFilter(String... sources)
+	public DataSourceFilter(String[] sources)
 	{
 		super(true, sources);
 	}

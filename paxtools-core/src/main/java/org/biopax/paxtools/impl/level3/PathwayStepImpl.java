@@ -1,9 +1,12 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
+import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -34,10 +37,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	 */
 	public PathwayStepImpl()
 	{
-		this.nextStep = new HashSet<PathwayStep>();
-		this.nextStepOf = new HashSet<PathwayStep>();
-		this.stepProcess = new HashSet<Process>();
-		this.evidence = new HashSet<Evidence>();
+		this.nextStep = new BiopaxSafeSet<PathwayStep>();
+		this.nextStepOf = new BiopaxSafeSet<PathwayStep>();
+		this.stepProcess = new BiopaxSafeSet<Process>();
+		this.evidence = new BiopaxSafeSet<Evidence>();
 	}
 
 	@Transient
@@ -98,6 +101,14 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	public void addStepProcess(Process processStep)
 	{
 		if (processStep != null) {
+			
+			if(this instanceof BiochemicalPathwayStep 
+				&& !(processStep instanceof Control)) {
+				throw new IllegalArgumentException(
+					"Range violation: BiochemicalPathwayStep.stepProcess "
+						+ "can add only Control interactions.");	
+			}
+			
 			this.stepProcess.add(processStep);
 			processStep.getStepProcessOf().add(this);
 		}

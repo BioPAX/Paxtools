@@ -2,6 +2,7 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -33,9 +34,9 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 	public PathwayImpl()
 	{
-		this.pathwayComponent = new HashSet<Process>();
-		this.pathwayOrder = new HashSet<PathwayStep>();
-		this.controllerOf = new HashSet<Control>();
+		this.pathwayComponent = new BiopaxSafeSet<Process>();
+		this.pathwayOrder = new BiopaxSafeSet<PathwayStep>();
+		this.controllerOf = new BiopaxSafeSet<Control>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

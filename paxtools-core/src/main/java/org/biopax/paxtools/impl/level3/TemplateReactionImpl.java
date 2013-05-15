@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.NucleicAcid;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.TemplateDirectionType;
 import org.biopax.paxtools.model.level3.TemplateReaction;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
@@ -27,7 +28,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 
 	public TemplateReactionImpl()
 	{
-        this.product = new HashSet<PhysicalEntity>();
+        this.product = new BiopaxSafeSet<PhysicalEntity>();
     }
 	
 	@Transient

@@ -50,6 +50,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 
 	private String _pk; // Primary Key
 
+	@Version
+	private long version;
 	
 	public BioPAXElementImpl() {
 		this.annotations = new HashMap<String, Object>();
@@ -123,7 +125,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     public int equivalenceCode()
     {
         return uri.hashCode();
-        // return uri == null ? super.hashCode() : uri.hashCode();
     }
 
 
@@ -201,5 +202,29 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 		return hex;
 	}
     
+	
+	/**
+	 * true if and only if the other obj has the same biopax type 
+	 * (same {@link #getModelInterface()}, not a subclass) and 
+	 * same URI. Other properties are not considered.
+	 * 
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof BioPAXElement) 
+			&& this.getModelInterface() == ((BioPAXElement) obj).getModelInterface()
+			&& this.uri.equals(((BioPAXElement) obj).getRDFId());
+	}
+	
+	
+	/**
+	 * This method is consistent with the 
+	 * overridden {@link #equals(Object)} method
+	 * (biopax type and URI are what matters) 
+	 */
+	@Override
+	public int hashCode() {
+		return (getModelInterface().getCanonicalName() + uri).hashCode();
+	}
 }
 

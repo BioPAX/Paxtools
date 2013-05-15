@@ -28,7 +28,7 @@ public class ConsecutiveCatalysisRuleTest
 		 *    \    |    /                        |
 		 *     == br0 =>sm3      p1     sm4 <==br2==sm5
 		 *    /            \      |    /
-		 * sm1               == br0 ==> sm6<==br3==>sm7
+		 * sm1               == br1 ==> sm6<==br3==>sm7
 		 *                                      |
 		 *                                     p3
 	*/

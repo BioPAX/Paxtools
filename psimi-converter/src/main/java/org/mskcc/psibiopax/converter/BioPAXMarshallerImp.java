@@ -28,12 +28,10 @@
  **/
 package org.mskcc.psibiopax.converter;
 
-// imports
 
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 
 import java.io.OutputStream;
@@ -42,33 +40,18 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This class waits for each EntryProcessor thread to finish.
- * After thread(s) completion, combines set of Paxerve Models
- * into single Model for marshalling.
+ * After each EntryProcessor thread is finished, 
+ * combines the set of generated Paxtools models
+ * into a single Model for marshalling.
  *
- * @author Benjamin Gross
+ * @author Benjamin Gross, rodche (re-factoring)
  */
-public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
+class BioPAXMarshallerImp implements BioPAXMarshaller {
 
     /**
 	 * Ref to PSIMIBioPAXConverter.
 	 */
 	private final PSIMIBioPAXConverter converter;
-
-	/**
-	 * Used for synchronization.
-	 */
-	private final Object synObj;
-
-	/**
-	 * numEntries complete.
-	 */
-	private int numEntries;
-
-	/*
-	 * number of entries completed.
-	 */
-	private int entriesComplete;
 
 	/**
 	 * Ref to file output stream.
@@ -84,14 +67,10 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 	 * Constructor.
 	 *
 	 * @param converter PSIMIBioPAXConverter
-	 * @param outputStream OutputStream - will be closed by this class
-	 * @param numEntries int
-	 * @parma bpLevel BioPAXLevel 
+	 * @param outputStream OutputStream - will be closed by this class 
 	 */
-	public BioPAXMarshallerImp(PSIMIBioPAXConverter converter, OutputStream outputStream, int numEntries) {
+	public BioPAXMarshallerImp(PSIMIBioPAXConverter converter, OutputStream outputStream) {
 		this.converter = converter;
-		this.numEntries = numEntries;
-		this.synObj = new Object();
 		this.bpModelList = new ArrayList<Model>();
 		this.outputStream = outputStream;
 	}
@@ -102,50 +81,12 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 	 * @param bpModel Model
 	 */
 	public void addModel(Model bpModel) {
-
-		// add model to our list,
-		// increment number of entries
-		synchronized (synObj) {
-			++entriesComplete;
-			bpModelList.add(bpModel);
-		}
+		bpModelList.add(bpModel);
 	}
 
-	/**
-	 * Our implementation of run.
-	 */
-	public void run() {
 
-		// loop until all entries are processed
-		while (true) {
-
-			// have all the entries completed ?
-			synchronized(synObj) {
-				if (entriesComplete == numEntries) {
-					break;
-				}
-			}
-
-			// sleep for a bit
-			try {
-				sleep(100);
-			}
-			catch (InterruptedException e){
-				e.printStackTrace();
-				break;
-			}
-		}
-
-		// marshall bpcontainer list into owl
-		marshallData();
-	}
-
-	/**
-	 * Combines set of Model(s) into single
-	 * paxerve Model.
-	 */
-	private void marshallData() {
-
+	@Override
+	public void marshallData() {
 		// combine all models into a single model
 		Model completeModel = converter.getBpLevel().getDefaultFactory().createModel();
 		completeModel.setXmlBase(converter.getXmlBase());
@@ -162,7 +103,6 @@ public class BioPAXMarshallerImp extends Thread implements BioPAXMarshaller {
 			BioPAXIOHandler io = new SimpleIOHandler();
 			io.convertToOWL(completeModel, outputStream);
 			outputStream.close();
-			this.converter.conversionIsComplete = true;
 		}
 		catch(Exception e) {
 			e.printStackTrace();

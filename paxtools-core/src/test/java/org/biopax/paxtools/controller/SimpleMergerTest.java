@@ -83,5 +83,27 @@ public class SimpleMergerTest {
 		
 		assertEquals(7, model.getObjects().size()); // Bug fixed: SimpleMerger adds BioSource to the model but not its children (xref)!
 	}
+	
+	@Test
+	public final void testMergeOneObject() {
+		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+		Model model = factory.createModel();
+ 	
+		Xref ref = factory.create(UnificationXref.class, "ref");
+    	ref.setDb("Taxonomy"); 
+    	ref.setId("9606"); // the same id
+		
+		SimpleMerger merger = new SimpleMerger(SimpleEditorMap.L3);
+		merger.merge(model, ref); 
+		
+		assertEquals(1, model.getObjects().size());
+		
+		model = factory.createModel();
+    	BioSource bs = factory.create(BioSource.class, "Mouse");
+    	bs.addXref(ref);
+    	merger.merge(model, bs); 
+    	
+    	assertEquals(2, model.getObjects().size());
+	}
 
 }

@@ -15,7 +15,7 @@ public class OrganismFilter extends StringFieldFilter
 	 * Constructor.
 	 * @param organism organisms to select
 	 */
-	public OrganismFilter(String... organism)
+	public OrganismFilter(String[] organism)
 	{
 		super(true, organism);
 	}
@@ -27,6 +27,8 @@ public class OrganismFilter extends StringFieldFilter
 	public void createFieldAccessors()
 	{
 		addAccessor(new PathAccessor("PhysicalEntity/entityReference/organism/name"),
+			PhysicalEntity.class);
+		addAccessor(new PathAccessor("PhysicalEntity/entityReference/organism/xref:UnificationXref/id"),
 			PhysicalEntity.class);
 	}
 }
