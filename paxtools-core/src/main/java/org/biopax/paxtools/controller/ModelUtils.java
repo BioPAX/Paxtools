@@ -31,18 +31,19 @@ import java.util.concurrent.TimeUnit;
  * BioPAX L3 elements, remove dangling, replace elements
  * or identifiers, etc.
  * @author rodche, Arman //TODO Annotate && Remove deprecated methods if not used - also this is too monolithic,
- * //TODO consider breaking it down to several classes.
+ *         //TODO consider breaking it down to several classes.
  */
 public final class ModelUtils
 {
 	private static final Log LOG = LogFactory.getLog(ModelUtils.class);
 
 	//protected constructor
-	ModelUtils() {
+	ModelUtils()
+	{
 		throw new AssertionError("Not instantiable");
 	}
 
-	
+
 	/**
 	 * To ignore 'nextStep' property (in most algorithms),
 	 * because it can eventually lead us outside current pathway,
@@ -123,7 +124,7 @@ public final class ModelUtils
 	public static final String COMMENT_FOR_GENERATED = "auto-generated";
 
 
-	/** 
+	/**
 	 * URI prefix for auto-generated utility class objects
 	 * (can be useful, for consistency, during, e.g.,
 	 * data convertion, normalization, merge, etc.
@@ -135,10 +136,8 @@ public final class ModelUtils
 	 * auto-generated/inferred Xref objects
 	 * (except for PublicationXref, where creating of
 	 * something like, e.g., 'urn:miriam:pubmed:' is recommended).
-	 * 
 	 * @param clazz
 	 * @return
-	 * 
 	 * @deprecated not a universal method; use your own xml:base
 	 */
 	@Deprecated
@@ -266,44 +265,50 @@ public final class ModelUtils
 
 		ExecutorService exe = Executors.newCachedThreadPool();
 		// but we run from every element (all types)
-		for (final BioPAXElement e : model.getObjects()) {
-			exe.execute(new Runnable() {
+		for (final BioPAXElement e : model.getObjects())
+		{
+			exe.execute(new Runnable()
+			{
 				@Override
-				public void run() {
+				public void run()
+				{
 					//new "shallow" traverser (visits direct properties, i.e., visitor does not call traverse again) 
-					new Traverser(em, new Visitor() {
-							@Override
-							public void visit(BioPAXElement parent, Object value, Model model,
-									PropertyEditor<?, ?> editor) {
-								if (filterClass.isInstance(value)) result.remove(value);
-							}
+					new Traverser(em, new Visitor()
+					{
+						@Override
+						public void visit(BioPAXElement parent, Object value, Model model, PropertyEditor<?, ?> editor)
+						{
+							if (filterClass.isInstance(value)) result.remove(value);
 						}
-					).traverse(e, null);
+					}).traverse(e, null);
 				}
 			});
 		}
-		
+
 		exe.shutdown();
-		try {
+		try
+		{
 			exe.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-		} catch (InterruptedException e1) {
-			throw new RuntimeException("Interrupted!",e1);
+		}
+		catch (InterruptedException e1)
+		{
+			throw new RuntimeException("Interrupted!", e1);
 		}
 
 		return result;
 	}
 
-	
+
 	/**
 	 * Iteratively removes "dangling" elements of given type and its sub-types,
-	 * e.g. Xref.class objects, from the BioPAX model. 
-	 * 
+	 * e.g. Xref.class objects, from the BioPAX model.
+	 * <p/>
 	 * If the "model" does not contain any root Entity class objects,
-	 * and the second parameter is basic UtilityClass.class (i.e., not its sub-class), 
-	 * then it simply logs a warning and quits shortly (otherwise, it would 
+	 * and the second parameter is basic UtilityClass.class (i.e., not its sub-class),
+	 * then it simply logs a warning and quits shortly (otherwise, it would
 	 * remove everything from the model). Do not use basic Entity.class either
 	 * (but a sub-class is OK) for the same reason (it would delete everything).
-	 * 
+	 * <p/>
 	 * <p/>
 	 * This, however, does not change relationships
 	 * among objects, particularly, some inverse properties,
@@ -315,21 +320,19 @@ public final class ModelUtils
 	public static <T extends BioPAXElement> void removeObjectsIfDangling(Model model, Class<T> clazz)
 	{
 		// 'equals' below is used intentionally (isAssignableFrom() would be incorrect)
-		if(Entity.class.equals(clazz)) {
-			LOG.warn("Ignored removeObjectsIfDangling call for: " +
-					"Entity.class (it would delete all)");
-			return;
-		}
-		if(UtilityClass.class.equals(clazz) 
-				&& getRootElements(model, Entity.class).isEmpty()) 
+		if (Entity.class.equals(clazz))
 		{
-			LOG.warn("Ignored removeObjectsIfDangling call: " +
-					"no root entities model; UtilityClass.class");
+			LOG.warn("Ignored removeObjectsIfDangling call for: " + "Entity.class (it would delete all)");
 			return;
 		}
-		
-		Set<T> dangling = getRootElements(model, clazz);	
-		
+		if (UtilityClass.class.equals(clazz) && getRootElements(model, Entity.class).isEmpty())
+		{
+			LOG.warn("Ignored removeObjectsIfDangling call: " + "no root entities model; UtilityClass.class");
+			return;
+		}
+
+		Set<T> dangling = getRootElements(model, clazz);
+
 		// get rid of dangling objects
 		if (!dangling.isEmpty())
 		{
@@ -367,40 +370,44 @@ public final class ModelUtils
 			final Class<? extends BioPAXElement>... forClasses)
 	{
 		// for each ROOT element (puts a strict top-down order on the following)
-		ExecutorService exec = Executors.newCachedThreadPool();		
+		ExecutorService exec = Executors.newCachedThreadPool();
 		Set<BioPAXElement> roots = getRootElements(model, BioPAXElement.class);
-		for (final BioPAXElement bpe : roots) {
-			exec.execute(new Runnable() {
-						@Override
-						public void run() {
-							PropertyReasoner reasoner = new PropertyReasoner(property, em);
-							reasoner.setDomains(forClasses);
-							reasoner.inferPropertyValue(bpe);
-						}
-					}	
-			);
+		for (final BioPAXElement bpe : roots)
+		{
+			exec.execute(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					PropertyReasoner reasoner = new PropertyReasoner(property, em);
+					reasoner.setDomains(forClasses);
+					reasoner.inferPropertyValue(bpe);
+				}
+			});
 		}
 		exec.shutdown();
-		try {
+		try
+		{
 			exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e)
+		{
 			throw new RuntimeException("Interrupted!", e);
 		}
 	}
 
-	
+
 	/**
 	 * Iteratively copies given property values
 	 * from parent BioPAX elements to children.
-	 * 
+	 * <p/>
 	 * If the property is multiple cardinality property, it will add
 	 * new values, otherwise - it will set it only if it was empty;
 	 * in both cases it won't delete/override existing values!
-	 * 
 	 * @param model
 	 * @param properties BioPAX properties (names) to infer values of
 	 * @param forClasses (optional) infer/set the property for these types only
-	 * @throws InterruptedException 
+	 * @exception InterruptedException
 	 * @see PropertyReasoner
 	 */
 	public static void inferPropertiesFromParent(Model model, final Set<String> properties,
@@ -409,30 +416,36 @@ public final class ModelUtils
 		ExecutorService exec = Executors.newCachedThreadPool();
 
 		Set<BioPAXElement> roots = getRootElements(model, BioPAXElement.class);
-		for (final BioPAXElement bpe : roots) {	
-			for(String property : properties) {
+		for (final BioPAXElement bpe : roots)
+		{
+			for (String property : properties)
+			{
 				final String p = property;
-				exec.execute(new Runnable() {
-							@Override
-							public void run() {
-								PropertyReasoner reasoner = new PropertyReasoner(p, em);
-								reasoner.setDomains(forClasses);
-								reasoner.inferPropertyValue(bpe);
-							}
-						}	
-				);
+				exec.execute(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						PropertyReasoner reasoner = new PropertyReasoner(p, em);
+						reasoner.setDomains(forClasses);
+						reasoner.inferPropertyValue(bpe);
+					}
+				});
 			}
 		}
-		
+
 		exec.shutdown();
-		try {
+		try
+		{
 			exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e)
+		{
 			throw new RuntimeException("Interrupted!", e);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Cuts the BioPAX model off other models and BioPAX objects
 	 * by essentially performing write/read to/from OWL.
@@ -574,7 +587,6 @@ public final class ModelUtils
 	 * @param model
 	 * @param <T>
 	 * @param processClass to relate entities with an interaction/pathway of this type
-	 * 
 	 * @deprecated probably, not very useful method
 	 */
 	@Deprecated
@@ -587,8 +599,7 @@ public final class ModelUtils
 		for (T ownerProc : processes)
 		{
 			// prepare the xref to use in children
-			String relXrefId = generateURIForXref(COMMENT_FOR_GENERATED, ownerProc.getRDFId(),
-			                                      RelationshipXref.class);
+			String relXrefId = generateURIForXref(COMMENT_FOR_GENERATED, ownerProc.getRDFId(), RelationshipXref.class);
 			RelationshipXref rx = (RelationshipXref) model.getByID(relXrefId);
 			if (rx == null)
 			{
@@ -635,8 +646,7 @@ public final class ModelUtils
 			RelationshipTypeVocabulary cv = getTheRelatioshipTypeCV(model, RelationshipType.PROCESS);
 
 			// prepare the xref to use in children
-			String relXrefId = generateURIForXref(COMMENT_FOR_GENERATED, ownerProc.getRDFId(),
-			                                      RelationshipXref.class);
+			String relXrefId = generateURIForXref(COMMENT_FOR_GENERATED, ownerProc.getRDFId(), RelationshipXref.class);
 			RelationshipXref rx = (RelationshipXref) model.getByID(relXrefId);
 			if (rx == null)
 			{
@@ -706,7 +716,6 @@ public final class ModelUtils
 	 * (equivalently, this can be achieved by collecting all the children first,
 	 * though not visiting properties who's range is a sub-class of UtilityClass)
 	 * @param model
-	 * 
 	 * @deprecated probably, not very useful method
 	 */
 	@Deprecated
@@ -847,7 +856,6 @@ public final class ModelUtils
 	 * @param model
 	 * @param entity
 	 * @param organisms
-	 * 
 	 * @deprecated not a universal method
 	 */
 	@Deprecated
@@ -917,7 +925,6 @@ public final class ModelUtils
 	 * @param id
 	 * @param type
 	 * @return new ID (URI); not null (unless it's a bug :))
-	 * 
 	 * @deprecated not a universal method; use your own xml:base and approach instead
 	 */
 	@Deprecated
@@ -941,7 +948,7 @@ public final class ModelUtils
 		return rdfid;
 	}
 
-	
+
 	/**
 	 * TODO
 	 * @param model
@@ -1040,12 +1047,10 @@ public final class ModelUtils
 
 	/**
 	 * Calculates MD5 hash code (as 32-byte hex. string).
-	 * 
+	 * <p/>
 	 * This method is not BioPAX specific. Can be
-	 * used for many purposes, such as generating 
+	 * used for many purposes, such as generating
 	 * new unique URIs, database primary keys, etc.
-	 * 
-	 * 
 	 * @param id
 	 * @return the 32-byte digest string
 	 */
@@ -1112,13 +1117,6 @@ public final class ModelUtils
 		traverser.setInverseOnly(true);
 		traverser.traverse(bpe, model);
 	}
-
-
-
-
-
-
-
 
 
 	// moved from FeatureUtils; provides operations for comparing features of physical entities.
@@ -1313,25 +1311,24 @@ public final class ModelUtils
 
 
 	/**
-	 * Converts generic simple physical entities, 
-	 * i.e., physical entities except Complexes 
+	 * Converts generic simple physical entities,
+	 * i.e., physical entities except Complexes
 	 * that have not empty memberPhysicalEntity property,
 	 * into equivalent physical entities
 	 * with generic entity references (which have members);
 	 * this is a better and less error prone way to model
-	 * generic molecules in BioPAX L3. 
-	 * 
+	 * generic molecules in BioPAX L3.
+	 * <p/>
 	 * Notes:
 	 * Generic Complexes could be normalized in a similar way,
 	 * but they do not have entityReference property and might
 	 * contain generic (incl. not yet normalized) components, which
 	 * makes it complicated.
-	 * 
+	 * <p/>
 	 * Please avoid using 'memberPhysicalEntity' in your BioPAX L3 models
-	 * unless absolutely sure/required, for there is an alternative way 
-	 * (using PhysicalEntity/entityReference/memberEntityReference), and 
+	 * unless absolutely sure/required, for there is an alternative way
+	 * (using PhysicalEntity/entityReference/memberEntityReference), and
 	 * this will probably be deprecated in the future BioPAX releases.
-	 * 
 	 * @param model
 	 */
 	public static void normalizeGenerics(Model model)
@@ -1341,7 +1338,7 @@ public final class ModelUtils
 				EntityReference>();
 		Set<SimplePhysicalEntity> pes = model.getObjects(SimplePhysicalEntity.class);
 		Set<SimplePhysicalEntity> pesToBeNormalized = new HashSet<SimplePhysicalEntity>();
-		
+
 		for (SimplePhysicalEntity pe : pes)
 		{
 			if (pe.getEntityReference() == null)
@@ -1352,7 +1349,7 @@ public final class ModelUtils
 				}
 			}
 		}
-		
+
 		for (SimplePhysicalEntity pe : pesToBeNormalized)
 		{
 			try
@@ -1368,7 +1365,7 @@ public final class ModelUtils
 		}
 	}
 
-	
+
 	private static void createNewERandAddMembers(Model model, SimplePhysicalEntity pe,
 			HashMap<Set<EntityReference>, EntityReference> memberMap)
 	{
@@ -1381,34 +1378,34 @@ public final class ModelUtils
 			if (firstEntityReference != null)
 			{
 				//generate a new URI in the same namespace (xml:base)
-				String syntheticId = model.getXmlBase() + md5hex(pe.getRDFId()); 
+				String syntheticId = model.getXmlBase() + md5hex(pe.getRDFId());
 				// create and add a new EntityReference
 				er = (EntityReference) model.addNew(firstEntityReference.getModelInterface(), syntheticId);
 				// copy names and xrefs (making orig. unif.xrefs become relat.xrefs)
 				copySimplePointers(model, pe, er);
-				
-				er.addComment("auto-generated by Paxtools from generic " 
-						+ pe.getModelInterface().getSimpleName()
-						+ ", uri=" + pe.getRDFId() + "");
+
+				er.addComment(
+						"auto-generated by Paxtools from generic " + pe.getModelInterface().getSimpleName() + ", " +
+						"uri=" +
+						pe.getRDFId() + "");
 
 				for (EntityReference member : members)
 				{
 					er.addMemberEntityReference(member);
 				}
-				
+
 				memberMap.put(members, er);
 			}
 		}
 		pe.setEntityReference(er);
 	}
 
-	
+
 	/**
-	 * Copies names and xrefs from source to target 
-	 * biopax object; it does not copy unification xrefs 
-	 * but instead adds relationship xrefs using the same 
+	 * Copies names and xrefs from source to target
+	 * biopax object; it does not copy unification xrefs
+	 * but instead adds relationship xrefs using the same
 	 * db and id values as source's unification xrefs.
-	 * 
 	 * @param model
 	 * @param source
 	 * @param target
@@ -1426,7 +1423,7 @@ public final class ModelUtils
 			if ((xref instanceof UnificationXref))
 			{
 				// generate URI using model's xml:base and xref's properties
-				String id = model.getXmlBase() + md5hex(xref.getDb()+xref.getRDFId());
+				String id = model.getXmlBase() + md5hex(xref.getDb() + xref.getRDFId());
 				Xref byID = (Xref) model.getByID(id);
 				if (byID == null)
 				{
@@ -1441,12 +1438,12 @@ public final class ModelUtils
 					xref = byID;
 				}
 			}
-			
+
 			target.addXref(xref);
 		}
 	}
 
-	
+
 	public void resolveFeatures(Model model)
 	{
 		if (!model.getLevel().equals(BioPAXLevel.L3))
@@ -1516,8 +1513,7 @@ public final class ModelUtils
 		}
 	}
 
-	private void resolveFeaturesOfComponent(Model model, Complex complex, PhysicalEntity component,
-			ShallowCopy copier)
+	private void resolveFeaturesOfComponent(Model model, Complex complex, PhysicalEntity component, ShallowCopy copier)
 	{
 		boolean connected = false;
 		Set<EntityFeature> feature = component.getFeature();
@@ -1605,7 +1601,7 @@ public final class ModelUtils
 				EntityFeature ef = bucket.get(i);
 				if (LOG.isWarnEnabled())
 				{
-					LOG.warn("removing: "+ ef.getRDFId()+ " since it is equivalent to: "+ bucket.get(0));
+					LOG.warn("removing: " + ef.getRDFId() + " since it is equivalent to: " + bucket.get(0));
 				}
 				scheduled.add(ef);
 			}
@@ -1623,8 +1619,8 @@ public final class ModelUtils
 				if (that != null && !that.equals(feature))
 				{
 					LOG.debug(" replacing " + feature +
-					                                  "{" + feature.getRDFId() + "} with " +
-					                                  that + "{" + that.getRDFId() + "}");
+					          "{" + feature.getRDFId() + "} with " +
+					          that + "{" + that.getRDFId() + "}");
 					physicalEntity.removeFeature(feature);
 					physicalEntity.addFeature(that);
 				}
@@ -1651,6 +1647,49 @@ public final class ModelUtils
 		}
 	}
 
+	public static void mergeEquivalentInteractions(Model model)
+	{
+		EquivalenceGrouper<Interaction> groups = new EquivalenceGrouper(model.getObjects(Interaction.class));
+		for (List<Interaction> group : groups.getBuckets())
+		{
+
+			if (group.size() > 1)
+			{
+				Interaction primus = null;
+				for (Interaction interaction : group)
+				{
+					if (primus == null)
+					{
+						primus = interaction;
+					} else
+					{
+						copySimplePointers(model, interaction, primus);
+						Set<Control> controlledOf = interaction.getControlledOf();
+						for (Control control : controlledOf)
+						{
+							control.removeControlled(interaction);
+							if (!control.getControlled().contains(primus))
+							{
+								control.addControlled(primus);
+							}
+						}
+						Set<Pathway> owners = interaction.getPathwayComponentOf();
+						for (Pathway pathway : owners)
+						{
+							pathway.removePathwayComponent(interaction);
+							if(!pathway.getPathwayComponent().contains(primus))
+							{
+								pathway.addPathwayComponent(primus);
+							}
+
+						}
+						model.remove(interaction);
+
+					}
+				}
+			}
+		}
+	}
 
 }
 
