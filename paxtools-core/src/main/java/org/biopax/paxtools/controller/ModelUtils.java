@@ -1320,6 +1320,7 @@ public final class ModelUtils
 		return pathways;
 	}
 
+
 	public static void mergeEquivalentInteractions(Model model)
 	{
 		EquivalenceGrouper<Interaction> groups = new EquivalenceGrouper(model.getObjects(Interaction.class));
