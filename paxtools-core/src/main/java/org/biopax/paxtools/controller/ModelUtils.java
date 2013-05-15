@@ -1320,6 +1320,49 @@ public final class ModelUtils
 		return pathways;
 	}
 
+	public static void mergeEquivalentInteractions(Model model)
+	{
+		EquivalenceGrouper<Interaction> groups = new EquivalenceGrouper(model.getObjects(Interaction.class));
+		for (List<Interaction> group : groups.getBuckets())
+		{
+
+			if (group.size() > 1)
+			{
+				Interaction primus = null;
+				for (Interaction interaction : group)
+				{
+					if (primus == null)
+					{
+						primus = interaction;
+					} else
+					{
+						copySimplePointers(model, interaction, primus);
+						Set<Control> controlledOf = interaction.getControlledOf();
+						for (Control control : controlledOf)
+						{
+							control.removeControlled(interaction);
+							if (!control.getControlled().contains(primus))
+							{
+								control.addControlled(primus);
+							}
+						}
+						Set<Pathway> owners = interaction.getPathwayComponentOf();
+						for (Pathway pathway : owners)
+						{
+							pathway.removePathwayComponent(interaction);
+							if(!pathway.getPathwayComponent().contains(primus))
+							{
+								pathway.addPathwayComponent(primus);
+							}
+
+						}
+
+					}
+				}
+			}
+		}
+	}
+
 }
 
 
