@@ -1324,6 +1324,7 @@ public final class ModelUtils
 	public static void mergeEquivalentInteractions(Model model)
 	{
 		EquivalenceGrouper<Conversion> groups = new EquivalenceGrouper(model.getObjects(Conversion.class));
+		HashSet<Conversion> tobeRemoved = new HashSet<Conversion>();
 		for (List<Conversion> group : groups.getBuckets())
 		{
 
@@ -1366,11 +1367,15 @@ public final class ModelUtils
 							conversion.removeRight(pe);
 						}
 
-						model.remove(conversion);
+						tobeRemoved.add(conversion);
 
 					}
 				}
 			}
+		}
+		for (Conversion conversion : tobeRemoved)
+		{
+			model.remove(conversion);
 		}
 	}
 
