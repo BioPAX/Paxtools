@@ -1342,7 +1342,6 @@ public final class ModelUtils
 						Set<Control> controlledOf = conversion.getControlledOf();
 						for (Control control : controlledOf)
 						{
-							control.removeControlled(conversion);
 							if (!control.getControlled().contains(primus))
 							{
 								control.addControlled(primus);
@@ -1351,7 +1350,6 @@ public final class ModelUtils
 						Set<Pathway> owners = conversion.getPathwayComponentOf();
 						for (Pathway pathway : owners)
 						{
-							pathway.removePathwayComponent(conversion);
 							if(!pathway.getPathwayComponent().contains(primus))
 							{
 								pathway.addPathwayComponent(primus);
