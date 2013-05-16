@@ -1358,14 +1358,6 @@ public final class ModelUtils
 							}
 
 						}
-						for (PhysicalEntity pe : conversion.getLeft())
-						{
-							conversion.removeLeft(pe);
-						}
-						for (PhysicalEntity pe : conversion.getRight())
-						{
-							conversion.removeRight(pe);
-						}
 
 						tobeRemoved.add(conversion);
 
@@ -1375,8 +1367,36 @@ public final class ModelUtils
 		}
 		for (Conversion conversion : tobeRemoved)
 		{
+			cleanAllInverse(conversion);
 			model.remove(conversion);
 		}
+	}
+
+	private static void cleanAllInverse(Conversion conversion)
+	{
+
+		Set<PhysicalEntity> concSafe = new HashSet<PhysicalEntity>(conversion.getLeft());
+		for (PhysicalEntity pe : concSafe)
+		{
+			conversion.removeLeft(pe);
+		}
+		concSafe = new HashSet<PhysicalEntity>(conversion.getRight());
+		for (PhysicalEntity pe : concSafe)
+		{
+			conversion.removeRight(pe);
+		}
+		Set<Control> controlledOf = new HashSet<Control>(conversion.getControlledOf());
+		for (Control control : controlledOf)
+		{
+			control.removeControlled(conversion);
+		}
+		Set<Pathway> owners = new HashSet<Pathway>(conversion.getPathwayComponentOf());
+		for (Pathway pathway : owners)
+		{
+			pathway.removePathwayComponent(conversion);
+		}
+
+
 	}
 
 }
