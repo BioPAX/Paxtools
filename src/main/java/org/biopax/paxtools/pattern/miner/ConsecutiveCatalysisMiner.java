@@ -94,4 +94,11 @@ public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
 	{
 		return true;
 	}
+
+	@Override
+	public String[] getPubmedHarvestableLabels()
+	{
+		return new String[]{"first Control", "first Conversion", "second Control",
+			"second Conversion"};
+	}
 }

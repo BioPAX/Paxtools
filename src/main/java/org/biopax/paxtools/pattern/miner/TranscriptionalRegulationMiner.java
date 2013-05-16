@@ -96,4 +96,10 @@ public class TranscriptionalRegulationMiner extends MinerAdapter implements SIFM
 	{
 		return "Upstream\ttype\tDownstream";
 	}
+
+	@Override
+	public String[] getPubmedHarvestableLabels()
+	{
+		return new String[]{"Control", "TempReac"};
+	}
 }

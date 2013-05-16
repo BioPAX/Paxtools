@@ -92,4 +92,10 @@ public class DegradesMiner extends MinerAdapter implements SIFMiner
 	{
 		return true;
 	}
+
+	@Override
+	public String[] getPubmedHarvestableLabels()
+	{
+		return new String[]{"Control", "Conversion"};
+	}
 }
