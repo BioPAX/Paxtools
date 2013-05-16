@@ -1,6 +1,7 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.controller.PathAccessor;
+import org.biopax.paxtools.impl.level3.EvidenceImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
@@ -571,11 +572,80 @@ public abstract class MinerAdapter implements Miner
 			if (source != null && target != null)
 			{
 				return new SIFInteraction(source, target, this.getRelationType(m),
-					((SIFMiner) this).isDirected());
-
+					((SIFMiner) this).isDirected(), harvestPMIDs(m));
 			}
 		}
 
 		return null;
+	}
+
+	protected static final PathAccessor xrefAcc = new PathAccessor("Xreferrable/xref:PublicationXref");
+	protected static final PathAccessor evidAcc = new PathAccessor("Observable/evidence/xref:PublicationXref");
+
+	/**
+	 * Collects publication xrefs of the given elements.
+	 * @param ele element array
+	 * @return publication xrefs
+	 */
+	protected Set<PublicationXref> harvestPublicationXrefs(BioPAXElement... ele)
+	{
+		Set<PublicationXref> set = new HashSet<PublicationXref>();
+
+		for (Object o : xrefAcc.getValueFromBeans(Arrays.asList(ele)))
+		{
+			set.add((PublicationXref) o);
+		}
+		for (Object o : evidAcc.getValueFromBeans(Arrays.asList(ele)))
+		{
+			set.add((PublicationXref) o);
+		}
+		return set;
+	}
+
+	/**
+	 * Collects PubMed IDs fromt the given publication xrefs.
+	 * @param xrefs publication xrefs
+	 * @return PMIDs
+	 */
+	protected Set<String> harvestPMIDs(Set<PublicationXref> xrefs)
+	{
+		Set<String> set = new HashSet<String>();
+
+		for (PublicationXref xref : xrefs)
+		{
+			if (xref.getDb() != null && xref.getDb().equals("pubmed"))
+				if (xref.getId() != null && !xref.getId().isEmpty())
+					set.add(xref.getId());
+		}
+		return set;
+	}
+
+	/**
+	 * If a SIF miner wants to add PubMed IDs to the mined SIF interactions, then they need to
+	 * override this method and pass the labels of elements to collect the PMIDs.
+	 * @return labels of elements to collect publication refs
+	 */
+	public String[] getPubmedHarvestableLabels()
+	{
+		return null;
+	}
+
+	/**
+	 * Collects PMIDs for the given Match
+	 * @param m the match
+	 * @return PMIDs
+	 */
+	protected Set<String> harvestPMIDs(Match m)
+	{
+		String[] labels = getPubmedHarvestableLabels();
+
+		if (labels == null) return null;
+
+		BioPAXElement[] ele = new BioPAXElement[labels.length];
+		for (int i = 0; i < ele.length; i++)
+		{
+			ele[i] =  m.get(labels[i], getPattern());
+		}
+		return harvestPMIDs(harvestPublicationXrefs(ele));
 	}
 }
