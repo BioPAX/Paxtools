@@ -579,7 +579,7 @@ public abstract class MinerAdapter implements Miner
 		return null;
 	}
 
-	protected static final PathAccessor xrefAcc = new PathAccessor("Xreferrable/xref:PublicationXref");
+	protected static final PathAccessor xrefAcc = new PathAccessor("XReferrable/xref:PublicationXref");
 	protected static final PathAccessor evidAcc = new PathAccessor("Observable/evidence/xref:PublicationXref");
 
 	/**
@@ -613,7 +613,7 @@ public abstract class MinerAdapter implements Miner
 
 		for (PublicationXref xref : xrefs)
 		{
-			if (xref.getDb() != null && xref.getDb().equals("pubmed"))
+			if (xref.getDb() != null && xref.getDb().equalsIgnoreCase("pubmed"))
 				if (xref.getId() != null && !xref.getId().isEmpty())
 					set.add(xref.getId());
 		}

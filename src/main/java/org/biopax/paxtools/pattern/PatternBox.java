@@ -380,4 +380,39 @@ public class PatternBox
 		p.addConstraint(new Type(ProteinReference.class), "Protein 2");
 		return p;
 	}
+
+	/**
+	 * Finds ProteinsReference related to an interaction. If specific types of interactions are
+	 * desired, they should be sent as parameter, otherwise leave the parameter empty.
+	 * @return pattern
+	 */
+	public static Pattern relatedProteinRefOfInter(Class<? extends Interaction>... seedType)
+	{
+		Pattern p = new Pattern(Interaction.class, "Interaction");
+
+		if (seedType.length == 1)
+		{
+			p.addConstraint(new Type(seedType[0]), "Interaction");
+		}
+		else if (seedType.length > 1)
+		{
+			MappedConst[] mc = new MappedConst[seedType.length];
+			for (int i = 0; i < mc.length; i++)
+			{
+				mc[i] = new MappedConst(new Type(seedType[i]), 0);
+			}
+
+			p.addConstraint(new OR(mc), "Interaction");
+		}
+
+		p.addConstraint(new OR(new MappedConst(ConBox.participant(), 0, 1),
+			new MappedConst(new PathConstraint(
+				"Interaction/controlledOf*/controller:PhysicalEntity"), 0, 1)),
+			"Interaction", "PE");
+
+		p.addConstraint(ConBox.linkToSimple(), "PE", "SPE");
+		p.addConstraint(ConBox.peToER(), "SPE", "PR");
+		p.addConstraint(new Type(ProteinReference.class), "PR");
+		return p;
+	}
 }
