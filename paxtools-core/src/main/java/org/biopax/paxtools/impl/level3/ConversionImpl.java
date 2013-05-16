@@ -186,7 +186,7 @@ public class ConversionImpl extends InteractionImpl
 	@Override
 	public int equivalenceCode()
 	{
-		return getEqCodeForSet(this.getLeft())+getEqCodeForSet(this.getRight());
+		return getEqCodeForSet(this.getLeft())*getEqCodeForSet(this.getRight());
 
 	}
 
