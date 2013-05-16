@@ -1205,7 +1205,7 @@ public final class ModelUtils
 			Pathway pw = ((PathwayStep) biopaxElement).getPathwayOrderOf();
 			if(pw != null && pw.getOrganism() != null)
 				biosources.add(pw.getOrganism());
-		} else if (biopaxElement instanceof Interaction 
+		} else if (biopaxElement instanceof Interaction
 				|| biopaxElement instanceof EntityReference
 				|| biopaxElement instanceof PhysicalEntity) {
 			
@@ -1323,40 +1323,50 @@ public final class ModelUtils
 
 	public static void mergeEquivalentInteractions(Model model)
 	{
-		EquivalenceGrouper<Interaction> groups = new EquivalenceGrouper(model.getObjects(Interaction.class));
-		for (List<Interaction> group : groups.getBuckets())
+		EquivalenceGrouper<Conversion> groups = new EquivalenceGrouper(model.getObjects(Conversion.class));
+		for (List<Conversion> group : groups.getBuckets())
 		{
 
 			if (group.size() > 1)
 			{
 				Interaction primus = null;
-				for (Interaction interaction : group)
+				for (Conversion conversion : group)
 				{
 					if (primus == null)
 					{
-						primus = interaction;
+						primus = conversion;
 					} else
 					{
-						copySimplePointers(model, interaction, primus);
-						Set<Control> controlledOf = interaction.getControlledOf();
+						copySimplePointers(model, conversion, primus);
+						Set<Control> controlledOf = conversion.getControlledOf();
 						for (Control control : controlledOf)
 						{
-							control.removeControlled(interaction);
+							control.removeControlled(conversion);
 							if (!control.getControlled().contains(primus))
 							{
 								control.addControlled(primus);
 							}
 						}
-						Set<Pathway> owners = interaction.getPathwayComponentOf();
+						Set<Pathway> owners = conversion.getPathwayComponentOf();
 						for (Pathway pathway : owners)
 						{
-							pathway.removePathwayComponent(interaction);
+							pathway.removePathwayComponent(conversion);
 							if(!pathway.getPathwayComponent().contains(primus))
 							{
 								pathway.addPathwayComponent(primus);
 							}
 
 						}
+						for (PhysicalEntity pe : conversion.getLeft())
+						{
+							conversion.removeLeft(pe);
+						}
+						for (PhysicalEntity pe : conversion.getRight())
+						{
+							conversion.removeRight(pe);
+						}
+
+						model.remove(conversion);
 
 					}
 				}

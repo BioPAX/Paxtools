@@ -305,7 +305,31 @@ public class ModelUtilsTest {
 	    assertTrue(model.getObjects(ModificationFeature.class).size()==1);
     }
     
-	
+	@Test
+	public void testMergeEquivalentConversions()
+	{
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		Model model = mock.createModel();
+
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
+
+		Protein[] proteins = mock.create(model, Protein.class, 4);
+
+		mock.bindInPairs("entityReference",  proteins[0], pr[0], proteins[1], pr[0], proteins[2], pr[1],proteins[3], pr[1]);
+
+		BiochemicalReaction[] rxn = mock.create(model, BiochemicalReaction.class, 2);
+
+		mock.bindInPairs("left", rxn[0], proteins[2], rxn[1], proteins[2]);
+		mock.bindInPairs("right", rxn[0], proteins[3], rxn[1], proteins[3]);
+
+		Catalysis[] ctl = mock.create(model, Catalysis.class,2);
+		mock.bindArrays("controlled", ctl, rxn);
+		mock.bindInPairs("controller", ctl[0],proteins[0],ctl[1], proteins[1]);
+
+		ModelUtils.mergeEquivalentInteractions(model);
+
+		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
+	}
 //
 //	@SuppressWarnings("unchecked")
 //	@Test
