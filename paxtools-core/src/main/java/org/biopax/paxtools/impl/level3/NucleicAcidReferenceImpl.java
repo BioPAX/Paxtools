@@ -2,14 +2,12 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
-import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -19,7 +17,7 @@ import java.util.Set;
 
 @Entity
 @Proxy(proxyClass= NucleicAcidReference.class)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class NucleicAcidReferenceImpl extends SequenceEntityReferenceImpl implements NucleicAcidReference
 {
@@ -27,10 +25,9 @@ public abstract class NucleicAcidReferenceImpl extends SequenceEntityReferenceIm
 
 	public NucleicAcidReferenceImpl()
 	{
-		this.subRegion = new HashSet<NucleicAcidRegionReference>();
+		this.subRegion = new BiopaxSafeSet<NucleicAcidRegionReference>();
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = NucleicAcidRegionReferenceImpl.class)
 	@JoinTable(name = "subRegion")

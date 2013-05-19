@@ -1,8 +1,9 @@
 package org.biopax.paxtools.io.gsea;
 
 import org.apache.commons.lang.StringUtils;
-import org.biopax.paxtools.controller.ModelUtils;
-import org.biopax.paxtools.converter.OneTwoThree;
+import org.biopax.paxtools.controller.Fetcher;
+import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -99,7 +100,7 @@ public class GSEAConverter
 		Model l3Model = null;
 		// convert to level 3 in necessary
 		if (model.getLevel() == BioPAXLevel.L1 || model.getLevel() == BioPAXLevel.L2)
-			l3Model = (new OneTwoThree()).filter(model);
+			l3Model = (new LevelUpgrader()).filter(model);
 		else
 			l3Model = model;
 
@@ -113,8 +114,10 @@ public class GSEAConverter
 				
 				String dataSource = getDataSource(pathway.getDataSource());
 				
-				Set<ProteinReference> pathwayProteinRefs = ModelUtils
-					.getAllChildren(pathway).getObjects(ProteinReference.class);
+				Set<ProteinReference> pathwayProteinRefs = 
+					(new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter))
+						.fetch(pathway, ProteinReference.class);
+				
 				if(!pathwayProteinRefs.isEmpty()) {
 					Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(pathwayProteinRefs);			
 					// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
@@ -125,11 +128,13 @@ public class GSEAConverter
 		} else {
 			//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
 			Set<ProteinReference> allProteinRefs = l3Model.getObjects(ProteinReference.class);
-			Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(allProteinRefs);
-			if(!orgToPrsMap.isEmpty()) {
-				// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
-				toReturn.addAll(createGseaEntries("From a BioPAX sub-model (protein references, no pathways)", 
+			if(!allProteinRefs.isEmpty()) {
+				Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(allProteinRefs);
+				if(!orgToPrsMap.isEmpty()) {
+					// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
+					toReturn.addAll(createGseaEntries("From a BioPAX sub-model (protein references, no pathways)", 
 						getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));	
+				}
 			}
 		}
 					

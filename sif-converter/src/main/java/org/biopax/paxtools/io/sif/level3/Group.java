@@ -1,33 +1,54 @@
 package org.biopax.paxtools.io.sif.level3;
 
 import org.biopax.paxtools.impl.level3.EntityReferenceImpl;
-import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
-//import org.hibernate.annotations.Cache;
-//import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
-//@Cache(usage = CacheConcurrencyStrategy.NONE)
+/**
+ * This class represents a grouping of EntityReferences strictly used by SIF rules for handling generics and complexes.
+ *
+ * @author Emek Demir
+ */
 public class Group extends EntityReferenceImpl
 {
+	/**
+	 * ER members of the group.
+	 */
 	Set<EntityReference> members = new HashSet<EntityReference>();
 
+	/**
+	 *  Since Group is also an ER, its members can be arbitrarily nested.
+	 */
 	Set<Group> subgroups = new HashSet<Group>();
 
-	BinaryInteractionType type;
+	/**
+	 * This value is true if this group maps to a complex, false otherwise.
+	 */
+	boolean isComplex;
 
-	Class<? extends BioPAXElement> genericType;
+	/**
+	 * The class of the sources that this group maps
+	 */
+	Class<? extends BioPAXElement> genericClass;
 
+	/**
+	 * The original bpes that this group maps.
+	 */
 	Set<BioPAXElement> sources;
 
-	Group(BinaryInteractionType type, BioPAXElement source)
+
+	/**
+	 *
+	 * @param type This value is true if this group maps to a complex, false otherwise.
+	 * @param source The original bpes that this group maps.
+	 */
+	Group(boolean type, BioPAXElement source)
 	{
-		this.type = type;
+		this.isComplex = type;
 		this.sources = new HashSet<BioPAXElement>();
 		this.sources.add(source);
 	}
@@ -61,9 +82,9 @@ public class Group extends EntityReferenceImpl
 			throw new IllegalArgumentException();
 	}
 
-	public BinaryInteractionType getType()
+	public boolean isComplex()
 	{
-		return type;
+		return isComplex;
 	}
 
 	@Override public boolean equals(Object o)
@@ -77,7 +98,7 @@ public class Group extends EntityReferenceImpl
 			{
 				return this.sources.equals(that.sources);
 			}
-			return this.type.equals(that.type) && this.members.equals(that.members) &&
+			return this.isComplex == that.isComplex && this.members.equals(that.members) &&
 			       this.subgroups.equals(that.subgroups);
 		} else return false;
 	}
@@ -88,7 +109,7 @@ public class Group extends EntityReferenceImpl
 		if (this.isEmpty())
 		{
 			code = sources.isEmpty() ? super.hashCode() : sources.hashCode();
-		} else code = members.hashCode() / 17 + this.subgroups.hashCode() / 23 + this.getType().hashCode();
+		} else code = members.hashCode() / 17 + this.subgroups.hashCode() / 23 + (isComplex?19:47);
 		return code;
 	}
 
@@ -100,7 +121,7 @@ public class Group extends EntityReferenceImpl
 	@Override public String toString()
 	{
 		StringBuilder bldr = new StringBuilder();
-		bldr.append(type).append("{");
+		bldr.append(isComplex).append("{");
 		if (!isEmpty())
 		{
 			for (EntityReference member : members)
@@ -126,15 +147,14 @@ public class Group extends EntityReferenceImpl
 
 	public String groupTypeToString()
 	{
-		if(type == BinaryInteractionType.COMPONENT_OF)
+		if(isComplex)
 		{
 			return "ComplexGroup";
 		}
-		else if(type == BinaryInteractionType.GENERIC_OF)
+		else
 		{
-			return "Generic"+ (genericType==null?"":genericType.getSimpleName());
+			return "Generic"+ (genericClass ==null?"": genericClass.getSimpleName());
 		}
-		else throw new IllegalStateException();
 
 	}
 }

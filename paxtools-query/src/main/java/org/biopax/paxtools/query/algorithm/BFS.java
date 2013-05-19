@@ -1,9 +1,12 @@
 package org.biopax.paxtools.query.algorithm;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,6 +21,8 @@ import java.util.Set;
  */
 public class BFS
 {
+	private static Log LOG = LogFactory.getLog(BFS.class); 
+	
 	/**
 	 * Distance labels. Missing label interpreted as infinitive.
 	 */
@@ -48,8 +53,18 @@ public class BFS
 	 */
 	protected int limit;
 
+	/**
+	 * BFS queue.
+	 */
 	protected LinkedList<Node> queue;
 
+	/**
+	 * Constructor with all parameters.
+	 * @param sourceSet Seed of BFS
+	 * @param stopSet Nodes that won't be traversed
+	 * @param direction Direction of the traversal
+	 * @param limit Distance limit
+	 */
 	public BFS(Set<Node> sourceSet, Set<Node> stopSet, Direction direction, int limit)
 	{
 		if (direction == Direction.BOTHSTREAM)
@@ -68,12 +83,11 @@ public class BFS
 	{
 	}
 
+	/**
+	 * Executes the algorithm.
+	 * @return BFS tree
+	 */
 	public Map<GraphObject, Integer> run()
-	{
-		return runBFS();
-	}
-
-	public Map<GraphObject, Integer> runBFS()
 	{
 		initMaps();
 
@@ -110,6 +124,9 @@ public class BFS
 		return dist;
 	}
 
+	/**
+	 * Initializes maps used during query.
+	 */
 	protected void initMaps()
 	{
 		// Initialize label, maps and queue
@@ -119,6 +136,10 @@ public class BFS
 		queue = new LinkedList<Node>();
 	}
 
+	/**
+	 * Processes a node.
+	 * @param current The current node
+	 */
 	protected void processNode(Node current)
 	{
 		// Do not process the node if it is ubique
@@ -199,9 +220,22 @@ public class BFS
 		}
 	}
 
+	/**
+	 * Labels equivalent nodes recursively.
+	 * @param node Node to label equivalents
+	 * @param up Traversing direction. Up means towards parents, if false then towards children
+	 * @param dist The label
+	 * @param enqueue Whether to enqueue equivalents
+	 * @param head Where to enqueue. Head or tail.
+	 */
 	protected void labelEquivRecursive(Node node, boolean up, int dist,
 		boolean enqueue, boolean head)
 	{
+		if(node == null) {
+			LOG.error("labelEquivRecursive: null (Node)");
+			return;
+		}
+		
 		for (Node equiv : up ? node.getUpperEquivalent() : node.getLowerEquivalent())
 		{
 			if (getColor(equiv) == WHITE)
@@ -225,12 +259,25 @@ public class BFS
 		}
 	}
 
+	/**
+	 * Checks if an equivalent of the given node is in the set.
+	 * @param node Node to check equivalents
+	 * @param set Node set
+	 * @return true if an equivalent is in the set
+	 */
 	protected boolean isEquivalentInTheSet(Node node, Set<Node> set)
 	{
 		return set.contains(node) ||
 			isEquivalentInTheSet(node, UPWARD, set) || isEquivalentInTheSet(node, DOWNWARD, set); 
 	}
 
+	/**
+	 * Checks if an equivalent of the given node is in the set.
+	 * @param node Node to check equivalents
+	 * @param direction Direction to go to get equivalents
+	 * @param set Node set
+	 * @return true if an equivalent is in the set
+	 */
 	protected boolean isEquivalentInTheSet(Node node, boolean direction, Set<Node> set)
 	{
 		for (Node eq : direction == UPWARD ? node.getUpperEquivalent() : node.getLowerEquivalent())
@@ -242,6 +289,11 @@ public class BFS
 		return false;
 	}
 
+	/**
+	 * Gets color tag of the node
+	 * @param node Node to get color tag
+	 * @return color tag
+	 */
 	protected int getColor(Node node)
 	{
 		if (!colors.containsKey(node))
@@ -255,11 +307,21 @@ public class BFS
 		}
 	}
 
+	/**
+	 * Sets color tag
+	 * @param node node to set color tag
+	 * @param color the color tag
+	 */
 	protected void setColor(Node node, int color)
 	{
 		colors.put(node, color);
 	}
 
+	/**
+	 * Gets the distance label of the object.
+	 * @param go object to get the distance
+	 * @return the distance label
+	 */
 	public int getLabel(GraphObject go)
 	{
 		if (!dist.containsKey(go))
@@ -273,6 +335,11 @@ public class BFS
 		}
 	}
 
+	/**
+	 * Sets the distance label.
+	 * @param go object to set the distance label
+	 * @param label the distance label
+	 */
 	protected void setLabel(GraphObject go, int label)
 	{
 //		System.out.println("Labeling(" + label + "): " + go);

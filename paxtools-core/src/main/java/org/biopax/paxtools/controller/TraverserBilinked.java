@@ -1,5 +1,7 @@
 package org.biopax.paxtools.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
@@ -8,11 +10,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Ozgun Babur
+ * @author Ozgun Babur  //TODO annotate
  */
 public class TraverserBilinked extends Traverser
 {
 	private boolean isInverseOnly = false;
+	private final static Log log = LogFactory.getLog(TraverserBilinked.class);
 	
 	
 	public TraverserBilinked(EditorMap editorMap, Visitor visitor, PropertyFilterBilinked... filters)
@@ -39,16 +42,15 @@ public class TraverserBilinked extends Traverser
 
 		if(editors == null)
 		{
-			if(log.isWarnEnabled())
-				log.warn("No editors for : " + element.getModelInterface());
+			log.warn("No editors for : " + element.getModelInterface());
 			return;
 		}
 		for (ObjectPropertyEditor editor : editors)
 		{
 			if (filterInverse(editor))
 			{
-					Set valueSet = new HashSet(editor.getInverseAccessor().getValueFromBean(element));
-					if (!valueSet.isEmpty()) for (Object value : valueSet)
+					Set<BioPAXElement> valueSet = new HashSet(editor.getInverseAccessor().getValueFromBean(element));
+					if (!valueSet.isEmpty()) for (BioPAXElement value : valueSet)
 					{
 						if(value != null) {
 							//TODO design issue: how visitor will know whether it's called from inverse or normal property (e.g., to modify value)?

@@ -2,18 +2,16 @@ package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.util.ChildDataStringBridge;
-import org.biopax.paxtools.util.DataSourceFilterFactory;
-import org.biopax.paxtools.util.OrganismFieldBridge;
-import org.biopax.paxtools.util.OrganismFilterFactory;
-import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.biopax.paxtools.util.*;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.JoinTable;
@@ -31,7 +29,7 @@ import java.util.Set;
     @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_ORGANISM, impl = OrganismFilterFactory.class), 
     @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_DATASOURCE, impl = DataSourceFilterFactory.class) 
 })
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 {
@@ -46,12 +44,12 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public PhysicalEntityImpl()
 	{
-		feature = new HashSet<EntityFeature>();
-		notFeature = new HashSet<EntityFeature>();
-		controllerOf = new HashSet<Control>();
-		componentOf = new HashSet<Complex>();
-		memberPhysicalEntityOf = new HashSet<PhysicalEntity>(); //TODO make generic?
-		memberPhysicalEntity = new HashSet<PhysicalEntity>();
+		feature = new BiopaxSafeSet<EntityFeature>();
+		notFeature = new BiopaxSafeSet<EntityFeature>();
+		controllerOf = new BiopaxSafeSet<Control>();
+		componentOf = new BiopaxSafeSet<Complex>();
+		memberPhysicalEntityOf = new BiopaxSafeSet<PhysicalEntity>(); //TODO make generic?
+		memberPhysicalEntity = new BiopaxSafeSet<PhysicalEntity>();
 	}
 
 	@Transient
@@ -60,11 +58,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		return PhysicalEntity.class;
 	}
 
-	@Fields({
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
-		//- can even associate small molecules with organisms (impossible to do explicitly in BioPAX)!
-	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
 	public Set<Complex> getComponentOf()
@@ -72,7 +65,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		return componentOf;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
 	public CellularLocationVocabulary getCellularLocation()
 	{
@@ -84,7 +76,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="feature")
@@ -115,7 +106,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.feature = feature;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityFeatureImpl.class)
 	@JoinTable(name="notfeature")
@@ -147,13 +137,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@Fields({
-		//using memberPhysicalEntity in addition to other props to generate "pathway" index field helps
-		//in rare cases when this one does not participate in any interaction or complex but some of its members do
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
-		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
-	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="memberPhysicalEntity") 	
@@ -184,10 +167,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	}
 
 
-	@Fields({
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class))
-	})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
@@ -232,7 +211,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		PhysicalEntity that = (PhysicalEntity) element;
 		return hasEquivalentCellularLocation(that)
 		       && hasEquivalentFeatures(that)
-		       && SetEquivalanceChecker
+		       && SetEquivalenceChecker
 				.isEquivalent(getMemberPhysicalEntity(), that.getMemberPhysicalEntity())
 		       &&
 		       super.semanticallyEquivalent(element); // StackOverflow BUG fixed: was isEquivalent !
@@ -262,8 +241,8 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		if (that != null)
 		{
 			equivalency =
-					SetEquivalanceChecker.isEquivalent(this.getFeature(), that.getFeature()) &&
-					SetEquivalanceChecker.isEquivalent(this.getNotFeature(), that.getNotFeature());
+					SetEquivalenceChecker.isEquivalent(this.getFeature(), that.getFeature()) &&
+					SetEquivalenceChecker.isEquivalent(this.getNotFeature(), that.getNotFeature());
 		}
 		return equivalency;
 	}
@@ -277,7 +256,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
-	//not indexed (organism, pathway fields) here, as it's done via EntityImpl participantOf super-property
 	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
 	public Set<Control> getControllerOf()
 	{

@@ -25,17 +25,33 @@ import java.util.*;
  */
 public class SimpleInteractionConverter
 {
+	/**
+	 * Rules used during generation of interactions.
+	 */
 	private final InteractionRule[] rules;
 
+	/**
+	 * Log for logging.
+	 */
 	private final Log log = LogFactory.getLog(SimpleInteractionConverter.class);
 
+	/**
+	 * Options for interaction generation.
+	 */
 	private final Map options;
 
+	/**
+	 * Option to reduce complexes or use them as they are in interactions.
+	 */
 	public static final String REDUCE_COMPLEXES = "REDUCE_COMPLEXES";
 
+	/**
+	 * IDs of unwanted elements in SIF graph.
+	 */
 	private Set<String> blackList;
 
 	/**
+	 * Constructor with the mining rules to use.
 	 * @param rules interaction rule set to be used in the conversion
 	 */
 	public SimpleInteractionConverter(InteractionRule... rules)
@@ -44,6 +60,7 @@ public class SimpleInteractionConverter
 	}
 
 	/**
+	 * Constructor with mining rules and options.
 	 * @param options options to be used during the conversion process
 	 * @param rules interaction rule set to be used in the conversion
 	 */
@@ -53,6 +70,7 @@ public class SimpleInteractionConverter
 	}
 
 	/**
+	 * Constructor with mining rules, options, and black list.
 	 * @param options options to be used during the conversion process
 	 * @param blackList ids of molecules that we do not want them in SIF
 	 * @param rules interaction rule set to be used in the conversion
@@ -90,6 +108,11 @@ public class SimpleInteractionConverter
 		}
 	}
 
+	/**
+	 * Infers interactions for L3 models.
+	 * @param model L3 model
+	 * @return inferred interactions
+	 */
 	private Set<SimpleInteraction> inferL3(Model model)
 	{
 		InteractionSetL3 interactions = new InteractionSetL3(model);
@@ -112,6 +135,16 @@ public class SimpleInteractionConverter
 		return interactions;
 	}
 
+	/**
+	 * Tries to use a rule to infer interactions. If an exception occurs other than
+	 * MaximumInteractionThresholdExceedException, logs the error and continues.
+	 * @param model model to use
+	 * @param interactions inferred interactions
+	 * @param bpe base element for inference
+	 * @param rule current interaction rule
+	 * @exception MaximumInteractionThresholdExceedException if generated rules are over a certain
+	 * number
+	 */
 	private void tryInferringRule(Model model, InteractionSet interactions, BioPAXElement bpe,
 			InteractionRule rule)
 	{
@@ -130,6 +163,11 @@ public class SimpleInteractionConverter
 		}
 	}
 
+	/**
+	 * Infers interactions on L2 models.
+	 * @param model L2 model
+	 * @return inferred interactions
+	 */
 	private Set<SimpleInteraction> inferL2(Model model)
 	{
 		InteractionSet interactions = new InteractionSet();
@@ -156,7 +194,11 @@ public class SimpleInteractionConverter
 		return interactions;
 	}
 
-
+	/**
+	 * Filters out interactions whose source or target are in black list.
+	 * @param interactions interactions to filter
+	 * @param blackList IDs of unwanted elements
+	 */
 	protected void removeInteractionsWithBlackListMolecules(Set<SimpleInteraction> interactions,
 			Set<String> blackList)
 	{
@@ -164,7 +206,8 @@ public class SimpleInteractionConverter
 		while (iter.hasNext())
 		{
 			SimpleInteraction inter = iter.next();
-			if (blackList.contains(inter.getSource().getRDFId()) || blackList.contains(inter.getTarget().getRDFId()))
+			if (blackList.contains(inter.getSource().getRDFId()) ||
+				blackList.contains(inter.getTarget().getRDFId()))
 			{
 				iter.remove();
 			}
@@ -296,6 +339,11 @@ public class SimpleInteractionConverter
 		writer.close();
 	}
 
+	/**
+	 * Gets the type of the element.
+	 * @param entity entity to ask its type
+	 * @return type in string
+	 */
 	private String getEntityTypeString(BioPAXElement entity)
 	{
 		if(entity instanceof Group)
@@ -306,6 +354,11 @@ public class SimpleInteractionConverter
 			return entity.getModelInterface().getSimpleName();
 	}
 
+	/**
+	 * Prepared a semicolon separated string of values.
+	 * @param values values to list
+	 * @return string representing values
+	 */
 	private String valuesToString(Set values)
 	{
 		StringBuilder bldr = new StringBuilder();
@@ -317,6 +370,11 @@ public class SimpleInteractionConverter
 		return bldr.toString();
 	}
 
+	/**
+	 * Gets all available interaction rules for the given level.
+	 * @param level BioPAX level
+	 * @return available rules
+	 */
 	public static List<InteractionRule> getRules(BioPAXLevel level)
 	{
 		List<InteractionRule> list = new ArrayList<InteractionRule>(5);

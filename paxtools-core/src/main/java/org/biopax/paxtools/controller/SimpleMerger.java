@@ -1,6 +1,5 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.collections15.set.CompositeSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -14,24 +13,22 @@ import java.util.Set;
 /**
  * This is a "simple" BioPAX merger, a utility class to merge
  * 'source' BioPAX models or a set of elements into the target model,
- * using the RDFId (URI) identity only. Merging of normalized,
- * self-consistent models normally gives "better" results
- * (though it depends on the application).
- * <p/>
+ * using the RDFId (URI) identity only. Merging into a normalized,
+ * self-consistent model normally gives "better" results 
+ * (it depends on the application though).
+ * 
  * One can also "merge" a model to itself, i.e.: merge(target,target),
- * which adds those implicit child elements that were not added
- * yet to the model (via model.add*) and makes it more integral.
- * <p/>
+ * or to an empty one, which adds all implicit child elements 
+ * to the model and makes it complete.
+ * 
  * Note, "RDFId (URI) identity" means that it skips, i.e., does not copy
- * a source's element to the target model, if the target already contains an element 
- * with the same RDFId. However, it does update (re-wire) all the object properties
- * to make sure they do not refer to the skipped objects (from the "source") anymore
- * <p/>
- * Note also that this merger does not guarantee the integrity of the passed models:
- * 'target' will be the merged model (often, "more integral"), and the 'source'
- * may be trashed (in fact, - still somewhat usable,
- * with some of its object properties now refer to target's elements).
- * <p/>
+ * a source's element to the target model, if the target already contains the element 
+ * with the same URI. However, it will update (re-wire) all the object properties
+ * to make sure they do not refer to objects outside the updated target model anymore.
+ * 
+ * We not guarantee the integrity of the source models after the merge is done
+ * (those may be still usable; all object properties will refer to target's elements).
+ * 
  * Finally, although called Simple Merger, it is in fact an advanced BioPAX utility,
  * which should be used wisely. Otherwise, it can actually waste resources.
  * So, consider using model.add(..), model.addNew(..) approach first (or instead),
@@ -40,7 +37,7 @@ import java.util.Set;
  */
 public class SimpleMerger
 {
-	private static final Log log = LogFactory.getLog(SimpleMerger.class);
+	private static final Log LOG = LogFactory.getLog(SimpleMerger.class);
 
 	private final EditorMap map;
 
@@ -54,56 +51,53 @@ public class SimpleMerger
 
 
 	/**
-	 * Merges the <em>source</em> models into <em>target</em> model.
-	 * <p/>
-	 * Note: both target and source models are not necessarily self-consistent,
-	 * i.e., they may already contain external and dangling elements...
+	 * Merges the <em>source</em> models into <em>target</em> model,
+	 * one after another (in the order they are listed).
+	 * 
+	 * If the target model is self-integral (complete) or empty, then
+	 * the result of the merge will be also a complete model (contain 
+	 * unique objects with unique URIs, all objects referenced from 
+	 * any other object in the model).
+	 * 
+	 * Source models do not necessarily have to be complete and may even
+	 * indirectly contain different objects of the same type with the same 
+	 * URI. Though, in most cases, one probably wants target model be complete
+	 * or empty for the best possible results. So, if your target is incomplete, 
+	 * or you are not quite sure, then do simply merge it as the first source 
+	 * to a new empty model or itself (or call {@link Model#repair()} first).
+	 *       
 	 * @param target model into which merging process will be done
-	 * @param sources models, if any, that are going to be merged/updated to <em>target</em>
+	 * @param sources models to be merged/updated to <em>target</em>; order can be important
 	 */
 	public void merge(Model target, Model... sources)
 	{
-		CompositeSet<BioPAXElement> objects = new CompositeSet<BioPAXElement>();
-		/* collect all the objects and then merge at once 
-		 * (do not merge for each model separately: this is not only less expensive 
-		 * but also more reliable approach, because models may in fact overlap!)
-		 */
 		for (Model source : sources)
-		{
 			if (source != null)
-			{
-				objects.addComposited(source.getObjects());
-			}
-		}
-		merge(target, objects.toCollection());
+				merge(target, source.getObjects());
 	}
 
 
 	/**
-	 * Merges the <em>elements</em> into <em>target</em> model.
-	 * @param target model into which merging process will be done
-	 * @param elements elements, if any, that are going to be merged/updated to <em>target</em>
+	 * Merges the <em>elements</em> and all their child biopax objects
+	 * into the <em>target</em> model.
+	 * 
+	 * @see #merge(Model, Model...) for details about the target model.
+	 * 
+	 * @param target model into which merging will be done
+	 * @param elements elements that are going to be merged/updated to <em>target</em>
 	 */
 	public void merge(Model target, Collection<? extends BioPAXElement> elements)
 	{
-		// First, fix 'target' model: find implicit objects
-		// if there are different objects with the same URI, 
-		// only one will be added to the model (no guarantee which one),
-		// but next steps should fix it (update object references to the added one)
-		@SuppressWarnings("unchecked") // safe, - no filters (empty array)
+		@SuppressWarnings("unchecked")
 		final Fetcher fetcher = new Fetcher(map);
-		for(BioPAXElement se :  new HashSet<BioPAXElement>(target.getObjects())) {
-			fetcher.fetch(se, target);
-		}
 		
-		// Second, auto-complete source 'elements' by discovering all the implicit elements there
-		// copy all elements, as the collection can be immutable or unsafe to add elements there
+		// Auto-complete source 'elements' by discovering all the implicit elements there
+		// copy all elements, as the collection can be immutable or unsafe to add elements to
 		final Set<BioPAXElement> sources = new HashSet<BioPAXElement>(elements);
 		for(BioPAXElement se : elements) {
 			sources.addAll(fetcher.fetch(se));
 		}
-		
-		
+				
 		// Next, we only copy elements having new URIs -
 		for (BioPAXElement bpe : sources)
 		{
@@ -129,11 +123,8 @@ public class SimpleMerger
 			} 
 		}
 
-		// Finally, update object references -
-		// for all elements in the 'target', - because 'target' model 
-		// itself might have had issues as well, particularly, more 
-		// than one child object having the same URI (see comments above)
-		for (BioPAXElement bpe : target.getObjects()) {
+		// Finally, update object references
+		for (BioPAXElement bpe : sources) {
 			updateObjectFields(bpe, target);
 		}
 		
@@ -142,15 +133,10 @@ public class SimpleMerger
 
 	/**
 	 * Merges the <em>source</em> element (and its "downstream" dependents)
-	 * into <em>target</em> model if its RDFId is not yet there.
-	 * <p/>
-	 * Dependents, though, are not explicitly added to the target model,
-	 * but the corresponding object properties of the element either
-	 * become magically 'fixed' (point to target's elements if found)
-	 * or "dangling" (not null though, but still refer to external objects,
-	 * which simply will be skipped if one exports to OWL using
-	 * e.g. SimpleIO).
-	 * The same apply to other merge methods in this class.
+	 * into <em>target</em> model.
+	 * 
+	 * @see #merge(Model, Collection)
+	 * 
 	 * @param target
 	 * @param source
 	 */
@@ -186,27 +172,16 @@ public class SimpleMerger
 	{
 		if (value != null)
 		{
-			BioPAXElement newValue = target.getByID(value.getRDFId());
-			if (!newValue.equals(value)) {
-				// newValue is a different, not null BioPAX element
-				if (log.isDebugEnabled() && !newValue.isEquivalent(value))
-				{
-					String msg = "Updating property " + editor.getProperty() +
-						"the replacement (target) object " + newValue + " (" +
-					    newValue.getModelInterface().getSimpleName() + "), with the same URI (" +
-					    newValue.getRDFId() + "), " + " is not equivalent to the source: " + 
-					    value + " (" + value.getModelInterface().getSimpleName() + ")!";
-					log.debug(msg); // we can live with it in some cases...(exception may be thrown below)
-				}
-
+			BioPAXElement newValue = target.getByID(value.getRDFId());			
+			assert newValue != null : "null should never be here (a bug in the calling method)";			
+			if (newValue != null && newValue != value) {//using 'equals' can be wrong if e.g. BioPAXElementImpl overrides 'equals' method)
 				/* 
 				 * "setValueToBean" comes first to prevent deleting of current value 
 				 * even though it cannot be replaced with newValue 
 				 * due to the property range error (setValueToBean throws exception)
 				 */
+				editor.removeValueFromBean(value, update);
 				editor.setValueToBean(newValue, update);
-				if(editor.isMultipleCardinality())
-					editor.removeValueFromBean(value, update);
 			} 
 		}
 	}

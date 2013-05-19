@@ -7,19 +7,20 @@ import org.biopax.paxtools.model.level3.Xref;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 import java.util.Comparator;
-import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
 @Proxy(proxyClass= Provenance.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProvenanceImpl extends NamedImpl implements Provenance
 {

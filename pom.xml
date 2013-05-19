@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
-	<version>4.1.7-SNAPSHOT</version>
+	<version>4.2.1-SNAPSHOT</version>
 
 	<name>Paxtools</name>
 	<packaging>pom</packaging>
@@ -25,26 +25,25 @@
 		<module>sbgn-converter</module>
 		<module>paxtools-console</module>
 		<module>paxtools-query</module>
-        <module>paxtools-pattern</module>
-    </modules>
+<!--         <module>json-converter</module> -->
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
 <!-- with maven 3, unlike ${project.version}, the ${biopax.site.url} is somehow not resolved 
- (from settings.xml) and thus 'modules' links suck; so - will use the firm URL prefix: -->
+ (from local settings.xml), and then 'modules' links suck; so - will use the firm URL prefix: -->
 <!-- <siteDeployUrl>${biopax.site.url}/paxtools-${project.version}</siteDeployUrl> -->
 		<siteDeployUrl>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2site/paxtools-${project.version}</siteDeployUrl>
-		<siteUrl>http://biopax.sourceforge.net/paxtools-${project.version}</siteUrl>	
+		<siteUrl>http://www.biopax.org/m2site/paxtools-${project.version}</siteUrl>	
 		
 		<junit.version>4.10</junit.version>
 		<commons-logging.version>1.1.1</commons-logging.version>
 		<log4j.version>1.2.13</log4j.version>
-		<hibernate-core.version>3.6.9.Final</hibernate-core.version>
-		<hibernate-search.version>3.4.0.Final</hibernate-search.version>
-		<jpa.api.version>1.0.0-</jpa.api.version>
-		<commons-lang.version>2.4</commons-lang.version>
+		<hibernate-core.version>4.2.0.Final</hibernate-core.version>
+		<hibernate-search.version>4.2.0.Final</hibernate-search.version>
+		<commons-lang.version>2.6</commons-lang.version>
 		<collections-generic.version>4.01</collections-generic.version>
 		
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
@@ -130,7 +129,7 @@
 
 	<issueManagement>
 		<system>SF</system>
-		<url>https://sourceforge.net/tracker/?group_id=85345</url>
+		<url>http://sourceforge.net/p/biopax/bugs/</url>
 	</issueManagement>
 
 	<ciManagement>
@@ -199,13 +198,12 @@
 	</profiles>
 
 	<scm>
-		<connection>scm:hg:http://biopax.hg.sourceforge.net:8000/hgroot/biopax/paxtools</connection>
-		<developerConnection>
-			scm:hg:ssh://${scm.username}@biopax.hg.sourceforge.net/hgroot/biopax/paxtools
-		</developerConnection>
-		<url>http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools</url>
-	  	<tag>HEAD</tag>
-	</scm>
+		<connection>scm:hg:http://hg.code.sf.net/p/biopax/paxtools</connection>
+		<developerConnection>scm:hg:ssh://${scm.username}@hg.code.sf.net/p/biopax/paxtools</developerConnection>
+		<url>http://sourceforge.net/p/biopax/paxtools</url>
+<!-- 	  	<tag>tip</tag> -->
+	  <tag>HEAD</tag>
+  </scm>
 
 	<distributionManagement>
 		<site>
@@ -326,7 +324,7 @@
         		<configuration>
         			<autoVersionSubmodules>true</autoVersionSubmodules>
         		</configuration>
-      		</plugin>  					
+      		</plugin> 
 		</plugins>
 	</build>
 
@@ -353,7 +351,7 @@
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.0.Final</version>
+            <version>1.0.1.Final</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -378,6 +376,16 @@
          	<artifactId>commons-lang</artifactId>
          	<version>${commons-lang.version}</version>
          </dependency>
+         <dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.12</version>
+         </dependency>
+        <dependency>
+        	<groupId>com.hp.hpl.jena</groupId>
+        	<artifactId>jena</artifactId>
+        	<version>2.5.7</version>
+        </dependency>
 	</dependencies>	
 	</dependencyManagement>
 
@@ -386,45 +394,23 @@
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
 	</dependencies>
 
 	<repositories>
 		<repository>
-			<id>JBoss Repo</id>
-			<url>https://repository.jboss.org/nexus/content/repositories/releases</url>
-			<name>JBoss Repo</name>
-		</repository>
-		<repository>
 			<id>biopax.snapshots</id>
 			<name>BioPAX Snapshots Repository at Sourceforge</name>
-			<url>http://biopax.sourceforge.net/m2repo/snapshots/</url>
+			<url>http://www.biopax.org/m2repo/snapshots/</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -432,7 +418,7 @@
 		<repository>
 			<id>biopax.releases</id>
 			<name>BioPAX Repository at Sourceforge</name>
-			<url>http://biopax.sourceforge.net/m2repo/releases/</url>
+			<url>http://www.biopax.org/m2repo/releases/</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -459,6 +445,16 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>codehaus</id>
+			<url>http://repository.codehaus.org/org/codehaus</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>		
 	</repositories>
 
 	<!-- the following is used both by Maven 3.x and 2.x -->
@@ -467,10 +463,36 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+              		<linksource>true</linksource>
+              		<notimestamp>true</notimestamp>
+              	<links combine.children="append">
+              		<link>http://docs.jboss.org/hibernate/search/4.2/api/</link>
+              		<link>http://docs.jboss.org/hibernate/core/4.2/javadocs/</link>
+              	</links>
+            	</configuration>
+            	<reportSets>
+              		<reportSet>
+                		<id>aggregate</id>
+                		<inherited>false</inherited>
+                		<reports>
+                  			<report>aggregate</report>
+                		</reports>
+              		</reportSet>
+            	</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
+				<reportSets>
+              		<reportSet>
+                		<id>aggregate</id>
+                		<inherited>false</inherited>
+                		<reports>
+                  			<report>aggregate</report>
+                		</reports>
+              		</reportSet>
+            	</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

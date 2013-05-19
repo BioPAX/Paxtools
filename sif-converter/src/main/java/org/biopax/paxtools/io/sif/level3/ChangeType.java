@@ -7,22 +7,68 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * This enum handles types of modifications and contains utility methods for extracting them.
  */
 public enum ChangeType {
-    EXIST_TO_NOT_EXIST,
+	/**
+	 * A modification type was explicitly removed. ( Very RARE since NOT-FEATURE is currently not adopted by most
+	 * pathway databases.)
+	 */
+	EXIST_TO_NOT_EXIST,
+	/**
+	 * A modification type "disappeared. (Common removal type)
+	 */
     EXIST_TO_UNKNOWN,
+	/**
+	 * A modification type "appeared" (Common addition type)
+	 */
     UNKNOWN_TO_NOT_EXIST,
+	/**
+	 * No addition or removal.
+	 */
     UNCHANGED,
-    NOT_EXIST_TO_UNKNOWN,
-    UNKNOWN_TO_EXIST,
-    NOT_EXIST_TO_EXIST;
+	/**
+	 *  A modification type that was known to be non-existing simply become unknown. No know instances, this is here
+	 *  for completeness
+	 */
+	NOT_EXIST_TO_UNKNOWN,
 
+	/**
+	 *  The most common addition form - a modification type "appeared".
+	 */
+	UNKNOWN_TO_EXIST,
+
+	/**
+	 * A modification type was explicitly added.  ( Very RARE since NOT-FEATURE is currently not adopted by most
+	 * pathway databases.)
+	 */
+	NOT_EXIST_TO_EXIST;
+
+	/**
+	 * Special static entity feature used for representing changes that effect existence of protein -i.e. translation
+	 * or degradation.
+	 */
     public static final EntityFeature EXISTENCE = BioPAXLevel.L3.getDefaultFactory().create(
             EntityFeature.class, "urn:org.biopax.paxtools.static/EXISTENCE");
-    public static final BindingFeature BINDING = BioPAXLevel.L3.getDefaultFactory().create(
+
+	/**
+	 * Special static entity feature used as a 'hack' to capture complex membership.
+	 */
+	public static final BindingFeature BINDING = BioPAXLevel.L3.getDefaultFactory().create(
             BindingFeature.class, "urn:org.biopax.paxtools.static/BINDING");
 
-    public static Map<EntityFeature, ChangeType> getDeltaFeatures(PhysicalEntity left, PhysicalEntity right,
+	/**
+	 * This method returns the features that are "changed" between the left and right physical entities. IF these are
+	 * "contained" in another PE such as a complex or generic it also considers changes to those containers .
+	 * @param left a simple physical entity to be compared.
+	 * @param right a simple physical entity to be compared
+	 * @param leftRoot if left is in a complex or represented as a generic actual participating entity that contains
+	 * or subsumes left.
+	 * @param rightRoot if right is in a complex or represented as a generic actual participating entity that contains
+	 * or subsumes right.
+	 * @return A Map of features of spe, annotated with a change type, direction is from-left-to-right.
+	 */
+	public static Map<EntityFeature, ChangeType> getDeltaFeatures(PhysicalEntity left, PhysicalEntity right,
                                                                   PhysicalEntity leftRoot, PhysicalEntity rightRoot) {
         Map<EntityFeature, ChangeType> result = new HashMap<EntityFeature, ChangeType>();
         if (left == null) {

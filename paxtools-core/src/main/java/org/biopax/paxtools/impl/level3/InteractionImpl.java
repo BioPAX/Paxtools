@@ -5,18 +5,14 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
-import org.biopax.paxtools.util.ChildDataStringBridge;
-import org.biopax.paxtools.util.OrganismFieldBridge;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -32,7 +28,7 @@ import java.util.Set;
 @Proxy(proxyClass= Interaction.class)
 @Indexed
 @Boost(1.5f)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class InteractionImpl extends ProcessImpl implements Interaction
 {
@@ -46,8 +42,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	public InteractionImpl()
 	{
-		this.interactionType = new HashSet<InteractionVocabulary>();
-		this.participant = new HashSet<Entity>();
+		this.interactionType = new BiopaxSafeSet<InteractionVocabulary>();
+		this.participant = new BiopaxSafeSet<Entity>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -67,7 +63,6 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
 	@JoinTable(name="interactionType")
@@ -96,13 +91,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	   this.interactionType = interactionType;
 	}
 
-	/* In addition to pathwayComponentOf, stepProcessOf props, we could infer parent pathways from participants (e.g. for a Controller...) 
-	 * Wrong! - because having ubiquitous small molecule participants there results in most pathways will be parent for this interaction :)
-	 */
-	@Fields({
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
-		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
-	})
+
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityImpl.class)
 	@JoinTable(name="participant")

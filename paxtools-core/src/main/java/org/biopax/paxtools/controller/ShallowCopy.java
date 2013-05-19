@@ -5,9 +5,8 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 
 /**
- * "Clones" a BioPAX element -
- * using direct properties/children only
- * (shallow copy)
+ * "Clones" a BioPAX element - using direct properties and dependent children only.
+ * (shallow copy).
  *
  * Compare to {@link Fetcher}
  *
@@ -21,20 +20,29 @@ public class ShallowCopy implements Visitor
     private BioPAXElement copy;
     private BioPAXLevel level;
 
-    
+	/**
+	 * Editor map based constructor.
+	 * @param map that determines the BioPAX Level
+	 * @deprecated use Level based constructor instead.
+	 */
     public ShallowCopy(EditorMap map)
 	{
 		traverser = new Traverser(map, this);
 		this.level = map.getLevel();
 	}
 
-    
-    public ShallowCopy(BioPAXLevel l)
+	/**
+	 * BioPAXLevel based constructor
+	 * @param level used for the cloning operation.
+	 */
+    public ShallowCopy(BioPAXLevel level)
     {
-        this(SimpleEditorMap.get(l));
+        this(SimpleEditorMap.get(level));
     }
 
-    
+	/**
+	 * Empty constructos that defaults to BioPAX L3.
+	 */
     public ShallowCopy()
     {
         this(BioPAXLevel.L3);

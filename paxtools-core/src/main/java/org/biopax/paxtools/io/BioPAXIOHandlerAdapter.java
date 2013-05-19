@@ -11,7 +11,6 @@ import org.biopax.paxtools.model.level2.deltaGprimeO;
 import org.biopax.paxtools.model.level2.kPrime;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.util.BioPaxIOException;
-import org.biopax.paxtools.util.Filter;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.io.*;
@@ -69,7 +68,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	/**
 	 * Updates the level and factory for this I/O
 	 * (final - because used in the constructor)
-	 * 
 	 * @param level
 	 * @param factory
 	 */
@@ -118,63 +116,102 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		this.fixReusedPEPs = fixReusedPEPs;
 	}
 
+	/**
+	 * A workaround for a common issue that was present in BioCyc exports. For non-present values BioCyc exports
+	 * contained the string "NIL".
+	 * @param treatNILasNull
+	 * @deprecated This problem is fixed and this option is no longer needed for recent BioCyc exports. Enable only if
+	 *             you are parsing a legacy export.
+	 */
 	public void treatNilAsNull(boolean treatNILasNull)
 	{
 		this.treatNilAsNull = treatNILasNull;
 	}
 
+	/**
+	 * This method enables silent conversion of Level1 to Level2. If disabled the method will throw an error.
+	 * @param convertingFromLevel1ToLevel2
+	 * @deprecated BioPAX Level 1 exports are extremely rare and obsolete.
+	 */
 	public void setConvertingFromLevel1ToLevel2(boolean convertingFromLevel1ToLevel2)
 	{
 		this.convertingFromLevel1ToLevel2 = convertingFromLevel1ToLevel2;
 	}
 
+	/**
+	 * @return true if this reader is treating string 'NIL' as Null
+	 * @deprecated This problem is fixed and this option is no longer needed for recent BioCyc exports. Enable only if
+	 *             you are parsing a legacy export.
+	 */
 	public boolean isTreatNilAsNull()
 	{
 		return treatNilAsNull;
 	}
 
+	/**
+	 * @return true is converting Level1 to Level2 silently.
+	 * @deprecated BioPAX Level 1 exports are extremely rare and obsolete.
+	 */
 	public boolean isConvertingFromLevel1ToLevel2()
 	{
 		return convertingFromLevel1ToLevel2;
 	}
 
+	/**
+	 * Workaround for a very common Level 2 issue. Most level2 exports in the past reused PhysicalEntityParticipants
+	 * as if they represent states. This is problematic because PEPs also contain stoichiometry information which is
+	 * specific to a reaction. BioPAX spec says that PEPs should not be reused across reactions.
+	 * <p/>
+	 * As Level2 exports getting obsolete this method is slated for deprecation.
+	 * @return true if this Handler automatically splits reused PEPs to interaction specific PEPS.
+	 */
 	public boolean isFixReusedPEPs()
 	{
 		return fixReusedPEPs;
 	}
 
-	public ReusedPEPHelper getReusedPEPHelper()
+	/**
+	 * This is a helper class initialized only if FixReusedPEPs is true.
+	 * @return
+	 */
+	protected ReusedPEPHelper getReusedPEPHelper()
 	{
 		return reusedPEPHelper;
 	}
 
+	/**
+
+	 */
 	public BioPAXFactory getFactory()
 	{
 		return factory;
 	}
 
-	public void setFactory(BioPAXFactory factory)
+
+	@Override public void setFactory(BioPAXFactory factory)
 	{
 		this.factory = factory;
 	}
 
-	public EditorMap getEditorMap()
+
+	@Override public EditorMap getEditorMap()
 	{
 		return editorMap;
 	}
 
-	public void setEditorMap(EditorMap editorMap)
+	@Override public void setEditorMap(EditorMap editorMap)
 	{
 		this.editorMap = editorMap;
 	}
 
-	public BioPAXLevel getLevel()
+	@Override public BioPAXLevel getLevel()
 	{
 		return level;
 	}
 
 	/**
-	 * This is experimental and is not not complete. Files have to be given in dependency order. i.e. a
+	 * This method reads multiple files and returns a merged model.
+	 * This is experimental and is not complete. Files have to be given in dependency order. i.e. a
 	 * former file should not point to the latter. Use it at your own risk.
 	 * @param files Dependency ordered biopax owl file names
 	 * @return a merged model.
@@ -220,9 +257,9 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 //		bp = level.getNameSpace();
 
 		Model model = factory.createModel();
-		
+
 		model.getNameSpacePrefixMap().putAll(namespaces);
-		
+
 		model.setXmlBase(base);
 
 		boolean fixingPEPS = model.getLevel() == BioPAXLevel.L2 && this.isFixReusedPEPs();
@@ -250,8 +287,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			filelevel = BioPAXLevel.getLevelFromNameSpace(namespaceValue);
 			if (filelevel != null)
 			{
-				if (log.isDebugEnabled()) log.debug(
-						"Auto-detected biopax " + filelevel + " (current settings are for Level " + level + ")");
+				if (log.isDebugEnabled())
+					log.debug("Auto-detected biopax " + filelevel + " (current settings are for Level " + level + ")");
 				break;
 			}
 		}
@@ -267,7 +304,16 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		}
 	}
 
-
+	/**
+	 * This method is called by the reader for each OWL instance in the OWL model. It creates a POJO instance, with
+	 * the given id and inserts it into the model. The inserted object is "clean" in the sense that its properties are
+	 * not set yet.
+	 * <p/>
+	 * Implementers of this abstract class can override this method to inject code during object creation.
+	 * @param model to be inserted
+	 * @param id of the new object. The model should not contain another object with the same ID.
+	 * @param localName of the class to be instantiated.
+	 */
 	protected void createAndAdd(Model model, String id, String localName)
 	{
 		BioPAXElement bpe = this.getFactory().create(localName, id);
@@ -283,16 +329,46 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		if (bpe != null)
 		{
 			model.add(bpe);
+		} else
+		{
+			log.warn("null object created during reading. It might not be an official BioPAX class.ID: " + id +
+			         " Class " +
+			         "name " + localName);
 		}
 	}
 
+	/**
+	 * This method provides a hook for the implementers of this abstract class to perform the initial reading from the
+	 * input stream.
+	 */
 	protected abstract void init(InputStream in);
 
+	/**
+	 * This method provides a hook for the implementers of this abstract class to set the namespaces of the model.
+	 * @return a map of namespaces.
+	 */
 	protected abstract Map<String, String> readNameSpaces();
 
+	/**
+	 * This method provides a hook for the implementers of this abstract class to create objects themselves and bind
+	 * the properties to the objects.
+	 * @param model to be populated
+	 */
 	protected abstract void createAndBind(Model model);
 
-	protected BioPAXElement literalFixes(PropertyEditor editor, BioPAXElement bpe, Model model, String value)
+	/**
+	 * Several workarounds for two properties, DeltaG and KEQ, that changed from Level1 for Level2
+	 * @param editor that is responsible for the property that is currently being assigned to the bpe. This method
+	 * will only react if the editor is one of Delta-G or KEQ. These two properties have integer values in L1 but were
+	 * upgraded to 5-tuples called DeltaGPrime0 and KPrime in L2.
+	 * @param bpe that is being bound.
+	 * @param model that is being populated.
+	 * @param value of the property which is an integer.
+	 * @return a modified BioPAX L2 element, DeltaGPrime0 or Kprime if the editor is Delta-G or KEQ respectively.
+	 *         Null otherwise.
+	 * @deprecated BioPAX Level 1 exports are extremely rare and obsolete.
+	 */
+	protected BioPAXElement L1ToL2Fixes(PropertyEditor editor, BioPAXElement bpe, Model model, String value)
 	{
 		BioPAXElement created = null;
 
@@ -316,6 +392,13 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		return created;
 	}
 
+	/**
+	 * This method currently only fixes reusedPEPs if the option is set. As L2 is becoming obsolete this method will be
+	 * slated for deprecation.
+	 * @param bpe to be bound
+	 * @param value to be assigned.
+	 * @return a "fixed" value.
+	 */
 	protected Object resourceFixes(BioPAXElement bpe, Object value)
 	{
 		if (this.isFixReusedPEPs() && value instanceof physicalEntityParticipant)
@@ -325,6 +408,14 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		return value;
 	}
 
+	/**
+	 * This method binds the value to the bpe. Actual assignment is handled by the editor - but this method performs
+	 * most of the workarounds and also error handling due to invalid parameters.
+	 * @param valueString to be assigned
+	 * @param editor that maps to the property
+	 * @param bpe to be bound
+	 * @param model to be populated.
+	 */
 	protected void bindValue(String valueString, PropertyEditor editor, BioPAXElement bpe, Model model)
 	{
 
@@ -340,7 +431,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			value = resourceFixes(bpe, value);
 			if (value == null)
 			{
-				value = literalFixes(editor, bpe, model, valueString);
+				value = L1ToL2Fixes(editor, bpe, model, valueString);
 				if (value == null)
 				{
 					throw new IllegalBioPAXArgumentException(
@@ -361,6 +452,11 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		}
 	}
 
+	/**
+	 * Paxtools maps BioPAX:comment (L3) and BioPAX:COMMENT (L2) to rdf:comment. This method handles that.
+	 * @param bpe to be bound.
+	 * @return a property editor responsible for editing comments.
+	 */
 	protected PropertyEditor getRDFCommentEditor(BioPAXElement bpe)
 	{
 		PropertyEditor editor;
@@ -376,8 +472,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	}
 
 	/**
-	 * Similar to {@link BioPAXIOHandler#convertToOWL(org.biopax.paxtools
-	 * .model.Model, Object)}, but
+	 * Similar to {@link BioPAXIOHandler#convertToOWL(org.biopax.paxtools.model.Model,
+	 * java.io.OutputStream)} (org.biopax.paxtools.model.Model, Object)}, but
 	 * extracts a sub-model, converts it into BioPAX (OWL) format,
 	 * and writes it into the outputStream.
 	 * Saved data can be then read via {@link BioPAXIOHandler}
@@ -395,19 +491,11 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		} else
 		{
 			Model m = model.getLevel().getDefaultFactory().createModel();
-			
 			m.setXmlBase(model.getXmlBase());
-			
+
 			//to avoid 'nextStep' that may lead to infinite loops -
-			Filter<PropertyEditor> filter = new Filter<PropertyEditor>()
-			{
-				public boolean filter(PropertyEditor editor)
-				{
-					return !"nextStep".equalsIgnoreCase(editor.getProperty()) && !"NEXT-STEP".equalsIgnoreCase(
-							editor.getProperty());
-				}
-			};
-			Fetcher fetcher = new Fetcher(SimpleEditorMap.get(model.getLevel()), filter);
+			Fetcher fetcher = new Fetcher(SimpleEditorMap.get(model.getLevel()), 
+					Fetcher.nextStepFilter);
 
 			for (String uri : ids)
 			{

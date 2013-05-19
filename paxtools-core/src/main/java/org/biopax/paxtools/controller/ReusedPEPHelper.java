@@ -15,7 +15,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class contains methods for handling reused PEPs.
+ * This class contains methods for handling reused PEPs - a historically common problem in BioPAX L2 exports.
+ *
+ * Note: This class might eventually be deprecated as this problem is mostly fixed and BioPAX L3 is making L2
+ * obsolete.
  */
 public class ReusedPEPHelper
 {

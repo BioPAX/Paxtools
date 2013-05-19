@@ -18,34 +18,66 @@ import static org.biopax.paxtools.io.sif.BinaryInteractionType.INTERACTS_WITH;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.REACTS_WITH;
 
 /**
+ * Finds pairs of molecules that are participants of the same interaction.
  * User: demir Date: Dec 28, 2007 Time: 5:52:06 PM
  */
 public class ParticipatesRule extends InteractionRuleL2Adaptor
 {
+	/**
+	 * Supported interaction types.
+	 */
 	private static List<BinaryInteractionType> binaryInteractionTypes =
 			Arrays.asList(BinaryInteractionType.INTERACTS_WITH, REACTS_WITH);
 
+	/**
+	 * A limit for number of participants.
+	 */
 	private long threshold;
 
+	/**
+	 * Log for logging.
+	 */
 	private static Log log = LogFactory.getLog(ComponentRule.class);
 
+	/**
+	 * Option to not to throw an exception when the participant threshold is exceeded, but to just
+	 * skip it
+	 */
 	boolean suppressExceptions = false;
 
+	/**
+	 * Option to not to mine INTERACTS_WITH type.
+	 */
 	private boolean skipInteractions;
 
+	/**
+	 * Option to not to mine REACTS_WITH type.
+	 */
 	private boolean skipConversions;
 
+	/**
+	 * Constructor with default values.
+	 */
 	public ParticipatesRule()
 	{
 		this(Integer.MAX_VALUE);
 	}
 
+	/**
+	 * Constructor with participant number threshold.
+	 * @param threshold participant number threshold
+	 */
 	public ParticipatesRule(int threshold)
 	{
 		this(threshold, false);
 
 	}
 
+	/**
+	 * Constructor with participant number threshold and option to suppress exceptions.
+	 * @param threshold participant number threshold
+	 * @param suppressExceptions option to just skip interactions with too many participants
+	 */
 	public ParticipatesRule(int threshold, boolean suppressExceptions)
 	{
 		this.threshold = threshold;
@@ -53,18 +85,27 @@ public class ParticipatesRule extends InteractionRuleL2Adaptor
 
 	}
 
-
+	/**
+	 * Initializes options.
+	 * @param options options map
+	 */
 	@Override public void initOptionsNotNull(Map options)
 	{
-		skipConversions = options.containsKey(REACTS_WITH) && options.get(REACTS_WITH).equals(false);
-
-		skipInteractions = options.containsKey(INTERACTS_WITH) && options.get(INTERACTS_WITH).equals(false);
+		skipConversions = options.containsKey(REACTS_WITH) &&
+			options.get(REACTS_WITH).equals(false);
+		skipInteractions = options.containsKey(INTERACTS_WITH) &&
+			options.get(INTERACTS_WITH).equals(false);
 	}
 
-	public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity pe, Model model)
+	/**
+	 * Infer using given physicalEntity as source.
+	 * @param interactionSet to be populated
+	 * @param pe source
+	 * @param model BioPAX model
+	 */
+	public void inferInteractionsFromPE(InteractionSet interactionSet, physicalEntity pe,
+		Model model)
 	{
-
-
 		// There is nothing to find if we are skipping both rules
 		if (skipConversions && skipInteractions)
 		{
@@ -112,6 +153,14 @@ public class ParticipatesRule extends InteractionRuleL2Adaptor
 		}
 	}
 
+	/**
+	 * Creates the binary interaction using the other participant.
+	 * @param interactionSet to populate
+	 * @param pe source
+	 * @param ip related to target
+	 * @param type type of the binary interaction
+	 * @param interaction the interaction that relates two participants
+	 */
 	private void processParticipant(InteractionSet interactionSet, physicalEntity pe, InteractionParticipant ip,
 			BinaryInteractionType type, interaction interaction)
 	{
@@ -129,6 +178,14 @@ public class ParticipatesRule extends InteractionRuleL2Adaptor
 		}
 	}
 
+	/**
+	 * Creates the interaction between given source and target.
+	 * @param pe source
+	 * @param pe2 target
+	 * @param set to populate
+	 * @param type binary interaction type
+	 * @param interaction mediator
+	 */
 	private void createInteraction(physicalEntity pe, physicalEntity pe2, InteractionSet set,
 			BinaryInteractionType type, interaction interaction)
 	{
@@ -145,6 +202,4 @@ public class ParticipatesRule extends InteractionRuleL2Adaptor
 	{
 		return binaryInteractionTypes;
 	}
-
-
 }

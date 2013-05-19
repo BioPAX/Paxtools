@@ -1,5 +1,7 @@
 package org.biopax.paxtools.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
@@ -28,6 +30,7 @@ public abstract class AbstractTraverser extends Traverser
 {
 	private final Stack<BioPAXElement> visited;
 	private final Stack<String> props;
+	private final static Log log = LogFactory.getLog(AbstractTraverser.class);
 		
 	public AbstractTraverser(EditorMap editorMap, 
 		@SuppressWarnings("rawtypes") Filter<PropertyEditor>... filters)
@@ -69,29 +72,25 @@ public abstract class AbstractTraverser extends Traverser
 	 * @param editor parent's property PropertyEditor
 	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?,?> editor) {
-			final Stack<BioPAXElement> objPath = getVisited();
-			final Stack<String> propsPath = getProps();
-		
 			if(range instanceof BioPAXElement) {
-				if(objPath.contains(range)) {
-				    if(log.isInfoEnabled())
-				    	log.info(((BioPAXElement)range).getRDFId() 
-				    		+ " already visited (cycle!): " + objPath.toString());
+				if(visited.contains(range)) {
+				    log.info(((BioPAXElement)range).getRDFId() 
+				    		+ " already visited (cycle!): " + visited.toString());
 					return;
 				}
  
-				objPath.push((BioPAXElement) range);
+				visited.push((BioPAXElement) range);
 			}
 			
-			propsPath.push(editor.getProperty());
+			props.push(editor.getProperty());
 			
 			// actions
 			visit(range, domain, model, editor);
 			
-			propsPath.pop();
+			props.pop();
 			
 			if(range instanceof BioPAXElement) {
-				objPath.pop();
+				visited.pop();
 			}
 	}
 

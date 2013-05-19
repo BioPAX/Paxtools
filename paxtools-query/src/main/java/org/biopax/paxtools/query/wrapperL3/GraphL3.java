@@ -12,40 +12,78 @@ import org.biopax.paxtools.query.model.Node;
 
 import java.util.*;
 
-
+/**
+ * Wrapper for L3 Graphs.
+ *
+ * @author Ozgun Babur
+ */
 public class GraphL3 extends AbstractGraph 
 {
+	/**
+	 * The model to be wrapped.
+	 */
 	protected Model model;
-	protected Set<String> ubiqueIDs;
 
+	protected List<Filter> filters;
+
+	/**
+	 * Log for logging.
+	 */
 	protected final Log log = LogFactory.getLog(GraphL3.class);
 
-	public GraphL3(Model model, Set<String> ubiqueIDs)
+	/**
+	 * Constructor with the model and the IDs of the ubiquitous molecules. IDs can be null, meaning
+	 * no labeling is desired.
+	 * @param model Model to wrap
+	 * @param filters for filtering graph elements
+	 */
+	public GraphL3(Model model, Filter... filters)
 	{
 		assert model.getLevel() == BioPAXLevel.L3;
 		this.model = model;
-		setUbiqueIDs(ubiqueIDs);
+
+		if (filters.length > 0)
+		{
+			this.filters = Arrays.asList(filters);
+		}
 	}
 
-	public void setUbiqueIDs(Set<String> ubiqueIDs)
+	/**
+	 * There must be no filter opposing to traverse this object to traverse it.
+	 * @param ele element to check
+	 * @return true if ok to traverse
+	 */
+	private boolean passesFilters(Level3Element ele)
 	{
-		this.ubiqueIDs = ubiqueIDs;
+		if (filters == null) return true;
+
+		for (Filter filter : filters)
+		{
+			if (!filter.okToTraverse(ele)) return false;
+		}
+		return true;
 	}
 
+	/**
+	 * This method creates a wrapper for every wrappable L3 element.
+	 * @param obj Object to wrap
+	 * @return The wrapper
+	 */
 	@Override
 	public Node wrap(Object obj)
 	{
+		// Check if the object is level3
+		if (!(obj instanceof Level3Element)) throw new IllegalArgumentException(
+			"An object other than a Level3Element is trying to be wrapped: " + obj);
+
+		// Check if the object passes the filter
+		if (!passesFilters((Level3Element) obj)) return null;
+
+		// Wrap if traversible
+
 		if (obj instanceof PhysicalEntity)
 		{
-			PhysicalEntity pe = (PhysicalEntity) obj;
-			PhysicalEntityWrapper pew = new PhysicalEntityWrapper(pe, this);
-
-			if (ubiqueIDs != null && ubiqueIDs.contains(pe.getRDFId()))
-			{
-				pew.setUbique(true);
-			}
-
-			return pew;
+			return new PhysicalEntityWrapper((PhysicalEntity) obj, this);
 		}
 		else if (obj instanceof Conversion)
 		{
@@ -69,6 +107,11 @@ public class GraphL3 extends AbstractGraph
 		}
 	}
 
+	/**
+	 * RDF IDs of elements is used as key in the object map.
+	 * @param wrapped Object to wrap
+	 * @return Key
+	 */
 	@Override
 	public String getKey(Object wrapped)
 	{
@@ -80,17 +123,11 @@ public class GraphL3 extends AbstractGraph
 		throw new IllegalArgumentException("Object cannot be wrapped: " + wrapped);
 	}
 
-	public Set<PhysicalEntity> getPhysical(Set<EntityReference> refs)
-	{
-		Set<PhysicalEntity> set = new HashSet<PhysicalEntity>();
-
-		for (EntityReference ref : refs)
-		{
-			set.addAll(ref.getEntityReferenceOf());
-		}
-		return set;
-	}
-
+	/**
+	 * Gets wrappers of given elements
+	 * @param objects Wrapped objects
+	 * @return wrappers
+	 */
 	public Set<Node> getWrapperSet(Set<?> objects)
 	{
 		Set<Node> wrapped = new HashSet<Node>();
@@ -106,6 +143,11 @@ public class GraphL3 extends AbstractGraph
 		return wrapped;
 	}
 
+	/**
+	 * Gets an element-to-wrapper map for the given elements.
+	 * @param objects Wrapped objects
+	 * @return object-to-wrapper map
+	 */
 	public Map<Object, Node> getWrapperMap(Set<?> objects)
 	{
 		Map<Object, Node> map = new HashMap<Object, Node>();
@@ -121,6 +163,11 @@ public class GraphL3 extends AbstractGraph
 		return map;
 	}
 
+	/**
+	 * Gets the wrapped objects of the given wrappers.
+	 * @param wrappers Wrappers
+	 * @return Wrapped objects
+	 */
 	public Set<Object> getWrappedSet(Set<? extends GraphObject> wrappers)
 	{
 		Set<Object> objects = new HashSet<Object>();
@@ -147,6 +194,9 @@ public class GraphL3 extends AbstractGraph
 		return objects;
 	}
 
+	/**
+	 * @return Wrapped model
+	 */
 	public Model getModel()
 	{
 		return model;

@@ -1,21 +1,18 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
+import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.util.ChildDataStringBridge;
-import org.biopax.paxtools.util.DataSourceFieldBridge;
-import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -24,7 +21,7 @@ import java.util.Set;
 @Entity
 @Proxy(proxyClass=PathwayStep.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 {
@@ -40,10 +37,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	 */
 	public PathwayStepImpl()
 	{
-		this.nextStep = new HashSet<PathwayStep>();
-		this.nextStepOf = new HashSet<PathwayStep>();
-		this.stepProcess = new HashSet<Process>();
-		this.evidence = new HashSet<Evidence>();
+		this.nextStep = new BiopaxSafeSet<PathwayStep>();
+		this.nextStepOf = new BiopaxSafeSet<PathwayStep>();
+		this.stepProcess = new BiopaxSafeSet<Process>();
+		this.evidence = new BiopaxSafeSet<Evidence>();
 	}
 
 	@Transient
@@ -93,7 +90,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
@@ -105,6 +101,14 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	public void addStepProcess(Process processStep)
 	{
 		if (processStep != null) {
+			
+			if(this instanceof BiochemicalPathwayStep 
+				&& !(processStep instanceof Control)) {
+				throw new IllegalArgumentException(
+					"Range violation: BiochemicalPathwayStep.stepProcess "
+						+ "can add only Control interactions.");	
+			}
+			
 			this.stepProcess.add(processStep);
 			processStep.getStepProcessOf().add(this);
 		}
@@ -123,7 +127,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.stepProcess = stepProcess;
 	}
 
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)
 	@JoinTable(name="evidence") 	
@@ -149,10 +152,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = evidence;
 	}
 
-	@Fields({
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
-	})
 	@ManyToOne(targetEntity = PathwayImpl.class)
 	public Pathway getPathwayOrderOf()
 	{

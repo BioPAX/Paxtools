@@ -10,17 +10,49 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * This experimental class is used by Activity Network Analyzer to capture state change events.
+ *
+ * Note: The idea here is similar to converting SBGN-PD to SBGN-ER and this class in the future can be a
+ * basis for that. But currently it makes assumptions about the representation which is compatible with the
+ * existing pathway data sources but might not be compatible with all usages of BioPAX.
+ *
+ * Use with caution.
+ *
+ * @author Emek Demir
  */
 public class PEStateChange {
 
-    Map<EntityFeature, ChangeType> deltaFeatures;
-    HashMap<Control, Boolean> deltaControls = new HashMap<Control, Boolean>();
+	/**
+	 * A map of features that are changed and how they changed.
+	 */
+	Map<EntityFeature, ChangeType> deltaFeatures;
 
-    private PhysicalEntity leftRoot;
+	/**
+	 * A map of changes in the types of controls. For example if as a result of the state change the entity can now
+	 * phosphorylate a downstream event, this is registered as a control that is gained.
+	 */
+	HashMap<Control, Boolean> deltaControls = new HashMap<Control, Boolean>();
+
+	/**
+	 * Left physical entity. Must belong to the same entity reference with right.
+	 */
+	SimplePhysicalEntity left;
+
+	/**
+	 * Right physical entity, must belong to the same entity reference with left.
+	 */
+	SimplePhysicalEntity right;
+
+	/**
+	 * Conversion event leading to state change,
+	 */
+	Conversion conv;
+
+	/**
+	 *
+	 */
+	private PhysicalEntity leftRoot;
     private PhysicalEntity rightRoot;
-    Conversion conv;
-    SimplePhysicalEntity left;
-    SimplePhysicalEntity right;
     static PathAccessor controllers = new PathAccessor("Conversion/controlledOf/controller");
 
 
@@ -179,12 +211,13 @@ public class PEStateChange {
 	private void appendXrefs(Controller controller, StringBuilder builder)
 	{
 		HashSet<SimplePhysicalEntity> simple = new HashSet<SimplePhysicalEntity>();
+        if(controller instanceof PhysicalEntity) {
+            Simplify.getSimpleMembers((PhysicalEntity) controller, simple);
+            for (SimplePhysicalEntity spe : simple)
+            {
 
-		Simplify.getSimpleMembers((PhysicalEntity) controller, simple);
-		for (SimplePhysicalEntity spe : simple)
-		{
-
-			builder.append("(").append(spe.getEntityReference().getXref()).append(")");
-		}
+                builder.append("(").append(spe.getEntityReference().getXref()).append(")");
+            }
+        }
 	}
 }

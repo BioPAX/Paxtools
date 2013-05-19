@@ -19,7 +19,7 @@ public class Completer implements Visitor
 {
 	protected TraverserBilinked traverser;
 
-	Set<BioPAXElement> completed;
+	private final Set<BioPAXElement> completed;
 
 	public Completer(EditorMap map)
 	{
@@ -57,14 +57,12 @@ public class Completer implements Visitor
 
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-		if (range instanceof BioPAXElement)
+		if (range instanceof BioPAXElement) //!=null works too (because of prop. filters)
 		{
 			BioPAXElement element = (BioPAXElement) range;
-
 			if (!completed.contains(element))
 			{
 				completed.add(element);
-
 				traverser.traverse(element, model);
 			}
 		}

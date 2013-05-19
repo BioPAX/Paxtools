@@ -24,11 +24,17 @@ public class Traverser
 
 	protected Filter<PropertyEditor>[] filters;
 
-	protected final Log log = LogFactory.getLog(Traverser.class);
+	private final static Log log = LogFactory.getLog(Traverser.class);
 
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
+	/**
+	 * The full constructor.
+	 * @param editorMap is used for looking up properties to traverse
+	 * @param visitor is a visitor element that determines the action on reaching a biopax element during traversal
+	 * @param filters limits the type of properties that are traversed.
+	 */
 	public Traverser(EditorMap editorMap, Visitor visitor, Filter<PropertyEditor>... filters)
 	{
 		this.editorMap = editorMap;
@@ -37,6 +43,7 @@ public class Traverser
 	}
 
 // -------------------------- SETTERS/GETTERS ------------------------
+
 
 	public void setVisitor(Visitor visitor)
 	{
@@ -68,7 +75,7 @@ public class Traverser
 
 		if (editors == null)
 		{
-			if (log.isWarnEnabled()) log.warn("No editors for : " + element.getModelInterface());
+			log.warn("No editors for : " + element.getModelInterface());
 			return;
 		}
 		for (PropertyEditor<? super D,?> editor : editors)
@@ -91,7 +98,7 @@ public class Traverser
     }
 
 
-    protected boolean filter(PropertyEditor<? extends BioPAXElement,?> editor)
+    protected boolean filter(PropertyEditor<?, ?> editor)
 	{
 		for (Filter<PropertyEditor> filter : filters)
 		{

@@ -11,9 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Provides an editor compatible with all value types other Primitive, ENUM, and String by extending
- * the {@link org.biopax.paxtools.controller.PropertyEditor}.
- * @see org.biopax.paxtools.controller.PropertyEditor
+ * Provides an editor for  all object value types, e.g. everything other than Primitive, ENUM, and String.
  */
 public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXElement> extends PropertyEditor<D, R>
 {
@@ -34,6 +32,14 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
+	/**
+	 * Full constructor.
+	 * @param property Name of the property, e.g. entityReference.
+	 * @param getMethod A "Method" class that represents the getter method. e.g. getEntityReference()
+	 * @param domain name of the domain of this property. e.g. PhysicalEntity
+	 * @param range name of the range of this property. e.g. EntityReference.
+	 * @param multipleCardinality false if this property is functional, e.g. many-to-one or one-to-one.
+	 */
 	public ObjectPropertyEditor(String property, Method getMethod, final Class<D> domain, final Class<R> range,
 	                            boolean multipleCardinality)
 	{
@@ -59,9 +65,8 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 			completeForward = autComp.forward();
 			completeBackward = autComp.backward();
 		}
-
-
 	}
+
 
 	private <T extends BioPAXElement> SimplePropertyAccessor<R, ? super D> buildInverse(Class<T> inverseRange,
 	                                                                                    Class<R> inverseDomain)
@@ -122,11 +127,30 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		return sb.toString();
 	}
 
+	/**
+	 * This method adds a range restriction to the property editor. e.g. All entityReferences of Proteins should be
+	 * ProteinReferences.
+	 *
+	 * Note: All restrictions specified in the BioPAX specification is automatically created by the {@link EditorMap}
+	 * during initialization. Use this method if you need to add restrictions that are not specified in
+	 * the model.
+	 * @param domain subdomain of the property to be restricted
+	 * @param ranges valid ranges for this subdomain.
+	 */
 	public void addRangeRestriction(Class<? extends BioPAXElement> domain, Set<Class<? extends BioPAXElement>> ranges)
 	{
 		this.restrictedRanges.put(domain, ranges);
 	}
 
+	/**
+	 * This method sets all range restrictions.
+	 *
+	 * Note: All restrictions specified in the BioPAX specification is automatically created by the {@link EditorMap}
+	 * during initialization. Use this method if you need to add restrictions that are not specified in
+	 * the model.
+
+	 * @param restrictedRanges a set of range restrictions specified as a map.
+	 */
 	public void setRangeRestriction(
 			Map<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>> restrictedRanges)
 	{
@@ -148,6 +172,11 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		}
 	}
 
+	/**
+	 *
+	 * @param restrictedDomain a subdomain that is restricted.
+	 * @return the range restrictions for the given subdomain for this propertyEditor.
+	 */
 	public Set<Class<? extends BioPAXElement>> getRestrictedRangesFor(Class<? extends D> restrictedDomain)
 	{
 		Set<Class<? extends BioPAXElement>> classes = this.restrictedRanges.get(restrictedDomain);
@@ -159,11 +188,19 @@ public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXEleme
 		return classes;
 	}
 
+	/**
+	 * @return true iff this property has a defined inverse link in paxtools.
+	 */
 	public boolean hasInverseLink()
 	{
 		return getInverseGetMethod() != null;
 	}
 
+	/**
+	 * @return the inverse get method for this property. If the property for this editor is entityReference this method
+	 * will return a Method instance that represents {@link org.biopax.paxtools.model.level3
+	 * .EntityReference#getEntityReferenceOf()}.
+	 */
 	protected Method findInverseGetMethod()
 	{
 		String name = getGetMethod().getName() + "Of";

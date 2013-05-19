@@ -4,9 +4,12 @@ import org.biopax.paxtools.model.level3.NucleicAcid;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.TemplateDirectionType;
 import org.biopax.paxtools.model.level3.TemplateReaction;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -16,7 +19,7 @@ import java.util.Set;
 @javax.persistence.Entity
 @Proxy(proxyClass= TemplateReaction.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
@@ -25,7 +28,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 
 	public TemplateReactionImpl()
 	{
-        this.product = new HashSet<PhysicalEntity>();
+        this.product = new BiopaxSafeSet<PhysicalEntity>();
     }
 	
 	@Transient

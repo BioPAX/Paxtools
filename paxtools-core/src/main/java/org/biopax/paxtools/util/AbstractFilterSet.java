@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * Base class for implementing various filter sets.
  * Filter sets are unmodifiable.
+ * @see ClassFilterSet for an implementation that filters classes.
  */
 
 public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements Filter<F>
@@ -43,13 +44,13 @@ public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements 
 		return i;
 	}
 
-	public boolean contains(Object o)
+	@Override public boolean contains(Object o)
 	{
 
 		return  baseSet.contains(o) && filter(((F) o));
 	}
 
-	public Iterator<E> iterator()
+	@Override public Iterator<E> iterator()
 	{
 		return new FilterIterator(baseSet.iterator());
 	}

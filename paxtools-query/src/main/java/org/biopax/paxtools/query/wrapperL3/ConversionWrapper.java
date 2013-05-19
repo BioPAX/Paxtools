@@ -3,31 +3,63 @@ package org.biopax.paxtools.query.wrapperL3;
 import org.biopax.paxtools.model.level3.*;
 
 /**
+ * Wrapper for the Conversion class.
+ *
  * @author Ozgun Babur
  */
 public class ConversionWrapper extends EventWrapper
 {
+	/**
+	 * Wrapped Conversion.
+	 */
 	protected Conversion conv;
+
+	/**
+	 * The direction that the Conversion is wrapped. A separate wrapper is used for each direction
+	 * if the Conversion is reversible.
+	 */
 	protected boolean direction;
+
+	/**
+	 * Link to the wrapper for the same Conversion but for the other direction, if exists.
+	 */
 	private ConversionWrapper reverse;
+
+	/**
+	 * Flag to say this Conversion is a transcription.
+	 */
 	protected boolean transcription;
 
+	/**
+	 * Constructor with the Conversion to wrap and the owner graph.
+	 * @param conv Conversion to wrap
+	 * @param graph Owner graph
+	 */
 	protected ConversionWrapper(Conversion conv, GraphL3 graph)
 	{
 		super(graph);
 		this.conv = conv;
 	}
 
+	/**
+	 * @return Direction of the conversion
+	 */
 	public boolean getDirection()
 	{
 		return direction;
 	}
 
+	/**
+	 * @return The reverse Conversion wrapper if exists
+	 */
 	public ConversionWrapper getReverse()
 	{
 		return reverse;
 	}
 
+	/**
+	 * Extracts the direction, creates the reverse if necessary.
+	 */
 	public void init()
 	{
 		if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
@@ -48,6 +80,9 @@ public class ConversionWrapper extends EventWrapper
 		}
 	}
 
+	/**
+	 * Binds inputs and controllers.
+	 */
 	@Override
 	public void initUpstream()
 	{
@@ -83,6 +118,9 @@ public class ConversionWrapper extends EventWrapper
 		}
 	}
 
+	/**
+	 * Binds products.
+	 */
 	@Override
 	public void initDownstream()
 	{
@@ -102,27 +140,47 @@ public class ConversionWrapper extends EventWrapper
 		}
 	}
 
+	/**
+	 * @return Whether this is a transcription
+	 */
 	public boolean isTranscription()
 	{
 		return transcription;
 	}
 
+	/**
+	 * RDF ID of the Conversion and the direction is used for the key.
+	 * @return Key
+	 */
 	public String getKey()
 	{
 		return conv.getRDFId() + "|" + direction;
 	}
 
+	/**
+	 * @return Wrapped Conversion
+	 */
 	public Conversion getConversion()
 	{
 		return conv;
 	}
 
+	/**
+	 * @return Display name with the ID
+	 */
 	@Override
 	public String toString()
 	{
 		return conv.getDisplayName() + " -- " + conv.getRDFId();
 	}
 
+	/**
+	 * Direction LEFT_TO_RIGHT.
+	 */
 	public static final boolean LEFT_TO_RIGHT = true;
+
+	/**
+	 * Direction RIGHT_TO_LEFT.
+	 */
 	public static final boolean RIGHT_TO_LEFT = false;
 }

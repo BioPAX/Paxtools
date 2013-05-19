@@ -2,18 +2,14 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.ChildDataStringBridge;
-import org.biopax.paxtools.util.OrganismFieldBridge;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -25,7 +21,7 @@ import java.util.Set;
 @Entity
 @Proxy(proxyClass= Complex.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
@@ -38,8 +34,8 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 	public ComplexImpl()
 	{
-		this.component = new HashSet<PhysicalEntity>();
-		this.componentStoichiometry = new HashSet<Stoichiometry>();
+		this.component = new BiopaxSafeSet<PhysicalEntity>();
+		this.componentStoichiometry = new BiopaxSafeSet<Stoichiometry>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -58,10 +54,6 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------- ACCESORS and MUTATORS---------------------
 	
-	@Fields({
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index=Index.UN_TOKENIZED, bridge= @FieldBridge(impl = OrganismFieldBridge.class)),
-		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
-	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
 	@JoinTable(name="component")
@@ -82,7 +74,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	{
 		if (component != null) {
 			this.component.remove(component);
-			component.getComponentOf().add(null);
+			component.getComponentOf().remove(this);
 		}
 	}
 
@@ -175,7 +167,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		if (!(element instanceof Complex))
 			return false;
 		
-		return SetEquivalanceChecker
+		return SetEquivalenceChecker
 				.isEquivalent(this.getComponent(), ((Complex) element).getComponent())
 				&& super.semanticallyEquivalent(element);
 	}

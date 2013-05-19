@@ -13,6 +13,10 @@ import org.biopax.paxtools.model.level3.SmallMolecule;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.algorithm.LimitType;
+import org.biopax.paxtools.query.wrapperL3.DataSourceFilter;
+import org.biopax.paxtools.query.wrapperL3.Filter;
+import org.biopax.paxtools.query.wrapperL3.OrganismFilter;
+import org.biopax.paxtools.query.wrapperL3.UbiqueFilter;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -95,7 +99,7 @@ public class QueryTest
 		return cln.clone(model, result);
 	}
 
-	private static Set<BioPAXElement> findElements(Model model, String... ids)
+	protected static Set<BioPAXElement> findElements(Model model, String... ids)
 	{
 		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
 
@@ -143,5 +147,73 @@ public class QueryTest
 
 		Model ex = excise(model, result);
 		handler.convertToOWL(ex, new FileOutputStream("QueryResult.owl"));		
+	}
+
+	@Test
+	public void testFilters()
+	{
+		Model model = handler.convertFromOWL(this.getClass().getResourceAsStream(
+			"raf_map_kinase_cascade_reactome.owl"));
+
+		Set<BioPAXElement> source = findElements(model,
+			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN2360_1_9606"); //MEK2
+		Set<BioPAXElement> target = findElements(model,
+			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1631_1_9606"); //ERK1
+
+		// test organism filter
+
+		Filter f = new OrganismFilter(new String[]{"Homo sapiens"});
+		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
+			source, target, model, LimitType.NORMAL, 2, f);
+		assertTrue(!result.isEmpty());
+
+		f = new OrganismFilter(new String[]{"Non-existing organism"});
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
+		assertTrue(result.isEmpty());
+
+		
+		f = new OrganismFilter(new String[]{"9606"});
+		result = QueryExecuter.runPathsFromTo(
+			source, target, model, LimitType.NORMAL, 2, f);
+		assertTrue(!result.isEmpty());
+		
+		// test data source filter
+
+		f = new DataSourceFilter(new String[]{"Reactome"});
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
+		assertTrue(!result.isEmpty());
+
+		f = new DataSourceFilter(new String[]{"Some DB"});
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
+		assertTrue(result.isEmpty());
+
+		// test both
+
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2,
+			new OrganismFilter(new String[]{"Homo sapiens"}), 
+			new DataSourceFilter(new String[]{"Reactome"}));
+		assertTrue(!result.isEmpty());
+
+		// test ubique filter
+
+		source = findElements(model,
+			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#SMALLMOLECULE5_1_9606"); //ATP
+		target = findElements(model,
+			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#SMALLMOLECULE6_1_9606"); //ADP
+
+		Set<String> ubiqueIDs = new HashSet<String>(Arrays.asList("Some ID", "Another ID"));
+
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 1,
+			new UbiqueFilter(ubiqueIDs));
+
+		assertTrue(!result.isEmpty());
+
+		ubiqueIDs = new HashSet<String>(Arrays.asList(
+			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#SMALLMOLECULE5_1_9606"));
+
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 1,
+			new UbiqueFilter(ubiqueIDs));
+
+		assertTrue(result.isEmpty());
 	}
 }

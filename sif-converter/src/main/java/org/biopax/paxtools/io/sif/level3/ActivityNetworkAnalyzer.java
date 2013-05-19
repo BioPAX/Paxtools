@@ -1,5 +1,7 @@
 package org.biopax.paxtools.io.sif.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -17,9 +19,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * This class analyzes the network to predict the effect of modifications on PEs on their activity.
+ *
+ * NOTE: This method is experimental and makes several assumptions based on the existing data sources.
+ * It might not work universally or return unexpected results for untested data sets. Use with caution.
+ *
+ * @author Emek Demir
  */
 public class ActivityNetworkAnalyzer
 {
+    private static final Log log = LogFactory.getLog(ActivityNetworkAnalyzer.class);
+
 	Map<BioPAXElement, Set<PEStateChange>> stateChangeMap;
 
 	Map<Conversion, Set<EntityReference>> extendedControls;
@@ -32,10 +42,12 @@ public class ActivityNetworkAnalyzer
 				Control.class,"http://biopax" + ".org/generated/ExtendedControl");
 		EXTENDED.setControlType(ControlType.ACTIVATION);
 		EXTENDED.addName("Inferred from complex binding");
-
 	}
 
-
+	/**
+	 * Given a model this method will analyze the states and populate the stateChangeMap and extendedControls maps.
+	 * @param model to be analyzed.
+	 */
 	public void analyzeStates(Model model)
 	{
 		GroupMap groupMap = Grouper.inferGroups(model);
@@ -88,6 +100,11 @@ public class ActivityNetworkAnalyzer
 		}
 	}
 
+	/**
+	 * @param spe
+	 * @return all preceding states of a SimplePhysicalEntity. Preceding states are other spes of the
+	 * same EntityReference that are converted into this spe in one conversion.
+	 */
 	public Set<SimplePhysicalEntity> getPrecedingStates(SimplePhysicalEntity spe)
 	{
 		Set<SimplePhysicalEntity> result = new HashSet<SimplePhysicalEntity>();
@@ -108,7 +125,11 @@ public class ActivityNetworkAnalyzer
 	{
 		return stateChangeMap.get(er);
 	}
-
+	/**
+	 * @param spe
+	 * @return all succeeding states of a SimplePhysicalEntity. Preceding states are other spes of the
+	 * same EntityReference that this spe is converted into in one conversion.
+	 */
 	public Set<SimplePhysicalEntity> getSucceedingStates(SimplePhysicalEntity spe)
 	{
 		Set<SimplePhysicalEntity> result = new HashSet<SimplePhysicalEntity>();
@@ -125,11 +146,16 @@ public class ActivityNetworkAnalyzer
 		return result;
 	}
 
-
+	/**
+	 * This method writes out the results of the stateNetworkAnalysis for each detected state change.
+	 *
+	 * @param out
+	 * @throws IOException
+	 */
 	public void writeStateNetworkAnalysis(OutputStream out) throws IOException
 	{
 		Writer writer = new OutputStreamWriter(out);
-		System.out.println("stateChangeMap.size = " + stateChangeMap.values().size());
+		log.debug("stateChangeMap.size = " + stateChangeMap.values().size());
 		int ineligible = 0;
 		int eligible = 0;
 		for (BioPAXElement bpe : stateChangeMap.keySet())
@@ -148,7 +174,7 @@ public class ActivityNetworkAnalyzer
 							String s = pathway.getName().toString();
 							if (s.isEmpty())
 							{
-								System.out.println("Empty name pathway = " + pathway);
+								log.debug("Empty name pathway = " + pathway);
 							}
 							writer.write(s + ";");
 						}
@@ -175,12 +201,12 @@ public class ActivityNetworkAnalyzer
 				}
 			} else
 			{
-				System.out.println("bpe = " + bpe);
+				log.debug("bpe = " + bpe);
 			}
 
 		}
-		System.out.println("ineligible = " + ineligible);
-		System.out.println("eligible = " + eligible);
+		log.debug("ineligible = " + ineligible);
+		log.debug("eligible = " + eligible);
 		writer.flush();
 
 
@@ -218,7 +244,7 @@ public class ActivityNetworkAnalyzer
 							Set<EntityReference> xC = extendedControls.get(next.getConv());
 							if (xC != null && xC.contains(sChange.getRight().getEntityReference()))
 							{
-								System.out.println("extended");
+								log.debug("extended");
 								dc.put(EXTENDED, false);
 							}
 						}

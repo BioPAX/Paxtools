@@ -1,14 +1,19 @@
 package org.biopax.paxtools.model;
 
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.impl.ModelImpl;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
+/**
+ * Abstract factory class for instantiating BioPAX classes. Different implementations of BioPAX model should also
+ * implement their own factory
+ */
 
 public abstract class BioPAXFactory
 {
@@ -29,7 +34,7 @@ public abstract class BioPAXFactory
     }
 
     
-    /*
+    /**
      * Universal method that creates a new BioPAX object.
      * (works with non-public, other package, implementations)
      */

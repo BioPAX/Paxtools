@@ -4,17 +4,12 @@ package org.biopax.paxtools.impl.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.DataSourceFieldBridge;
-import org.biopax.paxtools.util.OrganismFieldBridge;
-import org.biopax.paxtools.util.ParentPathwayFieldBridge;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -23,7 +18,7 @@ import java.util.Set;
 
 @Entity
 @Proxy(proxyClass= EntityReference.class)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
@@ -42,12 +37,12 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 */
 	public EntityReferenceImpl()
 	{
-		this.entityFeature = new HashSet<EntityFeature>();
-		this.entityReferenceOf = new HashSet<SimplePhysicalEntity>();
-		this.evidence = new HashSet<Evidence>();
-		this.entityReferenceType = new HashSet<EntityReferenceTypeVocabulary>();
-		this.memberEntityReference = new HashSet<EntityReference>();
-		this.ownerEntityReference= new HashSet<EntityReference>();
+		this.entityFeature = new BiopaxSafeSet<EntityFeature>();
+		this.entityReferenceOf = new BiopaxSafeSet<SimplePhysicalEntity>();
+		this.evidence = new BiopaxSafeSet<Evidence>();
+		this.entityReferenceType = new BiopaxSafeSet<EntityReferenceTypeVocabulary>();
+		this.memberEntityReference = new BiopaxSafeSet<EntityReference>();
+		this.ownerEntityReference= new BiopaxSafeSet<EntityReference>();
 	}
 
 	@Transient
@@ -114,12 +109,6 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	}
 
 
-	@Fields({
-		//TODO think of removing "store=Store.YES" for "pathway" field here, as it can become HUGE (ubiquitous small mol.refs belong to hundreds pathways!)
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
-		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
-	})
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
@@ -185,12 +174,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	}
 
-	@Fields({
-		//TODO think of removing "store=Store.YES" for "pathway" field here, as it can become HUGE (ubiquitous small mol.refs belong to hundreds pathways!)
-		@Field(name=FIELD_PATHWAY, store=Store.YES, index=Index.TOKENIZED, bridge=@FieldBridge(impl=ParentPathwayFieldBridge.class)),
-		@Field(name=FIELD_ORGANISM, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=OrganismFieldBridge.class)),
-		@Field(name=FIELD_DATASOURCE, store=Store.YES, index = Index.UN_TOKENIZED, bridge=@FieldBridge(impl=DataSourceFieldBridge.class))
-	})
+
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
 	public Set<EntityReference> getMemberEntityReferenceOf()

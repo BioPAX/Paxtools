@@ -3,15 +3,12 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PositionStatusType;
 import org.biopax.paxtools.model.level3.SequenceSite;
-import org.biopax.paxtools.util.ChildDataStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -20,7 +17,7 @@ import javax.persistence.Transient;
 @Entity
 @Proxy(proxyClass= SequenceSite.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSite
 {
@@ -70,7 +67,6 @@ public class SequenceSiteImpl extends SequenceLocationImpl implements SequenceSi
 	////////////////////////////////////////////////////////////////////////////
 
 	// Property POSITION-STATUS
-	@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Enumerated
 	public PositionStatusType getPositionStatus()
 	{

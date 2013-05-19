@@ -5,13 +5,15 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.EquivalenceWrapper;
+import org.biopax.paxtools.util.EquivalenceGrouper;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
+ * @author Emek Demir // todo annotate
  */
 public class Simplify
 {
@@ -79,22 +81,25 @@ public class Simplify
 			{
 				Set<SimplePhysicalEntity> leftSpe = new HashSet<SimplePhysicalEntity>();
 				getSimpleMembers(leftRoot, leftSpe);
-				Set<EquivalenceWrapper> leftComps = EquivalenceWrapper.getEquivalenceMap(leftSpe);
+				EquivalenceGrouper<SimplePhysicalEntity> leftComps =
+						new EquivalenceGrouper<SimplePhysicalEntity>(leftSpe);
 
 				Set<SimplePhysicalEntity> rightSpe = new HashSet<SimplePhysicalEntity>();
 				getSimpleMembers(rightRoot, rightSpe);
-				Set<EquivalenceWrapper> rightComps = EquivalenceWrapper.getEquivalenceMap(rightSpe);
-				leftComps.retainAll(rightComps);
-				for (EquivalenceWrapper leftComp : leftComps)
+
+				EquivalenceGrouper rightComps = new EquivalenceGrouper<SimplePhysicalEntity>(rightSpe);
+				leftComps.getBuckets().retainAll(rightComps.getBuckets());
+
+				for (List<SimplePhysicalEntity> bucket : leftComps.getBuckets())
 				{
-					SimplePhysicalEntity bpe = ((SimplePhysicalEntity) leftComp.getBpe());
+					SimplePhysicalEntity pe = bucket.get(0);
 					Set<EntityReference> erSet = extendedControls.get(conv);
 					if (erSet == null)
 					{
 						erSet = new HashSet<EntityReference>();
 						extendedControls.put(conv, erSet);
 					}
-					erSet.add(bpe.getEntityReference());
+					erSet.add(pe.getEntityReference());
 				}
 			}
 		}
@@ -117,10 +122,8 @@ public class Simplify
 
 			if (root.getMemberPhysicalEntity().isEmpty())
 			{
-				if(root instanceof SimplePhysicalEntity)
-					value.add((SimplePhysicalEntity) root);
-			}
-			else
+				if (root instanceof SimplePhysicalEntity) value.add((SimplePhysicalEntity) root);
+			} else
 			{
 				for (PhysicalEntity generic : root.getMemberPhysicalEntity())
 				{

@@ -5,23 +5,20 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
-import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.Entity;
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Proxy(proxyClass= Conversion.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ConversionImpl extends InteractionImpl
 		implements Conversion
@@ -38,9 +35,9 @@ public class ConversionImpl extends InteractionImpl
 
 	public ConversionImpl()
 	{
-		left = new HashSet<PhysicalEntity>();
-		right = new HashSet<PhysicalEntity>();
-		participantStoichiometry = new HashSet<Stoichiometry>();
+		left = new BiopaxSafeSet<PhysicalEntity>();
+		right = new BiopaxSafeSet<PhysicalEntity>();
+		participantStoichiometry = new BiopaxSafeSet<Stoichiometry>();
 	}
 
 
@@ -125,8 +122,6 @@ public class ConversionImpl extends InteractionImpl
 		this.spontaneous = spontaneous;
 	}
 
-// TODO not sure whether "data" search filed is required here (havin "data" from 'participant' property may be enough)...
-//	@Field(name=FIELD_KEYWORD, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = StoichiometryImpl.class)
 	@JoinTable(name="conversionstoichiometry")		
@@ -175,17 +170,34 @@ public class ConversionImpl extends InteractionImpl
 			if(that.getSpontaneous()==this.getSpontaneous() &&
 		       that.getConversionDirection() == this.getConversionDirection())
 			{
-				//return super.semanticallyEquivalent(element);
+				if(SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getLeft()))
+				{
+					return SetEquivalenceChecker.isEquivalent(this.getRight(), that.getRight());
+				}
+				else if(SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getRight()))
+				{
+					return(SetEquivalenceChecker.isEquivalent(this.getRight(), that.getLeft()));
+				}
 			}
 		}
-		return false;//todo
+		return false;
 	}
 
 	@Override
 	public int equivalenceCode()
 	{
-		//todo
-		return super.equivalenceCode();
+		return getEqCodeForSet(this.getLeft())*getEqCodeForSet(this.getRight());
+
+	}
+
+	private int getEqCodeForSet(Set<PhysicalEntity> peSet)
+	{
+		int eqCode=0;
+		for (PhysicalEntity pe : peSet)
+		{
+			eqCode+=pe.equivalenceCode();
+		}
+		return eqCode;
 	}
 
 }

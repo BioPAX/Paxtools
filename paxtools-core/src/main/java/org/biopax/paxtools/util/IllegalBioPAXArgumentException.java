@@ -1,6 +1,8 @@
 package org.biopax.paxtools.util;
 
 /**
+ * This exception is thrown typically when BioPAX domain or cardinality restrictions are violated. It may also be
+ * thrown when a class or property lookup by name fails.
  */
 public class IllegalBioPAXArgumentException extends IllegalArgumentException
 {

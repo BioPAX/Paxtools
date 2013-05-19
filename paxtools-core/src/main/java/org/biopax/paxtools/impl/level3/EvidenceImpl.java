@@ -3,10 +3,13 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -14,12 +17,12 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
+import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
 @Entity
 @Proxy(proxyClass=Evidence.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EvidenceImpl extends XReferrableImpl implements Evidence
 {
@@ -33,9 +36,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	public EvidenceImpl()
 	{
-		this.confidence = new HashSet<Score>();
-		this.evidenceCode = new HashSet<EvidenceCodeVocabulary>();
-		this.experimentalForm = new HashSet<ExperimentalForm>();
+		this.confidence = new BiopaxSafeSet<Score>();
+		this.evidenceCode = new BiopaxSafeSet<EvidenceCodeVocabulary>();
+		this.experimentalForm = new BiopaxSafeSet<ExperimentalForm>();
 	}
 
 	//
@@ -241,9 +244,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 		}
 		
 		//consider publication xrefs!
-		boolean hasCommonPublicationXref = isEquivalentIntersection(
-				new ClassFilterSet<Xref,PublicationXref>(getXref(), PublicationXref.class),
-				new ClassFilterSet<Xref,PublicationXref>(that.getXref(), PublicationXref.class));
+		boolean hasCommonPublicationXref = hasEquivalentIntersection(
+				new ClassFilterSet<Xref, PublicationXref>(getXref(), PublicationXref.class),
+				new ClassFilterSet<Xref, PublicationXref>(that.getXref(), PublicationXref.class));
 		
 		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes && hasAllEquivEvidenceCodes;
 	}

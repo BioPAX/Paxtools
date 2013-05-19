@@ -2,9 +2,12 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Transient;
@@ -14,7 +17,7 @@ import java.util.Set;
 @javax.persistence.Entity
 @Proxy(proxyClass= SequenceLocation.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SequenceLocationImpl extends L3ElementImpl
 	implements SequenceLocation
@@ -26,7 +29,7 @@ public class SequenceLocationImpl extends L3ElementImpl
 	 */
 	public SequenceLocationImpl()
 	{
-		this.regionType = new HashSet<SequenceRegionVocabulary>();
+		this.regionType = new BiopaxSafeSet<SequenceRegionVocabulary>();
     }
 
 	//

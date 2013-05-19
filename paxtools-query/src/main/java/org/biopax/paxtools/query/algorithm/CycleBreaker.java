@@ -9,14 +9,31 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
+ * When an algorithm searches for a paths between multiple source nodes, or from a source to a
+ * target node (source and targets may overlap), sometimes there comes paths from and to the same
+ * node, i.e cycles. When we want to avoid these cases this class can be used to remove those
+ * cycles in the result set.
+ *
  * @author Ozgun Babur
  */
 public class CycleBreaker extends BFS
 {
+	/**
+	 * The result set to search for cycles.
+	 */
 	Set<GraphObject> result;
 
+	/**
+	 * Source and (if exists) target nodes.
+	 */
 	Set<Node> ST;
 
+	/**
+	 * Constructor with the objects in the result, source and target nodes, and search limit.
+	 * @param result Result set to search in
+	 * @param ST Source and target nodes
+	 * @param limit Search limit
+	 */
 	public CycleBreaker(Set<GraphObject> result, Set<Node> ST, int limit)
 	{
 		this.result = result;
@@ -24,6 +41,9 @@ public class CycleBreaker extends BFS
 		this.limit = limit;
 	}
 
+	/**
+	 * Run the algorithm.
+	 */
 	public void breakCycles()
 	{
 		for (GraphObject go : new ArrayList<GraphObject>(result))
@@ -43,7 +63,12 @@ public class CycleBreaker extends BFS
 		}
 	}
 
-
+	/**
+	 * Checks whether an edge is on an unwanted cycle.
+	 * @param node Node that the edge is bound
+	 * @param edge The edge to check
+	 * @return True if no cycle is detected, false otherwise
+	 */
 	public boolean isSafe(Node node, Edge edge)
 	{
 		initMaps();
@@ -88,13 +113,23 @@ public class CycleBreaker extends BFS
 		return false;
 	}
 
-
+	/**
+	 * Continue the search from the node. 2 is added because a name clash in the parent class.
+	 * @param current The node to traverse
+	 * @return False if a cycle is detected
+	 */
 	protected boolean processNode2(Node current)
 	{
 		return processEdges(current, current.getDownstream()) ||
 			processEdges(current, current.getUpstream());
 	}
 
+	/**
+	 * Continue evaluating the next edge.
+	 * @param current Current node
+	 * @param edges The edge to evaluate
+	 * @return False if a cycle is detected
+	 */
 	private boolean processEdges(Node current, Collection<Edge> edges)
 	{
 		for (Edge edge : edges)

@@ -1,6 +1,5 @@
 package org.biopax.paxtools.util;
 
-// imports
 
 import org.hibernate.search.bridge.StringBridge;
 
@@ -14,7 +13,7 @@ public class SetStringBridge implements StringBridge {
 	public String objectToString(Object object) {
 
 		// string to return
-		StringBuffer toReturn = new StringBuffer();
+		StringBuilder toReturn = new StringBuilder();
 
 		// no way to do instanceof on generics.
 		// trust this bridge is used properly
@@ -22,7 +21,7 @@ public class SetStringBridge implements StringBridge {
 
 		// interate over all strings and append (' ' delimit) to return string
 		for (String item : items) {
-			toReturn.append(item + " ");
+			toReturn.append(item).append(" ");
 		}
 
 		return toReturn.toString();

@@ -1,6 +1,6 @@
 package org.biopax.paxtools.controller;
 
-import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandlerTest;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -8,15 +8,12 @@ import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
@@ -206,45 +203,9 @@ public class ModelUtilsTest {
 		assertEquals(1, g1.getComment().size()); // - he-he, and a new comment was generated!
 		assertNull(pr1.getOrganism()); // because ERs were filtered!
 		
-		ModelUtils.generateEntityOrganismXrefs(model);	
 		//printModel(model);
 	}
-	
-	
-	@Test
-	public final void testA() {
-		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
-		Provenance pro1 = model.addNew(Provenance.class, "urn:miriam:pid.pathway");
-		Protein p1 = model.addNew(Protein.class, "p1"); 
-		Pathway pw1 = model.addNew(Pathway.class, "pathway");
-		Pathway pw2 = model.addNew(Pathway.class, "sub_pathway");
-		Conversion conv1 = model.addNew(Conversion.class, "conv1");
-		GeneticInteraction gi1 = model.addNew(GeneticInteraction.class, "gi1");
-		Gene g1 = model.addNew(Gene.class, "gene1");
 		
-		pw1.addDataSource(pro1);
-		pw1.setStandardName("Pathway");
-		pw1.addPathwayComponent(pw2);
-		pw1.addPathwayComponent(conv1);
-		conv1.addLeft(p1);
-		
-		pw2.setStandardName("Sub-Pathway");
-		pw2.addDataSource(pro1);
-		pw2.addPathwayComponent(gi1);
-		gi1.addParticipant(g1);
-		
-		ModelUtils.generateEntityProcessXrefs(model, Process.class);
-		
-		//printModel(model);
-		
-		assertEquals(4, model.getObjects(RelationshipXref.class).size()); //- for 2 pathways and 2 interactions!
-		assertEquals(1, model.getObjects(RelationshipTypeVocabulary.class).size());
-		for(Entity e : model.getObjects(Entity.class)) {
-			if(!e.equals(pw1))
-				assertFalse(e.getXref().isEmpty());
-		}
-	}
-	
 	private void printModel(Model model) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		new SimpleIOHandler().convertToOWL(model, bytes);
@@ -302,9 +263,10 @@ public class ModelUtilsTest {
 	@Test
 	public void testGenericNormalization()
 	{
-		Mock mock = new Mock();
-		Protein[] p = mock.create(Protein.class, 3);
-		ProteinReference[] pr = mock.create(ProteinReference.class, 2);
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		Model model = mock.createModel();
+		Protein[] p = mock.create(model, Protein.class, 3);
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
 
 		mock.bindArrays("entityReference", Arrays.copyOfRange(p, 0, 2), pr);
 
@@ -312,7 +274,7 @@ public class ModelUtilsTest {
 		                 p[2],p[0],
 		                 p[2],p[1]);
 
-		ModelUtils.normalizeGenerics(mock.model);
+		ModelUtils.normalizeGenerics(model);
 
 		assertThat(true, is(p[2].getEntityReference()!=null));
 		assertThat(true, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[0])));
@@ -322,27 +284,52 @@ public class ModelUtilsTest {
     @Test
     public void testFixEquivalentFeatures()
     {
-        Mock mock = new Mock();
-	    SequenceSite[] ss= mock.create(SequenceSite.class,1);
+        MockFactory mock = new MockFactory(BioPAXLevel.L3);
+        Model model = mock.createModel();
+	    SequenceSite[] ss= mock.create(model, SequenceSite.class,1);
 	    ss[0].setSequencePosition(0);
 	    ss[0].setPositionStatus(PositionStatusType.EQUAL);
 
-	    ModificationFeature[] mf = mock.create(ModificationFeature.class, 2);
+	    ModificationFeature[] mf = mock.create(model, ModificationFeature.class, 2);
 	    mf[0].setFeatureLocation(ss[0]);
 	    mf[1].setFeatureLocation(ss[0]);
 
 	    mf[0].setFeatureLocation(ss[0]);
 	    mf[1].setFeatureLocation(ss[0]);
 
-	    ProteinReference[] pr = mock.create(ProteinReference.class, 1);
+	    ProteinReference[] pr = mock.create(model, ProteinReference.class, 1);
 	    pr[0].addEntityFeature(mf[0]);
 	    pr[0].addEntityFeature(mf[1]);
 
-	    ModelUtils.replaceEquivalentFeatures(mock.model);
-	    assertTrue(mock.model.getObjects(ModificationFeature.class).size()==1);
+	    ModelUtils.replaceEquivalentFeatures(model);
+	    assertTrue(model.getObjects(ModificationFeature.class).size()==1);
     }
     
-	
+	@Test
+	public void testMergeEquivalentConversions()
+	{
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		Model model = mock.createModel();
+
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
+
+		Protein[] proteins = mock.create(model, Protein.class, 4);
+
+		mock.bindInPairs("entityReference",  proteins[0], pr[0], proteins[1], pr[0], proteins[2], pr[1],proteins[3], pr[1]);
+
+		BiochemicalReaction[] rxn = mock.create(model, BiochemicalReaction.class, 2);
+
+		mock.bindInPairs("left", rxn[0], proteins[2], rxn[1], proteins[2]);
+		mock.bindInPairs("right", rxn[0], proteins[3], rxn[1], proteins[3]);
+
+		Catalysis[] ctl = mock.create(model, Catalysis.class,2);
+		mock.bindArrays("controlled", ctl, rxn);
+		mock.bindInPairs("controller", ctl[0],proteins[0],ctl[1], proteins[1]);
+
+		ModelUtils.mergeEquivalentInteractions(model);
+
+		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
+	}
 //
 //	@SuppressWarnings("unchecked")
 //	@Test

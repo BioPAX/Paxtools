@@ -18,16 +18,18 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
- * Converts BioPAX L1 and L2 to Level 3.
+ * Upgrades BioPAX L1 and L2 to Level 3.
  * 
  * Notes:
  * - it does not fix existing BioPAX errors
  * - most but not all things are converted (e.g., complex.ORGANISM property cannot...)
  * - phy. entities "clones" - because, during L1 or L2 data read, all re-used pEPs are duplicated... (TODO filter after the conversion)
  * 
- * @author rodch
+ * @author rodche
  *
+ * @deprecated please use {@link LevelUpgrader} instead (renamed since 4.1.7)
  */
+@Deprecated
 public final class OneTwoThree extends AbstractTraverser implements ModelFilter {
 	private static final Log log = LogFactory.getLog(OneTwoThree.class);
 	private static final String l3PackageName = "org.biopax.paxtools.model.level3.";

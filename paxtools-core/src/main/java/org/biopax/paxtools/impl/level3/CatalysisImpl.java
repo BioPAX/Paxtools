@@ -3,9 +3,12 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
@@ -19,7 +22,7 @@ import java.util.Set;
 @Entity
 @Proxy(proxyClass= Catalysis.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CatalysisImpl extends ControlImpl implements Catalysis
 {
@@ -33,7 +36,7 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 
 	public CatalysisImpl()
 	{
-		this.cofactor = new HashSet<PhysicalEntity>();
+		this.cofactor = new BiopaxSafeSet<PhysicalEntity>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

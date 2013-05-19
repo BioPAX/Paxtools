@@ -1,11 +1,14 @@
 package org.biopax.paxtools.impl;
 
-import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +16,8 @@ import java.util.Map;
 @Proxy(proxyClass= BioPAXElement.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(length=40)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate
+@DynamicInsert
 @NamedQueries({
 	@NamedQuery(name="org.biopax.paxtools.impl.BioPAXElementExists",
 				query="select 1 from BioPAXElementImpl where pk=:md5uri")
@@ -44,34 +48,69 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	// anything extra can be stored in this map (not to persist in a DB usually)
 	private Map<String, Object> annotations;
 
-	private String _pk; // used for primary key
+	private String _pk; // Primary Key
 
+	@Version
+	private long version;
 	
 	public BioPAXElementImpl() {
 		this.annotations = new HashMap<String, Object>();
 	}
 	
-	public BioPAXElementImpl(String uri) {
-		this();
-		this.uri = uri;
-	}
 
-
-	// Primary Key
-	// could not use names like: 'key' (SQL conflict), 'id', 'idx' (conflicts with the existing prop. in a child class), etc...
-	// @GeneratedValue did not work (stateless session is unable to save/resolve object references and inverse props)
-	@SuppressWarnings("unused") //is used by Hibernate
+	// Primary Key for persistence
+	// could not use names like: 'key' (SQL conflict), 'id', 'idx' 
+	// (conflicts with the property in sub-classes).
+	// @GeneratedValue - did not work (for stateless sessions)	
+    /**
+     * Gets Primary Key.
+     * 
+     * This method may be useful within a
+     * persistence context (Hibernate). This is not part of
+     * Paxtools standard BioPAX API, it is implementation detail.
+     * 
+     * Normally, one should always use {@link #getRDFId()}
+     * to get BioPAX element's URI and use it in 
+     * data analysis.
+     * 
+     * @return
+     */
 	@Id
 	@Column(name="pk", length=32) // enough to save MD5 digest Hex.
-	private String getPk() {
+	public String getPk() {
 		return _pk;
 	}
 
+	
+	/**
+	 * Primary Key setter (non-public method).
+	 * 
+	 * This is called only from {@link #setRDFId(String)} 
+	 * and Hibernate framework (optional). Primary Key is not required 
+	 * (can be ignored) if this BioPAX element (model, algorithm) 
+	 * is not persistent (i.e., when not using any persistence provider, 
+	 * database, etc. to handle the BioPAX model)
+	 * 
+	 * 
+	 * @param pk
+	 */
 	@SuppressWarnings("unused")
 	private void setPk(String pk) {
 		this._pk = pk;
 	}
 
+	//private simple setter/getter, for persistence only
+	//(use biopax element RDFId property instead)
+	@Lob
+	@Column(nullable=false)
+    private String getUri() {
+        return uri;
+    }
+    @SuppressWarnings("unused")
+	private void setUri(String uri) {
+    	this.uri = uri;
+    }	
+	
 	@Transient
     public boolean isEquivalent(BioPAXElement element)
     {
@@ -86,36 +125,41 @@ public abstract class BioPAXElementImpl implements BioPAXElement
     public int equivalenceCode()
     {
         return uri.hashCode();
-        // return uri == null ? super.hashCode() : uri.hashCode();
     }
 
-//    @Id
-//    @DocumentId
-//    @Column(length=333) 
-	// we have had a big PROBLEM using this as PK, like 
-	// (also, Mysql 5.0.x PK index is case-insensitive and only 64-chars long by default);
-    // no doubt, because of using this long string PK, we also had performance issues..
-    @Lob
+
+	// Beware PROBLEMs, do not use RDFId (URI) as primary key 
+	// (e.g., Mysql 5.x PK/index is case-insensitive, only 64-chars long, by default;
+    // and there're performance issues too)
+    @Transient
     public String getRDFId()
     {
         return uri;
     }
 
     /**
-     * BioPAX URI private set method. 
+     * Private setter for the biopax element RDFId 
+     * (full URI). Using the URI string, this setter 
+     * also sets or updates the primary key field, 
+     * {@link #getPk()}
      * 
-     * By design, URI should not normally be modified once the object is created,
-     * unless you know what you're doing (then it can be done using Java reflection)!
+     * Normally, URI should never be modified 
+     * after the object is created unless you know 
+     * what you're doing (and can use Java Reflection).
      * 
-     * @param id
+     * @param uri
      */
     @SuppressWarnings("unused")
-	private void setRDFId(String id)
+	private synchronized void setRDFId(String uri)
     {
-        this.uri = id;
-        this._pk = ModelUtils.md5hex(id);
+        if(uri == null)
+        	throw new IllegalArgumentException();
+        
+    	this.uri = uri;
+        this._pk = md5hex(this.uri);
     }
 
+    
     public String toString()
     {
         return uri;
@@ -127,5 +171,60 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 		return annotations;
 	}
     
+
+    //to calculate the PK from URI
+    public static final MessageDigest MD5_DIGEST; 
+
+	static {
+		try {
+			MD5_DIGEST = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("Cannot instantiate MD5 MessageDigest!", e);
+		}
+	}
+    
+
+	/**
+	 * Utility method that is called once per object
+	 * to generate the primary key {@link #getPk()}
+	 * from URI. URIs can be long and are case sensitive,
+	 * and therefore would make bad DB primary key.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private static String md5hex(String id) {
+		byte[] digest = MD5_DIGEST.digest(id.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (byte b : digest)
+			sb.append(Integer.toHexString((int) (b & 0xff) | 0x100).substring(1, 3));
+		String hex = sb.toString();
+		return hex;
+	}
+    
+	
+	/**
+	 * true if and only if the other obj has the same biopax type 
+	 * (same {@link #getModelInterface()}, not a subclass) and 
+	 * same URI. Other properties are not considered.
+	 * 
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof BioPAXElement) 
+			&& this.getModelInterface() == ((BioPAXElement) obj).getModelInterface()
+			&& this.uri.equals(((BioPAXElement) obj).getRDFId());
+	}
+	
+	
+	/**
+	 * This method is consistent with the 
+	 * overridden {@link #equals(Object)} method
+	 * (biopax type and URI are what matters) 
+	 */
+	@Override
+	public int hashCode() {
+		return (getModelInterface().getCanonicalName() + uri).hashCode();
+	}
 }
 

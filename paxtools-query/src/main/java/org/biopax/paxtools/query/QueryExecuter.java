@@ -8,26 +8,19 @@ import org.biopax.paxtools.query.algorithm.*;
 import org.biopax.paxtools.query.model.Graph;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
+import org.biopax.paxtools.query.wrapperL3.Filter;
 import org.biopax.paxtools.query.wrapperL3.GraphL3;
 
 import java.util.*;
 
 /**
+ * This class provides static methods to execute graph queries. These cover only the most frequent
+ * use cases. Users can use these methods as example for executing the query they need.
+ *
  * @author Ozgun Babur
  */
 public class QueryExecuter
 {
-    /**
-     * @see #runNeighborhood(java.util.Set, org.biopax.paxtools.model.Model, int, org.biopax.paxtools.query.algorithm.Direction)
-     */
-	public static Set<BioPAXElement> runNeighborhood(
-		Set<BioPAXElement> sourceSet,
-		Model model,
-		int limit,
-		Direction direction)
-	{
-        return runNeighborhood(sourceSet, model, limit, direction, null);
-    }
 	/**
 	 * Gets neighborhood of the source set.
 	 *
@@ -35,7 +28,7 @@ public class QueryExecuter
 	 * @param model BioPAX model
 	 * @param limit neigborhood distance to get
 	 * @param direction UPSTREAM, DOWNSTREAM or BOTHSTREAM
-	 * @param ubiqueIDs RDF IDs of ubiquitous entity references. can be null
+	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result set
 	 */
 	public static Set<BioPAXElement> runNeighborhood(
@@ -43,13 +36,13 @@ public class QueryExecuter
 		Model model,
 		int limit,
 		Direction direction,
-		Set<String> ubiqueIDs)
+		Filter... filters)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model, ubiqueIDs);
+			graph = new GraphL3(model, filters);
 		}
 		else return null;
 
@@ -60,32 +53,22 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
-    /**
-     * @see #runPathsBetween(java.util.Set, org.biopax.paxtools.model.Model, int)
-     *
-     */
-    public static Set<BioPAXElement> runPathsBetween(Set<BioPAXElement> sourceSet, Model model, int limit)
-	{
-        return runPathsBetween(sourceSet, model, limit, null);
-    }
-
 	/**
 	 * Gets the graph constructed by the paths between the given seed nodes. Does not get paths
 	 * between physical entities that belong the same entity reference.
 	 * @param sourceSet Seed to the query
 	 * @param model BioPAX model
 	 * @param limit Length limit for the paths to be found
-	 * @param ubiqueIDs RDF IDs of ubiquitous PEs. Can be null
 	 * @return BioPAX elements in the result
 	 */
 	public static Set<BioPAXElement> runPathsBetween(Set<BioPAXElement> sourceSet, Model model,
-		int limit, Set<String> ubiqueIDs)
+		int limit, Filter... filters)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model, ubiqueIDs);
+			graph = new GraphL3(model, filters);
 		}
 		else return null;
 
@@ -98,24 +81,11 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
-    /**
-     * @see #runGOI(java.util.Set, org.biopax.paxtools.model.Model, int)
-	 * @deprecated Use runPathsBetween instead
-     */
-    public static Set<BioPAXElement> runGOI(
-		Set<BioPAXElement> sourceSet,
-		Model model,
-		int limit)
-	{
-        return runGOI(sourceSet, model, limit, null);
-    }
-
 	/**
 	 * Gets paths between the seed nodes.
 	 * @param sourceSet Seed to the query
 	 * @param model BioPAX model
 	 * @param limit Length limit for the paths to be found
-	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
 	 * @return BioPAX elements in the result
 	 * @deprecated Use runPathsBetween instead
 	 */
@@ -123,24 +93,11 @@ public class QueryExecuter
 		Set<BioPAXElement> sourceSet,
 		Model model,
 		int limit,
-		Set<String> ubiqueIDs)
+		Filter... filters)
 	{
-		return runPathsFromTo(sourceSet, sourceSet, model, LimitType.NORMAL, limit, ubiqueIDs);
+		return runPathsFromTo(sourceSet, sourceSet, model, LimitType.NORMAL, limit, filters);
 	}
 
-    /**
-     * @see #runPathsFromTo
-     *
-     */
-    public static Set<BioPAXElement> runPathsFromTo(
-		Set<BioPAXElement> sourceSet,
-		Set<BioPAXElement> targetSet,
-		Model model,
-		LimitType limitType,
-		int limit)
-	{
-        return runPathsFromTo(sourceSet, targetSet, model, limitType, limit, null);
-    }
 	/**
 	 * Gets paths the graph composed of the paths from a source node, and ends at a target node.
 	 * @param sourceSet Seeds for start points of paths
@@ -148,7 +105,6 @@ public class QueryExecuter
 	 * @param model BioPAX model
 	 * @param limitType either NORMAL or SHORTEST_PLUS_K
 	 * @param limit Length limit fothe paths to be found
-	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
 	 * @return BioPAX elements in the result
 	 */
 	public static Set<BioPAXElement> runPathsFromTo(
@@ -157,13 +113,13 @@ public class QueryExecuter
 		Model model,
 		LimitType limitType,
 		int limit,
-		Set<String> ubiqueIDs)
+		Filter... filters)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model, ubiqueIDs);
+			graph = new GraphL3(model, filters);
 		}
 		else return null;
 
@@ -175,25 +131,12 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
-    /**
-     * @see #runCommonStream(java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.Direction, int)
-     */
-    public static Set<BioPAXElement> runCommonStream(
-		Set<BioPAXElement> sourceSet,
-		Model model,
-		Direction direction,
-		int limit)
-	{
-        return runCommonStream(sourceSet, model, direction, limit, null);
-
-    }
 	/**
 	 * Gets the elements in the common upstream or downstream of the seed
 	 * @param sourceSet Seed to the query
 	 * @param model BioPAX model
 	 * @param direction UPSTREAM or DOWNSTREAM
 	 * @param limit Length limit for the search
-	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
 	 * @return BioPAX elements in the result
 	 */
 	public static Set<BioPAXElement> runCommonStream(
@@ -201,13 +144,13 @@ public class QueryExecuter
 		Model model,
 		Direction direction,
 		int limit,
-		Set<String> ubiqueIDs)
+		Filter... filters)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model, ubiqueIDs);
+			graph = new GraphL3(model, filters);
 		}
 		else return null;
 
@@ -219,19 +162,6 @@ public class QueryExecuter
 		return convertQueryResult(resultWrappers, graph);
 	}
 
-    /**
-     * @see #runCommonStreamWithPOI(java.util.Set, org.biopax.paxtools.model.Model, org.biopax.paxtools.query.algorithm.Direction, int, java.util.Set)
-     *
-     */
-    public static Set<BioPAXElement> runCommonStreamWithPOI(
-        Set<BioPAXElement> sourceSet,
-        Model model,
-        Direction direction,
-        int limit)
-    {
-        return runCommonStreamWithPOI(sourceSet, model, direction, limit, null);
-    }
-
 	/**
 	 * First finds the common stream, then completes it with the paths between seed and common
 	 * stream.
@@ -239,7 +169,6 @@ public class QueryExecuter
 	 * @param model BioPAX model
 	 * @param direction UPSTREAM or DOWNSTREAM
 	 * @param limit Length limit for the search
-	 * @param ubiqueIDs RDF IDs of the ubiquitous physical entities. Can be null
 	 * @return BioPAX elements in the result
 	 */
 	public static Set<BioPAXElement> runCommonStreamWithPOI(
@@ -247,13 +176,13 @@ public class QueryExecuter
 		Model model,
 		Direction direction,
 		int limit,
-		Set<String> ubiqueIDs)
+		Filter... filters)
 	{
 		Graph graph;
 
 		if (model.getLevel() == BioPAXLevel.L3)
 		{
-			graph = new GraphL3(model, ubiqueIDs);
+			graph = new GraphL3(model, filters);
 		}
 		else return null;
 
@@ -303,10 +232,10 @@ public class QueryExecuter
 	}
 
 	/**
-	 * Converts the query result from wrappers to wrapped biopax elements.
-	 * @param resultWrappers
-	 * @param graph
-	 * @return
+	 * Converts the query result from wrappers to wrapped BioPAX elements.
+	 * @param resultWrappers Wrappers of the result set
+	 * @param graph Queried graph
+	 * @return Set of elements in the result
 	 */
 	private static HashSet<BioPAXElement> convertQueryResult(
 		Set<GraphObject> resultWrappers, Graph graph)
@@ -322,10 +251,10 @@ public class QueryExecuter
 	}
 
 	/**
-	 * Gets the related physical entities and wraps in a single node set.
-	 * @param elements
-	 * @param graph
-	 * @return
+	 * Gets the related wrappers of the given elements in a set.
+	 * @param elements Elements to get the related wrappers
+	 * @param graph Owner graph
+	 * @return Related wrappers in a set
 	 */
 	public static Set<Node> prepareSingleNodeSet(Set<BioPAXElement> elements, Graph graph)
 	{
@@ -347,6 +276,14 @@ public class QueryExecuter
 		return nodes;
 	}
 
+	/**
+	 * Gets the related wrappers of the given elements in individual sets. An object can be related
+	 * to more than one wrapper and they will appear in the same set. This method created a set for
+	 * each parameter element that has a related wrapper.
+	 * @param elements Elements to get the related wrappers
+	 * @param graph Owner graph
+	 * @return Related wrappers in individual sets
+	 */
 	private static Collection<Set<Node>> prepareNodeSets(Set<BioPAXElement> elements, Graph graph)
 	{
 		Collection<Set<Node>> sets = new HashSet<Set<Node>>();
@@ -374,8 +311,8 @@ public class QueryExecuter
 	/**
 	 * Maps each BioPAXElement to its related PhysicalEntity objects.
 	 *
-	 * @param elements
-	 * @return
+	 * @param elements Elements to map
+	 * @return The mapping
 	 */
 	public static Map<BioPAXElement, Set<PhysicalEntity>> getRelatedPhysicalEntityMap(
 		Collection<BioPAXElement> elements)
@@ -397,9 +334,9 @@ public class QueryExecuter
 	/**
 	 * Gets the related PhysicalEntity objects of the given BioPAXElement, in level 3 models.
 	 *
-	 * @param element to get related PhysicalEntity objects
-	 * @param pes result set. if not supplied, a new set will be initialized.
-	 * @return
+	 * @param element Element to get related PhysicalEntity objects
+	 * @param pes Result set. If not supplied, a new set will be initialized.
+	 * @return Related PhysicalEntity objects
 	 */
 	public static Set<PhysicalEntity> getRelatedPhysicalEntities(BioPAXElement element,
 		Set<PhysicalEntity> pes)
@@ -463,12 +400,25 @@ public class QueryExecuter
 		return pes;
 	}
 
+	/**
+	 * Adds equivalents and parent complexes of the given PhysicalEntity to the parameter set.
+	 * @param pe The PhysicalEntity to add its equivalents and complexes
+	 * @param pes Set to collect equivalents and complexes
+	 */
 	private static void addEquivalentsComplexes(PhysicalEntity pe, Set<PhysicalEntity> pes)
 	{
 		addEquivalentsComplexes(pe, true, pes);
 		addEquivalentsComplexes(pe, false, pes);
 	}
 
+	/**
+	 * Adds equivalents and parent complexes of the given PhysicalEntity to the parameter set. This
+	 * method traverses homologies only to one direction (either towards parents or to the
+	 * children).
+	 * @param pe The PhysicalEntity to add its equivalents and complexes
+	 * @param outer Give true if towards parents, false if to the children
+	 * @param pes Set to collect equivalents and complexes
+	 */
 	private static void addEquivalentsComplexes(PhysicalEntity pe, boolean outer,
 		Set<PhysicalEntity> pes)
 	{
@@ -487,10 +437,10 @@ public class QueryExecuter
 	}
 
 	/**
-	 * Extracts the queryable interactions from the elements.
+	 * Extracts the querible interactions from the elements.
 	 *
-	 * @param elements
-	 * @return
+	 * @param elements Elements to search
+	 * @return Querible Interactions
 	 */
 	public static Set<Node> getSeedInteractions(Collection<BioPAXElement> elements, Graph graph)
 	{
@@ -511,5 +461,4 @@ public class QueryExecuter
 		}
 		return nodes;
 	}
-
 }

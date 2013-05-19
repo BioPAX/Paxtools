@@ -30,10 +30,10 @@ package org.mskcc.psibiopax.converter;
 
 // imports
 
-import junit.framework.Assert;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -52,7 +52,7 @@ import java.util.Set;
  *
  * @author Benjamin Gross
  */
-public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
+public class TestMappingL2 implements BioPAXMarshaller {
 
 	/**
 	 * psi-mi test file
@@ -64,11 +64,6 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 	 */
 	private Model bpModel;
 
-	/**
-	 * synchronization object.
-	 */
-	private final Object syncObj = new Object();
-
     /**
      * Returns the description/name of the test.
 	 * 
@@ -78,23 +73,11 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
         return "TestMapping: Tests the proper mapping of a PSI-MI XML file (level 2-compact) to an in memory Paxtools Model";
     }
 
-	/**
-	 * Dynamically adds all methods as tests that begin with 'test'
-	 */
-    public static Test suite() {
-        return new TestSuite(TestMappingL2.class);
-    }
-
-	/**
-	 * The big deal main - if we want to run from command line.
-	 */
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
 
 	/**
      * Tests that a PSI-MI document (level 2-compact) is correctly mapped into a biopax model.
 	 */
+    @Test
     public void testMapping() {
 
 		// open file
@@ -108,7 +91,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 			Collection<Entry> entries =  es.getEntries();
 			
 			// we should only have 1 entry
-            Assert.assertEquals(entries.size(), 1);
+            assertEquals(entries.size(), 1);
 
 			// create a biopax mapper
 			BioPAXMapper bpMapper = new BioPAXMapperImp(BioPAXLevel.L2);
@@ -117,52 +100,19 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 			// get entry
 			Entry entry = (Entry)entries.iterator().next();
 			EntryMapper mapper = new EntryMapper(bpMapper, this, entry, 1970);
-			mapper.start();
+			mapper.run();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
-		}
-		
-		// infinite loop for a bit
-		while (true) {
-
-			// have all the entries completed ?
-			synchronized(syncObj) {
-				if (bpModel != null) {
-					break;
-				}
-			}
-
-			// sleep for a bit
-			try {
-				Thread.sleep(100);
-			}
-			catch (InterruptedException e){
-				e.printStackTrace();
-				System.exit(1);
-			}
 		}
 
 		// check Model returned from mapper process
 		checkModel();
 	}
 
-	/**
-	 * Method called when BioPAX data is ready to be marshalled
-	 *
-	 * @param bpModel Model
-	 */
-	public void addModel(Model bpModel) {
 
-		// add model to our list,
-		// increment number of entries
-		synchronized (syncObj) {
-			this.bpModel = bpModel;
-		}
-	}
-
-	/**
+    /**
 	 * Checks the model(s) returned from the mapper.
 	 */
 	private void checkModel() {
@@ -171,7 +121,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 
 		// get the element list
 		Set<BioPAXElement> biopaxElements = bpModel.getObjects();
-		Assert.assertEquals(135, biopaxElements.size());
+		assertEquals(135, biopaxElements.size());
 
 		// get the element
 		BioPAXElement bpElement = null;
@@ -181,14 +131,14 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 				break;
 			}
 		}
-		Assert.assertTrue(bpElement != null);
+		assertTrue(bpElement != null);
 
 		// cast to interaction
 		physicalInteraction bpInteraction = (physicalInteraction)bpElement;
 
 		// participants
 		Set<InteractionParticipant> interactionParticipants = bpInteraction.getPARTICIPANTS();
-		Assert.assertEquals(2, interactionParticipants.size());
+		assertEquals(2, interactionParticipants.size());
 
 		// get participant
 		sequenceParticipant participant = null;
@@ -197,7 +147,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 				participant = (sequenceParticipant)interactionParticipant;
 			}
 		}
-		Assert.assertTrue(participant != null);
+		assertTrue(participant != null);
 
 		// check sequence feature list/sequence feature
 		checkSequenceFeatures(participant);
@@ -216,7 +166,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 
 		// get list
 		Set<sequenceFeature> sequenceFeatureList = participant.getSEQUENCE_FEATURE_LIST();
-		Assert.assertEquals(1, sequenceFeatureList.size());
+		assertEquals(1, sequenceFeatureList.size());
 
 		// get feature
 		boolean featureFound = false;
@@ -228,7 +178,7 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 				break;
 			}
 		}
-		Assert.assertTrue(featureFound);
+		assertTrue(featureFound);
 		
         // get feature type
 		boolean featureTypeFound = false;
@@ -240,11 +190,11 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 				break;
 			}
 		}
-		Assert.assertTrue(featureTypeFound);
+		assertTrue(featureTypeFound);
 
         // feature location
         Set<sequenceLocation> featureLocation = bpSequenceFeature.getFEATURE_LOCATION();
-        Assert.assertEquals(0, featureLocation.size());
+        assertEquals(0, featureLocation.size());
 	}
 
 	/**
@@ -256,13 +206,13 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 
 		// get physical entity
 		physicalEntity bpPhysicalEntity = participant.getPHYSICAL_ENTITY();
-		Assert.assertEquals("8", bpPhysicalEntity.getRDFId());
-		Assert.assertEquals("DNA primase small subunit", bpPhysicalEntity.getNAME());
-		Assert.assertEquals("pri1_mouse", bpPhysicalEntity.getSHORT_NAME());
+		assertEquals("8", bpPhysicalEntity.getRDFId());
+		assertEquals("DNA primase small subunit", bpPhysicalEntity.getNAME());
+		assertEquals("pri1_mouse", bpPhysicalEntity.getSHORT_NAME());
 
 		// get physical entity xref list
 		Set<xref> physicalEntityXRefList = bpPhysicalEntity.getXREF();
-		Assert.assertEquals(4, physicalEntityXRefList.size());
+		assertEquals(4, physicalEntityXRefList.size());
 
 		// get physical entity unification xref
 		xref physicalEntityXRef = null;
@@ -276,20 +226,30 @@ public class TestMappingL2 extends TestCase implements BioPAXMarshaller {
 			fail("no unification xrefs found!");
 		}
 		
-		Assert.assertEquals("UXR-P20664", physicalEntityXRef.getRDFId());
-		Assert.assertEquals("uniprotkb", physicalEntityXRef.getDB());
-		Assert.assertEquals("P20664", physicalEntityXRef.getID());
+		assertEquals("UXR-P20664", physicalEntityXRef.getRDFId());
+		assertEquals("uniprotkb", physicalEntityXRef.getDB());
+		assertEquals("P20664", physicalEntityXRef.getID());
 
 		// organism
 		bioSource bpBioSource = ((sequenceEntity)bpPhysicalEntity).getORGANISM();
-		Assert.assertEquals("Mus musculus", bpBioSource.getNAME());
-		Assert.assertEquals("BS-10090", bpBioSource.getRDFId());
+		assertEquals("Mus musculus", bpBioSource.getNAME());
+		assertEquals("BS-10090", bpBioSource.getRDFId());
 		unificationXref bioSourceXRef = bpBioSource.getTAXON_XREF();
-		Assert.assertEquals("8992476572203004810", bioSourceXRef.getRDFId());
-		Assert.assertEquals("TAXONOMY", bioSourceXRef.getDB());
-		Assert.assertEquals("10090", bioSourceXRef.getID());
+		assertEquals("8992476572203004810", bioSourceXRef.getRDFId());
+		assertEquals("TAXONOMY", bioSourceXRef.getDB());
+		assertEquals("10090", bioSourceXRef.getID());
 
 		// sequence
-		Assert.assertEquals("MEPFDPAELPELLKLYYRRLFPYAQYYRWLNYGGVTKNYFQHREFSFTLKDDIYIRYQSFNNQSELEKEMQKMNPYKIDIGAVYSHRPNQHNTVKLGAFQAQEKELVFDIDMTDYDDVRRCCSSADICSKCWTLMTMAMRIIDRALKEDFGFKHRLWVYSGRRGVHCWVCDESVRKLSSAVRSGIVEYLSLVKGGQDVKKKVHLNEKVHPFVRKSINIIKKYFEEYALVGQDILENKENWDKILALVPETIHDELQRGFQKFHSSPQRWEHLRKVANSSQNMKNDKCGPWLEWEVMLQYCFPRLDVNVSKGVNHLLKSPFSVHPKTGRISVPIDFHKVDQFDPFTVPTISAICRELDMVSTHEKEKEENEADSKHRVRGYKKTSLAPYVKVFEQFLENLDKSRKGELLKKSDLQKDF", ((sequenceEntity)bpPhysicalEntity).getSEQUENCE());
+		assertEquals("MEPFDPAELPELLKLYYRRLFPYAQYYRWLNYGGVTKNYFQHREFSFTLKDDIYIRYQSFNNQSELEKEMQKMNPYKIDIGAVYSHRPNQHNTVKLGAFQAQEKELVFDIDMTDYDDVRRCCSSADICSKCWTLMTMAMRIIDRALKEDFGFKHRLWVYSGRRGVHCWVCDESVRKLSSAVRSGIVEYLSLVKGGQDVKKKVHLNEKVHPFVRKSINIIKKYFEEYALVGQDILENKENWDKILALVPETIHDELQRGFQKFHSSPQRWEHLRKVANSSQNMKNDKCGPWLEWEVMLQYCFPRLDVNVSKGVNHLLKSPFSVHPKTGRISVPIDFHKVDQFDPFTVPTISAICRELDMVSTHEKEKEENEADSKHRVRGYKKTSLAPYVKVFEQFLENLDKSRKGELLKKSDLQKDF", ((sequenceEntity)bpPhysicalEntity).getSEQUENCE());
+	}
+	
+	@Override
+	public void marshallData() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void addModel(Model bpModel) {
+		this.bpModel = bpModel;
 	}
 }

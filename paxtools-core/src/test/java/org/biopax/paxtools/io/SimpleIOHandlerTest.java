@@ -1,6 +1,6 @@
 package org.biopax.paxtools.io;
 
-import org.biopax.paxtools.impl.level3.Mock;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -299,17 +299,18 @@ public class SimpleIOHandlerTest
         BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
 
 
-        Mock mock = new Mock();
-        Protein[] pr = mock.create(Protein.class, 1);
+        MockFactory mock = new MockFactory(BioPAXLevel.L3);
+        final Model model = mock.createModel();
+        Protein[] pr = mock.create(model, Protein.class, 1);
 
-        String s = "\" \' < > & ";
+        String s = "\" \' < > & % : + && #";
         System.out.println(s);
         pr[0].getName().clear();
         pr[0].addName(s);
 
         // Write
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        io.convertToOWL(mock.model, outputStream);
+        io.convertToOWL(model, outputStream);
         outputStream.flush();
 
         // Read
@@ -319,7 +320,5 @@ public class SimpleIOHandlerTest
 
         Protein prot = (Protein) newModel.getObjects().iterator().next();
         assertTrue(prot.getName().iterator().next().equals(s));
-
-
     }
 }

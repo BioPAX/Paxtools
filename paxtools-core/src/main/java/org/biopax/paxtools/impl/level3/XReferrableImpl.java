@@ -3,18 +3,18 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
-import org.biopax.paxtools.util.ChildDataStringBridge;
+import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.XrefFieldBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate; 
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Fields;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.Analyze;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -22,7 +22,7 @@ import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentIntersection;
+import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
 /**
  * This class helps with managing the bidirectional xref links.
@@ -31,7 +31,7 @@ import static org.biopax.paxtools.util.SetEquivalanceChecker.isEquivalentInterse
  */
 @Entity
 @Proxy(proxyClass= XReferrable.class)
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
@@ -50,16 +50,13 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	public XReferrableImpl()
 	{
-		this.xref = new HashSet<Xref>();
+		this.xref = new BiopaxSafeSet<Xref>();
 	}
 
 // -------------------------- OTHER METHODS --------------------------
 
 	
-	@Fields({
-		@Field(name=FIELD_XREFID, index=Index.UN_TOKENIZED, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f)),
-		@Field(name=FIELD_KEYWORD, store=Store.YES, index=Index.TOKENIZED, bridge= @FieldBridge(impl = ChildDataStringBridge.class))
-	})
+	@Field(name=FIELD_XREFID, analyze=Analyze.NO, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f))
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = XrefImpl.class)
 	@JoinTable(name="xref")
@@ -105,9 +102,8 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	 */
 	protected boolean hasCommonUnificationXref(XReferrable xReferrable)
 	{
-		return isEquivalentIntersection(
-				new ClassFilterSet<Xref,UnificationXref>(xref, UnificationXref.class),
-				new ClassFilterSet<Xref,UnificationXref>(xReferrable.getXref(), UnificationXref.class)
-		);
+		return hasEquivalentIntersection(new ClassFilterSet<Xref, UnificationXref>(xref, UnificationXref.class),
+		                                 new ClassFilterSet<Xref, UnificationXref>(xReferrable.getXref(),
+		                                                                           UnificationXref.class));
 	}
 }

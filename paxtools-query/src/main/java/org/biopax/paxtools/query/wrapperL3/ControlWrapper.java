@@ -12,14 +12,32 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
+ * Wrapper for the Control class.
+ *
  * @author Ozgun Babur
  */
 public class ControlWrapper extends AbstractNode
 {
+	/**
+	 * Wrapped control.
+	 */
 	protected Control ctrl;
+
+	/**
+	 * Sign of the control.
+	 */
 	protected int sign;
+
+	/**
+	 * Flag to indicate if this control is related to a transcription.
+	 */
 	protected boolean transcription;
 
+	/**
+	 * Constructor with the Control and the owner graph.
+	 * @param ctrl Control to be wrapped
+	 * @param graph Owner graph
+	 */
 	protected ControlWrapper(Control ctrl, Graph graph)
 	{
 		super(graph);
@@ -27,26 +45,44 @@ public class ControlWrapper extends AbstractNode
 		this.transcription = false;
 	}
 
+	/**
+	 * Control is not a breadth node.
+	 * @return False
+	 */
 	public boolean isBreadthNode()
 	{
 		return false;
 	}
 
+	/**
+	 * @return Sign of the Control
+	 */
 	public int getSign()
 	{
 		return sign;
 	}
 
+	/**
+	 * Controls are not ubiquitous molecules.
+	 * @return False
+	 */
 	public boolean isUbique()
 	{
 		return false;
 	}
 
+	/**
+	 * RDF ID of the Control is its key.
+	 * @return Key
+	 */
 	public String getKey()
 	{
 		return ctrl.getRDFId();
 	}
 
+	/**
+	 * Extracts the sign and the type of the Control.
+	 */
 	@Override
 	public void init()
 	{
@@ -65,6 +101,10 @@ public class ControlWrapper extends AbstractNode
 			transcription = true;
 	}
 
+	/**
+	 * Puts the wrapper of the parameter element to the upstream of this Control.
+	 * @param element to put at upstream
+	 */
 	private void bindUpstream(BioPAXElement element)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(element);
@@ -73,6 +113,9 @@ public class ControlWrapper extends AbstractNode
 		this.getUpstreamNoInit().add(edge);
 	}
 
+	/**
+	 * Binds the controller and other Controls that controls this control.
+	 */
 	@Override
 	public void initUpstream()
 	{
@@ -90,6 +133,9 @@ public class ControlWrapper extends AbstractNode
 		}
 	}
 
+	/**
+	 * Binds the controlled objects.
+	 */
 	@Override
 	public void initDownstream()
 	{
@@ -107,28 +153,47 @@ public class ControlWrapper extends AbstractNode
 		}
 	}
 
+	/**
+	 * Gets the wrapped Control.
+	 * @return The Control
+	 */
 	public Control getControl()
 	{
 		return ctrl;
 	}
 
+	/**
+	 * Control cannot have an equivalent.
+	 * @return Empty set
+	 */
 	@Override
 	public Collection<Node> getUpperEquivalent()
 	{
 		return Collections.emptySet();
 	}
 
+	/**
+	 * Control cannot have an equivalent.
+	 * @return Empty set
+	 */
 	@Override
 	public Collection<Node> getLowerEquivalent()
 	{
 		return Collections.emptySet();
 	}
 
+	/**
+	 * @return whether this Control is related to a transcription event
+	 */
 	public boolean isTranscription()
 	{
 		return transcription;
 	}
 
+	/**
+	 * Make or not make this control related to a transcription.
+	 * @param transcription whether this Control is related to a transcription
+	 */
 	public void setTranscription(boolean transcription)
 	{
 		this.transcription = transcription;

@@ -30,13 +30,10 @@ public class NeighborhoodQuery
 	private int limit;
 
 	/**
-	 * Maps to hold forward and backward BFS results
-	 */
-	private Map<GraphObject, Integer> mapBackward;
-	private Map<GraphObject, Integer> mapForward;
-
-	/**
-	 * Constructor for Neighborhood Query.
+	 * Constructor with parameters.
+	 * @param sourceNodes Seed to the query
+	 * @param direction Direction of the search
+	 * @param limit Distance limit
 	 */
 	public NeighborhoodQuery(Set<Node> sourceNodes, Direction direction, int limit)
 	{
@@ -46,7 +43,8 @@ public class NeighborhoodQuery
 	}
 
 	/**
-	 * Method to run query
+	 * Executes the query.
+	 * @return Neighborhood
 	 */
 	public Set<GraphObject> run()
 	{
@@ -59,7 +57,10 @@ public class NeighborhoodQuery
 			// run BFS in upstream direction
 			BFS bfsBackward = new BFS(sourceNodes, null, Direction.UPSTREAM, this.limit);
 
-			mapBackward = bfsBackward.run();
+			/*
+	  Maps to hold forward and backward BFS results
+	 */
+			Map<GraphObject, Integer> mapBackward = bfsBackward.run();
 
 			// add result of BFS to result Set
 			queryResult.addAll(mapBackward.keySet());
@@ -71,7 +72,7 @@ public class NeighborhoodQuery
 			// run BFS in downstream direction
 			BFS bfsForward = new BFS(sourceNodes, null, Direction.DOWNSTREAM, this.limit);
 
-			mapForward = bfsForward.run();
+			Map<GraphObject, Integer> mapForward = bfsForward.run();
 
 			// add result of BFS to result Set
 			queryResult.addAll(mapForward.keySet());

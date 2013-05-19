@@ -7,14 +7,16 @@ import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.biopax.paxtools.util.SetEquivalanceChecker;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
@@ -25,7 +27,7 @@ import java.util.regex.Pattern;
 @Entity
 @Proxy(proxyClass= ControlledVocabulary.class)
 @Indexed
-@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+@DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
@@ -64,9 +66,9 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	// Property term
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	@JoinTable(name="term")
-	@Field(name = FIELD_TERM, index = Index.TOKENIZED)
+	@Field(name = FIELD_TERM, analyze=Analyze.YES)
 	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getTerm()
 	{
@@ -102,10 +104,9 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 		
 		return getModelInterface().equals(that.getModelInterface()) 
 				&& (term.isEmpty() && that.getTerm().isEmpty() || !terms.isEmpty() )
-				&& SetEquivalanceChecker.isEquivalentIntersection(
-						new ClassFilterSet<Xref,UnificationXref>(getXref(), UnificationXref.class),
-						new ClassFilterSet<Xref, UnificationXref>(that.getXref(), UnificationXref.class)
-					);		
+				&& SetEquivalenceChecker.hasEquivalentIntersection(
+				new ClassFilterSet<Xref, UnificationXref>(getXref(), UnificationXref.class),
+				new ClassFilterSet<Xref, UnificationXref>(that.getXref(), UnificationXref.class));
 	}
 	
 	@Override

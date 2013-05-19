@@ -39,6 +39,9 @@ import psidev.psi.mi.xml.PsimiXmlReaderException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The converter class. 
@@ -49,7 +52,6 @@ import java.io.OutputStream;
  * @author Benjamin Gross
  */
 public class PSIMIBioPAXConverter implements PSIMIConverter {
-
 
 	private final BioPAXLevel bpLevel;	
 	private final String xmlBase;
@@ -100,7 +102,6 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		// convert
 		boolean result = convert(entrySet, outputStream);
 
-		// outta here
 		inputStream.close();
 		return result;
 	}
@@ -125,42 +126,31 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 			throw new IllegalArgumentException("Only PSI-MI Level 2.5 is supported.");
 		}
 
-		// init
-		this.conversionIsComplete = false;
+		// create biopax marshaller
+		final BioPAXMarshallerImp biopaxMarshaller =
+			new BioPAXMarshallerImp(this, outputStream);
 
-		// create, start a marshaller
-		BioPAXMarshallerImp biopaxMarshaller =
-			new BioPAXMarshallerImp(this, outputStream, entrySet.getEntries().size());
-		biopaxMarshaller.start();
-
+		ExecutorService exec = Executors.newCachedThreadPool();	
+		
 		// iterate through the list
 		for (Entry entry : entrySet.getEntries()) {
-
 			// create a biopax mapper
 			BioPAXMapper bpMapper = new BioPAXMapperImp(bpLevel);
 			bpMapper.setNamespace(xmlBase);
 			// create and start PSIMapper
-            (new EntryMapper(bpMapper, biopaxMarshaller, entry)).start();
+			exec.execute(new EntryMapper(bpMapper, biopaxMarshaller, entry));
 		}
-
+		
+		exec.shutdown(); //no more tasks will be accepted
 		// wait for marshalling to complete
-		while (true) {
-
-			// sleep for a bit
-			try {
-				Thread.sleep(100);
-			}
-			catch (InterruptedException e){
-				e.printStackTrace();
-				System.exit(1);
-			}
-
-            if (conversionIsComplete) {
-                break;
-            }
+		try {
+			exec.awaitTermination(86400, TimeUnit.SECONDS); //a day, at most ;)
+		} catch (InterruptedException e) {
+			throw new RuntimeException("Interrupted!", e);
 		}
+		
+		biopaxMarshaller.marshallData();
 
-		// outta here
 		return true;
 	}
 
