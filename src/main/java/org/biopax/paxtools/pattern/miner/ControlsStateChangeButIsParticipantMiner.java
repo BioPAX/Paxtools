@@ -42,4 +42,10 @@ public class ControlsStateChangeButIsParticipantMiner extends ControlsStateChang
 		p.addConstraint(new Type(ProteinReference.class), "changed ER");
 		return p;
 	}
+
+	@Override
+	public String[] getPubmedHarvestableLabels()
+	{
+		return new String[]{"Conversion"};
+	}
 }

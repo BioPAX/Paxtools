@@ -72,4 +72,29 @@ public class SIFInteraction implements Comparable
 
 		return 0;
 	}
+
+	/**
+	 * Merges publications of the parameter equivalent sif with this one.
+	 * @param equivalent the equivalent sif interaction to get its publications.
+	 */
+	public void mergeWith(SIFInteraction equivalent)
+	{
+		if (!this.equals(equivalent))
+			throw new IllegalArgumentException("SIF interactions are not equivalent.");
+
+		if (pubmedIDs == null) pubmedIDs = equivalent.pubmedIDs;
+		else if (equivalent.pubmedIDs != null)
+		{
+			for (String id : equivalent.pubmedIDs)
+			{
+				if (!pubmedIDs.contains(id)) pubmedIDs.add(id);
+			}
+		}
+	}
+
+	@Override
+	public String toString()
+	{
+		return source + "\t" + type + "\t" + target;
+	}
 }

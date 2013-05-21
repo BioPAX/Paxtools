@@ -318,9 +318,10 @@ public class PatternBox
 		p.addConstraint(ConBox.peToControl(), "TF PE", "Control");
 		p.addConstraint(ConBox.controlToConv(), "Control", "Conversion");
 		p.addConstraint(new Empty(ConBox.left()), "Conversion");
+		p.addConstraint(new Size(ConBox.right(), 1, Size.Type.EQUAL), "Conversion");
 		p.addConstraint(ConBox.right(), "Conversion", "right PE");
 		p.addConstraint(ConBox.linkToSimple(), "right PE", "right SPE");
-		p.addConstraint(ConBox.peToER(), "product ER");
+		p.addConstraint(ConBox.peToER(), "right SPE", "product ER");
 		p.addConstraint(ConBox.equal(false), "TF PR", "product ER");
 		return p;
 	}

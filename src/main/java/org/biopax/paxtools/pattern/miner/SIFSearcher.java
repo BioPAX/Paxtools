@@ -5,10 +5,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Searcher;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Searches a model and generates SIF network using the pattern matches.
@@ -38,7 +35,7 @@ public class SIFSearcher
 	 */
 	public Set<SIFInteraction> searchSIF(Model model)
 	{
-		Set<SIFInteraction> set = new HashSet<SIFInteraction>();
+		Map<SIFInteraction, SIFInteraction> map = new HashMap<SIFInteraction, SIFInteraction>();
 
 		for (SIFMiner miner : miners)
 		{
@@ -52,11 +49,16 @@ public class SIFSearcher
 
 					if (sif != null)
 					{
-						set.add(sif);
+						if (map.containsKey(sif))
+						{
+							SIFInteraction existing = map.get(sif);
+							existing.mergeWith(sif);
+						}
+						else map.put(sif, sif);
 					}
 				}
 			}
 		}
-		return set;
+		return new HashSet<SIFInteraction>(map.values());
 	}
 }

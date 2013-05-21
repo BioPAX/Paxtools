@@ -1,7 +1,6 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.controller.PathAccessor;
-import org.biopax.paxtools.impl.level3.EvidenceImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
@@ -144,6 +143,20 @@ public abstract class MinerAdapter implements Miner
 	}
 
 	/**
+	 * Searches for the uniprot name of the given human EntityReference.
+	 * @param er to search for the uniprot name
+	 * @return uniprot name
+	 */
+	protected String getUniprotNameForHuman(EntityReference er)
+	{
+		for (String name : er.getName())
+		{
+			if (name.endsWith("_HUMAN")) return name;
+		}
+		return null;
+	}
+
+	/**
 	 * Searches for the gene symbol of the given EntityReference.
 	 * @param m current match
 	 * @param label label of the related EntityReference in the pattern
@@ -153,6 +166,18 @@ public abstract class MinerAdapter implements Miner
 	{
 		EntityReference er = (EntityReference) m.get(label, getPattern());
 		return getGeneSymbol(er);
+	}
+
+	/**
+	 * Searches for the uniprot name of the given human EntityReference.
+	 * @param m current match
+	 * @param label label of the related EntityReference in the pattern
+	 * @return uniprot name
+	 */
+	protected String getUniprotNameForHuman(Match m, String label)
+	{
+		EntityReference er = (EntityReference) m.get(label, getPattern());
+		return getUniprotNameForHuman(er);
 	}
 
 
@@ -566,8 +591,8 @@ public abstract class MinerAdapter implements Miner
 	{
 		if (this instanceof SIFMiner)
 		{
-			String source = getGeneSymbol(m, ((SIFMiner) this).getSourceLabel());
-			String target = getGeneSymbol(m, ((SIFMiner) this).getTargetLabel());
+			String source = getIdentifier(m, ((SIFMiner) this).getSourceLabel());
+			String target = getIdentifier(m, ((SIFMiner) this).getTargetLabel());
 
 			if (source != null && target != null)
 			{
@@ -647,5 +672,17 @@ public abstract class MinerAdapter implements Miner
 			ele[i] =  m.get(labels[i], getPattern());
 		}
 		return harvestPMIDs(harvestPublicationXrefs(ele));
+	}
+
+	/**
+	 * Uses uniprot name as identifier.
+	 * @param m current match
+	 * @param label label of the related EntityReference in the pattern
+	 * @return identifier
+	 */
+	public String getIdentifier(Match m, String label)
+	{
+		return getGeneSymbol(m, label);
+//		return getUniprotNameForHuman(m, label);
 	}
 }

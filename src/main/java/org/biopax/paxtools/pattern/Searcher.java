@@ -232,7 +232,6 @@ public class Searcher
 
 			if (prg != null) prg.tick(1);
 		}
-		System.out.println();
 		return map;
 	}
 
