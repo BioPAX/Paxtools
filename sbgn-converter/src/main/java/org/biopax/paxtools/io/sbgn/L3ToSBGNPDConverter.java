@@ -88,6 +88,11 @@ public class L3ToSBGNPDConverter
 	protected boolean doLayout;
 
 	/**
+	 * Mapping from SBGN IDs to the IDs of the related objects in BioPAX.
+	 */
+	protected Map<String, Set<String>> sbgn2BPMap;
+
+	/**
 	 * SBGN process glyph can be used to show reversible reactions. In that case two ports of the
 	 * process will only have product glyphs. However, this creates an incompatibility with BioPAX:
 	 * reversible biochemical reactions can have catalysis with a direction. But if we use a single
@@ -149,6 +154,7 @@ public class L3ToSBGNPDConverter
 			this.featStrGen = new CommonFeatureStringGenerator();
 
 		this.useTwoGlyphsForReversibleConversion = true;
+		this.sbgn2BPMap = new HashMap<String, Set<String>>();
 	}
 
 	/**
@@ -416,6 +422,10 @@ public class L3ToSBGNPDConverter
 
 		List<Glyph> states = getInformation(pe);
 		g.getGlyph().addAll(states);
+
+		// Record the mapping
+		sbgn2BPMap.put(g.getId(), new HashSet<String>());
+		sbgn2BPMap.get(g.getId()).add(pe.getRDFId());
 
 		return g;
 	}
@@ -852,6 +862,11 @@ public class L3ToSBGNPDConverter
 			Glyph g = createControlStructure(ctrl);
 			if (g != null) createArc(g, process, getControlType(ctrl));
 		}
+
+		// Record mapping
+
+		sbgn2BPMap.put(process.getId(), new HashSet<String>());
+		sbgn2BPMap.get(process.getId()).add(cnv.getRDFId());
 	}
 
 	/**
@@ -894,6 +909,11 @@ public class L3ToSBGNPDConverter
 			Glyph g = createControlStructure(ctrl);
 			if (g != null) createArc(g, process, getControlType(ctrl));
 		}
+
+		// Record mapping
+
+		sbgn2BPMap.put(process.getId(), new HashSet<String>());
+		sbgn2BPMap.get(process.getId()).add(tr.getRDFId());
 	}
 
 	/**
@@ -938,7 +958,7 @@ public class L3ToSBGNPDConverter
 				{
 					// If the control is negative, add a NOT in front of it
 
-					if (getControlType(ctrl2).equals(INHIBITION))
+					if (getControlType(ctrl2).equals(INHIBITION.getClazz()))
 					{
 						g = addNOT(g);
 					}
@@ -1242,7 +1262,17 @@ public class L3ToSBGNPDConverter
 			addChildren(child, set);
 		}
 	}
-	
+
+	/**
+	 * Gets the mapping from SBGN IDs to BioPAX IDs. This mapping is currently one-to-many, but has
+	 * potential to become many-to-many in the future.
+	 * @return sbgn-to-biopax mapping
+	 */
+	public Map<String, Set<String>> getSbgn2BPMap()
+	{
+		return sbgn2BPMap;
+	}
+
 	//-- Section: Static initialization -----------------------------------------------------------|
 
 	/**
