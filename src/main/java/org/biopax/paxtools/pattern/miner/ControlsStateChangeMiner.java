@@ -5,7 +5,7 @@ import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.constraint.Type;
+import org.biopax.paxtools.pattern.constraint.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -47,9 +47,25 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		Pattern p = PatternBox.controlsStateChange(true);
-		p.addConstraint(new Type(ProteinReference.class), "controller ER");
-		p.addConstraint(new Type(ProteinReference.class), "changed ER");
+//		Pattern p = PatternBox.controlsStateChange(true);
+//		p.addConstraint(new Type(ProteinReference.class), "controller ER");
+//		p.addConstraint(new Type(ProteinReference.class), "changed ER");
+		Pattern p = new Pattern(ProteinReference.class, "controller PR");
+		p.addConstraint(ConBox.isHuman(), "controller PR");
+		p.addConstraint(ConBox.erToPE(), "controller PR", "controller simple PE");
+		p.addConstraint(ConBox.linkToComplex(),"controller simple PE", "controller PE");
+		p.addConstraint(ConBox.peToControl(), "controller PE", "Control");
+		p.addConstraint(ConBox.controlToConv(), "Control", "Conversion");
+		p.addConstraint(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
+		p.addConstraint(ConBox.linkToSimple(), "input PE", "input simple PE");
+		p.addConstraint(ConBox.peToER(), "input simple PE", "changed ER");
+		p.addConstraint(new OtherSide(), "input PE", "Conversion", "output PE");
+		p.addConstraint(ConBox.equal(false), "input PE", "output PE");
+		p.addConstraint(ConBox.linkToComplex(), "output PE", "output simple PE");
+		p.addConstraint(ConBox.peToER(), "output simple PE", "changed PR");
+		p.addConstraint(new Type(ProteinReference.class), "changed PR");
+		p.addConstraint(ConBox.equal(false), "controller PR", "changed PR");
+
 		return p;
 	}
 
@@ -72,25 +88,25 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getHeader()
 	{
-		return "Upstream\tDownstream";
+		return "Upstream\tRelation\tDownstream";
 	}
 
 	@Override
 	public String getSourceLabel()
 	{
-		return "controller ER";
+		return "controller PR";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "changed ER";
+		return "changed PR";
 	}
 
 	@Override
 	public String getRelationType(Match m)
 	{
-		return "state-change";
+		return "controls-state-change";
 	}
 
 	@Override

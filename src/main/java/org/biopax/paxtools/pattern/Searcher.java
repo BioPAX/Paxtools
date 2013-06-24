@@ -377,13 +377,15 @@ public class Searcher
 		int seedCounter = 0;
 		for (BioPAXElement ele : matchMap.keySet())
 		{
-			seedCounter++;
-			
-			if (seedCounter > seedLimit) break;
+			if (seedCounter >= seedLimit) break;
 
 			int matchCounter = 0;
-			
-			for (Match match : matchMap.get(ele))
+
+			List<Match> matches = matchMap.get(ele);
+
+			if (!matches.isEmpty()) seedCounter++;
+
+			for (Match match : matches)
 			{
 				matchCounter++;
 				

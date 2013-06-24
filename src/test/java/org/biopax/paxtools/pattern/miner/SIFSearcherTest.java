@@ -48,10 +48,10 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		SIFSearcher s = new SIFSearcher(
 			new ControlsStateChangeMiner(),
-			new TranscriptionalRegulationMiner(),
+			new ControlsExpressionChangeMiner(),
 			new DegradesMiner(),
 			new ControlsStateChangeButIsParticipantMiner(),
-			new TranscriptionalRegulationWithConvMiner());
+			new ControlsExpressionChangeWithConvMiner());
 
 		Set<SIFInteraction> set = s.searchSIF(model);
 

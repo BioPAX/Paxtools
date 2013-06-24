@@ -15,90 +15,53 @@ import java.util.Set;
  */
 public class HGNC
 {
-	/**
-	 * Map from symbol to id.
-	 */
 	private static Map<String, String> sym2id;
-
-	/**
-	 * Map from id to symbol.
-	 */
 	private static Map<String, String> id2sym;
+	private static Map<String, String> old2new;
 
-	/**
-	 * Provides HGNC ID of the given approved gene symbol.
-	 * @param symbol symbol
-	 * @return hgnc id
-	 */
-	public static String getID(String symbol)
+	public static void main(String[] args)
 	{
-		return sym2id.get(symbol);
+		System.out.println(getSymbol("PKCA"));
 	}
 
-	/**
-	 * Gets the symbol of the given hgnc id.
-	 * @param hgncID hgnc id
-	 * @return symbol
-	 */
-	public static String getSymbol(String hgncID)
+	public static String getSymbol(String idOrSymbol)
 	{
-		return id2sym.get(hgncID);
+		if (id2sym.containsKey(idOrSymbol)) return id2sym.get(idOrSymbol);
+		else if (sym2id.containsKey(idOrSymbol)) return idOrSymbol;
+		else if (old2new.containsKey(idOrSymbol)) return old2new.get(idOrSymbol);
+		else return null;
 	}
 
-	/**
-	 * Checks if the hgnc id exists.
-	 * @param id hgnc id
-	 * @return true if id exists
-	 */
-	public static boolean containsID(String id)
-	{
-		return id2sym.containsKey(id);
-	}
-
-	/**
-	 * Checks if the given symbol exists.
-	 * @param symbol symbol
-	 * @return true if exists
-	 */
-	public static boolean containsSymbol(String symbol)
-	{
-		return sym2id.containsKey(symbol);
-	}
-
-	/**
-	 * Gets the set of all symbols.
-	 * @return all symbols
-	 */
-	public static Set<String> getSymbols()
-	{
-		return sym2id.keySet();
-	}
-
-	/**
-	 * Initializes resources.
-	 */
 	static
 	{
 		try
 		{
 			sym2id = new HashMap<String, String>();
+			id2sym = new HashMap<String, String>();
+			old2new = new HashMap<String, String>();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 				HGNC.class.getResourceAsStream("hgnc.txt")));
+
+			reader.readLine(); //skip header
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 			{
 				String[] token = line.split("\t");
 				String sym = token[1];
 				String id = token[0];
 				sym2id.put(sym, id);
+				id2sym.put(id, sym);
+
+				if (token.length > 2)
+				{
+					String olds = token[2];
+					for (String old : olds.split(","))
+					{
+						old = old.trim();
+						old2new.put(old, sym);
+					}
+				}
 			}
 			reader.close();
-
-			id2sym = new HashMap<String, String>();
-			for (String key : sym2id.keySet())
-			{
-				id2sym.put(sym2id.get(key), key);
-			}
-
 		}
 		catch (FileNotFoundException e)
 		{

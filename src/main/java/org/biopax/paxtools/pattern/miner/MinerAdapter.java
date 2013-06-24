@@ -36,16 +36,6 @@ public abstract class MinerAdapter implements Miner
 	protected Pattern pattern;
 
 	/**
-	 * Accessor to the xref of EntityReference.
-	 */
-	private static final Set<String> symbolIDNames = new HashSet<String>(Arrays.asList("hgnc"));
-
-	/**
-	 * Accessor to the xref of EntityReference.
-	 */
-	private static final Set<String> symbolNames = new HashSet<String>(Arrays.asList("HGNC Symbol"));
-
-	/**
 	 * Constructor with name and description.
 	 * @param name name of the miner
 	 * @param description description of the miner
@@ -116,7 +106,7 @@ public abstract class MinerAdapter implements Miner
 			if (db != null)
 			{
 				db = db.toLowerCase();
-				if (symbolIDNames.contains(db))
+				if (db.startsWith("hgnc"))
 				{
 					String id = xr.getId();
 					if (id != null)
@@ -126,14 +116,6 @@ public abstract class MinerAdapter implements Miner
 						{
 							return symbol;
 						}
-					}
-				}
-				if (symbolNames.contains(db))
-				{
-					String id = xr.getId();
-					if (id != null && !id.isEmpty())
-					{
-						return id;
 					}
 				}
 			}

@@ -291,7 +291,7 @@ public class PatternBox
 	 * Finds transcription factors that trans-activate or trans-inhibit an entity.
 	 * @return the pattern
 	 */
-	public static Pattern transcriptionWithTemplateReac()
+	public static Pattern expressionWithTemplateReac()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "TF PR");
 		p.addConstraint(ConBox.erToPE(), "TF PR", "TF SPE");
@@ -300,8 +300,9 @@ public class PatternBox
 		p.addConstraint(ConBox.controlToTempReac(), "Control", "TempReac");
 		p.addConstraint(ConBox.product(), "TempReac", "product PE");
 		p.addConstraint(ConBox.linkToSimple(), "product PE", "product SPE");
-		p.addConstraint(ConBox.peToER(), "product SPE", "product ER");
-		p.addConstraint(ConBox.equal(false), "TF PR", "product ER");
+		p.addConstraint(new Type(Protein.class), "product SPE");
+		p.addConstraint(ConBox.peToER(), "product SPE", "product PR");
+		p.addConstraint(ConBox.equal(false), "TF PR", "product PR");
 		return p;
 	}
 
@@ -310,7 +311,7 @@ public class PatternBox
 	 * TemplateReaction.
 	 * @return the pattern
 	 */
-	public static Pattern transcriptionWithConversion()
+	public static Pattern expressionWithConversion()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "TF PR");
 		p.addConstraint(ConBox.erToPE(), "TF PR", "TF SPE");

@@ -14,20 +14,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Miner for the transcriptional regulation pattern.
+ * Miner for the transcriptional regulation pattern, modeled using Conversion.
  * @author Ozgun Babur
  */
-public class TranscriptionalRegulationMiner extends MinerAdapter implements SIFMiner
+public class ControlsExpressionChangeWithConvMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public TranscriptionalRegulationMiner()
+	public ControlsExpressionChangeWithConvMiner()
 	{
-		super("Transcriptional-regulation", "This pattern finds relations where first protein " +
-			"is controlling transcriptional activity of the second protein. The output is either " +
-			"\"A transactivate B\" or \"A transinhibit B\". This pattern requires that " +
-			"transcription to be modeled with a TemplateReaction.");
+		super("Transcriptional-regulation-with-conversion", "This pattern finds relations where " +
+			"first protein is controlling transcriptional activity of the second protein. " +
+			"Proper way to model this relation is to use a TemplateReaction, however we see " +
+			"that Conversion is also used in resources. This miner find patterns where a " +
+			"Conversion with a single participant at right is used instead of a TemplateReaction." +
+			" The output is either \"A transactivate B\" or \"A transinhibit B\".");
 	}
 
 	/**
@@ -37,7 +39,7 @@ public class TranscriptionalRegulationMiner extends MinerAdapter implements SIFM
 	@Override
 	public Pattern constructPattern()
 	{
-		Pattern p = PatternBox.transcriptionWithTemplateReac();
+		Pattern p = PatternBox.expressionWithConversion();
 		p.addConstraint(new Type(ProteinReference.class), "product ER");
 		return p;
 	}
@@ -76,9 +78,7 @@ public class TranscriptionalRegulationMiner extends MinerAdapter implements SIFM
 	@Override
 	public String getRelationType(Match m)
 	{
-		Control con = (Control) m.get("Control", getPattern());
-		return con.getControlType() != null && con.getControlType().toString().startsWith("I") ?
-			"transinhibit" : "transactivate";
+		return "controls-expression-change";
 	}
 
 	@Override
@@ -100,6 +100,6 @@ public class TranscriptionalRegulationMiner extends MinerAdapter implements SIFM
 	@Override
 	public String[] getPubmedHarvestableLabels()
 	{
-		return new String[]{"Control", "TempReac"};
+		return new String[]{"Control", "Conversion"};
 	}
 }

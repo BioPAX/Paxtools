@@ -99,7 +99,8 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 * Prefix of URL of the Pathway Commons data.
 	 */
 	private static final String PC_DATA_URL_PREFIX =
-		"http://www.pathwaycommons.org/pc2/downloads/Pathway%20Commons%20";
+//		"http://www.pathwaycommons.org/pc2/downloads/Pathway%20Commons%20";
+		"http://webservice.baderlab.org:48080/downloads/Pathway%20Commons%202%20";
 
 	/**
 	 * Suffix of URL of the Pathway Commons data.
@@ -121,7 +122,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 * The URL components of the Pathway Commons resources.
 	 */
 	private static final String[] PC_RES_URL = new String[]{
-		"all", "reactome", "nci_nature", "humancyc", "phosphositeplus", "panther"};
+		"all", "Reactome", "NCI_Nature", "HumanCyc", "PhosphoSitePlus", "Panther%20Pathway"};
 
 	/**
 	 * The name of the file for IDs of ubiquitous molecules.
@@ -388,7 +389,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		minerList.add(new ControlsStateChangeMiner());
 		minerList.add(new ControlsStateChangeButIsParticipantMiner());
 		minerList.add(new ControlsStateChangeDetailedMiner());
-		minerList.add(new TranscriptionalRegulationMiner());
+		minerList.add(new ControlsExpressionChangeMiner());
 		minerList.add(new DegradesMiner());
 		minerList.add(new AffectsDegradationMiner());
 		minerList.add(new ConsecutiveCatalysisMiner(ubiqueIDs));

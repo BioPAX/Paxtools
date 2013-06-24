@@ -4,9 +4,10 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.Pathway;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.constraint.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -17,7 +18,7 @@ import java.util.*;
 /**
  * @author Ozgun Babur
  */
-@Ignore
+//@Ignore
 public class TempTests
 {
 	Model model;
@@ -26,7 +27,7 @@ public class TempTests
 	public void setUp() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-//		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
+		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
 	}
 
 	@Test
@@ -76,5 +77,27 @@ public class TempTests
 		Pattern p = PatternBox.consecutiveCatalysis(ubiq);
 
 		Searcher.searchInFile(p, "All-Data.owl", "Captured.owl", 100, 1);
+	}
+
+	@Test
+	public void capturePattern() throws Throwable
+	{
+		Pattern p = PatternBox.controlsStateChange(true);
+
+		Searcher.searchInFile(p, "All-Data.owl", "Captured-state-change.owl", 100, 1);
+	}
+
+	@Test
+	public void debugPattern() throws Throwable
+	{
+		Pattern p = PatternBox.expressionWithTemplateReac();
+
+		Match m = new Match(p.labelMap.size());
+		ProteinReference er = (ProteinReference) model.getByID("http://identifiers.org/uniprot/P42229");
+		PhysicalEntity pe = (PhysicalEntity) model.getByID("http://pid.nci.nih.gov/biopaxpid_10369");
+		m.set(er, 0);
+		m.set(pe, 1);
+		List<Match> result = Searcher.search(m, p);
+		System.out.println("result.size() = " + result.size());
 	}
 }
