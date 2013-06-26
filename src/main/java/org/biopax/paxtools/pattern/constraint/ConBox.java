@@ -41,6 +41,15 @@ public class ConBox
 	}
 
 	/**
+	 * From PhysicalEntity to the participated Interaction
+	 * @return generative constraint
+	 */
+	public static Constraint peToInter()
+	{
+		return new PathConstraint("PhysicalEntity/participantOf");
+	}
+
+	/**
 	 * From PhysicalEntity to the downstream Conversion.
 	 * @return generative constraint to get the Conversion that the PhysicalEntity is a controller
 	 */

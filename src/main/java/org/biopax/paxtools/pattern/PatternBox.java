@@ -383,6 +383,22 @@ public class PatternBox
 		return p;
 	}
 
+	public static Pattern interaction()
+	{
+		Pattern p = new Pattern(ProteinReference.class, "Protein 1");
+		p.addConstraint(ConBox.erToPE(), "Protein 1", "SPE1");
+		p.addConstraint(ConBox.linkToComplex(), "SPE1", "PE1");
+		p.addConstraint(ConBox.peToInter(), "PE1", "Inter");
+		p.addConstraint(ConBox.participant(), "Inter", "PE2");
+		p.addConstraint(ConBox.equal(false), "PE1", "PE2");
+		p.addConstraint(ConBox.linkToSimple(), "PE2", "SPE2");
+		p.addConstraint(ConBox.equal(false), "SPE1", "SPE2");
+		p.addConstraint(ConBox.type(Protein.class), "SPE2");
+		p.addConstraint(ConBox.peToER(), "SPE2", "Protein 2");
+		p.addConstraint(ConBox.equal(false), "Protein 1", "Protein 2");
+		return p;
+	}
+
 	/**
 	 * Finds ProteinsReference related to an interaction. If specific types of interactions are
 	 * desired, they should be sent as parameter, otherwise leave the parameter empty.

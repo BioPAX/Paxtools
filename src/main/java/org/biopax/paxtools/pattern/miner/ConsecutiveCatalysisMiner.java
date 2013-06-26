@@ -30,8 +30,8 @@ public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
 	 */
 	public ConsecutiveCatalysisMiner(Set<String> ubiqueIDs)
 	{
-		super("Consecutive-catalysis", "Finds two proteins, catalyzing different reactions, where" +
-			" an output of first reaction is input to second reaction.");
+		super(SIFType.CONSECUTIVE_CATALYSIS.getTag(), "Finds two proteins, catalyzing different " +
+			"reactions, where an output of first reaction is input to second reaction.");
 
 		this.ubiqueIDs = ubiqueIDs;
 	}
@@ -68,7 +68,7 @@ public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getHeader()
 	{
-		return "First-protein\tSecond-protein";
+		return "First-protein\tRelation\tSecond-protein";
 	}
 
 	@Override
@@ -84,15 +84,9 @@ public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
 	}
 
 	@Override
-	public String getRelationType(Match m)
+	public SIFType getSIFType(Match m)
 	{
-		return "consecutive-catalysis";
-	}
-
-	@Override
-	public boolean isDirected()
-	{
-		return true;
+		return SIFType.CONSECUTIVE_CATALYSIS;
 	}
 
 	@Override

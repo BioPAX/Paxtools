@@ -22,7 +22,7 @@ public class AffectsDegradationMiner extends MinerAdapter
 	 */
 	public AffectsDegradationMiner()
 	{
-		super("Affects-degradation", "This pattern finds relations where first protein " +
+		super("affects-degradation", "This pattern finds relations where first protein " +
 			"controls state change of the second protein, and the output PhysicalEntity of the " +
 			"second protein is degraded. If the Control is positive the relation is DEGRADES, " +
 			"else it is BLOCKS_DEGRADATION");

@@ -1,5 +1,11 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.EntityReference;
+import org.biopax.paxtools.model.level3.XReferrable;
+import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.pattern.util.HGNC;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,14 +16,24 @@ import java.util.Set;
  */
 public class SIFInteraction implements Comparable
 {
-	public SIFInteraction(String source, String target, String type, boolean directed,
-		Set<String> publications)
+	public BioPAXElement source;
+	public BioPAXElement target;
+	public String sourceID;
+	public String targetID;
+	public SIFType type;
+	public List<String> pubmedIDs;
+
+	public SIFInteraction(BioPAXElement source, BioPAXElement target, SIFType type,
+		Set<String> publications, IDFetcher fetcher)
 	{
-		if (!directed)
+		sourceID = fetcher.fetchID(source);
+		targetID = fetcher.fetchID(target);
+
+		if (!type.isDirected())
 		{
-			if (source.compareTo(target) > 0)
+			if (sourceID != null && targetID != null && sourceID.compareTo(targetID) > 0)
 			{
-				String temp = source;
+				BioPAXElement temp = source;
 				source = target;
 				target = temp;
 			}
@@ -26,7 +42,7 @@ public class SIFInteraction implements Comparable
 		this.source = source;
 		this.target = target;
 		this.type = type;
-		this.directed = directed;
+
 		if (publications != null)
 		{
 			this.pubmedIDs = new ArrayList<String>(publications);
@@ -34,11 +50,10 @@ public class SIFInteraction implements Comparable
 		}
 	}
 
-	public String source;
-	public String target;
-	public String type;
-	public boolean directed;
-	public List<String> pubmedIDs;
+	public boolean hasIDs()
+	{
+		return sourceID != null && targetID != null;
+	}
 
 	@Override
 	public int hashCode()
@@ -53,7 +68,7 @@ public class SIFInteraction implements Comparable
 		{
 			SIFInteraction i = (SIFInteraction) obj;
 
-			return i.type.equals(type) && i.source.equals(source) && i.target.equals(target);
+			return i.type.equals(type) && i.sourceID.equals(sourceID) && i.targetID.equals(targetID);
 		}
 
 		return false;
@@ -67,7 +82,7 @@ public class SIFInteraction implements Comparable
 		{
 			SIFInteraction i = (SIFInteraction) o;
 
-			return (source + target).compareTo(i.source + i.target);
+			return (sourceID + targetID).compareTo(i.sourceID + i.targetID);
 		}
 
 		return 0;
@@ -95,6 +110,7 @@ public class SIFInteraction implements Comparable
 	@Override
 	public String toString()
 	{
-		return source + "\t" + type + "\t" + target;
+		return sourceID + "\t" + type.getTag() + "\t" + targetID;
 	}
+
 }

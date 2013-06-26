@@ -26,10 +26,20 @@ public class ControlsExpressionChangeMiner extends MinerAdapter implements SIFMi
 	 */
 	public ControlsExpressionChangeMiner()
 	{
-		super("Controls-expression-change", "This pattern finds relations where first protein " +
-			"is controlling expression of the second protein. The output is like " +
-			"\"A controls-expression-change B\". This pattern requires that " +
+		super(SIFType.CONTROLS_EXPRESSION.getTag(), "This pattern finds relations where first " +
+			"protein is controlling expression of the second protein. The output is like " +
+			"\"A controls-expression B\". This pattern requires that " +
 			"expression to be modeled with a TemplateReaction.");
+	}
+
+	/**
+	 * Constructor for extending this class.
+	 * @param name name
+	 * @param description description
+	 */
+	public ControlsExpressionChangeMiner(String name, String description)
+	{
+		super(name, description);
 	}
 
 	/**
@@ -82,22 +92,10 @@ public class ControlsExpressionChangeMiner extends MinerAdapter implements SIFMi
 		return "product PR";
 	}
 
-	/**
-	 * The relation can be either transactivate for transactivation, or transinhibit for
-	 * transinhibition.
-	 * @param m the match
-	 * @return type
-	 */
 	@Override
-	public String getRelationType(Match m)
+	public SIFType getSIFType(Match m)
 	{
-		return "controls-expression-change";
-	}
-
-	@Override
-	public boolean isDirected()
-	{
-		return true;
+		return SIFType.CONTROLS_EXPRESSION;
 	}
 
 	/**

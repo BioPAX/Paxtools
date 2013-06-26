@@ -33,11 +33,11 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 	 */
 	public ControlsStateChangeMiner()
 	{
-		super("Controls-state-change", "Finds relations between proteins where the first one is " +
-			"controlling a reaction that changes the state of the second one. The reaction has " +
-			"to be a Conversion and modified Protein should be represented with different " +
-			"PhysicalEntity on each side. This pattern cannot determine the sign of the effect " +
-			"because it is hard to predict the effect of the modification.");
+		super(SIFType.CONTROLS_STATE_CHANGE.getTag(), "Finds relations between proteins where " +
+			"the first one is controlling a reaction that changes the state of the second one. " +
+			"The reaction has to be a Conversion and modified Protein should be represented with " +
+			"different PhysicalEntity on each side. This pattern cannot determine the sign of " +
+			"the effect because it is hard to predict the effect of the modification.");
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 		p.addConstraint(ConBox.peToER(), "input simple PE", "changed ER");
 		p.addConstraint(new OtherSide(), "input PE", "Conversion", "output PE");
 		p.addConstraint(ConBox.equal(false), "input PE", "output PE");
-		p.addConstraint(ConBox.linkToComplex(), "output PE", "output simple PE");
+		p.addConstraint(ConBox.linkToSimple(), "output PE", "output simple PE");
 		p.addConstraint(ConBox.peToER(), "output simple PE", "changed PR");
 		p.addConstraint(new Type(ProteinReference.class), "changed PR");
 		p.addConstraint(ConBox.equal(false), "controller PR", "changed PR");
@@ -104,15 +104,9 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 	}
 
 	@Override
-	public String getRelationType(Match m)
+	public SIFType getSIFType(Match m)
 	{
-		return "controls-state-change";
-	}
-
-	@Override
-	public boolean isDirected()
-	{
-		return true;
+		return SIFType.CONTROLS_STATE_CHANGE;
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class RelatedGenesOfInteractionsMiner extends MinerAdapter
 	 */
 	public RelatedGenesOfInteractionsMiner()
 	{
-		super("Related-genes-of-interactions", "This miner finds any related gene that is a " +
+		super("related-genes-of-interactions", "This miner finds any related gene that is a " +
 			"participant or a controller of an Interaction (Conversion or TemplateReaction). " +
 			"The output lists the ID of the interaction and the related gene symbols in a row.");
 	}

@@ -467,7 +467,11 @@ public abstract class MinerAdapter implements Miner
 	 */
 	public String getRelationType(Match m)
 	{
-		return null;
+		if (this instanceof SIFMiner)
+		{
+			return ((SIFMiner) this).getSIFType(m).getTag();
+		}
+		else return null;
 	}
 
 	/**
@@ -569,18 +573,13 @@ public abstract class MinerAdapter implements Miner
 	 * @param m match to use for SIF creation
 	 * @return SIF interaction
 	 */
-	public SIFInteraction createSIFInteraction(Match m)
+	public SIFInteraction createSIFInteraction(Match m, IDFetcher fetcher)
 	{
 		if (this instanceof SIFMiner)
 		{
-			String source = getIdentifier(m, ((SIFMiner) this).getSourceLabel());
-			String target = getIdentifier(m, ((SIFMiner) this).getTargetLabel());
-
-			if (source != null && target != null)
-			{
-				return new SIFInteraction(source, target, this.getRelationType(m),
-					((SIFMiner) this).isDirected(), harvestPMIDs(m));
-			}
+				return new SIFInteraction(m.get(((SIFMiner) this).getSourceLabel(), getPattern()),
+					m.get(((SIFMiner) this).getTargetLabel(), getPattern()),
+					((SIFMiner) this).getSIFType(m), harvestPMIDs(m), fetcher);
 		}
 
 		return null;

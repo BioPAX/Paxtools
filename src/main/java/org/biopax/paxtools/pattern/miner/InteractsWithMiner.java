@@ -14,15 +14,15 @@ import java.util.Map;
  * Miner for the degradation pattern.
  * @author Ozgun Babur
  */
-public class InSameComplexMiner extends MinerAdapter implements SIFMiner
+public class InteractsWithMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public InSameComplexMiner()
+	public InteractsWithMiner()
 	{
-		super(SIFType.IN_SAME_COMPLEX.getTag(), "This miner finds cases where two genes have " +
-			"states that are members of the same complex.");
+		super("Participants-of-same-interaction", "This miner finds cases where two genes are " +
+			"participants of the same interaction.");
 	}
 
 	/**
@@ -32,12 +32,12 @@ public class InSameComplexMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.appearInSameComplex();
+		return PatternBox.interaction();
 	}
 
 	/**
-	 * Writes the result as "A DEGRADES B" or "A BLOCKS_DEGRADATION B", where A and B are gene
-	 * symbols, and whitespace is tab.
+	 * Writes the result as "A interacts-with B", where A and B are gene symbols, and whitespace is
+	 * tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -63,6 +63,6 @@ public class InSameComplexMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.IN_SAME_COMPLEX;
+		return SIFType.INTERACTS_WITH;
 	}
 }

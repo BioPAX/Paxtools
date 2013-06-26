@@ -24,9 +24,8 @@ public class DegradesMiner extends MinerAdapter implements SIFMiner
 	 */
 	public DegradesMiner()
 	{
-		super("Degrades-or-blocks-it", "This pattern finds relations where first protein " +
-			"is controlling a Conversion that degrades the second protein. If the Control is " +
-			"positive the relation is DEGRADES, else it is BLOCKS_DEGRADATION");
+		super(SIFType.CONTROLS_DEGRADATION.getTag(), "This pattern finds relations where first " +
+			"protein is controlling a Conversion that degrades the second protein.");
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class DegradesMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getHeader()
 	{
-		return "Upstream\ttype\tDownstream";
+		return "Upstream\tRelation\tDownstream";
 	}
 
 	@Override
@@ -74,23 +73,10 @@ public class DegradesMiner extends MinerAdapter implements SIFMiner
 		return "downstream PR";
 	}
 
-	/**
-	 * The relation can be either degrades or blocks-degradation.
-	 * @param m the match
-	 * @return type
-	 */
 	@Override
-	public String getRelationType(Match m)
+	public SIFType getSIFType(Match m)
 	{
-		Control con = (Control) m.get("Control", getPattern());
-		return con.getControlType() != null && con.getControlType().toString().startsWith("I") ?
-			"blocks-degradation" : "degrades";
-	}
-
-	@Override
-	public boolean isDirected()
-	{
-		return true;
+		return SIFType.CONTROLS_DEGRADATION;
 	}
 
 	@Override

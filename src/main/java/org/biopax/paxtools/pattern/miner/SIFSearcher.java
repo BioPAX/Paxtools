@@ -2,8 +2,11 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.XReferrable;
+import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Searcher;
+import org.biopax.paxtools.pattern.util.HGNC;
 
 import java.util.*;
 
@@ -17,15 +20,101 @@ public class SIFSearcher
 	/**
 	 * SIF miners to use.
 	 */
-	private SIFMiner[] miners;
+	private List<SIFMiner> miners;
+
+	/**
+	 * SIF types to mine.
+	 */
+	private Set<SIFType> types;
+
+	/**
+	 * Used for getting an ID out of BioPAX elements.
+	 */
+	private IDFetcher idFetcher;
 
 	/**
 	 * Constructor with miners.
-	 * @param miners sif miners
+	 * @param types sif types
 	 */
-	public SIFSearcher(SIFMiner... miners)
+	public SIFSearcher(SIFType... types)
 	{
-		this.miners = miners;
+		this(null, types);
+	}
+
+	/**
+	 * Constructor with ID fetcher and miners.
+	 * @param types sif types
+	 */
+	public SIFSearcher(IDFetcher idFetcher, SIFType... types)
+	{
+		this.idFetcher = idFetcher;
+		this.types = new HashSet<SIFType>(Arrays.asList(types));
+		this.miners = new ArrayList<SIFMiner>();
+
+		for (SIFType type : types)
+		{
+			switch (type)
+			{
+				case CONTROLS_STATE_CHANGE:
+					miners.add(new ControlsStateChangeMiner());
+					miners.add(new ControlsStateChangeButIsParticipantMiner());
+					break;
+				case CONTROLS_EXPRESSION:
+					miners.add(new ControlsExpressionChangeMiner());
+					miners.add(new ControlsExpressionChangeWithConvMiner());
+					break;
+				case CONTROLS_DEGRADATION:
+					miners.add(new DegradesMiner());
+					break;
+				case CONSECUTIVE_CATALYSIS:
+					miners.add(new ConsecutiveCatalysisMiner(null));
+					break;
+				case IN_SAME_COMPLEX:
+					miners.add(new InSameComplexMiner());
+					break;
+				case INTERACTS_WITH:
+					miners.add(new InSameComplexMiner());
+					break;
+				default: throw new RuntimeException("There is an unhandled sif type: " + type);
+			}
+		}
+
+		if (idFetcher == null)
+		{
+			this.idFetcher = new IDFetcher()
+			{
+				@Override
+				public String fetchID(BioPAXElement ele)
+				{
+					if (ele instanceof XReferrable)
+					{
+						for (Xref xr : ((XReferrable) ele).getXref())
+						{
+							String db = xr.getDb();
+							if (db != null)
+							{
+								db = db.toLowerCase();
+								if (db.startsWith("hgnc"))
+								{
+									String id = xr.getId();
+									if (id != null)
+									{
+										String symbol = HGNC.getSymbol(id);
+										if (symbol != null && !symbol.isEmpty())
+										{
+											return symbol;
+										}
+									}
+								}
+							}
+						}
+					}
+
+					return null;
+
+				}
+			};
+		}
 	}
 
 	/**
@@ -45,9 +134,9 @@ public class SIFSearcher
 			{
 				for (Match m : matchList)
 				{
-					SIFInteraction sif = miner.createSIFInteraction(m);
+					SIFInteraction sif = miner.createSIFInteraction(m, idFetcher);
 
-					if (sif != null)
+					if (sif != null && sif.hasIDs() && types.contains(sif.type))
 					{
 						if (map.containsKey(sif))
 						{

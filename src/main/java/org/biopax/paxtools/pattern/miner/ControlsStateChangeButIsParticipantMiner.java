@@ -23,7 +23,7 @@ public class ControlsStateChangeButIsParticipantMiner extends ControlsStateChang
 	 */
 	public ControlsStateChangeButIsParticipantMiner()
 	{
-		super("Controls-state-change-but-a-participant", "Mines the same relation as with " +
+		super("controls-state-change-but-a-participant", "Mines the same relation as with " +
 			"Controls-state-change, however, this time the controller is modeled as a " +
 			"participant of the Conversion. This is in fact a modeling error, but this pattern " +
 			"exists in some resources. The controller PhysicalEntity appears at both left and " +

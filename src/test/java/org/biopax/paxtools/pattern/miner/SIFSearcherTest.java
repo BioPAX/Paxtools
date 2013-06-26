@@ -22,7 +22,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Test
 	public void testSIFMiner()
 	{
-		SIFSearcher s = new SIFSearcher(new ControlsStateChangeMiner(), new InSameComplexMiner());
+		SIFSearcher s = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE, SIFType.IN_SAME_COMPLEX);
 		Set<SIFInteraction> sif = s.searchSIF(model);
 		Assert.assertFalse(sif.isEmpty());
 
@@ -34,7 +34,7 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		Assert.assertFalse(pubmedIDs.isEmpty());
 
-		s = new SIFSearcher(new ConsecutiveCatalysisMiner(null));
+		s = new SIFSearcher(SIFType.CONSECUTIVE_CATALYSIS);
 		sif = s.searchSIF(model);
 		Assert.assertTrue(sif.isEmpty());
 	}
@@ -46,12 +46,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/PC.owl"));
 
-		SIFSearcher s = new SIFSearcher(
-			new ControlsStateChangeMiner(),
-			new ControlsExpressionChangeMiner(),
-			new DegradesMiner(),
-			new ControlsStateChangeButIsParticipantMiner(),
-			new ControlsExpressionChangeWithConvMiner());
+		SIFSearcher s = new SIFSearcher(SIFType.values());
 
 		Set<SIFInteraction> set = s.searchSIF(model);
 

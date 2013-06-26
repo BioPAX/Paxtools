@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.constraint.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -18,7 +19,7 @@ import java.util.*;
 /**
  * @author Ozgun Babur
  */
-//@Ignore
+@Ignore
 public class TempTests
 {
 	Model model;
