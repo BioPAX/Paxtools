@@ -354,6 +354,12 @@ public class QueryExecuter
 				{
 					getRelatedPhysicalEntities(parent, pes);
 				}
+
+				// This is a hack for BioPAX graph. Equivalence relations do not link members and
+				// complexes because members cannot be addressed. Below call makes sure that if the
+				// source node has a generic parents or children and they appear in a complex, we
+				// include the complex in the sources.
+				addEquivalentsComplexes(cpx, pes);
 			}
 		}
 		else if (element instanceof PhysicalEntity)
