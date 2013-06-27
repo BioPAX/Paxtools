@@ -9,7 +9,8 @@
 
 %%
 % Book metadata
-\title{Paxtools User's Guide\thanks{BioPAX Community for their feedback and support}}
+\title{Using Biological Pathway Data with Paxtools: A User's Guide}
+
 \author[Paxtools Developers]{Paxtools Developers}
 
 
@@ -111,19 +112,38 @@ December\fi\space\number\year
 \newcommand{\docfilehook}[2]{\texttt{#1}\index{file hooks!#2}\index{#1@\texttt{#1}}}
 \newcommand{\doccounter}[1]{\texttt{#1}\index{#1 counter@\texttt{#1} counter}}
 
+\newenvironment{tightcenter}{%
+  \setlength\topsep{0pt}
+  \setlength\parskip{0pt}
+  \begin{center}
+}{%
+  \end{center}
+}
+
 % Generates the index
 \usepackage{makeidx}
 \makeindex
 
 \begin{document}
 
+\begin{titlepage}
+\begin{tightcenter}
 
-% r.3 full title page
-\maketitle
+% Upper part of the page. The '~' is needed because \\
+% only works if a paragraph has started.
+
+\textsc{\LARGE Paxtools Developers}\\[5.5cm]
 
 
-% v.4 copyright page
-\newpage
+% Title
+
+{ \huge \bfseries Using Biological Pathway Data with Paxtools}\\[0.4cm]
+
+
+\textsc{\Large  A User's Guide}\\[0.5cm]
+
+\end{tightcenter}
+
 \begin{fullwidth}
 ~\vfill
 \thispagestyle{empty}
@@ -139,7 +159,7 @@ Copyright \copyright\ \the\year\ \thanklessauthor
 \par \url{code.google.com/p/tufte-latex/} The template is distributed under Apache 2.0 License
 \par\textit{Second Edition, \monthyear}
 \end{fullwidth}
-
+\end{titlepage}
 % r.5 contents
 \tableofcontents
 
@@ -285,11 +305,13 @@ More information on Paxtools can be found at:
 \begin{itemize}
 \item Wiki: \url{http://sourceforge.net/apps/mediawiki/biopax/index.php?title=Paxtools} 
 
-\item API: \url{http://biopax.sourceforge.net/paxtools-<version>}
+\item API: \url{http://www.biopax.org/m2site/}
 
 \item If you get stuck or have questions, use Paxtools support mailing list: 	
 
-\url{https://lists.sourceforge.net/lists/listinfo/biopax-paxtools}
+\url{biopax-paxtools@lists.sourceforge.net}
+
+\url{http://lists.sourceforge.net/lists/listinfo/biopax-paxtools}
 
 
 \item For general questions related to BioPAX, use BioPAX discuss mailing list: 
@@ -311,6 +333,7 @@ BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 \end{javacode}
 
 BioPAXLevel is an enum that contains multiple level specific facilities and fields. These can be very useful if you want to implement level agnostic facilities. You can find more information about BioPAXLevel in the API documentation.
+
 A Paxtools model is a container for your objects. When you read, write or pass around BioPAX objects, these objects will be contained inside a model. This is useful for validation and querying purposes. 
 Let's begin by creating a new model:
 
@@ -460,7 +483,6 @@ for (Protein currentProtein : proteinSet)
 \end{javacode}
 
 \section{Path Accessors}
-
 Path accessors provide you with XPath-like access to the model. This allows you to explicitly state the paths you would like to access and can significantly reduce boiler plate code, especially when you need to traverse multiple cardinality properties. For example, consider the simple case of extracting the UnificationXrefs that belongs to protein references for each pathway in your model. To do that you need to access the processes that belong to a particular pathway, then get their participants  that are Proteins, access their ProteinReferences and then access unification XRefs of all entityReferences and then test each XRef for whether it is a unification XRef.  This is further complicated by the fact that pathways can be nested. Without Path accessors, this leads to some complicated code:
 
 \begin{javacode}
@@ -497,6 +519,8 @@ public void extractAndPrintProteinUrefs(Interaction anInteraction)
   {
    ProteinReference entityReference=
     ((Protein)participant).getEntityReference();
+\end{javacode}
+\begin{javacode}
    if (entityReference != null)
    {
    Set<Xref> xrefSet = entityReference.getXref();
@@ -572,6 +596,7 @@ public static String[][] listProperties(BioPAXElement bpe)
 
 That was easy! 
 Editors also provide you with a generic way to set a value to the property, access its cardinality and other useful methods.  They are also used extensively for traversing and cloning which we will cover in the next part of the tutorial.
+
 
 \chapter{Advanced Controls:Traversing, cloning and merging}
 \section{Traversing}
@@ -676,8 +701,34 @@ Optionally, Traverser uses property filters. It will not visit a property if the
   }
 \end{javacode}
 \end{fullwidth}
+
 \section{Merging}
 
+One of the major goals of BioPAX is to integrate pathway information that were curated in a distributed fashion, similar to putting pieces of a puzzle together. Integration can be very complicated due  to incomplete information, multiple levels of details and finally curation differences and errors \sidenote{We differentiate between 4 different types of matching between objects: Equality, RDF Equality, Equivalence and External Equivalence. Paxtools handles the first three, the  fourth is handled by integration data warehouses such as Pathway Commons. There are other object matching/alignment relationships including Similarity, Subsumption and Containment. These are currently open problems.}
+
+\newthought{Equality} is based on Java object identity. Paxtools do not override equals() and hashCode methods to avoid potential confusions with Java frameworks such as Hibernate.
+
+\newthought{RDF Equality} is based on the unique RDF-IDs of objects and its semantics are relatively straightforward. If two different objects have the same RDF-ID then: they can not be added to the same model at the same time.
+
+\newthought{Equivalence} is based on the BioPAX properties of the objects and have much more complicated semantics. 
+
+\begin{description}
+
+  \item In general two BioPAX elements are equivalent if they are equal OR if they are defined to be semantically equivalent which considers its properties.
+  \item In general, UtilityClasses that only have primitive properties are equivalent if the values of these properties are all known AND equal. Unknown/undefined values are considered unequal. For example, two sequenceSites with undefined  positions are not considered equivalent. 
+  \item EntityReferences  equivalence is typically defined externally, e.g. by UniProt or Entrez Gene xrefs. Paxtools do not define additional equivalence semantics other than being equal for EntityReferences.
+  \item PhysicalEntities are defined to be equivalent if and only if their EntityReference, CellularLocation, set of Features and set of NotFeatures are all equivalent. 
+  \item Complexes are defined to be equivalent if and only if their participant sets are equivalent.
+  \item Interactions are defined to be equivalent if and only if their participant sets are equivalent. For subclasses of interactions with different types of participants e.g. catalysts each subset of participant should be equivalent to the corresponding subset.
+  \item Pathway definition has no strong semantic definition and is often demarcated arbitrarily. Paxtools do not define additional semantic equivalence for Pathways.
+  \item Features are equivalent if and only if their EntityReferences, FeatureTypes and Locations are equivalent.
+  \item ControlledVocabularies are equivalent if and only if their CV source and terms are equivalent.
+  \item Two stoichiometries are equivalent if and only if their PhysicalEntity and stoichiometric number is equivalent.
+
+\end{description}
+If A is equivalent to B then: Both A.isEquivalent(B) and B.isEquivalent(A) method returns true; they can be added to the same model and their equivalenceCode() are the same.
+
+\subsection{Merging based on Equivalence}
 If you want to merge multiple BioPAX models into a single model, the Merger class under the paxtools-core module can help you to do so:
 
 \begin{javacode}
@@ -685,7 +736,7 @@ If you want to merge multiple BioPAX models into a single model, the Merger clas
    merger.merge(targetModel, srcModel1, srcModel2);
 \end{javacode}
 
-The merger identifies equivalant elements and merges them\sidenote{If one element in the source model is matched to a target element, then for BioPAX properties with multiple cardinality, the values of the source element are added to the target.  For  single cardinality properties, the source value overwrites the target value. }. The method modifies the target model (but not the source models) so that the target becomes the merged model. If you do not want to modify the target model, then you might want to use a new model as the target:
+The merger identifies equivalent elements and merges them\sidenote{If one element in the source model is matched to a target element, then for BioPAX properties with multiple cardinality, the values of the source element are added to the target.  For  single cardinality properties, the source value overwrites the target value. }. The method modifies the target model (but not the source models) so that the target becomes the merged model. If you do not want to modify the target model, then you might want to use a new model as the target:
 
 \begin{javacode}
   Model targetModel = 
@@ -705,7 +756,6 @@ Paxtools also provides several converters to other standards and common formats.
 
 \section{Exporting to Simple Interaction Format (SIF)}
 Simple Interaction Format (SIF) was originally created for use with Cytoscape, the open source bioinformatics software platform for visualizing molecular interaction networks. SIF is simple to parse, and easy to load into Cytoscape and other third-party applications. 
-\subsection{SIF Format}
 
 Relations in a SIF file are formatted as: 
 
@@ -718,7 +768,7 @@ where source and target are a valid primary id and relationship type is one of t
 As its name suggests SIF, is a substantially simpler format compared to BioPAX. A BioPAX formatted network is capable of storing rich biological semantics, including multi-participant relationships, states and locations of entities, complexes and complex control relationships. A SIF network, on the other hand, is only capable of storing pairwise interactions between entity references. 
 
 \begin{figure*}[h]
-\includegraphics[width=\linewidth]{sifplain3.eps}%
+\includegraphics[width=\linewidth]{sifplain3.pdf}%
 \caption{SIF rules: The left column is the recognized BioPAX pattern drawn in SBGN-PD, the right column is the resulting inferred SIF relationship(s).}
 \label{fig:SIF}%
 \end{figure*}
@@ -748,7 +798,7 @@ converter.writeInteractionsInSIFNX(model,
 Parameters in this method represents the flexibility of SIFNX exporter. Model is the source model, and the two output streams are for writing out nodes and edges respectively. In this case, we opted to write both of them to the same stream. Next, two lists of strings define the path accessors to extract information for nodes and edges of the SIF. Finally, the last boolean parameter instructs converter to write the class of entity nodes to the export.
 
 \subsection{PSI-MI (Proteomics Standards Initiative - Molecular Interaction)}
-The PSI-MI format is a data exchange format for molecular interactions.  With help from the PSI-MI Developer Tools Library, the PSI-MI converter has the ability to create a BioPAX-L2 or BioPAX-L3 model from a PSI-MI Level 2.5 file.  For each EntrySet in the PSI-MI file, a BioPAX model is created.  For each Entry in the EntrySet, the converter creates a physicalInteraction (BioPAX-L2) or a MolecularInteraction (BioPAX-L3) for each interaction in the Entry.  Currently, genetic interactions are ignored.  For each Participant in the Interaction, the converter will create a sequenceParticipant (BioPAX-L2) or a SimplePhysicalEntity (BioPAX-L3).  The Participant’ Interactor determines the physical entity underlying the sequenceParticipant or SimplePhysicalEntity.  The converter will create a smallMolecule, dna, rna or protein class (BioPAX-L2) or SmallMolecule, Dna, Rna, or Protein class (BioPAX-L3) based on the type of Interactor.  This converter is also available using Paxtools from the command line.
+The PSI-MI format is a data exchange format for molecular interactions.  With help from the PSI-MI Developer Tools Library, the PSI-MI converter has the ability to create a BioPAX-L2 or BioPAX-L3 model from a PSI-MI Level 2.5 file.  For each EntrySet in the PSI-MI file, a BioPAX model is created.  For each Entry in the EntrySet, the converter creates a physicalInteraction (BioPAX-L2) or a MolecularInteraction (BioPAX-L3) for each interaction in the Entry.  Currently, genetic interactions are ignored.  For each Participant in the Interaction, the converter will create a sequenceParticipant (BioPAX-L2) or a SimplePhysicalEntity (BioPAX-L3).  The Participant's Interactor property determines the subclass of physical entity underlying the sequenceParticipant or SimplePhysicalEntity.  The converter will create a smallMolecule, dna, rna or protein class (BioPAX-L2) or SmallMolecule, Dna, Rna, or Protein class (BioPAX-L3) based on the type of Interactor.  This converter is also available using Paxtools from the command line.
 
 \subsection{Gene Set Enrichment Analysis(GSEA)}
 Paxtools  can create a Gene Matrix Transposed (*.gmt) file from a BioPAX-L3 model.  For each Pathway object in the model, the GSEA converter traverses all Protein objects in the Pathway and adds the RDF ID belonging to the first Xref returned by a call to Protein.getXref() to the gene set.  An optional external database name can be supplied to the converter, which would limit gene set membership to only those Protein objects that have an Xref to the external database.  The GSEA converter also has the ability to limit gene set membership to only those Protein objects that belong to the same species as the Pathway.  This converter is also available using Paxtools from the command line.
@@ -852,7 +902,7 @@ Parameters
 
 \item PathsBetween 
 
-This query is similar to GOI – it finds paths between a given source set of objects. The source set may contain Xref, EntityReference, and/or PhysicalEntity objects. They are automatically converted to sets of related PhysicalEntitiy objects to use as source in the query. The major difference here is that it avoids finding paths between PhysicalEntity objects that are associated with the same EntityReference, unless the user provides them explicitly in the source set. For instance, when the source set contains EntityReference of P53 protein, the query automatically finds all different modified versions of P53 in the model to use as seed in the query, but does not return paths between them. However, if a user provides different modification states of P53 in the source set, the query finds paths between them. The major use case of this query is the user has a set of entity references and wants to find paths connecting them.
+This query is similar to GOI as it finds paths between a given source set of objects. The source set may contain Xref, EntityReference, and/or PhysicalEntity objects. They are automatically converted to sets of related PhysicalEntitiy objects to use as source in the query. The major difference here is that it avoids finding paths between PhysicalEntity objects that are associated with the same EntityReference, unless the user provides them explicitly in the source set. For instance, when the source set contains EntityReference of P53 protein, the query automatically finds all different modified versions of P53 in the model to use as seed in the query, but does not return paths between them. However, if a user provides different modification states of P53 in the source set, the query finds paths between them. The major use case of this query is the user has a set of entity references and wants to find paths connecting them.
 
 Parameters
 
@@ -1042,7 +1092,7 @@ shutdownJVM()
 
 \chapter{Putting it all together}
 
-Here is an example application that takes two or more protein names and queries/saves the neighborhood of each protein from Pathway Commons. It also queries the paths between these proteins, converts the resulting model to SIF and lists the publications that support the each interaction in the final model. 
+Here is an example application that takes two or more protein names and queries/saves the neighborhood of each protein from Pathway Commons. It also queries the paths between these proteins, converts the resulting model to SIF and lists the publications that support each interaction in the final model. 
 
 \begin{fullwidth}
 \begin{javacode}
@@ -1150,24 +1200,112 @@ public class ProteinAnalyzer
 \end{javacode}
 \end{fullwidth}
 
+\chapter{Frequently Asked Questions}
+
+\textit{Q. When I convert BioPAX to simple interaction format file many relations contains unresolvable ids starting with  http://biopax.org/generated/group/.... How do I map this generated link to a known ID such as protein name or entrezID?}
+
+A. Unresolvable URIs like this are used to represent groups that are either complexes, generics or generic complexes. Generics are typically families of proteins ( think WNT) that pathway databases captured as a group. A generic complex would be WNT-FRZ complex that maps to combinatorially many instances. Since in a SIF conversion nodes are entityReferences and complexes and some generics in BioPAX do not have entity references, without groups SIF conversion would be lossy or inaccurate. 
+
+You can try toSifnx command to get external references as:
+
+\begin{xmlcode}
+java -Xmx1g -jar paxtools.jar toSifnx your_biopax_level3.owl 
+ edges.txt nodes.txt  "EntityReference/xref:UnificationXref,
+EntityReference/xref:RelationshipXref,Entity/xref:UnificationXref,
+Entity/xref:RelationshipXref"  
+"Interaction/dataSource/name,Interaction/xref:PublicationXref"
+\end{xmlcode}
+
+\textit{Q. I have encountered a conflict between jars and I get the following exception when I am reading BioPAX}
+
+\begin{fullwidth}
+\begin{xmlcode}
+Exception in thread "main" org.biopax.paxtools.util.BioPaxIOException:
+Unexpected element at start: 6
+    at org.biopax.paxtools.io.SimpleIOHandler.readNameSpaces
+\end{xmlcode}
+\end{fullwidth}
+
+A. This is a known problem caused by the StaX factory auto-discovery in JDK. You probably have two different stax implementations in your classpath. This problem also might happen under certain resource frameworks such as OSGi. For some discussion on this issue please see: http://code.cytoscape.org/redmine/issues/829.  Paxtools, in the future might allow different discovery solutions for different needs. As a temporary solution you can use the Jena based IO-handler.
+
+\textit{Q. While reading a new BioPAX Level 3 model I am getting an error}
+
+\begin{fullwidth}
+\begin{xmlcode}
+INFO Detected biopax namespace for level 2
+INFO Using level: 2
+ERROR org.biopax.paxtools.util.IllegalBioPAXArgumentException
+	: No creation methods for name: SmallMolecule 
+\end{xmlcode}
+\end{fullwidth}
+A. This sometimes happens with BioPAX files that contains both L2 and L3 namespaces confusing the auto level detection of the reader. Initialize your reader with the level explicitly:
+
+\begin{javacode}
+ JenaIOHandler jenaIOHandler = 
+  new JenaIOHandler(
+   new Level3FactoryImpl(), BioPAXLevel.L3);
+\end{javacode}
+
+
+\textit{Q. I am getting a lot of errors from the reader while reading BioPAX in the form of: ERROR org.biopax.paxtools.controller.PropertyEditor  - Failed to set value:.} 
+
+A. This can happen either  due to non-standard usage or extensions of the BioPAX that is not in the specification. We constantly work with data providers to reduce such cases but you might still encounter them with an unvalidated BioPAX file. Examine the properties reported in the error log to determine what kind of information is being lost. In some cases these are not important for your usecase and you can ignore them. Otherwise try contacting the data provider to fix them.  Paxtools will provide support for extensions in the future releases.
+
+\textit{Q. Is it possible --probably with loss of information-- to convert Level 3 files into Level 2?}
+ 
+A. L3 contains significant changes compared to L2 and such a conversion would be quite lossy and problematic. Unfortunately, Paxtools can only convert L2 to L3.
+
+\textit{Q. I am executing a paths-between query but the result is a BioPAX graph. I want to access the result paths separately. Where are the paths?}
+
+A. All graph queries  return a graph which is the union of the queried paths, but they do not create the resultgraph by iterating over each result path. In most cases, there would be combinatorially many paths that are infeasible to enumerate.
+
+\textit{Q. Why does Paxtools SBGN converter generates two process nodes for a reversible Conversion in the model when SBGN-PD can represent a reversible reaction with a single process node.}
+
+A. This is due to a subtle semantic mismatch between SBGN-PD and BioPAX. In BioPAX a reversible BiochemicalReaction (subclass of Conversion) can have a directed Catalysis (left-to-right or right-to-left) based on the physiological context. If we use a single process node for the reversible reaction, we cannot show the direction of the Catalysis. If we use two process nodes, one for each direction, then we can associate the Catalysis only with the related process node. However, creation of two process nodes is only the default behavior and can be changed to single node using the "setUseTwoGlyphsForReversibleConversion" method if this is the user preference.
+
+\textit{Q. I want to write an application that can handle both Level 2 and Level 3. Do I need to handle them separately?} 
+
+A. This is a side effect of lack of backward compatibility between BioPAX Level 2 and 3 specification and it is not something we could directly address at the Paxtools level. BioPAX Level 3 was a major refactoring of the specification and it was impossible to maintain a common class hierarchy between 2 and 3. We have indeed a single class-base for Level 1 and Level 2 which are mostly backward compatible.,
+
+To partially amend that situation we suggest all tool developers to upgrade the Level 2 models to Level 3 using the LevelUpgrader class and program to the Level 3 interfaces.  
+
+The other option is to use the PropertyEditors and EditorMaps extensively. For example both BioPAX readers can read both level 2 and level 3. This requires a little bit more programming than the previous option but arguably offers a more robust solution. 
+
+\textit{Q. I am confused by the statement "This syntactic validation does not include more detailed checking of semantics that is performed by the BioPAX validator." Which validation does what? Why is there a difference? Is the BioPAX validator not using Paxtools?}
+
+A. The validator is built on Paxtools but is a separate project that includes a sophisticated rule defining and reporting system. Paxtools limits itself to so-called \textit{invariants} of the BioPAX specification, namely, RDF well-formedness, domain and range restrictions, bidirectional links, and redundancies. When these constraints are violated Paxtools fails-fast  by throwing an exception. Checking additional semantics and best practices such as using proper controlled vocabularies or ensuring that a transport reaction has at least one substrate that changes its subcellular location as result of the reaction is left to the validator. There are no technical reasons for not including validation rules within Paxtools - in fact historically some of the current validator rules were a part of Paxtools. We quickly found out, however, that this was severely restricting our user base as they were using Paxtools and BioPAX in ways that we have not imagined. As a result we moved all of these optional constraints to the validator and built a system where users can activate and deactivate which rules are to be checked and how they are going to be reported( e.g. warnings vs. errors). 
+
+\textit{Q. Why are level2 model interfaces are not in CamelCase?}
+
+A.Class names of model interfaces strictly mirrors BioPAX specification and level 2 was specified using the LISP syntax.  We decided to copy the case directly from the specification to avoid any confusion.  In Level 3, BioPAX specification was migrated to CamelCase to amend that based on our input. All other classes in Paxtools strictly follow CamelCase and Java naming conventions. 
+
+\textit{Q. What happens to the additional properties that are not a part of BioPAX specification? If I define new properties or classes, can Paxtools read and write them?}
+
+A. The short answer is no - they are lost when you read them with Paxtools. The long answer is this is an important feature that we wanted to add but it turns out to be surprisingly difficult. Adding a simple custom property can be done relatively easily by adding a HashMap<key,Set> to every object but things get complicated when trying to implement more advanced OWL properties such as subproperties, symmetric and transitive properties. We felt that it would be inconsistent to offer a facility to read arbitrary extensions of the BioPAX specification in the OWL file but limit ourselves to only simple properties. We have an early alpha implementation that did not make the cut for the latest release. We will include this facility in the future releases.
+
+On the other hand, we believe that extending the library in the traditional sense by extending the classes is in fact very easy. In fact Paxtools were designed right from the start to enable such an extension by implementing a factory pattern for object creation and PropertyEditors for reading/writing properties.
+
+\textit{Q.  While exporting to SBGN-ML, I wonder why two process glyphs are created when a Conversion is reversible as it can be presented with one process glyph only as illustrated in \url{http://www.sbgn.org/Symbols/consumption_production_reversible}?}
+
+A. This choice is made because of the BioPAX structure. In BioPAX, a reversible BiochemicalReaction can have a Catalysis with a specific direction. If we draw one process glyph for the reversible BiochemicalReaction, then we cannot show the direction of the Catalysis. In the two process glyphs case, the Catalysis will point to the related process glyph only. However, we realize that some users may opt for a reversible process glyph even though they can not visualize the Catalysis direction, and we now provide this as an option in the exporter. 
+
+
+\chapter{A few last words...}
+\section{Acknowledgements}
+We would like to thank Ethan Cerami, Istemi Bahceci, Nadia Anwar, Ugur Dogrusoz, Ruth Isserlin, Guanming Wu, Suzanne Mercer Paley, Sasha Tkachev, Carl Schaefer, Takeshi Yoneki, Anushya Muruganujan, Sarala Wimalaratne, Nick Juty, Oliver Ruebenacker, Andrea Splendiani, Allan Ruttenberg, Martijn Van Iersel, Akira Funahashi, Logan Webb, Ranjani Ramakrishnan, Rebecca Tang, Rex Dwyer, Adem Bilican, Afshin Sadeghi, Alejandra Lopez Fuentes, Allyson Lister, Anatoly Sorokin, Anatoly Ulyanov, Anna Bauer-Mehren, Ashok Reddy Dinasarapu, Augustin Luna, Micheal Blinov, Brian Saunders, Brian Turner, Bruno Aranda, Jeff Buchoff, David Dunkley, Peter D'Eustachio, Esat Belviranli, Farzana Kazi, Francois Le Fevre, Fong Chun Chan, Hester Stekelenburg, Irma Martinez-Flores, Jean-Baptiste Pettit, Jing Wang, Julie Sullivan, Karin Brauer, Josh Stuart, Julio Saez-Rodriguez, Olivier Gevaert, Paul Shannon, Peter Karp, Pradeep Kumar Sreenivasaiah, Ricardo Usbeck, Sai Lakshmi Subramanian, Stan Dong, Samer Hanoudi, Sarah Boyd, Ufuk Kirik, Zhihua Li, Zhenjun Hu and other members of the  BioPAX community for their contributions and feedback.  
 \section{Get Involved}
 \begin{fullwidth}
-Paxtools is open source software and we welcome all contributions. Get involved! 
+Paxtools is open source software and we welcome all contributions.  Get involved! 
 \begin{itemize}
-\item Use Paxtools and report issues and feature requests. See:
-
- \url{http://biopax.sourceforge.net/paxtools/issue-tracking.html}
-\item Respond to questions by other users at biopax-paxtools
-\item Try your hand at fixing bugs and implementing requests 
-\item Improve this documentation.
-\item Spread the word. Let other people know about BioPAX and Paxtools. 
+\item Use Paxtools and report issues and feature requests.  : \url{http://biopax.sourceforge.net/paxtools/issue-tracking.html}
+\item Try your hand at fixing bugs and implementing requests .
+\item Respond to questions by other users at biopax-paxtools :  \url{http://lists.sourceforge.net/lists/listinfo/biopax-paxtools}
+\item Improve this documentation:  \url{http://sourceforge.net/p/biopax/paxtools/ci/default/tree/src/main/etc/}
+\item Spread the word. Let other people know about BioPAX and Paxtools. : \url{http://biopax.org} 
 \end{itemize}
 \end{fullwidth}
 
 \bibliographystyle{emek}
 \nobibliography{paxtools}
 
-\printindex
 \end{document}
-
-Show details
