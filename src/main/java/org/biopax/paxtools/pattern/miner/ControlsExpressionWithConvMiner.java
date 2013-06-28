@@ -1,28 +1,20 @@
 package org.biopax.paxtools.pattern.miner;
 
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.ProteinReference;
-import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
 import org.biopax.paxtools.pattern.constraint.Type;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Miner for the transcriptional regulation pattern, modeled using Conversion.
  * @author Ozgun Babur
  */
-public class ControlsExpressionChangeWithConvMiner extends ControlsExpressionChangeMiner
+public class ControlsExpressionWithConvMiner extends ControlsExpressionMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsExpressionChangeWithConvMiner()
+	public ControlsExpressionWithConvMiner()
 	{
 		super("controls-expression-with-conversion", "This pattern finds relations where " +
 			"first protein is controlling expressional activity of the second protein. " +
@@ -40,7 +32,7 @@ public class ControlsExpressionChangeWithConvMiner extends ControlsExpressionCha
 	public Pattern constructPattern()
 	{
 		Pattern p = PatternBox.expressionWithConversion();
-		p.addConstraint(new Type(ProteinReference.class), "product ER");
+		p.add(new Type(ProteinReference.class), "product ER");
 		return p;
 	}
 

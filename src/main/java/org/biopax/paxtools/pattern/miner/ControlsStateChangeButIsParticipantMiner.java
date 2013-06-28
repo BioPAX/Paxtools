@@ -1,16 +1,9 @@
 package org.biopax.paxtools.pattern.miner;
 
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ProteinReference;
-import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
 import org.biopax.paxtools.pattern.constraint.Type;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Miner for the controls-state-change pattern.
@@ -38,8 +31,8 @@ public class ControlsStateChangeButIsParticipantMiner extends ControlsStateChang
 	public Pattern constructPattern()
 	{
 		Pattern p = PatternBox.controlsStateChangeButIsParticipant(true);
-		p.addConstraint(new Type(ProteinReference.class), "controller ER");
-		p.addConstraint(new Type(ProteinReference.class), "changed ER");
+		p.add(new Type(ProteinReference.class), "controller ER");
+		p.add(new Type(ProteinReference.class), "changed ER");
 		return p;
 	}
 

@@ -418,6 +418,8 @@ public abstract class MinerAdapter implements Miner
 	public void writeResultAsSIF(Map<BioPAXElement, List<Match>> matches, OutputStream out,
 		boolean directed, String label1, String label2) throws IOException
 	{
+		if (matches.isEmpty()) return;
+
 		// Memory for already written pairs.
 		Set<String> mem = new HashSet<String>();
 

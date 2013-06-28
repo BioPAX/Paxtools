@@ -38,7 +38,7 @@ public class UbiquitousIDMiner extends MinerAdapter
 	public Pattern constructPattern()
 	{
 		Pattern p = new Pattern(SmallMoleculeReference.class, "SMR");
-		p.addConstraint(new Size(
+		p.add(new Size(
 			new PathConstraint("SmallMoleculeReference/entityReferenceOf/participantOf:Conversion"),
 			50, Size.Type.GREATER_OR_EQUAL), "SMR");
 		return p;

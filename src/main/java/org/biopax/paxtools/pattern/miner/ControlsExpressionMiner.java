@@ -1,13 +1,10 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
-import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.constraint.ConBox;
 import org.biopax.paxtools.pattern.constraint.Type;
 
 import java.io.IOException;
@@ -15,16 +12,18 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+import static org.biopax.paxtools.pattern.constraint.ConBox.*;
+
 /**
  * Miner for the transcriptional regulation pattern.
  * @author Ozgun Babur
  */
-public class ControlsExpressionChangeMiner extends MinerAdapter implements SIFMiner
+public class ControlsExpressionMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsExpressionChangeMiner()
+	public ControlsExpressionMiner()
 	{
 		super(SIFType.CONTROLS_EXPRESSION.getTag(), "This pattern finds relations where first " +
 			"protein is controlling expression of the second protein. The output is like " +
@@ -37,7 +36,7 @@ public class ControlsExpressionChangeMiner extends MinerAdapter implements SIFMi
 	 * @param name name
 	 * @param description description
 	 */
-	public ControlsExpressionChangeMiner(String name, String description)
+	public ControlsExpressionMiner(String name, String description)
 	{
 		super(name, description);
 	}
@@ -50,19 +49,19 @@ public class ControlsExpressionChangeMiner extends MinerAdapter implements SIFMi
 	public Pattern constructPattern()
 	{
 //		Pattern p = PatternBox.transcriptionWithTemplateReac();
-//		p.addConstraint(new Type(ProteinReference.class), "product ER");
+//		p.add(new Type(ProteinReference.class), "product ER");
 
 		Pattern p = new Pattern(ProteinReference.class, "TF PR");
-		p.addConstraint(ConBox.isHuman(), "TF PR");
-		p.addConstraint(ConBox.erToPE(), "TF PR", "TF simple PE");
-		p.addConstraint(ConBox.linkToComplex(), "TF simple PE", "TF PE");
-		p.addConstraint(ConBox.peToControl(), "TF PE", "Control");
-		p.addConstraint(ConBox.controlToTempReac(), "Control", "TempReac");
-		p.addConstraint(ConBox.product(), "TempReac", "product PE");
-		p.addConstraint(ConBox.linkToSimple(), "product PE", "product simple PE");
-		p.addConstraint(new Type(Protein.class), "product simple PE");
-		p.addConstraint(ConBox.peToER(), "product simple PE", "product PR");
-		p.addConstraint(ConBox.equal(false), "TF PR", "product PR");
+		p.add(isHuman(), "TF PR");
+		p.add(erToPE(), "TF PR", "TF simple PE");
+		p.add(linkToComplex(), "TF simple PE", "TF PE");
+		p.add(peToControl(), "TF PE", "Control");
+		p.add(controlToTempReac(), "Control", "TempReac");
+		p.add(product(), "TempReac", "product PE");
+		p.add(linkToSimple(), "product PE", "product simple PE");
+		p.add(new Type(Protein.class), "product simple PE");
+		p.add(peToER(), "product simple PE", "product PR");
+		p.add(equal(false), "TF PR", "product PR");
 
 		return p;
 	}

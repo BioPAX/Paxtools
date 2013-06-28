@@ -35,11 +35,11 @@ public class TempTests
 	public void namesOfPathwaysThatContainReversibleReactions()
 	{
 		Pattern p = new Pattern(Pathway.class, "Pathway");
-		p.addConstraint(new PathConstraint("Pathway/pathwayComponent:Conversion"), "Pathway", "Conv");
-		p.addConstraint(new Field("Conversion/conversionDirection", ConversionDirectionType.REVERSIBLE), "Conv");
-		p.addConstraint(new PathConstraint("Conversion/controlledOf:Catalysis"), "Conv", "Cat");
-		p.addConstraint(new Empty(new PathConstraint("Catalysis/catalysisDirection")), "Cat");
-		p.addConstraint(new Empty(new PathConstraint("Pathway/pathwayComponent:Pathway")), "Pathway");
+		p.add(new PathConstraint("Pathway/pathwayComponent:Conversion"), "Pathway", "Conv");
+		p.add(new Field("Conversion/conversionDirection", ConversionDirectionType.REVERSIBLE), "Conv");
+		p.add(new PathConstraint("Conversion/controlledOf:Catalysis"), "Conv", "Cat");
+		p.add(new Empty(new PathConstraint("Catalysis/catalysisDirection")), "Cat");
+		p.add(new Empty(new PathConstraint("Pathway/pathwayComponent:Pathway")), "Pathway");
 
 		List<Pathway> pats = new ArrayList<Pathway>(
 			Searcher.searchAndCollect(model, p, 0, Pathway.class));

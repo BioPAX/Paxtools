@@ -60,8 +60,8 @@ public class SIFSearcher
 					miners.add(new ControlsStateChangeButIsParticipantMiner());
 					break;
 				case CONTROLS_EXPRESSION:
-					miners.add(new ControlsExpressionChangeMiner());
-					miners.add(new ControlsExpressionChangeWithConvMiner());
+					miners.add(new ControlsExpressionMiner());
+					miners.add(new ControlsExpressionWithConvMiner());
 					break;
 				case CONTROLS_DEGRADATION:
 					miners.add(new DegradesMiner());

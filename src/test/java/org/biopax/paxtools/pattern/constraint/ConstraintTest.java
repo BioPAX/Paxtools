@@ -22,9 +22,9 @@ public class ConstraintTest extends TestParent
 	public void testAND() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
-		p.addConstraint(new AND(
-				new MappedConst(ConBox.withComplexMembers(), 0, 1),
-				new MappedConst(new PathConstraint("PhysicalEntity/participantOf/right/entityReference/entityReferenceOf"), 0, 1)),
+		p.add(new AND(
+			new MappedConst(ConBox.withComplexMembers(), 0, 1),
+			new MappedConst(new PathConstraint("PhysicalEntity/participantOf/right/entityReference/entityReferenceOf"), 0, 1)),
 			"PE", "second");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), p); // Gi family/GNB1/GNG2/GDP
@@ -37,8 +37,8 @@ public class ConstraintTest extends TestParent
 	public void testType() throws Exception
 	{
 		Pattern p = new Pattern(Complex.class, "Complex");
-		p.addConstraint(ConBox.complexMembers(), "Complex", "member");
-		p.addConstraint(new Type(SmallMolecule.class), "member");
+		p.add(ConBox.complexMembers(), "Complex", "member");
+		p.add(new Type(SmallMolecule.class), "member");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), p); // Gi family/GNB1/GNG2/GDP
 
@@ -46,8 +46,8 @@ public class ConstraintTest extends TestParent
 		Assert.assertTrue(list.get(0).get(1) == model.getByID("http://pid.nci.nih.gov/biopaxpid_678"));
 
 		p = new Pattern(Complex.class, "Complex");
-		p.addConstraint(ConBox.complexMembers(), "Complex", "member");
-		p.addConstraint(new Type(SimplePhysicalEntity.class), "member");
+		p.add(ConBox.complexMembers(), "Complex", "member");
+		p.add(new Type(SimplePhysicalEntity.class), "member");
 
 		list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), p); // Gi family/GNB1/GNG2/GDP
 
@@ -59,12 +59,12 @@ public class ConstraintTest extends TestParent
 	public void testEquality() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
-		p.addConstraint(ConBox.genericEquiv(), "PE", "eq1");
-		p.addConstraint(ConBox.genericEquiv(), "PE", "eq2");
-		p.addConstraint(new Equality(false), "eq1", "eq2");
-		p.addConstraint(ConBox.peToER(), "eq1", "ER1");
-		p.addConstraint(ConBox.peToER(), "eq2", "ER2");
-		p.addConstraint(new Equality(true), "ER1", "ER2");
+		p.add(ConBox.genericEquiv(), "PE", "eq1");
+		p.add(ConBox.genericEquiv(), "PE", "eq2");
+		p.add(new Equality(false), "eq1", "eq2");
+		p.add(ConBox.peToER(), "eq1", "ER1");
+		p.add(ConBox.peToER(), "eq2", "ER2");
+		p.add(new Equality(true), "ER1", "ER2");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_623"), p); // Gi family
 
@@ -77,8 +77,8 @@ public class ConstraintTest extends TestParent
 	public void testNOT() throws Exception
 	{
 		Pattern p = new Pattern(Complex.class, "Comp");
-		p.addConstraint(ConBox.complexMembers(), "Comp", "member");
-		p.addConstraint(new NOT(new Type(SmallMolecule.class)), "member");
+		p.add(ConBox.complexMembers(), "Comp", "member");
+		p.add(new NOT(new Type(SmallMolecule.class)), "member");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), p); // Gi family/GNB1/GNG2/GDP
 
@@ -90,7 +90,7 @@ public class ConstraintTest extends TestParent
 	public void testMultiPath() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
-		p.addConstraint(new MultiPathConstraint("PhysicalEntity/controllerOf/controlled",
+		p.add(new MultiPathConstraint("PhysicalEntity/controllerOf/controlled",
 			"PhysicalEntity/participantOf:Conversion"), "PE", "process");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21741"), p); // GNB1/GNG2
@@ -104,8 +104,8 @@ public class ConstraintTest extends TestParent
 	public void testOtherSide() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
-		p.addConstraint(ConBox.participatesInConv(), "PE", "Conv");
-		p.addConstraint(new OtherSide(), "PE", "Conv", "PE2");
+		p.add(ConBox.participatesInConv(), "PE", "Conv");
+		p.add(new OtherSide(), "PE", "Conv", "PE2");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -118,7 +118,7 @@ public class ConstraintTest extends TestParent
 	public void testParticipatesInConv() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
-		p.addConstraint(new ParticipatesInConv(RelType.INPUT, false), "PE", "Conv");
+		p.add(new ParticipatesInConv(RelType.INPUT, false), "PE", "Conv");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -126,7 +126,7 @@ public class ConstraintTest extends TestParent
 		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_50156")));
 
 		p = new Pattern(PhysicalEntity.class, "PE");
-		p.addConstraint(new ParticipatesInConv(RelType.OUTPUT, false), "PE", "Conv");
+		p.add(new ParticipatesInConv(RelType.OUTPUT, false), "PE", "Conv");
 
 		list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -137,7 +137,7 @@ public class ConstraintTest extends TestParent
 	public void testSelfOrThis() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
-		p.addConstraint(new SelfOrThis(new ParticipatesInConv(RelType.INPUT, false)), "PE", "Conv");
+		p.add(new SelfOrThis(new ParticipatesInConv(RelType.INPUT, false)), "PE", "Conv");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -152,7 +152,7 @@ public class ConstraintTest extends TestParent
 		try
 		{
 			Pattern p = new Pattern(PhysicalEntity.class, "PE");
-			p.addConstraint(new OtherSide(), "PE", "Conv", "PE2");
+			p.add(new OtherSide(), "PE", "Conv", "PE2");
 
 			Assert.assertFalse("Should have reached here", false);
 		}

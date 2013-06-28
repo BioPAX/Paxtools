@@ -184,8 +184,8 @@ public class ConBoxTest extends TestParent
 	public void testNameEquals() throws Exception
 	{
 		Pattern p = new Pattern(Complex.class, "Complex");
-		p.addConstraint(ConBox.complexMembers(),"Complex", "member");
-		p.addConstraint(ConBox.nameEquals("GDP"), "member");
+		p.add(ConBox.complexMembers(), "Complex", "member");
+		p.add(ConBox.nameEquals("GDP"), "member");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			p);
@@ -198,8 +198,8 @@ public class ConBoxTest extends TestParent
 	public void testNotUbique() throws Exception
 	{
 		Pattern p = new Pattern(Complex.class, "Complex");
-		p.addConstraint(ConBox.complexMembers(),"Complex", "member");
-		p.addConstraint(ConBox.notUbique(Collections.singleton("http://pid.nci.nih.gov/biopaxpid_678")), "member"); // not GDP
+		p.add(ConBox.complexMembers(), "Complex", "member");
+		p.add(ConBox.notUbique(Collections.singleton("http://pid.nci.nih.gov/biopaxpid_678")), "member"); // not GDP
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			p);

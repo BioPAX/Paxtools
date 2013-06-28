@@ -6,6 +6,8 @@ import org.biopax.paxtools.pattern.constraint.*;
 import java.util.Map;
 import java.util.Set;
 
+import static org.biopax.paxtools.pattern.constraint.ConBox.*;
+
 /**
  * This class contains several pattern samples.
  *
@@ -21,13 +23,13 @@ public class PatternBox
 	public static Pattern inSameComplex()
 	{
 		Pattern p = new Pattern(EntityReference.class, "first ER");
-		p.addConstraint(ConBox.erToPE(), "first ER", "first simple PE");
-		p.addConstraint(ConBox.linkToComplex(), "first simple PE", "Complex");
-		p.addConstraint(new Type(Complex.class), "Complex");
-		p.addConstraint(ConBox.linkToSimple(), "Complex", "second simple PE");
-		p.addConstraint(new PEChainsIntersect(false, true), "first simple PE", "Complex", "second simple PE", "Complex");
-		p.addConstraint(ConBox.peToER(), "second simple PE", "second ER");
-		p.addConstraint(ConBox.equal(false), "first ER", "second ER");
+		p.add(erToPE(), "first ER", "first simple PE");
+		p.add(linkToComplex(), "first simple PE", "Complex");
+		p.add(new Type(Complex.class), "Complex");
+		p.add(linkToSimple(), "Complex", "second simple PE");
+		p.add(new PEChainsIntersect(false, true), "first simple PE", "Complex", "second simple PE", "Complex");
+		p.add(peToER(), "second simple PE", "second ER");
+		p.add(equal(false), "first ER", "second ER");
 		return p;
 	}
 
@@ -40,7 +42,7 @@ public class PatternBox
 	public static Pattern inSameActiveComplex()
 	{
 		Pattern p = inSameComplex();
-		p.addConstraint(new ActivityConstraint(true), "Complex");
+		p.add(new ActivityConstraint(true), "Complex");
 		return p;
 	}
 
@@ -54,10 +56,10 @@ public class PatternBox
 	{
 		Pattern p = inSameComplex();
 
-		p.addConstraint(ConBox.peToControl(), "Complex", "Control");
-		p.addConstraint(ConBox.controlToTempReac(), "Control", "TR");
-		p.addConstraint(new NOT(ConBox.participantER()), "TR", "first ER");
-		p.addConstraint(new NOT(ConBox.participantER()), "TR", "second ER");
+		p.add(peToControl(), "Complex", "Control");
+		p.add(controlToTempReac(), "Control", "TR");
+		p.add(new NOT(participantER()), "TR", "first ER");
+		p.add(new NOT(participantER()), "TR", "second ER");
 		return p;
 	}
 
@@ -71,10 +73,10 @@ public class PatternBox
 	{
 		Pattern p = inSameComplex();
 
-		p.addConstraint(ConBox.peToControl(), "Complex", "Control");
-		p.addConstraint(ConBox.controlToConv(), "Control", "Conversion");
-		p.addConstraint(new NOT(ConBox.participantER()), "Control", "first ER");
-		p.addConstraint(new NOT(ConBox.participantER()), "Control", "second ER");
+		p.add(peToControl(), "Complex", "Control");
+		p.add(controlToConv(), "Control", "Conversion");
+		p.add(new NOT(participantER()), "Control", "first ER");
+		p.add(new NOT(participantER()), "Control", "second ER");
 		return p;
 	}
 
@@ -87,16 +89,16 @@ public class PatternBox
 	public static Pattern controlsStateChange(boolean considerGenerics)
 	{
 		Pattern p = new Pattern(EntityReference.class, "controller ER");
-		p.addConstraint(ConBox.erToPE(), "controller ER", "controller simple PE");
-		Constraint c = considerGenerics ? ConBox.linkToComplex() : ConBox.withComplexes();
-		p.addConstraint(c,"controller simple PE", "controller PE");
-		p.addConstraint(ConBox.peToControl(), "controller PE", "Control");
-		p.addConstraint(ConBox.controlToConv(), "Control", "Conversion");
+		p.add(erToPE(), "controller ER", "controller simple PE");
+		Constraint c = considerGenerics ? linkToComplex() : withComplexes();
+		p.add(c, "controller simple PE", "controller PE");
+		p.add(peToControl(), "controller PE", "Control");
+		p.add(controlToConv(), "Control", "Conversion");
 
 		Pattern p2 = stateChange(considerGenerics);
-		p.addPattern(p2);
+		p.add(p2);
 
-		p.addConstraint(ConBox.equal(false), "controller ER", "changed ER");
+		p.add(equal(false), "controller ER", "changed ER");
 
 		return p;
 	}
@@ -112,19 +114,19 @@ public class PatternBox
 	public static Pattern controlsStateChangeButIsParticipant(boolean considerGenerics)
 	{
 		Pattern p = new Pattern(EntityReference.class, "controller ER");
-		p.addConstraint(ConBox.erToPE(), "controller ER", "controller simple PE");
-		Constraint c = considerGenerics ? ConBox.linkToComplex() : ConBox.withComplexes();
-		p.addConstraint(c,"controller simple PE", "controller PE");
-		p.addConstraint(ConBox.participatesInConv(), "controller PE", "Conversion");
-		p.addConstraint(ConBox.left(), "Conversion", "controller PE");
-		p.addConstraint(ConBox.right(), "Conversion", "controller PE");
+		p.add(erToPE(), "controller ER", "controller simple PE");
+		Constraint c = considerGenerics ? linkToComplex() : withComplexes();
+		p.add(c, "controller simple PE", "controller PE");
+		p.add(participatesInConv(), "controller PE", "Conversion");
+		p.add(left(), "Conversion", "controller PE");
+		p.add(right(), "Conversion", "controller PE");
 
 		Pattern p2 = stateChange(considerGenerics);
-		p.addPattern(p2);
+		p.add(p2);
 
-		p.addConstraint(ConBox.equal(false), "controller ER", "changed ER");
-		p.addConstraint(ConBox.equal(false), "controller PE", "input PE");
-		p.addConstraint(ConBox.equal(false), "controller PE", "output PE");
+		p.add(equal(false), "controller ER", "changed ER");
+		p.add(equal(false), "controller PE", "input PE");
+		p.add(equal(false), "controller PE", "output PE");
 
 		return p;
 	}
@@ -138,15 +140,15 @@ public class PatternBox
 	public static Pattern stateChange(boolean considerGenerics)
 	{
 		Pattern p = new Pattern(Conversion.class, "Conversion");
-		p.addConstraint(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
-		Constraint c = considerGenerics ? ConBox.linkToSimple() : ConBox.withSimpleMembers();
-		p.addConstraint(c, "input PE", "input simple PE");
-		p.addConstraint(ConBox.peToER(), "input simple PE", "changed ER");
-		p.addConstraint(new OtherSide(), "input PE", "Conversion", "output PE");
-		p.addConstraint(ConBox.equal(false), "input PE", "output PE");
-		c = considerGenerics ? ConBox.linkToComplex() : ConBox.withComplexes();
-		p.addConstraint(c, "output PE", "output simple PE");
-		p.addConstraint(ConBox.peToER(), "output simple PE", "changed ER");
+		p.add(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
+		Constraint c = considerGenerics ? linkToSimple() : withSimpleMembers();
+		p.add(c, "input PE", "input simple PE");
+		p.add(peToER(), "input simple PE", "changed ER");
+		p.add(new OtherSide(), "input PE", "Conversion", "output PE");
+		p.add(equal(false), "input PE", "output PE");
+		c = considerGenerics ? linkToComplex() : withComplexes();
+		p.add(c, "output PE", "output simple PE");
+		p.add(peToER(), "output simple PE", "changed ER");
 		return p;
 	}
 
@@ -159,32 +161,32 @@ public class PatternBox
 	public static Pattern consecutiveCatalysis(Set<String> ubiqueIDs)
 	{
 		Pattern p = new Pattern(EntityReference.class, "first ER");
-		p.addConstraint(ConBox.erToPE(), "first ER", "first simple controller PE");
-		p.addConstraint(ConBox.linkToComplex(), "first simple controller PE", "first controller PE");
-		p.addConstraint(ConBox.peToControl(), "first controller PE", "first Control");
-		p.addConstraint(ConBox.controlToConv(), "first Control", "first Conversion");
-		p.addConstraint(new ParticipatingPE(RelType.OUTPUT, false), "first Control", "first Conversion", "linker PE");
-		if (ubiqueIDs != null) p.addConstraint(ConBox.notUbique(ubiqueIDs), "linker PE");
-		p.addConstraint(new ParticipatesInConv(RelType.INPUT, false), "linker PE", "second Conversion");
-		p.addConstraint(ConBox.equal(false), "first Conversion", "second Conversion");
-		p.addConstraint(new RelatedControl(RelType.INPUT), "linker PE", "second Conversion", "second Control");
-		p.addConstraint(ConBox.controllerPE(), "second Control", "second controller PE");
-		p.addConstraint(new NOT(ConBox.compToER()), "second controller PE", "first ER");
-		p.addConstraint(ConBox.linkToSimple(), "second controller PE", "second simple controller PE");
-		p.addConstraint(ConBox.peToER(), "second simple controller PE", "second ER");
+		p.add(erToPE(), "first ER", "first simple controller PE");
+		p.add(linkToComplex(), "first simple controller PE", "first controller PE");
+		p.add(peToControl(), "first controller PE", "first Control");
+		p.add(controlToConv(), "first Control", "first Conversion");
+		p.add(new ParticipatingPE(RelType.OUTPUT, false), "first Control", "first Conversion", "linker PE");
+		if (ubiqueIDs != null) p.add(notUbique(ubiqueIDs), "linker PE");
+		p.add(new ParticipatesInConv(RelType.INPUT, false), "linker PE", "second Conversion");
+		p.add(equal(false), "first Conversion", "second Conversion");
+		p.add(new RelatedControl(RelType.INPUT), "linker PE", "second Conversion", "second Control");
+		p.add(controllerPE(), "second Control", "second controller PE");
+		p.add(new NOT(compToER()), "second controller PE", "first ER");
+		p.add(linkToSimple(), "second controller PE", "second simple controller PE");
+		p.add(peToER(), "second simple controller PE", "second ER");
 		return p;
 	}
 
 	public static Pattern peInOut()
 	{
 		Pattern p = new Pattern(EntityReference.class, "changed ER");
-		p.addConstraint(ConBox.erToPE(), "changed ER", "input simple PE");
-		p.addConstraint(ConBox.linkToComplex(), "input simple PE", "input PE");
-		p.addConstraint(new ParticipatesInConv(RelType.INPUT, true), "input PE", "Conversion");
-		p.addConstraint(new OtherSide(), "input PE", "Conversion", "output PE");
-		p.addConstraint(ConBox.equal(false), "input PE", "output PE");
-		p.addConstraint(ConBox.linkToSimple(), "output PE", "output simple PE");
-		p.addConstraint(ConBox.peToER(), "output simple PE", "changed ER");
+		p.add(erToPE(), "changed ER", "input simple PE");
+		p.add(linkToComplex(), "input simple PE", "input PE");
+		p.add(new ParticipatesInConv(RelType.INPUT, true), "input PE", "Conversion");
+		p.add(new OtherSide(), "input PE", "Conversion", "output PE");
+		p.add(equal(false), "input PE", "output PE");
+		p.add(linkToSimple(), "output PE", "output simple PE");
+		p.add(peToER(), "output simple PE", "changed ER");
 		return p;
 	}
 
@@ -196,11 +198,11 @@ public class PatternBox
 	public static Pattern modifiedPESimple()
 	{
 		Pattern p = new Pattern(EntityReference.class, "modified ER");
-		p.addConstraint(ConBox.erToPE(), "modified ER", "first PE");
-		p.addConstraint(ConBox.participatesInConv(), "first PE", "Conversion");
-		p.addConstraint(new OtherSide(), "Conversion", "second PE");
-		p.addConstraint(ConBox.equal(false), "first PE", "second PE");
-		p.addConstraint(ConBox.peToER(), "second PE", "modified ER");
+		p.add(erToPE(), "modified ER", "first PE");
+		p.add(participatesInConv(), "first PE", "Conversion");
+		p.add(new OtherSide(), "Conversion", "second PE");
+		p.add(equal(false), "first PE", "second PE");
+		p.add(peToER(), "second PE", "modified ER");
 		return p;
 	}
 
@@ -216,8 +218,8 @@ public class PatternBox
 		Map<EntityReference, Set<ModificationFeature>> inactivityFeat)
 	{
 		Pattern p = peInOut();
-		p.addConstraint(new OR(
-			new MappedConst(ConBox.differentialActivity(activating), 0, 1),
+		p.add(new OR(
+			new MappedConst(differentialActivity(activating), 0, 1),
 			new MappedConst(new ModificationChangeConstraint(activating, activityFeat, inactivityFeat), 0, 1)),
 			"input simple PE", "output simple PE");
 		return p;
@@ -230,9 +232,9 @@ public class PatternBox
 	public static Pattern modifierConv()
 	{
 		Pattern p = new Pattern(EntityReference.class, "ER");
-		p.addConstraint(ConBox.erToPE(), "ER", "SPE");
-		p.addConstraint(ConBox.linkToComplex(), "SPE", "PE");
-		p.addConstraint(ConBox.participatesInConv(), "PE", "Conversion");
+		p.add(erToPE(), "ER", "SPE");
+		p.add(linkToComplex(), "SPE", "PE");
+		p.add(participatesInConv(), "PE", "Conversion");
 		return p;
 	}
 
@@ -244,11 +246,11 @@ public class PatternBox
 	public static Pattern hasNonSelfEffect()
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "SPE");
-		p.addConstraint(ConBox.peToER(), "SPE", "ER");
-		p.addConstraint(ConBox.linkToComplex(), "SPE", "PE");
-		p.addConstraint(ConBox.peToControl(), "PE", "Control");
-		p.addConstraint(ConBox.controlToInter(), "Control", "Inter");
-		p.addConstraint(new NOT(ConBox.participantER()), "Inter", "ER");
+		p.add(peToER(), "SPE", "ER");
+		p.add(linkToComplex(), "SPE", "PE");
+		p.add(peToControl(), "PE", "Control");
+		p.add(controlToInter(), "Control", "Inter");
+		p.add(new NOT(participantER()), "Inter", "ER");
 		return p;
 	}
 
@@ -261,12 +263,12 @@ public class PatternBox
 	public static Pattern bindsTo()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "first PR");
-		p.addConstraint(ConBox.erToPE(), "first PR", "first simple PE");
-		p.addConstraint(ConBox.linkToComplex(), "first simple PE", "Complex");
-		p.addConstraint(new Type(Complex.class), "Complex");
-		p.addConstraint(ConBox.linkToSimple(), "Complex", "second simple PE");
-		p.addConstraint(ConBox.peToER(), "second simple PE", "second PR");
-		p.addConstraint(ConBox.equal(false), "first PR", "second PR");
+		p.add(erToPE(), "first PR", "first simple PE");
+		p.add(linkToComplex(), "first simple PE", "Complex");
+		p.add(new Type(Complex.class), "Complex");
+		p.add(linkToSimple(), "Complex", "second simple PE");
+		p.add(peToER(), "second simple PE", "second PR");
+		p.add(equal(false), "first PR", "second PR");
 		return p;
 	}
 
@@ -277,13 +279,13 @@ public class PatternBox
 	public static Pattern physicallyInteracts()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "first PR");
-		p.addConstraint(ConBox.erToPE(), "first PR", "first simple PE");
-		p.addConstraint(ConBox.linkToComplex(), "first simple PE", "first PE");
-		p.addConstraint(ConBox.molecularInteraction(), "first PE", "Interaction");
-		p.addConstraint(ConBox.participant(), "Interaction", "second PE");
-		p.addConstraint(ConBox.linkToSimple(), "second PE", "second simple PE");
-		p.addConstraint(ConBox.peToER(), "second simple PE", "second ER");
-		p.addConstraint(ConBox.equal(false), "first ER", "second ER");
+		p.add(erToPE(), "first PR", "first simple PE");
+		p.add(linkToComplex(), "first simple PE", "first PE");
+		p.add(molecularInteraction(), "first PE", "Interaction");
+		p.add(participant(), "Interaction", "second PE");
+		p.add(linkToSimple(), "second PE", "second simple PE");
+		p.add(peToER(), "second simple PE", "second ER");
+		p.add(equal(false), "first ER", "second ER");
 		return p;
 	}
 
@@ -294,15 +296,15 @@ public class PatternBox
 	public static Pattern expressionWithTemplateReac()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "TF PR");
-		p.addConstraint(ConBox.erToPE(), "TF PR", "TF SPE");
-		p.addConstraint(ConBox.linkToComplex(), "TF SPE", "TF PE");
-		p.addConstraint(ConBox.peToControl(), "TF PE", "Control");
-		p.addConstraint(ConBox.controlToTempReac(), "Control", "TempReac");
-		p.addConstraint(ConBox.product(), "TempReac", "product PE");
-		p.addConstraint(ConBox.linkToSimple(), "product PE", "product SPE");
-		p.addConstraint(new Type(Protein.class), "product SPE");
-		p.addConstraint(ConBox.peToER(), "product SPE", "product PR");
-		p.addConstraint(ConBox.equal(false), "TF PR", "product PR");
+		p.add(erToPE(), "TF PR", "TF SPE");
+		p.add(linkToComplex(), "TF SPE", "TF PE");
+		p.add(peToControl(), "TF PE", "Control");
+		p.add(controlToTempReac(), "Control", "TempReac");
+		p.add(product(), "TempReac", "product PE");
+		p.add(linkToSimple(), "product PE", "product SPE");
+		p.add(new Type(Protein.class), "product SPE");
+		p.add(peToER(), "product SPE", "product PR");
+		p.add(equal(false), "TF PR", "product PR");
 		return p;
 	}
 
@@ -314,16 +316,16 @@ public class PatternBox
 	public static Pattern expressionWithConversion()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "TF PR");
-		p.addConstraint(ConBox.erToPE(), "TF PR", "TF SPE");
-		p.addConstraint(ConBox.linkToComplex(), "TF SPE", "TF PE");
-		p.addConstraint(ConBox.peToControl(), "TF PE", "Control");
-		p.addConstraint(ConBox.controlToConv(), "Control", "Conversion");
-		p.addConstraint(new Empty(ConBox.left()), "Conversion");
-		p.addConstraint(new Size(ConBox.right(), 1, Size.Type.EQUAL), "Conversion");
-		p.addConstraint(ConBox.right(), "Conversion", "right PE");
-		p.addConstraint(ConBox.linkToSimple(), "right PE", "right SPE");
-		p.addConstraint(ConBox.peToER(), "right SPE", "product ER");
-		p.addConstraint(ConBox.equal(false), "TF PR", "product ER");
+		p.add(erToPE(), "TF PR", "TF SPE");
+		p.add(linkToComplex(), "TF SPE", "TF PE");
+		p.add(peToControl(), "TF PE", "Control");
+		p.add(controlToConv(), "Control", "Conversion");
+		p.add(new Empty(left()), "Conversion");
+		p.add(new Size(right(), 1, Size.Type.EQUAL), "Conversion");
+		p.add(right(), "Conversion", "right PE");
+		p.add(linkToSimple(), "right PE", "right SPE");
+		p.add(peToER(), "right SPE", "product ER");
+		p.add(equal(false), "TF PR", "product ER");
 		return p;
 	}
 
@@ -334,16 +336,16 @@ public class PatternBox
 	public static Pattern degradation()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "upstream PR");
-		p.addConstraint(ConBox.erToPE(), "upstream PR", "upstream SPE");
-		p.addConstraint(ConBox.linkToComplex(), "upstream SPE", "upstream PE");
-		p.addConstraint(ConBox.peToControl(), "upstream PE", "Control");
-		p.addConstraint(ConBox.controlToConv(), "Control", "Conversion");
-		p.addConstraint(new Empty(new InputOrOutput(RelType.OUTPUT, true)), "Conversion");
-		p.addConstraint(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
-		p.addConstraint(ConBox.linkToSimple(), "input PE", "input SPE");
-		p.addConstraint(ConBox.peToER(), "input SPE", "downstream PR");
-		p.addConstraint(ConBox.equal(false), "upstream PR", "downstream PR");
-		p.addConstraint(ConBox.type(ProteinReference.class), "downstream PR");
+		p.add(erToPE(), "upstream PR", "upstream SPE");
+		p.add(linkToComplex(), "upstream SPE", "upstream PE");
+		p.add(peToControl(), "upstream PE", "Control");
+		p.add(controlToConv(), "Control", "Conversion");
+		p.add(new Empty(new InputOrOutput(RelType.OUTPUT, true)), "Conversion");
+		p.add(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
+		p.add(linkToSimple(), "input PE", "input SPE");
+		p.add(peToER(), "input SPE", "downstream PR");
+		p.add(equal(false), "upstream PR", "downstream PR");
+		p.add(type(ProteinReference.class), "downstream PR");
 		return p;
 	}
 
@@ -354,11 +356,11 @@ public class PatternBox
 	public static Pattern controlsDegradationIndirectly()
 	{
 		Pattern p = controlsStateChange(true);
-		p.addConstraint(new Type(ProteinReference.class), "controller ER");
-		p.addConstraint(new Type(ProteinReference.class), "changed ER");
-		p.addConstraint(new ParticipatesInConv(RelType.INPUT, true), "output PE", "degrading Conv");
-		p.addConstraint(new Empty(new InputOrOutput(RelType.OUTPUT, true)), "degrading Conv");
-		p.addConstraint(ConBox.equal(false), "degrading Conv", "Conversion");
+		p.add(new Type(ProteinReference.class), "controller ER");
+		p.add(new Type(ProteinReference.class), "changed ER");
+		p.add(new ParticipatesInConv(RelType.INPUT, true), "output PE", "degrading Conv");
+		p.add(new Empty(new InputOrOutput(RelType.OUTPUT, true)), "degrading Conv");
+		p.add(equal(false), "degrading Conv", "Conversion");
 		return p;
 	}
 
@@ -371,31 +373,31 @@ public class PatternBox
 	public static Pattern appearInSameComplex()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "Protein 1");
-		p.addConstraint(ConBox.erToPE(), "Protein 1", "SPE1");
-		p.addConstraint(ConBox.linkToComplex(), "SPE1", "PE1");
-		p.addConstraint(new PathConstraint("PhysicalEntity/componentOf"), "PE1", "Complex");
-		p.addConstraint(new PathConstraint("Complex/component"), "Complex", "PE2");
-		p.addConstraint(ConBox.equal(false), "PE1", "PE2");
-		p.addConstraint(ConBox.linkToSimple(), "PE2", "SPE2");
-		p.addConstraint(ConBox.peToER(), "SPE2", "Protein 2");
-		p.addConstraint(ConBox.equal(false), "Protein 1", "Protein 2");
-		p.addConstraint(new Type(ProteinReference.class), "Protein 2");
+		p.add(erToPE(), "Protein 1", "SPE1");
+		p.add(linkToComplex(), "SPE1", "PE1");
+		p.add(new PathConstraint("PhysicalEntity/componentOf"), "PE1", "Complex");
+		p.add(new PathConstraint("Complex/component"), "Complex", "PE2");
+		p.add(equal(false), "PE1", "PE2");
+		p.add(linkToSimple(), "PE2", "SPE2");
+		p.add(peToER(), "SPE2", "Protein 2");
+		p.add(equal(false), "Protein 1", "Protein 2");
+		p.add(new Type(ProteinReference.class), "Protein 2");
 		return p;
 	}
 
 	public static Pattern interaction()
 	{
 		Pattern p = new Pattern(ProteinReference.class, "Protein 1");
-		p.addConstraint(ConBox.erToPE(), "Protein 1", "SPE1");
-		p.addConstraint(ConBox.linkToComplex(), "SPE1", "PE1");
-		p.addConstraint(ConBox.peToInter(), "PE1", "Inter");
-		p.addConstraint(ConBox.participant(), "Inter", "PE2");
-		p.addConstraint(ConBox.equal(false), "PE1", "PE2");
-		p.addConstraint(ConBox.linkToSimple(), "PE2", "SPE2");
-		p.addConstraint(ConBox.equal(false), "SPE1", "SPE2");
-		p.addConstraint(ConBox.type(Protein.class), "SPE2");
-		p.addConstraint(ConBox.peToER(), "SPE2", "Protein 2");
-		p.addConstraint(ConBox.equal(false), "Protein 1", "Protein 2");
+		p.add(erToPE(), "Protein 1", "SPE1");
+		p.add(linkToComplex(), "SPE1", "PE1");
+		p.add(peToInter(), "PE1", "Inter");
+		p.add(participant(), "Inter", "PE2");
+		p.add(equal(false), "PE1", "PE2");
+		p.add(linkToSimple(), "PE2", "SPE2");
+		p.add(equal(false), "SPE1", "SPE2");
+		p.add(type(Protein.class), "SPE2");
+		p.add(peToER(), "SPE2", "Protein 2");
+		p.add(equal(false), "Protein 1", "Protein 2");
 		return p;
 	}
 
@@ -410,7 +412,7 @@ public class PatternBox
 
 		if (seedType.length == 1)
 		{
-			p.addConstraint(new Type(seedType[0]), "Interaction");
+			p.add(new Type(seedType[0]), "Interaction");
 		}
 		else if (seedType.length > 1)
 		{
@@ -420,17 +422,17 @@ public class PatternBox
 				mc[i] = new MappedConst(new Type(seedType[i]), 0);
 			}
 
-			p.addConstraint(new OR(mc), "Interaction");
+			p.add(new OR(mc), "Interaction");
 		}
 
-		p.addConstraint(new OR(new MappedConst(ConBox.participant(), 0, 1),
+		p.add(new OR(new MappedConst(participant(), 0, 1),
 			new MappedConst(new PathConstraint(
 				"Interaction/controlledOf*/controller:PhysicalEntity"), 0, 1)),
 			"Interaction", "PE");
 
-		p.addConstraint(ConBox.linkToSimple(), "PE", "SPE");
-		p.addConstraint(ConBox.peToER(), "SPE", "PR");
-		p.addConstraint(new Type(ProteinReference.class), "PR");
+		p.add(linkToSimple(), "PE", "SPE");
+		p.add(peToER(), "SPE", "PR");
+		p.add(new Type(ProteinReference.class), "PR");
 		return p;
 	}
 }

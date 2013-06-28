@@ -36,13 +36,13 @@ public class MinerTest
 			public Pattern constructPattern()
 			{
 				Pattern p = new Pattern(ProteinReference.class, "Protein 1");
-				p.addConstraint(ConBox.erToPE(), "Protein 1", "SPE1");
-				p.addConstraint(ConBox.linkToComplex(), "SPE1", "Complex");
-				p.addConstraint(new Type(Complex.class), "Complex");
-				p.addConstraint(ConBox.linkToSimple(), "Complex", "SPE2");
-				p.addConstraint(ConBox.peToER(), "SPE2", "Protein 2");
-				p.addConstraint(ConBox.equal(false), "Protein 1", "Protein 2");
-				p.addConstraint(new Type(ProteinReference.class), "Protein 2");
+				p.add(ConBox.erToPE(), "Protein 1", "SPE1");
+				p.add(ConBox.linkToComplex(), "SPE1", "Complex");
+				p.add(new Type(Complex.class), "Complex");
+				p.add(ConBox.linkToSimple(), "Complex", "SPE2");
+				p.add(ConBox.peToER(), "SPE2", "Protein 2");
+				p.add(ConBox.equal(false), "Protein 1", "Protein 2");
+				p.add(new Type(ProteinReference.class), "Protein 2");
 
 				return p;
 			}

@@ -99,8 +99,8 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 * Prefix of URL of the Pathway Commons data.
 	 */
 	private static final String PC_DATA_URL_PREFIX =
-//		"http://www.pathwaycommons.org/pc2/downloads/Pathway%20Commons%20";
-		"http://webservice.baderlab.org:48080/downloads/Pathway%20Commons%202%20";
+		"http://www.pathwaycommons.org/pc2/downloads/Pathway%20Commons%202%20";
+//		"http://webservice.baderlab.org:48080/downloads/Pathway%20Commons%202%20";
 
 	/**
 	 * Suffix of URL of the Pathway Commons data.
@@ -270,12 +270,12 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		outputField.setBorder(BorderFactory.createTitledBorder("Output file"));
 		outputField.addActionListener(this);
 		outputField.addKeyListener(this);
+		outputField.setText(((Miner) patternCombo.getSelectedItem()).getName() + ".txt");
 
 		finishPanel.add(outputField, BorderLayout.WEST);
 
 		runButton = new JButton("Run");
 		runButton.addActionListener(this);
-		runButton.setEnabled(false);
 		finishPanel.add(runButton, BorderLayout.EAST);
 
 		JPanel bufferPanel = new JPanel(new FlowLayout());
@@ -344,6 +344,13 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		{
 			Miner m = (Miner) patternCombo.getSelectedItem();
 			descArea.setText(m.getDescription());
+
+			// Update output file name
+			String text = outputField.getText();
+			if (text.contains("/")) text = text.substring(0, text.lastIndexOf("/") + 1);
+			else text = "";
+			text += m.getName() + ".txt";
+			outputField.setText(text);
 		}
 		else if (e.getSource() == runButton)
 		{
@@ -389,7 +396,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		minerList.add(new ControlsStateChangeMiner());
 		minerList.add(new ControlsStateChangeButIsParticipantMiner());
 		minerList.add(new ControlsStateChangeDetailedMiner());
-		minerList.add(new ControlsExpressionChangeMiner());
+		minerList.add(new ControlsExpressionMiner());
 		minerList.add(new DegradesMiner());
 		minerList.add(new AffectsDegradationMiner());
 		minerList.add(new ConsecutiveCatalysisMiner(ubiqueIDs));
@@ -520,26 +527,34 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		prgBar.setValue(0);
 		Map<BioPAXElement,List<Match>> matches = Searcher.search(model, p, prg);
 
-		try
+		if (matches.isEmpty())
 		{
-			prgLabel.setText("Writing result");
-			prgBar.setValue(0);
-			prgBar.setStringPainted(false);
-			prgBar.setIndeterminate(true);
-			FileOutputStream os = new FileOutputStream(outFile);
-			min.writeResult(matches, os);
-			os.close();
-			prgBar.setIndeterminate(false);
+			prgLabel.setText("No results found!");
 		}
-		catch (IOException e)
+		else
 		{
-			e.printStackTrace();
-			eraseProgressBar();
-			showMessageDialog(this, "Error occurred while writing the results");
-			return;
-		}
 
-		prgLabel.setText("Success!    ");
+			try
+			{
+				prgLabel.setText("Writing result");
+				prgBar.setValue(0);
+				prgBar.setStringPainted(false);
+				prgBar.setIndeterminate(true);
+				FileOutputStream os = new FileOutputStream(outFile);
+				min.writeResult(matches, os);
+				os.close();
+				prgBar.setIndeterminate(false);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				eraseProgressBar();
+				showMessageDialog(this, "Error occurred while writing the results");
+				return;
+			}
+
+			prgLabel.setText("Success!    ");
+		}
 	}
 
 	private void eraseProgressBar()

@@ -39,8 +39,8 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 	public Pattern constructPattern()
 	{
 		Pattern p = PatternBox.controlsStateChange(true);
-		p.addConstraint(new Type(ProteinReference.class), "controller ER");
-		p.addConstraint(new Type(ProteinReference.class), "changed ER");
+		p.add(new Type(ProteinReference.class), "controller ER");
+		p.add(new Type(ProteinReference.class), "changed ER");
 		return p;
 	}
 

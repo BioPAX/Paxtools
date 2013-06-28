@@ -354,6 +354,17 @@ public class ConBox
 	}
 
 	/**
+	 * Makes sure that the object has an Xref with the given ID. This id is not an RDF ID, it is
+	 * the value of the Xref, like gene symbol.
+	 * @param xrefID xref id
+	 * @return constraint
+	 */
+	public static Constraint hasXref(String xrefID)
+	{
+		return new Field("XReferrable/xref/id", xrefID);
+	}
+
+	/**
 	 * From PhysicalEntity to the MolecularInteraction.
 	 * @return generative constraint to get the MolecularInteraction the the PhysicalEntity is
 	 * participant

@@ -44,8 +44,8 @@ public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
 	public Pattern constructPattern()
 	{
 		Pattern p = PatternBox.consecutiveCatalysis(ubiqueIDs);
-		p.addConstraint(new Type(ProteinReference.class), "first ER");
-		p.addConstraint(new Type(ProteinReference.class), "second ER");
+		p.add(new Type(ProteinReference.class), "first ER");
+		p.add(new Type(ProteinReference.class), "second ER");
 		return p;
 	}
 

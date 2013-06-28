@@ -1,16 +1,18 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
-import org.biopax.paxtools.pattern.PatternBox;
 import org.biopax.paxtools.pattern.constraint.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+
+import static org.biopax.paxtools.pattern.constraint.ConBox.*;
 
 /**
  * Miner for the controls-state-change pattern.
@@ -51,20 +53,22 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 //		p.addConstraint(new Type(ProteinReference.class), "controller ER");
 //		p.addConstraint(new Type(ProteinReference.class), "changed ER");
 		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.addConstraint(ConBox.isHuman(), "controller PR");
-		p.addConstraint(ConBox.erToPE(), "controller PR", "controller simple PE");
-		p.addConstraint(ConBox.linkToComplex(),"controller simple PE", "controller PE");
-		p.addConstraint(ConBox.peToControl(), "controller PE", "Control");
-		p.addConstraint(ConBox.controlToConv(), "Control", "Conversion");
-		p.addConstraint(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
-		p.addConstraint(ConBox.linkToSimple(), "input PE", "input simple PE");
-		p.addConstraint(ConBox.peToER(), "input simple PE", "changed ER");
-		p.addConstraint(new OtherSide(), "input PE", "Conversion", "output PE");
-		p.addConstraint(ConBox.equal(false), "input PE", "output PE");
-		p.addConstraint(ConBox.linkToSimple(), "output PE", "output simple PE");
-		p.addConstraint(ConBox.peToER(), "output simple PE", "changed PR");
-		p.addConstraint(new Type(ProteinReference.class), "changed PR");
-		p.addConstraint(ConBox.equal(false), "controller PR", "changed PR");
+//		p.addConstraint(hasXref("IGKC"), "controller PR");
+		p.add(isHuman(), "controller PR");
+		p.add(erToPE(), "controller PR", "controller simple PE");
+		p.add(linkToComplex(), "controller simple PE", "controller PE");
+		p.add(peToControl(), "controller PE", "Control");
+		p.add(controlToConv(), "Control", "Conversion");
+		p.add(notAParticipant(), "Conversion", "controller PE");
+		p.add(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
+		p.add(linkToSimple(), "input PE", "input simple PE");
+		p.add(new Type(Protein.class), "input simple PE");
+		p.add(peToER(), "input simple PE", "changed PR");
+		p.add(new OtherSide(), "input PE", "Conversion", "output PE");
+		p.add(equal(false), "input PE", "output PE");
+		p.add(linkToSimple(), "output PE", "output simple PE");
+		p.add(peToER(), "output simple PE", "changed PR");
+		p.add(equal(false), "controller PR", "changed PR");
 
 		return p;
 	}

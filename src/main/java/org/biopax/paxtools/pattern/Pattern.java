@@ -57,7 +57,7 @@ public class Pattern
 		String... label)
 	{
 		this(startingClass, label[0]);
-		addConstraint(firstConstraint, label);
+		add(firstConstraint, label);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class Pattern
 	 * @param constr constraint to add
 	 * @param ind indices to map the constraint to the element in the pattern
 	 */
-	private void addConstraint(Constraint constr, int ... ind)
+	private void add(Constraint constr, int... ind)
 	{
 		assert ind.length > 0;
 		assert constr.getVariableSize() == ind.length;
@@ -104,7 +104,7 @@ public class Pattern
 	 * @param constr constraint to add
 	 * @param label a label for the last of the given indices
 	 */
-	public void addConstraint(Constraint constr, String... label)
+	public void add(Constraint constr, String... label)
 	{
 		checkLabels(constr.canGenerate(), label);
 
@@ -116,7 +116,7 @@ public class Pattern
 		}
 
 		// This will also increment lastIndex if necessary
-		addConstraint(constr, ind);
+		add(constr, ind);
 
 		if (!hasLabel(label[label.length - 1]) && constr.canGenerate())
 		{
@@ -186,14 +186,14 @@ public class Pattern
 	 * 
 	 * @param p the parameter pattern
 	 */
-	public void addPattern(Pattern p)
+	public void add(Pattern p)
 	{
 		if (!hasLabel(p.getLabel(0))) throw new IllegalArgumentException("The label of first " +
 			"element of parameter index \"" + p.getLabel(0) + "\" not found in this pattern.");
 
 		for (MappedConst mc : p.getConstraints())
 		{
-			addConstraint(mc.getConstr(), p.convertIndsToLabels(mc.getInds()));
+			add(mc.getConstr(), p.convertIndsToLabels(mc.getInds()));
 		}
 	}
 
