@@ -59,7 +59,7 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
-		p.add(notAParticipant(), "Conversion", "controller PE");
+		p.add(new NOT(participantER()), "Conversion", "controller PR");
 		p.add(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
 		p.add(linkToSimple(), "input PE", "input simple PE");
 		p.add(new Type(Protein.class), "input simple PE");
@@ -68,7 +68,6 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 		p.add(equal(false), "input PE", "output PE");
 		p.add(linkToSimple(), "output PE", "output simple PE");
 		p.add(peToER(), "output simple PE", "changed PR");
-		p.add(equal(false), "controller PR", "changed PR");
 
 		return p;
 	}

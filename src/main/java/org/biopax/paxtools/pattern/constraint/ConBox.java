@@ -316,8 +316,7 @@ public class ConBox
 	 */
 	public static Constraint participantER()
 	{
-		return new MultiPathConstraint("Interaction/participant:PhysicalEntity/entityReference",
-			"Interaction/participant:PhysicalEntity/component*/entityReference");
+		return new ConstraintChain(participant(), linkToSimple(), peToER());
 	}
 
 	/**

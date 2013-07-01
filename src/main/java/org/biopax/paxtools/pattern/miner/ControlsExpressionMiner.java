@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
+import org.biopax.paxtools.pattern.constraint.NOT;
 import org.biopax.paxtools.pattern.constraint.Type;
 
 import java.io.IOException;
@@ -57,11 +58,11 @@ public class ControlsExpressionMiner extends MinerAdapter implements SIFMiner
 		p.add(linkToComplex(), "TF simple PE", "TF PE");
 		p.add(peToControl(), "TF PE", "Control");
 		p.add(controlToTempReac(), "Control", "TempReac");
+		p.add(new NOT(participantER()), "TempReac", "TF PR");
 		p.add(product(), "TempReac", "product PE");
 		p.add(linkToSimple(), "product PE", "product simple PE");
 		p.add(new Type(Protein.class), "product simple PE");
 		p.add(peToER(), "product simple PE", "product PR");
-		p.add(equal(false), "TF PR", "product PR");
 
 		return p;
 	}
