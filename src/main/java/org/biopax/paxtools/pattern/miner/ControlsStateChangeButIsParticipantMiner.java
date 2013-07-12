@@ -41,4 +41,16 @@ public class ControlsStateChangeButIsParticipantMiner extends ControlsStateChang
 	{
 		return new String[]{"Conversion"};
 	}
+
+	@Override
+	public String getSourceLabel()
+	{
+		return "controller ER";
+	}
+
+	@Override
+	public String getTargetLabel()
+	{
+		return "changed ER";
+	}
 }

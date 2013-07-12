@@ -82,7 +82,8 @@ public class SIFInteraction implements Comparable
 		{
 			SIFInteraction i = (SIFInteraction) o;
 
-			return (sourceID + targetID).compareTo(i.sourceID + i.targetID);
+			return (sourceID + targetID + type.getTag()).compareTo(
+				i.sourceID + i.targetID + i.type.getTag());
 		}
 
 		return 0;

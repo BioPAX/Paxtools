@@ -1,9 +1,14 @@
 package org.biopax.paxtools.pattern.constraint;
 
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.pattern.Constraint;
 import org.biopax.paxtools.pattern.MappedConst;
+import org.biopax.paxtools.pattern.Match;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -265,8 +270,7 @@ public class ConBox
 	 */
 	public static Constraint compToER()
 	{
-		return new MultiPathConstraint("Complex/component*:SimplePhysicalEntity/entityReference",
-			"SimplePhysicalEntity/entityReference");
+		return new PathConstraint("Complex/component*:SimplePhysicalEntity/entityReference");
 	}
 
 	/**
@@ -277,6 +281,16 @@ public class ConBox
 	public static Constraint nameEquals(String name)
 	{
 		return new Field("Named/name", name);
+	}
+
+	/**
+	 * Filters Named to contain a name from the input set.
+	 * @param name name to require
+	 * @return constraint
+	 */
+	public static Constraint nameEquals(String... name)
+	{
+		return new Field("Named/name", new HashSet<String>(Arrays.asList(name)));
 	}
 
 	/**
@@ -455,5 +469,55 @@ public class ConBox
 	public static Constraint type(Class<? extends BioPAXElement> clazz)
 	{
 		return new Type(clazz);
+	}
+
+	/**
+	 * Makes sure the participant degree (number of Conversions that this is a participant) of the
+	 * PhysicalEntity is less than or equal to the parameter.
+	 * @return the constraint
+	 */
+	public static Constraint maxDegree(int limit)
+	{
+		return new Size(new PathConstraint("PhysicalEntity/participantOf:Conversion"), limit,
+			Size.Type.LESS_OR_EQUAL);
+	}
+
+	/**
+	 * Makes sure that the two interactions are members of the same pathway.
+	 * @return non-generative constraint
+	 */
+	public static Constraint inSamePathway()
+	{
+		String s1 = "Interaction/stepProcessOf/pathwayOrderOf";
+		String s2 = "Interaction/pathwayComponentOf";
+		return new OR(new MappedConst(new Field(s1, s1, null), 0, 1),
+			new MappedConst(new Field(s2, s2, null), 0, 1));
+	}
+
+	/**
+	 * Makes sure that the PhysicalEntity is controlling more reactions than it participates
+	 * (excluding complex assembly).
+	 * @return non-generative constraint
+	 */
+	public static Constraint moreControllerThanParticipant()
+	{
+		return new ConstraintAdapter(1)
+		{
+			PathAccessor partConv = new PathAccessor("PhysicalEntity/participantOf:Conversion");
+			PathAccessor partCompAss = new PathAccessor("PhysicalEntity/participantOf:ComplexAssembly");
+			PathAccessor effects = new PathAccessor("PhysicalEntity/controllerOf/controlled*:Conversion");
+
+			@Override
+			public boolean satisfies(Match match, int... ind)
+			{
+				PhysicalEntity pe = (PhysicalEntity) match.get(ind[0]);
+
+				int partCnvCnt = partConv.getValueFromBean(pe).size();
+				int partCACnt = partCompAss.getValueFromBean(pe).size();
+				int effCnt = effects.getValueFromBean(pe).size();
+
+				return (partCnvCnt - partCACnt) <= effCnt;
+			}
+		};
 	}
 }

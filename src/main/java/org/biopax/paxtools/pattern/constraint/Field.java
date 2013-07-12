@@ -68,7 +68,7 @@ public class Field extends ConstraintAdapter
 	 */
 	public Field(String accessorString1, String accessorString2, Object randomObj)
 	{
-		super(accessorString2 == null ? 1 : 2);
+		super(2);
 		this.pa1 = new PathAccessor(accessorString1);
 		this.pa2 = new PathAccessor(accessorString2);
 	}

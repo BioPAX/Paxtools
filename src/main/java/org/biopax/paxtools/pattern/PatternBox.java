@@ -146,9 +146,72 @@ public class PatternBox
 		p.add(peToER(), "input simple PE", "changed ER");
 		p.add(new OtherSide(), "input PE", "Conversion", "output PE");
 		p.add(equal(false), "input PE", "output PE");
-		c = considerGenerics ? linkToComplex() : withComplexes();
 		p.add(c, "output PE", "output simple PE");
 		p.add(peToER(), "output simple PE", "changed ER");
+		return p;
+	}
+
+	/**
+	 * Pattern for an entity is producing a small molecule, and hte small molecule controls state
+	 * change of another molecule.
+	 * @return the pattern
+	 */
+	public static Pattern controlsStateChangeThroughControllerSmallMolecule()
+	{
+		Pattern p = new Pattern(ProteinReference.class, "upper controller PR");
+		p.add(erToPE(), "upper controller PR", "upper controller simple PE");
+		p.add(linkToComplex(), "upper controller simple PE", "upper controller PE");
+		p.add(peToControl(), "upper controller PE", "upper Control");
+		p.add(controlToConv(), "upper Control", "upper Conversion");
+		p.add(new NOT(participantER()), "upper Conversion", "upper controller PR");
+		p.add(new InputOrOutput(RelType.OUTPUT, true), "upper Conversion", "controller PE");
+		p.add(type(SmallMolecule.class), "controller PE");
+		p.add(peToControl(), "controller PE", "Control");
+		p.add(controlToConv(), "Control", "Conversion");
+		p.add(equal(false), "upper Conversion", "Conversion");
+
+		p.add(new OR(new MappedConst(inSamePathway(), 0, 1),
+			new MappedConst(moreControllerThanParticipant(), 2)),
+			"upper Conversion", "Conversion", "controller PE");
+
+		Pattern p2 = stateChange(true);
+		p.add(p2);
+
+		p.add(type(ProteinReference.class), "changed ER");
+		p.add(equal(false), "upper controller PR", "changed ER");
+		p.add(new NOT(participantER()), "Conversion", "upper controller PR");
+
+		return p;
+	}
+
+	/**
+	 * Pattern for an entity is producing a small molecule, and hte small molecule controls state
+	 * change of another molecule.
+	 * @return the pattern
+	 */
+	public static Pattern controlsStateChangeThroughBindingSmallMolecule()
+	{
+		Pattern p = new Pattern(ProteinReference.class, "upper controller PR");
+		p.add(erToPE(), "upper controller PR", "upper controller simple PE");
+		p.add(linkToComplex(), "upper controller simple PE", "upper controller PE");
+		p.add(peToControl(), "upper controller PE", "upper Control");
+		p.add(controlToConv(), "upper Control", "upper Conversion");
+		p.add(new NOT(participantER()), "upper Conversion", "upper controller PR");
+		p.add(new InputOrOutput(RelType.OUTPUT, true), "upper Conversion", "SM");
+		p.add(type(SmallMolecule.class), "SM");
+		p.add(new ParticipatesInConv(RelType.INPUT, true), "SM", "Conversion");
+		p.add(peToER(), "SM", "SM ER");
+		p.add(equal(false), "upper Conversion", "Conversion");
+		p.add(inSamePathway(), "upper Conversion", "Conversion");
+
+		Pattern p2 = stateChange(true);
+		p.add(p2);
+
+		p.add(type(ProteinReference.class), "changed ER");
+		p.add(equal(false), "upper controller PR", "changed ER");
+		p.add(new NOT(participantER()), "Conversion", "upper controller PR");
+		p.add(compToER(), "output PE", "SM ER");
+
 		return p;
 	}
 
@@ -174,6 +237,7 @@ public class PatternBox
 		p.add(new NOT(compToER()), "second controller PE", "first ER");
 		p.add(linkToSimple(), "second controller PE", "second simple controller PE");
 		p.add(peToER(), "second simple controller PE", "second ER");
+		p.add(equal(false), "first ER", "second ER");
 		return p;
 	}
 
@@ -340,11 +404,11 @@ public class PatternBox
 		p.add(linkToComplex(), "upstream SPE", "upstream PE");
 		p.add(peToControl(), "upstream PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
+		p.add(new NOT(participantER()), "Conversion", "upstream PR");
 		p.add(new Empty(new InputOrOutput(RelType.OUTPUT, true)), "Conversion");
 		p.add(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
 		p.add(linkToSimple(), "input PE", "input SPE");
 		p.add(peToER(), "input SPE", "downstream PR");
-		p.add(equal(false), "upstream PR", "downstream PR");
 		p.add(type(ProteinReference.class), "downstream PR");
 		return p;
 	}

@@ -1,5 +1,6 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.pattern.PatternBoxTest;
@@ -7,12 +8,8 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
@@ -20,6 +17,7 @@ import java.util.Set;
 public class SIFSearcherTest extends PatternBoxTest
 {
 	@Test
+	@Ignore
 	public void testSIFMiner()
 	{
 		SIFSearcher s = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE, SIFType.IN_SAME_COMPLEX);
@@ -59,5 +57,58 @@ public class SIFSearcherTest extends PatternBoxTest
 		}
 
 		writer.close();
+	}
+
+
+	@Test
+	@Ignore
+	public void testSIFSearcher() throws IOException
+	{
+		generate("/home/ozgun/Projects/biopax-pattern/All-Data.owl",
+//		generate("/home/ozgun/Desktop/temp.owl",
+			"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
+	}
+
+	public static void generate(String inputModelFile, String ubiqueIDFile, String outputFile) throws IOException
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(new FileInputStream(inputModelFile));
+
+		List<SIFInteraction> sifs = new ArrayList<SIFInteraction>(
+			generate(model, loadUbiqueIDs(ubiqueIDFile)));
+
+		Collections.sort(sifs);
+
+		BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+
+		for (SIFInteraction sif : sifs)
+		{
+			writer.write(sif + "\n");
+		}
+
+		writer.close();
+	}
+
+	public static Set<SIFInteraction> generate(Model model, Set<String> ubiqueIDs)
+	{
+		SIFSearcher searcher = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE);
+//			SIFType.CONTROLS_EXPRESSION, SIFType.CONTROLS_DEGRADATION);
+
+		searcher.setUbiqueIDs(ubiqueIDs);
+
+		return searcher.searchSIF(model);
+	}
+
+	private static Set<String> loadUbiqueIDs(String filename)
+	{
+		Set<String> ids = new HashSet<String>();
+		Scanner scan = new Scanner(filename);
+		while (scan.hasNextLine())
+		{
+			String line = scan.nextLine();
+
+			if (!line.isEmpty()) ids.add(line);
+		}
+		return ids;
 	}
 }

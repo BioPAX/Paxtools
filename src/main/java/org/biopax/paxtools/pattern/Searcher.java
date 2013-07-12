@@ -115,6 +115,14 @@ public class Searcher
 	{
 		List<Match> result = new ArrayList<Match>();
 
+		// debug code
+//		if (match.get(2) != null && match.get(2).getRDFId().equals("http://pid.nci.nih.gov/biopaxpid_39918") &&
+//			match.get(6) != null && match.get(6).getRDFId().equals("http://pid.nci.nih.gov/biopaxpid_12411"))
+//		{
+//			System.out.println();
+//		}
+		// debug code
+
 		Constraint con = mc.get(index).getConstr();
 		int[] ind = mc.get(index).getInds();
 		int lastInd = ind[ind.length-1];

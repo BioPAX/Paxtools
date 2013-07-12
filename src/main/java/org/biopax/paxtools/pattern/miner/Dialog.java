@@ -116,13 +116,13 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 * Names of Pathway Commons resources.
 	 */
 	private static final Object[] PC_RES_NAMES = new Object[]{
-		"All-Data", "Reactome", "NCI-PID", "HumanCyc", "PhosphositePlus", "Panther"};
+		"All-Human-Data", "Reactome", "NCI-PID", "HumanCyc", "PhosphositePlus", "Panther"};
 
 	/**
 	 * The URL components of the Pathway Commons resources.
 	 */
 	private static final String[] PC_RES_URL = new String[]{
-		"all", "Reactome", "NCI_Nature", "HumanCyc", "PhosphoSitePlus", "Panther%20Pathway"};
+		"homo%20sapiens", "Reactome", "NCI_Nature", "HumanCyc", "PhosphoSitePlus", "Panther%20Pathway"};
 
 	/**
 	 * The name of the file for IDs of ubiquitous molecules.
@@ -395,6 +395,8 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		if (miners != null) minerList.addAll(Arrays.asList(miners));
 		minerList.add(new ControlsStateChangeMiner());
 		minerList.add(new ControlsStateChangeButIsParticipantMiner());
+		minerList.add(new ConStChThroughControllingSmallMoleculeMiner());
+		minerList.add(new ConStChThroughBindingSmallMoleculeMiner());
 		minerList.add(new ControlsStateChangeDetailedMiner());
 		minerList.add(new ControlsExpressionMiner());
 		minerList.add(new DegradesMiner());

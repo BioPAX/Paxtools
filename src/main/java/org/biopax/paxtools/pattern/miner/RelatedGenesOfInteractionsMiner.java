@@ -1,5 +1,6 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
@@ -42,6 +43,8 @@ public class RelatedGenesOfInteractionsMiner extends MinerAdapter
 			TemplateReaction.class);
 	}
 
+	private static final PathAccessor controlAcc = new PathAccessor("Interaction/controlledOf*");
+
 	/**
 	 * Writes the IDs of interaction, then gene symbols of related proteins in a line.
 	 * @param matches pattern search result
@@ -68,6 +71,12 @@ public class RelatedGenesOfInteractionsMiner extends MinerAdapter
 			if (syms.size() > 1)
 			{
 				writer.write("\n" + ele.getRDFId());
+
+				for (Object o : controlAcc.getValueFromBean(ele))
+				{
+					Control ctrl = (Control) o;
+					writer.write(" " + ctrl.getRDFId());
+				}
 
 				for (String sym : syms)
 				{

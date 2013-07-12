@@ -33,6 +33,16 @@ public class SIFSearcher
 	private IDFetcher idFetcher;
 
 	/**
+	 * IDs of ubiquitous molecules.
+	 */
+	private Set<String> ubiqueIDs;
+
+	/**
+	 * Several miners only usable in mass data.
+	 */
+	private boolean massDataMode;
+
+	/**
 	 * Constructor with miners.
 	 * @param types sif types
 	 */
@@ -49,35 +59,6 @@ public class SIFSearcher
 	{
 		this.idFetcher = idFetcher;
 		this.types = new HashSet<SIFType>(Arrays.asList(types));
-		this.miners = new ArrayList<SIFMiner>();
-
-		for (SIFType type : types)
-		{
-			switch (type)
-			{
-				case CONTROLS_STATE_CHANGE:
-					miners.add(new ControlsStateChangeMiner());
-					miners.add(new ControlsStateChangeButIsParticipantMiner());
-					break;
-				case CONTROLS_EXPRESSION:
-					miners.add(new ControlsExpressionMiner());
-					miners.add(new ControlsExpressionWithConvMiner());
-					break;
-				case CONTROLS_DEGRADATION:
-					miners.add(new DegradesMiner());
-					break;
-				case CONSECUTIVE_CATALYSIS:
-					miners.add(new ConsecutiveCatalysisMiner(null));
-					break;
-				case IN_SAME_COMPLEX:
-					miners.add(new InSameComplexMiner());
-					break;
-				case INTERACTS_WITH:
-					miners.add(new InSameComplexMiner());
-					break;
-				default: throw new RuntimeException("There is an unhandled sif type: " + type);
-			}
-		}
 
 		if (idFetcher == null)
 		{
@@ -117,6 +98,65 @@ public class SIFSearcher
 		}
 	}
 
+	private void initMiners()
+	{
+		this.miners = new ArrayList<SIFMiner>();
+
+		for (SIFType type : types)
+		{
+			switch (type)
+			{
+				case CONTROLS_STATE_CHANGE:
+					miners.add(new ControlsStateChangeMiner());
+					miners.add(new ControlsStateChangeButIsParticipantMiner());
+
+					if (massDataMode)
+					{
+						miners.add(new ConStChThroughControllingSmallMoleculeMiner());
+						miners.add(new ConStChThroughBindingSmallMoleculeMiner());
+					}
+
+					break;
+				case CONTROLS_EXPRESSION:
+					miners.add(new ControlsExpressionMiner());
+					miners.add(new ControlsExpressionWithConvMiner());
+					break;
+				case CONTROLS_DEGRADATION:
+					miners.add(new DegradesMiner());
+					break;
+				case CONSECUTIVE_CATALYSIS:
+					miners.add(new ConsecutiveCatalysisMiner(ubiqueIDs));
+					break;
+				case IN_SAME_COMPLEX:
+					miners.add(new InSameComplexMiner());
+					break;
+				case INTERACTS_WITH:
+					miners.add(new InSameComplexMiner());
+					break;
+				default: throw new RuntimeException("There is an unhandled sif type: " + type);
+			}
+		}
+	}
+
+	/**
+	 * Sets the mode of the searcher for mining interactions from large db files.
+	 * @param massDataMode mode
+	 */
+	public void setMassDataMode(boolean massDataMode)
+	{
+		this.massDataMode = massDataMode;
+	}
+
+	/**
+	 * Sets the IDs of ubique molecules. This is not mandatory but improves performance of some
+	 * SIF miners.
+	 * @param ubiqueIDs ID set
+	 */
+	public void setUbiqueIDs(Set<String> ubiqueIDs)
+	{
+		this.ubiqueIDs = ubiqueIDs;
+	}
+
 	/**
 	 * Searches the given model with the contained miners.
 	 * @param model model to search
@@ -124,6 +164,8 @@ public class SIFSearcher
 	 */
 	public Set<SIFInteraction> searchSIF(Model model)
 	{
+		if (miners == null) initMiners();
+
 		Map<SIFInteraction, SIFInteraction> map = new HashMap<SIFInteraction, SIFInteraction>();
 
 		for (SIFMiner miner : miners)
