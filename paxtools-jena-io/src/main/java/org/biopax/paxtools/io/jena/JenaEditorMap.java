@@ -6,7 +6,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.controller.EditorMapAdapter;
+import org.biopax.paxtools.controller.EditorMapImpl;
 import org.biopax.paxtools.controller.ObjectPropertyEditor;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -26,22 +26,18 @@ import java.util.Set;
  * This editor map is extensively used for I/O, modification, and querying operations applied on the
  * model.
  */
-public final class JenaEditorMap extends EditorMapAdapter {
+public final class JenaEditorMap extends EditorMapImpl
+{
 // ------------------------------ FIELDS ------------------------------
 
     private static final Log log = LogFactory.getLog(JenaEditorMap.class);
 
-	private BioPAXLevel level;
-
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-    public JenaEditorMap() {
-        this(null);
-    }
 
     public JenaEditorMap(BioPAXLevel level) {
-        this.level = level;
-        OntModel ontologyDefinition =
+	    super(level);
+	    OntModel ontologyDefinition =
                 JenaIOHandler.createModel();
 
         ontologyDefinition.read(this.level.getLevelFileAsStream(),
