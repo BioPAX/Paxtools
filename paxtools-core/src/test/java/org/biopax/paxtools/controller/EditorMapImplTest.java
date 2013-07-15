@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  */
-public class EditorMapAdapterTest
+public class EditorMapImplTest
 {
 	@Test
 	public void testGetKnownSubClassesOf() throws Exception

@@ -20,7 +20,7 @@ import java.util.*;
  * manipulate a certain property. Editor maps are responsible for initializing these editors and
  * providing them. The default level is the latest official release of BioPAX.
  */
-public abstract class EditorMapAdapter implements EditorMap {
+public  class EditorMapImpl implements EditorMap {
 
 	/**
 	 * A map from property names to actual property editors. Since EditorMap keeps a separate editor for each target
@@ -50,10 +50,17 @@ public abstract class EditorMapAdapter implements EditorMap {
             new HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>>();
 
 
-    private static final Log log = LogFactory.getLog(EditorMapAdapter.class);
+    private static final Log log = LogFactory.getLog(EditorMapImpl.class);
+
+	protected final BioPAXLevel level;
+
+	public EditorMapImpl(BioPAXLevel level)
+	{
+		this.level = level;
+	}
 
 
-    public Set<PropertyEditor> getEditorsOf(BioPAXElement bpe) {
+	public Set<PropertyEditor> getEditorsOf(BioPAXElement bpe) {
         return getEditorsOf(bpe.getModelInterface());
     }
 
@@ -263,5 +270,9 @@ public abstract class EditorMapAdapter implements EditorMap {
         return new CompositeIterator<PropertyEditor>(propertyToEditorMap.values());
     }
 
+	public BioPAXLevel getLevel()
+	{
+		return level;
+	}
 
 }
