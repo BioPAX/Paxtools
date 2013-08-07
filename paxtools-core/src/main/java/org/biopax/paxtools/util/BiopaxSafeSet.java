@@ -1,6 +1,5 @@
 package org.biopax.paxtools.util;
 
-import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +18,7 @@ import org.biopax.paxtools.model.BioPAXElement;
  *
  * @param <E>
  */
-public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E> implements Serializable
+public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 {
 	private final static Log LOG = LogFactory.getLog(BiopaxSafeSet.class);
 	private final Map<String,E> map;

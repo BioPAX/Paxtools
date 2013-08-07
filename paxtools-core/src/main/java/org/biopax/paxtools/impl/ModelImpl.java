@@ -10,7 +10,6 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -25,7 +24,7 @@ public class ModelImpl implements Model
     private final Map<String, String> nameSpacePrefixMap;
 	private BioPAXLevel level;
 	private transient BioPAXFactory factory;
-    private transient Set<BioPAXElement> exposedObjectSet;
+    private final transient Set<BioPAXElement> exposedObjectSet;
     private boolean addDependencies = false;
     private String xmlBase;
 
@@ -48,12 +47,6 @@ public class ModelImpl implements Model
 		this.factory = factory;
 		this.level = factory.getLevel();
     }
-
-	public void runAfterDeserialize()
-	{
-		this.exposedObjectSet = new UnmodifiableImplicitSet(idMap.values());
-		this.factory = level.getDefaultFactory();
-	}
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
