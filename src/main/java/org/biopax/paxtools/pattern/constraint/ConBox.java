@@ -482,6 +482,11 @@ public class ConBox
 			Size.Type.LESS_OR_EQUAL);
 	}
 
+	public static Constraint source(String dbname)
+	{
+		return new Field("Entity/dataSource/displayName", dbname);
+	}
+
 	/**
 	 * Makes sure that the two interactions are members of the same pathway.
 	 * @return non-generative constraint

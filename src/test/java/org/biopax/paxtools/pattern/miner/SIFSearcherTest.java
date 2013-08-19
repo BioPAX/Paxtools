@@ -1,6 +1,5 @@
 package org.biopax.paxtools.pattern.miner;
 
-import org.biopax.paxtools.impl.ModelImpl;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.pattern.PatternBoxTest;
@@ -64,7 +63,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Ignore
 	public void testSIFSearcher() throws IOException
 	{
-		generate("/home/ozgun/Projects/biopax-pattern/All-Data.owl",
+		generate("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl",
 //		generate("/home/ozgun/Desktop/temp.owl",
 			"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
 	}

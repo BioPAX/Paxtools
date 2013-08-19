@@ -21,8 +21,9 @@ public class InSameComplexMiner extends MinerAdapter implements SIFMiner
 	 */
 	public InSameComplexMiner()
 	{
-		super(SIFType.IN_SAME_COMPLEX.getTag(), "This miner finds cases where two genes have " +
-			"states that are members of the same complex.");
+		super(SIFType.IN_SAME_COMPLEX.getTag(), "This pattern captures pairs of proteins that " +
+			"are members of the same complex. Pattern allows multiple nesting of the members and" +
+			" use of homologies.");
 	}
 
 	/**
