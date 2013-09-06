@@ -312,8 +312,9 @@ public class VNode implements Updatable
 		int numOfStates = stateGlyphs.size();
 		int numOfInfos = infoGlyphs.size();
 		
+		//Adjust heights so that inf obox offsets are taken into account in layout.
 		if(numOfStates > 0 || numOfInfos > 0)
-			this.glyph.getBbox().setH(MAX_MACROMOLECULE_HEIGHT_WITH_INFO_BOXES);
+			this.glyph.getBbox().setH(this.glyph.getBbox().getH()+MAX_STATE_AND_INFO_HEIGHT/2);
 		
 		//Half of the info boxes on the upper side, half on the bottom side.
 		numOfStates = (numOfStates >= MAX_INFO_BOX_NUMBER/2) ? MAX_INFO_BOX_NUMBER/2 : numOfStates;
@@ -334,6 +335,9 @@ public class VNode implements Updatable
 		int numOfStates = stateGlyphs.size();
 		int numOfInfos = infoGlyphs.size();
 		
+		//Adjust heights so that inf obox offsets are taken into account in layout.
+		if(numOfStates > 0 || numOfInfos > 0)
+			this.glyph.getBbox().setH(this.glyph.getBbox().getH()-MAX_STATE_AND_INFO_HEIGHT/2);
 		
 		float parent_y_up = this.glyph.getBbox().getY()-INFO_BOUND.height/2;
 		float parent_y_bot = this.glyph.getBbox().getY()+this.glyph.getBbox().getH()-INFO_BOUND.height/2;;

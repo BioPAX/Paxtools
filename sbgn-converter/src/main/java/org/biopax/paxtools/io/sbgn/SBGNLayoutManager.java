@@ -167,6 +167,7 @@ public class SBGNLayoutManager
 			{
 				// Add a new value to hash map and also store the node as target node
 				String processGlyphID = glyph.getId();
+				String rootID = "root";			
 				nodetoNeighbours.put(processGlyphID, new TreeMap(Collections.reverseOrder()));
 				targetNodes.add(glyph);
 				
@@ -203,6 +204,16 @@ public class SBGNLayoutManager
 							else
 								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), 1);
 						}
+						else
+						{
+							if(nodetoNeighbours.get(processGlyphID).get(rootID) != null )
+							{
+								Integer value = nodetoNeighbours.get(processGlyphID).get(rootID);
+								nodetoNeighbours.get(processGlyphID).put(rootID, value+1 );
+							}
+							else
+								nodetoNeighbours.get(processGlyphID).put(rootID, 1);
+						}
 					}	
 					
 					// same as source part !!
@@ -220,6 +231,16 @@ public class SBGNLayoutManager
 							else
 								nodetoNeighbours.get(processGlyphID).put(containerCompartment.getId(), 1);
 						}
+						else
+						{
+							if(nodetoNeighbours.get(processGlyphID).get(rootID) != null )
+							{
+								Integer value = nodetoNeighbours.get(processGlyphID).get(rootID);
+								nodetoNeighbours.get(processGlyphID).put(rootID, value+1 );
+							}
+							else
+								nodetoNeighbours.get(processGlyphID).put(rootID, 1);
+						}
 					}
 				}
 			}
@@ -232,6 +253,10 @@ public class SBGNLayoutManager
 			TreeMap <String, Integer> tMap = nodetoNeighbours.get(id);
 			if(tMap.size() > 0)
 			{
+				// if the process belongs to root do not make any changes
+				if(tMap.firstKey() == "root")
+					continue;
+				
 				Glyph compartment = idToCompartmentGlyphs.get(tMap.firstKey());
 				compartment.getGlyph().add(glyph);
 				
