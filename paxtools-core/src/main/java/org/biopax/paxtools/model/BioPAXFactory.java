@@ -50,6 +50,7 @@ public abstract class BioPAXFactory
 				bpe = (T) c.newInstance();
 			} else {
 				log.error("Could not create a class " + aClass);
+				return null;
 			}
 		} catch (Exception e) {
 			log.error("Could not instantiate " + aClass);
@@ -58,12 +59,11 @@ public abstract class BioPAXFactory
 
 		// set URI
 		try {
-			Method m = BioPAXElementImpl.class.getDeclaredMethod("setRDFId",
-					String.class);
+			Method m = BioPAXElementImpl.class.getDeclaredMethod("setRDFId", String.class);
 			m.setAccessible(true);
 			m.invoke(bpe, uri);
 		} catch (Exception e) {
-			log.error("Could not set URI for " + bpe.getClass());
+			log.error("Could not set URI for " + bpe);
 			log.error(e.getStackTrace());
 			return null;
 		}
