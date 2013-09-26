@@ -17,7 +17,21 @@ import java.lang.reflect.Modifier;
 
 public abstract class BioPAXFactory
 {
-    private static Log log = LogFactory.getLog(BioPAXFactory.class);
+    private static final Log log = LogFactory.getLog(BioPAXFactory.class);
+	
+    private final Method setUriMethod;
+    
+    /**
+     * Protected Constructor without parameters.
+     */
+    protected BioPAXFactory() {
+    	try {
+			setUriMethod = BioPAXElementImpl.class.getDeclaredMethod("setRDFId", String.class);
+			setUriMethod.setAccessible(true);
+		} catch (Throwable e) {
+			throw new RuntimeException("BioPAXFactory Constructor failed", e);
+		} 
+	}
 
     /**
      * Gets the level.
@@ -48,25 +62,15 @@ public abstract class BioPAXFactory
 				Constructor<T> c = t.getDeclaredConstructor();
 				c.setAccessible(true);
 				bpe = (T) c.newInstance();
+				setUriMethod.invoke(bpe, uri);
 			} else {
-				log.error("Could not create a class " + aClass);
+				log.error("Could not find a class implementing " + aClass);
 				return null;
 			}
 		} catch (Exception e) {
-			log.error("Could not instantiate " + aClass);
-			log.error(e.getStackTrace());
+			log.error("Could not instantiate BioPAX Type: " + aClass 
+					+ "; URI: " + uri, e);
 		} 
-
-		// set URI
-		try {
-			Method m = BioPAXElementImpl.class.getDeclaredMethod("setRDFId", String.class);
-			m.setAccessible(true);
-			m.invoke(bpe, uri);
-		} catch (Exception e) {
-			log.error("Could not set URI for " + bpe);
-			log.error(e.getStackTrace());
-			return null;
-		}
 
 		return bpe;
 	}
