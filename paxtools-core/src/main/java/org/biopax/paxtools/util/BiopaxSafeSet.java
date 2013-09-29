@@ -1,9 +1,9 @@
 package org.biopax.paxtools.util;
 
 import java.util.AbstractSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +24,7 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 	private final Map<String,E> map;
 	
 	public BiopaxSafeSet() {
-		map = new ConcurrentHashMap<String, E>();
+		map = new HashMap<String, E>();
 	}
 	
 	@Override
