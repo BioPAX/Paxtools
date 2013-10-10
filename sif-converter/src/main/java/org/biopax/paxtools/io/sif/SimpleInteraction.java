@@ -302,60 +302,6 @@ public class SimpleInteraction
 		return null;
 	}
 
-	/**
-	 * If an interaction contains a complex as source or target, then this method creates new
-	 * interactions using the members of the complex. If both ends are complex with members of size
-	 * n and m, there will be n x m reduced interactions.
-	 * @param reducedInts new interactions generated with complex members
-	 */
-	public void reduceComplexes(Set<SimpleInteraction> reducedInts)
-	{
-		if (!(this.getType() == BinaryInteractionType.COMPONENT_OF))
-		{
-			Set<physicalEntity> sourceSet = new HashSet<physicalEntity>();
-			Set<physicalEntity> targetSet = new HashSet<physicalEntity>();
-
-			recursivelyReduce(this.getSource(), sourceSet);
-			recursivelyReduce(this.getTarget(), targetSet);
-			for (physicalEntity source : sourceSet)
-			{
-				for (physicalEntity target : targetSet)
-				{
-					SimpleInteraction interaction = new SimpleInteraction(source, target, type);
-					interaction.getMediators().addAll(this.getMediators());
-					reducedInts.add(interaction);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Gets member physicalEntity of the complex recursively.
-	 * @param bpe element to get the related physicalEntity
-	 * @param reduced related physicalEntity set
-	 */
-	private void recursivelyReduce(BioPAXElement bpe, Set<physicalEntity> reduced)
-	{
-		if (bpe instanceof physicalEntityParticipant)
-		{
-			recursivelyReduce(((physicalEntityParticipant) bpe).getPHYSICAL_ENTITY(), reduced);
-		} else
-		{
-			if (bpe instanceof complex)
-			{
-				for (physicalEntityParticipant pep : ((complex) bpe).getCOMPONENTS())
-				{
-					physicalEntity pe = pep.getPHYSICAL_ENTITY();
-					recursivelyReduce(pe, reduced);
-
-				}
-
-			} else if (bpe instanceof physicalEntity)
-			{
-				reduced.add((physicalEntity) bpe);
-			}
-		}
-	}
 
 	/**
 	 * Gets other related elements of the interaction.

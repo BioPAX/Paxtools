@@ -56,6 +56,17 @@ public class InteractionSetL3 extends InteractionSet
         }
     }
 
+	/**
+	 * This method iteratively replaces groups with BioPAX elements
+	 */
+	public void expandGroups()
+	{
+		for (SimpleInteraction simpleInteraction : this)
+		{
+
+		}
+	}
+
 
 }
 

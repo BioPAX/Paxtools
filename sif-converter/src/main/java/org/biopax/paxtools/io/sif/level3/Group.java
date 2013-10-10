@@ -157,4 +157,24 @@ public class Group extends EntityReferenceImpl
 		}
 
 	}
+
+	public Set<EntityReference> getAllSimpleMembers()
+	{
+		HashSet simples = new HashSet<EntityReference>();
+		recursivelyGetMembers(simples,this);
+		return simples;
+	}
+
+	private void recursivelyGetMembers(Set<EntityReference> simples,Group group)
+	{
+		for (EntityReference member : members)
+		{
+			simples.add(member);
+		}
+		for (Group subgroup : subgroups)
+		{
+			recursivelyGetMembers(simples, subgroup);
+		}
+	}
+
 }

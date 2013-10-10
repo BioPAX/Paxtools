@@ -1,12 +1,18 @@
 package org.biopax.paxtools.io.sif.level2;
 
+import org.biopax.paxtools.io.sif.BinaryInteractionType;
 import org.biopax.paxtools.io.sif.InteractionSet;
+import org.biopax.paxtools.io.sif.SimpleInteraction;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level2.complex;
 import org.biopax.paxtools.model.level2.physicalEntity;
+import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base class for level 2 rules.
@@ -48,4 +54,6 @@ public abstract class InteractionRuleL2Adaptor implements InteractionRuleL2
 	{
 		//do nothing
 	}
+
+
 }
