@@ -161,11 +161,11 @@ public class Group extends EntityReferenceImpl
 	public Set<EntityReference> getAllSimpleMembers()
 	{
 		HashSet simples = new HashSet<EntityReference>();
-		recursivelyGetMembers(simples,this);
+		recursivelyGetMembers(simples);
 		return simples;
 	}
 
-	private void recursivelyGetMembers(Set<EntityReference> simples,Group group)
+	private void recursivelyGetMembers(Set<EntityReference> simples)
 	{
 		for (EntityReference member : members)
 		{
@@ -173,7 +173,7 @@ public class Group extends EntityReferenceImpl
 		}
 		for (Group subgroup : subgroups)
 		{
-			recursivelyGetMembers(simples, subgroup);
+			subgroup.recursivelyGetMembers(simples);
 		}
 	}
 
