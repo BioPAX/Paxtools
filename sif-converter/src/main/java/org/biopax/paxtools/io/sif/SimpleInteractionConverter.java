@@ -136,6 +136,7 @@ public class SimpleInteractionConverter
         interactions.convertGroupsToInteractions();
 		if(options.containsKey(REDUCE_COMPLEXES))
 		{
+			System.out.println("reducing groups");
 			InteractionSetL3 reduced = new InteractionSetL3(model);
 			for (SimpleInteraction interaction : interactions)
 			{
