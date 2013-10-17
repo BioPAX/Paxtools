@@ -117,7 +117,7 @@ public  class EditorMapImpl implements EditorMap {
 
     protected PropertyEditor createAndRegisterBeanEditor(String pName, Class domain,
                                                          Map<Class<? extends BioPAXElement>, Set<Class<? extends BioPAXElement>>> rRestrictions) {
-        PropertyEditor editor = PropertyEditor.createPropertyEditor(domain, pName);
+        PropertyEditor editor = AbstractPropertyEditor.createPropertyEditor(domain, pName);
         if (editor instanceof ObjectPropertyEditor && rRestrictions != null) {
             ((ObjectPropertyEditor) editor).setRangeRestriction(rRestrictions);
         }

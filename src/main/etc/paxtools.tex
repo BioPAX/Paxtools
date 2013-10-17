@@ -1247,7 +1247,7 @@ A. This sometimes happens with BioPAX files that contains both L2 and L3 namespa
 \end{javacode}
 
 
-\textit{Q. I am getting a lot of errors from the reader while reading BioPAX in the form of: ERROR org.biopax.paxtools.controller.PropertyEditor  - Failed to set value:.} 
+\textit{Q. I am getting a lot of errors from the reader while reading BioPAX in the form of: ERROR org.biopax.paxtools.controller.AbstractPropertyEditor  - Failed to set value:.}
 
 A. This can happen either  due to non-standard usage or extensions of the BioPAX that is not in the specification. We constantly work with data providers to reduce such cases but you might still encounter them with an unvalidated BioPAX file. Examine the properties reported in the error log to determine what kind of information is being lost. In some cases these are not important for your usecase and you can ignore them. Otherwise try contacting the data provider to fix them.  Paxtools will provide support for extensions in the future releases.
 

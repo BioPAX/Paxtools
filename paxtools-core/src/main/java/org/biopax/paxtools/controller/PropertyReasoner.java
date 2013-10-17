@@ -52,7 +52,7 @@ public class PropertyReasoner extends AbstractTraverser
 	 * 
 	 * which additionally sets a BioPAX property filter 
 	 * for {@link #traverse(BioPAXElement, Model)} to call
-	 * {@link #visit(Object, BioPAXElement, Model, PropertyEditor)} 
+	 * {@link #visit(Object, BioPAXElement, Model, PropertyEditor)}
 	 * for each *object* property, except for 'nextStep'.
 	 * 
 	 * @param property
@@ -245,7 +245,7 @@ public class PropertyReasoner extends AbstractTraverser
 	 */
 	@Override
     protected void visit(Object range, BioPAXElement bpe, 
-    		Model model, PropertyEditor editor) 
+    		Model model, PropertyEditor editor)
 	{    	
     	if (range instanceof BioPAXElement)
 		{

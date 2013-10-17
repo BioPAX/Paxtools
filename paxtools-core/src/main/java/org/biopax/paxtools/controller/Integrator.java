@@ -824,7 +824,7 @@ public class Integrator {
         Set<PropertyEditor> editors =  editorMap.getEditorsOf(update);
 
         for (PropertyEditor editor : editors) {
-            if ( !editor.property.equals("PHYSICAL-ENTITY") ) {
+            if ( !editor.getProperty().equals("PHYSICAL-ENTITY") ) {
                 updateObjectFieldsForEditor(editor, update, existing);
             }
 

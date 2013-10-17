@@ -3,6 +3,7 @@ package org.biopax.paxtools.io;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.controller.AbstractPropertyEditor;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -111,7 +112,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 */
 	public void checkRestrictions(boolean checkRestrictions)
 	{
-		PropertyEditor.checkRestrictions.set(checkRestrictions);
+		AbstractPropertyEditor.checkRestrictions.set(checkRestrictions);
 	}
 	// -------------------------- OTHER METHODS --------------------------
 
@@ -432,7 +433,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		if (rdfs.equals(r.getNamespaceURI()) && "comment".equals(r.getLocalName()))
 		{
 			BioPAXElement paxElement = model.getByID(ownerID);
-			PropertyEditor commentor = getRDFCommentEditor(paxElement);
+			AbstractPropertyEditor commentor = getRDFCommentEditor(paxElement);
 			r.next();
 			assert r.getEventType() == CHARACTERS;
 			String text = r.getText();

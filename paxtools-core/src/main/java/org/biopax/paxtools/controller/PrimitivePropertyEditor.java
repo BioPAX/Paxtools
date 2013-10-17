@@ -9,12 +9,12 @@ import java.util.Set;
 
 /**
  * Provides a primitive (int, float, double)  class compatible editor by extending the {@link
- * org.biopax.paxtools.controller.PropertyEditor}.
+ * PropertyEditor}.
  *
- * @see org.biopax.paxtools.controller.PropertyEditor
+ * @see PropertyEditor
  */
 public class PrimitivePropertyEditor<D extends BioPAXElement, R>
-		extends PropertyEditor<D, R>
+		extends AbstractPropertyEditor<D, R>
 {
 // ------------------------------ FIELDS ------------------------------
 

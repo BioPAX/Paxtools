@@ -6,8 +6,6 @@ package org.biopax.paxtools.controller;
  * Time: 1:03:41 AM
  */
 
-import java.util.Set;
-
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -16,6 +14,8 @@ import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.junit.Test;
+
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -63,7 +63,7 @@ public class SimpleEditorMapTest
     	/*
     	assertNotNull(pr.getOrganism()); // no effect! Is this the behavior we want?
     	*/
-    	// after re-factoring (PropertyEditor)
+    	// after re-factoring (AbstractPropertyEditor)
     	assertNull(pr.getOrganism());
     	assertTrue(editor.isUnknown(pr.getOrganism()));
     	

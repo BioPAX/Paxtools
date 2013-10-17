@@ -13,7 +13,8 @@ import java.util.Set;
 /**
  * Provides an editor for  all object value types, e.g. everything other than Primitive, ENUM, and String.
  */
-public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXElement> extends PropertyEditor<D, R>
+public class ObjectPropertyEditor<D extends BioPAXElement, R extends BioPAXElement> extends AbstractPropertyEditor<D,
+		R>
 {
 // ------------------------------ FIELDS ------------------------------
 

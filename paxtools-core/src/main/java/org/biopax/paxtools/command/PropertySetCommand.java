@@ -18,7 +18,7 @@ public class PropertySetCommand<D extends BioPAXElement, R> extends AbstractProp
 			throw new IllegalBioPAXArgumentException();
 		}
 
-		Set<R> valueFromBean = editor.getValueFromBean(bpe);
+		Set<? extends R> valueFromBean = editor.getValueFromBean(bpe);
 		if(valueFromBean == null || valueFromBean.isEmpty()) oldValue = null;
 		else if(valueFromBean.size()>1)
 		{

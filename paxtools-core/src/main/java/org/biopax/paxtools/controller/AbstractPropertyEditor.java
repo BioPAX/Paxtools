@@ -16,8 +16,8 @@ import java.util.*;
  * This is the base class for all property editors. Each property controller is responsible for
  * manipulating a certain property for a given class of objects (domain).
  */
-public abstract class PropertyEditor<D extends BioPAXElement, R>
-		extends SimplePropertyAccessor<D,R>
+public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
+		extends SimplePropertyAccessor<D,R> implements PropertyEditor<D,R>
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -67,8 +67,8 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-	public PropertyEditor(String property, Method getMethod, Class<D> domain, Class<R> range,
-	                      boolean multipleCardinality)
+	public AbstractPropertyEditor(String property, Method getMethod, Class<D> domain, Class<R> range,
+			boolean multipleCardinality)
 	{
 		super(domain, range, multipleCardinality, getMethod);
 		this.property = property;
@@ -238,47 +238,27 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 
 	// --------------------- GETTER / SETTER METHODS ---------------------
 
-	/**
-	 * Returns the {@link #addMethod}.
-	 * @return the add method.
-	 */
-	public Method getAddMethod()
+	@Override public Method getAddMethod()
 	{
 		return addMethod;
 	}
 
-	/**
-	 * Returns {@link #getMethod}.
-	 * @return the get method
-	 */
-	public Method getGetMethod()
+	@Override public Method getGetMethod()
 	{
 		return getMethod;
 	}
 
-	/**
-	 * Returns the property name.
-	 * @return the proterty name as a string
-	 */
-	public String getProperty()
+	@Override public String getProperty()
 	{
 		return property;
 	}
 
-	/**
-	 * Returns the {@link #removeMethod}.
-	 * @return the remove method
-	 */
-	public Method getRemoveMethod()
+	@Override public Method getRemoveMethod()
 	{
 		return removeMethod;
 	}
 
-	/**
-	 * Returns the {@link #setMethod}.
-	 * @return the set method
-	 */
-	public Method getSetMethod()
+	@Override public Method getSetMethod()
 	{
 		return setMethod;
 	}
@@ -287,13 +267,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 
 	// -------------------------- OTHER METHODS --------------------------
 
-	/**
-	 * Sets a maximum cardinality for a domain.
-	 * @param domain domain on which restriction will be set
-	 * @param max cardinality
-	 * @see #isMultipleCardinality()
-	 */
-	public void addMaxCardinalityRestriction(Class<? extends D> domain, int max)
+	@Override public void addMaxCardinalityRestriction(Class<? extends D> domain, int max)
 	{
 		if (multipleCardinality)
 		{
@@ -317,12 +291,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		}
 	}
 
-	/**
-	 * Return the maximum cardinality that is defined for the property to which editor is belong.
-	 * @param restrictedDomain domain to be checked for the cardinality
-	 * @return an integer indicating the maximum cardinality
-	 */
-	public Integer getMaxCardinality(Class<? extends D> restrictedDomain)
+	@Override public Integer getMaxCardinality(Class<? extends D> restrictedDomain)
 	{
 		return this.maxCardinalities.get(restrictedDomain);
 	}
@@ -352,29 +321,13 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 
 
 
-	/**
-	 * Gets the unknown <em>value</em>. In an object property or enumeration
-	 * context a <em>value</em> is regarded to be unknown if it is null (unset);
-	 * in a primitive property context it depends (can be e.g.,
-	 * {@link BioPAXElement#UNKNOWN_FLOAT})
-	 * @return
-	 */
-	public R getUnknown()
+	@Override public R getUnknown()
 	{
 		return null;
 	}
 
 
-	/**
-	 * Removes the <em>value</em> from the <em>bean</em> using the default {@link #removeMethod},
-	 * if such method is defined (i.e., it's a multiple cardinality property), 
-	 * otherwise sets <em>unknown</em> value using {@link #setValueToBean(Object, BioPAXElement)} 
-	 * (but only if )
-	 * 
-	 * @param value to be removed from the bean
-	 * @param bean bean from which the value is going to be removed
-	 */
-	public void removeValueFromBean(R value, D bean)
+	@Override public void removeValueFromBean(R value, D bean)
 	{
 		try
 		{
@@ -407,15 +360,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 	}
 
 
-	/**
-	 * Removes the <em>values</em> from the <em>bean</em> 
-	 * using the {@link #removeValueFromBean(Object, BioPAXElement)}
-	 * for each value in the set.
-	 * 
-	 * @param values to be removed from the bean
-	 * @param bean bean from which the value is going to be removed
-	 */
-	public void removeValueFromBean(Set<R> values, D bean) {
+	@Override public void removeValueFromBean(Set<R> values, D bean) {
 		for(R r : values) {
 			removeValueFromBean(r, bean);
 		}
@@ -471,13 +416,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		throw new IllegalBioPAXArgumentException();
 	}
 
-	/**
-	 * Sets the <em>value</em> to the <em>bean</em> using the default {@link #setMethod} if
-	 * <em>value</em> is not null.
-	 * @param value to be set to the <em>bean</em>
-	 * @param bean to which the <em>value</em> is to be set
-	 */
-	public void setValueToBean(R value, D bean)
+	@Override public void setValueToBean(R value, D bean)
 	{
 		if (this.getPrimarySetMethod() != null)
 		{
@@ -510,7 +449,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		}
 	}
 
-	public void setValueToBean(Set<R> values, D bean)
+	@Override public void setValueToBean(Set<R> values, D bean)
 	{
 		if (values == null) setValueToBean(((R) null), bean);
 
@@ -552,12 +491,7 @@ public abstract class PropertyEditor<D extends BioPAXElement, R>
 		}
 	}
 
-	/**
-	 * Returns the primary set method of the editor. It is the {@link #setMethod} for a property of
-	 * single cardinality, and the {@link #addMethod} method for a property of multiple cardinality.
-	 * @return the method to be primarily used for setting a value to an object.
-	 */
-	public Method getPrimarySetMethod()
+	@Override public Method getPrimarySetMethod()
 	{
 		return multipleCardinality ? addMethod : setMethod;
 	}
