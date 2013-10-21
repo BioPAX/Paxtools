@@ -254,10 +254,11 @@ public class PaxtoolsMain {
             }
         } catch (Exception ex) {
             // fall-back: not using the remote validator; trying to read files
-            String msg = "Faild to Validate Using the Remote Service.\n " +
-                    "Now Trying To Read Each File and Build The Model\n" +
-                    "Watch Log Messages...\n";
-            System.err.println(msg);
+            String msg = "Unable to check with the biopax-validator web service: \n " +
+            		ex.toString() + 
+            		"\n Fall-back: trying to parse the file(s) with paxtools " +
+            		"(up to the first syntax error in each file)...\n";
+            log.error(msg, ex);
             os.write(msg.getBytes());
 
             for (File f : files) {
@@ -267,10 +268,14 @@ public class PaxtoolsMain {
                     m = io.convertFromOWL(new FileInputStream(f));
                     msg = "Model that contains "
                             + m.getObjects().size()
-                            + " elements is created (check the log messages)\n";
+                            + " elements is successfully created from " 
+                            + f.getPath() 
+                            + " (check the console output for warnings).\n";
                     os.write(msg.getBytes());
                 } catch (Exception e) {
-                    msg = "Error during validation" + e + "\n";
+                    msg = "Error: " + e + 
+                    		" in building a BioPAX Model from: " +
+                    		f.getPath() + "\n";
                     os.write(msg.getBytes());
                     e.printStackTrace();
                     log.error(msg);

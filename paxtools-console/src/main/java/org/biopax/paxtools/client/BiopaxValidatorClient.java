@@ -22,15 +22,17 @@ package org.biopax.paxtools.client;
  * #L%
  */
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.fluent.Executor;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.biopax.validator.jaxb.Behavior;
 import org.biopax.validator.jaxb.ValidatorResponse;
 
@@ -39,9 +41,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
-import java.util.Collection;
-import java.util.HashSet;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.nio.charset.Charset;
 
 /**
  * Simple (example) BioPAX Validator client 
@@ -57,7 +64,13 @@ public class BiopaxValidatorClient {
 	 * Default BioPAX Validator's URL
 	 */
 	public static final String 
-		DEFAULT_VALIDATOR_URL = "http://www.biopax.org/biopax-validator/check.html";
+		DEFAULT_VALIDATOR_URL = "http://www.biopax.org/validator/check.html";
+	
+	/**
+	 * The Java Option to set a BioPAX Validator URL
+	 * (if set, overrides the default and URL provided by the Constructor arg.)
+	 */
+	public static final String JVM_PROPERTY_URL = "biopax.validator.url";
 	
 	public static enum RetFormat {
 		HTML,// errors as HTML/Javascript 
@@ -65,7 +78,6 @@ public class BiopaxValidatorClient {
 		OWL; // modified BioPAX only (when 'autofix' or 'normalize' is true)
 	}
 	
-	private static HttpClient httpClient = new HttpClient();
 	private String url;
 
 	
@@ -79,19 +91,37 @@ public class BiopaxValidatorClient {
      * @param url - validator's file-upload form address
      */
     public BiopaxValidatorClient(String url) {
-		this.url = (url != null) ? url : DEFAULT_VALIDATOR_URL;
+//		if(url == null || url.isEmpty())
+//			this.url = System.getProperty(JVM_PROPERTY_URL, DEFAULT_VALIDATOR_URL);
+//		else 
+//			this.url = url;
+//		
+		// 1) use the arg (if not empty/null) or the default URL
+    	this.url = (url == null || url.isEmpty())
+			? DEFAULT_VALIDATOR_URL : url;
+    	
+    	// 2) override if the JVM option is set to another value
+    	this.url = System.getProperty(JVM_PROPERTY_URL, this.url);
+		
+    	// 3) get actual location (force through redirects, if any)   	
+		try {
+			this.url = location(this.url);
+//			System.out.println("Location: " + this.url);
+		} catch (IOException e) {
+			log.warn("Failed to resolve to actual web service " +
+				"URL using: " + url + " (if there is a 301/302/307 HTTP redirect, " +
+					"then validation requests (using HTTP POST method) will probably fail...)", e);
+		}
 	}
     
     
     /**
      * Default Constructor
      * 
-     * It configures for the default validator
-     * (defined by DEFAULT_VALIDATOR_URL constant)
-     * to return XML result.
+     * It configures for the default validator URL.
      */
     public BiopaxValidatorClient() {
-    	this(DEFAULT_VALIDATOR_URL);
+    	this(null);
 	}
        
 
@@ -111,56 +141,39 @@ public class BiopaxValidatorClient {
     public void validate(boolean autofix, String profile, RetFormat retFormat, Behavior filterBy,
     		Integer maxErrs, String biopaxUrl, File[] biopaxFiles, OutputStream out) throws IOException 
     {
-        Collection<Part> parts = new HashSet<Part>();
-        
-        if(autofix) {
-        	parts.add(new StringPart("autofix", "true"));
-        }
-        
-        //TODO add extra options (normalizer.fixDisplayName, normalizer.inferPropertyOrganism, normalizer.inferPropertyDataSource, normalizer.xmlBase)?
-              
-        if(profile != null && !profile.isEmpty()) {
-        	parts.add(new StringPart("profile", profile));
-        }
-        
-        // set result type
-		if (retFormat != null) {
-			parts.add(new StringPart("retDesired", retFormat.toString().toLowerCase()));
-		}
-        
-		if(filterBy != null) {
-			parts.add(new StringPart("filter", filterBy.toString()));
-		}
-		
-		if(maxErrs != null && maxErrs > 0) {
-			parts.add(new StringPart("maxErrors", maxErrs.toString()));
-		}
-		
-        // add data
-		if (biopaxFiles != null && biopaxFiles.length > 0) {
-			for (File f : biopaxFiles) {
-				parts.add(new FilePart(f.getName(), f));
-			}
-		} else if(biopaxUrl != null) {
-        	parts.add(new StringPart("url", biopaxUrl));
-        } else {
-        	log.error("Nothing to do (no BioPAX data specified)!");
+    	MultipartEntityBuilder meb = MultipartEntityBuilder.create();    	
+    	meb.setCharset(Charset.forName("UTF-8"));
+    	
+    	if(autofix)
+    		meb.addTextBody("autofix", "true");
+//TODO add extra options (normalizer.fixDisplayName, normalizer.inferPropertyOrganism, normalizer.inferPropertyDataSource, normalizer.xmlBase)?
+    	if(profile != null && !profile.isEmpty())
+    		meb.addTextBody("profile", profile);
+    	if(retFormat != null)
+    		meb.addTextBody("retDesired", retFormat.toString().toLowerCase());
+    	if(filterBy != null)
+    		meb.addTextBody("filter", filterBy.toString());
+    	if(maxErrs != null && maxErrs > 0)
+    		meb.addTextBody("maxErrors", maxErrs.toString());
+    	if(biopaxFiles != null && biopaxFiles.length > 0)
+    		for (File f : biopaxFiles) //important: use MULTIPART_FORM_DATA content-type
+    			meb.addBinaryBody("file", f, ContentType.MULTIPART_FORM_DATA, f.getName());
+    	else if(biopaxUrl != null) {
+    		meb.addTextBody("url", biopaxUrl);
+    	} else {
+    		log.error("Nothing to do (no BioPAX data specified)!");
         	return;
-        }
-        
-        PostMethod post = new PostMethod(url);
-        post.setRequestEntity(
-        		new MultipartRequestEntity(
-        				parts.toArray(new Part[]{}), post.getParams()
-        			)
-        		);
-        int status = httpClient.executeMethod(post);
-		
-        log.info("HTTP Status Text>>>" + HttpStatus.getStatusText(status));
-		
-		BufferedReader res = new BufferedReader(
-				new InputStreamReader(post.getResponseBodyAsStream())
-			);
+    	}
+    	
+    	//execute the query and get results as string
+    	HttpEntity httpEntity = meb.build();
+//    	httpEntity.writeTo(System.err);
+    	String content = Executor.newInstance()//Executor.newInstance(httpClient)
+    			.execute(Request.Post(url).body(httpEntity))
+    				.returnContent().asString();  	
+
+    	//save: append to the output stream (file)
+		BufferedReader res = new BufferedReader(new StringReader(content));
 		String line;
 		PrintWriter writer = new PrintWriter(out);
 		while((line = res.readLine()) != null) {
@@ -168,7 +181,6 @@ public class BiopaxValidatorClient {
 		}
 		writer.flush();
 		res.close();
-		post.releaseConnection();
     }
     
     public void setUrl(String url) {
@@ -180,6 +192,7 @@ public class BiopaxValidatorClient {
 	}
     
     /**
+     * Converts a biopax-validator XML response to the java object.
      * 
      * 
      * @param xml
@@ -192,6 +205,34 @@ public class BiopaxValidatorClient {
 		Source src = new StreamSource(new StringReader(xml));
 		ValidatorResponse resp = un.unmarshal(src, ValidatorResponse.class).getValue();
 		return resp;
+    }
+ 
+    
+    private String location(final String url) throws IOException {
+        String location = url; //initially the same
+    	// discover actual location, avoid going in circles:
+        int i=0;
+        for(String loc = url; loc != null && i<5; i++ ) 
+        { 	
+        	//do POST for location (Location header present if there's a 301/302/307 redirect on the way)
+        	loc = Request.Post(loc).execute()
+        			.handleResponse(new ResponseHandler<String>() {
+						@Override
+						public String handleResponse(HttpResponse httpResponse)
+								throws ClientProtocolException, IOException {
+							Header header = httpResponse.getLastHeader("Location");
+//							System.out.println("header=" + header);
+							return (header != null) ? header.getValue().trim() : null;
+						}
+			});
+        	 
+        	if(loc != null) {
+        		location = loc;
+        		log.info("BioPAX Validator location: " + loc);
+        	}
+    	}
+        
+        return location;
     }
     
 }
