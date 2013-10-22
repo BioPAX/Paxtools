@@ -319,11 +319,27 @@ public class SimpleInteractionConverter
 		{
 			SimpleInteraction inter = iter.next();
 			if (blackList.contains(inter.getSource().getRDFId()) ||
-				blackList.contains(inter.getTarget().getRDFId()))
+				blackList.contains(inter.getTarget().getRDFId()) ||
+				intersects(blackList, inter.getMediators()))
 			{
 				iter.remove();
 			}
 		}
+	}
+
+	/**
+	 * Checks if the blacklist contains id of any mediator
+	 * @param ids blacklist
+	 * @param mediators mediators of inferred interactions
+	 * @return true if any mediator is blacklisted
+	 */
+	private boolean intersects(Set<String> ids, Set<BioPAXElement> mediators)
+	{
+		for (BioPAXElement mediator : mediators)
+		{
+			if (ids.contains(mediator.getRDFId())) return true;
+		}
+		return false;
 	}
 
 	/**
