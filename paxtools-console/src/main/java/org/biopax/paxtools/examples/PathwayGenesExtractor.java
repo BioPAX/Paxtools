@@ -4,14 +4,11 @@ import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.controller.Traverser;
 import org.biopax.paxtools.controller.Visitor;
-import org.biopax.paxtools.io.BioPAXIOHandler;
-import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -52,17 +49,14 @@ public class PathwayGenesExtractor implements Visitor {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		
+
 		if(args.length != 2) {
 			System.out.println("\nUse Parameters: " +
 					"biopaxFile pathwayFullRdfId\n");
 			System.exit(-1);
 		}
-			
-		BioPAXIOHandler handler = new SimpleIOHandler();
-		FileInputStream fileInputStream = new FileInputStream(args[0]);
-		Model model = handler.convertFromOWL(fileInputStream);
-		
+
+		Model model = Macros.open(args[0]);
 		String pwId = args[1]; // gets pathway ID
 		pathway pw = (pathway) model.getByID(pwId);
 		
@@ -100,7 +94,7 @@ public class PathwayGenesExtractor implements Visitor {
 			
 		out.close();
 	}
-	
+
 	public void visit(BioPAXElement domain1, Object range, Model model, PropertyEditor editor) {
 		
 		// do not traverse the NEXT-STEP

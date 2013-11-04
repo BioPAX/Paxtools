@@ -6,11 +6,11 @@ import java.lang.reflect.Method;
 
 /**
  * Provides an String class compatible editor by extending the {@link
- * org.biopax.paxtools.controller.PropertyEditor}.
+ * PropertyEditor}.
  *
- * @see org.biopax.paxtools.controller.PropertyEditor
+ * @see PropertyEditor
  */
-public class StringPropertyEditor<D extends BioPAXElement> extends PropertyEditor<D, String>
+public class StringPropertyEditor<D extends BioPAXElement> extends AbstractPropertyEditor<D, String>
 {
 // --------------------------- CONSTRUCTORS ---------------------------
 

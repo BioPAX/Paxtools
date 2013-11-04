@@ -9,7 +9,10 @@ import org.biopax.paxtools.io.sif.level3.InteractionSetL3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level2.complex;
 import org.biopax.paxtools.model.level2.physicalEntity;
+import org.biopax.paxtools.model.level2.physicalEntityParticipant;
+import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -44,6 +47,11 @@ public class SimpleInteractionConverter
 	 * Option to reduce complexes or use them as they are in interactions.
 	 */
 	public static final String REDUCE_COMPLEXES = "REDUCE_COMPLEXES";
+
+	/**
+	 * Option to reduce complexes or use them as they are in interactions.
+	 */
+	public static final String REDUCE_GENERICS = "REDUCE_GENERICS";
 
 	/**
 	 * IDs of unwanted elements in SIF graph.
@@ -125,9 +133,17 @@ public class SimpleInteractionConverter
 				tryInferringRule(model, interactions, er, rule);
 			}
 		}
-
-        	interactions.convertGroupsToInteractions();
-
+        interactions.convertGroupsToInteractions();
+		if(options.containsKey(REDUCE_COMPLEXES))
+		{
+			System.out.println("reducing groups");
+			InteractionSetL3 reduced = new InteractionSetL3(model);
+			for (SimpleInteraction interaction : interactions)
+			{
+				reduceL3Groups(interaction, reduced);
+			}
+			interactions = reduced;
+		}
 		if (blackList != null)
 		{
 			removeInteractionsWithBlackListMolecules(interactions, blackList);
@@ -164,6 +180,45 @@ public class SimpleInteractionConverter
 	}
 
 	/**
+	 */
+	private void reduceL3Groups(SimpleInteraction int2reduce, Set<SimpleInteraction> reducedInts)
+	{
+		if (!(int2reduce.getType() == BinaryInteractionType.COMPONENT_OF))
+		{
+			HashSet<EntityReference> sourceSet = new HashSet<EntityReference>();
+			HashSet<EntityReference> targetSet = new HashSet<EntityReference>();
+
+			reduceL3Groups(int2reduce.getSource(), sourceSet);
+			reduceL3Groups(int2reduce.getTarget(), targetSet);
+			for (EntityReference source : sourceSet)
+			{
+				for (EntityReference target : targetSet)
+				{
+					SimpleInteraction interaction = new SimpleInteraction(source, target, int2reduce.getType());
+					interaction.getMediators().addAll(int2reduce.getMediators());
+					reducedInts.add(interaction);
+				}
+			}
+		}
+	}
+
+	/**
+	 */
+	private static void reduceL3Groups(BioPAXElement bpe, Set<EntityReference> reduced)
+	{
+		if (bpe instanceof Group)
+		{
+			reduced.addAll(((Group) bpe).getAllSimpleMembers());
+		}
+		else
+		{
+			reduced.add((EntityReference) bpe);
+		}
+	}
+
+
+
+	/**
 	 * Infers interactions on L2 models.
 	 * @param model L2 model
 	 * @return inferred interactions
@@ -185,7 +240,7 @@ public class SimpleInteractionConverter
 			InteractionSet reduced = new InteractionSet();
 			for (SimpleInteraction si : interactions)
 			{
-				si.reduceComplexes(reduced);
+				reduceL2Complexes(si, reduced);
 			}
 			interactions = reduced;
 		}
@@ -193,6 +248,63 @@ public class SimpleInteractionConverter
 		log.info(interactions.size() + " interactions inferred");
 		return interactions;
 	}
+
+
+	/**
+	 * If an interaction contains a complex as source or target, then this method creates new
+	 * interactions using the members of the complex. If both ends are complex with members of size
+	 * n and m, there will be n x m reduced interactions.
+	 * @param reducedInts new interactions generated with complex members
+	 */
+	private void reduceL2Complexes(SimpleInteraction int2reduce, Set<SimpleInteraction> reducedInts)
+	{
+		if (!(int2reduce.getType() == BinaryInteractionType.COMPONENT_OF))
+		{
+			Set<physicalEntity> sourceSet = new HashSet<physicalEntity>();
+			Set<physicalEntity> targetSet = new HashSet<physicalEntity>();
+
+			recursivelyReduceL2Complexes(int2reduce.getSource(), sourceSet);
+			recursivelyReduceL2Complexes(int2reduce.getTarget(), targetSet);
+			for (physicalEntity source : sourceSet)
+			{
+				for (physicalEntity target : targetSet)
+				{
+					SimpleInteraction interaction = new SimpleInteraction(source, target, int2reduce.getType());
+					interaction.getMediators().addAll(int2reduce.getMediators());
+					reducedInts.add(interaction);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Gets member physicalEntity of the complex recursively.
+	 * @param bpe element to get the related physicalEntity
+	 * @param reduced related physicalEntity set
+	 */
+	private static void recursivelyReduceL2Complexes(BioPAXElement bpe, Set<physicalEntity> reduced)
+	{
+		if (bpe instanceof physicalEntityParticipant)
+		{
+			recursivelyReduceL2Complexes(((physicalEntityParticipant) bpe).getPHYSICAL_ENTITY(), reduced);
+		} else
+		{
+			if (bpe instanceof complex)
+			{
+				for (physicalEntityParticipant pep : ((complex) bpe).getCOMPONENTS())
+				{
+					physicalEntity pe = pep.getPHYSICAL_ENTITY();
+					recursivelyReduceL2Complexes(pe, reduced);
+
+				}
+
+			} else if (bpe instanceof physicalEntity)
+			{
+				reduced.add((physicalEntity) bpe);
+			}
+		}
+	}
+
 
 	/**
 	 * Filters out interactions whose source or target are in black list.
@@ -207,11 +319,27 @@ public class SimpleInteractionConverter
 		{
 			SimpleInteraction inter = iter.next();
 			if (blackList.contains(inter.getSource().getRDFId()) ||
-				blackList.contains(inter.getTarget().getRDFId()))
+				blackList.contains(inter.getTarget().getRDFId()) ||
+				intersects(blackList, inter.getMediators()))
 			{
 				iter.remove();
 			}
 		}
+	}
+
+	/**
+	 * Checks if the blacklist contains id of any mediator
+	 * @param ids blacklist
+	 * @param mediators mediators of inferred interactions
+	 * @return true if any mediator is blacklisted
+	 */
+	private boolean intersects(Set<String> ids, Set<BioPAXElement> mediators)
+	{
+		for (BioPAXElement mediator : mediators)
+		{
+			if (ids.contains(mediator.getRDFId())) return true;
+		}
+		return false;
 	}
 
 	/**

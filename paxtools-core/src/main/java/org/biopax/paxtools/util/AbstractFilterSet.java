@@ -18,36 +18,41 @@ public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements 
 {
 	final Log log = LogFactory.getLog(ClassFilterSet.class);
 
+	int size = -1;
+
 	protected final Set<? extends F> baseSet;
 
 
 	public AbstractFilterSet(Set<? extends F> baseSet)
 	{
 		this.baseSet = baseSet;
+
 	}
 
 	/**
 	 * This size operation runs on O(n) and should be avoided for large sets.
 	 * It is possible to write a one pass more efficient abstract set but its
 	 * initialization cost would be higher.
-	 *
 	 * @return the size of the list
 	 */
 	public int size()
 	{
-		//TODO this set is immutable by design (as the javadoc says); why not to calculate size once and then reuse?
-		int i = 0;
-		for (E e : this)
+		if (size == -1)
 		{
-			i++;
+			int i = 0;
+			for (E e : this)
+			{
+				i++;
+			}
+			size = i;
 		}
-		return i;
+		return size;
 	}
 
 	@Override public boolean contains(Object o)
 	{
 
-		return  baseSet.contains(o) && filter(((F) o));
+		return baseSet.contains(o) && filter(((F) o));
 	}
 
 	@Override public Iterator<E> iterator()
@@ -56,10 +61,10 @@ public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements 
 	}
 
 
-
 	private class FilterIterator implements Iterator<E>
 	{
 		E next = null;
+
 		final Iterator<? extends F> base;
 
 		public FilterIterator(Iterator<? extends F> base)
@@ -103,8 +108,7 @@ public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements 
 				E value = next;
 				fetchNext();
 				return value;
-			}
-			else
+			} else
 			{
 				throw new NoSuchElementException();
 			}

@@ -70,6 +70,14 @@ public class SBGNConverterTest
 				assertTrue(g.getGlyph().isEmpty());
 			}
 		}
+
+		// Assert that the id mapping is not empty.
+		assertFalse(conv.getSbgn2BPMap().isEmpty());
+
+		for (Set<String> set : conv.getSbgn2BPMap().values())
+		{
+			assertFalse(set.isEmpty());
+		}
 	}
 
 	@Test

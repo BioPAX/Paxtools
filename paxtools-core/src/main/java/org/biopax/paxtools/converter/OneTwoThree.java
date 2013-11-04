@@ -284,7 +284,7 @@ public final class OneTwoThree extends AbstractTraverser implements ModelFilter 
 	 * and adds to the new model
 	 */
 	private ControlledVocabulary convertAndAddVocabulary(openControlledVocabulary value,
-			Level2Element parent, Model newModel, PropertyEditor newEditor) 
+			Level2Element parent, Model newModel, PropertyEditor newEditor)
 	{
 		String id = ((BioPAXElement) value).getRDFId();
 

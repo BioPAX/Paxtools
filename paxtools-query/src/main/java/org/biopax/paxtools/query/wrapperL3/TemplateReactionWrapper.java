@@ -79,11 +79,15 @@ public class TemplateReactionWrapper extends EventWrapper
 	protected void addToDownstream(PhysicalEntity pe, Graph graph)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(pe);
-		EdgeL3 edge = new EdgeL3(this, node, graph);
-		edge.setTranscription(true);
 
-		node.getUpstreamNoInit().add(edge);
-		this.getDownstreamNoInit().add(edge);
+		if (node != null)
+		{
+			EdgeL3 edge = new EdgeL3(this, node, graph);
+			edge.setTranscription(true);
+
+			node.getUpstreamNoInit().add(edge);
+			this.getDownstreamNoInit().add(edge);
+		}
 	}
 
 	/**
@@ -94,6 +98,8 @@ public class TemplateReactionWrapper extends EventWrapper
 	protected void addToUpstream(BioPAXElement ele, org.biopax.paxtools.query.model.Graph graph)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(ele);
+		if (node == null) return;
+
 		Edge edge = new EdgeL3(node, this, graph);
 
 		if (isTranscription())

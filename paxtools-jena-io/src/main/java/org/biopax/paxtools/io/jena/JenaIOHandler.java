@@ -6,6 +6,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.biopax.paxtools.controller.AbstractPropertyEditor;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.io.BioPAXIOHandlerAdapter;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -165,7 +166,7 @@ public final class JenaIOHandler extends BioPAXIOHandlerAdapter
 					} else if (predicate.getLocalName().equals("comment") && predicate.getNameSpace().equals(
 							"http://www.w3.org/1999/02/22-rdf-syntax-ns#"))
 					{
-						PropertyEditor editor = getRDFCommentEditor(bpe);
+						AbstractPropertyEditor editor = getRDFCommentEditor(bpe);
 
 						OntProperty ontProperty;
 						try

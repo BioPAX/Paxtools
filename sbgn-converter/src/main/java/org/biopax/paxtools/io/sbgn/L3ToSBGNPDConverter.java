@@ -88,6 +88,11 @@ public class L3ToSBGNPDConverter
 	protected boolean doLayout;
 
 	/**
+	 * Mapping from SBGN IDs to the IDs of the related objects in BioPAX.
+	 */
+	protected Map<String, Set<String>> sbgn2BPMap;
+
+	/**
 	 * SBGN process glyph can be used to show reversible reactions. In that case two ports of the
 	 * process will only have product glyphs. However, this creates an incompatibility with BioPAX:
 	 * reversible biochemical reactions can have catalysis with a direction. But if we use a single
@@ -149,6 +154,7 @@ public class L3ToSBGNPDConverter
 			this.featStrGen = new CommonFeatureStringGenerator();
 
 		this.useTwoGlyphsForReversibleConversion = true;
+		this.sbgn2BPMap = new HashMap<String, Set<String>>();
 	}
 
 	/**
@@ -348,7 +354,8 @@ public class L3ToSBGNPDConverter
 	 */
 	private Glyph createGlyph(PhysicalEntity pe)
 	{
-		if (glyphMap.containsKey(pe.getRDFId())) return glyphMap.get(pe.getRDFId());
+		String id = convertID(pe.getRDFId());
+		if (glyphMap.containsKey(id)) return glyphMap.get(id);
 
 		// Create its glyph and register
 
@@ -393,10 +400,22 @@ public class L3ToSBGNPDConverter
 	 */
 	private Glyph createGlyphBasics(PhysicalEntity pe)
 	{
+		return createGlyphBasics(pe, true);
+	}
+	/**
+	 * This method creates a glyph for the given PhysicalEntity, sets its title and state variables
+	 * if applicable.
+	 *
+	 * @param pe PhysicalEntity to represent
+	 * @param idIsFinal if ID is final, then it is recorded for future reference
+	 * @return the glyph
+	 */
+	private Glyph createGlyphBasics(PhysicalEntity pe, boolean idIsFinal)
+	{
 		String s = typeMatchMap.get(pe.getModelInterface());
 
 		Glyph g = factory.createGlyph();
-		g.setId(pe.getRDFId());
+		g.setId(convertID(pe.getRDFId()));
 		g.setClazz(s);
 
 		// Set the label
@@ -417,6 +436,12 @@ public class L3ToSBGNPDConverter
 		List<Glyph> states = getInformation(pe);
 		g.getGlyph().addAll(states);
 
+		// Record the mapping
+		if (idIsFinal)
+		{
+			sbgn2BPMap.put(g.getId(), new HashSet<String>());
+			sbgn2BPMap.get(g.getId()).add(pe.getRDFId());
+		}
 		return g;
 	}
 
@@ -430,13 +455,17 @@ public class L3ToSBGNPDConverter
 	{
 		if (ubiqueDet != null && !ubiqueDet.isUbique(pe))
 		{
-			return glyphMap.get(pe.getRDFId());
+			return glyphMap.get(convertID(pe.getRDFId()));
 		}
 		else
 		{
 			// Create a new glyph for each use of ubique
-			Glyph g = createGlyphBasics(pe);
-			g.setId(pe.getRDFId() + linkID);
+			Glyph g = createGlyphBasics(pe, false);
+			g.setId(convertID(pe.getRDFId()) + linkID);
+
+			sbgn2BPMap.put(g.getId(), new HashSet<String>());
+			sbgn2BPMap.get(g.getId()).add(pe.getRDFId());
+
 			assignLocation(pe, g);
 			ubiqueSet.add(g);
 			return g;
@@ -450,7 +479,7 @@ public class L3ToSBGNPDConverter
 	 */
 	private void createComplexContent(Complex cx)
 	{
-		Glyph cg = glyphMap.get(cx.getRDFId());
+		Glyph cg = glyphMap.get(convertID(cx.getRDFId()));
 
 		for (PhysicalEntity mem : cx.getComponent())
 		{
@@ -501,13 +530,17 @@ public class L3ToSBGNPDConverter
 	 */
 	private Glyph createComplexMember(PhysicalEntity pe, Glyph container)
 	{
-		Glyph g = createGlyphBasics(pe);
+		Glyph g = createGlyphBasics(pe, false);
 		container.getGlyph().add(g);
 
 		// A PhysicalEntity may appear in many complexes -- we identify the member using its complex
-		g.setId(g.getId() + "|" + container.getId());
+		g.setId(g.getId() + "_" + container.getId());
 
 		glyphMap.put(g.getId(), g);
+
+		sbgn2BPMap.put(g.getId(), new HashSet<String>());
+		sbgn2BPMap.get(g.getId()).add(pe.getRDFId());
+
 		return g;
 	}
 
@@ -772,7 +805,7 @@ public class L3ToSBGNPDConverter
 		{
 			if (!cl.getTerm().isEmpty())
 			{
-				return cl.getTerm().iterator().next();
+				return cl.getTerm().iterator().next().replaceAll(" ", "_");
 			}
 		}
 		return null;
@@ -797,7 +830,7 @@ public class L3ToSBGNPDConverter
 
 		Glyph process = factory.createGlyph();
 		process.setClazz(PROCESS.getClazz());
-		process.setId(cnv.getRDFId() + direction);
+		process.setId(convertID(cnv.getRDFId()) + direction);
 		glyphMap.put(process.getId(), process);
 
 		// Determine input and output sets
@@ -852,6 +885,11 @@ public class L3ToSBGNPDConverter
 			Glyph g = createControlStructure(ctrl);
 			if (g != null) createArc(g, process, getControlType(ctrl));
 		}
+
+		// Record mapping
+
+		sbgn2BPMap.put(process.getId(), new HashSet<String>());
+		sbgn2BPMap.get(process.getId()).add(cnv.getRDFId());
 	}
 
 	/**
@@ -865,7 +903,7 @@ public class L3ToSBGNPDConverter
 
 		Glyph process = factory.createGlyph();
 		process.setClazz(PROCESS.getClazz());
-		process.setId(tr.getRDFId());
+		process.setId(convertID(tr.getRDFId()));
 		glyphMap.put(process.getId(), process);
 
 		// Add input and output ports
@@ -875,7 +913,7 @@ public class L3ToSBGNPDConverter
 
 		Glyph sas = factory.createGlyph();
 		sas.setClazz(SOURCE_AND_SINK.getClazz());
-		sas.setId("SAS_For_" + tr.getRDFId());
+		sas.setId("SAS_For_" + process.getId());
 		glyphMap.put(sas.getId(), sas);
 		createArc(sas, process.getPort().get(0), CONSUMPTION.getClazz());
 
@@ -894,6 +932,11 @@ public class L3ToSBGNPDConverter
 			Glyph g = createControlStructure(ctrl);
 			if (g != null) createArc(g, process, getControlType(ctrl));
 		}
+
+		// Record mapping
+
+		sbgn2BPMap.put(process.getId(), new HashSet<String>());
+		sbgn2BPMap.get(process.getId()).add(tr.getRDFId());
 	}
 
 	/**
@@ -915,7 +958,7 @@ public class L3ToSBGNPDConverter
 
 		else if (controllers.size() == 1 && getControllerSize(ctrl.getControlledOf()) == 0)
 		{
-			cg = getGlyphToLink(controllers.iterator().next(), ctrl.getRDFId());
+			cg = getGlyphToLink(controllers.iterator().next(), convertID(ctrl.getRDFId()));
 		}
 
 		else
@@ -925,7 +968,7 @@ public class L3ToSBGNPDConverter
 
 			// Bundle controllers if necessary
 
-			Glyph gg = handlePEGroup(controllers, ctrl.getRDFId());
+			Glyph gg = handlePEGroup(controllers, convertID(ctrl.getRDFId()));
 			if(gg != null)
 				toConnect.add(gg);
 
@@ -938,7 +981,7 @@ public class L3ToSBGNPDConverter
 				{
 					// If the control is negative, add a NOT in front of it
 
-					if (getControlType(ctrl2).equals(INHIBITION))
+					if (getControlType(ctrl2).equals(INHIBITION.getClazz()))
 					{
 						g = addNOT(g);
 					}
@@ -952,7 +995,7 @@ public class L3ToSBGNPDConverter
 			if (ctrl instanceof Catalysis)
 			{
 				Set<PhysicalEntity> cofs = ((Catalysis) ctrl).getCofactor();
-				Glyph g = handlePEGroup(cofs, ctrl.getRDFId());
+				Glyph g = handlePEGroup(cofs, convertID(ctrl.getRDFId()));
 				if (g != null) 
 					toConnect.add(g);
 			}
@@ -987,7 +1030,7 @@ public class L3ToSBGNPDConverter
 			List<Glyph> gs = getGlyphsOfPEs(pes, context);
 			return connectWithAND(gs);
 		}
-		else if (sz == 1 && glyphMap.containsKey(pes.iterator().next().getRDFId()))
+		else if (sz == 1 && glyphMap.containsKey(convertID(pes.iterator().next().getRDFId())))
 		{
 			return getGlyphToLink(pes.iterator().next(), context);
 		}
@@ -1007,7 +1050,7 @@ public class L3ToSBGNPDConverter
 		List<Glyph> gs = new ArrayList<Glyph>();
 		for (PhysicalEntity pe : pes)
 		{
-			if (glyphMap.containsKey(pe.getRDFId()))
+			if (glyphMap.containsKey(convertID(pe.getRDFId())))
 			{
 				gs.add(getGlyphToLink(pe, context));
 			}
@@ -1157,7 +1200,7 @@ public class L3ToSBGNPDConverter
 		Set<PhysicalEntity> controllers = new HashSet<PhysicalEntity>();
 		for (Controller clr : ctrl.getController())
 		{
-			if (clr instanceof PhysicalEntity && glyphMap.containsKey(clr.getRDFId()))
+			if (clr instanceof PhysicalEntity && glyphMap.containsKey(convertID(clr.getRDFId())))
 			{
 				controllers.add((PhysicalEntity) clr);
 			}
@@ -1207,6 +1250,17 @@ public class L3ToSBGNPDConverter
 			((Glyph) target).getId() : ((Port) target).getId();
 
 		arc.setId(sourceID + "--to--" + targetID);
+
+		Arc.Start start = new Arc.Start();
+		start.setX(0);
+		start.setY(0);
+		arc.setStart(start);
+
+		Arc.End end = new Arc.End();
+		end.setX(0);
+		end.setY(0);
+		arc.setEnd(end);
+
 		arcMap.put(arc.getId(), arc);
 	}
 
@@ -1242,7 +1296,22 @@ public class L3ToSBGNPDConverter
 			addChildren(child, set);
 		}
 	}
-	
+
+	/**
+	 * Gets the mapping from SBGN IDs to BioPAX IDs. This mapping is currently one-to-many, but has
+	 * potential to become many-to-many in the future.
+	 * @return sbgn-to-biopax mapping
+	 */
+	public Map<String, Set<String>> getSbgn2BPMap()
+	{
+		return sbgn2BPMap;
+	}
+
+	private String convertID(String biopaxID)
+	{
+		return biopaxID.replaceAll(":", "_").replaceAll("/", "_");
+	}
+
 	//-- Section: Static initialization -----------------------------------------------------------|
 
 	/**

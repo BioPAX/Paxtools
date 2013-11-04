@@ -161,7 +161,7 @@ public class ConsecutiveCatalysisRule extends InteractionRuleL3Adaptor
                                 if (controller instanceof PhysicalEntity) {
                                     createAndAdd(bpe, interactionSet.getGroupMap().getEntityReferenceOrGroup(controller),
                                             interactionSet, BinaryInteractionType.SEQUENTIAL_CATALYSIS,
-                                            aCatalysis, consequentCatalysis);
+                                            aCatalysis, consequentCatalysis, pe);
                                 }
                             }
                         }

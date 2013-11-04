@@ -31,7 +31,7 @@ public final class UseOfReflection {
 	 * @param entity
 	 * @param organisms
 	 */
-	public static Set<BioPAXElement> getObjectBiopaxPropertyValues(BioPAXElement bpe, String property) {
+	public static Set<? extends BioPAXElement> getObjectBiopaxPropertyValues(BioPAXElement bpe, String property) {
 		Set<BioPAXElement> values = new HashSet<BioPAXElement>();
 
 		// get the BioPAX L3 property editors map
@@ -39,8 +39,7 @@ public final class UseOfReflection {
 
 		// get the 'organism' biopax property editor, 
 		// if exists for this type of bpe
-		@SuppressWarnings("unchecked")
-		PropertyEditor<BioPAXElement, BioPAXElement> editor 
+		@SuppressWarnings("unchecked") PropertyEditor<BioPAXElement, BioPAXElement> editor
 			= (PropertyEditor<BioPAXElement, BioPAXElement>) em
 				.getEditorForProperty(property, bpe.getModelInterface());
 
@@ -64,15 +63,14 @@ public final class UseOfReflection {
 	 * @param entity
 	 * @param organisms
 	 */
-	public static Set<Object> getBiopaxPropertyValues(BioPAXElement bpe, String property) {
+	public static Set getBiopaxPropertyValues(BioPAXElement bpe, String property) {
 
 		// get the BioPAX L3 property editors map
 		EditorMap em = SimpleEditorMap.L3;
 
 		// get the 'organism' biopax property editor, 
 		// if exists for this type of bpe
-		@SuppressWarnings("unchecked")
-		PropertyEditor<BioPAXElement, Object> editor 
+		@SuppressWarnings("unchecked") PropertyEditor<BioPAXElement, Object> editor
 			= (PropertyEditor<BioPAXElement, Object>) em
 				.getEditorForProperty(property, bpe.getModelInterface());
 

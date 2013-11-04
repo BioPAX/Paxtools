@@ -5,12 +5,12 @@ import org.biopax.paxtools.model.BioPAXElement;
 import java.lang.reflect.Method;
 
 /**
- * Provides an ENUM class compatible editor by extending the {@link org.biopax.paxtools.controller.PropertyEditor}.
+ * Provides an ENUM class compatible editor by extending the {@link PropertyEditor}.
  *
- * @see org.biopax.paxtools.controller.PropertyEditor
+ * @see PropertyEditor
  */
 public class EnumeratedPropertyEditor<D extends BioPAXElement, R extends Enum>
-		extends PropertyEditor<D, R>
+		extends AbstractPropertyEditor<D, R>
 {
 // --------------------------- CONSTRUCTORS ---------------------------
 

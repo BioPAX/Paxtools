@@ -198,7 +198,7 @@ public final class ModelUtils
 			new Visitor() {
 				@Override
 				public void visit(BioPAXElement parent, Object value, Model model,
-					PropertyEditor<?, ?> editor) 
+					PropertyEditor<?, ?> editor)
 				{
 					if (filterClass.isInstance(value)) result.remove(value);
 				}

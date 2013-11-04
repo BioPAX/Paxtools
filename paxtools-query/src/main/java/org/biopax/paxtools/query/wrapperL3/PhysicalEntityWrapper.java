@@ -76,6 +76,8 @@ public class PhysicalEntityWrapper extends AbstractNode
 		for (Conversion conv : getUpstreamConversions(pe.getParticipantOf()))
 		{
 			ConversionWrapper conW = (ConversionWrapper) graph.getGraphObject(conv);
+			if (conW == null) continue;
+
 			if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
 				conv.getLeft().contains(pe))
 			{
@@ -92,9 +94,10 @@ public class PhysicalEntityWrapper extends AbstractNode
 			{
 				TemplateReaction tr = (TemplateReaction) inter;
 				TemplateReactionWrapper trw = (TemplateReactionWrapper) graph.getGraphObject(tr);
+				if (trw == null) continue;
+
 				Edge edge = new EdgeL3(trw, this, graph);
 
-				assert trw != null;
 				assert trw.getDownstreamNoInit() != null;
 
 				trw.getDownstreamNoInit().add(edge);
@@ -111,7 +114,9 @@ public class PhysicalEntityWrapper extends AbstractNode
 		for (Interaction inter : getDownstreamInteractions(pe.getParticipantOf()))
 		{
 			AbstractNode node = (AbstractNode) graph.getGraphObject(inter);
-			
+
+			if (node == null) continue;
+
 			if (inter instanceof Conversion)
 			{
 				Conversion conv = (Conversion) inter;
@@ -277,7 +282,8 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntityOf())
 		{
-			this.upperEquivalent.add((Node) graph.getGraphObject(eq));
+			Node node = (Node) graph.getGraphObject(eq);
+			if (node != null) this.upperEquivalent.add(node);
 		}
 
 		upperEquivalentInited = true;
@@ -292,7 +298,8 @@ public class PhysicalEntityWrapper extends AbstractNode
 
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntity())
 		{
-			this.lowerEquivalent.add((Node) graph.getGraphObject(eq));
+			Node node = (Node) graph.getGraphObject(eq);
+			if (node != null) this.lowerEquivalent.add(node);
 		}
 
 		lowerEquivalentInited = true;
