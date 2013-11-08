@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.pattern.Match;
@@ -38,11 +39,6 @@ public class SIFSearcher
 	private Set<String> ubiqueIDs;
 
 	/**
-	 * Several miners only usable in mass data.
-	 */
-	private boolean massDataMode;
-
-	/**
 	 * Constructor with miners.
 	 * @param types sif types
 	 */
@@ -67,7 +63,14 @@ public class SIFSearcher
 				@Override
 				public String fetchID(BioPAXElement ele)
 				{
-					if (ele instanceof XReferrable)
+					if (ele instanceof SmallMoleculeReference)
+					{
+						SmallMoleculeReference smr = (SmallMoleculeReference) ele;
+						if (smr.getDisplayName() != null) return smr.getDisplayName();
+						else if (!smr.getName().isEmpty()) return smr.getName().iterator().next();
+						else return null;
+					}
+					else if (ele instanceof XReferrable)
 					{
 						for (Xref xr : ((XReferrable) ele).getXref())
 						{
@@ -109,17 +112,15 @@ public class SIFSearcher
 				case CONTROLS_STATE_CHANGE:
 					miners.add(new ControlsStateChangeMiner());
 					miners.add(new ControlsStateChangeButIsParticipantMiner());
-
-					if (massDataMode)
-					{
-						miners.add(new ConStChThroughControllingSmallMoleculeMiner());
-						miners.add(new ConStChThroughBindingSmallMoleculeMiner());
-					}
-
+					miners.add(new ConStChThroughControllingSmallMoleculeMiner());
+					miners.add(new ConStChThroughBindingSmallMoleculeMiner());
 					break;
 				case CONTROLS_EXPRESSION:
 					miners.add(new ControlsExpressionMiner());
 					miners.add(new ControlsExpressionWithConvMiner());
+					break;
+				case CONTROLS_METABOLIC_CATALYSIS:
+					miners.add(new ControlsMetabolicCatalysisMiner(ubiqueIDs));
 					break;
 				case CONTROLS_DEGRADATION:
 					miners.add(new DegradesMiner());
@@ -127,24 +128,19 @@ public class SIFSearcher
 				case CONSECUTIVE_CATALYSIS:
 					miners.add(new ConsecutiveCatalysisMiner(ubiqueIDs));
 					break;
+				case CHEMICAL_AFFECTS_PROTEIN:
+					miners.add(new ChemicalAffectsThroughBindingMiner(ubiqueIDs));
+					miners.add(new ChemicalAffectsThroughControlMiner(ubiqueIDs));
+					break;
 				case IN_SAME_COMPLEX:
 					miners.add(new InSameComplexMiner());
 					break;
-				case INTERACTS_WITH:
-					miners.add(new InSameComplexMiner());
+				case RELATED_THROUGH_INTERACTION:
+					miners.add(new RelatedThroughInteractionMiner());
 					break;
 				default: throw new RuntimeException("There is an unhandled sif type: " + type);
 			}
 		}
-	}
-
-	/**
-	 * Sets the mode of the searcher for mining interactions from large db files.
-	 * @param massDataMode mode
-	 */
-	public void setMassDataMode(boolean massDataMode)
-	{
-		this.massDataMode = massDataMode;
 	}
 
 	/**

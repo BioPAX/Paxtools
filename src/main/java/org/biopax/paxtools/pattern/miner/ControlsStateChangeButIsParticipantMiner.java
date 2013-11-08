@@ -37,7 +37,7 @@ public class ControlsStateChangeButIsParticipantMiner extends ControlsStateChang
 	}
 
 	@Override
-	public String[] getPubmedHarvestableLabels()
+	public String[] getMediatorLabels()
 	{
 		return new String[]{"Conversion"};
 	}

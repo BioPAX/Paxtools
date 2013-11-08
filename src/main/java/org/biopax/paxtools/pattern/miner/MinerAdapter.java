@@ -95,12 +95,12 @@ public abstract class MinerAdapter implements Miner
 
 	/**
 	 * Searches for the gene symbol of the given EntityReference.
-	 * @param er to search for a symbol
+	 * @param pr to search for a symbol
 	 * @return symbol
 	 */
-	protected String getGeneSymbol(EntityReference er)
+	protected String getGeneSymbol(ProteinReference pr)
 	{
-		for (Xref xr : er.getXref())
+		for (Xref xr : pr.getXref())
 		{
 			String db = xr.getDb();
 			if (db != null)
@@ -126,12 +126,12 @@ public abstract class MinerAdapter implements Miner
 
 	/**
 	 * Searches for the uniprot name of the given human EntityReference.
-	 * @param er to search for the uniprot name
+	 * @param pr to search for the uniprot name
 	 * @return uniprot name
 	 */
-	protected String getUniprotNameForHuman(EntityReference er)
+	protected String getUniprotNameForHuman(ProteinReference pr)
 	{
-		for (String name : er.getName())
+		for (String name : pr.getName())
 		{
 			if (name.endsWith("_HUMAN")) return name;
 		}
@@ -146,8 +146,8 @@ public abstract class MinerAdapter implements Miner
 	 */
 	protected String getGeneSymbol(Match m, String label)
 	{
-		EntityReference er = (EntityReference) m.get(label, getPattern());
-		return getGeneSymbol(er);
+		ProteinReference pr = (ProteinReference) m.get(label, getPattern());
+		return getGeneSymbol(pr);
 	}
 
 	/**
@@ -158,10 +158,9 @@ public abstract class MinerAdapter implements Miner
 	 */
 	protected String getUniprotNameForHuman(Match m, String label)
 	{
-		EntityReference er = (EntityReference) m.get(label, getPattern());
+		ProteinReference er = (ProteinReference) m.get(label, getPattern());
 		return getUniprotNameForHuman(er);
 	}
-
 
 	/**
 	 * Checks if the type of a Control is inhibition.
@@ -434,11 +433,8 @@ public abstract class MinerAdapter implements Miner
 		{
 			for (Match m : matches.get(ele))
 			{
-				ProteinReference pr1 = (ProteinReference) m.get(label1, getPattern());
-				ProteinReference pr2 = (ProteinReference) m.get(label2, getPattern());
-
-				String s1 = getGeneSymbol(pr1);
-				String s2 = getGeneSymbol(pr2);
+				String s1 = getIdentifier(m, label1);
+				String s2 = getIdentifier(m, label2);
 
 				if (s1 != null && s2 != null)
 				{
@@ -581,91 +577,55 @@ public abstract class MinerAdapter implements Miner
 		{
 				return new SIFInteraction(m.get(((SIFMiner) this).getSourceLabel(), getPattern()),
 					m.get(((SIFMiner) this).getTargetLabel(), getPattern()),
-					((SIFMiner) this).getSIFType(m), harvestPMIDs(m), fetcher);
+					((SIFMiner) this).getSIFType(m),
+					new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())), fetcher);
 		}
 
 		return null;
 	}
 
-	protected static final PathAccessor xrefAcc = new PathAccessor("XReferrable/xref:PublicationXref");
-	protected static final PathAccessor evidAcc = new PathAccessor("Observable/evidence/xref:PublicationXref");
 
 	/**
-	 * Collects publication xrefs of the given elements.
-	 * @param ele element array
-	 * @return publication xrefs
-	 */
-	protected Set<PublicationXref> harvestPublicationXrefs(BioPAXElement... ele)
-	{
-		Set<PublicationXref> set = new HashSet<PublicationXref>();
-
-		for (Object o : xrefAcc.getValueFromBeans(Arrays.asList(ele)))
-		{
-			set.add((PublicationXref) o);
-		}
-		for (Object o : evidAcc.getValueFromBeans(Arrays.asList(ele)))
-		{
-			set.add((PublicationXref) o);
-		}
-		return set;
-	}
-
-	/**
-	 * Collects PubMed IDs fromt the given publication xrefs.
-	 * @param xrefs publication xrefs
-	 * @return PMIDs
-	 */
-	protected Set<String> harvestPMIDs(Set<PublicationXref> xrefs)
-	{
-		Set<String> set = new HashSet<String>();
-
-		for (PublicationXref xref : xrefs)
-		{
-			if (xref.getDb() != null && xref.getDb().equalsIgnoreCase("pubmed"))
-				if (xref.getId() != null && !xref.getId().isEmpty())
-					set.add(xref.getId());
-		}
-		return set;
-	}
-
-	/**
-	 * If a SIF miner wants to add PubMed IDs to the mined SIF interactions, then they need to
-	 * override this method and pass the labels of elements to collect the PMIDs.
+	 * If a SIF miner wants to tell which essential BioPAX elements mediated this relation, then
+	 * they need to override this method and pass the labels of elements.
 	 * @return labels of elements to collect publication refs
 	 */
-	public String[] getPubmedHarvestableLabels()
+	public String[] getMediatorLabels()
 	{
 		return null;
 	}
 
-	/**
-	 * Collects PMIDs for the given Match
-	 * @param m the match
-	 * @return PMIDs
-	 */
-	protected Set<String> harvestPMIDs(Match m)
-	{
-		String[] labels = getPubmedHarvestableLabels();
-
-		if (labels == null) return null;
-
-		BioPAXElement[] ele = new BioPAXElement[labels.length];
-		for (int i = 0; i < ele.length; i++)
-		{
-			ele[i] =  m.get(labels[i], getPattern());
-		}
-		return harvestPMIDs(harvestPublicationXrefs(ele));
-	}
 
 	/**
-	 * Uses uniprot name as identifier.
+	 * Uses uniprot name or gene symbol as identifier.
 	 * @param m current match
 	 * @param label label of the related EntityReference in the pattern
 	 * @return identifier
 	 */
 	public String getIdentifier(Match m, String label)
 	{
-		return getGeneSymbol(m, label);
-//		return getUniprotNameForHuman(m, label);
+		BioPAXElement el = m.get(label, getPattern());
+
+		if (el instanceof ProteinReference)
+		{
+//			return getUniprotNameForHuman(m, label);
+			return getGeneSymbol((ProteinReference) el);
+		}
+		else if (el instanceof SmallMoleculeReference)
+		{
+			return getCompoundName((SmallMoleculeReference) el);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the name of the small molecule to use in SIF.
+	 * @param smr small molecule ref
+	 * @return a name
+	 */
+	public String getCompoundName(SmallMoleculeReference smr)
+	{
+		return smr.getDisplayName();
 	}
 }

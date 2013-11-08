@@ -80,7 +80,7 @@ public class DegradesMiner extends MinerAdapter implements SIFMiner
 	}
 
 	@Override
-	public String[] getPubmedHarvestableLabels()
+	public String[] getMediatorLabels()
 	{
 		return new String[]{"Control", "Conversion"};
 	}

@@ -84,7 +84,7 @@ public class DirectedRelationMiner extends MinerAdapter
 	}
 
 	@Override
-	public String[] getPubmedHarvestableLabels()
+	public String[] getMediatorLabels()
 	{
 		return new String[]{"Control", "Interaction"};
 	}

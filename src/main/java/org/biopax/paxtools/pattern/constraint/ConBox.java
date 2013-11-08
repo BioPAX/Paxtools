@@ -46,21 +46,43 @@ public class ConBox
 	}
 
 	/**
-	 * From PhysicalEntity to the participated Interaction
-	 * @return generative constraint
-	 */
-	public static Constraint peToInter()
-	{
-		return new PathConstraint("PhysicalEntity/participantOf");
-	}
-
-	/**
 	 * From PhysicalEntity to the downstream Conversion.
 	 * @return generative constraint to get the Conversion that the PhysicalEntity is a controller
 	 */
 	public static Constraint peToControlledConv()
 	{
 		return new PathConstraint("PhysicalEntity/controllerOf/controlled*:Conversion");
+	}
+
+	/**
+	 * From PhysicalEntity to the downstream Interaction.
+	 * @return generative constraint to get the Interaction that the PhysicalEntity is a controller
+	 */
+	public static Constraint peToControlledInter()
+	{
+		return new PathConstraint("PhysicalEntity/controllerOf/controlled*:Interaction");
+	}
+
+	/**
+	 * From PhysicalEntity to the downstream Interaction.
+	 * @return generative constraint to get the Interaction that the PhysicalEntity is a controller
+	 */
+	public static Constraint peToInter()
+	{
+		return new OR(
+			new MappedConst(peToControlledInter(), 0, 1),
+			new MappedConst(participatesInInter(), 0, 1));
+	}
+
+	/**
+	 * From Interaction to the related PhysicalEntity.
+	 * @return the constraint
+	 */
+	public static Constraint interToPE()
+	{
+		return new OR(
+			new MappedConst(interToController(), 0, 1),
+			new MappedConst(participant(), 0, 1));
 	}
 
 	/**
@@ -263,6 +285,15 @@ public class ConBox
 	}
 
 	/**
+	 * From Interaction to the controlling Controls recursively, and their controller PEs.
+	 * @return the constraint
+	 */
+	public static Constraint interToController()
+	{
+		return new PathConstraint("Interaction/controlledOf*:Control/controller:PhysicalEntity");
+	}
+
+	/**
 	 * From Complex or SimplePhysicalEntity to the related EntityReference. If Complex, then
 	 * EntityReference of simple members (recursively) are related.
 	 * @return generative constraint to get the related EntityReference of the Complex or
@@ -399,6 +430,16 @@ public class ConBox
 	}
 
 	/**
+	 * Makes sure that the given physical entity is not related to the entity reference.
+	 * @return the constraint
+	 * todo: method not tested
+	 */
+	public static Constraint peNotRelatedToER()
+	{
+		return new NOT(new ConstraintChain(linkToSimple(), peToER()));
+	}
+
+	/**
 	 * Makes sure the second element (Control) is not a controller to the first element
 	 * (Interaction).
 	 * @return constraint to filter out cases where the Control at the second index is controlling
@@ -469,6 +510,15 @@ public class ConBox
 	public static Constraint type(Class<? extends BioPAXElement> clazz)
 	{
 		return new Type(clazz);
+	}
+
+	/**
+	 * Makes sure that the PhysicalEntity do not have member physical entities..
+	 * @return the constraint
+	 */
+	public static Constraint notGeneric()
+	{
+		return new Empty(new PathConstraint("PhysicalEntity/memberPhysicalEntity"));
 	}
 
 	/**

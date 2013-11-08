@@ -43,7 +43,7 @@ public class ControlsExpressionWithConvMiner extends ControlsExpressionMiner
 	}
 
 	@Override
-	public String[] getPubmedHarvestableLabels()
+	public String[] getMediatorLabels()
 	{
 		return new String[]{"Control", "Conversion"};
 	}

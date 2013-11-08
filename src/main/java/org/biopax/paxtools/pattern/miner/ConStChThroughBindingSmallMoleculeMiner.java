@@ -30,7 +30,7 @@ public class ConStChThroughBindingSmallMoleculeMiner extends ControlsStateChange
 	}
 
 	@Override
-	public String[] getPubmedHarvestableLabels()
+	public String[] getMediatorLabels()
 	{
 		return new String[]{"upper Control", "upper Conversion", "Conversion"};
 	}

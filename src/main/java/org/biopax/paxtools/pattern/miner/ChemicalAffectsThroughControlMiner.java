@@ -7,23 +7,31 @@ import org.biopax.paxtools.pattern.PatternBox;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Miner for the degradation pattern.
+ * Miner for the chemical-affects-protein pattern.
  * @author Ozgun Babur
  */
-public class InSameComplexMiner extends MinerAdapter implements SIFMiner
+public class ChemicalAffectsThroughControlMiner extends MinerAdapter implements SIFMiner
 {
+	/**
+	 * IDs of ubiquitous molecules.
+	 */
+	Set<String> ubiqueIDs = new HashSet<String>();
+
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public InSameComplexMiner()
+	public ChemicalAffectsThroughControlMiner(Set<String> ubiqueIDs)
 	{
-		super(SIFType.IN_SAME_COMPLEX.getTag(), "This pattern captures pairs of proteins that " +
-			"are members of the same complex. Pattern allows multiple nesting of the members and" +
-			" use of homologies.");
+		super(SIFType.CHEMICAL_AFFECTS_PROTEIN.getTag(), "This pattern captures a small molecule " +
+			"controlling a reaction, and a protein is participant of that reaction.");
+
+		this.ubiqueIDs = ubiqueIDs;
 	}
 
 	/**
@@ -33,12 +41,12 @@ public class InSameComplexMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.appearInSameComplex();
+		return PatternBox.chemicalAffectsProteinThroughControl(ubiqueIDs);
 	}
 
 	/**
-	 * Writes the result as "A DEGRADES B" or "A BLOCKS_DEGRADATION B", where A and B are gene
-	 * symbols, and whitespace is tab.
+	 * Writes the result as "A chemical-affect-protein B", where A is small molecule name, B is gene
+	 * name, and whitespace is tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -52,24 +60,24 @@ public class InSameComplexMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "Protein 1";
+		return "controller SMR";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "Protein 2";
+		return "affected PR";
 	}
 
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.IN_SAME_COMPLEX;
+		return SIFType.CHEMICAL_AFFECTS_PROTEIN;
 	}
 
 	@Override
 	public String[] getMediatorLabels()
 	{
-		return new String[]{"Complex"};
+		return new String[]{"Control", "Interaction"};
 	}
 }

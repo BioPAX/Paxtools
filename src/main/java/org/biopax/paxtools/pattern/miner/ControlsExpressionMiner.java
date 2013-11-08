@@ -109,7 +109,7 @@ public class ControlsExpressionMiner extends MinerAdapter implements SIFMiner
 	}
 
 	@Override
-	public String[] getPubmedHarvestableLabels()
+	public String[] getMediatorLabels()
 	{
 		return new String[]{"Control", "TempReac"};
 	}

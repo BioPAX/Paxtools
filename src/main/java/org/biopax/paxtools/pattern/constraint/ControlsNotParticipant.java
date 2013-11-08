@@ -14,12 +14,12 @@ import java.util.Set;
  *
  * @author Ozgun Babur
  */
-public class ControlNotParticipant extends ConstraintAdapter
+public class ControlsNotParticipant extends ConstraintAdapter
 {
 	/**
 	 * Constructor.
 	 */
-	public ControlNotParticipant()
+	public ControlsNotParticipant()
 	{
 		super(1);
 	}

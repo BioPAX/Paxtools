@@ -26,7 +26,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		Set<String> pubmedIDs = new HashSet<String>();
 		for (SIFInteraction si : sif)
 		{
-			if (si.pubmedIDs != null) pubmedIDs.addAll(si.pubmedIDs);
+			pubmedIDs.addAll(si.getPubmedIDs());
 		}
 
 		Assert.assertFalse(pubmedIDs.isEmpty());

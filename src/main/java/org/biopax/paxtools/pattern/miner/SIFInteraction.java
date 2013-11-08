@@ -1,15 +1,10 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.EntityReference;
-import org.biopax.paxtools.model.level3.XReferrable;
-import org.biopax.paxtools.model.level3.Xref;
-import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.model.level3.PublicationXref;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
@@ -21,10 +16,10 @@ public class SIFInteraction implements Comparable
 	public String sourceID;
 	public String targetID;
 	public SIFType type;
-	public List<String> pubmedIDs;
+	public Set<BioPAXElement> mediators;
 
 	public SIFInteraction(BioPAXElement source, BioPAXElement target, SIFType type,
-		Set<String> publications, IDFetcher fetcher)
+		Set<BioPAXElement> mediators, IDFetcher fetcher)
 	{
 		sourceID = fetcher.fetchID(source);
 		targetID = fetcher.fetchID(target);
@@ -43,11 +38,7 @@ public class SIFInteraction implements Comparable
 		this.target = target;
 		this.type = type;
 
-		if (publications != null)
-		{
-			this.pubmedIDs = new ArrayList<String>(publications);
-			Collections.sort(pubmedIDs);
-		}
+		this.mediators = mediators;
 	}
 
 	public boolean hasIDs()
@@ -98,13 +89,10 @@ public class SIFInteraction implements Comparable
 		if (!this.equals(equivalent))
 			throw new IllegalArgumentException("SIF interactions are not equivalent.");
 
-		if (pubmedIDs == null) pubmedIDs = equivalent.pubmedIDs;
-		else if (equivalent.pubmedIDs != null)
+		if (mediators == null) mediators = equivalent.mediators;
+		else if (equivalent.mediators != null)
 		{
-			for (String id : equivalent.pubmedIDs)
-			{
-				if (!pubmedIDs.contains(id)) pubmedIDs.add(id);
-			}
+			mediators.addAll(equivalent.mediators);
 		}
 	}
 
@@ -112,6 +100,79 @@ public class SIFInteraction implements Comparable
 	public String toString()
 	{
 		return sourceID + "\t" + type.getTag() + "\t" + targetID;
+	}
+
+	/**
+	 * Collects IDs of mediators.
+	 * @return mediator IDs
+	 */
+	public List<String> getMediatorIDs()
+	{
+		List<String> ids = new ArrayList<String>(mediators.size());
+
+		for (BioPAXElement ele : mediators)
+		{
+			ids.add(ele.getRDFId());
+		}
+		return ids;
+	}
+
+	/**
+	 * Collects PMIDs from mediators.
+	 * @return PMIDs
+	 */
+	public List<String> getPubmedIDs()
+	{
+		if (mediators == null) return Collections.emptyList();
+
+		Set<String> set = harvestPMIDs(harvestPublicationXrefs(
+			mediators.toArray(new BioPAXElement[mediators.size()])));
+
+		List<String> list = new ArrayList<String>(set);
+		Collections.sort(list);
+
+		return list;
+	}
+
+	private static final PathAccessor xrefAcc = new PathAccessor("XReferrable/xref:PublicationXref");
+	private static final PathAccessor evidAcc = new PathAccessor("Observable/evidence/xref:PublicationXref");
+
+	/**
+	 * Collects publication xrefs of the given elements.
+	 * @param ele element array
+	 * @return publication xrefs
+	 */
+	private Set<PublicationXref> harvestPublicationXrefs(BioPAXElement... ele)
+	{
+		Set<PublicationXref> set = new HashSet<PublicationXref>();
+
+		for (Object o : xrefAcc.getValueFromBeans(Arrays.asList(ele)))
+		{
+			set.add((PublicationXref) o);
+		}
+		for (Object o : evidAcc.getValueFromBeans(Arrays.asList(ele)))
+		{
+			set.add((PublicationXref) o);
+		}
+		return set;
+	}
+
+	/**
+	 * Collects PubMed IDs fromt the given publication xrefs.
+	 * @param xrefs publication xrefs
+	 * @return PMIDs
+	 */
+	private Set<String> harvestPMIDs(Set<PublicationXref> xrefs)
+	{
+		Set<String> set = new HashSet<String>();
+
+		for (PublicationXref xref : xrefs)
+		{
+			if (xref.getDb() != null && xref.getDb().equalsIgnoreCase("pubmed"))
+				if (xref.getId() != null && !xref.getId().isEmpty())
+					set.add(xref.getId());
+		}
+		return set;
 	}
 
 }

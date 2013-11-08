@@ -85,17 +85,16 @@ public class LinkedPE extends ConstraintAdapter
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
 		PhysicalEntity pe = (PhysicalEntity) match.get(ind[0]);
+		Set<BioPAXElement> set = getLinkedElements(pe);
+
+		return set;
+	}
+
+	public Set<BioPAXElement> getLinkedElements(PhysicalEntity pe)
+	{
 		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
 		set.add(pe);
 		enrichWithGenerics(set, set);
-
-		for (BioPAXElement ele : set)
-		{
-			PhysicalEntityChain peh = type == Type.TO_MEMBER ?
-				new PhysicalEntityChain((PhysicalEntity) ele, (PhysicalEntity) match.get(ind[0])) :
-				new PhysicalEntityChain((PhysicalEntity) match.get(ind[0]), (PhysicalEntity) ele) ;
-		}
-
 		return set;
 	}
 

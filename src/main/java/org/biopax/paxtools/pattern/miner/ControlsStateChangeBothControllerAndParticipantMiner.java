@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
+import org.biopax.paxtools.pattern.PatternBox;
 import org.biopax.paxtools.pattern.constraint.*;
 
 import java.io.IOException;
@@ -15,17 +16,18 @@ import java.util.Map;
 import static org.biopax.paxtools.pattern.constraint.ConBox.*;
 
 /**
- * Miner for the controls-state-change pattern.
+ * Miner for the controls-state-change pattern. This time the controller is also an input.
  * @author Ozgun Babur
  */
-public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
+public class ControlsStateChangeBothControllerAndParticipantMiner extends MinerAdapter
+	implements SIFMiner
 {
 	/**
 	 * Constructor for extending purposes.
 	 * @param name name of the miner
 	 * @param description description of the miner
 	 */
-	public ControlsStateChangeMiner(String name, String description)
+	public ControlsStateChangeBothControllerAndParticipantMiner(String name, String description)
 	{
 		super(name, description);
 	}
@@ -33,13 +35,13 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsStateChangeMiner()
+	public ControlsStateChangeBothControllerAndParticipantMiner()
 	{
 		super(SIFType.CONTROLS_STATE_CHANGE.getTag(), "Finds relations between proteins where " +
 			"the first one is controlling a reaction that changes the state of the second one. " +
-			"The reaction has to be a Conversion and modified Protein should be represented with " +
-			"different PhysicalEntity on each side. This pattern cannot determine the sign of " +
-			"the effect because it is hard to predict the effect of the modification.");
+			"The controller is also an input. The reaction has to be a Conversion and modified " +
+			"Protein should be represented with different non-generic PhysicalEntity on each " +
+			"side.");
 	}
 
 	/**
@@ -49,28 +51,7 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-//		Pattern p = PatternBox.controlsStateChange(true);
-//		p.addConstraint(new Type(ProteinReference.class), "controller ER");
-//		p.addConstraint(new Type(ProteinReference.class), "changed ER");
-
-
-		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.add(isHuman(), "controller PR");
-		p.add(erToPE(), "controller PR", "controller simple PE");
-		p.add(linkToComplex(), "controller simple PE", "controller PE");
-		p.add(peToControl(), "controller PE", "Control");
-		p.add(controlToConv(), "Control", "Conversion");
-		p.add(new NOT(participantER()), "Conversion", "controller PR");
-		p.add(new InputOrOutput(RelType.INPUT, true), "Conversion", "input PE");
-		p.add(linkToSimple(), "input PE", "input simple PE");
-		p.add(new Type(Protein.class), "input simple PE");
-		p.add(peToER(), "input simple PE", "changed PR");
-		p.add(new OtherSide(), "input PE", "Conversion", "output PE");
-		p.add(equal(false), "input PE", "output PE");
-		p.add(linkToSimple(), "output PE", "output simple PE");
-		p.add(peToER(), "output simple PE", "changed PR");
-
-		return p;
+		return PatternBox.controlsStateChangeBothControlAndPart();
 	}
 
 	/**
@@ -104,7 +85,7 @@ public class ControlsStateChangeMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getTargetLabel()
 	{
-		return "changed PR";
+		return "changed ER";
 	}
 
 	@Override

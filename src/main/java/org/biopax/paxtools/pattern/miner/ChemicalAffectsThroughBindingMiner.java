@@ -7,22 +7,31 @@ import org.biopax.paxtools.pattern.PatternBox;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Miner for the degradation pattern.
+ * Miner for the chemical-affects-protein pattern.
  * @author Ozgun Babur
  */
-public class InteractsWithMiner extends MinerAdapter implements SIFMiner
+public class ChemicalAffectsThroughBindingMiner extends MinerAdapter implements SIFMiner
 {
+	/**
+	 * IDs of ubiquitous molecules.
+	 */
+	Set<String> ubiqueIDs = new HashSet<String>();
+
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public InteractsWithMiner()
+	public ChemicalAffectsThroughBindingMiner(Set<String> ubiqueIDs)
 	{
-		super("Participants-of-same-interaction", "This miner finds cases where two genes are " +
-			"participants of the same interaction.");
+		super(SIFType.CHEMICAL_AFFECTS_PROTEIN.getTag(), "This pattern captures a small molecule" +
+			"that appears in same complex with a protein.");
+
+		this.ubiqueIDs = ubiqueIDs;
 	}
 
 	/**
@@ -32,12 +41,12 @@ public class InteractsWithMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.interaction();
+		return PatternBox.chemicalAffectsProteinThroughBinding(ubiqueIDs);
 	}
 
 	/**
-	 * Writes the result as "A interacts-with B", where A and B are gene symbols, and whitespace is
-	 * tab.
+	 * Writes the result as "A chemical-affect-protein B", where A is small molecule name, B is gene
+	 * name, and whitespace is tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -51,18 +60,24 @@ public class InteractsWithMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "Protein 1";
+		return "SMR";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "Protein 2";
+		return "PR";
 	}
 
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.INTERACTS_WITH;
+		return SIFType.CHEMICAL_AFFECTS_PROTEIN;
+	}
+
+	@Override
+	public String[] getMediatorLabels()
+	{
+		return new String[]{"Complex"};
 	}
 }

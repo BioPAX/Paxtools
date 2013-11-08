@@ -7,16 +7,20 @@ package org.biopax.paxtools.pattern.miner;
  */
 public enum SIFType
 {
-	CONTROLS_STATE_CHANGE("First entity is controlling a reaction that changes the state of the " +
-		"second entity.", true),
-	CONTROLS_EXPRESSION("First entity is controlling a conversion or a template reaction that" +
-		"changes expression of the second entity.", true),
-	CONTROLS_DEGRADATION("First entity is controlling a reaction that degrades second entity," +
-		" i.e. second entity is input to a reaction with no output", true),
-	CONSECUTIVE_CATALYSIS("First entity is controlling a reaction whose output molecule is input" +
-		" to another reaction controlled by the second entity.", true),
-	IN_SAME_COMPLEX("Entities appear as members of the same complex.", false),
-	INTERACTS_WITH("Entities appear as participants of the same interaction.", false);
+	CONTROLS_STATE_CHANGE("First protein is controlling a reaction that changes the state of the " +
+		"second protein.", true),
+	CONTROLS_EXPRESSION("First protein is controlling a conversion or a template reaction that" +
+		"changes expression of the second protein.", true),
+	CONTROLS_DEGRADATION("First protein is controlling a reaction that degrades second protein," +
+		" i.e. second protein is input to a reaction with no output", true),
+	CONTROLS_METABOLIC_CATALYSIS("The protein is controlling a reaction of which the small " +
+		"molecule is a participant.", true),
+	CONSECUTIVE_CATALYSIS("First protein is controlling a reaction whose output molecule is input" +
+		" to another reaction controlled by the second protein.", true),
+	IN_SAME_COMPLEX("Proteins appear as members of the same complex.", false),
+	CHEMICAL_AFFECTS_PROTEIN("A small molecule has an effect on a protein.", true),
+	RELATED_THROUGH_INTERACTION("Proteins appear as participants or controllers of the same " +
+		"interaction.", false);
 
 	/**
 	 * Constructor with parameters.

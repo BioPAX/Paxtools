@@ -3,6 +3,10 @@ package org.biopax.paxtools.pattern;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Named;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * A pattern match is an array of biopax elements that satisfies the list of mapped constraints in a
  * pattern.
@@ -54,6 +58,25 @@ public class Match implements Cloneable
 	public BioPAXElement get(String label, Pattern p)
 	{
 		return variables[p.indexOf(label)];
+	}
+
+	/**
+	 * Gets elements corresponding to the given labels in the pattern.
+	 * @param label labels of the element in the pattern
+	 * @param p related pattern
+	 * @return elements of the given label
+	 * @throws IllegalArgumentException if one of the labels not in the pattern
+	 */
+	public List<BioPAXElement> get(String[] label, Pattern p)
+	{
+		if (label == null) return Collections.emptyList();
+
+		List<BioPAXElement> list = new ArrayList<BioPAXElement>(label.length);
+		for (String lab : label)
+		{
+			list.add(variables[p.indexOf(lab)]);
+		}
+		return list;
 	}
 
 	/**
