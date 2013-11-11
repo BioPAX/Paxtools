@@ -418,6 +418,11 @@ public abstract class MinerAdapter implements Miner
 		boolean directed, String label1, String label2) throws IOException
 	{
 		if (matches.isEmpty()) return;
+		if (this instanceof SIFMiner)
+		{
+			writeSIFsUsingSIFFramework(matches, out);
+			return;
+		}
 
 		// Memory for already written pairs.
 		Set<String> mem = new HashSet<String>();
@@ -452,6 +457,86 @@ public abstract class MinerAdapter implements Miner
 					}
 				}
 			}
+		}
+		writer.flush();
+	}
+
+	/**
+	 * This method writes the output as pairs of gene symbols of the given two ProteinReference.
+	 * Parameters labels have to map to ProteinReference.
+	 * @param matches the search result
+	 * @param out output stream for text output
+	 * @throws IOException if cannot write to output stream
+	 */
+	public void writeSIFsUsingSIFFramework(Map<BioPAXElement, List<Match>> matches,
+		OutputStream out) throws IOException
+	{
+		Map<SIFInteraction, SIFInteraction> sifMap = new HashMap<SIFInteraction, SIFInteraction>();
+
+		for (List<Match> matchList : matches.values())
+		{
+			for (Match match : matchList)
+			{
+				SIFInteraction inter = this.createSIFInteraction(match, new IDFetcher()
+				{
+					@Override
+					public String fetchID(BioPAXElement ele)
+					{
+						if (ele instanceof SmallMoleculeReference)
+						{
+							SmallMoleculeReference smr = (SmallMoleculeReference) ele;
+							if (smr.getDisplayName() != null) return smr.getDisplayName();
+							else if (!smr.getName().isEmpty())
+								return smr.getName().iterator().next();
+							else return null;
+						}
+						else if (ele instanceof XReferrable)
+						{
+							for (Xref xr : ((XReferrable) ele).getXref())
+							{
+								String db = xr.getDb();
+								if (db != null)
+								{
+									db = db.toLowerCase();
+									if (db.startsWith("hgnc"))
+									{
+										String id = xr.getId();
+										if (id != null)
+										{
+											String symbol = HGNC.getSymbol(id);
+											if (symbol != null && !symbol.isEmpty())
+											{
+												return symbol;
+											}
+										}
+									}
+								}
+							}
+						}
+
+						return null;
+					}
+				});
+
+				if (inter.hasIDs())
+				{
+					if (sifMap.containsKey(inter))
+					{
+						sifMap.get(inter).mergeWith(inter);
+					}
+					else sifMap.put(inter, inter);
+				}
+			}
+		}
+		OutputStreamWriter writer = new OutputStreamWriter(out);
+
+		boolean first = true;
+		for (SIFInteraction inter : sifMap.keySet())
+		{
+			if (first) first = false;
+			else writer.write("\n");
+
+			writer.write(inter.toString());
 		}
 		writer.flush();
 	}

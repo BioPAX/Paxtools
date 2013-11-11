@@ -41,14 +41,18 @@ public class SIFSearcherTest extends PatternBoxTest
 	public void generateLargeSIFGraph() throws IOException
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/PC.owl"));
+		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl"));
 
-		SIFSearcher s = new SIFSearcher(SIFType.values());
+		SIFSearcher s = new SIFSearcher(
+			SIFType.CONTROLS_STATE_CHANGE,
+			SIFType.CONTROLS_EXPRESSION,
+			SIFType.CONTROLS_DEGRADATION);
 
+		s.setUbiqueIDs(loadUbiqueIDs("/home/ozgun/Projects/biopax-pattern/blacklist.txt"));
 		Set<SIFInteraction> set = s.searchSIF(model);
 
 		BufferedWriter writer = new BufferedWriter(
-			new FileWriter("/home/ozgun/Desktop/SIF_uniprot.txt"));
+			new FileWriter("/home/ozgun/Desktop/PC.sif"));
 
 		for (SIFInteraction sif : set)
 		{

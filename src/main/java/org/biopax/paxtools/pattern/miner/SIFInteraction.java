@@ -99,7 +99,12 @@ public class SIFInteraction implements Comparable
 	@Override
 	public String toString()
 	{
-		return sourceID + "\t" + type.getTag() + "\t" + targetID;
+		String s = sourceID + "\t" + type.getTag() + "\t" + targetID;
+
+		String m = getMediatorsInString();
+		if (!m.isEmpty()) s += "\t" + m;
+
+		return s;
 	}
 
 	/**
@@ -115,6 +120,19 @@ public class SIFInteraction implements Comparable
 			ids.add(ele.getRDFId());
 		}
 		return ids;
+	}
+
+	/**
+	 * Gets the mediator IDs in a String with a space between each ID.
+	 */
+	public String getMediatorsInString()
+	{
+		String m = "";
+		for (String mid : getMediatorIDs())
+		{
+			m+= " " + mid;
+		}
+		return m.trim();
 	}
 
 	/**

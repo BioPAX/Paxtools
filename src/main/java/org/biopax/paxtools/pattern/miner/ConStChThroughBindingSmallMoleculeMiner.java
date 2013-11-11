@@ -3,6 +3,9 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Miner for the controls-state-change pattern.
  * @author Ozgun Babur
@@ -10,13 +13,20 @@ import org.biopax.paxtools.pattern.PatternBox;
 public class ConStChThroughBindingSmallMoleculeMiner extends ControlsStateChangeMiner
 {
 	/**
+	 * IDs of ubiquitous molecules.
+	 */
+	Set<String> ubiqueIDs = new HashSet<String>();
+
+	/**
 	 * Constructor that sets name and description.
 	 */
-	public ConStChThroughBindingSmallMoleculeMiner()
+	public ConStChThroughBindingSmallMoleculeMiner(Set<String> ubiqueIDs)
 	{
 		super("cont-st-chg-through-binding-small-mol", "Mines the relation where the first" +
 			"protein produces a non-ubique small molecule, and this small molecule controls" +
 			"state of the second protein.");
+
+		this.ubiqueIDs = ubiqueIDs;
 	}
 
 	/**
@@ -26,7 +36,7 @@ public class ConStChThroughBindingSmallMoleculeMiner extends ControlsStateChange
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.controlsStateChangeThroughBindingSmallMolecule();
+		return PatternBox.controlsStateChangeThroughBindingSmallMolecule(ubiqueIDs);
 	}
 
 	@Override

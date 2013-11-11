@@ -187,7 +187,7 @@ public class PatternBox
 	 * change of another molecule.
 	 * @return the pattern
 	 */
-	public static Pattern controlsStateChangeThroughControllerSmallMolecule()
+	public static Pattern controlsStateChangeThroughControllerSmallMolecule(Set<String> ubiqueIDs)
 	{
 		Pattern p = new Pattern(ProteinReference.class, "upper controller PR");
 		p.add(erToPE(), "upper controller PR", "upper controller simple PE");
@@ -198,6 +198,7 @@ public class PatternBox
 		p.add(new NOT(participantER()), "upper Conversion", "upper controller PR");
 		p.add(new InputOrOutput(RelType.OUTPUT, true), "upper Conversion", "controller PE");
 		p.add(type(SmallMolecule.class), "controller PE");
+		if (ubiqueIDs != null) p.add(notUbique(ubiqueIDs), "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
 		p.add(equal(false), "upper Conversion", "Conversion");
@@ -221,7 +222,7 @@ public class PatternBox
 	 * change of another molecule.
 	 * @return the pattern
 	 */
-	public static Pattern controlsStateChangeThroughBindingSmallMolecule()
+	public static Pattern controlsStateChangeThroughBindingSmallMolecule(Set<String> ubiqueIDs)
 	{
 		Pattern p = new Pattern(ProteinReference.class, "upper controller PR");
 		p.add(erToPE(), "upper controller PR", "upper controller simple PE");
@@ -232,6 +233,7 @@ public class PatternBox
 		p.add(new NOT(participantER()), "upper Conversion", "upper controller PR");
 		p.add(new InputOrOutput(RelType.OUTPUT, true), "upper Conversion", "SM");
 		p.add(type(SmallMolecule.class), "SM");
+		if (ubiqueIDs != null) p.add(notUbique(ubiqueIDs), "SM");
 		p.add(new ParticipatesInConv(RelType.INPUT, true), "SM", "Conversion");
 		p.add(peToER(), "SM", "SM ER");
 		p.add(equal(false), "upper Conversion", "Conversion");

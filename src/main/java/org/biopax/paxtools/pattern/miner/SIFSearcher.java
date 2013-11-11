@@ -95,7 +95,6 @@ public class SIFSearcher
 					}
 
 					return null;
-
 				}
 			};
 		}
@@ -112,8 +111,8 @@ public class SIFSearcher
 				case CONTROLS_STATE_CHANGE:
 					miners.add(new ControlsStateChangeMiner());
 					miners.add(new ControlsStateChangeButIsParticipantMiner());
-					miners.add(new ConStChThroughControllingSmallMoleculeMiner());
-					miners.add(new ConStChThroughBindingSmallMoleculeMiner());
+					miners.add(new ConStChThroughControllingSmallMoleculeMiner(ubiqueIDs));
+					miners.add(new ConStChThroughBindingSmallMoleculeMiner(ubiqueIDs));
 					break;
 				case CONTROLS_EXPRESSION:
 					miners.add(new ControlsExpressionMiner());
