@@ -12,18 +12,19 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Miner for the chemical-affects-protein pattern.
+ * Miner for the controls-production-of pattern.
  * @author Ozgun Babur
  */
-public class ChemicalAffectsThroughBindingMiner extends MinerAdapter implements SIFMiner
+public class ControlsProductionOfMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ChemicalAffectsThroughBindingMiner(Set<String> ubiqueIDs)
+	public ControlsProductionOfMiner(Set<String> ubiqueIDs)
 	{
-		super(SIFType.CHEMICAL_AFFECTS.getTag(), "This pattern captures a small molecule" +
-			"that appears in same complex with a protein.", ubiqueIDs);
+		super(SIFType.CONTROLS_PRODUCTION_OF.getTag(), "Finds relations from a protein that " +
+			"controls a reaction, to a small molecule that is produced by that reaction.",
+			ubiqueIDs);
 	}
 
 	/**
@@ -33,12 +34,12 @@ public class ChemicalAffectsThroughBindingMiner extends MinerAdapter implements 
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.chemicalAffectsProteinThroughBinding(ubiqueIDs);
+		return PatternBox.meabolicCatalysisSubclass(ubiqueIDs, false);
 	}
 
 	/**
-	 * Writes the result as "A chemical-affect-protein B", where A is small molecule name, B is gene
-	 * name, and whitespace is tab.
+	 * Writes the result as "A controls-production-of B", where B is small molecule name, A is gene
+	 * symbol, and whitespace is tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -46,30 +47,40 @@ public class ChemicalAffectsThroughBindingMiner extends MinerAdapter implements 
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		writeResultAsSIF(matches, out, false, getSourceLabel(), getTargetLabel());
+		writeResultAsSIF(matches, out, true, getSourceLabel(), getTargetLabel());
+	}
+
+	/**
+	 * Sets header of the output.
+	 * @return header
+	 */
+	@Override
+	public String getHeader()
+	{
+		return "Protein\tRelation\tChemical";
 	}
 
 	@Override
 	public String getSourceLabel()
 	{
-		return "SMR";
+		return "controller PR";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "PR";
+		return "part SMR";
 	}
 
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.CHEMICAL_AFFECTS;
+		return SIFType.CONTROLS_PRODUCTION_OF;
 	}
 
 	@Override
 	public String[] getMediatorLabels()
 	{
-		return new String[]{"Complex"};
+		return new String[]{"Control", "Conversion"};
 	}
 }

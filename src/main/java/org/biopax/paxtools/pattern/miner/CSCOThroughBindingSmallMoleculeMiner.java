@@ -10,7 +10,7 @@ import java.util.Set;
  * Miner for the controls-state-change pattern.
  * @author Ozgun Babur
  */
-public class ConStChThroughBindingSmallMoleculeMiner extends ControlsStateChangeMiner
+public class CSCOThroughBindingSmallMoleculeMiner extends ControlsStateChangeOfMiner
 {
 	/**
 	 * IDs of ubiquitous molecules.
@@ -20,9 +20,9 @@ public class ConStChThroughBindingSmallMoleculeMiner extends ControlsStateChange
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ConStChThroughBindingSmallMoleculeMiner(Set<String> ubiqueIDs)
+	public CSCOThroughBindingSmallMoleculeMiner(Set<String> ubiqueIDs)
 	{
-		super("cont-st-chg-through-binding-small-mol", "Mines the relation where the first" +
+		super("cso-through-binding-small-mol", "Mines the relation where the first" +
 			"protein produces a non-ubique small molecule, and this small molecule controls" +
 			"state of the second protein.");
 

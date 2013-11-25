@@ -64,7 +64,7 @@ public class ConBox
 	}
 
 	/**
-	 * From PhysicalEntity to the downstream Interaction.
+	 * From PhysicalEntity to the related Interaction.
 	 * @return generative constraint to get the Interaction that the PhysicalEntity is a controller
 	 */
 	public static Constraint peToInter()
@@ -72,6 +72,16 @@ public class ConBox
 		return new OR(
 			new MappedConst(peToControlledInter(), 0, 1),
 			new MappedConst(participatesInInter(), 0, 1));
+	}
+
+	/**
+	 * From simple PhysicalEntity to related Conversion. The relation can be through complexes and
+	 * generics.
+	 * @return generative constraint
+	 */
+	public static Constraint simplePEToConv(RelType type)
+	{
+		return new ConstraintChain(linkToComplex(), new ParticipatesInConv(type, true));
 	}
 
 	/**
@@ -311,7 +321,7 @@ public class ConBox
 	 */
 	public static Constraint nameEquals(String name)
 	{
-		return new Field("Named/name", name);
+		return new Field("Named/name", Field.Operation.INTERSECT, name);
 	}
 
 	/**
@@ -321,7 +331,8 @@ public class ConBox
 	 */
 	public static Constraint nameEquals(String... name)
 	{
-		return new Field("Named/name", new HashSet<String>(Arrays.asList(name)));
+		return new Field("Named/name", Field.Operation.INTERSECT,
+			new HashSet<String>(Arrays.asList(name)));
 	}
 
 	/**
@@ -392,9 +403,9 @@ public class ConBox
 	{
 		return new OR(
 			new MappedConst(new Field("SequenceEntityReference/organism/displayName",
-				"Homo sapiens"), 0),
+				Field.Operation.INTERSECT, "Homo sapiens"), 0),
 			new MappedConst(new Field("PhysicalEntity/entityReference/organism/displayName",
-				"Homo sapiens"), 0));
+				Field.Operation.INTERSECT, "Homo sapiens"), 0));
 	}
 
 	/**
@@ -405,17 +416,7 @@ public class ConBox
 	 */
 	public static Constraint hasXref(String xrefID)
 	{
-		return new Field("XReferrable/xref/id", xrefID);
-	}
-
-	/**
-	 * From PhysicalEntity to the MolecularInteraction.
-	 * @return generative constraint to get the MolecularInteraction the the PhysicalEntity is
-	 * participant
-	 */
-	public static Constraint molecularInteraction()
-	{
-		return new PathConstraint("PhysicalEntity/participantOf:MolecularInteraction");
+		return new Field("XReferrable/xref/id", Field.Operation.INTERSECT, xrefID);
 	}
 
 	/**
@@ -426,7 +427,8 @@ public class ConBox
 	 */
 	public static Constraint notAParticipant()
 	{
-		return new NOT(new Field("Interaction/participant", Field.USE_SECOND_ARG));
+		return new NOT(new Field("Interaction/participant", Field.Operation.INTERSECT,
+			Field.USE_SECOND_ARG));
 	}
 
 	/**
@@ -470,7 +472,8 @@ public class ConBox
 	public static Constraint modificationConstraint(String modifTerm)
 	{
 		return new FieldOfMultiple(new MappedConst(new LinkedPE(LinkedPE.Type.TO_MEMBER), 0),
-			"PhysicalEntity/feature:ModificationFeature/modificationType/term", modifTerm);
+			"PhysicalEntity/feature:ModificationFeature/modificationType/term",
+			Field.Operation.INTERSECT, modifTerm);
 	}
 
 	/**
@@ -534,7 +537,7 @@ public class ConBox
 
 	public static Constraint source(String dbname)
 	{
-		return new Field("Entity/dataSource/displayName", dbname);
+		return new Field("Entity/dataSource/displayName", Field.Operation.INTERSECT, dbname);
 	}
 
 	/**
@@ -545,8 +548,8 @@ public class ConBox
 	{
 		String s1 = "Interaction/stepProcessOf/pathwayOrderOf";
 		String s2 = "Interaction/pathwayComponentOf";
-		return new OR(new MappedConst(new Field(s1, s1, null), 0, 1),
-			new MappedConst(new Field(s2, s2, null), 0, 1));
+		return new OR(new MappedConst(new Field(s1, s1, Field.Operation.INTERSECT), 0, 1),
+			new MappedConst(new Field(s2, s2, Field.Operation.INTERSECT), 0, 1));
 	}
 
 	/**
@@ -574,5 +577,15 @@ public class ConBox
 				return (partCnvCnt - partCACnt) <= effCnt;
 			}
 		};
+	}
+
+	/**
+	 * Checks if two physical entities have non-empty and different compartments.
+	 * @return the constraint
+	 */
+	public static Constraint hasDifferentCompartments()
+	{
+		String acStr = "PhysicalEntity/cellularLocation/term";
+		return new Field(acStr, acStr, Field.Operation.NOT_EMPTY_AND_NOT_INTERSECT);
 	}
 }

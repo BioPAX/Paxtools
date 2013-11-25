@@ -1,12 +1,13 @@
 package org.biopax.paxtools.pattern;
 
-import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.constraint.*;
+import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.HGNC;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -26,8 +27,8 @@ public class TempTests
 	@Before
 	public void setUp() throws Exception
 	{
-		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(new FileInputStream("All-Human-Data.owl"));
+//		SimpleIOHandler h = new SimpleIOHandler();
+//		model = h.convertFromOWL(new FileInputStream("All-Human-Data.owl"));
 	}
 
 	@Test
@@ -36,7 +37,8 @@ public class TempTests
 	{
 		Pattern p = new Pattern(Pathway.class, "Pathway");
 		p.add(new PathConstraint("Pathway/pathwayComponent:Conversion"), "Pathway", "Conv");
-		p.add(new Field("Conversion/conversionDirection", ConversionDirectionType.REVERSIBLE), "Conv");
+		p.add(new Field("Conversion/conversionDirection", Field.Operation.INTERSECT,
+			ConversionDirectionType.REVERSIBLE), "Conv");
 		p.add(new PathConstraint("Conversion/controlledOf:Catalysis"), "Conv", "Cat");
 		p.add(new Empty(new PathConstraint("Catalysis/catalysisDirection")), "Cat");
 		p.add(new Empty(new PathConstraint("Pathway/pathwayComponent:Pathway")), "Pathway");
@@ -76,7 +78,7 @@ public class TempTests
 		reader.close();
 
 
-		Pattern p = PatternBox.consecutiveCatalysis(ubiq);
+		Pattern p = PatternBox.catalysisPrecedes(ubiq);
 
 		Searcher.searchInFile(p, "All-Human-Data.owl", "Captured-conseq-catalysis.owl", 100, 1);
 	}
@@ -85,7 +87,7 @@ public class TempTests
 	@Ignore
 	public void capturePattern() throws Throwable
 	{
-		Pattern p = PatternBox.degradation();
+		Pattern p = PatternBox.controlsDegradation();
 
 		Searcher.searchInFile(p, "All-Human-Data.owl", "Captured-controls-degradation.owl", 100, 1);
 	}
@@ -151,5 +153,192 @@ public class TempTests
 		m.set(pe, 1);
 		List<Match> result = Searcher.search(m, p);
 		System.out.println("result.size() = " + result.size());
+	}
+
+
+	@Test
+	@Ignore
+	public void searchAndWriteWithMiners() throws Throwable
+	{
+		Set<String> blacklist = readBlacklist();
+		SIFMiner[] miner = new SIFMiner[]{
+			new ControlsStateChangeOfMiner(),
+			new CSCOButIsParticipantMiner(),
+			new CSCOBothControllerAndParticipantMiner(),
+			new CSCOThroughControllingSmallMoleculeMiner(blacklist),
+			new CSCOThroughBindingSmallMoleculeMiner(blacklist)};
+
+		for (int i = 0; i < miner.length; i++)
+		{
+			System.out.println("i = " + i);
+			Map<BioPAXElement,List<Match>> matches =
+				Searcher.search(model, miner[i].getPattern(), null);
+
+			FileOutputStream os = new FileOutputStream(miner[i].getName() + ".txt");
+			miner[i].writeResult(matches, os);
+		}
+	}
+
+	@Test
+	@Ignore
+	public void printVennIntersections() throws FileNotFoundException
+	{
+		String[] file = new String[]{"changes-state-of.txt", "cso-but-a-participant.txt",
+			"cso-both-ctrl-part.txt", "cso-through-controlling-small-mol.txt",
+			"cso-through-binding-small-mol.txt"};
+		String[] let = new String[]{"A", "B", "C", "D", "E"};
+
+		Set<String>[] sets = new Set[file.length];
+
+		for (int i = 0; i < file.length; i++)
+		{
+			sets[i] = readPairsFromSIFFile(file[i], true);
+		}
+
+		for (int i = 1; i < Math.pow(2, file.length); i++)
+		{
+			Set<Set<String>> intersectSets = new HashSet<Set<String>>();
+			Set<Set<String>> subtractSets = new HashSet<Set<String>>();
+			String name = "";
+
+			for (int j = 0; j < file.length; j++)
+			{
+				if ((i / (int) Math.pow(2, j)) % 2 == 1)
+				{
+					intersectSets.add(sets[j]);
+					name += let[j];
+				}
+				else
+				{
+					subtractSets.add(sets[j]);
+				}
+			}
+
+			boolean first = true;
+			Set<String> set = new HashSet<String>();
+			for (Set<String> inset : intersectSets)
+			{
+				if (first)
+				{
+					set.addAll(inset);
+					first = false;
+				}
+				else set.retainAll(inset);
+			}
+			for (Set<String> subset : subtractSets)
+			{
+				set.removeAll(subset);
+			}
+
+			System.out.println(name + "\t" + set.size());
+		}
+
+		Set<String> all = new HashSet<String>();
+		for (Set<String> set : sets)
+		{
+			all.addAll(set);
+		}
+		System.out.println("Total: " + all.size());
+	}
+
+	@Test
+	@Ignore
+	public void checkOverlap() throws Throwable
+	{
+		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Desktop/PC.sif");
+
+		List<SIFType> types = new ArrayList<SIFType>(Arrays.asList(SIFType.values()));
+		types.retainAll(map.keySet());
+
+		printOverlaps(map, types.subList(0, 8));
+		printOverlaps(map, types.subList(8, 12));
+	}
+
+	private void printOverlaps(Map<SIFType, Set<String>> map, List<SIFType> types)
+	{
+		for (SIFType type : types)
+		{
+			System.out.print("\t" + type.getTag());
+		}
+		for (SIFType type : types)
+		{
+			System.out.print("\n" + type.getTag());
+
+			for (SIFType type2 : types)
+			{
+				Set<String> set = new HashSet<String>(map.get(type));
+				set.retainAll(map.get(type2));
+				int size = set.size();
+				if (!type.isDirected() && !type2.isDirected()) size /= 2;
+				System.out.print("\t" + size);
+			}
+		}
+		System.out.println("\n");
+	}
+
+	private Set<String> negatePairs(Set<String> set)
+	{
+		Set<String> neg = new HashSet<String>();
+		for (String pair : set)
+		{
+			String[] tok = pair.split("\t");
+			neg.add(tok[1] + "\t" + tok[0]);
+		}
+		return neg;
+	}
+
+
+	private Set<String> readPairsFromSIFFile(String file, boolean directed) throws FileNotFoundException
+	{
+		Scanner sc = new Scanner(new File(file));
+		Set<String> set = new HashSet<String>();
+
+		while(sc.hasNextLine())
+		{
+			String line = sc.nextLine();
+
+			String[] token = line.split("\t");
+			if (token.length >= 3)
+			{
+				set.add(token[0] + "\t" + token[2]);
+				if (!directed) set.add(token[2] + "\t" + token[0]);
+			}
+		}
+		return set;
+	}
+
+	private Map<SIFType, Set<String>> readSIFFile(String file) throws FileNotFoundException
+	{
+		Map<SIFType, Set<String>> map = new HashMap<SIFType, Set<String>>();
+		Scanner sc = new Scanner(new File(file));
+
+		while(sc.hasNextLine())
+		{
+			String line = sc.nextLine();
+
+			String[] token = line.split("\t");
+			if (token.length >= 3)
+			{
+				SIFType type = SIFType.typeOf(token[1]);
+				if (type == null) continue;
+
+				if (!map.containsKey(type)) map.put(type, new HashSet<String>());
+
+				map.get(type).add(token[0] + "\t" + token[2]);
+				if (!type.isDirected()) map.get(type).add(token[2] + "\t" + token[0]);
+			}
+		}
+		return map;
+	}
+
+	private Set<String> readBlacklist() throws FileNotFoundException
+	{
+		Set<String> black = new HashSet<String>();
+		Scanner sc = new Scanner(new File("blacklist.txt"));
+		while(sc.hasNextLine())
+		{
+			black.add(sc.nextLine());
+		}
+		return black;
 	}
 }

@@ -7,20 +7,27 @@ package org.biopax.paxtools.pattern.miner;
  */
 public enum SIFType
 {
-	CONTROLS_STATE_CHANGE("First protein is controlling a reaction that changes the state of the " +
-		"second protein.", true),
-	CONTROLS_EXPRESSION("First protein is controlling a conversion or a template reaction that" +
+	CONTROLS_STATE_CHANGE_OF("First protein is controlling a reaction that changes the state of " +
+		"the second protein.", true),
+	CONTROLS_TRANSPORT_OF("First protein is controlling a reaction that changes the cellular " +
+		"location of the second protein.", true),
+	CONTROLS_EXPRESSION_OF("First protein is controlling a conversion or a template reaction that" +
 		"changes expression of the second protein.", true),
-	CONTROLS_DEGRADATION("First protein is controlling a reaction that degrades second protein," +
-		" i.e. second protein is input to a reaction with no output", true),
-	CONTROLS_METABOLIC_CATALYSIS("The protein is controlling a reaction of which the small " +
-		"molecule is a participant.", true),
-	CONSECUTIVE_CATALYSIS("First protein is controlling a reaction whose output molecule is input" +
+	CONTROLS_DEGRADATION_OF("First protein is controlling a reaction that degrades second " +
+		"protein, i.e. second protein is input to a reaction with no output", true),
+	CATALYSIS_PRECEDES("First protein is controlling a reaction whose output molecule is input" +
 		" to another reaction controlled by the second protein.", true),
-	IN_SAME_COMPLEX("Proteins appear as members of the same complex.", false),
-	CHEMICAL_AFFECTS_PROTEIN("A small molecule has an effect on a protein.", true),
-	RELATED_THROUGH_INTERACTION("Proteins appear as participants or controllers of the same " +
-		"interaction.", false);
+	IN_COMPLEX_WITH("Proteins appear as members of the same complex.", false),
+	INTERACTS_WITH("Proteins appear as participants of the same MolecularInteraction", false),
+	NEIGHBOR_OF("Proteins appear as participants or controllers of the same interaction.", false),
+	CONSUMPTION_CONTROLLED_BY("The small molecule is consumed by a reaction that is controlled by" +
+		" a protein", true),
+	CONTROLS_PRODUCTION_OF("The protein is controlling a reaction of which the small molecule is " +
+		"an output", true),
+	CONTROLS_TRANSPORT_OF_CHEMICAL("The protein is controlling a reaction that changes cellular " +
+		"location of the small molecule.", true),
+	CHEMICAL_AFFECTS("A small molecule has an effect on a protein.", true),
+	;
 
 	/**
 	 * Constructor with parameters.
@@ -42,7 +49,6 @@ public enum SIFType
 	 * Some SIF edges are directed and others are not.
 	 */
 	private boolean directed;
-
 
 	/**
 	 * Tag of a SIF type is derived from the enum name.
@@ -69,5 +75,17 @@ public enum SIFType
 	public String getDescription()
 	{
 		return description;
+	}
+
+	public static SIFType typeOf(String tag)
+	{
+		tag = tag.toUpperCase().replaceAll("-", "_");
+		SIFType type = null;
+		try
+		{
+			type = valueOf(tag);
+		}
+		catch (IllegalArgumentException e){}
+		return type;
 	}
 }

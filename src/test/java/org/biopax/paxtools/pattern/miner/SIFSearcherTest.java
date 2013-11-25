@@ -19,7 +19,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Ignore
 	public void testSIFMiner()
 	{
-		SIFSearcher s = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE, SIFType.IN_SAME_COMPLEX);
+		SIFSearcher s = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE_OF, SIFType.IN_COMPLEX_WITH);
 		Set<SIFInteraction> sif = s.searchSIF(model);
 		Assert.assertFalse(sif.isEmpty());
 
@@ -31,7 +31,7 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		Assert.assertFalse(pubmedIDs.isEmpty());
 
-		s = new SIFSearcher(SIFType.CONSECUTIVE_CATALYSIS);
+		s = new SIFSearcher(SIFType.CATALYSIS_PRECEDES);
 		sif = s.searchSIF(model);
 		Assert.assertTrue(sif.isEmpty());
 	}
@@ -43,12 +43,11 @@ public class SIFSearcherTest extends PatternBoxTest
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl"));
 
-		SIFSearcher s = new SIFSearcher(
-			SIFType.CONTROLS_STATE_CHANGE,
-			SIFType.CONTROLS_EXPRESSION,
-			SIFType.CONTROLS_DEGRADATION);
+		SIFSearcher s = new SIFSearcher(SIFType.values());
 
-		s.setUbiqueIDs(loadUbiqueIDs("/home/ozgun/Projects/biopax-pattern/blacklist.txt"));
+		Set<String> ubiqueIDs = loadUbiqueIDs("/home/ozgun/Projects/biopax-pattern/blacklist.txt");
+		s.setUbiqueIDs(ubiqueIDs);
+		confirmPresenceOfUbiques(model, ubiqueIDs);
 		Set<SIFInteraction> set = s.searchSIF(model);
 
 		BufferedWriter writer = new BufferedWriter(
@@ -60,6 +59,24 @@ public class SIFSearcherTest extends PatternBoxTest
 		}
 
 		writer.close();
+	}
+
+	private void confirmPresenceOfUbiques(Model model, Set<String> ubiques)
+	{
+		int present = 0;
+		int absent = 0;
+		for (String ubique : ubiques)
+		{
+			if (model.getByID(ubique) != null) present++;
+			else
+			{
+				absent++;
+			}
+		}
+		System.out.println("absent ubique  = " + absent);
+		System.out.println("present ubique = " + present);
+		if (absent < present) System.out.println("Passed ubique test");
+		assert absent < present;
 	}
 
 
@@ -94,7 +111,7 @@ public class SIFSearcherTest extends PatternBoxTest
 
 	public static Set<SIFInteraction> generate(Model model, Set<String> ubiqueIDs)
 	{
-		SIFSearcher searcher = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE);
+		SIFSearcher searcher = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE_OF);
 //			SIFType.CONTROLS_EXPRESSION, SIFType.CONTROLS_DEGRADATION);
 
 		searcher.setUbiqueIDs(ubiqueIDs);
@@ -102,10 +119,10 @@ public class SIFSearcherTest extends PatternBoxTest
 		return searcher.searchSIF(model);
 	}
 
-	private static Set<String> loadUbiqueIDs(String filename)
+	private static Set<String> loadUbiqueIDs(String filename) throws FileNotFoundException
 	{
 		Set<String> ids = new HashSet<String>();
-		Scanner scan = new Scanner(filename);
+		Scanner scan = new Scanner(new File(filename));
 		while (scan.hasNextLine())
 		{
 			String line = scan.nextLine();

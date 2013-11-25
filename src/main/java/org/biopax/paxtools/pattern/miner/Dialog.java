@@ -127,7 +127,12 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	/**
 	 * The name of the file for IDs of ubiquitous molecules.
 	 */
-	private static final String UBIQUE_FILE = "ubiquitous-ids.txt";
+	private static final String UBIQUE_FILE = "blacklist.txt";
+
+	/**
+	 * The url of the file for IDs of ubiquitous molecules.
+	 */
+	private static final String UBIQUE_URL = "http://www.pathwaycommons.org/pc2/downloads/blacklist.txt";
 
 	/**
 	 * Resource file for IDs of ubiquitous molecules.
@@ -394,18 +399,25 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		List<Miner> minerList = new ArrayList<Miner>();
 		if (miners != null) minerList.addAll(Arrays.asList(miners));
 		minerList.add(new DirectedRelationMiner());
-		minerList.add(new ControlsStateChangeMiner());
-		minerList.add(new ControlsStateChangeButIsParticipantMiner());
-		minerList.add(new ConStChThroughControllingSmallMoleculeMiner());
-		minerList.add(new ConStChThroughBindingSmallMoleculeMiner());
+		minerList.add(new ControlsStateChangeOfMiner());
+		minerList.add(new CSCOButIsParticipantMiner());
+		minerList.add(new CSCOBothControllerAndParticipantMiner());
+		minerList.add(new CSCOThroughControllingSmallMoleculeMiner(ubiqueIDs));
+		minerList.add(new CSCOThroughBindingSmallMoleculeMiner(ubiqueIDs));
 		minerList.add(new ControlsStateChangeDetailedMiner());
+		minerList.add(new ControlsTransportMiner());
 		minerList.add(new ControlsExpressionMiner());
-		minerList.add(new DegradesMiner());
-		minerList.add(new ControlsMetabolicCatalysisMiner(ubiqueIDs));
-		minerList.add(new AffectsDegradationMiner());
-		minerList.add(new ConsecutiveCatalysisMiner(ubiqueIDs));
-		minerList.add(new InSameComplexMiner());
-		minerList.add(new RelatedThroughInteractionMiner());
+		minerList.add(new ControlsDegradationMiner());
+		minerList.add(new ControlsDegradationIndirectMiner());
+		minerList.add(new ConsumptionControlledByMiner(ubiqueIDs));
+		minerList.add(new ControlsProductionOfMiner(ubiqueIDs));
+		minerList.add(new CatalysisPrecedesMiner(ubiqueIDs));
+		minerList.add(new ChemicalAffectsThroughBindingMiner(ubiqueIDs));
+		minerList.add(new ChemicalAffectsThroughControlMiner(ubiqueIDs));
+		minerList.add(new ControlsTransportOfChemicalMiner(ubiqueIDs));
+		minerList.add(new InComplexWithMiner());
+		minerList.add(new InteractsWithMiner());
+		minerList.add(new NeighborOfMiner());
 		minerList.add(new RelatedGenesOfInteractionsMiner());
 		minerList.add(new UbiquitousIDMiner());
 		return minerList.toArray(new Object[minerList.size()]);
@@ -628,6 +640,45 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	}
 
 	/**
+	 * Downloads the PC data.
+	 * @return true if download successful
+	 */
+	private static boolean downloadUbiques()
+	{
+		try
+		{
+			URL url = new URL(UBIQUE_URL);
+			URLConnection con = url.openConnection();
+			InputStream in = con.getInputStream();
+
+			System.out.println(con.getContentLength());
+
+			// Open the output file
+			OutputStream out = new FileOutputStream(UBIQUE_FILE);
+			// Transfer bytes from the compressed file to the output file
+			byte[] buf = new byte[1024];
+
+			int total = 0;
+			int lines = 0;
+			int len;
+			while ((len = in.read(buf)) > 0)
+			{
+				total += len;
+				out.write(buf, 0, len);
+				lines++;
+			}
+
+			System.out.println("total = " + total);
+			// Close the file and stream
+			in.close();
+			out.close();
+
+			return lines > 0;
+		}
+		catch (IOException e){return false;}
+	}
+
+	/**
 	 * Load ubique IDs if exists.
 	 */
 	static
@@ -636,20 +687,20 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		{
 			File f = new File(UBIQUE_FILE);
 
-			if (f.exists())
+			if (!f.exists())
 			{
-				ubiqueIDs = new HashSet<String>();
-				BufferedReader reader = new BufferedReader(new FileReader(f));
-
-				for (String line = reader.readLine(); line != null; line = reader.readLine())
-				{
-					ubiqueIDs.add(line);
-				}
-
-				reader.close();
-
+				downloadUbiques();
 			}
-			else throw new IOException();
+
+			ubiqueIDs = new HashSet<String>();
+			BufferedReader reader = new BufferedReader(new FileReader(f));
+
+			for (String line = reader.readLine(); line != null; line = reader.readLine())
+			{
+				ubiqueIDs.add(line);
+			}
+
+			reader.close();
 		}
 		catch (IOException e){System.out.println("Warning: no ubiquitous id file is detected.");}
 	}

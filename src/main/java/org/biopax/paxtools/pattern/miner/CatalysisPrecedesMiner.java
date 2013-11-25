@@ -9,31 +9,23 @@ import org.biopax.paxtools.pattern.constraint.Type;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Miner for the consecutive-catalysis pattern.
+ * Miner for the catalysis-precedes pattern.
  * @author Ozgun Babur
  */
-public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
+public class CatalysisPrecedesMiner extends MinerAdapter implements SIFMiner
 {
-	/**
-	 * IDs of ubiquitous molecules.
-	 */
-	Set<String> ubiqueIDs = new HashSet<String>();
-
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ConsecutiveCatalysisMiner(Set<String> ubiqueIDs)
+	public CatalysisPrecedesMiner(Set<String> ubiqueIDs)
 	{
-		super(SIFType.CONSECUTIVE_CATALYSIS.getTag(), "Finds two proteins, catalyzing different " +
-			"reactions, where an output of first reaction is input to second reaction.");
-
-		this.ubiqueIDs = ubiqueIDs;
+		super(SIFType.CATALYSIS_PRECEDES.getTag(), "Finds two proteins, catalyzing different " +
+			"reactions, where an output of first reaction is input to second reaction.", ubiqueIDs);
 	}
 
 	/**
@@ -43,10 +35,7 @@ public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		Pattern p = PatternBox.consecutiveCatalysis(ubiqueIDs);
-		p.add(new Type(ProteinReference.class), "first ER");
-		p.add(new Type(ProteinReference.class), "second ER");
-		return p;
+		return PatternBox.catalysisPrecedes(ubiqueIDs);
 	}
 
 	/**
@@ -74,19 +63,19 @@ public class ConsecutiveCatalysisMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "first ER";
+		return "first PR";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "second ER";
+		return "second PR";
 	}
 
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.CONSECUTIVE_CATALYSIS;
+		return SIFType.CATALYSIS_PRECEDES;
 	}
 
 	@Override

@@ -25,6 +25,11 @@ import java.util.Set;
 public class InterToPartER extends ConstraintAdapter
 {
 	/**
+	 * Direction to go. When this parameter is used, the interaction has to be a Conversion.
+	 */
+	private Direction direction;
+
+	/**
 	 * Constraint used for traversing towards simpler PE.
 	 */
 	private static final LinkedPE linker = new LinkedPE(LinkedPE.Type.TO_MEMBER);
@@ -46,11 +51,32 @@ public class InterToPartER extends ConstraintAdapter
 	}
 
 	/**
+	 * Constructor with parameters. A taboo element is the participant that we want to exclude from
+	 * the analysis. User should provide the number of taboo elements, then during execution, these
+	 * elements will be fetched from the current match. The direction is left, or right, or both
+	 * sides of the Conversion.
+	 */
+	public InterToPartER(Direction direction, int numOfTabooElements)
+	{
+		this(numOfTabooElements);
+		this.direction = direction;
+	}
+
+	/**
 	 * Constructor without parameters. There are no taboo elements.
 	 */
 	public InterToPartER()
 	{
-		super(2);
+		this(0);
+	}
+
+	/**
+	 * Constructor with direction. There are no taboo elements.
+	 */
+	public InterToPartER(Direction direction)
+	{
+		this();
+		this.direction = direction;
 	}
 
 	/**
@@ -81,6 +107,18 @@ public class InterToPartER extends ConstraintAdapter
 			taboo.add((Entity) match.get(ind[i]));
 		}
 
+		if (direction == null) return generate(inter, taboo);
+		else return generate((Conversion) inter, direction, taboo);
+	}
+
+	/**
+	 * Gets the related entity references of the given interaction,
+	 * @param inter
+	 * @param taboo
+	 * @return
+	 */
+	protected Collection<BioPAXElement> generate(Interaction inter, Set<Entity> taboo)
+	{
 		Set<BioPAXElement> simples = new HashSet<BioPAXElement>();
 
 		for (Entity part : inter.getParticipant())
@@ -92,5 +130,37 @@ public class InterToPartER extends ConstraintAdapter
 		}
 
 		return pe2ER.getValueFromBeans(simples);
+	}
+
+	/**
+	 * Gets the related entity references of the given interaction,
+	 * @param conv
+	 * @param taboo
+	 * @return
+	 */
+	protected Collection<BioPAXElement> generate(Conversion conv, Direction direction,
+		Set<Entity> taboo)
+	{
+		if (direction == null) throw new IllegalArgumentException("Direction cannot be null");
+
+		Set<BioPAXElement> simples = new HashSet<BioPAXElement>();
+
+		for (Entity part : direction == Direction.BOTH ? conv.getParticipant() :
+			direction == Direction.LEFT ? conv.getLeft() : conv.getRight())
+		{
+			if (part instanceof PhysicalEntity && !taboo.contains(part))
+			{
+				simples.addAll(linker.getLinkedElements((PhysicalEntity) part));
+			}
+		}
+
+		return pe2ER.getValueFromBeans(simples);
+	}
+
+	public enum Direction
+	{
+		LEFT,
+		RIGHT,
+		BOTH
 	}
 }

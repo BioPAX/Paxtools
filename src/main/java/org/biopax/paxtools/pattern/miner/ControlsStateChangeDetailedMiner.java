@@ -28,7 +28,7 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 		super("controls-state-change-detailed", "Captures exactly the same pattern as " +
 			"\"Controls-state-change\", but the result file is more detailed. Together with " +
 			"upstream and downstream genes, it also contains modifications of the upstream " +
-			"entity, as well as the gained and lost modifications of the downstream entity.");
+			"entity, as well as the gained and lost modifications of the downstream entity.", null);
 	}
 
 	/**
@@ -38,10 +38,7 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 	@Override
 	public Pattern constructPattern()
 	{
-		Pattern p = PatternBox.controlsStateChange(true);
-		p.add(new Type(ProteinReference.class), "controller ER");
-		p.add(new Type(ProteinReference.class), "changed ER");
-		return p;
+		return PatternBox.controlsStateChange();
 	}
 
 	/**
@@ -80,7 +77,7 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 		{
 			case 0:
 			{
-				return getGeneSymbol(m, "controller ER");
+				return getGeneSymbol(m, "controller PR");
 			}
 			case 1:
 			{
@@ -88,7 +85,7 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 			}
 			case 2:
 			{
-				return getGeneSymbol(m, "changed ER");
+				return getGeneSymbol(m, "changed PR");
 			}
 			case 3:
 			{

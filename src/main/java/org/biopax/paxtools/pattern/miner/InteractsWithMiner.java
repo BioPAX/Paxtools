@@ -9,21 +9,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Miner for the chemical-affects-protein pattern.
+ * Miner for the "interacts-with" relation.
  * @author Ozgun Babur
  */
-public class ChemicalAffectsThroughBindingMiner extends MinerAdapter implements SIFMiner
+public class InteractsWithMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ChemicalAffectsThroughBindingMiner(Set<String> ubiqueIDs)
+	public InteractsWithMiner()
 	{
-		super(SIFType.CHEMICAL_AFFECTS.getTag(), "This pattern captures a small molecule" +
-			"that appears in same complex with a protein.", ubiqueIDs);
+		super("interacts-with", "This miner finds cases where two genes are participants of the " +
+			"same molecular interaction.", null);
 	}
 
 	/**
@@ -33,12 +32,12 @@ public class ChemicalAffectsThroughBindingMiner extends MinerAdapter implements 
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.chemicalAffectsProteinThroughBinding(ubiqueIDs);
+		return PatternBox.molecularInteraction();
 	}
 
 	/**
-	 * Writes the result as "A chemical-affect-protein B", where A is small molecule name, B is gene
-	 * name, and whitespace is tab.
+	 * Writes the result as "A interacts-with B", where A and B are gene symbols, and whitespace is
+	 * tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -52,24 +51,24 @@ public class ChemicalAffectsThroughBindingMiner extends MinerAdapter implements 
 	@Override
 	public String getSourceLabel()
 	{
-		return "SMR";
+		return "Protein 1";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "PR";
+		return "Protein 2";
 	}
 
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.CHEMICAL_AFFECTS;
+		return SIFType.INTERACTS_WITH;
 	}
 
 	@Override
 	public String[] getMediatorLabels()
 	{
-		return new String[]{"Complex"};
+		return new String[]{"MI"};
 	}
 }

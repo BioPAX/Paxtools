@@ -108,34 +108,47 @@ public class SIFSearcher
 		{
 			switch (type)
 			{
-				case CONTROLS_STATE_CHANGE:
-					miners.add(new ControlsStateChangeMiner());
-					miners.add(new ControlsStateChangeButIsParticipantMiner());
-					miners.add(new ConStChThroughControllingSmallMoleculeMiner(ubiqueIDs));
-					miners.add(new ConStChThroughBindingSmallMoleculeMiner(ubiqueIDs));
+				case CONTROLS_STATE_CHANGE_OF:
+					miners.add(new ControlsStateChangeOfMiner());
+					miners.add(new CSCOButIsParticipantMiner());
+					miners.add(new CSCOBothControllerAndParticipantMiner());
+					miners.add(new CSCOThroughControllingSmallMoleculeMiner(ubiqueIDs));
+					miners.add(new CSCOThroughBindingSmallMoleculeMiner(ubiqueIDs));
 					break;
-				case CONTROLS_EXPRESSION:
+				case CONTROLS_EXPRESSION_OF:
 					miners.add(new ControlsExpressionMiner());
 					miners.add(new ControlsExpressionWithConvMiner());
 					break;
-				case CONTROLS_METABOLIC_CATALYSIS:
-					miners.add(new ControlsMetabolicCatalysisMiner(ubiqueIDs));
+				case CONSUMPTION_CONTROLLED_BY:
+					miners.add(new ConsumptionControlledByMiner(ubiqueIDs));
 					break;
-				case CONTROLS_DEGRADATION:
-					miners.add(new DegradesMiner());
+				case CONTROLS_PRODUCTION_OF:
+					miners.add(new ControlsProductionOfMiner(ubiqueIDs));
 					break;
-				case CONSECUTIVE_CATALYSIS:
-					miners.add(new ConsecutiveCatalysisMiner(ubiqueIDs));
+				case CONTROLS_TRANSPORT_OF_CHEMICAL:
+					miners.add(new ControlsTransportOfChemicalMiner(ubiqueIDs));
 					break;
-				case CHEMICAL_AFFECTS_PROTEIN:
+				case CONTROLS_TRANSPORT_OF:
+					miners.add(new ControlsTransportMiner());
+					break;
+				case CONTROLS_DEGRADATION_OF:
+					miners.add(new ControlsDegradationMiner());
+					break;
+				case CATALYSIS_PRECEDES:
+					miners.add(new CatalysisPrecedesMiner(ubiqueIDs));
+					break;
+				case CHEMICAL_AFFECTS:
 					miners.add(new ChemicalAffectsThroughBindingMiner(ubiqueIDs));
 					miners.add(new ChemicalAffectsThroughControlMiner(ubiqueIDs));
 					break;
-				case IN_SAME_COMPLEX:
-					miners.add(new InSameComplexMiner());
+				case IN_COMPLEX_WITH:
+					miners.add(new InComplexWithMiner());
 					break;
-				case RELATED_THROUGH_INTERACTION:
-					miners.add(new RelatedThroughInteractionMiner());
+				case NEIGHBOR_OF:
+					miners.add(new NeighborOfMiner());
+					break;
+				case INTERACTS_WITH:
+					miners.add(new InteractsWithMiner());
 					break;
 				default: throw new RuntimeException("There is an unhandled sif type: " + type);
 			}

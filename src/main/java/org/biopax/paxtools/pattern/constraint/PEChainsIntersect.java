@@ -7,8 +7,8 @@ import org.biopax.paxtools.pattern.util.PhysicalEntityChain;
 /**
  * This constraint checks if two chains of linked physical entities are intersecting or not.
  *
- * Var0 First PhysicalEntity in the first chain
- * Var1 Last PhysicalEntity in the first chain
+ * Var0 First (simpler) PhysicalEntity in the first chain
+ * Var1 Last (complexer) PhysicalEntity in the first chain
  * Var2 First PhysicalEntity in the second chain
  * Var3 Last PhysicalEntity in the second chain
  *

@@ -9,14 +9,14 @@ import org.biopax.paxtools.pattern.constraint.Type;
  * Miner for the controls-state-change pattern.
  * @author Ozgun Babur
  */
-public class ControlsStateChangeButIsParticipantMiner extends ControlsStateChangeMiner
+public class CSCOButIsParticipantMiner extends ControlsStateChangeOfMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsStateChangeButIsParticipantMiner()
+	public CSCOButIsParticipantMiner()
 	{
-		super("controls-state-change-but-a-participant", "Mines the same relation as with " +
+		super("cso-but-a-participant", "Mines the same relation as with " +
 			"Controls-state-change, however, this time the controller is modeled as a " +
 			"participant of the Conversion. This is in fact a modeling error, but this pattern " +
 			"exists in some resources. The controller PhysicalEntity appears at both left and " +

@@ -1,47 +1,33 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.Protein;
-import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.constraint.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import static org.biopax.paxtools.pattern.constraint.ConBox.*;
-
 /**
  * Miner for the controls-state-change pattern. This time the controller is also an input.
  * @author Ozgun Babur
  */
-public class ControlsStateChangeBothControllerAndParticipantMiner extends MinerAdapter
+public class CSCOBothControllerAndParticipantMiner extends MinerAdapter
 	implements SIFMiner
 {
 	/**
-	 * Constructor for extending purposes.
-	 * @param name name of the miner
-	 * @param description description of the miner
-	 */
-	public ControlsStateChangeBothControllerAndParticipantMiner(String name, String description)
-	{
-		super(name, description);
-	}
-
-	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsStateChangeBothControllerAndParticipantMiner()
+	public CSCOBothControllerAndParticipantMiner()
 	{
-		super(SIFType.CONTROLS_STATE_CHANGE.getTag(), "Finds relations between proteins where " +
+		super("cso-both-ctrl-part",
+			"Finds relations between proteins where " +
 			"the first one is controlling a reaction that changes the state of the second one. " +
 			"The controller is also an input. The reaction has to be a Conversion and modified " +
 			"Protein should be represented with different non-generic PhysicalEntity on each " +
-			"side.");
+			"side.", null);
 	}
 
 	/**
@@ -91,7 +77,7 @@ public class ControlsStateChangeBothControllerAndParticipantMiner extends MinerA
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.CONTROLS_STATE_CHANGE;
+		return SIFType.CONTROLS_STATE_CHANGE_OF;
 	}
 
 	@Override

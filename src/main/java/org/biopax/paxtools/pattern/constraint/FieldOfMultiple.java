@@ -37,9 +37,9 @@ public class FieldOfMultiple extends Field
 	 * @param accessorString accessor string for the element
 	 * @param value desired value
 	 */
-	public FieldOfMultiple(MappedConst con, String accessorString, Object value)
+	public FieldOfMultiple(MappedConst con, String accessorString, Operation oper, Object value)
 	{
-		super(accessorString, value);
+		super(accessorString, oper, value);
 		con1 = con;
 	}
 
@@ -53,9 +53,9 @@ public class FieldOfMultiple extends Field
 	 * @param accessorString2 accessor string for the second element
 	 */
 	public FieldOfMultiple(MappedConst con1, String accessorString1, MappedConst con2,
-		String accessorString2)
+		String accessorString2, Operation oper)
 	{
-		super(accessorString1, accessorString2, null);
+		super(accessorString1, accessorString2, oper);
 		this.con1 = con1;
 		this.con2 = con2;
 	}
@@ -93,28 +93,25 @@ public class FieldOfMultiple extends Field
 		// If emptiness is desired, check that
 		if (value == EMPTY) return values.isEmpty();
 
+		// If cannot be empty, check it
+		if (oper == Operation.NOT_EMPTY_AND_NOT_INTERSECT && values.isEmpty()) return false;
+
 		// If the second element is desired value, check that
 		else if (value == USE_SECOND_ARG)
 		{
 			BioPAXElement q = match.get(ind[1]);
-			return values.contains(q);
+			return oper == Operation.INTERSECT ? values.contains(q) : !values.contains(q);
 		}
 
 		// If element group is compared to preset value, but the value is actually a collection,
 		// then iterate the collection, see if any of them matches
 		else if (value instanceof Collection)
 		{
-			for (Object o : (Collection) value)
-			{
-				if (values.contains(o)) return true;
-			}
-			return false;
-		}
+			Collection query = (Collection) value;
+			values.retainAll(query);
 
-		// Check if the elements contain the parameter value
-		else if (value != null)
-		{
-			return values.contains(value);
+			if (oper == Operation.INTERSECT) return !values.isEmpty();
+			else return values.isEmpty();
 		}
 
 		// If two set of elements should share a field value, check that
@@ -127,10 +124,24 @@ public class FieldOfMultiple extends Field
 				others.addAll(pa2.getValueFromBean(gen));
 			}
 
-			others.retainAll(values);
-			return !others.isEmpty();
+			switch (oper)
+			{
+				case INTERSECT:
+					others.retainAll(values);
+					return !others.isEmpty();
+				case NOT_INTERSECT:
+					others.retainAll(values);
+					return others.isEmpty();
+				case NOT_EMPTY_AND_NOT_INTERSECT:
+					if (others.isEmpty()) return false;
+					others.retainAll(values);
+					return others.isEmpty();
+				default: throw new RuntimeException("Unhandled operation: " + oper);
+			}
 		}
 
-		throw new RuntimeException("Shouldn't reach here. Please debug.");
+		// Check if the element field values contain the parameter value
+		else if (oper == Operation.INTERSECT) return values.contains(value);
+		else return !values.contains(value);
 	}
 }

@@ -42,19 +42,29 @@ public class Field extends ConstraintAdapter
 	PathAccessor pa2;
 
 	/**
+	 * The kind of check.
+	 */
+	Operation oper;
+
+	/**
 	 * Constructor with accessor string for the field value of the element and the desired value. If
 	 * the desired value is EMPTY, then emptiness is checked. If it is USE_SECOND_ARG, then the
 	 * second mapped element is used as the desired value. If a filed of the second element is
 	 * desired then the other constructor should be used.
 	 *
 	 * @param accessorString accessor string for the element
+	 * @param oper type of check
 	 * @param value desired value
 	 */
-	public Field(String accessorString, Object value)
+	public Field(String accessorString, Operation oper, Object value)
 	{
 		super(value == USE_SECOND_ARG ? 2 : 1);
 		this.value = value;
 		this.pa1 = new PathAccessor(accessorString);
+		this.oper = oper;
+
+		if (value instanceof Collection && ((Collection) value).isEmpty())
+			throw new IllegalArgumentException("The queried collection cannot be empty.");
 	}
 
 	/**
@@ -63,14 +73,14 @@ public class Field extends ConstraintAdapter
 	 *
 	 * @param accessorString1 accessor string for the first element
 	 * @param accessorString2 accessor string for the second element
-	 * @param randomObj this is a random object to avoid the confusion between two constructors. It
-	 * is ignored, just pass null.
+	 * @param oper type of check
 	 */
-	public Field(String accessorString1, String accessorString2, Object randomObj)
+	public Field(String accessorString1, String accessorString2, Operation oper)
 	{
 		super(2);
 		this.pa1 = new PathAccessor(accessorString1);
 		this.pa2 = new PathAccessor(accessorString2);
+		this.oper = oper;
 	}
 
 	/**
@@ -88,6 +98,9 @@ public class Field extends ConstraintAdapter
 
 		Set values = pa1.getValueFromBean(ele);
 
+		// If being empty is a failure, check it
+		if (oper == Operation.NOT_EMPTY_AND_NOT_INTERSECT && values.isEmpty()) return false;
+
 		// If emptiness is desired, check that
 		if (value == EMPTY) return values.isEmpty();
 
@@ -95,30 +108,51 @@ public class Field extends ConstraintAdapter
 		else if (value == USE_SECOND_ARG)
 		{
 			BioPAXElement q = match.get(ind[1]);
-			return values.contains(q);
-		}
-
-		// If two elements should share a field value, check that
-		else if (pa2 != null)
-		{
-			BioPAXElement q = match.get(ind[1]);
-			Set others = pa2.getValueFromBean(q);
-			others.retainAll(values);
-			return !others.isEmpty();
+			return oper == Operation.INTERSECT ? values.contains(q) : !values.contains(q);
 		}
 
 		// If one element is compared to preset value, but the value is actually a collection, then
 		// iterate the collection, see if any of them matches
 		else if (value instanceof Collection)
 		{
-			for (Object o : (Collection) value)
+			Collection query = (Collection) value;
+			values.retainAll(query);
+
+			if (oper == Operation.INTERSECT) return !values.isEmpty();
+			else return values.isEmpty();
+		}
+
+		// Check if fields of second element is to be used
+		else if (pa2 != null)
+		{
+			BioPAXElement q = match.get(ind[1]);
+			Set others = pa2.getValueFromBean(q);
+
+			switch (oper)
 			{
-				if (values.contains(o)) return true;
+				case INTERSECT:
+					others.retainAll(values);
+					return !others.isEmpty();
+				case NOT_INTERSECT:
+					others.retainAll(values);
+					return others.isEmpty();
+				case NOT_EMPTY_AND_NOT_INTERSECT:
+					if (others.isEmpty()) return false;
+					others.retainAll(values);
+					return others.isEmpty();
+				default: throw new RuntimeException("Unhandled operation: " + oper);
 			}
-			return false;
 		}
 
 		// Check if the element field values contain the parameter value
-		else return values.contains(value);
+		else if (oper == Operation.INTERSECT) return values.contains(value);
+		else return !values.contains(value);
+	}
+
+	public enum Operation
+	{
+		INTERSECT,
+		NOT_INTERSECT,
+		NOT_EMPTY_AND_NOT_INTERSECT
 	}
 }

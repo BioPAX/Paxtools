@@ -36,14 +36,21 @@ public abstract class MinerAdapter implements Miner
 	protected Pattern pattern;
 
 	/**
+	 * IDs of ubiquitous molecules.
+	 */
+	protected Set<String> ubiqueIDs = new HashSet<String>();
+
+	/**
 	 * Constructor with name and description.
 	 * @param name name of the miner
 	 * @param description description of the miner
+	 * @param ubiqueIDs IDs of ubiquitous small molecules
 	 */
-	protected MinerAdapter(String name, String description)
+	protected MinerAdapter(String name, String description, Set<String> ubiqueIDs)
 	{
 		this.name = name;
 		this.description = description;
+		this.ubiqueIDs = ubiqueIDs;
 	}
 
 	/**

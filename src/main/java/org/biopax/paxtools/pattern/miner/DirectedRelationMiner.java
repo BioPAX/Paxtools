@@ -26,7 +26,8 @@ public class DirectedRelationMiner extends MinerAdapter
 	public DirectedRelationMiner()
 	{
 		super("directed-relations", "Finds relations between proteins where " +
-			"the first one is controlling an interaction where the second protein is participant.");
+			"the first one is controlling an interaction where the second protein is participant.",
+			null);
 	}
 
 	/**

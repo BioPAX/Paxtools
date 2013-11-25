@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Miner for the "related through interaction" relation.
+ * Miner for the "neighbor-of" relation.
  * @author Ozgun Babur
  */
-public class RelatedThroughInteractionMiner extends MinerAdapter implements SIFMiner
+public class NeighborOfMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public RelatedThroughInteractionMiner()
+	public NeighborOfMiner()
 	{
 		super("Related-through-interaction", "This miner finds cases where two genes are " +
-			"participants or controllers of the same interaction.");
+			"participants or controllers of the same interaction.", null);
 	}
 
 	/**
@@ -32,12 +32,12 @@ public class RelatedThroughInteractionMiner extends MinerAdapter implements SIFM
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.relatedThroughInteraction();
+		return PatternBox.neighborOf();
 	}
 
 	/**
-	 * Writes the result as "A related-through-interaction B", where A and B are gene symbols, and
-	 * whitespace is tab.
+	 * Writes the result as "A neighbor-of B", where A and B are gene symbols, and whitespace is
+	 * tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -63,7 +63,7 @@ public class RelatedThroughInteractionMiner extends MinerAdapter implements SIFM
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.RELATED_THROUGH_INTERACTION;
+		return SIFType.NEIGHBOR_OF;
 	}
 
 	@Override

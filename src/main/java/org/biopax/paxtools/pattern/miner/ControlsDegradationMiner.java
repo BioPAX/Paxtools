@@ -14,16 +14,15 @@ import java.util.Map;
  * Miner for the degradation pattern.
  * @author Ozgun Babur
  */
-public class InSameComplexMiner extends MinerAdapter implements SIFMiner
+public class ControlsDegradationMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public InSameComplexMiner()
+	public ControlsDegradationMiner()
 	{
-		super(SIFType.IN_SAME_COMPLEX.getTag(), "This pattern captures pairs of proteins that " +
-			"are members of the same complex. Pattern allows multiple nesting of the members and" +
-			" use of homologies.");
+		super(SIFType.CONTROLS_DEGRADATION_OF.getTag(), "This pattern finds relations where first " +
+			"protein is controlling a Conversion that degrades the second protein.", null);
 	}
 
 	/**
@@ -33,7 +32,7 @@ public class InSameComplexMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.appearInSameComplex();
+		return PatternBox.controlsDegradation();
 	}
 
 	/**
@@ -46,30 +45,40 @@ public class InSameComplexMiner extends MinerAdapter implements SIFMiner
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{
-		writeResultAsSIF(matches, out, false, getSourceLabel(), getTargetLabel());
+		writeResultAsSIF(matches, out, true, getSourceLabel(), getTargetLabel());
+	}
+
+	/**
+	 * Sets header of the output.
+	 * @return header
+	 */
+	@Override
+	public String getHeader()
+	{
+		return "Upstream\tRelation\tDownstream";
 	}
 
 	@Override
 	public String getSourceLabel()
 	{
-		return "Protein 1";
+		return "upstream PR";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "Protein 2";
+		return "downstream PR";
 	}
 
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.IN_SAME_COMPLEX;
+		return SIFType.CONTROLS_DEGRADATION_OF;
 	}
 
 	@Override
 	public String[] getMediatorLabels()
 	{
-		return new String[]{"Complex"};
+		return new String[]{"Control", "Conversion"};
 	}
 }

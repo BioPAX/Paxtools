@@ -26,10 +26,10 @@ public class ControlsExpressionMiner extends MinerAdapter implements SIFMiner
 	 */
 	public ControlsExpressionMiner()
 	{
-		super(SIFType.CONTROLS_EXPRESSION.getTag(), "This pattern finds relations where first " +
+		super(SIFType.CONTROLS_EXPRESSION_OF.getTag(), "This pattern finds relations where first " +
 			"protein is controlling expression of the second protein. The output is like " +
-			"\"A controls-expression B\". This pattern requires that " +
-			"expression to be modeled with a TemplateReaction.");
+			"\"A controls-expression B\". This pattern requires that expression to be modeled " +
+			"with a TemplateReaction.", null);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class ControlsExpressionMiner extends MinerAdapter implements SIFMiner
 	 */
 	public ControlsExpressionMiner(String name, String description)
 	{
-		super(name, description);
+		super(name, description, null);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class ControlsExpressionMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.CONTROLS_EXPRESSION;
+		return SIFType.CONTROLS_EXPRESSION_OF;
 	}
 
 	/**

@@ -7,7 +7,6 @@ import org.biopax.paxtools.pattern.PatternBox;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,19 +18,12 @@ import java.util.Set;
 public class ChemicalAffectsThroughControlMiner extends MinerAdapter implements SIFMiner
 {
 	/**
-	 * IDs of ubiquitous molecules.
-	 */
-	Set<String> ubiqueIDs = new HashSet<String>();
-
-	/**
 	 * Constructor that sets name and description.
 	 */
 	public ChemicalAffectsThroughControlMiner(Set<String> ubiqueIDs)
 	{
-		super(SIFType.CHEMICAL_AFFECTS_PROTEIN.getTag(), "This pattern captures a small molecule " +
-			"controlling a reaction, and a protein is participant of that reaction.");
-
-		this.ubiqueIDs = ubiqueIDs;
+		super(SIFType.CHEMICAL_AFFECTS.getTag(), "This pattern captures a small molecule " +
+			"controlling a reaction, and a protein is participant of that reaction.", ubiqueIDs);
 	}
 
 	/**
@@ -72,7 +64,7 @@ public class ChemicalAffectsThroughControlMiner extends MinerAdapter implements 
 	@Override
 	public SIFType getSIFType(Match m)
 	{
-		return SIFType.CHEMICAL_AFFECTS_PROTEIN;
+		return SIFType.CHEMICAL_AFFECTS;
 	}
 
 	@Override
