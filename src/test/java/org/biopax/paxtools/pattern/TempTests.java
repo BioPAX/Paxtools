@@ -250,11 +250,12 @@ public class TempTests
 		List<SIFType> types = new ArrayList<SIFType>(Arrays.asList(SIFType.values()));
 		types.retainAll(map.keySet());
 
-		printOverlaps(map, types.subList(0, 8));
-		printOverlaps(map, types.subList(8, 12));
+		printOverlaps(map, types.subList(0, 8), false);
+		printOverlaps(map, types.subList(8, 12), true);
 	}
 
-	private void printOverlaps(Map<SIFType, Set<String>> map, List<SIFType> types)
+	private void printOverlaps(Map<SIFType, Set<String>> map, List<SIFType> types,
+		boolean tryReversing)
 	{
 		for (SIFType type : types)
 		{
@@ -269,6 +270,14 @@ public class TempTests
 				Set<String> set = new HashSet<String>(map.get(type));
 				set.retainAll(map.get(type2));
 				int size = set.size();
+
+				if (tryReversing)
+				{
+					set = new HashSet<String>(map.get(type));
+					set.retainAll(negatePairs(map.get(type2)));
+					if (set.size() > size) size = set.size();
+				}
+
 				if (!type.isDirected() && !type2.isDirected()) size /= 2;
 				System.out.print("\t" + size);
 			}

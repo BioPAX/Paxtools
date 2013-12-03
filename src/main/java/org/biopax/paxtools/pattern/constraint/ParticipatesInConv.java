@@ -72,22 +72,23 @@ public class ParticipatesInConv extends ConstraintAdapter
 			if (inter instanceof Conversion)
 			{
 				Conversion cnv = (Conversion) inter;
+				ConversionDirectionType dir = getDirection(cnv);
 
-				if (cnv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
+				if (dir == ConversionDirectionType.REVERSIBLE &&
 					!treatReversibleAsLeftToRight)
 				{
 					result.add(cnv);
 				}
-				else if (cnv.getConversionDirection() == ConversionDirectionType.RIGHT_TO_LEFT &&
+				else if (dir == ConversionDirectionType.RIGHT_TO_LEFT &&
 					(type == RelType.INPUT ? cnv.getRight().contains(pe) : cnv.getLeft().contains(pe)))
 				{
 					result.add(cnv);
 				}
 				// Note that null direction is treated as if LEFT_TO_RIGHT. This is not a best
 				// practice, but it is a good approximation.
-				else if ((cnv.getConversionDirection() == ConversionDirectionType.LEFT_TO_RIGHT ||
-					cnv.getConversionDirection() == null ||
-					(cnv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
+				else if ((dir == ConversionDirectionType.LEFT_TO_RIGHT ||
+					dir == null ||
+					(dir == ConversionDirectionType.REVERSIBLE &&
 						treatReversibleAsLeftToRight)) &&
 					(type == RelType.INPUT ? cnv.getLeft().contains(pe) : cnv.getRight().contains(pe)))
 				{

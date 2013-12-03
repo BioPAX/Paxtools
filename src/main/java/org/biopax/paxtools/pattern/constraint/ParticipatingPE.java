@@ -64,15 +64,7 @@ public class ParticipatingPE extends ConstraintAdapter
 		Conversion conv = (Conversion) match.get(ind[1]);
 
 		// This is the direction for our use only.
-		ConversionDirectionType dir = null;
-
-		for (Control c : getControlChain(cont, conv))
-		{
-			dir = getCatalysisDirection(c);
-			if (dir != null) break;
-		}
-		
-		if (dir == null) dir = conv.getConversionDirection();
+		ConversionDirectionType dir = getDirection(conv, cont);
 
 		// No evidence for direction. Assuming LEFT_TO_RIGHT. 
 		if (dir == null) dir = ConversionDirectionType.LEFT_TO_RIGHT;

@@ -64,23 +64,21 @@ public class InputOrOutput extends ConstraintAdapter
 		Collection<BioPAXElement> result = new HashSet<BioPAXElement>();
 
 		Conversion cnv = (Conversion) match.get(ind[0]);
+		ConversionDirectionType dir = cnv.getConversionDirection();
 
-		if (cnv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
-			!treatReversibleAsLeftToRight)
+		if (dir == ConversionDirectionType.REVERSIBLE && !treatReversibleAsLeftToRight)
 		{
 			result.addAll(cnv.getLeft());
 			result.addAll(cnv.getRight());
 		}
-		else if (cnv.getConversionDirection() == ConversionDirectionType.RIGHT_TO_LEFT)
+		else if (dir == ConversionDirectionType.RIGHT_TO_LEFT)
 		{
 			result.addAll(type == RelType.INPUT ? cnv.getRight() : cnv.getLeft());
 		}
 		// Note that null direction is treated as if LEFT_TO_RIGHT. This is not a best
 		// practice, but it is a good approximation.
-		else if ((cnv.getConversionDirection() == ConversionDirectionType.LEFT_TO_RIGHT ||
-			cnv.getConversionDirection() == null ||
-			(cnv.getConversionDirection() == ConversionDirectionType.REVERSIBLE &&
-				treatReversibleAsLeftToRight)))
+		else if ((dir == ConversionDirectionType.LEFT_TO_RIGHT || dir == null ||
+			(dir == ConversionDirectionType.REVERSIBLE && treatReversibleAsLeftToRight)))
 		{
 			result.addAll(type == RelType.OUTPUT ? cnv.getRight() : cnv.getLeft());
 		}

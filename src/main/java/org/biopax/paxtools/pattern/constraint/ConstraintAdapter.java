@@ -76,19 +76,49 @@ public abstract class ConstraintAdapter implements Constraint
 	}
 
 	/**
-	 * Gets the direction of the Control chain the the Interaction.
-	 * @param cont top control
-	 * @param inter controlled interaction
-	 * @return the direction of catalysis, if any found
+	 * Asserts the size of teh parameter array is equal to the variable size.
+	 * @param ind index array to assert its size
 	 */
-	protected ConversionDirectionType getCatalysisDirection(Control cont, Interaction inter)
+	protected void assertIndLength(int[] ind)
 	{
-		for (Control ctrl : getControlChain(cont, inter))
+		assert ind.length == getVariableSize();
+	}
+
+	/**
+	 * Sets the size of the constraint.
+	 * @param size size of the constraint
+	 */
+	public void setSize(int size)
+	{
+		this.size = size;
+	}
+
+	/**
+	 * Gets the variable size of the constraint.
+	 * @return variable size
+	 */
+	@Override
+	public int getVariableSize()
+	{
+		return size;
+	}
+
+	//----- Section: Common BioPAX Operations -----------------------------------------------------|
+
+	/**
+	 * Gets the direction of the Control chain the the Interaction.
+	 * @param conv controlled conversion
+	 * @param cont top control
+	 * @return the direction of the conversion related to the catalysis
+	 */
+	protected ConversionDirectionType getDirection(Conversion conv, Control cont)
+	{
+		for (Control ctrl : getControlChain(cont, conv))
 		{
 			ConversionDirectionType dir = getCatalysisDirection(ctrl);
 			if (dir != null) return dir;
 		}
-		return null;
+		return getDirection(conv);
 	}
 
 	/**
@@ -117,7 +147,8 @@ public abstract class ConstraintAdapter implements Constraint
 	/**
 	 * Gets the chain of Control, staring from the given Control, leading to the given Interaction.
 	 * Use this method only if you are sure that there is a link from the control to conversion.
-	 * Otherwise a RuntimeException is thrown.
+	 * Otherwise a RuntimeException is thrown. This assumes that there is only one control chain
+	 * towards the interaction. It not, then one of the chains will be returned.
 	 *
 	 * @param control top level Control
 	 * @param inter target Interaction
@@ -149,6 +180,9 @@ public abstract class ConstraintAdapter implements Constraint
 		{
 			if (process instanceof Control)
 			{
+				// prevent searching in cycles
+				if (list.contains(process)) continue;
+
 				list.add((Control) process);
 				if (search(list, inter)) return true;
 				else list.removeLast();
@@ -176,34 +210,62 @@ public abstract class ConstraintAdapter implements Constraint
 			return type == RelType.INPUT ? conv.getRight() : conv.getLeft();
 		}
 		else return type == RelType.OUTPUT ? conv.getRight() : conv.getLeft();
-		
 	}
 
 	/**
-	 * Asserts the size of teh parameter array is equal to the variable size.
-	 * @param ind index array to assert its size
+	 * Searches pathways that contains this conversion for the possible directions. If both
+	 * directions exist, then the result is reversible.
+	 * @param conv the conversion
+	 * @return direction inferred from pathway membership
 	 */
-	protected void assertIndLength(int[] ind)
+	protected ConversionDirectionType findDirectionInPathways(Conversion conv)
 	{
-		assert ind.length == getVariableSize();
+		Set<StepDirection> dirs = new HashSet<StepDirection>();
+		for (PathwayStep step : conv.getStepProcessOf())
+		{
+			if (step instanceof BiochemicalPathwayStep)
+			{
+				StepDirection dir = ((BiochemicalPathwayStep) step).getStepDirection();
+				if (dir != null) dirs.add(dir);
+			}
+		}
+		if (dirs.size() > 1) return ConversionDirectionType.REVERSIBLE;
+		else if (!dirs.isEmpty())
+		{
+			return dirs.iterator().next() == StepDirection.LEFT_TO_RIGHT ?
+				ConversionDirectionType.LEFT_TO_RIGHT : ConversionDirectionType.RIGHT_TO_LEFT;
+		}
+		else return null;
 	}
 
 	/**
-	 * Sets the size of the constraint.
-	 * @param size size of the constraint
+	 * Searches the controlling catalysis for possible direction of the conversion.
+	 * @param conv the conversion
+	 * @return direction inferred from catalysis objects
 	 */
-	public void setSize(int size)
+	protected ConversionDirectionType findDirectionInCatalysis(Conversion conv)
 	{
-		this.size = size;
+		Set<ConversionDirectionType> dirs = new HashSet<ConversionDirectionType>();
+		for (Control control : conv.getControlledOf())
+		{
+			ConversionDirectionType dir = getCatalysisDirection(control);
+			if (dir != null) dirs.add(dir);
+		}
+		if (dirs.size() > 1) return ConversionDirectionType.REVERSIBLE;
+		else if (!dirs.isEmpty()) return dirs.iterator().next();
+		else return null;
 	}
 
-	/**
-	 * Gets the variable size of the constraint.
-	 * @return variable size
-	 */
-	@Override
-	public int getVariableSize()
+	protected ConversionDirectionType getDirection(Conversion conv)
 	{
-		return size;
+		if (conv.getConversionDirection() != null) return conv.getConversionDirection();
+
+		ConversionDirectionType catDir = findDirectionInCatalysis(conv);
+		ConversionDirectionType patDir = findDirectionInPathways(conv);
+
+		if (catDir != null && patDir != null && catDir != patDir)
+			return ConversionDirectionType.REVERSIBLE;
+		else if (catDir != null) return catDir;
+		else return patDir;
 	}
 }

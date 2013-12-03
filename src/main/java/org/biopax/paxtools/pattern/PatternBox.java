@@ -89,7 +89,6 @@ public class PatternBox
 	{
 
 		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.add(isHuman(), "controller PR");
 		p.add(erToPE(), "controller PR", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
@@ -132,7 +131,6 @@ public class PatternBox
 	{
 
 		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.add(isHuman(), "controller PR");
 		p.add(erToPE(), "controller PR", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");

@@ -53,7 +53,6 @@ public class ControlsExpressionMiner extends MinerAdapter implements SIFMiner
 //		p.add(new Type(ProteinReference.class), "product ER");
 
 		Pattern p = new Pattern(ProteinReference.class, "TF PR");
-		p.add(isHuman(), "TF PR");
 		p.add(erToPE(), "TF PR", "TF simple PE");
 		p.add(linkToComplex(), "TF simple PE", "TF PE");
 		p.add(peToControl(), "TF PE", "Control");
