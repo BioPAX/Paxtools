@@ -691,6 +691,31 @@ public class PatternBox
 	}
 
 	/**
+	 * Constructs a pattern where first and last proteins are related through an interaction. They
+	 * can be participants or controllers. No limitation.
+	 * @return the pattern
+	 */
+	public static Pattern neighborOfWithProtAndSM()
+	{
+		Pattern p = new Pattern(EntityReference.class, "Entity 1");
+		p.add(new OR(new MappedConst(type(ProteinReference.class), 0),
+			new MappedConst(type(SmallMoleculeReference.class), 0)), "Entity 1");
+		p.add(erToPE(), "Entity 1", "SPE1");
+		p.add(notGeneric(), "SPE1");
+		p.add(linkToComplex(), "SPE1", "PE1");
+		p.add(peToInter(), "PE1", "Inter");
+		p.add(interToPE(), "Inter", "PE2");
+		p.add(linkToSimple(), "PE2", "SPE2");
+		p.add(notGeneric(), "SPE2");
+		p.add(equal(false), "SPE1", "SPE2");
+		p.add(new OR(new MappedConst(type(Protein.class), 0),
+			new MappedConst(type(SmallMolecule.class), 0)), "SPE2");
+		p.add(peToER(), "SPE2", "Entity 2");
+		p.add(equal(false), "Entity 1", "Entity 2");
+		return p;
+	}
+
+	/**
 	 * Constructs a pattern where first and last proteins are participants of a
 	 * MolecularInteraction.
 	 * @return the pattern

@@ -418,6 +418,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		minerList.add(new InComplexWithMiner());
 		minerList.add(new InteractsWithMiner());
 		minerList.add(new NeighborOfMiner());
+		minerList.add(new NeighborOfWithProtAndSMMiner());
 		minerList.add(new RelatedGenesOfInteractionsMiner());
 		minerList.add(new UbiquitousIDMiner());
 		return minerList.toArray(new Object[minerList.size()]);
@@ -683,25 +684,25 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	static
 	{
-		try
-		{
-			File f = new File(UBIQUE_FILE);
-
-			if (!f.exists())
-			{
-				downloadUbiques();
-			}
-
-			ubiqueIDs = new HashSet<String>();
-			BufferedReader reader = new BufferedReader(new FileReader(f));
-
-			for (String line = reader.readLine(); line != null; line = reader.readLine())
-			{
-				ubiqueIDs.add(line);
-			}
-
-			reader.close();
-		}
-		catch (IOException e){System.out.println("Warning: no ubiquitous id file is detected.");}
+//		try
+//		{
+//			File f = new File(UBIQUE_FILE);
+//
+//			if (!f.exists())
+//			{
+//				downloadUbiques();
+//			}
+//
+//			ubiqueIDs = new HashSet<String>();
+//			BufferedReader reader = new BufferedReader(new FileReader(f));
+//
+//			for (String line = reader.readLine(); line != null; line = reader.readLine())
+//			{
+//				ubiqueIDs.add(line);
+//			}
+//
+//			reader.close();
+//		}
+//		catch (IOException e){System.out.println("Warning: no ubiquitous id file is detected.");}
 	}
 }
