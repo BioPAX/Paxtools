@@ -1,0 +1,75 @@
+package org.biopax.paxtools.pattern.miner;
+
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.pattern.Match;
+import org.biopax.paxtools.pattern.Pattern;
+import org.biopax.paxtools.pattern.PatternBox;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Miner for the chemical-affects-protein pattern.
+ * @author Ozgun Babur
+ */
+public class ChemicalAffectsThroughControlMiner extends MinerAdapter implements SIFMiner
+{
+	/**
+	 * Constructor that sets name and description.
+	 */
+	public ChemicalAffectsThroughControlMiner(Set<String> ubiqueIDs)
+	{
+		super(SIFType.CHEMICAL_AFFECTS.getTag(), "This pattern captures a small molecule " +
+			"controlling a reaction, and a protein is participant of that reaction.", ubiqueIDs);
+	}
+
+	/**
+	 * Constructs the pattern.
+	 * @return pattern
+	 */
+	@Override
+	public Pattern constructPattern()
+	{
+		return PatternBox.chemicalAffectsProteinThroughControl(ubiqueIDs);
+	}
+
+	/**
+	 * Writes the result as "A chemical-affect-protein B", where A is small molecule name, B is gene
+	 * name, and whitespace is tab.
+	 * @param matches pattern search result
+	 * @param out output stream
+	 */
+	@Override
+	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
+		throws IOException
+	{
+		writeResultAsSIF(matches, out, false, getSourceLabel(), getTargetLabel());
+	}
+
+	@Override
+	public String getSourceLabel()
+	{
+		return "controller SMR";
+	}
+
+	@Override
+	public String getTargetLabel()
+	{
+		return "affected PR";
+	}
+
+	@Override
+	public SIFType getSIFType(Match m)
+	{
+		return SIFType.CHEMICAL_AFFECTS;
+	}
+
+	@Override
+	public String[] getMediatorLabels()
+	{
+		return new String[]{"Control", "Interaction"};
+	}
+}
