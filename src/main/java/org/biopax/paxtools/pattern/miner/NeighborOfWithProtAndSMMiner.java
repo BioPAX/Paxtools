@@ -11,18 +11,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Miner for the "neighbor-of" relation.
+ * Miner for the "neighbor-of" relation. This is non-standard version that includes small molecules.
  * @author Ozgun Babur
  */
-public class NeighborOfMiner extends MinerAdapter implements SIFMiner
+public class NeighborOfWithProtAndSMMiner extends MinerAdapter implements SIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public NeighborOfMiner()
+	public NeighborOfWithProtAndSMMiner()
 	{
-		super(SIFType.NEIGHBOR_OF.getTag(), "This miner finds cases where two genes are " +
-			"participants or controllers of the same interaction.", null);
+		super(SIFType.NEIGHBOR_OF.getTag() + "-with-prot-sm", "This miner finds cases where two " +
+			"genes or small molecules are participants or controllers of the same interaction.",
+			null);
 	}
 
 	/**
@@ -32,12 +33,12 @@ public class NeighborOfMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.neighborOf();
+		return PatternBox.neighborOfWithProtAndSM();
 	}
 
 	/**
-	 * Writes the result as "A neighbor-of B", where A and B are gene symbols, and whitespace is
-	 * tab.
+	 * Writes the result as "A neighbor-of B", where A and B are gene symbols or chemical names, and
+	 * whitespace is tab.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
@@ -51,13 +52,13 @@ public class NeighborOfMiner extends MinerAdapter implements SIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "Protein 1";
+		return "Entity 1";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "Protein 2";
+		return "Entity 2";
 	}
 
 	@Override
