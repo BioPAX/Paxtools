@@ -49,17 +49,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		Set<String> ubiqueIDs = loadUbiqueIDs("/home/ozgun/Projects/pattern/blacklist.txt");
 		s.setUbiqueIDs(ubiqueIDs);
 		confirmPresenceOfUbiques(model, ubiqueIDs);
-		Set<SIFInteraction> set = s.searchSIF(model);
-
-		BufferedWriter writer = new BufferedWriter(
-			new FileWriter("/home/ozgun/PC.sif"));
-
-		for (SIFInteraction sif : set)
-		{
-			writer.write(sif.toString() + "\n");
-		}
-
-		writer.close();
+		s.searchSIF(model, new FileOutputStream("/home/ozgun/PC.sif"), true);
 	}
 
 	private void confirmPresenceOfUbiques(Model model, Set<String> ubiques)

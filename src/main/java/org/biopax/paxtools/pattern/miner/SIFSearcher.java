@@ -9,6 +9,10 @@ import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Searcher;
 import org.biopax.paxtools.pattern.util.HGNC;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.*;
 
 /**
@@ -199,5 +203,63 @@ public class SIFSearcher
 			}
 		}
 		return new HashSet<SIFInteraction>(map.values());
+	}
+
+	/**
+	 * Searches the given model with the contained miners. Writes the textual result to the given
+	 * output stream. Closes the stream at the end.
+	 * @param model model to search
+	 * @param out stream to write
+	 * @param withMediators whether to write the IDs of the mediator elements to the output
+	 * @return true if any output produced successfully
+	 */
+	public boolean searchSIF(Model model, OutputStream out, final boolean withMediators)
+	{
+		return searchSIF(model, out, new SIFToText()
+		{
+			@Override
+			public String convert(SIFInteraction inter)
+			{
+				return inter.toString(withMediators);
+			}
+		});
+	}
+
+	/**
+	 * Searches the given model with the contained miners. Writes the textual result to the given
+	 * output stream. Closes the stream at the end.
+	 * @param model model to search
+	 * @param out stream to write
+	 * @param stt sif to text converter
+	 * @return true if any output produced successfully
+	 */
+	public boolean searchSIF(Model model, OutputStream out, SIFToText stt)
+	{
+		Set<SIFInteraction> inters = searchSIF(model);
+
+		if (!inters.isEmpty())
+		{
+			List<SIFInteraction> interList = new ArrayList<SIFInteraction>(inters);
+			Collections.sort(interList);
+			try
+			{
+				boolean first = true;
+				OutputStreamWriter writer = new OutputStreamWriter(out);
+				for (SIFInteraction inter : interList)
+				{
+					if (first) first = false;
+					else writer.write("\n");
+
+					writer.write(stt.convert(inter));
+				}
+				writer.close();
+				return true;
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 }

@@ -551,7 +551,6 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		}
 		else
 		{
-
 			try
 			{
 				prgLabel.setText("Writing result");

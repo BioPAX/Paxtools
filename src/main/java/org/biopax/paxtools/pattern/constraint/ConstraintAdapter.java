@@ -113,20 +113,28 @@ public abstract class ConstraintAdapter implements Constraint
 	 */
 	protected ConversionDirectionType getDirection(Conversion conv, Control cont)
 	{
-		// If conversion direction is specified and it is one way, then control direction does not
-		// have any effect
-		if (conv.getConversionDirection() != null &&
-				conv.getConversionDirection() != ConversionDirectionType.REVERSIBLE)
-			return conv.getConversionDirection();
-
-		// else if the control chain have a direction, use it
 		for (Control ctrl : getControlChain(cont, conv))
 		{
 			ConversionDirectionType dir = getCatalysisDirection(ctrl);
 			if (dir != null) return dir;
 		}
 
-		// else use any direction found
+		Set<StepDirection> dirs = new HashSet<StepDirection>();
+
+		Set<PathwayStep> convSteps = conv.getStepProcessOf();
+
+		for (PathwayStep step : cont.getStepProcessOf())
+		{
+			if (step instanceof BiochemicalPathwayStep && convSteps.contains(step))
+			{
+				StepDirection dir = ((BiochemicalPathwayStep) step).getStepDirection();
+				if (dir != null) dirs.add(dir);
+			}
+		}
+
+		if (dirs.size() > 1) return ConversionDirectionType.REVERSIBLE;
+		else if (!dirs.isEmpty()) return convertStepDirection(dirs.iterator().next());
+
 		return getDirection(conv);
 	}
 
@@ -208,14 +216,13 @@ public abstract class ConstraintAdapter implements Constraint
 	 */
 	protected Set<PhysicalEntity> getConvParticipants(Conversion conv, RelType type)
 	{
-		ConversionDirectionType dir = getDirection(conv);
-		if (dir == ConversionDirectionType.REVERSIBLE)
+		if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE)
 		{
 			HashSet<PhysicalEntity> set = new HashSet<PhysicalEntity>(conv.getLeft());
 			set.addAll(conv.getRight());
 			return set;
 		}
-		else if (dir == ConversionDirectionType.RIGHT_TO_LEFT)
+		else if (conv.getConversionDirection() == ConversionDirectionType.RIGHT_TO_LEFT)
 		{
 			return type == RelType.INPUT ? conv.getRight() : conv.getLeft();
 		}
@@ -246,6 +253,13 @@ public abstract class ConstraintAdapter implements Constraint
 				ConversionDirectionType.LEFT_TO_RIGHT : ConversionDirectionType.RIGHT_TO_LEFT;
 		}
 		else return null;
+	}
+
+	protected ConversionDirectionType convertStepDirection(StepDirection sdir)
+	{
+		if (sdir == StepDirection.LEFT_TO_RIGHT) return ConversionDirectionType.LEFT_TO_RIGHT;
+		if (sdir == StepDirection.RIGHT_TO_LEFT) return ConversionDirectionType.RIGHT_TO_LEFT;
+		return null;
 	}
 
 	/**

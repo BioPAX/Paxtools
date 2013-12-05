@@ -28,6 +28,10 @@ public class SIFInteraction implements Comparable
 		{
 			if (sourceID != null && targetID != null && sourceID.compareTo(targetID) > 0)
 			{
+				String tempID = sourceID;
+				sourceID = targetID;
+				targetID = tempID;
+
 				BioPAXElement temp = source;
 				source = target;
 				target = temp;
@@ -99,10 +103,18 @@ public class SIFInteraction implements Comparable
 	@Override
 	public String toString()
 	{
+		return toString(true);
+	}
+
+	public String toString(boolean withMediators)
+	{
 		String s = sourceID + "\t" + type.getTag() + "\t" + targetID;
 
-		String m = getMediatorsInString();
-		if (!m.isEmpty()) s += "\t" + m;
+		if (withMediators)
+		{
+			String m = getMediatorsInString();
+			if (!m.isEmpty()) s += "\t" + m;
+		}
 
 		return s;
 	}
