@@ -9,7 +9,6 @@ import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Searcher;
 import org.biopax.paxtools.pattern.util.HGNC;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -153,6 +152,12 @@ public class SIFSearcher
 					break;
 				case INTERACTS_WITH:
 					miners.add(new InteractsWithMiner());
+					break;
+				case REACTS_WITH:
+					miners.add(new ReactsWithMiner(ubiqueIDs));
+					break;
+				case USED_TO_PRODUCE:
+					miners.add(new UsedToProduceMiner(ubiqueIDs));
 					break;
 				default: throw new RuntimeException("There is an unhandled sif type: " + type);
 			}

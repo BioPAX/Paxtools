@@ -16,12 +16,10 @@ public class ControlsExpressionWithConvMiner extends ControlsExpressionMiner
 	 */
 	public ControlsExpressionWithConvMiner()
 	{
-		super("controls-expression-with-conversion", "This pattern finds relations where " +
-			"first protein is controlling expressional activity of the second protein. " +
-			"Proper way to model this relation is to use a TemplateReaction, however we see " +
-			"that Conversion is also used in resources. This miner find patterns where a " +
-			"Conversion with a single participant at right is used instead of a TemplateReaction." +
-			" The output is either \"A transactivate B\" or \"A transinhibit B\".");
+		super("-with-conversion", "Proper way to model this relation is to use a TemplateReaction" +
+			", however we see that Conversion is also used in resources. This miner find patterns" +
+			" where a Conversion with a single participant at right is used instead of a " +
+			"TemplateReaction.");
 	}
 
 	/**

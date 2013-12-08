@@ -6,17 +6,17 @@ import org.biopax.paxtools.pattern.PatternBox;
 import java.util.Set;
 
 /**
- * Miner for the controls-production-of pattern.
+ * Miner for the "used-for-production-of" relation.
  * @author Ozgun Babur
  */
-public class ControlsProductionOfMiner extends AbstractSIFMiner
+public class UsedToProduceMiner extends AbstractSIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsProductionOfMiner(Set<String> ubiqueIDs)
+	public UsedToProduceMiner(Set<String> ubiqueIDs)
 	{
-		super(SIFType.CONTROLS_PRODUCTION_OF, ubiqueIDs);
+		super(SIFType.USED_TO_PRODUCE, ubiqueIDs);
 	}
 
 	/**
@@ -26,24 +26,24 @@ public class ControlsProductionOfMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.meabolicCatalysisSubclass(ubiqueIDs, false);
+		return PatternBox.usedForProductionOf(ubiqueIDs);
 	}
 
 	@Override
 	public String getSourceLabel()
 	{
-		return "controller PR";
+		return "SMR1";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "part SMR";
+		return "SMR2";
 	}
 
 	@Override
 	public String[] getMediatorLabels()
 	{
-		return new String[]{"Control", "Conversion"};
+		return new String[]{"Conv"};
 	}
 }

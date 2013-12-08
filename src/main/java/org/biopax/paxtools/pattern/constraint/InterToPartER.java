@@ -143,24 +143,62 @@ public class InterToPartER extends ConstraintAdapter
 	{
 		if (direction == null) throw new IllegalArgumentException("Direction cannot be null");
 
-		Set<BioPAXElement> simples = new HashSet<BioPAXElement>();
-
-		for (Entity part : direction == Direction.BOTH ? conv.getParticipant() :
-			direction == Direction.LEFT ? conv.getLeft() : conv.getRight())
+		if (!(direction == Direction.BOTHSIDERS || direction == Direction.ONESIDERS))
 		{
-			if (part instanceof PhysicalEntity && !taboo.contains(part))
-			{
-				simples.addAll(linker.getLinkedElements((PhysicalEntity) part));
-			}
-		}
+			Set<BioPAXElement> simples = new HashSet<BioPAXElement>();
 
-		return pe2ER.getValueFromBeans(simples);
+			for (Entity part : direction == Direction.ANY ? conv.getParticipant() :
+				direction == Direction.LEFT ? conv.getLeft() : conv.getRight())
+			{
+				if (part instanceof PhysicalEntity && !taboo.contains(part))
+				{
+					simples.addAll(linker.getLinkedElements((PhysicalEntity) part));
+				}
+			}
+
+			return pe2ER.getValueFromBeans(simples);
+		}
+		else
+		{
+			Set<BioPAXElement> leftSimples = new HashSet<BioPAXElement>();
+			Set<BioPAXElement> rightSimples = new HashSet<BioPAXElement>();
+
+			for (PhysicalEntity pe : conv.getLeft())
+			{
+				if (!taboo.contains(pe)) leftSimples.addAll(linker.getLinkedElements(pe));
+			}
+			for (PhysicalEntity pe : conv.getRight())
+			{
+				if (!taboo.contains(pe)) rightSimples.addAll(linker.getLinkedElements(pe));
+			}
+
+			Set leftERs = pe2ER.getValueFromBeans(leftSimples);
+			Set rightERs = pe2ER.getValueFromBeans(rightSimples);
+
+			if (direction == Direction.ONESIDERS)
+			{
+				// get all but intersection
+				Set temp = new HashSet(leftERs);
+				leftERs.removeAll(rightERs);
+				rightERs.removeAll(temp);
+				leftERs.addAll(rightERs);
+			}
+			else // BOTHSIDERS
+			{
+				// get intersection
+				leftERs.retainAll(rightERs);
+			}
+
+			return leftERs;
+		}
 	}
 
 	public enum Direction
 	{
 		LEFT,
 		RIGHT,
-		BOTH
+		ANY,
+		ONESIDERS,
+		BOTHSIDERS
 	}
 }

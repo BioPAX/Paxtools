@@ -16,8 +16,7 @@ public class CSCOButIsParticipantMiner extends ControlsStateChangeOfMiner
 	 */
 	public CSCOButIsParticipantMiner()
 	{
-		super("cso-but-a-participant", "Mines the same relation as with " +
-			"Controls-state-change, however, this time the controller is modeled as a " +
+		super("-but-a-participant", "The controller is modeled as a " +
 			"participant of the Conversion. This is in fact a modeling error, but this pattern " +
 			"exists in some resources. The controller PhysicalEntity appears at both left and " +
 			"right of the Conversion.");

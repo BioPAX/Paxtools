@@ -13,20 +13,14 @@ import java.util.Set;
 public class CSCOThroughBindingSmallMoleculeMiner extends ControlsStateChangeOfMiner
 {
 	/**
-	 * IDs of ubiquitous molecules.
-	 */
-	Set<String> ubiqueIDs = new HashSet<String>();
-
-	/**
 	 * Constructor that sets name and description.
 	 */
 	public CSCOThroughBindingSmallMoleculeMiner(Set<String> ubiqueIDs)
 	{
-		super("cso-through-binding-small-mol", "Mines the relation where the first" +
-			"protein produces a non-ubique small molecule, and this small molecule controls" +
-			"state of the second protein.");
+		super("-through-binding-small-mol", "The first protein produces a non-ubique small " +
+			"molecule, and this small molecule controls state of the second protein.");
 
-		this.ubiqueIDs = ubiqueIDs;
+		super.ubiqueIDs = ubiqueIDs;
 	}
 
 	/**

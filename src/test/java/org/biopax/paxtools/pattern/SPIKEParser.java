@@ -1,4 +1,4 @@
-package org.biopax.paxtools.pattern.miner;
+package org.biopax.paxtools.pattern;
 
 import org.biopax.paxtools.pattern.util.HGNC;
 

@@ -32,6 +32,16 @@ public class InputOrOutput extends ConstraintAdapter
 	/**
 	 * Constructor with parameters.
 	 * @param type input or output
+	 * conversion
+	 */
+	public InputOrOutput(RelType type)
+	{
+		this(type, false);
+	}
+
+	/**
+	 * Constructor with parameters.
+	 * @param type input or output
 	 * @param treatReversibleAsLeftToRight option to not to traverse both sides of a reversible
 	 * conversion
 	 */

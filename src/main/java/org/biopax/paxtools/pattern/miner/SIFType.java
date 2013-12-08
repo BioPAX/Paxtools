@@ -27,6 +27,11 @@ public enum SIFType
 	CONTROLS_TRANSPORT_OF_CHEMICAL("The protein is controlling a reaction that changes cellular " +
 		"location of the small molecule.", true),
 	CHEMICAL_AFFECTS("A small molecule has an effect on a protein.", true),
+	REACTS_WITH("A small molecule is input to a biochemical reaction together with another small " +
+		"molecule. None of the molecules are also output.", false),
+	USED_TO_PRODUCE("A small molecule is input to a biochemical reaction that produces " +
+		"another small molecule. Both small molecules appear at only one side of the reaction.",
+		true),
 	;
 
 	/**

@@ -34,6 +34,16 @@ public class ParticipatesInConv extends ConstraintAdapter
 	/**
 	 * Constructor with parameters.
 	 * @param type input or output
+	 * conversion
+	 */
+	public ParticipatesInConv(RelType type)
+	{
+		this(type, false);
+	}
+
+	/**
+	 * Constructor with parameters.
+	 * @param type input or output
 	 * @param treatReversibleAsLeftToRight option to not to traverse both sides of a reversible
 	 * conversion
 	 */
@@ -86,8 +96,10 @@ public class ParticipatesInConv extends ConstraintAdapter
 				}
 				// Note that null direction is treated as if LEFT_TO_RIGHT. This is not a best
 				// practice, but it is a good approximation.
-				else if ((dir == ConversionDirectionType.LEFT_TO_RIGHT || dir == null ||
-					(dir == ConversionDirectionType.REVERSIBLE && treatReversibleAsLeftToRight)) &&
+				else if ((dir == ConversionDirectionType.LEFT_TO_RIGHT ||
+					dir == null ||
+					(dir == ConversionDirectionType.REVERSIBLE &&
+						treatReversibleAsLeftToRight)) &&
 					(type == RelType.INPUT ? cnv.getLeft().contains(pe) : cnv.getRight().contains(pe)))
 				{
 					result.add(cnv);

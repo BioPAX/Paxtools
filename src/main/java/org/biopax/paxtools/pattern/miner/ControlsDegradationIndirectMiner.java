@@ -1,14 +1,7 @@
 package org.biopax.paxtools.pattern.miner;
 
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Yet another miner for the controls-degradation pattern. This one searches two step relations.
@@ -17,16 +10,15 @@ import java.util.Map;
  *
  * @author Ozgun Babur
  */
-public class ControlsDegradationIndirectMiner extends MinerAdapter implements SIFMiner
+public class ControlsDegradationIndirectMiner extends AbstractSIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
 	public ControlsDegradationIndirectMiner()
 	{
-		super(SIFType.CONTROLS_DEGRADATION_OF.getTag() + "-indirectly", "This pattern finds relations " +
-			"where first protein is controlling a Conversion whose output molecule is degraded " +
-			"without a control.", null);
+		super(SIFType.CONTROLS_DEGRADATION_OF, "-indirectly", "The control is to a previous " +
+			"reaction that produces the degraded state of the protein.", null);
 	}
 
 	/**
@@ -39,29 +31,6 @@ public class ControlsDegradationIndirectMiner extends MinerAdapter implements SI
 		return PatternBox.controlsDegradationIndirectly();
 	}
 
-	/**
-	 * Writes the result as "A controls-degradation B", where A and B are gene symbols, and
-	 * whitespace is tab.
-	 * @param matches pattern search result
-	 * @param out output stream
-	 */
-	@Override
-	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
-		throws IOException
-	{
-		writeResultAsSIF(matches, out, true, getSourceLabel(), getTargetLabel());
-	}
-
-	/**
-	 * Sets header of the output.
-	 * @return header
-	 */
-	@Override
-	public String getHeader()
-	{
-		return "Upstream\tRelation\tDownstream";
-	}
-
 	@Override
 	public String getSourceLabel()
 	{
@@ -72,12 +41,6 @@ public class ControlsDegradationIndirectMiner extends MinerAdapter implements SI
 	public String getTargetLabel()
 	{
 		return "changed PR";
-	}
-
-	@Override
-	public SIFType getSIFType(Match m)
-	{
-		return SIFType.CONTROLS_DEGRADATION_OF;
 	}
 
 	@Override

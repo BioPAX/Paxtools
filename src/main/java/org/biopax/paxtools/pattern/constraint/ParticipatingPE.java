@@ -31,6 +31,15 @@ public class ParticipatingPE extends ConstraintAdapter
 	/**
 	 * Constructor with parameters.
 	 * @param type direction from the Conversion
+	 */
+	public ParticipatingPE(RelType type)
+	{
+		this(type, false);
+	}
+
+	/**
+	 * Constructor with parameters.
+	 * @param type direction from the Conversion
 	 * @param treatReversibleAsLeftToRight option to treat reversible Conversion as if left to right
 	 */
 	public ParticipatingPE(RelType type, boolean treatReversibleAsLeftToRight)

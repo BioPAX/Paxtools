@@ -6,17 +6,17 @@ import org.biopax.paxtools.pattern.PatternBox;
 import java.util.Set;
 
 /**
- * Miner for the controls-production-of pattern.
+ * Miner for the "reacts-with" relation.
  * @author Ozgun Babur
  */
-public class ControlsProductionOfMiner extends AbstractSIFMiner
+public class ReactsWithMiner extends AbstractSIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsProductionOfMiner(Set<String> ubiqueIDs)
+	public ReactsWithMiner(Set<String> ubiqueIDs)
 	{
-		super(SIFType.CONTROLS_PRODUCTION_OF, ubiqueIDs);
+		super(SIFType.REACTS_WITH, ubiqueIDs);
 	}
 
 	/**
@@ -26,24 +26,24 @@ public class ControlsProductionOfMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.meabolicCatalysisSubclass(ubiqueIDs, false);
+		return PatternBox.reactsWith(ubiqueIDs);
 	}
 
 	@Override
 	public String getSourceLabel()
 	{
-		return "controller PR";
+		return "SMR1";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "part SMR";
+		return "SMR2";
 	}
 
 	@Override
 	public String[] getMediatorLabels()
 	{
-		return new String[]{"Control", "Conversion"};
+		return new String[]{"Conv"};
 	}
 }

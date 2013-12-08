@@ -691,27 +691,57 @@ public class PatternBox
 	}
 
 	/**
-	 * Constructs a pattern where first and last proteins are related through an interaction. They
-	 * can be participants or controllers. No limitation.
+	 * Constructs a pattern where first and last small molecules are substrates to the same
+	 * biochemical reaction.
 	 * @return the pattern
 	 */
-	public static Pattern neighborOfWithProtAndSM()
+	public static Pattern reactsWith(Set<String> ubiqueIDs)
 	{
-		Pattern p = new Pattern(EntityReference.class, "Entity 1");
-		p.add(new OR(new MappedConst(type(ProteinReference.class), 0),
-			new MappedConst(type(SmallMoleculeReference.class), 0)), "Entity 1");
-		p.add(erToPE(), "Entity 1", "SPE1");
+		Pattern p = new Pattern(SmallMoleculeReference.class, "SMR1");
+		p.add(erToPE(), "SMR1", "SPE1");
+		if (ubiqueIDs != null) p.add(notUbique(ubiqueIDs), "SPE1");
 		p.add(notGeneric(), "SPE1");
 		p.add(linkToComplex(), "SPE1", "PE1");
-		p.add(peToInter(), "PE1", "Inter");
-		p.add(interToPE(), "Inter", "PE2");
+		p.add(new ParticipatesInConv(RelType.INPUT), "PE1", "Conv");
+		p.add(type(BiochemicalReaction.class), "Conv");
+		p.add(new InterToPartER(InterToPartER.Direction.ONESIDERS), "Conv", "SMR1");
+		p.add(new ConversionSide(ConversionSide.Type.SAME_SIDE), "PE1", "Conv", "PE2");
+		p.add(type(SmallMolecule.class), "PE2");
 		p.add(linkToSimple(), "PE2", "SPE2");
+		if (ubiqueIDs != null) p.add(notUbique(ubiqueIDs), "SPE2");
+		p.add(notGeneric(), "SPE2");
+		p.add(new PEChainsIntersect(false), "SPE1", "PE1", "SPE2", "PE2");
+		p.add(peToER(), "SPE2", "SMR2");
+		p.add(equal(false), "SMR1", "SMR2");
+		p.add(new InterToPartER(InterToPartER.Direction.ONESIDERS), "Conv", "SMR2");
+		return p;
+	}
+
+	/**
+	 * Constructs a pattern where first small molecule is an input a biochemical reaction that
+	 * produces the second small molecule.
+	 * biochemical reaction.
+	 * @return the pattern
+	 */
+	public static Pattern usedForProductionOf(Set<String> ubiqueIDs)
+	{
+		Pattern p = new Pattern(SmallMoleculeReference.class, "SMR1");
+		p.add(erToPE(), "SMR1", "SPE1");
+		if (ubiqueIDs != null) p.add(notUbique(ubiqueIDs), "SPE1");
+		p.add(notGeneric(), "SPE1");
+		p.add(linkToComplex(), "SPE1", "PE1");
+		p.add(new ParticipatesInConv(RelType.INPUT), "PE1", "Conv");
+		p.add(type(BiochemicalReaction.class), "Conv");
+		p.add(new InterToPartER(InterToPartER.Direction.ONESIDERS), "Conv", "SMR1");
+		p.add(new ConversionSide(ConversionSide.Type.OTHER_SIDE), "PE1", "Conv", "PE2");
+		p.add(type(SmallMolecule.class), "PE2");
+		p.add(linkToSimple(), "PE2", "SPE2");
+		if (ubiqueIDs != null) p.add(notUbique(ubiqueIDs), "SPE2");
 		p.add(notGeneric(), "SPE2");
 		p.add(equal(false), "SPE1", "SPE2");
-		p.add(new OR(new MappedConst(type(Protein.class), 0),
-			new MappedConst(type(SmallMolecule.class), 0)), "SPE2");
-		p.add(peToER(), "SPE2", "Entity 2");
-		p.add(equal(false), "Entity 1", "Entity 2");
+		p.add(peToER(), "SPE2", "SMR2");
+		p.add(equal(false), "SMR1", "SMR2");
+		p.add(new InterToPartER(InterToPartER.Direction.ONESIDERS), "Conv", "SMR2");
 		return p;
 	}
 

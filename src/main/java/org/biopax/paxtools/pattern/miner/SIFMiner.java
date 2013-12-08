@@ -24,7 +24,7 @@ public interface SIFMiner extends Miner
 	 * Gets the type of the interaction.
 	 * @return interaction type
 	 */
-	public SIFType getSIFType(Match m);
+	public SIFType getSIFType();
 
 	/**
 	 * Creates a SIF interaction for the given match.

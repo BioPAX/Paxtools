@@ -434,8 +434,7 @@ public abstract class MinerAdapter implements Miner
 		// Memory for already written pairs.
 		Set<String> mem = new HashSet<String>();
 
-		String mid = getRelationType(matches.values().iterator().next().get(0)) == null ?
-			"\t" : "\trelation\t";
+		String mid = getRelationType() == null ? "\t" : "\trelation\t";
 
 		OutputStreamWriter writer = new OutputStreamWriter(out);
 		String header = getHeader();
@@ -450,7 +449,7 @@ public abstract class MinerAdapter implements Miner
 
 				if (s1 != null && s2 != null)
 				{
-					String type = getRelationType(m);
+					String type = getRelationType();
 					String sep = type == null ? "\t" : "\t" + type + "\t";
 
 					String relation = s1 + sep + s2;
@@ -552,14 +551,13 @@ public abstract class MinerAdapter implements Miner
 	 * Checks if the relation captured by match has a type. THis method just returns null but any
 	 * child class using <code>writeResultAsSIF</code> method can implement this to have a
 	 * relationship type between gene symbol pairs.
-	 * @param m the match
 	 * @return type of the relation
 	 */
-	public String getRelationType(Match m)
+	public String getRelationType()
 	{
 		if (this instanceof SIFMiner)
 		{
-			return ((SIFMiner) this).getSIFType(m).getTag();
+			return ((SIFMiner) this).getSIFType().getTag();
 		}
 		else return null;
 	}
@@ -669,7 +667,7 @@ public abstract class MinerAdapter implements Miner
 		{
 				return new SIFInteraction(m.get(((SIFMiner) this).getSourceLabel(), getPattern()),
 					m.get(((SIFMiner) this).getTargetLabel(), getPattern()),
-					((SIFMiner) this).getSIFType(m),
+					((SIFMiner) this).getSIFType(),
 					new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())), fetcher);
 		}
 
