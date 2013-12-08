@@ -42,7 +42,7 @@ public class SIFSearcher
 	private Set<String> ubiqueIDs;
 
 	/**
-	 * Constructor with miners.
+	 * Constructor with binary interaction types.
 	 * @param types sif types
 	 */
 	public SIFSearcher(SIFType... types)
@@ -51,7 +51,16 @@ public class SIFSearcher
 	}
 
 	/**
-	 * Constructor with ID fetcher and miners.
+	 * Constructor with miners.
+	 * @param miners sif miners
+	 */
+	public SIFSearcher(SIFMiner... miners)
+	{
+		this(null, miners);
+	}
+
+	/**
+	 * Constructor with ID fetcher and binary interaction types.
 	 * @param types sif types
 	 */
 	public SIFSearcher(IDFetcher idFetcher, SIFType... types)
@@ -59,48 +68,19 @@ public class SIFSearcher
 		this.idFetcher = idFetcher;
 		this.types = new HashSet<SIFType>(Arrays.asList(types));
 
-		if (idFetcher == null)
-		{
-			this.idFetcher = new IDFetcher()
-			{
-				@Override
-				public String fetchID(BioPAXElement ele)
-				{
-					if (ele instanceof SmallMoleculeReference)
-					{
-						SmallMoleculeReference smr = (SmallMoleculeReference) ele;
-						if (smr.getDisplayName() != null) return smr.getDisplayName();
-						else if (!smr.getName().isEmpty()) return smr.getName().iterator().next();
-						else return null;
-					}
-					else if (ele instanceof XReferrable)
-					{
-						for (Xref xr : ((XReferrable) ele).getXref())
-						{
-							String db = xr.getDb();
-							if (db != null)
-							{
-								db = db.toLowerCase();
-								if (db.startsWith("hgnc"))
-								{
-									String id = xr.getId();
-									if (id != null)
-									{
-										String symbol = HGNC.getSymbol(id);
-										if (symbol != null && !symbol.isEmpty())
-										{
-											return symbol;
-										}
-									}
-								}
-							}
-						}
-					}
+		if (idFetcher == null) this.idFetcher = new CommonIDFetcher();
+	}
 
-					return null;
-				}
-			};
-		}
+	/**
+	 * Constructor with ID fetcher and miners.
+	 * @param miners sif miners
+	 */
+	public SIFSearcher(IDFetcher idFetcher, SIFMiner... miners)
+	{
+		this.idFetcher = idFetcher;
+		this.miners = Arrays.asList(miners);
+
+		if (idFetcher == null) this.idFetcher = new CommonIDFetcher();
 	}
 
 	private void initMiners()
@@ -195,7 +175,7 @@ public class SIFSearcher
 				{
 					SIFInteraction sif = miner.createSIFInteraction(m, idFetcher);
 
-					if (sif != null && sif.hasIDs() && types.contains(sif.type))
+					if (sif != null && sif.hasIDs() && (types== null || types.contains(sif.type)))
 					{
 						if (map.containsKey(sif))
 						{
