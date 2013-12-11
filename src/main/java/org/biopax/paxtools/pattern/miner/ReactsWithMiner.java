@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
+import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.util.Set;
 
@@ -14,9 +15,9 @@ public class ReactsWithMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ReactsWithMiner(Set<String> ubiqueIDs)
+	public ReactsWithMiner(Blacklist blacklist)
 	{
-		super(SIFType.REACTS_WITH, ubiqueIDs);
+		super(SIFType.REACTS_WITH, blacklist);
 	}
 
 	/**
@@ -26,7 +27,7 @@ public class ReactsWithMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.reactsWith(ubiqueIDs);
+		return PatternBox.reactsWith(blacklist);
 	}
 
 	@Override

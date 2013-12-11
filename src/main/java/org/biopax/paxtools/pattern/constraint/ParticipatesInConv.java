@@ -6,6 +6,8 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.pattern.util.Blacklist;
+import org.biopax.paxtools.pattern.util.RelType;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,13 +25,18 @@ public class ParticipatesInConv extends ConstraintAdapter
 	/**
 	 * Input or output.
 	 */
-	RelType type;
+	private RelType type;
 
 	/**
-	 * Sometimes users may opt to treat reversible conversions as if left to right just to avoid to
-	 * traverse towards both sides.
+	 * Constructor with parameters.
+	 * @param type input or output conversion
+	 * @param blacklist for detecting blacklisted small molecules
 	 */
-	boolean treatReversibleAsLeftToRight;
+	public ParticipatesInConv(RelType type, Blacklist blacklist)
+	{
+		super(2, blacklist);
+		this.type = type;
+	}
 
 	/**
 	 * Constructor with parameters.
@@ -38,20 +45,7 @@ public class ParticipatesInConv extends ConstraintAdapter
 	 */
 	public ParticipatesInConv(RelType type)
 	{
-		this(type, false);
-	}
-
-	/**
-	 * Constructor with parameters.
-	 * @param type input or output
-	 * @param treatReversibleAsLeftToRight option to not to traverse both sides of a reversible
-	 * conversion
-	 */
-	public ParticipatesInConv(RelType type, boolean treatReversibleAsLeftToRight)
-	{
-		super(2);
-		this.type = type;
-		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
+		this(type, null);
 	}
 
 	/**
@@ -84,8 +78,10 @@ public class ParticipatesInConv extends ConstraintAdapter
 				Conversion cnv = (Conversion) inter;
 				ConversionDirectionType dir = getDirection(cnv);
 
-				if (dir == ConversionDirectionType.REVERSIBLE &&
-					!treatReversibleAsLeftToRight)
+				// do not get blacklisted small molecules
+				if (blacklist != null && blacklist.isUbique(pe, cnv, dir, type)) continue;
+
+				if (dir == ConversionDirectionType.REVERSIBLE)
 				{
 					result.add(cnv);
 				}
@@ -96,10 +92,7 @@ public class ParticipatesInConv extends ConstraintAdapter
 				}
 				// Note that null direction is treated as if LEFT_TO_RIGHT. This is not a best
 				// practice, but it is a good approximation.
-				else if ((dir == ConversionDirectionType.LEFT_TO_RIGHT ||
-					dir == null ||
-					(dir == ConversionDirectionType.REVERSIBLE &&
-						treatReversibleAsLeftToRight)) &&
+				else if ((dir == ConversionDirectionType.LEFT_TO_RIGHT || dir == null) &&
 					(type == RelType.INPUT ? cnv.getLeft().contains(pe) : cnv.getRight().contains(pe)))
 				{
 					result.add(cnv);

@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.Searcher;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.ProgressWatcher;
 
 import javax.swing.*;
@@ -135,9 +136,9 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	private static final String UBIQUE_URL = "http://www.pathwaycommons.org/pc2/downloads/blacklist.txt";
 
 	/**
-	 * Resource file for IDs of ubiquitous molecules.
+	 * Blacklist for detecting ubiquitous small molecules.
 	 */
-	private static Set<String> ubiqueIDs;
+	private static Blacklist blacklist;
 
 	/**
 	 * Runs the program showing the dialog.
@@ -403,24 +404,24 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		minerList.add(new ControlsStateChangeOfMiner());
 		minerList.add(new CSCOButIsParticipantMiner());
 		minerList.add(new CSCOBothControllerAndParticipantMiner());
-		minerList.add(new CSCOThroughControllingSmallMoleculeMiner(ubiqueIDs));
-		minerList.add(new CSCOThroughBindingSmallMoleculeMiner(ubiqueIDs));
+		minerList.add(new CSCOThroughControllingSmallMoleculeMiner(blacklist));
+		minerList.add(new CSCOThroughBindingSmallMoleculeMiner(blacklist));
 		minerList.add(new ControlsStateChangeDetailedMiner());
 		minerList.add(new ControlsTransportMiner());
 		minerList.add(new ControlsExpressionMiner());
 		minerList.add(new ControlsDegradationMiner());
 		minerList.add(new ControlsDegradationIndirectMiner());
-		minerList.add(new ConsumptionControlledByMiner(ubiqueIDs));
-		minerList.add(new ControlsProductionOfMiner(ubiqueIDs));
-		minerList.add(new CatalysisPrecedesMiner(ubiqueIDs));
-		minerList.add(new ChemicalAffectsThroughBindingMiner(ubiqueIDs));
-		minerList.add(new ChemicalAffectsThroughControlMiner(ubiqueIDs));
-		minerList.add(new ControlsTransportOfChemicalMiner(ubiqueIDs));
+		minerList.add(new ConsumptionControlledByMiner(blacklist));
+		minerList.add(new ControlsProductionOfMiner(blacklist));
+		minerList.add(new CatalysisPrecedesMiner(blacklist));
+		minerList.add(new ChemicalAffectsThroughBindingMiner(blacklist));
+		minerList.add(new ChemicalAffectsThroughControlMiner());
+		minerList.add(new ControlsTransportOfChemicalMiner(blacklist));
 		minerList.add(new InComplexWithMiner());
 		minerList.add(new InteractsWithMiner());
 		minerList.add(new NeighborOfMiner());
-		minerList.add(new ReactsWithMiner(ubiqueIDs));
-		minerList.add(new UsedToProduceMiner(ubiqueIDs));
+		minerList.add(new ReactsWithMiner(blacklist));
+		minerList.add(new UsedToProduceMiner(blacklist));
 		minerList.add(new RelatedGenesOfInteractionsMiner());
 		minerList.add(new UbiquitousIDMiner());
 		return minerList.toArray(new Object[minerList.size()]);
@@ -687,25 +688,10 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	static
 	{
-		try
-		{
-			File f = new File(UBIQUE_FILE);
+		File f = new File(UBIQUE_FILE);
 
-			if (!f.exists())
-			{
-				downloadUbiques();
-			}
-
-			ubiqueIDs = new HashSet<String>();
-			BufferedReader reader = new BufferedReader(new FileReader(f));
-
-			for (String line = reader.readLine(); line != null; line = reader.readLine())
-			{
-				ubiqueIDs.add(line);
-			}
-
-			reader.close();
-		}
-		catch (IOException e){System.out.println("Warning: no ubiquitous id file is detected.");}
+		if (!f.exists()) downloadUbiques();
+		else if (f.exists()) blacklist = new Blacklist(f.getAbsolutePath());
+		else System.out.println("Warning: Cannot load blacklist.");
 	}
 }

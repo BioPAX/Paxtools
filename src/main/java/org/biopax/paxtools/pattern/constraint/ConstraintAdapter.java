@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.pattern.Constraint;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.pattern.util.Blacklist;
+import org.biopax.paxtools.pattern.util.RelType;
 
 import java.util.*;
 
@@ -22,12 +24,28 @@ public abstract class ConstraintAdapter implements Constraint
 	protected int size;
 
 	/**
+	 * Blacklist to detect ubiquitous small molecules.
+	 */
+	protected Blacklist blacklist;
+
+	/**
 	 * Constructor with size.
 	 * @param size size if the constraint.
 	 */
 	protected ConstraintAdapter(int size)
 	{
 		this.size = size;
+	}
+
+	/**
+	 * Constructor with size.
+	 * @param size size if the constraint.
+	 * @param blacklist for detecting ubiquitous small molecules
+	 */
+	protected ConstraintAdapter(int size, Blacklist blacklist)
+	{
+		this.size = size;
+		this.blacklist = blacklist;
 	}
 
 	/**
@@ -113,6 +131,18 @@ public abstract class ConstraintAdapter implements Constraint
 	 */
 	protected ConversionDirectionType getDirection(Conversion conv, Control cont)
 	{
+		return getDirection(conv, null, cont);
+	}
+
+	/**
+	 * Gets the direction of the Control chain the the Interaction.
+	 * @param conv controlled conversion
+	 * @param pathway the container pathway
+	 * @param cont top control
+	 * @return the direction of the conversion related to the catalysis
+	 */
+	protected ConversionDirectionType getDirection(Conversion conv, Pathway pathway,  Control cont)
+	{
 		for (Control ctrl : getControlChain(cont, conv))
 		{
 			ConversionDirectionType dir = getCatalysisDirection(ctrl);
@@ -123,9 +153,38 @@ public abstract class ConstraintAdapter implements Constraint
 
 		Set<PathwayStep> convSteps = conv.getStepProcessOf();
 
+		// maybe the direction is embedded in a pathway step
 		for (PathwayStep step : cont.getStepProcessOf())
 		{
+			if (pathway != null && !step.getPathwayOrderOf().equals(pathway)) continue;
+
 			if (step instanceof BiochemicalPathwayStep && convSteps.contains(step))
+			{
+				StepDirection dir = ((BiochemicalPathwayStep) step).getStepDirection();
+				if (dir != null) dirs.add(dir);
+			}
+		}
+
+		if (dirs.size() > 1) return ConversionDirectionType.REVERSIBLE;
+		else if (!dirs.isEmpty()) return convertStepDirection(dirs.iterator().next());
+
+		return getDirection(conv);
+	}
+
+	/**
+	 * Gets the direction of the Control chain the the Interaction.
+	 * @param conv controlled conversion
+	 * @param pathway the container pathway
+	 * @return the direction of the conversion related to the catalysis
+	 */
+	protected ConversionDirectionType getDirection(Conversion conv, Pathway pathway)
+	{
+		Set<StepDirection> dirs = new HashSet<StepDirection>();
+
+		// find the direction in the pathway step
+		for (PathwayStep step : conv.getStepProcessOf())
+		{
+			if (step.getPathwayOrderOf().equals(pathway) && step instanceof BiochemicalPathwayStep)
 			{
 				StepDirection dir = ((BiochemicalPathwayStep) step).getStepDirection();
 				if (dir != null) dirs.add(dir);
@@ -290,6 +349,9 @@ public abstract class ConstraintAdapter implements Constraint
 		if (catDir != null && patDir != null && catDir != patDir)
 			return ConversionDirectionType.REVERSIBLE;
 		else if (catDir != null) return catDir;
-		else return patDir;
+		else if (patDir != null) return patDir;
+
+		// No direction found! Assuming it is left-to-right.
+		else return ConversionDirectionType.LEFT_TO_RIGHT;
 	}
 }

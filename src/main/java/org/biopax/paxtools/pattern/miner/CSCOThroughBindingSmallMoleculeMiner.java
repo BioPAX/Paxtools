@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
+import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,12 +16,12 @@ public class CSCOThroughBindingSmallMoleculeMiner extends ControlsStateChangeOfM
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public CSCOThroughBindingSmallMoleculeMiner(Set<String> ubiqueIDs)
+	public CSCOThroughBindingSmallMoleculeMiner(Blacklist blacklist)
 	{
 		super("-through-binding-small-mol", "The first protein produces a non-ubique small " +
 			"molecule, and this small molecule controls state of the second protein.");
 
-		super.ubiqueIDs = ubiqueIDs;
+		super.blacklist = blacklist;
 	}
 
 	/**
@@ -30,7 +31,7 @@ public class CSCOThroughBindingSmallMoleculeMiner extends ControlsStateChangeOfM
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.controlsStateChangeThroughBindingSmallMolecule(ubiqueIDs);
+		return PatternBox.controlsStateChangeThroughBindingSmallMolecule(blacklist);
 	}
 
 	@Override

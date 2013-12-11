@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Searcher;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.HGNC;
 
 import java.io.IOException;
@@ -37,9 +38,9 @@ public class SIFSearcher
 	private IDFetcher idFetcher;
 
 	/**
-	 * IDs of ubiquitous molecules.
+	 * Blacklist used for detecting ubiquitous molecules.
 	 */
-	private Set<String> ubiqueIDs;
+	private Blacklist blacklist;
 
 	/**
 	 * Constructor with binary interaction types.
@@ -95,21 +96,21 @@ public class SIFSearcher
 					miners.add(new ControlsStateChangeOfMiner());
 					miners.add(new CSCOButIsParticipantMiner());
 					miners.add(new CSCOBothControllerAndParticipantMiner());
-					miners.add(new CSCOThroughControllingSmallMoleculeMiner(ubiqueIDs));
-					miners.add(new CSCOThroughBindingSmallMoleculeMiner(ubiqueIDs));
+					miners.add(new CSCOThroughControllingSmallMoleculeMiner(blacklist));
+					miners.add(new CSCOThroughBindingSmallMoleculeMiner(blacklist));
 					break;
 				case CONTROLS_EXPRESSION_OF:
 					miners.add(new ControlsExpressionMiner());
 					miners.add(new ControlsExpressionWithConvMiner());
 					break;
 				case CONSUMPTION_CONTROLLED_BY:
-					miners.add(new ConsumptionControlledByMiner(ubiqueIDs));
+					miners.add(new ConsumptionControlledByMiner(blacklist));
 					break;
 				case CONTROLS_PRODUCTION_OF:
-					miners.add(new ControlsProductionOfMiner(ubiqueIDs));
+					miners.add(new ControlsProductionOfMiner(blacklist));
 					break;
 				case CONTROLS_TRANSPORT_OF_CHEMICAL:
-					miners.add(new ControlsTransportOfChemicalMiner(ubiqueIDs));
+					miners.add(new ControlsTransportOfChemicalMiner(blacklist));
 					break;
 				case CONTROLS_TRANSPORT_OF:
 					miners.add(new ControlsTransportMiner());
@@ -118,11 +119,11 @@ public class SIFSearcher
 					miners.add(new ControlsDegradationMiner());
 					break;
 				case CATALYSIS_PRECEDES:
-					miners.add(new CatalysisPrecedesMiner(ubiqueIDs));
+					miners.add(new CatalysisPrecedesMiner(blacklist));
 					break;
 				case CHEMICAL_AFFECTS:
-					miners.add(new ChemicalAffectsThroughBindingMiner(ubiqueIDs));
-					miners.add(new ChemicalAffectsThroughControlMiner(ubiqueIDs));
+					miners.add(new ChemicalAffectsThroughBindingMiner(blacklist));
+					miners.add(new ChemicalAffectsThroughControlMiner());
 					break;
 				case IN_COMPLEX_WITH:
 					miners.add(new InComplexWithMiner());
@@ -134,10 +135,10 @@ public class SIFSearcher
 					miners.add(new InteractsWithMiner());
 					break;
 				case REACTS_WITH:
-					miners.add(new ReactsWithMiner(ubiqueIDs));
+					miners.add(new ReactsWithMiner(blacklist));
 					break;
 				case USED_TO_PRODUCE:
-					miners.add(new UsedToProduceMiner(ubiqueIDs));
+					miners.add(new UsedToProduceMiner(blacklist));
 					break;
 				default: throw new RuntimeException("There is an unhandled sif type: " + type);
 			}
@@ -145,13 +146,13 @@ public class SIFSearcher
 	}
 
 	/**
-	 * Sets the IDs of ubique molecules. This is not mandatory but improves performance of some
-	 * SIF miners.
-	 * @param ubiqueIDs ID set
+	 * Sets the blacklist that manages IDs of ubique molecules. This is not mandatory but need if
+	 * ubiquitous small molecules are needed to be handled.
+	 * @param blacklist for identifying ubiquitous small molecules
 	 */
-	public void setUbiqueIDs(Set<String> ubiqueIDs)
+	public void setBlacklist(Blacklist blacklist)
 	{
-		this.ubiqueIDs = ubiqueIDs;
+		this.blacklist = blacklist;
 	}
 
 	/**

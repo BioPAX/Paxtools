@@ -3,6 +3,8 @@ package org.biopax.paxtools.pattern.constraint;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
+import org.biopax.paxtools.pattern.util.Blacklist;
+import org.biopax.paxtools.pattern.util.RelType;
 
 import java.util.*;
 
@@ -14,6 +16,9 @@ import java.util.*;
  * Var1 - Conversion
  * Var2 - input or output PhysicalEntity
  *
+ * @deprecated
+ * @see Participant
+ *
  * @author Ozgun Babur
  */
 public class ParticipatingPE extends ConstraintAdapter
@@ -24,9 +29,14 @@ public class ParticipatingPE extends ConstraintAdapter
 	RelType type;
 
 	/**
-	 * If this is false then all participants of the Conversion is traversed.
+	 * Constructor with parameters.
+	 * @param type direction from the Conversion
 	 */
-	boolean treatReversibleAsLeftToRight;
+	public ParticipatingPE(RelType type, Blacklist blacklist)
+	{
+		super(3, blacklist);
+		this.type = type;
+	}
 
 	/**
 	 * Constructor with parameters.
@@ -34,19 +44,7 @@ public class ParticipatingPE extends ConstraintAdapter
 	 */
 	public ParticipatingPE(RelType type)
 	{
-		this(type, false);
-	}
-
-	/**
-	 * Constructor with parameters.
-	 * @param type direction from the Conversion
-	 * @param treatReversibleAsLeftToRight option to treat reversible Conversion as if left to right
-	 */
-	public ParticipatingPE(RelType type, boolean treatReversibleAsLeftToRight)
-	{
-		super(3);
-		this.type = type;
-		this.treatReversibleAsLeftToRight = treatReversibleAsLeftToRight;
+		this(type, null);
 	}
 
 	/**
@@ -75,23 +73,41 @@ public class ParticipatingPE extends ConstraintAdapter
 		// This is the direction for our use only.
 		ConversionDirectionType dir = getDirection(conv, cont);
 
-		// No evidence for direction. Assuming LEFT_TO_RIGHT. 
-		if (dir == null) dir = ConversionDirectionType.LEFT_TO_RIGHT;
+		Set<Set<PhysicalEntity>> sides = new HashSet<Set<PhysicalEntity>>();
 
-		if (dir == ConversionDirectionType.LEFT_TO_RIGHT ||
-			(dir == ConversionDirectionType.REVERSIBLE && treatReversibleAsLeftToRight))
+		if (dir == ConversionDirectionType.LEFT_TO_RIGHT)
 		{
-			return new HashSet<BioPAXElement>(type == RelType.INPUT ? conv.getLeft() : conv.getRight());
+			sides.add(type == RelType.INPUT ? conv.getLeft() : conv.getRight());
 		}
 		else if (dir == ConversionDirectionType.RIGHT_TO_LEFT)
 		{
-			return new HashSet<BioPAXElement>(type == RelType.OUTPUT ? conv.getLeft() : conv.getRight());
+			sides.add(type == RelType.OUTPUT ? conv.getLeft() : conv.getRight());
 		}
 		else // dir is reversible and we will go both sides
 		{
-			Set<BioPAXElement> result = new HashSet<BioPAXElement>(conv.getLeft());
-			result.addAll(conv.getRight());
-			return result;
+			sides.add(conv.getLeft());
+			sides.add(conv.getRight());
 		}
+
+		Set<BioPAXElement> result = new HashSet<BioPAXElement>();
+
+		if (blacklist == null)
+		{
+			for (Set<PhysicalEntity> side : sides)
+			{
+				result.addAll(side);
+			}
+		}
+		else
+		{
+			for (Set<PhysicalEntity> side : sides)
+			{
+				// if the control is in fact reversible then don't mind the context
+				result.addAll(blacklist.getNonUbiques(side,
+					dir == ConversionDirectionType.REVERSIBLE ? null : type));
+			}
+		}
+
+		return result;
 	}
 }

@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.Searcher;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -199,12 +200,14 @@ public class ConBoxTest extends TestParent
 	{
 		Pattern p = new Pattern(Complex.class, "Complex");
 		p.add(ConBox.complexMembers(), "Complex", "member");
-		p.add(ConBox.notUbique(Collections.singleton("http://pid.nci.nih.gov/biopaxpid_678")), "member"); // not GDP
+		Blacklist blacklist = new Blacklist();
+		blacklist.addEntry("http://pid.nci.nih.gov/biopaxpid_679", 0, null); // GDP ER ID
+		p.add(new NonUbique(blacklist), "member"); // not GDP
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			p);
 
 		Assert.assertTrue(list.size() == 3);
-		Assert.assertFalse(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678")));
+		Assert.assertFalse(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678"))); //GDP PE ID
 	}
 }

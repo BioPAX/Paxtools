@@ -4,6 +4,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
+import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,9 +26,9 @@ public abstract class AbstractSIFMiner extends MinerAdapter implements SIFMiner
 	/**
 	 * Constructor with interaction type and ubique ids.
 	 */
-	public AbstractSIFMiner(SIFType type, Set<String> ubiqueIDs)
+	public AbstractSIFMiner(SIFType type, Blacklist blacklist)
 	{
-		super(type.getTag(), type.getDescription(), ubiqueIDs);
+		super(type.getTag(), type.getDescription(), blacklist);
 
 		this.type = type;
 	}
@@ -38,9 +39,9 @@ public abstract class AbstractSIFMiner extends MinerAdapter implements SIFMiner
 	 * miners for the same binary interaction type. In that case these supplementary data is
 	 * augmented to the name and description of the interaction type.
 	 */
-	public AbstractSIFMiner(SIFType type, String supplName, String supplDesc, Set<String> ubiqueIDs)
+	public AbstractSIFMiner(SIFType type, String supplName, String supplDesc, Blacklist blacklist)
 	{
-		super(type.getTag() + supplName, type.getDescription() + " " + supplDesc, ubiqueIDs);
+		super(type.getTag() + supplName, type.getDescription() + " " + supplDesc, blacklist);
 
 		this.type = type;
 	}

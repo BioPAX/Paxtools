@@ -29,7 +29,7 @@ public class CSCOButIsParticipantMiner extends ControlsStateChangeOfMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		Pattern p = PatternBox.controlsStateChangeButIsParticipant(true);
+		Pattern p = PatternBox.controlsStateChangeButIsParticipant();
 		p.add(new Type(ProteinReference.class), "controller ER");
 		p.add(new Type(ProteinReference.class), "changed ER");
 		return p;

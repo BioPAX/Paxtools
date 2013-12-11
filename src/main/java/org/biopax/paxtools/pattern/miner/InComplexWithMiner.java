@@ -24,7 +24,7 @@ public class InComplexWithMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.appearInSameComplex();
+		return PatternBox.inComplexWith();
 	}
 
 	@Override

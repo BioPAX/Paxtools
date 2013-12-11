@@ -4,7 +4,7 @@ import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.pattern.Match;
-import org.biopax.paxtools.pattern.util.PhysicalEntityChain;
+import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -61,7 +61,16 @@ public class LinkedPE extends ConstraintAdapter
 	 */
 	public LinkedPE(Type type)
 	{
-		super(2);
+		this(type, null);
+	}
+
+	/**
+	 * Constructor with the linking type.
+	 * @param type type of desired linking
+	 */
+	public LinkedPE(Type type, Blacklist blacklist)
+	{
+		super(2, blacklist);
 		this.type = type;
 	}
 
@@ -143,7 +152,10 @@ public class LinkedPE extends ConstraintAdapter
 	{
 		Set set = pa.getValueFromBeans(seed);
 		set.removeAll(all);
-		return set;
+
+		// remove blacklisted
+		if (blacklist == null) return set;
+		else return blacklist.getNonUbiqueObjects(set);
 	}
 
 	/**

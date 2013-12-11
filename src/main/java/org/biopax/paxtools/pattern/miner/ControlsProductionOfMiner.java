@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
+import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.util.Set;
 
@@ -14,9 +15,9 @@ public class ControlsProductionOfMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsProductionOfMiner(Set<String> ubiqueIDs)
+	public ControlsProductionOfMiner(Blacklist blacklist)
 	{
-		super(SIFType.CONTROLS_PRODUCTION_OF, ubiqueIDs);
+		super(SIFType.CONTROLS_PRODUCTION_OF, blacklist);
 	}
 
 	/**
@@ -26,7 +27,7 @@ public class ControlsProductionOfMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.meabolicCatalysisSubclass(ubiqueIDs, false);
+		return PatternBox.controlsMetabolicCatalysis(blacklist, false);
 	}
 
 	@Override

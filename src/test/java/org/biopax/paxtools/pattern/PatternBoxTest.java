@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.pattern.constraint.ConBox;
+import org.biopax.paxtools.pattern.constraint.NonUbique;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,16 +59,22 @@ public class PatternBoxTest
 	public void testConsecutiveCatalysis() throws Exception
 	{
 		Pattern p = PatternBox.catalysisPrecedes(null);
-		p.insertPointConstraint(ConBox.notUbique(Collections.singleton("http://www.reactome.org/biopax/68322SmallMolecule19")), 5);
 
-		Map<BioPAXElement,List<Match>> map = Searcher.search(model_urea, p);
+		List<Match> list = Searcher.searchPlain(model_urea, p);
 
-		Assert.assertTrue(map.size() > 0);
+		int size = list.size();
+		Assert.assertTrue(size > 0);
 
-		for (BioPAXElement ele : map.keySet())
-		{
-			printMatches(map.get(ele), 0, 5, 10);
-		}
+		printMatches(list, 0, 5, 10);
+
+		Blacklist b = new Blacklist();
+		b.addEntry("urn:miriam:chebi:29888", 0, null);
+
+		p.insertPointConstraint(new NonUbique(b), p.indexOf("linker PE"));
+
+		list = Searcher.searchPlain(model_urea, p);
+
+		Assert.assertTrue(!list.isEmpty() && list.size() < size);
 	}
 
 

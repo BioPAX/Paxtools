@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.PhysicalEntityChain;
 import org.biopax.paxtools.pattern.util.HGNC;
 
@@ -36,21 +37,21 @@ public abstract class MinerAdapter implements Miner
 	protected Pattern pattern;
 
 	/**
-	 * IDs of ubiquitous molecules.
+	 * Blacklist for identifying ubiquitous small molecules.
 	 */
-	protected Set<String> ubiqueIDs = new HashSet<String>();
+	protected Blacklist blacklist;
 
 	/**
 	 * Constructor with name and description.
 	 * @param name name of the miner
 	 * @param description description of the miner
-	 * @param ubiqueIDs IDs of ubiquitous small molecules
+	 * @param blacklist for identifying ubiquitous small molecules
 	 */
-	protected MinerAdapter(String name, String description, Set<String> ubiqueIDs)
+	protected MinerAdapter(String name, String description, Blacklist blacklist)
 	{
 		this.name = name;
 		this.description = description;
-		this.ubiqueIDs = ubiqueIDs;
+		this.blacklist = blacklist;
 	}
 
 	/**

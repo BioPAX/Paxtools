@@ -53,7 +53,7 @@ public class SIFInteraction implements Comparable
 	@Override
 	public int hashCode()
 	{
-		return source.hashCode() + target.hashCode() + type.hashCode();
+		return sourceID.hashCode() + targetID.hashCode() + type.hashCode();
 	}
 
 	@Override

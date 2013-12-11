@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
+import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.util.Set;
 
@@ -14,10 +15,10 @@ public class ChemicalAffectsThroughControlMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ChemicalAffectsThroughControlMiner(Set<String> ubiqueIDs)
+	public ChemicalAffectsThroughControlMiner()
 	{
 		super(SIFType.CHEMICAL_AFFECTS, "-through-control", "In this case, chemical is " +
-			"controlling a reaction of which the protein is a participant.", ubiqueIDs);
+			"controlling a reaction of which the protein is a participant.", null);
 	}
 
 	/**
@@ -27,7 +28,7 @@ public class ChemicalAffectsThroughControlMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.chemicalAffectsProteinThroughControl(ubiqueIDs);
+		return PatternBox.chemicalAffectsProteinThroughControl();
 	}
 
 	@Override

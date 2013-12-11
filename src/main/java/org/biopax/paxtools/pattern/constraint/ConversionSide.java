@@ -2,12 +2,16 @@ package org.biopax.paxtools.pattern.constraint;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Conversion;
+import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.pattern.Match;
+import org.biopax.paxtools.pattern.util.Blacklist;
+import org.biopax.paxtools.pattern.util.RelType;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Given Conversion and its one of the participants (at the left or right), traverses to either
@@ -23,14 +27,30 @@ import java.util.HashSet;
  */
 public class ConversionSide extends ConstraintAdapter
 {
+	/**
+	 * Same side or other side;
+	 */
 	Type sideType;
+
+	/**
+	 * Type of the relation of the participant. It is either input or output.
+	 */
+	RelType relType;
 
 	/**
 	 * Constructor.
 	 */
 	public ConversionSide(Type type)
 	{
-		super(3);
+		this(type, null, null);
+	}
+
+	/**
+	 * Constructor.
+	 */
+	public ConversionSide(Type type, Blacklist blacklist, RelType relType)
+	{
+		super(3, blacklist);
 
 		if (type == null)
 		{
@@ -38,6 +58,7 @@ public class ConversionSide extends ConstraintAdapter
 		}
 
 		this.sideType = type;
+		this.relType = relType;
 	}
 
 	/**
@@ -65,17 +86,30 @@ public class ConversionSide extends ConstraintAdapter
 		PhysicalEntity pe1 = (PhysicalEntity) match.get(ind[0]);
 		Conversion conv = (Conversion) match.get(ind[1]);
 
+		Set<PhysicalEntity> parts;
+
 		if (conv.getLeft().contains(pe1))
 		{
-			return new HashSet<BioPAXElement>(
-				sideType == Type.OTHER_SIDE ? conv.getRight() : conv.getLeft());
+			parts = sideType == Type.OTHER_SIDE ? conv.getRight() : conv.getLeft();
 		}
 		else if (conv.getRight().contains(pe1))
 		{
-			return new HashSet<BioPAXElement>(
-				sideType == Type.SAME_SIDE ? conv.getRight() : conv.getLeft());
+			parts = sideType == Type.SAME_SIDE ? conv.getRight() : conv.getLeft();
 		}
-		return Collections.emptySet();
+		else throw new IllegalArgumentException(
+				"The PhysicalEntity has to be a participant of the Conversion.");
+
+		if (blacklist == null) return new HashSet<BioPAXElement>(parts);
+		else
+		{
+			ConversionDirectionType dir = getDirection(conv);
+
+			if ((dir == ConversionDirectionType.LEFT_TO_RIGHT && ((relType == RelType.INPUT && parts != conv.getLeft()) || (relType == RelType.OUTPUT && parts != conv.getRight()))) ||
+				(dir == ConversionDirectionType.RIGHT_TO_LEFT && ((relType == RelType.INPUT && parts != conv.getRight()) || (relType == RelType.OUTPUT && parts != conv.getLeft()))))
+				return Collections.emptySet();
+
+			return new HashSet<BioPAXElement>(blacklist.getNonUbiques(parts, relType));
+		}
 	}
 
 	/**

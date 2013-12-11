@@ -3,6 +3,7 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.pattern.PatternBoxTest;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,19 +45,21 @@ public class SIFSearcherTest extends PatternBoxTest
 		Model model = h.convertFromOWL(new FileInputStream
 				("/home/ozgun/Projects/pattern/All-Human-Data.owl"));
 
-		SIFSearcher s = new SIFSearcher(SIFType.values());
+		BlacklistGenerator gen = new BlacklistGenerator();
+		Blacklist blacklist = gen.generateBlacklist(model);
 
-		Set<String> ubiqueIDs = loadUbiqueIDs("/home/ozgun/Projects/pattern/blacklist.txt");
-		s.setUbiqueIDs(ubiqueIDs);
-		confirmPresenceOfUbiques(model, ubiqueIDs);
+		SIFSearcher s = new SIFSearcher(SIFType.values());
+		s.setBlacklist(blacklist);
+
+		confirmPresenceOfUbiques(model, blacklist);
 		s.searchSIF(model, new FileOutputStream("/home/ozgun/PC.sif"), true);
 	}
 
-	private void confirmPresenceOfUbiques(Model model, Set<String> ubiques)
+	private void confirmPresenceOfUbiques(Model model, Blacklist blacklist)
 	{
 		int present = 0;
 		int absent = 0;
-		for (String ubique : ubiques)
+		for (String ubique : blacklist.getListed())
 		{
 			if (model.getByID(ubique) != null) present++;
 			else
@@ -78,13 +81,14 @@ public class SIFSearcherTest extends PatternBoxTest
 			"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
 	}
 
-	public static void generate(String inputModelFile, String ubiqueIDFile, String outputFile) throws IOException
+	public static void generate(String inputModelFile, String ubiqueIDFile, String outputFile)
+		throws IOException
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream(inputModelFile));
 
-		List<SIFInteraction> sifs = new ArrayList<SIFInteraction>(
-			generate(model, loadUbiqueIDs(ubiqueIDFile)));
+		List<SIFInteraction> sifs = new ArrayList<SIFInteraction>(generate(model,
+			new Blacklist(ubiqueIDFile)));
 
 		Collections.sort(sifs);
 
@@ -98,26 +102,13 @@ public class SIFSearcherTest extends PatternBoxTest
 		writer.close();
 	}
 
-	public static Set<SIFInteraction> generate(Model model, Set<String> ubiqueIDs)
+	public static Set<SIFInteraction> generate(Model model, Blacklist blacklist)
 	{
 		SIFSearcher searcher = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE_OF);
 //			SIFType.CONTROLS_EXPRESSION, SIFType.CONTROLS_DEGRADATION);
 
-		searcher.setUbiqueIDs(ubiqueIDs);
+		searcher.setBlacklist(blacklist);
 
 		return searcher.searchSIF(model);
-	}
-
-	private static Set<String> loadUbiqueIDs(String filename) throws FileNotFoundException
-	{
-		Set<String> ids = new HashSet<String>();
-		Scanner scan = new Scanner(new File(filename));
-		while (scan.hasNextLine())
-		{
-			String line = scan.nextLine();
-
-			if (!line.isEmpty()) ids.add(line);
-		}
-		return ids;
 	}
 }

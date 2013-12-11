@@ -6,6 +6,8 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.pattern.Constraint;
 import org.biopax.paxtools.pattern.MappedConst;
 import org.biopax.paxtools.pattern.Match;
+import org.biopax.paxtools.pattern.util.Blacklist;
+import org.biopax.paxtools.pattern.util.RelType;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -81,7 +83,7 @@ public class ConBox
 	 */
 	public static Constraint simplePEToConv(RelType type)
 	{
-		return new ConstraintChain(linkToComplex(), new ParticipatesInConv(type, true));
+		return new ConstraintChain(linkToComplex(), new ParticipatesInConv(type));
 	}
 
 	/**
@@ -335,15 +337,15 @@ public class ConBox
 			new HashSet<String>(Arrays.asList(name)));
 	}
 
-	/**
-	 * Filters out ubiquitous elements.
-	 * @param ubiques set of ubique IDs
-	 * @return constraint to filter out ubique based on IDs
-	 */
-	public static Constraint notUbique(Set<String> ubiques)
-	{
-		return new NOT(new IDConstraint(ubiques));
-	}
+//	/**
+//	 * Filters out ubiquitous elements.
+//	 * @param ubiques set of ubique IDs
+//	 * @return constraint to filter out ubique based on IDs
+//	 */
+//	public static Constraint notUbique(Set<String> ubiques)
+//	{
+//		return new NOT(new IDConstraint(ubiques));
+//	}
 
 	/**
 	 * Gets a constraint to ensure that ensures only one of the two PhysicalEntities has an
@@ -494,6 +496,28 @@ public class ConBox
 	public static Constraint linkToComplex()
 	{
 		return new LinkedPE(LinkedPE.Type.TO_COMPLEX);
+	}
+
+	/**
+	 * Makes a linker constraint from PhysicalEntity to its linked PhysicalEntity towards member
+	 * direction.
+	 * @param blacklist used to detect ubiquitous small molecules
+	 * @return the constraint
+	 */
+	public static Constraint linkToSimple(Blacklist blacklist)
+	{
+		return new LinkedPE(LinkedPE.Type.TO_MEMBER, blacklist);
+	}
+
+	/**
+	 * Makes a linker constraint from PhysicalEntity to its linked PhysicalEntity towards complex
+	 * direction.
+	 * @param blacklist used to detect ubiquitous small molecules
+	 * @return the constraint
+	 */
+	public static Constraint linkToComplex(Blacklist blacklist)
+	{
+		return new LinkedPE(LinkedPE.Type.TO_COMPLEX, blacklist);
 	}
 
 	/**

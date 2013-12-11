@@ -4,10 +4,8 @@ import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.model.level3.SmallMolecule;
-import org.biopax.paxtools.pattern.MappedConst;
-import org.biopax.paxtools.pattern.Match;
-import org.biopax.paxtools.pattern.Pattern;
-import org.biopax.paxtools.pattern.Searcher;
+import org.biopax.paxtools.pattern.*;
+import org.biopax.paxtools.pattern.util.RelType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -101,11 +99,11 @@ public class ConstraintTest extends TestParent
 	}
 
 	@Test
-	public void testOtherSide() throws Exception
+	public void testConversionSide() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
 		p.add(ConBox.participatesInConv(), "PE", "Conv");
-		p.add(new OtherSide(), "PE", "Conv", "PE2");
+		p.add(new ConversionSide(ConversionSide.Type.OTHER_SIDE), "PE", "Conv", "PE2");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -118,7 +116,7 @@ public class ConstraintTest extends TestParent
 	public void testParticipatesInConv() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
-		p.add(new ParticipatesInConv(RelType.INPUT, false), "PE", "Conv");
+		p.add(new ParticipatesInConv(RelType.INPUT), "PE", "Conv");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -126,7 +124,7 @@ public class ConstraintTest extends TestParent
 		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_50156")));
 
 		p = new Pattern(PhysicalEntity.class, "PE");
-		p.add(new ParticipatesInConv(RelType.OUTPUT, false), "PE", "Conv");
+		p.add(new ParticipatesInConv(RelType.OUTPUT), "PE", "Conv");
 
 		list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -137,7 +135,7 @@ public class ConstraintTest extends TestParent
 	public void testSelfOrThis() throws Exception
 	{
 		Pattern p = new Pattern(PhysicalEntity.class, "PE");
-		p.add(new SelfOrThis(new ParticipatesInConv(RelType.INPUT, false)), "PE", "Conv");
+		p.add(new SelfOrThis(new ParticipatesInConv(RelType.INPUT)), "PE", "Conv");
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_21151"), p); // p38alpha-beta
 
@@ -152,7 +150,7 @@ public class ConstraintTest extends TestParent
 		try
 		{
 			Pattern p = new Pattern(PhysicalEntity.class, "PE");
-			p.add(new OtherSide(), "PE", "Conv", "PE2");
+			p.add(new ConversionSide(ConversionSide.Type.OTHER_SIDE), "PE", "Conv", "PE2");
 
 			Assert.assertFalse("Should have reached here", false);
 		}

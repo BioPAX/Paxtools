@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
+import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.util.Set;
 
@@ -14,9 +15,9 @@ public class UsedToProduceMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public UsedToProduceMiner(Set<String> ubiqueIDs)
+	public UsedToProduceMiner(Blacklist blacklist)
 	{
-		super(SIFType.USED_TO_PRODUCE, ubiqueIDs);
+		super(SIFType.USED_TO_PRODUCE, blacklist);
 	}
 
 	/**
@@ -26,7 +27,7 @@ public class UsedToProduceMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.usedForProductionOf(ubiqueIDs);
+		return PatternBox.usedToProduce(blacklist);
 	}
 
 	@Override

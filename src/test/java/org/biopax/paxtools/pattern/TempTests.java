@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.miner.*;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.HGNC;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -61,26 +62,6 @@ public class TempTests
 			System.out.println(pat.getPathwayComponent().size() + "\t" + pat.getDisplayName());
 			System.out.println(pat.getRDFId());
 		}
-	}
-
-	@Test
-	@Ignore
-	public void captureConseqCataSamples() throws Throwable
-	{
-		Set<String> ubiq = new HashSet<String>();
-		BufferedReader reader = new BufferedReader(new FileReader("ubiquitous-ids.txt"));
-
-		for (String line = reader.readLine(); line != null; line = reader.readLine())
-		{
-			ubiq.add(line);
-		}
-
-		reader.close();
-
-
-		Pattern p = PatternBox.catalysisPrecedes(ubiq);
-
-		Searcher.searchInFile(p, "All-Human-Data.owl", "Captured-conseq-catalysis.owl", 100, 1);
 	}
 
 	@Test
@@ -144,7 +125,7 @@ public class TempTests
 	public void debugPattern() throws Throwable
 	{
 
-		Pattern p = PatternBox.expressionWithTemplateReac();
+		Pattern p = PatternBox.controlsExpressionWithTemplateReac();
 
 		Match m = new Match(p.size());
 		ProteinReference er = (ProteinReference) model.getByID("http://identifiers.org/uniprot/P42229");
@@ -160,7 +141,7 @@ public class TempTests
 	@Ignore
 	public void searchAndWriteWithMiners() throws Throwable
 	{
-		Set<String> blacklist = readBlacklist();
+		Blacklist blacklist = new Blacklist("blacklist.txt");
 		SIFMiner[] miner = new SIFMiner[]{
 			new ControlsStateChangeOfMiner(),
 			new CSCOButIsParticipantMiner(),
@@ -338,16 +319,5 @@ public class TempTests
 			}
 		}
 		return map;
-	}
-
-	private Set<String> readBlacklist() throws FileNotFoundException
-	{
-		Set<String> black = new HashSet<String>();
-		Scanner sc = new Scanner(new File("blacklist.txt"));
-		while(sc.hasNextLine())
-		{
-			black.add(sc.nextLine());
-		}
-		return black;
 	}
 }

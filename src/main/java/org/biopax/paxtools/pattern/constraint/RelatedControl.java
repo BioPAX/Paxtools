@@ -4,8 +4,11 @@ import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
+import org.biopax.paxtools.pattern.util.Blacklist;
+import org.biopax.paxtools.pattern.util.RelType;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +33,7 @@ public class RelatedControl extends ConstraintAdapter
 	/**
 	 * Accessor to controller of Control recursively.
 	 */
-	PathAccessor controlledOf = new PathAccessor("Control/controlledOf*:Control");
+	PathAccessor controlledOf = new PathAccessor("Conversion/controlledOf*:Control");
 
 	/**
 	 * Constructor with the relation type between PhysicalEntity and Conversion.
@@ -38,7 +41,17 @@ public class RelatedControl extends ConstraintAdapter
 	 */
 	public RelatedControl(RelType peType)
 	{
-		super(3);
+		this(peType, null);
+	}
+
+	/**
+	 * Constructor with the relation type between PhysicalEntity and Conversion, and the blacklist.
+	 * @param peType relation type between PhysicalEntity and Conversion
+	 * @param blacklist to detect ubiquitous small molecules
+	 */
+	public RelatedControl(RelType peType, Blacklist blacklist)
+	{
+		super(3, blacklist);
 		this.peType = peType;
 	}
 
@@ -63,19 +76,18 @@ public class RelatedControl extends ConstraintAdapter
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
 		PhysicalEntity pe = (PhysicalEntity) match.get(ind[0]);
+
+		// if the molecule is ubique all the time then don't go further
+		if (blacklist != null && blacklist.isUbiqueInBothContexts(pe))
+			return Collections.emptySet();
+
 		Conversion conv = (Conversion) match.get(ind[1]);
 
 		if (!(peType == RelType.INPUT && getConvParticipants(conv, RelType.INPUT).contains(pe)) ||
 			(peType == RelType.OUTPUT && getConvParticipants(conv, RelType.OUTPUT).contains(pe)))
-		{
-			System.out.println();
-		}
-
-		assert (peType == RelType.INPUT && getConvParticipants(conv, RelType.INPUT).contains(pe)) ||
-			(peType == RelType.OUTPUT && getConvParticipants(conv, RelType.OUTPUT).contains(pe)) :
-			"peType = " + peType + ", and related participant set does not contain this PE. Conv " +
-					"dir = " + getDirection(conv) + " conv.id=" + conv.getRDFId() + " pe.id=" +
-					pe.getRDFId();
+			throw new IllegalArgumentException("peType = " + peType +
+				", and related participant set does not contain this PE. Conv dir = " +
+				getDirection(conv) + " conv.id=" + conv.getRDFId() + " pe.id=" +pe.getRDFId());
 
 		boolean rightContains = conv.getRight().contains(pe);
 		boolean leftContains = conv.getLeft().contains(pe);
@@ -84,28 +96,21 @@ public class RelatedControl extends ConstraintAdapter
 
 		Set<BioPAXElement> result = new HashSet<BioPAXElement>();
 
-		if (leftContains && rightContains)
+		ConversionDirectionType avoidDir = (leftContains && rightContains) ? null : peType == RelType.OUTPUT ?
+			(leftContains ? ConversionDirectionType.LEFT_TO_RIGHT : ConversionDirectionType.RIGHT_TO_LEFT) :
+			(rightContains ? ConversionDirectionType.LEFT_TO_RIGHT : ConversionDirectionType.RIGHT_TO_LEFT);
+
+		for (Object o : controlledOf.getValueFromBean(conv))
 		{
-			result.addAll(controlledOf.getValueFromBean(conv));
-			return result;
-		}
+			Control ctrl = (Control) o;
+			ConversionDirectionType dir = getDirection(conv, ctrl);
 
-		CatalysisDirectionType avoidDir = peType == RelType.OUTPUT ?
-			(leftContains ? CatalysisDirectionType.LEFT_TO_RIGHT : CatalysisDirectionType.RIGHT_TO_LEFT) :
-			(rightContains ? CatalysisDirectionType.LEFT_TO_RIGHT : CatalysisDirectionType.RIGHT_TO_LEFT);
+			if (avoidDir != null && dir == avoidDir) continue;
 
-		for (Control ctrl : conv.getControlledOf())
-		{
-			if (ctrl instanceof Catalysis)
-			{
-				if (((Catalysis) ctrl).getCatalysisDirection() == avoidDir)
-				{
-					continue;
-				}
+			// don't collect this if the pe is ubique in the context of this control
+			if (blacklist != null && blacklist.isUbique(pe, conv, dir, peType)) continue;
 
-				result.add(ctrl);
-				result.addAll(controlledOf.getValueFromBean(conv));
-			}
+			result.add(ctrl);
 		}
 		return result;
 	}

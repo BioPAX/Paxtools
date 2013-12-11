@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
+import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.util.Set;
 
@@ -14,9 +15,9 @@ public class CatalysisPrecedesMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public CatalysisPrecedesMiner(Set<String> ubiqueIDs)
+	public CatalysisPrecedesMiner(Blacklist blacklist)
 	{
-		super(SIFType.CATALYSIS_PRECEDES, ubiqueIDs);
+		super(SIFType.CATALYSIS_PRECEDES, blacklist);
 	}
 
 	/**
@@ -26,7 +27,7 @@ public class CatalysisPrecedesMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.catalysisPrecedes(ubiqueIDs);
+		return PatternBox.catalysisPrecedes(blacklist);
 	}
 
 	@Override
