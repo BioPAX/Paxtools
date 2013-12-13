@@ -20,6 +20,7 @@ public class PatternBoxTest
 {
 	protected Model model;
 	protected Model model_urea;
+	protected Model model_tca;
 
 	@Before
 	public void setUp() throws Exception
@@ -27,6 +28,7 @@ public class PatternBoxTest
 		SimpleIOHandler h = new SimpleIOHandler();
 		model = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("AR-TP53.owl"));
 		model_urea = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("UreaCycle.owl"));
+		model_tca = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("tca_cycle.owl"));
 	}
 
 	@Test
@@ -75,8 +77,17 @@ public class PatternBoxTest
 		list = Searcher.searchPlain(model_urea, p);
 
 		Assert.assertTrue(!list.isEmpty() && list.size() < size);
-	}
 
+		b = new Blacklist(PatternBoxTest.class.getResourceAsStream("blacklist.txt"));
+		p = PatternBox.catalysisPrecedes(b);
+		list = Searcher.searchPlain(model_tca, p);
+
+		Assert.assertTrue(list.size() > 15);
+
+		System.out.println();
+		printMatches(list, 0, 5, 10);
+
+	}
 
 	protected void printMatches(Collection<Match> matches)
 	{

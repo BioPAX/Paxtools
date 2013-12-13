@@ -226,13 +226,14 @@ public class TempTests
 	@Ignore
 	public void checkOverlap() throws Throwable
 	{
-		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Desktop/PC.sif");
+		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache//PC.sif");
 
 		List<SIFType> types = new ArrayList<SIFType>(Arrays.asList(SIFType.values()));
 		types.retainAll(map.keySet());
 
 		printOverlaps(map, types.subList(0, 8), false);
 		printOverlaps(map, types.subList(8, 12), true);
+		printOverlaps(map, types.subList(12, 14), true);
 	}
 
 	private void printOverlaps(Map<SIFType, Set<String>> map, List<SIFType> types,

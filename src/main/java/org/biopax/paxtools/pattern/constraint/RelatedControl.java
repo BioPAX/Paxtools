@@ -76,11 +76,6 @@ public class RelatedControl extends ConstraintAdapter
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
 		PhysicalEntity pe = (PhysicalEntity) match.get(ind[0]);
-
-		// if the molecule is ubique all the time then don't go further
-		if (blacklist != null && blacklist.isUbiqueInBothContexts(pe))
-			return Collections.emptySet();
-
 		Conversion conv = (Conversion) match.get(ind[1]);
 
 		if (!((peType == RelType.INPUT && getConvParticipants(conv, RelType.INPUT).contains(pe)) ||
