@@ -38,7 +38,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void generateLargeSIFGraph() throws IOException
 	{
 		long start = System.currentTimeMillis();
