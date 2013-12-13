@@ -9,8 +9,10 @@ import org.biopax.paxtools.pattern.constraint.NonUbique;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.FileInputStream;
 import java.util.*;
 
 /**
@@ -85,6 +87,22 @@ public class PatternBoxTest
 		Assert.assertTrue(list.size() > 15);
 
 		System.out.println();
+		printMatches(list, 0, 5, 10);
+
+	}
+
+	@Test
+	@Ignore
+	public void testConsecutiveCatalysis2() throws Exception
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/POLE-POLE2.owl"));
+
+		Blacklist b = new Blacklist(PatternBoxTest.class.getResourceAsStream("blacklist.txt"));
+		Pattern p = PatternBox.catalysisPrecedes(b);
+
+		List<Match> list = Searcher.searchPlain(model, p);
+
 		printMatches(list, 0, 5, 10);
 
 	}

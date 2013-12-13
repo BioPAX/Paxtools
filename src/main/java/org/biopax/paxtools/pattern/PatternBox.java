@@ -290,6 +290,7 @@ public class PatternBox
 		p.add(peToControl(), "first controller PE", "first Control");
 		p.add(controlToConv(), "first Control", "first Conversion");
 		p.add(new Participant(RelType.OUTPUT, blacklist, true), "first Control", "first Conversion", "linker PE");
+		p.add(type(SmallMolecule.class), "linker PE");
 		p.add(new ParticipatesInConv(RelType.INPUT, blacklist), "linker PE", "second Conversion");
 		p.add(equal(false), "first Conversion", "second Conversion");
 		p.add(new RelatedControl(RelType.INPUT, blacklist), "linker PE", "second Conversion", "second Control");
