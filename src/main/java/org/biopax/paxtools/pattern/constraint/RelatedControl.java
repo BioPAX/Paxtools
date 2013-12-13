@@ -83,8 +83,8 @@ public class RelatedControl extends ConstraintAdapter
 
 		Conversion conv = (Conversion) match.get(ind[1]);
 
-		if (!(peType == RelType.INPUT && getConvParticipants(conv, RelType.INPUT).contains(pe)) ||
-			(peType == RelType.OUTPUT && getConvParticipants(conv, RelType.OUTPUT).contains(pe)))
+		if (!((peType == RelType.INPUT && getConvParticipants(conv, RelType.INPUT).contains(pe)) ||
+			(peType == RelType.OUTPUT && getConvParticipants(conv, RelType.OUTPUT).contains(pe))))
 			throw new IllegalArgumentException("peType = " + peType +
 				", and related participant set does not contain this PE. Conv dir = " +
 				getDirection(conv) + " conv.id=" + conv.getRDFId() + " pe.id=" +pe.getRDFId());

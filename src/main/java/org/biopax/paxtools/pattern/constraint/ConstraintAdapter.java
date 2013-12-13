@@ -275,13 +275,15 @@ public abstract class ConstraintAdapter implements Constraint
 	 */
 	protected Set<PhysicalEntity> getConvParticipants(Conversion conv, RelType type)
 	{
-		if (conv.getConversionDirection() == ConversionDirectionType.REVERSIBLE)
+		ConversionDirectionType dir = getDirection(conv);
+
+		if (dir == ConversionDirectionType.REVERSIBLE)
 		{
 			HashSet<PhysicalEntity> set = new HashSet<PhysicalEntity>(conv.getLeft());
 			set.addAll(conv.getRight());
 			return set;
 		}
-		else if (conv.getConversionDirection() == ConversionDirectionType.RIGHT_TO_LEFT)
+		else if (dir == ConversionDirectionType.RIGHT_TO_LEFT)
 		{
 			return type == RelType.INPUT ? conv.getRight() : conv.getLeft();
 		}

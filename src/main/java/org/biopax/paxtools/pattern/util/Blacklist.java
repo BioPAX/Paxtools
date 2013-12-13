@@ -181,6 +181,8 @@ public class Blacklist
 	 */
 	private String convertContext(RelType type)
 	{
+		if (type == null) return "B";
+
 		switch (type)
 		{
 			case INPUT: return "I";

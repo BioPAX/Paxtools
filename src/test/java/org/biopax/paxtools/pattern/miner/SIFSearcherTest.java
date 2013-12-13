@@ -41,9 +41,11 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Ignore
 	public void generateLargeSIFGraph() throws IOException
 	{
+		long start = System.currentTimeMillis();
+
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream
-				("/home/ozgun/Projects/pattern/All-Human-Data.owl"));
+				("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl"));
 
 		BlacklistGenerator gen = new BlacklistGenerator();
 		Blacklist blacklist = gen.generateBlacklist(model);
@@ -53,6 +55,26 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		confirmPresenceOfUbiques(model, blacklist);
 		s.searchSIF(model, new FileOutputStream("/home/ozgun/PC.sif"), true);
+
+		long time = System.currentTimeMillis() - start;
+		System.out.println("Completed in: " + getPrintable(time));
+	}
+
+	private static String getPrintable(long time)
+	{
+		int div = 1000 * 60 * 60;
+		int hours = (int) (time / div);
+		time %= div;
+		div /= 60;
+		int minutes = (int) (time / div);
+		time %= div;
+		div /= 60;
+		int seconds = (int) (time / div);
+
+		String s = hours > 0 ? hours + "h, " : "";
+		s += minutes > 0 ? minutes + "m, " : "";
+		s += seconds + "s";
+		return s;
 	}
 
 	private void confirmPresenceOfUbiques(Model model, Blacklist blacklist)
@@ -78,7 +100,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	{
 		generate("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl",
 //		generate("/home/ozgun/Desktop/temp.owl",
-			"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
+				"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
 	}
 
 	public static void generate(String inputModelFile, String ubiqueIDFile, String outputFile)

@@ -7,6 +7,7 @@ import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.ChemicalNameNormalizer;
 import org.biopax.paxtools.pattern.util.RelType;
 
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -134,6 +135,8 @@ public class BlacklistGenerator
 					decider.getContext(neighSize, upstrOnly, dwstrOnly));
 			}
 		}
+
+		blacklist.write("blacklist.txt");
 
 		return blacklist;
 	}
