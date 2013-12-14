@@ -4,6 +4,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
@@ -28,39 +29,41 @@ public class TempTests
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
 		model = h.convertFromOWL(new FileInputStream("All-Human-Data.owl"));
+//		model = h.convertFromOWL(new FileInputStream("HumanCyc.owl"));
+//		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc_premerge.owl"));
 	}
 
 	@Test
 	@Ignore
 	public void checkSomethingOnModel()
 	{
-		int pc = 0;
-		int nc = 0;
-
-		for (Conversion cnv : model.getObjects(Conversion.class))
+		for (PathwayStep step : model.getObjects(PathwayStep.class))
 		{
-			boolean exists = false;
-			if (cnv.getDataSource().iterator().next().getDisplayName().equals("humancyc"))
+			for (Process prc : step.getStepProcess())
 			{
-				if (cnv.getConversionDirection() != null) exists = true;
-				for (Control control : cnv.getControlledOf())
+				if (prc instanceof Conversion)
 				{
-					if (control instanceof Catalysis && ((Catalysis) control).getCatalysisDirection() != null) exists = true;
-					for (PathwayStep step : control.getStepProcessOf())
-					{
-						if (step instanceof BiochemicalPathwayStep && ((BiochemicalPathwayStep) step).getStepDirection() != null) exists = true;
-					}
-				}
-				for (PathwayStep step : cnv.getStepProcessOf())
-				{
-					if (step instanceof BiochemicalPathwayStep && ((BiochemicalPathwayStep) step).getStepDirection() != null) exists = true;
+					System.out.println(prc.getRDFId());
+					System.exit(0);
 				}
 			}
-
-			if (exists) pc++; else nc++;
 		}
 
-		
+//		for (SmallMolecule sm : model.getObjects(SmallMolecule.class))
+//		{
+//			for (Interaction inter : sm.getParticipantOf())
+//			{
+//				if (inter instanceof Conversion)
+//				{
+//					Conversion cnv = (Conversion) inter;
+//
+//					if (cnv.getLeft().contains(sm) && cnv.getRight().contains(sm))
+//					{
+//						System.out.println(sm.getDisplayName() + "\t" + cnv.getRDFId());
+//					}
+//				}
+//			}
+//		}
 	}
 
 	@Test
