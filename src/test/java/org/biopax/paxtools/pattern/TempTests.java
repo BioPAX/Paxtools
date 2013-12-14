@@ -1,11 +1,9 @@
 package org.biopax.paxtools.pattern;
 
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.ConversionDirectionType;
-import org.biopax.paxtools.model.level3.Pathway;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
-import org.biopax.paxtools.model.level3.ProteinReference;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
@@ -28,8 +26,41 @@ public class TempTests
 	@Before
 	public void setUp() throws Exception
 	{
-//		SimpleIOHandler h = new SimpleIOHandler();
-//		model = h.convertFromOWL(new FileInputStream("All-Human-Data.owl"));
+		SimpleIOHandler h = new SimpleIOHandler();
+		model = h.convertFromOWL(new FileInputStream("All-Human-Data.owl"));
+	}
+
+	@Test
+	@Ignore
+	public void checkSomethingOnModel()
+	{
+		int pc = 0;
+		int nc = 0;
+
+		for (Conversion cnv : model.getObjects(Conversion.class))
+		{
+			boolean exists = false;
+			if (cnv.getDataSource().iterator().next().getDisplayName().equals("humancyc"))
+			{
+				if (cnv.getConversionDirection() != null) exists = true;
+				for (Control control : cnv.getControlledOf())
+				{
+					if (control instanceof Catalysis && ((Catalysis) control).getCatalysisDirection() != null) exists = true;
+					for (PathwayStep step : control.getStepProcessOf())
+					{
+						if (step instanceof BiochemicalPathwayStep && ((BiochemicalPathwayStep) step).getStepDirection() != null) exists = true;
+					}
+				}
+				for (PathwayStep step : cnv.getStepProcessOf())
+				{
+					if (step instanceof BiochemicalPathwayStep && ((BiochemicalPathwayStep) step).getStepDirection() != null) exists = true;
+				}
+			}
+
+			if (exists) pc++; else nc++;
+		}
+
+		
 	}
 
 	@Test
@@ -164,9 +195,26 @@ public class TempTests
 	@Ignore
 	public void printVennIntersections() throws FileNotFoundException
 	{
-		String[] file = new String[]{"changes-state-of.txt", "cso-but-a-participant.txt",
+		Blacklist black = new Blacklist("blacklist.txt");
+		SIFMiner[] miners = new SIFMiner[]{
+			new ControlsStateChangeOfMiner(),
+			new CSCOButIsParticipantMiner(),
+			new CSCOBothControllerAndParticipantMiner(),
+			new CSCOThroughControllingSmallMoleculeMiner(black),
+			new CSCOThroughBindingSmallMoleculeMiner(black)};
+
+		String[] file = new String[]{"changes-state-of.txt", "cso-but-is-participant.txt",
 			"cso-both-ctrl-part.txt", "cso-through-controlling-small-mol.txt",
 			"cso-through-binding-small-mol.txt"};
+
+		assert miners.length == file.length;
+
+		for (int i = 0; i < file.length; i++)
+		{
+			SIFSearcher searcher = new SIFSearcher(miners[i]);
+			searcher.searchSIF(model, new FileOutputStream(file[i]), false);
+		}
+
 		String[] let = new String[]{"A", "B", "C", "D", "E"};
 
 		Set<String>[] sets = new Set[file.length];
@@ -226,7 +274,7 @@ public class TempTests
 	@Ignore
 	public void checkOverlap() throws Throwable
 	{
-		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache//PC.sif");
+		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
 
 		List<SIFType> types = new ArrayList<SIFType>(Arrays.asList(SIFType.values()));
 		types.retainAll(map.keySet());

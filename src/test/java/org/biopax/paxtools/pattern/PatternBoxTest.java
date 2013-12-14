@@ -96,7 +96,7 @@ public class PatternBoxTest
 	public void testConsecutiveCatalysis2() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/POLE-POLE2.owl"));
+		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/NMNAT1-QPRT.owl"));
 
 		Blacklist b = new Blacklist(PatternBoxTest.class.getResourceAsStream("blacklist.txt"));
 		Pattern p = PatternBox.catalysisPrecedes(b);
