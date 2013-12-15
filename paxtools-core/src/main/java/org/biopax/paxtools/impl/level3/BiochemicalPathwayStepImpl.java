@@ -1,8 +1,8 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
-import org.biopax.paxtools.model.level3.Conversion;
-import org.biopax.paxtools.model.level3.StepDirection;
+import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -11,6 +11,7 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 @Entity
 @Proxy(proxyClass= BiochemicalPathwayStep.class)
@@ -61,32 +62,34 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
     
     /**
      * {@inheritDoc}
-     * 
-     * Also, note that this method does not
-     * automatically add the Conversion to the 
-     * stepPprocess property despite stepProcess
-     * is super-property for stepConversion; this
-     * is because BiochemicalPathwayStep is 
-     * defined as a sub-class of PathwayStep with
-     * additional constraint that stepProcess can
-     * contain only Control interactions (neither Pathway 
-     * nor Conversion processes are allowed).
-     * 
      */
-    public void setStepConversion(Conversion newSTEP_CONVERSION)
+    public void setStepConversion(Conversion highLander)
 	{
 		if (this.stepConversion != null)
 		{
 			this.stepConversion.getStepProcessOf().remove(this);
+            this.removeStepProcess(this.stepConversion); //since there can only be one
 		}
-		this.stepConversion = newSTEP_CONVERSION;
+		this.stepConversion = highLander;
 		if (this.stepConversion != null)
 		{
 			this.stepConversion.getStepProcessOf().add(this);
+            this.addStepProcess(highLander);
 		}
 	}
-    
-    
+
+    @Override
+    public void addStepProcess(Process process)
+    {
+        if(process instanceof Conversion && this.stepConversion!=process)
+        {
+            throw new IllegalBioPAXArgumentException(
+                    "Biochemical Pathway Step can have only one conversion. Did you want to use" +
+                            "the setStepConversion method? ");
+        }
+        super.addStepProcess(process);
+    }
+
     // Property STEP-DIRECTION
 
 	@Enumerated(EnumType.STRING)
