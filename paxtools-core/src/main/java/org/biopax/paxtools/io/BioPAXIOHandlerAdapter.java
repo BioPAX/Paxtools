@@ -274,11 +274,25 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			this.getReusedPEPHelper().copyPEPFields();
 		}
+		
+		reset(in);
 
 		return model;
 	}
 
+	protected void reset(InputStream in)
+	{
+		try
+		{
+			in.close();
 
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("Failed to close the file");
+		}
+
+	}	
 	private void autodetectBiopaxLevel()
 	{
 		BioPAXLevel filelevel = null;

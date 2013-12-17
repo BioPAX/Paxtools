@@ -173,6 +173,22 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	}
 
+	@Override protected void reset(InputStream in)
+	{
+
+		this.triples=null;
+		try
+		{
+			r.close();
+		}
+		catch (XMLStreamException e)
+		{
+			throw new RuntimeException("Can't close the stream");
+		}
+		r=null;
+		super.reset(in);
+	}
+
 	@Override protected Map<String, String> readNameSpaces()
 	{
 		Map<String, String> ns = new HashMap<String, String>();
