@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.pattern.PatternBoxTest;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.Assert;
@@ -17,11 +18,25 @@ import java.util.*;
 public class SIFSearcherTest extends PatternBoxTest
 {
 	@Test
+	public void testGetPathways()
+	{
+		SIFSearcher searcher = new SIFSearcher(SIFType.values());
+		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
+		Set<Pathway> pathways = new HashSet<Pathway>();
+		for (SIFInteraction inter : inters)
+		{
+			pathways.addAll(inter.getPathways());
+		}
+
+		Assert.assertFalse(pathways.isEmpty());
+	}
+
+	@Test
 	@Ignore
 	public void testSIFMiner()
 	{
 		SIFSearcher s = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE_OF, SIFType.IN_COMPLEX_WITH);
-		Set<SIFInteraction> sif = s.searchSIF(model);
+		Set<SIFInteraction> sif = s.searchSIF(model_P53);
 		Assert.assertFalse(sif.isEmpty());
 
 		Set<String> pubmedIDs = new HashSet<String>();
@@ -33,7 +48,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		Assert.assertFalse(pubmedIDs.isEmpty());
 
 		s = new SIFSearcher(SIFType.CATALYSIS_PRECEDES);
-		sif = s.searchSIF(model);
+		sif = s.searchSIF(model_P53);
 		Assert.assertTrue(sif.isEmpty());
 	}
 

@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PublicationXref;
 
 import java.util.*;
@@ -205,4 +206,26 @@ public class SIFInteraction implements Comparable
 		return set;
 	}
 
+	private static final PathAccessor pathwayAcc1 = new PathAccessor("Interaction/pathwayComponentOf*");
+	private static final PathAccessor pathwayAcc2 = new PathAccessor("Interaction/stepProcessOf/pathwayOrderOf");
+
+	/**
+	 * Collects Pathway objects that the Interactions among the mediators are members.
+	 * @return related pathways
+	 */
+	public Set<Pathway> getPathways()
+	{
+		Set<Pathway> set = new HashSet<Pathway>();
+
+		for (Object o : pathwayAcc1.getValueFromBeans(mediators))
+		{
+			set.add((Pathway) o);
+		}
+		for (Object o : pathwayAcc2.getValueFromBeans(mediators))
+		{
+			set.add((Pathway) o);
+		}
+
+		return set;
+	}
 }

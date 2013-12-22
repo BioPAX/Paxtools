@@ -4,7 +4,6 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Named;
-import org.biopax.paxtools.pattern.constraint.ConBox;
 import org.biopax.paxtools.pattern.constraint.NonUbique;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.Assert;
@@ -20,7 +19,7 @@ import java.util.*;
  */
 public class PatternBoxTest
 {
-	protected Model model;
+	protected Model model_P53;
 	protected Model model_urea;
 	protected Model model_tca;
 
@@ -28,7 +27,7 @@ public class PatternBoxTest
 	public void setUp() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("AR-TP53.owl"));
+		model_P53 = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("AR-TP53.owl"));
 		model_urea = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("UreaCycle.owl"));
 		model_tca = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("tca_cycle.owl"));
 	}
@@ -36,13 +35,13 @@ public class PatternBoxTest
 	@Test
 	public void testInSameComplex() throws Exception
 	{
-		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_33442"), 
+		List<Match> list = Searcher.search(model_P53.getByID("http://pid.nci.nih.gov/biopaxpid_33442"),
 			PatternBox.inSameComplex());
 		
 		Assert.assertTrue(list.size() == 1);
 
 
-		Map<BioPAXElement,List<Match>> map = Searcher.search(model, PatternBox.inSameComplex());
+		Map<BioPAXElement,List<Match>> map = Searcher.search(model_P53, PatternBox.inSameComplex());
 
 		for (BioPAXElement ele : map.keySet())
 		{
@@ -54,7 +53,7 @@ public class PatternBoxTest
 	public void testControlsStateChange() throws Exception
 	{
 		Map<BioPAXElement,List<Match>> map = Searcher.search(
-			model, PatternBox.controlsStateChange());
+			model_P53, PatternBox.controlsStateChange());
 
 		Assert.assertTrue(map.size() > 0);
 	}
@@ -96,12 +95,12 @@ public class PatternBoxTest
 	public void testConsecutiveCatalysis2() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/NMNAT1-QPRT.owl"));
+		model_P53 = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/NMNAT1-QPRT.owl"));
 
 		Blacklist b = new Blacklist(PatternBoxTest.class.getResourceAsStream("blacklist.txt"));
 		Pattern p = PatternBox.catalysisPrecedes(b);
 
-		List<Match> list = Searcher.searchPlain(model, p);
+		List<Match> list = Searcher.searchPlain(model_P53, p);
 
 		printMatches(list, 0, 5, 10);
 
