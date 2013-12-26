@@ -2,17 +2,15 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.*;
-import java.util.HashSet;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.util.Set;
 
 
@@ -33,8 +31,8 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 	 */
 	public ExperimentalFormImpl()
 	{
-		this.experimentalFormDescription = new BiopaxSafeSet<ExperimentalFormVocabulary>();
-		this.experimentalFeature = new BiopaxSafeSet<EntityFeature>();
+		this.experimentalFormDescription = BPCollections.createSafeSet();
+		this.experimentalFeature = BPCollections.createSafeSet();
 	}
 
 	//

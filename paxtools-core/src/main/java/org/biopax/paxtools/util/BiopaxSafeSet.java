@@ -1,13 +1,10 @@
 package org.biopax.paxtools.util;
 
-import java.util.AbstractSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
+
+import java.util.*;
 
 
 /**
@@ -21,12 +18,18 @@ import org.biopax.paxtools.model.BioPAXElement;
 public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 {
 	private final static Log LOG = LogFactory.getLog(BiopaxSafeSet.class);
-	private final Map<String,E> map;
+	private Map<String,E> map;
 	
-	public BiopaxSafeSet() {
-		map = new HashMap<String, E>();
+	public BiopaxSafeSet()
+	{
+		map = Collections.emptyMap();
 	}
-	
+
+	public BiopaxSafeSet(Map<String,E> map)
+	{
+		this.map = map;
+	}
+
 	@Override
 	public Iterator<E> iterator() {
 		return map.values().iterator();
@@ -38,7 +41,12 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 	}
 	
 	@Override
-	public boolean add(E bpe) {
+	public boolean add(E bpe)
+	{
+		if(this.isEmpty())
+		{
+			this.map = BPCollections.createMap();
+		}
 		String uri = bpe.getRDFId();
 		if(!map.containsKey(uri)) {
 			map.put(uri, bpe);

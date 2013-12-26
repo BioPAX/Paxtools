@@ -6,21 +6,19 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import javax.persistence.Entity;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -42,7 +40,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	 */
 	public ControlledVocabularyImpl()
 	{
-		this.term = new HashSet<String>();
+		this.term = BPCollections.createSet();
 	}
 
 	//
@@ -97,7 +95,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 		if(! (element instanceof ControlledVocabulary)) return false;
 		
 		ControlledVocabulary that = (ControlledVocabulary) element;
-		Set<String> terms = new HashSet<String>(term.size());
+		Set<String> terms = BPCollections.createSet();
 		terms.addAll(term);
 		terms.retainAll(that.getTerm());
 

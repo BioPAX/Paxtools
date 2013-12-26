@@ -6,16 +6,12 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.biopax.paxtools.util.BPCollections;
+import org.hibernate.annotations.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -42,7 +38,7 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	@Transient
 	public Set<EntityReference> getGenericEntityReferences()
 	{
-		Set<EntityReference> ger = new HashSet<EntityReference>();
+		Set<EntityReference> ger = BPCollections.createSet();
 		EntityReference er = this.getEntityReference();
 		if(er!=null)
 		{

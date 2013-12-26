@@ -140,4 +140,5 @@ public abstract class BioPAXFactory
 
 		return implClass;
 	}
+
 }

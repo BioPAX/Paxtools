@@ -21,7 +21,7 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
-	protected static final Log log = LogFactory.getLog(PropertyEditor.class);
+	protected static final Log log = LogFactory.getLog(AbstractPropertyEditor.class);
 
 	/**
 	 * This variable stores the method to invoke for setting a property to the to the given value. If

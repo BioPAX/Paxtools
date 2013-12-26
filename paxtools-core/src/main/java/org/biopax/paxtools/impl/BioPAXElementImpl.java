@@ -6,12 +6,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
-
 @Entity
 @Proxy(proxyClass= BioPAXElement.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -54,7 +52,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	private long version;
 	
 	public BioPAXElementImpl() {
-		this.annotations = new HashMap<String, Object>();
+		this.annotations = Collections.EMPTY_MAP; //TODO: temp, till the annotations are added.
 	}
 	
 
@@ -225,5 +223,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public int hashCode() {
 		return (getModelInterface().getCanonicalName() + uri).hashCode();
 	}
+
+
+
 }
 

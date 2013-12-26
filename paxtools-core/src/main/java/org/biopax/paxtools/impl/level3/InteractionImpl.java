@@ -5,19 +5,14 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
-import org.biopax.paxtools.util.BiopaxSafeSet;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.biopax.paxtools.util.BPCollections;
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -42,8 +37,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	public InteractionImpl()
 	{
-		this.interactionType = new BiopaxSafeSet<InteractionVocabulary>();
-		this.participant = new BiopaxSafeSet<Entity>();
+		this.interactionType = BPCollections.createSafeSet();
+		this.participant = BPCollections.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

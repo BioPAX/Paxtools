@@ -311,7 +311,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 				r.next();
 
 			}
-
+		r.close();
 		}
 		catch (XMLStreamException e)
 		{

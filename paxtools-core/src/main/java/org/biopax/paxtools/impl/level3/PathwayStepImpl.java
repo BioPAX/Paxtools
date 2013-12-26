@@ -1,21 +1,14 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
-import org.biopax.paxtools.model.level3.Control;
-import org.biopax.paxtools.model.level3.Evidence;
-import org.biopax.paxtools.model.level3.Pathway;
-import org.biopax.paxtools.model.level3.PathwayStep;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.Entity;
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -37,10 +30,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	 */
 	public PathwayStepImpl()
 	{
-		this.nextStep = new BiopaxSafeSet<PathwayStep>();
-		this.nextStepOf = new BiopaxSafeSet<PathwayStep>();
-		this.stepProcess = new BiopaxSafeSet<Process>();
-		this.evidence = new BiopaxSafeSet<Evidence>();
+		this.nextStep = BPCollections.createSafeSet();
+		this.nextStepOf = BPCollections.createSafeSet();
+		this.stepProcess = BPCollections.createSafeSet();
+		this.evidence = BPCollections.createSafeSet();
 	}
 
 	@Transient
@@ -101,13 +94,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	public void addStepProcess(Process processStep)
 	{
 		if (processStep != null) {
-			
-			if(this instanceof BiochemicalPathwayStep 
-				&& !(processStep instanceof Control)) {
-				throw new IllegalArgumentException(
-					"Range violation: BiochemicalPathwayStep.stepProcess "
-						+ "can add only Control interactions.");	
-			}
 			
 			this.stepProcess.add(processStep);
 			processStep.getStepProcessOf().add(this);

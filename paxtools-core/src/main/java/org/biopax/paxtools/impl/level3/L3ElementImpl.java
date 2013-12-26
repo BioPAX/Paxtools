@@ -5,23 +5,16 @@ import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.Level3Element;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.Provenance;
-import org.biopax.paxtools.util.DataSourceFieldBridge;
-import org.biopax.paxtools.util.OrganismFieldBridge;
-import org.biopax.paxtools.util.ParentPathwayFieldBridge;
-import org.biopax.paxtools.util.SetStringBridge;
+import org.biopax.paxtools.util.*;
+import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Store;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.Transient;
-
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.hibernate.annotations.FetchProfile.FetchOverride;
@@ -110,11 +103,11 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 
     public L3ElementImpl()
     {
-        this.comment = new HashSet<String>();
-        this.pathways = new HashSet<Pathway>();
-        this.datasources = new HashSet<Provenance>();
-        this.organisms = new HashSet<BioSource>();
-        this.keywords = new HashSet<String>();
+        this.comment = BPCollections.createSet();
+        this.pathways = BPCollections.createSet();
+        this.datasources = BPCollections.createSet();
+        this.organisms = BPCollections.createSet();
+        this.keywords =  BPCollections.createSet();
     }
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

@@ -25,6 +25,7 @@
 		<module>sbgn-converter</module>
 		<module>paxtools-console</module>
 		<module>paxtools-query</module>
+		<module>paxtools-trove</module>
 <!--         <module>json-converter</module> -->
 	</modules>
 

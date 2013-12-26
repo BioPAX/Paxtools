@@ -2,17 +2,13 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
@@ -34,9 +30,9 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 	public PathwayImpl()
 	{
-		this.pathwayComponent = new BiopaxSafeSet<Process>();
-		this.pathwayOrder = new BiopaxSafeSet<PathwayStep>();
-		this.controllerOf = new BiopaxSafeSet<Control>();
+		this.pathwayComponent = BPCollections.createSafeSet();
+		this.pathwayOrder = BPCollections.createSafeSet();
+		this.controllerOf = BPCollections.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

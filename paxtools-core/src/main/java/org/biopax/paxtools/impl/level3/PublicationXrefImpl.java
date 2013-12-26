@@ -2,21 +2,14 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PublicationXref;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.annotations.*;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import javax.persistence.Entity;
 import java.util.Set;
 
 @Entity
@@ -37,9 +30,9 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	 */
 	public PublicationXrefImpl()
 	{
-		this.url = new HashSet<String>();
-		this.source = new HashSet<String>();
-		this.author = new HashSet<String>();
+		this.url = BPCollections.createSet();
+		this.source = BPCollections.createSet();
+		this.author = BPCollections.createSet();
 	}
 
 	@Transient

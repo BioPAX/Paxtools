@@ -4,17 +4,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -38,11 +34,11 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	public EntityFeatureImpl()
 	{
-		evidence = new BiopaxSafeSet<Evidence>();
-		featureOf = new BiopaxSafeSet<PhysicalEntity>();
-		notFeatureOf = new BiopaxSafeSet<PhysicalEntity>();
-		memberFeatureOf = new BiopaxSafeSet<EntityFeature>();
-		memberFeature = new BiopaxSafeSet<EntityFeature>();
+		evidence = BPCollections.createSafeSet();
+		featureOf = BPCollections.createSafeSet();
+		notFeatureOf = BPCollections.createSafeSet();
+		memberFeatureOf = BPCollections.createSafeSet();
+		memberFeature = BPCollections.createSafeSet();
 	}
 
 
