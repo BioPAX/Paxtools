@@ -18,11 +18,13 @@ import java.util.*;
 public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 {
 	private final static Log LOG = LogFactory.getLog(BiopaxSafeSet.class);
+	private final static Map empty = Collections.emptyMap();
+
 	private Map<String,E> map;
 	
 	public BiopaxSafeSet()
 	{
-		map = Collections.emptyMap();
+		map = empty;
 	}
 
 	public BiopaxSafeSet(Map<String,E> map)
@@ -36,7 +38,8 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 	}
 
 	@Override
-	public int size() {
+	public int size()
+	{
 		return map.size();
 	}
 	
