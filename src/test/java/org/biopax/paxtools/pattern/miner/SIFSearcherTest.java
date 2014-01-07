@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.pattern.PatternBoxTest;
 import org.biopax.paxtools.pattern.util.Blacklist;
+import org.biopax.paxtools.trove.TProvider;
+import org.biopax.paxtools.util.BPCollections;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,6 +31,28 @@ public class SIFSearcherTest extends PatternBoxTest
 		}
 
 		Assert.assertFalse(pathways.isEmpty());
+
+		Set<String> dataSources = new HashSet<String>();
+		for (SIFInteraction inter : inters)
+		{
+			dataSources.addAll(inter.getDataSources());
+		}
+
+		Assert.assertFalse(dataSources.isEmpty());
+	}
+
+	@Test
+	public void testGetDataSources()
+	{
+		SIFSearcher searcher = new SIFSearcher(SIFType.values());
+		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
+		Set<String> dataSources = new HashSet<String>();
+		for (SIFInteraction inter : inters)
+		{
+			dataSources.addAll(inter.getDataSources());
+		}
+
+		Assert.assertFalse(dataSources.isEmpty());
 	}
 
 	@Test
@@ -57,6 +81,8 @@ public class SIFSearcherTest extends PatternBoxTest
 	public void generateLargeSIFGraph() throws IOException
 	{
 		long start = System.currentTimeMillis();
+
+		BPCollections.setProvider(new TProvider());
 
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream

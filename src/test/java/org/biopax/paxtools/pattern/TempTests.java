@@ -9,6 +9,7 @@ import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.pattern.util.RelType;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,8 +28,8 @@ public class TempTests
 	@Before
 	public void setUp() throws Exception
 	{
-		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(new FileInputStream("All-Human-Data.owl"));
+//		SimpleIOHandler h = new SimpleIOHandler();
+//		model = h.convertFromOWL(new FileInputStream("All-Human-Data.owl"));
 //		model = h.convertFromOWL(new FileInputStream("HumanCyc.owl"));
 //		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc_premerge.owl"));
 	}
@@ -371,5 +372,77 @@ public class TempTests
 			}
 		}
 		return map;
+	}
+
+	private Map<SIFType, Set<String>> readSIFFile2(String file) throws FileNotFoundException
+	{
+		Map<SIFType, Set<String>> map = new HashMap<SIFType, Set<String>>();
+		Scanner sc = new Scanner(new File(file));
+
+		while(sc.hasNextLine())
+		{
+			String line = sc.nextLine();
+
+			String[] token = line.split("\t");
+			if (token.length >= 3)
+			{
+				SIFType type = SIFType.typeOf(token[1]);
+				if (type == null) continue;
+
+				if (!map.containsKey(type)) map.put(type, new HashSet<String>());
+
+				map.get(type).add(token[0] + "\t" + type.getTag() +  "\t" + token[2]);
+			}
+		}
+		return map;
+	}
+
+	@Test
+	@Ignore
+	public void separateInteractions() throws IOException
+	{
+		Map<SIFType, Set<String>> map = readSIFFile2("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
+
+		String outDir = "/home/ozgun/Desktop/BinIntStats/";
+		String dirDir = outDir + "directed/";
+		String undirDir = outDir + "undirected/";
+
+		new File(dirDir + "/stats/").mkdirs();
+		new File(undirDir + "/stats/").mkdirs();
+
+		for (SIFType type : map.keySet())
+		{
+			String file = (type.isDirected() ? dirDir : undirDir) + type.getTag() + ".sif";
+
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+
+			for (String s : map.get(type))
+			{
+				writer.write(s + "\n");
+			}
+
+			writer.close();
+		}
+
+	}
+
+	@Test
+	@Ignore
+	public void tempCode() throws FileNotFoundException
+	{
+		SIFSearcher searcher = new SIFSearcher(SIFType.values());
+		searcher.searchSIF(model, new FileOutputStream("/path/to/output.sif"), new SIFToText()
+		{
+			@Override
+			public String convert(SIFInteraction inter)
+			{
+				String s = inter.toString();
+				for (String pmID : inter.getPubmedIDs())
+				{
+					s += "\t" + pmID;
+				}
+				return s;
+			}
+		});
 	}
 }

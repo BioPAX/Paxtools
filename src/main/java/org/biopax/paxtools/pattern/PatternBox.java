@@ -198,7 +198,7 @@ public class PatternBox
 		p.add(controlToConv(), "Control", "Conversion");
 		p.add(equal(false), "upper Conversion", "Conversion");
 
-		p.add(new OR(new MappedConst(inSamePathway(), 0, 1),
+		p.add(new OR(new MappedConst(nextInteraction(), 0, 1),
 			new MappedConst(moreControllerThanParticipant(), 2)),
 			"upper Conversion", "Conversion", "controller PE");
 
@@ -231,7 +231,7 @@ public class PatternBox
 		p.add(new ParticipatesInConv(RelType.INPUT), "SM", "Conversion");
 		p.add(peToER(), "SM", "SM ER");
 		p.add(equal(false), "upper Conversion", "Conversion");
-		p.add(inSamePathway(), "upper Conversion", "Conversion");
+		p.add(nextInteraction(), "upper Conversion", "Conversion");
 
 		p.add(stateChange());
 

@@ -190,6 +190,16 @@ public class ConBox
 	}
 
 	/**
+	 * Starts from an Interaction and gets next Interactions in temporal order, if ever defined in
+	 * a Pathway.
+	 * @return generative constraint
+	 */
+	public static Constraint nextInteraction()
+	{
+		return new PathConstraint("Interaction/stepProcessOf/nextStep/stepProcess:Interaction");
+	}
+
+	/**
 	 * From PhysicalEntity to its generic equivalents, i.e. either parent PhysicalEntity recursively
 	 * or member PhysicalEntity recursively. Note that another member of the parent is not a generic
 	 * equivalent.

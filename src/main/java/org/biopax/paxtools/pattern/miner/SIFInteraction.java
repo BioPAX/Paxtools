@@ -12,8 +12,8 @@ import java.util.*;
  */
 public class SIFInteraction implements Comparable
 {
-	public BioPAXElement source;
-	public BioPAXElement target;
+	public Set<BioPAXElement> source;
+	public Set<BioPAXElement> target;
 	public String sourceID;
 	public String targetID;
 	public SIFType type;
@@ -24,6 +24,9 @@ public class SIFInteraction implements Comparable
 	{
 		sourceID = fetcher.fetchID(source);
 		targetID = fetcher.fetchID(target);
+
+		this.source = new HashSet<BioPAXElement>();
+		this.target = new HashSet<BioPAXElement>();
 
 		if (!type.isDirected())
 		{
@@ -39,8 +42,8 @@ public class SIFInteraction implements Comparable
 			}
 		}
 
-		this.source = source;
-		this.target = target;
+		this.source.add(source);
+		this.target.add(target);
 		this.type = type;
 
 		this.mediators = mediators;
@@ -94,6 +97,9 @@ public class SIFInteraction implements Comparable
 		if (!this.equals(equivalent))
 			throw new IllegalArgumentException("SIF interactions are not equivalent.");
 
+		source.addAll(equivalent.source);
+		target.addAll(equivalent.target);
+
 		if (mediators == null) mediators = equivalent.mediators;
 		else if (equivalent.mediators != null)
 		{
@@ -104,7 +110,7 @@ public class SIFInteraction implements Comparable
 	@Override
 	public String toString()
 	{
-		return toString(true);
+		return toString(false);
 	}
 
 	public String toString(boolean withMediators)
@@ -224,6 +230,24 @@ public class SIFInteraction implements Comparable
 		for (Object o : pathwayAcc2.getValueFromBeans(mediators))
 		{
 			set.add((Pathway) o);
+		}
+
+		return set;
+	}
+
+	private static final PathAccessor dataSourceAcc = new PathAccessor("Entity/dataSource/displayName");
+
+	/**
+	 * Collects data source names (Provenance display names) of mediators.
+	 * @return related data sources
+	 */
+	public Set<String> getDataSources()
+	{
+		Set<String> set = new HashSet<String>();
+
+		for (Object o : dataSourceAcc.getValueFromBeans(mediators))
+		{
+			set.add((String) o);
 		}
 
 		return set;

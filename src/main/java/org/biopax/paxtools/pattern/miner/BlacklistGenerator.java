@@ -7,7 +7,6 @@ import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.ChemicalNameNormalizer;
 import org.biopax.paxtools.pattern.util.RelType;
 
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -170,8 +169,30 @@ public class BlacklistGenerator
 	 */
 	static interface Decider
 	{
+		/**
+		 * Tells if the molecule is ubique in at least one context.
+		 * @param neighborSize number of neighbors in the used-to-produce network
+		 * @param upstrOnly number of upstream neighbors in the used-to-produce network, that are not also at downstream
+		 * @param dwstrOnly number of downstream neighbors in the used-to-produce network, that are not also at upstream
+		 */
 		public boolean isUbique(int neighborSize, int upstrOnly, int dwstrOnly);
+
+		/**
+		 * Gets the ubiquity score of the ubique molecule. This score is used for comparing ubiques
+		 * and deciding the most essential reactants of a reaction if all reactants are ubique.
+		 * @param neighborSize number of neighbors in the used-to-produce network
+		 * @param upstrOnly number of upstream neighbors in the used-to-produce network, that are not also at downstream
+		 * @param dwstrOnly number of downstream neighbors in the used-to-produce network, that are not also at upstream
+		 */
 		public int getScore(int neighborSize, int upstrOnly, int dwstrOnly);
+
+		/**
+		 * Gets the context of ubiquity. A molecule can be ubiquitously consumed, or can be
+		 * ubiquitously produced, or both. When it is both, this method has to return null.
+		 * @param neighborSize number of neighbors in the used-to-produce network
+		 * @param upstrOnly number of upstream neighbors in the used-to-produce network, that are not also at downstream
+		 * @param dwstrOnly number of downstream neighbors in the used-to-produce network, that are not also at upstream
+		 */
 		public RelType getContext(int neighborSize, int upstrOnly, int dwstrOnly);
 	}
 

@@ -193,6 +193,18 @@ public class SIFSearcher
 
 	/**
 	 * Searches the given model with the contained miners. Writes the textual result to the given
+	 * output stream. Closes the stream at the end. Produces simplest version of SIF format.
+	 * @param model model to search
+	 * @param out stream to write
+	 * @return true if any output produced successfully
+	 */
+	public boolean searchSIF(Model model, OutputStream out)
+	{
+		return searchSIF(model, out, false);
+	}
+
+	/**
+	 * Searches the given model with the contained miners. Writes the textual result to the given
 	 * output stream. Closes the stream at the end.
 	 * @param model model to search
 	 * @param out stream to write
