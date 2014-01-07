@@ -33,9 +33,9 @@ public class  ControlImpl extends InteractionImpl
 
 	public ControlImpl()
 	{
-		pathwayController = BPCollections.createSafeSet();
-		peController = BPCollections.createSafeSet();
-		controlled = BPCollections.createSafeSet();
+		pathwayController = BPCollections.I.createSafeSet();
+		peController = BPCollections.I.createSafeSet();
+		controlled = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

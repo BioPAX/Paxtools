@@ -30,8 +30,8 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 	public ComplexImpl()
 	{
-		this.component = BPCollections.createSafeSet();
-		this.componentStoichiometry = BPCollections.createSafeSet();
+		this.component = BPCollections.I.createSafeSet();
+		this.componentStoichiometry = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -109,7 +109,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	@Transient
 	public Set<SimplePhysicalEntity> getSimpleMembers()
 	{
-		return getSimpleMembers(BPCollections.<SimplePhysicalEntity>createSet());
+		return getSimpleMembers(BPCollections.I.<SimplePhysicalEntity>createSet());
 	}
 
 	@Transient
@@ -141,7 +141,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	@Transient
 	public Set<EntityReference> getMemberReferences()
 	{
-		Set<EntityReference> set = BPCollections.createSet();
+		Set<EntityReference> set = BPCollections.I.createSet();
 
 		for (SimplePhysicalEntity spe : getSimpleMembers())
 		{

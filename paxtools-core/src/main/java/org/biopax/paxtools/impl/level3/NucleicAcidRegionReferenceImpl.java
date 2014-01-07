@@ -31,8 +31,8 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	public NucleicAcidRegionReferenceImpl()
 	{
-		regionType = BPCollections.createSafeSet();
-		subRegionOf = BPCollections.createSafeSet();
+		regionType = BPCollections.I.createSafeSet();
+		subRegionOf = BPCollections.I.createSafeSet();
 	}
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

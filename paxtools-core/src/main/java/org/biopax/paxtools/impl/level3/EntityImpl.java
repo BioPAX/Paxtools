@@ -59,10 +59,10 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	public EntityImpl()
 	{
-		this.availability = BPCollections.createSet();
-		this.dataSource = BPCollections.createSafeSet();
-		this.participantOf = BPCollections.createSafeSet();
-		this.evidence = BPCollections.createSafeSet();
+		this.availability = BPCollections.I.createSet();
+		this.dataSource = BPCollections.I.createSafeSet();
+		this.participantOf = BPCollections.I.createSafeSet();
+		this.evidence = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

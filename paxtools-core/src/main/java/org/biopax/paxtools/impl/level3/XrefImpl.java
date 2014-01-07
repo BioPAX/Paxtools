@@ -34,7 +34,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	 */
 	public XrefImpl()
 	{
-		this.xrefOf = BPCollections.createSafeSet();
+		this.xrefOf = BPCollections.I.createSafeSet();
 	}
 
 	@Override

@@ -28,9 +28,9 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 	public ProcessImpl()
 	{
-		this.controlledOf = BPCollections.createSafeSet();
-		this.stepProcessOf = BPCollections.createSafeSet();
-		this.pathwayComponentOf = BPCollections.createSafeSet();
+		this.controlledOf = BPCollections.I.createSafeSet();
+		this.stepProcessOf = BPCollections.I.createSafeSet();
+		this.pathwayComponentOf = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

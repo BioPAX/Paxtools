@@ -38,11 +38,11 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 	public BiochemicalReactionImpl()
 	{
-		this.deltaG = BPCollections.createSafeSet();
-		this.deltaH = BPCollections.createSet();
-		this.deltaS = BPCollections.createSet();
-		this.eCNumber = BPCollections.createSet();
-		this.kEQ = BPCollections.createSafeSet();
+		this.deltaG = BPCollections.I.createSafeSet();
+		this.deltaH = BPCollections.I.createSet();
+		this.deltaS = BPCollections.I.createSet();
+		this.eCNumber = BPCollections.I.createSet();
+		this.kEQ = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

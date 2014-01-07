@@ -30,10 +30,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	 */
 	public PathwayStepImpl()
 	{
-		this.nextStep = BPCollections.createSafeSet();
-		this.nextStepOf = BPCollections.createSafeSet();
-		this.stepProcess = BPCollections.createSafeSet();
-		this.evidence = BPCollections.createSafeSet();
+		this.nextStep = BPCollections.I.createSafeSet();
+		this.nextStepOf = BPCollections.I.createSafeSet();
+		this.stepProcess = BPCollections.I.createSafeSet();
+		this.evidence = BPCollections.I.createSafeSet();
 	}
 
 	@Transient
@@ -83,12 +83,22 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    //Hidden property for hibernate
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
 	@JoinTable(name="stepProcess")
-	public Set<Process> getStepProcess()
+	public Set<Process> getStepProcessX()
 	{
 		return stepProcess;
+	}
+	public void setStepProcessX(Set<Process> stepProcess)
+	{
+		this.stepProcess = stepProcess;
+	}
+
+	public Set<Process> getStepProcess()
+	{
+		return this.getStepProcessX();
 	}
 
 	public void addStepProcess(Process processStep)
@@ -108,10 +118,7 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		}
 	}
 
-	public void setStepProcess(Set<Process> stepProcess)
-	{
-		this.stepProcess = stepProcess;
-	}
+
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)

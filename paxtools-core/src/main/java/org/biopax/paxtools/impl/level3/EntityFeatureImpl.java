@@ -34,11 +34,11 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 
 	public EntityFeatureImpl()
 	{
-		evidence = BPCollections.createSafeSet();
-		featureOf = BPCollections.createSafeSet();
-		notFeatureOf = BPCollections.createSafeSet();
-		memberFeatureOf = BPCollections.createSafeSet();
-		memberFeature = BPCollections.createSafeSet();
+		evidence = BPCollections.I.createSafeSet();
+		featureOf = BPCollections.I.createSafeSet();
+		notFeatureOf = BPCollections.I.createSafeSet();
+		memberFeatureOf = BPCollections.I.createSafeSet();
+		memberFeature = BPCollections.I.createSafeSet();
 	}
 
 

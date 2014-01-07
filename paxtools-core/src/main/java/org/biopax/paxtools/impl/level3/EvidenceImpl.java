@@ -32,9 +32,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	public EvidenceImpl()
 	{
-		this.confidence = BPCollections.createSafeSet();
-		this.evidenceCode = BPCollections.createSafeSet();
-		this.experimentalForm = BPCollections.createSafeSet();
+		this.confidence = BPCollections.I.createSafeSet();
+		this.evidenceCode = BPCollections.I.createSafeSet();
+		this.experimentalForm = BPCollections.I.createSafeSet();
 	}
 
 	//

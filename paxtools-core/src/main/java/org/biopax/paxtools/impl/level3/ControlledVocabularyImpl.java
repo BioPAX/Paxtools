@@ -40,7 +40,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	 */
 	public ControlledVocabularyImpl()
 	{
-		this.term = BPCollections.createSet();
+		this.term = BPCollections.I.createSet();
 	}
 
 	//
@@ -95,7 +95,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 		if(! (element instanceof ControlledVocabulary)) return false;
 		
 		ControlledVocabulary that = (ControlledVocabulary) element;
-		Set<String> terms = BPCollections.createSet();
+		Set<String> terms = BPCollections.I.createSet();
 		terms.addAll(term);
 		terms.retainAll(that.getTerm());
 

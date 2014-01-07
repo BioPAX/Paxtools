@@ -35,9 +35,9 @@ public class ConversionImpl extends InteractionImpl
 
 	public ConversionImpl()
 	{
-		left = BPCollections.createSafeSet();
-		right = BPCollections.createSafeSet();
-		participantStoichiometry = BPCollections.createSafeSet();
+		left = BPCollections.I.createSafeSet();
+		right = BPCollections.I.createSafeSet();
+		participantStoichiometry = BPCollections.I.createSafeSet();
 	}
 
 

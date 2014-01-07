@@ -30,9 +30,9 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	 */
 	public PublicationXrefImpl()
 	{
-		this.url = BPCollections.createSet();
-		this.source = BPCollections.createSet();
-		this.author = BPCollections.createSet();
+		this.url = BPCollections.I.createSet();
+		this.source = BPCollections.I.createSet();
+		this.author = BPCollections.I.createSet();
 	}
 
 	@Transient

@@ -24,7 +24,7 @@ public class SequenceLocationImpl extends L3ElementImpl
 	 */
 	public SequenceLocationImpl()
 	{
-		this.regionType = BPCollections.createSafeSet();
+		this.regionType = BPCollections.I.createSafeSet();
     }
 
 	//

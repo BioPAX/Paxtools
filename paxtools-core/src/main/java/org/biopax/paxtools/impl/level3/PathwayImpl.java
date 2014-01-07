@@ -30,9 +30,9 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 
 	public PathwayImpl()
 	{
-		this.pathwayComponent = BPCollections.createSafeSet();
-		this.pathwayOrder = BPCollections.createSafeSet();
-		this.controllerOf = BPCollections.createSafeSet();
+		this.pathwayComponent = BPCollections.I.createSafeSet();
+		this.pathwayOrder = BPCollections.I.createSafeSet();
+		this.controllerOf = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

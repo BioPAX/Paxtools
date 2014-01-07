@@ -35,6 +35,11 @@ public class PathAccessorTest
 		SmallMoleculeReference smr[] = mock.create(model, SmallMoleculeReference.class,1);
 		SmallMolecule sm[] = mock.create(model, SmallMolecule.class,1);
 
+		BiochemicalReaction[] rx = mock.create(model, BiochemicalReaction.class,1);
+		Pathway[] pw = mock.create(model,Pathway.class,1);
+		BiochemicalPathwayStep[] pws = mock.create(model,BiochemicalPathwayStep.class,1);
+
+		pws[0].setStepConversion(rx[0]);
 
 		mock.bindArrays(mock.editor("entityReference", Protein.class), p, pr);
 		mock.bindArrays(mock.editor("entityReference", SmallMolecule.class), sm, smr);
@@ -51,6 +56,11 @@ public class PathAccessorTest
 		assertTrue(values.contains(px[0]) && values.size() == 1);
 		values = accessor.getValueFromModel(model);
 		assertTrue(values.containsAll(Arrays.asList(px)) && values.size() == 2);
+
+		accessor = new PathAccessor("Conversion/stepProcessOf", BioPAXLevel.L3);
+		values = accessor.getValueFromBean(rx[0]);
+		assertTrue(values.contains(pws[0]) && values.size() == 1);
+
 
 		accessor = new PathAccessor("Protein/entityReference/xref:RelationshipXref", BioPAXLevel.L3);
 		values = accessor.getValueFromBean(p[1]);

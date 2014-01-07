@@ -24,7 +24,7 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
 
 	public TemplateReactionImpl()
 	{
-        this.product = BPCollections.createSafeSet();
+        this.product = BPCollections.I.createSafeSet();
     }
 	
 	@Transient

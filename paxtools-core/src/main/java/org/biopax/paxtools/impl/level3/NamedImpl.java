@@ -29,7 +29,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 
 	public NamedImpl()
 	{
-		allNames = BPCollections.createSet();
+		allNames = BPCollections.I.createSet();
 		displayName = null;
 		standardName = null;
 	}

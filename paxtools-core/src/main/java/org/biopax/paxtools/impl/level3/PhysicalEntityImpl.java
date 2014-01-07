@@ -44,12 +44,12 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public PhysicalEntityImpl()
 	{
-		feature = BPCollections.createSafeSet();
-		notFeature = BPCollections.createSafeSet();
-		controllerOf = BPCollections.createSafeSet();
-		componentOf = BPCollections.createSafeSet();
-		memberPhysicalEntityOf = BPCollections.createSafeSet(); //TODO make generic?
-		memberPhysicalEntity = BPCollections.createSafeSet();
+		feature = BPCollections.I.createSafeSet();
+		notFeature = BPCollections.I.createSafeSet();
+		controllerOf = BPCollections.I.createSafeSet();
+		componentOf = BPCollections.I.createSafeSet();
+		memberPhysicalEntityOf = BPCollections.I.createSafeSet(); //TODO make generic?
+		memberPhysicalEntity = BPCollections.I.createSafeSet();
 	}
 
 	@Transient

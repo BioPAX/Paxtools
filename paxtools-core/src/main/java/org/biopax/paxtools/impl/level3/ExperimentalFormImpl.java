@@ -31,8 +31,8 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 	 */
 	public ExperimentalFormImpl()
 	{
-		this.experimentalFormDescription = BPCollections.createSafeSet();
-		this.experimentalFeature = BPCollections.createSafeSet();
+		this.experimentalFormDescription = BPCollections.I.createSafeSet();
+		this.experimentalFeature = BPCollections.I.createSafeSet();
 	}
 
 	//

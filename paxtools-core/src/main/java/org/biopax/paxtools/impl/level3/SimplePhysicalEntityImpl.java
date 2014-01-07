@@ -38,7 +38,7 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	@Transient
 	public Set<EntityReference> getGenericEntityReferences()
 	{
-		Set<EntityReference> ger = BPCollections.createSet();
+		Set<EntityReference> ger = BPCollections.I.createSet();
 		EntityReference er = this.getEntityReference();
 		if(er!=null)
 		{

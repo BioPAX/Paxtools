@@ -48,7 +48,7 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 	{
 		if(this.isEmpty())
 		{
-			this.map = BPCollections.createMap();
+			this.map = BPCollections.I.createMap();
 		}
 		String uri = bpe.getRDFId();
 		if(!map.containsKey(uri)) {

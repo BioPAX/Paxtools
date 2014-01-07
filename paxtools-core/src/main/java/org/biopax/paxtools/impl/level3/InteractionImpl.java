@@ -37,8 +37,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	public InteractionImpl()
 	{
-		this.interactionType = BPCollections.createSafeSet();
-		this.participant = BPCollections.createSafeSet();
+		this.interactionType = BPCollections.I.createSafeSet();
+		this.participant = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

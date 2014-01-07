@@ -33,12 +33,12 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 */
 	public EntityReferenceImpl()
 	{
-		this.entityFeature = BPCollections.createSafeSet();
-		this.entityReferenceOf = BPCollections.createSafeSet();
-		this.evidence = BPCollections.createSafeSet();
-		this.entityReferenceType = BPCollections.createSafeSet();
-		this.memberEntityReference = BPCollections.createSafeSet();
-		this.ownerEntityReference= BPCollections.createSafeSet();
+		this.entityFeature = BPCollections.I.createSafeSet();
+		this.entityReferenceOf = BPCollections.I.createSafeSet();
+		this.evidence = BPCollections.I.createSafeSet();
+		this.entityReferenceType = BPCollections.I.createSafeSet();
+		this.memberEntityReference = BPCollections.I.createSafeSet();
+		this.ownerEntityReference= BPCollections.I.createSafeSet();
 	}
 
 	@Transient

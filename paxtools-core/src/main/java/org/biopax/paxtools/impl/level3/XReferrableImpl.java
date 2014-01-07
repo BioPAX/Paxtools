@@ -45,7 +45,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	public XReferrableImpl()
 	{
-		this.xref = BPCollections.createSafeSet();
+		this.xref = BPCollections.I.createSafeSet();
 	}
 
 // -------------------------- OTHER METHODS --------------------------

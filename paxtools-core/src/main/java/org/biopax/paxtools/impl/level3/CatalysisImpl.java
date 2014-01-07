@@ -32,7 +32,7 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 
 	public CatalysisImpl()
 	{
-		this.cofactor = BPCollections.createSafeSet();
+		this.cofactor = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

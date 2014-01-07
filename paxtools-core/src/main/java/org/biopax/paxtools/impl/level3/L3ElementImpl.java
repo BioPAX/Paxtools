@@ -103,11 +103,11 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 
     public L3ElementImpl()
     {
-        this.comment = BPCollections.createSet();
-        this.pathways = BPCollections.createSet();
-        this.datasources = BPCollections.createSet();
-        this.organisms = BPCollections.createSet();
-        this.keywords =  BPCollections.createSet();
+        this.comment = BPCollections.I.createSet();
+        this.pathways = BPCollections.I.createSet();
+        this.datasources = BPCollections.I.createSet();
+        this.organisms = BPCollections.I.createSet();
+        this.keywords =  BPCollections.I.createSet();
     }
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

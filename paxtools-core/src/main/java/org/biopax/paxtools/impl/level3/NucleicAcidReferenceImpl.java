@@ -20,7 +20,7 @@ public abstract class NucleicAcidReferenceImpl extends SequenceEntityReferenceIm
 
 	public NucleicAcidReferenceImpl()
 	{
-		this.subRegion = BPCollections.createSafeSet();
+		this.subRegion = BPCollections.I.createSafeSet();
 	}
 
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
