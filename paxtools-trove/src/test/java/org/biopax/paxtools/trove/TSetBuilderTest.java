@@ -16,8 +16,8 @@ public class TSetBuilderTest
 	@Test
 	public void testModelMemoryLoad() throws InvocationTargetException, IllegalAccessException
 	{
-		MockFactory factory = new MockFactory(BioPAXLevel.L3);
 		BPCollections.I.setProvider(new TProvider());
+		MockFactory factory = new MockFactory(BioPAXLevel.L3);
 		Model model = factory.createModel();
 
 		//test reflectively create
