@@ -40,7 +40,7 @@ import static org.hibernate.annotations.FetchProfile.FetchOverride;
  @FetchOverride(entity = ConversionImpl.class, association = "participantStoichiometry", mode = FetchMode.JOIN),
  @FetchOverride(entity = PhysicalEntityImpl.class, association = "feature", mode = FetchMode.JOIN),
  @FetchOverride(entity = ConversionImpl.class, association = "right", mode = FetchMode.JOIN),
- @FetchOverride(entity = PathwayStepImpl.class, association = "stepProcess", mode = FetchMode.JOIN),
+ @FetchOverride(entity = PathwayStepImpl.class, association = "stepProcessX", mode = FetchMode.JOIN),
  @FetchOverride(entity = ExperimentalFormImpl.class, association = "experimentalFeature", mode = FetchMode.JOIN),
  @FetchOverride(entity = ControlImpl.class, association = "controlled", mode = FetchMode.JOIN),
  @FetchOverride(entity = PublicationXrefImpl.class, association = "url", mode = FetchMode.JOIN),

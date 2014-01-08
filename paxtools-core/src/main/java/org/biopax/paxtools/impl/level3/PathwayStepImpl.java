@@ -9,6 +9,7 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
+
 import java.util.Set;
 
 @Entity
@@ -83,22 +84,25 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
-    //Hidden property for hibernate
+	@Transient
+	public Set<Process> getStepProcess()
+	{	
+		return this.getStepProcessX();
+	}
+	
+	//private setter for ORM frameworks only
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = ProcessImpl.class)
-	@JoinTable(name="stepProcess")
-	public Set<Process> getStepProcessX()
+	@JoinTable(name="stepProcess",
+		joinColumns={@JoinColumn(name="STEPPROCESS_PK", referencedColumnName="PK")},
+		inverseJoinColumns={@JoinColumn(name="STEPPROCESSOF_PK", referencedColumnName="PK")})
+	Set<Process> getStepProcessX()
 	{
 		return stepProcess;
 	}
-	public void setStepProcessX(Set<Process> stepProcess)
+	void setStepProcessX(Set<Process> stepProcess)
 	{
 		this.stepProcess = stepProcess;
-	}
-
-	public Set<Process> getStepProcess()
-	{
-		return this.getStepProcessX();
 	}
 
 	public void addStepProcess(Process processStep)
@@ -117,8 +121,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 			this.stepProcess.remove(processStep);
 		}
 	}
-
-
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@ManyToMany(targetEntity = EvidenceImpl.class)

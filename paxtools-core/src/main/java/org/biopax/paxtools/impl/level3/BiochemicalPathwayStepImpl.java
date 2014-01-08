@@ -21,11 +21,11 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
-	Conversion stepConversion;
+	private Conversion stepConversion;
 
-	StepDirection stepDirection;
+	private StepDirection stepDirection;
 
-	Set<Process> stepProcess = new StepProcessSet();
+	private Set<Process> stepProcess = new StepProcessSet();
 
 	private Log log = LogFactory.getLog(BiochemicalPathwayStepImpl.class);
 
@@ -50,13 +50,23 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	////////////////////////////////////////////////////////////////////////////
 
 
-	// Property stepConversion
+	//trivial private setter/getter for ORM frameworks only
 	@ManyToOne(targetEntity = ConversionImpl.class)
+	Conversion getStepConversionX()
+	{
+		return stepConversion;
+	}
+	void setStepConversionX(Conversion conversion)
+	{
+		this.stepConversion = conversion;
+	}	
+	
+	// Property stepConversion
+	@Transient
 	public Conversion getStepConversion()
 	{
 		return stepConversion;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -109,6 +119,7 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 		stepDirection = newSTEP_DIRECTION;
 	}
 
+	@Transient
 	@Override public Set<Process> getStepProcess()
 	{
 		return stepProcess;
