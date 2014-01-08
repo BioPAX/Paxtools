@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.*;
 import java.util.AbstractSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Entity @Proxy(proxyClass = BiochemicalPathwayStep.class) @Indexed @DynamicUpdate @DynamicInsert
@@ -51,16 +52,16 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 
 
 	//trivial private setter/getter for ORM frameworks only
-	@ManyToOne(targetEntity = ConversionImpl.class)
-	Conversion getStepConversionX()
+	@ManyToOne(targetEntity = ConversionImpl.class) Conversion getStepConversionX()
 	{
 		return stepConversion;
 	}
+
 	void setStepConversionX(Conversion conversion)
 	{
 		this.stepConversion = conversion;
-	}	
-	
+	}
+
 	// Property stepConversion
 	@Transient
 	public Conversion getStepConversion()
@@ -119,8 +120,7 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 		stepDirection = newSTEP_DIRECTION;
 	}
 
-	@Transient
-	@Override public Set<Process> getStepProcess()
+	@Transient @Override public Set<Process> getStepProcess()
 	{
 		return stepProcess;
 	}
@@ -143,11 +143,13 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 
 				@Override public Process next()
 				{
+					if (procEnd) throw new NoSuchElementException();
 					if (proci.hasNext()) return proci.next();
 					else
 					{
 						procEnd = true;
-						return getStepConversion();
+						if (stepConversion == null) throw new NoSuchElementException();
+						else return stepConversion;
 					}
 				}
 
