@@ -197,10 +197,7 @@ public class PatternBox
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
 		p.add(equal(false), "upper Conversion", "Conversion");
-
-		p.add(new OR(new MappedConst(nextInteraction(), 0, 1),
-			new MappedConst(moreControllerThanParticipant(), 2)),
-			"upper Conversion", "Conversion", "controller PE");
+		p.add(nextInteraction(), "upper Conversion", "Conversion");
 
 		p.add(stateChange());
 

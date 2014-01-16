@@ -28,8 +28,8 @@ public class TempTests
 	@Before
 	public void setUp() throws Exception
 	{
-//		SimpleIOHandler h = new SimpleIOHandler();
-//		model = h.convertFromOWL(new FileInputStream("All-Human-Data.owl"));
+		SimpleIOHandler h = new SimpleIOHandler();
+		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
 //		model = h.convertFromOWL(new FileInputStream("HumanCyc.owl"));
 //		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc_premerge.owl"));
 	}
@@ -199,7 +199,9 @@ public class TempTests
 	@Ignore
 	public void printVennIntersections() throws FileNotFoundException
 	{
-		Blacklist black = new Blacklist("blacklist.txt");
+		BlacklistGenerator gen = new BlacklistGenerator();
+		Blacklist black = gen.generateBlacklist(model);
+
 		SIFMiner[] miners = new SIFMiner[]{
 			new ControlsStateChangeOfMiner(),
 			new CSCOButIsParticipantMiner(),

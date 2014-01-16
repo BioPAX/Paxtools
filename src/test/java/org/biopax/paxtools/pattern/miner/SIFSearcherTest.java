@@ -82,14 +82,15 @@ public class SIFSearcherTest extends PatternBoxTest
 	{
 		long start = System.currentTimeMillis();
 
-		BPCollections.setProvider(new TProvider());
+		BPCollections.I.setProvider(new TProvider());
 
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream
-				("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl"));
+				("/home/ozgun/Projects/biopax-pattern/All-Data.owl"));
 
 		BlacklistGenerator gen = new BlacklistGenerator();
 		Blacklist blacklist = gen.generateBlacklist(model);
+		blacklist.write(new FileOutputStream("blacklist.txt"));
 
 		SIFSearcher s = new SIFSearcher(SIFType.values());
 		s.setBlacklist(blacklist);
