@@ -32,7 +32,7 @@ public enum BPCollections
 				cProvider = cProviderClass.newInstance();
 				log.info("CollectionProvider " + prop + " was successfully activated.");
 			}
-			catch (IllegalAccessException | ClassNotFoundException | InstantiationException e)
+			catch (Exception e) // catch (IllegalAccessException | ClassNotFoundException | InstantiationException e)
 			{
 				log.warn("Could not initialize the specified collector provider:" + prop +
 				         " . Falling back to default " +
@@ -45,12 +45,12 @@ public enum BPCollections
 			cProvider = new CollectionProvider() {
 				@Override
 				public <R> Set<R> createSet() {
-					return new HashSet<>();
+					return new HashSet<R>();
 				}
 
 				@Override
 				public <D, R> Map<D, R> createMap() {
-					return new HashMap<>();
+					return new HashMap<D, R>();
 				}
 			};
 			log.info("Using the default CollectionProvider (creates HashMap, HashSet).");

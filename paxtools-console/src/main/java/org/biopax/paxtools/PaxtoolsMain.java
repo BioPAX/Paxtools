@@ -11,6 +11,7 @@ import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.client.BiopaxValidatorClient;
@@ -357,29 +358,13 @@ public class PaxtoolsMain {
 
 
 //---- Debug code
-//		for (Complex c : model.getObjects(Complex.class))
-//		{
-//			if (c.getComponent().size() == 1 &&
-//				c.getComponent().iterator().next() instanceof SimplePhysicalEntity &&
-//				c.getComponentStoichiometry().size() == 1 &&
-//				c.getComponentStoichiometry().iterator().next().getStoichiometricCoefficient() > 1)
-//			{
-//				for (PhysicalEntity pe : c.getComponent())
-//				{
-//					if (pe instanceof SimplePhysicalEntity)
-//					{
-//						for (Xref xref : ((SimplePhysicalEntity) pe).getEntityReference().getXref())
-//						{
-//							if (xref.getDb().startsWith("HGNC"))
-//							{
-//								System.out.println(xref.getId());
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//		BioPAXElement byID = model.getByID("http://biocyc.org/biopax/biopax-level3ComplexAssembly175733");
+		for (Pathway p : model.getObjects(Pathway.class))
+		{
+			for (PathwayStep step : p.getPathwayOrder())
+			{
+				step.getNextStep();
+			}
+		}
 //---- Debug code
 
 		final SimpleEditorMap em = (model.getLevel() == BioPAXLevel.L3) 

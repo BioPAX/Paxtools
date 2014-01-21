@@ -395,7 +395,7 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 			}
 			throw new IllegalBioPAXArgumentException(message, e);
 		}
-		catch (InvocationTargetException|IllegalAccessException e)
+		catch (Exception e) //catch (InvocationTargetException|IllegalAccessException e)
 		{
 			String message = "Failed to set property: " + property + " with method: " + method.getName() + " on " +
 			                 domain.getSimpleName() + " (" + bean.getClass().getSimpleName() + ")" + " with range: " +
