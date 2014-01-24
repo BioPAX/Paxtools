@@ -10,6 +10,8 @@ import java.util.*;
  */
 public class SPIKEParser
 {
+	static final boolean SKIP_TRANSCRIPTION = true;
+
 	public static void main(String[] args) throws IOException
 	{
 		SPIKEParser parser = new SPIKEParser();
@@ -84,8 +86,15 @@ public class SPIKEParser
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 
+		int i = 0;
 		for (Regulation reg : regs)
 		{
+			if (SKIP_TRANSCRIPTION && reg.transcription)
+			{
+				i++;
+				continue;
+			}
+
 			List<Gene> sources = getGenes(reg.source, id2gene, id2group);
 			List<Gene> targets = getGenes(reg.target, id2gene, id2group);
 
@@ -102,6 +111,8 @@ public class SPIKEParser
 		}
 
 		writer.close();
+
+		if (i > 0) System.out.println(i + " TR interactions skipped.");
 	}
 
 	List<Gene> getGenes(String id, Map<String, Gene> id2gene, Map<String, Group> id2group)
@@ -188,13 +199,20 @@ public class SPIKEParser
 	{
 		String source;
 		String target;
+		boolean transcription;
 
 		Regulation(String block)
 		{
 			for (String line : block.split("\n"))
 			{
 				line = line.trim();
-				if (line.startsWith("<Source "))
+				if (line.startsWith("<Regulation"))
+				{
+					int ind = line.indexOf("mechanism=\"") + 11;
+					String mec = line.substring(ind, line.indexOf("\"", ind));
+					transcription = mec.equals("Transcription Regulation");
+				}
+				else if (line.startsWith("<Source "))
 				{
 					assert source == null;
 					source = line.substring(line.lastIndexOf("=\"") + 2, line.lastIndexOf("\""));

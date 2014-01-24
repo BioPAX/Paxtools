@@ -235,6 +235,25 @@ public class SIFInteraction implements Comparable
 		return set;
 	}
 
+	/**
+	 * Collects the names of the related pathways.
+	 * @return pathway names
+	 */
+	public List<String> getPathwayNames()
+	{
+		Set<Pathway> set = getPathways();
+		List<String> names = new ArrayList<String>();
+
+		for (Pathway p : set)
+		{
+			String name = p.getDisplayName();
+			if (!names.contains(name)) names.add(name);
+		}
+
+		Collections.sort(names);
+		return names;
+	}
+
 	private static final PathAccessor dataSourceAcc = new PathAccessor("Entity/dataSource/displayName");
 
 	/**

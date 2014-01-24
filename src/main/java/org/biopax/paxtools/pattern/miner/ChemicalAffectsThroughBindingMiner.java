@@ -2,9 +2,6 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.util.Blacklist;
-
-import java.util.Set;
 
 /**
  * Miner for the chemical-affects-protein pattern.
@@ -15,10 +12,10 @@ public class ChemicalAffectsThroughBindingMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ChemicalAffectsThroughBindingMiner(Blacklist blacklist)
+	public ChemicalAffectsThroughBindingMiner()
 	{
-		super(SIFType.CHEMICAL_AFFECTS, "-through-binding", "In this case the chemical appears in" +
-			" the same complex with the protein.", blacklist);
+		super(SIFEnum.CHEMICAL_AFFECTS, "-through-binding", "In this case the chemical appears in" +
+			" the same complex with the protein.");
 	}
 
 	/**

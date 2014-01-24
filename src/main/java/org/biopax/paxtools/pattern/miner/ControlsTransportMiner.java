@@ -14,7 +14,7 @@ public class ControlsTransportMiner extends AbstractSIFMiner
 	 */
 	public ControlsTransportMiner()
 	{
-		super(SIFType.CONTROLS_TRANSPORT_OF, null);
+		super(SIFEnum.CONTROLS_TRANSPORT_OF);
 	}
 
 	/**

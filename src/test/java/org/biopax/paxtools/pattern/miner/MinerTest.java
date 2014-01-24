@@ -29,7 +29,7 @@ public class MinerTest
 		Miner miner = new MinerAdapter("Appear-in-same-complex", "The pattern captures two " +
 			"proteins appear to be members of the same complex. There may be a nesting hierarchy " +
 			"in the complex, and the proteins can be represented with generic entities, again " +
-			"through multiple generic-member relations.", null)
+			"through multiple generic-member relations.")
 		{
 			/**
 			 * The pattern is composed of two proteins associated to a complex as members. The

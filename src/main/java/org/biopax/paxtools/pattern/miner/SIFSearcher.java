@@ -1,18 +1,17 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.SmallMoleculeReference;
-import org.biopax.paxtools.model.level3.XReferrable;
-import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Searcher;
 import org.biopax.paxtools.pattern.util.Blacklist;
-import org.biopax.paxtools.pattern.util.HGNC;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.*;
 
 /**
@@ -86,62 +85,27 @@ public class SIFSearcher
 
 	private void initMiners()
 	{
-		this.miners = new ArrayList<SIFMiner>();
-
-		for (SIFType type : types)
+		try
 		{
-			switch (type)
+			this.miners = new ArrayList<SIFMiner>();
+
+			for (SIFType type : types)
 			{
-				case CONTROLS_STATE_CHANGE_OF:
-					miners.add(new ControlsStateChangeOfMiner());
-					miners.add(new CSCOButIsParticipantMiner());
-					miners.add(new CSCOBothControllerAndParticipantMiner());
-					miners.add(new CSCOThroughControllingSmallMoleculeMiner(blacklist));
-					miners.add(new CSCOThroughBindingSmallMoleculeMiner(blacklist));
-					break;
-				case CONTROLS_EXPRESSION_OF:
-					miners.add(new ControlsExpressionMiner());
-					miners.add(new ControlsExpressionWithConvMiner());
-					break;
-				case CONSUMPTION_CONTROLLED_BY:
-					miners.add(new ConsumptionControlledByMiner(blacklist));
-					break;
-				case CONTROLS_PRODUCTION_OF:
-					miners.add(new ControlsProductionOfMiner(blacklist));
-					break;
-				case CONTROLS_TRANSPORT_OF_CHEMICAL:
-					miners.add(new ControlsTransportOfChemicalMiner(blacklist));
-					break;
-				case CONTROLS_TRANSPORT_OF:
-					miners.add(new ControlsTransportMiner());
-					break;
-				case CONTROLS_DEGRADATION_OF:
-					miners.add(new ControlsDegradationMiner());
-					break;
-				case CATALYSIS_PRECEDES:
-					miners.add(new CatalysisPrecedesMiner(blacklist));
-					break;
-				case CHEMICAL_AFFECTS:
-					miners.add(new ChemicalAffectsThroughBindingMiner(blacklist));
-					miners.add(new ChemicalAffectsThroughControlMiner());
-					break;
-				case IN_COMPLEX_WITH:
-					miners.add(new InComplexWithMiner());
-					break;
-				case NEIGHBOR_OF:
-					miners.add(new NeighborOfMiner());
-					break;
-				case INTERACTS_WITH:
-					miners.add(new InteractsWithMiner());
-					break;
-				case REACTS_WITH:
-					miners.add(new ReactsWithMiner(blacklist));
-					break;
-				case USED_TO_PRODUCE:
-					miners.add(new UsedToProduceMiner(blacklist));
-					break;
-				default: throw new RuntimeException("There is an unhandled sif type: " + type);
+				for (Class<? extends SIFMiner> clazz : type.getMiners())
+				{
+					SIFMiner miner = clazz.newInstance();
+					miner.setBlacklist(blacklist);
+					miners.add(miner);
+				}
 			}
+		}
+		catch (InstantiationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
 		}
 	}
 

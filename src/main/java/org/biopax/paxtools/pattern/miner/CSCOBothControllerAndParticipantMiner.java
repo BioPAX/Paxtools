@@ -14,9 +14,9 @@ public class CSCOBothControllerAndParticipantMiner extends AbstractSIFMiner
 	 */
 	public CSCOBothControllerAndParticipantMiner()
 	{
-		super(SIFType.CONTROLS_STATE_CHANGE_OF, "-both-ctrl-part", "The controller is also an " +
+		super(SIFEnum.CONTROLS_STATE_CHANGE_OF, "-both-ctrl-part", "The controller is also an " +
 			"input. The reaction has to be a Conversion and modified Protein should be " +
-			"represented with different non-generic PhysicalEntity on each side.", null);
+			"represented with different non-generic PhysicalEntity on each side.");
 	}
 
 	/**

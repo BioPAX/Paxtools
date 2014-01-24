@@ -2,9 +2,6 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.util.Blacklist;
-
-import java.util.Set;
 
 /**
  * Miner for the chemical-affects-protein pattern.
@@ -17,8 +14,8 @@ public class ChemicalAffectsThroughControlMiner extends AbstractSIFMiner
 	 */
 	public ChemicalAffectsThroughControlMiner()
 	{
-		super(SIFType.CHEMICAL_AFFECTS, "-through-control", "In this case, chemical is " +
-			"controlling a reaction of which the protein is a participant.", null);
+		super(SIFEnum.CHEMICAL_AFFECTS, "-through-control", "In this case, chemical is " +
+			"controlling a reaction of which the protein is a participant.");
 	}
 
 	/**

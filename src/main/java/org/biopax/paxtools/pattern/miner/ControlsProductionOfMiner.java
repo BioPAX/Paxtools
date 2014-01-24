@@ -2,9 +2,6 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.util.Blacklist;
-
-import java.util.Set;
 
 /**
  * Miner for the controls-production-of pattern.
@@ -15,9 +12,9 @@ public class ControlsProductionOfMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsProductionOfMiner(Blacklist blacklist)
+	public ControlsProductionOfMiner()
 	{
-		super(SIFType.CONTROLS_PRODUCTION_OF, blacklist);
+		super(SIFEnum.CONTROLS_PRODUCTION_OF);
 	}
 
 	/**

@@ -2,9 +2,6 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.util.Blacklist;
-
-import java.util.Set;
 
 /**
  * Miner for the controls-transport-of-chemical pattern.
@@ -15,9 +12,9 @@ public class ControlsTransportOfChemicalMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsTransportOfChemicalMiner(Blacklist blacklist)
+	public ControlsTransportOfChemicalMiner()
 	{
-		super(SIFType.CONTROLS_TRANSPORT_OF_CHEMICAL, blacklist);
+		super(SIFEnum.CONTROLS_TRANSPORT_OF_CHEMICAL);
 	}
 
 	/**

@@ -27,7 +27,7 @@ public class UbiquitousIDMiner extends MinerAdapter
 	{
 		super("ubiquitous-molecule-lister", "Finds small molecules that participate in at least " +
 			"50 Conversions. Writes down IDs of these molecules to the output file, one ID per " +
-			"line.", null);
+			"line.");
 	}
 
 	/**

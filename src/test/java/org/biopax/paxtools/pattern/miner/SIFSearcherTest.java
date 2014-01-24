@@ -22,7 +22,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Test
 	public void testGetPathways()
 	{
-		SIFSearcher searcher = new SIFSearcher(SIFType.values());
+		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
 		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
 		Set<Pathway> pathways = new HashSet<Pathway>();
 		for (SIFInteraction inter : inters)
@@ -44,7 +44,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Test
 	public void testGetDataSources()
 	{
-		SIFSearcher searcher = new SIFSearcher(SIFType.values());
+		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
 		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
 		Set<String> dataSources = new HashSet<String>();
 		for (SIFInteraction inter : inters)
@@ -59,7 +59,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Ignore
 	public void testSIFMiner()
 	{
-		SIFSearcher s = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE_OF, SIFType.IN_COMPLEX_WITH);
+		SIFSearcher s = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF, SIFEnum.IN_COMPLEX_WITH);
 		Set<SIFInteraction> sif = s.searchSIF(model_P53);
 		Assert.assertFalse(sif.isEmpty());
 
@@ -71,9 +71,20 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		Assert.assertFalse(pubmedIDs.isEmpty());
 
-		s = new SIFSearcher(SIFType.CATALYSIS_PRECEDES);
+		s = new SIFSearcher(SIFEnum.CATALYSIS_PRECEDES);
 		sif = s.searchSIF(model_P53);
 		Assert.assertTrue(sif.isEmpty());
+	}
+
+	@Test
+	@Ignore
+	public void testOldFormatWriter() throws FileNotFoundException
+	{
+		SIFSearcher s = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF, SIFEnum.IN_COMPLEX_WITH);
+		SimpleIOHandler handler = new SimpleIOHandler();
+		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/AR.TP53.owl"));
+		Set<SIFInteraction> sif = s.searchSIF(model);
+		OldFormatWriter.write(sif, new FileOutputStream("temp.sif"));
 	}
 
 	@Test
@@ -92,7 +103,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		Blacklist blacklist = gen.generateBlacklist(model);
 		blacklist.write(new FileOutputStream("blacklist.txt"));
 
-		SIFSearcher s = new SIFSearcher(SIFType.values());
+		SIFSearcher s = new SIFSearcher(SIFEnum.values());
 		s.setBlacklist(blacklist);
 
 		confirmPresenceOfUbiques(model, blacklist);
@@ -168,7 +179,7 @@ public class SIFSearcherTest extends PatternBoxTest
 
 	public static Set<SIFInteraction> generate(Model model, Blacklist blacklist)
 	{
-		SIFSearcher searcher = new SIFSearcher(SIFType.CONTROLS_STATE_CHANGE_OF);
+		SIFSearcher searcher = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF);
 //			SIFType.CONTROLS_EXPRESSION, SIFType.CONTROLS_DEGRADATION);
 
 		searcher.setBlacklist(blacklist);

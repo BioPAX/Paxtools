@@ -25,57 +25,6 @@ import java.util.*;
 public class Searcher
 {
 	/**
-	 * This method consumes a lot of memory, and it is not practical to use on big graphs. This is
-	 * replaced with the recursive alternative. I left this method here in case someday we need it.
-	 * @param ele element to start from
-	 * @param pattern pattern to search
-	 * @deprecated
-	 * @see Searcher#search(BioPAXElement, Pattern)
-	 */
-	public static List<Match> search_old(BioPAXElement ele, Pattern pattern)
-	{
-		assert pattern.getStartingClass().isAssignableFrom(ele.getModelInterface());
-
-		Match m = new Match(pattern.size());
-		m.set(ele, 0);
-		
-		List<Match> list = new LinkedList<Match>();
-		list.add(m);
-
-		for (MappedConst mc : pattern.getConstraints())
-		{
-			Constraint constr = mc.getConstr();
-			int[] ind = mc.getInds();
-			int lastInd = ind[ind.length-1];
-
-			for (Match match : new ArrayList<Match>(list))
-			{
-				if (constr.canGenerate() && match.get(lastInd) == null)
-				{
-					Collection<BioPAXElement> elements = constr.generate(match, ind);
-
-					for (BioPAXElement el : elements)
-					{
-						m = (Match) match.clone();
-
-						m.set(el, lastInd);
-						list.add(m);
-					}
-					list.remove(match);
-				}
-				else
-				{
-					if (!constr.satisfies(match, ind))
-					{
-						list.remove(match);
-					}
-				}
-			}			
-		}
-		return list;
-	}
-
-	/**
 	 * Searches the pattern starting from the given match. The first element of the match should be
 	 * assigned. Others are optional.
 	 * @param m match to start from

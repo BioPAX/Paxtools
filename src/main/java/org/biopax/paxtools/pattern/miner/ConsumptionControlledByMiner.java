@@ -2,9 +2,6 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.util.Blacklist;
-
-import java.util.Set;
 
 /**
  * Miner for the consumption-controlled-by pattern.
@@ -15,9 +12,9 @@ public class ConsumptionControlledByMiner extends AbstractSIFMiner
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ConsumptionControlledByMiner(Blacklist blacklist)
+	public ConsumptionControlledByMiner()
 	{
-		super(SIFType.CONSUMPTION_CONTROLLED_BY, blacklist);
+		super(SIFEnum.CONSUMPTION_CONTROLLED_BY);
 	}
 
 	/**

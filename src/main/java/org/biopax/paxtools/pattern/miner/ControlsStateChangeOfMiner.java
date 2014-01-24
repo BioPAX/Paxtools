@@ -16,7 +16,7 @@ public class ControlsStateChangeOfMiner extends AbstractSIFMiner
 	 */
 	public ControlsStateChangeOfMiner(String name, String description)
 	{
-		super(SIFType.CONTROLS_STATE_CHANGE_OF, name, description, null);
+		super(SIFEnum.CONTROLS_STATE_CHANGE_OF, name, description);
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class ControlsStateChangeOfMiner extends AbstractSIFMiner
 	 */
 	public ControlsStateChangeOfMiner()
 	{
-		super(SIFType.CONTROLS_STATE_CHANGE_OF, null);
+		super(SIFEnum.CONTROLS_STATE_CHANGE_OF);
 	}
 
 	/**

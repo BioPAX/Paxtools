@@ -1,14 +1,7 @@
 package org.biopax.paxtools.pattern.miner;
 
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Miner for the "neighbor-of" relation.
@@ -17,11 +10,11 @@ import java.util.Map;
 public class NeighborOfMiner extends AbstractSIFMiner
 {
 	/**
-	 * Constructor that sets name and description.
+	 * Constructor that sets sif type.
 	 */
 	public NeighborOfMiner()
 	{
-		super(SIFType.NEIGHBOR_OF, null);
+		super(SIFEnum.NEIGHBOR_OF);
 	}
 
 	/**

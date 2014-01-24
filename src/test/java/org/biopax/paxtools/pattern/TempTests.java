@@ -9,7 +9,6 @@ import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.HGNC;
-import org.biopax.paxtools.pattern.util.RelType;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,8 +27,8 @@ public class TempTests
 	@Before
 	public void setUp() throws Exception
 	{
-		SimpleIOHandler h = new SimpleIOHandler();
-		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
+//		SimpleIOHandler h = new SimpleIOHandler();
+//		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
 //		model = h.convertFromOWL(new FileInputStream("HumanCyc.owl"));
 //		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc_premerge.owl"));
 	}
@@ -181,8 +180,13 @@ public class TempTests
 			new ControlsStateChangeOfMiner(),
 			new CSCOButIsParticipantMiner(),
 			new CSCOBothControllerAndParticipantMiner(),
-			new CSCOThroughControllingSmallMoleculeMiner(blacklist),
-			new CSCOThroughBindingSmallMoleculeMiner(blacklist)};
+			new CSCOThroughControllingSmallMoleculeMiner(),
+			new CSCOThroughBindingSmallMoleculeMiner()};
+
+		for (SIFMiner m : miner)
+		{
+			m.setBlacklist(blacklist);
+		}
 
 		for (int i = 0; i < miner.length; i++)
 		{
@@ -199,6 +203,9 @@ public class TempTests
 	@Ignore
 	public void printVennIntersections() throws FileNotFoundException
 	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
+
 		BlacklistGenerator gen = new BlacklistGenerator();
 		Blacklist black = gen.generateBlacklist(model);
 
@@ -206,8 +213,10 @@ public class TempTests
 			new ControlsStateChangeOfMiner(),
 			new CSCOButIsParticipantMiner(),
 			new CSCOBothControllerAndParticipantMiner(),
-			new CSCOThroughControllingSmallMoleculeMiner(black),
-			new CSCOThroughBindingSmallMoleculeMiner(black)};
+			new CSCOThroughControllingSmallMoleculeMiner(),
+			new CSCOThroughBindingSmallMoleculeMiner()};
+
+		for (SIFMiner m : miners) m.setBlacklist(black);
 
 		String[] file = new String[]{"changes-state-of.txt", "cso-but-is-participant.txt",
 			"cso-both-ctrl-part.txt", "cso-through-controlling-small-mol.txt",
@@ -282,7 +291,7 @@ public class TempTests
 	{
 		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
 
-		List<SIFType> types = new ArrayList<SIFType>(Arrays.asList(SIFType.values()));
+		List<SIFType> types = new ArrayList<SIFType>(Arrays.asList(SIFEnum.values()));
 		types.retainAll(map.keySet());
 
 		printOverlaps(map, types.subList(0, 8), false);
@@ -364,7 +373,7 @@ public class TempTests
 			String[] token = line.split("\t");
 			if (token.length >= 3)
 			{
-				SIFType type = SIFType.typeOf(token[1]);
+				SIFType type = SIFEnum.typeOf(token[1]);
 				if (type == null) continue;
 
 				if (!map.containsKey(type)) map.put(type, new HashSet<String>());
@@ -388,7 +397,7 @@ public class TempTests
 			String[] token = line.split("\t");
 			if (token.length >= 3)
 			{
-				SIFType type = SIFType.typeOf(token[1]);
+				SIFType type = SIFEnum.typeOf(token[1]);
 				if (type == null) continue;
 
 				if (!map.containsKey(type)) map.put(type, new HashSet<String>());
@@ -432,7 +441,11 @@ public class TempTests
 	@Ignore
 	public void tempCode() throws FileNotFoundException
 	{
-		SIFSearcher searcher = new SIFSearcher(SIFType.values());
+		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
+		Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
+		OldFormatWriter.write(binaryInts, new FileOutputStream("/path/to/output.sif"));
+
+//		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
 		searcher.searchSIF(model, new FileOutputStream("/path/to/output.sif"), new SIFToText()
 		{
 			@Override

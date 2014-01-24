@@ -19,7 +19,7 @@ public class ControlsExpressionMiner extends AbstractSIFMiner
 	 */
 	public ControlsExpressionMiner()
 	{
-		super(SIFType.CONTROLS_EXPRESSION_OF, null);
+		super(SIFEnum.CONTROLS_EXPRESSION_OF);
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class ControlsExpressionMiner extends AbstractSIFMiner
 	 */
 	public ControlsExpressionMiner(String nameSuppl, String descriptionSuppl)
 	{
-		super(SIFType.CONTROLS_EXPRESSION_OF, nameSuppl, descriptionSuppl, null);
+		super(SIFEnum.CONTROLS_EXPRESSION_OF, nameSuppl, descriptionSuppl);
 	}
 
 	/**

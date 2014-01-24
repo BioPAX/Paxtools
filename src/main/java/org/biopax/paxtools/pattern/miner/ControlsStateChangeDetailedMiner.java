@@ -28,7 +28,7 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 		super("controls-state-change-detailed", "Captures exactly the same pattern as " +
 			"\"Controls-state-change\", but the result file is more detailed. Together with " +
 			"upstream and downstream genes, it also contains modifications of the upstream " +
-			"entity, as well as the gained and lost modifications of the downstream entity.", null);
+			"entity, as well as the gained and lost modifications of the downstream entity.");
 	}
 
 	/**

@@ -16,12 +16,10 @@ public class CSCOThroughBindingSmallMoleculeMiner extends ControlsStateChangeOfM
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public CSCOThroughBindingSmallMoleculeMiner(Blacklist blacklist)
+	public CSCOThroughBindingSmallMoleculeMiner()
 	{
 		super("-through-binding-small-mol", "The first protein produces a non-ubique small " +
 			"molecule, and this small molecule controls state of the second protein.");
-
-		super.blacklist = blacklist;
 	}
 
 	/**

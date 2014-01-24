@@ -2,9 +2,6 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.util.Blacklist;
-
-import java.util.Set;
 
 /**
  * Miner for the "used-for-production-of" relation.
@@ -13,11 +10,11 @@ import java.util.Set;
 public class UsedToProduceMiner extends AbstractSIFMiner
 {
 	/**
-	 * Constructor that sets name and description.
+	 * Constructor that sets sif type.
 	 */
-	public UsedToProduceMiner(Blacklist blacklist)
+	public UsedToProduceMiner()
 	{
-		super(SIFType.USED_TO_PRODUCE, blacklist);
+		super(SIFEnum.USED_TO_PRODUCE);
 	}
 
 	/**

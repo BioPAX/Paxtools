@@ -404,26 +404,32 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		minerList.add(new ControlsStateChangeOfMiner());
 		minerList.add(new CSCOButIsParticipantMiner());
 		minerList.add(new CSCOBothControllerAndParticipantMiner());
-		minerList.add(new CSCOThroughControllingSmallMoleculeMiner(blacklist));
-		minerList.add(new CSCOThroughBindingSmallMoleculeMiner(blacklist));
+		minerList.add(new CSCOThroughControllingSmallMoleculeMiner());
+		minerList.add(new CSCOThroughBindingSmallMoleculeMiner());
 		minerList.add(new ControlsStateChangeDetailedMiner());
 		minerList.add(new ControlsTransportMiner());
 		minerList.add(new ControlsExpressionMiner());
 		minerList.add(new ControlsDegradationMiner());
 		minerList.add(new ControlsDegradationIndirectMiner());
-		minerList.add(new ConsumptionControlledByMiner(blacklist));
-		minerList.add(new ControlsProductionOfMiner(blacklist));
-		minerList.add(new CatalysisPrecedesMiner(blacklist));
-		minerList.add(new ChemicalAffectsThroughBindingMiner(blacklist));
+		minerList.add(new ConsumptionControlledByMiner());
+		minerList.add(new ControlsProductionOfMiner());
+		minerList.add(new CatalysisPrecedesMiner());
+		minerList.add(new ChemicalAffectsThroughBindingMiner());
 		minerList.add(new ChemicalAffectsThroughControlMiner());
-		minerList.add(new ControlsTransportOfChemicalMiner(blacklist));
+		minerList.add(new ControlsTransportOfChemicalMiner());
 		minerList.add(new InComplexWithMiner());
 		minerList.add(new InteractsWithMiner());
 		minerList.add(new NeighborOfMiner());
-		minerList.add(new ReactsWithMiner(blacklist));
-		minerList.add(new UsedToProduceMiner(blacklist));
+		minerList.add(new ReactsWithMiner());
+		minerList.add(new UsedToProduceMiner());
 		minerList.add(new RelatedGenesOfInteractionsMiner());
 		minerList.add(new UbiquitousIDMiner());
+
+		for (Miner miner : minerList)
+		{
+			if (miner instanceof MinerAdapter) ((MinerAdapter) miner).setBlacklist(blacklist);
+		}
+
 		return minerList.toArray(new Object[minerList.size()]);
 	}
 

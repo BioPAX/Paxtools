@@ -10,11 +10,11 @@ import org.biopax.paxtools.pattern.PatternBox;
 public class InComplexWithMiner extends AbstractSIFMiner
 {
 	/**
-	 * Constructor that sets name and description.
+	 * Constructor that sets edge type.
 	 */
 	public InComplexWithMiner()
 	{
-		super(SIFType.IN_COMPLEX_WITH, null);
+		super(SIFEnum.IN_COMPLEX_WITH);
 	}
 
 	/**

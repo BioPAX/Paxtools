@@ -72,7 +72,7 @@ public class BlacklistGenerator
 	public Blacklist generateBlacklist(Model model)
 	{
 		ChemicalNameNormalizer normalizer = new ChemicalNameNormalizer(model);
-		SIFSearcher searcher = new SIFSearcher(new Fetcher(normalizer), SIFType.USED_TO_PRODUCE);
+		SIFSearcher searcher = new SIFSearcher(new Fetcher(normalizer), SIFEnum.USED_TO_PRODUCE);
 
 		Set<SIFInteraction> sifs = searcher.searchSIF(model);
 

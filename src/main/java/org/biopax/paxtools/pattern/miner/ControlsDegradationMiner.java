@@ -14,7 +14,7 @@ public class ControlsDegradationMiner extends AbstractSIFMiner
 	 */
 	public ControlsDegradationMiner()
 	{
-		super(SIFType.CONTROLS_DEGRADATION_OF, null);
+		super(SIFEnum.CONTROLS_DEGRADATION_OF);
 	}
 
 	/**

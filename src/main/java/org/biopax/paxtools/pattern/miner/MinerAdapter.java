@@ -45,12 +45,19 @@ public abstract class MinerAdapter implements Miner
 	 * Constructor with name and description.
 	 * @param name name of the miner
 	 * @param description description of the miner
-	 * @param blacklist for identifying ubiquitous small molecules
 	 */
-	protected MinerAdapter(String name, String description, Blacklist blacklist)
+	protected MinerAdapter(String name, String description)
 	{
 		this.name = name;
 		this.description = description;
+	}
+
+	/**
+	 * Sets the blacklist to use during SIF search.
+	 * @param blacklist for identifying ubiquitous small molecules
+	 */
+	public void setBlacklist(Blacklist blacklist)
+	{
 		this.blacklist = blacklist;
 	}
 

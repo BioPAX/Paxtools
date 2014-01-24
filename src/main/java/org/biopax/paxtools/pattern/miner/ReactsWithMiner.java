@@ -2,9 +2,6 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
-import org.biopax.paxtools.pattern.util.Blacklist;
-
-import java.util.Set;
 
 /**
  * Miner for the "reacts-with" relation.
@@ -13,11 +10,11 @@ import java.util.Set;
 public class ReactsWithMiner extends AbstractSIFMiner
 {
 	/**
-	 * Constructor that sets name and description.
+	 * Constructor that sets sif type.
 	 */
-	public ReactsWithMiner(Blacklist blacklist)
+	public ReactsWithMiner()
 	{
-		super(SIFType.REACTS_WITH, blacklist);
+		super(SIFEnum.REACTS_WITH);
 	}
 
 	/**
