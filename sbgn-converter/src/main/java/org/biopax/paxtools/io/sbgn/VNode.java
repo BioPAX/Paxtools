@@ -13,8 +13,8 @@ import org.ivis.layout.cose.CoSEGraph;
 
 
 /**
- * VNode class
- * @author: istemi Bahceci
+ * VNode Class
+ * @author: Istemi Bahceci
  * */
 
 public class VNode implements Updatable
@@ -25,7 +25,6 @@ public class VNode implements Updatable
 
 	ArrayList <Glyph> stateGlyphs;
 	ArrayList <Glyph> infoGlyphs;
-	
 	
 	/*Glyph class types*/
 	private static final String MACROMOLECULE = "macromolecule";
@@ -104,7 +103,7 @@ public class VNode implements Updatable
 	
 	/**
 	 *
-	 *  Function that will take place when VNode objects will update in layout process of ChiLay
+	 * Function that will take place when VNode objects will update in layout process of ChiLay
 	 * @Override
 	 * @param lGraphObj LGraphObject for whom the update will take place.
 	 * */
@@ -221,35 +220,43 @@ public class VNode implements Updatable
 		
 	}
 	
-	public int setInfoGlyphSizeAccordingToLabel(List<Glyph> infoList)
+	/**
+	 * Calculates required width according to the given list state and info glyphs of this VNode.
+	 * This method also previously computes the width and height of state and info glyphs
+	 * according to their label. 
+	 * 
+	 * @param  stateORinfoList list that keeps state or info glyphs of this VNode
+	 * @return new width that is adjusted so that all glyphs in stateORinfoList are included.
+	 * */
+	public int calcReqWidthByStateAndInfos(List<Glyph> stateORinfoList)
 	{
 		int wholeSize = 0;
 		int count = 0;
 
-		for (Glyph infoGlyph: infoList)
+		for (Glyph tmpGlyph: stateORinfoList)
 		{
 			String text;
 
-			if (infoGlyph.getState() != null)
+			if (tmpGlyph.getState() != null)
 			{
-				text = infoGlyph.getState().getValue();
+				text = tmpGlyph.getState().getValue();
 
-				if (infoGlyph.getState().getVariable() != null &&
-					infoGlyph.getState().getVariable().length() > 0)
+				if (tmpGlyph.getState().getVariable() != null &&
+						tmpGlyph.getState().getVariable().length() > 0)
 				{
-					if(infoGlyph.getState().getVariable() != null) 
-						text += "@" + infoGlyph.getState().getVariable();
+					if(tmpGlyph.getState().getVariable() != null) 
+						text += "@" + tmpGlyph.getState().getVariable();
 				}
 			}
-			else if (infoGlyph.getLabel() != null)
+			else if (tmpGlyph.getLabel() != null)
 			{
-				text = infoGlyph.getLabel().getText();
+				text = tmpGlyph.getLabel().getText();
 			}
 			else
 			{
 				throw new RuntimeException("Encountered an information glyph with no state " +
 					"variable (as modification boxes should have) and no label (as molecule type " +
-					"boxed should have). glyph = " + infoGlyph);
+					"boxed should have). glyph = " + tmpGlyph);
 			}
 
 			int numOfUpper = 0;
@@ -266,16 +273,20 @@ public class VNode implements Updatable
 			}
 
 			Bbox b = new Bbox();
-			infoGlyph.setBbox(b);
+			tmpGlyph.setBbox(b);
 
+			//Set width
 			float requiredSize = numOfLower * LOWERCASE_LETTER_PIXEL_WIDTH + numOfUpper * UPPERCASE_LETTER_PIXEL_WIDTH;		
 			if (requiredSize < MAX_STATE_AND_INFO_WIDTH)
-				infoGlyph.getBbox().setW(requiredSize);
+				tmpGlyph.getBbox().setW(requiredSize);
 			else
-				infoGlyph.getBbox().setW(STATE_BOUND.width);
-			infoGlyph.getBbox().setH(MAX_STATE_AND_INFO_HEIGHT);
+				tmpGlyph.getBbox().setW(STATE_BOUND.width);
+			
+			//Set height
+			tmpGlyph.getBbox().setH(MAX_STATE_AND_INFO_HEIGHT);
+			
 			if (count < MAX_INFO_BOX_NUMBER / 2)
-				wholeSize += infoGlyph.getBbox().getW();
+				wholeSize += tmpGlyph.getBbox().getW();
 			
 			count++;
 
@@ -286,7 +297,7 @@ public class VNode implements Updatable
 	
 	/**
 	 * 	If glyph attribute of this VNode object includes any "state of information" or "unit of information" glyphs, this method updates the
-	 * size of VNode accordingly.
+	 *  size of VNode accordingly.
 	 * */
 	public void updateSizeForStateAndInfo()
 	{
@@ -305,14 +316,14 @@ public class VNode implements Updatable
 		}
 		
 		//Calculate "state of information" glyphs' sizes
-		int wholeWidthOfStates = setInfoGlyphSizeAccordingToLabel(stateGlyphs);
-		int wholeWidthOfInfos  = setInfoGlyphSizeAccordingToLabel(infoGlyphs);
+		int wholeWidthOfStates = calcReqWidthByStateAndInfos(stateGlyphs);
+		int wholeWidthOfInfos  = calcReqWidthByStateAndInfos(infoGlyphs);
 		
 		// Calculate  positions
 		int numOfStates = stateGlyphs.size();
 		int numOfInfos = infoGlyphs.size();
 		
-		//Adjust heights so that inf obox offsets are taken into account in layout.
+		//Adjust heights so that info box offsets are taken into account in layout.
 		if(numOfStates > 0 || numOfInfos > 0)
 			this.glyph.getBbox().setH(this.glyph.getBbox().getH()+MAX_STATE_AND_INFO_HEIGHT/2);
 		
@@ -330,6 +341,9 @@ public class VNode implements Updatable
 		}		
 	}
 	
+	/**
+	 * Places state and info glyphs of this node
+	 * */
 	public void placeStateAndInfoGlyphs()
 	{
 		int numOfStates = stateGlyphs.size();
@@ -391,7 +405,8 @@ public class VNode implements Updatable
 		}
 	}
 	
-	/**Inner Class for glyph bounds
+	/**
+	 * Inner Class for glyph bounds
 	 * */
 	public class Bound
 	{
