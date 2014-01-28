@@ -12,6 +12,8 @@ import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
+import org.biopax.paxtools.pattern.miner.SIFEnum;
+import org.biopax.paxtools.pattern.miner.SIFSearcher;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.client.BiopaxValidatorClient;
@@ -301,12 +303,8 @@ public class PaxtoolsMain {
     public static void toSif(String[] argv) throws IOException {
 
         Model model = getModel(io, argv[1]);
-
-        SimpleInteractionConverter sic =
-                new SimpleInteractionConverter(SimpleInteractionConverter
-                        .getRules(model.getLevel()).toArray(new InteractionRule[]{}));
-
-        sic.writeInteractionsInSIF(model, new FileOutputStream(argv[2]));
+		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
+		searcher.searchSIF(model, new FileOutputStream(argv[2]));
     }
 
     public static void integrate(String[] argv) throws IOException {

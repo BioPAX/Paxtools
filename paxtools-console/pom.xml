@@ -84,6 +84,18 @@
 		</profile>
 	</profiles>
 
+	<repositories>
+		<repository>
+			<id>pattern</id>
+			<name>Repository for BioPAX-pattern project</name>
+			<url>http://maven-repo.biopax-pattern.googlecode.com/hg/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -114,6 +126,11 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>paxtools-query</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.biopax.paxtools</groupId>
+			<artifactId>pattern</artifactId>
+			<version>[1,]</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
