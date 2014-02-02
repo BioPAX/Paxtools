@@ -6,6 +6,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Searcher;
+import org.biopax.paxtools.pattern.util.AdjacencyMatrix;
 import org.biopax.paxtools.pattern.util.Blacklist;
 
 import java.io.IOException;
@@ -117,6 +118,19 @@ public class SIFSearcher
 	public void setBlacklist(Blacklist blacklist)
 	{
 		this.blacklist = blacklist;
+	}
+
+	/**
+	 * Searches the given model with the contained miners.
+	 * @param model model to search
+	 * @return sif interactions
+	 */
+	public AdjacencyMatrix searchSIFGetMatrix(Model model)
+	{
+		Set<SIFInteraction> sifInts = searchSIF(model);
+		return new AdjacencyMatrix(
+			SIFInteraction.convertToAdjacencyMatrix(sifInts),
+			SIFInteraction.getSortedGeneNames(sifInts));
 	}
 
 	/**

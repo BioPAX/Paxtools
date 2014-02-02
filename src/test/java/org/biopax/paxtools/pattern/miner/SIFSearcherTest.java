@@ -4,6 +4,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.pattern.PatternBoxTest;
+import org.biopax.paxtools.pattern.util.AdjacencyMatrix;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.trove.TProvider;
 import org.biopax.paxtools.util.BPCollections;
@@ -39,18 +40,6 @@ public class SIFSearcherTest extends PatternBoxTest
 		}
 
 		Assert.assertFalse(dataSources.isEmpty());
-
-		// Test adjacency matrix
-
-		boolean[][] matrix = SIFInteraction.convertToAdjacencyMatrix(inters);
-		List<String> names = SIFInteraction.getSortedGeneNames(inters);
-		System.out.println(names);
-		int i = 0;
-		for (boolean[] m : matrix)
-		{
-			System.out.print(names.get(i++) + "\t");
-			System.out.println(Arrays.toString(m));
-		}
 	}
 
 	@Test
@@ -65,6 +54,16 @@ public class SIFSearcherTest extends PatternBoxTest
 		}
 
 		Assert.assertFalse(dataSources.isEmpty());
+	}
+
+	@Test
+	public void testAdjacencyMatrix()
+	{
+		SIFSearcher searcher = new SIFSearcher(
+			SIFEnum.CONTROLS_STATE_CHANGE_OF, SIFEnum.IN_COMPLEX_WITH);
+		AdjacencyMatrix matrix = searcher.searchSIFGetMatrix(model_P53);
+		System.out.println(matrix);
+		Assert.assertTrue(matrix.names.length > 0);
 	}
 
 	@Test
