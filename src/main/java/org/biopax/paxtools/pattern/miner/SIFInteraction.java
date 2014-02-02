@@ -271,4 +271,79 @@ public class SIFInteraction implements Comparable
 
 		return set;
 	}
+
+	//---- Section: Static methods ----------------------------------------------------------------|
+
+	/**
+	 * Collects and sorts sourceID and targetID of the given collection of sif interactions.
+	 * @param sifInts interactions to consider
+	 * @param type types of interest, all types accepted if empty
+	 * @return sorted source and target IDS
+	 */
+	public static List<String> getSortedGeneNames(Collection<SIFInteraction> sifInts,
+		SIFType... type)
+	{
+		Set<String> genes = new HashSet<String>();
+		Set<SIFType> types = new HashSet<SIFType>(Arrays.asList(type));
+
+		// collect gene names
+
+		for (SIFInteraction sifInt : sifInts)
+		{
+			if (!types.isEmpty() && !types.contains(sifInt.type)) continue;
+
+			genes.add(sifInt.sourceID);
+			genes.add(sifInt.targetID);
+		}
+
+		// sort all gene names
+
+		List<String> names = new ArrayList<String>(genes);
+		Collections.sort(names);
+
+		return names;
+	}
+
+	/**
+	 * Converts the given collection of interactions into an adjacency matrix.
+	 * @param sifInts interactions to consider
+	 * @param type types of interest, all types accepted if empty
+	 * @return the sif network as adjacency matrix
+	 */
+	public static boolean[][] convertToAdjacencyMatrix(Collection<SIFInteraction> sifInts,
+		SIFType... type)
+	{
+		Set<SIFType> types = new HashSet<SIFType>(Arrays.asList(type));
+
+		// collect gene names
+		List<String> names = getSortedGeneNames(sifInts, type);
+
+		// record name indexes for efficient lookup
+
+		Map<String, Integer> name2ind = new HashMap<String, Integer>();
+		int i = 0;
+		for (String name : names)
+		{
+			name2ind.put(name, i++);
+		}
+
+		// generate adjacency matrix
+
+		boolean[][] matrix = new boolean[names.size()][names.size()];
+		for (boolean[] m : matrix) Arrays.fill(m, false);
+
+		for (SIFInteraction sifInt : sifInts)
+		{
+			if (!types.isEmpty() && !types.contains(sifInt.type)) continue;
+
+			matrix[name2ind.get(sifInt.sourceID)][name2ind.get(sifInt.targetID)] = true;
+
+			if (!sifInt.type.isDirected())
+			{
+				matrix[name2ind.get(sifInt.targetID)][name2ind.get(sifInt.sourceID)] = true;
+			}
+		}
+
+		return matrix;
+	}
 }

@@ -140,7 +140,8 @@ public class SIFSearcher
 				{
 					SIFInteraction sif = miner.createSIFInteraction(m, idFetcher);
 
-					if (sif != null && sif.hasIDs() && (types== null || types.contains(sif.type)))
+					if (sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID) &&
+						(types == null || types.contains(sif.type)))
 					{
 						if (map.containsKey(sif))
 						{

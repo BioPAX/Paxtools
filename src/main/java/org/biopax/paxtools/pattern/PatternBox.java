@@ -5,6 +5,7 @@ import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.RelType;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,14 +27,13 @@ public class PatternBox
 	 */
 	public static Pattern controlsStateChange()
 	{
-
 		Pattern p = new Pattern(ProteinReference.class, "controller PR");
 		p.add(erToPE(), "controller PR", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
 		p.add(new NOT(participantER()), "Conversion", "controller PR");
-		p.add(new Participant(RelType.INPUT), "Conversion", "input PE");
+		p.add(new Participant(RelType.INPUT, true), "Control", "Conversion", "input PE");
 		p.add(linkToSimple(), "input PE", "input simple PE");
 		p.add(new Type(Protein.class), "input simple PE");
 		p.add(peToER(), "input simple PE", "changed PR");
@@ -74,7 +74,7 @@ public class PatternBox
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
-		p.add(new Participant(RelType.INPUT, blacklist, false), "Conversion", "input PE");
+		p.add(new Participant(RelType.INPUT, blacklist, true), "Control", "Conversion", "input PE");
 		p.add(linkToSimple(blacklist), "input PE", "input simple PE");
 		p.add(new Type(SmallMolecule.class), "input simple PE");
 		p.add(notGeneric(), "input simple PE");
@@ -116,7 +116,7 @@ public class PatternBox
 		p.add(equal(false), "special output PE", "controller PE");
 		p.add(new ParticipatesInConv(RelType.OUTPUT), "special output PE", "Conversion");
 
-		p.add(stateChange());
+		stateChange(p, "Control");
 
 		// non-generic input and outputs are only associated with one side
 		p.add(equal(false), "input simple PE", "output simple PE");
@@ -148,8 +148,7 @@ public class PatternBox
 		// The controller ER is not associated with the Conversion in another way.
 		p.add(new NOT(new InterToPartER(1)), "Conversion", "controller PE", "controller ER");
 
-		Pattern p2 = stateChange();
-		p.add(p2);
+		stateChange(p, null);
 
 		p.add(equal(false), "controller ER", "changed ER");
 		p.add(equal(false), "controller PE", "input PE");
@@ -163,10 +162,13 @@ public class PatternBox
 	 * belongs to the same EntityReference.
 	 * @return the pattern
 	 */
-	public static Pattern stateChange()
+	public static Pattern stateChange(Pattern p, String ctrlLabel)
 	{
-		Pattern p = new Pattern(Conversion.class, "Conversion");
-		p.add(new Participant(RelType.INPUT), "Conversion", "input PE");
+		if (p == null) p = new Pattern(Conversion.class, "Conversion");
+
+		if (ctrlLabel == null) p.add(new Participant(RelType.INPUT), "Conversion", "input PE");
+		else p.add(new Participant(RelType.INPUT, true), ctrlLabel, "Conversion", "input PE");
+
 		p.add(linkToSimple(), "input PE", "input simple PE");
 		p.add(notGeneric(), "input simple PE");
 		p.add(peToER(), "input simple PE", "changed ER");
@@ -179,7 +181,7 @@ public class PatternBox
 	}
 
 	/**
-	 * Pattern for an entity is producing a small molecule, and hte small molecule controls state
+	 * Pattern for an entity is producing a small molecule, and the small molecule controls state
 	 * change of another molecule.
 	 * @return the pattern
 	 */
@@ -194,12 +196,20 @@ public class PatternBox
 		p.add(new NOT(participantER()), "upper Conversion", "upper controller PR");
 		p.add(new Participant(RelType.OUTPUT, blacklist), "upper Conversion", "controller PE");
 		p.add(type(SmallMolecule.class), "controller PE");
+		if (blacklist != null) p.add(new NonUbique(blacklist), "controller PE");
+
+		// the linker small mol is at also an input
+		p.add(new NOT(new ConstraintChain(
+			new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSimple())),
+			"controller PE", "upper Conversion", "controller PE");
+
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
 		p.add(equal(false), "upper Conversion", "Conversion");
-		p.add(nextInteraction(), "upper Conversion", "Conversion");
 
-		p.add(stateChange());
+//		p.add(nextInteraction(), "upper Conversion", "Conversion");
+
+		stateChange(p, "Control");
 
 		p.add(type(ProteinReference.class), "changed ER");
 		p.add(equal(false), "upper controller PR", "changed ER");
@@ -209,7 +219,7 @@ public class PatternBox
 	}
 
 	/**
-	 * Pattern for an entity is producing a small molecule, and hte small molecule controls state
+	 * Pattern for an entity is producing a small molecule, and the small molecule controls state
 	 * change of another molecule.
 	 * @return the pattern
 	 */
@@ -225,12 +235,19 @@ public class PatternBox
 		p.add(new Participant(RelType.OUTPUT, blacklist, true), "upper Control", "upper Conversion", "SM");
 		p.add(type(SmallMolecule.class), "SM");
 		if (blacklist != null) p.add(new NonUbique(blacklist), "SM");
+
+		// the linker small mol is at also an input
+		p.add(new NOT(new ConstraintChain(
+			new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSimple())),
+			"SM", "upper Conversion", "SM");
+
 		p.add(new ParticipatesInConv(RelType.INPUT), "SM", "Conversion");
 		p.add(peToER(), "SM", "SM ER");
 		p.add(equal(false), "upper Conversion", "Conversion");
-		p.add(nextInteraction(), "upper Conversion", "Conversion");
 
-		p.add(stateChange());
+//		p.add(nextInteraction(), "upper Conversion", "Conversion");
+
+		stateChange(p, null);
 
 		p.add(type(ProteinReference.class), "changed ER");
 		p.add(equal(false), "upper controller PR", "changed ER");
@@ -292,6 +309,43 @@ public class PatternBox
 		p.add(new ParticipatesInConv(RelType.INPUT, blacklist), "linker PE", "second Conversion");
 		p.add(new NOT(new ConversionSide(ConversionSide.Type.OTHER_SIDE)), "linker PE", "second Conversion", "linker PE");
 		p.add(equal(false), "first Conversion", "second Conversion");
+
+		// make sure that conversions are not replicates or reverse of each other
+		// and also outward facing sides of reactions contain at least one non ubique
+		p.add(new ConstraintAdapter(3, blacklist)
+		{
+			@Override
+			public boolean satisfies(Match match, int... ind)
+			{
+				Conversion cnv1 = (Conversion) match.get(ind[0]);
+				Conversion cnv2 = (Conversion) match.get(ind[1]);
+				SmallMolecule linker = (SmallMolecule) match.get(ind[2]);
+
+				Set<PhysicalEntity> input1 = cnv1.getLeft().contains(linker) ? cnv1.getRight() : cnv1.getLeft();
+				Set<PhysicalEntity> input2 = cnv2.getLeft().contains(linker) ? cnv2.getLeft() : cnv2.getRight();
+				Set<PhysicalEntity> output1 = cnv1.getLeft().contains(linker) ? cnv1.getLeft() : cnv1.getRight();
+				Set<PhysicalEntity> output2 = cnv2.getLeft().contains(linker) ? cnv2.getRight() : cnv2.getLeft();
+
+				if (input1.equals(input2) && output1.equals(output2)) return false;
+				if (input1.equals(output2) && output1.equals(input2)) return false;
+
+				if (blacklist != null)
+				{
+					Set<PhysicalEntity> set = new HashSet<PhysicalEntity>(input1);
+					set.removeAll(output1);
+					if (blacklist.getNonUbiques(set, RelType.INPUT).isEmpty())
+					{
+						set.clear();
+						set.addAll(output2);
+						set.removeAll(input2);
+
+						if (blacklist.getNonUbiques(set, RelType.OUTPUT).isEmpty()) return false;
+					}
+				}
+				return true;
+			}
+		}, "first Conversion", "second Conversion", "linker PE");
+
 		p.add(new RelatedControl(RelType.INPUT, blacklist), "linker PE", "second Conversion", "second Control");
 		p.add(controllerPE(), "second Control", "second controller PE");
 		p.add(new NOT(compToER()), "second controller PE", "first PR");

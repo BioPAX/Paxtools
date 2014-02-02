@@ -133,6 +133,8 @@ public class LinkedPE extends ConstraintAdapter
 	{
 		Set addition = access(type == Type.TO_COMPLEX ? complexAcc : memberAcc, seed, all);
 
+		if (blacklist != null) addition = blacklist.getNonUbiqueObjects(addition);
+
 		if (!addition.isEmpty())
 		{
 			all.addAll(addition);

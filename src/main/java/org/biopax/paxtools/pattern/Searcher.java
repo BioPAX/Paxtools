@@ -389,7 +389,7 @@ public class Searcher
 	 * @param size max value for i
 	 * @return printable string for i with leading zeros
 	 */
-	public static String getLeadingZeros(int i, int size)
+	private static String getLeadingZeros(int i, int size)
 	{
 		assert i <= size;
 		int w1 = (int) Math.floor(Math.log10(size));
@@ -407,12 +407,12 @@ public class Searcher
 	/**
 	 * IO handler for reading and writing BioPAX.
 	 */
-	static BioPAXIOHandler handler =  new SimpleIOHandler();
+	private static BioPAXIOHandler handler =  new SimpleIOHandler();
 
 	/**
 	 * Editor map to use for excising.
 	 */
-	static final SimpleEditorMap EM = SimpleEditorMap.L3;
+	private static final SimpleEditorMap EM = SimpleEditorMap.L3;
 
 	/**
 	 * Excises a model to the given elements.
@@ -420,7 +420,7 @@ public class Searcher
 	 * @param result elements to excise to
 	 * @return excised model
 	 */
-	public static Model excise(Model model, Set<BioPAXElement> result)
+	private static Model excise(Model model, Set<BioPAXElement> result)
 	{
 		Completer c = new Completer(EM);
 

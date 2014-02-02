@@ -39,6 +39,18 @@ public class SIFSearcherTest extends PatternBoxTest
 		}
 
 		Assert.assertFalse(dataSources.isEmpty());
+
+		// Test adjacency matrix
+
+		boolean[][] matrix = SIFInteraction.convertToAdjacencyMatrix(inters);
+		List<String> names = SIFInteraction.getSortedGeneNames(inters);
+		System.out.println(names);
+		int i = 0;
+		for (boolean[] m : matrix)
+		{
+			System.out.print(names.get(i++) + "\t");
+			System.out.println(Arrays.toString(m));
+		}
 	}
 
 	@Test

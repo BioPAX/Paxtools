@@ -1,5 +1,7 @@
 package org.biopax.paxtools.pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
@@ -203,32 +205,32 @@ public class TempTests
 	@Ignore
 	public void printVennIntersections() throws FileNotFoundException
 	{
-		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
-
-		BlacklistGenerator gen = new BlacklistGenerator();
-		Blacklist black = gen.generateBlacklist(model);
-
-		SIFMiner[] miners = new SIFMiner[]{
-			new ControlsStateChangeOfMiner(),
-			new CSCOButIsParticipantMiner(),
-			new CSCOBothControllerAndParticipantMiner(),
-			new CSCOThroughControllingSmallMoleculeMiner(),
-			new CSCOThroughBindingSmallMoleculeMiner()};
-
-		for (SIFMiner m : miners) m.setBlacklist(black);
+//		SimpleIOHandler h = new SimpleIOHandler();
+//		Model model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
+//
+//		BlacklistGenerator gen = new BlacklistGenerator();
+//		Blacklist black = gen.generateBlacklist(model);
+//
+//		SIFMiner[] miners = new SIFMiner[]{
+//			new ControlsStateChangeOfMiner(),
+//			new CSCOButIsParticipantMiner(),
+//			new CSCOBothControllerAndParticipantMiner(),
+//			new CSCOThroughControllingSmallMoleculeMiner(),
+//			new CSCOThroughBindingSmallMoleculeMiner()};
+//
+//		for (SIFMiner m : miners) m.setBlacklist(black);
 
 		String[] file = new String[]{"changes-state-of.txt", "cso-but-is-participant.txt",
 			"cso-both-ctrl-part.txt", "cso-through-controlling-small-mol.txt",
 			"cso-through-binding-small-mol.txt"};
 
-		assert miners.length == file.length;
-
-		for (int i = 0; i < file.length; i++)
-		{
-			SIFSearcher searcher = new SIFSearcher(miners[i]);
-			searcher.searchSIF(model, new FileOutputStream(file[i]), false);
-		}
+//		assert miners.length == file.length;
+//
+//		for (int i = 0; i < file.length; i++)
+//		{
+//			SIFSearcher searcher = new SIFSearcher(miners[i]);
+//			searcher.searchSIF(model, new FileOutputStream(file[i]), false);
+//		}
 
 		String[] let = new String[]{"A", "B", "C", "D", "E"};
 

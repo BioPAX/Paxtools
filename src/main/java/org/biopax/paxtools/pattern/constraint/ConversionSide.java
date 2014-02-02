@@ -46,7 +46,8 @@ public class ConversionSide extends ConstraintAdapter
 	}
 
 	/**
-	 * Constructor.
+	 * Constructor. The relType parameter is using during blacklisting, and only if the blacklist is
+	 * not null.
 	 */
 	public ConversionSide(Type type, Blacklist blacklist, RelType relType)
 	{
