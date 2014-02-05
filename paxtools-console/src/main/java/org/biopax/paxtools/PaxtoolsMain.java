@@ -66,7 +66,6 @@ public class PaxtoolsMain {
         } catch (NumberFormatException e) {
             System.err.println("Incorrect BioPAX level specified: " + argv[1] 
             	+ " .  Please select level 2 or 3.");
-            System.exit(0);
         }
 
         // set strings vars
@@ -76,7 +75,6 @@ public class PaxtoolsMain {
         // check args - input file exists
         if (!((File) (new File(inputFile))).exists()) {
             System.err.println("input filename: " + inputFile + " does not exist!");
-            System.exit(0);
         }
 
         // create converter and convert file
@@ -95,7 +93,6 @@ public class PaxtoolsMain {
             converter.convert(fis, fos);
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(0);
         }
     }
 
@@ -228,7 +225,6 @@ public class PaxtoolsMain {
         File fileOrDir = new File(input);
         if (!fileOrDir.canRead()) {
             System.out.println("Cannot read " + input);
-            System.exit(-1);
         }
 
         // collect files
@@ -350,10 +346,12 @@ public class PaxtoolsMain {
 
 	//----- Section: Printing summary -------------------------------------------------------------|
 	
-	public static void summarize(String[] argv) throws IOException {
+	public static HashMap<String, Integer> summarize(String[] argv) throws IOException {
 
 		Model model = getModel(io, argv[1]);
 
+        // Produce a simplified version of the summary
+        HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
 //---- Debug code
 		for (Pathway p : model.getObjects(Pathway.class))
@@ -375,6 +373,8 @@ public class PaxtoolsMain {
 			set = filterToExactClass(set, clazz);
 			
 			String s = clazz.getSimpleName() + " = " + set.size();
+            hm.put(clazz.getSimpleName(), set.size());
+
 			if (initialSize != set.size()) s += " (and " + (initialSize - set.size()) + " children)";
 			System.out.println(s);
 
@@ -459,6 +459,7 @@ public class PaxtoolsMain {
 			}
 
 			System.out.println(prop + "\t(" + cnt.size() + " distinct values):");
+            hm.put(prop, cnt.size());
 
 			// If the object is String, then all counts are 1, no need to print counts.
 			if (isString)
@@ -478,6 +479,8 @@ public class PaxtoolsMain {
 			}
 			System.out.println();
 		}
+
+        return hm;
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(Set<? extends Class<? extends BioPAXElement>>

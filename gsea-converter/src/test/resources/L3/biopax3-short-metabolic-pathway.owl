@@ -95,8 +95,8 @@
     >SMILES</bp:structureFormat>
     <bp:structureData rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >[CH]3(n1(c2(c(nc1)c(N)ncn2)))(O[CH]([CH](O)[CH](O)3)COP(=O)(O)OP(O)(=O)OP(O)(=O)O)</bp:structureData>
-    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >ATP</rdfs:comment>
+    <bp:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >ATP</bp:comment>
   </bp:ChemicalStructure>
   <bp:Stoichiometry rdf:ID="Stoichiometry_52">
     <bp:stoichiometricCoefficient rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
@@ -130,8 +130,8 @@
               <bp:ChemicalStructure rdf:ID="ChemicalStructure_7">
                 <bp:structureData rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
                 >C(OP(=O)(O)O)[CH]1([CH](O)[CH](O)[CH](O)[CH](O)O1)</bp:structureData>
-                <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-                >beta-glucose-6-phosphate</rdfs:comment>
+                <bp:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >beta-glucose-6-phosphate</bp:comment>
                 <bp:structureFormat rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
                 >SMILES</bp:structureFormat>
               </bp:ChemicalStructure>
@@ -188,8 +188,8 @@
                   <bp:ChemicalStructure rdf:ID="ChemicalStructure_8">
                     <bp:structureData rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
                     >C(OP(O)(O)=O)[CH]1([CH](O)[CH](O)C(O)(O1)CO)</bp:structureData>
-                    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-                    >beta-fructose-6-phosphate</rdfs:comment>
+                    <bp:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                    >beta-fructose-6-phosphate</bp:comment>
                     <bp:structureFormat rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
                     >SMILES</bp:structureFormat>
                   </bp:ChemicalStructure>
@@ -271,8 +271,8 @@
         >SMILES</bp:structureFormat>
         <bp:structureData rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
         >c12(n(cnc(c(N)ncn1)2)[CH]3(O[CH]([CH](O)[CH](O)3)COP(=O)(O)OP(O)(=O)O))</bp:structureData>
-        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-        >ADP</rdfs:comment>
+        <bp:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >ADP</bp:comment>
       </bp:ChemicalStructure>
     </bp:structure>
     <bp:xref>
@@ -444,8 +444,8 @@
             >b-D-glu</bp:standardName>
             <bp:structure>
               <bp:ChemicalStructure rdf:ID="ChemicalStructure_5">
-                <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-                >alpha-D-glucose</rdfs:comment>
+                <bp:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+                >alpha-D-glucose</bp:comment>
                 <bp:structureData rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
                 >C1(C(O)C(O)C(O)C(O1)CO)(O)</bp:structureData>
                 <bp:structureFormat rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
