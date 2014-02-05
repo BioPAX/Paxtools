@@ -36,6 +36,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import psidev.psi.mi.tab.PsimiTabReader;
+import psidev.psi.mi.tab.converter.tab2xml.Tab2Xml;
+import psidev.psi.mi.tab.model.BinaryInteraction;
 import psidev.psi.mi.xml.PsimiXmlReader;
 import psidev.psi.mi.xml.model.Entry;
 import psidev.psi.mi.xml.model.EntrySet;
@@ -56,6 +59,11 @@ public class TestMappingL3 implements BioPAXMarshaller {
 	 * psi-mi test file
 	 */
 	private static final String PSI_MI_TEST_FILE = "10523676-compact.xml";
+	
+	/**
+	 * psi-mitab test file
+	 */
+	private static final String PSI_MITAB_TEST_FILE = "12167173.txt";
 
 	/**
 	 * Used for synchronization.
@@ -107,7 +115,7 @@ public class TestMappingL3 implements BioPAXMarshaller {
 		checkModel();
 	}
 
-
+ 
 	/**
 	 * Checks the model(s) returned from the mapper.
 	 */
@@ -250,5 +258,24 @@ public class TestMappingL3 implements BioPAXMarshaller {
 	@Override
 	public void addModel(Model bpModel) {
 		this.bpModel = bpModel;
+	}
+	
+	
+	@Test
+	public void testMitabToMi() throws Exception {
+		PsimiTabReader reader = new PsimiTabReader();
+		InputStream is = getClass().getClassLoader().getResourceAsStream(PSI_MITAB_TEST_FILE);
+		Collection<BinaryInteraction> its = reader.read(is);
+		is.close();
+
+		assertFalse(its.isEmpty());
+		assertEquals(11, its.size());
+
+		EntrySet es = (new Tab2Xml()).convert(its);
+		Collection<Entry> entries = es.getEntries();
+		
+		//only one entry - multiple interactions
+		assertEquals(1, entries.size());
+		assertEquals(11, entries.iterator().next().getInteractions().size());
 	}
 }
