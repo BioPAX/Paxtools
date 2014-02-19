@@ -453,7 +453,7 @@ public class L3ToSBGNPDConverter
 	 */
 	private Glyph getGlyphToLink(PhysicalEntity pe, String linkID)
 	{
-		if (ubiqueDet != null && !ubiqueDet.isUbique(pe))
+		if (ubiqueDet == null || !ubiqueDet.isUbique(pe))
 		{
 			return glyphMap.get(convertID(pe.getRDFId()));
 		}
