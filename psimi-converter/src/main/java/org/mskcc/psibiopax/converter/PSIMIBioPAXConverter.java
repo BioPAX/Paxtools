@@ -31,6 +31,11 @@ package org.mskcc.psibiopax.converter;
 // imports
 import org.biopax.paxtools.model.BioPAXLevel;
 
+import psidev.psi.mi.tab.PsimiTabException;
+import psidev.psi.mi.tab.PsimiTabReader;
+import psidev.psi.mi.tab.converter.tab2xml.Tab2Xml;
+import psidev.psi.mi.tab.converter.tab2xml.XmlConversionException;
+import psidev.psi.mi.tab.model.BinaryInteraction;
 import psidev.psi.mi.xml.model.Entry;
 import psidev.psi.mi.xml.model.EntrySet;
 import psidev.psi.mi.xml.PsimiXmlReader;
@@ -39,17 +44,18 @@ import psidev.psi.mi.xml.PsimiXmlReaderException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
  * The converter class. 
- * 1 - Unmarshalls PSI data.
+ * 1 - Unmarshalls PSI-MI or PSI-MITAB data.
  * 2 - Creates a set of EntryMapper threads, each of which is mapping a single PSI Entry object.
  * 3 - Creates a BioPAXMarshaller class to aggregate and marshall the data.
  *
- * @author Benjamin Gross
+ * @author Benjamin Gross, Igor Rodchenkov
  */
 public class PSIMIBioPAXConverter implements PSIMIConverter {
 
@@ -75,13 +81,14 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		this.bpLevel = bpLevel;
 		this.xmlBase = xmlBase;
 	}
+
 	
 	/**
-	 * Converts the psi data in inputStream and places into outputStream.
+	 * Converts the PSI-MI inputStream into BioPAX outputStream.
 	 * Streams will be closed by the converter.
 	 *
-	 * @param inputStream InputStream
-	 * @param outputStream OutputStream
+	 * @param inputStream PSI-MI
+	 * @param outputStream BioPAX
 	 * @return boolean
 	 *
 	 * @throws IOException
@@ -92,7 +99,8 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 
 		// check args
 		if (inputStream == null || outputStream == null) {
-			throw new IllegalArgumentException("One or more null arguments to PSIMIBioPAXConverter.convert()");
+			throw new IllegalArgumentException("convert(): " +
+					"one or more null arguments.");
 		}
 
 		// unmarshall the data, close the stream
@@ -105,25 +113,52 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		inputStream.close();
 		return result;
 	}
-
+	
 	/**
-	 * Converts the psi data in the EntrySet and places into outputstream.
+	 * {@inheritDoc}
 	 * Stream will be closed by the converter.
-	 *
-	 * @param entrySet EntrySet
-	 * @param outputStream OutputStream
-	 * @return boolean
-	 *
-	 * @throws PsimiXmlReaderException
+	 */
+	public boolean convertTab(InputStream inputStream, OutputStream outputStream)
+		throws IOException, PsimiTabException {
+
+		// check args
+		if (inputStream == null || outputStream == null) {
+			throw new IllegalArgumentException("convertTab(): " +
+					"one or more null arguments.");
+		}
+
+		// unmarshall the data, close the stream
+		PsimiTabReader reader = new PsimiTabReader();
+		Collection<BinaryInteraction> interactions = reader.read(inputStream);
+		Tab2Xml tab2Xml = new Tab2Xml();
+		EntrySet entrySet;
+		try {
+			entrySet = tab2Xml.convert(interactions);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (XmlConversionException e) {
+			throw new RuntimeException(e);
+		}
+
+		// convert
+		boolean result = convert(entrySet, outputStream);
+
+		inputStream.close();
+		return result;
+	}	
+	
+	/**
+	 * {@inheritDoc}
+	 * Stream will be closed by the converter.
 	 */
 	public boolean convert(EntrySet entrySet, OutputStream outputStream) {
 
 		// check args
 		if (entrySet == null || outputStream == null) {
-			throw new IllegalArgumentException("One or more null arguments to PSIMIBioPAXConverter.convert()");
+			throw new IllegalArgumentException("convert: one or more null arguments.");
 		}
 		if (entrySet.getLevel() != 2) {
-			throw new IllegalArgumentException("Only PSI-MI Level 2.5 is supported.");
+			throw new IllegalArgumentException("convert: only PSI-MI Level 2.5 is supported.");
 		}
 
 		// create biopax marshaller

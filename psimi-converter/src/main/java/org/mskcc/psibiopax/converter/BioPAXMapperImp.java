@@ -1065,6 +1065,8 @@ public class BioPAXMapperImp implements BioPAXMapper
 	/**
 	 * Creates a data source and adds to given interaction.
 	 *
+	 * TODO also set Provenance?
+	 *
 	 * @param id      String
 	 * @param bpXrefs Set<BioPAXElement>
 	 * @parma interaction Object

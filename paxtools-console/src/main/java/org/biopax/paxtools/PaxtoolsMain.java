@@ -66,7 +66,6 @@ public class PaxtoolsMain {
         } catch (NumberFormatException e) {
             System.err.println("Incorrect BioPAX level specified: " + argv[1] 
             	+ " .  Please select level 2 or 3.");
-            System.exit(0);
         }
 
         // set strings vars
@@ -76,7 +75,6 @@ public class PaxtoolsMain {
         // check args - input file exists
         if (!((File) (new File(inputFile))).exists()) {
             System.err.println("input filename: " + inputFile + " does not exist!");
-            System.exit(0);
         }
 
         // create converter and convert file
@@ -95,7 +93,6 @@ public class PaxtoolsMain {
             converter.convert(fis, fos);
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(0);
         }
     }
 
@@ -228,7 +225,6 @@ public class PaxtoolsMain {
         File fileOrDir = new File(input);
         if (!fileOrDir.canRead()) {
             System.out.println("Cannot read " + input);
-            System.exit(-1);
         }
 
         // collect files
@@ -353,17 +349,13 @@ public class PaxtoolsMain {
 	public static void summarize(String[] argv) throws IOException {
 
 		Model model = getModel(io, argv[1]);
+		
+		PrintStream out = System.out;
+		if(argv.length > 2)
+			out = new PrintStream(argv[2]);
 
-
-//---- Debug code
-		for (Pathway p : model.getObjects(Pathway.class))
-		{
-			for (PathwayStep step : p.getPathwayOrder())
-			{
-				step.getNextStep();
-			}
-		}
-//---- Debug code
+        // Produce a simplified version of the summary
+        HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
 		final SimpleEditorMap em = (model.getLevel() == BioPAXLevel.L3) 
 				? SimpleEditorMap.L3 : SimpleEditorMap.L2;
@@ -375,8 +367,11 @@ public class PaxtoolsMain {
 			set = filterToExactClass(set, clazz);
 			
 			String s = clazz.getSimpleName() + " = " + set.size();
-			if (initialSize != set.size()) s += " (and " + (initialSize - set.size()) + " children)";
-			System.out.println(s);
+
+			if (initialSize != set.size()) 
+				s += " (and " + (initialSize - set.size()) + " children)";
+			
+			out.println(s);
 
 			Set<PropertyEditor> editors = em.getEditorsOf(clazz);
 			for (PropertyEditor editor : editors)
@@ -391,7 +386,7 @@ public class PaxtoolsMain {
 				{
 					for (BioPAXElement ele : set)
 					{
-						Set values = editor.getValueFromBean(ele);
+						Set<?> values = editor.getValueFromBean(ele);
 						if (values.isEmpty())
 						{
 							increaseCnt(cnt, NULL);
@@ -407,7 +402,7 @@ public class PaxtoolsMain {
 				{
 					for (BioPAXElement ele : set)
 					{
-						Set values = editor.getValueFromBean(ele);
+						Set<?> values = editor.getValueFromBean(ele);
 						if (values.isEmpty())
 						{
 							increaseCnt(cnt, EMPTY);
@@ -424,12 +419,12 @@ public class PaxtoolsMain {
 					String name = "-" 
 						+ (returnType.equals(Set.class) ? editor.getRange().getSimpleName() : returnType.getSimpleName());
 
-					System.out.print("\t" + name + ":");
+					out.print("\t" + name + ":");
 					for (Object key : getOrdering(cnt))
 					{
-						System.out.print("\t" + key + " = " + cnt.get(key));
+						out.print("\t" + key + " = " + cnt.get(key));
 					}
-					System.out.println();
+					out.println();
 				}
 			}
 		}
@@ -438,7 +433,7 @@ public class PaxtoolsMain {
 			? new String[]{"UnificationXref/db","RelationshipXref/db"}
 			: new String[]{"unificationXref/DB","relationshipXref/DB"};
 
-		System.out.println("\nOther property counts\n");
+		out.println("\nOther property counts\n");
 
 		for (String prop : props)
 		{
@@ -458,7 +453,8 @@ public class PaxtoolsMain {
 				else cnt.put(s, cnt.get(s) + 1);
 			}
 
-			System.out.println(prop + "\t(" + cnt.size() + " distinct values):");
+			out.println(prop + "\t(" + cnt.size() + " distinct values):");
+            hm.put(prop, cnt.size());
 
 			// If the object is String, then all counts are 1, no need to print counts.
 			if (isString)
@@ -466,18 +462,19 @@ public class PaxtoolsMain {
 				Collections.sort(valList);
 				for (String s : valList)
 				{
-					System.out.print("\t" + s);
+					out.print("\t" + s);
 				}
 			}
 			else
 			{
 				for (Object key : getOrdering(cnt))
 				{
-					System.out.print("\t" + key + " = " + cnt.get(key));
+					out.print("\t" + key + " = " + cnt.get(key));
 				}
 			}
-			System.out.println();
+			out.println();
 		}
+
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(Set<? extends Class<? extends BioPAXElement>>
@@ -598,8 +595,8 @@ public class PaxtoolsMain {
         getNeighbors("<file1> <id1,id2,..> <output>\n" +
         		"\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)", 3)
 		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
-        summarize("<file>\n" +
-        		"\t- prints a summary of the contents of the model", 1)
+        summarize("<file> [<output>]\n" +
+        		"\t- prints a summary of the contents of the model to the output file (if not provided - to stdout)", 2)
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
         help("\t- prints this screen and exits", Integer.MAX_VALUE)
 		        {public void run(String[] argv) throws IOException{help();} };
