@@ -307,6 +307,7 @@ public class EntryMapper implements Runnable {
 															  bpEvidence);
 
 		// create a datasource object for the interaction
+		//TODO not really... in fact, it only adds the xrefs, no Provenance, right now
 		bpMapper.setInteractionDataSource(bpInteraction, genRdfId(), entryDataSourceName, bpXrefs);
 	}
 
