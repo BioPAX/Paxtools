@@ -47,7 +47,7 @@ import java.util.Set;
  * @author Benjamin Gross, rodche (re-factoring)
  */
 class BioPAXMarshallerImp implements BioPAXMarshaller {
-
+	
     /**
 	 * Ref to PSIMIBioPAXConverter.
 	 */
@@ -91,6 +91,9 @@ class BioPAXMarshallerImp implements BioPAXMarshaller {
 		Model completeModel = converter.getBpLevel().getDefaultFactory().createModel();
 		completeModel.setXmlBase(converter.getXmlBase());
 		
+		// we suppose there are no any URI clashes between elements 
+		// from different models (true if URI generator was fair/reliable...);
+		// otherwise this throws a paxtools exception: "already have element with the same ID"
 		for (Model bpModel : bpModelList) {
 			Set<BioPAXElement> elementList = bpModel.getObjects();
 			for (BioPAXElement elementInstance : elementList) {

@@ -60,7 +60,7 @@ import java.util.concurrent.TimeUnit;
 public class PSIMIBioPAXConverter implements PSIMIConverter {
 
 	private final BioPAXLevel bpLevel;	
-	private final String xmlBase;
+	private final String xmlBase; //common URI prefix
 
 	/**
 	 * Ref to boolean which indicates conversion is complete.
@@ -69,14 +69,21 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 
 	/**
 	 * Constructor.
+	 * Will use the default empty string xml:base.
 	 *
 	 * @param bpLevel BioPAXLevel
 	 */
 	public PSIMIBioPAXConverter(BioPAXLevel bpLevel) {
 		this.bpLevel = bpLevel;
-		this.xmlBase = "HTTP://PATHWAYCOMMONS.ORG/PSI2BP#"; //older version default
+		this.xmlBase = "";
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param bpLevel
+	 * @param xmlBase
+	 */
 	public PSIMIBioPAXConverter(BioPAXLevel bpLevel, String xmlBase) {
 		this.bpLevel = bpLevel;
 		this.xmlBase = xmlBase;
@@ -168,12 +175,12 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		ExecutorService exec = Executors.newCachedThreadPool();	
 		
 		// iterate through the list
+		int i = 0; //add to the xml:base (to avoid generated biopax URIs clash)
 		for (Entry entry : entrySet.getEntries()) {
-			// create a biopax mapper
-			BioPAXMapper bpMapper = new BioPAXMapperImp(bpLevel);
-			bpMapper.setNamespace(xmlBase);
+			//make unique xml:base per entry;
 			// create and start PSIMapper
-			exec.execute(new EntryMapper(bpMapper, biopaxMarshaller, entry));
+			exec.execute(new EntryMapper(bpLevel, xmlBase + i + "_", biopaxMarshaller, entry));
+			++i;
 		}
 		
 		exec.shutdown(); //no more tasks will be accepted

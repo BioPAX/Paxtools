@@ -35,7 +35,7 @@ import org.biopax.paxtools.model.Model;
  *
  * @author Benjamin Gross, rodche
  */
-public interface BioPAXMarshaller {
+interface BioPAXMarshaller {
 
 	/**
 	 * Method called when BioPAX data is ready to be marshalled
