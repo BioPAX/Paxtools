@@ -45,4 +45,16 @@ public class ControlsExpressionWithConvMiner extends ControlsExpressionMiner
 	{
 		return new String[]{"Control", "Conversion"};
 	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"TF SPE", "TF PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"right PE", "right SPE"};
+	}
 }

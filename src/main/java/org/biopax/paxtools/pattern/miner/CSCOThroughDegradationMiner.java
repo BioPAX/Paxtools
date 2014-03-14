@@ -7,14 +7,14 @@ import org.biopax.paxtools.pattern.PatternBox;
  * Miner for the degradation pattern.
  * @author Ozgun Babur
  */
-public class ControlsDegradationMiner extends AbstractSIFMiner
+public class CSCOThroughDegradationMiner extends AbstractSIFMiner
 {
 	/**
 	 * Constructor that sets name and description.
 	 */
-	public ControlsDegradationMiner()
+	public CSCOThroughDegradationMiner()
 	{
-		super(SIFEnum.CONTROLS_DEGRADATION_OF);
+		super(SIFEnum.CONTROLS_STATE_CHANGE_OF);
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class ControlsDegradationMiner extends AbstractSIFMiner
 	@Override
 	public Pattern constructPattern()
 	{
-		return PatternBox.controlsDegradation();
+		return PatternBox.controlsStateChangeThroughDegradation();
 	}
 
 	@Override
@@ -43,5 +43,17 @@ public class ControlsDegradationMiner extends AbstractSIFMiner
 	public String[] getMediatorLabels()
 	{
 		return new String[]{"Control", "Conversion"};
+	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"upstream SPE", "upstream PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"input PE", "input SPE"};
 	}
 }

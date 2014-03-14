@@ -258,6 +258,36 @@ public class PatternBox
 	}
 
 	/**
+	 * Finds cases where proteins affect their degradation.
+	 * @return the pattern
+	 */
+	public static Pattern controlsStateChangeThroughDegradation()
+	{
+		Pattern p = new Pattern(ProteinReference.class, "upstream PR");
+		p.add(erToPE(), "upstream PR", "upstream SPE");
+		p.add(linkToComplex(), "upstream SPE", "upstream PE");
+		p.add(peToControl(), "upstream PE", "Control");
+		p.add(controlToConv(), "Control", "Conversion");
+		p.add(new NOT(participantER()), "Conversion", "upstream PR");
+		p.add(new Empty(new Participant(RelType.OUTPUT)), "Conversion");
+		p.add(new Participant(RelType.INPUT), "Conversion", "input PE");
+		p.add(linkToSimple(), "input PE", "input SPE");
+		p.add(peToER(), "input SPE", "downstream PR");
+		p.add(type(ProteinReference.class), "downstream PR");
+		return p;
+	}
+
+	public static Pattern controlsPhosphorylation()
+	{
+		Pattern p = controlsStateChange();
+		p.add(new NOT(ConBox.linkToSimple()), "input PE", "output simple PE");
+		p.add(new NOT(ConBox.linkToSimple()), "output PE", "input simple PE");
+		p.add(new ModificationChangeConstraint(ModificationChangeConstraint.Type.ANY,
+			"phospho"), "input simple PE", "output simple PE");
+		return p;
+	}
+
+	/**
 	 * Pattern for a Protein controlling a reaction whose participant is a small molecule.
 	 * @return the pattern
 	 */
@@ -304,10 +334,10 @@ public class PatternBox
 		p.add(peToControl(), "first controller PE", "first Control");
 		p.add(controlToConv(), "first Control", "first Conversion");
 		p.add(new Participant(RelType.OUTPUT, blacklist, true), "first Control", "first Conversion", "linker PE");
-		p.add(new NOT(new ConversionSide(ConversionSide.Type.OTHER_SIDE)), "linker PE", "first Conversion", "linker PE");
+		p.add(new NOT(new ConstraintChain(new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSimple())), "linker PE", "first Conversion", "linker PE");
 		p.add(type(SmallMolecule.class), "linker PE");
 		p.add(new ParticipatesInConv(RelType.INPUT, blacklist), "linker PE", "second Conversion");
-		p.add(new NOT(new ConversionSide(ConversionSide.Type.OTHER_SIDE)), "linker PE", "second Conversion", "linker PE");
+		p.add(new NOT(new ConstraintChain(new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSimple())), "linker PE", "second Conversion", "linker PE");
 		p.add(equal(false), "first Conversion", "second Conversion");
 
 		// make sure that conversions are not replicates or reverse of each other
@@ -332,14 +362,15 @@ public class PatternBox
 				if (blacklist != null)
 				{
 					Set<PhysicalEntity> set = new HashSet<PhysicalEntity>(input1);
-					set.removeAll(output1);
-					if (blacklist.getNonUbiques(set, RelType.INPUT).isEmpty())
+					set = blacklist.getNonUbiques(set, RelType.INPUT);
+					set.removeAll(output2);
+					if (set.isEmpty())
 					{
-						set.clear();
 						set.addAll(output2);
-						set.removeAll(input2);
+						set = blacklist.getNonUbiques(set, RelType.OUTPUT);
+						set.removeAll(input1);
 
-						if (blacklist.getNonUbiques(set, RelType.OUTPUT).isEmpty()) return false;
+						if (set.isEmpty()) return false;
 					}
 				}
 				return true;
@@ -394,26 +425,6 @@ public class PatternBox
 		p.add(linkToSimple(), "right PE", "right SPE");
 		p.add(peToER(), "right SPE", "product ER");
 		p.add(equal(false), "TF PR", "product ER");
-		return p;
-	}
-
-	/**
-	 * Finds cases where proteins affect their degradation.
-	 * @return the pattern
-	 */
-	public static Pattern controlsDegradation()
-	{
-		Pattern p = new Pattern(ProteinReference.class, "upstream PR");
-		p.add(erToPE(), "upstream PR", "upstream SPE");
-		p.add(linkToComplex(), "upstream SPE", "upstream PE");
-		p.add(peToControl(), "upstream PE", "Control");
-		p.add(controlToConv(), "Control", "Conversion");
-		p.add(new NOT(participantER()), "Conversion", "upstream PR");
-		p.add(new Empty(new Participant(RelType.OUTPUT)), "Conversion");
-		p.add(new Participant(RelType.INPUT), "Conversion", "input PE");
-		p.add(linkToSimple(), "input PE", "input SPE");
-		p.add(peToER(), "input SPE", "downstream PR");
-		p.add(type(ProteinReference.class), "downstream PR");
 		return p;
 	}
 
@@ -649,6 +660,7 @@ public class PatternBox
 		p.add(linkToComplex(), "first simple PE", "Complex");
 		p.add(new Type(Complex.class), "Complex");
 		p.add(linkToSimple(), "Complex", "second simple PE");
+		p.add(equal(false), "first simple PE", "second simple PE");
 		p.add(new PEChainsIntersect(false, true), "first simple PE", "Complex", "second simple PE", "Complex");
 		p.add(peToER(), "second simple PE", "second ER");
 		p.add(equal(false), "first ER", "second ER");
@@ -745,7 +757,8 @@ public class PatternBox
 		Pattern p = peInOut();
 		p.add(new OR(
 			new MappedConst(differentialActivity(activating), 0, 1),
-			new MappedConst(new ModificationChangeConstraint(activating, activityFeat, inactivityFeat), 0, 1)),
+			new MappedConst(new ActivityModificationChangeConstraint(
+				activating, activityFeat, inactivityFeat), 0, 1)),
 			"input simple PE", "output simple PE");
 		return p;
 	}

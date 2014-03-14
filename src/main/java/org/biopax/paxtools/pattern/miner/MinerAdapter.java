@@ -5,6 +5,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
+import org.biopax.paxtools.pattern.constraint.HasAnID;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.PhysicalEntityChain;
 import org.biopax.paxtools.pattern.util.HGNC;
@@ -42,6 +43,11 @@ public abstract class MinerAdapter implements Miner
 	protected Blacklist blacklist;
 
 	/**
+	 * ID fetcher is used for skipping objects that cannot generate a valid ID during the search.
+	 */
+	protected IDFetcher idFetcher;
+
+	/**
 	 * Constructor with name and description.
 	 * @param name name of the miner
 	 * @param description description of the miner
@@ -61,6 +67,11 @@ public abstract class MinerAdapter implements Miner
 		this.blacklist = blacklist;
 	}
 
+	public void setIDFetcher(IDFetcher idFetcher)
+	{
+		this.idFetcher = idFetcher;
+	}
+
 	/**
 	 * Constructs the pattern to use for mining.
 	 * @return the pattern
@@ -73,7 +84,18 @@ public abstract class MinerAdapter implements Miner
 	 */
 	public Pattern getPattern()
 	{
-		if (pattern == null) pattern = constructPattern();
+		if (pattern == null)
+		{
+			pattern = constructPattern();
+
+			if (this instanceof SIFMiner && idFetcher != null)
+			{
+				pattern.add(new HasAnID(idFetcher), ((SIFMiner) this).getSourceLabel());
+				pattern.add(new HasAnID(idFetcher), ((SIFMiner) this).getTargetLabel());
+			}
+
+			pattern.optimizeConstraintOrder();
+		}
 
 		return pattern;
 	}
@@ -94,6 +116,16 @@ public abstract class MinerAdapter implements Miner
 	public String getDescription()
 	{
 		return description;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
 	}
 
 	/**
@@ -676,7 +708,10 @@ public abstract class MinerAdapter implements Miner
 				return new SIFInteraction(m.get(((SIFMiner) this).getSourceLabel(), getPattern()),
 					m.get(((SIFMiner) this).getTargetLabel(), getPattern()),
 					((SIFMiner) this).getSIFType(),
-					new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())), fetcher);
+					new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())),
+					new HashSet<BioPAXElement>(m.get(getSourcePELabels(), getPattern())),
+					new HashSet<BioPAXElement>(m.get(getTargetPELabels(), getPattern())),
+					fetcher);
 		}
 
 		return null;
@@ -693,6 +728,25 @@ public abstract class MinerAdapter implements Miner
 		return null;
 	}
 
+	/**
+	 * If a SIF miner wants to tell which PhysicalEntity objects acted as source of the relation,
+	 * they need to override this method and pass the labels of elements.
+	 * @return labels of elements
+	 */
+	public String[] getSourcePELabels()
+	{
+		return null;
+	}
+
+	/**
+	 * If a SIF miner wants to tell which PhysicalEntity objects acted as source of the relation,
+	 * they need to override this method and pass the labels of elements.
+	 * @return labels of elements
+	 */
+	public String[] getTargetPELabels()
+	{
+		return null;
+	}
 
 	/**
 	 * Uses uniprot name or gene symbol as identifier.
@@ -703,6 +757,8 @@ public abstract class MinerAdapter implements Miner
 	public String getIdentifier(Match m, String label)
 	{
 		BioPAXElement el = m.get(label, getPattern());
+
+		if (idFetcher != null) return idFetcher.fetchID(el);
 
 		if (el instanceof ProteinReference)
 		{

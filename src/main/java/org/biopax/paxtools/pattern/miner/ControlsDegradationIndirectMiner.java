@@ -17,7 +17,7 @@ public class ControlsDegradationIndirectMiner extends AbstractSIFMiner
 	 */
 	public ControlsDegradationIndirectMiner()
 	{
-		super(SIFEnum.CONTROLS_DEGRADATION_OF, "-indirectly", "The control is to a previous " +
+		super(SIFEnum.CONTROLS_STATE_CHANGE_OF, "-indirectly", "The control is to a previous " +
 			"reaction that produces the degraded state of the protein.");
 	}
 

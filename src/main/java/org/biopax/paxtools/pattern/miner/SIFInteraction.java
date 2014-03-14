@@ -12,21 +12,24 @@ import java.util.*;
  */
 public class SIFInteraction implements Comparable
 {
-	public Set<BioPAXElement> source;
-	public Set<BioPAXElement> target;
+	public Set<BioPAXElement> sourceERs;
+	public Set<BioPAXElement> targetERs;
+	public Set<BioPAXElement> sourcePEs;
+	public Set<BioPAXElement> targetPEs;
 	public String sourceID;
 	public String targetID;
 	public SIFType type;
 	public Set<BioPAXElement> mediators;
 
-	public SIFInteraction(BioPAXElement source, BioPAXElement target, SIFType type,
-		Set<BioPAXElement> mediators, IDFetcher fetcher)
+	public SIFInteraction(BioPAXElement sourceER, BioPAXElement targetER, SIFType type,
+		Set<BioPAXElement> mediators, Set<BioPAXElement> sourcePEs, Set<BioPAXElement> targetPEs,
+		IDFetcher fetcher)
 	{
-		sourceID = fetcher.fetchID(source);
-		targetID = fetcher.fetchID(target);
+		sourceID = fetcher.fetchID(sourceER);
+		targetID = fetcher.fetchID(targetER);
 
-		this.source = new HashSet<BioPAXElement>();
-		this.target = new HashSet<BioPAXElement>();
+		this.sourceERs = new HashSet<BioPAXElement>();
+		this.targetERs = new HashSet<BioPAXElement>();
 
 		if (!type.isDirected())
 		{
@@ -36,17 +39,19 @@ public class SIFInteraction implements Comparable
 				sourceID = targetID;
 				targetID = tempID;
 
-				BioPAXElement temp = source;
-				source = target;
-				target = temp;
+				BioPAXElement temp = sourceER;
+				sourceER = targetER;
+				targetER = temp;
 			}
 		}
 
-		this.source.add(source);
-		this.target.add(target);
+		this.sourceERs.add(sourceER);
+		this.targetERs.add(targetER);
 		this.type = type;
 
 		this.mediators = mediators;
+		this.sourcePEs = sourcePEs;
+		this.targetPEs = targetPEs;
 	}
 
 	public boolean hasIDs()
@@ -73,7 +78,6 @@ public class SIFInteraction implements Comparable
 		return false;
 	}
 
-
 	@Override
 	public int compareTo(Object o)
 	{
@@ -97,8 +101,11 @@ public class SIFInteraction implements Comparable
 		if (!this.equals(equivalent))
 			throw new IllegalArgumentException("SIF interactions are not equivalent.");
 
-		source.addAll(equivalent.source);
-		target.addAll(equivalent.target);
+		sourceERs.addAll(equivalent.sourceERs);
+		targetERs.addAll(equivalent.targetERs);
+
+		sourcePEs.addAll(equivalent.sourcePEs);
+		targetPEs.addAll(equivalent.targetPEs);
 
 		if (mediators == null) mediators = equivalent.mediators;
 		else if (equivalent.mediators != null)
@@ -271,6 +278,44 @@ public class SIFInteraction implements Comparable
 
 		return set;
 	}
+
+	private static final PathAccessor locAcc = new PathAccessor("PhysicalEntity/cellularLocation/term");
+
+	/**
+	 * Collects cellular location terms of target objects.
+	 * @return cellular locations
+	 */
+	public Set<String> getCellularLocationsOfTarget()
+	{
+		return getCellularLocations(targetPEs);
+	}
+
+	/**
+	 * Collects cellular location terms of source objects.
+	 * @return cellular locations
+	 */
+	public Set<String> getCellularLocationsOfSource()
+	{
+		return getCellularLocations(sourcePEs);
+	}
+
+	/**
+	 * Collects cellular location terms of related objects.
+	 * @return cellular locations
+	 */
+	private Set<String> getCellularLocations(Set<BioPAXElement> eles)
+	{
+		Set<String> set = new HashSet<String>();
+
+		for (Object o : locAcc.getValueFromBeans(eles))
+		{
+			set.add((String) o);
+		}
+
+		return set;
+	}
+
+
 
 	//---- Section: Static methods ----------------------------------------------------------------|
 

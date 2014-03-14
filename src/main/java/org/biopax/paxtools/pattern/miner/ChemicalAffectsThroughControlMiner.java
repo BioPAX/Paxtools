@@ -45,4 +45,16 @@ public class ChemicalAffectsThroughControlMiner extends AbstractSIFMiner
 	{
 		return new String[]{"Control", "Interaction"};
 	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"controller simple PE", "controller PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"affected PE", "affected simple PE"};
+	}
 }

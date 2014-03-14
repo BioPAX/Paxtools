@@ -117,13 +117,13 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 * Names of Pathway Commons resources.
 	 */
 	private static final Object[] PC_RES_NAMES = new Object[]{
-		"All-Data", "Reactome", "NCI-PID", "HumanCyc", "PhosphositePlus", "Panther"};
+		"All-Data", "Reactome", "NCI-PID", "HumanCyc", "PhosphoSitePlus", "PANTHER"};
 
 	/**
 	 * The URL components of the Pathway Commons resources.
 	 */
 	private static final String[] PC_RES_URL = new String[]{
-		"All", "Reactome", "NCI_Nature", "HumanCyc", "PhosphoSitePlus", "Panther%20Pathway"};
+		"All", "Reactome", "NCI_Nature", "HumanCyc", "PhosphoSitePlus", "PANTHER%20Pathway"};
 
 	/**
 	 * The name of the file for IDs of ubiquitous molecules.
@@ -407,10 +407,11 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		minerList.add(new CSCOThroughControllingSmallMoleculeMiner());
 		minerList.add(new CSCOThroughBindingSmallMoleculeMiner());
 		minerList.add(new ControlsStateChangeDetailedMiner());
+		minerList.add(new ControlsPhosphorylationMiner());
 		minerList.add(new ControlsTransportMiner());
 		minerList.add(new ControlsExpressionMiner());
 		minerList.add(new ControlsExpressionWithConvMiner());
-		minerList.add(new ControlsDegradationMiner());
+		minerList.add(new CSCOThroughDegradationMiner());
 		minerList.add(new ControlsDegradationIndirectMiner());
 		minerList.add(new ConsumptionControlledByMiner());
 		minerList.add(new ControlsProductionOfMiner());
@@ -448,10 +449,14 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private void mine()
 	{
+		Miner miner = (Miner) patternCombo.getSelectedItem();
+		if (miner instanceof MinerAdapter)
+			((MinerAdapter) miner).setIDFetcher(new CommonIDFetcher());
+
 		// Constructing the pattern before loading any model for a debug friendly code. Otherwise if
 		// loading model takes time and an exception occurs in pattern construction, it is just too
 		// much wait for nothing.
-		((Miner) patternCombo.getSelectedItem()).getPattern();
+				((Miner) patternCombo.getSelectedItem()).getPattern();
 
 		// Prepare progress bar
 
@@ -648,7 +653,11 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 
 			return lines > 0;
 		}
-		catch (IOException e){return false;}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	/**

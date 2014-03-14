@@ -10,21 +10,30 @@ import org.biopax.paxtools.pattern.PatternBox;
 public class ControlsStateChangeOfMiner extends AbstractSIFMiner
 {
 	/**
-	 * Constructor for extending purposes.
+	 * Constructor for extension purposes.
 	 * @param name name of the miner
 	 * @param description description of the miner
 	 */
-	public ControlsStateChangeOfMiner(String name, String description)
+	protected ControlsStateChangeOfMiner(String name, String description)
 	{
 		super(SIFEnum.CONTROLS_STATE_CHANGE_OF, name, description);
 	}
 
 	/**
-	 * Constructor that sets name and description.
+	 * Empty constructor.
 	 */
 	public ControlsStateChangeOfMiner()
 	{
 		super(SIFEnum.CONTROLS_STATE_CHANGE_OF);
+	}
+
+	/**
+	 * Constructor for extension purposes.
+	 * @param type relation type
+	 */
+	protected ControlsStateChangeOfMiner(SIFType type)
+	{
+		super(type);
 	}
 
 	/**
@@ -53,5 +62,17 @@ public class ControlsStateChangeOfMiner extends AbstractSIFMiner
 	public String[] getMediatorLabels()
 	{
 		return new String[]{"Control", "Conversion"};
+	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"controller simple PE", "controller PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"input PE", "input simple PE", "output PE", "output simple PE"};
 	}
 }

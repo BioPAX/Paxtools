@@ -1,221 +1,120 @@
 package org.biopax.paxtools.pattern.constraint;
 
-import org.biopax.paxtools.controller.PathAccessor;
-import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.ModificationFeature;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
 import org.biopax.paxtools.pattern.Match;
+import org.biopax.paxtools.pattern.util.DifferentialModificationUtil;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
- * This is a very specialized constraint that checks if two PhysicalEntity of the same
- * EntityReference have differential features, such that we can predict an activity change based on
- * gain or loss of these features. To use this constraint, user should be able to supply maps that
- * categorize features as activating or inhibiting.
+ * This class checks if there exists a desired type of modification change among two PhysicalEntity.
+ *
+ * var0: First simple PhysicalEntity
+ * Var1: Second simple PhysicalEntity
  *
  * @author Ozgun Babur
  */
 public class ModificationChangeConstraint extends ConstraintAdapter
 {
 	/**
-	 * Desired change.
+	 * Partial names of the features to be considered.
 	 */
-	boolean activating;
+	protected String[] featureSubstring;
 
 	/**
-	 * Accessor to modification features.
+	 * Gain or loss?
 	 */
-	static PathAccessor pa = new PathAccessor("PhysicalEntity/feature:ModificationFeature");
-
-	/**
-	 * Some general modification sub-strings to use if exact terms are not conclusive.
-	 */
-	protected final static String[] general = new String[]{
-		"phospho", "ubiqutin", "acetyl", "myristoyl", "palmitoyl", "glucosyl"};
-
-	/**
-	 * Map from EntityReference to the activity related features.
-	 */
-	Map<EntityReference, Set<ModificationFeature>> activityFeat;
-
-	/**
-	 * Map from EntityReference to the inactivity related features.
-	 */
-	Map<EntityReference, Set<ModificationFeature>> inactivityFeat;
-
-	/**
-	 * Map from EntityReference to the activity related terms.
-	 */
-	Map<EntityReference, Set<String>> activityStr;
-
-	/**
-	 * Map from EntityReference to the inactivity related terms.
-	 */
-	Map<EntityReference, Set<String>> inactivityStr;
+	protected Type type;
 
 	/**
 	 * Constructor with the desired change and maps to activating and inactivating features,
-	 * @param activating desired change
-	 * @param activityFeat map from EntityReference to the activating features
-	 * @param inactivityFeat map from EntityReference to the inactivating features
+	 * @param featureSubstring partial names of the features desired to be changed
 	 */
-	public ModificationChangeConstraint(boolean activating,
-		Map<EntityReference, Set<ModificationFeature>> activityFeat,
-		Map<EntityReference, Set<ModificationFeature>> inactivityFeat)
+	public ModificationChangeConstraint(Type type, String... featureSubstring)
 	{
 		super(2);
-		this.activating = activating;
-		this.activityFeat = activityFeat;
-		this.inactivityFeat = inactivityFeat;
 
-		activityStr = extractModifNames(activityFeat);
-		inactivityStr = extractModifNames(inactivityFeat);
+		this.type = type;
+
+		for (int i = 0; i < featureSubstring.length; i++)
+		{
+			featureSubstring[i] = featureSubstring[i].toLowerCase();
+		}
+
+		this.featureSubstring = featureSubstring;
 	}
 
 	/**
-	 * Checks the gained and and lost features to predict the activity change is the desired change.
-	 * If exact matching (terms with locations) is not conclusive, then terms without locations are
-	 * checked. If still not conclusive, then approximate matching is used.
+	 * Checks the any of the changed modifications match to any of the desired modifications.
 	 * @param match current pattern match
 	 * @param ind mapped indices
-	 * @return true if the modification gain or loss is mapped to the desired change
+	 * @return true if a modification change is among desired modifications
 	 */
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
-		BioPAXElement ele1 = match.get(ind[0]);
-		BioPAXElement ele2 = match.get(ind[1]);
+		PhysicalEntity pe1 = (PhysicalEntity) match.get(ind[0]);
+		PhysicalEntity pe2 = (PhysicalEntity) match.get(ind[1]);
 
-		EntityReference er = ((SimplePhysicalEntity) ele1).getEntityReference();
+		Set<ModificationFeature>[] mods =
+			DifferentialModificationUtil.getChangedModifications(pe1, pe2);
 
-		Set set1 = pa.getValueFromBean(ele1);
-		Set set2 = pa.getValueFromBean(ele2);
+		Set<String> terms;
 
-		Set gain = new HashSet(set2);
-		gain.removeAll(set1);
+		if (type == Type.GAIN) terms = collectTerms(mods[0]);
+		else if (type == Type.LOSS) terms = collectTerms(mods[1]);
+		else terms = collectTerms(mods);
 
-		Set loss = new HashSet(set1);
-		loss.removeAll(set2);
-
-		int activatingCnt = 0;
-		int inhibitingCnt = 0;
-
-		for (Object o : gain)
-		{
-			if (activityFeat.get(er).contains(o)) activatingCnt++;
-			if (inactivityFeat.get(er).contains(o)) inhibitingCnt++;
-		}
-		for (Object o : loss)
-		{
-			if (inactivityFeat.get(er).contains(o)) activatingCnt++;
-			if (activityFeat.get(er).contains(o)) inhibitingCnt++;
-		}
-
-		// Match without considering the locations
-
-		Set<String> gainTypes = null;
-		Set<String> lossTypes = null;
-
-		if (activatingCnt + inhibitingCnt == 0)
-		{
-			gainTypes = extractModifNames(gain);
-			lossTypes = extractModifNames(loss);
-
-			for (String s : gainTypes)
-			{
-				if (activityStr.get(er).contains(s)) activatingCnt++;
-				if (inactivityStr.get(er).contains(s)) inhibitingCnt++;
-			}
-			for (String s : lossTypes)
-			{
-				if (inactivityStr.get(er).contains(s)) activatingCnt++;
-				if (activityStr.get(er).contains(s)) inhibitingCnt++;
-			}
-		}
-
-		// Try to match modifications with approximate name matching
-
-		if (activatingCnt + inhibitingCnt == 0)
-		{
-			for (String genName : general)
-			{
-				boolean foundInActivating = setContainsGeneralTerm(activityStr.get(er), genName);
-				boolean foundInInhibiting = setContainsGeneralTerm(inactivityStr.get(er), genName);
-
-				if (foundInActivating == foundInInhibiting) continue;
-
-				boolean foundInGain = setContainsGeneralTerm(gainTypes, genName);
-				boolean foundInLose = setContainsGeneralTerm(lossTypes, genName);
-
-				if (foundInGain == foundInLose) continue;
-
-				if (foundInActivating && foundInGain) activatingCnt++;
-				else if (foundInInhibiting && foundInLose) activatingCnt++;
-				else if (foundInActivating && foundInLose) inhibitingCnt++;
-				else /*if (foundInInhibiting && foundInGain)*/ inhibitingCnt++;
-			}
-		}
-
-		if (activatingCnt > 0 && inhibitingCnt > 0) return false;
-		return activating ? activatingCnt > 0 : inhibitingCnt > 0;
+		return termsContainDesired(terms);
 	}
 
-
-	/**
-	 * Extracts the modification terms from the moficiation features.
-	 * @param mfMap map for the features
-	 * @return map from EntityReference to the set of the extracted terms
-	 */
-	protected Map<EntityReference, Set<String>> extractModifNames(Map mfMap)
+	private Set<String> collectTerms(Set<ModificationFeature>... mods)
 	{
-		Map<EntityReference, Set<String>> map = new HashMap<EntityReference, Set<String>>();
-
-		for (Object o : mfMap.keySet())
-		{
-			EntityReference er = (EntityReference) o;
-			map.put(er, extractModifNames((Set) mfMap.get(er)));
-		}
-
-		return map;
+		Set<String> terms = new HashSet<String>();
+		collectTerms(mods[0], terms);
+		if (mods.length > 1) collectTerms(mods[1], terms);
+		return terms;
 	}
 
-	/**
-	 * Extracts terms of the modification features.
-	 * @param mfSet set of modification features
-	 * @return set of extracted terms
-	 */
-	protected Set<String> extractModifNames(Set mfSet)
+	private void collectTerms(Set<ModificationFeature> mods, Set<String> terms)
 	{
-		Set<String> set = new HashSet<String>();
-
-		for (Object o : mfSet)
+		for (ModificationFeature mf : mods)
 		{
-			ModificationFeature mf = (ModificationFeature) o;
-			if (mf.getModificationType() != null && !mf.getModificationType().getTerm().isEmpty())
+			SequenceModificationVocabulary type = mf.getModificationType();
+			if (type != null)
 			{
-				set.add(mf.getModificationType().getTerm().iterator().next());
+				for (String term : type.getTerm())
+				{
+					terms.add(term.toLowerCase());
+				}
 			}
 		}
-		return set;
 	}
 
 	/**
 	 * Checks if any element in the set contains the term.
-	 * @param set set to check
-	 * @param term term to search for
-	 * @return true if any element contains the term
+	 * @param terms changed terms
+	 * @return true if any changed terms contains a desired substring
 	 */
-	protected boolean setContainsGeneralTerm(Set<String> set, String term)
+	private boolean termsContainDesired(Set<String> terms)
 	{
-		for (String s : set)
+		for (String term : terms)
 		{
-			if (s.contains(term)) return true;
+			for (String sub : featureSubstring)
+			{
+				if (term.contains(sub)) return true;
+			}
 		}
 		return false;
+	}
+
+	public enum Type
+	{
+		GAIN,
+		LOSS,
+		ANY
 	}
 }

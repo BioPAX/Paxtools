@@ -51,6 +51,20 @@ public class MappedConst implements Constraint
 	}
 
 	/**
+	 * Gets the maximum index.
+	 * @return maximum index
+	 */
+	public int getMaxInd()
+	{
+		int max = -1;
+		for (int ind : inds)
+		{
+			if (ind > max) max = ind;
+		}
+		return max;
+	}
+
+	/**
 	 * This methods translates the indexes of outer constraint, to this inner constraint.
 	 *
 	 * @param outer mapped indices for the outer constraints

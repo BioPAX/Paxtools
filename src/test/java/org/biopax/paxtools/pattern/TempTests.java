@@ -1,8 +1,6 @@
 package org.biopax.paxtools.pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.io.SimpleIOHandler;
+import junit.framework.Assert;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -104,7 +102,7 @@ public class TempTests
 	@Ignore
 	public void capturePattern() throws Throwable
 	{
-		Pattern p = PatternBox.controlsDegradation();
+		Pattern p = PatternBox.controlsStateChangeThroughDegradation();
 
 		Searcher.searchInFile(p, "All-Human-Data.owl", "Captured-controls-degradation.owl", 100, 1);
 	}
@@ -291,7 +289,8 @@ public class TempTests
 	@Ignore
 	public void checkOverlap() throws Throwable
 	{
-		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
+//		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
+		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/PC.sif");
 
 		List<SIFType> types = new ArrayList<SIFType>(Arrays.asList(SIFEnum.values()));
 		types.retainAll(map.keySet());
@@ -299,6 +298,8 @@ public class TempTests
 		printOverlaps(map, types.subList(0, 8), false);
 		printOverlaps(map, types.subList(8, 12), true);
 		printOverlaps(map, types.subList(12, 14), true);
+
+		Assert.assertTrue(2 + 2 == 4);
 	}
 
 	private void printOverlaps(Map<SIFType, Set<String>> map, List<SIFType> types,

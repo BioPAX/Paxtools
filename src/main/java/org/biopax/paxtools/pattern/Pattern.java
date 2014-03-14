@@ -2,10 +2,7 @@ package org.biopax.paxtools.pattern;
 
 import org.biopax.paxtools.model.BioPAXElement;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A pattern is a list of mapped constraints.
@@ -96,6 +93,71 @@ public class Pattern
 
 			else lastIndex++;
 		}
+	}
+
+	public void optimizeConstraintOrder()
+	{
+		// determine what should come after what
+
+		Map<MappedConst, Set<MappedConst>> preMap = new HashMap<MappedConst, Set<MappedConst>>();
+
+		for (MappedConst con1 : constraints)
+		{
+			preMap.put(con1, new HashSet<MappedConst>());
+
+			int m1 = con1.getMaxInd();
+			for (MappedConst con2 : constraints)
+			{
+				if (con1 == con2) continue;
+
+				int m2 = con2.getMaxInd();
+
+				if (m1 > m2 || (m1 == m2 && con2.canGenerate() && !con1.canGenerate()))
+				{
+					preMap.get(con1).add(con2);
+				}
+			}
+		}
+
+		// determine ordered levels
+
+		List<Set<MappedConst>> levels = new ArrayList<Set<MappedConst>>();
+
+		do
+		{
+			Set<MappedConst> level = new HashSet<MappedConst>();
+
+			for (MappedConst con : preMap.keySet())
+			{
+				if (preMap.get(con).isEmpty()) level.add(con);
+			}
+
+			for (MappedConst con : level)
+			{
+				preMap.remove(con);
+			}
+
+			for (MappedConst con : preMap.keySet())
+			{
+				preMap.get(con).removeAll(level);
+			}
+
+			levels.add(level);
+		}
+		while (!preMap.isEmpty());
+
+		// build new constraints list
+
+		List<MappedConst> newList = new ArrayList<MappedConst>(constraints.size());
+
+		for (Set<MappedConst> level : levels)
+		{
+			List<MappedConst> temp = new ArrayList<MappedConst>(constraints);
+			temp.retainAll(level);
+			newList.addAll(temp);
+		}
+
+		this.constraints = newList;
 	}
 
 	/**

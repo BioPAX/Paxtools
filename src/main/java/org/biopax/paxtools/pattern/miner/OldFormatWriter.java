@@ -98,8 +98,8 @@ public class OldFormatWriter
 			if (!map.containsKey(inter.targetID))
 				map.put(inter.targetID, new HashSet<BioPAXElement>());
 
-			map.get(inter.sourceID).addAll(inter.source);
-			map.get(inter.targetID).addAll(inter.target);
+			map.get(inter.sourceID).addAll(inter.sourceERs);
+			map.get(inter.targetID).addAll(inter.targetERs);
 		}
 		return map;
 	}

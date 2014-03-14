@@ -13,15 +13,15 @@ public enum SIFEnum implements SIFType
 	CONTROLS_STATE_CHANGE_OF("First protein is controlling a reaction that changes the state of " +
 		"the second protein.", true, ControlsStateChangeOfMiner.class,
 		CSCOButIsParticipantMiner.class, CSCOBothControllerAndParticipantMiner.class,
-		CSCOThroughControllingSmallMoleculeMiner.class, CSCOThroughBindingSmallMoleculeMiner.class),
+		CSCOThroughControllingSmallMoleculeMiner.class, CSCOThroughBindingSmallMoleculeMiner.class,
+		CSCOThroughDegradationMiner.class),
 	CONTROLS_TRANSPORT_OF("First protein is controlling a reaction that changes the cellular " +
 		"location of the second protein.", true, ControlsTransportMiner.class),
+	CONTROLS_PHOSPHORYLATION_OF("First protein is controlling a reaction that changes the " +
+		"phosphorylation status of the second protein.", true, ControlsPhosphorylationMiner.class),
 	CONTROLS_EXPRESSION_OF("First protein is controlling a conversion or a template reaction that" +
 		"changes expression of the second protein.", true, ControlsExpressionMiner.class,
 		ControlsExpressionWithConvMiner.class),
-	CONTROLS_DEGRADATION_OF("First protein is controlling a reaction that degrades second " +
-		"protein, i.e. second protein is input to a reaction with no output", true,
-		ControlsDegradationMiner.class),
 	CATALYSIS_PRECEDES("First protein is controlling a reaction whose output molecule is input" +
 		" to another reaction controlled by the second protein.", true,
 		CatalysisPrecedesMiner.class),

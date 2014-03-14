@@ -45,4 +45,16 @@ public class ChemicalAffectsThroughBindingMiner extends AbstractSIFMiner
 	{
 		return new String[]{"Complex"};
 	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"SPE1", "PE1", "Complex"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"SPE2", "PE2", "Complex"};
+	}
 }

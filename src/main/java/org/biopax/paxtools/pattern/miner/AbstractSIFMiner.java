@@ -60,4 +60,9 @@ public abstract class AbstractSIFMiner extends MinerAdapter implements SIFMiner
 	{
 		return type;
 	}
+
+	public void setType(SIFType type)
+	{
+		this.type = type;
+	}
 }

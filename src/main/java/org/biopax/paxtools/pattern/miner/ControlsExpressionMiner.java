@@ -73,4 +73,16 @@ public class ControlsExpressionMiner extends AbstractSIFMiner
 	{
 		return new String[]{"Control", "TempReac"};
 	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"TF simple PE", "TF PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"product PE", "product simple PE"};
+	}
 }

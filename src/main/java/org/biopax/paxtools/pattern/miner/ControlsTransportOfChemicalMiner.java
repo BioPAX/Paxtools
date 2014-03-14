@@ -44,4 +44,16 @@ public class ControlsTransportOfChemicalMiner extends AbstractSIFMiner
 	{
 		return new String[]{"Control", "Conversion"};
 	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"controller simple PE", "controller PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"input PE", "input simple PE", "output PE", "output simple PE"};
+	}
 }

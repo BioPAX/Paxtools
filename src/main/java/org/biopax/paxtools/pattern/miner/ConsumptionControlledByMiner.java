@@ -18,6 +18,14 @@ public class ConsumptionControlledByMiner extends AbstractSIFMiner
 	}
 
 	/**
+	 * Constructor for extension purposes.
+	 */
+	protected ConsumptionControlledByMiner(SIFType type)
+	{
+		super(type);
+	}
+
+	/**
 	 * Constructs the pattern.
 	 * @return pattern
 	 */
@@ -43,5 +51,17 @@ public class ConsumptionControlledByMiner extends AbstractSIFMiner
 	public String[] getMediatorLabels()
 	{
 		return new String[]{"Control", "Conversion"};
+	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"controller simple PE", "controller PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"part PE", "part SM"};
 	}
 }

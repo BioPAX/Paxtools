@@ -16,6 +16,12 @@ public class OutputColumn
 	private Type type;
 	private PathAccessor[] accessors;
 
+	/**
+	 * Constructor with output type. The <code>field</code> parameter can either be a value among
+	 * OutputValue.Type enum (excluding the value <code>CUSTOM</code>), or a PathAccessor string to
+	 * apply to mediator objects.
+	 * @param field type of the custom field
+	 */
 	public OutputColumn(String field)
 	{
 		if (field == null)
@@ -38,6 +44,7 @@ public class OutputColumn
 
 		if (type == null)
 		{
+			type = Type.CUSTOM;
 			String[] param = field.split(";");
 			accessors = new PathAccessor[param.length];
 			for (int i = 0; i < accessors.length; i++)
@@ -67,6 +74,8 @@ public class OutputColumn
 			case PATHWAY: return concat(inter.getPathwayNames());
 			case PUBMED: return concat(inter.getPubmedIDs());
 			case RESOURCE: return concat(inter.getDataSources());
+			case SOURCE_LOC: return concat(inter.getCellularLocationsOfSource());
+			case TARGET_LOC: return concat(inter.getCellularLocationsOfTarget());
 			case CUSTOM:
 			{
 				Set<String> set = new HashSet<String>();
@@ -115,6 +124,8 @@ public class OutputColumn
 		PUBMED,
 		PATHWAY,
 		RESOURCE,
+		SOURCE_LOC,
+		TARGET_LOC,
 		CUSTOM
 	}
 }

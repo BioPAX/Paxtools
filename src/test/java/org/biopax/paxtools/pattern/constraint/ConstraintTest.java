@@ -66,7 +66,7 @@ public class ConstraintTest extends TestParent
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_623"), p); // Gi family
 
-		Assert.assertTrue(list.size() == 2);
+		Assert.assertFalse(list.isEmpty());
 		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_637")));
 		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_638")));
 	}

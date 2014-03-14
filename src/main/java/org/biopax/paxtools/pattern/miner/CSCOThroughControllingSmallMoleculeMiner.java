@@ -20,8 +20,6 @@ public class CSCOThroughControllingSmallMoleculeMiner extends ControlsStateChang
 	{
 		super("-through-controlling-small-mol", "The first protein produces a non-ubique small " +
 			"molecule, and this small molecule controls state of the second protein.");
-
-		this.blacklist = blacklist;
 	}
 
 	/**
@@ -37,7 +35,8 @@ public class CSCOThroughControllingSmallMoleculeMiner extends ControlsStateChang
 	@Override
 	public String[] getMediatorLabels()
 	{
-		return new String[]{"upper Control", "upper Conversion", "Control", "Conversion"};
+		return new String[]{"upper Control", "upper Conversion", "Control", "Conversion",
+			"controller PE"};
 	}
 
 	@Override
@@ -50,5 +49,17 @@ public class CSCOThroughControllingSmallMoleculeMiner extends ControlsStateChang
 	public String getTargetLabel()
 	{
 		return "changed ER";
+	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"upper controller simple PE", "upper controller PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"input PE", "input simple PE", "output PE", "output simple PE"};
 	}
 }

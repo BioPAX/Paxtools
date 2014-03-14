@@ -44,4 +44,16 @@ public class UsedToProduceMiner extends AbstractSIFMiner
 	{
 		return new String[]{"Conv"};
 	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"SPE1", "PE1"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"SPE2", "PE2"};
+	}
 }

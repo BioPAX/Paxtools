@@ -39,4 +39,10 @@ public interface SIFMiner extends Miner
 	 * @param blacklist the blacklist
 	 */
 	public void setBlacklist(Blacklist blacklist);
+
+	/**
+	 * Sets the idFetcher that helps to fasten the search.
+	 * @param idFetcher ID generator from BioPAx object
+	 */
+	public void setIDFetcher(IDFetcher idFetcher);
 }

@@ -59,8 +59,8 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Test
 	public void testAdjacencyMatrix()
 	{
-		SIFSearcher searcher = new SIFSearcher(
-			SIFEnum.CONTROLS_STATE_CHANGE_OF, SIFEnum.IN_COMPLEX_WITH);
+		SIFSearcher searcher = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF,
+			SIFEnum.CHEMICAL_AFFECTS);
 		AdjacencyMatrix matrix = searcher.searchSIFGetMatrix(model_P53);
 		System.out.println(matrix);
 		Assert.assertTrue(matrix.names.length > 0);
@@ -122,6 +122,7 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
+		Assert.assertTrue(2 + 2 == 4);
 	}
 
 	private static String getPrintable(long time)

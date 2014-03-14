@@ -96,6 +96,7 @@ public class SIFSearcher
 				{
 					SIFMiner miner = clazz.newInstance();
 					miner.setBlacklist(blacklist);
+					miner.setIDFetcher(idFetcher);
 					miners.add(miner);
 				}
 			}

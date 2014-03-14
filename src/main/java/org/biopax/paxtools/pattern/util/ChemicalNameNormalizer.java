@@ -28,7 +28,7 @@ public class ChemicalNameNormalizer
 	{
 		SimpleIOHandler reader = new SimpleIOHandler();
 		Model model = reader.convertFromOWL(new FileInputStream(
-			"/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl"));
+			"/home/ozgun/Projects/biopax-pattern/All-Data.owl"));
 
 		new ChemicalNameNormalizer(model);
 	}
@@ -78,8 +78,13 @@ public class ChemicalNameNormalizer
 			Set<SmallMoleculeReference> matches = standardSelfMatch.get(smr);
 			if (matches.size() == 1)
 			{
-				map.put(smr, matches.iterator().next());
-				standard.remove(smr);
+				SmallMoleculeReference m = matches.iterator().next();
+
+				if (smr.getDisplayName().length() <= m.getDisplayName().length())
+				{
+					map.put(smr, m);
+					standard.remove(smr);
+				}
 			}
 			else
 			{

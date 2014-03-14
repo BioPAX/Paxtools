@@ -45,4 +45,16 @@ public class CatalysisPrecedesMiner extends AbstractSIFMiner
 		return new String[]{"first Control", "first Conversion", "second Control",
 			"second Conversion"};
 	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"first simple controller PE", "first controller PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"second simple controller PE", "second controller PE"};
+	}
 }

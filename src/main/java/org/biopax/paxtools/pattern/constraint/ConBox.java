@@ -26,7 +26,8 @@ public class ConBox
 	 */
 	public static Constraint erToPE()
 	{
-		return new PathConstraint("EntityReference/entityReferenceOf");
+		return new MultiPathConstraint("EntityReference/memberEntityReferenceOf*/entityReferenceOf",
+			"EntityReference/entityReferenceOf");
 	}
 
 	/**
@@ -35,7 +36,8 @@ public class ConBox
 	 */
 	public static Constraint peToER()
 	{
-		return new PathConstraint("SimplePhysicalEntity/entityReference");
+		return new MultiPathConstraint("SimplePhysicalEntity/entityReference",
+			"SimplePhysicalEntity/entityReference/memberEntityReference*");
 	}
 
 	/**

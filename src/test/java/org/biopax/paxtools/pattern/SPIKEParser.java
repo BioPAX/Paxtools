@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class SPIKEParser
 {
-	static final boolean SKIP_TRANSCRIPTION = true;
+	static final boolean SKIP_TRANSCRIPTION = false;
 
 	public static void main(String[] args) throws IOException
 	{
@@ -105,7 +105,7 @@ public class SPIKEParser
 					String s = HGNC.getSymbol(source.name);
 					String t = HGNC.getSymbol(target.name);
 					if (s != null && t != null)
-						writer.write("\n" + s + "\t" + t);
+						writer.write("\n" + s + "\t" + t + "\t" + (reg.transcription ? "T" : ""));
 				}
 			}
 		}

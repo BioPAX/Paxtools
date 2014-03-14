@@ -35,7 +35,7 @@ public class CSCOThroughBindingSmallMoleculeMiner extends ControlsStateChangeOfM
 	@Override
 	public String[] getMediatorLabels()
 	{
-		return new String[]{"upper Control", "upper Conversion", "Conversion"};
+		return new String[]{"upper Control", "upper Conversion", "Conversion", "SM"};
 	}
 
 	@Override
@@ -48,5 +48,17 @@ public class CSCOThroughBindingSmallMoleculeMiner extends ControlsStateChangeOfM
 	public String getTargetLabel()
 	{
 		return "changed ER";
+	}
+
+	@Override
+	public String[] getSourcePELabels()
+	{
+		return new String[]{"upper controller simple PE", "upper controller PE"};
+	}
+
+	@Override
+	public String[] getTargetPELabels()
+	{
+		return new String[]{"input PE", "input simple PE", "output PE", "output simple PE"};
 	}
 }
