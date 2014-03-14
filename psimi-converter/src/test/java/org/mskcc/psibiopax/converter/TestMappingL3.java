@@ -52,10 +52,15 @@ import java.util.Set;
 /**
  * This tests that a PSI-MI document (level 2-compact) is correctly mapped into a biopax model (L3).
  *
+ * This test depends upon a particular random number generator
+ * with a particular seed.
+ * 
+ * TODO write new tests
+ * 
  * @author Benjamin Gross
  */
 @Ignore //TODO re-factor (due to new URI generator, etc.)
-public class TestMappingL3 implements BioPAXMarshaller {
+public class TestMappingL3 extends BioPAXMarshaller {
 
 	/**
 	 * psi-mi test file

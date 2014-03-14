@@ -44,6 +44,8 @@ import psidev.psi.mi.xml.PsimiXmlReaderException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -169,18 +171,26 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		}
 
 		// create biopax marshaller
-		final BioPAXMarshallerImp biopaxMarshaller =
-			new BioPAXMarshallerImp(this, outputStream);
+		final BioPAXMarshaller biopaxMarshaller =
+			new BioPAXMarshaller(this, outputStream);
 
 		ExecutorService exec = Executors.newCachedThreadPool();	
 		
 		// iterate through the list
-		int i = 0; //add to the xml:base (to avoid generated biopax URIs clash)
+		int i = 0;
 		for (Entry entry : entrySet.getEntries()) {
-			//make unique xml:base per entry;
+			//make unique xml:base per entry (to avoid generated biopax URIs clash)
+			String xmlBasePart = 
+			  (entry.hasSource() && entry.getSource().hasNames() && entry.getSource().getNames().hasShortLabel())
+					? entry.getSource().getNames().getShortLabel()
+						: String.valueOf(++i);
+			try {
+				xmlBasePart = URLEncoder.encode(xmlBasePart, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				xmlBasePart = URLEncoder.encode(xmlBasePart);
+			}
 			// create and start PSIMapper
-			exec.execute(new EntryMapper(bpLevel, xmlBase + i + "_", biopaxMarshaller, entry));
-			++i;
+			exec.execute(new EntryMapper(bpLevel, xmlBase + xmlBasePart + "_", biopaxMarshaller, entry));
 		}
 		
 		exec.shutdown(); //no more tasks will be accepted

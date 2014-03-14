@@ -11,7 +11,6 @@ import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.pattern.miner.SIFEnum;
 import org.biopax.paxtools.pattern.miner.SIFSearcher;
 import org.biopax.paxtools.query.QueryExecuter;
@@ -87,7 +86,9 @@ public class PaxtoolsMain {
             FileOutputStream fos = new FileOutputStream(outputFile);
 
             // create converter
-			PSIMIConverter converter = new PSIMIBioPAXConverter(bpLevel);
+			PSIMIConverter converter = (argv.length>4) 
+				? new PSIMIBioPAXConverter(bpLevel, argv[4])
+				: new PSIMIBioPAXConverter(bpLevel);
 
             // note streams will be closed by converter
             converter.convert(fis, fos);
@@ -580,7 +581,7 @@ public class PaxtoolsMain {
         toLevel3("<file1> <output>\n" +
         		"\t- converts level 1 or 2 to the level 3 file", 2)
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
-        fromPsimi("<level> <file1> <output>\n" +
+        fromPsimi("<level> <file1> <output> <xml:base>\n" +
         		"\t- converts PSI-MI Level 2.5 to biopax level 2 or 3 file", 3)
 		        {public void run(String[] argv) throws IOException{fromPsimi(argv);} },
         toGSEA("<file1> <output> <database> [crossSpeciesCheck]\n" +

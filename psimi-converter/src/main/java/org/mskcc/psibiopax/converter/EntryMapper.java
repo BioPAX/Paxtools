@@ -463,7 +463,7 @@ class EntryMapper implements Runnable {
 
 		// set the BioPXElement URI and taxonomy xref id
 		String ncbiId = Integer.toString(organism.getNcbiTaxId());
-		String bioSourceUri = "http://identifiers.org/taxonomy/" + ncbiId;
+		String bioSourceUri = bpMapper.getNamespace() + "BS-" + ncbiId;
 
 		// outta here if element already exists in model
 		BioPAXElement bpBioSource = bpMapper.getBioPAXElement(bioSourceUri);

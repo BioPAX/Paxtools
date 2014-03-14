@@ -49,22 +49,26 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * This tests that a PSI-MI document (level 2-compact) is correctly mapped into a biopax model (L2).
+ * This tests that a PSI-MI document (level 2-compact) 
+ * is correctly mapped into a biopax model (L2).
+ * 
+ * This test depends upon a particular random number generator
+ * with a particular seed.
+ * 
+ * TODO write new tests
  *
  * @author Benjamin Gross
  */
 @Ignore //TODO re-factor (due to new URI generator, etc.)
-public class TestMappingL2 implements BioPAXMarshaller {
+public class TestMappingL2 extends BioPAXMarshaller {
 
+	
+	Model bpModel;
+	
 	/**
 	 * psi-mi test file
 	 */
 	private static final String PSI_MI_TEST_FILE = "10523676-compact.xml";
-
-	/**
-	 * Used for synchronization.
-	 */
-	private Model bpModel;
 
     /**
      * Returns the description/name of the test.
@@ -81,10 +85,8 @@ public class TestMappingL2 implements BioPAXMarshaller {
 	 */
     @Test
     public void testMapping() {
-
 		// open file
 		try {
-
 			// unmarshall the data, close the stream
 			PsimiXmlReader reader = new PsimiXmlReader();
             InputStream is = getClass().getClassLoader().getResourceAsStream(PSI_MI_TEST_FILE);
@@ -97,6 +99,7 @@ public class TestMappingL2 implements BioPAXMarshaller {
 
 			// get entry
 			Entry entry = (Entry)entries.iterator().next();
+			
 			EntryMapper mapper = new EntryMapper(BioPAXLevel.L2, "", this, entry);
 			mapper.run();
 		}

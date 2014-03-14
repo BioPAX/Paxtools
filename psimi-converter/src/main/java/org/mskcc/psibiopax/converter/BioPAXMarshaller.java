@@ -1,3 +1,5 @@
+// $Id: BioPAXMarshaller.java,v 1.1 2009/11/22 15:50:28 rodche Exp $
+//------------------------------------------------------------------------------
 /** Copyright (c) 2009 Memorial Sloan-Kettering Cancer Center.
  **
  ** This library is free software; you can redistribute it and/or modify it
@@ -26,27 +28,99 @@
  **/
 package org.mskcc.psibiopax.converter;
 
-// imports
+
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 /**
- * Definition of the BioPAXMarshaller interface.
- * Used by the EntryMapper class to return a processed PSI Entry object.
+ * After each EntryProcessor thread is finished, 
+ * combines the set of generated Paxtools models
+ * into a single Model for marshalling.
  *
- * @author Benjamin Gross, rodche
+ * @author Benjamin Gross, rodche (re-factoring)
  */
-interface BioPAXMarshaller {
+class BioPAXMarshaller {
+	
+    /**
+	 * Ref to PSIMIBioPAXConverter.
+	 */
+	private PSIMIBioPAXConverter converter;
 
 	/**
-	 * Method called when BioPAX data is ready to be marshalled
+	 * Ref to file output stream.
+	 */
+	private OutputStream outputStream;
+
+	/**
+	 * Our list of BioPAXContainers.
+	 */
+	private List<Model> bpModelList;
+	
+	
+	/**
+	 * Default Costructor for texting/extending
+	 */
+	public BioPAXMarshaller() {	
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param converter PSIMIBioPAXConverter
+	 * @param outputStream OutputStream - will be closed by this class 
+	 */
+	public BioPAXMarshaller(PSIMIBioPAXConverter converter, OutputStream outputStream) {
+		this.converter = converter;
+		this.bpModelList = new ArrayList<Model>();
+		this.outputStream = outputStream;
+	}
+
+	/**
+	 * Adds a model independently converted from a PSI-MI entry 
+	 * to the collection.
 	 *
 	 * @param bpModel Model
 	 */
-	void addModel(Model bpModel);
-	
-	
+	public void addModel(Model bpModel) {
+		bpModelList.add(bpModel);
+	}
+
+
 	/**
-	 * Combines set of Model(s) into single Paxtools Model.
+	 * Writes all the collected BioPAX models 
+	 * to the RDF/XML output stream.
+	 * 
 	 */
-	public void marshallData();
+	public void marshallData() {
+		// combine all models into a single model
+		Model completeModel = converter.getBpLevel().getDefaultFactory().createModel();
+		completeModel.setXmlBase(converter.getXmlBase());
+		
+		// we suppose there are no any URI clashes between elements 
+		// from different models (true if URI generator was fair/reliable...);
+		// otherwise this throws a paxtools exception: "already have element with the same ID"
+		for (Model bpModel : bpModelList) {
+			Set<BioPAXElement> elementList = bpModel.getObjects();
+			for (BioPAXElement elementInstance : elementList) {
+				completeModel.add(elementInstance);
+			}
+		}
+
+		// write out the file
+		try {
+			BioPAXIOHandler io = new SimpleIOHandler();
+			io.convertToOWL(completeModel, outputStream);
+			outputStream.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
