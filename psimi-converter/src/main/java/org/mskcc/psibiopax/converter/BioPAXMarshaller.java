@@ -111,13 +111,8 @@ class BioPAXMarshaller {
 		}
 
 		// write out the file
-		try {
-			BioPAXIOHandler io = new SimpleIOHandler();
-			io.convertToOWL(completeModel, outputStream);
-			outputStream.close();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		BioPAXIOHandler io = new SimpleIOHandler();
+		io.convertToOWL(completeModel, outputStream);
+		//outputStream is closed inside the above method
 	}
 }

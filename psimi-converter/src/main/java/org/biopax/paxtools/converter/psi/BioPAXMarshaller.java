@@ -47,10 +47,7 @@ import java.util.List;
  */
 class BioPAXMarshaller {
 	
-    /**
-	 * Ref to PsiToBiopax3Converter.
-	 */
-	private PsiToBiopax3Converter converter;
+	private final String xmlBase;
 
 	/**
 	 * Ref to file output stream.
@@ -62,23 +59,23 @@ class BioPAXMarshaller {
 	 */
 	private List<Model> bpModelList;
 	
-	
-	/**
-	 * Default Costructor for texting/extending
-	 */
-	public BioPAXMarshaller() {	
-	}
-
 	/**
 	 * Constructor.
 	 *
-	 * @param converter PsiToBiopax3Converter
+	 * @param xmlBase xml:base (URI namespace) for the final model
 	 * @param outputStream OutputStream - will be closed by this class 
 	 */
-	public BioPAXMarshaller(PsiToBiopax3Converter converter, OutputStream outputStream) {
-		this.converter = converter;
+	public BioPAXMarshaller(String xmlBase, OutputStream outputStream) {
+		this.xmlBase = xmlBase;
 		this.bpModelList = new ArrayList<Model>();
 		this.outputStream = outputStream;
+	}
+	
+	/**
+	 * Constructor for tests.
+	 */
+	BioPAXMarshaller() {
+		this.xmlBase = "";
 	}
 
 	/**
@@ -100,7 +97,7 @@ class BioPAXMarshaller {
 	public void marshallData() {
 		// combine all models into a single model
 		Model completeModel = BioPAXLevel.L3.getDefaultFactory().createModel();
-		completeModel.setXmlBase(converter.getXmlBase());
+		completeModel.setXmlBase(xmlBase);
 		
 		for (Model bpModel : bpModelList) {
 			bpModel.repair();
@@ -108,13 +105,7 @@ class BioPAXMarshaller {
 		}
 
 		// write out the file
-		try {
-			BioPAXIOHandler io = new SimpleIOHandler();
-			io.convertToOWL(completeModel, outputStream);
-			outputStream.close();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		BioPAXIOHandler io = new SimpleIOHandler();
+		io.convertToOWL(completeModel, outputStream);
 	}
 }

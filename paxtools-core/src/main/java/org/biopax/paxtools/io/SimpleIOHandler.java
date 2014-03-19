@@ -567,7 +567,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		try
 		{
-			Writer out = new BufferedWriter(new OutputStreamWriter(outputStream));
+			Writer out = new OutputStreamWriter(outputStream);
 			writeObjects(out, model);
 			out.close();
 		}

@@ -199,6 +199,9 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 			throw new RuntimeException("Interrupted!", e);
 		}
 		
+		entrySet.getEntries().clear();
+		System.gc();
+		
 		biopaxMarshaller.marshallData();
 
 		return true;

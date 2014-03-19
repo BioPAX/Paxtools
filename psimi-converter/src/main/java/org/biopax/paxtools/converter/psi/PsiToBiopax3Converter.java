@@ -89,12 +89,11 @@ public class PsiToBiopax3Converter {
 	 *
 	 * @param inputStream PSI-MI
 	 * @param outputStream BioPAX
-	 * @return
 	 *
 	 * @throws IOException
 	 * @throws PsimiXmlReaderException
 	 */
-	public boolean convert(InputStream inputStream, OutputStream outputStream)
+	public void convert(InputStream inputStream, OutputStream outputStream)
 		throws IOException, PsimiXmlReaderException {
 
 		// check args
@@ -109,7 +108,7 @@ public class PsiToBiopax3Converter {
 		inputStream.close();
 		
 		// convert
-		return convert(entrySet, outputStream);
+		convert(entrySet, outputStream);
 	}
 
 	
@@ -119,12 +118,11 @@ public class PsiToBiopax3Converter {
 	 *
 	 * @param inputStream psimitab
 	 * @param outputStream biopax
-	 * @return
 	 *
 	 * @throws IOException
 	 * @throws PsimiTabException
 	 */
-	public boolean convertTab(InputStream inputStream, OutputStream outputStream)
+	public void convertTab(InputStream inputStream, OutputStream outputStream)
 		throws IOException, PsimiTabException {
 
 		// check args
@@ -145,12 +143,10 @@ public class PsiToBiopax3Converter {
 		} catch (XmlConversionException e) {
 			throw new RuntimeException(e);
 		}
-
-		// convert
-		boolean result = convert(entrySet, outputStream);
-
 		inputStream.close();
-		return result;
+		
+		// convert
+		convert(entrySet, outputStream);
 	}	
 	
 	/**
@@ -159,9 +155,8 @@ public class PsiToBiopax3Converter {
 	 *
 	 * @param entrySet
 	 * @param outputStream
-	 * @return
 	 */
-	public boolean convert(EntrySet entrySet, OutputStream outputStream) {
+	public void convert(EntrySet entrySet, OutputStream outputStream) {
 
 		// check args
 		if (entrySet == null || outputStream == null) {
@@ -172,19 +167,17 @@ public class PsiToBiopax3Converter {
 		}
 
 		// create biopax marshaller
-		final BioPAXMarshaller biopaxMarshaller =
-			new BioPAXMarshaller(this, outputStream);
+		final BioPAXMarshaller biopaxMarshaller = new BioPAXMarshaller(xmlBase, outputStream);
 
 		ExecutorService exec = Executors.newCachedThreadPool();	
 		
 		// iterate through the list
-		int i = 0;
 		for (Entry entry : entrySet.getEntries()) {
-			// create and start PSIMapper
+			// create and start PSIMapper; use the same xml:base
 			exec.execute(new EntryMapper(xmlBase, biopaxMarshaller, entry));
 		}
 		
-		exec.shutdown(); //no more tasks will be accepted
+		exec.shutdown(); //no more tasks
 		// wait for marshalling to complete
 		try {
 			exec.awaitTermination(86400, TimeUnit.SECONDS); //a day, at most ;)
@@ -192,9 +185,12 @@ public class PsiToBiopax3Converter {
 			throw new RuntimeException("Interrupted!", e);
 		}
 		
+		//try to release some RAM earlier
+		entrySet.getEntries().clear();
+		entrySet = null;
+		System.gc();
+		
 		biopaxMarshaller.marshallData();
-
-		return true;
 	}
 
 	/**
