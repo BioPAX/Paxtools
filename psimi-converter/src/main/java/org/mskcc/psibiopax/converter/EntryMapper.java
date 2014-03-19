@@ -93,10 +93,6 @@ class EntryMapper implements Runnable {
 	 */
 	private Map<Integer, ExperimentDescription> experimentMap;
 
-	/**
-	 * Set of open/controlled vocabulary.
-	 */
-	Set<BioPAXElement> vocabulary;
 
 	/**
 	 * Constructor.
@@ -321,7 +317,7 @@ class EntryMapper implements Runnable {
 
 		// create the physical entity which is contained within the participant, if it does not already exist
 		String physicalEntityRdfId = bpMapper.getNamespace() + interactorRef;
-		BioPAXElement bpPhysicalEntity = bpMapper.getBioPAXElement(physicalEntityRdfId);
+		BioPAXElement bpPhysicalEntity = bpMapper.getModel().getByID(physicalEntityRdfId);
 		bpPhysicalEntity = (bpPhysicalEntity == null) ?
 			createPhysicalEntity(physicalEntityRdfId, interactor) : bpPhysicalEntity;
 
@@ -466,7 +462,7 @@ class EntryMapper implements Runnable {
 		String bioSourceUri = bpMapper.getNamespace() + "BS-" + ncbiId;
 
 		// outta here if element already exists in model
-		BioPAXElement bpBioSource = bpMapper.getBioPAXElement(bioSourceUri);
+		BioPAXElement bpBioSource = bpMapper.getModel().getByID(bioSourceUri);
 		if (bpBioSource != null) return bpBioSource;
 
 		// taxon xref
@@ -568,7 +564,7 @@ class EntryMapper implements Runnable {
                 	&& (refType.equals("identity") || refType.equals("identical object"))) 
                 {
                     String id = bpMapper.getNamespace() + "UXR-" + validateDBID(dbRefId);
-                    bpXref = bpMapper.getBioPAXElement(id);                   
+                    bpXref = bpMapper.getModel().getByID(id);                   
                     if (bpXref != null) {
                         toReturn.add(bpXref);
                         continue;
@@ -580,7 +576,7 @@ class EntryMapper implements Runnable {
                 else if (!forOCVorInteraction) 
                 {
                     String id = bpMapper.getNamespace() + "RXR-" + validateDBID(dbRefId);
-                    bpXref = bpMapper.getBioPAXElement(id);                   
+                    bpXref = bpMapper.getModel().getByID(id);                   
                     if (bpXref != null) {
                         toReturn.add(bpXref);
                         continue;
@@ -623,7 +619,7 @@ class EntryMapper implements Runnable {
 
 		// create publication ref
 		String id = bpMapper.getNamespace() + "PXR-" + validateDBID(psiDBRef.getId());
-		BioPAXElement bpXref = bpMapper.getBioPAXElement(id);
+		BioPAXElement bpXref = bpMapper.getModel().getByID(id);
 		// outta here if element already exists in model
 		if (bpXref != null) {
 			toReturn.add(bpXref);

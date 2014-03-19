@@ -10,6 +10,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
@@ -566,7 +567,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		try
 		{
-			Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+			Writer out = new BufferedWriter(new OutputStreamWriter(outputStream));
 			writeObjects(out, model);
 			out.close();
 		}
@@ -638,6 +639,15 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{ // the latter maybe not necessary...
 			Named named = (Named) bean;
 			if (value != null && (value.equals(named.getDisplayName()) || value.equals(named.getStandardName())))
+			{
+				return;
+			}
+		}
+		
+		if (editor.getProperty().equalsIgnoreCase("stepProcess") && bean instanceof BiochemicalPathwayStep)
+		{
+			BiochemicalPathwayStep bps = (BiochemicalPathwayStep) bean;
+			if (value != null && value.equals(bps.getStepConversion())) 
 			{
 				return;
 			}

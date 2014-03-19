@@ -114,6 +114,44 @@ public class SimpleIOHandlerTest
 		}
 
 	}
+	
+	
+	@Test
+	public final void testDuplicateConversionInBiochemicalPathwayStepByExporter() throws IOException
+	{
+		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+		BiochemicalPathwayStep bps = factory.create(BiochemicalPathwayStep.class, "myStep");
+		BiochemicalReaction reaction = factory.create(BiochemicalReaction.class, "myConversion");
+		bps.setStepConversion(reaction);
+		bps.addComment("The Conversion should not occur in stepProcess property!");
+		Model m = factory.createModel();
+		m.add(bps);
+		m.add(reaction);
+		
+		FileOutputStream out =
+				new FileOutputStream( // to the target test dir
+						getClass().getResource("").getFile()
+						+ File.separator + "testDuplicateConversionInBiochemicalPathwayStepByExporter.xml"
+				);
+		
+		outputModel(m, out);
+
+		// read back
+		BufferedReader in = new BufferedReader(
+			new FileReader(getClass().getResource("").getFile()
+				+ File.separator + "testDuplicateConversionInBiochemicalPathwayStepByExporter.xml"));
+		char[] buf = new char[3000];
+		in.read(buf);
+		String xml = new String(buf);
+		
+		assertTrue(xml.contains("<bp:stepConversion"));
+		
+		if (xml.contains("<bp:stepProcess")){
+			fail("Conversion was output to the stepProcess property " +
+					"by the SimpleIOHandler (should be only in stepConversion)!");
+		}
+	}
+	
 
 	@Test
 	public final void testhibernateFile() throws IOException

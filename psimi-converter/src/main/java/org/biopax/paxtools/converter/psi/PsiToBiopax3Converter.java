@@ -1,4 +1,4 @@
-// $Id: PSIMIBioPAXConverter.java,v 1.2 2009/11/23 13:59:42 rodche Exp $
+// $Id: PsiToBiopax3Converter.java,v 1.2 2009/11/23 13:59:42 rodche Exp $
 //------------------------------------------------------------------------------
 /** Copyright (c) 2009 Memorial Sloan-Kettering Cancer Center.
  **
@@ -26,10 +26,8 @@
  ** along with this library; if not, write to the Free Software Foundation,
  ** Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  **/
-package org.mskcc.psibiopax.converter;
+package org.biopax.paxtools.converter.psi;
 
-// imports
-import org.biopax.paxtools.model.BioPAXLevel;
 
 import psidev.psi.mi.tab.PsimiTabException;
 import psidev.psi.mi.tab.PsimiTabReader;
@@ -44,8 +42,6 @@ import psidev.psi.mi.xml.PsimiXmlReaderException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,11 +53,10 @@ import java.util.concurrent.TimeUnit;
  * 2 - Creates a set of EntryMapper threads, each of which is mapping a single PSI Entry object.
  * 3 - Creates a BioPAXMarshaller class to aggregate and marshall the data.
  *
- * @author Benjamin Gross, Igor Rodchenkov
+ * @author Igor Rodchenkov (rodche)
  */
-public class PSIMIBioPAXConverter implements PSIMIConverter {
+public class PsiToBiopax3Converter {
 
-	private final BioPAXLevel bpLevel;	
 	private final String xmlBase; //common URI prefix
 
 	/**
@@ -73,21 +68,17 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 	 * Constructor.
 	 * Will use the default empty string xml:base.
 	 *
-	 * @param bpLevel BioPAXLevel
 	 */
-	public PSIMIBioPAXConverter(BioPAXLevel bpLevel) {
-		this.bpLevel = bpLevel;
+	public PsiToBiopax3Converter() {
 		this.xmlBase = "";
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param bpLevel
 	 * @param xmlBase
 	 */
-	public PSIMIBioPAXConverter(BioPAXLevel bpLevel, String xmlBase) {
-		this.bpLevel = bpLevel;
+	public PsiToBiopax3Converter(String xmlBase) {
 		this.xmlBase = xmlBase;
 	}
 
@@ -98,7 +89,7 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 	 *
 	 * @param inputStream PSI-MI
 	 * @param outputStream BioPAX
-	 * @return boolean
+	 * @return
 	 *
 	 * @throws IOException
 	 * @throws PsimiXmlReaderException
@@ -120,10 +111,18 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		// convert
 		return convert(entrySet, outputStream);
 	}
+
 	
 	/**
-	 * {@inheritDoc}
-	 * Stream will be closed by the converter.
+	 * Converts the PSI-MITAB inputStream into BioPAX outputStream.
+	 * Streams will be closed by the converter.
+	 *
+	 * @param inputStream psimitab
+	 * @param outputStream biopax
+	 * @return
+	 *
+	 * @throws IOException
+	 * @throws PsimiTabException
 	 */
 	public boolean convertTab(InputStream inputStream, OutputStream outputStream)
 		throws IOException, PsimiTabException {
@@ -155,8 +154,12 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 	}	
 	
 	/**
-	 * {@inheritDoc}
+	 * Converts the PSI interactions from the EntrySet and places into BioPAX output stream.
 	 * Stream will be closed by the converter.
+	 *
+	 * @param entrySet
+	 * @param outputStream
+	 * @return
 	 */
 	public boolean convert(EntrySet entrySet, OutputStream outputStream) {
 
@@ -177,18 +180,8 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		// iterate through the list
 		int i = 0;
 		for (Entry entry : entrySet.getEntries()) {
-			//make unique xml:base per entry (to avoid generated biopax URIs clash)
-			String xmlBasePart = 
-			  (entry.hasSource() && entry.getSource().hasNames() && entry.getSource().getNames().hasShortLabel())
-					? entry.getSource().getNames().getShortLabel()
-						: String.valueOf(++i);
-			try {
-				xmlBasePart = URLEncoder.encode(xmlBasePart, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				xmlBasePart = URLEncoder.encode(xmlBasePart);
-			}
 			// create and start PSIMapper
-			exec.execute(new EntryMapper(bpLevel, xmlBase + xmlBasePart + "_", biopaxMarshaller, entry));
+			exec.execute(new EntryMapper(xmlBase, biopaxMarshaller, entry));
 		}
 		
 		exec.shutdown(); //no more tasks will be accepted
@@ -202,13 +195,6 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 		biopaxMarshaller.marshallData();
 
 		return true;
-	}
-
-	/**
-	 * @return the bpLevel
-	 */
-	public BioPAXLevel getBpLevel() {
-		return bpLevel;
 	}
 
 	/**

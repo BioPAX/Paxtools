@@ -1,4 +1,4 @@
-// $Id: TestMappingL3.java,v 1.2 2009/11/23 13:59:42 rodche Exp $
+// $Id: TestMapping.java,v 1.2 2009/11/23 13:59:42 rodche Exp $
 //------------------------------------------------------------------------------
 /** Copyright (c) 2009 Memorial Sloan-Kettering Cancer Center.
  **

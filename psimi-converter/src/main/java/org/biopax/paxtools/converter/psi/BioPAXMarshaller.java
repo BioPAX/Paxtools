@@ -26,18 +26,17 @@
  ** along with this library; if not, write to the Free Software Foundation,
  ** Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  **/
-package org.mskcc.psibiopax.converter;
+package org.biopax.paxtools.converter.psi;
 
 
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * After each EntryProcessor thread is finished, 
@@ -48,7 +47,10 @@ import java.util.Set;
  */
 class BioPAXMarshaller {
 	
-	private PSIMIBioPAXConverter converter;
+    /**
+	 * Ref to PsiToBiopax3Converter.
+	 */
+	private PsiToBiopax3Converter converter;
 
 	/**
 	 * Ref to file output stream.
@@ -70,10 +72,10 @@ class BioPAXMarshaller {
 	/**
 	 * Constructor.
 	 *
-	 * @param converter
-	 * @param outputStream - will be closed by this class 
+	 * @param converter PsiToBiopax3Converter
+	 * @param outputStream OutputStream - will be closed by this class 
 	 */
-	public BioPAXMarshaller(PSIMIBioPAXConverter converter, OutputStream outputStream) {
+	public BioPAXMarshaller(PsiToBiopax3Converter converter, OutputStream outputStream) {
 		this.converter = converter;
 		this.bpModelList = new ArrayList<Model>();
 		this.outputStream = outputStream;
@@ -97,17 +99,12 @@ class BioPAXMarshaller {
 	 */
 	public void marshallData() {
 		// combine all models into a single model
-		Model completeModel = converter.getBpLevel().getDefaultFactory().createModel();
+		Model completeModel = BioPAXLevel.L3.getDefaultFactory().createModel();
 		completeModel.setXmlBase(converter.getXmlBase());
 		
-		// we suppose there are no any URI clashes between elements 
-		// from different models (true if URI generator was fair/reliable...);
-		// otherwise this throws a paxtools exception: "already have element with the same ID"
 		for (Model bpModel : bpModelList) {
-			Set<BioPAXElement> elementList = bpModel.getObjects();
-			for (BioPAXElement elementInstance : elementList) {
-				completeModel.add(elementInstance);
-			}
+			bpModel.repair();
+			completeModel.merge(bpModel);
 		}
 
 		// write out the file

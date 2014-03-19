@@ -228,8 +228,6 @@ class BioPAXMapper {
 			if (evidenceCodes != null && evidenceCodes.size() > 0)
 			{
 				// go through these hoops to keep EntryMapper from juggling different L3 ControlledVocabulary types
-				Set<EvidenceCodeVocabulary> evidenceCodeVocabularies =
-						new HashSet<EvidenceCodeVocabulary>();
 				for (ControlledVocabulary cv : (Set<ControlledVocabulary>) evidenceCodes)
 				{
 					if (bpModel.contains(cv))
@@ -239,7 +237,6 @@ class BioPAXMapper {
 					EvidenceCodeVocabulary ecv =
 							bpModel.addNew(EvidenceCodeVocabulary.class, cv.getRDFId());
 					replaceControlledVocabulary(cv, ecv);
-					evidenceCodeVocabularies.add(ecv);
 				}
 			}
 			if (scoresOrConfidences != null && scoresOrConfidences.size() > 0)
@@ -465,17 +462,6 @@ class BioPAXMapper {
 		return null;
 	}
 
-	/**
-	 * Given an RDF ID, returns a matching model element
-	 *
-	 * @param rdfID
-	 * @return BioPAXElement
-	 */
-	public BioPAXElement getBioPAXElement(String rdfID)
-	{
-		// does a key exist ?
-		return bpModel.getByID(rdfID);
-	}
 
 	/**
 	 * Gets an interaction.
@@ -888,7 +874,7 @@ class BioPAXMapper {
 			firstXref = bpXrefs.iterator().next();
 			//try to find and reuse the feature
 			String id = getNamespace() + "SF-" + getXrefID(firstXref);
-			BioPAXElement bpSequenceFeature = getBioPAXElement(id);
+			BioPAXElement bpSequenceFeature = bpModel.getByID(id);
 			if (bpSequenceFeature != null) {
 				return getFeature(bpSequenceFeature, bpXrefs, featureLocations, featureType);
 			}
