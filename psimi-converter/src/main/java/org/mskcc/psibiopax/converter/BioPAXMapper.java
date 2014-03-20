@@ -38,8 +38,8 @@ import org.biopax.paxtools.model.level3.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * An base class that creates paxtool models given psi.
@@ -54,7 +54,7 @@ class BioPAXMapper {
 	
 	private final String xmlBase;
 	
-	private final ThreadLocalRandom threadLocalRandom;
+	private final Random random;
 
 	/**
 	 * Set of open/controlled vocabulary.
@@ -70,7 +70,7 @@ class BioPAXMapper {
 	 */
 	public BioPAXMapper(BioPAXLevel bpLevel, String xmlBase){
 		
-		this.threadLocalRandom = ThreadLocalRandom.current();
+		this.random = new Random(System.currentTimeMillis());
 // the setSeed below always throws an UOE (it's overloaded, no need to call)
 //		this.threadLocalRandom.setSeed(System.currentTimeMillis());
 		
@@ -1158,7 +1158,7 @@ class BioPAXMapper {
 	 */
 	private String genUri(Class<? extends BioPAXElement> type) {
 		return getNamespace() + type.getSimpleName()
-				+ Long.toString(threadLocalRandom.nextLong(Long.MAX_VALUE));
+				+ Long.toString(random.nextLong());
 	}
 
 }

@@ -36,8 +36,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -122,7 +122,7 @@ class EntryMapper implements Runnable {
 	
 	private final BioPAXMarshaller biopaxMarshaller;
 	
-	private final ThreadLocalRandom threadLocalRandom;
+	private final Random random;
 
 	/**
 	 * Ref to interatorMap
@@ -146,7 +146,7 @@ class EntryMapper implements Runnable {
 	 */
 	public EntryMapper(String xmlBase, BioPAXMarshaller biopaxMarshaller, Entry entry) {
 		this.entry = entry;
-		this.threadLocalRandom = ThreadLocalRandom.current();
+		this.random = new Random(System.currentTimeMillis());
 		this.biopaxMarshaller = biopaxMarshaller;
 		this.xmlBase = xmlBase;
 	}
@@ -1326,6 +1326,6 @@ class EntryMapper implements Runnable {
 	 */
 	private String genUri(Class<? extends BioPAXElement> type) {
 		return xmlBase + type.getSimpleName()
-				+ Long.toString(threadLocalRandom.nextLong(Long.MAX_VALUE));
+				+ Long.toString(random.nextLong());
 	}	
 }

@@ -881,6 +881,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * @param model
 	 * @return
 	 * @exception IllegalArgumentException if model is null
+	 * @throws OutOfMemoryError when model is very large, and the byte array cannot exceed 2Gb.
 	 */
 	public static String convertToOwl(Model model)
 	{
