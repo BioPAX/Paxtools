@@ -96,6 +96,9 @@ public class PSIMIBioPAXConverter implements PSIMIConverter {
 	 * Converts the PSI-MI inputStream into BioPAX outputStream.
 	 * Streams will be closed by the converter.
 	 *
+	 * Note: for huge models (several Gb), using a byte array output
+	 * stream leads to OutOfMemoryError despite there is free heap memory.
+	 *
 	 * @param inputStream PSI-MI
 	 * @param outputStream BioPAX
 	 * @return boolean

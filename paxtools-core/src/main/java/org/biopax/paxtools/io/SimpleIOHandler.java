@@ -557,6 +557,11 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * dangling BioPAX elements) and is exported by this method, it works; however one
 	 * will find corresponding object properties set to NULL later,
 	 * after converting such data back to Model.
+	 * 
+	 * Note: if the model is very very large, and the output stream is a byte array stream,
+	 * then you can eventually get OutOfMemoryError "Requested array size exceeds VM limit"
+	 * (max. array size is 2Gb)
+	 * 
 	 * @param model model to be converted into OWL format
 	 * @param outputStream output stream into which the output will be written
 	 * @exception BioPaxIOException in case of I/O problems
@@ -567,7 +572,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		try
 		{
-			Writer out = new OutputStreamWriter(outputStream);
+			Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
 			writeObjects(out, model);
 			out.close();
 		}
