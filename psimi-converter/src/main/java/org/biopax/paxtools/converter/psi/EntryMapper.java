@@ -417,24 +417,24 @@ class EntryMapper implements Runnable {
 		EntityReference er = null;
 		if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("small molecule"))
 		{
-			toReturn = bpModel.addNew(SmallMolecule.class, genUri(SmallMolecule.class));
-			er = bpModel.addNew(SmallMoleculeReference.class, genUri(SmallMoleculeReference.class));
+			toReturn = bpModel.addNew(SmallMolecule.class, genUri(SmallMolecule.class, bpModel));
+			er = bpModel.addNew(SmallMoleculeReference.class, genUri(SmallMoleculeReference.class, bpModel));
 		}
 		else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("dna"))
 		{
-			toReturn = bpModel.addNew(Dna.class, genUri(Dna.class));
-			er = bpModel.addNew(DnaReference.class, genUri(DnaReference.class));
+			toReturn = bpModel.addNew(Dna.class, genUri(Dna.class, bpModel));
+			er = bpModel.addNew(DnaReference.class, genUri(DnaReference.class, bpModel));
 		}
 		else if (physicalEntityType != null && physicalEntityType.equalsIgnoreCase("rna"))
 		{
-			toReturn = bpModel.addNew(Rna.class, genUri(Rna.class));
-			er = bpModel.addNew(RnaReference.class, genUri(RnaReference.class));
+			toReturn = bpModel.addNew(Rna.class, genUri(Rna.class, bpModel));
+			er = bpModel.addNew(RnaReference.class, genUri(RnaReference.class, bpModel));
 		}
 		else
 		{
 			// default to protein
-			toReturn = bpModel.addNew(Protein.class, genUri(Protein.class));
-			er = bpModel.addNew(ProteinReference.class, genUri(ProteinReference.class));
+			toReturn = bpModel.addNew(Protein.class, genUri(Protein.class, bpModel));
+			er = bpModel.addNew(ProteinReference.class, genUri(ProteinReference.class, bpModel));
 		}
 
 		if (name != null)
@@ -1009,7 +1009,7 @@ class EntryMapper implements Runnable {
 		if (refType != null)
 		{
 			RelationshipTypeVocabulary rtv = bpModel
-				.addNew(RelationshipTypeVocabulary.class, genUri(RelationshipTypeVocabulary.class));
+				.addNew(RelationshipTypeVocabulary.class, genUri(RelationshipTypeVocabulary.class, bpModel));
 			rtv.addTerm(refType);
 			toReturn.setRelationshipType(rtv);
 		}
@@ -1032,7 +1032,7 @@ class EntryMapper implements Runnable {
 	                               Set<String> comments,
 	                               Set<ExperimentalForm> experimentalForms)
 	{
-		Evidence bpEvidence = bpModel.addNew(Evidence.class, genUri(Evidence.class));
+		Evidence bpEvidence = bpModel.addNew(Evidence.class, genUri(Evidence.class, bpModel));
 		if (bpXrefs != null)
 		{
 			for (Xref bpXref : bpXrefs)
@@ -1071,7 +1071,7 @@ class EntryMapper implements Runnable {
 	private Score createScore(String value, 
 			Set<? extends Xref> bpXrefs, Set<String> comments)
 	{
-		Score bpScore = bpModel.addNew(Score.class, genUri(Score.class));
+		Score bpScore = bpModel.addNew(Score.class, genUri(Score.class, bpModel));
 		if (value != null)
 		{
 			bpScore.setValue(value);
@@ -1101,7 +1101,7 @@ class EntryMapper implements Runnable {
 	private ExperimentalForm createExperimentalForm(ExperimentalFormVocabulary formType, SimplePhysicalEntity participant)
 	{
 		ExperimentalForm bpExperimentalForm =
-				bpModel.addNew(ExperimentalForm.class, genUri(ExperimentalForm.class));
+				bpModel.addNew(ExperimentalForm.class, genUri(ExperimentalForm.class, bpModel));
 		
 		if (formType != null) {
 			bpExperimentalForm.addExperimentalFormDescription(formType);
@@ -1131,7 +1131,7 @@ class EntryMapper implements Runnable {
 	                                                  Set<Evidence> bpEvidence)
 	{
 		MolecularInteraction toReturn =
-				bpModel.addNew(MolecularInteraction.class, genUri(MolecularInteraction.class));
+				bpModel.addNew(MolecularInteraction.class, genUri(MolecularInteraction.class, bpModel));
 		
 		if (name != null)
 		{
@@ -1237,7 +1237,7 @@ class EntryMapper implements Runnable {
 				return bpSequenceFeature;
 			}
 		} else {
-			entityFeatureUri = genUri(EntityFeature.class);
+			entityFeatureUri = genUri(EntityFeature.class, bpModel);
 		}
 		
 		EntityFeature feature = bpModel.addNew(EntityFeature.class, entityFeatureUri);
@@ -1262,13 +1262,13 @@ class EntryMapper implements Runnable {
 	                                            long endSequenceInterval)
 	{
 			SequenceInterval toReturn =
-					bpModel.addNew(SequenceInterval.class, genUri(SequenceInterval.class));
+					bpModel.addNew(SequenceInterval.class, genUri(SequenceInterval.class, bpModel));
 			SequenceSite bpSequenceSiteBegin =
-					bpModel.addNew(SequenceSite.class, genUri(SequenceSite.class));
+					bpModel.addNew(SequenceSite.class, genUri(SequenceSite.class, bpModel));
 			bpSequenceSiteBegin.setSequencePosition((int) beginSequenceInterval);
 			toReturn.setSequenceIntervalBegin(bpSequenceSiteBegin);
 			SequenceSite bpSequenceSiteEnd =
-					bpModel.addNew(SequenceSite.class, genUri(SequenceSite.class));
+					bpModel.addNew(SequenceSite.class, genUri(SequenceSite.class, bpModel));
 			bpSequenceSiteEnd.setSequencePosition((int) endSequenceInterval);
 			toReturn.setSequenceIntervalEnd(bpSequenceSiteEnd);
 			
@@ -1321,11 +1321,20 @@ class EntryMapper implements Runnable {
 	 * using the xml base, model interface name 
 	 * and randomly generated long integer.
 	 *
-	 * @param type
+	 * @param type - biopax interface
+	 * @param model - the biopax model where to check whether the generated URI is not unique
 	 * @return 
 	 */
-	private String genUri(Class<? extends BioPAXElement> type) {
-		return xmlBase + type.getSimpleName()
+	private String genUri(Class<? extends BioPAXElement> type, Model model) {
+		String uri = xmlBase + type.getSimpleName()
 				+ Long.toString(random.nextLong());
+		
+		while(model.getByID(uri) != null) {
+			//if the uri was already assigned, generate new one;
+			//in practice, it rarely gets inside here
+			uri = xmlBase + type.getSimpleName() + Long.toString(random.nextLong());
+		}
+		
+		return uri;
 	}	
 }
