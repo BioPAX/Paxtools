@@ -93,6 +93,11 @@ public class L3ToSBGNPDConverter
 	protected Map<String, Set<String>> sbgn2BPMap;
 
 	/**
+	 * Option to flatten nested complexes.
+	 */
+	protected boolean flattenComplexContent;
+
+	/**
 	 * SBGN process glyph can be used to show reversible reactions. In that case two ports of the
 	 * process will only have product glyphs. However, this creates an incompatibility with BioPAX:
 	 * reversible biochemical reactions can have catalysis with a direction. But if we use a single
@@ -155,6 +160,7 @@ public class L3ToSBGNPDConverter
 
 		this.useTwoGlyphsForReversibleConversion = true;
 		this.sbgn2BPMap = new HashMap<String, Set<String>>();
+		this.flattenComplexContent = true;
 	}
 
 	/**
@@ -173,6 +179,16 @@ public class L3ToSBGNPDConverter
 	public void setUseTwoGlyphsForReversibleConversion(boolean useTwoGlyphsForReversibleConversion)
 	{
 		this.useTwoGlyphsForReversibleConversion = useTwoGlyphsForReversibleConversion;
+	}
+
+	public boolean isFlattenComplexContent()
+	{
+		return flattenComplexContent;
+	}
+
+	public void setFlattenComplexContent(boolean flattenComplexContent)
+	{
+		this.flattenComplexContent = flattenComplexContent;
 	}
 
 	/**
@@ -481,15 +497,25 @@ public class L3ToSBGNPDConverter
 	{
 		Glyph cg = glyphMap.get(convertID(cx.getRDFId()));
 
-		for (PhysicalEntity mem : cx.getComponent())
+		if (flattenComplexContent)
 		{
-			if (mem instanceof Complex)
-			{
-				addComplexAsMember((Complex) mem, cg);
-			}
-			else
+			for (PhysicalEntity mem : getFlattenedMembers(cx))
 			{
 				createComplexMember(mem, cg);
+			}
+		}
+		else
+		{
+			for (PhysicalEntity mem : cx.getComponent())
+			{
+				if (mem instanceof Complex)
+				{
+					addComplexAsMember((Complex) mem, cg);
+				}
+				else
+				{
+					createComplexMember(mem, cg);
+				}
 			}
 		}
 	}
@@ -520,6 +546,51 @@ public class L3ToSBGNPDConverter
 				createComplexMember(mem, inner);
 			}
 		}
+	}
+
+	/**
+	 * Gets the members of the Complex that needs to be displayed in a flattened view.
+	 * @param cx to get members
+	 * @return members to display
+	 */
+	private Set<PhysicalEntity> getFlattenedMembers(Complex cx)
+	{
+		Set<PhysicalEntity> set = new HashSet<PhysicalEntity>();
+
+		for (PhysicalEntity mem : cx.getComponent())
+		{
+			if (mem instanceof Complex)
+			{
+				if (!hasNonComplexMember((Complex) mem))
+				{
+					set.add(mem);
+				}
+				else
+				{
+					set.addAll(getFlattenedMembers((Complex) mem));
+				}
+			}
+			else set.add(mem);
+		}
+		return set;
+	}
+
+	/**
+	 * Checks if a Complex contains any PhysicalEntity member which is not a Complex.
+	 * @param cx to check
+	 * @return true if there is a non-complex member
+	 */
+	private boolean hasNonComplexMember(Complex cx)
+	{
+		for (PhysicalEntity mem : cx.getComponent())
+		{
+			if (! (mem instanceof Complex)) return true;
+			else
+			{
+				if (hasNonComplexMember((Complex) mem)) return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -585,7 +656,7 @@ public class L3ToSBGNPDConverter
 		// Use display name of entity
 		String name = pe.getDisplayName();
 
-		if (name == null)
+		if (name == null || name.trim().isEmpty())
 		{
 			if (er != null)
 			{
@@ -593,12 +664,12 @@ public class L3ToSBGNPDConverter
 				name = er.getDisplayName();
 			}
 
-			if (name == null)
+			if (name == null || name.trim().isEmpty())
 			{
 				// Use standard name of entity
 				name = pe.getStandardName();
 
-				if (name == null)
+				if (name == null || name.trim().isEmpty())
 				{
 					if (er != null)
 					{
@@ -606,7 +677,7 @@ public class L3ToSBGNPDConverter
 						name = er.getStandardName();
 					}
 
-					if (name == null)
+					if (name == null || name.trim().isEmpty())
 					{
 						if (!pe.getName().isEmpty())
 						{
@@ -630,11 +701,15 @@ public class L3ToSBGNPDConverter
 
 			if (shortName != null)
 			{
-				if (name == null || shortName.length() < name.length()) name = shortName;
+				if (name == null || (shortName.length() < name.length() &&
+					!shortName.isEmpty()))
+				{
+					name = shortName;
+				}
 			}
 		}
 		
-		if (name == null)
+		if (name == null || name.trim().isEmpty())
 		{
 			// Don't leave it without a name
 			name = "noname";
