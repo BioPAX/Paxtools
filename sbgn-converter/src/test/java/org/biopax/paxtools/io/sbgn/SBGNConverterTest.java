@@ -92,6 +92,7 @@ public class SBGNConverterTest
 		String out = "target/" + input + ".sbgn";
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, true);
+		conv.setFlattenComplexContent(false);
 
 		conv.writeSBGN(level3, out);
 
