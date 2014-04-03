@@ -42,6 +42,7 @@ import java.util.Set;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.BindingFeature;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.CellularLocationVocabulary;
@@ -55,6 +56,7 @@ import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
 import org.biopax.paxtools.model.level3.ExperimentalFormVocabulary;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.model.level3.PublicationXref;
@@ -182,7 +184,7 @@ class EntryMapper implements Runnable {
 
 		// iterate through the interactions and create biopax/paxtools mol. interactions
 		for (Interaction interaction : entry.getInteractions()) {
-			createInteraction(entryDataSourceName, availabilitySet, interaction);
+			processInteraction(entryDataSourceName, availabilitySet, interaction);
 		}
 		
 		// add the model to the shared (by multiple threads) marshaller
@@ -236,19 +238,20 @@ class EntryMapper implements Runnable {
 		return map;
 	}
 
-	/**
-	 * Creates a paxtools interaction object.
+	/*
+	 * Creates a paxtools object that
+	 * corresponds to the psi interaction.
 	 *
 	 * Note:
 	 *
-	 * psi.interactionElementType                 -> biopax.(physicalInteraction or MolecularInteraction)
+	 * psi.interactionElementType                 -> biopax.(physicalInteraction or MolecularInteraction) TODO consider Complex
 	 * psi.interactionElementType.participantList -> biopax.physicalInteraction.participants
 	 *
 	 * @param entryDataSourceName
 	 * @param availability
 	 * @param interaction
 	 */
-	private void createInteraction(String entryDataSourceName,
+	private void processInteraction(String entryDataSourceName,
 								   Set<String> availability,
 								   Interaction interaction) {
 
@@ -304,8 +307,11 @@ class EntryMapper implements Runnable {
 			bpXrefs.addAll(getXrefs(interaction.getXref(), true));
 		}
 
+		//TODO decide whether to generate an Interaction or Complex (e.g., from CORUM PSI-MI, "association")
+		
 		MolecularInteraction bpInteraction = createMolecularInteraction(name,
 				shortName, availability, bpParticipants, bpEvidence);
+		
 		//add xrefs
 		for (Xref bpXref : bpXrefs) {
 			if(bpXref instanceof Xref)
@@ -324,9 +330,6 @@ class EntryMapper implements Runnable {
 	 * @return
 	 */
 	private SimplePhysicalEntity createParticipant(Participant participant) {
-
-		// features
-		Set<EntityFeature> features = getFeatureList(participant.getFeatures());
 	
 		// get protein interactor type
 		// use the interactor ref to get the interactor out of the interactor list
@@ -356,16 +359,12 @@ class EntryMapper implements Runnable {
 
 		// create the physical entity which is contained within the participant, if it does not already exist
 		String physicalEntityRdfId = xmlBase + encode(interactorRef);
-		SimplePhysicalEntity bpPhysicalEntity = (SimplePhysicalEntity) bpModel.getByID(physicalEntityRdfId);
-		
+		SimplePhysicalEntity bpPhysicalEntity = (SimplePhysicalEntity) bpModel.getByID(physicalEntityRdfId);		
 		bpPhysicalEntity = (bpPhysicalEntity == null) ?
 			createPhysicalEntity(physicalEntityRdfId, interactor) : bpPhysicalEntity;
 		
-		if (features != null && features.size() > 0) {
-			for (EntityFeature feature : features) {
-				bpPhysicalEntity.addFeature(feature);
-			}
-		}
+		// add features
+		addFeatures(bpPhysicalEntity, participant.getFeatures());		
 			
 		if (cellularLocation != null && bpPhysicalEntity != null) {
 			bpPhysicalEntity.setCellularLocation(cellularLocation);
@@ -474,18 +473,17 @@ class EntryMapper implements Runnable {
 	}
 
 	/**
-	 * Creates a list of paxtools elements given a psi feature list
+	 * Given a psi feature list,
+	 * creates and adds biopax entity features to the physical entity.
 	 *
+	 * @param pe
 	 * @param psiFeatureList
-	 * @return
 	 */
-	private Set<EntityFeature> getFeatureList(Collection<Feature> psiFeatureList) {
+	private void addFeatures(SimplePhysicalEntity pe, Collection<Feature> psiFeatureList) {
 
 		// check args
-		if (psiFeatureList == null || psiFeatureList.size() == 0) return null;
-
-		// set to return
-		Set<EntityFeature> toReturn = new HashSet<EntityFeature>();
+		if (psiFeatureList == null || psiFeatureList.size() == 0) 
+			return;
 
 		// interate through psi feature list
 		for (Feature psiFeature : psiFeatureList) {
@@ -503,10 +501,12 @@ class EntryMapper implements Runnable {
 			// xref - use feature type xref
 			Set<Xref> bpSequenceFeatureXref = getXrefs(psiFeature.getXref(), false);// null/empty is ok too
 			//using the bpSequenceFeatureXref, it will try getting the feature while avoiding duplicates
-			toReturn.add(getFeature(bpSequenceFeatureXref, sequenceLocationSet, bpFeatureType));
+			Class<? extends EntityFeature> featureClass = (pe instanceof SmallMolecule)
+					? BindingFeature.class : EntityFeature.class; //TODO consider other types, e.g. ModificationFeature under some circumstances.
+			
+			EntityFeature feature = getFeature(bpSequenceFeatureXref, sequenceLocationSet, bpFeatureType, featureClass);
+			pe.addFeature(feature);
 		}
-
-		return toReturn;
 	}
 
 	/**
@@ -792,8 +792,6 @@ class EntryMapper implements Runnable {
 				}
 				// host organism list dropped
 				
-				// interaction detection method, participant detection method, feature detection method
-				Set<EvidenceCodeVocabulary> evidenceCodes = getEvidenceCodes(experimentDescription);
 				// confidence list
 				Set<Score> scores = new HashSet<Score>();
 				if (experimentDescription.hasConfidences()) {
@@ -809,6 +807,9 @@ class EntryMapper implements Runnable {
 				// experimental form
 				Set<ExperimentalForm> experimentalForms = getExperimentalFormSet(experimentDescription, interaction,
 																			  psimiParticipantToBiopaxParticipantMap);
+				
+				// interaction detection method, participant detection method, feature detection method
+				Set<EvidenceCodeVocabulary> evidenceCodes = getEvidenceCodes(experimentDescription);
 				// add evidence to list we are returning
 				Evidence evi = createEvidence(bpXrefs, evidenceCodes, scores, comments, experimentalForms);
 				toReturn.add(evi);
@@ -1056,6 +1057,9 @@ class EntryMapper implements Runnable {
 				bpEvidence.addExperimentalForm((ExperimentalForm)experimentalForm);
 			}
 		}
+		
+		for(EvidenceCodeVocabulary ecv : evidenceCodes)
+			bpEvidence.addEvidenceCode(ecv);
 			
 		return bpEvidence;
 	}
@@ -1202,17 +1206,20 @@ class EntryMapper implements Runnable {
 
 
 	/**
-	 * Gets a sequence/entity feature.
+	 * Gets a sequence entity feature.
 	 *
+	 * @param <T>
 	 * @param bpXrefs 
 	 * @param featureLocations
 	 * @param featureType
+	 * @param featureClass
 	 * 
 	 * @return
 	 */
-	private EntityFeature getFeature(Set<? extends Xref> bpXrefs,
+	private <T extends EntityFeature> T getFeature(Set<? extends Xref> bpXrefs,
 	                                Set<? extends SequenceLocation> featureLocations,
-	                                SequenceRegionVocabulary featureType)
+	                                SequenceRegionVocabulary featureType, 
+	                                Class<T> featureClass)
 	{		
 		Xref firstXref = null;		
 		String entityFeatureUri;
@@ -1222,7 +1229,7 @@ class EntryMapper implements Runnable {
 			firstXref = bpXrefs.iterator().next();
 			entityFeatureUri = xmlBase + "SF-" + encode(firstXref.getDb() + "_"+ firstXref.getId());
 			//try to find and reuse the feature
-			EntityFeature bpSequenceFeature = (EntityFeature) bpModel.getByID(entityFeatureUri);
+			T bpSequenceFeature = (T) bpModel.getByID(entityFeatureUri);
 			if (bpSequenceFeature != null) {
 				// TODO: EntityFeature is not XReferrable; what else to do with bpXrefs?
 				if (featureLocations != null) {
@@ -1240,7 +1247,7 @@ class EntryMapper implements Runnable {
 			entityFeatureUri = genUri(EntityFeature.class, bpModel);
 		}
 		
-		EntityFeature feature = bpModel.addNew(EntityFeature.class, entityFeatureUri);
+		T feature = bpModel.addNew(featureClass, entityFeatureUri);
 		// TODO: EntityFeature does not implement XReferrable; what to do with bpXrefs?
 		if (featureLocations != null)
 			for (SequenceLocation featureLocation : featureLocations) 

@@ -57,6 +57,14 @@
             <name>BioPAX Repository at Sourceforge</name>
             <url>http://biopax.sourceforge.net/m2repo/releases/</url>
         </repository>
+		<repository>
+			<id>pattern</id>
+			<name>Repository for BioPAX-pattern project</name>
+			<url>http://maven-repo.biopax-pattern.googlecode.com/hg/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
     </repositories>
 
     <properties>
@@ -110,10 +118,20 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search</artifactId>
-            <version>4.3.0.Final</version>
-        </dependency>
+<!-- we do not have to include hibernate; paxtools-core has those in "provided" scope;
+unless a project actually persists/indexes a biopax model, there is no need in hibarnate  -->
+<!--         <dependency> -->
+<!--             <groupId>org.hibernate</groupId> -->
+<!--             <artifactId>hibernate-search</artifactId> -->
+<!--             <version>4.3.0.Final</version> -->
+<!--             <scope>provided</scope> -->
+<!--         </dependency> -->
+        
+		<dependency>
+			<groupId>org.biopax.paxtools</groupId>
+			<artifactId>pattern</artifactId>
+			<version>[1,]</version>
+		</dependency>        
+        
     </dependencies>
 </project>
