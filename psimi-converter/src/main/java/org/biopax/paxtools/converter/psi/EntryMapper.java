@@ -49,14 +49,15 @@ import org.biopax.paxtools.model.level3.CellularLocationVocabulary;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.Dna;
 import org.biopax.paxtools.model.level3.DnaReference;
+import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.EntityFeature;
 import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
 import org.biopax.paxtools.model.level3.ExperimentalFormVocabulary;
+import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
 import org.biopax.paxtools.model.level3.PublicationXref;
@@ -181,7 +182,7 @@ class EntryMapper implements Runnable {
 				}
 			}
 		}
-
+		
 		// iterate through the interactions and create biopax/paxtools mol. interactions
 		for (Interaction interaction : entry.getInteractions()) {
 			processInteraction(entryDataSourceName, availabilitySet, interaction);
@@ -254,7 +255,6 @@ class EntryMapper implements Runnable {
 	private void processInteraction(String entryDataSourceName,
 								   Set<String> availability,
 								   Interaction interaction) {
-
 		// a map between psi-mi Participant and biopax participant - required below in getExperimentalData()
 		Map<Participant, SimplePhysicalEntity> psimiParticipantToBiopaxParticipantMap =
 				new HashMap<Participant, SimplePhysicalEntity>();
@@ -307,17 +307,37 @@ class EntryMapper implements Runnable {
 			bpXrefs.addAll(getXrefs(interaction.getXref(), true));
 		}
 
-		//TODO decide whether to generate an Interaction or Complex (e.g., from CORUM PSI-MI, "association")
 		
-		MolecularInteraction bpInteraction = createMolecularInteraction(name,
-				shortName, availability, bpParticipants, bpEvidence);
+		boolean complex = false; // TODO have to decide whether to generate an Interaction or Complex 
 		
-		//add xrefs
-		for (Xref bpXref : bpXrefs) {
-			if(bpXref instanceof Xref)
-				((MolecularInteraction) bpInteraction).addXref((Xref) bpXref);
+		Set<InteractionVocabulary> interactionVocabularies = new HashSet<InteractionVocabulary>();
+		if (interaction.hasInteractionTypes()) {
+			for(CvType interactionType : interaction.getInteractionTypes()) {
+				//generate InteractionVocabulary and set interactionType
+				InteractionVocabulary cv = findOrCreateControlledVocabulary(interactionType, InteractionVocabulary.class);
+				interactionVocabularies.add(cv);
+				//TODO e.g. if terms were 'direct interaction' or 'physical association' (as in IntAct), set complex=true
+			}
+		}
+	
+		Entity bpEntity = null;
+		
+		if (complex) {
+			//TODO generate a Complex, add the components (participants)
+		} else {
+			bpEntity = createMolecularInteraction(
+					name, shortName, availability, bpParticipants, bpEvidence);
+			
+			for(InteractionVocabulary iv : interactionVocabularies) {
+				((MolecularInteraction) bpEntity).addInteractionType(iv);
+			}
 		}
 		
+		// add xrefs
+		for (Xref bpXref : bpXrefs) {
+			if (bpXref instanceof Xref)
+				((MolecularInteraction) bpEntity).addXref((Xref) bpXref);
+		}
 	}
 
 	/**
@@ -1058,8 +1078,9 @@ class EntryMapper implements Runnable {
 			}
 		}
 		
-		for(EvidenceCodeVocabulary ecv : evidenceCodes)
-			bpEvidence.addEvidenceCode(ecv);
+		if(evidenceCodes != null)
+			for(EvidenceCodeVocabulary ecv : evidenceCodes)
+				bpEvidence.addEvidenceCode(ecv);
 			
 		return bpEvidence;
 	}

@@ -29,6 +29,7 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
+import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
 import org.biopax.paxtools.model.BioPAXLevel;
 
 import psidev.psi.mi.tab.PsimiTabException;
@@ -58,6 +59,8 @@ import java.util.concurrent.TimeUnit;
  * 3 - Creates a BioPAXMarshaller class to aggregate and marshall the data.
  *
  * @author Benjamin Gross, Igor Rodchenkov
+ * 
+ * @deprecated use {@link PsiToBiopax3Converter}
  */
 public class PSIMIBioPAXConverter implements PSIMIConverter {
 

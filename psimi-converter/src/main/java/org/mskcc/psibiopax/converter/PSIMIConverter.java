@@ -35,8 +35,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
 
+import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
+
 /**
  * An interface which provides methods to convert a PSI-MI file.
+ * @deprecated use {@link PsiToBiopax3Converter}
  */
 public interface PSIMIConverter {
 

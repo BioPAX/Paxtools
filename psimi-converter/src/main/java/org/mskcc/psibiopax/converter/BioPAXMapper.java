@@ -237,6 +237,9 @@ class BioPAXMapper {
 					EvidenceCodeVocabulary ecv =
 							bpModel.addNew(EvidenceCodeVocabulary.class, cv.getRDFId());
 					replaceControlledVocabulary(cv, ecv);
+					
+					if(!bpEvidence.getEvidenceCode().contains(ecv))
+						bpEvidence.addEvidenceCode(ecv);
 				}
 			}
 			if (scoresOrConfidences != null && scoresOrConfidences.size() > 0)
@@ -356,8 +359,7 @@ class BioPAXMapper {
 					bpModel.remove(formType);
 				}
 				ExperimentalFormVocabulary efv =
-						bpModel
-								.addNew(ExperimentalFormVocabulary.class, formType.getRDFId());
+						bpModel.addNew(ExperimentalFormVocabulary.class, formType.getRDFId());
 				replaceControlledVocabulary((ControlledVocabulary) formType,
 						efv);
 				bpExperimentalForm.addExperimentalFormDescription(efv);
