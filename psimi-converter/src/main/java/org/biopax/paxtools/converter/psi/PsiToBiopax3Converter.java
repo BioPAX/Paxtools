@@ -92,12 +92,13 @@ public class PsiToBiopax3Converter {
 	 *
 	 * @param inputStream PSI-MI
 	 * @param outputStream BioPAX
+	 * @param forceInteractionToComplex - always generate Complex instead of MolecularInteraction
 	 *
 	 * @throws IOException
 	 * @throws PsimiXmlReaderException
 	 */
-	public void convert(InputStream inputStream, OutputStream outputStream)
-		throws IOException, PsimiXmlReaderException {
+	public void convert(InputStream inputStream, OutputStream outputStream, 
+			boolean forceInteractionToComplex) throws IOException, PsimiXmlReaderException {
 
 		// check args
 		if (inputStream == null || outputStream == null) {
@@ -111,7 +112,7 @@ public class PsiToBiopax3Converter {
 		inputStream.close();
 		
 		// convert
-		convert(entrySet, outputStream);
+		convert(entrySet, outputStream, forceInteractionToComplex);
 	}
 
 	
@@ -121,12 +122,13 @@ public class PsiToBiopax3Converter {
 	 *
 	 * @param inputStream psimitab
 	 * @param outputStream biopax
+	 * @param forceInteractionToComplex - always generate Complex instead of MolecularInteraction
 	 *
 	 * @throws IOException
 	 * @throws PsimiTabException
 	 */
-	public void convertTab(InputStream inputStream, OutputStream outputStream)
-		throws IOException, PsimiTabException {
+	public void convertTab(InputStream inputStream, OutputStream outputStream, 
+			boolean forceInteractionToComplex) throws IOException, PsimiTabException {
 
 		// check args
 		if (inputStream == null || outputStream == null) {
@@ -149,7 +151,7 @@ public class PsiToBiopax3Converter {
 		inputStream.close();
 		
 		// convert
-		convert(entrySet, outputStream);
+		convert(entrySet, outputStream, forceInteractionToComplex);
 	}	
 	
 	/**
@@ -158,8 +160,10 @@ public class PsiToBiopax3Converter {
 	 *
 	 * @param entrySet
 	 * @param outputStream
+	 * @param forceInteractionToComplex - always generate Complex instead of MolecularInteraction
 	 */
-	public void convert(EntrySet entrySet, OutputStream outputStream) {
+	public void convert(EntrySet entrySet, OutputStream outputStream, 
+			boolean forceInteractionToComplex) {
 
 		// check args
 		if (entrySet == null || outputStream == null) {
@@ -177,7 +181,7 @@ public class PsiToBiopax3Converter {
 		// iterate through the list
 		for (Entry entry : entrySet.getEntries()) {
 			// create and start PSIMapper; use the same xml:base
-			exec.execute(new EntryMapper(xmlBase, biopaxMarshaller, entry));
+			exec.execute(new EntryMapper(xmlBase, biopaxMarshaller, entry, forceInteractionToComplex));
 		}
 		
 		exec.shutdown(); //no more tasks

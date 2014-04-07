@@ -46,6 +46,7 @@ import org.biopax.paxtools.model.level3.BindingFeature;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.CellularLocationVocabulary;
+import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.Dna;
 import org.biopax.paxtools.model.level3.DnaReference;
@@ -126,6 +127,8 @@ class EntryMapper implements Runnable {
 	private final BioPAXMarshaller biopaxMarshaller;
 	
 	private final Random random;
+	
+	private final boolean forceInteractionToComplex;
 
 	/**
 	 * Ref to interatorMap
@@ -146,12 +149,15 @@ class EntryMapper implements Runnable {
 	 * @param xmlBase
 	 * @param biopaxMarshaller
 	 * @param entry
+	 * @param forceInteractionToComplex - always generate Complex instead of MolecularInteraction
 	 */
-	public EntryMapper(String xmlBase, BioPAXMarshaller biopaxMarshaller, Entry entry) {
+	public EntryMapper(String xmlBase, BioPAXMarshaller biopaxMarshaller, 
+			Entry entry, boolean forceInteractionToComplex) {
 		this.entry = entry;
 		this.random = new Random(System.currentTimeMillis());
 		this.biopaxMarshaller = biopaxMarshaller;
 		this.xmlBase = xmlBase;
+		this.forceInteractionToComplex = forceInteractionToComplex;
 	}
 
 	/**
@@ -322,8 +328,10 @@ class EntryMapper implements Runnable {
 	
 		Entity bpEntity = null;
 		
-		if (complex) {
+		if (complex || forceInteractionToComplex) {
 			//TODO generate a Complex, add the components (participants)
+			bpEntity = createComplex(
+					name, shortName, availability, bpParticipants, bpEvidence);
 		} else {
 			bpEntity = createMolecularInteraction(
 					name, shortName, availability, bpParticipants, bpEvidence);
@@ -1188,7 +1196,53 @@ class EntryMapper implements Runnable {
 		return toReturn;
 	}
 
-
+	/**
+	 * New Complex.
+	 *
+	 * @param name
+	 * @param shortName
+	 * @param availability
+	 * @param participants
+	 * @param bpEvidence
+	 * @return
+	 */
+	private Complex createComplex(String name, String shortName,
+	                              Set<String> availability,
+	                              Set<? extends SimplePhysicalEntity> participants,
+	                              Set<Evidence> bpEvidence)
+	{
+		Complex toReturn = bpModel.addNew(Complex.class, genUri(Complex.class, bpModel));
+		
+		if (name != null)
+		{
+			toReturn.setStandardName(name);
+		}
+		if (shortName != null)
+		{
+			toReturn.setDisplayName(shortName);
+		}
+		if (availability != null && availability.size() > 0)
+		{
+			for (String availabilityStr : availability) {
+				toReturn.addAvailability(availabilityStr);
+			}
+		}
+		if (participants != null && participants.size() > 0)
+		{
+			for (SimplePhysicalEntity participant : participants) {
+				toReturn.addComponent(participant);
+			}
+		}
+		if (bpEvidence != null && bpEvidence.size() > 0)
+		{
+			for (Evidence evidence : bpEvidence) {
+				toReturn.addEvidence(evidence);
+			}
+		}
+			
+		return toReturn;
+	}
+	
 	/**
 	 * Gets a biosource.
 	 *

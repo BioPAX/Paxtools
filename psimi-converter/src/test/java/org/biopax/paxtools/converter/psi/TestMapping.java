@@ -99,7 +99,7 @@ public class TestMapping extends BioPAXMarshaller {
 
 			// get entry
 			Entry entry = (Entry)entries.iterator().next();
-			EntryMapper mapper = new EntryMapper("", this, entry);
+			EntryMapper mapper = new EntryMapper("", this, entry, false);
 			mapper.run();
 		}
 		catch (Exception e) {
