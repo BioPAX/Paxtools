@@ -328,6 +328,8 @@ class EntryMapper implements Runnable {
 	
 		Entity bpEntity = null;
 		
+		//TODO set bf.bindsTo symmetrical props (e.g., for IntAct Complex data, can use <inferredInteractionList> element)	
+		
 		if (complex || forceInteractionToComplex) {
 			//TODO generate a Complex, add the components (participants)
 			bpEntity = createComplex(
