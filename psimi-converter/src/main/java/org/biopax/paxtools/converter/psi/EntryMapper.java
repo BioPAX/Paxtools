@@ -343,8 +343,7 @@ class EntryMapper implements Runnable {
 		
 		// add xrefs
 		for (Xref bpXref : bpXrefs) {
-			if (bpXref instanceof Xref)
-				((MolecularInteraction) bpEntity).addXref((Xref) bpXref);
+			bpEntity.addXref(bpXref);
 		}
 	}
 
