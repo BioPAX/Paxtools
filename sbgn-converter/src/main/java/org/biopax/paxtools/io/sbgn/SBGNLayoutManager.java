@@ -218,6 +218,8 @@ public class SBGNLayoutManager
                     continue;
 
                 Glyph compartment = idToCompartmentGlyphs.get(entries.get(0).getKey());
+		//Set compartmentRef of process glyph also!
+		glyph.setCompartmentRef(compartment);
                 compartment.getGlyph().add(glyph);
 
                 //Remove it from sbgn also
