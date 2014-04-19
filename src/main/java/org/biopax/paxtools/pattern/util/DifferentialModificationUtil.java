@@ -33,6 +33,26 @@ public class DifferentialModificationUtil
 		return new Set[]{collectFeatures(set2), collectFeatures(set1)};
 	}
 
+	public static Set<String> collectChangedPhosphorylationSites(PhysicalEntity before,
+		PhysicalEntity after, boolean gained)
+	{
+		Set<ModificationFeature> set = getChangedModifications(before, after)[gained ? 0 : 1];
+		Set<String> sites = new HashSet<String>();
+		for (ModificationFeature mf : set)
+		{
+			String lett = getPhosphoSiteLetter(mf);
+			if (lett != null)
+			{
+				int site = getPhosphoSite(mf);
+				if (site > 0)
+				{
+					sites.add(lett + site);
+				}
+			}
+		}
+		return sites;
+	}
+
 	private static Set<Modification> collectFeatures(PhysicalEntity pe)
 	{
 		Set<Modification> set = new HashSet<Modification>();
@@ -125,5 +145,33 @@ public class DifferentialModificationUtil
 			return mf.getFeatureLocation().equivalenceCode() ==
 				m.mf.getFeatureLocation().equivalenceCode();
 		}
+	}
+
+	private static String getPhosphoSiteLetter(ModificationFeature mf)
+	{
+		if (mf.getModificationType() != null)
+		{
+			for (String term : mf.getModificationType().getTerm())
+			{
+				term = term.toLowerCase();
+				if (term.contains("phospho"))
+				{
+					if (term.contains("serine")) return "S";
+					if (term.contains("threonine")) return "T";
+					if (term.contains("tyrosine")) return "Y";
+				}
+			}
+		}
+		return null;
+	}
+
+	private static int getPhosphoSite(ModificationFeature mf)
+	{
+		SequenceLocation loc = mf.getFeatureLocation();
+		if (loc != null && loc instanceof SequenceSite)
+		{
+			return ((SequenceSite) loc).getSequencePosition();
+		}
+		return -1;
 	}
 }

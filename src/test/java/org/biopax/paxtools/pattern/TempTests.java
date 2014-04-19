@@ -9,6 +9,7 @@ import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.pattern.util.RelType;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -444,23 +445,52 @@ public class TempTests
 	@Ignore
 	public void tempCode() throws FileNotFoundException
 	{
-		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
-		Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
-		OldFormatWriter.write(binaryInts, new FileOutputStream("/path/to/output.sif"));
-
-//		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
-		searcher.searchSIF(model, new FileOutputStream("/path/to/output.sif"), new SIFToText()
+		Miner miner = new MinerAdapter("PhysicalEntity-to-ComplexAssembly", "Finds PhysicalEntity " +
+			"objects which are input to a ComplexAssembly.")
 		{
-			@Override
-			public String convert(SIFInteraction inter)
+			/**
+			 * The pattern is composed of two proteins associated to a complex as members. The
+			 * relation can be through nested memberships or through generic relations.
+			 */
+			public Pattern constructPattern()
 			{
-				String s = inter.toString();
-				for (String pmID : inter.getPubmedIDs())
-				{
-					s += "\t" + pmID;
-				}
-				return s;
+				Pattern p = new Pattern(PhysicalEntity.class, "PE");
+				p.add(new ParticipatesInConv(RelType.INPUT), "PE", "Conv");
+//				p.add(new Type(ComplexAssembly.class), "Conv");
+				return p;
 			}
-		});
+
+			/**
+			 * Writes the result as "P1 P2", where P1 and P2 are gene symbols of proteins and the
+			 * whitespace is tab. The relation is undirected, so "P2 P1" is treated as the same
+			 * relation.
+			 */
+			public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
+				throws IOException
+			{
+				Writer writer = new OutputStreamWriter(out);
+				for (BioPAXElement ele : matches.keySet())
+				{
+					for (Match match : matches.get(ele))
+					{
+						BioPAXElement conv = match.get("Conv", getPattern());
+
+						if (conv instanceof ComplexAssembly)
+							writer.write(ele.getRDFId() + "\t" + conv.getRDFId() + "\n");
+					}
+				}
+				writer.close();
+			}
+		};
+
+		// Launch the GUI that will assist choosing a source model, and output file name
+		Dialog d = new Dialog(miner);
+		d.setVisible(true);
+	}
+
+	public static void main(String[] args) throws FileNotFoundException
+	{
+		TempTests tt = new TempTests();
+		tt.tempCode();
 	}
 }

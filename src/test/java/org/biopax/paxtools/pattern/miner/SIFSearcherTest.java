@@ -114,11 +114,17 @@ public class SIFSearcherTest extends PatternBoxTest
 		Blacklist blacklist = gen.generateBlacklist(model);
 		blacklist.write(new FileOutputStream("blacklist.txt"));
 
-		SIFSearcher s = new SIFSearcher(SIFEnum.values());
+//		SIFSearcher s = new SIFSearcher(SIFEnum.values());
+		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
+			new CSCOThroughDegradationMiner(), new CSCOThroughControllingSmallMoleculeMiner(),
+			new ControlsExpressionMiner(), new ControlsExpressionWithConvMiner()};
+		for (SIFMiner miner : miners) miner.setBlacklist(blacklist);
+
+		SIFSearcher s = new SIFSearcher(miners);
 		s.setBlacklist(blacklist);
 
 		confirmPresenceOfUbiques(model, blacklist);
-		s.searchSIF(model, new FileOutputStream("/home/ozgun/PC.sif"), true);
+		s.searchSIF(model, new FileOutputStream("/home/ozgun/PCt2.sif"), true);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));

@@ -25,6 +25,7 @@ import java.net.URLConnection;
 import java.util.*;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipInputStream;
 
 import static javax.swing.JOptionPane.*;
 
@@ -49,12 +50,22 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	/**
 	 * Checkbox for downloading and using PC data.
 	 */
-	private JRadioButton customRadio;
+	private JRadioButton customFileRadio;
+
+	/**
+	 * Checkbox for downloading and using PC data.
+	 */
+	private JRadioButton customURLRadio;
 
 	/**
 	 * Text fiels for model filename.
 	 */
 	private JTextField modelField;
+
+	/**
+	 * Text fiels for model filename.
+	 */
+	private JTextField urlField;
 
 	/**
 	 * Button for loading the model.
@@ -192,19 +203,14 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		con.ipadx = 5;
 		modelPanel.add(pcCombo, con);
 
-		customRadio = new JRadioButton("Use custom file");
-		customRadio.addActionListener(this);
-		customRadio.setBackground(BACKGROUND);
+		customFileRadio = new JRadioButton("Use custom file");
+		customFileRadio.addActionListener(this);
+		customFileRadio.setBackground(BACKGROUND);
 		con = new GridBagConstraints();
 		con.gridx = 0;
 		con.gridy = 1;
 		con.anchor = GridBagConstraints.LINE_START;
-		modelPanel.add(customRadio, con);
-
-		ButtonGroup group = new ButtonGroup();
-		group.add(pcRadio);
-		group.add(customRadio);
-		group.setSelected(pcRadio.getModel(), true);
+		modelPanel.add(customFileRadio, con);
 
 		JPanel modelChooserPanel = new JPanel(new FlowLayout());
 		modelField = new JTextField(15);
@@ -221,6 +227,30 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		con.gridy = 1;
 		con.anchor = GridBagConstraints.CENTER;
 		modelPanel.add(modelChooserPanel, con);
+
+		customURLRadio = new JRadioButton("Use the owl at URL");
+		customURLRadio.addActionListener(this);
+		customURLRadio.setBackground(BACKGROUND);
+		con = new GridBagConstraints();
+		con.gridx = 0;
+		con.gridy = 2;
+		con.anchor = GridBagConstraints.LINE_START;
+		modelPanel.add(customURLRadio, con);
+
+		urlField = new JTextField(15);
+		urlField.addKeyListener(this);
+		urlField.setEnabled(false);
+		con = new GridBagConstraints();
+		con.gridx = 1;
+		con.gridy = 2;
+		con.anchor = GridBagConstraints.LINE_START;
+		modelPanel.add(urlField, con);
+
+		ButtonGroup group = new ButtonGroup();
+		group.add(pcRadio);
+		group.add(customFileRadio);
+		group.add(customURLRadio);
+		group.setSelected(pcRadio.getModel(), true);
 
 		modelPanel.setBorder(BorderFactory.createTitledBorder("Source model"));
 		modelPanel.setBackground(BACKGROUND);
@@ -322,17 +352,14 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (e.getSource() == pcRadio)
+		if (e.getSource() == pcRadio ||
+			e.getSource() == customFileRadio ||
+			e.getSource() == customURLRadio)
 		{
 			pcCombo.setEnabled(pcRadio.isSelected());
-			modelField.setEnabled(!pcRadio.isSelected());
-			loadButton.setEnabled(!pcRadio.isSelected());
-		}
-		else if (e.getSource() == customRadio)
-		{
-			pcCombo.setEnabled(!customRadio.isSelected());
-			modelField.setEnabled(customRadio.isSelected());
-			loadButton.setEnabled(customRadio.isSelected());
+			modelField.setEnabled(customFileRadio.isSelected());
+			loadButton.setEnabled(customFileRadio.isSelected());
+			urlField.setEnabled(customURLRadio.isSelected());
 		}
 		else if (e.getSource() == loadButton)
 		{
@@ -372,8 +399,10 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private void checkRunButton()
 	{
-		runButton.setEnabled((pcRadio.isSelected() || !modelField.getText().trim().isEmpty()) &&
-			!outputField.getText().trim().isEmpty());
+		runButton.setEnabled((pcRadio.isSelected() ||
+			(customFileRadio.isSelected() && !modelField.getText().trim().isEmpty()) ||
+			(customURLRadio.isSelected() && !urlField.getText().trim().isEmpty()))
+			&& !outputField.getText().trim().isEmpty());
 	}
 
 	/**
@@ -399,33 +428,39 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	private Object[] getAvailablePatterns()
 	{
 		List<Miner> minerList = new ArrayList<Miner>();
-		if (miners != null) minerList.addAll(Arrays.asList(miners));
-		minerList.add(new DirectedRelationMiner());
-		minerList.add(new ControlsStateChangeOfMiner());
-		minerList.add(new CSCOButIsParticipantMiner());
-		minerList.add(new CSCOBothControllerAndParticipantMiner());
-		minerList.add(new CSCOThroughControllingSmallMoleculeMiner());
-		minerList.add(new CSCOThroughBindingSmallMoleculeMiner());
-		minerList.add(new ControlsStateChangeDetailedMiner());
-		minerList.add(new ControlsPhosphorylationMiner());
-		minerList.add(new ControlsTransportMiner());
-		minerList.add(new ControlsExpressionMiner());
-		minerList.add(new ControlsExpressionWithConvMiner());
-		minerList.add(new CSCOThroughDegradationMiner());
-		minerList.add(new ControlsDegradationIndirectMiner());
-		minerList.add(new ConsumptionControlledByMiner());
-		minerList.add(new ControlsProductionOfMiner());
-		minerList.add(new CatalysisPrecedesMiner());
-		minerList.add(new ChemicalAffectsThroughBindingMiner());
-		minerList.add(new ChemicalAffectsThroughControlMiner());
-		minerList.add(new ControlsTransportOfChemicalMiner());
-		minerList.add(new InComplexWithMiner());
-		minerList.add(new InteractsWithMiner());
-		minerList.add(new NeighborOfMiner());
-		minerList.add(new ReactsWithMiner());
-		minerList.add(new UsedToProduceMiner());
-		minerList.add(new RelatedGenesOfInteractionsMiner());
-		minerList.add(new UbiquitousIDMiner());
+		if (miners != null && miners.length > 0)
+		{
+			minerList.addAll(Arrays.asList(miners));
+		}
+		else
+		{
+			minerList.add(new DirectedRelationMiner());
+			minerList.add(new ControlsStateChangeOfMiner());
+			minerList.add(new CSCOButIsParticipantMiner());
+			minerList.add(new CSCOBothControllerAndParticipantMiner());
+			minerList.add(new CSCOThroughControllingSmallMoleculeMiner());
+			minerList.add(new CSCOThroughBindingSmallMoleculeMiner());
+			minerList.add(new ControlsStateChangeDetailedMiner());
+			minerList.add(new ControlsPhosphorylationMiner());
+			minerList.add(new ControlsTransportMiner());
+			minerList.add(new ControlsExpressionMiner());
+			minerList.add(new ControlsExpressionWithConvMiner());
+			minerList.add(new CSCOThroughDegradationMiner());
+			minerList.add(new ControlsDegradationIndirectMiner());
+			minerList.add(new ConsumptionControlledByMiner());
+			minerList.add(new ControlsProductionOfMiner());
+			minerList.add(new CatalysisPrecedesMiner());
+			minerList.add(new ChemicalAffectsThroughBindingMiner());
+			minerList.add(new ChemicalAffectsThroughControlMiner());
+			minerList.add(new ControlsTransportOfChemicalMiner());
+			minerList.add(new InComplexWithMiner());
+			minerList.add(new InteractsWithMiner());
+			minerList.add(new NeighborOfMiner());
+			minerList.add(new ReactsWithMiner());
+			minerList.add(new UsedToProduceMiner());
+			minerList.add(new RelatedGenesOfInteractionsMiner());
+			minerList.add(new UbiquitousIDMiner());
+		}
 
 		for (Miner miner : minerList)
 		{
@@ -505,9 +540,31 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 				assert modFile.exists();
 			}
 		}
-		else
+		else if (customFileRadio.isSelected())
 		{
 			modFile = new File(modelField.getText());
+		}
+		else if (customURLRadio.isSelected())
+		{
+			String url = urlField.getText().trim();
+			prgLabel.setText("Downloading model");
+			if (url.endsWith(".gz")) downloadCompressed(prg, url, "temp.owl", true);
+			else if (url.endsWith(".zip")) downloadCompressed(prg, url, "temp.owl", false);
+			else downloadPlain(url, "temp.owl");
+
+			modFile = new File("temp.owl");
+
+			if (!modFile.exists())
+			{
+				showMessageDialog(this,
+					"Cannot download the model at the given URL.");
+				eraseProgressBar();
+				return;
+			}
+		}
+		else
+		{
+			throw new RuntimeException("Code should not be able to reach here!");
 		}
 
 		// Get the output file
@@ -621,32 +678,35 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private boolean downloadPC(ProgressWatcher prg)
 	{
+		return downloadCompressed(prg, getPCDataURL(), getPCFilename(), true);
+	}
+
+	private boolean downloadCompressed(ProgressWatcher prg, String urlString, String filename,
+		boolean gz)
+	{
 		try
 		{
-			URL url = new URL(getPCDataURL());
+			URL url = new URL(urlString);
 			URLConnection con = url.openConnection();
-			GZIPInputStream in = new GZIPInputStream(con.getInputStream());
+			InputStream in = gz ? new GZIPInputStream(con.getInputStream()) :
+				new ZipInputStream(con.getInputStream());
 
 			prg.setTotalTicks(con.getContentLength() * 8);
-			System.out.println(con.getContentLength());
 
 			// Open the output file
-			OutputStream out = new FileOutputStream(getPCFilename());
+			OutputStream out = new FileOutputStream(filename);
 			// Transfer bytes from the compressed file to the output file
 			byte[] buf = new byte[1024];
 
-			int total = 0;
 			int lines = 0;
 			int len;
 			while ((len = in.read(buf)) > 0)
 			{
-				total += len;
 				prg.tick(len);
 				out.write(buf, 0, len);
 				lines++;
 			}
 
-			System.out.println("total = " + total);
 			// Close the file and stream
 			in.close();
 			out.close();
@@ -666,30 +726,30 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private static boolean downloadUbiques()
 	{
+		return downloadPlain(UBIQUE_URL, UBIQUE_FILE);
+	}
+
+	private static boolean downloadPlain(String urlString, String file)
+	{
 		try
 		{
-			URL url = new URL(UBIQUE_URL);
+			URL url = new URL(urlString);
 			URLConnection con = url.openConnection();
 			InputStream in = con.getInputStream();
 
-			System.out.println(con.getContentLength());
-
 			// Open the output file
-			OutputStream out = new FileOutputStream(UBIQUE_FILE);
+			OutputStream out = new FileOutputStream(file);
 			// Transfer bytes from the compressed file to the output file
 			byte[] buf = new byte[1024];
 
-			int total = 0;
 			int lines = 0;
 			int len;
 			while ((len = in.read(buf)) > 0)
 			{
-				total += len;
 				out.write(buf, 0, len);
 				lines++;
 			}
 
-			System.out.println("total = " + total);
 			// Close the file and stream
 			in.close();
 			out.close();

@@ -95,6 +95,37 @@ public class Pattern
 		}
 	}
 
+	/**
+	 * Removes the last constraint added to the pattern.
+	 */
+	public void removeLastConstraint()
+	{
+		if (constraints.isEmpty()) return;
+
+		MappedConst mc = constraints.get(constraints.size() - 1);
+		constraints.remove(mc);
+		if (mc.canGenerate() && mc.getInds()[mc.getInds().length - 1] == lastIndex)
+		{
+			setLastIndexToMaxFound();
+		}
+	}
+
+	/**
+	 * This method is used after removal of an generative constraint. Searching the remaining
+	 * constraints, we decide the value of lastIndex.
+	 */
+	private void setLastIndexToMaxFound()
+	{
+		int max = -1;
+		for (MappedConst mc : constraints)
+		{
+			int[] ind = mc.getInds();
+			int last = ind[ind.length - 1];
+			if (last > max) max = last;
+		}
+		lastIndex = max;
+	}
+
 	public void optimizeConstraintOrder()
 	{
 		// determine what should come after what
