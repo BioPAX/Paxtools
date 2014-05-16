@@ -82,7 +82,7 @@ public class Traverser
 		{
 			if (filter(editor))
 			{
-				Set<?> valueSet = new HashSet<Object>(editor.getValueFromBean(element));
+				Set<?> valueSet = editor.getValueFromBean(element);
 				if (!valueSet.isEmpty())
                     traverseElements(element, model, editor, valueSet);
             }

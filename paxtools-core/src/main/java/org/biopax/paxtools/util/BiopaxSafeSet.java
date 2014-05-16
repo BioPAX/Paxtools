@@ -34,32 +34,42 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 
 	@Override
 	public Iterator<E> iterator() {
-		return map.values().iterator();
+		synchronized (map) {
+			return map.values().iterator();
+		}
 	}
 
 	@Override
 	public int size()
 	{
-		return map.size();
+		synchronized (map) {
+			return map.size();
+		}
 	}
 	
 	@Override
 	public boolean add(E bpe)
 	{
-		if(this.isEmpty())
-		{
-			this.map = BPCollections.I.createMap();
-		}
-		String uri = bpe.getRDFId();
-		if(!map.containsKey(uri)) {
-			map.put(uri, bpe);
-			return true;
-		} else { 
-			//do not throw an ex., because duplicate attempts occur naturally 
-			// (e.g., same PE on both left and right sides of a reaction 
-			// causes same participant/participantOf is touched twice) 
-			LOG.debug("ignored duplicate:" + bpe.getRDFId());
-			return false;
+		synchronized (map) {
+		
+			if(this.isEmpty())
+			{
+				this.map = BPCollections.I.createMap();
+			}
+			
+			String uri = bpe.getRDFId();
+		
+			if (!map.containsKey(uri)) {
+				map.put(uri, bpe);
+				return true;
+			} else {
+				// do not throw an ex., because duplicate attempts occur
+				// naturally
+				// (e.g., same PE on both left and right sides of a reaction
+				// causes same participant/participantOf is touched twice)
+				LOG.debug("ignored duplicate:" + bpe.getRDFId());
+				return false;
+			}
 		}
 	}
 	
@@ -78,6 +88,8 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 	 * @return BioPAX object or null
 	 */
 	public E get(String uri) {
-		return map.get(uri);
+		synchronized (map) {
+			return map.get(uri);
+		}
 	}
 }
