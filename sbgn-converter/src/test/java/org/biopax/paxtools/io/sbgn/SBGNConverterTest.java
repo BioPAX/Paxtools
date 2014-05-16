@@ -4,6 +4,7 @@ import static junit.framework.Assert.*;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sbgn.GlyphClazz;
 import org.sbgn.SbgnUtil;
@@ -133,6 +134,7 @@ public class SBGNConverterTest
 		assertTrue(hasNestedComplex);
 	}
 
+	@Ignore
 	@Test
 	public void testStoichiometry() throws JAXBException, IOException, SAXException
 	{
