@@ -134,7 +134,6 @@ public class SBGNConverterTest
 		assertTrue(hasNestedComplex);
 	}
 
-	@Ignore
 	@Test
 	public void testStoichiometry() throws JAXBException, IOException, SAXException
 	{
