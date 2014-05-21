@@ -83,7 +83,9 @@ public class ExperimentalFormImpl extends L3ElementImpl implements ExperimentalF
 	
 	public void setExperimentalFormEntity(Entity experimentalFormEntity)
 	{
-		if(PhysicalEntity.class.isAssignableFrom(experimentalFormEntity.getClass())
+		if(experimentalFormEntity == null) {
+			this.experimentalFormEntity = null;
+		} else if(PhysicalEntity.class.isAssignableFrom(experimentalFormEntity.getClass())
                 || Gene.class.isInstance(experimentalFormEntity)) {
                 this.experimentalFormEntity = experimentalFormEntity;
         } else {
