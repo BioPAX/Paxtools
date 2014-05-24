@@ -17,6 +17,7 @@ import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map;
 
@@ -1348,7 +1349,7 @@ public class L3ToSBGNPDConverter
 			Glyph card = factory.createGlyph();
 			card.setClazz(CARDINALITY.getClazz());
 			Label label = factory.createLabel();
-			label.setText("" + stoic.getStoichiometricCoefficient());
+			label.setText(new DecimalFormat("0.##").format(stoic.getStoichiometricCoefficient()));
 			card.setLabel(label);
 			arc.getGlyph().add(card);
 		}
