@@ -651,7 +651,7 @@ class EntryMapper implements Runnable {
 
 		if (bpXrefs != null && bpXrefs.size() > 0)
 			for (Xref bpXref : bpXrefs)
-				toReturn.addXref((Xref)bpXref);
+				toReturn.addXref(bpXref);
 
 		return toReturn;
  	}
