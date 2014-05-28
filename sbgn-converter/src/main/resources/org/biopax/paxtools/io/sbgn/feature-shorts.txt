@@ -89,7 +89,7 @@
 "L-leucine removal"		
 "MOD_RES Phosphothreonine (Probable)"		
 "MOD_RES N6-methylated lysine (By similarity)"		
-"ubiquitination"		
+"ubiquitination"	"Ub"
 "carboxylated residue"		
 "protonated residue"		
 "MOD_RES N6-(pyridoxal phosphate)lysine"		

@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
-		<version>4.2.0-SNAPSHOT</version>
+		<version>4.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>paxtools-console</artifactId>
 	<packaging>jar</packaging>
@@ -66,7 +66,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>jena</id>
@@ -83,7 +83,19 @@
 			</dependencies>
 		</profile>
 	</profiles>
-	
+
+	<repositories>
+		<repository>
+			<id>pattern</id>
+			<name>Repository for BioPAX-pattern project</name>
+			<url>http://maven-repo.biopax-pattern.googlecode.com/hg/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -105,21 +117,31 @@
 			<artifactId>gsea-converter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>sbgn-converter</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>sbgn-converter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>paxtools-query</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
+			<groupId>org.biopax.paxtools</groupId>
+			<artifactId>pattern</artifactId>
+			<version>[1,]</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>fluent-hc</artifactId>
+			<version>4.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.3.1</version>
 		</dependency>
 	</dependencies>
-	
+
 </project>

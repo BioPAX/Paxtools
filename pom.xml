@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
-	<version>4.2.0-SNAPSHOT</version>
+	<version>4.3.0-SNAPSHOT</version>
 
 	<name>Paxtools</name>
 	<packaging>pom</packaging>
@@ -25,7 +25,10 @@
 		<module>sbgn-converter</module>
 		<module>paxtools-console</module>
 		<module>paxtools-query</module>
-<!--         <module>json-converter</module> -->
+		<module>paxtools-trove</module>
+        <module>paxtools-archetype</module>
+        <module>json-converter</module>
+        <module>paxtools-search</module>
 	</modules>
 
 	<properties>
@@ -41,8 +44,8 @@
 		<junit.version>4.10</junit.version>
 		<commons-logging.version>1.1.1</commons-logging.version>
 		<log4j.version>1.2.13</log4j.version>
-		<hibernate-core.version>4.2.0.Final</hibernate-core.version>
-		<hibernate-search.version>4.2.0.Final</hibernate-search.version>
+		<hibernate-core.version>4.2.7.Final</hibernate-core.version>
+		<hibernate-search.version>4.3.0.Final</hibernate-search.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<collections-generic.version>4.01</collections-generic.version>
 		
@@ -54,7 +57,7 @@
 		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
 		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
 		
-		<maven-site-plugin.version>3.2</maven-site-plugin.version>
+		<maven-site-plugin.version>3.3</maven-site-plugin.version>
 		<maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
 		<maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
 		<maven-project-info-reports-plugin.version>2.6</maven-project-info-reports-plugin.version>
@@ -202,7 +205,8 @@
 		<developerConnection>scm:hg:ssh://${scm.username}@hg.code.sf.net/p/biopax/paxtools</developerConnection>
 		<url>http://sourceforge.net/p/biopax/paxtools</url>
 <!-- 	  	<tag>tip</tag> -->
-	</scm>
+	  <tag>HEAD</tag>
+  </scm>
 
 	<distributionManagement>
 		<site>
@@ -220,6 +224,7 @@
 			<name>BioPAX Releases Repository</name>
 			<url>${biopax.release.url}</url>
 		</repository>
+		<downloadUrl>http://www.biopax.org/downloads/paxtools/</downloadUrl>
 	</distributionManagement>
 
 	<organization>

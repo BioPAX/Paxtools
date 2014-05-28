@@ -82,7 +82,7 @@ public class Traverser
 		{
 			if (filter(editor))
 			{
-				Set<?> valueSet = new HashSet<Object>(editor.getValueFromBean(element));
+				Set<?> valueSet = editor.getValueFromBean(element);
 				if (!valueSet.isEmpty())
                     traverseElements(element, model, editor, valueSet);
             }
@@ -91,7 +91,7 @@ public class Traverser
 
     protected void traverseElements(BioPAXElement element, Model model, PropertyEditor<?,?> editor, Set<?> valueSet)
     {
-        for (Object value : valueSet)
+        for (Object value : new HashSet<Object>(valueSet))
         {
         	visitor.visit(element, value, model, editor);
         }

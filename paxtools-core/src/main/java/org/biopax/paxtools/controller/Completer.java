@@ -43,6 +43,8 @@ public class Completer implements Visitor
 
 	public Set<BioPAXElement> complete(Collection<BioPAXElement> elements, Model model)
 	{
+		completed.clear();
+
 		for (BioPAXElement element : elements)
 		{
 			if (!completed.contains(element))

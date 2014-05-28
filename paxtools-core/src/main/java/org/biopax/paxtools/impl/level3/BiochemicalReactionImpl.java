@@ -3,20 +3,17 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.BiochemicalReaction;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.KPrime;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import javax.persistence.Entity;
 import java.util.Set;
 
 @Entity
@@ -41,11 +38,11 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 	public BiochemicalReactionImpl()
 	{
-		this.deltaG = new BiopaxSafeSet<DeltaG>();
-		this.deltaH = new HashSet<Float>();
-		this.deltaS = new HashSet<Float>();
-		this.eCNumber = new HashSet<String>();
-		this.kEQ = new BiopaxSafeSet<KPrime>();
+		this.deltaG = BPCollections.I.createSafeSet();
+		this.deltaH = BPCollections.I.createSet();
+		this.deltaS = BPCollections.I.createSet();
+		this.eCNumber = BPCollections.I.createSet();
+		this.kEQ = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

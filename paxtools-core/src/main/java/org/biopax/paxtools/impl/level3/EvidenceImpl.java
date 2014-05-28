@@ -3,18 +3,14 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
@@ -36,9 +32,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 */
 	public EvidenceImpl()
 	{
-		this.confidence = new BiopaxSafeSet<Score>();
-		this.evidenceCode = new BiopaxSafeSet<EvidenceCodeVocabulary>();
-		this.experimentalForm = new BiopaxSafeSet<ExperimentalForm>();
+		this.confidence = BPCollections.I.createSafeSet();
+		this.evidenceCode = BPCollections.I.createSafeSet();
+		this.experimentalForm = BPCollections.I.createSafeSet();
 	}
 
 	//
@@ -166,7 +162,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	}
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="experimentalForm")	
 	public Set<ExperimentalForm> getExperimentalForm()
 	{

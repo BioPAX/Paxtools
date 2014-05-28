@@ -2,21 +2,17 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
-import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Entity;
 
 @Entity
 @Proxy(proxyClass= Complex.class)
@@ -34,8 +30,8 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 	public ComplexImpl()
 	{
-		this.component = new BiopaxSafeSet<PhysicalEntity>();
-		this.componentStoichiometry = new BiopaxSafeSet<Stoichiometry>();
+		this.component = BPCollections.I.createSafeSet();
+		this.componentStoichiometry = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -113,7 +109,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	@Transient
 	public Set<SimplePhysicalEntity> getSimpleMembers()
 	{
-		return getSimpleMembers(new HashSet<SimplePhysicalEntity>());
+		return getSimpleMembers(BPCollections.I.<SimplePhysicalEntity>createSet());
 	}
 
 	@Transient
@@ -145,7 +141,7 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 	@Transient
 	public Set<EntityReference> getMemberReferences()
 	{
-		Set<EntityReference> set = new HashSet<EntityReference>();
+		Set<EntityReference> set = BPCollections.I.createSet();
 
 		for (SimplePhysicalEntity spe : getSimpleMembers())
 		{

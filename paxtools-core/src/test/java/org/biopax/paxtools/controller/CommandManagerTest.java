@@ -41,7 +41,7 @@ public class CommandManagerTest
 		manager.redo();
 
 		PropertyEditor propertyEditor =
-				PropertyEditor.createPropertyEditor(MolecularInteraction.class, "participant");
+				AbstractPropertyEditor.createPropertyEditor(MolecularInteraction.class, "participant");
 		manager.addProperty(interaction, propertyEditor,protein);
 		manager.addProperty(interaction, propertyEditor,protein2);
 		assertTrue(model.getObjects().size()==3);

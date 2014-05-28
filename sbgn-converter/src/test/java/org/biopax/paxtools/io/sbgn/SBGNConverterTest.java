@@ -4,8 +4,11 @@ import static junit.framework.Assert.*;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.sbgn.GlyphClazz;
 import org.sbgn.SbgnUtil;
+import org.sbgn.bindings.Arc;
 import org.sbgn.bindings.Glyph;
 import org.sbgn.bindings.Sbgn;
 import org.xml.sax.SAXException;
@@ -70,6 +73,14 @@ public class SBGNConverterTest
 				assertTrue(g.getGlyph().isEmpty());
 			}
 		}
+
+		// Assert that the id mapping is not empty.
+		assertFalse(conv.getSbgn2BPMap().isEmpty());
+
+		for (Set<String> set : conv.getSbgn2BPMap().values())
+		{
+			assertFalse(set.isEmpty());
+		}
 	}
 
 	@Test
@@ -84,6 +95,7 @@ public class SBGNConverterTest
 		String out = "target/" + input + ".sbgn";
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, true);
+		conv.setFlattenComplexContent(false);
 
 		conv.writeSBGN(level3, out);
 
@@ -120,5 +132,44 @@ public class SBGNConverterTest
 		}
 
 		assertTrue(hasNestedComplex);
+	}
+
+	@Test
+	public void testStoichiometry() throws JAXBException, IOException, SAXException
+	{
+		String input = "/Stoic";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+
+		String out = "target/" + input + ".sbgn";
+
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, true);
+
+		conv.writeSBGN(level3, out);
+
+		File outFile = new File(out);
+		boolean isValid = SbgnUtil.isValid(outFile);
+
+		if (isValid)
+			System.out.println ("Validation succeeded");
+		else
+			System.out.println ("Validation failed");
+
+		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		// Now read from "f" and put the result in "sbgn"
+		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
+
+		boolean stoicFound = false;
+		for (Arc arc : result.getMap().getArc())
+		{
+			for (Glyph g : arc.getGlyph())
+			{
+				if (g.getClazz().equals(GlyphClazz.CARDINALITY.getClazz())) stoicFound = true;
+			}
+		}
+
+		assertTrue(stoicFound);
 	}
 }

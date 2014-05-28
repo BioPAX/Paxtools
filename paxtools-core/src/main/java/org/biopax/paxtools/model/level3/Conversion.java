@@ -136,4 +136,6 @@ public interface Conversion extends Interaction
 	public void setConversionDirection(ConversionDirectionType conversionDirection);
 
 
+
+
 }

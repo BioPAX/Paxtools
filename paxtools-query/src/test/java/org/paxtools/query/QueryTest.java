@@ -31,7 +31,6 @@ import java.util.Set;
  */
 public class QueryTest
 {
-	static final SimpleEditorMap EM = SimpleEditorMap.L3;
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
 
 	@Test
@@ -90,11 +89,11 @@ public class QueryTest
 
 	private Model excise(Model model, Set<BioPAXElement> result)
 	{
-		Completer c = new Completer(EM);
+		Completer c = new Completer(SimpleEditorMap.L3);
 
 		result = c.complete(result, model);
 
-		Cloner cln = new Cloner(EM, BioPAXLevel.L3.getDefaultFactory());
+		Cloner cln = new Cloner(SimpleEditorMap.L3, BioPAXLevel.L3.getDefaultFactory());
 
 		return cln.clone(model, result);
 	}

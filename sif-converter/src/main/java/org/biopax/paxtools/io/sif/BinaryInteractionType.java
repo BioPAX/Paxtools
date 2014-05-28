@@ -66,7 +66,10 @@ public enum BinaryInteractionType
 			"This interaction is directed.", true),
 
 	GENERIC_OF(
-			"The first entity is a generic form of the second entity.This interaction is directed",true);
+			"The first entity is a generic form of the second entity.This interaction is directed",true),
+
+	SIMILAR(
+			"The two entities are members of a generic form. This interaction is undirected",false);
 
 	private String description;
 	private boolean directed;

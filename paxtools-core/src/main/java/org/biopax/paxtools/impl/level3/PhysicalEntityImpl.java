@@ -44,12 +44,12 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public PhysicalEntityImpl()
 	{
-		feature = new BiopaxSafeSet<EntityFeature>();
-		notFeature = new BiopaxSafeSet<EntityFeature>();
-		controllerOf = new BiopaxSafeSet<Control>();
-		componentOf = new BiopaxSafeSet<Complex>();
-		memberPhysicalEntityOf = new BiopaxSafeSet<PhysicalEntity>(); //TODO make generic?
-		memberPhysicalEntity = new BiopaxSafeSet<PhysicalEntity>();
+		feature = BPCollections.I.createSafeSet();
+		notFeature = BPCollections.I.createSafeSet();
+		controllerOf = BPCollections.I.createSafeSet();
+		componentOf = BPCollections.I.createSafeSet();
+		memberPhysicalEntityOf = BPCollections.I.createSafeSet(); //TODO make generic?
+		memberPhysicalEntity = BPCollections.I.createSafeSet();
 	}
 
 	@Transient

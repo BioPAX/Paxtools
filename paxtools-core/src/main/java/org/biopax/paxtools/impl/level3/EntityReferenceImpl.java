@@ -4,16 +4,12 @@ package org.biopax.paxtools.impl.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -37,12 +33,12 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 */
 	public EntityReferenceImpl()
 	{
-		this.entityFeature = new BiopaxSafeSet<EntityFeature>();
-		this.entityReferenceOf = new BiopaxSafeSet<SimplePhysicalEntity>();
-		this.evidence = new BiopaxSafeSet<Evidence>();
-		this.entityReferenceType = new BiopaxSafeSet<EntityReferenceTypeVocabulary>();
-		this.memberEntityReference = new BiopaxSafeSet<EntityReference>();
-		this.ownerEntityReference= new BiopaxSafeSet<EntityReference>();
+		this.entityFeature = BPCollections.I.createSafeSet();
+		this.entityReferenceOf = BPCollections.I.createSafeSet();
+		this.evidence = BPCollections.I.createSafeSet();
+		this.entityReferenceType = BPCollections.I.createSafeSet();
+		this.memberEntityReference = BPCollections.I.createSafeSet();
+		this.ownerEntityReference= BPCollections.I.createSafeSet();
 	}
 
 	@Transient
@@ -58,8 +54,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 * @return A set of entity features for the reference entity.
 	 */
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = EntityFeatureImpl.class, 
-			mappedBy = "entityFeatureOf")
+	@OneToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "entityFeatureOf")
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;

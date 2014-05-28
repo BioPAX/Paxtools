@@ -24,7 +24,7 @@ public class ModelImpl implements Model
     private final Map<String, String> nameSpacePrefixMap;
 	private BioPAXLevel level;
 	private transient BioPAXFactory factory;
-    private transient final Set<BioPAXElement> exposedObjectSet;
+    private final transient Set<BioPAXElement> exposedObjectSet;
     private boolean addDependencies = false;
     private String xmlBase;
 
@@ -47,8 +47,7 @@ public class ModelImpl implements Model
 		this.factory = factory;
 		this.level = factory.getLevel();
     }
-	
-	
+
 // --------------------- GETTER / SETTER METHODS ---------------------
 
     public boolean containsID(String id) {

@@ -1,13 +1,10 @@
 package org.biopax.paxtools.util;
 
-import java.util.AbstractSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
+
+import java.util.*;
 
 
 /**
@@ -21,34 +18,58 @@ import org.biopax.paxtools.model.BioPAXElement;
 public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 {
 	private final static Log LOG = LogFactory.getLog(BiopaxSafeSet.class);
-	private final Map<String,E> map;
+	private final static Map empty = Collections.emptyMap();
+
+	private Map<String,E> map;
 	
-	public BiopaxSafeSet() {
-		map = new HashMap<String, E>();
+	public BiopaxSafeSet()
+	{
+		map = empty;
 	}
-	
-	@Override
-	public Iterator<E> iterator() {
-		return map.values().iterator();
+
+	public BiopaxSafeSet(Map<String,E> map)
+	{
+		this.map = map;
 	}
 
 	@Override
-	public int size() {
-		return map.size();
+	public Iterator<E> iterator() {
+		synchronized (map) {
+			return map.values().iterator();
+		}
+	}
+
+	@Override
+	public int size()
+	{
+		synchronized (map) {
+			return map.size();
+		}
 	}
 	
 	@Override
-	public boolean add(E bpe) {
-		String uri = bpe.getRDFId();
-		if(!map.containsKey(uri)) {
-			map.put(uri, bpe);
-			return true;
-		} else { 
-			//do not throw an ex., because duplicate attempts occur naturally 
-			// (e.g., same PE on both left and right sides of a reaction 
-			// causes same participant/participantOf is touched twice) 
-			LOG.debug("ignored duplicate:" + bpe.getRDFId());
-			return false;
+	public boolean add(E bpe)
+	{
+		synchronized (map) {
+		
+			if(this.isEmpty())
+			{
+				this.map = BPCollections.I.createMap();
+			}
+			
+			String uri = bpe.getRDFId();
+		
+			if (!map.containsKey(uri)) {
+				map.put(uri, bpe);
+				return true;
+			} else {
+				// do not throw an ex., because duplicate attempts occur
+				// naturally
+				// (e.g., same PE on both left and right sides of a reaction
+				// causes same participant/participantOf is touched twice)
+				LOG.debug("ignored duplicate:" + bpe.getRDFId());
+				return false;
+			}
 		}
 	}
 	
@@ -67,6 +88,8 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 	 * @return BioPAX object or null
 	 */
 	public E get(String uri) {
-		return map.get(uri);
+		synchronized (map) {
+			return map.get(uri);
+		}
 	}
 }

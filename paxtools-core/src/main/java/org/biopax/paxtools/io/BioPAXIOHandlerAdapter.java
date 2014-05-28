@@ -274,11 +274,25 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			this.getReusedPEPHelper().copyPEPFields();
 		}
+		
+		reset(in);
 
 		return model;
 	}
 
+	protected void reset(InputStream in)
+	{
+		try
+		{
+			in.close();
 
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("Failed to close the file");
+		}
+
+	}	
 	private void autodetectBiopaxLevel()
 	{
 		BioPAXLevel filelevel = null;
@@ -457,16 +471,16 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 * @param bpe to be bound.
 	 * @return a property editor responsible for editing comments.
 	 */
-	protected PropertyEditor getRDFCommentEditor(BioPAXElement bpe)
+	protected StringPropertyEditor getRDFCommentEditor(BioPAXElement bpe)
 	{
-		PropertyEditor editor;
+		StringPropertyEditor editor;
 		Class<? extends BioPAXElement> inter = bpe.getModelInterface();
 		if (this.getLevel().equals(BioPAXLevel.L3))
 		{
-			editor = this.getEditorMap().getEditorForProperty("comment", inter);
+			editor = (StringPropertyEditor) this.getEditorMap().getEditorForProperty("comment", inter);
 		} else
 		{
-			editor = this.getEditorMap().getEditorForProperty("COMMENT", inter);
+			editor = (StringPropertyEditor) this.getEditorMap().getEditorForProperty("COMMENT", inter);
 		}
 		return editor;
 	}

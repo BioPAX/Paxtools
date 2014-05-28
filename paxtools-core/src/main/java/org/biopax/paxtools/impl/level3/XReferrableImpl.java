@@ -3,23 +3,18 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.XrefFieldBridge;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Analyze;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
@@ -50,7 +45,7 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 	public XReferrableImpl()
 	{
-		this.xref = new BiopaxSafeSet<Xref>();
+		this.xref = BPCollections.I.createSafeSet();
 	}
 
 // -------------------------- OTHER METHODS --------------------------

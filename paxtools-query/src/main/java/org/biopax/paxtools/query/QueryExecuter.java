@@ -44,7 +44,7 @@ public class QueryExecuter
 		{
 			graph = new GraphL3(model, filters);
 		}
-		else return null;
+		else return Collections.emptySet();
 
 		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
 
@@ -70,11 +70,11 @@ public class QueryExecuter
 		{
 			graph = new GraphL3(model, filters);
 		}
-		else return null;
+		else return Collections.emptySet();
 
 		Collection<Set<Node>> sourceWrappers = prepareNodeSets(sourceSet, graph);
 
-		if (sourceWrappers.size() < 2) return null;
+		if (sourceWrappers.size() < 2) return Collections.emptySet();
 
 		PathsBetweenQuery query = new PathsBetweenQuery(sourceWrappers, limit);
 		Set<GraphObject> resultWrappers = query.run();
@@ -121,7 +121,7 @@ public class QueryExecuter
 		{
 			graph = new GraphL3(model, filters);
 		}
-		else return null;
+		else return Collections.emptySet();
 
 		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
 		Set<Node> target = prepareSingleNodeSet(targetSet, graph);
@@ -152,7 +152,7 @@ public class QueryExecuter
 		{
 			graph = new GraphL3(model, filters);
 		}
-		else return null;
+		else return Collections.emptySet();
 
 		Collection<Set<Node>> source = prepareNodeSets(sourceSet, graph);
 
@@ -184,7 +184,7 @@ public class QueryExecuter
 		{
 			graph = new GraphL3(model, filters);
 		}
-		else return null;
+		else return Collections.emptySet();
 
 		Collection<Set<Node>> sourceSets = prepareNodeSets(sourceSet, graph);
 
@@ -195,7 +195,7 @@ public class QueryExecuter
 		Set<GraphObject> resultWrappers = commStream.run();
 
 		// Stop if they have no common stream.
-		if (resultWrappers.isEmpty()) return null;
+		if (resultWrappers.isEmpty()) return Collections.emptySet();
 
 		// Extract nodes from the result
 
@@ -354,6 +354,12 @@ public class QueryExecuter
 				{
 					getRelatedPhysicalEntities(parent, pes);
 				}
+
+				// This is a hack for BioPAX graph. Equivalence relations do not link members and
+				// complexes because members cannot be addressed. Below call makes sure that if the
+				// source node has a generic parents or children and they appear in a complex, we
+				// include the complex in the sources.
+				addEquivalentsComplexes(cpx, pes);
 			}
 		}
 		else if (element instanceof PhysicalEntity)

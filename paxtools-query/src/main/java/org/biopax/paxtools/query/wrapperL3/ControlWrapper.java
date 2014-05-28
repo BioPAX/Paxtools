@@ -108,9 +108,13 @@ public class ControlWrapper extends AbstractNode
 	private void bindUpstream(BioPAXElement element)
 	{
 		AbstractNode node = (AbstractNode) graph.getGraphObject(element);
-		Edge edge = new EdgeL3(node, this, graph);
-		node.getDownstreamNoInit().add(edge);
-		this.getUpstreamNoInit().add(edge);
+
+		if (node != null)
+		{
+			Edge edge = new EdgeL3(node, this, graph);
+			node.getDownstreamNoInit().add(edge);
+			this.getUpstreamNoInit().add(edge);
+		}
 	}
 
 	/**
@@ -146,9 +150,13 @@ public class ControlWrapper extends AbstractNode
 				prc instanceof TemplateReaction)
 			{
 				AbstractNode node = (AbstractNode) graph.getGraphObject(prc);
-				Edge edge = new EdgeL3(this, node, graph);
-				node.getUpstreamNoInit().add(edge);
-				getDownstreamNoInit().add(edge);
+
+				if (node != null)
+				{
+					Edge edge = new EdgeL3(this, node, graph);
+					node.getUpstreamNoInit().add(edge);
+					getDownstreamNoInit().add(edge);
+				}
 			}
 		}
 	}

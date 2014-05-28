@@ -198,7 +198,7 @@ public final class ModelUtils
 			new Visitor() {
 				@Override
 				public void visit(BioPAXElement parent, Object value, Model model,
-					PropertyEditor<?, ?> editor) 
+					PropertyEditor<?, ?> editor)
 				{
 					if (filterClass.isInstance(value)) result.remove(value);
 				}
@@ -1205,7 +1205,7 @@ public final class ModelUtils
 			Pathway pw = ((PathwayStep) biopaxElement).getPathwayOrderOf();
 			if(pw != null && pw.getOrganism() != null)
 				biosources.add(pw.getOrganism());
-		} else if (biopaxElement instanceof Interaction 
+		} else if (biopaxElement instanceof Interaction
 				|| biopaxElement instanceof EntityReference
 				|| biopaxElement instanceof PhysicalEntity) {
 			
@@ -1323,34 +1323,34 @@ public final class ModelUtils
 
 	public static void mergeEquivalentInteractions(Model model)
 	{
-		EquivalenceGrouper<Interaction> groups = new EquivalenceGrouper(model.getObjects(Interaction.class));
-		for (List<Interaction> group : groups.getBuckets())
+		EquivalenceGrouper<Conversion> groups = new EquivalenceGrouper(model.getObjects(Conversion.class));
+
+		for (List<Conversion> group : groups.getBuckets())
 		{
 
 			if (group.size() > 1)
 			{
+				HashSet<Conversion> tobeRemoved = new HashSet<Conversion>();
 				Interaction primus = null;
-				for (Interaction interaction : group)
+				for (Conversion conversion : group)
 				{
 					if (primus == null)
 					{
-						primus = interaction;
+						primus = conversion;
 					} else
 					{
-						copySimplePointers(model, interaction, primus);
-						Set<Control> controlledOf = interaction.getControlledOf();
+						copySimplePointers(model, conversion, primus);
+						Set<Control> controlledOf = conversion.getControlledOf();
 						for (Control control : controlledOf)
 						{
-							control.removeControlled(interaction);
 							if (!control.getControlled().contains(primus))
 							{
 								control.addControlled(primus);
 							}
 						}
-						Set<Pathway> owners = interaction.getPathwayComponentOf();
+						Set<Pathway> owners = conversion.getPathwayComponentOf();
 						for (Pathway pathway : owners)
 						{
-							pathway.removePathwayComponent(interaction);
 							if(!pathway.getPathwayComponent().contains(primus))
 							{
 								pathway.addPathwayComponent(primus);
@@ -1358,10 +1358,45 @@ public final class ModelUtils
 
 						}
 
+						tobeRemoved.add(conversion);
+
 					}
 				}
+				for (Conversion conversion : tobeRemoved)
+				{
+					cleanAllInverse(conversion);
+					model.remove(conversion);
+				}
+
 			}
 		}
+	}
+
+	private static void cleanAllInverse(Conversion conversion)
+	{
+
+		Set<PhysicalEntity> concSafe = new HashSet<PhysicalEntity>(conversion.getLeft());
+		for (PhysicalEntity pe : concSafe)
+		{
+			conversion.removeLeft(pe);
+		}
+		concSafe = new HashSet<PhysicalEntity>(conversion.getRight());
+		for (PhysicalEntity pe : concSafe)
+		{
+			conversion.removeRight(pe);
+		}
+		Set<Control> controlledOf = new HashSet<Control>(conversion.getControlledOf());
+		for (Control control : controlledOf)
+		{
+			control.removeControlled(conversion);
+		}
+		Set<Pathway> owners = new HashSet<Pathway>(conversion.getPathwayComponentOf());
+		for (Pathway pathway : owners)
+		{
+			pathway.removePathwayComponent(conversion);
+		}
+
+
 	}
 
 }

@@ -1,21 +1,15 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
-import org.biopax.paxtools.model.level3.Control;
-import org.biopax.paxtools.model.level3.Evidence;
-import org.biopax.paxtools.model.level3.Pathway;
-import org.biopax.paxtools.model.level3.PathwayStep;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.Entity;
 import javax.persistence.*;
-import java.util.HashSet;
+
 import java.util.Set;
 
 @Entity
@@ -37,10 +31,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	 */
 	public PathwayStepImpl()
 	{
-		this.nextStep = new BiopaxSafeSet<PathwayStep>();
-		this.nextStepOf = new BiopaxSafeSet<PathwayStep>();
-		this.stepProcess = new BiopaxSafeSet<Process>();
-		this.evidence = new BiopaxSafeSet<Evidence>();
+		this.nextStep = BPCollections.I.createSafeSet();
+		this.nextStepOf = BPCollections.I.createSafeSet();
+		this.stepProcess = BPCollections.I.createSafeSet();
+		this.evidence = BPCollections.I.createSafeSet();
 	}
 
 	@Transient
@@ -90,24 +84,30 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.nextStepOf = nextStepOf;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = ProcessImpl.class)
-	@JoinTable(name="stepProcess")
+	@Transient
 	public Set<Process> getStepProcess()
+	{	
+		return this.getStepProcessX();
+	}
+	
+	//private setter for ORM frameworks only
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@ManyToMany(targetEntity = ProcessImpl.class)
+	@JoinTable(name="stepProcess",
+		joinColumns={@JoinColumn(name="STEPPROCESS_PK", referencedColumnName="PK")},
+		inverseJoinColumns={@JoinColumn(name="STEPPROCESSOF_PK", referencedColumnName="PK")})
+	Set<Process> getStepProcessX()
 	{
 		return stepProcess;
+	}
+	void setStepProcessX(Set<Process> stepProcess)
+	{
+		this.stepProcess = stepProcess;
 	}
 
 	public void addStepProcess(Process processStep)
 	{
 		if (processStep != null) {
-			
-			if(this instanceof BiochemicalPathwayStep 
-				&& !(processStep instanceof Control)) {
-				throw new IllegalArgumentException(
-					"Range violation: BiochemicalPathwayStep.stepProcess "
-						+ "can add only Control interactions.");	
-			}
 			
 			this.stepProcess.add(processStep);
 			processStep.getStepProcessOf().add(this);
@@ -120,11 +120,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 			processStep.getStepProcessOf().remove(this);
 			this.stepProcess.remove(processStep);
 		}
-	}
-
-	public void setStepProcess(Set<Process> stepProcess)
-	{
-		this.stepProcess = stepProcess;
 	}
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

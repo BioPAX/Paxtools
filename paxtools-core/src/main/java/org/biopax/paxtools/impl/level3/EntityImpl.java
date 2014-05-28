@@ -1,16 +1,13 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.DataSourceFieldBridge;
 import org.biopax.paxtools.util.SetStringBridge;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -19,7 +16,6 @@ import org.hibernate.search.annotations.Store;
 import javax.persistence.ElementCollection;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
@@ -63,10 +59,10 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 	public EntityImpl()
 	{
-		this.availability = new HashSet<String>();
-		this.dataSource = new BiopaxSafeSet<Provenance>();
-		this.participantOf = new BiopaxSafeSet<Interaction>();
-		this.evidence = new BiopaxSafeSet<Evidence>();
+		this.availability = BPCollections.I.createSet();
+		this.dataSource = BPCollections.I.createSafeSet();
+		this.participantOf = BPCollections.I.createSafeSet();
+		this.evidence = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

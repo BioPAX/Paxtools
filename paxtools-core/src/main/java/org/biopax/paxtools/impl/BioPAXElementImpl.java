@@ -6,12 +6,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
-
 @Entity
 @Proxy(proxyClass= BioPAXElement.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -54,7 +52,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	private long version;
 	
 	public BioPAXElementImpl() {
-		this.annotations = new HashMap<String, Object>();
+		this.annotations = Collections.EMPTY_MAP; //TODO: temp, till the annotations are added.
 	}
 	
 
@@ -172,18 +170,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	}
     
 
-    //to calculate the PK from URI
-    public static final MessageDigest MD5_DIGEST; 
-
-	static {
-		try {
-			MD5_DIGEST = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Cannot instantiate MD5 MessageDigest!", e);
-		}
-	}
-    
-
 	/**
 	 * Utility method that is called once per object
 	 * to generate the primary key {@link #getPk()}
@@ -194,12 +180,23 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	 * @return
 	 */
 	private static String md5hex(String id) {
-		byte[] digest = MD5_DIGEST.digest(id.getBytes());
+		
+		// MessageDigest is not thread-safe and cheap to build 
+		// - so we create a instance every time here:
+		MessageDigest md5; 
+		try {
+			md5 = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("Cannot instantiate MD5 MessageDigest!", e);
+		}
+		
+		byte[] digest = md5.digest(id.getBytes());
+		
 		StringBuffer sb = new StringBuffer();
 		for (byte b : digest)
 			sb.append(Integer.toHexString((int) (b & 0xff) | 0x100).substring(1, 3));
-		String hex = sb.toString();
-		return hex;
+		
+		return sb.toString();
 	}
     
 	
@@ -226,5 +223,8 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public int hashCode() {
 		return (getModelInterface().getCanonicalName() + uri).hashCode();
 	}
+
+
+
 }
 
