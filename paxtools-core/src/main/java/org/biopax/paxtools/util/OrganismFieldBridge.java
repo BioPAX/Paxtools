@@ -18,7 +18,6 @@ import org.hibernate.search.bridge.LuceneOptions;
  * to parent BioPAX element's index.
  * 
  * @author rodche
- *
  */
 public final class OrganismFieldBridge implements FieldBridge {
 

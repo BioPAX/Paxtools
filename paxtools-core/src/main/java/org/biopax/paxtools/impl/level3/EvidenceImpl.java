@@ -162,7 +162,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	}
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
+	@ManyToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
 	@JoinTable(name="experimentalForm")	
 	public Set<ExperimentalForm> getExperimentalForm()
 	{

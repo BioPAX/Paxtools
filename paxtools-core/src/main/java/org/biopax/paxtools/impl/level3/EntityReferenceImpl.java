@@ -54,8 +54,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 * @return A set of entity features for the reference entity.
 	 */
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = EntityFeatureImpl.class, 
-			mappedBy = "entityFeatureOf")
+	@OneToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "entityFeatureOf")
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
