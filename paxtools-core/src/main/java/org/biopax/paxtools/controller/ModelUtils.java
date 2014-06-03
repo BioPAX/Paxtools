@@ -23,12 +23,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * An advanced BioPAX utility class that implements
+ * A BioPAX utility class that implements
  * several useful algorithms to extract root or child
  * BioPAX L3 elements, remove dangling, replace elements
- * or identifiers, etc.
- * @author rodche, Arman 
- * //TODO consider breaking it down to several classes.
+ * or identifiers, fix/infer property values, etc.
+ * @author rodche, Arman, Emek
  */
 public final class ModelUtils
 {
@@ -44,7 +43,7 @@ public final class ModelUtils
 	}
 
 
-	public static final MessageDigest MD5_DIGEST; 
+	static final MessageDigest MD5_DIGEST; 
 
 	/**
 	 * Initializer.
@@ -62,42 +61,6 @@ public final class ModelUtils
 	private final static EditorMap em = SimpleEditorMap.L3;
 
 	private final static BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
-
-	/**
-	 * Controlled vocabulary terms for the RelationshipType
-	 * CV to be added with auto-generated/inferred comments
-	 * and/or relationship xrefs.
-	 * <p/>
-	 * We do not want to use "official" CV terms and IDs
-	 * from the PSI-MI "cross-reference" branch for several reasons:
-	 * - it's does not have terms we'd like and have those we'd not use
-	 * - to distinguish auto-generated rel. xrefs from the original BioPAX data
-	 * - hack: we also want put the related BioPAX element's URI into the xref's 'id' proerty
-	 * (this is not what the BioPAX standard officially regarding to use of xrefs)
-	 * @author rodche
-	 */
-	public static enum RelationshipType
-	{
-		PROCESS, // refers to a parent pathway or interaction
-		ORGANISM,
-		GENE, // term for, e.g., Entrez Gene rel. xrefs in protein references
-		SEQUENCE, // e.g, to relate UniProt to RefSeq identifiers (incl. for splice variants...)
-		; //TODO add more on use-case bases...
-	}
-
-
-	/**
-	 * A comment (at least - prefix) to add to all generated objects
-	 */
-	public static final String COMMENT_FOR_GENERATED = "auto-generated";
-
-
-	/** 
-	 * URI prefix for auto-generated utility class objects
-	 * (can be useful, for consistency, during, e.g.,
-	 * data convertion, normalization, merge, etc.
-	 */
-	public static final String BIOPAX_URI_PREFIX = "urn:biopax:";
 
 
 	static
@@ -648,7 +611,15 @@ public final class ModelUtils
 
 
 	/**
-	 * TODO annotate
+	 * Finds and adds all (missing) entity features 
+	 * to given entity reference from all its owner 
+	 * simple physical entities ('feature' and 'notFeature' 
+	 * properties).
+	 * 
+	 * Though, it neither checks for nor resolves any violations 
+	 * of the 'entityFeature' property's inverse functional constraint
+	 * (i.e., an EntityFeature instance can only belong to one and only one
+	 * EntityReference object).  
 	 * 
 	 * @param er
 	 * @param fix
@@ -677,10 +648,16 @@ public final class ModelUtils
 
 
 	/**
-	 * TODO annotate
+	 * Tests whether a physical entity's 'feature' and 'notFeature' 
+	 * property value sets are mutually exclusive (intersect or not).
+	 * 
+	 * This method does not take EntityFeature equivalence into account
+	 * (so the answer 'true' or 'false' can be wrong if there are equivalent
+	 * but different EntityFeature instances)
 	 * 
 	 * @param pe
-	 * @return
+	 * @return true iif 'feature' and 'notFeature' sets do not intersect.
+	 * @deprecated looks, it's not used and not a good measure...
 	 */
 	public static boolean checkMutuallyExclusiveSets(PhysicalEntity pe)
 	{
@@ -693,6 +670,7 @@ public final class ModelUtils
 		}
 	}
 
+	
 	private static boolean scanAndAddToFeatureSet(EntityReference er, boolean fix, boolean check, EntityFeature ef)
 	{
 		if (!er.getEntityFeature().contains(ef))
@@ -701,6 +679,7 @@ public final class ModelUtils
 			if (fix)
 			{
 				er.addEntityFeature(ef);
+				//TODO resolve inverse functional prop. constraint violation (e.g., copy/replace the e.f. before adding if it has entityFeatureOf not null)?
 			}
 		}
 		return check;
@@ -919,7 +898,12 @@ public final class ModelUtils
 	}
 
 	
-	public void resolveFeatures(Model model)
+	/**
+	 * TODO annotate
+	 * 
+	 * @param model
+	 */
+	public static void resolveFeatures(Model model)
 	{
 		if (!model.getLevel().equals(BioPAXLevel.L3))
 		{
@@ -965,21 +949,19 @@ public final class ModelUtils
 	}
 
 
-	private void resolveBindingFeatures(Model model)
+	private static void resolveBindingFeatures(Model model)
 	{
 		ShallowCopy copier = new ShallowCopy(BioPAXLevel.L3);
 
 		//For each Complex
 		Set<Complex> complexes = model.getObjects(Complex.class);
-		for (Complex complex : complexes)
-		{
+		for (Complex complex : complexes) {
 			resolveBindingFeatures(model, complex, copier);
-
-
 		}
 	}
 
-	private void resolveBindingFeatures(Model model, Complex complex, ShallowCopy copier)
+	
+	private static void resolveBindingFeatures(Model model, Complex complex, ShallowCopy copier)
 	{
 		Set<PhysicalEntity> components = complex.getComponent();
 		for (PhysicalEntity component : components)
@@ -988,7 +970,7 @@ public final class ModelUtils
 		}
 	}
 
-	private void resolveFeaturesOfComponent(Model model, Complex complex, PhysicalEntity component,
+	private static void resolveFeaturesOfComponent(Model model, Complex complex, PhysicalEntity component,
 			ShallowCopy copier)
 	{
 		boolean connected = false;
@@ -1011,7 +993,6 @@ public final class ModelUtils
 				} else
 				{
 					connected = true;
-
 				}
 			}
 		}
@@ -1038,7 +1019,7 @@ public final class ModelUtils
 		}
 	}
 
-	private PhysicalEntity createCopy(Model model, Complex complex, PhysicalEntity component, ShallowCopy copier)
+	private static PhysicalEntity createCopy(Model model, Complex complex, PhysicalEntity component, ShallowCopy copier)
 	{
 		//This is an aggressive fix - if a complex member is present in both an interaction that is not a control
 		// and a complex, we are creating clone, adding it a binding feature to mark it  and put it  into the
