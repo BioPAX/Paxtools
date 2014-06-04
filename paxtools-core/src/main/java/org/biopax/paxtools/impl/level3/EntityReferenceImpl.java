@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
 
@@ -65,10 +66,10 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		if (entityFeature != null)
 		{
 			EntityReference eFof = entityFeature.getEntityFeatureOf();
+			
 			if (eFof != null && !eFof.equals(this))
 			{
-				//throw new BidirectionalLinkViolationException(this, entityFeature);
-				log.warn("addEntityFeature: adding (to this "
+				throw new IllegalBioPAXArgumentException("addEntityFeature: adding (to this "
 					+ getModelInterface().getSimpleName() +
 					" " + getRDFId() + ") a "
 					+ entityFeature.getModelInterface().getSimpleName()
@@ -76,10 +77,9 @@ public abstract class EntityReferenceImpl extends NamedImpl
 					+ " that is already owned by another "
 					+ eFof.getModelInterface().getSimpleName()
 					+ " " + eFof.getRDFId());
-			}
+			} 
 
-			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this); //todo (what?)
-			
+			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this);	
 			this.entityFeature.add(entityFeature);
 		}
 	}
@@ -93,7 +93,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 				: "attempt to remove not own EntityFeature!"; //- but the assertion alone is not enough...
 			if(entityFeature.getEntityFeatureOf() == this) {
 				this.entityFeature.remove(entityFeature);
-				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null); //todo
+				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null);
 			} 
 		}
 	}
