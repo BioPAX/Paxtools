@@ -394,12 +394,14 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 			}
 			throw new IllegalBioPAXArgumentException(message, e);
 		}
-		catch (Exception e) //catch (InvocationTargetException|IllegalAccessException e)
+		catch (Exception e) //java.lang.reflect.InvocationTargetException
 		{
-			String message = "Failed to set property: " + property + " with method: " + method.getName() + " on " +
-			                 domain.getSimpleName() + " (" + bean.getClass().getSimpleName() + ")" + " with range: " +
-			                 range.getSimpleName() + " (" + value.getClass().getSimpleName() + ")";
+			String valInfo = (value == null) ? null : value.getClass().getSimpleName() + ", " + value;
+			String message = "Failed to set " + property + " with " + method.getName() + " on " 
+				+ domain.getSimpleName() + " (" + bean.getClass().getSimpleName() + ", " + bean + ")" 
+				+ " with range: " + range.getSimpleName() + " (" + valInfo + ")";
 			throw new IllegalBioPAXArgumentException(message, e);
+			//TODO actual exceptions thrown by the biopax setter/method are lost, unfortunately...
 		}
 	}
 
@@ -434,10 +436,11 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 		}
 		catch (Exception e)
 		{
-			log.error("Failed to set value: " + value + " to bean " + bean + "; bean class: " + bean.getClass() +
-			          "; primary set method: " + this.getPrimarySetMethod() 
-			          + ((value != null) ? "; value class: " + value.getClass() : "") +
-			          ". Error: " + e + ". " + e.getCause());
+			log.error("Failed to set value: " + value + " to bean " + bean 
+					+ "; bean class: " + bean.getClass().getSimpleName() 
+					+ "; primary set method: " + getPrimarySetMethod() 
+			        + ((value != null) ? "; value class: " + value.getClass().getSimpleName() : "") 
+			        + ". Error: " + e + ", Cause: " + e.getCause());
 		}
 	}
 

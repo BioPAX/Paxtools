@@ -907,7 +907,8 @@ public final class ModelUtils
 	{
 		if (!model.getLevel().equals(BioPAXLevel.L3))
 		{
-			//TODO Log error
+			throw new UnsupportedOperationException(
+				"resolveFeatures method does not work with " + model.getLevel());
 		} else
 		{
 			resolveBindingFeatures(model);

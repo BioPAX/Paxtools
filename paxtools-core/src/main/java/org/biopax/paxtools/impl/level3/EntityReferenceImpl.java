@@ -69,14 +69,21 @@ public abstract class EntityReferenceImpl extends NamedImpl
 			
 			if (eFof != null && !eFof.equals(this))
 			{
-				throw new IllegalBioPAXArgumentException("addEntityFeature: adding (to this "
-					+ getModelInterface().getSimpleName() +
-					" " + getRDFId() + ") a "
-					+ entityFeature.getModelInterface().getSimpleName()
-					+ " " + entityFeature.getRDFId()
-					+ " that is already owned by another "
-					+ eFof.getModelInterface().getSimpleName()
-					+ " " + eFof.getRDFId());
+				//log, because the message is lost when happens via reflection (SimpleReader),
+				//then throw the exception anyway (to prevent semantically wrong biopax model)
+				
+				log.error("Cannot add (again) " + entityFeature.getModelInterface().getSimpleName() 
+						+ " " + entityFeature.getRDFId() + " to "
+						+ getModelInterface().getSimpleName() + " " + getRDFId()
+						+ ", because it is already owned by another "
+						+ eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId());		
+				
+				throw new IllegalBioPAXArgumentException(
+						"Cannot add (again) " + entityFeature.getModelInterface().getSimpleName() 
+						+ " " + entityFeature.getRDFId() + " to "
+						+ getModelInterface().getSimpleName() + " " + getRDFId()
+						+ ", because it is already owned by another "
+						+ eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId());
 			} 
 
 			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this);	

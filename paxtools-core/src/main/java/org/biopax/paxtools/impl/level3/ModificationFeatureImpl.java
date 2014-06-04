@@ -32,7 +32,21 @@ public class ModificationFeatureImpl extends EntityFeatureImpl
     @Override
     public String toString()
     {
-        return (modificationType==null?"?":modificationType.getTerm())+"@"+this.getFeatureLocation();
+    	StringBuilder sb = new StringBuilder();
+    	 	
+        if(modificationType!=null)
+        	sb.append("ModificationFeature: ").append(modificationType.getTerm());
+        
+        if(getFeatureLocation() != null) {
+        	if(sb.length() == 0)
+        		sb.append("ModificationFeature: ");
+        	sb.append("@"+getFeatureLocation());
+        }
+        
+        if(sb.length() == 0)
+        	sb.append(super.toString());
+        
+        return sb.toString();
     }
 
     @Transient
