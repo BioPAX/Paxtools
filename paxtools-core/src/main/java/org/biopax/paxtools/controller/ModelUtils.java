@@ -23,10 +23,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A BioPAX utility class that implements
- * several useful algorithms to extract root or child
+ * Several useful algorithms and examples, e.g., to extract root or child
  * BioPAX L3 elements, remove dangling, replace elements
- * or identifiers, fix/infer property values, etc.
+ * or URIs, fix/infer property values, etc.
+ * 
+ * NOTE: despite it is public class and has public methods,
+ * this class can be (and has been already) modified (sometimes considerably) 
+ * in every minor revision; it was not designed to be Paxtools' public API...
+ * So, we encourage users copy some methods to their own apps rather than 
+ * depend on this unstable utility class in long term.
+ * 
  * @author rodche, Arman, Emek
  */
 public final class ModelUtils
