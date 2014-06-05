@@ -52,7 +52,7 @@ public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 	public EntityReference getEntityFeatureOf(){
 		return ownerEntityReference;
 	}
-	protected void setEntityFeatureOf(EntityReference entityReference){
+	public void setEntityFeatureOf(EntityReference entityReference){
 		ownerEntityReference = entityReference;
 	}
 	
