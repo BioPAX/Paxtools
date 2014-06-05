@@ -18,7 +18,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
@@ -96,7 +95,10 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void removeFeature(EntityFeature feature)
 	{
 		if (feature != null) {
-			checkAndRemoveFeature(feature, feature.getFeatureOf());
+			assert feature.getFeatureOf().contains(this) ^ feature.getNotFeatureOf().contains(this) 
+				: feature + " is both 'feature' and 'notFeature' of " + this; 
+			//TODO even if the assertion fails, so what? (in any case, we still want to remove this PE from the set)
+			feature.getFeatureOf().remove(this);	
 			this.feature.remove(feature);
 		}
 	}
@@ -126,7 +128,10 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void removeNotFeature(EntityFeature feature)
 	{
 		if (feature != null) {
-			checkAndRemoveFeature(feature, feature.getNotFeatureOf());
+			assert feature.getFeatureOf().contains(this) ^ feature.getNotFeatureOf().contains(this) 
+			: feature + " is both 'feature' and 'notFeature' of " + this; 
+			//TODO even if the assertion fails, so what? (in any case, we still want to remove this PE from the set)
+			feature.getNotFeatureOf().remove(this);
 			this.notFeature.remove(feature);
 		}
 	}
@@ -189,14 +194,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 						+ feature.getRDFId());
 		}
 		target.add(this);
-	}
-
-	private void checkAndRemoveFeature(EntityFeature feature,
-	                                   Set<PhysicalEntity> target)
-	{
-		assert feature.getFeatureOf().contains(this) ^
-		       feature.getNotFeatureOf().contains(this);
-		target.remove(this);
 	}
 
 	// --------------------- Interface BioPAXElement ---------------------

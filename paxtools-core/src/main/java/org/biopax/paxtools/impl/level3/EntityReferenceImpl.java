@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
-import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
 
@@ -69,21 +68,13 @@ public abstract class EntityReferenceImpl extends NamedImpl
 			
 			if (eFof != null && !eFof.equals(this))
 			{
-				//log, because the message is lost when happens via reflection (SimpleReader),
-				//then throw the exception anyway (to prevent semantically wrong biopax model)
-				
-				log.error("Cannot add (again) " + entityFeature.getModelInterface().getSimpleName() 
+				//log, then do anyway				
+				log.error("addEntityFeature: moved " 
+						+ entityFeature.getModelInterface().getSimpleName() 
 						+ " " + entityFeature.getRDFId() + " to "
 						+ getModelInterface().getSimpleName() + " " + getRDFId()
-						+ ", because it is already owned by another "
-						+ eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId());		
-				
-				throw new IllegalBioPAXArgumentException(
-						"Cannot add (again) " + entityFeature.getModelInterface().getSimpleName() 
-						+ " " + entityFeature.getRDFId() + " to "
-						+ getModelInterface().getSimpleName() + " " + getRDFId()
-						+ ", because it is already owned by another "
-						+ eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId());
+						+ " from " + eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId() 
+						+ ", but it's still owned by the latter (one should remove or copy the feature first).");		
 			} 
 
 			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this);	
