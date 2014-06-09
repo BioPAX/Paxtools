@@ -64,7 +64,9 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	{
 		if (xref != null) {
 			this.xref.remove(xref);
-			xref.getXrefOf().remove(this);
+			synchronized (xref) {
+				xref.getXrefOf().remove(this);
+			}
 		}
 	}
 
@@ -77,7 +79,9 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 	{
 		if (xref != null) {
 			this.xref.add(xref);
-			xref.getXrefOf().add(this);
+			synchronized (xref) {
+				xref.getXrefOf().add(this);
+			}
 		}
 	}
 

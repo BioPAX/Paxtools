@@ -65,12 +65,16 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	{
 		if (this.entityReference != null)
 		{
-			this.entityReference.getEntityReferenceOf().remove(this);
+			synchronized (this.entityReference) {
+				this.entityReference.getEntityReferenceOf().remove(this);
+			}
 		}
 		this.entityReference = entityReference;
 		if (this.entityReference != null)
 		{
-			this.entityReference.getEntityReferenceOf().add(this);
+			synchronized (this.entityReference) {
+				this.entityReference.getEntityReferenceOf().add(this);
+			}
 		}
 	}
 

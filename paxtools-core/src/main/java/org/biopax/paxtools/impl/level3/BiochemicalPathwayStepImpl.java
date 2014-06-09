@@ -77,14 +77,22 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	{
 		if (this.stepConversion != null)
 		{
-			if (this.stepConversion == highLander) return;
-			else this.stepConversion.getStepProcessOf().remove(this);
+			if (this.stepConversion == highLander) 
+				return;
+			else { 
+				synchronized (this.stepConversion) {
+					this.stepConversion.getStepProcessOf().remove(this);
+				}
+			}
 		}
 		
 		this.stepConversion = highLander; //can be null!
 		
-		if(this.stepConversion != null)
-			this.stepConversion.getStepProcessOf().add(this);
+		if(this.stepConversion != null) {
+			synchronized (this.stepConversion) {
+				this.stepConversion.getStepProcessOf().add(this);
+			}
+		}
 
 	}
 
