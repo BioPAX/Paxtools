@@ -936,10 +936,13 @@ class EntryMapper implements Runnable {
         		if(rtv == null) {
         			rtv = bpModel.addNew(RelationshipTypeVocabulary.class, cvUri);
         			rtv.addTerm(refType);
-        			UnificationXref cvx = bpModel.addNew(UnificationXref.class, genUri(UnificationXref.class, bpModel));
-        			cvx.setDb("PSI-MI");
-        			cvx.setId(refTypeAc);
-        			rtv.addXref(cvx);
+        			if(refTypeAc != null && !refTypeAc.isEmpty()) {//null happens, e.g., for 'uniprot-removed-ac' terms...
+        				UnificationXref cvx = bpModel
+        					.addNew(UnificationXref.class, genUri(UnificationXref.class, bpModel));
+        				cvx.setDb("PSI-MI");
+        				cvx.setId(refTypeAc);
+        				rtv.addXref(cvx);
+        			}
         		}			
         		x.setRelationshipType(rtv);
         	}		
