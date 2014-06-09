@@ -1147,7 +1147,7 @@ class EntryMapper implements Runnable {
 
 	private <T extends EntityFeature> T getFeature(Class<T> featureClass, Feature psiFeature)
 	{					
-		String entityFeatureUri = xmlBase + genUri(EntityFeature.class, bpModel); 
+		String entityFeatureUri = genUri(EntityFeature.class, bpModel); 
 		//try to find and reuse the feature
 		T entityFeature = (T) bpModel.getByID(entityFeatureUri);
 		if (entityFeature == null) 
