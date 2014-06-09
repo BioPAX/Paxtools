@@ -1,31 +1,3 @@
-// $Id: EntryMapper.java,v 1.2 2009/11/23 13:59:42 rodche Exp $
-//------------------------------------------------------------------------------
-/** Copyright (c) 2009 Memorial Sloan-Kettering Cancer Center.
- **
- ** This library is free software; you can redistribute it and/or modify it
- ** under the terms of the GNU Lesser General Public License as published
- ** by the Free Software Foundation; either version 2.1 of the License, or
- ** any later version.
- **
- ** This library is distributed in the hope that it will be useful, but
- ** WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF
- ** MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  The software and
- ** documentation provided hereunder is on an "as is" basis, and
- ** Memorial Sloan-Kettering Cancer Center
- ** has no obligations to provide maintenance, support,
- ** updates, enhancements or modifications.  In no event shall
- ** Memorial Sloan-Kettering Cancer Center
- ** be liable to any party for direct, indirect, special,
- ** incidental or consequential damages, including lost profits, arising
- ** out of the use of this software and its documentation, even if
- ** Memorial Sloan-Kettering Cancer Center
- ** has been advised of the possibility of such damage.  See
- ** the GNU Lesser General Public License for more details.
- **
- ** You should have received a copy of the GNU Lesser General Public License
- ** along with this library; if not, write to the Free Software Foundation,
- ** Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
- **/
 package org.biopax.paxtools.converter.psi;
 
 import java.io.UnsupportedEncodingException;
@@ -88,14 +60,9 @@ import psidev.psi.mi.xml.model.*;
  * whose ref is passed during object construction.
  *
  * @author Benjamin Gross, rodche (full re-factoring for Level3)
- * 
- * TODO in some cases, such as CORUM data model, we actually want to generate Complex instead MolecularInteraction objects
  */
 class EntryMapper implements Runnable {
 
-	/**
-	 * Genetic Interactions.
-	 */
 	private static final ArrayList<String> GENETIC_INTERACTIONS;
 	static {
 		GENETIC_INTERACTIONS = new ArrayList<String>();
@@ -130,13 +97,13 @@ class EntryMapper implements Runnable {
 	
 	private final boolean forceInteractionToComplex;
 
-	/**
+	/*
 	 * Ref to interatorMap
 	 * (key is the interactor id, and the value is the Interactor)
 	 */
 	private Map<String, Interactor> interactorMap;
 
-	/**
+	/*
 	 * Ref to experimentMap
 	 * (key is the experiment description, and the value is the ExperimentDescription)
 	 */
@@ -160,9 +127,7 @@ class EntryMapper implements Runnable {
 		this.forceInteractionToComplex = forceInteractionToComplex;
 	}
 
-	/**
-	 * Our implementation of run.
-	 */
+
 	public void run() {
 		this.bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();
 		this.bpModel.setXmlBase(xmlBase);					
@@ -198,12 +163,9 @@ class EntryMapper implements Runnable {
 		biopaxMarshaller.addModel(bpModel);
 	}
 
-	/**
+	/*
 	 * Given an Entry, creates a hashmap of Interactors,
 	 * where the key is the interactor id, and the value is the Interactor.
-	 *
-	 * @param entry
-	 * @return
 	 */
 	private Map<String, Interactor> createInteractorMap(Entry entry) {
 
@@ -220,15 +182,12 @@ class EntryMapper implements Runnable {
 		return map;
 	}
 
-	/**
+	/*
 	 * Given an EntrySet Entry, creates a hashmap of ExperimentTypes,
 	 * where the key is the experiment description id, and the value is the ExperimentType.
 	 *
 	 * Note: We do this because as we interate over interactions, the interaction references
 	 *       an experiment, and we can use the experiment id to reference the experiment description.
-	 *
-	 * @param entry
-	 * @return
 	 */
 	private Map<Integer, ExperimentDescription> createExperimentMap(Entry entry) {
 
@@ -253,10 +212,6 @@ class EntryMapper implements Runnable {
 	 *
 	 * psi.interactionElementType                 -> biopax.(physicalInteraction or MolecularInteraction) TODO consider Complex
 	 * psi.interactionElementType.participantList -> biopax.physicalInteraction.participants
-	 *
-	 * @param entryDataSourceName
-	 * @param availability
-	 * @param interaction
 	 */
 	private void processInteraction(String entryDataSourceName,
 								   Set<String> availability,
@@ -282,7 +237,11 @@ class EntryMapper implements Runnable {
 		Set<Evidence> bpEvidence = getExperimentalData(interaction, psimiParticipantToBiopaxParticipantMap);
 
 		// don't add genetic interactions to file (at least biogrid will be affected 1/6/09)
-		if (isGeneticInteraction(GENETIC_INTERACTIONS, bpEvidence)) return;
+		if (isGeneticInteraction(GENETIC_INTERACTIONS, bpEvidence)) {
+			for(Evidence ev : bpEvidence)
+				bpModel.remove(ev);
+			return;
+		}
 
 		// get interaction name/short name
 		String name = null;
@@ -304,15 +263,6 @@ class EntryMapper implements Runnable {
 			}
 		}
 
-        // interaction publication & unification xref 
-		Set<Xref> bpXrefs = new HashSet<Xref>();
-		if (entry.hasSource() && entry.getSource().hasBibref()) {
-			bpXrefs.addAll(getPublicationXref(entry.getSource().getBibref().getXref()));
-		}
-		if (interaction.hasXref()) {
-			bpXrefs.addAll(getXrefs(interaction.getXref(), true));
-		}
-
 		
 		boolean complex = false; // TODO have to decide whether to generate an Interaction or Complex 
 		
@@ -328,8 +278,6 @@ class EntryMapper implements Runnable {
 	
 		Entity bpEntity = null;
 		
-		//TODO set bf.bindsTo symmetrical props (e.g., for IntAct Complex data, can use <inferredInteractionList> element)	
-		
 		if (complex || forceInteractionToComplex) {
 			//TODO generate a Complex, add the components (participants)
 			bpEntity = createComplex(
@@ -343,20 +291,29 @@ class EntryMapper implements Runnable {
 			}
 		}
 		
-		// add xrefs
+		//TODO set bf.bindsTo symmetrical props (e.g., for IntAct Complex data, can use <inferredInteractionList> element)	
+		//interaction.getInferredInteractions()...
+		
+		// add xrefs		
+        // interaction publication & unification xref 
+		Set<Xref> bpXrefs = new HashSet<Xref>();
+		if (entry.hasSource() && entry.getSource().hasBibref()) {
+			bpXrefs.addAll(getPublicationXref(entry.getSource().getBibref().getXref()));
+		}
+		if (interaction.hasXref()) {
+			bpXrefs.addAll(getXrefs(interaction.getXref(), true));
+		}
+		
 		for (Xref bpXref : bpXrefs) {
 			bpEntity.addXref(bpXref);
 		}
 	}
 
-	/**
+	/*
 	 * Creates a paxtools participant.
 	 *
 	 * Note:
 	 * psi.participantType -> biopax.(physicalEntityParticipant or PhysicalEntity)
-	 *
-	 * @param participant
-	 * @return
 	 */
 	private SimplePhysicalEntity createParticipant(Participant participant) {
 	
@@ -381,40 +338,32 @@ class EntryMapper implements Runnable {
 		}
 
 		// cellular location
-		CellularLocationVocabulary cellularLocation =
-				findOrCreateControlledVocabulary((interactor.hasOrganism() &&
-										 interactor.getOrganism().hasCompartment()) ?
-										interactor.getOrganism().getCompartment() : null, CellularLocationVocabulary.class);
-
-		// create the physical entity which is contained within the participant, if it does not already exist
-		String physicalEntityRdfId = xmlBase + encode(interactorRef);
-		SimplePhysicalEntity bpPhysicalEntity = (SimplePhysicalEntity) bpModel.getByID(physicalEntityRdfId);		
-		bpPhysicalEntity = (bpPhysicalEntity == null) ?
-			createPhysicalEntity(physicalEntityRdfId, interactor) : bpPhysicalEntity;
+		CellularLocationVocabulary cellularLocation = findOrCreateControlledVocabulary(
+			(interactor.hasOrganism() && interactor.getOrganism().hasCompartment()) 
+				? interactor.getOrganism().getCompartment() : null, CellularLocationVocabulary.class);		
 		
-		// add features
-		addFeatures(bpPhysicalEntity, participant.getFeatures());		
-			
-		if (cellularLocation != null && bpPhysicalEntity != null) {
-			bpPhysicalEntity.setCellularLocation(cellularLocation);
-		}
+		// find or create the physical entity which is contained/referred within the participant
+		SimplePhysicalEntity bpPhysicalEntity = createPhysicalEntity(interactor, interactorRef, 
+				cellularLocation, participant.getFeatures());
 				
 		return bpPhysicalEntity;
 	}
 
-	/**
+	/*
 	 * Creates a paxtools simple physical entity.
 	 *
 	 * Note:
 	 * psi.interactorElementType  -> PhysicalEntity (more specifically, SimplePhysicalEntity in paxtools)
-	 *
-	 * @param physicalEntityRdfId
-	 * @param interactor
-	 *
-	 * @return
 	 */
-	private SimplePhysicalEntity createPhysicalEntity(String physicalEntityRdfId, Interactor interactor) 
+	private SimplePhysicalEntity createPhysicalEntity(Interactor interactor, String interactorRef, 
+			CellularLocationVocabulary cellularLocation, Collection<Feature> features) 
 	{
+		String physicalEntityRdfId = xmlBase + encode(interactorRef);
+		
+		SimplePhysicalEntity toReturn = (SimplePhysicalEntity) bpModel.getByID(physicalEntityRdfId);		
+		if(toReturn != null) 
+			return toReturn;
+		
 		// figure out physical entity type (protein, dna, rna, small molecule)
 		String physicalEntityType = null;
 		CvType interactorType = interactor.getInteractorType();
@@ -439,7 +388,6 @@ class EntryMapper implements Runnable {
 			}
 		}
 		
-		SimplePhysicalEntity toReturn = null;
 		Set<Xref> bpXrefs = getXrefs(interactor.getXref(), false);
 		
 		EntityReference er = null;
@@ -488,25 +436,30 @@ class EntryMapper implements Runnable {
                 er.addXref((Xref) xref);
 			}
 		}
+		
 		// set sequence entity ref props
-
 		if (er instanceof SequenceEntityReference) {
 			SequenceEntityReference ser = (SequenceEntityReference)er;
 			ser.setOrganism(getBioSource(interactor.getOrganism()));
 			ser.setSequence(interactor.getSequence());
 		}
+		
 		// set entity ref on pe
-		toReturn.setEntityReference(er);
+		toReturn.setEntityReference(er);		
+		
+		// add features
+		addFeatures(toReturn, features);		
+		
+		//set cellular loc.
+		toReturn.setCellularLocation(cellularLocation);
 		
 		return toReturn;
 	}
 
-	/**
+	/*
 	 * Given a psi feature list,
-	 * creates and adds biopax entity features to the physical entity.
-	 *
-	 * @param pe
-	 * @param psiFeatureList
+	 * creates and adds biopax entity features 
+	 * to the simple physical entity and its ent. ref.
 	 */
 	private void addFeatures(SimplePhysicalEntity pe, Collection<Feature> psiFeatureList) {
 
@@ -516,34 +469,27 @@ class EntryMapper implements Runnable {
 
 		// interate through psi feature list
 		for (Feature psiFeature : psiFeatureList) {
-
-			// feature location
-			Set<SequenceInterval> sequenceLocationSet =
-				getSequenceLocation(psiFeature.getRanges());
-
-			// feature type
-			SequenceRegionVocabulary bpFeatureType = null;
-			if (psiFeature.hasFeatureType()) {
-				bpFeatureType = findOrCreateControlledVocabulary(psiFeature.getFeatureType(), SequenceRegionVocabulary.class);
-            }
-
-			// xref - use feature type xref
-			Set<Xref> bpSequenceFeatureXref = getXrefs(psiFeature.getXref(), false);// null/empty is ok too
-			//using the bpSequenceFeatureXref, it will try getting the feature while avoiding duplicates
-			Class<? extends EntityFeature> featureClass = (pe instanceof SmallMolecule)
-					? BindingFeature.class : EntityFeature.class; //TODO consider other types, e.g. ModificationFeature under some circumstances.
+			if(psiFeature==null) continue;
 			
-			EntityFeature feature = getFeature(bpSequenceFeatureXref, sequenceLocationSet, bpFeatureType, featureClass);
-			pe.addFeature(feature);
+			//using the xrefs, it will try getting the feature while avoiding duplicates
+			//TODO consider other types, e.g. ModificationFeature under some circumstances.
+			Class<? extends EntityFeature> featureClass = (pe instanceof SmallMolecule)
+					? BindingFeature.class : EntityFeature.class; 
+			
+			EntityFeature feature = getFeature(featureClass, psiFeature);			
+			if(feature != null) {
+				pe.addFeature(feature);
+			}
+			
+			if(pe.getEntityReference()!=null) {//in fact, always...
+				pe.getEntityReference().addEntityFeature(feature);
+			}				
 		}
 	}
 
-	/**
+	/*
 	 * Given a psiFeature, return the set
-	 * of SequenceInterval (sequence locations).
-	 *
-	 * @param rangeList
-	 * @return 
+	 * of SequenceInterval (sequence locations). 
 	 */
 	private Set<SequenceInterval> getSequenceLocation(Collection<Range> rangeList) {
 		Set<SequenceInterval> toReturn = new HashSet<SequenceInterval>();
@@ -573,11 +519,8 @@ class EntryMapper implements Runnable {
 	}
 
 
-	/**
+	/*
 	 * Given a psi organism, return a paxtools biosource.
-	 *
-	 * @param organism
-	 * @return
 	 */
 	private BioSource getBioSource(Organism organism) {
 
@@ -594,7 +537,7 @@ class EntryMapper implements Runnable {
 			return bpBioSource;
 
 		// taxon xref
-		String taxonXrefUri = xmlBase + "UnificationXref_taxonomy_" + ncbiId;
+		String taxonXrefUri = xmlBase + "UX_taxonomy_" + ncbiId;
 		UnificationXref taxonXref = (UnificationXref) bpModel.getByID(taxonXrefUri);
 		if(taxonXref == null) {
 			taxonXref = bpModel.addNew(UnificationXref.class, taxonXrefUri);
@@ -617,12 +560,8 @@ class EntryMapper implements Runnable {
 	}
 
 
-	/**
+	/*
 	 * Given a CvType, return a paxtools ControlledVocabulary.
-	 *
-	 * @param cvType
-	 * @param bpCvClass
-	 * @return
 	 */
 	private <T extends ControlledVocabulary> T findOrCreateControlledVocabulary(CvType cvType, Class<T> bpCvClass) {
 
@@ -634,11 +573,10 @@ class EntryMapper implements Runnable {
 		if (cvType.hasNames()) {
 			term = getName(cvType.getNames());
 			if (term == null) 
-				return null; //TODO log no term error?
+				return null;
 		}
 		
 		String uri = xmlBase + bpCvClass.getSimpleName() + encode(term);
-
 		// look for name in our vocabulary set
 		T toReturn = (T) bpModel.getByID(uri);
 		if (toReturn != null) 
@@ -648,7 +586,6 @@ class EntryMapper implements Runnable {
 		Set<Xref> bpXrefs = getXrefs(cvType.getXref(), true);		
 		toReturn = bpModel.addNew(bpCvClass, uri);
 		toReturn.addTerm(term);
-
 		if (bpXrefs != null && bpXrefs.size() > 0)
 			for (Xref bpXref : bpXrefs)
 				toReturn.addXref(bpXref);
@@ -656,14 +593,10 @@ class EntryMapper implements Runnable {
 		return toReturn;
  	}
 
-	/**
+	/*
 	 * Given a psi xref, returns paxtools unification and relationship xrefs.
-	 *
-	 * @param psiXREF
-	 * @param forOCVorInteraction
-	 * @return
 	 */
-	private Set<Xref> getXrefs(psidev.psi.mi.xml.model.Xref psiXREF, boolean forOCVorInteraction) {
+	private Set<Xref> getXrefs(psidev.psi.mi.xml.model.Xref psiXREF, boolean cvOrInteraction) {
 
 		// set to return
 		Set<Xref> toReturn = new HashSet<Xref>();
@@ -671,7 +604,7 @@ class EntryMapper implements Runnable {
 		// check args
 		if (psiXREF == null) return toReturn;
 
-		// create list of all references
+		// create the list of all psimi xrefs
 		List<DbReference> psiDBRefList = new ArrayList<DbReference>();
 		psiDBRefList.add(psiXREF.getPrimaryRef());
 		if (psiXREF.hasSecondaryRef()) {
@@ -679,41 +612,26 @@ class EntryMapper implements Runnable {
 		}
 
 		for (DbReference psiDBRef : psiDBRefList) {
-			// check for null xref
-			if (psiDBRef == null) continue;
-
+			if(psiDBRef==null) continue;
+			
 			// process ref type
-			Xref bpXref = null;
 			String refType = (psiDBRef.hasRefType()) ? psiDBRef.getRefType() : null;
+			String refTypeAc = (psiDBRef.hasRefTypeAc()) ? psiDBRef.getRefTypeAc() : null;
             String psiDBRefId = psiDBRef.getId();
 
             // If multiple ids given with comma separated values, then split them.
             for (String dbRefId : psiDBRefId.split(",")) {
-                if (refType != null 
-                	&& (refType.equals("identity") || refType.equals("identical object"))) 
-                {
-                    String id = xmlBase + "UnificationXref_" + encode(psiDBRef.getDb().toLowerCase()+"_"+dbRefId);
-                    bpXref = (Xref) bpModel.getByID(id);                   
-                    if (bpXref != null) {
-                        toReturn.add(bpXref);
-                        continue;
-                    }                                       
-                    bpXref = bpModel.addNew(UnificationXref.class, id);
+            	Xref bpXref = null;
+                if ("identity".equals(refType) || "identical object".equals(refType)) {
+                    bpXref = unificationXref(psiDBRef.getDb(), dbRefId);
                 } 
-                else if (!forOCVorInteraction) 
-                {
-                    String id = xmlBase + "RelationshipXref_" + encode(psiDBRef.getDb().toLowerCase()+"_"+dbRefId);
-                    bpXref = (Xref) bpModel.getByID(id);                 
-                    if (bpXref != null) {
-                        toReturn.add(bpXref);
-                        continue;
-                    } 
-                    bpXref = ((refType != null) 
-                    	? createRelationshipXref(id, refType) 
-                    	: (	
-                    		psiDBRef.getDb().toLowerCase().equals("uniprot")
-                    			? bpModel.addNew(UnificationXref.class, id) : createRelationshipXref(id, null)
-                    	  ));
+                else if (!cvOrInteraction) {
+                	if("secondary-ac".equals(refType) ) {//&& psiDBRef.getDb().toLowerCase().startsWith("uniprot")) {
+                		bpXref = unificationXref(psiDBRef.getDb(), dbRefId);
+                	} 
+                	else {
+                		bpXref = relationshipXref(psiDBRef.getDb(), dbRefId, refType, refTypeAc);
+                	}
                 }
 
                 //set properties for the new xref and add it to the set to return
@@ -728,48 +646,46 @@ class EntryMapper implements Runnable {
 		return toReturn;
 	}
 
-	/**
-	 * Given a psi xref, returns a paxtools xref.
-	 *
-	 * @param psiXREF
-	 * @return
-	 */
+	
+	private Xref unificationXref(String db, String id) {
+		String xuri = xmlBase + "UX_" + encode(db.toLowerCase() + "_" + id);
+		UnificationXref x = (UnificationXref) bpModel.getByID(xuri);
+		if(x==null) {
+			x= bpModel.addNew(UnificationXref.class, xuri);
+			x.setDb(db);
+			x.setId(id);
+		}
+		return x;
+	}
+
+
 	private Set<PublicationXref> getPublicationXref(psidev.psi.mi.xml.model.Xref psiXREF) {
-		// set to return
 		Set<PublicationXref> toReturn = new HashSet<PublicationXref>();
 
-		if (psiXREF == null) return toReturn;
+		if (psiXREF == null) 
+			return toReturn; //empty set
 
 		// get primary 
 		DbReference psiDBRef = psiXREF.getPrimaryRef();
-		if (psiDBRef == null) return toReturn;
+		if (psiDBRef == null) 
+			return toReturn; //empty set
 
-		// create publication ref
-		String id = xmlBase + "PublicationXref_" + encode(psiDBRef.getDb().toLowerCase() + "_"+ psiDBRef.getId());
+		// find or create publication xref
+		String id = xmlBase + "PX_" + encode(psiDBRef.getDb().toLowerCase() + "_"+ psiDBRef.getId());
 		PublicationXref bpXref = (PublicationXref) bpModel.getByID(id);
-		// outta here if element already exists in model
-		if (bpXref != null) {
-			toReturn.add(bpXref);
-			return toReturn;
-		}
-		else {
+		if (bpXref == null) {
 			bpXref = bpModel.addNew(PublicationXref.class, id);
+			bpXref.setDb(psiDBRef.getDb());
+			bpXref.setId(psiDBRef.getId());
 		}
 		
-		bpXref.setDb(psiDBRef.getDb());
-		bpXref.setId(psiDBRef.getId());
 		toReturn.add(bpXref);
 		
 		return toReturn;
 	}
 
-	/**
-	 * Makes a psi-mi xref id safe to add to a biopax URI.
-	 * 
-	 * @param id
-	 */
+
 	private String encode(String id) {
-//		id = id.replaceAll("\\$|\\&|\\+|,|/|:|;|=|\\?|@| ", "-");
 		try {
 			return URLEncoder.encode(id, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -777,12 +693,8 @@ class EntryMapper implements Runnable {
 		}
 	}
 
-	/**
+	/*
 	 * Given an interaction, return a set of paxtools evidence objects.
-	 *
-	 * @param interaction
-	 * @param psimiParticipantToBiopaxParticipantMap
-	 * @return
 	 */
 	private Set<Evidence> getExperimentalData(Interaction interaction, 
 			Map<Participant, SimplePhysicalEntity> psimiParticipantToBiopaxParticipantMap) {
@@ -848,12 +760,9 @@ class EntryMapper implements Runnable {
 		return toReturn;
 	}
 
-	/**
+	/*
 	 * Given a psi-mi experiment type, returns a set of open
 	 * controlled vocabulary objects which represent evidence code(s).
-	 *
-	 * @param experimentDescription
-	 * @return
 	 */
 	private Set<EvidenceCodeVocabulary> getEvidenceCodes(ExperimentDescription experimentDescription) {
 
@@ -878,11 +787,8 @@ class EntryMapper implements Runnable {
 		return toReturn;
 	}
 
-	/**
+	/*
 	 * Given a psi-mi confidence object, returns a paxtools confidence object.
-	 *
-	 * @param psiConfidence
-	 * @return
 	 */
 	private Score getScoreOrConfidence(Confidence psiConfidence) {
 
@@ -921,12 +827,9 @@ class EntryMapper implements Runnable {
 		return ret;
 	}
 
-	/**
+	/*
 	 * Given a psi-mi attributes list, returns a string set, where
 	 * each string is concatenation of name/value pairs.
-	 *
-	 * @param attributes
-	 * @return
 	 */
 	private Set<String> getAttributes(Collection<Attribute> attributes) {
 
@@ -950,13 +853,8 @@ class EntryMapper implements Runnable {
 		return toReturn;
 	}
 
-	/**
+	/*
 	 * Given a psi-mi interaction element type, returns a set of experimental forms.
-	 *
-	 * @param experimentDescription 
-	 * @param interaction 
-	 * @param psimiParticipantToBiopaxParticipantMap 
-	 * @return
 	 */
 	private Set<ExperimentalForm> getExperimentalFormSet(ExperimentDescription experimentDescription,
 													  Interaction interaction,
@@ -1008,11 +906,8 @@ class EntryMapper implements Runnable {
 		return toReturn;
 	}
 
-	/**
+	/*
 	 * Given a PSI Names object, returns a name.
-	 *
-	 * @param name
-	 * @return
 	 */
 	private String getName(Names name) {		
 		if (name.hasFullName()) {
@@ -1026,35 +921,35 @@ class EntryMapper implements Runnable {
 	}
 
 
-	/**
-	 * Gets a relationship xref.
-	 *
-	 * @param uri        
-	 * @param refType   
-	 * @return
-	 */
-	private RelationshipXref createRelationshipXref(String uri, String refType)
-	{
-		RelationshipXref toReturn = bpModel.addNew(RelationshipXref.class, uri);
-		if (refType != null)
-		{
-			RelationshipTypeVocabulary rtv = bpModel
-				.addNew(RelationshipTypeVocabulary.class, genUri(RelationshipTypeVocabulary.class, bpModel));
-			rtv.addTerm(refType);
-			toReturn.setRelationshipType(rtv);
-		}
-		return toReturn;
+	private RelationshipXref relationshipXref(String db, String id, String refType, String refTypeAc)
+	{	
+		String uri = xmlBase + "RX_" + encode(db.toLowerCase()+"_"+id+"_"+refType);
+        RelationshipXref x = (RelationshipXref) bpModel.getByID(uri);                 
+        
+        if (x == null) { //create/add a new RX
+        	x = bpModel.addNew(RelationshipXref.class, uri);
+        	if (refType != null) //use the standard CV term and accession
+        	{
+        		String cvUri = (refTypeAc!=null) ? "http://identifiers.org/psimi/" + refTypeAc
+        			: xmlBase + "RTV_" + encode(refType);//the latter should not happen often (ever, in a valid PSI-MI XML)			
+        		RelationshipTypeVocabulary rtv = (RelationshipTypeVocabulary) bpModel.getByID(cvUri);
+        		if(rtv == null) {
+        			rtv = bpModel.addNew(RelationshipTypeVocabulary.class, cvUri);
+        			rtv.addTerm(refType);
+        			UnificationXref cvx = bpModel.addNew(UnificationXref.class, genUri(UnificationXref.class, bpModel));
+        			cvx.setDb("PSI-MI");
+        			cvx.setId(refTypeAc);
+        			rtv.addXref(cvx);
+        		}			
+        		x.setRelationshipType(rtv);
+        	}		
+        }
+        
+		return x;
 	}
 
-	/**
+	/*
 	 * Gets an evidence object.
-	 *
-	 * @param bpXrefs 
-	 * @param evidenceCodes
-	 * @param scoresOrConfidences
-	 * @param comments
-	 * @param experimentalForms
-	 * @return
 	 */
 	private Evidence createEvidence(Set<? extends Xref> bpXrefs,
 	                               Set<EvidenceCodeVocabulary> evidenceCodes,
@@ -1077,7 +972,7 @@ class EntryMapper implements Runnable {
 		if (comments != null && comments.size() > 0)
 		{
 			for (String comment : comments) {
-				bpEvidence.addComment(comment);
+				bpEvidence.addComment(comment.trim());
 			}
 		}
 		if (experimentalForms != null && experimentalForms.size() > 0)
@@ -1094,13 +989,8 @@ class EntryMapper implements Runnable {
 		return bpEvidence;
 	}
 
-	/**
+	/*
 	 * Gets a confidence/score object.
-	 *
-	 * @param value    
-	 * @param bpXrefs  
-	 * @param comments 
-	 * @return
 	 */
 	private Score createScore(String value, 
 			Set<? extends Xref> bpXrefs, Set<String> comments)
@@ -1125,12 +1015,8 @@ class EntryMapper implements Runnable {
 		return bpScore;
 	}
 
-	/**
+	/*
 	 * Gets a experimental form object.
-	 *
-	 * @param formType    
-	 * @param participant 
-	 * @return
 	 */
 	private ExperimentalForm createExperimentalForm(ExperimentalFormVocabulary formType, SimplePhysicalEntity participant)
 	{
@@ -1149,15 +1035,8 @@ class EntryMapper implements Runnable {
 	}
 
 
-	/**
+	/*
 	 * New a molecular interaction.
-	 *
-	 * @param name
-	 * @param shortName
-	 * @param availability
-	 * @param participants
-	 * @param bpEvidence
-	 * @return
 	 */
 	private MolecularInteraction createMolecularInteraction(String name, String shortName,
 	                                                  Set<String> availability,
@@ -1187,7 +1066,7 @@ class EntryMapper implements Runnable {
 				toReturn.addParticipant(participant);
 			}
 		}
-		if (bpEvidence != null && bpEvidence.size() > 0)
+		if (bpEvidence != null && !bpEvidence.isEmpty())
 		{
 			for (Evidence evidence : bpEvidence) {
 				toReturn.addEvidence(evidence);
@@ -1197,16 +1076,7 @@ class EntryMapper implements Runnable {
 		return toReturn;
 	}
 
-	/**
-	 * New Complex.
-	 *
-	 * @param name
-	 * @param shortName
-	 * @param availability
-	 * @param participants
-	 * @param bpEvidence
-	 * @return
-	 */
+
 	private Complex createComplex(String name, String shortName,
 	                              Set<String> availability,
 	                              Set<? extends SimplePhysicalEntity> participants,
@@ -1234,7 +1104,7 @@ class EntryMapper implements Runnable {
 				toReturn.addComponent(participant);
 			}
 		}
-		if (bpEvidence != null && bpEvidence.size() > 0)
+		if (bpEvidence != null && !bpEvidence.isEmpty())
 		{
 			for (Evidence evidence : bpEvidence) {
 				toReturn.addEvidence(evidence);
@@ -1244,16 +1114,7 @@ class EntryMapper implements Runnable {
 		return toReturn;
 	}
 	
-	/**
-	 * Gets a biosource.
-	 *
-	 * @param id        
-	 * @param taxonXref 
-	 * @param cellType  
-	 * @param tissue    
-	 * @param name      
-	 * @return
-	 */
+
 	private BioSource createBioSource(String id, UnificationXref taxonXref,
 	                                 CellVocabulary cellType, TissueVocabulary tissue,
 	                                 String name)
@@ -1281,66 +1142,31 @@ class EntryMapper implements Runnable {
 	}
 
 
-	/**
-	 * Gets a sequence entity feature.
-	 *
-	 * @param <T>
-	 * @param bpXrefs 
-	 * @param featureLocations
-	 * @param featureType
-	 * @param featureClass
-	 * 
-	 * @return
-	 */
-	private <T extends EntityFeature> T getFeature(Set<? extends Xref> bpXrefs,
-	                                Set<? extends SequenceLocation> featureLocations,
-	                                SequenceRegionVocabulary featureType, 
-	                                Class<T> featureClass)
-	{		
-		Xref firstXref = null;		
-		String entityFeatureUri;
-		// lets use xref id as id for feature - to eliminate duplicate features
-		if(bpXrefs != null && !bpXrefs.isEmpty()) {
-			//get by chance but still ok...
-			firstXref = bpXrefs.iterator().next();
-			entityFeatureUri = xmlBase + "SF-" + encode(firstXref.getDb() + "_"+ firstXref.getId());
-			//try to find and reuse the feature
-			T bpSequenceFeature = (T) bpModel.getByID(entityFeatureUri);
-			if (bpSequenceFeature != null) {
-				// TODO: EntityFeature is not XReferrable; what else to do with bpXrefs?
-				if (featureLocations != null) {
-					for (SequenceLocation sequenceLocation : featureLocations) {
-						bpSequenceFeature.setFeatureLocation(sequenceLocation);
-					}
-				}
-				if (featureType != null) {
-					bpSequenceFeature.setFeatureLocationType(featureType);
-				}
-							
-				return bpSequenceFeature;
-			}
-		} else {
-			entityFeatureUri = genUri(EntityFeature.class, bpModel);
-		}
+	private <T extends EntityFeature> T getFeature(Class<T> featureClass, Feature psiFeature)
+	{					
+		String entityFeatureUri = xmlBase + genUri(EntityFeature.class, bpModel); 
+		//try to find and reuse the feature
+		T entityFeature = (T) bpModel.getByID(entityFeatureUri);
+		if (entityFeature == null) 
+			entityFeature = bpModel.addNew(featureClass, entityFeatureUri);
 		
-		T feature = bpModel.addNew(featureClass, entityFeatureUri);
-		// TODO: EntityFeature does not implement XReferrable; what to do with bpXrefs?
+		// feature location
+		Set<SequenceInterval> featureLocations = getSequenceLocation(psiFeature.getRanges());
 		if (featureLocations != null)
 			for (SequenceLocation featureLocation : featureLocations) 
-				feature.setFeatureLocation(featureLocation);
-		if (featureType != null)
-			feature.setFeatureLocationType(featureType);
+				entityFeature.setFeatureLocation(featureLocation);
+		
+		// feature type
+		if (psiFeature.hasFeatureType()) {
+			SequenceRegionVocabulary cv = findOrCreateControlledVocabulary(
+					psiFeature.getFeatureType(), SequenceRegionVocabulary.class);
+			entityFeature.setFeatureLocationType(cv);
+		}
 			
-		return feature;
+		return entityFeature;
 	}
 
-	/**
-	 * Gets a sequence location.
-	 *
-	 * @param beginSequenceInterval 
-	 * @param endSequenceInterval   
-	 * @return 
-	 */
+	
 	private SequenceInterval getSequenceLocation(long beginSequenceInterval,
 	                                            long endSequenceInterval)
 	{
@@ -1359,13 +1185,9 @@ class EntryMapper implements Runnable {
 	}
 	
 
-	/**
+	/*
 	 * Given a set of evidence objects, determines if interaction (that evidence obj is derived from)
 	 * is a genetic interaction.
-	 *
-	 * @param geneticInteractionTerms
-	 * @param bpEvidence  
-	 * @return
 	 */
 	private boolean isGeneticInteraction(final List<String> geneticInteractionTerms,
 	                                    Set<Evidence> bpEvidence)
@@ -1399,14 +1221,10 @@ class EntryMapper implements Runnable {
 	}
 
 	
-	/**
+	/*
 	 * Generates a URI of a BioPAX object
 	 * using the xml base, model interface name 
 	 * and randomly generated long integer.
-	 *
-	 * @param type - biopax interface
-	 * @param model - the biopax model where to check whether the generated URI is not unique
-	 * @return 
 	 */
 	private String genUri(Class<? extends BioPAXElement> type, Model model) {
 		String uri = xmlBase + type.getSimpleName()
