@@ -48,6 +48,8 @@ public class QueryExecuter
 
 		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
 
+		if (sourceSet.isEmpty()) return Collections.emptySet();
+
 		NeighborhoodQuery query = new NeighborhoodQuery(source, direction, limit);
 		Set<GraphObject> resultWrappers = query.run();
 		return convertQueryResult(resultWrappers, graph);
@@ -74,7 +76,7 @@ public class QueryExecuter
 
 		Collection<Set<Node>> sourceWrappers = prepareNodeSets(sourceSet, graph);
 
-		if (sourceWrappers.size() < 2) return Collections.emptySet();
+		if (sourceSet.size() < 2) return Collections.emptySet();
 
 		PathsBetweenQuery query = new PathsBetweenQuery(sourceWrappers, limit);
 		Set<GraphObject> resultWrappers = query.run();
@@ -156,6 +158,8 @@ public class QueryExecuter
 
 		Collection<Set<Node>> source = prepareNodeSets(sourceSet, graph);
 
+		if (sourceSet.size() < 2) return Collections.emptySet();
+
 		CommonStreamQuery query = new CommonStreamQuery(source, direction, limit);
 
 		Set<GraphObject> resultWrappers = query.run();
@@ -187,6 +191,8 @@ public class QueryExecuter
 		else return Collections.emptySet();
 
 		Collection<Set<Node>> sourceSets = prepareNodeSets(sourceSet, graph);
+
+		if (sourceSet.size() < 2) return Collections.emptySet();
 
 		// Run a common stream query
 
@@ -317,6 +323,7 @@ public class QueryExecuter
 	public static Map<BioPAXElement, Set<PhysicalEntity>> getRelatedPhysicalEntityMap(
 		Collection<BioPAXElement> elements)
 	{
+		replaceXrefsWithRelatedER(elements);
 		Map<BioPAXElement, Set<PhysicalEntity>> map = new HashMap<BioPAXElement, Set<PhysicalEntity>>();
 
 		for (BioPAXElement ele : elements)
@@ -329,6 +336,38 @@ public class QueryExecuter
 			}
 		}
 		return map;
+	}
+
+	/**
+	 * Replaces Xref objects with the related EntityReference objects. This is required for the use
+	 * case when user provides multiple xrefs that point to the same ER.
+	 * @param elements elements to send to a query as source or target
+	 */
+	protected static void replaceXrefsWithRelatedER(
+		Collection<BioPAXElement> elements)
+	{
+		Set<EntityReference> ers = new HashSet<EntityReference>();
+		Set<Xref> xrefs = new HashSet<Xref>();
+		for (BioPAXElement element : elements)
+		{
+			if (element instanceof Xref)
+			{
+				xrefs.add((Xref) element);
+				for (XReferrable able : ((Xref) element).getXrefOf())
+				{
+					if (able instanceof EntityReference)
+					{
+						ers.add((EntityReference) able);
+					}
+				}
+			}
+		}
+
+		elements.removeAll(xrefs);
+		for (EntityReference er : ers)
+		{
+			if (!elements.contains(er)) elements.add(er);
+		}
 	}
 
 	/**
