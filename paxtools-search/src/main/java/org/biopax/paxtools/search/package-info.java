@@ -1,8 +1,8 @@
 /**
- * Classes and utilities for indexing and 
- * full-text searching BioPAX models with Lucene.
+ * Public interfaces and classes (API) 
+ * for indexing and full-text searching 
+ * BioPAX models.
  * 
  * @author rodche
- *
  */
 package org.biopax.paxtools.search;

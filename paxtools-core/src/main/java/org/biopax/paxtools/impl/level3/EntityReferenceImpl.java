@@ -85,17 +85,28 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	public void removeEntityFeature(EntityFeature entityFeature)
 	{
-		if (entityFeature != null)
+		if (this.entityFeature.contains(entityFeature))
 		{
-			assert entityFeature.getEntityFeatureOf() == this
-				: "attempt to remove not own EntityFeature!"; //- but the assertion alone is not enough...
+			this.entityFeature.remove(entityFeature);
+			
 			if(entityFeature.getEntityFeatureOf() == this) {
-				this.entityFeature.remove(entityFeature);
 				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null);
-			} 
+			} else if(entityFeature.getEntityFeatureOf() != null) {
+				//won't call entityFeature.setEntityFeatureOf(null) 
+				log.warn("Removed entityFeature value: " + entityFeature.getRDFId() 
+					+ ", which is still entityFeatureOf " + entityFeature.getEntityFeatureOf().getRDFId());
+			} else {
+				log.warn("Removed entityFeature value: " + entityFeature.getRDFId() 
+					+ ", which already had entityFeatureOf == null (was illegal state)");
+			}
+		} else {
+			log.warn("removeEntityFeature did nothing: entityFeature property of "
+					+ this.getRDFId() + " does not contain the (EF): " 
+					+ ((entityFeature!=null)?entityFeature.getRDFId():null));
 		}
 	}
 
+	
 	protected void setEntityFeature(Set<EntityFeature> entityFeature)
 	{
 		this.entityFeature = entityFeature;
