@@ -46,6 +46,7 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * The converter class. 
@@ -178,10 +179,13 @@ public class PsiToBiopax3Converter {
 
 		ExecutorService exec = Executors.newCachedThreadPool();	
 		
-		// iterate through the list
+		//init the atomic 'counter' to be used for generated unique URIs in all mapper threads
+		//(curr. time is about +1.5x10^13ms; max. long is ~10^19 - still more than enough room for incrementing...)
+		final AtomicLong counter = new AtomicLong(System.currentTimeMillis()); 
+		// iterate through the entry list to convert
 		for (Entry entry : entrySet.getEntries()) {
 			// create and start PSIMapper; use the same xml:base
-			exec.execute(new EntryMapper(xmlBase, biopaxMarshaller, entry, forceInteractionToComplex));
+			exec.execute(new EntryMapper(xmlBase, biopaxMarshaller, entry, forceInteractionToComplex, counter));
 		}
 		
 		exec.shutdown(); //no more tasks

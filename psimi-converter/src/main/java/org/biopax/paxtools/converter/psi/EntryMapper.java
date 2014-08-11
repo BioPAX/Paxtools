@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -93,7 +93,7 @@ class EntryMapper implements Runnable {
 	
 	private final BioPAXMarshaller biopaxMarshaller;
 	
-	private final Random random;
+	private final AtomicLong counter;
 	
 	private final boolean forceInteractionToComplex;
 
@@ -117,11 +117,12 @@ class EntryMapper implements Runnable {
 	 * @param biopaxMarshaller
 	 * @param entry
 	 * @param forceInteractionToComplex - always generate Complex instead of MolecularInteraction
+	 * @param rnd a random number generator (to generate URIs)
 	 */
 	public EntryMapper(String xmlBase, BioPAXMarshaller biopaxMarshaller, 
-			Entry entry, boolean forceInteractionToComplex) {
+			Entry entry, boolean forceInteractionToComplex, AtomicLong counter) {
 		this.entry = entry;
-		this.random = new Random(System.currentTimeMillis());
+		this.counter = counter;
 		this.biopaxMarshaller = biopaxMarshaller;
 		this.xmlBase = xmlBase;
 		this.forceInteractionToComplex = forceInteractionToComplex;
@@ -472,7 +473,7 @@ class EntryMapper implements Runnable {
 			if(psiFeature==null) continue;
 			
 			//using the xrefs, it will try getting the feature while avoiding duplicates
-			//TODO consider other types, e.g. ModificationFeature under some circumstances.
+			//TODO consider other types, e.g. ModificationFeature under some circumstances; perhaps use psimi <featureType>...
 			Class<? extends EntityFeature> featureClass = (pe instanceof SmallMolecule)
 					? BindingFeature.class : EntityFeature.class; 
 			
@@ -1147,11 +1148,8 @@ class EntryMapper implements Runnable {
 
 	private <T extends EntityFeature> T getFeature(Class<T> featureClass, Feature psiFeature)
 	{					
-		String entityFeatureUri = genUri(EntityFeature.class, bpModel); 
-		//try to find and reuse the feature
-		T entityFeature = (T) bpModel.getByID(entityFeatureUri);
-		if (entityFeature == null) 
-			entityFeature = bpModel.addNew(featureClass, entityFeatureUri);
+		String entityFeatureUri = genUri(featureClass, bpModel); 		
+		T entityFeature = (T) bpModel.addNew(featureClass, entityFeatureUri);
 		
 		// feature location
 		Set<SequenceInterval> featureLocations = getSequenceLocation(psiFeature.getRanges());
@@ -1160,12 +1158,15 @@ class EntryMapper implements Runnable {
 				entityFeature.setFeatureLocation(featureLocation);
 		
 		// feature type
+		//TODO why always SequenceRegionVocabulary?
 		if (psiFeature.hasFeatureType()) {
 			SequenceRegionVocabulary cv = findOrCreateControlledVocabulary(
 					psiFeature.getFeatureType(), SequenceRegionVocabulary.class);
 			entityFeature.setFeatureLocationType(cv);
 		}
 			
+		//TODO set bindsTo for BindingFeatures if possible (using <interaction><inferredInteractionList>.. psimi elements/attr.)
+		
 		return entityFeature;
 	}
 
@@ -1225,20 +1226,13 @@ class EntryMapper implements Runnable {
 
 	
 	/*
-	 * Generates a URI of a BioPAX object
-	 * using the xml base, model interface name 
-	 * and randomly generated long integer.
+	 * Generates a URI of a BioPAX object using the xml base, model interface name 
+	 * and generated number (sequential).
+	 * The idea is virtually never ever return the same URI here (taking into account 
+	 * that there are multiple threads converting different PSIMI Entries, one per thread, 
+	 * symultaneously)
 	 */
 	private String genUri(Class<? extends BioPAXElement> type, Model model) {
-		String uri = xmlBase + type.getSimpleName()
-				+ Long.toString(random.nextLong());
-		
-		while(model.getByID(uri) != null) {
-			//if the uri was already assigned, generate new one;
-			//in practice, it rarely gets inside here
-			uri = xmlBase + type.getSimpleName() + Long.toString(random.nextLong());
-		}
-		
-		return uri;
+		return xmlBase + type.getSimpleName() + "_" + counter.incrementAndGet();
 	}	
 }

@@ -32,7 +32,6 @@ import org.biopax.paxtools.model.Model;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
 import psidev.psi.mi.tab.PsimiTabReader;
 import psidev.psi.mi.tab.converter.tab2xml.Tab2Xml;
 import psidev.psi.mi.tab.model.BinaryInteraction;
@@ -42,6 +41,7 @@ import psidev.psi.mi.xml.model.EntrySet;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -99,7 +99,7 @@ public class TestMapping extends BioPAXMarshaller {
 
 			// get entry
 			Entry entry = (Entry)entries.iterator().next();
-			EntryMapper mapper = new EntryMapper("", this, entry, false);
+			EntryMapper mapper = new EntryMapper("", this, entry, false, new AtomicLong(0));
 			mapper.run();
 		}
 		catch (Exception e) {

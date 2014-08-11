@@ -8,8 +8,6 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
-import org.biopax.paxtools.model.level3.SmallMolecule;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.algorithm.LimitType;
@@ -165,7 +163,12 @@ public class QueryTest
 		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
 			source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(!result.isEmpty());
-
+		// test the filter is case insensitive
+		f = new OrganismFilter(new String[]{"homo SAPIENS"});
+		result = QueryExecuter.runPathsFromTo(
+			source, target, model, LimitType.NORMAL, 2, f);
+		assertTrue(!result.isEmpty());
+		
 		f = new OrganismFilter(new String[]{"Non-existing organism"});
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(result.isEmpty());
@@ -179,6 +182,10 @@ public class QueryTest
 		// test data source filter
 
 		f = new DataSourceFilter(new String[]{"Reactome"});
+		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
+		assertTrue(!result.isEmpty());
+		// test the filter is case insensitive
+		f = new DataSourceFilter(new String[]{"reactome"});
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(!result.isEmpty());
 
