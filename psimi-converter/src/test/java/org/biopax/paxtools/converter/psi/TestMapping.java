@@ -28,7 +28,9 @@
  **/
 package org.biopax.paxtools.converter.psi;
 
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.ExperimentalForm;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -38,10 +40,11 @@ import psidev.psi.mi.tab.model.BinaryInteraction;
 import psidev.psi.mi.xml.PsimiXmlReader;
 import psidev.psi.mi.xml.model.Entry;
 import psidev.psi.mi.xml.model.EntrySet;
+import psidev.psi.mi.xml.model.Interaction;
+import psidev.psi.mi.xml.model.Participant;
 
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -52,7 +55,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 
  * @author rodche (Igor Rodchenkov)
  */
-public class TestMapping extends BioPAXMarshaller {
+public class TestMapping  {
 
 	/**
 	 * psi-mi test file
@@ -64,27 +67,75 @@ public class TestMapping extends BioPAXMarshaller {
 	 */
 	private static final String PSI_MITAB_TEST_FILE = "12167173.txt";
 
-	/**
-	 * Used for synchronization.
-	 */
-	private Model bpModel;
-
     /**
      * Returns the description/name of the test.
 	 * 
 	 * @return String
      */
     public String getName() {
-        return "TestMapping: Tests the proper mapping of a PSI-MI XML file (level 3-compact) to an in memory Paxtools Model";
+        return "TestMapping: Tests the proper mapping of a PSI-MI XML file (level 2.5 compact) to an in memory Paxtools Model";
     }
 
 
+    @Test
+    public void testApi() throws Exception {
+
+    	// unmarshall the data, close the stream
+    	PsimiXmlReader reader = new PsimiXmlReader();
+    	InputStream is = getClass().getClassLoader().getResourceAsStream(PSI_MI_TEST_FILE);
+    	EntrySet es = reader.read(is);
+    	is.close();
+    	Collection<Entry> entries =  es.getEntries();			
+    	// we should only have 1 entry
+    	assertEquals(1, entries.size());
+    	// get entry
+    	Entry entry = (Entry)entries.iterator().next();
+
+    	assertTrue(entry.hasExperiments());
+    	assertEquals(4, entry.getExperiments().size());
+    	assertEquals(10, entry.getInteractions().size());
+
+    	Interaction interaction = null;
+    	for(Interaction it : entry.getInteractions()) {
+    		if(it.getId()==1) {
+    			interaction = it;
+    			break;
+    		}
+    	}
+
+    	//despite there is <experimentList><experimentRef> instead of <experimentList><experimentDescription> items -
+    	assertFalse(interaction.hasExperimentRefs());
+    	assertEquals(0, interaction.getExperimentRefs().size());
+    	//(- weird, but this is how PSIMI API works!)	
+    	//at the same time the following is set correctly:
+    	assertTrue(interaction.hasExperiments());
+    	assertEquals(1, interaction.getExperiments().size());
+
+    	assertFalse(interaction.getParticipants().isEmpty());
+    	Participant participant = interaction.getParticipants().iterator().next();
+    	//despite there was interactorRef,
+    	assertFalse(participant.hasInteractorRef());
+    	assertNull(participant.getInteractorRef());
+    	//at the same time, the following is set:
+    	assertTrue(participant.hasInteractor());
+    	assertNotNull(participant.getInteractor());
+
+    	assertFalse(participant.hasInteractionRef());
+    	assertFalse(participant.hasInteraction());			
+
+    	
+    	//TODO assert experimentalRole.hasExperiments()==true always (if there're experiments); experimentalRole.hasExperimentRefs()==false
+	}    
+    
+    
     /**
-     * Tests that a PSI document (level 2) is correctly mapped into a biopax model.
+     * Tests that a PSI document (level 2.5) is correctly mapped into a biopax model.
 	 */
     @Test
     public void testMapping() {
 
+		Model bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();
+    	
 		// open file
 		try {
 			// unmarshall the data, close the stream
@@ -95,35 +146,25 @@ public class TestMapping extends BioPAXMarshaller {
 			Collection<Entry> entries =  es.getEntries();
 			
 			// we should only have 1 entry
-            assertEquals(entries.size(), 1);
+            assertEquals(1, entries.size());
 
 			// get entry
 			Entry entry = (Entry)entries.iterator().next();
-			EntryMapper mapper = new EntryMapper("", this, entry, false, new AtomicLong(0));
-			mapper.run();
+			EntryMapper mapper = new EntryMapper(bpModel, false);
+			mapper.run(entry);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+			
 		assertNotNull(bpModel);
 		assertFalse(bpModel.getObjects().isEmpty());
+		
+		assertFalse(bpModel.getObjects(ExperimentalForm.class).isEmpty());
 		
 		//TODO add more assertions
 	}
 
-
-	@Override
-	public void marshallData() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void addModel(Model bpModel) {
-		this.bpModel = bpModel;
-	}
-	
 	
 	@Test
 	public void testMitabToMi() throws Exception {
