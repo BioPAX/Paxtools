@@ -123,6 +123,18 @@ class EntryMapper {
 	 * @param entry
 	 */
 	public void run(Entry entry) {	
+		
+		// get availabilities
+		final Set<String> avail = new HashSet<String>();
+		if(entry.hasAvailabilities()) {
+			for (Availability a : entry.getAvailabilities())
+				if (a.hasValue()) 
+					avail.add(a.getValue());	
+		}
+		
+		// get data source
+		final Provenance pro = createProvenance(entry.getSource());
+		
 		//a skip-set of interactions linked by participant.interactionRef element (complex blocks)
 		Set<Interaction> participantInteractions = new HashSet<Interaction>();
 		for(Interaction interaction : entry.getInteractions()) {
@@ -138,30 +150,8 @@ class EntryMapper {
 		for (Interaction interaction : entry.getInteractions()) {
 			if(!participantInteractions.contains(interaction)) {
 				// TODO future (hard): make a Complex or Interaction based on the interaction type ('direct interaction' or 'physical association' (IntAct) -> complex)
-				processInteraction(interaction, false);
+				processInteraction(interaction, avail, pro, false);
 			}
-		}
-		
-		// set availabilities
-		if(entry.hasAvailabilities()) {
-			Set<String> avail = new HashSet<String>();
-			for (Availability a : entry.getAvailabilities()) {
-				if (a.hasValue()) {
-					avail.add(a.getValue());
-				}
-			}			
-			if(!avail.isEmpty())
-				for(Entity e : bpModel.getObjects(Entity.class))
-					for(String a : avail)
-						e.addAvailability(a);
-		}		
-		
-		// set the data source if possible
-		if(entry.hasSource()) {
-			Provenance pro = createProvenance(entry.getSource());
-			if(pro != null)
-				for(Entity e : bpModel.getObjects(Entity.class))
-					e.addDataSource(pro);
 		}
 	}
 	
@@ -233,7 +223,7 @@ class EntryMapper {
 	 * psi.interactionElementType                 -> biopax Complex, MolecularInteraction, or GeneticInteraction
 	 * psi.interactionElementType.participantList -> biopax interaction/complex participants/components
 	 */
-	private Entity processInteraction(Interaction interaction, boolean isComplex) {
+	private Entity processInteraction(Interaction interaction, Set<String> avail, Provenance pro, boolean isComplex) {
 		
 		Entity bpEntity = null; //interaction or complex
 		
@@ -250,7 +240,7 @@ class EntryMapper {
 		Set<Entity> bpParticipants = new HashSet<Entity>();
 		for (Participant participant : interaction.getParticipants()) {
 			// get paxtools physical entity participant and add to participant list
-			Entity bpParticipant = createParticipant(participant, interaction);
+			Entity bpParticipant = createParticipant(participant, interaction, avail, pro);
 			if (bpParticipant != null) {
 				bpParticipants.add(bpParticipant);
 				participantMap.put(participant, bpParticipant);
@@ -315,6 +305,8 @@ class EntryMapper {
 			bpEntity = createMolecularInteraction(bpParticipants, bpEvidences, interactionVocabularies);
 		}
 		
+		addAvailabilityAndProvenance(bpEntity, avail, pro);
+		
 		if (name != null)
 			bpEntity.setStandardName(name);
 		if (shortName != null)
@@ -333,6 +325,18 @@ class EntryMapper {
 		return bpEntity;
 	}
 
+	
+	private void addAvailabilityAndProvenance(Entity bpEntity,
+			Set<String> avail, Provenance pro) {
+		if(pro != null)
+			bpEntity.addDataSource(pro);
+		
+		if(avail != null)
+			for(String a : avail)
+				bpEntity.addAvailability(a);
+	}
+
+
 	/*
 	 * Converts PSIMI participant to
 	 * BioPAX physical entity (and entity reference,
@@ -342,7 +346,7 @@ class EntryMapper {
 	 * Note:
 	 * psi.participantType -> PhysicalEntity or Gene
 	 */
-	private Entity createParticipant(Participant participant, Interaction interaction) {
+	private Entity createParticipant(Participant participant, Interaction interaction, Set<String> avail, Provenance pro) {
 		
 		//PSIMI parser does not set 'interactorRef' (or clears it after all), but does set (or infer) 'interactor' (see junit tests).
 		Interactor interactor = null;
@@ -350,8 +354,8 @@ class EntryMapper {
 			interactor = participant.getInteractor();
 		} else if(participant.hasInteraction()) {
 			//hierarchical buildup of a complex (participant.hasInteraction==true)...
-			Complex c = (Complex) processInteraction(participant.getInteraction(), true);
-			return c;
+			Complex c = (Complex) processInteraction(participant.getInteraction(), avail, pro, true);
+			return c; //done
 		}
 
 		if (interactor == null) {
@@ -433,11 +437,15 @@ class EntryMapper {
 			entityUri += "_" + encode(cellularLocation.getTerm().iterator().next());
 				
 		Entity entity = (Entity) bpModel.getByID(entityUri);		
-		if(entity != null) 
+		if(entity != null) {
+			addAvailabilityAndProvenance(entity, avail, pro);
 			return entity; //re-use previously created PE or gene
+		}
 		
 		// create a new PE or Gene
 		entity = bpModel.addNew(entityClass, entityUri);
+		
+		addAvailabilityAndProvenance(entity, avail, pro);
 		
 		//and set names
 		if (name != null) {
