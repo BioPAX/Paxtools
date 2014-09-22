@@ -391,7 +391,6 @@ class EntryMapper {
 		}
 		
 		Set<Xref> bpXrefsOfInteractor = getXrefs(interactor.getXref());
-		final UnificationXref primaryXrefOfInteractor = getPrimaryUnificationXref(interactor.getXref());
 		
 		//get cellular location, if any
 		CellularLocationVocabulary cellularLocation = null;
@@ -425,12 +424,15 @@ class EntryMapper {
 			entityReferenceClass = null;
 		}
 		
-		//make consistent biopax URI(s)
-		String baseUri = xmlBase; //starts with...
-		if(entityReferenceClass!= null) {
-			baseUri += entityReferenceClass.getSimpleName() + "_";
-		}
-		baseUri += encode(primaryXrefOfInteractor.getDb() + "_" + primaryXrefOfInteractor.getId());
+		//make consistent base biopax URI (either for entity reference, gene, complex, or base phys. ent.)
+		String baseUri = xmlBase;
+		if(entityReferenceClass != null)
+			baseUri += entityReferenceClass.getSimpleName() + "_";			
+		final UnificationXref primaryXrefOfInteractor = getPrimaryUnificationXref(interactor.getXref());
+		if(primaryXrefOfInteractor != null) 
+			baseUri += encode(primaryXrefOfInteractor.getDb() + "_" + primaryXrefOfInteractor.getId());
+		else
+			baseUri += "_" + (counter++); //new unique part (seldom happens, when no primary xref...)
 		
 		String entityUri = baseUri + "_" + entityClass.getSimpleName();
 		if(cellularLocation != null)
@@ -466,13 +468,13 @@ class EntryMapper {
 		// when it's not a Gene, -
 		if(entityReferenceClass != null) {
 			//check if the entity ref. exists
-			EntityReference er = (EntityReference) bpModel.getByID(baseUri);		
+			EntityReference er = (EntityReference) bpModel.getByID(baseUri);	
+			
 			if(er != null) {
 				entityReference = er;
 			} else { 
 				//generate a new ER
-				entityReference = bpModel.addNew(entityReferenceClass, baseUri);
-				((SimplePhysicalEntity)entity).setEntityReference(entityReference);			
+				entityReference = bpModel.addNew(entityReferenceClass, baseUri);	
 				
 				//set ER's names, xrefs
 				if (name != null) {
@@ -501,6 +503,9 @@ class EntryMapper {
 					ser.setSequence(interactor.getSequence());
 				}
 			}
+			// set ER
+			((SimplePhysicalEntity)entity).setEntityReference(entityReference);		
+			
 		} else { //i.e., entity is Gene	(otherwise, entityReferenceClass != null by design of this psimi converter)
 			assert entity instanceof Gene : "Must be Gene instead: " + entity.getModelInterface().getSimpleName();
 			//add gene's other names, xrefs, organism (for non-genes, these're added to the ER)
