@@ -454,9 +454,9 @@ public class TempTests
 			 */
 			public Pattern constructPattern()
 			{
-				Pattern p = new Pattern(PhysicalEntity.class, "PE");
-				p.add(new ParticipatesInConv(RelType.INPUT), "PE", "Conv");
-//				p.add(new Type(ComplexAssembly.class), "Conv");
+				Pattern p = PatternBox.inComplexWith();
+				p.add(new Field("ProteinReference/xref/id", Field.Operation.INTERSECT, "KRAS"), "Protein 1");
+				p.optimizeConstraintOrder();
 				return p;
 			}
 

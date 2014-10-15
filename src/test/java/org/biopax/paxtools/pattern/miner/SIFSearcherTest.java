@@ -104,27 +104,27 @@ public class SIFSearcherTest extends PatternBoxTest
 	{
 		long start = System.currentTimeMillis();
 
-		BPCollections.I.setProvider(new TProvider());
+//		BPCollections.I.setProvider(new TProvider());
 
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream
-				("/home/ozgun/Projects/biopax-pattern/All-Data.owl"));
+				("/home/ozgun/Temp/data.owl"));
 
 		BlacklistGenerator gen = new BlacklistGenerator();
 		Blacklist blacklist = gen.generateBlacklist(model);
-		blacklist.write(new FileOutputStream("blacklist.txt"));
+		blacklist.write(new FileOutputStream("/home/ozgun/blacklist.txt"));
 
-//		SIFSearcher s = new SIFSearcher(SIFEnum.values());
-		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
-			new CSCOThroughDegradationMiner(), new CSCOThroughControllingSmallMoleculeMiner(),
-			new ControlsExpressionMiner(), new ControlsExpressionWithConvMiner()};
-		for (SIFMiner miner : miners) miner.setBlacklist(blacklist);
+		SIFSearcher s = new SIFSearcher(SIFEnum.values());
+//		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
+//			new CSCOThroughDegradationMiner(), new CSCOThroughControllingSmallMoleculeMiner(),
+//			new ControlsExpressionMiner(), new ControlsExpressionWithConvMiner()};
+//		for (SIFMiner miner : miners) miner.setBlacklist(blacklist);
 
-		SIFSearcher s = new SIFSearcher(miners);
+//		SIFSearcher s = new SIFSearcher(miners);
 		s.setBlacklist(blacklist);
 
 		confirmPresenceOfUbiques(model, blacklist);
-		s.searchSIF(model, new FileOutputStream("/home/ozgun/PCt2.sif"), true);
+		s.searchSIF(model, new FileOutputStream("/home/ozgun/Temp/PC.sif"), true);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));

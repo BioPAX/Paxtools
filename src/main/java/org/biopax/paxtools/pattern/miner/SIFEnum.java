@@ -27,14 +27,14 @@ public enum SIFEnum implements SIFType
 		CatalysisPrecedesMiner.class),
 	IN_COMPLEX_WITH("Proteins appear as members of the same complex.", false,
 		InComplexWithMiner.class),
-	INTERACTS_WITH("Proteins appear as participants of the same MolecularInteraction", false,
+	INTERACTS_WITH("Proteins appear as participants of the same MolecularInteraction.", false,
 		InteractsWithMiner.class),
 	NEIGHBOR_OF("Proteins appear as participants or controllers of the same interaction.", false,
 		NeighborOfMiner.class),
 	CONSUMPTION_CONTROLLED_BY("The small molecule is consumed by a reaction that is controlled by" +
-		" a protein", true, ConsumptionControlledByMiner.class),
+		" a protein.", true, ConsumptionControlledByMiner.class),
 	CONTROLS_PRODUCTION_OF("The protein is controlling a reaction of which the small molecule is " +
-		"an output", true, ControlsProductionOfMiner.class),
+		"an output.", true, ControlsProductionOfMiner.class),
 	CONTROLS_TRANSPORT_OF_CHEMICAL("The protein is controlling a reaction that changes cellular " +
 		"location of the small molecule.", true, ControlsTransportOfChemicalMiner.class),
 	CHEMICAL_AFFECTS("A small molecule has an effect on a protein.", true,

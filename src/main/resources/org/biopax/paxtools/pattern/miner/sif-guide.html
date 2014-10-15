@@ -1,0 +1,119 @@
+<html>
+<body>
+<div>
+
+<h2>Types of Binary Relations</h2>
+
+<table border=1 cellspacing=5 cellpadding=5>
+<tr>
+<th>Type</th>
+<th style="width:100px">Description</th>
+<th>Sample BioPAX Structure</th>
+<th>Inferred Binary Relation(s)</th>
+</tr>
+<tr>
+<td valign=center aling=center><b>controls-state-change-of</b></td>
+<td valign=center aling=center>First protein is controlling a reaction that changes the state of the second protein.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/controls-state-change-of-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/B-to-A.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>controls-transport-of</b></td> 
+<td valign=center aling=center>First protein is controlling a reaction that changes the cellular location of the second protein.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/controls-transport-of-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/B-to-A.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>controls-phosphorylation-of</b></td> 
+<td valign=center aling=center>First protein is controlling a reaction that changes the phosphorylation status of the second protein.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/controls-phosphorylation-of-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/B-to-A.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>controls-expression-of</b></td> 
+<td valign=center aling=center>First protein is controlling a conversion or a template reaction that changes expression of the second protein.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/controls-expression-of-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/B-to-A.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>catalysis-precedes</b></td>
+<td valign=center aling=center>First protein is controlling a reaction whose output molecule is input to another reaction controlled by the second protein.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/catalysis-precedes-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/A-to-B.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>in-complex-with</b></td> 
+<td valign=center aling=center>Proteins appear as members of the same complex.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/in-complex-with-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/triangle.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>interacts-with</b></td> 
+<td valign=center aling=center>Proteins appear as participants of the same MolecularInteraction.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/interacts-with-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/interacts-with-sif.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>neighbor-of</b></td> 
+<td valign=center aling=center>Proteins appear as participants or controllers of the same interaction.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/neighbor-of-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/neighbor-of-sif.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>consumption-controlled-by</b></td>
+<td valign=center aling=center>The small molecule is consumed by a reaction that is controlled by a protein</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/metabolic1-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/X-to-A.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>controls-production-of</b></td>
+<td valign=center aling=center>The protein is controlling a reaction of which the small molecule is an output.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/metabolic1-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/controls-production-of-sif.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>controls-transport-of-chemical</b></td>
+<td valign=center aling=center>The protein is controlling a reaction that changes cellular location of the small molecule.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/controls-transport-of-chemical-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/controls-transport-of-chemical-sif.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>chemical-affects</b></td>
+<td valign=center aling=center>A small molecule has an effect on a protein.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/chemical-affects-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/X-to-A.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>reacts-with</b></td>
+<td valign=center aling=center>A small molecule is input to a biochemical reaction together with another small molecule. None of the molecules are also output.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/metabolic2-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/reacts-with-sif.svg'/>
+</tr>
+
+<tr>
+<td valign=center aling=center><b>used-to-produce</b></td>
+<td valign=center aling=center>A small molecule is input to a biochemical reaction that produces another small molecule. Both small molecules appear at only one side of the reaction.</td>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/metabolic2-biopax.svg'/>
+<td valign=center align=center><img src='http://image.biopax-pattern.googlecode.com/hg/sif/used-to-produce-sif.svg'/>
+</tr>
+
+</table>
+
+<table cellspacing=10 cellpadding=10><tr>
+<td valign=center>Legend:</td><td><img src='http://image.biopax-pattern.googlecode.com/hg/sif/legend.svg'/></td>
+</tr></table>
+</div>
+</body>
+</html>
