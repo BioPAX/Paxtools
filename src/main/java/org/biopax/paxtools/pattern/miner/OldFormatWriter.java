@@ -21,9 +21,9 @@ public class OldFormatWriter
 	 * Path accessors for participant properties.
 	 */
 	private static final PathAccessor[] ACCS = new PathAccessor[]{
+		new PathAccessor("Named/displayName"),
 		new PathAccessor("XReferrable/xref:UnificationXref"),
-		new PathAccessor("XReferrable/xref:RelationshipXref"),
-		new PathAccessor("Named/displayName")};
+		new PathAccessor("XReferrable/xref:RelationshipXref")};
 
 	/**
 	 * Writes down the given interactions into the given output stream in the old
