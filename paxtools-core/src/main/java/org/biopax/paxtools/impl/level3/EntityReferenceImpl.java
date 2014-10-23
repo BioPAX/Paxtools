@@ -62,19 +62,18 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	public void addEntityFeature(EntityFeature entityFeature)
 	{
-		if (entityFeature != null)
+		if (entityFeature != null) synchronized (entityFeature)
 		{
 			EntityReference eFof = entityFeature.getEntityFeatureOf();
 			
 			if (eFof != null && !eFof.equals(this))
-			{
-				//log, then do anyway				
-				log.error("addEntityFeature: moved " 
-						+ entityFeature.getModelInterface().getSimpleName() 
-						+ " " + entityFeature.getRDFId() + " to "
-						+ getModelInterface().getSimpleName() + " " + getRDFId()
-						+ " from " + eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId() 
-						+ ", but it's still owned by the latter (one should remove or copy the feature first).");		
+			{				
+				log.warn("addEntityFeature: violated the inverse-functional OWL constraint; to fix, " 
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
+					+ " should be REMOVED from " 
+					+ eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId());
+				//TODO eFof.removeEntityFeature(entityFeature) or an exception would be a breaking change (let's shelve for v5.0.0)
+				//so, we neither fix nor fail here (currently, biopax-validator detects and optionally fixes it).
 			} 
 
 			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this);	
@@ -92,17 +91,23 @@ public abstract class EntityReferenceImpl extends NamedImpl
 			if(entityFeature.getEntityFeatureOf() == this) {
 				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null);
 			} else if(entityFeature.getEntityFeatureOf() != null) {
-				//won't call entityFeature.setEntityFeatureOf(null) 
-				log.warn("Removed entityFeature value: " + entityFeature.getRDFId() 
-					+ ", which is still entityFeatureOf " + entityFeature.getEntityFeatureOf().getRDFId());
+				//Don't set entityFeatureOf to null here 
+				//(looks, this EF was previously moved to another ER)
+				log.warn("removeEntityFeature: removed " 
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
+					+ " from " + getModelInterface().getSimpleName() + " " + getRDFId() 
+					+ "; though entityFeatureOf was another " 
+					+ entityFeature.getEntityFeatureOf().getModelInterface().getSimpleName() 
+					+ " " + entityFeature.getEntityFeatureOf().getRDFId());
 			} else {
-				log.warn("Removed entityFeature value: " + entityFeature.getRDFId() 
-					+ ", which already had entityFeatureOf == null (was illegal state)");
+				log.warn("removeEntityFeature: removed " 
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
+					+ " from " + getModelInterface().getSimpleName() + " " + getRDFId()
+					+ ", but entityFeatureOf was already NULL (illegal state)");
 			}
 		} else {
-			log.warn("removeEntityFeature did nothing: entityFeature property of "
-					+ this.getRDFId() + " does not contain the (EF): " 
-					+ ((entityFeature!=null)?entityFeature.getRDFId():null));
+			log.warn("removeEntityFeature: did nothing, because "
+					+ getRDFId() + " does not contain feature " + entityFeature.getRDFId());
 		}
 	}
 
