@@ -31,6 +31,7 @@ import org.biopax.paxtools.model.level3.ExperimentalFormVocabulary;
 import org.biopax.paxtools.model.level3.Gene;
 import org.biopax.paxtools.model.level3.GeneticInteraction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
+import org.biopax.paxtools.model.level3.ModificationFeature;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Protein;
@@ -45,6 +46,7 @@ import org.biopax.paxtools.model.level3.Score;
 import org.biopax.paxtools.model.level3.SequenceEntityReference;
 import org.biopax.paxtools.model.level3.SequenceInterval;
 import org.biopax.paxtools.model.level3.SequenceLocation;
+import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
 import org.biopax.paxtools.model.level3.SequenceSite;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
@@ -538,8 +540,8 @@ class EntryMapper {
 		for (Feature psiFeature : psiFeatureList) {
 			if(psiFeature==null) continue;
 			
-			//TODO consider ModificationFeature, BindingFeature?
-			Class<? extends EntityFeature> featureClass = EntityFeature.class; 		
+			//TODO consider BindingFeature in some cases?..
+			Class<? extends EntityFeature> featureClass = ModificationFeature.class; 		
 			
 			EntityFeature feature = getFeature(featureClass, psiFeature);			
 			if(feature != null) 
@@ -584,20 +586,31 @@ class EntryMapper {
 	 * Given a psi organism, return a paxtools biosource.
 	 */
 	private BioSource getBioSource(Organism organism) {
-
 		// check args
-		if (organism == null) return null;
+		if (organism == null) 
+			return null;
+
+		// cell type (can be undefined, i.e., null)
+		CellVocabulary cellType = findOrCreateControlledVocabulary(organism.getCellType(), CellVocabulary.class);
+		// tissue (can be null)
+		TissueVocabulary tissue = findOrCreateControlledVocabulary(organism.getTissue(), TissueVocabulary.class);
 
 		// set the BioPXElement URI and taxonomy xref id
 		String ncbiId = Integer.toString(organism.getNcbiTaxId());
-		String bioSourceUri = IDENTIFIERS_ORG + "taxonomy/" + ncbiId;
+		String uri = xmlBase + "BioSource_" + 
+			"taxonomy_" + ncbiId; //tissue and cell type terms can be added below		
+		if(tissue!=null && !tissue.getTerm().isEmpty()) 
+			uri += "_" + encode(tissue.getTerm().iterator().next());
+		if(cellType!=null && !cellType.getTerm().isEmpty()) 
+			uri += "_" + encode(cellType.getTerm().iterator().next());
 
 		//return if element already exists in model
-		BioSource bpBioSource = (BioSource) bpModel.getByID(bioSourceUri);
-		if (bpBioSource != null) 
-			return bpBioSource;
-
-		// taxon xref
+		BioSource toReturn = (BioSource) bpModel.getByID(uri);
+		if (toReturn != null) 
+			return toReturn;
+		
+		toReturn = bpModel.addNew(BioSource.class, uri);
+		
 		String taxonXrefUri = xmlBase + "UX_taxonomy_" + ncbiId;
 		UnificationXref taxonXref = (UnificationXref) bpModel.getByID(taxonXrefUri);
 		if(taxonXref == null) {
@@ -605,18 +618,21 @@ class EntryMapper {
 			taxonXref.setDb("Taxonomy");
 			taxonXref.setId(ncbiId);
 		}
-
-		// cell type (can be undefined, i.e., null)
-		CellVocabulary cellType = findOrCreateControlledVocabulary(organism.getCellType(), CellVocabulary.class);
-		// tissue (can be null)
-		TissueVocabulary tissue = findOrCreateControlledVocabulary(organism.getTissue(), TissueVocabulary.class);
-
-		String bioSourceName = null;
-		if (organism.hasNames()) {
-			bioSourceName = getName(organism.getNames());
+		toReturn.addXref((Xref)taxonXref);
+		
+		if (cellType != null)
+		{
+			toReturn.setCellType((CellVocabulary) cellType);
 		}
-
-		return createBioSource(bioSourceUri, taxonXref, cellType, tissue, bioSourceName);
+		if (tissue != null)
+		{
+			toReturn.setTissue((TissueVocabulary) tissue);
+		}
+		if (organism.hasNames()) {
+			toReturn.setStandardName(getName(organism.getNames()));
+		}
+				
+		return toReturn;
 	}
 
 
@@ -635,11 +651,23 @@ class EntryMapper {
 		}
 
 		//xref and primaryRef must always exist, acc. to the schema
-		UnificationXref bpXref = getPrimaryUnificationXref(cvType.getXref());			
+		UnificationXref bpXref = getPrimaryUnificationXref(cvType.getXref());					
+		T toReturn = findOrCreateControlledVocabulary(term, bpXref, bpCvClass);
+
+		return toReturn;
+ 	}
+
+	
+	/*
+	 * Given a term (name), unification xref, it finds/creates and returns a ControlledVocabulary.
+	 */
+	private <T extends ControlledVocabulary> T findOrCreateControlledVocabulary(
+			String term, UnificationXref bpXref, Class<T> bpCvClass) {
+
 		// generate URI
 		String uri = xmlBase + bpCvClass.getSimpleName() + "_" + 
 			encode(
-				(term != null && !term.isEmpty()) ? term : bpXref.getDb()+"_"+bpXref.getId()
+				(term != null && !term.isEmpty()) ? term : bpXref.getDb() + "_" + bpXref.getId()
 			);
 		
 		// look for name in our vocabulary set
@@ -1135,33 +1163,6 @@ class EntryMapper {
 	}
 	
 
-	private BioSource createBioSource(String id, UnificationXref taxonXref,
-	                                 CellVocabulary cellType, TissueVocabulary tissue,
-	                                 String name)
-	{
-		BioSource toReturn = bpModel.addNew(BioSource.class, id);
-		
-		if (taxonXref != null)
-		{
-			toReturn.addXref((Xref)taxonXref);
-		}
-		if (cellType != null)
-		{
-			toReturn.setCellType((CellVocabulary) cellType);
-		}
-		if (tissue != null)
-		{
-			toReturn.setTissue((TissueVocabulary) tissue);
-		}
-		if (name != null)
-		{
-			toReturn.setStandardName(name);
-		}
-			
-		return toReturn;
-	}
-
-
 	private <T extends EntityFeature> T getFeature(Class<T> featureClass, Feature psiFeature)
 	{					
 		String entityFeatureUri = genUri(featureClass, bpModel); 		
@@ -1173,11 +1174,23 @@ class EntryMapper {
 			for (SequenceLocation featureLocation : featureLocations) 
 				entityFeature.setFeatureLocation(featureLocation);
 		
-		// feature location type (use SequenceRegionVocabulary value)
+		// set biopax featureLocationType prop. (find/create a SequenceRegionVocabulary)
+		String term = null;
+		if (psiFeature.hasNames())
+			term = getName(psiFeature.getNames());
+		//xref and primaryRef must exist
+		UnificationXref uref = getPrimaryUnificationXref(psiFeature.getXref());
+		SequenceRegionVocabulary srv = findOrCreateControlledVocabulary(term, 
+				uref, SequenceRegionVocabulary.class); //can be null
+		entityFeature.setFeatureLocationType(srv);				
+		
 		if (psiFeature.hasFeatureType()) {
-			SequenceRegionVocabulary cv = findOrCreateControlledVocabulary(
-					psiFeature.getFeatureType(), SequenceRegionVocabulary.class); //can be null
-			entityFeature.setFeatureLocationType(cv);
+			// set modificationType (get/create a SequenceModificationVocabulary)
+			if(featureClass == ModificationFeature.class) {
+				SequenceModificationVocabulary smv = findOrCreateControlledVocabulary(
+						psiFeature.getFeatureType(), SequenceModificationVocabulary.class); //can be null
+				((ModificationFeature)entityFeature).setModificationType(smv);
+			} 
 		}
 		
 		return entityFeature;
