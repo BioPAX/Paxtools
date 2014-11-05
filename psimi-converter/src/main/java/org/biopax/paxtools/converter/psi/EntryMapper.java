@@ -955,7 +955,13 @@ class EntryMapper {
 
 	private RelationshipXref relationshipXref(String db, String id, String refType, String refTypeAc)
 	{	
-		String uri = xmlBase + "RX_" + encode(db.toLowerCase()+"_"+id+"_"+refType);
+		//generate URI
+		String uri = xmlBase + "RX_";
+		if(refType!=null && !refType.isEmpty())
+			uri += encode(db.toLowerCase()+"_"+id+"_"+refType);
+		else
+			uri += encode(db.toLowerCase()+"_"+id);	
+		
         RelationshipXref x = (RelationshipXref) bpModel.getByID(uri);                 
         
         if (x == null) { //create/add a new RX
