@@ -3,21 +3,16 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
-import org.biopax.paxtools.util.BiopaxSafeSet;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.biopax.paxtools.util.BPCollections;
+import org.hibernate.annotations.*;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Analyze;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -39,7 +34,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 	 */
 	public XrefImpl()
 	{
-		this.xrefOf = new BiopaxSafeSet<XReferrable>();
+		this.xrefOf = BPCollections.I.createSafeSet();
 	}
 
 	@Override

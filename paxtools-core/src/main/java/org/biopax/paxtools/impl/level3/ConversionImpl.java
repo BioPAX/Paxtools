@@ -5,7 +5,7 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.ConversionDirectionType;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
@@ -35,9 +35,9 @@ public class ConversionImpl extends InteractionImpl
 
 	public ConversionImpl()
 	{
-		left = new BiopaxSafeSet<PhysicalEntity>();
-		right = new BiopaxSafeSet<PhysicalEntity>();
-		participantStoichiometry = new BiopaxSafeSet<Stoichiometry>();
+		left = BPCollections.I.createSafeSet();
+		right = BPCollections.I.createSafeSet();
+		participantStoichiometry = BPCollections.I.createSafeSet();
 	}
 
 

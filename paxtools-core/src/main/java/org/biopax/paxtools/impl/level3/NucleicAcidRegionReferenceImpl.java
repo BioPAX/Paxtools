@@ -4,18 +4,13 @@ import org.biopax.paxtools.model.level3.NucleicAcidReference;
 import org.biopax.paxtools.model.level3.NucleicAcidRegionReference;
 import org.biopax.paxtools.model.level3.SequenceLocation;
 import org.biopax.paxtools.model.level3.SequenceRegionVocabulary;
-import org.biopax.paxtools.util.BiopaxSafeSet;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.biopax.paxtools.util.BPCollections;
+import org.hibernate.annotations.*;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,8 +31,8 @@ public abstract class NucleicAcidRegionReferenceImpl extends NucleicAcidReferenc
 
 	public NucleicAcidRegionReferenceImpl()
 	{
-		regionType = new BiopaxSafeSet<SequenceRegionVocabulary>();
-		subRegionOf = new BiopaxSafeSet<NucleicAcidReference>();
+		regionType = BPCollections.I.createSafeSet();
+		subRegionOf = BPCollections.I.createSafeSet();
 	}
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

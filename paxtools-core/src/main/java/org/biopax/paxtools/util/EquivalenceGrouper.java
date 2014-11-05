@@ -159,10 +159,10 @@ public class EquivalenceGrouper<T extends BioPAXElement>
 			} else
 			{
 				T t = this.get(0);
-				if (parity) //EQUALITY
+				if (parity) //EQUIVALENCE
 				{
 					return t.isEquivalent((BioPAXElement) o);
-				} else //EQUIVALENCE
+				} else //EQUALITY
 				{
 					return t.equals(o);
 				}

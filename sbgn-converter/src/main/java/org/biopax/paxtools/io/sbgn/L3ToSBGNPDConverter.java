@@ -17,6 +17,7 @@ import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map;
 
@@ -93,6 +94,11 @@ public class L3ToSBGNPDConverter
 	protected Map<String, Set<String>> sbgn2BPMap;
 
 	/**
+	 * Option to flatten nested complexes.
+	 */
+	protected boolean flattenComplexContent;
+
+	/**
 	 * SBGN process glyph can be used to show reversible reactions. In that case two ports of the
 	 * process will only have product glyphs. However, this creates an incompatibility with BioPAX:
 	 * reversible biochemical reactions can have catalysis with a direction. But if we use a single
@@ -155,6 +161,7 @@ public class L3ToSBGNPDConverter
 
 		this.useTwoGlyphsForReversibleConversion = true;
 		this.sbgn2BPMap = new HashMap<String, Set<String>>();
+		this.flattenComplexContent = true;
 	}
 
 	/**
@@ -173,6 +180,16 @@ public class L3ToSBGNPDConverter
 	public void setUseTwoGlyphsForReversibleConversion(boolean useTwoGlyphsForReversibleConversion)
 	{
 		this.useTwoGlyphsForReversibleConversion = useTwoGlyphsForReversibleConversion;
+	}
+
+	public boolean isFlattenComplexContent()
+	{
+		return flattenComplexContent;
+	}
+
+	public void setFlattenComplexContent(boolean flattenComplexContent)
+	{
+		this.flattenComplexContent = flattenComplexContent;
 	}
 
 	/**
@@ -453,7 +470,7 @@ public class L3ToSBGNPDConverter
 	 */
 	private Glyph getGlyphToLink(PhysicalEntity pe, String linkID)
 	{
-		if (ubiqueDet != null && !ubiqueDet.isUbique(pe))
+		if (ubiqueDet == null || !ubiqueDet.isUbique(pe))
 		{
 			return glyphMap.get(convertID(pe.getRDFId()));
 		}
@@ -481,15 +498,25 @@ public class L3ToSBGNPDConverter
 	{
 		Glyph cg = glyphMap.get(convertID(cx.getRDFId()));
 
-		for (PhysicalEntity mem : cx.getComponent())
+		if (flattenComplexContent)
 		{
-			if (mem instanceof Complex)
-			{
-				addComplexAsMember((Complex) mem, cg);
-			}
-			else
+			for (PhysicalEntity mem : getFlattenedMembers(cx))
 			{
 				createComplexMember(mem, cg);
+			}
+		}
+		else
+		{
+			for (PhysicalEntity mem : cx.getComponent())
+			{
+				if (mem instanceof Complex)
+				{
+					addComplexAsMember((Complex) mem, cg);
+				}
+				else
+				{
+					createComplexMember(mem, cg);
+				}
 			}
 		}
 	}
@@ -520,6 +547,51 @@ public class L3ToSBGNPDConverter
 				createComplexMember(mem, inner);
 			}
 		}
+	}
+
+	/**
+	 * Gets the members of the Complex that needs to be displayed in a flattened view.
+	 * @param cx to get members
+	 * @return members to display
+	 */
+	private Set<PhysicalEntity> getFlattenedMembers(Complex cx)
+	{
+		Set<PhysicalEntity> set = new HashSet<PhysicalEntity>();
+
+		for (PhysicalEntity mem : cx.getComponent())
+		{
+			if (mem instanceof Complex)
+			{
+				if (!hasNonComplexMember((Complex) mem))
+				{
+					set.add(mem);
+				}
+				else
+				{
+					set.addAll(getFlattenedMembers((Complex) mem));
+				}
+			}
+			else set.add(mem);
+		}
+		return set;
+	}
+
+	/**
+	 * Checks if a Complex contains any PhysicalEntity member which is not a Complex.
+	 * @param cx to check
+	 * @return true if there is a non-complex member
+	 */
+	private boolean hasNonComplexMember(Complex cx)
+	{
+		for (PhysicalEntity mem : cx.getComponent())
+		{
+			if (! (mem instanceof Complex)) return true;
+			else
+			{
+				if (hasNonComplexMember((Complex) mem)) return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -585,7 +657,7 @@ public class L3ToSBGNPDConverter
 		// Use display name of entity
 		String name = pe.getDisplayName();
 
-		if (name == null)
+		if (name == null || name.trim().isEmpty())
 		{
 			if (er != null)
 			{
@@ -593,12 +665,12 @@ public class L3ToSBGNPDConverter
 				name = er.getDisplayName();
 			}
 
-			if (name == null)
+			if (name == null || name.trim().isEmpty())
 			{
 				// Use standard name of entity
 				name = pe.getStandardName();
 
-				if (name == null)
+				if (name == null || name.trim().isEmpty())
 				{
 					if (er != null)
 					{
@@ -606,7 +678,7 @@ public class L3ToSBGNPDConverter
 						name = er.getStandardName();
 					}
 
-					if (name == null)
+					if (name == null || name.trim().isEmpty())
 					{
 						if (!pe.getName().isEmpty())
 						{
@@ -630,11 +702,15 @@ public class L3ToSBGNPDConverter
 
 			if (shortName != null)
 			{
-				if (name == null || shortName.length() < name.length()) name = shortName;
+				if (name == null || (shortName.length() < name.length() &&
+					!shortName.isEmpty()))
+				{
+					name = shortName;
+				}
 			}
 		}
 		
-		if (name == null)
+		if (name == null || name.trim().isEmpty())
 		{
 			// Don't leave it without a name
 			name = "noname";
@@ -843,13 +919,15 @@ public class L3ToSBGNPDConverter
 		// Create input and outputs ports for the process
 		addPorts(process);
 
+		Map<PhysicalEntity, Stoichiometry> stoic = getStoichiometry(cnv);
+
 		// Associate inputs to input port
 
 		for (PhysicalEntity pe : input)
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
 			createArc(g, process.getPort().get(0), direction == ConversionDirectionType.REVERSIBLE ?
-				PRODUCTION.getClazz() : CONSUMPTION.getClazz());
+				PRODUCTION.getClazz() : CONSUMPTION.getClazz(), stoic.get(pe));
 		}
 
 		// Associate outputs to output port
@@ -857,7 +935,7 @@ public class L3ToSBGNPDConverter
 		for (PhysicalEntity pe : output)
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
-			createArc(process.getPort().get(1), g, PRODUCTION.getClazz());
+			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), stoic.get(pe));
 		}
 
 		// Associate controllers
@@ -883,13 +961,28 @@ public class L3ToSBGNPDConverter
 			}
 
 			Glyph g = createControlStructure(ctrl);
-			if (g != null) createArc(g, process, getControlType(ctrl));
+			if (g != null) createArc(g, process, getControlType(ctrl), null);
 		}
 
 		// Record mapping
 
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
 		sbgn2BPMap.get(process.getId()).add(cnv.getRDFId());
+	}
+
+	/**
+	 * Gets the map of stoichiometry coefficients of participants.
+	 * @param conv the conversion
+	 * @return map from physical entities to their stoichiometry
+	 */
+	private Map<PhysicalEntity, Stoichiometry> getStoichiometry(Conversion conv)
+	{
+		Map<PhysicalEntity, Stoichiometry> map = new HashMap<PhysicalEntity, Stoichiometry>();
+		for (Stoichiometry stoc : conv.getParticipantStoichiometry())
+		{
+			map.put(stoc.getPhysicalEntity(), stoc);
+		}
+		return map;
 	}
 
 	/**
@@ -915,14 +1008,14 @@ public class L3ToSBGNPDConverter
 		sas.setClazz(SOURCE_AND_SINK.getClazz());
 		sas.setId("SAS_For_" + process.getId());
 		glyphMap.put(sas.getId(), sas);
-		createArc(sas, process.getPort().get(0), CONSUMPTION.getClazz());
+		createArc(sas, process.getPort().get(0), CONSUMPTION.getClazz(), null);
 
 		// Associate products
 
 		for (PhysicalEntity pe : tr.getProduct())
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
-			createArc(process.getPort().get(1), g, PRODUCTION.getClazz());
+			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), null);
 		}
 
 		// Associate controllers
@@ -930,7 +1023,7 @@ public class L3ToSBGNPDConverter
 		for (Control ctrl : tr.getControlledOf())
 		{
 			Glyph g = createControlStructure(ctrl);
-			if (g != null) createArc(g, process, getControlType(ctrl));
+			if (g != null) createArc(g, process, getControlType(ctrl), null);
 		}
 
 		// Record mapping
@@ -1094,7 +1187,7 @@ public class L3ToSBGNPDConverter
 
 		for (Glyph g : gs)
 		{
-			createArc(g, and, LOGIC_ARC.getClazz());
+			createArc(g, and, LOGIC_ARC.getClazz(), null);
 		}
 		return and;
 	}
@@ -1127,7 +1220,7 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Connect the glyph and NOT
-		createArc(g, not, LOGIC_ARC.getClazz());
+		createArc(g, not, LOGIC_ARC.getClazz(), null);
 
 		return not;
 	}
@@ -1234,7 +1327,7 @@ public class L3ToSBGNPDConverter
 	 * @param target target of the arc -- either Glyph or Port
 	 * @param clazz class of the arc
 	 */
-	private void createArc(Object source, Object target, String clazz)
+	private void createArc(Object source, Object target, String clazz, Stoichiometry stoic)
 	{
 		assert source instanceof Glyph || source instanceof Port : "source = " + source;
 		assert target instanceof Glyph || target instanceof Port : "target = " + target;
@@ -1250,6 +1343,16 @@ public class L3ToSBGNPDConverter
 			((Glyph) target).getId() : ((Port) target).getId();
 
 		arc.setId(sourceID + "--to--" + targetID);
+
+		if (stoic != null && stoic.getStoichiometricCoefficient() != 1F)
+		{
+			Glyph card = factory.createGlyph();
+			card.setClazz(CARDINALITY.getClazz());
+			Label label = factory.createLabel();
+			label.setText(new DecimalFormat("0.##").format(stoic.getStoichiometricCoefficient()));
+			card.setLabel(label);
+			arc.getGlyph().add(card);
+		}
 
 		Arc.Start start = new Arc.Start();
 		start.setX(0);

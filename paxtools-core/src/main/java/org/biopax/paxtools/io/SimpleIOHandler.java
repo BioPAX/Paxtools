@@ -10,6 +10,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
@@ -173,6 +174,22 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	}
 
+	@Override protected void reset(InputStream in)
+	{
+
+		this.triples=null;
+		try
+		{
+			r.close();
+		}
+		catch (XMLStreamException e)
+		{
+			throw new RuntimeException("Can't close the stream");
+		}
+		r=null;
+		super.reset(in);
+	}
+
 	@Override protected Map<String, String> readNameSpaces()
 	{
 		Map<String, String> ns = new HashMap<String, String>();
@@ -295,7 +312,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 				r.next();
 
 			}
-
+		r.close();
 		}
 		catch (XMLStreamException e)
 		{
@@ -540,6 +557,11 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * dangling BioPAX elements) and is exported by this method, it works; however one
 	 * will find corresponding object properties set to NULL later,
 	 * after converting such data back to Model.
+	 * 
+	 * Note: if the model is very very large, and the output stream is a byte array stream,
+	 * then you can eventually get OutOfMemoryError "Requested array size exceeds VM limit"
+	 * (max. array size is 2Gb)
+	 * 
 	 * @param model model to be converted into OWL format
 	 * @param outputStream output stream into which the output will be written
 	 * @exception BioPaxIOException in case of I/O problems
@@ -622,6 +644,15 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{ // the latter maybe not necessary...
 			Named named = (Named) bean;
 			if (value != null && (value.equals(named.getDisplayName()) || value.equals(named.getStandardName())))
+			{
+				return;
+			}
+		}
+		
+		if (editor.getProperty().equalsIgnoreCase("stepProcess") && bean instanceof BiochemicalPathwayStep)
+		{
+			BiochemicalPathwayStep bps = (BiochemicalPathwayStep) bean;
+			if (value != null && value.equals(bps.getStepConversion())) 
 			{
 				return;
 			}
@@ -850,6 +881,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * @param model
 	 * @return
 	 * @exception IllegalArgumentException if model is null
+	 * @throws OutOfMemoryError when model is very large, and the byte array cannot exceed 2Gb.
 	 */
 	public static String convertToOwl(Model model)
 	{

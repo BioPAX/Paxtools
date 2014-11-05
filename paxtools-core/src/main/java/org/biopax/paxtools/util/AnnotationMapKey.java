@@ -10,7 +10,7 @@ import org.biopax.paxtools.model.BioPAXElement;
  * with {@link BioPAXElement#getAnnotations()} map.
  * 
  * @author rodche
- *
+ * @deprecated this enumeration is not used and probably not required at all.
  */
 public enum AnnotationMapKey {
 	PARENT_PATHWAYS,

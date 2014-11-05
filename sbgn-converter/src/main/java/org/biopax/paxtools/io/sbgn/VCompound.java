@@ -13,7 +13,7 @@ import org.ivis.layout.cose.CoSEGraph;
 
 /**
  * VCompound Class
- * @author: istemi Bahceci
+ * @author: Istemi Bahceci
  * */
  
 
@@ -21,12 +21,20 @@ public class VCompound extends VNode implements Updatable
 {
 	public List<VNode> children;
 	
+	/**
+	 * Default Constructor, creates a VCompound node by given glyph
+	 * @param g Glyph object that VCompound object will be created from.
+	 * */
 	public VCompound(Glyph g)
 	{
 		super(g);
 		this.children = new ArrayList();
 	}
 	
+	/**
+	 * Returns the child list of this VCompound
+	 * @return child list of this VCompound.
+	 * */
 	public List<VNode> getChildren()
 	{
 		return children;

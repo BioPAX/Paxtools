@@ -84,8 +84,12 @@ public class CommonFeatureStringGenerator implements FeatureDecorator
 					if (loc instanceof SequenceSite)
 					{
 						SequenceSite ss = (SequenceSite) loc;
-						state.setVariable((state.getVariable() != null ? state.getVariable() : "") +
-							ss.getSequencePosition());
+						if (ss.getSequencePosition() > 0)
+						{
+							state.setVariable(
+								(state.getVariable() != null ? state.getVariable() : "") +
+								ss.getSequencePosition());
+						}
 					}
 					
 					return state;

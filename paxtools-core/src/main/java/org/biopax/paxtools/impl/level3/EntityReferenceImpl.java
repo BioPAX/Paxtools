@@ -4,12 +4,9 @@ package org.biopax.paxtools.impl.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -36,12 +33,12 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 */
 	public EntityReferenceImpl()
 	{
-		this.entityFeature = new BiopaxSafeSet<EntityFeature>();
-		this.entityReferenceOf = new BiopaxSafeSet<SimplePhysicalEntity>();
-		this.evidence = new BiopaxSafeSet<Evidence>();
-		this.entityReferenceType = new BiopaxSafeSet<EntityReferenceTypeVocabulary>();
-		this.memberEntityReference = new BiopaxSafeSet<EntityReference>();
-		this.ownerEntityReference= new BiopaxSafeSet<EntityReference>();
+		this.entityFeature = BPCollections.I.createSafeSet();
+		this.entityReferenceOf = BPCollections.I.createSafeSet();
+		this.evidence = BPCollections.I.createSafeSet();
+		this.entityReferenceType = BPCollections.I.createSafeSet();
+		this.memberEntityReference = BPCollections.I.createSafeSet();
+		this.ownerEntityReference= BPCollections.I.createSafeSet();
 	}
 
 	@Transient
@@ -57,8 +54,7 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	 * @return A set of entity features for the reference entity.
 	 */
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = EntityFeatureImpl.class, 
-			mappedBy = "entityFeatureOf")
+	@OneToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "entityFeatureOf")
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
@@ -66,24 +62,21 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	public void addEntityFeature(EntityFeature entityFeature)
 	{
-		if (entityFeature != null)
+		if (entityFeature != null) synchronized (entityFeature)
 		{
 			EntityReference eFof = entityFeature.getEntityFeatureOf();
-			if (eFof != null && !eFof.equals(this))
-			{
-				//throw new BidirectionalLinkViolationException(this, entityFeature);
-				log.warn("addEntityFeature: adding (to this "
-					+ getModelInterface().getSimpleName() +
-					" " + getRDFId() + ") a "
-					+ entityFeature.getModelInterface().getSimpleName()
-					+ " " + entityFeature.getRDFId()
-					+ " that is already owned by another "
-					+ eFof.getModelInterface().getSimpleName()
-					+ " " + eFof.getRDFId());
-			}
-
-			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this); //todo (what?)
 			
+			if (eFof != null && !eFof.equals(this))
+			{				
+				log.warn("addEntityFeature: violated the inverse-functional OWL constraint; to fix, " 
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
+					+ " should be REMOVED from " 
+					+ eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId());
+				//TODO eFof.removeEntityFeature(entityFeature) or an exception would be a breaking change (let's shelve for v5.0.0)
+				//so, we neither fix nor fail here (currently, biopax-validator detects and optionally fixes it).
+			} 
+
+			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this);	
 			this.entityFeature.add(entityFeature);
 		}
 	}
@@ -91,17 +84,34 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	public void removeEntityFeature(EntityFeature entityFeature)
 	{
-		if (entityFeature != null)
+		if (this.entityFeature.contains(entityFeature))
 		{
-			assert entityFeature.getEntityFeatureOf() == this
-				: "attempt to remove not own EntityFeature!"; //- but the assertion alone is not enough...
+			this.entityFeature.remove(entityFeature);
+			
 			if(entityFeature.getEntityFeatureOf() == this) {
-				this.entityFeature.remove(entityFeature);
-				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null); //todo
-			} 
+				((EntityFeatureImpl) entityFeature).setEntityFeatureOf(null);
+			} else if(entityFeature.getEntityFeatureOf() != null) {
+				//Don't set entityFeatureOf to null here 
+				//(looks, this EF was previously moved to another ER)
+				log.warn("removeEntityFeature: removed " 
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
+					+ " from " + getModelInterface().getSimpleName() + " " + getRDFId() 
+					+ "; though entityFeatureOf was another " 
+					+ entityFeature.getEntityFeatureOf().getModelInterface().getSimpleName() 
+					+ " " + entityFeature.getEntityFeatureOf().getRDFId());
+			} else {
+				log.warn("removeEntityFeature: removed " 
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
+					+ " from " + getModelInterface().getSimpleName() + " " + getRDFId()
+					+ ", but entityFeatureOf was already NULL (illegal state)");
+			}
+		} else {
+			log.warn("removeEntityFeature: did nothing, because "
+					+ getRDFId() + " does not contain feature " + entityFeature.getRDFId());
 		}
 	}
 
+	
 	protected void setEntityFeature(Set<EntityFeature> entityFeature)
 	{
 		this.entityFeature = entityFeature;

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
-	<version>4.2.2-SNAPSHOT</version>
+	<version>4.3.0-SNAPSHOT</version>
 
 	<name>Paxtools</name>
 	<packaging>pom</packaging>
@@ -25,7 +25,10 @@
 		<module>sbgn-converter</module>
 		<module>paxtools-console</module>
 		<module>paxtools-query</module>
-<!--         <module>json-converter</module> -->
+		<module>paxtools-trove</module>
+        <module>paxtools-archetype</module>
+        <module>json-converter</module>
+        <module>paxtools-search</module>
 	</modules>
 
 	<properties>
@@ -41,8 +44,8 @@
 		<junit.version>4.10</junit.version>
 		<commons-logging.version>1.1.1</commons-logging.version>
 		<log4j.version>1.2.13</log4j.version>
-		<hibernate-core.version>4.2.0.Final</hibernate-core.version>
-		<hibernate-search.version>4.2.0.Final</hibernate-search.version>
+		<hibernate-core.version>4.2.7.Final</hibernate-core.version>
+		<hibernate-search.version>4.3.0.Final</hibernate-search.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<collections-generic.version>4.01</collections-generic.version>
 		

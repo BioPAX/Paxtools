@@ -2,13 +2,10 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.util.BiopaxSafeSet;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Entity;
@@ -36,9 +33,9 @@ public class  ControlImpl extends InteractionImpl
 
 	public ControlImpl()
 	{
-		pathwayController = new BiopaxSafeSet<Pathway>();
-		peController = new BiopaxSafeSet<PhysicalEntity>();
-		controlled = new BiopaxSafeSet<Process>();
+		pathwayController = BPCollections.I.createSafeSet();
+		peController = BPCollections.I.createSafeSet();
+		controlled = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -107,7 +104,7 @@ public class  ControlImpl extends InteractionImpl
 	@Transient
 	public Set<Controller> getController()
 	{
-		Set<Controller> controller = new HashSet<Controller>(getPeController());
+		Set<Controller> controller = new HashSet<Controller>(this.getPeController());
 		controller.addAll(getPathwayController());
 		return Collections.unmodifiableSet(controller);
 	}

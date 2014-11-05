@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -21,7 +20,7 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
-	protected static final Log log = LogFactory.getLog(PropertyEditor.class);
+	protected static final Log log = LogFactory.getLog(AbstractPropertyEditor.class);
 
 	/**
 	 * This variable stores the method to invoke for setting a property to the to the given value. If
@@ -395,19 +394,14 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 			}
 			throw new IllegalBioPAXArgumentException(message, e);
 		}
-		catch (InvocationTargetException e)
+		catch (Exception e) //java.lang.reflect.InvocationTargetException
 		{
-			String message = "Failed to set property: " + property + " with method: " + method.getName() + " on " +
-			                 domain.getSimpleName() + " (" + bean.getClass().getSimpleName() + ")" + " with range: " +
-			                 range.getSimpleName() + " (" + value.getClass().getSimpleName() + ")";
+			String valInfo = (value == null) ? null : value.getClass().getSimpleName() + ", " + value;
+			String message = "Failed to set " + property + " with " + method.getName() + " on " 
+				+ domain.getSimpleName() + " (" + bean.getClass().getSimpleName() + ", " + bean + ")" 
+				+ " with range: " + range.getSimpleName() + " (" + valInfo + ")";
 			throw new IllegalBioPAXArgumentException(message, e);
-		}
-		catch (IllegalAccessException e)
-		{
-			String message = "Failed to set property: " + property + " with method: " + method.getName() + " on " +
-			                 domain.getSimpleName() + " (" + bean.getClass().getSimpleName() + ")" + " with range: " +
-			                 range.getSimpleName() + " (" + value.getClass().getSimpleName() + ")";
-			throw new IllegalBioPAXArgumentException(message, e);
+			//TODO actual exceptions thrown by the biopax setter/method are lost, unfortunately...
 		}
 	}
 
@@ -442,10 +436,11 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 		}
 		catch (Exception e)
 		{
-			log.error("Failed to set value: " + value + " to bean " + bean + "; bean class: " + bean.getClass() +
-			          "; primary set method: " + this.getPrimarySetMethod() 
-			          + ((value != null) ? "; value class: " + value.getClass() : "") +
-			          ". Error: " + e + ". " + e.getCause());
+			log.error("Failed to set value: " + value + " to bean " + bean 
+					+ "; bean class: " + bean.getClass().getSimpleName() 
+					+ "; primary set method: " + getPrimarySetMethod() 
+			        + ((value != null) ? "; value class: " + value.getClass().getSimpleName() : "") 
+			        + ". Error: " + e + ", Cause: " + e.getCause());
 		}
 	}
 

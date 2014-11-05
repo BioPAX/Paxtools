@@ -1,19 +1,17 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.Named;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.SetStringBridge;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.hibernate.annotations.*;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Analyze;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import javax.persistence.Entity;
 import java.util.Set;
 
 /**
@@ -31,7 +29,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 
 	public NamedImpl()
 	{
-		allNames = new HashSet<String>();
+		allNames = BPCollections.I.createSet();
 		displayName = null;
 		standardName = null;
 	}

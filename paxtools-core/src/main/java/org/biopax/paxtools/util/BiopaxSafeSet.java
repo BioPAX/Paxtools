@@ -1,62 +1,86 @@
 package org.biopax.paxtools.util;
 
-import java.util.AbstractSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 
+import java.util.*;
+
 
 /**
- * A set of BioPAX objects that prevents adding several elements 
+ * A thread-safe set of BioPAX objects that also prevents adding several elements 
  * having the same URI. It also allows to quickly get a BioPAX 
- * object by URI. This set is used internally by multiple cardinality
- * object biopax property and inverse implementations (since v4.2, 2013).
+ * object by URI. This set is used internally by all multiple cardinality
+ * biopax object property and inverse propery implementations (since v4.2, 2013).
  *
  * @param <E>
  */
 public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 {
 	private final static Log LOG = LogFactory.getLog(BiopaxSafeSet.class);
-	private final Map<String,E> map;
 	
-	public BiopaxSafeSet() {
-		map = new HashMap<String, E>();
-	}
+	//initial map is to be reset to a modifiable instance on first write
+	private final static Map empty = Collections.unmodifiableMap(Collections.emptyMap());
+
+	private Map<String,E> map;
 	
-	@Override
-	public Iterator<E> iterator() {
-		return map.values().iterator();
+	public BiopaxSafeSet()
+	{
+		map = empty;
 	}
 
 	@Override
-	public int size() {
-		return map.size();
+	public Iterator<E> iterator() {
+		synchronized (map) {
+			return map.values().iterator();
+		}
+	}
+
+	@Override
+	public int size()
+	{
+		synchronized (map) {
+			return map.size();
+		}
 	}
 	
 	@Override
-	public boolean add(E bpe) {
+	public boolean add(E bpe)
+	{
+		synchronized (map) {	
+			if(map.isEmpty())
+			{	//new real map instead of initial fake (empty) one
+				this.map = BPCollections.I.createMap();
+			}
+		}
+			
 		String uri = bpe.getRDFId();
-		if(!map.containsKey(uri)) {
-			map.put(uri, bpe);
-			return true;
-		} else { 
-			//do not throw an ex., because duplicate attempts occur naturally 
-			// (e.g., same PE on both left and right sides of a reaction 
-			// causes same participant/participantOf is touched twice) 
-			LOG.debug("ignored duplicate:" + bpe.getRDFId());
-			return false;
+		
+		synchronized (map) { //sync on the new map instance		
+			if (!map.containsKey(uri)) {
+				map.put(uri, bpe);
+				return true;
+			} else {
+				// do not throw an ex., because duplicate attempts occur
+				// naturally
+				// (e.g., same PE on both left and right sides of a reaction
+				// causes same participant/participantOf is touched twice)
+				LOG.debug("ignored duplicate:" + uri);
+				return false;
+			}
 		}
 	}
 	
 	
 	@Override
 	public boolean contains(Object o) {
-		return super.contains(o) 
+		if(map==empty)
+			return false;
+		
+		synchronized (map) {//to sync due to two operations
+			return super.contains(o) 
 				&& ( get(((E)o).getRDFId()) == o );
+		}
 	}
 	
 	
@@ -67,6 +91,12 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 	 * @return BioPAX object or null
 	 */
 	public E get(String uri) {
-		return map.get(uri);
+		
+		if(map==empty)
+			return null;
+		
+		synchronized (map) {
+			return map.get(uri);
+		}
 	}
 }

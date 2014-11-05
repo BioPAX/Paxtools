@@ -1,0 +1,2332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+ xml:base="http://purl.org/pc2/4/">
+<owl:Ontology rdf:about="">
+ <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+</owl:Ontology>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_215223dea3d6510f99510530c4e396ed">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001161403</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0fff753b9a40b025d59506b0815fa522">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000314733</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b265ea62c96685f6918f34a470bda943">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9H0E2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:CellularLocationVocabulary rdf:about="http://identifiers.org/go/GO:0005886">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">plasma membrane</bp:term>
+ <bp:xref rdf:resource="#UnificationXref_d02530d6e3fb7d9142507532edd0d46d" />
+</bp:CellularLocationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_ff86c490c0773007c0486a493b6579c4">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_002182</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_647049320c75c9572d8d29f621e7dfe9">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">446643</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=446643</bp:comment>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_083d64046a84657ba9d45f57e60e7028">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q69FE1</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_c5e83dc1df446e40cbaab4bdf0ad6e12">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">8143180</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubchem-substance</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_f325f56b7b8eb5f2e8011d38a4a25258">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceInterval2136</bp:comment>
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_41a602137aff7511eba7b2d23a334957" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_5bd5f3df63bc9936408ca4b2b1d3d73a" />
+</bp:SequenceInterval>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_4c3c5f18a567b94b400902eb5c23dd6d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000345829</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0f1345222ad308909fc58d67b766086c">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000342550</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_686ca9751ba63dc3e1c2cd8ebf23dd4d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TOLLIP</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC Symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_ad74a05b31bba94fa50e740a1fa304c7">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">445758</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=445758</bp:comment>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_0ab73663b49819745b988e431ae9d48e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O14915</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d3c5ef7e3f1700900ef0df29905a7676">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001145257</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d2d1e5c873b2a186e3851ae4036b462e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000390327</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_6b08d3066dc9d17063cc429a61652c14">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000413869</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d270f623d78e09583572676519323095">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1B</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_397f3de944edaf06763d0df12def17cc">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">117</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19784</bp:comment>
+</bp:SequenceSite>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_dd4ae04c29189024fc4cacf40d774abd">
+ <bp:physicalEntity rdf:resource="#Complex_8cb14f7d84f7974ab445f107455c04f5" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11864</bp:comment>
+</bp:Stoichiometry>
+
+<bp:SmallMoleculeReference rdf:about="http://identifiers.org/chebi/CHEBI:16761">
+ <bp:structure rdf:resource="#ChemicalStructure_4b6890d2263fa8e828a63d959c21b745" />
+ <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H15N5O10P2</bp:chemicalFormula>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">5&apos;-adenylphosphoric acid</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H3adp</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">adenosine 5&apos;-(trihydrogen diphosphate)</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_901a92f45817d60fcd0419d33d6ef6b5" />
+ <bp:xref rdf:resource="#UnificationXref_4b6890d2263fa8e828a63d959c21b745" />
+ <bp:xref rdf:resource="#UnificationXref_f784cce5e81a9b65f7ca35180c71af69" />
+ <bp:xref rdf:resource="#UnificationXref_e3a40c24ec0e28289477e16ed7706d7d" />
+ <bp:xref rdf:resource="#UnificationXref_a195ba57e1e1b3aa087396b1bdc25059" />
+ <bp:xref rdf:resource="#UnificationXref_b4aeeb967b783999a9e83efd39308146" />
+ <bp:xref rdf:resource="#UnificationXref_0d0d2e63c9ee57e983607553d2ee0efc" />
+ <bp:xref rdf:resource="#UnificationXref_e7d51942d17a0879b364d68a95b97aa8" />
+ <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">427.2011</bp:molecularWeight>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A purine ribonucleoside 5&apos;-diphosphate having adenine as the nucleobase.</bp:comment>
+</bp:SmallMoleculeReference>
+
+<bp:SequenceSite rdf:ID="SequenceSite_530342708a9481eaca34892eea9523c8">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">83</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19781</bp:comment>
+</bp:SequenceSite>
+
+<bp:UnificationXref rdf:ID="UnificationXref_e7d51942d17a0879b364d68a95b97aa8">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">8144912</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubchem-substance</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_f71ce08a5c351995a78fe0c8305e260c">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSG00000115008</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_3847d703a7eb46e1bd38fe7f28b41709">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000416296</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_cd00e8010fbdb27b2358b1b6edf55638">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q53XX2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:Protein rdf:ID="Protein_581780a98c72b280d1f102e7f427eb65">
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/P14778" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor type 1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R_HUMAN</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_14e20a6b2de894076385a9738f319358" />
+ <bp:xref rdf:resource="#UnificationXref_70c1d6ccf6354aec7a0c667e5a0dc006" />
+ <bp:feature rdf:resource="#FragmentFeature_02cce65420446914c6f26c7c2fabe621" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005886" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 197595</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein10657</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_581780a98c72b280d1f102e7f427eb65http://purl.org/pc2/4/Complex_dcf53d1093d9c7efcebacb9fa6cb51e5@Layout@http://chibecreated#1400247424571-2021634426@241@477</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_581780a98c72b280d1f102e7f427eb65http://purl.org/pc2/4/Complex_c2ec7cdb2de75fea4f5026738f8472d8@Layout@http://chibecreated#1400247424571-2021634426@385@304</bp:comment>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R1</bp:displayName>
+</bp:Protein>
+
+<bp:UnificationXref rdf:ID="UnificationXref_8ea14dc852cd89e1fcd556775ceebda1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q7M4S7</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_27ec9ef754321d1e57cbf7f8b8efe69b">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q53XS7</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_a3e8374567af746574ad1813822dca75">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD:00047</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Protein Modification Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_4959d18eee3b3f683be2b9c849cf6615">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B4DQ60</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d796e0f564bcd5783a2d068e2770b776">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000263339</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_0d0d2e63c9ee57e983607553d2ee0efc">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">8144912</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubchem</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_224c66da6008dadf8b552fb4af4b4638">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P14778</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_7afc860791d6359aff3ed2e9e06917f3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000447382</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_1f3d0dd39691aed9d0dcae6d7ab59903">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000422485</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_631291f2a82d832e0589a8317bd709ad">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">446649</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=446649</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_ee9a45f5a8a0a9a9aa40a144f06b4e2d">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">345</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite18366</bp:comment>
+</bp:SequenceSite>
+
+<bp:SequenceModificationVocabulary rdf:ID="SequenceModificationVocabulary_dca4510b2b41bf5c2a3cb8d4de0e6789">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES Phosphoserine (By similarity)</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_21bc714c19246c771449c806566f556a">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001167929</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_6f1d16c724e1c24be30c7ec34f1e444d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1RAP</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC Symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_918ede5b34c14b778caeb604adf64afc">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000410023</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_8e2cb7b2700582611bd5c5a673ec1f60">
+ <bp:physicalEntity rdf:resource="#Complex_ecce43e9db88dde854503c95a865e045" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11861</bp:comment>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0d66be510dd2647304e1339a13647f05">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MYD88</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC Symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b02566cb85222e6676f5d8ddcd48d0e8">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_14621</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_14621.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_3cbad26f05381bc4665aac24ff4bc73f">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">398</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_81c9ec3c12fd33a9f75973d0cf6851f1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1A</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_a23be17c3217c717753985ba464c2deb">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1WGL</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PROTEIN DATA BANK</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_5ed28d85cad3c3964474e2c41d5e4f29">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R1</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC Symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_f4ef55506da41369233c0fb72dc07561">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q587I7</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_41a602137aff7511eba7b2d23a334957">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">296</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite4700</bp:comment>
+</bp:SequenceSite>
+
+<bp:SmallMolecule rdf:ID="SmallMolecule_f206dac25614ddf411b7935ba3e90a52">
+ <bp:entityReference rdf:resource="http://identifiers.org/chebi/CHEBI:16761" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-diphosphate</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_8d8d91dc731578e8d12d33055069c3a5" />
+ <bp:xref rdf:resource="#UnificationXref_61220c4affeb8c86d6fa8669ccdead21" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005829" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SmallMolecule7</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29370</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/SmallMolecule_f206dac25614ddf411b7935ba3e90a52http://purl.org/pc2/4/BiochemicalReaction_6de2d8ef1ce7a15e1c4096f22dd986a8@Layout@http://chibecreated#1400247424571-2021634426@62@85</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:UnificationXref rdf:ID="UnificationXref_98568b0b72c72d97cff685bc949719d9">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B1NLD0</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_6a5e4b46a984c32bc69482f96e58abea">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9H9E6</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:Protein rdf:ID="Protein_18b29086d4a7cb8641f08503508f9029">
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q9NWZ3" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p-T342,T345,S346-IRAK4</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_631291f2a82d832e0589a8317bd709ad" />
+ <bp:xref rdf:resource="#UnificationXref_b5a1f594b598c4090ac2adbb5e399bef" />
+ <bp:feature rdf:resource="#ModificationFeature_f9567acb83dea3a3ff497be5dcb368f6" />
+ <bp:feature rdf:resource="#ModificationFeature_29a8fb5f9516c4826ec9fa45bc7578bd" />
+ <bp:feature rdf:resource="#ModificationFeature_68542328d569c45a8fd5fca62d75949a" />
+ <bp:feature rdf:resource="#FragmentFeature_bcb98b60d8a00dc9f1116642e0c59ae6" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005829" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 446649</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_18b29086d4a7cb8641f08503508f9029http://purl.org/pc2/4/Complex_c2ec7cdb2de75fea4f5026738f8472d8@Layout@http://chibecreated#1400247424571-2021634426@384@323</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein10664</bp:comment>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Activated IRAK4</bp:displayName>
+</bp:Protein>
+
+<bp:Complex rdf:ID="Complex_c2ec7cdb2de75fea4f5026738f8472d8">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_8e2cb7b2700582611bd5c5a673ec1f60" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_64c850c3701d0479c27197b2c327cc6d" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_dd4ae04c29189024fc4cacf40d774abd" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_6dd5971ae7bb901cf0270d99422c9475" />
+ <bp:component rdf:resource="#Complex_8cb14f7d84f7974ab445f107455c04f5" />
+ <bp:component rdf:resource="#Complex_ecce43e9db88dde854503c95a865e045" />
+ <bp:component rdf:resource="#Protein_79fc8ea995d2e5bc60ccf89a7b77eff5" />
+ <bp:component rdf:resource="#Protein_18b29086d4a7cb8641f08503508f9029" />
+ <bp:xref rdf:resource="#UnificationXref_647049320c75c9572d8d29f621e7dfe9" />
+ <bp:xref rdf:resource="#UnificationXref_bb71e4babdb1585e8bd0246eb3bb9b92" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005886" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1 receptor complex - activated IRAK4:TOLLIP</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Complex4556</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 446643</bp:comment>
+</bp:Complex>
+
+<bp:SequenceSite rdf:ID="SequenceSite_0dba92cea863b13ee75a2e84af5144cc">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">342</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite18365</bp:comment>
+</bp:SequenceSite>
+
+<bp:UnificationXref rdf:ID="UnificationXref_4341968306cd5b2bbce63e8c7d839100">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:13236</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_2053076264aff4c6e9a065ac718800de">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:10841</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_895bf7938183cbebb4d0009f19f132be">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1G0Y</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PROTEIN DATA BANK</bp:db>
+</bp:RelationshipXref>
+
+<bp:ChemicalStructure rdf:ID="ChemicalStructure_4b6890d2263fa8e828a63d959c21b745">
+ <bp:structureData rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI=1S/C10H15N5O10P2/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(24-10)1-23-27(21,22)25-26(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1</bp:structureData>
+ <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:structureFormat>
+</bp:ChemicalStructure>
+
+<bp:UnificationXref rdf:ID="UnificationXref_cb9822aa19429817e372b74592070c39">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9Y589</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_115c839b1bbb7a488d27ba5b19c79560">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">570</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19797</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_652b151281a81a8c7cb239b260b9a8dc">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">602626</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">omim</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_16f3237ccf86ef0548425a73b5627646">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">445755</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=445755</bp:comment>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_87ab1f7b355bb1a712c1add4a915c8ca">
+ <bp:physicalEntity rdf:resource="#Protein_ef72c95a781ac0f8c60c44e0e929890e" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11852</bp:comment>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b504f0a909dd75fcb41d927a0b0b4e91">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_22656</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_22656.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_8bf1dadc95461e18e6a70b80e01b810f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3553</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCBI Gene</bp:db>
+</bp:RelationshipXref>
+
+<bp:Protein rdf:ID="Protein_5ee05e2d8ba468ba3a196733fab02d68">
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q99836" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Myeloid differentiation primary response protein MyD88</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MY88_HUMAN</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_d4edd7ea0f0bf1d8155375bdcf9561ae" />
+ <bp:xref rdf:resource="#UnificationXref_b02566cb85222e6676f5d8ddcd48d0e8" />
+ <bp:feature rdf:resource="#FragmentFeature_e5e15b189f09cb4bc5e6a0fdb169a712" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005829" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_5ee05e2d8ba468ba3a196733fab02d68http://purl.org/pc2/4/Complex_dcf53d1093d9c7efcebacb9fa6cb51e5@Layout@http://chibecreated#1400247424571-2021634426@286@477</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 193946</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein2501</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_5ee05e2d8ba468ba3a196733fab02d68http://purl.org/pc2/4/Complex_c2ec7cdb2de75fea4f5026738f8472d8@Layout@http://chibecreated#1400247424571-2021634426@339@329</bp:comment>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MYD88</bp:displayName>
+</bp:Protein>
+
+<bp:SequenceSite rdf:ID="SequenceSite_e3cf160259c46949ab6c72a472f6b8c8">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">87</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:SequenceSite rdf:ID="SequenceSite_09b3d259eeac13d4de5553960026745e">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">460</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19801</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_bfc127b79ad2636524985f84573bab9e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_134470</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_2ff8d0b31e248e0d31badddb8a2e13ca">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">450120</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=450120</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceModificationVocabulary rdf:ID="SequenceModificationVocabulary_ce06d0ad7c8dae9135a273947bda253d">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES N6-acetyllysine</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:UnificationXref rdf:ID="UnificationXref_7f908919cc8dc7aded609c7903963b5a">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q7RU01</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_58295a1d4b4b9e693234c429ce4fef1d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000401132</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_e6a719405fea31efa71c539d196d593f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_23348</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_23348.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d93bc12d9fec09faf83273ee870098f8">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001161401</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_71ac05084ffb2d6170f36e971328085a">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceInterval9248</bp:comment>
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_178dbe4cec8a28bcd529e9f42da05489" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_63f1379d00657931eb765180fd4fde16" />
+</bp:SequenceInterval>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d89e338ab52af5d7915f03163b63f463">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">606883</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">omim</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_6947a5475ad9eb061904c1f7aaf986cd">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_000566</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_88d008c70413b825843ed5d24589daaf">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000431837</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_c5f96d32d36dd4c5bb03f0ecac6c3789">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005829</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_51ab030bd4e625a1503959b3a4e0ad56">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9NWZ3</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_e10161d67f116503d7569687ff994b60">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q8TDF7</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_9e716b22ef214ee99b4ff1983cd3c7a3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2JS7</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PROTEIN DATA BANK</bp:db>
+</bp:RelationshipXref>
+
+<bp:Complex rdf:ID="Complex_ecce43e9db88dde854503c95a865e045">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_a4cafd7b9b42f9bb9be9429ae4c0d5b9" />
+ <bp:component rdf:resource="#Protein_5ee05e2d8ba468ba3a196733fab02d68" />
+ <bp:xref rdf:resource="#UnificationXref_1b5f57f6543647aa27a81dcc616363bd" />
+ <bp:xref rdf:resource="#UnificationXref_a6a365e5118f11de4549fe410677eef9" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005829" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MYD88 homodimer</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Complex1120</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 193932</bp:comment>
+</bp:Complex>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_daecbb6192ef675776c6d1a23f74e36f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001166040</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_1ebe39b7009be680589374026c3e790d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000412053</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_f4a8c59285a7070790b27aba3bffe1ee">
+ <bp:physicalEntity rdf:resource="#Protein_581780a98c72b280d1f102e7f427eb65" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11845</bp:comment>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_7647d4bf9cf9977472654575f41666d9">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">606277</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">omim</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_5ee307a11c81ba18b4b915adeeecfc57">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000408893</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_1c66d6bf47e8b7767252dfa88581db68">
+ <bp:physicalEntity rdf:resource="#Protein_6f63f60939c713c9c1964ba394ed8005" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11856</bp:comment>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_9bb021f9d2e4a5b07625d3f48d5f029f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:15422</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_6268e484ad50beeabf94ce596ecac396">
+ <bp:featureLocation rdf:resource="#SequenceSite_a91d98ca94c03f978011e7e6a6139919" />
+ <bp:modificationType rdf:resource="http://identifiers.org/psimod/MOD:00087" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#ModificationFeature1778</bp:comment>
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_23f7659b6d12fcd832009e5869f1c8d2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000417848</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_3ea90699874d10cd93703706ab7a5b4e">
+ <bp:physicalEntity rdf:resource="#SmallMolecule_1c06b4a932bf168e21f7d14cb36906e6" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">3.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11859</bp:comment>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_9d18a3690ed8d98edfd37db0151807ba">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_057207</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0ea90e2182558c122f8d1dc893eeeeb1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_002459</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_9fb3b5beb7d6ee032ded5bc9fc33cd5b">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">34</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:SequenceSite rdf:ID="SequenceSite_60fd715dd5dc2f8680458599edf2ec0c">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">557</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_8b8de449d3f341b15bceff29b4b3c396">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:5991</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0c63e628eecbc8b8e7e1715a8ce062bb">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001145258</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_e683f3c69de21cc70db7a8d5cadfa6d1">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19800</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_9c147bcf3912a70a072a13fca8841fa1">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000495303</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_f8bcebc50bab0397a53b33e77601bf9f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000386380</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_02cce65420446914c6f26c7c2fabe621">
+ <bp:featureLocation rdf:resource="#SequenceInterval_71ac05084ffb2d6170f36e971328085a" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#FragmentFeature9208</bp:comment>
+</bp:FragmentFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_d5f177d71878e3bac2fc3ac87fa18aec">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:10789</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceModificationVocabulary rdf:about="http://identifiers.org/psimod/MOD:00046">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O-phospho-L-serine</bp:term>
+ <bp:xref rdf:resource="#UnificationXref_71fced4caa9668d74135eae85b2167da" />
+</bp:SequenceModificationVocabulary>
+
+<bp:SequenceModificationVocabulary rdf:about="http://identifiers.org/psimod/MOD:00047">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O-phospho-L-threonine</bp:term>
+ <bp:xref rdf:resource="#UnificationXref_a3e8374567af746574ad1813822dca75" />
+</bp:SequenceModificationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_9d1d5d49a1785c26d6477034739ad889">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000443433</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_f4dd25b7c58419121ce473f715f95dfa">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000072516</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceModificationVocabulary rdf:ID="SequenceModificationVocabulary_50c1a8577a122d70cd1bd7579a74ceba">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES Phosphoserine</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_36f52f85d047fc41f5731605fe07fe59">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000317204</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_577c3b753587003baf872ef49d11b051">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_22720</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_22720.3</bp:comment>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_64c850c3701d0479c27197b2c327cc6d">
+ <bp:physicalEntity rdf:resource="#Protein_79fc8ea995d2e5bc60ccf89a7b77eff5" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11862</bp:comment>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_ae14d496305b1a0936234e2356a33fc3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000263341</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_30e5fd7977e9c67e8409ea44464921d2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSG00000198001</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:BiochemicalReaction rdf:ID="BiochemicalReaction_6de2d8ef1ce7a15e1c4096f22dd986a8">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:conversionDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:conversionDirection>
+ <bp:xref rdf:resource="#UnificationXref_ed03f3fc9247a8d638226fec1a7ca219" />
+ <bp:xref rdf:resource="#UnificationXref_bdaf2f4b240e48dc4dfc00d7bd1cc5a5" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/17141195" />
+ <bp:participantStoichiometry rdf:resource="#Stoichiometry_0fddc99423fc82eab88e634640e02688" />
+ <bp:participantStoichiometry rdf:resource="#Stoichiometry_3ea90699874d10cd93703706ab7a5b4e" />
+ <bp:left rdf:resource="#SmallMolecule_1c06b4a932bf168e21f7d14cb36906e6" />
+ <bp:left rdf:resource="#Complex_dcf53d1093d9c7efcebacb9fa6cb51e5" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IRAK4 is activated by autophosphorylation</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#BiochemicalReaction3458</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Edited: Jupe, S, 2010-05-17</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/BiochemicalReaction_6de2d8ef1ce7a15e1c4096f22dd986a8true@Layout@http://chibecreated#1400247424571-2021634426@101@165</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Pinteaux, E, 2010-05-17</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IRAK4 is activated by autophosphorylation at 3 positions within the kinase activation loop, Thr-342, Thr-345 and Ser-346.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Authored: Ray, KP, 2010-05-17</bp:comment>
+ <bp:right rdf:resource="#SmallMolecule_f206dac25614ddf411b7935ba3e90a52" />
+ <bp:right rdf:resource="#Complex_c2ec7cdb2de75fea4f5026738f8472d8" />
+</bp:BiochemicalReaction>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d5a00e0457b29be61486d3aa0c397bf4">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000390565</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_a06c1385119094affb438547db8ad65f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005576</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_59e05d305f0c19cf1e72e88337d6ebed">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">602170</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">omim</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_1e6a08f5e83f9951d02a05bcf52fa81f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1B</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC Symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_5bd814be6aaac2bfdfafb1878b461621">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">346</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_5f21c2407ecbf5a452b14701bef7b738">
+ <bp:featureLocation rdf:resource="#SequenceSite_5aca0b5b75034c55a44db00af50f4063" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_07d2cdec26f84f03a7b0c3d4f3076273" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 342 342 Phosphothreonine.</bp:comment>
+</bp:ModificationFeature>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_eb02bf2496a87f1345efefefba75186b">
+ <bp:featureLocation rdf:resource="#SequenceInterval_45feb0416a5b570db3e4e6f42aeb7a31" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#FragmentFeature9205</bp:comment>
+</bp:FragmentFeature>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_3aedefa973171388cd1978623039edea">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceInterval9252</bp:comment>
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_3b53c2b837bc1c491d604f12608ee384" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_e182b73b8e689837885b82f65a320b60" />
+</bp:SequenceInterval>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_c3dd85c2e447309d73a9a41b89d46d95">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001114182</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceModificationVocabulary rdf:ID="SequenceModificationVocabulary_d06f75e35fc5cf3492d5319c12a98f03">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES Phosphotyrosine</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d1fdafe4081aaf2915657705a467f831">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001172566</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_572e5c50c467e3a3334907de9970f3dc">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:5995</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_3b53c2b837bc1c491d604f12608ee384">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">274</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19799</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_65bf0990cb3559707d79c0b8f7f17f3a">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001172569</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_99fd03114eecd2f4267e2a50bc0f8ae6">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MYD88</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_29a8fb5f9516c4826ec9fa45bc7578bd">
+ <bp:featureLocation rdf:resource="#SequenceSite_ee9a45f5a8a0a9a9aa40a144f06b4e2d" />
+ <bp:modificationType rdf:resource="http://identifiers.org/psimod/MOD:00047" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#ModificationFeature1623</bp:comment>
+</bp:ModificationFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_f0901efbf16c5808cdb8ba8e066d0342">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">8143180</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubchem</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b7bbeff90165042c4c29598c41b2869b">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_23118</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_23118.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/Q9NWZ3">
+ <bp:entityFeature rdf:resource="#ModificationFeature_1723af6c0e9aaef18ee21da2ccce1319" />
+ <bp:entityFeature rdf:resource="#ModificationFeature_5f21c2407ecbf5a452b14701bef7b738" />
+ <bp:entityFeature rdf:resource="#ModificationFeature_70a5bcd52dd9fd98dae4349553ff9dc5" />
+ <bp:entityFeature rdf:resource="#ModificationFeature_52efe22ec990d98cc960f11f202798fe" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IRAK4</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IRAK-4</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.7.11.1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Renal carcinoma antigen NY-REN-64</bp:name>
+ <bp:xref rdf:resource="#RelationshipXref_0eb52c9d8f0fba1291fb11f6a962aa66" />
+ <bp:xref rdf:resource="#RelationshipXref_621ba0468bdfa2098b1182347c36ae0a" />
+ <bp:xref rdf:resource="#RelationshipXref_bab2c56ecd2b39006a54545d3b6e3a35" />
+ <bp:xref rdf:resource="#RelationshipXref_8d81b314aaac485f86a01e4e0c49dc97" />
+ <bp:xref rdf:resource="#RelationshipXref_30e5fd7977e9c67e8409ea44464921d2" />
+ <bp:xref rdf:resource="#UnificationXref_083d64046a84657ba9d45f57e60e7028" />
+ <bp:xref rdf:resource="#RelationshipXref_d89e338ab52af5d7915f03163b63f463" />
+ <bp:xref rdf:resource="#RelationshipXref_88d008c70413b825843ed5d24589daaf" />
+ <bp:xref rdf:resource="#RelationshipXref_16c0a8e159022d23f5e9cee5f0e3b07e" />
+ <bp:xref rdf:resource="#RelationshipXref_462fac21e345af7704170831bd134696" />
+ <bp:xref rdf:resource="#UnificationXref_51ab030bd4e625a1503959b3a4e0ad56" />
+ <bp:xref rdf:resource="#RelationshipXref_d3c5ef7e3f1700900ef0df29905a7676" />
+ <bp:xref rdf:resource="#RelationshipXref_c3dd85c2e447309d73a9a41b89d46d95" />
+ <bp:xref rdf:resource="#UnificationXref_e10161d67f116503d7569687ff994b60" />
+ <bp:xref rdf:resource="#RelationshipXref_ce671e9a4d9cc68d39f2b361fed0183e" />
+ <bp:xref rdf:resource="#RelationshipXref_d2d1e5c873b2a186e3851ae4036b462e" />
+ <bp:xref rdf:resource="#RelationshipXref_c2589387eafef4dac6bfea15664a8668" />
+ <bp:xref rdf:resource="#RelationshipXref_bb27ddf9638f0556d1cad107e826c782" />
+ <bp:xref rdf:resource="#RelationshipXref_926537849bc88e4e82862081128dd7f6" />
+ <bp:xref rdf:resource="#RelationshipXref_0231b86ef7af2fbec023cb28150c53d6" />
+ <bp:xref rdf:resource="#RelationshipXref_0aa5f0b9a684314694ed365603ae2b4c" />
+ <bp:xref rdf:resource="#RelationshipXref_6200b2324249ef7fbd7f84a827034d6d" />
+ <bp:xref rdf:resource="#UnificationXref_cb9822aa19429817e372b74592070c39" />
+ <bp:xref rdf:resource="#RelationshipXref_b15987045853e969752fdb7892b0447f" />
+ <bp:xref rdf:resource="#RelationshipXref_9d18a3690ed8d98edfd37db0151807ba" />
+ <bp:xref rdf:resource="#RelationshipXref_4bb8418bbd15e7be8b511499ef26d092" />
+ <bp:xref rdf:resource="#RelationshipXref_8c0eac5b3938602dc9925d1a5fbd7dbd" />
+ <bp:xref rdf:resource="#RelationshipXref_0c63e628eecbc8b8e7e1715a8ce062bb" />
+ <bp:xref rdf:resource="#RelationshipXref_534038814cdfe40ced9db2ec39c7cf8e" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IRAK4_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor-associated kinase 4</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Serine/threonine-protein kinase that plays a critical role in initiating innate immune response against foreign pathogens. Involved in Toll-like receptor (TLR) and IL-1R signaling pathways. Is rapidly recruited by MYD88 to the receptor- signaling complex upon TLR activation to form the Myddosome together with IRAK2. Phosphorylates initially IRAK1, thus stimulating the kinase activity and intensive autophosphorylation of IRAK1. Phosphorylates E3 ubiquitin ligases Pellino proteins (PELI1, PELI2 and PELI3) to promote pellino-mediated polyubiquitination of IRAK1. Then, the ubiquitin-binding domain of IKBKG/NEMO binds to polyubiquitinated IRAK1 bringing together the IRAK1-MAP3K7/TAK1-TRAF6 complex and the NEMO-IKKA-IKKB complex. In turn, MAP3K7/TAK1 activates IKKs (CHUK/IKKA and IKBKB/IKKB) leading to NF-kappa-B nuclear translocation and activation. Alternatively, phosphorylates TIRAP to promote its ubiquitination and subsequent degradation. Phosphorylates NCF1 and regulates NADPH oxidase activation after LPS stimulation suggesting a similar mechanism during microbial infections.CATALYTIC ACTIVITY: ATP + a protein = ADP + a phosphoprotein.COFACTOR: Magnesium.BIOPHYSICOCHEMICAL PROPERTIES: Kinetic parameters: KM=650 uM for ATP (at pH 7.5); KM=1100 uM for substrate (at pH 7.5);SUBUNIT: Associates with MYD88 and IRAK2 to form a ternary complex called the Myddosome. Once phosphorylated, IRAK4 dissociates from the receptor complex and then associates with the TNF receptor- associated factor 6 (TRAF6), IRAK1, and PELI1; this intermediate complex is required for subsequent NF-kappa-B activation. Direct binding of SMAD6 to PELI1 prevents complex formation and hence negatively regulates IL1R-TLR signaling and eventually NF-kappa-B- mediated gene expression. Interacts with IL1RL1.SUBCELLULAR LOCATION: Cytoplasm.ALTERNATIVE PRODUCTS: Event=Alternative splicing; Named isoforms=2; Name=1; IsoId=Q9NWZ3-1; Sequence=Displayed; Name=2; IsoId=Q9NWZ3-2; Sequence=VSP_041556;PTM: Phosphorylated (By similarity).DISEASE: Recurrent isolated invasive pneumococcal disease 1 (IPD1) [MIM:610799]: Recurrent invasive pneumococcal disease (IPD) is defined as two episodes of IPD occurring at least 1 month apart, whether caused by the same or different serotypes or strains. Recurrent IPD occurs in at least 2% of patients in most series, making IPD the most important known risk factor for subsequent IPD. Note=The disease is caused by mutations affecting the gene represented in this entry.DISEASE: IRAK4 deficiency (IRAK4D) [MIM:607676]: Causes extracellular pyogenic bacterial and fungal infections in otherwise healthy children. Note=The disease is caused by mutations affecting the gene represented in this entry.SIMILARITY: Belongs to the protein kinase superfamily. TKL Ser/Thr protein kinase family. Pelle subfamily.SIMILARITY: Contains 1 death domain.SIMILARITY: Contains 1 protein kinase domain.WEB RESOURCE: Name=IRAK4base; Note=IRAK4 mutation db; URL=&quot;http://bioinf.uta.fi/IRAK4base/&quot;;WEB RESOURCE: Name=SeattleSNPs; URL=&quot;http://pga.gs.washington.edu/data/irak4/&quot;; COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:ID="UnificationXref_8bbfce1f100120caf20882961937ed57">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q53X59</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_10956131225f2c95150db448d9dcc295">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000314807</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_3010637f53ad72aea61349877a2c3b5c">
+ <bp:featureLocation rdf:resource="#SequenceSite_e3cf160259c46949ab6c72a472f6b8c8" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_dca4510b2b41bf5c2a3cb8d4de0e6789" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 87 87 Phosphoserine (By similarity).</bp:comment>
+</bp:ModificationFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_7fe65ccd1faa811def85a0a3fac3a054">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B4DKH8</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_5aca0b5b75034c55a44db00af50f4063">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">342</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:UnificationXref rdf:ID="UnificationXref_cfadac1f655a8483864daa558d3cf076">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9NPH3</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_33ef5cce1eecea27d4f12ba7183d6f5d">
+ <bp:featureLocation rdf:resource="#SequenceSite_3cbad26f05381bc4665aac24ff4bc73f" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_d3e799e941ff7ae719acbcacf433d066" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 398 398 Phosphothreonine (By similarity).</bp:comment>
+</bp:ModificationFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_6d74383024c8b460ed6ea88d612228a0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9UJ69</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_f32bc71cee0f37aaa020c3897177e61f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_22576</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_22576.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:SmallMoleculeReference rdf:about="http://identifiers.org/chebi/CHEBI:15422">
+ <bp:structure rdf:resource="#ChemicalStructure_9bb021f9d2e4a5b07625d3f48d5f029f" />
+ <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H16N5O13P3</bp:chemicalFormula>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine triphosphate</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H4atp</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">adenosine 5&apos;-(tetrahydrogen triphosphate)</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_5b15984036d43685cc09375a26f5efd9" />
+ <bp:xref rdf:resource="#UnificationXref_4341968306cd5b2bbce63e8c7d839100" />
+ <bp:xref rdf:resource="#UnificationXref_2053076264aff4c6e9a065ac718800de" />
+ <bp:xref rdf:resource="#UnificationXref_7b60f3b4ba5458857ac637ea9d7ef93d" />
+ <bp:xref rdf:resource="#UnificationXref_d5f177d71878e3bac2fc3ac87fa18aec" />
+ <bp:xref rdf:resource="#UnificationXref_9bb021f9d2e4a5b07625d3f48d5f029f" />
+ <bp:xref rdf:resource="#UnificationXref_97b9263a6dcb7c62f85748ada5ce8599" />
+ <bp:xref rdf:resource="#UnificationXref_c5e83dc1df446e40cbaab4bdf0ad6e12" />
+ <bp:xref rdf:resource="#UnificationXref_1d781c5533f434cdbfbff597bef346d7" />
+ <bp:xref rdf:resource="#UnificationXref_f0901efbf16c5808cdb8ba8e066d0342" />
+ <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">507.181</bp:molecularWeight>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP</bp:standardName>
+</bp:SmallMoleculeReference>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_bcb98b60d8a00dc9f1116642e0c59ae6">
+ <bp:featureLocation rdf:resource="#SequenceInterval_7f75fcf7a9d7ac5ef24cb635eaa717db" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#FragmentFeature9213</bp:comment>
+</bp:FragmentFeature>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_8c0eac5b3938602dc9925d1a5fbd7dbd">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001145256</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:Complex rdf:ID="Complex_8cb14f7d84f7974ab445f107455c04f5">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_87ab1f7b355bb1a712c1add4a915c8ca" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_18e2e9273c6610b39d770400a33fb8b8" />
+ <bp:component rdf:resource="#Complex_ce38b6d434ba4db67dcc3fe50711572f" />
+ <bp:component rdf:resource="#Protein_ef72c95a781ac0f8c60c44e0e929890e" />
+ <bp:xref rdf:resource="#UnificationXref_ad74a05b31bba94fa50e740a1fa304c7" />
+ <bp:xref rdf:resource="#UnificationXref_b504f0a909dd75fcb41d927a0b0b4e91" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005886" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R1:IL1:IL1RAP</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Complex4552</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 445758</bp:comment>
+</bp:Complex>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_e5e15b189f09cb4bc5e6a0fdb169a712">
+ <bp:featureLocation rdf:resource="#SequenceInterval_f325f56b7b8eb5f2e8011d38a4a25258" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#FragmentFeature2115</bp:comment>
+</bp:FragmentFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_27b0d018433cb15fb56004089ee57af3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q86WJ7</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/Q99836">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MYD88</bp:name>
+ <bp:xref rdf:resource="#RelationshipXref_a35b03566b0ea2b2e672eee7f0ecbef2" />
+ <bp:xref rdf:resource="#RelationshipXref_0d66be510dd2647304e1339a13647f05" />
+ <bp:xref rdf:resource="#RelationshipXref_d5a00e0457b29be61486d3aa0c397bf4" />
+ <bp:xref rdf:resource="#RelationshipXref_15525ef4237c0fec74b1bfddd92e8a7f" />
+ <bp:xref rdf:resource="#RelationshipXref_59e05d305f0c19cf1e72e88337d6ebed" />
+ <bp:xref rdf:resource="#UnificationXref_42e7d392a51f3765e80fc4f73df1bb6e" />
+ <bp:xref rdf:resource="#RelationshipXref_9e716b22ef214ee99b4ff1983cd3c7a3" />
+ <bp:xref rdf:resource="#RelationshipXref_45281b05f108566bb1a192d1966bd179" />
+ <bp:xref rdf:resource="#RelationshipXref_d1fdafe4081aaf2915657705a467f831" />
+ <bp:xref rdf:resource="#RelationshipXref_daecbb6192ef675776c6d1a23f74e36f" />
+ <bp:xref rdf:resource="#RelationshipXref_65bf0990cb3559707d79c0b8f7f17f3a" />
+ <bp:xref rdf:resource="#RelationshipXref_99fd03114eecd2f4267e2a50bc0f8ae6" />
+ <bp:xref rdf:resource="#UnificationXref_731aff4643bda7691e15867f20b7c92e" />
+ <bp:xref rdf:resource="#UnificationXref_7fe65ccd1faa811def85a0a3fac3a054" />
+ <bp:xref rdf:resource="#UnificationXref_27ec9ef754321d1e57cbf7f8b8efe69b" />
+ <bp:xref rdf:resource="#UnificationXref_4959d18eee3b3f683be2b9c849cf6615" />
+ <bp:xref rdf:resource="#RelationshipXref_1243cd789fd126c21ae55bcf146a75ca" />
+ <bp:xref rdf:resource="#RelationshipXref_ae565d2ae19ed24468f9e3078bbd5ef3" />
+ <bp:xref rdf:resource="#RelationshipXref_23f7659b6d12fcd832009e5869f1c8d2" />
+ <bp:xref rdf:resource="#RelationshipXref_0ea90e2182558c122f8d1dc893eeeeb1" />
+ <bp:xref rdf:resource="#RelationshipXref_5b16e2e7c3613f3d64d6ce64464d6896" />
+ <bp:xref rdf:resource="#RelationshipXref_9c147bcf3912a70a072a13fca8841fa1" />
+ <bp:xref rdf:resource="#RelationshipXref_9d1d5d49a1785c26d6477034739ad889" />
+ <bp:xref rdf:resource="#RelationshipXref_f556b89b6ab7a08e01b77ab0947518ef" />
+ <bp:xref rdf:resource="#UnificationXref_1782449c13f0a82333b663f5a2e5bf16" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MYD88_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Myeloid differentiation primary response protein MyD88</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Adapter protein involved in the Toll-like receptor and IL-1 receptor signaling pathway in the innate immune response. Acts via IRAK1, IRAK2, IRF7 and TRAF6, leading to NF-kappa-B activation, cytokine secretion and the inflammatory response. Increases IL-8 transcription. Involved in IL-18-mediated signaling pathway. Activates IRF1 resulting in its rapid migration into the nucleus to mediate an efficient induction of IFN-beta, NOS2/INOS, and IL12A genes. MyD88-mediated signaling in intestinal epithelial cells is crucial for maintenance of gut homeostasis and controls the expression of the antimicrobial lectin REG3G in the small intestine.SUBUNIT: Homodimer. Also forms heterodimers with TIRAP. Binds to TLR2, TLR4, IRAK1, IRAK2 and IRAK4 via their respective TIR domains. Interacts with IL18R1 (By similarity). Interacts with BMX, IL1RL1 and IRF7. Interacts with LRRFIP1 and LRRFIP2; this interaction positively regulates Toll-like receptor (TLR) signaling in response to agonist. Interacts with FLII. LRRFIP1 and LRRFIP2 compete with FLII for MYD88-binding. Interacts with IRF1 (By similarity). May interact with PIK3AP1 (By similarity). Upon IL1B treatment, forms a complex with PELI1, IRAK1, IRAK4 and TRAF6; this complex recruits MAP3K7/TAK1, TAB1 and TAB2 to mediate NF-kappa-B activation. Direct binding of SMAD6 to PELI1 prevents the complex formation and hence negatively regulates IL1R-TLR signaling and eventually NF-kappa-B-mediated gene expression.SUBCELLULAR LOCATION: Cytoplasm.ALTERNATIVE PRODUCTS: Event=Alternative splicing; Named isoforms=4; Name=1; IsoId=Q99836-1; Sequence=Displayed; Name=2; IsoId=Q99836-2; Sequence=VSP_038887; Note=No experimental confirmation available; Name=3; IsoId=Q99836-3; Sequence=VSP_043497, VSP_043500; Note=No experimental confirmation available; Name=4; IsoId=Q99836-4; Sequence=VSP_043497, VSP_043498, VSP_043499, VSP_043500; Note=No experimental confirmation available;TISSUE SPECIFICITY: Ubiquitous.DOMAIN: The intermediate domain (ID) is required for the phosphorylation and activation of IRAK (By similarity).DISEASE: MYD88 deficiency (MYD88D) [MIM:612260]: Patients suffer from autosomal recessive, life-threatening, often recurrent pyogenic bacterial infections, including invasive pneumococcal disease, and die between 1 and 11 months of age. Surviving patients are otherwise healthy, with normal resistance to other microbes, and their clinical status improved with age. Note=The disease is caused by mutations affecting the gene represented in this entry.SIMILARITY: Contains 1 death domain.SIMILARITY: Contains 1 TIR domain. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+</bp:ProteinReference>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_d25daaa1aa7733e36d396f2dc9d37605">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_000575</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_8678bc4113f7fe30d96aaf8ab2f56e90">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">445746</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=445746</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_e7ddac5c867bf0591a3290629cab150d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSG00000115594</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_7edff365e0e7106515680bf0c45d75a7">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PTHR11420:SF0</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PANTHER Family</bp:db>
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:2163" />
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_f556b89b6ab7a08e01b77ab0947518ef">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001172568</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_66bf335742e59553e30bf4ad7b16b48e">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">269</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19785</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0eb52c9d8f0fba1291fb11f6a962aa66">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000440781</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/P14778">
+ <bp:entityFeature rdf:resource="#ModificationFeature_d6893555a727fb3364964cbf48f7cf83" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mIL-1RI</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CD121a</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1R-1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CD121 antigen-like family member A</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">sIL-1R1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1R-alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1RA</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1RT1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p80</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor type 1, membrane form</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">sIL-1RI</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor type 1, soluble form</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor type I</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1RT1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mIL-1R1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1RT-1</bp:name>
+ <bp:xref rdf:resource="#RelationshipXref_918ede5b34c14b778caeb604adf64afc" />
+ <bp:xref rdf:resource="#RelationshipXref_79f3bf8c88554a78de04d06e95dbf799" />
+ <bp:xref rdf:resource="#RelationshipXref_895bf7938183cbebb4d0009f19f132be" />
+ <bp:xref rdf:resource="#RelationshipXref_e7ca4ba199107dcbb9b83486753bc84b" />
+ <bp:xref rdf:resource="#RelationshipXref_7f854251a2b08cf6a11885e1c5f9925e" />
+ <bp:xref rdf:resource="#RelationshipXref_66336791c1bf4257cd9b93407bbe4abe" />
+ <bp:xref rdf:resource="#UnificationXref_224c66da6008dadf8b552fb4af4b4638" />
+ <bp:xref rdf:resource="#RelationshipXref_829cdd26b0a25b6b8b6435f81b7c39b5" />
+ <bp:xref rdf:resource="#RelationshipXref_4b18eb70068900d40f9136c79c90161d" />
+ <bp:xref rdf:resource="#RelationshipXref_6573e6d8d2cab6cd0625a89d504c65db" />
+ <bp:xref rdf:resource="#RelationshipXref_5ed28d85cad3c3964474e2c41d5e4f29" />
+ <bp:xref rdf:resource="#UnificationXref_f4ef55506da41369233c0fb72dc07561" />
+ <bp:xref rdf:resource="#RelationshipXref_f8bcebc50bab0397a53b33e77601bf9f" />
+ <bp:xref rdf:resource="#RelationshipXref_7d4fff86d37bbbc47388c0f21fc27c85" />
+ <bp:xref rdf:resource="#RelationshipXref_e7ddac5c867bf0591a3290629cab150d" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R1_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor type 1</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Receptor for IL1A, IL1B and IL1RN. After binding to interleukin-1 associates with the corecptor IL1RAP to form the high affinity interleukin-1 receptor complex which mediates interleukin-1-dependent activation of NF-kappa-B, MAPK and other pathways. Signaling involves the recruitment of adapter molecules such as TOLLIP, MYD88, and IRAK1 or IRAK2 via the respective TIR domains of the receptor/coreceptor subunits. Binds ligands with comparable affinity and binding of antagonist IL1RN prevents association with IL1RAP to form a signaling complex.SUBUNIT: The interleukin-1 receptor complex is a heterodimer of IL1R1 and IL1RAP. Interacts with PIK3R1.SUBCELLULAR LOCATION: Membrane; Single-pass type I membrane protein. Cell membrane (Probable). Secreted.PTM: A soluble form (sIL1R1) is probably produced by proteolytic cleavage at the cell surface (shedding).PTM: Rapidely phosphorylated on Tyr-496 in response to IL-1, which creates a SH2 binding site for the PI 3-kinase regulatory subunit PIK3R1.SIMILARITY: Belongs to the interleukin-1 receptor family.SIMILARITY: Contains 3 Ig-like C2-type (immunoglobulin-like) domains.SIMILARITY: Contains 1 TIR domain.WEB RESOURCE: Name=SeattleSNPs; URL=&quot;http://pga.gs.washington.edu/data/il1r1/&quot;; COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+</bp:ProteinReference>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_621ba0468bdfa2098b1182347c36ae0a">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001138728</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_250fcd80e9e538617a3dfffcc912db18">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">D3DNW0</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_0fe70c8ab9193a22bdbaf3cf5e5340da">
+ <bp:featureLocation rdf:resource="#SequenceInterval_e8bb6a70ae974304c04edb3616bab0d4" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#FragmentFeature9207</bp:comment>
+</bp:FragmentFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_a6a365e5118f11de4549fe410677eef9">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_14253</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_14253.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_a6bb75440f3ef124191aee8bb71c9175">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_608273</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_fabfd9e39b48d9536b6b337e9a97edeb">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">496</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_c32141b023fd0615da33b2c2d6b5cd73">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000412504</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_8160931042e2a2bf0f57b4b7fe8abaf0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">54472</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCBI Gene</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_61220c4affeb8c86d6fa8669ccdead21">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_2741</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_2741.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_f9567acb83dea3a3ff497be5dcb368f6">
+ <bp:featureLocation rdf:resource="#SequenceSite_25a3a688905dd557b82c6bd7e888bd10" />
+ <bp:modificationType rdf:resource="http://identifiers.org/psimod/MOD:00046" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#ModificationFeature1624</bp:comment>
+</bp:ModificationFeature>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_722f40d00f518f89a58055957a12887c">
+ <bp:featureLocation rdf:resource="#SequenceInterval_1ae8b672214c4d0cfdf3349ea5c7c9a1" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#FragmentFeature9211</bp:comment>
+</bp:FragmentFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_42e7d392a51f3765e80fc4f73df1bb6e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q99836</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_4b18eb70068900d40f9136c79c90161d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3554</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCBI Gene</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_ce671e9a4d9cc68d39f2b361fed0183e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_016123</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_7d4fff86d37bbbc47388c0f21fc27c85">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000233946</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b079986ec2298af4c618b6f24a15bc99">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P01583</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_cf519e5ede72a22dab3c0eaf25961274">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000072516</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_bb71e4babdb1585e8bd0246eb3bb9b92">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_23002</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_23002.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_bb27ddf9638f0556d1cad107e826c782">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001138730</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_926537849bc88e4e82862081128dd7f6">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000551736</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_3b5483c16fa94652da9da6f0d9656f87">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001167930</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_731aff4643bda7691e15867f20b7c92e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P78397</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_79dab77bed2b242d75b7f8ab7e911c0d">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">460</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite18362</bp:comment>
+</bp:SequenceSite>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_dae29bc8fc452fff10a485e2f8d739ab">
+ <bp:physicalEntity rdf:resource="#Protein_79fc8ea995d2e5bc60ccf89a7b77eff5" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11857</bp:comment>
+</bp:Stoichiometry>
+
+<bp:SmallMolecule rdf:ID="SmallMolecule_1c06b4a932bf168e21f7d14cb36906e6">
+ <bp:entityReference rdf:resource="http://identifiers.org/chebi/CHEBI:15422" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-triphosphate</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_aba6511ec5ce1367e4dd8438d727a503" />
+ <bp:xref rdf:resource="#UnificationXref_149439a697d2850f591b2fcf81020c0b" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005829" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/SmallMolecule_1c06b4a932bf168e21f7d14cb36906e6http://purl.org/pc2/4/BiochemicalReaction_6de2d8ef1ce7a15e1c4096f22dd986a8@Layout@http://chibecreated#1400247424571-2021634426@10@106</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113592</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SmallMolecule5</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP</bp:displayName>
+</bp:SmallMolecule>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0aa5f0b9a684314694ed365603ae2b4c">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IRAK4</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC Symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_4bc6837589b4b02cc49093a3cad405ae">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">446888</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=446888</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_6200b2324249ef7fbd7f84a827034d6d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000446490</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_8929a609e3ed4671e0e315e8103d2eeb">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000387371</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_e7ca4ba199107dcbb9b83486753bc84b">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:5993</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_7f854251a2b08cf6a11885e1c5f9925e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000233946</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_83841e4d20f94d23d2d794b91e2bce42">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_019009</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_ed03f3fc9247a8d638226fec1a7ca219">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_22405</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_22405.2</bp:comment>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_bdaf2f4b240e48dc4dfc00d7bd1cc5a5">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">446634</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=446634</bp:comment>
+</bp:UnificationXref>
+
+<bp:PublicationXref rdf:about="http://identifiers.org/pubmed/17141195">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">17141195</bp:id>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Dahlstrand, E</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Xu, Y</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ocain, TD</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Dorsch, M</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Li, P</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Keshishian, H</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Lu, C</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cheng, H</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Wang, A</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Parsons, TF</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Jaffee, B</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Addona, T</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Li, Z</bp:author>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pubmed</bp:db>
+ <bp:title rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Regulation of IRAK-4 kinase activity via autophosphorylation within its activation loop</bp:title>
+ <bp:source rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Biochem Biophys Res Commun 352:609-16</bp:source>
+ <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">2007</bp:year>
+</bp:PublicationXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_d6893555a727fb3364964cbf48f7cf83">
+ <bp:featureLocation rdf:resource="#SequenceSite_fabfd9e39b48d9536b6b337e9a97edeb" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_d06f75e35fc5cf3492d5319c12a98f03" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 496 496 Phosphotyrosine.</bp:comment>
+</bp:ModificationFeature>
+
+<bp:SequenceModificationVocabulary rdf:about="http://identifiers.org/psimod/MOD:00087">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">N6-myristoyl-L-lysine</bp:term>
+ <bp:xref rdf:resource="#UnificationXref_0d2a429f0c75f6b84adc7ed34a3fdce7" />
+</bp:SequenceModificationVocabulary>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_6dd5971ae7bb901cf0270d99422c9475">
+ <bp:physicalEntity rdf:resource="#Protein_18b29086d4a7cb8641f08503508f9029" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11863</bp:comment>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_5b15984036d43685cc09375a26f5efd9">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:40938</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:Protein rdf:ID="Protein_6f63f60939c713c9c1964ba394ed8005">
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q9NWZ3" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:xref rdf:resource="#UnificationXref_3fea6b003839b1b246f8d7ca8aa5c074" />
+ <bp:xref rdf:resource="#UnificationXref_aa7172099a72b77786ba8cbfd4344d63" />
+ <bp:feature rdf:resource="#FragmentFeature_9b810940a9cadae28358555d5b53538b" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005829" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 166081</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein9885</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_6f63f60939c713c9c1964ba394ed8005http://purl.org/pc2/4/Complex_dcf53d1093d9c7efcebacb9fa6cb51e5@Layout@http://chibecreated#1400247424571-2021634426@287@452</bp:comment>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IRAK4</bp:displayName>
+</bp:Protein>
+
+<bp:SequenceSite rdf:ID="SequenceSite_94da3adf50a15e685229e851e7b9a522">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">345</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_9b810940a9cadae28358555d5b53538b">
+ <bp:featureLocation rdf:resource="#SequenceInterval_5e772ec2fe8e59dbcb379cdebbfffe49" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#FragmentFeature8567</bp:comment>
+</bp:FragmentFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_d02530d6e3fb7d9142507532edd0d46d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005886</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_cc3a246fbbd362718975b1fefc347178">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001161400</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_36d1bd6116d9a438953e6d3aef679806">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">113</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19788</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_65d15980bbe9bf804b39897077184027">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1ITA</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PROTEIN DATA BANK</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_aba6511ec5ce1367e4dd8438d727a503">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_2812</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_2812.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/P01584">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1 beta</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Catabolin</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1F2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1B</bp:name>
+ <bp:xref rdf:resource="#RelationshipXref_269100e352745ce4ba6b12a008902560" />
+ <bp:xref rdf:resource="#UnificationXref_8ea14dc852cd89e1fcd556775ceebda1" />
+ <bp:xref rdf:resource="#UnificationXref_cd00e8010fbdb27b2358b1b6edf55638" />
+ <bp:xref rdf:resource="#RelationshipXref_864fb96807049c6f03b1ab041217bfbb" />
+ <bp:xref rdf:resource="#RelationshipXref_ae14d496305b1a0936234e2356a33fc3" />
+ <bp:xref rdf:resource="#UnificationXref_40b51697f25c06346eb04404ae066562" />
+ <bp:xref rdf:resource="#RelationshipXref_1e6a08f5e83f9951d02a05bcf52fa81f" />
+ <bp:xref rdf:resource="#UnificationXref_12fee84fa73de8cd8208830ea8884137" />
+ <bp:xref rdf:resource="#RelationshipXref_8bf1dadc95461e18e6a70b80e01b810f" />
+ <bp:xref rdf:resource="#RelationshipXref_f903b8bb02b793a53a14e17da47fe8bb" />
+ <bp:xref rdf:resource="#RelationshipXref_d270f623d78e09583572676519323095" />
+ <bp:xref rdf:resource="#RelationshipXref_8dbba7fe6f1d29f44f842bfda7b83a9b" />
+ <bp:xref rdf:resource="#RelationshipXref_ba7282782119300c8e19e87f6464abf0" />
+ <bp:xref rdf:resource="#UnificationXref_7f908919cc8dc7aded609c7903963b5a" />
+ <bp:xref rdf:resource="#RelationshipXref_803f77f7be08a5c4a67c0f0a65847dd4" />
+ <bp:xref rdf:resource="#UnificationXref_3778fbf0feb7c58d4a1b4adee85fcd4b" />
+ <bp:xref rdf:resource="#RelationshipXref_90332b9fc39dc081037758a2757763c3" />
+ <bp:xref rdf:resource="#UnificationXref_8bbfce1f100120caf20882961937ed57" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1B_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 beta</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Produced by activated macrophages, IL-1 stimulates thymocyte proliferation by inducing IL-2 release, B-cell maturation and proliferation, and fibroblast growth factor activity. IL-1 proteins are involved in the inflammatory response, being identified as endogenous pyrogens, and are reported to stimulate the release of prostaglandin and collagenase from synovial cells.SUBUNIT: Monomer.SUBCELLULAR LOCATION: Secreted. Note=The lack of a specific hydrophobic segment in the precursor sequence suggests that IL-1 is released by damaged cells or is secreted by a mechanism differing from that used for other secretory proteins.DOMAIN: The similarity among the IL-1 precursors suggests that the amino ends of these proteins serve some as yet undefined function.SIMILARITY: Belongs to the IL-1 family.WEB RESOURCE: Name=Atlas of Genetics and Cytogenetics in Oncology and Haematology; URL=&quot;http://atlasgeneticsoncology.org//Genes/IL1BID40950ch2q13.html&quot;;WEB RESOURCE: Name=Wikipedia; Note=Interleukin-1 entry; URL=&quot;http://en.wikipedia.org/wiki/Interleukin_1&quot;;WEB RESOURCE: Name=SeattleSNPs; URL=&quot;http://pga.gs.washington.edu/data/il1b/&quot;;WEB RESOURCE: Name=SHMPD; Note=The Singapore human mutation and polymorphism database; URL=&quot;http://shmpd.bii.a-star.edu.sg/gene.php?genestart=A&amp;genename=IL1B&quot;; COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:ID="UnificationXref_d4edd7ea0f0bf1d8155375bdcf9561ae">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">193946</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=193946</bp:comment>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/P01583">
+ <bp:entityFeature rdf:resource="#ModificationFeature_3010637f53ad72aea61349877a2c3b5c" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Hematopoietin-1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1 alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1F1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1A</bp:name>
+ <bp:xref rdf:resource="#RelationshipXref_65d15980bbe9bf804b39897077184027" />
+ <bp:xref rdf:resource="#RelationshipXref_045da6550ab6f87156834675f4c94d91" />
+ <bp:xref rdf:resource="#RelationshipXref_f701d14f70067be8319000ef6026946a" />
+ <bp:xref rdf:resource="#UnificationXref_6cceae8f4984053837cacaa1a45eeaed" />
+ <bp:xref rdf:resource="#RelationshipXref_d796e0f564bcd5783a2d068e2770b776" />
+ <bp:xref rdf:resource="#RelationshipXref_6947a5475ad9eb061904c1f7aaf986cd" />
+ <bp:xref rdf:resource="#RelationshipXref_81c9ec3c12fd33a9f75973d0cf6851f1" />
+ <bp:xref rdf:resource="#UnificationXref_f64958237d8bd40daaa07791a64d50cf" />
+ <bp:xref rdf:resource="#RelationshipXref_8b8de449d3f341b15bceff29b4b3c396" />
+ <bp:xref rdf:resource="#RelationshipXref_0e77c7d1030e9c990537926d13b1f727" />
+ <bp:xref rdf:resource="#RelationshipXref_d25daaa1aa7733e36d396f2dc9d37605" />
+ <bp:xref rdf:resource="#RelationshipXref_c3a111b7e415ba4937deccb46bded724" />
+ <bp:xref rdf:resource="#UnificationXref_b079986ec2298af4c618b6f24a15bc99" />
+ <bp:xref rdf:resource="#RelationshipXref_7edff365e0e7106515680bf0c45d75a7" />
+ <bp:xref rdf:resource="#RelationshipXref_f71ce08a5c351995a78fe0c8305e260c" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1A_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 alpha</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Produced by activated macrophages, IL-1 stimulates thymocyte proliferation by inducing IL-2 release, B-cell maturation and proliferation, and fibroblast growth factor activity. IL-1 proteins are involved in the inflammatory response, being identified as endogenous pyrogens, and are reported to stimulate the release of prostaglandin and collagenase from synovial cells.SUBUNIT: Monomer.SUBCELLULAR LOCATION: Secreted. Note=The lack of a specific hydrophobic segment in the precursor sequence suggests that IL-1 is released by damaged cells or is secreted by a mechanism differing from that used for other secretory proteins.DOMAIN: The similarity among the IL-1 precursors suggests that the amino ends of these proteins serve some as yet undefined function.SIMILARITY: Belongs to the IL-1 family.WEB RESOURCE: Name=Wikipedia; Note=Interleukin-1 entry; URL=&quot;http://en.wikipedia.org/wiki/Interleukin_1&quot;;WEB RESOURCE: Name=SeattleSNPs; URL=&quot;http://pga.gs.washington.edu/data/il1a/&quot;;WEB RESOURCE: Name=SHMPD; Note=The Singapore human mutation and polymorphism database; URL=&quot;http://shmpd.bii.a-star.edu.sg/gene.php?genestart=A&amp;genename=IL1A&quot;; COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:ID="UnificationXref_6cceae8f4984053837cacaa1a45eeaed">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q7RU02</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_e72ff3ce24f43348f1f01f558ab14393">
+ <bp:physicalEntity rdf:resource="#Complex_0996725291a39b5e4d7a38c69dface96" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11855</bp:comment>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_16c0a8e159022d23f5e9cee5f0e3b07e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">51135</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCBI Gene</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_9889a3413b5f57374be007b21665329f">
+ <bp:physicalEntity rdf:resource="#Protein_e0cd6faef88a59c660fbdde120623a90" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11846</bp:comment>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_d7fa0a71d89ce011508b30b8a330ff11">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">9606</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:db>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_1723af6c0e9aaef18ee21da2ccce1319">
+ <bp:featureLocation rdf:resource="#SequenceSite_5bd814be6aaac2bfdfafb1878b461621" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_50c1a8577a122d70cd1bd7579a74ceba" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 346 346 Phosphoserine.</bp:comment>
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_45514c75d6b779beb18fe21ec97ca192">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_061882</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_12fee84fa73de8cd8208830ea8884137">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P01584</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_f64958237d8bd40daaa07791a64d50cf">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q53QF9</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_7c7661bff633d6c23134d684691c13b0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSG00000078902</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_a34588c2069114b37cd4168c40c60070">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">445744</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=445744</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0e77c7d1030e9c990537926d13b1f727">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1A</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC Symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_3c6de57c5a1bd8be0e831b659c88e6c2">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">21</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19796</bp:comment>
+</bp:SequenceSite>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_a4cafd7b9b42f9bb9be9429ae4c0d5b9">
+ <bp:physicalEntity rdf:resource="#Protein_5ee05e2d8ba468ba3a196733fab02d68" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">2.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry3252</bp:comment>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_3778fbf0feb7c58d4a1b4adee85fcd4b">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q9UCT6</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_e8bb6a70ae974304c04edb3616bab0d4">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceInterval9247</bp:comment>
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_a457bb28e670ac87fd44f592150d2fb0" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_36d1bd6116d9a438953e6d3aef679806" />
+</bp:SequenceInterval>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_52efe22ec990d98cc960f11f202798fe">
+ <bp:featureLocation rdf:resource="#SequenceSite_9fb3b5beb7d6ee032ded5bc9fc33cd5b" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_ce06d0ad7c8dae9135a273947bda253d" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 34 34 N6-acetyllysine.</bp:comment>
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_90332b9fc39dc081037758a2757763c3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000263341</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:Complex rdf:ID="Complex_ce38b6d434ba4db67dcc3fe50711572f">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_f4a8c59285a7070790b27aba3bffe1ee" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_9889a3413b5f57374be007b21665329f" />
+ <bp:component rdf:resource="#Protein_581780a98c72b280d1f102e7f427eb65" />
+ <bp:component rdf:resource="#Protein_e0cd6faef88a59c660fbdde120623a90" />
+ <bp:xref rdf:resource="#UnificationXref_16f3237ccf86ef0548425a73b5627646" />
+ <bp:xref rdf:resource="#UnificationXref_b7bbeff90165042c4c29598c41b2869b" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005886" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor type 1:Interleukin-1</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 445755</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Complex4549</bp:comment>
+</bp:Complex>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_79f3bf8c88554a78de04d06e95dbf799">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_000877</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_045da6550ab6f87156834675f4c94d91">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000263339</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_864fb96807049c6f03b1ab041217bfbb">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:5992</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_c84e993361b79c59c44c0e725d058e5c">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000443369</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_ae565d2ae19ed24468f9e3078bbd5ef3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">4615</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCBI Gene</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b4aeeb967b783999a9e83efd39308146">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">XTWYTFMLZFPYCI-KQYNXXCUSA-N</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChIKey</bp:db>
+</bp:UnificationXref>
+
+<bp:Complex rdf:ID="Complex_0996725291a39b5e4d7a38c69dface96">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_0db95a5987cca0269db55130f6d7e003" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_f6a52fc91f8d581bb020ab082c04bb97" />
+ <bp:component rdf:resource="#Complex_8cb14f7d84f7974ab445f107455c04f5" />
+ <bp:component rdf:resource="#Complex_ecce43e9db88dde854503c95a865e045" />
+ <bp:xref rdf:resource="#UnificationXref_b4a24e7f75fc82c4a217b50c8fc1b73d" />
+ <bp:xref rdf:resource="#UnificationXref_2ff8d0b31e248e0d31badddb8a2e13ca" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005886" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1:IL1R1:IL1RAP:MYD88 homodimer</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Complex4553</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 450120</bp:comment>
+</bp:Complex>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_68542328d569c45a8fd5fca62d75949a">
+ <bp:featureLocation rdf:resource="#SequenceSite_0dba92cea863b13ee75a2e84af5144cc" />
+ <bp:modificationType rdf:resource="http://identifiers.org/psimod/MOD:00047" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#ModificationFeature1622</bp:comment>
+</bp:ModificationFeature>
+
+<bp:Complex rdf:ID="Complex_dcf53d1093d9c7efcebacb9fa6cb51e5">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_dae29bc8fc452fff10a485e2f8d739ab" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_bb37c57cd433e2a45be90ff5cfd13fe0" />
+ <bp:component rdf:resource="#Complex_5ab2de21ce2a1fa8836baccc979e3a87" />
+ <bp:component rdf:resource="#Protein_79fc8ea995d2e5bc60ccf89a7b77eff5" />
+ <bp:xref rdf:resource="#UnificationXref_4bc6837589b4b02cc49093a3cad405ae" />
+ <bp:xref rdf:resource="#UnificationXref_e6a719405fea31efa71c539d196d593f" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005886" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1 receptor complex:TOLLIP</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Complex4555</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 446888</bp:comment>
+</bp:Complex>
+
+<bp:UnificationXref rdf:ID="UnificationXref_71fced4caa9668d74135eae85b2167da">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD:00046</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Protein Modification Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_7d91954806051078916c9dfcc7b52202">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_22809</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_22809.2</bp:comment>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/Q9NPH3">
+ <bp:entityFeature rdf:resource="#ModificationFeature_294d9ef35c72aeaa0b94327847d67afa" />
+ <bp:entityFeature rdf:resource="#ModificationFeature_33ef5cce1eecea27d4f12ba7183d6f5d" />
+ <bp:entityFeature rdf:resource="#ModificationFeature_04f5f118168d0a5bfeaa0ba3a25688ce" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R3</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1R-3</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1RAP</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C3orf13</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor 3</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1 receptor accessory protein</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1RAcP</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL-1R3</bp:name>
+ <bp:xref rdf:resource="#RelationshipXref_215223dea3d6510f99510530c4e396ed" />
+ <bp:xref rdf:resource="#RelationshipXref_58295a1d4b4b9e693234c429ce4fef1d" />
+ <bp:xref rdf:resource="#UnificationXref_250fcd80e9e538617a3dfffcc912db18" />
+ <bp:xref rdf:resource="#RelationshipXref_1f92ddd26fed5c106912641ea32c89e9" />
+ <bp:xref rdf:resource="#RelationshipXref_ff86c490c0773007c0486a493b6579c4" />
+ <bp:xref rdf:resource="#RelationshipXref_a6bb75440f3ef124191aee8bb71c9175" />
+ <bp:xref rdf:resource="#RelationshipXref_c32141b023fd0615da33b2c2d6b5cd73" />
+ <bp:xref rdf:resource="#RelationshipXref_d93bc12d9fec09faf83273ee870098f8" />
+ <bp:xref rdf:resource="#RelationshipXref_0f1345222ad308909fc58d67b766086c" />
+ <bp:xref rdf:resource="#RelationshipXref_4c3c5f18a567b94b400902eb5c23dd6d" />
+ <bp:xref rdf:resource="#RelationshipXref_23f5207c6a36aa9ba1b80ac631ff58f5" />
+ <bp:xref rdf:resource="#RelationshipXref_b25cc814b61e96dbd2f082e27502f127" />
+ <bp:xref rdf:resource="#UnificationXref_0ab73663b49819745b988e431ae9d48e" />
+ <bp:xref rdf:resource="#RelationshipXref_cd2e00b545fa2d77eb8a377994bfff42" />
+ <bp:xref rdf:resource="#RelationshipXref_572e5c50c467e3a3334907de9970f3dc" />
+ <bp:xref rdf:resource="#RelationshipXref_6b08d3066dc9d17063cc429a61652c14" />
+ <bp:xref rdf:resource="#RelationshipXref_1ebe39b7009be680589374026c3e790d" />
+ <bp:xref rdf:resource="#RelationshipXref_cf519e5ede72a22dab3c0eaf25961274" />
+ <bp:xref rdf:resource="#UnificationXref_98568b0b72c72d97cff685bc949719d9" />
+ <bp:xref rdf:resource="#RelationshipXref_3b5483c16fa94652da9da6f0d9656f87" />
+ <bp:xref rdf:resource="#RelationshipXref_10956131225f2c95150db448d9dcc295" />
+ <bp:xref rdf:resource="#RelationshipXref_5ee307a11c81ba18b4b915adeeecfc57" />
+ <bp:xref rdf:resource="#UnificationXref_cfadac1f655a8483864daa558d3cf076" />
+ <bp:xref rdf:resource="#RelationshipXref_3847d703a7eb46e1bd38fe7f28b41709" />
+ <bp:xref rdf:resource="#RelationshipXref_8929a609e3ed4671e0e315e8103d2eeb" />
+ <bp:xref rdf:resource="#RelationshipXref_c84e993361b79c59c44c0e725d058e5c" />
+ <bp:xref rdf:resource="#RelationshipXref_652b151281a81a8c7cb239b260b9a8dc" />
+ <bp:xref rdf:resource="#RelationshipXref_f8fdf845d2aa9bf0a54c737f8f0c355f" />
+ <bp:xref rdf:resource="#RelationshipXref_cc199c8eb33b07e44dd6a0badfdec406" />
+ <bp:xref rdf:resource="#RelationshipXref_3758d0d30ac13feb2bc622ac209c0f00" />
+ <bp:xref rdf:resource="#RelationshipXref_7afc860791d6359aff3ed2e9e06917f3" />
+ <bp:xref rdf:resource="#RelationshipXref_1f3d0dd39691aed9d0dcae6d7ab59903" />
+ <bp:xref rdf:resource="#RelationshipXref_e5f64a0112b230b5c96d8d1b30d3ec80" />
+ <bp:xref rdf:resource="#RelationshipXref_5d4fb2248f98a4ce36e266aac624c4dd" />
+ <bp:xref rdf:resource="#UnificationXref_27b0d018433cb15fb56004089ee57af3" />
+ <bp:xref rdf:resource="#RelationshipXref_21bc714c19246c771449c806566f556a" />
+ <bp:xref rdf:resource="#RelationshipXref_bfc127b79ad2636524985f84573bab9e" />
+ <bp:xref rdf:resource="#RelationshipXref_6f1d16c724e1c24be30c7ec34f1e444d" />
+ <bp:xref rdf:resource="#RelationshipXref_f4dd25b7c58419121ce473f715f95dfa" />
+ <bp:xref rdf:resource="#RelationshipXref_9e51b075961a76394e5de29756974a5a" />
+ <bp:xref rdf:resource="#RelationshipXref_cc3a246fbbd362718975b1fefc347178" />
+ <bp:xref rdf:resource="#RelationshipXref_dac5bc4c0258a5cda9a4b5b1b6e8e085" />
+ <bp:xref rdf:resource="#RelationshipXref_9bf798c1c9dafb5edab2cf625e6e5a16" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1AP_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor accessory protein</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Coreceptor with IL1R1. Associates with IL1R1 bound to IL1B to form the high affinity interleukin-1 receptor complex which mediates interleukin-1-dependent activation of NF-kappa-B and other pathways. Signaling involves the recruitment of adapter molecules such as TOLLIP, MYD88, and IRAK1 or IRAK2 via the respective TIR domains of the receptor/coreceptor subunits. Recruits TOLLIP to the signaling complex. Does not bind to interleukin-1 alone; binding of IL1RN to IL1R1, prevents its association with IL1R1 to form a signaling complex. The cellular response is modulated through a non-signaling association with the membrane IL1R2 decoy receptor. Secreted forms (isoforms 2 and 3) associate with secreted ligand-bound IL1R2 and increase the affinity of secreted IL1R2 for IL1B; this complex formation may be the dominant mechanism for neutralization of IL1B by secreted/soluble receptors.SUBUNIT: The interleukin-1 receptor complex is a heterodimer of IL1R1 and IL1RAP. Associates with IL1R2 to form a non-signaling interleukin-1 receptor complex.SUBCELLULAR LOCATION: Isoform 1: Cell membrane; Single-pass type I membrane protein.SUBCELLULAR LOCATION: Isoform 2: Secreted.SUBCELLULAR LOCATION: Isoform 3: Secreted.ALTERNATIVE PRODUCTS: Event=Alternative splicing; Named isoforms=4; Name=1; Synonyms=Membrane-bound IL-1RAcP, mIL-1RAcP; IsoId=Q9NPH3-1; Sequence=Displayed; Name=2; Synonyms=Soluble IL-1RAcP, sIL-1RAcP; IsoId=Q9NPH3-2; Sequence=VSP_008050, VSP_008051; Name=3; Synonyms=Soluble IL-1RAcP-beta, sIL-1RAcP-beta; IsoId=Q9NPH3-3; Sequence=VSP_008052; Note=May be produced at very low levels due to a premature stop codon in the mRNA, leading to nonsense-mediated mRNA decay; Name=4; Synonyms=AcPb, mIL-1RAcP687; IsoId=Q9NPH3-5; Sequence=VSP_041256;TISSUE SPECIFICITY: Detected in liver, skin, placenta, thymus and lung.INDUCTION: Isoform 1 is down-regulated by phorbol ester treatment. Isoform 2 is induced by phorbol ester treatment.SIMILARITY: Belongs to the interleukin-1 receptor family.SIMILARITY: Contains 3 Ig-like C2-type (immunoglobulin-like) domains.SIMILARITY: Contains 1 TIR domain. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:ID="UnificationXref_8d8d91dc731578e8d12d33055069c3a5">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">29370</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=29370</bp:comment>
+</bp:UnificationXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_7c22721c974ea64dabdb53e6560970d4">
+ <bp:featureLocation rdf:resource="#SequenceSite_530342708a9481eaca34892eea9523c8" />
+ <bp:modificationType rdf:resource="http://identifiers.org/psimod/MOD:00087" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#ModificationFeature1779</bp:comment>
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_8dbba7fe6f1d29f44f842bfda7b83a9b">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_000567</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_534038814cdfe40ced9db2ec39c7cf8e">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IRAK4</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_9e51b075961a76394e5de29756974a5a">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001167931</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_dac5bc4c0258a5cda9a4b5b1b6e8e085">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001161402</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_1782449c13f0a82333b663f5a2e5bf16">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B4DQ72</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_9bf798c1c9dafb5edab2cf625e6e5a16">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000409352</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:CellularLocationVocabulary rdf:about="http://identifiers.org/go/GO:0005576">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">extracellular region</bp:term>
+ <bp:xref rdf:resource="#UnificationXref_a06c1385119094affb438547db8ad65f" />
+</bp:CellularLocationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_a35b03566b0ea2b2e672eee7f0ecbef2">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSG00000172936</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_1f92ddd26fed5c106912641ea32c89e9">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_002173</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_829cdd26b0a25b6b8b6435f81b7c39b5">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_000868</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_23f5207c6a36aa9ba1b80ac631ff58f5">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000439062</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_d29a281a2747787fb5b29220df66062d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_22645</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_22645.2</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_cd2e00b545fa2d77eb8a377994bfff42">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000390541</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_45281b05f108566bb1a192d1966bd179">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001166037</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_18e2e9273c6610b39d770400a33fb8b8">
+ <bp:physicalEntity rdf:resource="#Complex_ce38b6d434ba4db67dcc3fe50711572f" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11851</bp:comment>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_97b9263a6dcb7c62f85748ada5ce8599">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:22249</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_5f041d5b01adbdde98d768697e53f2d8">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:16476</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://identifiers.org/psimi/MI:2163">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">By Homology</bp:term>
+ <bp:xref rdf:resource="#UnificationXref_8ebcf837806303c0916339b5313c04b3" />
+</bp:RelationshipTypeVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_8baf603c64bffe3d4bbcb8791e4c1ddc">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TOLLIP</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_1ae8b672214c4d0cfdf3349ea5c7c9a1">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceInterval9251</bp:comment>
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_115c839b1bbb7a488d27ba5b19c79560" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_3c6de57c5a1bd8be0e831b659c88e6c2" />
+</bp:SequenceInterval>
+
+<bp:UnificationXref rdf:ID="UnificationXref_735ad6f60cbc379d78aae89d421b20e0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_23029</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_23029.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_149439a697d2850f591b2fcf81020c0b">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">113592</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=113592</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_25a3a688905dd557b82c6bd7e888bd10">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">346</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite18367</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_0231b86ef7af2fbec023cb28150c53d6">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001138729</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_269100e352745ce4ba6b12a008902560">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSG00000125538</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_4b6890d2263fa8e828a63d959c21b745">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:16761</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/Q9H0E2">
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TOLLIP</bp:name>
+ <bp:xref rdf:resource="#RelationshipXref_0fff753b9a40b025d59506b0815fa522" />
+ <bp:xref rdf:resource="#RelationshipXref_7647d4bf9cf9977472654575f41666d9" />
+ <bp:xref rdf:resource="#RelationshipXref_36f52f85d047fc41f5731605fe07fe59" />
+ <bp:xref rdf:resource="#UnificationXref_b265ea62c96685f6918f34a470bda943" />
+ <bp:xref rdf:resource="#UnificationXref_6d74383024c8b460ed6ea88d612228a0" />
+ <bp:xref rdf:resource="#RelationshipXref_83841e4d20f94d23d2d794b91e2bce42" />
+ <bp:xref rdf:resource="#RelationshipXref_8160931042e2a2bf0f57b4b7fe8abaf0" />
+ <bp:xref rdf:resource="#RelationshipXref_a23be17c3217c717753985ba464c2deb" />
+ <bp:xref rdf:resource="#RelationshipXref_45514c75d6b779beb18fe21ec97ca192" />
+ <bp:xref rdf:resource="#RelationshipXref_686ca9751ba63dc3e1c2cd8ebf23dd4d" />
+ <bp:xref rdf:resource="#RelationshipXref_7c7661bff633d6c23134d684691c13b0" />
+ <bp:xref rdf:resource="#RelationshipXref_5f041d5b01adbdde98d768697e53f2d8" />
+ <bp:xref rdf:resource="#RelationshipXref_8baf603c64bffe3d4bbcb8791e4c1ddc" />
+ <bp:xref rdf:resource="#UnificationXref_6a5e4b46a984c32bc69482f96e58abea" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TOLIP_HUMAN</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Toll-interacting protein</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Component of the signaling pathway of IL-1 and Toll-like receptors. Inhibits cell activation by microbial products. Recruits IRAK1 to the IL-1 receptor complex. Inhibits IRAK1 phosphorylation and kinase activity.SUBUNIT: Oligomerizes. Binds to TLR2 and the TLR4-MD2 complex via its C-terminus. Exists as complex with IRAK1 in unstimulated cells. Upon IL-1 signaling, Tollip binds to the activated IL-1 receptor complex containing IL-1RI, IL-1RacP and the adapter protein MyD88, where it interacts with the TIR domain of IL-1RacP. MyD88 then triggers IRAK1 autophosphorylation, which in turn leads to the dissociation of IRAK1 from Tollip and IL-1RAcP. Interacts with TOM1L2.SUBCELLULAR LOCATION: Cytoplasm (Probable).PTM: Phosphorylated by IRAK1 upon stimulation by IL-1 or microbial products.SIMILARITY: Belongs to the tollip family.SIMILARITY: Contains 1 C2 domain.SIMILARITY: Contains 1 CUE domain.SEQUENCE CAUTION: Sequence=BAB14283.1; Type=Erroneous initiation; COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:ID="UnificationXref_7b60f3b4ba5458857ac637ea9d7ef93d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:2359</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_05814b5e0ca62e0b4e5bf4c8749d2555">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_22487</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_22487.2</bp:comment>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_40b51697f25c06346eb04404ae066562">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q96HE5</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UniProt</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_1243cd789fd126c21ae55bcf146a75ca">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_002468</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_14e20a6b2de894076385a9738f319358">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">197595</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=197595</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_f8fdf845d2aa9bf0a54c737f8f0c355f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000317757</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_5e772ec2fe8e59dbcb379cdebbfffe49">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceInterval8607</bp:comment>
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_79dab77bed2b242d75b7f8ab7e911c0d" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_11dfa68af91316820badb1a38ad09604" />
+</bp:SequenceInterval>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_cc199c8eb33b07e44dd6a0badfdec406">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSG00000196083</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_66336791c1bf4257cd9b93407bbe4abe">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1R1</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b8b2eaf7a0ff52858f4cedfb8df7791a">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">446885</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=446885</bp:comment>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_bb37c57cd433e2a45be90ff5cfd13fe0">
+ <bp:physicalEntity rdf:resource="#Complex_5ab2de21ce2a1fa8836baccc979e3a87" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11858</bp:comment>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_4bb8418bbd15e7be8b511499ef26d092">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000408734</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:BioSource rdf:about="http://identifiers.org/taxonomy/9606">
+ <bp:xref rdf:resource="#UnificationXref_d7fa0a71d89ce011508b30b8a330ff11" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:standardName>
+</bp:BioSource>
+
+<bp:SequenceModificationVocabulary rdf:ID="SequenceModificationVocabulary_07d2cdec26f84f03a7b0c3d4f3076273">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES Phosphothreonine</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_294d9ef35c72aeaa0b94327847d67afa">
+ <bp:featureLocation rdf:resource="#SequenceSite_44de7a801ff1aff35410c8dda99fa4f4" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_d3e799e941ff7ae719acbcacf433d066" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 395 395 Phosphothreonine (By similarity).</bp:comment>
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_e5f64a0112b230b5c96d8d1b30d3ec80">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_001167928</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_5d4fb2248f98a4ce36e266aac624c4dd">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3556</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCBI Gene</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_e3a40c24ec0e28289477e16ed7706d7d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:13222</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b4a24e7f75fc82c4a217b50c8fc1b73d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_23167</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_23167.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_a457bb28e670ac87fd44f592150d2fb0">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">271</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19789</bp:comment>
+</bp:SequenceSite>
+
+<bp:UnificationXref rdf:ID="UnificationXref_0d2a429f0c75f6b84adc7ed34a3fdce7">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD:00087</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Protein Modification Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_803f77f7be08a5c4a67c0f0a65847dd4">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NM_000576</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_f6a52fc91f8d581bb020ab082c04bb97">
+ <bp:physicalEntity rdf:resource="#Complex_ecce43e9db88dde854503c95a865e045" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11853</bp:comment>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_bab2c56ecd2b39006a54545d3b6e3a35">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000448290</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_f784cce5e81a9b65f7ca35180c71af69">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:40553</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:Pathway rdf:about="http://chibecreated#1400247424571-2021634426">
+ <bp:pathwayComponent rdf:resource="#BiochemicalReaction_6de2d8ef1ce7a15e1c4096f22dd986a8" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BiochemicalReaction_6de2d8ef1ce7a15e1c4096f22dd986a8</bp:displayName>
+</bp:Pathway>
+
+<bp:SequenceModificationVocabulary rdf:ID="SequenceModificationVocabulary_d3e799e941ff7ae719acbcacf433d066">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES Phosphothreonine (By similarity)</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:Provenance rdf:ID="reactome46_human">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:displayName>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:standardName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Source type: BIOPAX, Reactome v46 (using only &apos;Homo sapiens.owl&apos;) 23-SEP-2013</bp:comment>
+</bp:Provenance>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_8d81b314aaac485f86a01e4e0c49dc97">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSP00000390651</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_a195ba57e1e1b3aa087396b1bdc25059">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:22244</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_0fddc99423fc82eab88e634640e02688">
+ <bp:physicalEntity rdf:resource="#SmallMolecule_f206dac25614ddf411b7935ba3e90a52" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">3.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11860</bp:comment>
+</bp:Stoichiometry>
+
+<bp:Protein rdf:ID="Protein_298b6d115a087d3288d01353c7e8d427">
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/P01584" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 beta</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1B_HUMAN</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_05814b5e0ca62e0b4e5bf4c8749d2555" />
+ <bp:xref rdf:resource="#UnificationXref_e678f76b4809124e5b266c27a7fa537d" />
+ <bp:feature rdf:resource="#FragmentFeature_eb02bf2496a87f1345efefefba75186b" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005576" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 445748</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein10654</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_298b6d115a087d3288d01353c7e8d427@Layout@http://chibecreated#1400247424571-2021634426@323@31</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1B</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1B</bp:displayName>
+</bp:Protein>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_15525ef4237c0fec74b1bfddd92e8a7f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001166039</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_04f5f118168d0a5bfeaa0ba3a25688ce">
+ <bp:featureLocation rdf:resource="#SequenceSite_60fd715dd5dc2f8680458599edf2ec0c" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_50c1a8577a122d70cd1bd7579a74ceba" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 557 557 Phosphoserine.</bp:comment>
+</bp:ModificationFeature>
+
+<bp:SequenceSite rdf:ID="SequenceSite_63f1379d00657931eb765180fd4fde16">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">18</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19790</bp:comment>
+</bp:SequenceSite>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_70a5bcd52dd9fd98dae4349553ff9dc5">
+ <bp:featureLocation rdf:resource="#SequenceSite_94da3adf50a15e685229e851e7b9a522" />
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_07d2cdec26f84f03a7b0c3d4f3076273" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 345 345 Phosphothreonine.</bp:comment>
+</bp:ModificationFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_901a92f45817d60fcd0419d33d6ef6b5">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:2342</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ChEBI</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_462fac21e345af7704170831bd134696">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NP_001107654</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RefSeq</bp:db>
+</bp:RelationshipXref>
+
+<bp:CellularLocationVocabulary rdf:about="http://identifiers.org/go/GO:0005829">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cytosol</bp:term>
+ <bp:xref rdf:resource="#UnificationXref_c5f96d32d36dd4c5bb03f0ecac6c3789" />
+</bp:CellularLocationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_b25cc814b61e96dbd2f082e27502f127">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1RAP</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_f903b8bb02b793a53a14e17da47fe8bb">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1HIB</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PROTEIN DATA BANK</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_0db95a5987cca0269db55130f6d7e003">
+ <bp:physicalEntity rdf:resource="#Complex_8cb14f7d84f7974ab445f107455c04f5" />
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Stoichiometry11854</bp:comment>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_e678f76b4809124e5b266c27a7fa537d">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">445748</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=445748</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_c3a111b7e415ba4937deccb46bded724">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3552</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NCBI Gene</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_1d781c5533f434cdbfbff597bef346d7">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ZKHQWZAMYRWXGA-KQYNXXCUSA-N</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChIKey</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_c2589387eafef4dac6bfea15664a8668">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2NRU</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PROTEIN DATA BANK</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_70c1d6ccf6354aec7a0c667e5a0dc006">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_23180</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_23180.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_178dbe4cec8a28bcd529e9f42da05489">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">569</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19791</bp:comment>
+</bp:SequenceSite>
+
+<bp:Protein rdf:ID="Protein_9a7030fdeae359a07cac32c3712b6276">
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/P01583" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1A_HUMAN</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2xMyri-IL1A</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_7d91954806051078916c9dfcc7b52202" />
+ <bp:xref rdf:resource="#UnificationXref_8678bc4113f7fe30d96aaf8ab2f56e90" />
+ <bp:feature rdf:resource="#FragmentFeature_0fe70c8ab9193a22bdbaf3cf5e5340da" />
+ <bp:feature rdf:resource="#ModificationFeature_7c22721c974ea64dabdb53e6560970d4" />
+ <bp:feature rdf:resource="#ModificationFeature_6268e484ad50beeabf94ce596ecac396" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005576" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein10656</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_9a7030fdeae359a07cac32c3712b6276@Layout@http://chibecreated#1400247424571-2021634426@412@20</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 445746</bp:comment>
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1A</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1A</bp:displayName>
+</bp:Protein>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_45feb0416a5b570db3e4e6f42aeb7a31">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceInterval9245</bp:comment>
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_66bf335742e59553e30bf4ad7b16b48e" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_397f3de944edaf06763d0df12def17cc" />
+</bp:SequenceInterval>
+
+<bp:UnificationXref rdf:ID="UnificationXref_8ebcf837806303c0916339b5313c04b3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:2163</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Molecular Interactions Ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_836ae68164ef891379872f0a1caf3f0b">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">446637</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=446637</bp:comment>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_c011c1c43ba3b25e3b459312f3d8712c">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">445745</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=445745</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_11dfa68af91316820badb1a38ad09604">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite18361</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_f701d14f70067be8319000ef6026946a">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">147760</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">omim</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_44de7a801ff1aff35410c8dda99fa4f4">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">395</bp:sequencePosition>
+</bp:SequenceSite>
+
+<bp:Complex rdf:ID="Complex_5ab2de21ce2a1fa8836baccc979e3a87">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_1c66d6bf47e8b7767252dfa88581db68" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_e72ff3ce24f43348f1f01f558ab14393" />
+ <bp:component rdf:resource="#Protein_6f63f60939c713c9c1964ba394ed8005" />
+ <bp:component rdf:resource="#Complex_0996725291a39b5e4d7a38c69dface96" />
+ <bp:xref rdf:resource="#UnificationXref_836ae68164ef891379872f0a1caf3f0b" />
+ <bp:xref rdf:resource="#UnificationXref_735ad6f60cbc379d78aae89d421b20e0" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005886" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1 receptor complex</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Complex4554</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 446637</bp:comment>
+</bp:Complex>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_2c6593b159cdaa2b222d56e2d19e911b">
+ <bp:featureLocation rdf:resource="#SequenceInterval_3aedefa973171388cd1978623039edea" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#FragmentFeature9212</bp:comment>
+</bp:FragmentFeature>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_b15987045853e969752fdb7892b0447f">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:17967</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:ChemicalStructure rdf:ID="ChemicalStructure_9bb021f9d2e4a5b07625d3f48d5f029f">
+ <bp:structureData rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI=1S/C10H16N5O13P3/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(26-10)1-25-30(21,22)28-31(23,24)27-29(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H,23,24)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1</bp:structureData>
+ <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:structureFormat>
+</bp:ChemicalStructure>
+
+<bp:Protein rdf:ID="Protein_e0cd6faef88a59c660fbdde120623a90">
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:memberPhysicalEntity rdf:resource="#Protein_298b6d115a087d3288d01353c7e8d427" />
+ <bp:memberPhysicalEntity rdf:resource="#Protein_9a7030fdeae359a07cac32c3712b6276" />
+ <bp:xref rdf:resource="#UnificationXref_a34588c2069114b37cd4168c40c60070" />
+ <bp:xref rdf:resource="#UnificationXref_f32bc71cee0f37aaa020c3897177e61f" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005576" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_e0cd6faef88a59c660fbdde120623a90http://purl.org/pc2/4/Complex_dcf53d1093d9c7efcebacb9fa6cb51e5@Layout@http://chibecreated#1400247424571-2021634426@241@427</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein10658</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_e0cd6faef88a59c660fbdde120623a90http://purl.org/pc2/4/Complex_c2ec7cdb2de75fea4f5026738f8472d8@Layout@http://chibecreated#1400247424571-2021634426@339@279</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 445744</bp:comment>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1</bp:displayName>
+</bp:Protein>
+
+<bp:Protein rdf:ID="Protein_ef72c95a781ac0f8c60c44e0e929890e">
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q9NPH3" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Interleukin-1 receptor accessory protein, membrane associated isoform</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1RAP-1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mIL-1RAcP</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Membrane-bound IL-1RAcP</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1AP_HUMAN</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IL1RAP isoform 1</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_d29a281a2747787fb5b29220df66062d" />
+ <bp:xref rdf:resource="#UnificationXref_c011c1c43ba3b25e3b459312f3d8712c" />
+ <bp:feature rdf:resource="#FragmentFeature_722f40d00f518f89a58055957a12887c" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005886" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_ef72c95a781ac0f8c60c44e0e929890ehttp://purl.org/pc2/4/Complex_c2ec7cdb2de75fea4f5026738f8472d8@Layout@http://chibecreated#1400247424571-2021634426@407@279</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein10662</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 445745</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_ef72c95a781ac0f8c60c44e0e929890ehttp://purl.org/pc2/4/Complex_dcf53d1093d9c7efcebacb9fa6cb51e5@Layout@http://chibecreated#1400247424571-2021634426@309@427</bp:comment>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mIL1RAP</bp:displayName>
+</bp:Protein>
+
+<bp:UnificationXref rdf:ID="UnificationXref_b5a1f594b598c4090ac2adbb5e399bef">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_23251</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_23251.2</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_5bd5f3df63bc9936408ca4b2b1d3d73a">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite4699</bp:comment>
+</bp:SequenceSite>
+
+<bp:UnificationXref rdf:ID="UnificationXref_aa7172099a72b77786ba8cbfd4344d63">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">166081</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=166081</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_3758d0d30ac13feb2bc622ac209c0f00">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENST00000422940</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ensembl</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_6573e6d8d2cab6cd0625a89d504c65db">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">147810</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">omim</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_1b5f57f6543647aa27a81dcc616363bd">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">193932</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome Database ID Release 46</bp:db>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=193932</bp:comment>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_5b16e2e7c3613f3d64d6ce64464d6896">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC:7562</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HGNC</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_e182b73b8e689837885b82f65a320b60">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19798</bp:comment>
+</bp:SequenceSite>
+
+<bp:Protein rdf:ID="Protein_79fc8ea995d2e5bc60ccf89a7b77eff5">
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q9H0E2" />
+ <bp:dataSource rdf:resource="#reactome46_human" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Toll-interacting protein</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TOLIP_HUMAN</bp:name>
+ <bp:xref rdf:resource="#UnificationXref_577c3b753587003baf872ef49d11b051" />
+ <bp:xref rdf:resource="#UnificationXref_b8b2eaf7a0ff52858f4cedfb8df7791a" />
+ <bp:feature rdf:resource="#FragmentFeature_2c6593b159cdaa2b222d56e2d19e911b" />
+ <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005829" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_79fc8ea995d2e5bc60ccf89a7b77eff5http://purl.org/pc2/4/Complex_c2ec7cdb2de75fea4f5026738f8472d8@Layout@http://chibecreated#1400247424571-2021634426@339@304</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 446885</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://purl.org/pc2/4/Protein_79fc8ea995d2e5bc60ccf89a7b77eff5http://purl.org/pc2/4/Complex_dcf53d1093d9c7efcebacb9fa6cb51e5@Layout@http://chibecreated#1400247424571-2021634426@241@452</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#Protein10663</bp:comment>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TOLLIP</bp:displayName>
+</bp:Protein>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_ba7282782119300c8e19e87f6464abf0">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">147720</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">omim</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_3fea6b003839b1b246f8d7ca8aa5c074">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_7771</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:db>
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=REACT_7771.1</bp:comment>
+</bp:UnificationXref>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_7f75fcf7a9d7ac5ef24cb635eaa717db">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceInterval9253</bp:comment>
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_09b3d259eeac13d4de5553960026745e" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_e683f3c69de21cc70db7a8d5cadfa6d1" />
+</bp:SequenceInterval>
+
+<bp:SequenceSite rdf:ID="SequenceSite_a91d98ca94c03f978011e7e6a6139919">
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">82</bp:sequencePosition>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/46/48887#SequenceSite19780</bp:comment>
+</bp:SequenceSite>
+</rdf:RDF>

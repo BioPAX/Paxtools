@@ -1,17 +1,15 @@
 package org.biopax.paxtools.impl;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.util.BPCollections;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Map;
-
 @Entity
 @Proxy(proxyClass= BioPAXElement.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -54,7 +52,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	private long version;
 	
 	public BioPAXElementImpl() {
-		this.annotations = new HashMap<String, Object>();
+		this.annotations = BPCollections.I.createMap();
 	}
 	
 
@@ -225,5 +223,6 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public int hashCode() {
 		return (getModelInterface().getCanonicalName() + uri).hashCode();
 	}
+
 }
 

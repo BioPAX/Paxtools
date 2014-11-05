@@ -5,23 +5,16 @@ import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.Level3Element;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.Provenance;
-import org.biopax.paxtools.util.DataSourceFieldBridge;
-import org.biopax.paxtools.util.OrganismFieldBridge;
-import org.biopax.paxtools.util.ParentPathwayFieldBridge;
-import org.biopax.paxtools.util.SetStringBridge;
+import org.biopax.paxtools.util.*;
+import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Store;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.Transient;
-
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.hibernate.annotations.FetchProfile.FetchOverride;
@@ -47,7 +40,7 @@ import static org.hibernate.annotations.FetchProfile.FetchOverride;
  @FetchOverride(entity = ConversionImpl.class, association = "participantStoichiometry", mode = FetchMode.JOIN),
  @FetchOverride(entity = PhysicalEntityImpl.class, association = "feature", mode = FetchMode.JOIN),
  @FetchOverride(entity = ConversionImpl.class, association = "right", mode = FetchMode.JOIN),
- @FetchOverride(entity = PathwayStepImpl.class, association = "stepProcess", mode = FetchMode.JOIN),
+ @FetchOverride(entity = PathwayStepImpl.class, association = "stepProcessX", mode = FetchMode.JOIN),
  @FetchOverride(entity = ExperimentalFormImpl.class, association = "experimentalFeature", mode = FetchMode.JOIN),
  @FetchOverride(entity = ControlImpl.class, association = "controlled", mode = FetchMode.JOIN),
  @FetchOverride(entity = PublicationXrefImpl.class, association = "url", mode = FetchMode.JOIN),
@@ -110,11 +103,11 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 
     public L3ElementImpl()
     {
-        this.comment = new HashSet<String>();
-        this.pathways = new HashSet<Pathway>();
-        this.datasources = new HashSet<Provenance>();
-        this.organisms = new HashSet<BioSource>();
-        this.keywords = new HashSet<String>();
+        this.comment = BPCollections.I.createSet();
+        this.pathways = BPCollections.I.createSet();
+        this.datasources = BPCollections.I.createSet();
+        this.organisms = BPCollections.I.createSet();
+        this.keywords =  BPCollections.I.createSet();
     }
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)

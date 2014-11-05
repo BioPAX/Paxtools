@@ -1,102 +1,186 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
 import org.biopax.paxtools.model.level3.Conversion;
+import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.model.level3.StepDirection;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Indexed;
 
+import javax.persistence.Entity;
 import javax.persistence.*;
+import java.util.AbstractSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
-@Entity
-@Proxy(proxyClass= BiochemicalPathwayStep.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
+@Entity @Proxy(proxyClass = BiochemicalPathwayStep.class) @Indexed @DynamicUpdate @DynamicInsert
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
-	Conversion stepConversion;
-	StepDirection stepDirection;
+	private Conversion stepConversion;
 
-	public BiochemicalPathwayStepImpl() {
+	private StepDirection stepDirection;
+
+	private Set<Process> stepProcess = new StepProcessSet();
+
+	private Log log = LogFactory.getLog(BiochemicalPathwayStepImpl.class);
+
+	public BiochemicalPathwayStepImpl()
+	{
+
 	}
-	
+
 	//
 	// utilityClass interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
 	@Transient
-    public Class<? extends BiochemicalPathwayStep> getModelInterface()
-    {
-        return BiochemicalPathwayStep.class;
-    }
+	public Class<? extends BiochemicalPathwayStep> getModelInterface()
+	{
+		return BiochemicalPathwayStep.class;
+	}
 
 	//
 	// biochemicalPathwayStep interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	// hidden property 'stepConversion' for persistence
-	@ManyToOne(targetEntity = ConversionImpl.class)
-    Conversion getStepConversionX()
+
+	//trivial private setter/getter for ORM frameworks only
+	@ManyToOne(targetEntity = ConversionImpl.class) Conversion getStepConversionX()
 	{
 		return stepConversion;
 	}
-    void setStepConversionX(Conversion newSTEP_CONVERSION)
+
+	void setStepConversionX(Conversion conversion)
 	{
-		stepConversion = newSTEP_CONVERSION;
+		this.stepConversion = conversion;
 	}
 
 	// Property stepConversion
-    @Transient
-    public Conversion getStepConversion()
+	@Transient
+	public Conversion getStepConversion()
 	{
 		return stepConversion;
 	}
 
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * Also, note that this method does not
-     * automatically add the Conversion to the 
-     * stepPprocess property despite stepProcess
-     * is super-property for stepConversion; this
-     * is because BiochemicalPathwayStep is 
-     * defined as a sub-class of PathwayStep with
-     * additional constraint that stepProcess can
-     * contain only Control interactions (neither Pathway 
-     * nor Conversion processes are allowed).
-     * 
-     */
-    public void setStepConversion(Conversion newSTEP_CONVERSION)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setStepConversion(Conversion highLander)
+
 	{
 		if (this.stepConversion != null)
 		{
-			this.stepConversion.getStepProcessOf().remove(this);
+			if (this.stepConversion == highLander) 
+				return;
+			else { 
+				synchronized (this.stepConversion) {
+					this.stepConversion.getStepProcessOf().remove(this);
+				}
+			}
 		}
-		this.stepConversion = newSTEP_CONVERSION;
-		if (this.stepConversion != null)
-		{
-			this.stepConversion.getStepProcessOf().add(this);
+		
+		this.stepConversion = highLander; //can be null!
+		
+		if(this.stepConversion != null) {
+			synchronized (this.stepConversion) {
+				this.stepConversion.getStepProcessOf().add(this);
+			}
 		}
+
 	}
-    
-    
-    // Property STEP-DIRECTION
+
+	@Override
+	public void addStepProcess(Process process)
+	{
+		if (process instanceof Conversion)
+		{
+			if (this.stepConversion == null || this.stepConversion == process)
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("Ignoring duplicate request to add stepConversion as a  stepProcess - this is already " +
+					          "implied");
+				}
+			} else
+			{
+				throw new IllegalBioPAXArgumentException(
+						"Biochemical Pathway Step can have only one conversion. Did you want to use" +
+						"the setStepConversion method? ");
+			}
+		}
+		super.addStepProcess(process);
+	}
+
+	// Property STEP-DIRECTION
 
 	@Enumerated(EnumType.STRING)
-    public StepDirection getStepDirection()
+	public StepDirection getStepDirection()
 	{
 		return stepDirection;
 	}
 
-    public void setStepDirection(StepDirection newSTEP_DIRECTION)
+	public void setStepDirection(StepDirection newSTEP_DIRECTION)
 	{
 		stepDirection = newSTEP_DIRECTION;
+	}
+
+	@Transient @Override public Set<Process> getStepProcess()
+	{
+		return stepProcess;
+	}
+
+
+	private class StepProcessSet extends AbstractSet<Process>
+	{
+		@Override public Iterator<Process> iterator()
+		{
+			final Iterator<Process> proci = BiochemicalPathwayStepImpl.super.getStepProcess().iterator();
+
+			return new Iterator<Process>()
+			{
+				boolean procEnd = false;
+
+				@Override public boolean hasNext()
+				{
+					return proci.hasNext() || !(procEnd || stepConversion == null);
+				}
+
+				@Override public Process next()
+				{
+					if (procEnd) throw new NoSuchElementException();
+					if (proci.hasNext()) return proci.next();
+					else
+					{
+						procEnd = true;
+						if (stepConversion == null) throw new NoSuchElementException();
+						else return stepConversion;
+					}
+				}
+
+				@Override public void remove()
+				{
+					throw new UnsupportedOperationException();
+				}
+			};
+		}
+
+		@Override public int size()
+		{
+			return BiochemicalPathwayStepImpl.super.getStepProcess().size() + (stepConversion == null ? 0 : 1);
+		}
+
+		@Override public boolean contains(Object o)
+		{
+			return o != null && ((stepConversion != null && stepConversion.equals(o)) || BiochemicalPathwayStepImpl
+					.super.getStepProcess().contains(o));
+		}
+
 	}
 }

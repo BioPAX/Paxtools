@@ -36,10 +36,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+
 import psidev.psi.mi.xml.model.*;
 
 
@@ -50,7 +51,7 @@ import psidev.psi.mi.xml.model.*;
  *
  * @author Benjamin Gross, rodche (re-factored to Runnable)
  */
-public class EntryMapper implements Runnable {
+class EntryMapper implements Runnable {
 
 	/**
 	 * Genetic Interactions.
@@ -74,25 +75,11 @@ public class EntryMapper implements Runnable {
 	// as an attribute of the Interaction via "BioGRID Evidence Code" key
 	private static final String BIOGRID_EVIDENCE_CODE = "BioGRID Evidence Code";
 
-	/**
-	 * Ref to random number generator
-	 */
-	private Random random;
-
-	/**
-	 * Ref to BioPAXMapper.
-	 */
-	private BioPAXMapper bpMapper;
-
-	/**
-	 * Ref to PSI entry.
-	 */
-	private Entry entry;
-
-	/**
-	 * Ref to marshaller.
-	 */
-	private BioPAXMarshaller biopaxMarshaller;
+	private final BioPAXMapper bpMapper;
+	
+	private final Entry entry;
+	
+	private final BioPAXMarshaller biopaxMarshaller;
 
 	/**
 	 * Ref to interatorMap
@@ -106,41 +93,19 @@ public class EntryMapper implements Runnable {
 	 */
 	private Map<Integer, ExperimentDescription> experimentMap;
 
-	/**
-	 * Set of open/controlled vocabulary.
-	 */
-	Set<BioPAXElement> vocabulary;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param bpMapper BioPAXMapper
+	 * @param bpLevel
+	 * @param xmlBase
 	 * @param biopaxMarshaller BioPAXMarshaller
 	 * @param entry EntrySet.Entry
 	 */
-	public EntryMapper(BioPAXMapper bpMapper, BioPAXMarshaller biopaxMarshaller, Entry entry) {
-		this(bpMapper, biopaxMarshaller, entry, 0);
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * @param bpMapper BioPAXMapper
-	 * @param biopaxMarshaller BioPAXMarshaller
-	 * @param entry EntrySet.Entry
-	 * @param seed long
-	 */
-	public EntryMapper(BioPAXMapper bpMapper, BioPAXMarshaller biopaxMarshaller, Entry entry, long seed) {
-
-		// set member vars
+	public EntryMapper(BioPAXLevel bpLevel, String xmlBase, BioPAXMarshaller biopaxMarshaller, Entry entry) {
 		this.entry = entry;
-		this.bpMapper = bpMapper;
+		this.bpMapper = new BioPAXMapper(bpLevel, xmlBase);
 		this.biopaxMarshaller = biopaxMarshaller;
-
-		// random number gen setup
-		this.random = (seed > 0) ?
-			new Random(seed) :
-			new Random(System.currentTimeMillis());
 	}
 
 	/**
@@ -179,7 +144,7 @@ public class EntryMapper implements Runnable {
 							  interaction);
 		}
 		
-		// add the model to the marshaller
+		// add the model to the shared (by multiple threads) marshaller
 		biopaxMarshaller.addModel(bpMapper.getModel());
 	}
 
@@ -297,17 +262,15 @@ public class EntryMapper implements Runnable {
 			bpXrefs.addAll(getPublicationXref(entry.getSource().getBibref().getXref()));
 		}
 		if (interaction.hasXref()) {
-			bpXrefs.addAll(getUnificationXref(interaction.getXref(), true));
+			bpXrefs.addAll(getXrefs(interaction.getXref(), true));
 		}
 
-		BioPAXElement bpInteraction = bpMapper.getInteraction(genRdfId(),
-															  name, shortName,
+		BioPAXElement bpInteraction = bpMapper.getInteraction(name, shortName,
 															  availability,
 															  bpParticipants,
 															  bpEvidence);
 
-		// create a datasource object for the interaction
-		bpMapper.setInteractionDataSource(bpInteraction, genRdfId(), entryDataSourceName, bpXrefs);
+		bpMapper.addXrefsToInteraction(bpInteraction, bpXrefs);
 	}
 
 	/**
@@ -354,12 +317,12 @@ public class EntryMapper implements Runnable {
 
 		// create the physical entity which is contained within the participant, if it does not already exist
 		String physicalEntityRdfId = bpMapper.getNamespace() + interactorRef;
-		BioPAXElement bpPhysicalEntity = bpMapper.getBioPAXElement(physicalEntityRdfId);
+		BioPAXElement bpPhysicalEntity = bpMapper.getModel().getByID(physicalEntityRdfId);
 		bpPhysicalEntity = (bpPhysicalEntity == null) ?
 			createPhysicalEntity(physicalEntityRdfId, interactor) : bpPhysicalEntity;
 
 		// outta here
-		return bpMapper.getParticipant(genRdfId(), features, cellularLocation, bpPhysicalEntity);
+		return bpMapper.getParticipant(features, cellularLocation, bpPhysicalEntity);
 	}
 
 	/**
@@ -401,10 +364,9 @@ public class EntryMapper implements Runnable {
 			}
 		}
 
-		return bpMapper.getPhysicalEntity(physicalEntityType, physicalEntityRdfId,
+		return bpMapper.getPhysicalEntity(physicalEntityType,
 										  name, shortName, synonyms,
-										  getUnificationXref(interactor.getXref(), false),
-										  genRdfId(),
+										  getXrefs(interactor.getXref(), false),
 										  getBioSource(interactor.getOrganism()),
 										  interactor.getSequence());
 	}
@@ -439,27 +401,11 @@ public class EntryMapper implements Runnable {
 
 			// xref - use feature type xref
 			Xref psiFeatureXref = psiFeature.getXref();
-			Set<BioPAXElement> bpSequenceFeatureXref = getUnificationXref(psiFeatureXref, false);
-			if (bpSequenceFeatureXref != null && bpSequenceFeatureXref.size() > 0) {
-				// lets use xref id as id for feature - to eliminate duplicate features
-				String id = bpMapper.getNamespace() + "SF-" + bpMapper.getXrefID(bpSequenceFeatureXref.iterator().next());
-				if (id != null && id.length() > 0) {
-					BioPAXElement bpSequenceFeature = bpMapper.getBioPAXElement(id);
-					if (bpSequenceFeature == null) {
-						toReturn.add(bpMapper.getFeature(id, bpSequenceFeatureXref, sequenceLocationSet, bpFeatureType));
-					}
-					else {
-						// add the xref to the sequence feature
-						toReturn.add(bpMapper.getFeature(bpSequenceFeature, bpSequenceFeatureXref, sequenceLocationSet, bpFeatureType));
-					}
-				}
-			}
-			else {
-				toReturn.add(bpMapper.getFeature(genRdfId(), null, sequenceLocationSet, bpFeatureType));
-			}
+			Set<BioPAXElement> bpSequenceFeatureXref = getXrefs(psiFeatureXref, false);// null/empty is ok too
+			//using the bpSequenceFeatureXref, it will try getting the feature while avoiding duplicates
+			toReturn.add(bpMapper.getFeature(bpSequenceFeatureXref, sequenceLocationSet, bpFeatureType));
 		}
 
-		// outta here
 		return toReturn;
 	}
 
@@ -487,13 +433,11 @@ public class EntryMapper implements Runnable {
 				continue;
 			}
 			else {
-				toReturn.add(bpMapper.getSequenceLocation(genRdfId(), genRdfId(), genRdfId(),
-														  beginInterval.getBegin(), beginInterval.getEnd()));
+				toReturn.add(bpMapper.getSequenceLocation(beginInterval.getBegin(), beginInterval.getEnd()));
 			}
 
 			if (endInterval != null) {
-				toReturn.add(bpMapper.getSequenceLocation(genRdfId(), genRdfId(), genRdfId(),
-														  endInterval.getBegin(), endInterval.getEnd()));
+				toReturn.add(bpMapper.getSequenceLocation(endInterval.getBegin(), endInterval.getEnd()));
 			}
 		}
 
@@ -513,19 +457,17 @@ public class EntryMapper implements Runnable {
 		// check args
 		if (organism == null) return null;
 
-		// set BioPXElement rdf id and taxon xref id
+		// set the BioPXElement URI and taxonomy xref id
 		String ncbiId = Integer.toString(organism.getNcbiTaxId());
-		String rdfID = bpMapper.getNamespace() + "BS-" + ncbiId;
+		String bioSourceUri = bpMapper.getNamespace() + "BS-" + ncbiId;
 
 		// outta here if element already exists in model
-		BioPAXElement bpBioSource = bpMapper.getBioPAXElement(rdfID);
-		if (bpBioSource != null) {
-			return bpBioSource;
-		}
+		BioPAXElement bpBioSource = bpMapper.getModel().getByID(bioSourceUri);
+		if (bpBioSource != null) return bpBioSource;
 
 		// taxon xref
-		BioPAXElement taxonXref = bpMapper.getUnificationXref(genRdfId());
-		bpMapper.setXrefDBAndID(taxonXref, "TAXONOMY", ncbiId);
+		BioPAXElement taxonXref = bpMapper.addNewUnificationXref(null); //generate URI
+		bpMapper.setXrefDBAndID(taxonXref, "Taxonomy", ncbiId);
 
 		// cell type
 		BioPAXElement cellType = getOpenControlledVocabulary(organism.getCellType());
@@ -538,8 +480,7 @@ public class EntryMapper implements Runnable {
 			bioSourceName = getName(organism.getNames());
 		}
 
-		// outta here
-		return bpMapper.getBioSource(rdfID, taxonXref, cellType, tissue, bioSourceName);
+		return bpMapper.getBioSource(bioSourceUri, taxonXref, cellType, tissue, bioSourceName);
 	}
 
 	/**
@@ -565,7 +506,6 @@ public class EntryMapper implements Runnable {
 	 */
 	private BioPAXElement getOpenControlledVocabulary(CvType cvType) {
 
-		// check args
 		if (cvType == null) return null;
 
 		// try full name first, else try short name
@@ -580,21 +520,20 @@ public class EntryMapper implements Runnable {
 		if (toReturn != null) return toReturn;
 
 		// made it here, we have to create a new open/controlled vocabulary
-		Set<BioPAXElement> bpXrefs = getUnificationXref(cvType.getXref(), true);
-		toReturn = bpMapper.getOpenControlledVocabulary(genRdfId(), nameToSearch, bpXrefs);
+		Set<BioPAXElement> bpXrefs = getXrefs(cvType.getXref(), true);
+		toReturn = bpMapper.getOpenControlledVocabulary(nameToSearch, bpXrefs);
 
-		// outta here
 		return toReturn;
  	}
 
 	/**
-	 * Given a psi xref, returns a paxtools xref.
+	 * Given a psi xref, returns paxtools unification and relationship xrefs.
 	 *
 	 * @param psiXREF Xref
 	 * @param forOCVorInteraction boolean
-	 * @return Set<BioPAXElement>
+	 * @return
 	 */
-	private Set<BioPAXElement> getUnificationXref(Xref psiXREF, boolean forOCVorInteraction) {
+	private Set<BioPAXElement> getXrefs(Xref psiXREF, boolean forOCVorInteraction) {
 
 		// set to return
 		Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
@@ -610,7 +549,6 @@ public class EntryMapper implements Runnable {
 		}
 
 		for (DbReference psiDBRef : psiDBRefList) {
-
 			// check for null xref
 			if (psiDBRef == null) continue;
 
@@ -620,40 +558,45 @@ public class EntryMapper implements Runnable {
             String psiDBRefId = psiDBRef.getId();
 
             // If multiple ids given with comma separated values, then split them.
-            for (String dbRefId : psiDBRefId.split(",")) {
-                if (refType != null && (refType.equals("identity") || refType.equals("identical object"))) {
+            for (String dbRefId : psiDBRefId.split(",")) 
+            {
+                if (refType != null 
+                	&& (refType.equals("identity") || refType.equals("identical object"))) 
+                {
                     String id = bpMapper.getNamespace() + "UXR-" + validateDBID(dbRefId);
-                    bpXref = bpMapper.getBioPAXElement(id);
+                    bpXref = bpMapper.getModel().getByID(id);                   
                     if (bpXref != null) {
                         toReturn.add(bpXref);
                         continue;
-                    }
-                    bpXref = bpMapper.getUnificationXref(id);
-                }
-                else if (!forOCVorInteraction) {
+                    }                    
+                    
+                    bpXref = bpMapper.addNewUnificationXref(id);
+                    
+                } 
+                else if (!forOCVorInteraction) 
+                {
                     String id = bpMapper.getNamespace() + "RXR-" + validateDBID(dbRefId);
-                    bpXref = bpMapper.getBioPAXElement(id);
+                    bpXref = bpMapper.getModel().getByID(id);                   
                     if (bpXref != null) {
                         toReturn.add(bpXref);
                         continue;
-                    }
-                    bpXref = (refType != null) ?
-                        bpMapper.getRelationshipXref(id, refType, genRdfId()) :
-                        (psiDBRef.getDb().toLowerCase().equals("uniprot")
-                            ? bpMapper.getUnificationXref(id)
-                            : bpMapper.getRelationshipXref(id, null, null)
-                        );
+                    }                    
+                    bpXref = (refType != null) 
+                    	? bpMapper.getRelationshipXref(id, refType) 
+                    	: (	
+                    		psiDBRef.getDb().toLowerCase().equals("uniprot")
+                    			? bpMapper.addNewUnificationXref(id) : bpMapper.getRelationshipXref(id, null)
+                    	  );
                 }
 
+                //set properties for the new xref and add it to the set to return
                 if (bpXref != null) {
                     bpMapper.setXrefDBAndID(bpXref, psiDBRef.getDb(), dbRefId);
                     toReturn.add(bpXref);
                 }
             }
-
         }
 
-		// outta here
 		return toReturn;
 	}
 
@@ -676,7 +619,7 @@ public class EntryMapper implements Runnable {
 
 		// create publication ref
 		String id = bpMapper.getNamespace() + "PXR-" + validateDBID(psiDBRef.getId());
-		BioPAXElement bpXref = bpMapper.getBioPAXElement(id);
+		BioPAXElement bpXref = bpMapper.getModel().getByID(id);
 		// outta here if element already exists in model
 		if (bpXref != null) {
 			toReturn.add(bpXref);
@@ -737,7 +680,7 @@ public class EntryMapper implements Runnable {
 				// bibref / xref
 				Set<BioPAXElement> bpXrefs = new HashSet<BioPAXElement>();
 				if (experimentDescription.hasXref()) {
-					bpXrefs.addAll(getUnificationXref(experimentDescription.getXref(), false));
+					bpXrefs.addAll(getXrefs(experimentDescription.getXref(), false));
 				}
 				if (experimentDescription.getBibref() != null) {
 					bpXrefs.addAll(getPublicationXref(experimentDescription.getBibref().getXref()));
@@ -761,7 +704,7 @@ public class EntryMapper implements Runnable {
 				Set<BioPAXElement> experimentalForms = getExperimentalFormSet(experimentDescription, interaction,
 																			  psimiParticipantToBiopaxParticipantMap);
 				// add evidence to list we are returning
-				toReturn.add(bpMapper.getEvidence(genRdfId(), bpXrefs, evidenceCodes,
+				toReturn.add(bpMapper.getEvidence(bpXrefs, evidenceCodes,
 												  scoresOrConfidences, comments, experimentalForms));
 			}
 		}
@@ -819,7 +762,7 @@ public class EntryMapper implements Runnable {
 		// psiConfidence.unit.xref maps to confidence.xref
 		Set<BioPAXElement> bpXrefs = new HashSet<BioPAXElement>();
 		if (ocv != null && ocv.getXref() != null) {
-			bpXrefs.addAll(getUnificationXref(ocv.getXref(), false));
+			bpXrefs.addAll(getXrefs(ocv.getXref(), false));
 		}
 
 		// used to store names and attributes
@@ -837,7 +780,7 @@ public class EntryMapper implements Runnable {
 		}
 
 		// outta here
-		return (bpMapper.getScoreOrConfidence(genRdfId(), value, bpXrefs, comments));
+		return (bpMapper.getScoreOrConfidence(value, bpXrefs, comments));
 	}
 
 	/**
@@ -914,9 +857,8 @@ public class EntryMapper implements Runnable {
 						if (experimentalRole.hasNames()) {
 							String roleName = getName(experimentalRole.getNames());
 							if (!processedRoles.contains(roleName)) {
-								toReturn.add(bpMapper.getExperimentalForm(genRdfId(),
-																		  getOpenControlledVocabulary(experimentalRole),
-																		  bpParticipant));
+								toReturn.add(bpMapper
+									.getExperimentalForm(getOpenControlledVocabulary(experimentalRole), bpParticipant));
 								processedRoles.add(roleName);
 							}
 						}
@@ -927,15 +869,6 @@ public class EntryMapper implements Runnable {
 
 		// outta here
 		return toReturn;
-	}
-
-	/**
-	 * Generates an RDF id required by paxtools.
-	 *
-	 * @return String
-	 */
-	private String genRdfId() {
-		return bpMapper.getNamespace() + Long.toString(Math.abs(random.nextLong()));
 	}
 
 	/**
@@ -956,4 +889,5 @@ public class EntryMapper implements Runnable {
 		// outta here
 		return null;
 	}
+
 }

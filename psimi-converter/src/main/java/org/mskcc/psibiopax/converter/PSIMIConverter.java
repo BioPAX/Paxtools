@@ -27,6 +27,7 @@
 package org.mskcc.psibiopax.converter;
 
 // imports
+import psidev.psi.mi.tab.PsimiTabException;
 import psidev.psi.mi.xml.model.EntrySet;
 import psidev.psi.mi.xml.PsimiXmlReaderException;
 
@@ -34,27 +35,47 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
 
+import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
+
 /**
  * An interface which provides methods to convert a PSI-MI file.
+ * @deprecated use {@link PsiToBiopax3Converter}
  */
 public interface PSIMIConverter {
 
 	/**
-	 * Converts the psi data in inputStream and places into outputStream.
+	 * Converts the PSI-MI inputStream into BioPAX outputStream.
 	 * Streams will be closed by the converter.
 	 *
-	 * @param inputStream InputStream
-	 * @param outputStream OutputStream
-	 * @return boolean
+	 * Note: for huge models (several Gb), using a byte array output
+	 * stream leads to OutOfMemoryError despite there is free heap memory.
+	 *
+	 * @param inputStream psimi
+	 * @param outputStream biopax
+	 * @return
 	 *
 	 * @throws IOException
 	 * @throws PsimiXmlReaderException
 	 */
 	public boolean convert(InputStream inputStream, OutputStream outputStream)
 		throws IOException, PsimiXmlReaderException;
+	
+	/**
+	 * Converts the PSI-MITAB inputStream into BioPAX outputStream.
+	 * Streams will be closed by the converter.
+	 *
+	 * @param inputStream psimitab
+	 * @param outputStream biopax
+	 * @return boolean
+	 *
+	 * @throws IOException
+	 * @throws PsimiTabException
+	 */
+	public boolean convertTab(InputStream inputStream, OutputStream outputStream)
+		throws IOException, PsimiTabException;	
 
 	/**
-	 * Converts the psi data in the EntrySet and places into outputstream.
+	 * Converts the PSI interactions from the EntrySet and places into BioPAX output stream.
 	 * Stream will be closed by the converter.
 	 *
 	 * @param entrySet EntrySet

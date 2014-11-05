@@ -4,16 +4,11 @@ import org.biopax.paxtools.model.level3.Control;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.util.BiopaxSafeSet;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
+import org.biopax.paxtools.util.BPCollections;
+import org.hibernate.annotations.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -33,9 +28,9 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 
 	public ProcessImpl()
 	{
-		this.controlledOf = new BiopaxSafeSet<Control>();
-		this.stepProcessOf = new BiopaxSafeSet<PathwayStep>();
-		this.pathwayComponentOf = new BiopaxSafeSet<Pathway>();
+		this.controlledOf = BPCollections.I.createSafeSet();
+		this.stepProcessOf = BPCollections.I.createSafeSet();
+		this.pathwayComponentOf = BPCollections.I.createSafeSet();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -54,7 +49,7 @@ public abstract class ProcessImpl extends EntityImpl implements Process
 // --------------------- Interface process ---------------------
 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcess")
+	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "stepProcessX")
 	public Set<PathwayStep> getStepProcessOf()
 	{
 		return stepProcessOf;

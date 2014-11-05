@@ -18,7 +18,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
@@ -44,12 +43,12 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public PhysicalEntityImpl()
 	{
-		feature = new BiopaxSafeSet<EntityFeature>();
-		notFeature = new BiopaxSafeSet<EntityFeature>();
-		controllerOf = new BiopaxSafeSet<Control>();
-		componentOf = new BiopaxSafeSet<Complex>();
-		memberPhysicalEntityOf = new BiopaxSafeSet<PhysicalEntity>(); //TODO make generic?
-		memberPhysicalEntity = new BiopaxSafeSet<PhysicalEntity>();
+		feature = BPCollections.I.createSafeSet();
+		notFeature = BPCollections.I.createSafeSet();
+		controllerOf = BPCollections.I.createSafeSet();
+		componentOf = BPCollections.I.createSafeSet();
+		memberPhysicalEntityOf = BPCollections.I.createSafeSet(); //TODO make generic?
+		memberPhysicalEntity = BPCollections.I.createSafeSet();
 	}
 
 	@Transient
@@ -96,7 +95,12 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void removeFeature(EntityFeature feature)
 	{
 		if (feature != null) {
-			checkAndRemoveFeature(feature, feature.getFeatureOf());
+			synchronized (feature) {
+				assert feature.getFeatureOf().contains(this) ^ feature.getNotFeatureOf().contains(this) 
+				: feature + " is both 'feature' and 'notFeature' of " + this; 
+				//TODO even if the assertion fails, so what? (in any case, we still want to remove this PE from the set)
+				feature.getFeatureOf().remove(this);
+			}
 			this.feature.remove(feature);
 		}
 	}
@@ -126,7 +130,12 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void removeNotFeature(EntityFeature feature)
 	{
 		if (feature != null) {
-			checkAndRemoveFeature(feature, feature.getNotFeatureOf());
+			synchronized (feature) {
+				assert feature.getFeatureOf().contains(this) ^ feature.getNotFeatureOf().contains(this) 
+				: feature + " is both 'feature' and 'notFeature' of " + this; 
+				//TODO even if the assertion fails, so what? (in any case, we still want to remove this PE from the set)
+				feature.getNotFeatureOf().remove(this);
+			}
 			this.notFeature.remove(feature);
 		}
 	}
@@ -149,15 +158,19 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	{
 		if (newMember != null) {
 			this.memberPhysicalEntity.add(newMember);
-			newMember.getMemberPhysicalEntityOf().add(this);
+			synchronized (newMember) {
+				newMember.getMemberPhysicalEntityOf().add(this);
+			}
 		}
 	}
 
 	public void removeMemberPhysicalEntity(PhysicalEntity oldMember)
 	{
 		if (oldMember != null) {
-			this.memberPhysicalEntity.remove(oldMember); // TODO (what?)
-			oldMember.getMemberPhysicalEntityOf().remove(this);
+			this.memberPhysicalEntity.remove(oldMember);
+			synchronized (oldMember) {
+				oldMember.getMemberPhysicalEntityOf().remove(this);
+			}
 		}
 	}
 
@@ -189,14 +202,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 						+ feature.getRDFId());
 		}
 		target.add(this);
-	}
-
-	private void checkAndRemoveFeature(EntityFeature feature,
-	                                   Set<PhysicalEntity> target)
-	{
-		assert feature.getFeatureOf().contains(this) ^
-		       feature.getNotFeatureOf().contains(this);
-		target.remove(this);
 	}
 
 	// --------------------- Interface BioPAXElement ---------------------
