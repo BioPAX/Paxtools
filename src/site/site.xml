@@ -23,10 +23,6 @@
 	<fluidoSkin>
 		<sideBarEnabled>true</sideBarEnabled>
 		<topBarEnabled>true</topBarEnabled>
-      		<ohloh>
-        		<projectId>12525</projectId>
-        		<widget>factoids</widget>
-		</ohloh>
 		<profile>production</profile>
 		<googleSearch>
        			<sitesearch/>
