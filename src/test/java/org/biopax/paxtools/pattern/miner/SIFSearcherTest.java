@@ -106,13 +106,13 @@ public class SIFSearcherTest extends PatternBoxTest
 
 //		BPCollections.I.setProvider(new TProvider());
 
+		String dir = "/home/ozgun/Projects/biopax-pattern/";
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream
-				("/home/ozgun/Temp/data.owl"));
+		Model model = h.convertFromOWL(new FileInputStream(dir + "Pathway Commons.5.Detailed_Process_Data.BIOPAX.owl"));
 
 		BlacklistGenerator gen = new BlacklistGenerator();
 		Blacklist blacklist = gen.generateBlacklist(model);
-		blacklist.write(new FileOutputStream("/home/ozgun/blacklist.txt"));
+		blacklist.write(new FileOutputStream(dir + "blacklist.txt"));
 
 		SIFSearcher s = new SIFSearcher(SIFEnum.values());
 //		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
@@ -124,7 +124,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		s.setBlacklist(blacklist);
 
 		confirmPresenceOfUbiques(model, blacklist);
-		s.searchSIF(model, new FileOutputStream("/home/ozgun/Temp/PC.sif"), true);
+		s.searchSIF(model, new FileOutputStream(dir + "PC.sif"), true);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));

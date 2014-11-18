@@ -30,7 +30,10 @@ public class ModificationChangeConstraint extends ConstraintAdapter
 	protected Type type;
 
 	/**
-	 * Constructor with the desired change and maps to activating and inactivating features,
+	 * Constructor with the desired change and maps to activating and inactivating features. If the
+	 * feature substrings are not provided, any feature is qualified.
+	 *
+	 * @param type either gain, loss, or any
 	 * @param featureSubstring partial names of the features desired to be changed
 	 */
 	public ModificationChangeConstraint(Type type, String... featureSubstring)
@@ -101,6 +104,9 @@ public class ModificationChangeConstraint extends ConstraintAdapter
 	 */
 	private boolean termsContainDesired(Set<String> terms)
 	{
+		if (terms.isEmpty()) return false;
+		if (featureSubstring.length == 0) return true;
+
 		for (String term : terms)
 		{
 			for (String sub : featureSubstring)

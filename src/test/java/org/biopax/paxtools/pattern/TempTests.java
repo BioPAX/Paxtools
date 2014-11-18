@@ -1,7 +1,9 @@
 package org.biopax.paxtools.pattern;
 
 import junit.framework.Assert;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
@@ -445,47 +447,87 @@ public class TempTests
 	@Ignore
 	public void tempCode() throws FileNotFoundException
 	{
-		Miner miner = new MinerAdapter("PhysicalEntity-to-ComplexAssembly", "Finds PhysicalEntity " +
-			"objects which are input to a ComplexAssembly.")
-		{
-			/**
-			 * The pattern is composed of two proteins associated to a complex as members. The
-			 * relation can be through nested memberships or through generic relations.
-			 */
-			public Pattern constructPattern()
-			{
-				Pattern p = PatternBox.inComplexWith();
-				p.add(new Field("ProteinReference/xref/id", Field.Operation.INTERSECT, "KRAS"), "Protein 1");
-				p.optimizeConstraintOrder();
-				return p;
-			}
+		String uri = "http://identifiers.org/uniprot/F7GJZ7";
+		String convURI = "http://www.pantherdb.org/pathways/biopax#STATE_TRANSITION_LEFT__Lck-RIGHT__Pi-_Lck-_r4";
+		String contURI = "http://www.pantherdb.org/pathways/biopax#_CATALYSIS___CD45_r4m1_r4";
 
-			/**
-			 * Writes the result as "P1 P2", where P1 and P2 are gene symbols of proteins and the
-			 * whitespace is tab. The relation is undirected, so "P2 P1" is treated as the same
-			 * relation.
-			 */
-			public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
-				throws IOException
+		Model model1 = BioPAXLevel.L3.getDefaultFactory().createModel();
+		File directory = new File("/home/ozgun/Desktop/Panther/"); // just my directory
+
+		SimpleIOHandler importer = new SimpleIOHandler(BioPAXLevel.L3);
+
+		for (File f : directory.listFiles()) {
+			model1.merge(importer.convertFromOWL(new FileInputStream(f.getAbsoluteFile())));
+			model1 = importer.convertFromOWL(new FileInputStream(f.getAbsoluteFile()));
+			if (model1.getByID(convURI) != null)
 			{
-				Writer writer = new OutputStreamWriter(out);
-				for (BioPAXElement ele : matches.keySet())
+				System.out.println(f);
+			}
+			if (model1.getByID(contURI) != null)
+			{
+				Catalysis cat = (Catalysis) model1.getByID(contURI);
+				for (Process prc : cat.getControlled())
 				{
-					for (Match match : matches.get(ele))
-					{
-						BioPAXElement conv = match.get("Conv", getPattern());
-
-						if (conv instanceof ComplexAssembly)
-							writer.write(ele.getRDFId() + "\t" + conv.getRDFId() + "\n");
-					}
+					System.out.println("prc = " + prc.getRDFId());
 				}
-				writer.close();
+				System.out.println(f);
 			}
-		};
+		}
 
-		// Launch the GUI that will assist choosing a source model, and output file name
-		Dialog d = new Dialog(miner);
-		d.setVisible(true);
+		System.exit(0);
+
+		Pattern p = new Pattern(ProteinReference.class, "PR1");
+		p.add(new IDConstraint(Collections.singleton(uri)), "PR1");
+		p.add(ConBox.erToPE(), "PR1", "P1");
+		p.add(ConBox.peToControl(), "P1", "Cont1");
+		p.add(ConBox.controlToConv(), "Cont1", "Conv1");
+		p.add(ConBox.right(),  "Conv1", "linker");
+		p.add(ConBox.participatesInConv(),  "linker", "Conv2");
+		p.add(ConBox.left(),  "Conv2","linker");
+		p.add(ConBox.convToControl(), "Conv2", "Cont2");
+		p.add(ConBox.controllerPE(), "Cont2", "P2");
+		p.add(ConBox.peToER(), "P2", "PR2");
+		p.add(new Type(Protein.class),"P2");
+		p.add(ConBox.equal(false), "linker", "P2");
+		p.add(ConBox.equal(false), "PR2", "PR1");
+		p.add(ConBox.equal(false), "P2", "P1");
+		p.add(ConBox.equal(false), "linker", "P1");
+		p.add(ConBox.equal(false), "Conv1", "Conv2");
+
+		Map<BioPAXElement, List<Match>> map1 = Searcher.search(model1, p);
+		System.out.println("map.size() = " + map1.size());
+
+		String model_filename = "/home/ozgun/Temp/temp.owl";
+		importer.convertToOWL(model1, new FileOutputStream(model_filename));
+		Model model2 = importer.convertFromOWL(new FileInputStream(model_filename));
+
+		Map<BioPAXElement, List<Match>> map2 = Searcher.search(model2, p);
+		System.out.println("map.size() = " + map2.size());
+
+		for (BioPAXElement ele : map1.keySet())
+		{
+			if (!map2.containsKey(ele))
+			{
+				System.out.println(ele.getRDFId());
+			}
+		}
+
+		Conversion conv1 = (Conversion) model1.getByID(convURI);
+		Conversion conv2 = (Conversion) model2.getByID(convURI);
+
+		System.out.println(conv1.getControlledOf().size());
+		System.out.println(conv2.getControlledOf().size());
+	}
+
+	private void compareModels(Model m1, Model m2)
+	{
+		for (BioPAXElement e1 : m1.getObjects())
+		{
+			BioPAXElement e2 = m2.getByID(e1.getRDFId());
+
+			if (!e1.equals(e2)) System.out.println("Not equal!!");
+		}
+		System.out.println("End");
 	}
 
 	public static void main(String[] args) throws FileNotFoundException
@@ -493,4 +535,5 @@ public class TempTests
 		TempTests tt = new TempTests();
 		tt.tempCode();
 	}
+
 }
