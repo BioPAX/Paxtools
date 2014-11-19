@@ -1,4 +1,4 @@
-package org.biopax.paxtools.pattern.miner;
+package org.biopax.paxtools.pattern.example;
 
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -9,6 +9,8 @@ import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
 import org.biopax.paxtools.pattern.Searcher;
+import org.biopax.paxtools.pattern.miner.AbstractSIFMiner;
+import org.biopax.paxtools.pattern.miner.SIFEnum;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.DifferentialModificationUtil;
 
@@ -18,6 +20,8 @@ import java.util.*;
 /**
  * This class goes over the state change pattern results and writes down the gained and lost
  * modifications through these directed relations.
+ *
+ * Do not forget to allocate a large memory while running this example (like -Xmx8G).
  *
  * @author Ozgun Babur
  */
@@ -29,6 +33,26 @@ public class DeltaFeatureExtractor
 
 	private AbstractMiner[] miners = new AbstractMiner[]{
 		new CSCO(), new CSCO_ButPart(), new CSCO_CtrlAndPart(), new CSCO_ThrContSmMol()};
+
+	public static void main(String[] args) throws IOException
+	{
+		// A blacklist file is available at http://www.pathwaycommons.org/pc2/downloads/blacklist.txt
+		// This is for avoiding ubiquitous small molecules like ATP
+		Blacklist black = new Blacklist("blacklist.txt");
+
+		DeltaFeatureExtractor dfe = new DeltaFeatureExtractor();
+		dfe.setBlacklist(black);
+
+		SimpleIOHandler io = new SimpleIOHandler();
+
+		// The large model file is available at
+		// http://www.pathwaycommons.org/pc2/downloads/Pathway%20Commons.5.Detailed_Process_Data.BIOPAX.owl.gz
+		Model model = io.convertFromOWL(new FileInputStream(
+			"Pathway Commons.5.Detailed_Process_Data.BIOPAX.owl"));
+
+		dfe.mineAndCollect(model);
+		dfe.writeResults("DeltaFeatures.txt");
+	}
 
 	abstract class AbstractMiner extends AbstractSIFMiner
 	{
@@ -279,18 +303,5 @@ public class DeltaFeatureExtractor
 			s += " " + s1;
 		}
 		return s.substring(1);
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		Blacklist black = new Blacklist("blacklist.txt");
-		DeltaFeatureExtractor dfe = new DeltaFeatureExtractor();
-		dfe.setBlacklist(black);
-		SimpleIOHandler io = new SimpleIOHandler();
-		Model model = io.convertFromOWL(new FileInputStream(
-			"Pathway Commons.5.Detailed_Process_Data.BIOPAX.owl"));
-//			"Pathway Commons.5.NCI_Nature.BIOPAX.owl"));
-		dfe.mineAndCollect(model);
-		dfe.writeResults("DeltaFeatures.txt");
 	}
 }
