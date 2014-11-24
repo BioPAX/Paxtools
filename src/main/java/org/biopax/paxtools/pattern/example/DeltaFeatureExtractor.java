@@ -3,8 +3,7 @@ package org.biopax.paxtools.pattern.example;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.ModificationFeature;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBox;
@@ -12,7 +11,6 @@ import org.biopax.paxtools.pattern.Searcher;
 import org.biopax.paxtools.pattern.miner.AbstractSIFMiner;
 import org.biopax.paxtools.pattern.miner.SIFEnum;
 import org.biopax.paxtools.pattern.util.Blacklist;
-import org.biopax.paxtools.pattern.util.DifferentialModificationUtil;
 
 import java.io.*;
 import java.util.*;
@@ -27,8 +25,12 @@ import java.util.*;
  */
 public class DeltaFeatureExtractor
 {
-	private Map<String, Map<String, Set<String>>> gains;
-	private Map<String, Map<String, Set<String>>> losses;
+	private Map<String, Map<String, Set<String>>> gainMods;
+	private Map<String, Map<String, Set<String>>> lossMods;
+	private Map<String, Map<String, Set<String>>> gainComps;
+	private Map<String, Map<String, Set<String>>> lossComps;
+	private Map<String, Map<String, Set<String>>> sourceMods;
+	private Map<String, Map<String, Set<String>>> sourceComps;
 	private Map<String, Map<String, Set<String>>> mediators;
 
 	private AbstractMiner[] miners = new AbstractMiner[]{
@@ -71,25 +73,42 @@ public class DeltaFeatureExtractor
 			{
 				for (Match m : matchList)
 				{
+					// find source and target identifiers
 					String s1 = getIdentifier(m, getSourceLabel());
 					String s2 = getIdentifier(m, getTargetLabel());
 
 					if (s1 == null || s2 == null) continue;
 
-					SimplePhysicalEntity speIn = (SimplePhysicalEntity)
-						m.get(getInputSimplePELabel(), getPattern());
+					// collect gained and lost modifications and cellular locations of the target
 
-					SimplePhysicalEntity speOut = (SimplePhysicalEntity)
-						m.get(getOutputSimplePELabel(), getPattern());
+					Set<String>[] modif = getDeltaModifications(m,
+						getInputSimplePELabel(), getInputComplexPELabel(),
+						getOutputSimplePELabel(), getOutputComplexPELabel());
 
-					Set<ModificationFeature>[] modif =
-						DifferentialModificationUtil.getChangedModifications(speIn, speOut);
+					Set<String>[] comps = getDeltaCompartments(m,
+						getInputSimplePELabel(), getInputComplexPELabel(),
+						getOutputSimplePELabel(), getOutputComplexPELabel());
 
-					if (!modif[0].isEmpty()) collect(s1, s2, modif[0], gains);
-					if (!modif[1].isEmpty()) collect(s1, s2, modif[1], losses);
+					// correct for inactive-labelled controllers and negative sign controls
+					int sign = sign(m, getControlLabels());
+					if (labeledInactive(m, getSourceSimplePELabel(), getSourceComplexPELabel()))
+						sign *= -1;
 
-					if (!modif[0].isEmpty() || !modif[1].isEmpty())
+					Set<String> modif0 = modif[sign == -1 ? 1 : 0];
+					Set<String> modif1 = modif[sign == -1 ? 0 : 1];
+					Set<String> comps0 = comps[sign == -1 ? 1 : 0];
+					Set<String> comps1 = comps[sign == -1 ? 0 : 1];
+
+					if (!modif0.isEmpty()) collect(s1, s2, modif0, gainMods);
+					if (!modif1.isEmpty()) collect(s1, s2, modif1, lossMods);
+					if (!comps0.isEmpty()) collect(s1, s2, comps0, gainComps);
+					if (!comps1.isEmpty()) collect(s1, s2, comps1, lossComps);
+
+					if (!modif[0].isEmpty() || !modif[1].isEmpty() ||
+						!comps[0].isEmpty() || !comps[1].isEmpty())
 					{
+						// record mediator ids to map these interactions to detailed data
+
 						if (!mediators.containsKey(s1)) mediators.put(s1, new HashMap<String, Set<String>>());
 						if (!mediators.get(s1).containsKey(s2)) mediators.get(s1).put(s2, new HashSet<String>());
 
@@ -98,22 +117,38 @@ public class DeltaFeatureExtractor
 						{
 							mediators.get(s1).get(s2).add(med.getRDFId());
 						}
+
+						// record modifications and cellular locations of the source molecule
+
+						Set<String> mods = getModifications(m, getSourceSimplePELabel(), getSourceComplexPELabel());
+						Set<String> locs = getCellularLocations(m, getSourceSimplePELabel(), getSourceComplexPELabel());
+
+						collect(s1, s2, mods, sourceMods);
+						collect(s1, s2, locs, sourceComps);
 					}
 				}
 			}
+
+			correctForActiveAndInactive(gainMods, lossMods, sourceMods);
 		}
 
-		private void collect(String s1, String s2, Set<ModificationFeature> modificationFeatures,
+		private void collect(String s1, String s2, Set<String> modificationFeatures,
 			Map<String, Map<String, Set<String>>> map)
 		{
 			if (!map.containsKey(s1)) map.put(s1, new HashMap<String, Set<String>>());
 			if (!map.get(s1).containsKey(s2)) map.get(s1).put(s2, new HashSet<String>());
+			map.get(s1).get(s2).addAll(modificationFeatures);
+		}
 
-			for (ModificationFeature mf : modificationFeatures)
-			{
-				String s = toString(mf);
-				if (s != null) map.get(s1).get(s2).add(s);
-			}
+
+		String getSourceSimplePELabel()
+		{
+			return "controller simple PE";
+		}
+
+		String getSourceComplexPELabel()
+		{
+			return "controller PE";
 		}
 
 		String getInputSimplePELabel()
@@ -124,6 +159,16 @@ public class DeltaFeatureExtractor
 		String getOutputSimplePELabel()
 		{
 			return "output simple PE";
+		}
+
+		String getInputComplexPELabel()
+		{
+			return "input PE";
+		}
+
+		String getOutputComplexPELabel()
+		{
+			return "output PE";
 		}
 
 		@Override
@@ -142,6 +187,11 @@ public class DeltaFeatureExtractor
 		public String[] getMediatorLabels()
 		{
 			return new String[]{"Control", "Conversion"};
+		}
+
+		public String[] getControlLabels()
+		{
+			return new String[]{"Control"};
 		}
 
 		protected String toString(ModificationFeature mf)
@@ -201,6 +251,12 @@ public class DeltaFeatureExtractor
 		}
 
 		@Override
+		public String[] getControlLabels()
+		{
+			return new String[]{};
+		}
+
+		@Override
 		public String[] getMediatorLabels()
 		{
 			return new String[]{"Conversion"};
@@ -213,6 +269,18 @@ public class DeltaFeatureExtractor
 		public Pattern constructPattern()
 		{
 			return PatternBox.controlsStateChangeThroughControllerSmallMolecule(blacklist);
+		}
+
+		@Override
+		String getSourceSimplePELabel()
+		{
+			return "upper controller simple PE";
+		}
+
+		@Override
+		String getSourceComplexPELabel()
+		{
+			return "upper controller PE";
 		}
 
 		@Override
@@ -232,12 +300,22 @@ public class DeltaFeatureExtractor
 		{
 			return new String[]{"upper Control", "upper Conversion", "Control", "Conversion"};
 		}
+
+		@Override
+		public String[] getControlLabels()
+		{
+			return new String[]{"upper Control", "Control"};
+		}
 	}
 
 	public DeltaFeatureExtractor()
 	{
-		gains = new HashMap<String, Map<String, Set<String>>>();
-		losses = new HashMap<String, Map<String, Set<String>>>();
+		gainMods = new HashMap<String, Map<String, Set<String>>>();
+		lossMods = new HashMap<String, Map<String, Set<String>>>();
+		gainComps = new HashMap<String, Map<String, Set<String>>>();
+		lossComps = new HashMap<String, Map<String, Set<String>>>();
+		sourceMods = new HashMap<String, Map<String, Set<String>>>();
+		sourceComps = new HashMap<String, Map<String, Set<String>>>();
 		mediators = new HashMap<String, Map<String, Set<String>>>();
 	}
 
@@ -263,36 +341,68 @@ public class DeltaFeatureExtractor
 	public void writeResults(String filename) throws IOException
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-		writer.write("Source\tType\tTarget\tGained\tLost\tMediators");
+		writer.write("Source\tType\tTarget\tSource-modifs\tSource-locs\tGained-modifs\tLost-modifs\tGained-locs\tLost-locs\tMediators");
 
-		Set<String> s1s = new HashSet<String>(gains.keySet());
-		s1s.addAll(losses.keySet());
+		Set<String> s1s = new HashSet<String>(gainMods.keySet());
+		s1s.addAll(lossMods.keySet());
 
 		for (String s1 : s1s)
 		{
 			Set<String> s2s = new HashSet<String>();
-			if (gains.containsKey(s1)) s2s.addAll(gains.get(s1).keySet());
-			if (losses.containsKey(s1)) s2s.addAll(losses.get(s1).keySet());
+			if (gainMods.containsKey(s1)) s2s.addAll(gainMods.get(s1).keySet());
+			if (lossMods.containsKey(s1)) s2s.addAll(lossMods.get(s1).keySet());
 
 			for (String s2 : s2s)
 			{
 				writer.write("\n" + s1 + "\t" + SIFEnum.CONTROLS_STATE_CHANGE_OF.getTag() +
-					"\t" + s2 + "\t");
+					"\t" + s2);
 
-				if (gains.containsKey(s1) && gains.get(s1).containsKey(s2))
-				{
-					writer.write(gains.get(s1).get(s2).toString());
-				}
-				writer.write("\t");
-				if (losses.containsKey(s1) && losses.get(s1).containsKey(s2))
-				{
-					writer.write(losses.get(s1).get(s2).toString());
-				}
+				writeVal(writer, s1, s2, sourceMods);
+				writeVal(writer, s1, s2, sourceComps);
+				writeVal(writer, s1, s2, gainMods);
+				writeVal(writer, s1, s2, lossMods);
+				writeVal(writer, s1, s2, gainComps);
+				writeVal(writer, s1, s2, lossComps);
 				writer.write("\t" + toString(mediators.get(s1).get(s2)));
 			}
 		}
 
 		writer.close();
+	}
+
+	private static final String ACTIVE_WORD = "residue modification, active";
+	private static final String INACTIVE_WORD = "residue modification, inactive";
+	private void correctForActiveAndInactive(Map<String, Map<String, Set<String>>>... maps)
+	{
+		for (Map<String, Map<String, Set<String>>> map : maps)
+		{
+			for (Map<String, Set<String>> setMaps : map.values())
+			{
+				for (Set<String> set : setMaps.values())
+				{
+					if (set.contains(ACTIVE_WORD))
+					{
+						set.remove(ACTIVE_WORD);
+						set.add("active");
+					}
+					if (set.contains(INACTIVE_WORD))
+					{
+						set.remove(INACTIVE_WORD);
+						set.add("inactive");
+					}
+				}
+			}
+		}
+	}
+
+	private void writeVal(BufferedWriter writer, String s1, String s2,
+		Map<String, Map<String, Set<String>>> map) throws IOException
+	{
+		writer.write("\t");
+		if (map.containsKey(s1) && map.get(s1).containsKey(s2))
+		{
+			writer.write(map.get(s1).get(s2).toString());
+		}
 	}
 
 	private String toString(Set<String> set)

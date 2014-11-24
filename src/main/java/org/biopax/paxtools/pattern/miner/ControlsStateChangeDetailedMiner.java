@@ -81,7 +81,7 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 			}
 			case 1:
 			{
-				return getModifications(m, "controller simple PE", "controller PE");
+				return concat(getModifications(m, "controller simple PE", "controller PE"), " ");
 			}
 			case 2:
 			{
@@ -89,13 +89,13 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 			}
 			case 3:
 			{
-				return getDeltaModifications(m,
-					"input simple PE", "input PE", "output simple PE", "output PE")[0];
+				return concat(getDeltaModifications(m,
+					"input simple PE", "input PE", "output simple PE", "output PE")[0], " ");
 			}
 			case 4:
 			{
-				return getDeltaModifications(m,
-					"input simple PE", "input PE", "output simple PE", "output PE")[1];
+				return concat(getDeltaModifications(m,
+					"input simple PE", "input PE", "output simple PE", "output PE")[1], " ");
 			}
 			default: throw new RuntimeException("Invalid col number: " + col);
 		}

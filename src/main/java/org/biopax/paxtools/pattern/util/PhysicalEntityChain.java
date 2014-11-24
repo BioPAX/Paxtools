@@ -126,8 +126,9 @@ public class PhysicalEntityChain
 	 * Retrieves the cellular location of the PhysicalEntity.
 	 * @return cellular location of the PhysicalEntity
 	 */
-	public String getCellularLocation()
+	public Set<String> getCellularLocations()
 	{
+		Set<String> locs = new HashSet<String>();
 		for (PhysicalEntity pe : pes)
 		{
 			CellularLocationVocabulary voc = pe.getCellularLocation();
@@ -135,11 +136,11 @@ public class PhysicalEntityChain
 			{
 				for (String term : voc.getTerm())
 				{
-					if (term != null && term.length() > 0) return term;
+					if (term != null && term.length() > 0) locs.add(term);
 				}
 			}
 		}
-		return null;
+		return locs;
 	}
 
 	/**
@@ -214,7 +215,7 @@ public class PhysicalEntityChain
 	/**
 	 * Values for activity.
 	 */
-	enum Activity
+	public enum Activity
 	{
 		ACTIVE,
 		INACTIVE,

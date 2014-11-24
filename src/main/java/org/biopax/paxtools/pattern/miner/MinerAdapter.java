@@ -256,7 +256,7 @@ public abstract class MinerAdapter implements Miner
 	 * @param set modifications
 	 * @return a String listing the modifications
 	 */
-	public String listModifications(Set<ModificationFeature> set)
+	public Set<String> toStringSet(Set<ModificationFeature> set)
 	{
 		List<ModificationFeature> list = new ArrayList<ModificationFeature>(set);
 
@@ -287,9 +287,9 @@ public abstract class MinerAdapter implements Miner
 	 * @param list modification list
 	 * @return String representing the modifications
 	 */
-	private String getInString(List<ModificationFeature> list)
+	private Set<String> getInString(List<ModificationFeature> list)
 	{
-		List<String> text = new ArrayList<String>(list.size());
+		Set<String> text = new HashSet<String>(list.size());
 
 		for (ModificationFeature mf : list)
 		{
@@ -302,13 +302,7 @@ public abstract class MinerAdapter implements Miner
 				if (!text.contains(s)) text.add(s);
 			}
 		}
-
-		String s = "";
-		for (String t : text)
-		{
-			s += "[" + t + "] ";
-		}
-		return s.trim();
+		return text;
 	}
 
 	/**
@@ -391,33 +385,46 @@ public abstract class MinerAdapter implements Miner
 	 * @param label label of the PhysicalEntity
 	 * @return modifications
 	 */
-	protected String getModifications(Match m, String label)
+	protected Set<String> getModifications(Match m, String label)
 	{
 		PhysicalEntity pe = (PhysicalEntity) m.get(label, getPattern());
-		return listModifications(new HashSet<ModificationFeature>(FEAT_ACC.getValueFromBean(pe)));
+		return toStringSet(new HashSet<ModificationFeature>(FEAT_ACC.getValueFromBean(pe)));
 	}
 
 	/**
-	 * Gets modifications of the given elements in a string. The elements has to be a PhysicalEntity
-	 * and they must be two ends of a chain with homology and/or complex membership relations.
+	 * Gets modifications of the given elements in a string set. The elements has to be a
+	 * PhysicalEntity and they must be two ends of a chain with homology and/or complex membership
+	 * relations.
 	 * @param m match
 	 * @param memLabel the member-end of the PhysicalEntity chain
 	 * @param comLabel the complex-end of the PhysicalEntity chain
 	 * @return modifications
 	 */
-	protected String getModifications(Match m, String memLabel, String comLabel)
+	protected Set<String> getModifications(Match m, String memLabel, String comLabel)
 	{
-		PhysicalEntityChain chain = new PhysicalEntityChain(
-			(PhysicalEntity) m.get(memLabel, getPattern()),
-			(PhysicalEntity)m.get(comLabel, getPattern()));
-
-		return listModifications(chain.getModifications());
+		PhysicalEntityChain chain = getChain(m, memLabel, comLabel);
+		return toStringSet(chain.getModifications());
 	}
 
 	/**
-	 * Gets delta modifications of the given elements in a string. The elements has to be two
+	 * Gets cellular locations of the given elements in a string set. The elements has to be a
+	 * PhysicalEntity and they must be two ends of a chain with homology and/or complex membership
+	 * relations.
+	 * @param m match
+	 * @param memLabel the member-end of the PhysicalEntity chain
+	 * @param comLabel the complex-end of the PhysicalEntity chain
+	 * @return cellular locations
+	 */
+	protected Set<String> getCellularLocations(Match m, String memLabel, String comLabel)
+	{
+		PhysicalEntityChain chain = getChain(m, memLabel, comLabel);
+		return chain.getCellularLocations();
+	}
+
+	/**
+	 * Gets delta modifications of the given elements in string sets. The elements has to be two
 	 * PhysicalEntity chains. The result array is composed of two strings: gained (0) and lost (1).
-	 * Feature tokens are separated with comma.
+	 *
 	 * @param m match
 	 * @param memLabel1 the member-end of the first PhysicalEntity chain
 	 * @param comLabel1 the complex-end of the first PhysicalEntity chain
@@ -425,28 +432,121 @@ public abstract class MinerAdapter implements Miner
 	 * @param comLabel2 the complex-end of the second PhysicalEntity chain
 	 * @return delta modifications
 	 */
-	protected String[] getDeltaModifications(Match m, String memLabel1, String comLabel1,
+	protected Set<String>[] getDeltaModifications(Match m, String memLabel1, String comLabel1,
 		String memLabel2, String comLabel2)
 	{
-		PhysicalEntityChain chain1 = new PhysicalEntityChain(
-			(PhysicalEntity) m.get(memLabel1, getPattern()),
-			(PhysicalEntity)m.get(comLabel1, getPattern()));
-
-		PhysicalEntityChain chain2 = new PhysicalEntityChain(
-			(PhysicalEntity) m.get(memLabel2, getPattern()),
-			(PhysicalEntity)m.get(comLabel2, getPattern()));
+		PhysicalEntityChain chain1 = getChain(m, memLabel1, comLabel1);
+		PhysicalEntityChain chain2 = getChain(m, memLabel2, comLabel2);
 
 		Set<ModificationFeature> before = chain1.getModifications();
-		Set<ModificationFeature> intersect = new HashSet<ModificationFeature>(before);
 		Set<ModificationFeature> after = chain2.getModifications();
-		intersect.retainAll(after);
-		before.removeAll(intersect);
-		after.removeAll(intersect);
 
-		String afterMods = listModifications(after);
-		String beforeMods = listModifications(before);
+		Set<String> afterMods = toStringSet(after);
+		Set<String> beforeMods = toStringSet(before);
+		removeCommon(afterMods, beforeMods);
 
-		return new String[]{afterMods, beforeMods};
+		return new Set[]{afterMods, beforeMods};
+	}
+
+	/**
+	 * Gets delta compartments of the given two PE chains. The result array is composed of two
+	 * string sets: gained (0) and lost (1).
+	 *
+	 * @param m match
+	 * @param memLabel1 the member-end of the first PhysicalEntity chain
+	 * @param comLabel1 the complex-end of the first PhysicalEntity chain
+	 * @param memLabel2 the member-end of the second PhysicalEntity chain
+	 * @param comLabel2 the complex-end of the second PhysicalEntity chain
+	 * @return delta compartments
+	 */
+	protected Set<String>[] getDeltaCompartments(Match m, String memLabel1, String comLabel1,
+		String memLabel2, String comLabel2)
+	{
+		PhysicalEntityChain chain1 = getChain(m, memLabel1, comLabel1);
+		PhysicalEntityChain chain2 = getChain(m, memLabel2, comLabel2);
+
+		Set<String> before = chain1.getCellularLocations();
+		Set<String> after = chain2.getCellularLocations();
+		removeCommon(after, before);
+
+		return new Set[]{after, before};
+	}
+
+	protected PhysicalEntityChain getChain(Match m, String memLabel, String comLabel)
+	{
+		return new PhysicalEntityChain((PhysicalEntity) m.get(memLabel, getPattern()),
+			(PhysicalEntity)m.get(comLabel, getPattern()));
+	}
+
+	protected void removeCommon(Set<String> set1, Set<String> set2)
+	{
+		Set<String> common = new HashSet<String>(set1);
+		common.retainAll(set2);
+		set1.removeAll(common);
+		set2.removeAll(common);
+	}
+
+	/**
+	 * Converts the set of string to a single string.
+	 * @param set the set
+	 * @param sep separator string
+	 * @return concatenated string
+	 */
+	protected String concat(Set<String> set, String sep)
+	{
+		String s = "";
+
+		int i = set.size();
+		for (String ss : set)
+		{
+			s += ss;
+			if (--i > 0) s += sep;
+		}
+		return s;
+	}
+
+	/**
+	 * Identifies negative and positive controls. Assumes positive by default.
+	 * @param ctrl control to check
+	 * @return sign
+	 */
+	protected int sign(Control ctrl)
+	{
+		ControlType type = ctrl.getControlType();
+		if (type != null && type.name().startsWith("I")) return -1;
+		return 1;
+	}
+
+	/**
+	 * Checks the cumulative sign of the chained controls.
+	 * @param m result match
+	 * @param ctrlLabel labels for controls
+	 * @return sign
+	 */
+	protected int sign(Match m, String... ctrlLabel)
+	{
+		int sign = 1;
+
+		for (String lab : ctrlLabel)
+		{
+			Control ctrl = (Control) m.get(lab, getPattern());
+			sign *= sign(ctrl);
+		}
+		return sign;
+	}
+
+	/**
+	 * Checks if a PE chain is labeled as inactive.
+	 * @param m the result match
+	 * @param simpleLabel simple end of the chain
+	 * @param complexLabel complex end of the chain
+	 * @return true if labeled inactive
+	 */
+	protected boolean labeledInactive(Match m, String simpleLabel, String complexLabel)
+	{
+		PhysicalEntityChain chain = getChain(m, simpleLabel, complexLabel);
+		PhysicalEntityChain.Activity activity = chain.checkActivityLabel();
+		return activity == PhysicalEntityChain.Activity.INACTIVE;
 	}
 
 	//----- Section: Result as SIF format ---------------------------------------------------------|
