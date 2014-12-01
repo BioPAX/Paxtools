@@ -9,7 +9,7 @@ public enum BinaryInteractionType
 
 	COMPONENT_OF(
 			"The first entity is a component of the second entity, which is a complex.  " +
-			"This interaction is transient in the sense that A component_of B and B component_of " +
+			"This interaction is transitive in the sense that A component_of B and B component_of " +
 			"C implies A component_of C.  " +
 			"This interaction is directed.", true),
 

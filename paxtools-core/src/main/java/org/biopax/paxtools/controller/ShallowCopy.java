@@ -37,7 +37,8 @@ public class ShallowCopy implements Visitor
 	 */
     public ShallowCopy(BioPAXLevel level)
     {
-        this(SimpleEditorMap.get(level));
+    	this.level = level;
+    	traverser = new Traverser(SimpleEditorMap.get(level), this);
     }
 
 	/**

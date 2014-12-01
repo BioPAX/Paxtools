@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
-	<version>4.3.0-SNAPSHOT</version>
+	<version>4.3.1-SNAPSHOT</version>
 
 	<name>Paxtools</name>
 	<packaging>pom</packaging>
@@ -17,8 +17,8 @@
 	<url>${siteUrl}</url>
 
 	<modules>
-        <module>paxtools-core</module>
-        <module>paxtools-jena-io</module>
+		<module>paxtools-core</module>
+		<module>paxtools-jena-io</module>
 		<module>sif-converter</module>
 		<module>gsea-converter</module>
 		<module>psimi-converter</module>
@@ -26,9 +26,9 @@
 		<module>paxtools-console</module>
 		<module>paxtools-query</module>
 		<module>paxtools-trove</module>
-        <module>paxtools-archetype</module>
-        <module>json-converter</module>
-        <module>paxtools-search</module>
+		<module>paxtools-archetype</module>
+<!-- 		<module>json-converter</module> -->
+ 		<module>paxtools-search</module>
 	</modules>
 
 	<properties>

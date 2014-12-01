@@ -43,15 +43,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+
+import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 
 /**
- * The converter class. 
- * 1 - Unmarshalls PSI-MI or PSI-MITAB data.
- * 2 - Creates a set of EntryMapper threads, each of which is mapping a single PSI Entry object.
- * 3 - Creates a BioPAXMarshaller class to aggregate and marshall the data.
+ * The PSIMI 2.5 to BioPAX Level3 converter. 
  *
  * @author Igor Rodchenkov (rodche)
  */
@@ -60,7 +58,7 @@ public class PsiToBiopax3Converter {
 	private final String xmlBase; //common URI prefix
 
 	/**
-	 * Ref to boolean which indicates conversion is complete.
+	 * Indicates whether conversion is complete.
 	 */
 	protected boolean conversionIsComplete;
 
@@ -87,8 +85,9 @@ public class PsiToBiopax3Converter {
 	 * Converts the PSI-MI inputStream into BioPAX outputStream.
 	 * Streams will be closed by the converter.
 	 * 
-	 * Note: for huge models (several Gb), using a byte array output
-	 * stream leads to OutOfMemoryError despite there is free heap mem.
+	 * Note: for huge models (> 1 or 2 Gb data), and when a ByteArrayOutputStream 
+	 * is used, the OutOfMemoryError will be thrown (increasing the "heap" RAM won't help;
+	 * but using a FileOutputStream will do).
 	 *
 	 * @param inputStream PSI-MI
 	 * @param outputStream BioPAX
@@ -173,31 +172,22 @@ public class PsiToBiopax3Converter {
 			throw new IllegalArgumentException("convert: only PSI-MI Level 2.5 is supported.");
 		}
 
-		// create biopax marshaller
-		final BioPAXMarshaller biopaxMarshaller = new BioPAXMarshaller(xmlBase, outputStream);
-
-		ExecutorService exec = Executors.newCachedThreadPool();	
+		//create a new empty BioPAX Model
+		final Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
+		model.setXmlBase(xmlBase);
 		
-		// iterate through the list
+		// convert all psimi entries
+		EntryMapper entryMapper = new EntryMapper(model, forceInteractionToComplex);
 		for (Entry entry : entrySet.getEntries()) {
-			// create and start PSIMapper; use the same xml:base
-			exec.execute(new EntryMapper(xmlBase, biopaxMarshaller, entry, forceInteractionToComplex));
-		}
-		
-		exec.shutdown(); //no more tasks
-		// wait for marshalling to complete
-		try {
-			exec.awaitTermination(86400, TimeUnit.SECONDS); //a day, at most ;)
-		} catch (InterruptedException e) {
-			throw new RuntimeException("Interrupted!", e);
+			entryMapper.run(entry);
 		}
 		
 		//try to release some RAM earlier
 		entrySet.getEntries().clear();
 		entrySet = null;
-		System.gc();
 		
-		biopaxMarshaller.marshallData();
+		// write BioPAX RDF/XML
+		(new SimpleIOHandler()).convertToOWL(model, outputStream);
 	}
 
 	/**

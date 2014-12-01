@@ -821,6 +821,10 @@
                            <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
                    
                         </xref>
+                        
+                        <experimentRefList>
+                        	<experimentRef>2</experimentRef>
+                        </experimentRefList>
                  
                      </experimentalRole>
                

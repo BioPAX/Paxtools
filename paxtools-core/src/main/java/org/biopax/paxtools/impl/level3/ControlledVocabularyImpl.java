@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -19,8 +20,8 @@ import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
 import java.util.Set;
-import java.util.regex.Pattern;
 
 @Entity
 @Proxy(proxyClass= ControlledVocabulary.class)
@@ -33,7 +34,6 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	private final static Log LOG = LogFactory.getLog(CellVocabularyImpl.class);
 	
 	private Set<String> term;
-	private static final Pattern PATTERN = Pattern.compile("\\]|\\[");
 
 	/**
 	 * Constructor.
@@ -110,13 +110,15 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	@Override
 	public String toString()
 	{
+		String ret = getRDFId();
 		try {
-			return PATTERN.matcher(term.toString()).replaceAll("");
-		} catch (Exception e) {
-			// in a persistent context, there might be 
-			// a lazy collection initialization issue with this method...
+			// in a persistent context, there can be lazy collection initialization exception...
+			if(!term.isEmpty())
+				ret = getModelInterface().getSimpleName() +
+					"_" + StringUtils.join(term, ",");
+		} catch (Exception e) {		
 			LOG.warn("toString(): ", e);
-			return getRDFId();
 		}
+		return ret;
 	}
 }

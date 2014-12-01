@@ -20,7 +20,7 @@ public abstract class StringFieldFilter extends Filter
 	Map<PathAccessor, Class<? extends BioPAXElement>> accessors;
 
 	/**
-	 * Set of valid values.
+	 * Set of valid values (case insensitive), for filtering.
 	 */
 	Set<String> validValues;
 
@@ -41,9 +41,13 @@ public abstract class StringFieldFilter extends Filter
 		
 		if(valid == null || valid.length == 0) {
 			validValues = Collections.EMPTY_SET;
-			//TODO log warning - the filter does not make any sense
-		} else 
-			validValues = new HashSet<String>(Arrays.asList(valid));
+		} else {
+			validValues = new HashSet<String>();
+			//copy all the filter values, making them lower-case (will then match ignoring case)
+			for(String val : valid)
+				if(val != null && !val.isEmpty())
+					validValues.add(val.toLowerCase());
+		}
 		
 		createFieldAccessors();
 	}
@@ -89,7 +93,8 @@ public abstract class StringFieldFilter extends Filter
 	 */
 	protected void addValidValue(String value)
 	{
-		validValues.add(value);
+		if(value!=null && !value.isEmpty())
+			validValues.add(value.toLowerCase());
 	}
 
 	/**
@@ -119,9 +124,9 @@ public abstract class StringFieldFilter extends Filter
 			if (empty) empty = values.isEmpty();
 
 			for (Object o : values)
-			{
-				if (validValues.contains(o.toString())) return true;
-			}
+				//ignoring capitalization (case)
+				if (validValues.contains(o.toString().toLowerCase())) 
+					return true;
 		}
 
 		return !objectRelevant || (empty && isEmptyOK());

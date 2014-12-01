@@ -17,7 +17,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-
 /**
  * Converts a BioPAX model to GSEA (GMT format).
  * <p/>
@@ -103,7 +102,11 @@ public class GSEAConverter
 			l3Model = (new LevelUpgrader()).filter(model);
 		else
 			l3Model = model;
-
+		
+		//a modifiable copy of a set of all PRs in the model
+		Set<ProteinReference> prs = new HashSet<ProteinReference>(
+				l3Model.getObjects(ProteinReference.class));
+		
 		Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
 		if(!pathways.isEmpty()) {	
 			for (Pathway pathway : pathways) 
@@ -112,29 +115,28 @@ public class GSEAConverter
 				name = (name == null) ? pathway.getStandardName() : name;
 				name = (name == null) ? pathway.getRDFId() : name;
 				
-				String dataSource = getDataSource(pathway.getDataSource());
-				
 				Set<ProteinReference> pathwayProteinRefs = 
 					(new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter))
-						.fetch(pathway, ProteinReference.class);
-				
+						.fetch(pathway, ProteinReference.class);				
 				if(!pathwayProteinRefs.isEmpty()) {
 					Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(pathwayProteinRefs);			
 					// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
+					String dataSource = getDataSource(pathway.getDataSource());
 					Collection<GSEAEntry> entries = createGseaEntries(name, dataSource, orgToPrsMap);
 					toReturn.addAll(entries);
+					prs.removeAll(pathwayProteinRefs); //remove processed PRs from the set
 				}
 			}
-		} else {
-			//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
-			Set<ProteinReference> allProteinRefs = l3Model.getObjects(ProteinReference.class);
-			if(!allProteinRefs.isEmpty()) {
-				Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(allProteinRefs);
-				if(!orgToPrsMap.isEmpty()) {
-					// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
-					toReturn.addAll(createGseaEntries("From a BioPAX sub-model (protein references, no pathways)", 
-						getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));	
-				}
+		} 
+		
+		//when there're no pathways, only empty pathays, pathways w/o PRs, then use all/rest of PRs -
+		//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
+		if(!prs.isEmpty()) { //all or not processed above
+			Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(prs);
+			if(!orgToPrsMap.isEmpty()) {
+				// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
+				toReturn.addAll(createGseaEntries("Not pathway", 
+					getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));	
 			}
 		}
 					

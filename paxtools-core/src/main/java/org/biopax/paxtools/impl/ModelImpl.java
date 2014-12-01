@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
@@ -31,7 +32,7 @@ public class ModelImpl implements Model
 // --------------------------- CONSTRUCTORS ---------------------------
 
     protected ModelImpl() {
-		idMap = new HashMap<String, BioPAXElement>();
+		idMap = BPCollections.I.createMap();
         nameSpacePrefixMap = new HashMap<String, String>();
         this.exposedObjectSet = new UnmodifiableImplicitSet(idMap.values());
 	}
@@ -50,12 +51,12 @@ public class ModelImpl implements Model
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
-    public boolean containsID(String id) {
+    public synchronized boolean containsID(String id) {
         return this.idMap.containsKey(id);
     }
 
     
-    public BioPAXElement getByID(String id) {
+    public synchronized BioPAXElement getByID(String id) {
     	BioPAXElement ret = this.idMap.get(id);
     	if(ret != null) {
     		assert ret.getRDFId().equals(id);
@@ -70,11 +71,9 @@ public class ModelImpl implements Model
 	}
 
     
-    private void setNameSpacePrefixMap(Map<String, String> nameSpacePrefixMap) {
-    	synchronized (this.nameSpacePrefixMap) {
-			this.nameSpacePrefixMap.clear();
-			this.nameSpacePrefixMap.putAll(nameSpacePrefixMap);
-		}
+    private synchronized void setNameSpacePrefixMap(Map<String, String> nameSpacePrefixMap) {
+		this.nameSpacePrefixMap.clear();
+		this.nameSpacePrefixMap.putAll(nameSpacePrefixMap);
 	}
     
 
@@ -90,33 +89,31 @@ public class ModelImpl implements Model
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public Set<BioPAXElement> getObjects()
+	public synchronized Set<BioPAXElement> getObjects()
 	{
 		return exposedObjectSet;
 	}
 
-	public <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy)
+	public synchronized <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy)
 	{
 		return new ClassFilterSet<BioPAXElement,T>(exposedObjectSet, filterBy);
 	}
 
-    void setObjects(Set<BioPAXElement> objects) {   	
-    	synchronized (idMap) {
-    		idMap.clear();
-        	for(BioPAXElement bpe : objects) {
-        		add(bpe);
-        	}
-		}
+	synchronized void synchronizedsetObjects(Set<BioPAXElement> objects) {   	
+   		idMap.clear();
+       	for(BioPAXElement bpe : objects) {
+       		add(bpe);
+       	}
     }
 
     
-	public void remove(BioPAXElement aBioPAXElement)
+	public synchronized void remove(BioPAXElement aBioPAXElement)
 	{		
 		if(this.contains(aBioPAXElement))
 			this.idMap.remove(aBioPAXElement.getRDFId());
 	}
                             
-	public <T extends BioPAXElement> T addNew(Class<T> c, String id)
+	public synchronized <T extends BioPAXElement> T addNew(Class<T> c, String id)
 	{
 		T paxElement = factory.create(c, id);
 		this.add(paxElement);
@@ -131,14 +128,14 @@ public class ModelImpl implements Model
 	 * @param aBioPAXElement
 	 * @return
 	 */
-	public boolean contains(BioPAXElement aBioPAXElement)
+	public synchronized boolean contains(BioPAXElement aBioPAXElement)
 	{
 		return this.idMap.get(aBioPAXElement.getRDFId()) == aBioPAXElement;
 	}
 
 // -------------------------- OTHER METHODS --------------------------
 
-	public void add(BioPAXElement aBioPAXElement)
+	public synchronized void add(BioPAXElement aBioPAXElement)
 	{
 		String rdfId = aBioPAXElement.getRDFId();
         if(!this.level.hasElement(aBioPAXElement))
@@ -176,7 +173,7 @@ public class ModelImpl implements Model
 	}
 
 	// used by hibernate
-	void setLevel(BioPAXLevel level) {
+    synchronized void setLevel(BioPAXLevel level) {
 		this.level = level;
 		this.factory = level.getDefaultFactory();
 	}
@@ -296,7 +293,7 @@ public class ModelImpl implements Model
 	 * @see SimpleMerger
 	 * @see Model#merge(Model)
 	 */
-	public void merge(Model source) {
+	public synchronized void merge(Model source) {
 		SimpleMerger merger = new SimpleMerger(
 			SimpleEditorMap.get(level));
 		if(source == null)
