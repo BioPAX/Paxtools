@@ -530,10 +530,36 @@ public class TempTests
 		System.out.println("End");
 	}
 
+	private static void compareSIFs() throws FileNotFoundException
+	{
+		Set<String> set1 = new HashSet<String>();
+		Scanner sc = new Scanner(new File("/home/ozgun/Projects/causality/PC/controls-expression-of.txt"));
+		while (sc.hasNextLine())
+		{
+			String[] tok = sc.nextLine().split("\t");
+			set1.add(tok[0] + " " + tok[1]);
+		}
+
+		Set<String> set2 = new HashSet<String>();
+		sc = new Scanner(new File("/home/ozgun/Projects/chibe/PC/controls-expression-of.txt"));
+		while (sc.hasNextLine())
+		{
+			String[] tok = sc.nextLine().split("\t");
+			set2.add(tok[0] + " " + tok[1]);
+		}
+
+		set1.removeAll(set2);
+		for (String s : set1)
+		{
+			System.out.println(s);
+		}
+	}
+
 	public static void main(String[] args) throws FileNotFoundException
 	{
-		TempTests tt = new TempTests();
-		tt.tempCode();
+		compareSIFs();
+//		TempTests tt = new TempTests();
+//		tt.tempCode();
 	}
 
 }

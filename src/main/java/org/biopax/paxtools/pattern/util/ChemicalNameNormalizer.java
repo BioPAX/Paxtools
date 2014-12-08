@@ -236,7 +236,8 @@ public class ChemicalNameNormalizer
 
 		for (SmallMoleculeReference std : standard)
 		{
-			if (std.getDisplayName().toLowerCase().equals(smr.getDisplayName().toLowerCase()))
+			if (std.getDisplayName() != null && smr.getDisplayName() != null &&
+				std.getDisplayName().toLowerCase().equals(smr.getDisplayName().toLowerCase()))
 				matching.add(std);
 		}
 

@@ -108,11 +108,11 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		String dir = "/home/ozgun/Projects/biopax-pattern/";
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream(dir + "Pathway Commons.5.Detailed_Process_Data.BIOPAX.owl"));
+		Model model = h.convertFromOWL(new FileInputStream(dir + "Pathway Commons.6.Detailed_Process_Data.BIOPAX.owl"));
 
 		BlacklistGenerator gen = new BlacklistGenerator();
 		Blacklist blacklist = gen.generateBlacklist(model);
-		blacklist.write(new FileOutputStream(dir + "blacklist.txt"));
+		blacklist.write(new FileOutputStream(dir + "blacklist6.txt"));
 
 		SIFSearcher s = new SIFSearcher(SIFEnum.values());
 //		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
@@ -124,7 +124,28 @@ public class SIFSearcherTest extends PatternBoxTest
 		s.setBlacklist(blacklist);
 
 		confirmPresenceOfUbiques(model, blacklist);
-		s.searchSIF(model, new FileOutputStream(dir + "PC.sif"), true);
+		s.searchSIF(model, new FileOutputStream(dir + "PC6.sif"), true);
+
+		long time = System.currentTimeMillis() - start;
+		System.out.println("Completed in: " + getPrintable(time));
+		Assert.assertTrue(2 + 2 == 4);
+	}
+
+	@Test
+	@Ignore
+	public void generateSomeSIFGraph() throws IOException
+	{
+		long start = System.currentTimeMillis();
+
+//		BPCollections.I.setProvider(new TProvider());
+
+		String dir = "/home/ozgun/Temp/";
+		SimpleIOHandler h = new SimpleIOHandler();
+		Model model = h.convertFromOWL(new FileInputStream(dir + "goal3_drugbank_20140730.owl"));
+
+		SIFSearcher s = new SIFSearcher(SIFEnum.CHEMICAL_AFFECTS);
+
+		s.searchSIF(model, new FileOutputStream(dir + "goal5.sif"), true);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
