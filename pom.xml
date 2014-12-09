@@ -27,7 +27,7 @@
 		<module>paxtools-query</module>
 		<module>paxtools-trove</module>
 		<module>paxtools-archetype</module>
-<!-- 		<module>json-converter</module> -->
+		<module>json-converter</module>
  		<module>paxtools-search</module>
 	</modules>
 
