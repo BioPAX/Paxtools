@@ -46,6 +46,8 @@ public class SearchEngineTest {
 		
 		BioPAXElement hit = response.getHits().get(0);
 		assertEquals(5, hit.getAnnotations().get(SearchEngine.HitAnnotation.HIT_SIZE.name()));
+		assertTrue(hit instanceof Pathway);
+		assertEquals(5, hit.getAnnotations().keySet().size());
 		
 		//test a special implementation for wildcard queries
 		response = searchEngine.search("*", 0, Pathway.class, null, null);
