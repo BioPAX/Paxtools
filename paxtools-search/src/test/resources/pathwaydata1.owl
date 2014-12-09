@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns="http://www.biopax.org/examples/myExample#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+	xmlns:p1="http://www.owl-ontologies.com/assert.owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xml:base="http://www.biopax.org/examples/myExample#">
+	<owl:Ontology rdf:about="">
+		<owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+	</owl:Ontology>
+
+	<bp:BioSource rdf:about="http://identifiers.org/taxonomy/562">
+		<bp:displayName rdf:datatype="xsd:string">Escherichia coliü
+		</bp:displayName>
+		<bp:xref rdf:resource="UnificationXref:TAXONOMY_562" />
+	</bp:BioSource>
+
+	<bp:ChemicalStructure rdf:ID="ChemicalStructure_9">
+		<bp:structureData rdf:datatype="xsd:string">[CH]3(n1(c2(c(nc1)c(N)ncn2)))(O[CH]([CH](O)[CH](O)3)COP(=O)(O)OP(O)(=O)OP(O)(=O)O)
+		</bp:structureData>
+		<bp:structureFormat rdf:datatype="xsd:string">SMILES
+		</bp:structureFormat>
+		<bp:comment rdf:datatype="xsd:string">ATP</bp:comment>
+	</bp:ChemicalStructure>
+
+	<bp:ChemicalStructure rdf:ID="ChemicalStructure_8">
+		<bp:structureData rdf:datatype="xsd:string">C(OP(O)(O)=O)[CH]1([CH](O)[CH](O)C(O)(O1)CO)
+		</bp:structureData>
+		<bp:structureFormat rdf:datatype="xsd:string">SMILES
+		</bp:structureFormat>
+		<bp:comment rdf:datatype="xsd:string">beta-fructose-6-phosphate
+		</bp:comment>
+	</bp:ChemicalStructure>
+
+	<bp:Provenance rdf:about="http://identifiers.org/kegg.pathway/">
+		<bp:standardName rdf:datatype="xsd:string">KEGG Pathway</bp:standardName>
+		<bp:displayName rdf:datatype="xsd:string">KEGG</bp:displayName>
+	</bp:Provenance>
+
+	<bp:CellularLocationVocabulary rdf:about="http://identifiers.org/go/GO:0005737">
+		<bp:term rdf:datatype="xsd:string">cytoplasm</bp:term>
+		<bp:xref
+			rdf:resource="UnificationXref:GENE+ONTOLOGY_GO%3A0005737" />
+		<bp:comment rdf:datatype="xsd:string">This example is meant to provide
+			an illustration of how various BioPAX slots should be filled; it is
+			not intended to provide useful (or even accurate) biological
+			information</bp:comment>
+	</bp:CellularLocationVocabulary>
+
+	<bp:UnificationXref rdf:about="UnificationXref:UNIPROT_P27797">
+		<bp:db rdf:datatype="xsd:string">UniProt</bp:db>
+		<bp:id rdf:datatype="xsd:string">P27797</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 15608167</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:UnificationXref	rdf:about="UnificationXref:CHEBI_CHEBI%3A422">
+		<bp:db rdf:datatype="xsd:string">chebi</bp:db>
+		<bp:id rdf:datatype="xsd:string">CHEBI:422</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 9847135</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:UnificationXref rdf:about="UnificationXref:KEGG_R02740">
+		<bp:db rdf:datatype="xsd:string">kegg reaction</bp:db>
+		<bp:id rdf:datatype="xsd:string">R02740</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 9847135</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:Provenance rdf:about="http://identifiers.org/reactome/">
+		<bp:displayName rdf:datatype="xsd:string">Reactome</bp:displayName>
+		<bp:standardName rdf:datatype="xsd:string">Reactome</bp:standardName>
+	</bp:Provenance>
+
+	<bp:SmallMoleculeReference rdf:about="http://identifiers.org/chebi/CHEBI:422">
+		<bp:displayName rdf:datatype="xsd:string">beta-D-glucose 6-phosphate
+		</bp:displayName>
+		<bp:structure rdf:resource="#ChemicalStructure_7" />
+		<bp:standardName rdf:datatype="xsd:string">b-D-glu-6-p
+		</bp:standardName>
+		<bp:xref rdf:resource="UnificationXref:CHEBI_CHEBI%3A422" />
+		<bp:molecularWeight rdf:datatype="xsd:float">260.14
+		</bp:molecularWeight>
+		<bp:chemicalFormula rdf:datatype="xsd:string">C6H13O9P
+		</bp:chemicalFormula>
+	</bp:SmallMoleculeReference>
+
+	<bp:BiochemicalReaction rdf:ID="glucokinase">
+		<bp:xref rdf:resource="UnificationXref:KEGG_R01786" />
+		<bp:spontaneous rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</bp:spontaneous>
+		<bp:standardName rdf:datatype="xsd:string">b-D-glu =&gt;
+			b-D-glu-6-p</bp:standardName>
+		<bp:eCNumber rdf:datatype="xsd:string">2.7.1.1</bp:eCNumber>
+		<bp:eCNumber rdf:datatype="xsd:string">2.7.1.2</bp:eCNumber>
+		<bp:left rdf:resource="#alpha-D-glucose" />
+		<bp:left rdf:resource="#ATP" />
+		<bp:name rdf:datatype="xsd:string">glucose ATP phosphotransferase</bp:name>
+		<bp:name rdf:datatype="xsd:string">ATP:D-glucose 6-phosphotransferase
+		</bp:name>
+		<bp:conversionDirection rdf:datatype="xsd:string">REVERSIBLE
+		</bp:conversionDirection>
+		<bp:right rdf:resource="#alpha-D-glucose_6-phosphate" />
+		<bp:right rdf:resource="#ADP" />
+		<bp:displayName rdf:datatype="xsd:string">beta-D-glu + ATP =&gt;
+			beta-D-glu-6-p + ADP</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:BiochemicalReaction>
+
+	<bp:SmallMoleculeReference rdf:about="http://identifiers.org/chebi/CHEBI:28">
+		<bp:displayName rdf:datatype="xsd:string">beta-D-glucose
+		</bp:displayName>
+		<bp:structure rdf:resource="#ChemicalStructure_5" />
+		<bp:standardName rdf:datatype="xsd:string">b-D-glu
+		</bp:standardName>
+		<bp:xref rdf:resource="UnificationXref:CHEBI_CHEBI%3A28" />
+		<bp:molecularWeight rdf:datatype="xsd:float">180.16
+		</bp:molecularWeight>
+		<bp:chemicalFormula rdf:datatype="xsd:string">C6H12O6
+		</bp:chemicalFormula>
+	</bp:SmallMoleculeReference>
+
+	<bp:SmallMoleculeReference rdf:about="http://identifiers.org/chebi/CHEBI:20">
+		<bp:displayName rdf:datatype="xsd:string">beta-D-fructose
+			6-phosphate</bp:displayName>
+		<bp:structure rdf:resource="#ChemicalStructure_8" />
+		<bp:standardName rdf:datatype="xsd:string">b-D-fru-6-p
+		</bp:standardName>
+		<bp:xref rdf:resource="UnificationXref:CHEBI_CHEBI%3A20" />
+		<bp:molecularWeight rdf:datatype="xsd:float">260.14
+		</bp:molecularWeight>
+		<bp:chemicalFormula rdf:datatype="xsd:string">C6H13O9P
+		</bp:chemicalFormula>
+	</bp:SmallMoleculeReference>
+
+	<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/P27797">
+		<bp:displayName rdf:datatype="xsd:string">glucokinase
+		</bp:displayName>
+		<bp:standardName rdf:datatype="xsd:string">GLK</bp:standardName>
+		<bp:xref rdf:resource="UnificationXref:UNIPROT_P27797" />
+		<bp:name rdf:datatype="xsd:string">glucose kinase</bp:name>
+		<bp:sequence rdf:datatype="xsd:string">MTKYALVGDVGGTNARLALCDIASGEISQAKTYSGLDYPSLEAVIRVYLEEHKVEVKDGCIAIACPITGDWVAMTNHTWAFSIAEMKKNLGFSHLEIINDFTAVSMAIPMLKKEHLIQFGGAEPVEGKPIAVYGAGTGLGVAHLVHVDKRWVSLPGEGGHVDFAPNSEEEAIILEILRAEIGHVSAERVLSGPGLVNLYRAIVKADNRLPENLKPKDITERALADSCTDCRRALSLFCVIMGRFGGNLALNLGTFGGVFIAGGIVPRFLEFFKASGFRAAFEDKGRFKEYVHDIPVYLIVHDNPGLLGSGAHLRQTLGHIL
+		</bp:sequence>
+		<bp:organism rdf:resource="http://identifiers.org/taxonomy/562" />
+	</bp:ProteinReference>
+
+	<bp:UnificationXref rdf:about="UnificationXref:CHEBI_CHEBI%3A28">
+		<bp:db rdf:datatype="xsd:string">chebi</bp:db>
+		<bp:id rdf:datatype="xsd:string">CHEBI:28</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 9847135</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:UnificationXref rdf:about="UnificationXref:CHEBI_CHEBI%3A20">
+		<bp:db rdf:datatype="xsd:string">chebi</bp:db>
+		<bp:id rdf:datatype="xsd:string">CHEBI:20</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 9847135</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:SmallMolecule rdf:ID="beta-D-fructose_6-phosphate">
+		<bp:entityReference rdf:resource="http://identifiers.org/chebi/CHEBI:20" />
+		<bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005737" />
+		<bp:standardName rdf:datatype="xsd:string">b-D-fru-6-p
+		</bp:standardName>
+		<bp:name rdf:datatype="xsd:string">&lt;FONT
+			FACE=&quot;Symbol&quot;&gt;b&lt;/FONT&gt;-D-fructose-6-phosphate
+		</bp:name>
+		<bp:displayName rdf:datatype="xsd:string">beta-D-fructose
+			6-phosphate</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:SmallMolecule>
+
+	<bp:SmallMoleculeReference rdf:about="http://identifiers.org/pubchem.substance/14438">
+		<bp:displayName rdf:datatype="xsd:string">Adenosine
+			5&apos;-diphosphate</bp:displayName>
+		<bp:structure rdf:resource="#ChemicalStructure_6" />
+		<bp:standardName rdf:datatype="xsd:string">ADP</bp:standardName>
+		<bp:xref rdf:resource="UnificationXref:PUBCHEM_14438" />
+		<bp:name rdf:datatype="xsd:string">adenosine diphosphate</bp:name>
+		<bp:molecularWeight rdf:datatype="xsd:float">427.2
+		</bp:molecularWeight>
+		<bp:chemicalFormula rdf:datatype="xsd:string">C10H15N5O10P2
+		</bp:chemicalFormula>
+	</bp:SmallMoleculeReference>
+
+	<bp:SmallMoleculeReference rdf:about="http://identifiers.org/pubchem.substance/14439">
+		<bp:displayName rdf:datatype="xsd:string">Adenosine
+			5&apos;-triphosphate</bp:displayName>
+		<bp:structure rdf:resource="#ChemicalStructure_9" />
+		<bp:standardName rdf:datatype="xsd:string">ATP</bp:standardName>
+		<bp:xref rdf:resource="UnificationXref:PUBCHEM_14439" />
+		<bp:name rdf:datatype="xsd:string">adenosine triphosphate</bp:name>
+		<bp:molecularWeight rdf:datatype="xsd:float">507.18
+		</bp:molecularWeight>
+		<bp:chemicalFormula rdf:datatype="xsd:string">C10H16N5O13P3
+		</bp:chemicalFormula>
+	</bp:SmallMoleculeReference>
+
+	<bp:Catalysis rdf:ID="glucokinase_converts_alpha-D-glu_to_alpha-D-glu-6-p">
+	    <!--<bp:controller rdf:resource="#Protein_54" />-->
+		<bp:controller rdf:resource="#Protein6003" />
+		<bp:catalysisDirection rdf:datatype="xsd:string">LEFT_TO_RIGHT
+		</bp:catalysisDirection>
+		<bp:standardName rdf:datatype="xsd:string">GLK -&gt; (a-D-glu
+			&lt;=&gt; a-D-glu-6-p)</bp:standardName>
+		<bp:controlled rdf:resource="#glucokinase" />
+		<bp:controlType rdf:datatype="xsd:string">ACTIVATION
+		</bp:controlType>
+		<bp:comment rdf:datatype="xsd:string">The source of this data did not
+			store catalyses of reactions as separate objects, so there are no
+			unification x-refs pointing to the source of these BioPAX instances.
+		</bp:comment>
+		<bp:displayName rdf:datatype="xsd:string">catalysis of (alpha-D-glu
+			&lt;=&gt; alpha-D-glu-6-p)</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:Catalysis>
+
+	<bp:BiochemicalReaction rdf:ID="phosphoglucoisomerase">
+		<bp:xref rdf:resource="UnificationXref:KEGG_R02740" />
+		<bp:standardName rdf:datatype="xsd:string">b-D-glu-6-p &lt;=&gt;
+			b-D-fru-6-p</bp:standardName>
+		<bp:eCNumber rdf:datatype="xsd:string">5.3.1.9</bp:eCNumber>
+		<bp:left rdf:resource="#alpha-D-glucose_6-phosphate" />
+		<bp:name rdf:datatype="xsd:string">beta-D-Glucose 6-phosphate
+			ketol-isomerase</bp:name>
+		<bp:name rdf:datatype="xsd:string">beta-D-Glucose 6-phosphate =&gt;
+			beta-D-Fructose 6-phosphate</bp:name>
+		<bp:conversionDirection rdf:datatype="xsd:string">REVERSIBLE
+		</bp:conversionDirection>
+		<bp:deltaG rdf:resource="#DeltaG_12" />
+		<bp:right rdf:resource="#beta-D-fructose_6-phosphate" />
+		<bp:displayName rdf:datatype="xsd:string">beta-D-glu-6-p &lt;=&gt;
+			beta-D-fru-6-p</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:BiochemicalReaction>
+
+	<bp:UnificationXref rdf:about="UnificationXref:KEGG_R01786">
+		<bp:db rdf:datatype="xsd:string">kegg reaction</bp:db>
+		<bp:id rdf:datatype="xsd:string">R01786</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 9847135</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:SmallMolecule rdf:ID="ADP">
+		<bp:entityReference rdf:resource="http://identifiers.org/pubchem.substance/14438" />
+		<bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005737" />
+		<bp:standardName rdf:datatype="xsd:string">ADP</bp:standardName>
+		<bp:name rdf:datatype="xsd:string">adenosine diphosphate</bp:name>
+		<bp:displayName rdf:datatype="xsd:string">Adenosine
+			5&apos;-diphosphate</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:SmallMolecule>
+
+	<bp:Protein rdf:ID="Protein_54">
+		<bp:entityReference rdf:resource="http://identifiers.org/uniprot/P27797" />
+		<bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005737" />
+		<bp:standardName rdf:datatype="xsd:string">GLK</bp:standardName>
+		<bp:name rdf:datatype="xsd:string">GLK_ECOLI</bp:name>
+		<bp:displayName rdf:datatype="xsd:string">glucokinase
+		</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+	</bp:Protein>
+
+	<bp:DeltaG rdf:ID="DeltaG_12">
+		<bp:deltaGPrime0 rdf:datatype="xsd:float">0.4</bp:deltaGPrime0>
+	</bp:DeltaG>
+
+	<bp:Protein rdf:ID="phosphoglucose_isomerase">
+		<bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q16602" />
+		<bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005737" />
+		<bp:standardName rdf:datatype="xsd:string">PGI</bp:standardName>
+		<bp:name rdf:datatype="xsd:string">GPI</bp:name>
+		<bp:name rdf:datatype="xsd:string">phosphohexose isomerase</bp:name>
+		<bp:name rdf:datatype="xsd:string">PHI</bp:name>
+		<bp:name rdf:datatype="xsd:string">glucose-6-phosphate isomerase</bp:name>
+		<bp:displayName rdf:datatype="xsd:string">phosphoglucose isomerase
+		</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+		<bp:feature rdf:resource="#O_phospho_L_serine_at_5" />
+	</bp:Protein>
+
+	<bp:Pathway rdf:ID="Pathway50">
+		<bp:organism rdf:resource="http://identifiers.org/taxonomy/562" />
+		<bp:xref rdf:resource="PublicationXref:PUBMED_2549346" />
+		<bp:name rdf:datatype="xsd:string">Embden-Meyerhof pathway</bp:name>
+		<bp:name rdf:datatype="xsd:string">glucose degradation</bp:name>
+		<bp:availability rdf:datatype="xsd:string">see
+			http://www.amaze.ulb.ac.be/</bp:availability>
+		<bp:availability rdf:datatype="xsd:string">All data within the
+			pathway has the same availability</bp:availability>
+		<bp:pathwayOrder rdf:resource="#BiochemicalPathwayStep_3" />
+		<bp:pathwayOrder rdf:resource="#BiochemicalPathwayStep_2" />
+		<bp:pathwayComponent
+			rdf:resource="#phosphoglucose_isomerase_converts_alpha-D-gluc-6-p_to_beta-D-fruc-6-p" />
+		<bp:pathwayComponent rdf:resource="#glucokinase" />
+		<bp:comment rdf:datatype="xsd:string">This example is meant to provide
+			an illustration of how various BioPAX slots should be filled; it is
+			not intended to provide useful (or even accurate) biological
+			information</bp:comment>
+		<bp:displayName rdf:datatype="xsd:string">Glycolysis Pathway
+		</bp:displayName>
+		<bp:standardName rdf:datatype="xsd:string">glycolysis
+		</bp:standardName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+		<bp:pathwayComponent
+			rdf:resource="#glucokinase_converts_alpha-D-glu_to_alpha-D-glu-6-p" />
+	</bp:Pathway>
+
+	<bp:Protein rdf:ID="Protein6003">
+	  <bp:displayName rdf:datatype="xsd:string">H2a/x</bp:displayName>
+	  <bp:name rdf:datatype="xsd:string">Histone H2A.x</bp:name>
+	  <bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005737" />
+	  <bp:entityReference rdf:resource="http://identifiers.org/uniprot/P16104" />
+	  <bp:comment rdf:datatype="xsd:string">Reactome DB_ID: 56151</bp:comment>
+	  <bp:xref rdf:resource="UnificationXref:REACTOME_REACT_3939" />
+	  <bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+	</bp:Protein>
+	<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/P16104">
+	  <bp:xref rdf:resource="UnificationXref:UNIPROT_P16104" />
+	  <bp:displayName rdf:datatype = "xsd:string">H2AX</bp:displayName>
+	</bp:ProteinReference>
+	<bp:UnificationXref rdf:about="UnificationXref:UNIPROT_P16104">
+	  <bp:db rdf:datatype="xsd:string">UniProt</bp:db>
+	  <bp:id rdf:datatype="xsd:string">P16104</bp:id>
+	</bp:UnificationXref>
+	<bp:UnificationXref rdf:about="UnificationXref:REACTOME_REACT_3939">
+	  <bp:db rdf:datatype="xsd:string">Reactome</bp:db>
+	  <bp:id rdf:datatype="xsd:string">REACT_3939</bp:id>
+	  <bp:idVersion rdf:datatype="xsd:string">1</bp:idVersion>
+	</bp:UnificationXref>
+
+	<bp:UnificationXref rdf:about="UnificationXref:TAXONOMY_562">
+		<bp:db rdf:datatype="xsd:string">Taxonomy</bp:db>
+		<bp:id rdf:datatype="xsd:string">562</bp:id>
+	</bp:UnificationXref>
+
+	<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/Q16602">
+		<bp:displayName rdf:datatype="xsd:string">phosphoglucose isomerase
+		</bp:displayName>
+		<bp:standardName rdf:datatype="xsd:string">PGI</bp:standardName>
+		<bp:xref rdf:resource="UnificationXref:UNIPROT_Q16602" />
+		<bp:name rdf:datatype="xsd:string">GPI</bp:name>
+		<bp:name rdf:datatype="xsd:string">phosphohexose isomerase</bp:name>
+		<bp:name rdf:datatype="xsd:string">PHI</bp:name>
+		<bp:name rdf:datatype="xsd:string">glucose-6-phosphate isomerase</bp:name>
+		<bp:sequence rdf:datatype="xsd:string">KTFSEAIISGEWKGYTGKAITDVVNIGIGGSDLGPYMVTEALRPYKNHLNMHFVSNVDGTHIAEVLKKVNPETTLFLVASKTFTTQETMTNAHSARDWFLKAAGDEKHVAKHFAALSTNAKAVGEFGIDTANMFEFWDWVGGRYSLWSAIGLSIVLSIGFDNFVELLSGAHAMDKHFSTTPAEKNLPVLLALIGIWYNNFFGAETEAILPYDQYMHRFAAYFQQGNMESNGKYVDRNGNVVDYQTGPIIWGEPGTNGQHAFYQLIHQGTKMVPCDFIAPAITHNPLFDHHQKLLSKFFAQTEALAFGKSREVVEQEYRDQGKDPAT
+		</bp:sequence>
+		<bp:comment rdf:datatype="xsd:string">This example is meant to provide
+			an illustration of how various BioPAX slots should be filled; it is
+			not intended to provide useful (or even accurate) biological
+			information</bp:comment>
+		<bp:organism rdf:resource="http://identifiers.org/taxonomy/562" />
+	</bp:ProteinReference>
+
+	<bp:SmallMolecule rdf:ID="ATP">
+		<bp:entityReference rdf:resource="http://identifiers.org/pubchem.substance/14439" />
+		<bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005737" />
+		<bp:standardName rdf:datatype="xsd:string">ATP</bp:standardName>
+		<bp:name rdf:datatype="xsd:string">adenosine triphosphate</bp:name>
+		<bp:displayName rdf:datatype="xsd:string">Adenosine
+			5&apos;-triphosphate</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:SmallMolecule>
+
+	<bp:UnificationXref rdf:about="UnificationXref:PUBCHEM_14438">
+		<!-- test: using umbiguous name 'PubChem'; won't map/merge! -->
+		<bp:db rdf:datatype="xsd:string">PubChem</bp:db> 
+		<bp:id rdf:datatype="xsd:string">14438</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 9847135</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:Catalysis
+		rdf:ID="phosphoglucose_isomerase_converts_alpha-D-gluc-6-p_to_beta-D-fruc-6-p">
+		<bp:controller rdf:resource="#phosphoglucose_isomerase" />
+		<bp:catalysisDirection rdf:datatype="xsd:string">LEFT_TO_RIGHT
+		</bp:catalysisDirection>
+		<bp:standardName rdf:datatype="xsd:string">PGI -&gt; (b-d-glu-6-p
+			&lt;=&gt; b-D-fru-6p)</bp:standardName>
+		<bp:controlled rdf:resource="#phosphoglucoisomerase" />
+		<bp:controlType rdf:datatype="xsd:string">ACTIVATION
+		</bp:controlType>
+		<bp:comment rdf:datatype="xsd:string">The source of this data did not
+			store catalyses of reactions as separate objects, so there are no
+			unification x-refs pointing to the source of these BioPAX instances.
+		</bp:comment>
+		<bp:displayName rdf:datatype="xsd:string">catalysis of
+			(beta-D-glu-6-p &lt;=&gt; beta-D-fruc-6-p)</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:Catalysis>
+
+	<bp:UnificationXref rdf:about="UnificationXref:PUBCHEM_14439">
+		<bp:db rdf:datatype="xsd:string">PUBCHEM-substance</bp:db>
+		<bp:id rdf:datatype="xsd:string">14439</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 9847135</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:SmallMolecule rdf:ID="alpha-D-glucose_6-phosphate">
+		<bp:entityReference rdf:resource="http://identifiers.org/chebi/CHEBI:422" />
+		<bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005737" />
+		<bp:standardName rdf:datatype="xsd:string">a-D-glu-6-p
+		</bp:standardName>
+		<bp:name rdf:datatype="xsd:string">D-glucose-6-P</bp:name>
+		<bp:name rdf:datatype="xsd:string">glucose-6-P</bp:name>
+		<bp:name rdf:datatype="xsd:string">beeta-D-glucose-6-p</bp:name>
+		<bp:name rdf:datatype="xsd:string">b-D-glucose-6-phoshate</bp:name>
+		<bp:displayName rdf:datatype="xsd:string">beta-D-glucose 6-phosphate
+		</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:SmallMolecule>
+
+	<bp:BiochemicalPathwayStep rdf:ID="BiochemicalPathwayStep_3">
+		<bp:stepDirection rdf:datatype="xsd:string">LEFT_TO_RIGHT
+		</bp:stepDirection>
+		<bp:stepConversion rdf:resource="#phosphoglucoisomerase" />
+		<bp:stepProcess
+			rdf:resource="#phosphoglucose_isomerase_converts_alpha-D-gluc-6-p_to_beta-D-fruc-6-p" />
+	</bp:BiochemicalPathwayStep>
+
+	<bp:SmallMolecule rdf:ID="alpha-D-glucose">
+		<bp:entityReference rdf:resource="http://identifiers.org/chebi/CHEBI:28" />
+		<bp:cellularLocation rdf:resource="http://identifiers.org/go/GO:0005737" />
+		<bp:standardName rdf:datatype="xsd:string">b-D-glu
+		</bp:standardName>
+		<bp:name rdf:datatype="xsd:string">&lt;FONT
+			FACE=&quot;Symbol&quot;&gt;a&lt;/FONT&gt;-D-glucose</bp:name>
+		<bp:displayName rdf:datatype="xsd:string">beta-D-glucose
+		</bp:displayName>
+		<bp:dataSource rdf:resource="http://identifiers.org/reactome/" />
+		<bp:dataSource rdf:resource="http://identifiers.org/kegg.pathway/" />
+	</bp:SmallMolecule>
+
+	<bp:UnificationXref
+		rdf:about="UnificationXref:GENE+ONTOLOGY_GO%3A0005737">
+		<bp:db rdf:datatype="xsd:string">Gene Ontology</bp:db>
+		<bp:id rdf:datatype="xsd:string">GO:0005737</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 11483584</bp:comment>
+	</bp:UnificationXref>
+
+	<bp:PublicationXref rdf:about="PublicationXref:PUBMED_2549346">
+		<bp:db rdf:datatype="xsd:string">PubMed</bp:db>
+		<bp:id rdf:datatype="xsd:string">2549346</bp:id>
+	</bp:PublicationXref>
+
+	<bp:BiochemicalPathwayStep rdf:ID="BiochemicalPathwayStep_2">
+		<bp:stepDirection rdf:datatype="xsd:string">LEFT_TO_RIGHT
+		</bp:stepDirection>
+		<bp:stepConversion rdf:resource="#glucokinase" />
+		<bp:nextStep rdf:resource="#BiochemicalPathwayStep_3" />
+		<bp:stepProcess rdf:resource="#glucokinase_converts_alpha-D-glu_to_alpha-D-glu-6-p" />
+	</bp:BiochemicalPathwayStep>
+
+	<bp:ChemicalStructure rdf:ID="ChemicalStructure_5">
+		<bp:structureData rdf:datatype="xsd:string">C1(C(O)C(O)C(O)C(O1)CO)(O)
+		</bp:structureData>
+		<bp:structureFormat rdf:datatype="xsd:string">SMILES
+		</bp:structureFormat>
+		<bp:comment rdf:datatype="xsd:string">alpha-D-glucose</bp:comment>
+	</bp:ChemicalStructure>
+
+	<bp:ChemicalStructure rdf:ID="ChemicalStructure_7">
+		<bp:structureData rdf:datatype="xsd:string">C(OP(=O)(O)O)[CH]1([CH](O)[CH](O)[CH](O)[CH](O)O1)
+		</bp:structureData>
+		<bp:structureFormat rdf:datatype="xsd:string">SMILES
+		</bp:structureFormat>
+		<bp:comment rdf:datatype="xsd:string">beta-glucose-6-phosphate
+		</bp:comment>
+	</bp:ChemicalStructure>
+
+	<bp:ChemicalStructure rdf:ID="ChemicalStructure_6">
+		<bp:structureData rdf:datatype="xsd:string">c12(n(cnc(c(N)ncn1)2)[CH]3(O[CH]([CH](O)[CH](O)3)COP(=O)(O)OP(O)(=O)O))
+		</bp:structureData>
+		<bp:structureFormat rdf:datatype="xsd:string">SMILES
+		</bp:structureFormat>
+		<bp:comment rdf:datatype="xsd:string">ADP</bp:comment>
+	</bp:ChemicalStructure>
+
+	<bp:UnificationXref rdf:about="UnificationXref:UNIPROT_Q16602">
+		<bp:db rdf:datatype="xsd:string">UniProt</bp:db>
+		<bp:id rdf:datatype="xsd:string">Q16602</bp:id>
+		<bp:comment rdf:datatype="xsd:string">PMID: 15608167</bp:comment>
+	</bp:UnificationXref>
+	
+	<!-- the following SMCV is added to test a bug in the CV repository impl. (why MOD becomes MI...) -->
+	<bp:UnificationXref rdf:about="UnificationXref:PROTEIN+MODIFICATION+ONTOLOGY_MOD%3A00046">
+ 		<bp:id rdf:datatype = "xsd:string">MOD:00046</bp:id>
+ 		<bp:db rdf:datatype = "xsd:string">Protein Modification Ontology</bp:db>
+	</bp:UnificationXref>
+	
+	<bp:SequenceModificationVocabulary rdf:about="http://identifiers.org/psimod/MOD:00046">
+ 		<bp:term rdf:datatype = "xsd:string">O-phospho-L-serine</bp:term>
+ 		<bp:xref rdf:resource="UnificationXref:PROTEIN+MODIFICATION+ONTOLOGY_MOD%3A00046" />
+	</bp:SequenceModificationVocabulary>
+	
+	<bp:ModificationFeature rdf:ID="O_phospho_L_serine_at_5">
+ 		<bp:modificationType rdf:resource="http://identifiers.org/psimod/MOD:00046" />
+	</bp:ModificationFeature>
+	
+	
+</rdf:RDF>
