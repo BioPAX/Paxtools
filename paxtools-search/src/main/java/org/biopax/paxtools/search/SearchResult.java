@@ -10,7 +10,7 @@ public class SearchResult {
 	private List<BioPAXElement> hits;
 	private long totalHits;
 	private long maxHitsPerPage = 100;
-	
+	private int page = 0;
 	
 	public SearchResult() {
 	}
@@ -44,6 +44,15 @@ public class SearchResult {
 	public void setMaxHitsPerPage(long maxHitsPerPage) {
 		this.maxHitsPerPage = maxHitsPerPage;
 	}
-	
+
+
+	public int getPage() {
+		return page;
+	}
+
+
+	public void setPage(int page) {
+		this.page = page;
+	}
 	
 }

@@ -70,6 +70,7 @@ import org.biopax.paxtools.util.ClassFilterSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * A full-text searcher/indexer for BioPAX L3 models.
  * 
@@ -242,7 +243,9 @@ public class SearchEngine implements Indexer, Searcher {
 				}
 			} catch (IOException e) {}	
 		}
-
+		
+		response.setPage(page);
+		
 		return response;
 	}
 
@@ -350,7 +353,7 @@ public class SearchEngine implements Indexer, Searcher {
 		}
 						
 		//set total no. hits	
-		response.setTotalHits(topDocs.totalHits);	
+		response.setTotalHits(topDocs.totalHits);
 		
 		return response;
 	}
