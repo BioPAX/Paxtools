@@ -94,14 +94,17 @@ public class SearchEngine implements Indexer, Searcher {
 	public static final String FIELD_DATASOURCE = "datasource";
 	public static final String FIELD_TYPE = "type";
 	
-	public final static String[] DEFAULT_FIELDS = //to use with the MultiFieldQueryParser
+	//Default fields to use with the MultiFieldQueryParser;
+	//one can still search in other fields directly, e.g.,
+	//pathway:some_keywords datasource:"pid", etc.
+	public final static String[] DEFAULT_FIELDS = 
 	{
-			FIELD_KEYWORD, //includes all data type properties (names, terms, comments), also from  child elements up to given depth (3)
+			FIELD_KEYWORD, //includes all data type properties (names, terms, comments), 
+			// also from child elements up to given depth (3), also includes pathway names (inferred)
 			FIELD_NAME, // standardName, displayName, other names
-			FIELD_XREFDB, //xref.db
 			FIELD_XREFID, //xref.id (also direct child's xref.id, i.e., can find both xref and its owners using a xrefid:<id> query string)
-			FIELD_PATHWAY, // PARENT pathway names (URIs are stored in the index, but not analyzed/indexed)
 			FIELD_SIZE, // find entities with a given no. child/associated processes...
+//			FIELD_PATHWAY, // only this/parent pathway URIs are stored in the index, not indexed/analyzed; names get indexed but not stored
 // the following fields are for filtering only (thus excluded):
 //			FIELD_ORGANISM,	
 //			FIELD_DATASOURCE, 
@@ -345,9 +348,10 @@ public class SearchEngine implements Indexer, Searcher {
 				bpe.getAnnotations().put(HitAnnotation.HIT_SIZE.name(), Integer.valueOf(doc.get(FIELD_SIZE))); 
 			
 //TODO if debugging, store the Lucene's score and explanation.
-//			String excerpt = (String) bpe.getAnnotations().get(HitAnnotation.EXCERPT.name());
-//			if(excerpt == null) excerpt = "";
-//			excerpt += " -SCORE- " + scoreDoc.score + " -EXPLANATION- " + searcher.explain(query, scoreDoc.doc);
+			String excerpt = (String) bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name());
+			if(excerpt == null) excerpt = "";
+			excerpt += " -SCORE- " + scoreDoc.score + " -EXPLANATION- " + searcher.explain(query, scoreDoc.doc);
+			bpe.getAnnotations().put(HitAnnotation.HIT_EXCERPT.name(), excerpt);
 			
 			hits.add(bpe);
 		}
@@ -399,12 +403,12 @@ public class SearchEngine implements Indexer, Searcher {
 					bpe.getAnnotations().put(FIELD_KEYWORD, keywords);
 					bpe.getAnnotations().put(FIELD_DATASOURCE, ModelUtils.getDatasources(bpe));
 					bpe.getAnnotations().put(FIELD_ORGANISM, ModelUtils.getOrganisms(bpe));
-					bpe.getAnnotations().put(FIELD_PATHWAY, ModelUtils.getParentPathways(bpe));
+					bpe.getAnnotations().put(FIELD_PATHWAY, ModelUtils.getParentPathways(bpe)); //- includes itself if bpe is a pathway
 					
-					// for bio processes, also save the total no. member interactions and pathways:
+					// for bio processes, also save the total number of member interactions or pathways:
 					if(bpe instanceof org.biopax.paxtools.model.level3.Process) {
 						int size = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
-								.fetch(bpe, Process.class).size() + 1; //+1 counts itself						
+								.fetch(bpe, Process.class).size();						
 						bpe.getAnnotations().put(FIELD_SIZE, Integer.toString(size)); 
 					}
 
@@ -505,19 +509,21 @@ public class SearchEngine implements Indexer, Searcher {
 		// name
 		if(bpe instanceof Named) {
 			Named named = (Named) bpe;
-			if(named.getDisplayName() != null) {
-				field = new TextField(FIELD_NAME, named.getDisplayName(), Field.Store.NO);
-				field.setBoost(2.5f);
-				doc.add(field);
-			}
 			if(named.getStandardName() != null) {
 				field = new TextField(FIELD_NAME, named.getStandardName(), Field.Store.NO);
+				field.setBoost(3.5f);
+				doc.add(field);
+			}
+			if(named.getDisplayName() != null && !named.getDisplayName().equalsIgnoreCase(named.getStandardName())) {
+				field = new TextField(FIELD_NAME, named.getDisplayName(), Field.Store.NO);
 				field.setBoost(3.0f);
 				doc.add(field);
 			}
-			if(!named.getName().isEmpty()) {
-				field = new TextField(FIELD_NAME, StringUtils.join(named.getName(), " "), Field.Store.NO);
-				field.setBoost(2.0f);
+			for(String name : named.getName()) {
+				if(name.equalsIgnoreCase(named.getDisplayName()) || name.equalsIgnoreCase(named.getStandardName()))
+					continue;
+				field = new TextField(FIELD_NAME, name.toLowerCase(), Field.Store.NO);
+				field.setBoost(2.5f);
 				doc.add(field);
 			}
 		}
@@ -559,7 +565,8 @@ public class SearchEngine implements Indexer, Searcher {
 
 	private void addKeywords(Set<String> keywords, Document doc) {
 		for (String keyword : keywords) {
-			doc.add(new TextField(FIELD_KEYWORD, keyword.toLowerCase(), Field.Store.YES));
+			Field f = new TextField(FIELD_KEYWORD, keyword.toLowerCase(), Field.Store.YES);
+			doc.add(f);
 		}
 	}
 
@@ -608,19 +615,19 @@ public class SearchEngine implements Indexer, Searcher {
 			//add URI as is (do not lowercase; do not index; store=yes - required to report hits, e.g., as xml)
 			doc.add(new StoredField(FIELD_PATHWAY, pw.getRDFId()));
 			
-			// add names to the 'pathway' (don't store) and 'keywords' (store) indexes
+			// add names to the 'pathway' (don't store) and 'keywords' (store, don't index) fields
 			for (String s : pw.getName()) {
 				doc.add(new TextField(FIELD_PATHWAY, s.toLowerCase(), Field.Store.NO));
-				doc.add(new TextField(FIELD_KEYWORD, s.toLowerCase(), Field.Store.YES));
+				doc.add(new StoredField(FIELD_KEYWORD, s.toLowerCase()));//for highlighting only, not indexed
 			}
 			
 			// add unification xref IDs too
 			for (UnificationXref x : new ClassFilterSet<Xref, UnificationXref>(
 					pw.getXref(), UnificationXref.class)) {
 				if (x.getId() != null) {
-					// index in both 'pathway' (don't store) and 'keywords' (store)
+					// index in both 'pathway' (don't store) and 'keywords' (store, don't index)
 					doc.add(new TextField(FIELD_PATHWAY, x.getId().toLowerCase(), Field.Store.NO));
-					doc.add(new TextField(FIELD_KEYWORD, x.getId().toLowerCase(), Field.Store.YES));
+					doc.add(new StoredField(FIELD_KEYWORD, x.getId().toLowerCase()));//for highlighting only, not indexed
 				}
 			}
 		}
