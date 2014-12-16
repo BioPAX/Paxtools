@@ -105,71 +105,80 @@ public class SearchEngineTest {
 		Model model = reader.convertFromOWL(new GZIPInputStream(
 				getClass().getResourceAsStream("/three-bmp-pathways.owl.gz")));
 		
-		//there are three BMP pathways (one is an empty pathway), and a sub-pathway (not bmp):
+		//there are three BMP pathways (one is an empty pathway), and a trivial sub-pathway (not bmp):
 		//"http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b" ("bmppathway", "BMP receptor signaling")
 		//"http://purl.org/pc2/7/Pathway_b8fa8401d3053b57a10d4c29a3211258" ("BMP signaling pathway")
 		//"http://identifiers.org/reactome/REACT_12034.3" ("Signaling by BMP" - the one we want...)
+		//"http://purl.org/pc2/7/Pathway_aaa00bbf872fc777ce1e5eafc108752b" ("proteasomal ubiquitin-dependent protein catabolic process", a black-box)
 		
 		SearchEngine searchEngine = new SearchEngine(model, indexLocation + "index2");
 		searchEngine.index();
 		assertTrue(new File(indexLocation + "index2").exists());
 		
-		// search in default fields
+		// A wide search in the default fields -
 		SearchResult response = searchEngine.search("signaling by bmp", 0, Pathway.class, null, null);
 		assertNotNull(response);
-		assertFalse(response.getHits().isEmpty());
-		
+		assertFalse(response.getHits().isEmpty());		
+		int i=0;
 		for(BioPAXElement bpe : response.getHits()) {
-			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
+			System.out.println(String.format("Hit %d: %s; size: %s; excerpt: %s", 
+					++i, bpe.getRDFId(), 
 					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
-		}
-		
+		}		
 		assertEquals(3, response.getHits().size());
 		assertEquals(3, response.getTotalHits());
+		assertEquals("http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b", response.getHits().get(0).getRDFId());	
+		//the order of hits is alright, though we'd love to see REACT_12034.3 on top...
 		
-		
-		//Next, search in 'name' field only using quoted string
-		response = searchEngine.search("name:\"signaling by bmp\"", 0, Pathway.class, null, null);
+		// more accurate search in all the default fields using quotation marks around -
+		response = searchEngine.search("\"signaling by bmp\"", 0, Pathway.class, null, null);
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());
-		
-		for(BioPAXElement bpe : response.getHits()) {
-			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
-					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
-					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
-		}
-		
-		//there are three BMP pathways (one is an empty pathway), and a sub-pathway (should not match) -
-		assertEquals(1, response.getHits().size());
 		assertEquals(1, response.getTotalHits());
+		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getRDFId());	
 		
-		
-		//Next, search in 'pathway' field only using quoted string
-		response = searchEngine.search("pathway:\"signaling by bmp\"", 0, Pathway.class, null, null);
+		//Next, narrow search in 'name' field only using quoted string
+		response = searchEngine.search("name:\"Signaling by BMP\"", 0, Pathway.class, null, null);
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());
-		
-		for(BioPAXElement bpe : response.getHits()) {
-			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
-					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
-					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
-		}
-		
+//		for(BioPAXElement bpe : response.getHits()) {
+//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
+//					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
+//					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
+//		}
 		//there are three BMP pathways (one is an empty pathway), and a sub-pathway (should not match) -
 		assertEquals(1, response.getHits().size());
 		assertEquals(1, response.getTotalHits());
 		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getRDFId());
 		
 		
+		//Next, search in 'pathway' field only, using quoted string
+		response = searchEngine.search("pathway:\"signaling by bmp\"", 0, Pathway.class, null, null);
+		assertNotNull(response);
+		assertFalse(response.getHits().isEmpty());		
+//		for(BioPAXElement bpe : response.getHits()) {
+//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
+//					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
+//					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
+//		}		
+		//there is one pathway, and no sub-pathways of it
+		assertEquals(1, response.getHits().size());
+		assertEquals(1, response.getTotalHits());
+		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getRDFId());
+		
 		response = searchEngine.search("pathway:\"bmp receptor signaling\"", 0, Pathway.class, null, null);
 		assertNotNull(response);
-		assertFalse(response.getHits().isEmpty());
+		assertFalse(response.getHits().isEmpty());		
+//		for(BioPAXElement bpe : response.getHits()) {
+//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
+//					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
+//					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
+//		}	
+		assertEquals(2, response.getTotalHits());
+		// - the second pathway is a trivial one, member of Pathway_3f75176b9a6272a62f9257f0540dc63b and of many other parent pathways.
 		
-		for(BioPAXElement bpe : response.getHits()) {
-			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
-					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
-					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
-		}
+		//check the top pathway is the main one (parent)
+		assertEquals("http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b", response.getHits().get(0).getRDFId());
 	}
 }

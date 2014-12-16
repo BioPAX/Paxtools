@@ -511,19 +511,19 @@ public class SearchEngine implements Indexer, Searcher {
 			Named named = (Named) bpe;
 			if(named.getStandardName() != null) {
 				field = new TextField(FIELD_NAME, named.getStandardName(), Field.Store.NO);
-				field.setBoost(3.5f);
+				field.setBoost(3.0f);
 				doc.add(field);
 			}
 			if(named.getDisplayName() != null && !named.getDisplayName().equalsIgnoreCase(named.getStandardName())) {
 				field = new TextField(FIELD_NAME, named.getDisplayName(), Field.Store.NO);
-				field.setBoost(3.0f);
+				field.setBoost(2.5f);
 				doc.add(field);
 			}
 			for(String name : named.getName()) {
 				if(name.equalsIgnoreCase(named.getDisplayName()) || name.equalsIgnoreCase(named.getStandardName()))
 					continue;
 				field = new TextField(FIELD_NAME, name.toLowerCase(), Field.Store.NO);
-				field.setBoost(2.5f);
+				field.setBoost(2.0f);
 				doc.add(field);
 			}
 		}
