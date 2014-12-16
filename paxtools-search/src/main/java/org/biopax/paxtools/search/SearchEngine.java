@@ -451,7 +451,9 @@ public class SearchEngine implements Indexer, Searcher {
 	 * the biopax object but also from its child elements, up to some depth 
 	 * (using key-value pairs in the pre-computed bpe.annotations map):
 	 * 
-	 *  'uri' - biopax object's absolute URI, index=no, analyze=no, store=yes;
+	 *  'uri' - biopax object's absolute URI, analyze=no, store=yes;
+	 * 
+	 *  'name' - names, analyze=yes, store=yes; boosted;
 	 * 
 	 *  'keyword' - infer from this bpe and its child objects' data properties,
 	 *            such as Score.value, structureData, structureFormat, chemicalFormula, 
