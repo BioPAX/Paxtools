@@ -17,12 +17,16 @@ import org.biopax.paxtools.query.wrapperL3.OrganismFilter;
 import org.biopax.paxtools.query.wrapperL3.UbiqueFilter;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ozgun Babur
@@ -163,12 +167,7 @@ public class QueryTest
 		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
 			source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(!result.isEmpty());
-		// test the filter is case insensitive
-		f = new OrganismFilter(new String[]{"homo SAPIENS"});
-		result = QueryExecuter.runPathsFromTo(
-			source, target, model, LimitType.NORMAL, 2, f);
-		assertTrue(!result.isEmpty());
-		
+
 		f = new OrganismFilter(new String[]{"Non-existing organism"});
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(result.isEmpty());
@@ -182,10 +181,6 @@ public class QueryTest
 		// test data source filter
 
 		f = new DataSourceFilter(new String[]{"Reactome"});
-		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
-		assertTrue(!result.isEmpty());
-		// test the filter is case insensitive
-		f = new DataSourceFilter(new String[]{"reactome"});
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(!result.isEmpty());
 

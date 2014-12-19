@@ -434,12 +434,14 @@ public class PaxtoolsMain {
 	public static void summarize(String[] argv) throws IOException {
 
 		Model model = getModel(io, argv[1]);
+		summarize(model, argv.length > 2 ? new PrintStream(argv[2]) : null);
+	}
 		
-		PrintStream out = System.out;
-		if(argv.length > 2)
-			out = new PrintStream(argv[2]);
-
+	public static void summarize(Model model, PrintStream out) throws IOException {
         // Produce a simplified version of the summary
+
+		if (out == null) out = System.out;
+
         HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
 		final SimpleEditorMap em = (model.getLevel() == BioPAXLevel.L3) 
