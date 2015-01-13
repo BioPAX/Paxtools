@@ -46,13 +46,33 @@ public class Example {
             bpeSet.addAll(rawModelObject.getRight());
 
             for(PhysicalEntity bpe : bpeSet) {
-                // Xrefs (or cross-references) include identifier information in BioPAX
-                Set<Xref> xrefs = bpe.getXref();
+                EntityReference er = null;
 
-                for(Xref xref : xrefs) {
-                    tmp = "\tID: " + bpe.getRDFId() +
-                          " NAME: " + bpe.getDisplayName() +
-                          " DB: " + xref.getDb() + ": " + xref.getId();
+                // Check what type of entity
+                if(bpe instanceof Protein) {
+                    Protein p = (Protein) bpe;
+                    er = p.getEntityReference();
+                }
+
+                if(bpe instanceof SmallMolecule) {
+                    SmallMolecule p = (SmallMolecule) bpe;
+                    er = p.getEntityReference();
+                }
+
+                if(er instanceof EntityReference) {
+                    // Xrefs (or cross-references) include identifier information in BioPAX
+                    Set<Xref> xrefs = er.getXref();
+
+                    for(Xref xref : xrefs) {
+                        tmp = "\tID: " + bpe.getRDFId() +
+                                " NAME: " + bpe.getDisplayName() +
+                                " DB: " + xref.getDb() + " DB_ID: " + xref.getId();
+
+                        System.out.println(tmp);
+                        out.println(tmp);
+                    }
+                } else {
+                    tmp = "\tNONE";
 
                     System.out.println(tmp);
                     out.println(tmp);
