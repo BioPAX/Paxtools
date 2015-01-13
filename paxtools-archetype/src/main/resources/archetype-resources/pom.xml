@@ -34,14 +34,14 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.2-beta-5</version>
                     <configuration>
-                        <finalName>pc-hgnc-sif-single</finalName>
+                        <finalName>example-single</finalName>
                         <appendAssemblyId>false</appendAssemblyId>
                         <descriptorRefs>
                             <descriptorRef>jar-with-dependencies</descriptorRef>
                         </descriptorRefs>
                         <archive>
                             <manifest>
-                                <mainClass>org.mskcc.cbio.PcToHgncEdgesMain</mainClass>
+                                <mainClass>com.example.test.Example</mainClass>
                                 <addClasspath>true</addClasspath>
                             </manifest>
                         </archive>
