@@ -597,6 +597,20 @@ class EntryMapper {
 
 		// set the BioPXElement URI and taxonomy xref id
 		String ncbiId = Integer.toString(organism.getNcbiTaxId());
+		String name = null;
+		
+		if (organism.hasNames()) {
+			name = getName(organism.getNames());
+			//a hack for BIND data (and perhaps other DBs)
+			if((name.equalsIgnoreCase("homo sapiens")
+					|| name.equalsIgnoreCase("human"))
+					&& !ncbiId.equals("9606")) {
+				LOG.warn("Changed from " + ncbiId + " to the human taxonomy ID in "
+						+ organism);
+				ncbiId = "9606";
+			}
+		}
+		
 		String uri = xmlBase + "BioSource_" + 
 			"taxonomy_" + ncbiId; //tissue and cell type terms can be added below		
 		if(tissue!=null && !tissue.getTerm().isEmpty()) 
@@ -628,8 +642,8 @@ class EntryMapper {
 		{
 			toReturn.setTissue((TissueVocabulary) tissue);
 		}
-		if (organism.hasNames()) {
-			toReturn.setStandardName(getName(organism.getNames()));
+		if (name != null) {
+			toReturn.setStandardName(name);
 		}
 				
 		return toReturn;
