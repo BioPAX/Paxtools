@@ -52,7 +52,7 @@ public class QueryExecuter
 
 		NeighborhoodQuery query = new NeighborhoodQuery(source, direction, limit);
 		Set<GraphObject> resultWrappers = query.run();
-		return convertQueryResult(resultWrappers, graph);
+		return convertQueryResult(resultWrappers, graph, true);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class QueryExecuter
 
 		PathsBetweenQuery query = new PathsBetweenQuery(sourceWrappers, limit);
 		Set<GraphObject> resultWrappers = query.run();
-		return convertQueryResult(resultWrappers, graph);
+		return convertQueryResult(resultWrappers, graph, true);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class QueryExecuter
 
 		PathsFromToQuery query = new PathsFromToQuery(source, target, limitType, limit, true);
 		Set<GraphObject> resultWrappers = query.run();
-		return convertQueryResult(resultWrappers, graph);
+		return convertQueryResult(resultWrappers, graph, true);
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class QueryExecuter
 		CommonStreamQuery query = new CommonStreamQuery(source, direction, limit);
 
 		Set<GraphObject> resultWrappers = query.run();
-		return convertQueryResult(resultWrappers, graph);
+		return convertQueryResult(resultWrappers, graph, false);
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class QueryExecuter
 		}
 
 		resultWrappers = poi.run();
-		return convertQueryResult(resultWrappers, graph);
+		return convertQueryResult(resultWrappers, graph, true);
 	}
 
 	/**
@@ -243,17 +243,59 @@ public class QueryExecuter
 	 * @param graph Queried graph
 	 * @return Set of elements in the result
 	 */
-	private static HashSet<BioPAXElement> convertQueryResult(
-		Set<GraphObject> resultWrappers, Graph graph)
+	private static Set<BioPAXElement> convertQueryResult(
+		Set<GraphObject> resultWrappers, Graph graph, boolean removeDisconnected)
 	{
 		Set<Object> result = graph.getWrappedSet(resultWrappers);
 
-		HashSet<BioPAXElement> set = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
 		for (Object o : result)
 		{
 			set.add((BioPAXElement) o);
 		}
+
+		// remove disconnected simple physical entities
+		if (removeDisconnected)
+		{
+			Set<BioPAXElement> remove = new HashSet<BioPAXElement>();
+
+			for (BioPAXElement ele : set)
+			{
+				if (ele instanceof SimplePhysicalEntity &&
+					isDisconnected((SimplePhysicalEntity) ele, set))
+				{
+					remove.add(ele);
+				}
+			}
+			set.removeAll(remove);
+		}
+		
 		return set;
+	}
+
+	private static boolean isDisconnected(SimplePhysicalEntity spe, Set<BioPAXElement> resultSet)
+	{
+		for (Interaction inter : spe.getParticipantOf())
+		{
+			if (resultSet.contains(inter)) return false;
+		}
+
+		for (Complex complex : spe.getComponentOf())
+		{
+			if (resultSet.contains(complex)) return false;
+		}
+
+		for (PhysicalEntity pe : spe.getMemberPhysicalEntityOf())
+		{
+			if (resultSet.contains(pe)) return false;
+		}
+
+		for (PhysicalEntity pe : spe.getMemberPhysicalEntity())
+		{
+			if (resultSet.contains(pe)) return false;
+		}
+
+		return true;
 	}
 
 	/**
