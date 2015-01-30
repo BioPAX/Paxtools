@@ -2,8 +2,8 @@ package org.biopax.paxtools.examples;
 
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.io.sif.InteractionRule;
-import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
+//import org.biopax.paxtools.io.sif.InteractionRule;
+//import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.Model;
 
 import java.io.FileInputStream;
@@ -16,6 +16,8 @@ import java.util.Arrays;
  * This example exports A BioPAX model to sif using all the rules.
  *
  * To use specific rules uncomment the rule enumeration below.
+ *
+ * @deprecated
  */
 public final class SifnxExportExample {
 
@@ -30,9 +32,9 @@ public final class SifnxExportExample {
 		BioPAXIOHandler biopaxReader = new SimpleIOHandler();
 		Model model = biopaxReader.convertFromOWL(new FileInputStream(args[0]));
 		
-		SimpleInteractionConverter sic = // add all rules
-        	new SimpleInteractionConverter(SimpleInteractionConverter
-				.getRules(model.getLevel()).toArray(new InteractionRule[]{}));
+//		SimpleInteractionConverter sic = // add all rules
+//        	new SimpleInteractionConverter(SimpleInteractionConverter
+//				.getRules(model.getLevel()).toArray(new InteractionRule[]{}));
 
 		/* or - use some of the rules - 
 		SimpleInteractionConverter sic = null;
@@ -58,8 +60,8 @@ public final class SifnxExportExample {
 		*/
 		OutputStream edgeStream = new FileOutputStream(args[1]);
 		OutputStream nodeStream = new FileOutputStream(args[2]);
-        sic.writeInteractionsInSIFNX(model, edgeStream, nodeStream, 
-        		null, Arrays.asList("entity/NAME","entity/XREF"),false);
+//        sic.writeInteractionsInSIFNX(model, edgeStream, nodeStream,
+//        		null, Arrays.asList("entity/NAME","entity/XREF"),false);
 	}
 
 }

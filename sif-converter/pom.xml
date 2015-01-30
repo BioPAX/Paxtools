@@ -18,6 +18,21 @@
 			<artifactId>paxtools-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-search</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	
 	<description>Converts a BioPAX model to binary SIF (simple interaction format) or extended binary SIF by inferring the interactions in the model and describing them in terms of simple interactions. This includes a set of BioPAX-specific inference rules implemented on top of paxtools-core.</description>
