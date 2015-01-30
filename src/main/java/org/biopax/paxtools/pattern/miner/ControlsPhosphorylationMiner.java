@@ -14,7 +14,7 @@ public class ControlsPhosphorylationMiner extends ControlsStateChangeOfMiner
 	 */
 	public ControlsPhosphorylationMiner()
 	{
-		super(SIFEnum.CONTROLS_PHOSPHORYLATION_OF.getTag(),
+		super("phosphorylation",
 			SIFEnum.CONTROLS_PHOSPHORYLATION_OF.getDescription());
 		setType(SIFEnum.CONTROLS_PHOSPHORYLATION_OF);
 	}

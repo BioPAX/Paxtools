@@ -30,7 +30,7 @@ public class ControlsTransportOfChemicalMiner extends AbstractSIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "controller PR";
+		return "controller ER";
 	}
 
 	@Override

@@ -30,14 +30,7 @@ public class ControlsExpressionWithConvMiner extends ControlsExpressionMiner
 	public Pattern constructPattern()
 	{
 		Pattern p = PatternBox.controlsExpressionWithConversion();
-		p.add(new Type(ProteinReference.class), "product ER");
 		return p;
-	}
-
-	@Override
-	public String getTargetLabel()
-	{
-		return "product ER";
 	}
 
 	@Override

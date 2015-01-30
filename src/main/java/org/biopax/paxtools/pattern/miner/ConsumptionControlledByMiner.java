@@ -44,7 +44,7 @@ public class ConsumptionControlledByMiner extends AbstractSIFMiner
 	@Override
 	public String getTargetLabel()
 	{
-		return "controller PR";
+		return "controller ER";
 	}
 
 	@Override

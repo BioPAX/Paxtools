@@ -155,6 +155,13 @@ public class SIFSearcher
 				{
 					SIFInteraction sif = miner.createSIFInteraction(m, idFetcher);
 
+					//----debug-block
+//					if (sif.sourceID.equals("limonin") && sif.targetID.equals("GNG11"))
+//					{
+//						System.out.println();
+//					}
+					//----end-of-debug-block
+
 					if (sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID) &&
 						(types == null || types.contains(sif.type)))
 					{

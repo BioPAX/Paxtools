@@ -1,8 +1,12 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Pathway;
+import org.biopax.paxtools.model.level3.Protein;
+import org.biopax.paxtools.model.level3.SmallMolecule;
 import org.biopax.paxtools.pattern.PatternBoxTest;
 import org.biopax.paxtools.pattern.util.AdjacencyMatrix;
 import org.biopax.paxtools.pattern.util.Blacklist;
@@ -112,7 +116,7 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		BlacklistGenerator gen = new BlacklistGenerator();
 		Blacklist blacklist = gen.generateBlacklist(model);
-		blacklist.write(new FileOutputStream(dir + "blacklist6.txt"));
+		blacklist.write(new FileOutputStream(dir + "blacklist.txt"));
 
 		SIFSearcher s = new SIFSearcher(SIFEnum.values());
 //		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
@@ -124,7 +128,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		s.setBlacklist(blacklist);
 
 		confirmPresenceOfUbiques(model, blacklist);
-		s.searchSIF(model, new FileOutputStream(dir + "PC6.sif"), true);
+		s.searchSIF(model, new FileOutputStream(dir + "PC.sif"), true);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
@@ -139,13 +143,20 @@ public class SIFSearcherTest extends PatternBoxTest
 
 //		BPCollections.I.setProvider(new TProvider());
 
-		String dir = "/home/ozgun/Temp/";
+//		String dir = "/home/ozgun/Projects/biopax-pattern/";
+		String dir = "/home/ozgun/Desktop/";
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream(dir + "goal3_drugbank_20140730.owl"));
+		Model model = h.convertFromOWL(new FileInputStream(dir + "temp.owl"));
 
-		SIFSearcher s = new SIFSearcher(SIFEnum.CHEMICAL_AFFECTS);
+		CommonIDFetcher idFetcher = new CommonIDFetcher();
+		idFetcher.setUseUniprotIDs(true);
+		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.values());
 
-		s.searchSIF(model, new FileOutputStream(dir + "goal5.sif"), true);
+		BlacklistGenerator gen = new BlacklistGenerator();
+		Blacklist blacklist = gen.generateBlacklist(model);
+		s.setBlacklist(blacklist);
+//		s.setBlacklist(new Blacklist("blacklist.txt"));
+		s.searchSIF(model, new FileOutputStream(dir + "temp.sif"), true);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
@@ -224,5 +235,25 @@ public class SIFSearcherTest extends PatternBoxTest
 		searcher.setBlacklist(blacklist);
 
 		return searcher.searchSIF(model);
+	}
+
+	@Test
+	@Ignore
+	public void testTemp()
+	{
+		FileInputStream fin;
+		try {
+			fin = new FileInputStream("/home/ozgun/Downloads/testmodel.owl");
+			BioPAXIOHandler handler = new SimpleIOHandler();
+			Model model = handler.convertFromOWL(fin); //THIS LINE OF CODE CAUSES THE ERROR
+
+			for (SmallMolecule sm : model.getObjects(SmallMolecule.class))
+			{
+				System.out.println("protein.getDisplayName() = " + sm.getName().iterator().next());
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }

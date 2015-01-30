@@ -32,7 +32,7 @@ public class InterToPartER extends ConstraintAdapter
 	/**
 	 * Constraint used for traversing towards simpler PE.
 	 */
-	private static final LinkedPE linker = new LinkedPE(LinkedPE.Type.TO_MEMBER);
+	private static final LinkedPE linker = new LinkedPE(LinkedPE.Type.TO_SPECIFIC);
 
 	/**
 	 * Accessor from PE to ER.

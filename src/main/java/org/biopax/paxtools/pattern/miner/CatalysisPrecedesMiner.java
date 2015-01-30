@@ -30,13 +30,13 @@ public class CatalysisPrecedesMiner extends AbstractSIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "first PR";
+		return "first ER";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "second PR";
+		return "second ER";
 	}
 
 	@Override

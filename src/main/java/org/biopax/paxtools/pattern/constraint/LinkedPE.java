@@ -115,8 +115,9 @@ public class LinkedPE extends ConstraintAdapter
 	 */
 	protected void enrichWithGenerics(Set<BioPAXElement> seed, Set<BioPAXElement> all)
 	{
-		Set addition = access(upperGenAcc, seed, all);
-		addition.addAll(access(lowerGenAcc, seed, all));
+		Set addition;
+		if (type == Type.TO_GENERAL) addition = access(upperGenAcc, seed, all);
+		else addition = access(lowerGenAcc, seed, all);
 		
 		all.addAll(addition);
 		seed.addAll(addition);
@@ -131,7 +132,7 @@ public class LinkedPE extends ConstraintAdapter
 	 */
 	protected void enrichWithCM(Set<BioPAXElement> seed, Set<BioPAXElement> all)
 	{
-		Set addition = access(type == Type.TO_COMPLEX ? complexAcc : memberAcc, seed, all);
+		Set addition = access(type == Type.TO_GENERAL ? complexAcc : memberAcc, seed, all);
 
 		if (blacklist != null) addition = blacklist.getNonUbiqueObjects(addition);
 
@@ -165,7 +166,7 @@ public class LinkedPE extends ConstraintAdapter
 	 */
 	public enum Type
 	{
-		TO_COMPLEX,
-		TO_MEMBER
+		TO_GENERAL,
+		TO_SPECIFIC
 	}
 }

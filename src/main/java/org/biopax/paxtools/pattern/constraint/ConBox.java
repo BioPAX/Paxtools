@@ -11,7 +11,6 @@ import org.biopax.paxtools.pattern.util.RelType;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Some predefined constraints.
@@ -26,8 +25,7 @@ public class ConBox
 	 */
 	public static Constraint erToPE()
 	{
-		return new MultiPathConstraint("EntityReference/memberEntityReferenceOf*/entityReferenceOf",
-			"EntityReference/entityReferenceOf");
+		return new PathConstraint("EntityReference/entityReferenceOf");
 	}
 
 	/**
@@ -36,8 +34,7 @@ public class ConBox
 	 */
 	public static Constraint peToER()
 	{
-		return new MultiPathConstraint("SimplePhysicalEntity/entityReference",
-			"SimplePhysicalEntity/entityReference/memberEntityReference*");
+		return new PathConstraint("SimplePhysicalEntity/entityReference");
 	}
 
 	/**
@@ -386,7 +383,7 @@ public class ConBox
 	 */
 	public static Constraint participantER()
 	{
-		return new ConstraintChain(participant(), linkToSimple(), peToER());
+		return new ConstraintChain(participant(), linkToSpecific(), peToER(), linkedER(false));
 	}
 
 	/**
@@ -452,7 +449,7 @@ public class ConBox
 	 */
 	public static Constraint peNotRelatedToER()
 	{
-		return new NOT(new ConstraintChain(linkToSimple(), peToER()));
+		return new NOT(new ConstraintChain(linkToSpecific(), peToER()));
 	}
 
 	/**
@@ -485,7 +482,7 @@ public class ConBox
 	 */
 	public static Constraint modificationConstraint(String modifTerm)
 	{
-		return new FieldOfMultiple(new MappedConst(new LinkedPE(LinkedPE.Type.TO_MEMBER), 0),
+		return new FieldOfMultiple(new MappedConst(new LinkedPE(LinkedPE.Type.TO_SPECIFIC), 0),
 			"PhysicalEntity/feature:ModificationFeature/modificationType/term",
 			Field.Operation.INTERSECT, modifTerm);
 	}
@@ -495,9 +492,9 @@ public class ConBox
 	 * direction.
 	 * @return the constraint
 	 */
-	public static Constraint linkToSimple()
+	public static Constraint linkToSpecific()
 	{
-		return new LinkedPE(LinkedPE.Type.TO_MEMBER);
+		return new LinkedPE(LinkedPE.Type.TO_SPECIFIC);
 	}
 
 	/**
@@ -507,7 +504,12 @@ public class ConBox
 	 */
 	public static Constraint linkToComplex()
 	{
-		return new LinkedPE(LinkedPE.Type.TO_COMPLEX);
+		return new LinkedPE(LinkedPE.Type.TO_GENERAL);
+	}
+
+	public static Constraint linkedER(boolean up)
+	{
+		return new SelfOrThis(new PathConstraint("EntityReference/memberEntityReference" + (up ? "Of" : "") + "*"));
 	}
 
 	/**
@@ -518,7 +520,7 @@ public class ConBox
 	 */
 	public static Constraint linkToSimple(Blacklist blacklist)
 	{
-		return new LinkedPE(LinkedPE.Type.TO_MEMBER, blacklist);
+		return new LinkedPE(LinkedPE.Type.TO_SPECIFIC, blacklist);
 	}
 
 	/**
@@ -529,7 +531,7 @@ public class ConBox
 	 */
 	public static Constraint linkToComplex(Blacklist blacklist)
 	{
-		return new LinkedPE(LinkedPE.Type.TO_COMPLEX, blacklist);
+		return new LinkedPE(LinkedPE.Type.TO_GENERAL, blacklist);
 	}
 
 	/**

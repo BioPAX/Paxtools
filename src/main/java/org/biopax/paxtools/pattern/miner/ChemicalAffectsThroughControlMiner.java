@@ -37,7 +37,7 @@ public class ChemicalAffectsThroughControlMiner extends AbstractSIFMiner
 	@Override
 	public String getTargetLabel()
 	{
-		return "affected PR";
+		return "affected ER";
 	}
 
 	@Override

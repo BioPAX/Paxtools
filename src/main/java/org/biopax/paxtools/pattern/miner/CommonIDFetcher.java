@@ -7,12 +7,14 @@ import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.pattern.util.HGNC;
 
 /**
- * Tries to get gene symbols for genes and display names for small molecules.
+ * Tries to get gene symbols or uniprot IDs for genes and display names for small molecules.
  *
  * @author Ozgun Babur
  */
 public class CommonIDFetcher implements IDFetcher
 {
+	boolean useUniprotIDs = false;
+
 	@Override
 	public String fetchID(BioPAXElement ele)
 	{
@@ -31,7 +33,7 @@ public class CommonIDFetcher implements IDFetcher
 				if (db != null)
 				{
 					db = db.toLowerCase();
-					if (db.startsWith("hgnc"))
+					if (!useUniprotIDs && db.startsWith("hgnc"))
 					{
 						String id = xr.getId();
 						if (id != null)
@@ -43,10 +45,23 @@ public class CommonIDFetcher implements IDFetcher
 							}
 						}
 					}
+					else if (useUniprotIDs && db.startsWith("uniprot"))
+					{
+						String id = xr.getId();
+						if (id != null)
+						{
+							return id;
+						}
+					}
 				}
 			}
 		}
 
 		return null;
+	}
+
+	public void setUseUniprotIDs(boolean useUniprotIDs)
+	{
+		this.useUniprotIDs = useUniprotIDs;
 	}
 }

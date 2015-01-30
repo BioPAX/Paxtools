@@ -34,13 +34,13 @@ public class ControlsDegradationIndirectMiner extends AbstractSIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "controller PR";
+		return "controller ER";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "changed PR";
+		return "changed ER";
 	}
 
 	@Override

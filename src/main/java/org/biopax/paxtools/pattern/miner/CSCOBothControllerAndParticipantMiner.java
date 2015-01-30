@@ -32,7 +32,7 @@ public class CSCOBothControllerAndParticipantMiner extends AbstractSIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "controller PR";
+		return "controller ER";
 	}
 
 	@Override

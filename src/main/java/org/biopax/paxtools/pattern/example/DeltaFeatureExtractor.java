@@ -174,13 +174,13 @@ public class DeltaFeatureExtractor
 		@Override
 		public String getSourceLabel()
 		{
-			return "controller PR";
+			return "controller ER";
 		}
 
 		@Override
 		public String getTargetLabel()
 		{
-			return "changed PR";
+			return "changed ER";
 		}
 
 		@Override
@@ -222,12 +222,6 @@ public class DeltaFeatureExtractor
 		{
 			return PatternBox.controlsStateChangeBothControlAndPart();
 		}
-
-		@Override
-		public String getTargetLabel()
-		{
-			return "changed ER";
-		}
 	}
 
 	class CSCO_ButPart extends AbstractMiner
@@ -236,18 +230,6 @@ public class DeltaFeatureExtractor
 		public Pattern constructPattern()
 		{
 			return PatternBox.controlsStateChangeButIsParticipant();
-		}
-
-		@Override
-		public String getSourceLabel()
-		{
-			return "controller ER";
-		}
-
-		@Override
-		public String getTargetLabel()
-		{
-			return "changed ER";
 		}
 
 		@Override
@@ -286,13 +268,7 @@ public class DeltaFeatureExtractor
 		@Override
 		public String getSourceLabel()
 		{
-			return "upper controller PR";
-		}
-
-		@Override
-		public String getTargetLabel()
-		{
-			return "changed ER";
+			return "upper controller ER";
 		}
 
 		@Override

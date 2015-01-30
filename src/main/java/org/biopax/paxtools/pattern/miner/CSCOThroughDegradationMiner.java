@@ -30,13 +30,13 @@ public class CSCOThroughDegradationMiner extends AbstractSIFMiner
 	@Override
 	public String getSourceLabel()
 	{
-		return "upstream PR";
+		return "upstream ER";
 	}
 
 	@Override
 	public String getTargetLabel()
 	{
-		return "downstream PR";
+		return "downstream ER";
 	}
 
 	@Override

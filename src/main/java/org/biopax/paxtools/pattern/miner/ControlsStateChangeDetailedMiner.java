@@ -77,7 +77,7 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 		{
 			case 0:
 			{
-				return getGeneSymbol(m, "controller PR");
+				return getGeneSymbol(m, "controller ER");
 			}
 			case 1:
 			{
@@ -85,7 +85,7 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 			}
 			case 2:
 			{
-				return getGeneSymbol(m, "changed PR");
+				return getGeneSymbol(m, "changed ER");
 			}
 			case 3:
 			{

@@ -37,7 +37,7 @@ public class ChemicalAffectsThroughBindingMiner extends AbstractSIFMiner
 	@Override
 	public String getTargetLabel()
 	{
-		return "PR";
+		return "ER";
 	}
 
 	@Override

@@ -27,20 +27,22 @@ public class PatternBox
 	 */
 	public static Pattern controlsStateChange()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.add(erToPE(), "controller PR", "controller simple PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "controller ER");
+		p.add(linkedER(true), "controller ER", "generic controller ER");
+		p.add(erToPE(), "generic controller ER", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
-		p.add(new NOT(participantER()), "Conversion", "controller PR");
+		p.add(new NOT(participantER()), "Conversion", "controller ER");
 		p.add(new Participant(RelType.INPUT, true), "Control", "Conversion", "input PE");
-		p.add(linkToSimple(), "input PE", "input simple PE");
-		p.add(new Type(Protein.class), "input simple PE");
-		p.add(peToER(), "input simple PE", "changed PR");
+		p.add(linkToSpecific(), "input PE", "input simple PE");
+		p.add(new Type(SequenceEntity.class), "input simple PE");
+		p.add(peToER(), "input simple PE", "changed generic ER");
 		p.add(new ConversionSide(ConversionSide.Type.OTHER_SIDE), "input PE", "Conversion", "output PE");
 		p.add(equal(false), "input PE", "output PE");
-		p.add(linkToSimple(), "output PE", "output simple PE");
-		p.add(peToER(), "output simple PE", "changed PR");
+		p.add(linkToSpecific(), "output PE", "output simple PE");
+		p.add(peToER(), "output simple PE", "changed generic ER");
+		p.add(linkedER(false), "changed generic ER", "changed ER");
 
 		return p;
 	}
@@ -68,9 +70,9 @@ public class PatternBox
 	 */
 	public static Pattern controlsTransportOfChemical(Blacklist blacklist)
 	{
-
-		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.add(erToPE(), "controller PR", "controller simple PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "controller ER");
+		p.add(linkedER(true), "controller ER", "controller generic ER");
+		p.add(erToPE(), "controller generic ER", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
@@ -78,12 +80,14 @@ public class PatternBox
 		p.add(linkToSimple(blacklist), "input PE", "input simple PE");
 		p.add(new Type(SmallMolecule.class), "input simple PE");
 		p.add(notGeneric(), "input simple PE");
-		p.add(peToER(), "input simple PE", "changed SMR");
+		p.add(peToER(), "input simple PE", "changed generic SMR");
 		p.add(new ConversionSide(ConversionSide.Type.OTHER_SIDE, blacklist, RelType.OUTPUT), "input PE", "Conversion", "output PE");
 		p.add(equal(false), "input PE", "output PE");
 		p.add(linkToSimple(blacklist), "output PE", "output simple PE");
+		p.add(new Type(SmallMolecule.class), "output simple PE");
 		p.add(notGeneric(), "output simple PE");
-		p.add(peToER(), "output simple PE", "changed SMR");
+		p.add(peToER(), "output simple PE", "changed generic SMR");
+		p.add(linkedER(false), "changed generic SMR", "changed SMR");
 		p.add(new OR(
 			new MappedConst(hasDifferentCompartments(), 0, 1),
 			new MappedConst(hasDifferentCompartments(), 2, 3)),
@@ -101,9 +105,9 @@ public class PatternBox
 	 */
 	public static Pattern controlsStateChangeBothControlAndPart()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.add(erToPE(), "controller PR", "controller simple PE");
-		p.add(notGeneric(), "controller simple PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "controller ER");
+		p.add(linkedER(true), "controller ER", "controller generic ER");
+		p.add(erToPE(), "controller generic ER", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
@@ -123,8 +127,8 @@ public class PatternBox
 		p.add(new NOT(simplePEToConv(RelType.OUTPUT)), "input simple PE", "Conversion");
 		p.add(new NOT(simplePEToConv(RelType.INPUT)), "output simple PE", "Conversion");
 
-		p.add(equal(false), "controller PR", "changed ER");
-		p.add(type(ProteinReference.class), "changed ER");
+		p.add(equal(false), "controller ER", "changed ER");
+		p.add(type(SequenceEntityReference.class), "changed ER");
 
 		return p;
 	}
@@ -138,9 +142,9 @@ public class PatternBox
 	 */
 	public static Pattern controlsStateChangeButIsParticipant()
 	{
-		Pattern p = new Pattern(EntityReference.class, "controller ER");
-		p.add(erToPE(), "controller ER", "controller simple PE");
-		p.add(notGeneric(), "controller simple PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "controller ER");
+		p.add(linkedER(true), "controller ER", "controller generic ER");
+		p.add(erToPE(), "controller generic ER", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(participatesInConv(), "controller PE", "Conversion");
 		p.add(left(), "Conversion", "controller PE");
@@ -169,14 +173,13 @@ public class PatternBox
 		if (ctrlLabel == null) p.add(new Participant(RelType.INPUT), "Conversion", "input PE");
 		else p.add(new Participant(RelType.INPUT, true), ctrlLabel, "Conversion", "input PE");
 
-		p.add(linkToSimple(), "input PE", "input simple PE");
-		p.add(notGeneric(), "input simple PE");
-		p.add(peToER(), "input simple PE", "changed ER");
+		p.add(linkToSpecific(), "input PE", "input simple PE");
+		p.add(peToER(), "input simple PE", "changed generic ER");
 		p.add(new ConversionSide(ConversionSide.Type.OTHER_SIDE), "input PE", "Conversion", "output PE");
 		p.add(equal(false), "input PE", "output PE");
-		p.add(linkToSimple(), "output PE", "output simple PE");
-		p.add(notGeneric(), "output simple PE");
-		p.add(peToER(), "output simple PE", "changed ER");
+		p.add(linkToSpecific(), "output PE", "output simple PE");
+		p.add(peToER(), "output simple PE", "changed generic ER");
+		p.add(linkedER(false), "changed generic ER", "changed ER");
 		return p;
 	}
 
@@ -187,20 +190,20 @@ public class PatternBox
 	 */
 	public static Pattern controlsStateChangeThroughControllerSmallMolecule(Blacklist blacklist)
 	{
-		Pattern p = new Pattern(ProteinReference.class, "upper controller PR");
-		p.add(erToPE(), "upper controller PR", "upper controller simple PE");
-		p.add(notGeneric(), "upper controller simple PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "upper controller ER");
+		p.add(linkedER(true), "upper controller ER", "upper controller generic ER");
+		p.add(erToPE(), "upper controller generic ER", "upper controller simple PE");
 		p.add(linkToComplex(), "upper controller simple PE", "upper controller PE");
 		p.add(peToControl(), "upper controller PE", "upper Control");
 		p.add(controlToConv(), "upper Control", "upper Conversion");
-		p.add(new NOT(participantER()), "upper Conversion", "upper controller PR");
+		p.add(new NOT(participantER()), "upper Conversion", "upper controller ER");
 		p.add(new Participant(RelType.OUTPUT, blacklist), "upper Conversion", "controller PE");
 		p.add(type(SmallMolecule.class), "controller PE");
 		if (blacklist != null) p.add(new NonUbique(blacklist), "controller PE");
 
 		// the linker small mol is at also an input
 		p.add(new NOT(new ConstraintChain(
-			new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSimple())),
+			new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSpecific())),
 			"controller PE", "upper Conversion", "controller PE");
 
 		p.add(peToControl(), "controller PE", "Control");
@@ -211,9 +214,9 @@ public class PatternBox
 
 		stateChange(p, "Control");
 
-		p.add(type(ProteinReference.class), "changed ER");
-		p.add(equal(false), "upper controller PR", "changed ER");
-		p.add(new NOT(participantER()), "Conversion", "upper controller PR");
+		p.add(type(SequenceEntityReference.class), "changed ER");
+		p.add(equal(false), "upper controller ER", "changed ER");
+		p.add(new NOT(participantER()), "Conversion", "upper controller ER");
 
 		return p;
 	}
@@ -225,20 +228,20 @@ public class PatternBox
 	 */
 	public static Pattern controlsStateChangeThroughBindingSmallMolecule(Blacklist blacklist)
 	{
-		Pattern p = new Pattern(ProteinReference.class, "upper controller PR");
-		p.add(erToPE(), "upper controller PR", "upper controller simple PE");
-		p.add(notGeneric(), "upper controller simple PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "upper controller ER");
+		p.add(linkedER(true), "upper controller ER", "upper controller generic ER");
+		p.add(erToPE(), "upper controller ER", "upper controller simple PE");
 		p.add(linkToComplex(), "upper controller simple PE", "upper controller PE");
 		p.add(peToControl(), "upper controller PE", "upper Control");
 		p.add(controlToConv(), "upper Control", "upper Conversion");
-		p.add(new NOT(participantER()), "upper Conversion", "upper controller PR");
+		p.add(new NOT(participantER()), "upper Conversion", "upper controller ER");
 		p.add(new Participant(RelType.OUTPUT, blacklist, true), "upper Control", "upper Conversion", "SM");
 		p.add(type(SmallMolecule.class), "SM");
 		if (blacklist != null) p.add(new NonUbique(blacklist), "SM");
 
 		// the linker small mol is at also an input
 		p.add(new NOT(new ConstraintChain(
-			new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSimple())),
+			new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSpecific())),
 			"SM", "upper Conversion", "SM");
 
 		p.add(new ParticipatesInConv(RelType.INPUT), "SM", "Conversion");
@@ -249,9 +252,9 @@ public class PatternBox
 
 		stateChange(p, null);
 
-		p.add(type(ProteinReference.class), "changed ER");
-		p.add(equal(false), "upper controller PR", "changed ER");
-		p.add(new NOT(participantER()), "Conversion", "upper controller PR");
+		p.add(type(SequenceEntityReference.class), "changed ER");
+		p.add(equal(false), "upper controller ER", "changed ER");
+		p.add(new NOT(participantER()), "Conversion", "upper controller ER");
 		p.add(compToER(), "output PE", "SM ER");
 
 		return p;
@@ -263,25 +266,27 @@ public class PatternBox
 	 */
 	public static Pattern controlsStateChangeThroughDegradation()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "upstream PR");
-		p.add(erToPE(), "upstream PR", "upstream SPE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "upstream ER");
+		p.add(linkedER(true), "upstream ER", "upstream generic ER");
+		p.add(erToPE(), "upstream generic ER", "upstream SPE");
 		p.add(linkToComplex(), "upstream SPE", "upstream PE");
 		p.add(peToControl(), "upstream PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
-		p.add(new NOT(participantER()), "Conversion", "upstream PR");
+		p.add(new NOT(participantER()), "Conversion", "upstream ER");
 		p.add(new Empty(new Participant(RelType.OUTPUT)), "Conversion");
 		p.add(new Participant(RelType.INPUT), "Conversion", "input PE");
-		p.add(linkToSimple(), "input PE", "input SPE");
-		p.add(peToER(), "input SPE", "downstream PR");
-		p.add(type(ProteinReference.class), "downstream PR");
+		p.add(linkToSpecific(), "input PE", "input SPE");
+		p.add(peToER(), "input SPE", "downstream generic ER");
+		p.add(type(SequenceEntityReference.class), "downstream generic ER");
+		p.add(linkedER(false), "downstream generic ER", "downstream ER");
 		return p;
 	}
 
 	public static Pattern controlsPhosphorylation()
 	{
 		Pattern p = controlsStateChange();
-		p.add(new NOT(ConBox.linkToSimple()), "input PE", "output simple PE");
-		p.add(new NOT(ConBox.linkToSimple()), "output PE", "input simple PE");
+		p.add(new NOT(ConBox.linkToSpecific()), "input PE", "output simple PE");
+		p.add(new NOT(ConBox.linkToSpecific()), "output PE", "input simple PE");
 		p.add(new ModificationChangeConstraint(ModificationChangeConstraint.Type.ANY,
 			"phospho"), "input simple PE", "output simple PE");
 		return p;
@@ -291,17 +296,17 @@ public class PatternBox
 	 * Pattern for a Protein controlling a reaction whose participant is a small molecule.
 	 * @return the pattern
 	 */
-	public static Pattern controlsMetabolicCatalysis(Blacklist blacklist, boolean comsumption)
+	public static Pattern controlsMetabolicCatalysis(Blacklist blacklist, boolean consumption)
 	{
-		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.add(erToPE(), "controller PR", "controller simple PE");
-		p.add(notGeneric(), "controller simple PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "controller ER");
+		p.add(linkedER(true), "controller ER", "controller generic ER");
+		p.add(erToPE(), "controller generic ER", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
-		p.add(new NOT(participantER()), "Conversion", "controller PR");
+		p.add(new NOT(participantER()), "Conversion", "controller ER");
 
-		p.add(new Participant(comsumption ? RelType.INPUT : RelType.OUTPUT, blacklist, true),
+		p.add(new Participant(consumption ? RelType.INPUT : RelType.OUTPUT, blacklist, true),
 			"Control", "Conversion", "part PE");
 
 		p.add(linkToSimple(blacklist), "part PE", "part SM");
@@ -327,17 +332,17 @@ public class PatternBox
 	 */
 	public static Pattern catalysisPrecedes(Blacklist blacklist)
 	{
-		Pattern p = new Pattern(ProteinReference.class, "first PR");
-		p.add(erToPE(), "first PR", "first simple controller PE");
-		p.add(notGeneric(), "first simple controller PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "first ER");
+		p.add(linkedER(true), "first ER", "first generic ER");
+		p.add(erToPE(), "first generic ER", "first simple controller PE");
 		p.add(linkToComplex(), "first simple controller PE", "first controller PE");
 		p.add(peToControl(), "first controller PE", "first Control");
 		p.add(controlToConv(), "first Control", "first Conversion");
 		p.add(new Participant(RelType.OUTPUT, blacklist, true), "first Control", "first Conversion", "linker PE");
-		p.add(new NOT(new ConstraintChain(new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSimple())), "linker PE", "first Conversion", "linker PE");
+		p.add(new NOT(new ConstraintChain(new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSpecific())), "linker PE", "first Conversion", "linker PE");
 		p.add(type(SmallMolecule.class), "linker PE");
 		p.add(new ParticipatesInConv(RelType.INPUT, blacklist), "linker PE", "second Conversion");
-		p.add(new NOT(new ConstraintChain(new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSimple())), "linker PE", "second Conversion", "linker PE");
+		p.add(new NOT(new ConstraintChain(new ConversionSide(ConversionSide.Type.OTHER_SIDE), linkToSpecific())), "linker PE", "second Conversion", "linker PE");
 		p.add(equal(false), "first Conversion", "second Conversion");
 
 		// make sure that conversions are not replicates or reverse of each other
@@ -379,12 +384,12 @@ public class PatternBox
 
 		p.add(new RelatedControl(RelType.INPUT, blacklist), "linker PE", "second Conversion", "second Control");
 		p.add(controllerPE(), "second Control", "second controller PE");
-		p.add(new NOT(compToER()), "second controller PE", "first PR");
-		p.add(linkToSimple(), "second controller PE", "second simple controller PE");
-		p.add(notGeneric(), "second simple controller PE");
-		p.add(type(Protein.class), "second simple controller PE");
-		p.add(peToER(), "second simple controller PE", "second PR");
-		p.add(equal(false), "first PR", "second PR");
+		p.add(new NOT(compToER()), "second controller PE", "first ER");
+		p.add(linkToSpecific(), "second controller PE", "second simple controller PE");
+		p.add(type(SequenceEntity.class), "second simple controller PE");
+		p.add(peToER(), "second simple controller PE", "second generic ER");
+		p.add(linkedER(false), "second generic ER", "second ER");
+		p.add(equal(false), "first ER", "second ER");
 		return p;
 	}
 
@@ -394,16 +399,18 @@ public class PatternBox
 	 */
 	public static Pattern controlsExpressionWithTemplateReac()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "TF PR");
-		p.add(erToPE(), "TF PR", "TF SPE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "TF ER");
+		p.add(linkedER(true), "TF ER", "TF generic ER");
+		p.add(erToPE(), "TF generic ER", "TF SPE");
 		p.add(linkToComplex(), "TF SPE", "TF PE");
 		p.add(peToControl(), "TF PE", "Control");
 		p.add(controlToTempReac(), "Control", "TempReac");
 		p.add(product(), "TempReac", "product PE");
-		p.add(linkToSimple(), "product PE", "product SPE");
-		p.add(new Type(Protein.class), "product SPE");
-		p.add(peToER(), "product SPE", "product PR");
-		p.add(equal(false), "TF PR", "product PR");
+		p.add(linkToSpecific(), "product PE", "product SPE");
+		p.add(new Type(SequenceEntity.class), "product SPE");
+		p.add(peToER(), "product SPE", "product generic ER");
+		p.add(linkedER(false), "product generic ER", "product ER");
+		p.add(equal(false), "TF ER", "product ER");
 		return p;
 	}
 
@@ -414,17 +421,37 @@ public class PatternBox
 	 */
 	public static Pattern controlsExpressionWithConversion()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "TF PR");
-		p.add(erToPE(), "TF PR", "TF SPE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "TF ER");
+		p.add(linkedER(true), "TF ER", "TF generic ER");
+		p.add(erToPE(), "TF generic ER", "TF SPE");
 		p.add(linkToComplex(), "TF SPE", "TF PE");
 		p.add(peToControl(), "TF PE", "Control");
 		p.add(controlToConv(), "Control", "Conversion");
-		p.add(new Empty(left()), "Conversion");
 		p.add(new Size(right(), 1, Size.Type.EQUAL), "Conversion");
+		p.add(new OR(new MappedConst(new Empty(left()), 0), new MappedConst(new ConstraintAdapter(1)
+		{
+			@Override
+			public boolean satisfies(Match match, int... ind)
+			{
+				Conversion cnv = (Conversion) match.get(ind[0]);
+				Set<PhysicalEntity> left = cnv.getLeft();
+				if (left.size() > 1) return false;
+				if (left.isEmpty()) return true;
+				PhysicalEntity pe = left.iterator().next();
+				if (pe instanceof NucleicAcid)
+				{
+					PhysicalEntity rPE = cnv.getRight().iterator().next();
+					return rPE instanceof Protein;
+				}
+				return false;
+			}
+		}, 0)), "Conversion");
 		p.add(right(), "Conversion", "right PE");
-		p.add(linkToSimple(), "right PE", "right SPE");
-		p.add(peToER(), "right SPE", "product ER");
-		p.add(equal(false), "TF PR", "product ER");
+		p.add(linkToSpecific(), "right PE", "right SPE");
+		p.add(new Type(SequenceEntity.class), "right SPE");
+		p.add(peToER(), "right SPE", "product generic ER");
+		p.add(linkedER(false), "product generic ER", "product ER");
+		p.add(equal(false), "TF ER", "product ER");
 		return p;
 	}
 
@@ -457,16 +484,16 @@ public class PatternBox
 	 */
 	public static Pattern inComplexWith()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "Protein 1");
-		p.add(erToPE(), "Protein 1", "SPE1");
-		p.add(notGeneric(), "SPE1");
+		Pattern p = new Pattern(SequenceEntityReference.class, "Protein 1");
+		p.add(linkedER(true), "Protein 1", "generic Protein 1");
+		p.add(erToPE(), "generic Protein 1", "SPE1");
 		p.add(linkToComplex(), "SPE1", "PE1");
 		p.add(new PathConstraint("PhysicalEntity/componentOf"), "PE1", "Complex");
 		p.add(new PathConstraint("Complex/component"), "Complex", "PE2");
 		p.add(equal(false), "PE1", "PE2");
-		p.add(linkToSimple(), "PE2", "SPE2");
-		p.add(notGeneric(), "SPE2");
-		p.add(peToER(), "SPE2", "Protein 2");
+		p.add(linkToSpecific(), "PE2", "SPE2");
+		p.add(peToER(), "SPE2", "generic Protein 2");
+		p.add(linkedER(false), "generic Protein 2", "Protein 2");
 		p.add(equal(false), "Protein 1", "Protein 2");
 		p.add(new Type(ProteinReference.class), "Protein 2");
 		return p;
@@ -486,10 +513,10 @@ public class PatternBox
 		p.add(new PathConstraint("PhysicalEntity/componentOf"), "PE1", "Complex");
 		p.add(new PathConstraint("Complex/component"), "Complex", "PE2");
 		p.add(equal(false), "PE1", "PE2");
-		p.add(linkToSimple(), "PE2", "SPE2");
-		p.add(notGeneric(), "SPE2");
-		p.add(peToER(), "SPE2", "PR");
-		p.add(new Type(ProteinReference.class), "PR");
+		p.add(linkToSpecific(), "PE2", "SPE2");
+		p.add(new Type(SequenceEntity.class), "SPE2");
+		p.add(peToER(), "SPE2", "generic ER");
+		p.add(linkedER(false), "generic ER", "ER");
 		return p;
 	}
 
@@ -507,10 +534,10 @@ public class PatternBox
 		p.add(controlToInter(), "Control", "Interaction");
 		p.add(new NOT(participantER()), "Interaction", "controller SMR");
 		p.add(participant(), "Interaction", "affected PE");
-		p.add(linkToSimple(), "affected PE", "affected simple PE");
-		p.add(notGeneric(), "affected simple PE");
-		p.add(new Type(Protein.class), "affected simple PE");
-		p.add(peToER(), "affected simple PE", "affected PR");
+		p.add(linkToSpecific(), "affected PE", "affected simple PE");
+		p.add(new Type(SequenceEntity.class), "affected simple PE");
+		p.add(peToER(), "affected simple PE", "affected generic ER");
+		p.add(linkedER(false), "affected generic ER", "affected ER");
 		return p;
 	}
 
@@ -521,17 +548,17 @@ public class PatternBox
 	 */
 	public static Pattern neighborOf()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "Protein 1");
-		p.add(erToPE(), "Protein 1", "SPE1");
-		p.add(notGeneric(), "SPE1");
+		Pattern p = new Pattern(SequenceEntityReference.class, "Protein 1");
+		p.add(linkedER(true), "Protein 1", "generic Protein 1");
+		p.add(erToPE(), "generic Protein 1", "SPE1");
 		p.add(linkToComplex(), "SPE1", "PE1");
 		p.add(peToInter(), "PE1", "Inter");
 		p.add(interToPE(), "Inter", "PE2");
-		p.add(linkToSimple(), "PE2", "SPE2");
-		p.add(notGeneric(), "SPE2");
+		p.add(linkToSpecific(), "PE2", "SPE2");
 		p.add(equal(false), "SPE1", "SPE2");
-		p.add(type(Protein.class), "SPE2");
-		p.add(peToER(), "SPE2", "Protein 2");
+		p.add(type(SequenceEntity.class), "SPE2");
+		p.add(peToER(), "SPE2", "generic Protein 2");
+		p.add(linkedER(false), "generic Protein 2", "Protein 2");
 		p.add(equal(false), "Protein 1", "Protein 2");
 		return p;
 	}
@@ -552,7 +579,7 @@ public class PatternBox
 		p.add(new InterToPartER(InterToPartER.Direction.ONESIDERS), "Conv", "SMR1");
 		p.add(new ConversionSide(ConversionSide.Type.SAME_SIDE, blacklist, RelType.INPUT), "PE1", "Conv", "PE2");
 		p.add(type(SmallMolecule.class), "PE2");
-		p.add(linkToSimple(), "PE2", "SPE2");
+		p.add(linkToSpecific(), "PE2", "SPE2");
 		p.add(notGeneric(), "SPE2");
 		p.add(new PEChainsIntersect(false), "SPE1", "PE1", "SPE2", "PE2");
 		p.add(peToER(), "SPE2", "SMR2");
@@ -594,18 +621,18 @@ public class PatternBox
 	 */
 	public static Pattern molecularInteraction()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "Protein 1");
-		p.add(erToPE(), "Protein 1", "SPE1");
-		p.add(notGeneric(), "SPE1");
+		Pattern p = new Pattern(SequenceEntityReference.class, "Protein 1");
+		p.add(linkedER(true), "Protein 1", "generic Protein 1");
+		p.add(erToPE(), "generic Protein 1", "SPE1");
 		p.add(linkToComplex(), "SPE1", "PE1");
 		p.add(new PathConstraint("PhysicalEntity/participantOf:MolecularInteraction"), "PE1", "MI");
 		p.add(participant(), "MI", "PE2");
 		p.add(equal(false), "PE1", "PE2");
-		p.add(linkToSimple(), "PE2", "SPE2");
-		p.add(notGeneric(), "SPE2");
-		p.add(type(Protein.class), "SPE2");
+		p.add(linkToSpecific(), "PE2", "SPE2");
+		p.add(type(SequenceEntity.class), "SPE2");
 		p.add(new PEChainsIntersect(false), "SPE1", "PE1", "SPE2", "PE2");
-		p.add(peToER(), "SPE2", "Protein 2");
+		p.add(peToER(), "SPE2", "generic Protein 2");
+		p.add(linkedER(false), "generic Protein 2", "Protein 2");
 		p.add(equal(false), "Protein 1", "Protein 2");
 		return p;
 	}
@@ -642,9 +669,10 @@ public class PatternBox
 				"Interaction/controlledOf*/controller:PhysicalEntity"), 0, 1)),
 			"Interaction", "PE");
 
-		p.add(linkToSimple(), "PE", "SPE");
-		p.add(peToER(), "SPE", "PR");
-		p.add(new Type(ProteinReference.class), "PR");
+		p.add(linkToSpecific(), "PE", "SPE");
+		p.add(peToER(), "SPE", "generic PR");
+		p.add(new Type(ProteinReference.class), "generic PR");
+		p.add(linkedER(false), "generic PR", "PR");
 		return p;
 	}
 
@@ -659,7 +687,7 @@ public class PatternBox
 		p.add(erToPE(), "first ER", "first simple PE");
 		p.add(linkToComplex(), "first simple PE", "Complex");
 		p.add(new Type(Complex.class), "Complex");
-		p.add(linkToSimple(), "Complex", "second simple PE");
+		p.add(linkToSpecific(), "Complex", "second simple PE");
 		p.add(equal(false), "first simple PE", "second simple PE");
 		p.add(new PEChainsIntersect(false, true), "first simple PE", "Complex", "second simple PE", "Complex");
 		p.add(peToER(), "second simple PE", "second ER");
@@ -722,7 +750,7 @@ public class PatternBox
 		p.add(new ParticipatesInConv(RelType.INPUT), "input PE", "Conversion");
 		p.add(new ConversionSide(ConversionSide.Type.OTHER_SIDE), "input PE", "Conversion", "output PE");
 		p.add(equal(false), "input PE", "output PE");
-		p.add(linkToSimple(), "output PE", "output simple PE");
+		p.add(linkToSpecific(), "output PE", "output simple PE");
 		p.add(peToER(), "output simple PE", "changed ER");
 		return p;
 	}
@@ -804,7 +832,7 @@ public class PatternBox
 		p.add(erToPE(), "first PR", "first simple PE");
 		p.add(linkToComplex(), "first simple PE", "Complex");
 		p.add(new Type(Complex.class), "Complex");
-		p.add(linkToSimple(), "Complex", "second simple PE");
+		p.add(linkToSpecific(), "Complex", "second simple PE");
 		p.add(peToER(), "second simple PE", "second PR");
 		p.add(equal(false), "first PR", "second PR");
 		return p;

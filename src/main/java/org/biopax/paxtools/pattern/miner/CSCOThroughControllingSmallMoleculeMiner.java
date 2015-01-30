@@ -42,7 +42,7 @@ public class CSCOThroughControllingSmallMoleculeMiner extends ControlsStateChang
 	@Override
 	public String getSourceLabel()
 	{
-		return "upper controller PR";
+		return "upper controller ER";
 	}
 
 	@Override

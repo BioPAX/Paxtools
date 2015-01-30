@@ -26,4 +26,16 @@ public class ControlsProductionOfMiner extends ConsumptionControlledByMiner
 	{
 		return PatternBox.controlsMetabolicCatalysis(blacklist, false);
 	}
+
+	@Override
+	public String getSourceLabel()
+	{
+		return "controller ER";
+	}
+
+	@Override
+	public String getTargetLabel()
+	{
+		return "part SMR";
+	}
 }

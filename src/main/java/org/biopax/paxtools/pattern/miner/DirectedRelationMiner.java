@@ -3,6 +3,8 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
+import org.biopax.paxtools.model.level3.SequenceEntity;
+import org.biopax.paxtools.model.level3.SequenceEntityReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.constraint.*;
@@ -36,17 +38,19 @@ public class DirectedRelationMiner extends MinerAdapter
 	@Override
 	public Pattern constructPattern()
 	{
-		Pattern p = new Pattern(ProteinReference.class, "controller PR");
-		p.add(isHuman(), "controller PR");
-		p.add(erToPE(), "controller PR", "controller simple PE");
+		Pattern p = new Pattern(SequenceEntityReference.class, "controller ER");
+		p.add(isHuman(), "controller ER");
+		p.add(linkedER(true), "controller ER", "controller generic ER");
+		p.add(erToPE(), "controller generic ER", "controller simple PE");
 		p.add(linkToComplex(), "controller simple PE", "controller PE");
 		p.add(peToControl(), "controller PE", "Control");
 		p.add(controlToInter(), "Control", "Interaction");
-		p.add(new NOT(participantER()), "Interaction", "controller PR");
+		p.add(new NOT(participantER()), "Interaction", "controller ER");
 		p.add(participant(), "Interaction", "affected PE");
-		p.add(linkToSimple(), "affected PE", "affected simple PE");
-		p.add(new Type(Protein.class), "affected simple PE");
-		p.add(peToER(), "affected simple PE", "affected PR");
+		p.add(linkToSpecific(), "affected PE", "affected simple PE");
+		p.add(new Type(SequenceEntity.class), "affected simple PE");
+		p.add(peToER(), "affected simple PE", "affected generic ER");
+		p.add(peToER(), "affected generic ER", "affected ER");
 
 		return p;
 	}
@@ -75,12 +79,12 @@ public class DirectedRelationMiner extends MinerAdapter
 
 	public String getSourceLabel()
 	{
-		return "controller PR";
+		return "controller ER";
 	}
 
 	public String getTargetLabel()
 	{
-		return "affected PR";
+		return "affected ER";
 	}
 
 	@Override
