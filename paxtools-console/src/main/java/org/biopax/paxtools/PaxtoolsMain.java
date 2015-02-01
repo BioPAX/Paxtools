@@ -7,11 +7,10 @@ import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
 import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
-import org.biopax.paxtools.io.sif.InteractionRule;
-import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.pattern.miner.CommonIDFetcher;
 import org.biopax.paxtools.pattern.miner.SIFEnum;
 import org.biopax.paxtools.pattern.miner.SIFSearcher;
 import org.biopax.paxtools.query.QueryExecuter;
@@ -373,18 +372,20 @@ public class PaxtoolsMain {
 
         Model model = getModel(io, argv[1]);
 
-        SimpleInteractionConverter sic =
-                new SimpleInteractionConverter(SimpleInteractionConverter
-                        .getRules(model.getLevel()).toArray(new InteractionRule[]{}));
-
-        sic.writeInteractionsInSIFNX(model, new FileOutputStream(argv[2]), new FileOutputStream(argv[3]),
-                                     Arrays.asList(argv[4].split(",")), Arrays.asList(argv[5].split(",")),false);
+//        SimpleInteractionConverter sic =
+//                new SimpleInteractionConverter(SimpleInteractionConverter
+//                        .getRules(model.getLevel()).toArray(new InteractionRule[]{}));
+//
+//        sic.writeInteractionsInSIFNX(model, new FileOutputStream(argv[2]), new FileOutputStream(argv[3]),
+//                                     Arrays.asList(argv[4].split(",")), Arrays.asList(argv[5].split(",")),false);
     }
 
     public static void toSif(String[] argv) throws IOException {
 
         Model model = getModel(io, argv[1]);
-		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
+		CommonIDFetcher idFetcher = new CommonIDFetcher();
+		idFetcher.setUseUniprotIDs(argv.length > 3 && argv[3].equals("uniprot"));
+		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
 		searcher.searchSIF(model, new FileOutputStream(argv[2]));
     }
 
@@ -645,11 +646,11 @@ public class PaxtoolsMain {
         merge("<file1> <file2> <output>\n" +
         		"\t- merges file2 into file1 and writes it into output")
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
-        toSif("<file1> <output>\n" +
+        toSif("<file1> <output> [hgnc|uniprot]\n" +
         		"\t- converts model to the simple interaction format")
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
         toSifnx("<file1> <outEdges> <outNodes> <node-prop1,node-prop2,..> <edge-prop1,edge-prop2,...>\n" +
-        		"\t- converts model to the extendent simple interaction format")
+        		"\t- converts model to the extended simple interaction format")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         toSbgn("<biopax.owl> <output.sbgn>\n" +
         		"\t- converts model to the SBGN format.")
