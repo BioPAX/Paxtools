@@ -244,7 +244,8 @@ class EntryMapper {
 			// get paxtools physical entity participant and add to participant list
 			Entity bpParticipant = createParticipant(participant, interaction, avail, pro);
 			if (bpParticipant != null) {
-				bpParticipants.add(bpParticipant);
+				if(!bpParticipants.contains(bpParticipant))
+					bpParticipants.add(bpParticipant);
 				participantMap.put(participant, bpParticipant);
 			}
 		}
@@ -447,7 +448,7 @@ class EntryMapper {
 		}
 		
 		// create a new PE or Gene
-		entity = bpModel.addNew(entityClass, entityUri);
+		entity = bpModel.getLevel().getDefaultFactory().create(entityClass, entityUri);
 		
 		addAvailabilityAndProvenance(entity, avail, pro);
 		
@@ -522,6 +523,18 @@ class EntryMapper {
 			}			
 			((Gene)entity).setOrganism(getBioSource(interactor.getOrganism()));
 		}
+		
+		//try to avoid duplicate entities
+		boolean hasEquivalentEntity = false;
+		for(BioPAXElement ety : bpModel.getObjects(entity.getModelInterface())) {
+			if(ety.isEquivalent(entity)) {
+				entity = (Entity) ety;
+				break;
+			}	
+		}
+		
+		if(!hasEquivalentEntity)
+			bpModel.add(entity);
 		
 		return entity;
 	}

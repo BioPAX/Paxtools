@@ -51,7 +51,7 @@ import java.util.Collection;
  * This test depends upon a particular random number generator
  * with a particular seed.
  * 
- * TODO write new tests
+ * TODO more tests
  * 
  * @author rodche (Igor Rodchenkov)
  */
@@ -66,15 +66,6 @@ public class TestMapping  {
 	 * psi-mitab test file
 	 */
 	private static final String PSI_MITAB_TEST_FILE = "12167173.txt";
-
-    /**
-     * Returns the description/name of the test.
-	 * 
-	 * @return String
-     */
-    public String getName() {
-        return "TestMapping: Tests the proper mapping of a PSI-MI XML file (level 2.5 compact) to an in memory Paxtools Model";
-    }
 
 
     @Test
