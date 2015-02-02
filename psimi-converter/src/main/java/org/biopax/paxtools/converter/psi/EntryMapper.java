@@ -502,7 +502,7 @@ class EntryMapper {
 				//set organism if it's not a small molecule
 				if(entityReference instanceof SequenceEntityReference) {
 					SequenceEntityReference ser = (SequenceEntityReference)entityReference;
-					ser.setOrganism(getBioSource(interactor.getOrganism()));
+					ser.setOrganism(getBioSource(interactor));
 					ser.setSequence(interactor.getSequence());
 				}
 			}
@@ -521,7 +521,7 @@ class EntryMapper {
 				for (Xref xref : bpXrefsOfInteractor)
 					entity.addXref((Xref) xref);
 			}			
-			((Gene)entity).setOrganism(getBioSource(interactor.getOrganism()));
+			((Gene)entity).setOrganism(getBioSource(interactor));
 		}
 		
 		//try to avoid duplicate entities
@@ -529,6 +529,7 @@ class EntryMapper {
 		for(BioPAXElement ety : bpModel.getObjects(entity.getModelInterface())) {
 			if(ety.isEquivalent(entity)) {
 				entity = (Entity) ety;
+				hasEquivalentEntity = true;
 				break;
 			}	
 		}
@@ -598,8 +599,11 @@ class EntryMapper {
 	/*
 	 * Given a psi organism, return a paxtools biosource.
 	 */
-	private BioSource getBioSource(Organism organism) {
-		// check args
+	private BioSource getBioSource(Interactor interactor) {
+		
+		Organism organism = interactor.getOrganism();
+		
+		// trivial check
 		if (organism == null) 
 			return null;
 
@@ -618,8 +622,9 @@ class EntryMapper {
 			if((name.equalsIgnoreCase("homo sapiens")
 					|| name.equalsIgnoreCase("human"))
 					&& !ncbiId.equals("9606")) {
-				LOG.warn("Changed from " + ncbiId + " to the human taxonomy ID in "
-						+ organism);
+				LOG.warn("Based on the name, auto-changed taxonomy ID from " 
+					+ ncbiId + " to 9606 (human) in: " + organism 
+					+ "; interactor: " + interactor.getId());
 				ncbiId = "9606";
 			}
 		}
