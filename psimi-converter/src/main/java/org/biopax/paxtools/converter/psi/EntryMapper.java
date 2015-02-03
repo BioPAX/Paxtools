@@ -3,6 +3,7 @@ package org.biopax.paxtools.converter.psi;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -170,14 +171,18 @@ class EntryMapper {
 		
 		if(source.hasXref()) {
 			ux = getPrimaryUnificationXref(source.getXref());
-			if(name==null)
+			if(name==null && ux != null)
 				name = ux.getDb()+"_"+ux.getId();
 		} 
 			
 		if(source.hasBibref()) {
-			px = getPublicationXref(source.getBibref().getXref());
-			if(name==null)
-			 name = px.getDb()+"_"+px.getId();
+			psidev.psi.mi.xml.model.Xref psiXREF = source.getBibref().getXref();
+			if (psiXREF != null) {
+				px = publicationXref(psiXREF.getPrimaryRef().getDb(), psiXREF.getPrimaryRef().getId());
+			}
+			
+			if(name==null && px != null)
+				name = px.getDb()+"_"+px.getId();
 		}
 		
 		String ver = null;
@@ -779,18 +784,29 @@ class EntryMapper {
 
 		UnificationXref toReturn = null;
 		String refType = (psiDBRef.hasRefType()) ? psiDBRef.getRefType() : null;
-        String psiDBRefId = psiDBRef.getId();
         
         // If multiple ids given with comma separated values, then split them.
        	if (refType==null || "identity".equals(refType) || "identical object".equals(refType)) {
-       		toReturn = unificationXref(psiDBRef.getDb(), psiDBRefId);
+       		toReturn = unificationXref(psiDBRef.getDb(), psiDBRef.getId());
        	} 
 
 		return toReturn;
 	}	
 	
 	
+	private static final Collection<String> BAD_ID_VALS = 
+			Arrays.asList("0", "-1", "NULL", "NIL", "NONE", "N/A");
+	
 	private UnificationXref unificationXref(String db, String id) {
+		if(db == null || db.isEmpty()) {
+			LOG.warn("unificationXref(), db is null, id=" + id);
+			return null;
+		}
+		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
+			LOG.warn("unificationXref(), illegal id=" + id);
+			return  null;
+		}
+		
 		String xuri = xmlBase + "UX_" + encode(db.toLowerCase() + "_" + id);
 		UnificationXref x = (UnificationXref) bpModel.getByID(xuri);
 		if(x==null) {
@@ -802,6 +818,15 @@ class EntryMapper {
 	}
 	
 	private PublicationXref publicationXref(String db, String id) {
+		if(db == null || db.isEmpty()) {
+			LOG.warn("publicationXref(), db is null, id=" + id);
+			return null;
+		}
+		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
+			LOG.warn("publicationXref(), illegal id=" + id);
+			return  null;
+		}
+		
 		String xuri = xmlBase + "PX_" + encode(db.toLowerCase() + "_" + id);
 		PublicationXref x = (PublicationXref) bpModel.getByID(xuri);
 		if(x==null) {
@@ -811,20 +836,6 @@ class EntryMapper {
 		}
 		return x;
 	}	
-
-
-	private PublicationXref getPublicationXref(psidev.psi.mi.xml.model.Xref psiXREF) {
-		if (psiXREF == null) 
-			return null; 
-
-		// get primary 
-		DbReference psiDBRef = psiXREF.getPrimaryRef();
-		if (psiDBRef == null) 
-			return null;
-
-		// find or create publication xref
-		return publicationXref(psiDBRef.getDb(), psiDBRef.getId());		
-	}
 
 
 	private String encode(String id) {
@@ -987,6 +998,15 @@ class EntryMapper {
 
 	private RelationshipXref relationshipXref(String db, String id, String refType, String refTypeAc)
 	{	
+		if(db == null || db.isEmpty()) {
+			LOG.warn("relationshipXref(), db is null, id=" + id);
+			return null;
+		}
+		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
+			LOG.warn("relationshipXref(), illegal id=" + id);
+			return  null;
+		}
+		
 		//generate URI
 		String uri = xmlBase + "RX_";
 		if(refType!=null && !refType.isEmpty())
@@ -1038,8 +1058,12 @@ class EntryMapper {
 				evidence.addXref(xref);
 		}
 		if (experimentDescription.getBibref() != null) {
-			PublicationXref px = getPublicationXref(experimentDescription.getBibref().getXref());
-			if(px != null) evidence.addXref(px);
+			psidev.psi.mi.xml.model.Xref psiXREF = experimentDescription.getBibref().getXref();
+			if (psiXREF != null) {
+				PublicationXref px = publicationXref(psiXREF.getPrimaryRef().getDb(), psiXREF.getPrimaryRef().getId());
+				if(px != null) 
+					evidence.addXref(px);
+			}
 		}
 				
 		// create comments
