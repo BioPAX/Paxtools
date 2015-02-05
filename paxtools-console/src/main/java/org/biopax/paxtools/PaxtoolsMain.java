@@ -110,7 +110,8 @@ public class PaxtoolsMain {
     public static void toGSEA(String[] argv) throws IOException
     {
     	Model model = io.convertFromOWL(new FileInputStream(argv[1]));
-        (new GSEAConverter(argv[3], new Boolean(argv[4]))).writeToGSEA(model, new FileOutputStream(argv[2]));
+    	Boolean specCheckEnabled = (argv.length>4) ? new Boolean(argv[4]) : Boolean.FALSE;
+        (new GSEAConverter(argv[3], specCheckEnabled)).writeToGSEA(model, new FileOutputStream(argv[2]));
     }
 
     public static void getNeighbors(String[] argv) throws IOException
