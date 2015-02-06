@@ -50,8 +50,8 @@ public class CommonStreamQuery
 	 */
 	public CommonStreamQuery(Set<Node> sourceNodeSet, Direction direction, int limit)
 	{
-		assert direction != Direction.BOTHSTREAM :
-			"BOTHSTREAM is not a valid parameter for CommonStream";
+		if (direction != Direction.UPSTREAM && direction != Direction.DOWNSTREAM)
+			throw new IllegalArgumentException("Direction has to be either upstream or downstream");
 
 		this.sourceSet = new LinkedHashSet<Set<Node>>();
 		
@@ -75,8 +75,8 @@ public class CommonStreamQuery
 	 */
 	public CommonStreamQuery(Collection<Set<Node>> sourceStateSet, Direction direction, int limit)
 	{
-		assert direction != Direction.BOTHSTREAM :
-			"BOTHSTREAM is not a valid parameter for CommonStream";
+		if (direction != Direction.UPSTREAM && direction != Direction.DOWNSTREAM)
+			throw new IllegalArgumentException("Direction has to be either upstream or downstream");
 
 		this.sourceSet = sourceStateSet;
 		this.direction = direction;

@@ -67,8 +67,8 @@ public class BFS
 	 */
 	public BFS(Set<Node> sourceSet, Set<Node> stopSet, Direction direction, int limit)
 	{
-		if (direction == Direction.BOTHSTREAM)
-			throw new IllegalArgumentException("BOTHSTREAM is not a valid parameter in BFS");
+		if (direction != Direction.UPSTREAM && direction != Direction.DOWNSTREAM)
+			throw new IllegalArgumentException("Direction has to be either upstream or downstream");
 
 		this.sourceSet = sourceSet;
 		this.stopSet = stopSet;

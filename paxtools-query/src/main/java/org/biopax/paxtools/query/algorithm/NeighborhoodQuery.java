@@ -37,6 +37,10 @@ public class NeighborhoodQuery
 	 */
 	public NeighborhoodQuery(Set<Node> sourceNodes, Direction direction, int limit)
 	{
+		if (direction == Direction.UNDIRECTED)
+			throw new IllegalArgumentException("Direction cannot be undirected, " +
+				"use BOTHSTREAM instead");
+
 		this.sourceNodes = sourceNodes;
 		this.direction = direction;
 		this.limit = limit;

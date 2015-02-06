@@ -1,4 +1,4 @@
-package org.biopax.paxtools.query.wrapperL3;
+package org.biopax.paxtools.query.wrapperL3undirected;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +18,7 @@ import java.util.*;
  *
  * @author Ozgun Babur
  */
-public class GraphL3 extends AbstractGraph 
+public class GraphL3Undirected extends AbstractGraph
 {
 	/**
 	 * The model to be wrapped.
@@ -30,7 +30,7 @@ public class GraphL3 extends AbstractGraph
 	/**
 	 * Log for logging.
 	 */
-	protected final Log log = LogFactory.getLog(GraphL3.class);
+	protected final Log log = LogFactory.getLog(GraphL3Undirected.class);
 
 	/**
 	 * Constructor with the model and the IDs of the ubiquitous molecules. IDs can be null, meaning
@@ -38,7 +38,7 @@ public class GraphL3 extends AbstractGraph
 	 * @param model Model to wrap
 	 * @param filters for filtering graph elements
 	 */
-	public GraphL3(Model model, Filter... filters)
+	public GraphL3Undirected(Model model, Filter... filters)
 	{
 		assert model.getLevel() == BioPAXLevel.L3;
 		this.model = model;
@@ -86,17 +86,13 @@ public class GraphL3 extends AbstractGraph
 		{
 			return new PhysicalEntityWrapper((PhysicalEntity) obj, this);
 		}
-		else if (obj instanceof Conversion)
-		{
-			return new ConversionWrapper((Conversion) obj, this);
-		}
-		else if (obj instanceof TemplateReaction)
-		{
-			return new TemplateReactionWrapper((TemplateReaction) obj, this);
-		}
 		else if (obj instanceof Control)
 		{
 			return new ControlWrapper((Control) obj, this);
+		}
+		else if (obj instanceof Interaction)
+		{
+			return new InteractionWrapper((Interaction) obj, this);
 		}
 		else
 		{
@@ -179,17 +175,13 @@ public class GraphL3 extends AbstractGraph
 			{
 				objects.add(((PhysicalEntityWrapper) wrapper).getPhysicalEntity());
 			}
-			else if (wrapper instanceof ConversionWrapper)
-			{
-				objects.add(((ConversionWrapper) wrapper).getConversion());
-			}
-			else if (wrapper instanceof TemplateReactionWrapper)
-			{
-				objects.add(((TemplateReactionWrapper) wrapper).getTempReac());
-			}
 			else if (wrapper instanceof ControlWrapper)
 			{
 				objects.add(((ControlWrapper) wrapper).getControl());
+			}
+			else if (wrapper instanceof InteractionWrapper)
+			{
+				objects.add(((InteractionWrapper) wrapper).getInteraction());
 			}
 		}
 		return objects;

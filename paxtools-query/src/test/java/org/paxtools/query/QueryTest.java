@@ -8,13 +8,14 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.algorithm.LimitType;
-import org.biopax.paxtools.query.wrapperL3.DataSourceFilter;
-import org.biopax.paxtools.query.wrapperL3.Filter;
-import org.biopax.paxtools.query.wrapperL3.OrganismFilter;
-import org.biopax.paxtools.query.wrapperL3.UbiqueFilter;
+import org.biopax.paxtools.query.utilL3.DataSourceFilter;
+import org.biopax.paxtools.query.utilL3.Filter;
+import org.biopax.paxtools.query.utilL3.OrganismFilter;
+import org.biopax.paxtools.query.utilL3.UbiqueFilter;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -38,7 +40,7 @@ public class QueryTest
 	@Test
 	public void testQueries() throws Throwable
 	{
-		Model model = handler.convertFromOWL(this.getClass().getResourceAsStream(
+		Model model = handler.convertFromOWL(QueryTest.class.getResourceAsStream(
 			"raf_map_kinase_cascade_reactome.owl"));
 
 		Set<BioPAXElement> source = findElements(model,
@@ -84,9 +86,20 @@ public class QueryTest
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 3);
 		assertTrue(result.size() == 7);
 
-		Model clonedModel = excise(model, result);
-		handler.convertToOWL(clonedModel, new FileOutputStream(
-			getClass().getResource("").getFile() + File.separator + "temp.owl"));
+		// check if bothstream and undirected neighborhood works properly
+
+		source = findElements(model, "HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1632_1_9606"); // ERT2
+		PhysicalEntity check = (PhysicalEntity) model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#COMPLEX1115_1_9606"); // Activated RAF1 complex
+
+		result = QueryExecuter.runNeighborhood(source, model, 3, Direction.BOTHSTREAM);
+		assertFalse(result.contains(check));
+		result = QueryExecuter.runNeighborhood(source, model, 3, Direction.UNDIRECTED);
+		assertTrue(result.contains(check));
+
+
+//		Model clonedModel = excise(model, result);
+//		handler.convertToOWL(clonedModel, new FileOutputStream(
+//			getClass().getResource("").getFile() + File.separator + "temp.owl"));
 	}
 
 	private Model excise(Model model, Set<BioPAXElement> result)
