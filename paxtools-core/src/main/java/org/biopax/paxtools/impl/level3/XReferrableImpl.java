@@ -1,10 +1,8 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.BPCollections;
-import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.XrefFieldBridge;
 import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Analyze;
@@ -16,8 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import java.util.Set;
-
-import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
 /**
  * This class helps with managing the bidirectional xref links.
@@ -92,17 +88,4 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 		return 1;
 	}
 
-	/**
-	 * This method returns true if two {@link XReferrable} objects have at least one UnificationXref in common
-	 * or neither have any.
-	 * 
-	 * @param xReferrable
-	 * @return true if this and that either share - or neither have a UnificationXref!
-	 */
-	protected boolean hasCommonUnificationXref(XReferrable xReferrable)
-	{
-		return hasEquivalentIntersection(new ClassFilterSet<Xref, UnificationXref>(xref, UnificationXref.class),
-		                                 new ClassFilterSet<Xref, UnificationXref>(xReferrable.getXref(),
-		                                                                           UnificationXref.class));
-	}
 }

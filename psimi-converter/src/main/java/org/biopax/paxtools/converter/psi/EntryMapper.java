@@ -561,7 +561,7 @@ class EntryMapper {
 			((Gene)entity).setOrganism(getBioSource(interactor));
 		}
 		
-		//try to avoid duplicate entities
+		//try to avoid duplicate physical entities or genes
 		boolean hasEquivalentEntity = false;
 		for(BioPAXElement ety : bpModel.getObjects(entity.getModelInterface())) {
 			if(ety.isEquivalent(entity)) {

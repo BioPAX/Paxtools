@@ -1,11 +1,16 @@
 package org.biopax.paxtools.impl.level3;
 
+import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
 import org.biopax.paxtools.model.level3.TissueVocabulary;
+import org.biopax.paxtools.model.level3.UnificationXref;
+import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -44,7 +49,6 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 		return BioSource.class;
 	}
 
-	//TODO right now, it's always FALSE due to changes in the superclass
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
 		if(!(element instanceof BioSource))
@@ -60,10 +64,9 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 				(tissue != null ?
 					tissue.isEquivalent(bioSource.getTissue()) :
 					bioSource.getTissue() == null)
-			&& 
-			// Named, XReferrable equivalence test
-			super.semanticallyEquivalent(bioSource); 
-		   //TODO nonsense call (always false, after the method disappeared from XReferrableImpl)
+			&& hasEquivalentIntersection(
+				new ClassFilterSet<Xref, UnificationXref>(getXref(), UnificationXref.class),
+				new ClassFilterSet<Xref, UnificationXref>(bioSource.getXref(), UnificationXref.class));
     }
 
 	public int equivalenceCode()
