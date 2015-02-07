@@ -411,7 +411,6 @@ class EntryMapper {
 		// make one physical entity (PE) per unique participant... 		
 		// (a unique state PE is defined by the ER and cell. location, but not by entity features - which are to go with ExperimentalForms)
 		
-		EntityReference entityReference = null;
 		Class<? extends Entity> entityClass = Protein.class; //default
 		Class<? extends EntityReference> entityReferenceClass = ProteinReference.class; //default		
 		if ("small molecule".equalsIgnoreCase(physicalEntityType))
@@ -430,31 +429,32 @@ class EntryMapper {
 		{
 			entityClass = Gene.class;
 			entityReferenceClass = null;
-		}
+		} //else it's still a protein (peptides are proteins too)
 		
-		//make consistent base biopax URI (either for entity reference, gene, complex, or base phys. ent.)
+		//make consistent biopax URI (for the entity ref., if applies, or phys. entity)
+		String entityUri = null; //always make new unique URI (avoid different states clash)
 		String baseUri = xmlBase;
 		if(entityReferenceClass != null)
-			baseUri += entityReferenceClass.getSimpleName() + "_";			
-		final UnificationXref primaryXrefOfInteractor = getPrimaryUnificationXref(interactor.getXref());
-		if(primaryXrefOfInteractor != null) 
-			baseUri += encode(primaryXrefOfInteractor.getDb() + "_" + primaryXrefOfInteractor.getId());
-		else
-			baseUri += "_" + (counter++); //new unique part (seldom happens, when no primary xref...)
+			baseUri += entityReferenceClass.getSimpleName() + "_";		
 		
-		String entityUri = baseUri + "_" + entityClass.getSimpleName();
-		if(cellularLocation != null)
-			entityUri += "_" + encode(cellularLocation.getTerm().iterator().next());
-				
-		Entity entity = (Entity) bpModel.getByID(entityUri);		
-		if(entity != null) {
-			addAvailabilityAndProvenance(entity, avail, pro);
-			return entity; //re-use previously created PE or gene
+		RelationshipXref x = getPrimaryRelationshipXref(interactor.getXref());
+		if(x != null) {
+			baseUri += encode(x.getDb() + "_" + x.getId());
+			if(x.getRelationshipType()!=null)
+				baseUri += "_" + encode(x.getRelationshipType().getTerm().iterator().next());
+			entityUri = baseUri + "_" + entityClass.getSimpleName() + "_" + (counter++);
+			x=null; //not needed
+		} else { //when no xrefs present, use a number ending (always increment);
+			baseUri += "_" + (counter++); //new unique part (seldom happens, when no primary xref...)
+			entityUri = baseUri + "_" + entityClass.getSimpleName();		
 		}
 		
-		// create a new PE or Gene
-		entity = bpModel.getLevel().getDefaultFactory().create(entityClass, entityUri);
+		if(cellularLocation != null)
+			entityUri += "_" + encode(cellularLocation.getTerm().iterator().next());
 		
+		// always create a new PE or Gene 
+		//(not's add to the model just yet; there could be an existing equivalent one)
+		Entity entity = bpModel.getLevel().getDefaultFactory().create(entityClass, entityUri);
 		addAvailabilityAndProvenance(entity, avail, pro);
 		
 		//and set names
@@ -473,14 +473,43 @@ class EntryMapper {
 		if(cellularLocation != null && entity instanceof PhysicalEntity)
 			((PhysicalEntity)entity).setCellularLocation(cellularLocation);
 		
-		// when it's not a Gene, -
+		// when not a Gene, we are to find/generate corresponding EntityRererence;
+		// but we do not want to gererate apparently duplicate objects...
 		if(entityReferenceClass != null) {
-			//check if the entity ref. exists
-			EntityReference er = (EntityReference) bpModel.getByID(baseUri);	
+			EntityReference entityReference = null;
+			BioSource bioSource = getBioSource(interactor);
 			
-			if(er != null) {
-				entityReference = er;
-			} else { 
+			/* check if the entity ref. with this URI already exists 
+			 * (we'll the use that instead of generating a new one every time;
+			 * unfortunately, chances still are that we generate same URI 
+			 * from non-equivalent psi-mi interactors, though this would probably 
+			 * flag for semantic errors in the psi-mi data, such as using same xrefs,
+			 * features, etc. for different xml entries unnecessarily).
+			 * Unfortunately, we cannot simply create a new ER and simply compare
+			 * with an existing one using Paxtools (as of paxtools-core 4.x and older, 
+			 * two ERs are NOT equivalent unless they either have the same URI, or - same organism and sequence).
+			 */
+			EntityReference er = (EntityReference) bpModel.getByID(baseUri);			
+			if( er != null 
+				&& er.getModelInterface()==entityReferenceClass 
+				&& er.getXref().size() == bpXrefsOfInteractor.size() //ideally we'd compare all xrefs there...
+				&& ((er.getDisplayName()==null && shortName==null) 
+						|| (er.getDisplayName()!=null && er.getDisplayName().equalsIgnoreCase(shortName))
+					)
+				&& (bioSource != null && SequenceEntityReference.class.isAssignableFrom(er.getModelInterface())
+					&& (bioSource.getDisplayName()!=null && bioSource.getDisplayName().equalsIgnoreCase(((SequenceEntityReference)er).getOrganism().getDisplayName()))
+					)
+			) 
+			{
+				entityReference = er; // ok to reuse
+			} else if( er != null ) {
+				LOG.warn("Model has a different (non-equivalent) " + er.getModelInterface().getSimpleName()
+							+ " with uri=" + baseUri + "; so, I will make a new ER using another URI.");
+				baseUri += "_" + (counter++);
+			}
+			
+			//if not found above, create a new ER
+			if(entityReference == null) { 
 				//generate a new ER
 				entityReference = bpModel.addNew(entityReferenceClass, baseUri);	
 				
@@ -507,10 +536,13 @@ class EntryMapper {
 				//set organism if it's not a small molecule
 				if(entityReference instanceof SequenceEntityReference) {
 					SequenceEntityReference ser = (SequenceEntityReference)entityReference;
-					ser.setOrganism(getBioSource(interactor));
+					ser.setOrganism(bioSource);
 					ser.setSequence(interactor.getSequence());
 				}
 			}
+			
+			
+			
 			// set ER
 			((SimplePhysicalEntity)entity).setEntityReference(entityReference);		
 			
@@ -780,9 +812,9 @@ class EntryMapper {
 		if (psiXref==null || psiXref.getPrimaryRef() == null) 
 			return null;
 		
-		DbReference psiDBRef = psiXref.getPrimaryRef();
-
 		UnificationXref toReturn = null;
+		
+		DbReference psiDBRef = psiXref.getPrimaryRef();
 		String refType = (psiDBRef.hasRefType()) ? psiDBRef.getRefType() : null;
         
         // If multiple ids given with comma separated values, then split them.
@@ -791,7 +823,19 @@ class EntryMapper {
        	} 
 
 		return toReturn;
-	}	
+	}
+	
+	
+	private RelationshipXref getPrimaryRelationshipXref(psidev.psi.mi.xml.model.Xref psiXref) {
+		
+		if (psiXref==null || psiXref.getPrimaryRef() == null) 
+			return null;
+		
+		DbReference psiDBRef = psiXref.getPrimaryRef();
+		String refType = (psiDBRef.hasRefType()) ? psiDBRef.getRefType() : null;
+		String refTypeAc = (psiDBRef.hasRefType()) ? psiDBRef.getRefTypeAc() : null;
+       	return relationshipXref(psiDBRef.getDb(), psiDBRef.getId(), refType, refTypeAc);
+	}
 	
 	
 	private static final Collection<String> BAD_ID_VALS = 

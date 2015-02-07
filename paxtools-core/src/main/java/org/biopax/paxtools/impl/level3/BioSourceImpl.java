@@ -44,6 +44,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 		return BioSource.class;
 	}
 
+	//TODO right now, it's always FALSE due to changes in the superclass
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
 		if(!(element instanceof BioSource))
@@ -61,7 +62,8 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 					bioSource.getTissue() == null)
 			&& 
 			// Named, XReferrable equivalence test
-			super.semanticallyEquivalent(bioSource);
+			super.semanticallyEquivalent(bioSource); 
+		   //TODO nonsense call (always false, after the method disappeared from XReferrableImpl)
     }
 
 	public int equivalenceCode()
