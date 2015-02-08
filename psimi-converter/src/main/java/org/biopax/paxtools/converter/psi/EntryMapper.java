@@ -496,9 +496,7 @@ class EntryMapper {
 				&& ((er.getDisplayName()==null && shortName==null) 
 						|| (er.getDisplayName()!=null && er.getDisplayName().equalsIgnoreCase(shortName))
 					)
-				&& (bioSource != null && SequenceEntityReference.class.isAssignableFrom(er.getModelInterface())
-					&& (bioSource.getDisplayName()!=null && bioSource.getDisplayName().equalsIgnoreCase(((SequenceEntityReference)er).getOrganism().getDisplayName()))
-					)
+				&& ( !(er instanceof SequenceEntityReference) || sameNameOrUndefined(((SequenceEntityReference)er).getOrganism(),bioSource))
 			) 
 			{
 				entityReference = er; // ok to reuse
@@ -575,6 +573,29 @@ class EntryMapper {
 			bpModel.add(entity);
 		
 		return entity;
+	}
+
+	
+	/*
+	 * True if both organisms are null
+	 * or have null (both) or equal (ignoring case)
+	 * organism names; false otherwise.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	private boolean sameNameOrUndefined(BioSource a, BioSource b) {
+		return (a==null)? b==null 
+			: 
+			( (b==null)? false 
+				: //when both a and b are not null, check if names are same
+				a.getDisplayName()==null && b.getDisplayName()==null
+				||
+				a.getDisplayName()!=null && a.getDisplayName().equalsIgnoreCase(b.getDisplayName())
+				||
+				b.getDisplayName()!=null && b.getDisplayName().equalsIgnoreCase(a.getDisplayName())
+			);
 	}
 
 
