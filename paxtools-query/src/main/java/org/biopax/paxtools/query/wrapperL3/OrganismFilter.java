@@ -1,4 +1,4 @@
-package org.biopax.paxtools.query.utilL3;
+package org.biopax.paxtools.query.wrapperL3;
 
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.level3.PhysicalEntity;

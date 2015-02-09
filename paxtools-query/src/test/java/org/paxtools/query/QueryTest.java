@@ -12,14 +12,13 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.algorithm.LimitType;
-import org.biopax.paxtools.query.utilL3.DataSourceFilter;
-import org.biopax.paxtools.query.utilL3.Filter;
-import org.biopax.paxtools.query.utilL3.OrganismFilter;
-import org.biopax.paxtools.query.utilL3.UbiqueFilter;
+import org.biopax.paxtools.query.wrapperL3.DataSourceFilter;
+import org.biopax.paxtools.query.wrapperL3.Filter;
+import org.biopax.paxtools.query.wrapperL3.OrganismFilter;
+import org.biopax.paxtools.query.wrapperL3.UbiqueFilter;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

@@ -9,7 +9,6 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.model.AbstractGraph;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
-import org.biopax.paxtools.query.utilL3.Filter;
 
 import java.util.*;
 

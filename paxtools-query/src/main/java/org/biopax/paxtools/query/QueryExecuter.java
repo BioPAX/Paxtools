@@ -8,7 +8,7 @@ import org.biopax.paxtools.query.algorithm.*;
 import org.biopax.paxtools.query.model.Graph;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
-import org.biopax.paxtools.query.utilL3.Filter;
+import org.biopax.paxtools.query.wrapperL3.Filter;
 import org.biopax.paxtools.query.wrapperL3.GraphL3;
 import org.biopax.paxtools.query.wrapperL3undirected.GraphL3Undirected;
 
