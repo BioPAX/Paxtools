@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entrySet xmlns="http://psi.hupo.org/mi/mif" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://psi.hupo.org/mi/mif http://psidev.sourceforge.net/mi/rel25/src/MIF254.xsd"
+	level="2" version="5" minorVersion="4">
+	<entry>
+		<source>
+			<names>
+				<shortLabel>bind</shortLabel>
+				<fullName>The Biomolecular Interaction Network Database</fullName>
+			</names>
+			<bibref>
+				<xref>
+					<primaryRef db="pubmed" dbAc="MI:0446" id="12519993"
+						refTypeAc="MI:0358" refType="primary reference"></primaryRef>
+				</xref>
+			</bibref>
+		</source>
+		<interactionList>
+			<interaction id="1432986">
+				<names>
+					<shortLabel>Myc interacts with Max. This interaction was modeled on a demonstrated interaction between human Myc and Max from an unspecified source.</shortLabel>
+					<fullName>Myc interacts with Max. This interaction was modeled on a demonstrated interaction between human Myc and Max from an unspecified source.</fullName>
+				</names>
+				<xref>
+					<primaryRef db="bind" dbAc="MI:0462" id="50060"
+						refTypeAc="MI:0356" refType="identity"></primaryRef>
+				</xref>
+				<experimentList>
+					<experimentDescription id="1432984">
+						<names>
+							<shortLabel>affinity-chromatography</shortLabel>
+							<fullName>An interaction between human Myc and Max from an unspecifed source was demonstrated by GST pull-down assay. Endogenous Myc was isolated from K562 lysates using purified GST-Max immobilized on glutathione-Sepharose beads. Eluates were resolved by SDS-PAGE and analyzed by western blot with anti-Myc. Fig. 2B.</fullName>
+						</names>
+						<bibref>
+							<xref>
+								<primaryRef db="pubmed" dbAc="MI:0446" id="12584560"
+									refTypeAc="MI:0358" refType="primary reference"></primaryRef>
+							</xref>
+						</bibref>
+						<interactionDetectionMethod>
+							<names>
+								<shortLabel>affinity chromatography technology</shortLabel>
+								<fullName>affinity chromatography technology</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0004"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</interactionDetectionMethod>
+						<participantIdentificationMethod>
+							<names>
+								<shortLabel>inferred by curator</shortLabel>
+								<fullName>unspecified method</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0364"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</participantIdentificationMethod>
+					</experimentDescription>
+					<experimentDescription id="1432985">
+						<names>
+							<shortLabel>affinity-chromatography</shortLabel>
+							<fullName>An interaction between human Myc and Max from an unspecified source was demonstrated by GST pull-down assay. [35S]-methionine labeled in vitro transcribed and translated Myc was isolated using purified GST-Max immobilized on glutathione-Sepharose beads. Eluates were resolved by SDS-PAGE and detected by autoradiography. Fig. 2A.</fullName>
+						</names>
+						<bibref>
+							<xref>
+								<primaryRef db="pubmed" dbAc="MI:0446" id="12584560"
+									refTypeAc="MI:0358" refType="primary reference"></primaryRef>
+							</xref>
+						</bibref>
+						<interactionDetectionMethod>
+							<names>
+								<shortLabel>affinity chromatography technology</shortLabel>
+								<fullName>affinity chromatography technology</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0004"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</interactionDetectionMethod>
+						<participantIdentificationMethod>
+							<names>
+								<shortLabel>inferred by curator</shortLabel>
+								<fullName>unspecified method</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0364"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</participantIdentificationMethod>
+					</experimentDescription>
+				</experimentList>
+				<participantList>
+					<participant id="1432979">
+						<interactor id="1432980">
+							<names>
+								<shortLabel>Myc</shortLabel>
+								<fullName>V-myc myelocytomatosis viral oncogene homolog (avian); protooncogene homologous to myelocytomatosis virus. A transcription factor with roles in regulation of cell cycle, differentiation and apoptosis. OMIM:190080</fullName>
+							</names>
+							<xref>
+								<primaryRef db="refseq" dbAc="MI:0481" id="NP_002458"
+									version="1" refTypeAc="MI:0356" refType="identity"></primaryRef>
+								<secondaryRef db="genbank indentifier" dbAc="MI:0860"
+									id="12962935" refTypeAc="MI:0361" refType="see-also">
+									<attributeList>
+										<attribute name="GI status">REPLACED</attribute>
+									</attributeList>
+								</secondaryRef>
+								<secondaryRef db="genbank indentifier" dbAc="MI:0860"
+									id="71774083" refTypeAc="MI:0361" refType="see-also">
+									<attributeList>
+										<attribute name="BIND translation id conversion">Updated GI</attribute>
+									</attributeList>
+								</secondaryRef>
+								<secondaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+									id="4609" refTypeAc="MI:0251" refType="gene product"></secondaryRef>
+							</xref>
+							<interactorType>
+								<names>
+									<shortLabel>protein</shortLabel>
+									<fullName>protein</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0326"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</interactorType>
+							<organism ncbiTaxId="9606">
+								<names>
+									<shortLabel>Homo sapiens</shortLabel>
+									<fullName>Homo sapiens</fullName>
+								</names>
+							</organism>
+						</interactor>
+						<experimentalRoleList>
+							<experimentalRole>
+								<names>
+									<shortLabel>unspecified role</shortLabel>
+									<fullName>unspecified role</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0499"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</experimentalRole>
+						</experimentalRoleList>
+					</participant>
+					<participant id="1432981">
+						<interactor id="1432982">
+							<names>
+								<shortLabel>Max</shortLabel>
+								<fullName>Myc-associated factor X; helix-loop-helix zipper protein; A transcription factor that functions as a homodimer and heterodimer with Mad, Mxi1 and Myc. This protein is transcript variant 1 of 6. This is a modeled interaction record. Any GIs listed below refer to the molecules being modeled, not to the molecules that were actually shown to interact. OMIM:154950</fullName>
+							</names>
+							<xref>
+								<primaryRef db="refseq" dbAc="MI:0481" id="NP_002373"
+									version="3" refTypeAc="MI:0356" refType="identity"></primaryRef>
+								<secondaryRef db="genbank indentifier" dbAc="MI:0860"
+									id="21704261" refTypeAc="MI:0361" refType="see-also">
+									<attributeList>
+										<attribute name="GI status">LIVE</attribute>
+									</attributeList>
+								</secondaryRef>
+								<secondaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+									id="4149" refTypeAc="MI:0251" refType="gene product"></secondaryRef>
+							</xref>
+							<interactorType>
+								<names>
+									<shortLabel>protein</shortLabel>
+									<fullName>protein</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0326"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</interactorType>
+							<organism ncbiTaxId="9606">
+								<names>
+									<shortLabel>Homo sapiens</shortLabel>
+									<fullName>Homo sapiens</fullName>
+								</names>
+							</organism>
+						</interactor>
+						<experimentalRoleList>
+							<experimentalRole>
+								<names>
+									<shortLabel>unspecified role</shortLabel>
+									<fullName>unspecified role</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0499"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</experimentalRole>
+						</experimentalRoleList>
+						<experimentalInteractorList>
+							<experimentalInteractor>
+								<interactor id="1432983">
+									<names>
+										<shortLabel>GST-Max</shortLabel>
+										<fullName>Glutathione-S-transferase (GST) fused to Max from an unspecified source</fullName>
+									</names>
+									<xref>
+										<primaryRef db="refseq" dbAc="MI:0481" id="NP_002373"
+											version="3" refTypeAc="MI:0356" refType="identity"></primaryRef>
+										<secondaryRef db="genbank indentifier" dbAc="MI:0860"
+											id="21704261" refTypeAc="MI:0361" refType="see-also">
+											<attributeList>
+												<attribute name="GI status">LIVE</attribute>
+											</attributeList>
+										</secondaryRef>
+										<secondaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+											id="4149" refTypeAc="MI:0251" refType="gene product"></secondaryRef>
+									</xref>
+									<interactorType>
+										<names>
+											<shortLabel>protein</shortLabel>
+											<fullName>protein</fullName>
+										</names>
+										<xref>
+											<primaryRef db="psimi" dbAc="MI:0488" id="MI:0326"
+												refTypeAc="MI:0356" refType="identity"></primaryRef>
+										</xref>
+									</interactorType>
+									<organism ncbiTaxId="32644">
+										<names>
+											<shortLabel>unidentified</shortLabel>
+											<fullName>unidentified</fullName>
+										</names>
+									</organism>
+								</interactor>
+							</experimentalInteractor>
+						</experimentalInteractorList>
+					</participant>
+				</participantList>
+				<attributeList>
+					<attribute name="BIND interaction division">BIND Metazoa</attribute>
+				</attributeList>
+			</interaction>
+			<interaction id="1432994">
+				<names>
+					<shortLabel>Max interacts with MSH2. This is a modeled interaction between Max from an unspecified source and human MSH2.</shortLabel>
+					<fullName>Max interacts with MSH2. This is a modeled interaction between Max from an unspecified source and human MSH2.</fullName>
+				</names>
+				<xref>
+					<primaryRef db="bind" dbAc="MI:0462" id="50061"
+						refTypeAc="MI:0356" refType="identity"></primaryRef>
+				</xref>
+				<experimentList>
+					<experimentDescription id="1432992">
+						<names>
+							<shortLabel>affinity-chromatography</shortLabel>
+							<fullName>An interaction between human MSH2 and Max from an unspecified source was demonstrated by GST pull-down assay. Endogenous MSH2 was isolated from K562 lysates using purified GST-Max immobilized on glutathione-Sepharose beads. Eluates were resolved by SDS-PAGE and analyzed by western blot with anti-MSH2. Fig. 2B.</fullName>
+						</names>
+						<bibref>
+							<xref>
+								<primaryRef db="pubmed" dbAc="MI:0446" id="12584560"
+									refTypeAc="MI:0358" refType="primary reference"></primaryRef>
+							</xref>
+						</bibref>
+						<interactionDetectionMethod>
+							<names>
+								<shortLabel>affinity chromatography technology</shortLabel>
+								<fullName>affinity chromatography technology</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0004"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</interactionDetectionMethod>
+						<participantIdentificationMethod>
+							<names>
+								<shortLabel>inferred by curator</shortLabel>
+								<fullName>unspecified method</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0364"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</participantIdentificationMethod>
+					</experimentDescription>
+					<experimentDescription id="1432993">
+						<names>
+							<shortLabel>immunoprecipitation</shortLabel>
+							<fullName>An interaction between MSH2 and Max was demonstrated by co-immunoprecipitation. Endogenous Max was immunoprecipitated from A2780 extracts using anti-Max and precipitates were resolved by SDS-PAGE. Endogenous MSH2 was detected by western blot using anti-MSH2. Fig. 3A.</fullName>
+						</names>
+						<bibref>
+							<xref>
+								<primaryRef db="pubmed" dbAc="MI:0446" id="12584560"
+									refTypeAc="MI:0358" refType="primary reference"></primaryRef>
+							</xref>
+						</bibref>
+						<interactionDetectionMethod>
+							<names>
+								<shortLabel>coip</shortLabel>
+								<fullName>coimmunoprecipitation</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0019"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</interactionDetectionMethod>
+						<participantIdentificationMethod>
+							<names>
+								<shortLabel>inferred by curator</shortLabel>
+								<fullName>unspecified method</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0364"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</participantIdentificationMethod>
+					</experimentDescription>
+				</experimentList>
+				<participantList>
+					<participant id="1432987">
+						<interactor id="1432988">
+							<names>
+								<shortLabel>MSH2</shortLabel>
+								<fullName>Human MutS Homolog 2. Human homolog of the E. coli mismatch repair gene mutS. hMSH2 is involved in mismatch repair (MMR) and recombination. hMSH2 mutations are linked to hereditary nonpolyposis colon cancer (HNPCC). OMIM: 120435</fullName>
+							</names>
+							<xref>
+								<primaryRef db="refseq" dbAc="MI:0481" id="NP_000242"
+									version="1" refTypeAc="MI:0356" refType="identity"></primaryRef>
+								<secondaryRef db="genbank indentifier" dbAc="MI:0860"
+									id="4557761" refTypeAc="MI:0361" refType="see-also">
+									<attributeList>
+										<attribute name="GI status">LIVE</attribute>
+									</attributeList>
+								</secondaryRef>
+								<secondaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+									id="4436" refTypeAc="MI:0251" refType="gene product"></secondaryRef>
+							</xref>
+							<interactorType>
+								<names>
+									<shortLabel>protein</shortLabel>
+									<fullName>protein</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0326"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</interactorType>
+							<organism ncbiTaxId="9606">
+								<names>
+									<shortLabel>Homo sapiens</shortLabel>
+									<fullName>Homo sapiens</fullName>
+								</names>
+							</organism>
+						</interactor>
+						<experimentalRoleList>
+							<experimentalRole>
+								<names>
+									<shortLabel>unspecified role</shortLabel>
+									<fullName>unspecified role</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0499"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</experimentalRole>
+						</experimentalRoleList>
+					</participant>
+					<participant id="1432989">
+						<interactor id="1432990">
+							<names>
+								<shortLabel>Myc-associated factor X</shortLabel>
+								<!-- changed from original Max to Myc-associated factor X 
+									for testing (has to merge with Max based on the primaryRef, and both names to be added) -->
+								<fullName>Myc-associated factor X; helix-loop-helix zipper protein; A transcription factor that functions as a homodimer and heterodimer with Mad, Mxi1 and Myc. This protein is transcript variant 1 of 6. This is a modeled interaction record. Any GIs listed below refer to the molecules being modeled, not to the molecules that were actually shown to interact. OMIM:154950</fullName>
+							</names>
+							<xref>
+								<primaryRef db="refseq" dbAc="MI:0481" id="NP_002373"
+									version="3" refTypeAc="MI:0356" refType="identity"></primaryRef>
+								<secondaryRef db="genbank indentifier" dbAc="MI:0860"
+									id="21704261" refTypeAc="MI:0361" refType="see-also">
+									<attributeList>
+										<attribute name="GI status">LIVE</attribute>
+									</attributeList>
+								</secondaryRef>
+								<secondaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+									id="4149" refTypeAc="MI:0251" refType="gene product"></secondaryRef>
+							</xref>
+							<interactorType>
+								<names>
+									<shortLabel>protein</shortLabel>
+									<fullName>protein</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0326"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</interactorType>
+							<organism ncbiTaxId="9606">
+								<names>
+									<shortLabel>Homo sapiens</shortLabel>
+									<fullName>Homo sapiens</fullName>
+								</names>
+							</organism>
+						</interactor>
+						<experimentalRoleList>
+							<experimentalRole>
+								<names>
+									<shortLabel>unspecified role</shortLabel>
+									<fullName>unspecified role</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0499"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</experimentalRole>
+						</experimentalRoleList>
+						<experimentalInteractorList>
+							<experimentalInteractor>
+								<interactor id="1432991">
+									<names>
+										<shortLabel>GST-Max</shortLabel>
+										<fullName>Glutathione-S-transferase (GST) fused to Max from an unspecified source</fullName>
+									</names>
+									<xref>
+										<primaryRef db="refseq" dbAc="MI:0481" id="NP_002373"
+											version="3" refTypeAc="MI:0356" refType="identity"></primaryRef>
+										<secondaryRef db="genbank indentifier" dbAc="MI:0860"
+											id="21704261" refTypeAc="MI:0361" refType="see-also">
+											<attributeList>
+												<attribute name="GI status">LIVE</attribute>
+											</attributeList>
+										</secondaryRef>
+										<secondaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+											id="4149" refTypeAc="MI:0251" refType="gene product"></secondaryRef>
+									</xref>
+									<interactorType>
+										<names>
+											<shortLabel>protein</shortLabel>
+											<fullName>protein</fullName>
+										</names>
+										<xref>
+											<primaryRef db="psimi" dbAc="MI:0488" id="MI:0326"
+												refTypeAc="MI:0356" refType="identity"></primaryRef>
+										</xref>
+									</interactorType>
+									<organism ncbiTaxId="32644">
+										<names>
+											<shortLabel>unidentified</shortLabel>
+											<fullName>unidentified</fullName>
+										</names>
+									</organism>
+								</interactor>
+							</experimentalInteractor>
+						</experimentalInteractorList>
+					</participant>
+				</participantList>
+				<attributeList>
+					<attribute name="BIND interaction division">BIND Metazoa</attribute>
+				</attributeList>
+			</interaction>
+			<interaction id="1477945">
+				<names>
+					<shortLabel>Max interacts with the HMBS promoter.</shortLabel>
+					<fullName>Max interacts with the HMBS promoter.</fullName>
+				</names>
+				<xref>
+					<primaryRef db="bind" dbAc="MI:0462" id="210130"
+						refTypeAc="MI:0356" refType="identity"></primaryRef>
+				</xref>
+				<experimentList>
+					<experimentDescription id="1477944">
+						<names>
+							<shortLabel>cross-linking</shortLabel>
+							<fullName>An interaction between Max and HMBS promoter was demonstrated by chromatin immunoprecipitation and genomic microarray hybridization (chIp-CHIP). Daudi cells, a cell line derived from a Burkitt's lymphoma patient, were fixed with formaldehyde. Protein-crosslinked DNA was enriched by immunoprecipitation with anti-Max antibodies (sc-197). Crosslinking was reversed and the enriched DNA was labelled with Cy5 by ligation-mediated PCR. Control DNA from whole cell extract was labelled with Cy3 by ligation-mediated PCR. Test and control DNA were hybridized to a single DNA microarray (hu6K) containing the promoters of 4,839 human genes. The ratio of test to control DNA bound to each spot was determined from 5 replicate experiments and a p-value was calculated from the replications. Results were considered positive if the p-value was less than or equal to 0.001. The p-value for this experiment is 0.000105. Refer to http://www.pnas.org/cgi/content/full/1332764100/DC1?maxtoshow=&amp;HITS=10&amp;hits=10&amp;RESULTFORMAT=1&amp;andorexacttitle=and&amp;andorexacttitleabs=and&amp;andorexactfulltext=and&amp;searchid=1102573514761_10733&amp;stored_search=&amp;FIRSTINDEX=0&amp;sortspec=relevance&amp;volume=100&amp;firstpage=8164&amp;fdate=12/1/1994&amp;journalcode=pnas for data.</fullName>
+						</names>
+						<bibref>
+							<xref>
+								<primaryRef db="pubmed" dbAc="MI:0446" id="12808131"
+									refTypeAc="MI:0358" refType="primary reference"></primaryRef>
+							</xref>
+						</bibref>
+						<interactionDetectionMethod>
+							<names>
+								<shortLabel>crosslink</shortLabel>
+								<fullName>cross-linking study</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0030"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</interactionDetectionMethod>
+						<participantIdentificationMethod>
+							<names>
+								<shortLabel>inferred by curator</shortLabel>
+								<fullName>unspecified method</fullName>
+							</names>
+							<xref>
+								<primaryRef db="psimi" dbAc="MI:0488" id="MI:0364"
+									refTypeAc="MI:0356" refType="identity"></primaryRef>
+							</xref>
+						</participantIdentificationMethod>
+					</experimentDescription>
+				</experimentList>
+				<participantList>
+					<participant id="1477939">
+						<interactor id="1477940">
+							<names>
+								<shortLabel>Max</shortLabel>
+								<fullName>Myc-associated factor X; helix-loop-helix zipper protein; A transcription factor that functions as a homodimer or heterodimer with Mad, Mxi1 and Myc. Note that the listed GeneID refers to multiple variants encoded by the same gene. The precise molecular variant involved in this interaction is not specified.</fullName>
+							</names>
+							<xref>
+								<primaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+									id="4149" refTypeAc="MI:0251" refType="gene product"></primaryRef>
+								<secondaryRef db="omim" dbAc="MI:0480" id="154950"
+									refTypeAc="MI:0251" refType="gene product"></secondaryRef>
+							</xref>
+							<interactorType>
+								<names>
+									<shortLabel>protein</shortLabel>
+									<fullName>protein</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0326"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</interactorType>
+							<organism ncbiTaxId="9606">
+								<names>
+									<shortLabel>Homo sapiens</shortLabel>
+									<fullName>Homo sapiens</fullName>
+								</names>
+							</organism>
+						</interactor>
+						<experimentalRoleList>
+							<experimentalRole>
+								<names>
+									<shortLabel>bait</shortLabel>
+									<fullName>bait</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0496"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</experimentalRole>
+						</experimentalRoleList>
+					</participant>
+					<participant id="1477941">
+						<interactor id="1477942">
+							<names>
+								<shortLabel>HMBS promoter</shortLabel>
+								<fullName>hydroxymethylbilane synthase. Refer to BioSeq for sequence information derived from PMID 12808131. Note that the listed BioSeq may not describe the complete HMBS promoter.</fullName>
+							</names>
+							<xref>
+								<primaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+									id="3145" refTypeAc="MI:0356" refType="identity"></primaryRef>
+								<secondaryRef db="omim" dbAc="MI:0480" id="176000"
+									refTypeAc="MI:0356" refType="identity"></secondaryRef>
+							</xref>
+							<interactorType>
+								<names>
+									<shortLabel>dna</shortLabel>
+									<fullName>deoxyribonucleic acid</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0319"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</interactorType>
+							<organism ncbiTaxId="9606">
+								<names>
+									<shortLabel>Homo sapiens</shortLabel>
+									<fullName>Homo sapiens</fullName>
+								</names>
+							</organism>
+						</interactor>
+						<experimentalRoleList>
+							<experimentalRole>
+								<names>
+									<shortLabel>prey</shortLabel>
+									<fullName>prey</fullName>
+								</names>
+								<xref>
+									<primaryRef db="psimi" dbAc="MI:0488" id="MI:0498"
+										refTypeAc="MI:0356" refType="identity"></primaryRef>
+								</xref>
+							</experimentalRole>
+						</experimentalRoleList>
+						<experimentalInteractorList>
+							<experimentalInteractor>
+								<interactor id="1477943">
+									<names>
+										<shortLabel>HMBS promoter</shortLabel>
+										<fullName>This DNA fragment corresponds to the region [79-959] of HMBS promoter as described in the attached BioSeq.</fullName>
+									</names>
+									<xref>
+										<primaryRef db="entrezgene/locuslink" dbAc="MI:0477"
+											id="3145" refTypeAc="MI:0356" refType="identity"></primaryRef>
+									</xref>
+									<interactorType>
+										<names>
+											<shortLabel>dna</shortLabel>
+											<fullName>deoxyribonucleic acid</fullName>
+										</names>
+										<xref>
+											<primaryRef db="psimi" dbAc="MI:0488" id="MI:0319"
+												refTypeAc="MI:0356" refType="identity"></primaryRef>
+										</xref>
+									</interactorType>
+									<organism ncbiTaxId="32644">
+										<names>
+											<shortLabel>unidentified</shortLabel>
+											<fullName>unidentified</fullName>
+										</names>
+									</organism>
+								</interactor>
+							</experimentalInteractor>
+						</experimentalInteractorList>
+					</participant>
+				</participantList>
+				<attributeList>
+					<attribute name="BIND interaction division">BIND Metazoa</attribute>
+				</attributeList>
+			</interaction>
+
+		</interactionList>
+	</entry>
+</entrySet>

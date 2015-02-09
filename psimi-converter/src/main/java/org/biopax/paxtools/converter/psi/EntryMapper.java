@@ -111,7 +111,7 @@ class EntryMapper {
 	 */
 	public EntryMapper(Model model, boolean forceInteractionToComplex) {
 		this.bpModel = model;
-		this.xmlBase = model.getXmlBase();
+		this.xmlBase = (model.getXmlBase()==null) ? "" : model.getXmlBase();
 		this.counter = System.currentTimeMillis();
 		this.forceInteractionToComplex = forceInteractionToComplex;
 		this.participantMap = new HashMap<Participant, Entity>();
@@ -316,9 +316,13 @@ class EntryMapper {
 		addAvailabilityAndProvenance(bpEntity, avail, pro);
 		
 		if (name != null)
-			bpEntity.setStandardName(name);
-		if (shortName != null)
-			bpEntity.setDisplayName(shortName);
+			bpEntity.addName(name);
+		if (shortName != null) {
+			if(shortName.length()<51)
+				bpEntity.setDisplayName(shortName);
+			else
+				bpEntity.addName(shortName);
+		}
 				
 		// add xrefs		
 		Set<Xref> bpXrefs = new HashSet<Xref>();		
@@ -346,10 +350,9 @@ class EntryMapper {
 
 
 	/*
-	 * Converts PSIMI participant to
-	 * BioPAX physical entity (and entity reference,
-	 * and experimental form with exp. entity features)
-	 * or gene.
+	 * Converts PSIMI participant to BioPAX physical entity or gene
+	 * (also can make entity reference,
+	 * experimental forms with exp. entity features).
 	 *
 	 * Note:
 	 * psi.participantType -> PhysicalEntity or Gene
@@ -398,8 +401,6 @@ class EntryMapper {
 			}
 		}
 		
-		Set<Xref> bpXrefsOfInteractor = getXrefs(interactor.getXref());
-		
 		//get cellular location, if any
 		CellularLocationVocabulary cellularLocation = null;
 		if((interactor.hasOrganism() && interactor.getOrganism().hasCompartment())) {
@@ -432,52 +433,54 @@ class EntryMapper {
 		} //else it's still a protein (peptides are proteins too)
 		
 		//make consistent biopax URI (for the entity ref., if applies, or phys. entity)
-		String entityUri = null; //always make new unique URI (avoid different states clash)
-		String baseUri = xmlBase;
-		if(entityReferenceClass != null)
-			baseUri += entityReferenceClass.getSimpleName() + "_";		
+		String entityUri = "";
+		String baseUri = "";
 		
-		RelationshipXref x = getPrimaryRelationshipXref(interactor.getXref());
+		final RelationshipXref x = getInteractorPrimaryRef(interactor.getXref());
 		if(x != null) {
 			baseUri += encode(x.getDb() + "_" + x.getId());
 			if(x.getRelationshipType()!=null)
 				baseUri += "_" + encode(x.getRelationshipType().getTerm().iterator().next());
-			entityUri = baseUri + "_" + entityClass.getSimpleName() + "_" + (counter++);
-			x=null; //not needed
+			entityUri = baseUri + "_" + String.valueOf(counter++);
 		} else { //when no xrefs present, use a number ending (always increment);
-			baseUri += "_" + (counter++); //new unique part (seldom happens, when no primary xref...)
-			entityUri = baseUri + "_" + entityClass.getSimpleName();		
+			baseUri = String.valueOf(counter++); //new unique part (seldom happens, when no primary xref...)
+			entityUri = baseUri;
 		}
 		
 		if(cellularLocation != null)
 			entityUri += "_" + encode(cellularLocation.getTerm().iterator().next());
 		
-		// always create a new PE or Gene 
-		//(not's add to the model just yet; there could be an existing equivalent one)
-		Entity entity = bpModel.getLevel().getDefaultFactory().create(entityClass, entityUri);
-		addAvailabilityAndProvenance(entity, avail, pro);
+		//makes URI look like xmlBase+type+unique_suffix...
+		entityUri = xmlBase + entityClass.getSimpleName() + "_" + entityUri;	
+		if(entityReferenceClass != null)
+			baseUri = xmlBase + entityReferenceClass.getSimpleName() + "_" + baseUri;	
 		
-		//and set names
+		// create a new PE or Gene (don't add to the model yet, for there may exist an equivalent one)
+		Entity entity = bpModel.getLevel().getDefaultFactory().create(entityClass, entityUri);
+		
+		addAvailabilityAndProvenance(entity, avail, pro);
+		//and names
 		if (name != null) {
 			//quite a few PSIMI providers use too long text (like comments) for <fullName> fields...
-			if(name.length() > 50 && shortName != null) 
+			if(name.length() > 100 && shortName != null) 
 				entity.addComment(name);
 			else 
-				entity.setStandardName(name);
+				entity.addName(name);
 		}
 		if (shortName != null) {
             entity.setDisplayName(shortName);
-		}		
-		
-		// set cell. loc.
+		}				
+		// set cellular location if possible
 		if(cellularLocation != null && entity instanceof PhysicalEntity)
 			((PhysicalEntity)entity).setCellularLocation(cellularLocation);
+		
+		final Set<Xref> bpXrefsOfInteractor = getXrefs(interactor.getXref());
+		final BioSource bioSource = getBioSource(interactor);
 		
 		// when not a Gene, we are to find/generate corresponding EntityRererence;
 		// but we do not want to gererate apparently duplicate objects...
 		if(entityReferenceClass != null) {
 			EntityReference entityReference = null;
-			BioSource bioSource = getBioSource(interactor);
 			
 			/* check if the entity ref. with this URI already exists 
 			 * (we'll the use that instead of generating a new one every time;
@@ -485,50 +488,34 @@ class EntryMapper {
 			 * from non-equivalent psi-mi interactors, though this would probably 
 			 * flag for semantic errors in the psi-mi data, such as using same xrefs,
 			 * features, etc. for different xml entries unnecessarily).
-			 * Unfortunately, we cannot simply create a new ER and simply compare
+			 * Unfortunately, we cannot simply create a new ER and compare
 			 * with an existing one using Paxtools (as of paxtools-core 4.x and older, 
 			 * two ERs are NOT equivalent unless they either have the same URI, or - same organism and sequence).
 			 */
 			EntityReference er = (EntityReference) bpModel.getByID(baseUri);			
 			if( er != null 
 				&& er.getModelInterface()==entityReferenceClass 
-				&& er.getXref().size() == bpXrefsOfInteractor.size() //ideally we'd compare all xrefs there...
-				&& ((er.getDisplayName()==null && shortName==null) 
-						|| (er.getDisplayName()!=null && er.getDisplayName().equalsIgnoreCase(shortName))
+				&& (!(er instanceof SequenceEntityReference) 
+					|| sameNameOrUndefined(((SequenceEntityReference)er).getOrganism(),bioSource)
 					)
-				&& ( !(er instanceof SequenceEntityReference) || sameNameOrUndefined(((SequenceEntityReference)er).getOrganism(),bioSource))
-			) 
-			{
+			) {
+				
 				entityReference = er; // ok to reuse
-			} else if( er != null ) {
-				LOG.warn("Model has a different (non-equivalent) " + er.getModelInterface().getSimpleName()
-							+ " with uri=" + baseUri + "; so, I will make a new ER using another URI.");
-				baseUri += "_" + (counter++);
+				
+			} else if(er != null) {
+				String newUri = baseUri + "_" + (counter++);
+				LOG.warn("A different " + er.getModelInterface().getSimpleName()
+					+ ", URI=" + baseUri + ", was found; for interactor:" + interactor.getId()
+					+ ", a new ("+entityReferenceClass.getSimpleName()+") URI will be used:" + newUri);
+				baseUri = newUri;
 			}
 			
 			//if not found above, create a new ER
 			if(entityReference == null) { 
-				//generate a new ER
 				entityReference = bpModel.addNew(entityReferenceClass, baseUri);	
 				
-				//set ER's names, xrefs
-				if (name != null) {
-					if(name.length() > 50 && //and there are other names available
-							(shortName!=null || (synonyms!=null && !synonyms.isEmpty())))
-						entityReference.addComment(name); //comment instead of 'standardName'
-					else		
-						entityReference.setStandardName(name);
-				}
 				if (shortName != null) {
 					entityReference.setDisplayName(shortName);
-				}
-				if (synonyms != null) {
-					for (String synonym : synonyms)
-						entityReference.addName(synonym);
-				}
-				if (bpXrefsOfInteractor != null) {
-					for (Xref xref : bpXrefsOfInteractor)
-						entityReference.addXref((Xref) xref);
 				}
 				
 				//set organism if it's not a small molecule
@@ -538,8 +525,36 @@ class EntryMapper {
 					ser.setSequence(interactor.getSequence());
 				}
 			}
+				
+			//update the displayName if we've got to reuse the existing ER
+			if(entityReference == er && shortName != null) {
+				if (er.getDisplayName()!=null) {
+					if(shortName.length() < er.getDisplayName().length()) {
+						entityReference.addName(er.getDisplayName()); //keep both names
+						entityReference.setDisplayName(shortName);
+					} else {
+						entityReference.addName(shortName); //keep both names
+					}
+				} else {
+					entityReference.setDisplayName(shortName);
+				}
+			}
 			
-			
+			if (name != null) {
+				if(name.length() > 100 && //and there are other names
+						(entityReference.getDisplayName()!=null || (synonyms!=null && !synonyms.isEmpty())))
+					entityReference.addComment(name); //comment instead of 'standardName'
+				else		
+					entityReference.addName(name);
+			}
+			if (synonyms != null) {
+				for (String synonym : synonyms)
+					entityReference.addName(synonym);
+			}
+			if (bpXrefsOfInteractor != null) {
+				for (Xref xref : bpXrefsOfInteractor)
+					entityReference.addXref((Xref) xref);
+			}
 			
 			// set ER
 			((SimplePhysicalEntity)entity).setEntityReference(entityReference);		
@@ -556,7 +571,7 @@ class EntryMapper {
 				for (Xref xref : bpXrefsOfInteractor)
 					entity.addXref((Xref) xref);
 			}			
-			((Gene)entity).setOrganism(getBioSource(interactor));
+			((Gene)entity).setOrganism(bioSource);
 		}
 		
 		//try to avoid duplicate physical entities or genes
@@ -593,8 +608,6 @@ class EntryMapper {
 				a.getDisplayName()==null && b.getDisplayName()==null
 				||
 				a.getDisplayName()!=null && a.getDisplayName().equalsIgnoreCase(b.getDisplayName())
-				||
-				b.getDisplayName()!=null && b.getDisplayName().equalsIgnoreCase(a.getDisplayName())
 			);
 	}
 
@@ -701,7 +714,7 @@ class EntryMapper {
 		
 		toReturn = bpModel.addNew(BioSource.class, uri);
 		
-		String taxonXrefUri = xmlBase + "UX_taxonomy_" + ncbiId;
+		String taxonXrefUri = xmlBase + "UnificationXref_taxonomy_" + ncbiId;
 		UnificationXref taxonXref = (UnificationXref) bpModel.getByID(taxonXrefUri);
 		if(taxonXref == null) {
 			taxonXref = bpModel.addNew(UnificationXref.class, taxonXrefUri);
@@ -801,9 +814,9 @@ class EntryMapper {
 			String refTypeAc = (psiDBRef.hasRefTypeAc()) ? psiDBRef.getRefTypeAc() : null;
             String psiDBRefId = psiDBRef.getId();
             String psiDBRefDb = psiDBRef.getDb();
-
             // If multiple ids given with comma separated values, then split them.
             for (String dbRefId : psiDBRefId.split(",")) {
+            	
             	Xref bpXref = null;
                 if ("identity".equals(refType) || "identical object".equals(refType)) {
                     bpXref = unificationXref(psiDBRefDb, dbRefId);
@@ -828,6 +841,21 @@ class EntryMapper {
 	}
 
 
+	private String dbQuickFix(String db) {
+        //a hack/fix to have the standard name of the gene id resource
+        if("entrezgene/locuslink".equalsIgnoreCase(db)
+        		|| "entrezgene".equalsIgnoreCase(db)
+        		|| "entrez gene".equalsIgnoreCase(db)
+        		|| "ncbi gene".equalsIgnoreCase(db)
+        		|| "geneid".equalsIgnoreCase(db)
+        		|| "gene id".equalsIgnoreCase(db)
+        		|| "ncbigene".equalsIgnoreCase(db))
+        	db = "NCBI Gene";
+        
+		return db;
+	}
+
+
 	private UnificationXref getPrimaryUnificationXref(psidev.psi.mi.xml.model.Xref psiXref) {
 		
 		if (psiXref==null || psiXref.getPrimaryRef() == null) 
@@ -847,15 +875,16 @@ class EntryMapper {
 	}
 	
 	
-	private RelationshipXref getPrimaryRelationshipXref(psidev.psi.mi.xml.model.Xref psiXref) {
+	private RelationshipXref getInteractorPrimaryRef(psidev.psi.mi.xml.model.Xref psiXref) {
 		
 		if (psiXref==null || psiXref.getPrimaryRef() == null) 
 			return null;
 		
-		DbReference psiDBRef = psiXref.getPrimaryRef();
+		DbReference psiDBRef = psiXref.getPrimaryRef();		
 		String refType = (psiDBRef.hasRefType()) ? psiDBRef.getRefType() : null;
 		String refTypeAc = (psiDBRef.hasRefType()) ? psiDBRef.getRefTypeAc() : null;
-       	return relationshipXref(psiDBRef.getDb(), psiDBRef.getId(), refType, refTypeAc);
+       	
+		return relationshipXref(psiDBRef.getDb(), psiDBRef.getId(), refType, refTypeAc);
 	}
 	
 	
@@ -867,12 +896,15 @@ class EntryMapper {
 			LOG.warn("unificationXref(), db is null, id=" + id);
 			return null;
 		}
+		
+		db = dbQuickFix(db);
+		
 		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
 			LOG.warn("unificationXref(), illegal id=" + id);
 			return  null;
 		}
 		
-		String xuri = xmlBase + "UX_" + encode(db.toLowerCase() + "_" + id);
+		String xuri = xmlBase + "UnificationXref_" + encode(db.toLowerCase() + "_" + id);
 		UnificationXref x = (UnificationXref) bpModel.getByID(xuri);
 		if(x==null) {
 			x= bpModel.addNew(UnificationXref.class, xuri);
@@ -887,12 +919,15 @@ class EntryMapper {
 			LOG.warn("publicationXref(), db is null, id=" + id);
 			return null;
 		}
+		
+		db = dbQuickFix(db);
+		
 		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
 			LOG.warn("publicationXref(), illegal id=" + id);
 			return  null;
 		}
 		
-		String xuri = xmlBase + "PX_" + encode(db.toLowerCase() + "_" + id);
+		String xuri = xmlBase + "PublicationXref_" + encode(db.toLowerCase() + "_" + id);
 		PublicationXref x = (PublicationXref) bpModel.getByID(xuri);
 		if(x==null) {
 			x= bpModel.addNew(PublicationXref.class, xuri);
@@ -1034,7 +1069,10 @@ class EntryMapper {
 							bpModel.addNew(ExperimentalForm.class, efUri);	
 					experimentalForm.addExperimentalFormDescription(efv);						
 					//only Gene or PE is in fact allowed to be set
-					experimentalForm.setExperimentalFormEntity(bpParticipant);					
+					experimentalForm.setExperimentalFormEntity(bpParticipant);
+					if(participant.hasExperimentalInteractors()) {
+						//TODO do something about each experimentalInteractor (create/use other entities instead of bpParticipant?)
+					}
 					experimentalForms.add(experimentalForm);
 						
 					//using participant.getFeatures(), set the ExperimentalForm/experimentalFeature values									
@@ -1067,13 +1105,16 @@ class EntryMapper {
 			LOG.warn("relationshipXref(), db is null, id=" + id);
 			return null;
 		}
+		
+		db = dbQuickFix(db);
+		
 		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
 			LOG.warn("relationshipXref(), illegal id=" + id);
 			return  null;
 		}
 		
 		//generate URI
-		String uri = xmlBase + "RX_";
+		String uri = xmlBase + "RelationshipXref_";
 		if(refType!=null && !refType.isEmpty())
 			uri += encode(db.toLowerCase()+"_"+id+"_"+refType);
 		else
@@ -1161,15 +1202,14 @@ class EntryMapper {
 			}
 		}		
 		
-		// experimental form
-		Set<ExperimentalForm> experimentalForms = getExperimentalForms(interaction, experimentDescription);
-		//TODO for entity features of these experimental forms, set BindingFeature.bindsTo (when <interaction><inferredInteractionList> elements are present, e.g., see IntAct)
-
-		if (experimentalForms != null && !experimentalForms.isEmpty()) {
-			for (ExperimentalForm experimentalForm : experimentalForms) {
-				evidence.addExperimentalForm(experimentalForm);
-			}
-		}
+		// TODO create/add experimental forms
+		//Set<ExperimentalForm> experimentalForms = getExperimentalForms(interaction, experimentDescription);
+		//TODO for entity features of these experimental forms, set BindingFeature.bindsTo (when <interaction><inferredInteractionList> elements are present, e.g., see IntAct)	
+//		if (experimentalForms != null && !experimentalForms.isEmpty()) {
+//			for (ExperimentalForm experimentalForm : experimentalForms) {
+//				evidence.addExperimentalForm(experimentalForm);
+//			}
+//		}
 
 		// interaction detection method, participant detection method, feature detection method
 		Set<EvidenceCodeVocabulary> evidenceCodes = getEvidenceCodes(experimentDescription);			

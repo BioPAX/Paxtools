@@ -28,9 +28,12 @@
  **/
 package org.biopax.paxtools.converter.psi;
 
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
+import org.biopax.paxtools.model.level3.MolecularInteraction;
+import org.biopax.paxtools.model.level3.ProteinReference;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -43,6 +46,9 @@ import psidev.psi.mi.xml.model.EntrySet;
 import psidev.psi.mi.xml.model.Interaction;
 import psidev.psi.mi.xml.model.Participant;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -67,6 +73,11 @@ public class TestMapping  {
 	 */
 	private static final String PSI_MITAB_TEST_FILE = "12167173.txt";
 
+	
+	/**
+	 * A test data excerpt from BIND PSI-MI XML
+	 */
+	private static final String BIND_TEST_FILE = "bind-test.psimi.xml";
 
     @Test
     public void testApi() throws Exception {
@@ -151,7 +162,8 @@ public class TestMapping  {
 		assertNotNull(bpModel);
 		assertFalse(bpModel.getObjects().isEmpty());
 		
-		assertFalse(bpModel.getObjects(ExperimentalForm.class).isEmpty());
+		//EFs are nor generated at all anymore (until we get a better idea how)
+		assertTrue(bpModel.getObjects(ExperimentalForm.class).isEmpty());
 		
 		//TODO add more assertions
 	}
@@ -174,4 +186,49 @@ public class TestMapping  {
 		assertEquals(1, entries.size());
 		assertEquals(11, entries.iterator().next().getInteractions().size());
 	}
+	
+    @Test
+    public void testParticipantsAreNotDuplicated() throws IOException {
+
+		Model bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();
+		// open file
+		try {
+			// unmarshall the data, close the stream
+			PsimiXmlReader reader = new PsimiXmlReader();
+            InputStream is = getClass().getClassLoader().getResourceAsStream(BIND_TEST_FILE);
+			EntrySet es = reader.read(is);
+			is.close();
+			Collection<Entry> entries =  es.getEntries();
+            assertEquals(1, entries.size());
+			Entry entry = (Entry)entries.iterator().next();
+			EntryMapper mapper = new EntryMapper(bpModel, false);
+			mapper.run(entry);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+		assertNotNull(bpModel);
+		assertFalse(bpModel.getObjects().isEmpty());
+		
+		assertEquals(3, bpModel.getObjects(MolecularInteraction.class).size());
+		
+		save(bpModel, getClass().getClassLoader().getResource("").getPath() 
+			+ File.separator + "testConvertBindPsimi.owl");
+		
+		//two (<interactor id=1432990> and id=1477940) out of three original Max interactors 
+		//should merge together (due to same primary xref, name, organism)
+		assertEquals(5, bpModel.getObjects(ProteinReference.class).size());
+		
+		ProteinReference pr = (ProteinReference) bpModel.getByID("ProteinReference_refseq_NP_002373_identity");
+		assertNotNull(pr);
+		assertEquals(2, pr.getName().size());
+		assertTrue(pr.getName().contains("Max"));
+		assertTrue(pr.getName().contains("Myc-associated factor X"));
+		
+	}
+    
+    private void save(Model model, String file) throws IOException {
+    	new SimpleIOHandler(BioPAXLevel.L3).convertToOWL(model, new FileOutputStream(file));
+    }
 }

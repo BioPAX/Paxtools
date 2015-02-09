@@ -68,7 +68,7 @@ public class PsiToBiopax3Converter {
 	 *
 	 */
 	public PsiToBiopax3Converter() {
-		this.xmlBase = "";
+		this.xmlBase = null;
 	}
 
 	/**
