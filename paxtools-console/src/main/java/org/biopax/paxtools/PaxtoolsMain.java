@@ -10,11 +10,13 @@ import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.pattern.miner.BlacklistGenerator;
 import org.biopax.paxtools.pattern.miner.CommonIDFetcher;
 import org.biopax.paxtools.pattern.miner.OldFormatWriter;
 import org.biopax.paxtools.pattern.miner.SIFEnum;
 import org.biopax.paxtools.pattern.miner.SIFInteraction;
 import org.biopax.paxtools.pattern.miner.SIFSearcher;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.client.BiopaxValidatorClient;
@@ -378,17 +380,26 @@ public class PaxtoolsMain {
         CommonIDFetcher idFetcher = new CommonIDFetcher();
 		idFetcher.setUseUniprotIDs(argv.length > 3 && argv[3].equals("uniprot"));
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
+		File blacklistFile = new File("blacklist.txt");
+		if(blacklistFile.exists()) {
+			log.info("toSif: will use the blacklist.txt (found in the current directory)");
+			searcher.setBlacklist(new Blacklist(new FileInputStream(blacklistFile)));
+		}
 		Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
 		OldFormatWriter.write(binaryInts, new FileOutputStream(argv[2]));
     }
 
     public static void toSif(String[] argv) throws IOException {
-
         Model model = getModel(io, argv[1]);
         ModelUtils.mergeEquivalentInteractions(model);
 		CommonIDFetcher idFetcher = new CommonIDFetcher();
 		idFetcher.setUseUniprotIDs(argv.length > 3 && argv[3].equals("uniprot"));
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
+		File blacklistFile = new File("blacklist.txt");
+		if(blacklistFile.exists()) {
+			log.info("toSif: will use the blacklist.txt (found in the current directory)");
+			searcher.setBlacklist(new Blacklist(new FileInputStream(blacklistFile)));
+		}
 		searcher.searchSIF(model, new FileOutputStream(argv[2]));
     }
 
@@ -417,7 +428,22 @@ public class PaxtoolsMain {
         io.convertToOWL(model1, new FileOutputStream(argv[3]));
     }
 
-
+	/**
+     * Generates a blacklist file
+     * (to optionally use it to exclude ubiquitous small molecules, 
+     * like ATP, when performing graph queries and exporting to
+     * SIF formats).
+     *     
+     * @throws RuntimeException (when I/O errors), 
+     * 			IllegalStateException (when not in maintenance mode)
+     */
+    public static void blacklist(String[] argv) throws IOException {
+    	Model model = getModel(io, argv[1]);
+		BlacklistGenerator gen = new BlacklistGenerator();
+		Blacklist blacklist = gen.generateBlacklist(model);
+		blacklist.write(new FileOutputStream(argv[2]));
+    }
+   
     static void help() {
 
         System.out.println("(Paxtools Console) Available Operations:\n");
@@ -692,6 +718,11 @@ public class PaxtoolsMain {
         summarize("<file> [<output>]\n" +
         		"\t- prints a summary of the contents of the model to the output file (if not provided - to stdout)")
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
+		blacklist("<file> <output>\n" +
+		        "\t- creates a blacklist of ubiquitous small molecules, like ATP, "
+		        + "from the BioPAX model and writes it to the output file. The blacklist can be used with "
+		        + "paxtools graph queries or when converting from the SAME BioPAX data to the SIF formats.")
+				{public void run(String[] argv) throws IOException{blacklist(argv);} },		        
         help("\t- prints this screen and exits")
 		        {public void run(String[] argv) throws IOException{help();} };
 
