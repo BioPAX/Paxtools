@@ -374,9 +374,6 @@ public class PaxtoolsMain {
     }
 
     public static void toSifnx(String[] argv) throws IOException {
-
-        Model model = getModel(io, argv[1]);
-        ModelUtils.mergeEquivalentInteractions(model);
         CommonIDFetcher idFetcher = new CommonIDFetcher();
 		idFetcher.setUseUniprotIDs(argv.length > 3 && argv[3].equals("uniprot"));
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
@@ -384,14 +381,16 @@ public class PaxtoolsMain {
 		if(blacklistFile.exists()) {
 			log.info("toSif: will use the blacklist.txt (found in the current directory)");
 			searcher.setBlacklist(new Blacklist(new FileInputStream(blacklistFile)));
+		} else {
+			log.info("toSif: not blacklisting ubiquitous molecules (no blacklist.txt found)");
 		}
+        Model model = getModel(io, argv[1]);
+        ModelUtils.mergeEquivalentInteractions(model);
 		Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
 		OldFormatWriter.write(binaryInts, new FileOutputStream(argv[2]));
     }
 
     public static void toSif(String[] argv) throws IOException {
-        Model model = getModel(io, argv[1]);
-        ModelUtils.mergeEquivalentInteractions(model);
 		CommonIDFetcher idFetcher = new CommonIDFetcher();
 		idFetcher.setUseUniprotIDs(argv.length > 3 && argv[3].equals("uniprot"));
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
@@ -399,7 +398,11 @@ public class PaxtoolsMain {
 		if(blacklistFile.exists()) {
 			log.info("toSif: will use the blacklist.txt (found in the current directory)");
 			searcher.setBlacklist(new Blacklist(new FileInputStream(blacklistFile)));
+		} else {
+			log.info("toSif: not blacklisting ubiquitous molecules (no blacklist.txt found)");
 		}
+        Model model = getModel(io, argv[1]);
+        ModelUtils.mergeEquivalentInteractions(model);
 		searcher.searchSIF(model, new FileOutputStream(argv[2]));
     }
 
@@ -676,10 +679,10 @@ public class PaxtoolsMain {
         		"\t- merges file2 into file1 and writes it into output")
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
         toSif("<file1> <output> [hgnc|uniprot]\n" +
-        		"\t- converts model to the simple interaction format")
+        		"\t- converts model to the simple interaction format; will use blacklist.txt file in the current directory, if present")
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
         toSifnx("<file1> <output> [hgnc|uniprot] \n" +
-        		"\t- converts model to the extended simple interaction format")
+        		"\t- converts model to the extended simple interaction format; will use blacklist.txt file in the current directory, if present")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         toSbgn("<biopax.owl> <output.sbgn>\n" +
         		"\t- converts model to the SBGN format.")
@@ -707,7 +710,7 @@ public class PaxtoolsMain {
         		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
                 + "\tUses that database identifier or the biopax URI if database is \"NONE\".\n"
                 + "\tCross species check ensures participant protein is from same species\n" +
-                "\tas pathway (set to true or false).")
+                "\tas pathway (set to true or false; if false, taxonomy/organism value there will be always 'unspecified').")
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
         fetch("<file1> <id1,id2,..> <output>\n" +
         		"\t- extracts a sub-model from file1 and writes BioPAX to output")

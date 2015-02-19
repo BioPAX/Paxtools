@@ -12,28 +12,51 @@
 
 	<build>
 		<plugins>
+<!-- 			<plugin> -->
+<!-- 				<artifactId>maven-assembly-plugin</artifactId> -->
+<!-- 				<version>2.4</version> -->
+<!-- 				<configuration> -->
+<!-- 					<finalName>paxtools</finalName> -->
+<!-- 					<appendAssemblyId>false</appendAssemblyId> -->
+<!-- 					<descriptorRefs> -->
+<!-- 						<descriptorRef>jar-with-dependencies</descriptorRef> -->
+<!-- 					</descriptorRefs> -->
+<!-- 					<archive> -->
+<!-- 						<manifest> -->
+<!-- 							<mainClass>org.biopax.paxtools.PaxtoolsMain</mainClass> -->
+<!-- 							<addClasspath>true</addClasspath> -->
+<!-- 						</manifest> -->
+<!-- 					</archive> -->
+<!-- 				</configuration> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>make-console-assembly</id> -->
+<!-- 						<phase>package</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>single</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.0</version>
 				<configuration>
-					<finalName>paxtools</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
+					<transformers>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 							<mainClass>org.biopax.paxtools.PaxtoolsMain</mainClass>
-							<addClasspath>true</addClasspath>
-						</manifest>
-					</archive>
+						</transformer>
+					</transformers>
+					<finalName>paxtools</finalName>
+					<shadedArtifactAttached>true</shadedArtifactAttached>
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-console-assembly</id>
 						<phase>package</phase>
 						<goals>
-							<goal>single</goal>
+							<goal>shade</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -125,7 +148,7 @@
 		<dependency>
 			<groupId>org.biopax.paxtools</groupId>
 			<artifactId>pattern</artifactId>
-			<version>[1,]</version>
+			<version>[1.1.1-SNAPSHOT,2)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
