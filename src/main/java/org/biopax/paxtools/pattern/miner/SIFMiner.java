@@ -3,6 +3,8 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.util.Blacklist;
 
+import java.util.Set;
+
 /**
  * This interface tells that the miner supports SIF output.
  * @author Ozgun Babur
@@ -28,11 +30,11 @@ public interface SIFMiner extends Miner
 	public SIFType getSIFType();
 
 	/**
-	 * Creates a SIF interaction for the given match.
+	 * Creates SIF interactions for the given match.
 	 * @param m match to use for SIF creation
 	 * @return SIF interaction
 	 */
-	public SIFInteraction createSIFInteraction(Match m, IDFetcher fetcher);
+	public Set<SIFInteraction> createSIFInteraction(Match m, IDFetcher fetcher);
 
 	/**
 	 * Sets the blacklist that can be used during the search.

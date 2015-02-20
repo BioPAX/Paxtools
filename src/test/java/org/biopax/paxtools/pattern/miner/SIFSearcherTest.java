@@ -150,7 +150,7 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		CommonIDFetcher idFetcher = new CommonIDFetcher();
 		idFetcher.setUseUniprotIDs(true);
-		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.values());
+		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.IN_COMPLEX_WITH);
 
 		BlacklistGenerator gen = new BlacklistGenerator();
 		Blacklist blacklist = gen.generateBlacklist(model);

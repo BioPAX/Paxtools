@@ -36,7 +36,8 @@ public class OldFormatWriter
 	{
 		SIFToText stt = new CustomFormat(
 			OutputColumn.Type.RESOURCE.name(),
-			OutputColumn.Type.PUBMED.name());
+			OutputColumn.Type.PUBMED.name(),
+			OutputColumn.Type.PATHWAY.name());
 
 		if (!inters.isEmpty())
 		{
@@ -46,7 +47,7 @@ public class OldFormatWriter
 			{
 				OutputStreamWriter writer = new OutputStreamWriter(out);
 				writer.write("PARTICIPANT_A\tINTERACTION_TYPE\tPARTICIPANT_B\t" +
-					"INTERACTION_DATA_SOURCE\tINTERACTION_PUBMED_ID");
+					"INTERACTION_DATA_SOURCE\tINTERACTION_PUBMED_ID\tPATHWAY_NAMES");
 				for (SIFInteraction inter : interList)
 				{
 					writer.write("\n" + stt.convert(inter));

@@ -74,10 +74,10 @@ public class DeltaFeatureExtractor
 				for (Match m : matchList)
 				{
 					// find source and target identifiers
-					String s1 = getIdentifier(m, getSourceLabel());
-					String s2 = getIdentifier(m, getTargetLabel());
+					Set<String> s1 = getIdentifiers(m, getSourceLabel());
+					Set<String> s2 = getIdentifiers(m, getTargetLabel());
 
-					if (s1 == null || s2 == null) continue;
+					if (s1.isEmpty() || s2.isEmpty()) continue;
 
 					// collect gained and lost modifications and cellular locations of the target
 
@@ -99,32 +99,38 @@ public class DeltaFeatureExtractor
 					Set<String> comps0 = comps[sign == -1 ? 1 : 0];
 					Set<String> comps1 = comps[sign == -1 ? 0 : 1];
 
-					if (!modif0.isEmpty()) collect(s1, s2, modif0, gainMods);
-					if (!modif1.isEmpty()) collect(s1, s2, modif1, lossMods);
-					if (!comps0.isEmpty()) collect(s1, s2, comps0, gainComps);
-					if (!comps1.isEmpty()) collect(s1, s2, comps1, lossComps);
-
-					if (!modif[0].isEmpty() || !modif[1].isEmpty() ||
-						!comps[0].isEmpty() || !comps[1].isEmpty())
+					for (String s1s : s1)
 					{
-						// record mediator ids to map these interactions to detailed data
-
-						if (!mediators.containsKey(s1)) mediators.put(s1, new HashMap<String, Set<String>>());
-						if (!mediators.get(s1).containsKey(s2)) mediators.get(s1).put(s2, new HashSet<String>());
-
-						List<BioPAXElement> meds = m.get(getMediatorLabels(), getPattern());
-						for (BioPAXElement med : meds)
+						for (String s2s : s2)
 						{
-							mediators.get(s1).get(s2).add(med.getRDFId());
+							if (!modif0.isEmpty()) collect(s1s, s2s, modif0, gainMods);
+							if (!modif1.isEmpty()) collect(s1s, s2s, modif1, lossMods);
+							if (!comps0.isEmpty()) collect(s1s, s2s, comps0, gainComps);
+							if (!comps1.isEmpty()) collect(s1s, s2s, comps1, lossComps);
+
+							if (!modif[0].isEmpty() || !modif[1].isEmpty() ||
+								!comps[0].isEmpty() || !comps[1].isEmpty())
+							{
+								// record mediator ids to map these interactions to detailed data
+
+								if (!mediators.containsKey(s1s)) mediators.put(s1s, new HashMap<String, Set<String>>());
+								if (!mediators.get(s1s).containsKey(s2s)) mediators.get(s1s).put(s2s, new HashSet<String>());
+
+								List<BioPAXElement> meds = m.get(getMediatorLabels(), getPattern());
+								for (BioPAXElement med : meds)
+								{
+									mediators.get(s1s).get(s2s).add(med.getRDFId());
+								}
+
+								// record modifications and cellular locations of the source molecule
+
+								Set<String> mods = getModifications(m, getSourceSimplePELabel(), getSourceComplexPELabel());
+								Set<String> locs = getCellularLocations(m, getSourceSimplePELabel(), getSourceComplexPELabel());
+
+								collect(s1s, s2s, mods, sourceMods);
+								collect(s1s, s2s, locs, sourceComps);
+							}
 						}
-
-						// record modifications and cellular locations of the source molecule
-
-						Set<String> mods = getModifications(m, getSourceSimplePELabel(), getSourceComplexPELabel());
-						Set<String> locs = getCellularLocations(m, getSourceSimplePELabel(), getSourceComplexPELabel());
-
-						collect(s1, s2, mods, sourceMods);
-						collect(s1, s2, locs, sourceComps);
 					}
 				}
 			}

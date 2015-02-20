@@ -584,22 +584,25 @@ public abstract class MinerAdapter implements Miner
 		{
 			for (Match m : matches.get(ele))
 			{
-				String s1 = getIdentifier(m, label1);
-				String s2 = getIdentifier(m, label2);
+				Set<String> s1 = getIdentifiers(m, label1);
+				Set<String> s2 = getIdentifiers(m, label2);
 
-				if (s1 != null && s2 != null)
+				for (String s1s : s1)
 				{
-					String type = getRelationType();
-					String sep = type == null ? "\t" : "\t" + type + "\t";
-
-					String relation = s1 + sep + s2;
-					String reverse = s2 + sep + s1;
-
-					if (!mem.contains(relation) && (directed || !mem.contains(reverse)))
+					for (String s2s : s2)
 					{
-						writer.write("\n" + relation);
-						mem.add(relation);
-						if (!directed) mem.add(reverse);
+						String type = getRelationType();
+						String sep = type == null ? "\t" : "\t" + type + "\t";
+
+						String relation = s1s + sep + s2s;
+						String reverse = s2s + sep + s1s;
+
+						if (!mem.contains(relation) && (directed || !mem.contains(reverse)))
+						{
+							writer.write("\n" + relation);
+							mem.add(relation);
+							if (!directed) mem.add(reverse);
+						}
 					}
 				}
 			}
@@ -623,54 +626,16 @@ public abstract class MinerAdapter implements Miner
 		{
 			for (Match match : matchList)
 			{
-				SIFInteraction inter = this.createSIFInteraction(match, new IDFetcher()
+				for (SIFInteraction inter : this.createSIFInteraction(match, new CommonIDFetcher()))
 				{
-					@Override
-					public String fetchID(BioPAXElement ele)
+					if (inter.hasIDs())
 					{
-						if (ele instanceof SmallMoleculeReference)
+						if (sifMap.containsKey(inter))
 						{
-							SmallMoleculeReference smr = (SmallMoleculeReference) ele;
-							if (smr.getDisplayName() != null) return smr.getDisplayName();
-							else if (!smr.getName().isEmpty())
-								return smr.getName().iterator().next();
-							else return null;
+							sifMap.get(inter).mergeWith(inter);
 						}
-						else if (ele instanceof XReferrable)
-						{
-							for (Xref xr : ((XReferrable) ele).getXref())
-							{
-								String db = xr.getDb();
-								if (db != null)
-								{
-									db = db.toLowerCase();
-									if (db.startsWith("hgnc"))
-									{
-										String id = xr.getId();
-										if (id != null)
-										{
-											String symbol = HGNC.getSymbol(id);
-											if (symbol != null && !symbol.isEmpty())
-											{
-												return symbol;
-											}
-										}
-									}
-								}
-							}
-						}
-
-						return null;
+						else sifMap.put(inter, inter);
 					}
-				});
-
-				if (inter.hasIDs())
-				{
-					if (sifMap.containsKey(inter))
-					{
-						sifMap.get(inter).mergeWith(inter);
-					}
-					else sifMap.put(inter, inter);
 				}
 			}
 		}
@@ -801,20 +766,40 @@ public abstract class MinerAdapter implements Miner
 	 * @param m match to use for SIF creation
 	 * @return SIF interaction
 	 */
-	public SIFInteraction createSIFInteraction(Match m, IDFetcher fetcher)
+	public Set<SIFInteraction> createSIFInteraction(Match m, IDFetcher fetcher)
 	{
-		if (this instanceof SIFMiner)
-		{
-				return new SIFInteraction(m.get(((SIFMiner) this).getSourceLabel(), getPattern()),
-					m.get(((SIFMiner) this).getTargetLabel(), getPattern()),
-					((SIFMiner) this).getSIFType(),
-					new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())),
-					new HashSet<BioPAXElement>(m.get(getSourcePELabels(), getPattern())),
-					new HashSet<BioPAXElement>(m.get(getTargetPELabels(), getPattern())),
-					fetcher);
-		}
+		BioPAXElement sourceER = m.get(((SIFMiner) this).getSourceLabel(), getPattern());
+		BioPAXElement targetER = m.get(((SIFMiner) this).getTargetLabel(), getPattern());
 
-		return null;
+		Set<String> sources = fetcher.fetchID(sourceER);
+		Set<String> targets = fetcher.fetchID(targetER);
+
+		SIFType sifType = ((SIFMiner) this).getSIFType();
+
+		Set<SIFInteraction> set = new HashSet<SIFInteraction>();
+
+		for (String source : sources)
+		{
+			for (String target : targets)
+			{
+				if (source.equals(target)) continue;
+				else if (sifType.isDirected() || source.compareTo(target) < 0)
+				{
+					set.add(new SIFInteraction(source, target, sourceER, targetER, sifType,
+						new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())),
+						new HashSet<BioPAXElement>(m.get(getSourcePELabels(), getPattern())),
+						new HashSet<BioPAXElement>(m.get(getTargetPELabels(), getPattern()))));
+				}
+				else
+				{
+					set.add(new SIFInteraction(target, source, targetER, sourceER, sifType,
+						new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())),
+						new HashSet<BioPAXElement>(m.get(getTargetPELabels(), getPattern())),
+						new HashSet<BioPAXElement>(m.get(getSourcePELabels(), getPattern()))));
+				}
+			}
+		}
+		return set;
 	}
 
 
@@ -854,23 +839,24 @@ public abstract class MinerAdapter implements Miner
 	 * @param label label of the related EntityReference in the pattern
 	 * @return identifier
 	 */
-	public String getIdentifier(Match m, String label)
+	public Set<String> getIdentifiers(Match m, String label)
 	{
 		BioPAXElement el = m.get(label, getPattern());
 
 		if (idFetcher != null) return idFetcher.fetchID(el);
 
+		Set<String> set = new HashSet<String>();
 		if (el instanceof ProteinReference)
 		{
-//			return getUniprotNameForHuman(m, label);
-			return getGeneSymbol((ProteinReference) el);
+//			set.add(getUniprotNameForHuman(m, label));
+			set.add(getGeneSymbol((ProteinReference) el));
 		}
 		else if (el instanceof SmallMoleculeReference)
 		{
-			return getCompoundName((SmallMoleculeReference) el);
+			set.add(getCompoundName((SmallMoleculeReference) el));
 		}
 
-		return null;
+		return set;
 	}
 
 	/**

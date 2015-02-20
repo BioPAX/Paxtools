@@ -7,10 +7,7 @@ import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.ChemicalNameNormalizer;
 import org.biopax.paxtools.pattern.util.RelType;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class generates a blacklist for the given model. It is important that the given model is the
@@ -153,11 +150,11 @@ public class BlacklistGenerator
 		}
 
 		@Override
-		public String fetchID(BioPAXElement ele)
+		public Set<String> fetchID(BioPAXElement ele)
 		{
 			if (ele instanceof SmallMoleculeReference)
 			{
-				return normalizer.getName((SmallMoleculeReference) ele);
+				return Collections.singleton(normalizer.getName((SmallMoleculeReference) ele));
 			}
 
 			return null;

@@ -126,6 +126,15 @@ public class OutputColumn
 		RESOURCE,
 		SOURCE_LOC,
 		TARGET_LOC,
-		CUSTOM
+		CUSTOM;
+
+		public static Type getType(String name)
+		{
+			for (Type type : values())
+			{
+				if (type.name().toLowerCase().equals(name.toLowerCase())) return type;
+			}
+			return null;
+		}
 	}
 }

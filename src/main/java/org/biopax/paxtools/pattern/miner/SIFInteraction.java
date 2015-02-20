@@ -21,29 +21,14 @@ public class SIFInteraction implements Comparable
 	public SIFType type;
 	public Set<BioPAXElement> mediators;
 
-	public SIFInteraction(BioPAXElement sourceER, BioPAXElement targetER, SIFType type,
-		Set<BioPAXElement> mediators, Set<BioPAXElement> sourcePEs, Set<BioPAXElement> targetPEs,
-		IDFetcher fetcher)
+	public SIFInteraction(String sourceID, String targetID, BioPAXElement sourceER,
+		BioPAXElement targetER, SIFType type, Set<BioPAXElement> mediators,
+		Set<BioPAXElement> sourcePEs, Set<BioPAXElement> targetPEs)
 	{
-		sourceID = fetcher.fetchID(sourceER);
-		targetID = fetcher.fetchID(targetER);
-
+		this.sourceID = sourceID;
+		this.targetID = targetID;
 		this.sourceERs = new HashSet<BioPAXElement>();
 		this.targetERs = new HashSet<BioPAXElement>();
-
-		if (!type.isDirected())
-		{
-			if (sourceID != null && targetID != null && sourceID.compareTo(targetID) > 0)
-			{
-				String tempID = sourceID;
-				sourceID = targetID;
-				targetID = tempID;
-
-				BioPAXElement temp = sourceER;
-				sourceER = targetER;
-				targetER = temp;
-			}
-		}
 
 		this.sourceERs.add(sourceER);
 		this.targetERs.add(targetER);

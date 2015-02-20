@@ -153,7 +153,7 @@ public class SIFSearcher
 			{
 				for (Match m : matchList)
 				{
-					SIFInteraction sif = miner.createSIFInteraction(m, idFetcher);
+					Set<SIFInteraction> sifs = miner.createSIFInteraction(m, idFetcher);
 
 					//----debug-block
 //					if (sif.sourceID.equals("limonin") && sif.targetID.equals("GNG11"))
@@ -162,15 +162,18 @@ public class SIFSearcher
 //					}
 					//----end-of-debug-block
 
-					if (sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID) &&
-						(types == null || types.contains(sif.type)))
+					for (SIFInteraction sif : sifs)
 					{
-						if (map.containsKey(sif))
+						if (sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID) &&
+							(types == null || types.contains(sif.type)))
 						{
-							SIFInteraction existing = map.get(sif);
-							existing.mergeWith(sif);
+							if (map.containsKey(sif))
+							{
+								SIFInteraction existing = map.get(sif);
+								existing.mergeWith(sif);
+							}
+							else map.put(sif, sif);
 						}
-						else map.put(sif, sif);
 					}
 				}
 			}
