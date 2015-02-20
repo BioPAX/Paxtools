@@ -10,12 +10,7 @@ import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.pattern.miner.BlacklistGenerator;
-import org.biopax.paxtools.pattern.miner.CommonIDFetcher;
-import org.biopax.paxtools.pattern.miner.OldFormatWriter;
-import org.biopax.paxtools.pattern.miner.SIFEnum;
-import org.biopax.paxtools.pattern.miner.SIFInteraction;
-import org.biopax.paxtools.pattern.miner.SIFSearcher;
+import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
@@ -379,10 +374,10 @@ public class PaxtoolsMain {
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
 		File blacklistFile = new File("blacklist.txt");
 		if(blacklistFile.exists()) {
-			log.info("toSif: will use the blacklist.txt (found in the current directory)");
+			log.info("toSifnx: will use the blacklist.txt (found in the current directory)");
 			searcher.setBlacklist(new Blacklist(new FileInputStream(blacklistFile)));
 		} else {
-			log.info("toSif: not blacklisting ubiquitous molecules (no blacklist.txt found)");
+			log.info("toSifnx: not blacklisting ubiquitous molecules (no blacklist.txt found)");
 		}
         Model model = getModel(io, argv[1]);
         ModelUtils.mergeEquivalentInteractions(model);
@@ -392,7 +387,11 @@ public class PaxtoolsMain {
 
     public static void toSif(String[] argv) throws IOException {
 		CommonIDFetcher idFetcher = new CommonIDFetcher();
-		idFetcher.setUseUniprotIDs(argv.length > 3 && argv[3].equals("uniprot"));
+
+		List<String> otherParam = new ArrayList<String>();
+		otherParam.addAll(Arrays.asList(argv).subList(3, argv.length));
+
+		idFetcher.setUseUniprotIDs(otherParam.contains("uniprot"));
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
 		File blacklistFile = new File("blacklist.txt");
 		if(blacklistFile.exists()) {
@@ -401,9 +400,36 @@ public class PaxtoolsMain {
 		} else {
 			log.info("toSif: not blacklisting ubiquitous molecules (no blacklist.txt found)");
 		}
-        Model model = getModel(io, argv[1]);
-        ModelUtils.mergeEquivalentInteractions(model);
-		searcher.searchSIF(model, new FileOutputStream(argv[2]));
+
+		// check for custom fields
+		List<String> fieldList = new ArrayList<String>();
+		for (String param : otherParam)
+		{
+			OutputColumn.Type type = OutputColumn.Type.getType(param);
+			if ((type != null && type != OutputColumn.Type.CUSTOM) ||
+				param.contains("/"))
+			{
+				fieldList.add(param);
+			}
+		}
+
+		Model model = getModel(io, argv[1]);
+		ModelUtils.mergeEquivalentInteractions(model);
+
+		if (fieldList.isEmpty())
+		{
+			searcher.searchSIF(model, new FileOutputStream(argv[2]), false);
+		}
+		else if (fieldList.size() == 1 &&
+			fieldList.contains(OutputColumn.Type.MEDIATOR.name().toLowerCase()))
+		{
+			searcher.searchSIF(model, new FileOutputStream(argv[2]), true);
+		}
+		else
+		{
+			searcher.searchSIF(model, new FileOutputStream(argv[2]),
+				new CustomFormat(fieldList.toArray(new String[fieldList.size()])));
+		}
     }
 
     public static void integrate(String[] argv) throws IOException {
@@ -681,7 +707,7 @@ public class PaxtoolsMain {
         toSif("<file1> <output> [hgnc|uniprot]\n" +
         		"\t- converts model to the simple interaction format; will use blacklist.txt file in the current directory, if present")
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("<file1> <output> [hgnc|uniprot] \n" +
+        toSifnx("<file1> <output> [hgnc|uniprot] [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
         		"\t- converts model to the extended simple interaction format; will use blacklist.txt file in the current directory, if present")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         toSbgn("<biopax.owl> <output.sbgn>\n" +

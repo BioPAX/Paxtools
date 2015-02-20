@@ -49,7 +49,8 @@
 			<groupId>org.apache.jena</groupId>
 			<artifactId>apache-jena-libs</artifactId>
 			<type>pom</type>
-			<version>2.12.1</version>
+			<!-- This is the last Java 6 compatible version -->
+			<version>2.11.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.biopax.paxtools</groupId>

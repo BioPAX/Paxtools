@@ -148,7 +148,7 @@
 		<dependency>
 			<groupId>org.biopax.paxtools</groupId>
 			<artifactId>pattern</artifactId>
-			<version>[1.1.1-SNAPSHOT,2)</version>
+			<version>[2.0.0-SNAPSHOT,3)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
