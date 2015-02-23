@@ -81,7 +81,7 @@ public class GSEAConverterTest {
 			assertTrue(entry.description().contains("nci-nature"));
 			assertEquals("9606", entry.taxID());
 			assertEquals("NP", entry.idType());
-			assertEquals(25, entry.getIdentifiers().size());
+			assertEquals(33, entry.getIdentifiers().size());
 		
 			(new GSEAConverter("NP", true)).writeToGSEA(level2, out);
 			

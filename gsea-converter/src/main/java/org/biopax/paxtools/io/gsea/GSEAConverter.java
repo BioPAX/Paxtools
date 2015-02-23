@@ -18,24 +18,32 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Converts a BioPAX model to GSEA (GMT format).
- * <p/>
- * Creates GSEA entries from the protein references's xrefs contained in the BioPAX model. 
- * One entry (id-list) per pathway per organism. If there are no pathways,
- * then simply - per organism (i.e., all available protein types are considered).
- * - One identifier per protein reference (not guaranteed to be the primary one).
- * All identifiers can only be of the same type, e.g., UniProt,
- * and the converter does not do any id-mapping; so a protein without 
- * the required identifier type will not be listed.
- * <p/>
- * Note, to effectively enforce cross-species violation, bio-sources must
- * be annotated (have a unification xref) with "taxonomy" database name 
- * and id, and pathways's, protein references's "organism" property - not empty. 
- * <p/>
+ * Converts a BioPAX model to the GMT format (used by GSEA software).
+ * 
+ * It creates GSEA entries from the protein reference (PR) xrefs 
+ * in the BioPAX model as follows: 
+ * <ul>
+ * <li>Each entry (row) consists of three columns (tab separated): 
+ * name (e.g., "taxonomyID: pathway_name"), 
+ * description (e.g. "datasource: pid;reactome; organism: 9606 id type: uniprot"), and
+ * the list of identifiers (of the same type). For all PRs not associated with any pathway,
+ * "Not pathway" is used instead of the pathway name.</li>
+ * <li>The "id type" is what specified by Constructor parameter 'database'. 
+ * </li>
+ * <li>The list may have one or more IDs of the same type per PR, 
+ * e.g., UniProt IDs or HGNC Symbols; PRs not having an xref of 
+ * given db/id type are ignored.</li>
+ * </ul>
+ * 
+ * Note, to effectively enforce cross-species violation, 
+ * 'organism' property of PRs and pathways must be set 
+ * to a BioSource object that has a valid unification xref: 
+ * db="Taxonomy" and some taxonomy id.
+ *
  * Note, this code assumes that the model has successfully been validated
- * and normalized (e.g., using the BioPAX Validator for Level3 data). 
- * L1 and L2 models are first converted to L3 (this however does not 
- * fix BioPAX errors, if any present, but possibly adds new)
+ * and perhaps even normalized (using the BioPAX Validator/Normalizer). 
+ * A BioPAX L1 or L2 model is first converted to the L3 
+ * (this is a lossless conversion if there are no BioPAX errors).
  */
 public class GSEAConverter
 {
@@ -54,7 +62,12 @@ public class GSEAConverter
 	 * Constructor.
 	 * <p/>
 	 * See class declaration for more information.
-	 * @param database String: the database/xref to use for grabbing participants
+	 * @param database - identifier type, name of the resource, either the string value 
+	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
+	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
+	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs 
+	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt;
+	 *                   (it depends on the actual data; so double-check before using in this constructor).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 */
 	public GSEAConverter(final String database, boolean crossSpeciesCheckEnabled)
@@ -111,9 +124,11 @@ public class GSEAConverter
 		if(!pathways.isEmpty()) {	
 			for (Pathway pathway : pathways) 
 			{
-				String name = pathway.getDisplayName();
-				name = (name == null) ? pathway.getStandardName() : name;
-				name = (name == null) ? pathway.getRDFId() : name;
+				String name = (pathway.getDisplayName() == null) 
+						? pathway.getStandardName() : pathway.getDisplayName();
+				
+				if(name == null || name.isEmpty()) 
+					name = pathway.getRDFId();
 				
 				Set<ProteinReference> pathwayProteinRefs = 
 					(new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter))
@@ -200,7 +215,6 @@ public class GSEAConverter
 
 	void processProteinReferences(Set<ProteinReference> prs, GSEAEntry targetEntry)
 	{
-
 		for (ProteinReference aProteinRef : prs)
 		{
 			// we only process PRs that belong to the same species (as for targetEntry) if crossSpeciesCheckEnabled==true
@@ -209,18 +223,12 @@ public class GSEAConverter
 				
 			if (database != null && !database.isEmpty())
 			{
-				// short circuit if we are converting new Pathway Commons or another normalized data;
-				// we get back the primary accession number, which is built into the URI of the
-				// ProteinReference.
+				String lowercaseDb = database.toLowerCase();
+				// a shortcut if we are converting validated normalized BioPAX model:
+				// get the primary ID from the URI of the ProteinReference
 				final String lowcaseUri = aProteinRef.getRDFId().toLowerCase();
-				if (lowcaseUri.startsWith("urn:miriam:" + database.toLowerCase()))
-				{
-					String accession = aProteinRef.getRDFId();
-					accession = accession.substring(accession.lastIndexOf(":") + 1);
-					targetEntry.getIdentifiers().add(accession);
-				} 
-				else if (lowcaseUri.startsWith("http://identifiers.org/")
-					&& lowcaseUri.contains(database.toLowerCase()))
+				if (lowcaseUri.startsWith("http://identifiers.org/")
+					&& lowcaseUri.contains(lowercaseDb))
 				{
 					String accession = aProteinRef.getRDFId();
 					accession = accession.substring(accession.lastIndexOf("/") + 1);
@@ -235,24 +243,23 @@ public class GSEAConverter
 					});
 					
 					orderedXrefs.addAll(aProteinRef.getXref());
+					
 					for (Xref aXref : orderedXrefs)
 					{
 						if (aXref.getId() != null && aXref.getDb() != null && 
-							(aXref.getDb().equalsIgnoreCase(database) 
-									|| aXref.getId().toLowerCase().startsWith(database.toLowerCase()+":")
-									|| aXref.getId().toLowerCase().startsWith(database.toLowerCase()+"_"))
+							(aXref.getDb().toLowerCase().startsWith(lowercaseDb) 
+							|| aXref.getId().toLowerCase().startsWith(lowercaseDb + ":")
+							|| aXref.getId().toLowerCase().startsWith(lowercaseDb + "_"))
 						) {
 							targetEntry.getIdentifiers().add(aXref.getId());
-							break;
 						}
 					}
 				}
-			} else // use URI (not really useful for GSEA software, but good for testing/hacking...)
-			{
+			} else {
+				// use URI (not really useful for GSEA software, but good for testing/hacking)
 				targetEntry.getIdentifiers().add(aProteinRef.getRDFId());
 			}
 		}
-		
 	}
 
 	/*
