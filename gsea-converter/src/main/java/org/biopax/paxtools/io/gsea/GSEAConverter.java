@@ -32,7 +32,8 @@ import java.util.concurrent.TimeUnit;
  * </li>
  * <li>The list may have one or more IDs of the same type per PR, 
  * e.g., UniProt IDs or HGNC Symbols; PRs not having an xref of 
- * given db/id type are ignored.</li>
+ * given db/id type are ignored. If there are less than three protein 
+ * referencesper entry, it will not be printed.</li>
  * </ul>
  * 
  * Note, to effectively enforce cross-species violation, 
@@ -116,7 +117,8 @@ public class GSEAConverter
 		else
 			l3Model = model;
 		
-		//a modifiable copy of a set of all PRs in the model
+		//a modifiable copy of the set of all PRs in the model - 
+		//simply to keep, after all, all the PRs that do not belong to any pathway
 		Set<ProteinReference> prs = new HashSet<ProteinReference>(
 				l3Model.getObjects(ProteinReference.class));
 		
@@ -138,8 +140,9 @@ public class GSEAConverter
 					// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
 					String dataSource = getDataSource(pathway.getDataSource());
 					Collection<GSEAEntry> entries = createGseaEntries(name, dataSource, orgToPrsMap);
-					toReturn.addAll(entries);
-					prs.removeAll(pathwayProteinRefs); //remove processed PRs from the set
+					if(!entries.isEmpty())
+						toReturn.addAll(entries);
+					prs.removeAll(pathwayProteinRefs);//there left not yet processed PRs (PR can be processed multiple times anyway)
 				}
 			}
 		} 
@@ -164,16 +167,20 @@ public class GSEAConverter
 	{
 		// generate GSEA entries for each taxId in parallel threads; await till all done (before returning)
 		final Collection<GSEAEntry> toReturn = Collections.synchronizedList(new ArrayList<GSEAEntry>());
+		
 		ExecutorService exe = Executors.newFixedThreadPool(orgToPrsMap.keySet().size());
 		for (final String org : orgToPrsMap.keySet()) {
-			exe.submit(new Runnable() {
-				@Override
-				public void run() {
-					GSEAEntry gseaEntry = new GSEAEntry(name, org, database, "datasource: " + dataSource);
-					processProteinReferences(orgToPrsMap.get(org), gseaEntry);
-					toReturn.add(gseaEntry);
-				}
-			});
+			//skip when <3 PRs per entry
+			if(orgToPrsMap.get(org).size() > 1) {			
+				exe.submit(new Runnable() {
+					@Override
+					public void run() {
+						GSEAEntry gseaEntry = new GSEAEntry(name, org, database, "datasource: " + dataSource);
+						processProteinReferences(orgToPrsMap.get(org), gseaEntry);
+						toReturn.add(gseaEntry);
+					}
+				});
+			}
 		}
 		exe.shutdown();
 		try {
