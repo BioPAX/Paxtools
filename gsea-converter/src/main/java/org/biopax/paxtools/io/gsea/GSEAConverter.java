@@ -166,12 +166,10 @@ public class GSEAConverter
 			final Map<String, Set<ProteinReference>> orgToPrsMap) 
 	{
 		// generate GSEA entries for each taxId in parallel threads; await till all done (before returning)
-		final Collection<GSEAEntry> toReturn = Collections.synchronizedList(new ArrayList<GSEAEntry>());
-		
+		final Collection<GSEAEntry> toReturn = Collections.synchronizedList(new ArrayList<GSEAEntry>());	
 		ExecutorService exe = Executors.newFixedThreadPool(orgToPrsMap.keySet().size());
 		for (final String org : orgToPrsMap.keySet()) {
-			//skip when <3 PRs per entry
-			if(orgToPrsMap.get(org).size() > 1) {			
+			if(orgToPrsMap.get(org).size() > 0) {			
 				exe.submit(new Runnable() {
 					@Override
 					public void run() {
