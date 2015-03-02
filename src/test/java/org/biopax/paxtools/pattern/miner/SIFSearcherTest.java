@@ -106,19 +106,23 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Ignore
 	public void generateLargeSIFGraph() throws IOException
 	{
-		long start = System.currentTimeMillis();
-
 //		BPCollections.I.setProvider(new TProvider());
 
-		String dir = "/home/ozgun/Projects/biopax-pattern/";
+//		String dir = "/home/ozgun/Projects/biopax-pattern/";
+		String dir = "/home/ozgun/Downloads/PC-resources/";
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream(dir + "Pathway Commons.6.Detailed_Process_Data.BIOPAX.owl"));
+//		String name = "Pathway Commons.7.Comparative Toxicogenomics Database.BIOPAX";
+		String name = "temp";
+		Model model = h.convertFromOWL(new FileInputStream(dir + name + ".owl"));
 
-		BlacklistGenerator gen = new BlacklistGenerator();
-		Blacklist blacklist = gen.generateBlacklist(model);
-		blacklist.write(new FileOutputStream(dir + "blacklist.txt"));
+//		BlacklistGenerator gen = new BlacklistGenerator();
+//		Blacklist blacklist = gen.generateBlacklist(model);
+//		blacklist.write(new FileOutputStream(dir + "blacklist.txt"));
+		Blacklist blacklist = new Blacklist(dir + "blacklist.txt");
 
-		SIFSearcher s = new SIFSearcher(SIFEnum.values());
+		CommonIDFetcher idFetcher = new CommonIDFetcher();
+		idFetcher.setUseUniprotIDs(true);
+		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.values());
 //		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
 //			new CSCOThroughDegradationMiner(), new CSCOThroughControllingSmallMoleculeMiner(),
 //			new ControlsExpressionMiner(), new ControlsExpressionWithConvMiner()};
@@ -128,7 +132,9 @@ public class SIFSearcherTest extends PatternBoxTest
 		s.setBlacklist(blacklist);
 
 		confirmPresenceOfUbiques(model, blacklist);
-		s.searchSIF(model, new FileOutputStream(dir + "PC.sif"), true);
+
+		long start = System.currentTimeMillis();
+		s.searchSIF(model, new FileOutputStream(dir + name + ".sif"), false);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
@@ -160,6 +166,30 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
+		Assert.assertTrue(2 + 2 == 4);
+	}
+
+	@Test
+	@Ignore
+	public void countRelations() throws FileNotFoundException
+	{
+		String file = "/home/ozgun/Downloads/PC-resources/Pathway Commons.7.Comparative Toxicogenomics Database.BIOPAX.sif";
+
+		Map<String, Integer> count = new HashMap<String, Integer>();
+		for (SIFEnum type : SIFEnum.values())
+		{
+			count.put(type.getTag(), 0);
+		}
+		Scanner sc = new Scanner(new File(file));
+		while (sc.hasNextLine())
+		{
+			String rel = sc.nextLine().split("\t")[1];
+			count.put(rel, count.get(rel) + 1);
+		}
+		for (SIFEnum type : SIFEnum.values())
+		{
+			System.out.println(count.get(type.getTag()) + "\t" + type);
+		}
 		Assert.assertTrue(2 + 2 == 4);
 	}
 

@@ -30,6 +30,10 @@ public class CommonIDFetcher implements IDFetcher
 
 			return set;
 		}
+		else if (useUniprotIDs && ele.getRDFId().startsWith("http://identifiers.org/uniprot/"))
+		{
+			set.add(ele.getRDFId().substring(ele.getRDFId().lastIndexOf("/") + 1));
+		}
 		else if (ele instanceof XReferrable)
 		{
 			for (Xref xr : ((XReferrable) ele).getXref())
