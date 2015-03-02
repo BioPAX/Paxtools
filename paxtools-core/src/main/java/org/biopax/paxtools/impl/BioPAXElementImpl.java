@@ -221,7 +221,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	 */
 	@Override
 	public int hashCode() {
-		return (getModelInterface().getCanonicalName() + uri).hashCode();
+		return (getModelInterface() + uri).hashCode();
 	}
 
 }
