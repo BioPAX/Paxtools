@@ -1,9 +1,7 @@
 package org.biopax.paxtools.pattern.miner;
 
-import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Searcher;
 import org.biopax.paxtools.pattern.util.AdjacencyMatrix;
@@ -12,7 +10,6 @@ import org.biopax.paxtools.pattern.util.Blacklist;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.*;
 
 /**
@@ -145,8 +142,12 @@ public class SIFSearcher
 
 		Map<SIFInteraction, SIFInteraction> map = new HashMap<SIFInteraction, SIFInteraction>();
 
+		Map<BioPAXElement, Set<String>> idMap = new HashMap<BioPAXElement, Set<String>>();
+
 		for (SIFMiner miner : miners)
 		{
+			if (miner instanceof MinerAdapter) ((MinerAdapter) miner).setIdMap(idMap);
+
 			Map<BioPAXElement,List<Match>> matches = Searcher.search(model, miner.getPattern());
 
 			for (List<Match> matchList : matches.values())

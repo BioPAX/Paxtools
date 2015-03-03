@@ -48,6 +48,12 @@ public abstract class MinerAdapter implements Miner
 	protected IDFetcher idFetcher;
 
 	/**
+	 * Memory for object IDs. This is needed for performance issues. Without this, half of SIF
+	 * conversion is spent for fetchIDs().
+	 */
+	protected Map<BioPAXElement, Set<String>> idMap;
+
+	/**
 	 * Constructor with name and description.
 	 * @param name name of the miner
 	 * @param description description of the miner
@@ -56,6 +62,7 @@ public abstract class MinerAdapter implements Miner
 	{
 		this.name = name;
 		this.description = description;
+		this.idMap = new HashMap<BioPAXElement, Set<String>>();
 	}
 
 	/**
@@ -88,10 +95,10 @@ public abstract class MinerAdapter implements Miner
 		{
 			pattern = constructPattern();
 
-			if (this instanceof SIFMiner && idFetcher != null)
+			if (this instanceof SIFMiner && idFetcher != null && idMap != null)
 			{
-				pattern.add(new HasAnID(idFetcher), ((SIFMiner) this).getSourceLabel());
-				pattern.add(new HasAnID(idFetcher), ((SIFMiner) this).getTargetLabel());
+				pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getSourceLabel());
+				pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getTargetLabel());
 			}
 
 			pattern.optimizeConstraintOrder();
@@ -126,6 +133,16 @@ public abstract class MinerAdapter implements Miner
 	public void setDescription(String description)
 	{
 		this.description = description;
+	}
+
+	public Map<BioPAXElement, Set<String>> getIdMap()
+	{
+		return idMap;
+	}
+
+	public void setIdMap(Map<BioPAXElement, Set<String>> idMap)
+	{
+		this.idMap = idMap;
 	}
 
 	/**
@@ -771,8 +788,8 @@ public abstract class MinerAdapter implements Miner
 		BioPAXElement sourceER = m.get(((SIFMiner) this).getSourceLabel(), getPattern());
 		BioPAXElement targetER = m.get(((SIFMiner) this).getTargetLabel(), getPattern());
 
-		Set<String> sources = fetcher.fetchID(sourceER);
-		Set<String> targets = fetcher.fetchID(targetER);
+		Set<String> sources = fetchIDs(sourceER, fetcher);
+		Set<String> targets = fetchIDs(targetER, fetcher);
 
 		SIFType sifType = ((SIFMiner) this).getSIFType();
 
@@ -802,6 +819,15 @@ public abstract class MinerAdapter implements Miner
 		return set;
 	}
 
+	protected Set<String> fetchIDs(BioPAXElement ele, IDFetcher fetcher)
+	{
+		if (!idMap.containsKey(ele))
+		{
+			Set<String> ids = fetcher.fetchID(ele);
+			idMap.put(ele, ids);
+		}
+		return idMap.get(ele);
+	}
 
 	/**
 	 * If a SIF miner wants to tell which essential BioPAX elements mediated this relation, then

@@ -111,8 +111,8 @@ public class SIFSearcherTest extends PatternBoxTest
 //		String dir = "/home/ozgun/Projects/biopax-pattern/";
 		String dir = "/home/ozgun/Downloads/PC-resources/";
 		SimpleIOHandler h = new SimpleIOHandler();
-//		String name = "Pathway Commons.7.Comparative Toxicogenomics Database.BIOPAX";
-		String name = "temp";
+		String name = "Pathway Commons.7.Reactome.BIOPAX";
+//		String name = "temp";
 		Model model = h.convertFromOWL(new FileInputStream(dir + name + ".owl"));
 
 //		BlacklistGenerator gen = new BlacklistGenerator();
@@ -121,7 +121,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		Blacklist blacklist = new Blacklist(dir + "blacklist.txt");
 
 		CommonIDFetcher idFetcher = new CommonIDFetcher();
-		idFetcher.setUseUniprotIDs(true);
+		idFetcher.setUseUniprotIDs(false);
 		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.values());
 //		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
 //			new CSCOThroughDegradationMiner(), new CSCOThroughControllingSmallMoleculeMiner(),

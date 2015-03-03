@@ -1,8 +1,10 @@
 package org.biopax.paxtools.pattern.constraint;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.miner.IDFetcher;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,13 +19,16 @@ public class HasAnID extends ConstraintAdapter
 	 */
 	private IDFetcher idFetcher;
 
+	private Map<BioPAXElement, Set<String>> idMap;
+
 	/**
 	 * Constructor with the ID fetcher.
 	 * @param fetcher ID generator
 	 */
-	public HasAnID(IDFetcher fetcher)
+	public HasAnID(IDFetcher fetcher, Map<BioPAXElement, Set<String>> idMap)
 	{
 		this.idFetcher = fetcher;
+		this.idMap = idMap;
 	}
 
 	/**
@@ -45,6 +50,8 @@ public class HasAnID extends ConstraintAdapter
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
-		return idFetcher.fetchID(match.get(ind[0])) != null;
+		BioPAXElement ele = match.get(ind[0]);
+		if (!idMap.containsKey(ele)) idMap.put(ele, idFetcher.fetchID(ele));
+		return idMap.get(ele) != null && !idMap.get(ele).isEmpty();
 	}
 }
