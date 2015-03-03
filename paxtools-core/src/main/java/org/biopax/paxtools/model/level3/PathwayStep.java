@@ -1,6 +1,8 @@
 package org.biopax.paxtools.model.level3;
 
 
+import org.biopax.paxtools.util.AutoComplete;
+
 import java.util.Set;
 
 /**
@@ -11,6 +13,7 @@ public interface PathwayStep extends UtilityClass,Observable
 
     // Property NEXT-STEP
 
+	@AutoComplete(forward = false)
     Set<PathwayStep> getNextStep();
 
     void addNextStep(PathwayStep newNEXT_STEP);
