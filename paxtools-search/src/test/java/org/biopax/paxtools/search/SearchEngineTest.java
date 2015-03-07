@@ -79,7 +79,12 @@ public class SearchEngineTest {
 		response = searchEngine.search("*", 0, Provenance.class, new String[] {"kegg"}, null);
 		assertEquals(1, response.getHits().size());
 		
-		//datasource filter using a URI (required for -update-counts console command and datasources.html page to work)
+		//now - same but using the long name (with 'of' an 'and') as filter value:
+		response = searchEngine.search("*", 0, Provenance.class, new String[] {"Kyoto Encyclopedia of Genes and Genomes"}, null);
+		assertEquals(1, response.getHits().size());
+		
+		//filter by data source (Provenance) URI - to tell Provenance objects having same name (but perhaps different organism or version)
+		// from each other if necessary -
 		response = searchEngine.search("*", 0, Pathway.class, new String[] {"http://identifiers.org/kegg.pathway/"}, null);
 		assertEquals(1, response.getHits().size());
 		

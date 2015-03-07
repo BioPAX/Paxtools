@@ -34,6 +34,7 @@
 	<bp:Provenance rdf:about="http://identifiers.org/kegg.pathway/">
 		<bp:standardName rdf:datatype="xsd:string">KEGG Pathway</bp:standardName>
 		<bp:displayName rdf:datatype="xsd:string">KEGG</bp:displayName>
+		<bp:name rdf:datatype="xsd:string">Kyoto Encyclopedia of Genes and Genomes</bp:name>
 	</bp:Provenance>
 
 	<bp:CellularLocationVocabulary rdf:about="http://identifiers.org/go/GO:0005737">
