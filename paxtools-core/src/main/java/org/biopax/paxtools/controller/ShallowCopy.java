@@ -81,7 +81,11 @@ public class ShallowCopy implements Visitor
 		T copy = (T) level.getDefaultFactory().create(
 				(Class<T>) source.getModelInterface(), newID);
 		this.copy = copy;
+		// to avoid unnecessary checks/warnings when existing valid element is being cloned  
+		//(e.g., copying BPS.stepProcess values, if there is a Conversion, which was set via stepConversion).
+		AbstractPropertyEditor.checkRestrictions.set(false);
 		traverser.traverse(source, null);
+		AbstractPropertyEditor.checkRestrictions.set(true);//back to default
 		return copy;
 	}
 

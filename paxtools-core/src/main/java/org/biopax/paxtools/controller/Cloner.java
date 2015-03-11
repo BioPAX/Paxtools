@@ -49,10 +49,17 @@ public class Cloner implements Visitor
 			targetModel.addNew(bpe.getModelInterface(), bpe.getRDFId());
 		}
 
+		// a hack to avoid unnecessary checks for the valid sub-model being cloned, 
+		// and warnings when the Cloner copies BPS.stepProcess values, 
+		// and there is a Conversion among them (-always unless stepConversion is null).
+		AbstractPropertyEditor.checkRestrictions.set(false);
+		
 		for (BioPAXElement bpe : toBeCloned)
 		{
 			traverser.traverse(bpe, source);
 		}
+		
+		AbstractPropertyEditor.checkRestrictions.set(true); //back to the default mode
 
 		return targetModel;
 	}
@@ -62,14 +69,15 @@ public class Cloner implements Visitor
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
 		BioPAXElement targetDomain = targetModel.getByID(domain.getRDFId());
+		
 		if (range instanceof BioPAXElement)
 		{
 			BioPAXElement bpe = (BioPAXElement) range;
 			BioPAXElement existing = targetModel.getByID(bpe.getRDFId());
-			if (existing != null)
-			{
+			//set the property value if the value is already present in the target 
+			if (existing != null) {
 				editor.setValueToBean(existing, targetDomain);
-			} 
+			}
 		}
 		else
 		{
