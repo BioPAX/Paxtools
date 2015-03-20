@@ -99,4 +99,24 @@
             <url>file://${basedir}/maven-repo/</url>
         </repository>
     </distributionManagement>
+
+	<profiles>
+		<profile>
+			<id>local-deploy</id>
+			<distributionManagement>
+				<!-- define the $variables in ~/.m2/settings.xml or via profile-->
+				<snapshotRepository>
+					<id>biopax.snapshots</id>
+					<name>Local Snapshots Repository</name>
+					<url>${biopax.snapshot.url}</url>
+				</snapshotRepository>
+				<repository>
+					<id>biopax.releases</id>
+					<name>Local Releases Repository</name>
+					<url>${biopax.release.url}</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+	</profiles>
+    
 </project>
