@@ -7,7 +7,9 @@
 	<version>4.3.1-SNAPSHOT</version>
 
 	<name>Paxtools</name>
+	
 	<packaging>pom</packaging>
+	
 	<description>Paxtools is a Java library that allows software to read, write, analyze and manipulate BioPAX models.
 		Paxtools provide a consistent, fully implemented, validating BioPAX API that significantly reduces development
 		time of oftware that require programmatic access to BioPAX. Paxtools is modular, lightweight and platform
@@ -15,6 +17,11 @@
 	</description>
 	
 	<url>${siteUrl}</url>
+	
+	<organization>
+		<name>BioPAX</name>
+		<url>http://www.biopax.org</url>
+	</organization>
 
 	<modules>
 		<module>paxtools-core</module>
@@ -198,6 +205,22 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+		<id>local-deploy</id>
+		  <distributionManagement>
+			<snapshotRepository>
+				<id>biopax.snapshots</id>
+				<name>BioPAX Snapshots Repository</name>
+				<url>${biopax.snapshot.url}</url>
+			</snapshotRepository>
+			<repository>
+				<id>biopax.releases</id>
+				<name>BioPAX Releases Repository</name>
+				<url>${biopax.release.url}</url>
+			</repository>
+			<downloadUrl>http://www.biopax.org/downloads/paxtools/</downloadUrl>
+		  </distributionManagement>
+		</profile>
 	</profiles>
 
 	<scm>
@@ -208,29 +231,25 @@
 	  <tag>HEAD</tag>
   </scm>
 
+
 	<distributionManagement>
 		<site>
 			<id>biopax.sf.net</id>
 			<name>BioPAX Sourceforge site</name>
 			<url>${siteDeployUrl}</url>
-		</site>
+		</site>	
 		<snapshotRepository>
-			<id>biopax.snapshots</id>
-			<name>BioPAX Snapshots Repository</name>
-			<url>${biopax.snapshot.url}</url>
+			<id>ossrh.snapshots</id>
+			<name>OSSRH Snapshots Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
 			<id>biopax.releases</id>
-			<name>BioPAX Releases Repository</name>
-			<url>${biopax.release.url}</url>
+			<name>OSSRH Releases Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
-		<downloadUrl>http://www.biopax.org/downloads/paxtools/</downloadUrl>
+		<downloadUrl>http://www.biopax.org/downloads/</downloadUrl>
 	</distributionManagement>
-
-	<organization>
-		<name>BioPAX</name>
-		<url>http://www.biopax.org</url>
-	</organization>
 
 	<build>
 		<pluginManagement>
