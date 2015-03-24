@@ -28,7 +28,7 @@ p.add(ConBox.equal(false), "PR2", "PR1");
 
 To learn how to use, please start with the QuickStartGuide.
 
-A [Javadoc](http://javadoc.biopax-pattern.googlecode.com/hg/index.html) is also available.
+A [Javadoc](http://biopax.github.io/pattern/javadoc/index.html) is also available.
 
 ### Searching for binary interactions ###
 
@@ -36,17 +36,27 @@ As an example use of this pattern search framework, we defined a set of patterns
 
 ### Using the software ###
 
-You can find a jar file in [Downloads](http://code.google.com/p/biopax-pattern/downloads/list).
+You can find a biopax-pattern jar file in [BioPAX Downloads](http://www.biopax.org/downloads/paxtools/).
 
 [Maven](http://maven.apache.org) users can add the following lines to their project pom files to use biopax-pattern framework.
 
 ```
 <repositories>
 	<repository>
-		<id>pattern.repo</id>
-		<name>Repository of BioPAX Pattern Framework</name>
-		<url>http://maven-repo.biopax-pattern.googlecode.com/hg/</url>
-		<snapshots><enabled>true</enabled></snapshots>
+		<id>biopax.release.repo</id>
+		<name>BioPAX releases</name>
+		<url>http://www.biopax.org/m2repo/releases</url>
+		<snapshots>
+			<enabled>false</enabled>
+		</snapshots>
+	</repository>
+	<repository>
+		<id>biopax.snapshot.repo</id>
+		<name>BioPAX snapshots</name>
+		<url>http://www.biopax.org/m2repo/snapshots</url>
+		<releases>
+			<enabled>false</enabled>
+		</releases>
 	</repository>
 </repositories>
 
