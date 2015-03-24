@@ -2,7 +2,7 @@
 ## Pattern search software for BioPAX models ##
 [BioPAX](http://www.biopax.org) is a language standard for describing biological networks. This software helps to define graph patterns with BioPAX objects, and searches them on BioPAX models.
 
-This tool is developed on top of [Paxtools](http://www.biopax.org/paxtools.php), and effective usage requires knowledge of BioPAX structure and some familiarity with Paxtools.
+This tool is developed on top of [Paxtools](http://www.biopax.org/paxtools), and effective usage requires knowledge of BioPAX structure and some familiarity with Paxtools.
 
 ### A pattern sample ###
 
