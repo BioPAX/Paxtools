@@ -26,13 +26,13 @@ p.add(ConBox.peToER(), "P2", "PR2");
 p.add(ConBox.equal(false), "PR2", "PR1");
 ```
 
-To learn how to use, please start with the [Quick Start Guide](/wiki/QuickStartGuide).
+To learn how to use, please start with the [Quick Start Guide](https://github.com/BioPAX/pattern/wiki/QuickStartGuide).
 
 A [Javadoc](http://biopax.github.io/pattern/index.html) is also available.
 
 ### Searching for binary interactions ###
 
-As an example use of this pattern search framework, we defined a set of patterns that capture useful binary interactions between proteins and small molecules in a BioPAX model. Binary interaction types include upstream-to-downstream signal transmissions, controlling expression changes, sequential catalysis by metabolic enzymes, controlling transportation, enzymes consuming or producing chemicals, etc. [Read more](/wiki/UsingBinaryInteractionFramework).
+As an example use of this pattern search framework, we defined a set of patterns that capture useful binary interactions between proteins and small molecules in a BioPAX model. Binary interaction types include upstream-to-downstream signal transmissions, controlling expression changes, sequential catalysis by metabolic enzymes, controlling transportation, enzymes consuming or producing chemicals, etc. [Read more](https://github.com/BioPAX/pattern/wiki/UsingBinaryInteractionFramework).
 
 ### Using the software ###
 
