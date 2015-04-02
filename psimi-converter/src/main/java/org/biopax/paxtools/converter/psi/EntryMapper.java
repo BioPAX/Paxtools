@@ -693,10 +693,13 @@ class EntryMapper {
 			if((name.equalsIgnoreCase("homo sapiens")
 					|| name.equalsIgnoreCase("human"))
 					&& !ncbiId.equals("9606")) {
-				LOG.warn("Based on the name, auto-changed taxonomy ID from " 
-					+ ncbiId + " to 9606 (human) in: " + organism 
-					+ "; interactor: " + interactor.getId());
-				ncbiId = "9606";
+				LOG.error("Taxonomy: " 
+					+ ncbiId + " of organism: " + organism 
+					+ ", interactor: " + interactor.getId() 
+					+ " does not belong to '" 
+					+ name + "'; the name will be removed. "
+					+ "Data provider should probably use <experimentalInteractor> in addition to <interactor>");
+				name = null;
 			}
 		}
 		
