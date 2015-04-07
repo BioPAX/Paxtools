@@ -1,7 +1,10 @@
+package com.example;
+
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.model.level3.Process;
 
 import java.io.*;
 import java.util.*;
@@ -18,15 +21,8 @@ public class Example {
         String inFileName = "dna_replication.owl";
         String outFileName = "test_result.txt";
 
-        ClassLoader classLoader = Example.class.getClassLoader();
-        File inFile = new File(classLoader.getResource(inFileName).getFile());
-
-        InputStream f = new FileInputStream(inFile);
-
         BioPAXIOHandler handler = new SimpleIOHandler();
-        Model rawModel = handler.convertFromOWL(f);
-
-        f.close();
+        Model rawModel = handler.convertFromOWL(Example.class.getClassLoader().getResourceAsStream(inFileName));
 
         PrintStream out = null;
         out = new PrintStream(new FileOutputStream(outFileName, true));

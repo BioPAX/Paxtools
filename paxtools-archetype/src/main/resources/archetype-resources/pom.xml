@@ -8,11 +8,10 @@
     <version>${version}</version>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.0</version>
+                    <version>3.3</version>
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
@@ -30,25 +29,31 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.5.3</version>
-                    <configuration>
-                        <finalName>example-single</finalName>
-                        <appendAssemblyId>false</appendAssemblyId>
-                        <descriptorRefs>
-                            <descriptorRef>jar-with-dependencies</descriptorRef>
-                        </descriptorRefs>
-                        <archive>
-                            <manifest>
-                                <mainClass>com.example.test.Example</mainClass>
-                                <addClasspath>true</addClasspath>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.0</version>
+					<configuration>
+						<transformers>
+							<transformer
+								implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<mainClass>com.example.Example</mainClass>
+							</transformer>
+						</transformers>
+						<finalName>example-exec</finalName>
+						<shadedArtifactAttached>true</shadedArtifactAttached>
+					</configuration>
+					<executions>  
+						<!-- "mvn install" command will also assembly the fat jar -->
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin> 
             </plugins>
-        </pluginManagement>
     </build>
 
     <repositories>
@@ -72,7 +77,6 @@
 
     <properties>
         <paxtools.version>4.3.1-SNAPSHOT</paxtools.version>
-        <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
     </properties>
 
     <dependencies>
