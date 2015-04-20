@@ -1412,7 +1412,7 @@ public class L3ToSBGNPDConverter
 
 	private String convertID(String biopaxID)
 	{
-		return biopaxID.replaceAll(":", "_").replaceAll("/", "_");
+		return biopaxID.replaceAll("[^-\\w]", "_");
 	}
 
 	//-- Section: Static initialization -----------------------------------------------------------|
