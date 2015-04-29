@@ -156,13 +156,13 @@ public class PaxtoolsMain {
 
         // set strings vars
         String in = argv[1];
-        String[] ids = argv[2].split(",");
+        String[] uris = argv[2].split(",");
         String out = argv[3];
 
         Model model = io.convertFromOWL(new FileInputStream(in));
         io.setFactory(model.getLevel().getDefaultFactory());
         // extract and save the sub-model (defined by ids)
-        io.convertToOWL(model, new FileOutputStream(out), ids);
+        io.convertToOWL(model, new FileOutputStream(out), uris);
     }
 
     
@@ -657,7 +657,7 @@ public class PaxtoolsMain {
 		return list;
 	}
 	
-	private static Set<BioPAXElement> filterToExactClass(Set<? extends BioPAXElement> classSet, Class clazz)
+	private static Set<BioPAXElement> filterToExactClass(Set<? extends BioPAXElement> classSet, Class<?> clazz)
 	{
 		Set<BioPAXElement> exact = new HashSet<BioPAXElement>();
 		for (BioPAXElement ele : classSet)
@@ -738,8 +738,8 @@ public class PaxtoolsMain {
                 + "\tCross species check ensures participant protein is from same species\n" +
                 "\tas pathway (set to true or false; if false, taxonomy/organism value there will be always 'unspecified').")
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
-        fetch("<file1> <id1,id2,..> <output>\n" +
-        		"\t- extracts a sub-model from file1 and writes BioPAX to output")
+        fetch("<file1> <Uri1,Uri2,..> <output>\n" +
+        		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output.")
 		        {public void run(String[] argv) throws IOException{fetch(argv);} },
         getNeighbors("<file1> <id1,id2,..> <output>\n" +
         		"\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)")
