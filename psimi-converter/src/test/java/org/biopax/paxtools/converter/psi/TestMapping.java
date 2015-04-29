@@ -31,9 +31,11 @@ package org.biopax.paxtools.converter.psi;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.DnaReference;
 import org.biopax.paxtools.model.level3.ExperimentalForm;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.ProteinReference;
+import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -162,8 +164,8 @@ public class TestMapping  {
 		assertNotNull(bpModel);
 		assertFalse(bpModel.getObjects().isEmpty());
 		
-		//EFs are nor generated at all anymore (until we get a better idea how)
-		assertTrue(bpModel.getObjects(ExperimentalForm.class).isEmpty());
+		//EFs are generated 
+		assertFalse(bpModel.getObjects(ExperimentalForm.class).isEmpty());
 		
 		//TODO add more assertions
 	}
@@ -216,9 +218,15 @@ public class TestMapping  {
 		save(bpModel, getClass().getClassLoader().getResource("").getPath() 
 			+ File.separator + "testConvertBindPsimi.owl");
 		
-		//two (<interactor id=1432990> and id=1477940) out of three original Max interactors 
-		//should merge together (due to same primary xref, name, organism)
-		assertEquals(5, bpModel.getObjects(ProteinReference.class).size());
+		// there are 6 PSI-MI participants that refer to: 6 interactors and 3 experimental interactors 
+		// (but these refer to only 5 unique primary xref IDs - 4 of protein and 1 of dna type) 
+		// 4 "Max"/"GST-Max" and "Myc-associated factor X" interactors that have same ID makes only one PR
+		// 2 HMBS promoter dnas make one DnaReference
+		assertEquals(4, bpModel.getObjects(ProteinReference.class).size());
+		// 2 dna type interactors ans experimental inter. merge into one
+		assertEquals(1, bpModel.getObjects(DnaReference.class).size());
+		// 9 original physical entities, some were merged (e.g., two gst-max...)
+		assertEquals(8, bpModel.getObjects(SimplePhysicalEntity.class).size());
 		
 		ProteinReference pr = (ProteinReference) bpModel.getByID("ProteinReference_refseq_NP_002373_identity");
 		assertNotNull(pr);

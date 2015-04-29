@@ -1,14 +1,10 @@
 package org.biopax.paxtools.converter.psi;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -61,9 +57,19 @@ import psidev.psi.mi.xml.model.*;
 
 
 /**
- * PSIMI 'entry' to BioPAX converter.
+ * PSIMI 'entry' to BioPAX converter. 
+ * 
+ * PS (rodche, IR):
+ * The PSI-MI api is weird. It has methods/classes that pretend to follow the XML schema (OXM like)
+ * but in fact some of those do not make any practical sense, because they are either cleared or reset by the 
+ * PSI-MI parser (post-processing); e.g., look at (try) all those get*Ref or has*Ref, etc. methods.
+ * PSI-MI specification itself is tricky (e.g., the ability to define/express multiple experiment 
+ * descriptions per interaction, multiple roles per participant, multiple experimentalInteractors 
+ * per participant of an interaction are probably altogether unnecessary) and uses conventions 
+ * and practices not formally defined in the schema (e.g., how/whether to use "id" attribute, 
+ * absence of some xml elements means sometimes ALL such elements from the parent element (see e.g. experimentRef).
  *
- * @author Benjamin Gross, rodche (major re-factoring for Level3; fixing, adding genetic interactions)
+ * @author Benjamin Gross, rodche (major re-factoring for Level3; fixing, adding genetic interactions, experimental form entities and features, etc.)
  */
 class EntryMapper {
 
@@ -89,8 +95,8 @@ class EntryMapper {
 	// as of BioGRID v3.1.72 (at least), genetic interaction code can reside
 	// as an attribute of the Interaction via "BioGRID Evidence Code" key
 	private static final String BIOGRID_EVIDENCE_CODE = "BioGRID Evidence Code";
-	
-	private static final String IDENTIFIERS_ORG = "http://identifiers.org/";
+
+	private static final String EXPERIMENTAL_FORM_ENTITY_COMMENT = "experimental form entity";
 	
 	private final Model bpModel;
 	
@@ -99,9 +105,6 @@ class EntryMapper {
 	private long counter;
 	
 	private final boolean forceInteractionToComplex;
-
-	// a map from psi-mi participant to biopax physical entity or gene
-	private final Map<Participant, Entity> participantMap;
 	
 	/**
 	 * Constructor.
@@ -114,7 +117,6 @@ class EntryMapper {
 		this.xmlBase = (model.getXmlBase()==null) ? "" : model.getXmlBase();
 		this.counter = System.currentTimeMillis();
 		this.forceInteractionToComplex = forceInteractionToComplex;
-		this.participantMap = new HashMap<Participant, Entity>();
 	}
 
 
@@ -138,18 +140,21 @@ class EntryMapper {
 		// get data source
 		final Provenance pro = createProvenance(entry.getSource());
 		
-		//a skip-set of interactions linked by participant.interactionRef element (complex blocks)
+		//build a skip-set of "interactions" linked by participant.interactionRef element;
+		//we'll then create Complex type participants from these in-participant interactions.
 		Set<Interaction> participantInteractions = new HashSet<Interaction>();
 		for(Interaction interaction : entry.getInteractions()) {
 			for(Participant participant : interaction.getParticipants()) {
+				//checking for hasInteraction()==true only is sufficient; 
+				//i.e., we ignore hasInteractionRef(), getInteractionRefs(), 
+				//because these in fact get cleared by the PSI-MI parser:
 				if(participant.hasInteraction()) {
-					//ignore hasInteractionRef/getInteractionRefs, for these get cleared by the psimi parser
 					participantInteractions.add(participant.getInteraction());
 				}
 			}
 		}
 		
-		// iterate through the root interactions and create biopax interactions or complexes
+		// iterate through the "root" psimi interactions only and create biopax interactions or complexes
 		for (Interaction interaction : entry.getInteractions()) {
 			if(!participantInteractions.contains(interaction)) {
 				// TODO future (hard): make a Complex or Interaction based on the interaction type ('direct interaction' or 'physical association' (IntAct) -> complex)
@@ -230,9 +235,11 @@ class EntryMapper {
 	 * psi.interactionElementType                 -> biopax Complex, MolecularInteraction, or GeneticInteraction
 	 * psi.interactionElementType.participantList -> biopax interaction/complex participants/components
 	 */
-	private Entity processInteraction(Interaction interaction, Set<String> avail, Provenance pro, boolean isComplex) {
-		
-		Entity bpEntity = null; //interaction or complex
+	private Entity processInteraction(Interaction interaction, Set<String> avail, 
+			Provenance pro, boolean isComplex) 
+	{	
+		Entity bpInteraction = null; //interaction or complex
+		boolean isGeneticInteraction = false;
 		
 		// get interaction name/short name
 		String name = null;
@@ -243,19 +250,7 @@ class EntryMapper {
 			shortName = (names.hasShortLabel()) ? names.getShortLabel() : "";
 		}
 		
-		// interate through the psi participants, create biopax equivalents
-		Set<Entity> bpParticipants = new HashSet<Entity>();
-		for (Participant participant : interaction.getParticipants()) {
-			// get paxtools physical entity participant and add to participant list
-			Entity bpParticipant = createParticipant(participant, interaction, avail, pro);
-			if (bpParticipant != null) {
-				if(!bpParticipants.contains(bpParticipant))
-					bpParticipants.add(bpParticipant);
-				participantMap.put(participant, bpParticipant);
-			}
-		}
-				
-		Set<InteractionVocabulary> interactionVocabularies = new HashSet<InteractionVocabulary>();
+		final Set<InteractionVocabulary> interactionVocabularies = new HashSet<InteractionVocabulary>();
 		if (interaction.hasInteractionTypes()) {
 			for(CvType interactionType : interaction.getInteractionTypes()) {
 				//generate InteractionVocabulary and set interactionType
@@ -263,11 +258,60 @@ class EntryMapper {
 				if(cv != null)
 					interactionVocabularies.add(cv);
 			}
+		}		
+		
+		// using experiment descriptions, create Evidence objects 
+		// (yet, no experimental forms/roles/entities are created here)
+		Set<Evidence> bpEvidences = new HashSet<Evidence>();
+		if (interaction.hasExperiments()) {			
+			bpEvidences = createBiopaxEvidences(interaction);
 		}
 		
-		// as of BioGRID v3.1.72 (at least), genetic interaction code can reside
+		//A hack for e.g. IntAct or BIND "gene-protein" interactions (ChIp and EMSA experiments)
+		// where the interactor type should probably not be 'gene' (but 'dna' or 'rna')
+		Set<String> participantTypes = new HashSet<String>();
+		for(Participant p : interaction.getParticipants()) {
+			if(p.hasInteractor()) {
+				String type = getName(p.getInteractor().getInteractorType().getNames());
+				if(type==null) type = "protein"; //default type (if unspecified)
+				participantTypes.add(type.toLowerCase());
+			} else if (p.hasInteraction()) {
+				participantTypes.add("complex"); //hierarchical complex build up
+			} // else? (impossible!)
+		}
+		// If there are both genes and physical entities present, let's 
+		// replace 'gene' with 'dna' (esp. true for "ch-ip", "emsa" experiments);
+		// (this won't affect experimental form entities if experimentalInteractor element exists)
+		if(participantTypes.size() > 1 && participantTypes.contains("gene")) {
+			//TODO a better criteria to reliably detect whether 'gene' interactor type actually means Dna/DnaRegion or Rna/RnaRegion, or indeed Gene)
+			LOG.warn("Interaction: " + interaction.getId() + ", name(s): " + shortName + " " + name 
+					+ "; has both 'gene' and physical entity type participants: " + participantTypes 
+					+ "; so we'll replace 'gene' with 'dna' (a quick fix)");
+			for(Participant p : interaction.getParticipants()) {
+				if(p.hasInteractor() && p.getInteractor().getInteractorType().hasNames()) {
+					String type = getName(p.getInteractor().getInteractorType().getNames());
+					if("gene".equalsIgnoreCase(type)) {
+						p.getInteractor().getInteractorType().getNames().setShortLabel("dna");
+					}
+				}
+			}	
+		}		
+		
+		// interate through the psi-mi participants, create corresp. biopax entities
+		final Set<Entity> bpParticipants = new HashSet<Entity>();
+		for (Participant participant : interaction.getParticipants()) {
+			// get paxtools physical entity participant and add to participant list
+			// (this also adds experimental evidence and forms)
+			Entity bpParticipant = createBiopaxEntity(participant, avail, pro); 
+			if (bpParticipant != null) {
+				if(!bpParticipants.contains(bpParticipant))
+					bpParticipants.add(bpParticipant);
+			}
+		}
+				
+		// Set GeneticInteraction flag.
+		// As of BioGRID v3.1.72 (at least), genetic interaction code can reside
 		// as an attribute of the Interaction via "BioGRID Evidence Code" key
-		boolean isGeneticInteraction = false;
 		if (interaction.hasAttributes()) {
 			for (Attribute attribute : interaction.getAttributes()) {
 				if (attribute.getName().equalsIgnoreCase(BIOGRID_EVIDENCE_CODE)) {
@@ -278,50 +322,37 @@ class EntryMapper {
 				}
 			}
 		}
-		
-		// get experiment metadata; also helps us determine if interaction is genetic or not
-		Set<Evidence> bpEvidences = new HashSet<Evidence>();
-		if (interaction.hasExperiments()) {			
-			for (ExperimentDescription experimentDescription : interaction.getExperiments()) {
-				// build and add evidence
-				bpEvidences.add(createEvidence(interaction, experimentDescription));
-			}		
-		}	
-		
-		//check another genetic interaction flag (criteria)
-		if(!isGeneticInteraction) 
+		// or, if all participants are 'gene' type, make a biopax GeneticInteraction
+		if(participantTypes.size() == 1 && participantTypes.contains("gene")) {
+			isGeneticInteraction = true;
+		}		
+		//or, check another genetic interaction flag (criteria)
+		if(!isGeneticInteraction) {
 			isGeneticInteraction = isGeneticInteraction(bpEvidences);
-		
-		//last test and hack (to skip for e.g. IntAct gene-protein (TF) interactions, 
-		//TODO looks, we should convert such to a TemplateReaction...
-		Set<Class<? extends BioPAXElement>> participantTypes = new HashSet<Class<? extends BioPAXElement>>();
-		for(Entity p : bpParticipants)
-			participantTypes.add(p.getModelInterface());
-		if(participantTypes.size() > 1 && participantTypes.contains(Gene.class)) {
-			isGeneticInteraction = false;
-			LOG.warn("Skipped a gene-notgene interaction; psimi-id=" 
-					+ interaction.getId() + ", name(s): " + shortName + " " + name 
-					+ "; participants: " + participantTypes);
-			return null;
 		}
 		
 		if ((isComplex || forceInteractionToComplex) && !isGeneticInteraction) {
-			bpEntity = createComplex(bpParticipants, bpEvidences);
+			bpInteraction = createComplex(bpParticipants);
 		} else if(isGeneticInteraction) {
-			bpEntity = createGeneticInteraction(bpParticipants, bpEvidences, interactionVocabularies);
+			bpInteraction = createGeneticInteraction(bpParticipants, interactionVocabularies);
 		} else {
-			bpEntity = createMolecularInteraction(bpParticipants, bpEvidences, interactionVocabularies);
+			bpInteraction = createMolecularInteraction(bpParticipants, interactionVocabularies);
+		}
+			
+		//add evidences to the interaction/complex bpEntity
+		for (Evidence evidence : bpEvidences) {
+			bpInteraction.addEvidence(evidence);
 		}
 		
-		addAvailabilityAndProvenance(bpEntity, avail, pro);
+		addAvailabilityAndProvenance(bpInteraction, avail, pro);
 		
 		if (name != null)
-			bpEntity.addName(name);
+			bpInteraction.addName(name);
 		if (shortName != null) {
 			if(shortName.length()<51)
-				bpEntity.setDisplayName(shortName);
+				bpInteraction.setDisplayName(shortName);
 			else
-				bpEntity.addName(shortName);
+				bpInteraction.addName(shortName);
 		}
 				
 		// add xrefs		
@@ -331,13 +362,80 @@ class EntryMapper {
 		}
 		
 		for (Xref bpXref : bpXrefs) {
-			bpEntity.addXref(bpXref);
+			bpInteraction.addXref(bpXref);
 		}
 		
-		return bpEntity;
+		return bpInteraction;
 	}
 
 	
+	private Set<Evidence> createBiopaxEvidences(Interaction interaction) {
+		Set<Evidence> evidences = new HashSet<Evidence>();
+		
+		for (ExperimentDescription experimentDescription : interaction.getExperiments()) {
+			// build and add evidence
+			String evUri = genUri(Evidence.class, bpModel) + 
+					"_i" + interaction.getId() + "_e" + experimentDescription.getId();
+			
+			Evidence evidence = bpModel.addNew(Evidence.class, evUri);
+
+			if (experimentDescription.hasXref()) {
+				for(Xref xref : getXrefs(experimentDescription.getXref()))
+					evidence.addXref(xref);
+			}
+			if (experimentDescription.getBibref() != null) {
+				psidev.psi.mi.xml.model.Xref psiXREF = experimentDescription.getBibref().getXref();
+				if (psiXREF != null) {
+					PublicationXref px = publicationXref(psiXREF.getPrimaryRef().getDb(), psiXREF.getPrimaryRef().getId());
+					if(px != null) 
+						evidence.addXref(px);
+				}
+			}
+					
+			// create comments
+			// from names (there is no biopax Evidence.name property)
+			if (experimentDescription.hasNames()) {
+				Names names = experimentDescription.getNames();
+				if(names.hasFullName())
+					evidence.addComment(names.getFullName().trim());
+				if(names.hasShortLabel())
+					evidence.addComment(names.getShortLabel().trim());
+			}
+			
+			// from attributes
+			if (experimentDescription.hasAttributes()) {
+				for(String attr : getAttributes(experimentDescription.getAttributes()))
+					evidence.addComment(attr.trim());
+			}
+
+			//add hostOrganism info to comments (there is no 'organism' property of Evidence, EF, etc)
+			if(experimentDescription.hasHostOrganisms()) {
+				for(Organism organism : experimentDescription.getHostOrganisms())
+					evidence.addComment("Host " + organism.toString());
+			}
+
+			// confidence list
+			if (experimentDescription.hasConfidences()) {
+				for (Confidence psiConfidence : experimentDescription.getConfidences()) {
+					Score bpScoreOrConfidence = getScoreOrConfidence(psiConfidence);
+					if (bpScoreOrConfidence != null) 
+						evidence.addConfidence(bpScoreOrConfidence);
+				}
+			}		
+			
+			// interaction detection method, participant detection method, feature detection method
+			Set<EvidenceCodeVocabulary> evidenceCodes = getEvidenceCodes(experimentDescription);			
+			if(evidenceCodes != null)
+				for(EvidenceCodeVocabulary ecv : evidenceCodes)
+					evidence.addEvidenceCode(ecv);
+			
+			evidences.add(evidence);
+		}
+		
+		return evidences;
+	}
+
+
 	private void addAvailabilityAndProvenance(Entity bpEntity,
 			Set<String> avail, Provenance pro) {
 		if(pro != null)
@@ -350,38 +448,96 @@ class EntryMapper {
 
 
 	/*
-	 * Converts PSIMI participant to BioPAX physical entity or gene
-	 * (also can make entity reference,
-	 * experimental forms with exp. entity features).
-	 *
-	 * Note:
-	 * psi.participantType -> PhysicalEntity or Gene
+	 * Converts a PSI-MI interaction's participant 
+	 * to a BioPAX physical entity or gene
+	 * and corresponding experimental form entities.
 	 */
-	private Entity createParticipant(Participant participant, Interaction interaction, Set<String> avail, Provenance pro) {
+	private Entity createBiopaxEntity(Participant participant, Set<String> avail, Provenance pro) 
+	{	
+		LOG.debug("createBiopaxEntity, processing participant: " + participant.getId());
 		
-		//PSIMI parser does not set 'interactorRef' (or clears it after all), but does set (or infer) 'interactor' (see junit tests).
-		Interactor interactor = null;
+		// create a new PE or Gene to be
+		Entity entity = null;
+	
+		// The PSI-MI parser does not set 'interactorRef' 
+		// (or it rather clears that property and updates 'interactor' prop. instead;  
+		// see junit tests).
 		if (participant.hasInteractor()) {
-			interactor = participant.getInteractor();
+			//participant.getInteractor() is not null
+			entity = createParticipant(participant, participant.getInteractor(), avail, pro, false);
 		} else if(participant.hasInteraction()) {
 			//hierarchical buildup of a complex (participant.hasInteraction==true)...
-			Complex c = (Complex) processInteraction(participant.getInteraction(), avail, pro, true);
-			return c; //done
+			entity = (Complex) processInteraction(participant.getInteraction(), avail, pro, true);
 		}
-
-		if (interactor == null) {
-			LOG.error("EntryMapper.createParticipant(): interactor cannot be found;"
-				+ " participant: " + participant.toString());
+				
+		if(entity == null) 
 			return null;
-		}
-
-		// Find or create the physical entity and entity reference -
 		
-		// figure out physical entity type (protein, dna, rna, small molecule)
-		String physicalEntityType = null;
+		//create new Evidence for this participant
+		Evidence participantEvidence = bpModel.getLevel().getDefaultFactory()
+			.create(Evidence.class, genUri(Evidence.class, bpModel) + "_p" + participant.getId());
+		
+		if(participant.hasExperimentalRoles() 
+			|| participant.hasExperimentalInteractors() 
+				|| participant.hasFeatures()) 
+		{
+			if(participant.hasExperimentalInteractors()) {
+				//create and collect experimental entities for current participant:
+				for(ExperimentalInteractor experimentalInteractor : participant.getExperimentalInteractors()) {
+					Interactor interactor = experimentalInteractor.getInteractor();
+					LOG.debug("createBiopaxEntity, participant: " + participant.getId() 
+							+ ", exp. interactor: " + interactor.getId());
+					Entity expEntity = createParticipant(participant, interactor, avail, pro, true);
+					assert expEntity!=null : "expEntity is null?!";
+					//workaround a PSI-MI parser issue (no exp. or exp.refs means to apply to all interaction's experiments):
+					if(experimentalInteractor.hasExperiments()) {
+						for(ExperimentDescription exp : experimentalInteractor.getExperiments()) {
+							LOG.debug("createBiopaxEntity, making EFs for exp: " 
+									+ exp.getId() + "; exp.ent: " + expEntity.getRDFId());
+							createAddExperimentalForm(participant, participantEvidence, expEntity, exp);
+							
+						}
+					} else {
+						LOG.debug("createBiopaxEntity, making a EForm - one for all experiments " 
+								+ "; exp.ent: " + expEntity.getRDFId());
+						createAddExperimentalForm(participant, participantEvidence, expEntity, null);
+					}
+				}		
+			} else {
+				LOG.debug("createBiopaxEntity, participant: " + participant.getId() 
+						+ " doesn't have any exp. interactors");
+				createAddExperimentalForm(participant, participantEvidence, null, null);
+			}
+			
+			//save the participant entity evidence if it's not empty (roles, forms were actually generated)
+			if(!participantEvidence.getExperimentalForm().isEmpty()) {
+				bpModel.add(participantEvidence);
+				entity.addEvidence(participantEvidence);
+			}
+		}
+	
+		return entity;
+	}
+	
+	/*
+	 * Converts a PSIMI participant to BioPAX physical entity or gene. 
+	 * It can be then used either as a participant of an interaction 
+	 * or exp. form entity of a exp. form of a participant's evidence,
+	 * depending on the caller method and the map provided.
+	 */
+	private Entity createParticipant(Participant participant, Interactor interactor, 
+			Set<String> avail, Provenance pro, boolean isExperimentalForm) 
+	{
+		if(interactor==null)
+			throw new AssertionError("createParticipant: participant: " 
+					+ participant.getId() + " has got null interactor");
+		
+		// Find or create the physical entity and entity reference -		
+		// figure out physical entity type (protein, dna, rna, small molecule, gene)
+		String entityType = null;
 		CvType interactorType = interactor.getInteractorType();
 		if (interactorType != null && interactorType.hasNames()) {
-			physicalEntityType = getName(interactorType.getNames());
+			entityType = getName(interactorType.getNames());
 		}
 
 		// get names/synonyms from the psimi interactor (participant does not have them)
@@ -410,27 +566,53 @@ class EntryMapper {
 		
 		// make one entity reference (ER) per unique interactor (merge duplicate/equivalent ones)
 		// make one physical entity (PE) per unique participant... 		
-		// (a unique state PE is defined by the ER and cell. location, but not by entity features - which are to go with ExperimentalForms)
-		
+		// (a unique state PE is defined by the ER and cell. location, but not by entity features - which are to go with ExperimentalForms)		
 		Class<? extends Entity> entityClass = Protein.class; //default
-		Class<? extends EntityReference> entityReferenceClass = ProteinReference.class; //default		
-		if ("small molecule".equalsIgnoreCase(physicalEntityType))
-		{
-			entityClass = SmallMolecule.class;
-			entityReferenceClass = SmallMoleculeReference.class;
-		} else if ("dna".equalsIgnoreCase(physicalEntityType))
-		{
-			entityClass = Dna.class;
-			entityReferenceClass = DnaReference.class;
-		} else if ("rna".equalsIgnoreCase(physicalEntityType))
-		{
-			entityClass = Rna.class;
-			entityReferenceClass = RnaReference.class;
-		} else if ("gene".equalsIgnoreCase(physicalEntityType))
-		{
-			entityClass = Gene.class;
-			entityReferenceClass = null;
-		} //else it's still a protein (peptides are proteins too)
+		Class<? extends EntityReference> entityReferenceClass = ProteinReference.class; //default
+		if(entityType!=null && !entityType.isEmpty()) {
+			//entityType should be a term from MI:0313 "interactor type" CV
+			entityType = entityType.toLowerCase();
+			if ("small molecule".equals(entityType)
+					|| "polysaccharide".equals(entityType)
+					|| "bioactive entity".equals(entityType))
+			{
+				entityClass = SmallMolecule.class;
+				entityReferenceClass = SmallMoleculeReference.class;
+			} else if ("dna".equals(entityType) 
+					|| "deoxyribonucleic acid".equals(entityType) 
+					|| entityType.contains("deoxyribonucleic")
+					|| entityType.contains("dna")
+					|| "nucleic acid".equals(entityType)) //when can't tell dna from rna? guess DNA
+			{
+				entityClass = Dna.class;
+				entityReferenceClass = DnaReference.class;
+			} else if ("rna".equals(entityType)
+					|| "ribonucleic acid".equals(entityType)
+					|| "poly adenine".equals(entityType)
+					|| entityType.contains("rna"))
+			{
+				entityClass = Rna.class;
+				entityReferenceClass = RnaReference.class;
+			} else if ("gene".equals(entityType))
+			{ //NOTE: Gene "gene" type is for Genetic Interactions only (not transcription/translation regulation, etc.), but...
+				entityClass = Gene.class;
+				entityReferenceClass = null;
+			} else if ("complex".equals(entityType) || entityType.contains("complex"))
+			{
+				entityClass = Complex.class;
+				entityReferenceClass = null;
+			} else if ("interaction".equals(entityType))
+			{
+//				entityClass = null;
+//				entityReferenceClass = null;
+				LOG.warn("EntryMapper.createParticipant(): skip for interactor: " + interactor.getId()
+						+ " that has type: " + entityType 
+						+ ", participant:" + participant.getId() + ").");
+				return null;
+			}
+						
+			//else - peptide, biopolymer, molecule set, unknown, etc. - consider this is a Protein.
+		}
 		
 		//make consistent biopax URI (for the entity ref., if applies, or phys. entity)
 		String entityUri = "";
@@ -526,9 +708,10 @@ class EntryMapper {
 				}
 			}
 				
-			//update the displayName if we've got to reuse the existing ER
-			if(entityReference == er && shortName != null) {
-				if (er.getDisplayName()!=null) {
+			//update the displayName if we've got to reuse the existing ER,
+			//and this is not an experimental interactor, and new name is shorter
+			if(entityReference == er && shortName != null && !isExperimentalForm) {
+				if(er.getDisplayName() != null) {
 					if(shortName.length() < er.getDisplayName().length()) {
 						entityReference.addName(er.getDisplayName()); //keep both names
 						entityReference.setDisplayName(shortName);
@@ -540,20 +723,24 @@ class EntryMapper {
 				}
 			}
 			
-			if (name != null) {
-				if(name.length() > 100 && //and there are other names
-						(entityReference.getDisplayName()!=null || (synonyms!=null && !synonyms.isEmpty())))
-					entityReference.addComment(name); //comment instead of 'standardName'
-				else		
-					entityReference.addName(name);
-			}
-			if (synonyms != null) {
-				for (String synonym : synonyms)
-					entityReference.addName(synonym);
-			}
-			if (bpXrefsOfInteractor != null) {
-				for (Xref xref : bpXrefsOfInteractor)
-					entityReference.addXref((Xref) xref);
+			// if we're not reusing existing ER, and this interactor is not experimental,
+			// copy names and xrefs to the exisiting ER
+			if( !(isExperimentalForm && entityReference == er) ) {
+				if (name != null) {
+					if(name.length() > 100 && //and there are other names
+							(entityReference.getDisplayName()!=null || (synonyms!=null && !synonyms.isEmpty())))
+						entityReference.addComment(name); //comment instead of 'standardName'
+					else		
+						entityReference.addName(name);
+				}
+				if (synonyms != null) {
+					for (String synonym : synonyms)
+						entityReference.addName(synonym);
+				}
+				if (bpXrefsOfInteractor != null) {
+					for (Xref xref : bpXrefsOfInteractor)
+						entityReference.addXref((Xref) xref);
+				}
 			}
 			
 			// set ER
@@ -574,14 +761,39 @@ class EntryMapper {
 			((Gene)entity).setOrganism(bioSource);
 		}
 		
-		//try to avoid duplicate physical entities or genes
+		//Merge some of equivalent entities to avoid unnecessary duplicates 
+		// CAREFULLY, e.g.:
+		// - never merge a participant entity with an experimental form entity,
+		// - never merge if one entity have evidence, etc.
+		//(equiv. ERs are being merged regardless this)
+		//Merging entities (states) can mess up names, features, exp. roles!
+		if(isExperimentalForm)
+			entity.addComment(EXPERIMENTAL_FORM_ENTITY_COMMENT);
+		else
+			entity.addComment("psi-mi participant");
+		
 		boolean hasEquivalentEntity = false;
-		for(BioPAXElement ety : bpModel.getObjects(entity.getModelInterface())) {
-			if(ety.isEquivalent(entity)) {
-				entity = (Entity) ety;
-				hasEquivalentEntity = true;
-				break;
-			}	
+		for(Entity existingEntity : bpModel.getObjects(entityClass)) {
+			// replace with an existing equivalent entity iif
+			if( (//both are not experimental form entities 
+				 !isExperimentalForm 
+				 && !existingEntity.getComment().contains(EXPERIMENTAL_FORM_ENTITY_COMMENT)
+				 && existingEntity.getEvidence().isEmpty() //and there are no evidence
+				)
+				|| 
+				(//both are experimental form entities 
+				 isExperimentalForm 
+				 && existingEntity.getComment().contains(EXPERIMENTAL_FORM_ENTITY_COMMENT)
+				 	//and if disp.names match: names like 'GST-Max' are often used to describe states, instead of using other psi-mi features...
+				 && entity.getDisplayName().equalsIgnoreCase(existingEntity.getDisplayName())
+				)
+			){	
+				if(existingEntity.isEquivalent(entity)) {
+					entity = (Entity) existingEntity;
+					hasEquivalentEntity = true;
+					break;
+				}
+			}
 		}
 		
 		if(!hasEquivalentEntity)
@@ -609,29 +821,6 @@ class EntryMapper {
 				||
 				a.getDisplayName()!=null && a.getDisplayName().equalsIgnoreCase(b.getDisplayName())
 			);
-	}
-
-
-	/*
-	 * Given a psi feature list,
-	 * adds biopax entity features 
-	 * to the experimental form.
-	 */
-	private void addFeatures(ExperimentalForm ef, Collection<Feature> psiFeatureList) {
-
-		if (psiFeatureList == null || psiFeatureList.isEmpty()) 
-			return;
-
-		for (Feature psiFeature : psiFeatureList) {
-			if(psiFeature==null) continue;
-			
-			//TODO consider BindingFeature in some cases?..
-			Class<? extends EntityFeature> featureClass = ModificationFeature.class; 		
-			
-			EntityFeature feature = getFeature(featureClass, psiFeature);			
-			if(feature != null) 
-				ef.addExperimentalFeature(feature);
-		}
 	}
 
 	
@@ -799,48 +988,56 @@ class EntryMapper {
 
 		// check args
 		if (psiXREF == null) return toReturn;
-
-		// create the list of all psimi xrefs
-		List<DbReference> psiDBRefList = new ArrayList<DbReference>();
-		psiDBRefList.add(psiXREF.getPrimaryRef());
 		
+		// create the list of all other psimi xrefs
+		List<DbReference> psiDBRefList = new ArrayList<DbReference>();
+		
+		psiDBRefList.add(psiXREF.getPrimaryRef());
 		if (psiXREF.hasSecondaryRef()) {
 			psiDBRefList.addAll(psiXREF.getSecondaryRef());
 		}
 
-		for (DbReference psiDBRef : psiDBRefList) {
-			if(psiDBRef==null) 
+		for (DbReference psiref : psiDBRefList) {
+			if(psiref==null) 
 				continue;
-			
-			// process ref type
-			String refType = (psiDBRef.hasRefType()) ? psiDBRef.getRefType() : null;
-			String refTypeAc = (psiDBRef.hasRefTypeAc()) ? psiDBRef.getRefTypeAc() : null;
-            String psiDBRefId = psiDBRef.getId();
-            String psiDBRefDb = psiDBRef.getDb();
-            // If multiple ids given with comma separated values, then split them.
-            for (String dbRefId : psiDBRefId.split(",")) {
-            	
-            	Xref bpXref = null;
-                if ("identity".equals(refType) || "identical object".equals(refType)) {
-                    bpXref = unificationXref(psiDBRefDb, dbRefId);
-                } 
-                else if("secondary-ac".equals(refType) ) {
-                	bpXref = unificationXref(psiDBRefDb, dbRefId);
-                } 
-                else if(!"pubmed".equalsIgnoreCase(psiDBRefDb)) {
-                	bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
-                }
-                else {
-                	//TODO shall we skip PublicationXref here (IntAct puts the same PSIMI paper pmid everywhere...)?
-            		bpXref = publicationXref(psiDBRefDb, dbRefId);
-                }
-
-                if (bpXref != null) 
-                    toReturn.add(bpXref);
-            }
+			xref(psiref, toReturn);
         }
 
 		return toReturn;
+	}
+
+
+	private void xref(DbReference psiref, Set<Xref> bpXrefs) {
+		// process ref type
+		String refType = (psiref.hasRefType()) ? psiref.getRefType() : null;
+		String refTypeAc = (psiref.hasRefTypeAc()) ? psiref.getRefTypeAc() : null;
+        String psiDBRefId = psiref.getId();
+        String psiDBRefDb = psiref.getDb();
+        // If multiple ids given with comma separated values, then split them.
+        for (String dbRefId : psiDBRefId.split(",")) {	
+        	Xref bpXref = null;
+        	
+// Let's never make UnificationXref - RelationshipXref is more safe and makes sense 
+// (e.g., often an entrez gene or omim ID is a protein's Xref id with 'identity' ref. type)
+//            if ("identity".equals(refType) || "identical object".equals(refType)) {
+//                bpXref = unificationXref(psiDBRefDb, dbRefId);
+//            } 
+//            else if("secondary-ac".equals(refType) ) {
+//            	bpXref = unificationXref(psiDBRefDb, dbRefId);
+//            } 
+//            else        	
+            if(!"pubmed".equalsIgnoreCase(psiDBRefDb)) {
+            	bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
+            }
+            else {
+            	//TODO shall we skip PublicationXref here (IntAct puts the same PSIMI paper pmid everywhere...)?
+        		bpXref = publicationXref(psiDBRefDb, dbRefId);
+            }
+
+            if (bpXref != null) 
+            	bpXrefs.add(bpXref);
+        }
+		
 	}
 
 
@@ -942,11 +1139,7 @@ class EntryMapper {
 
 
 	private String encode(String id) {
-		try {
-			return URLEncoder.encode(id, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return URLEncoder.encode(id);
-		}
+			return id.replaceAll("[^-\\w]", "_");
 	}
 
 
@@ -959,9 +1152,16 @@ class EntryMapper {
 
 		// get experiment methods
 		Set<CvType> cvTypeSet = new HashSet<CvType>(3);
-		cvTypeSet.add(experimentDescription.getInteractionDetectionMethod());
-		cvTypeSet.add(experimentDescription.getParticipantIdentificationMethod());
-		cvTypeSet.add(experimentDescription.getFeatureDetectionMethod());
+		//skip if "unspecified method" (MI:0686) is the interaction detection method
+		if(experimentDescription.getInteractionDetectionMethod() != null 
+				&& !"MI:0686".equalsIgnoreCase(experimentDescription.getInteractionDetectionMethod().getXref().getPrimaryRef().getId()))
+			cvTypeSet.add(experimentDescription.getInteractionDetectionMethod());
+		if(experimentDescription.getParticipantIdentificationMethod() != null 
+				&& !"MI:0686".equalsIgnoreCase(experimentDescription.getParticipantIdentificationMethod().getXref().getPrimaryRef().getId()))
+			cvTypeSet.add(experimentDescription.getParticipantIdentificationMethod());
+		if(experimentDescription.getFeatureDetectionMethod() != null 
+				&& !"MI:0686".equalsIgnoreCase(experimentDescription.getFeatureDetectionMethod().getXref().getPrimaryRef().getId()))
+			cvTypeSet.add(experimentDescription.getFeatureDetectionMethod());
 
 		// create openControlledVocabulary objects for each detection method
 		for (CvType cvtype : cvTypeSet) {
@@ -1039,63 +1239,84 @@ class EntryMapper {
 		return toReturn;
 	}
 
-	/*
-	 * Given psi-mi interaction and experiment, returns the set of experimental forms.
+	/* Builds a new ExperimentalForm.
+	 * 
+	 * @param expEntity - if null, then either the interaction participant entity
+	 * 					itsef is the experimental entity, or exp. interactor is unspecified;
+	 * 					in both cases we set ExperimentalForm.experimentalFormEntity to null
+	 * 					to avoid endless loop: entity/evidence/form/entity/evidence/...
+	 * @param participant - PSI-MI interaction's participant object;
+	 * @param exp - interaction's experiment desc. or null (which actually means all experiments)
 	 */
-	private Set<ExperimentalForm> getExperimentalForms(Interaction interaction, ExperimentDescription experimentDescription) 
-	{
-		Set<ExperimentalForm> experimentalForms = new HashSet<ExperimentalForm>();		
-
-		// interate through the psi participants, get experimental role
-		for (Participant participant : interaction.getParticipants()) {
-			// get participant - may be used in following loop
-			Entity bpParticipant = participantMap.get(participant);			
-			assert bpParticipant != null : "participantMap has now entry for a psimi participant key";
-						
-			// get experimental role list
-			if (participant.hasExperimentalRoles()) {
-				for (ExperimentalRole experimentalRole : participant.getExperimentalRoles()) {
-					// according to psi-mi, no experimentalRefs means the participant plays in all experiments of the interaction;
-					// (btw, no <experimentList> is defined under <experimentalRole> according to the xml schema)
-					
-					if (experimentalRole.hasExperiments() && !experimentalRole.getExperiments().contains(experimentDescription))
-						continue; //skip: current experimentDescription is not listed in the not empty <experimentRefs> set
-					
-					//create or find and add the ExperimentalFormVocabulary
-					ExperimentalFormVocabulary efv = 
-						findOrCreateControlledVocabulary(experimentalRole, ExperimentalFormVocabulary.class);
-					//create a EF
-					String efUri = genUri(ExperimentalForm.class, bpModel) + 
-							"_e" + experimentDescription.getId() + 
-							"_i" + interaction.getId();
-					ExperimentalForm experimentalForm =
-							bpModel.addNew(ExperimentalForm.class, efUri);	
-					experimentalForm.addExperimentalFormDescription(efv);						
-					//only Gene or PE is in fact allowed to be set
-					experimentalForm.setExperimentalFormEntity(bpParticipant);
-					if(participant.hasExperimentalInteractors()) {
-						//TODO do something about each experimentalInteractor (create/use other entities instead of bpParticipant?)
-					}
-					experimentalForms.add(experimentalForm);
-						
-					//using participant.getFeatures(), set the ExperimentalForm/experimentalFeature values									
-					addFeatures(experimentalForm, participant.getFeatures());						
+	private void createAddExperimentalForm(Participant participant, 
+			Evidence pEvidence, Entity expEntity, ExperimentDescription exp) 
+	{	 		
+		Set<EntityFeature> efs = new HashSet<EntityFeature>();
+		for(Feature f : participant.getFeatures()) {
+			if(exp==null || f.getExperiments().contains(exp) || f.getExperiments().isEmpty()) {
+				EntityFeature feature = getFeature(ModificationFeature.class, f);			
+				if(feature != null) {
+					efs.add(feature);
 				}
 			}
 		}
 
-		return experimentalForms;
+		Set<ExperimentalFormVocabulary> efvs = new HashSet<ExperimentalFormVocabulary>();
+		if (participant.hasExperimentalRoles()) {
+			for (ExperimentalRole role : participant.getExperimentalRoles()) {
+				if(exp==null || role.getExperiments().contains(exp) || role.getExperiments().isEmpty()) {
+					//create/find ExperimentalFormVocabulary (skip for "unspecified role")
+					ExperimentalFormVocabulary efv = null;
+					//if(experimentalRole.hasNames() && !"unspecified role".equalsIgnoreCase(experimentalRole.getNames().getShortLabel()))
+					if(role.getXref() != null && !"MI:0499".equalsIgnoreCase(role.getXref().getPrimaryRef().getId())) {
+						efv = findOrCreateControlledVocabulary(role, ExperimentalFormVocabulary.class);
+						if(efv != null) {
+							efvs.add(efv);
+						}
+					}
+				}
+			}
+		}
+		
+		if( efs.isEmpty() && efvs.isEmpty() && expEntity == null)
+			return; //skip creating empty useless ExperimentalForm		
+		
+		ExperimentalForm ef = bpModel.addNew(ExperimentalForm.class, genUri(ExperimentalForm.class, bpModel));	
+		
+		//add all exp. features to the exp. form
+		if(!efs.isEmpty()) {
+			ef.addComment(efs.toString());
+			for(EntityFeature f : efs)
+				ef.addExperimentalFeature(f);
+		}
+		
+		//add all exp. form vocabularies (roles) to the exp. form
+		if(!efvs.isEmpty()) {
+			ef.addComment(efvs.toString());
+			for(ExperimentalFormVocabulary efv : efvs)
+				ef.addExperimentalFormDescription(efv);
+		}
+				
+		if(expEntity != null) {
+			ef.setExperimentalFormEntity(expEntity);
+			ef.addComment(EXPERIMENTAL_FORM_ENTITY_COMMENT + ": " + expEntity.getDisplayName());
+		}
+
+		//add the ef to participant's evidence
+		pEvidence.addExperimentalForm(ef);
+
 	}
 
 	/*
 	 * Given a PSI Names object, returns a name.
 	 */
 	private String getName(Names name) {		
-		if (name.hasFullName()) {
-			return name.getFullName();
-		}
-		else if (name.hasShortLabel()) {
+
+		if (name.hasShortLabel()) {
 			return name.getShortLabel();
+		}
+		else if (name.hasFullName()) {
+			return name.getFullName();
 		}
 
 		return null;
@@ -1151,77 +1372,7 @@ class EntryMapper {
         
 		return x;
 	}
-	
 
-	/*
-	 * Builds an Evidence object.
-	 */
-	private Evidence createEvidence(Interaction interaction, ExperimentDescription experimentDescription)
-	{
-		String evUri = genUri(Evidence.class, bpModel) + 
-				"_i" + interaction.getId() + "_e" + experimentDescription.getId();
-		Evidence evidence = bpModel.addNew(Evidence.class, evUri);
-
-		if (experimentDescription.hasXref()) {
-			for(Xref xref : getXrefs(experimentDescription.getXref()))
-				evidence.addXref(xref);
-		}
-		if (experimentDescription.getBibref() != null) {
-			psidev.psi.mi.xml.model.Xref psiXREF = experimentDescription.getBibref().getXref();
-			if (psiXREF != null) {
-				PublicationXref px = publicationXref(psiXREF.getPrimaryRef().getDb(), psiXREF.getPrimaryRef().getId());
-				if(px != null) 
-					evidence.addXref(px);
-			}
-		}
-				
-		// create comments
-		// from names (there is no biopax Evidence.name property)
-		if (experimentDescription.hasNames()) {
-			Names names = experimentDescription.getNames();
-			if(names.hasFullName())
-				evidence.addComment(names.getFullName().trim());
-			if(names.hasShortLabel())
-				evidence.addComment(names.getShortLabel().trim());
-		}
-		// from attributes
-		if (experimentDescription.hasAttributes()) {
-			for(String attr : getAttributes(experimentDescription.getAttributes()))
-				evidence.addComment(attr.trim());
-		}
-
-		//add hostOrganism info to comments (there is no 'organism' property of Evidence, EF, etc)
-		if(experimentDescription.hasHostOrganisms()) {
-			for(Organism organism : experimentDescription.getHostOrganisms())
-				evidence.addComment("Host " + organism.toString());
-		}
-
-		// confidence list
-		if (experimentDescription.hasConfidences()) {
-			for (Confidence psiConfidence : experimentDescription.getConfidences()) {
-				Score bpScoreOrConfidence = getScoreOrConfidence(psiConfidence);
-				if (bpScoreOrConfidence != null) 
-					evidence.addConfidence(bpScoreOrConfidence);
-			}
-		}		
-		
-		// TODO create/add experimental forms
-		//Set<ExperimentalForm> experimentalForms = getExperimentalForms(interaction, experimentDescription);
-		//TODO for entity features of these experimental forms, set BindingFeature.bindsTo (when <interaction><inferredInteractionList> elements are present, e.g., see IntAct)	
-//		if (experimentalForms != null && !experimentalForms.isEmpty()) {
-//			for (ExperimentalForm experimentalForm : experimentalForms) {
-//				evidence.addExperimentalForm(experimentalForm);
-//			}
-//		}
-
-		// interaction detection method, participant detection method, feature detection method
-		Set<EvidenceCodeVocabulary> evidenceCodes = getEvidenceCodes(experimentDescription);			
-		if(evidenceCodes != null)
-			for(EvidenceCodeVocabulary ecv : evidenceCodes)
-				evidence.addEvidenceCode(ecv);
-			
-		return evidence;
-	}
 
 	/*
 	 * Gets a confidence/score object.
@@ -1255,7 +1406,6 @@ class EntryMapper {
 	 */
 	private MolecularInteraction createMolecularInteraction(
 			Set<? extends Entity> participants,
-			Set<Evidence> bpEvidence,
 			Set<InteractionVocabulary> interactionVocabularies)
 	{
 		MolecularInteraction toReturn =
@@ -1265,12 +1415,6 @@ class EntryMapper {
 		{
 			for (Entity participant : participants) {
 				toReturn.addParticipant((PhysicalEntity)participant);
-			}
-		}
-		if (bpEvidence != null && !bpEvidence.isEmpty())
-		{
-			for (Evidence evidence : bpEvidence) {
-				toReturn.addEvidence(evidence);
 			}
 		}
 			
@@ -1283,7 +1427,6 @@ class EntryMapper {
 	
 	private GeneticInteraction createGeneticInteraction(
 			Set<? extends Entity> participants,
-			Set<Evidence> bpEvidence,
 			Set<InteractionVocabulary> interactionVocabularies)
 	{
 		GeneticInteraction toReturn =
@@ -1295,12 +1438,6 @@ class EntryMapper {
 				toReturn.addParticipant((Gene)participant);
 			}
 		}
-		if (bpEvidence != null && !bpEvidence.isEmpty())
-		{
-			for (Evidence evidence : bpEvidence) {
-				toReturn.addEvidence(evidence);
-			}
-		}
 
 		for(InteractionVocabulary iv : interactionVocabularies) {
 			toReturn.addInteractionType(iv);
@@ -1310,9 +1447,7 @@ class EntryMapper {
 	}
 
 
-	private Complex createComplex(
-			Set<? extends Entity> participants,
-			Set<Evidence> bpEvidence)
+	private Complex createComplex(Set<? extends Entity> participants)
 	{
 		Complex toReturn = bpModel.addNew(Complex.class, genUri(Complex.class, bpModel));
 
@@ -1320,12 +1455,6 @@ class EntryMapper {
 		{
 			for (Entity participant : participants) {
 				toReturn.addComponent((PhysicalEntity)participant);
-			}
-		}
-		if (bpEvidence != null && !bpEvidence.isEmpty())
-		{
-			for (Evidence evidence : bpEvidence) {
-				toReturn.addEvidence(evidence);
 			}
 		}
 			
