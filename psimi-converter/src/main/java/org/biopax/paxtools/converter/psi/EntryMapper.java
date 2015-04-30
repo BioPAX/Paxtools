@@ -488,7 +488,13 @@ class EntryMapper {
 					LOG.debug("createBiopaxEntity, participant: " + participant.getId() 
 							+ ", exp. interactor: " + interactor.getId());
 					Entity expEntity = createParticipant(participant, interactor, avail, pro, true);
-					assert expEntity!=null : "expEntity is null?!";
+					assert expEntity!=null : "expEntity is null";
+					
+					//try to reuse existing experimental form entity
+					expEntity = findEquivalentEntity(expEntity);
+					if(!bpModel.contains(expEntity))
+						bpModel.add(expEntity);
+					
 					//workaround a PSI-MI parser issue (no exp. or exp.refs means to apply to all interaction's experiments):
 					if(experimentalInteractor.hasExperiments()) {
 						for(ExperimentDescription exp : experimentalInteractor.getExperiments()) {
@@ -513,17 +519,73 @@ class EntryMapper {
 			if(!participantEvidence.getExperimentalForm().isEmpty()) {
 				bpModel.add(participantEvidence);
 				entity.addEvidence(participantEvidence);
+				//do not call findEquivalentEntity(entity) for this one having not empty evidence
+			} else {
+				//try to merge/reuse existing equivalent entity
+				entity = findEquivalentEntity(entity);
 			}
 		}
 	
+		//finally, add, if new, entity to the model and return
+		if(!bpModel.contains(entity))
+			bpModel.add(entity);
+		
 		return entity;
 	}
 	
+	
+	/*
+	 * Carefully find an existing equivalent physical entity or gene  
+	 * or return the same one unchanged.
+	 */
+	private Entity findEquivalentEntity(final Entity entity) {
+		Entity toReturn = entity;
+		
+		Class<? extends Entity> entityClass = PhysicalEntity.class;
+		if(entity instanceof Gene)
+			entityClass = Gene.class;
+		
+		for(Entity existingEntity : bpModel.getObjects(entityClass)) {
+			// replace with an existing equivalent entity iif
+			if( (//both are not experimental form entities
+				 !entity.getComment().contains(EXPERIMENTAL_FORM_ENTITY_COMMENT)
+				 && !existingEntity.getComment().contains(EXPERIMENTAL_FORM_ENTITY_COMMENT)
+				)
+				|| 
+				(//both are experimental form entities
+				 entity.getComment().contains(EXPERIMENTAL_FORM_ENTITY_COMMENT)
+				 && existingEntity.getComment().contains(EXPERIMENTAL_FORM_ENTITY_COMMENT)
+				 //and if disp.names match: names like 'GST-Max' are often used to describe states, instead of using other psi-mi features...
+				 && entity.getDisplayName().equalsIgnoreCase(existingEntity.getDisplayName())
+				)
+			){	
+				//and if there are no evidences yet, and the two are equivalent, then return existing one (to replace the entity)
+				if(existingEntity.getEvidence().isEmpty() && entity.getEvidence().isEmpty() 
+						&& existingEntity.isEquivalent(entity)) {
+					toReturn = (Entity) existingEntity;
+					break;
+				}
+			}
+		}
+		
+		return toReturn;
+	}
+
+
 	/*
 	 * Converts a PSIMI participant to BioPAX physical entity or gene. 
 	 * It can be then used either as a participant of an interaction 
 	 * or exp. form entity of a exp. form of a participant's evidence,
 	 * depending on the caller method and the map provided.
+	 * The result entity is not added to the model yet (but its entity reference, 
+	 * if applicable, Xrefs, CVs are added to the model).
+	 * 
+	 * @param participant - of a PSI-MI interaction
+	 * @param interactor - participant's interactor or experimental interactor's interactor
+	 * @param avail - (biopax) availability
+	 * @param pro - (biopax) provenance
+	 * @param isExperimentalForm - a flag that controls entity's key comments (important)  
+	 * 							 and how entity references are merged (e.g., copy names or not)
 	 */
 	private Entity createParticipant(Participant participant, Interactor interactor, 
 			Set<String> avail, Provenance pro, boolean isExperimentalForm) 
@@ -771,33 +833,6 @@ class EntryMapper {
 			entity.addComment(EXPERIMENTAL_FORM_ENTITY_COMMENT);
 		else
 			entity.addComment("psi-mi participant");
-		
-		boolean hasEquivalentEntity = false;
-		for(Entity existingEntity : bpModel.getObjects(entityClass)) {
-			// replace with an existing equivalent entity iif
-			if( (//both are not experimental form entities 
-				 !isExperimentalForm 
-				 && !existingEntity.getComment().contains(EXPERIMENTAL_FORM_ENTITY_COMMENT)
-				 && existingEntity.getEvidence().isEmpty() //and there are no evidence
-				)
-				|| 
-				(//both are experimental form entities 
-				 isExperimentalForm 
-				 && existingEntity.getComment().contains(EXPERIMENTAL_FORM_ENTITY_COMMENT)
-				 	//and if disp.names match: names like 'GST-Max' are often used to describe states, instead of using other psi-mi features...
-				 && entity.getDisplayName().equalsIgnoreCase(existingEntity.getDisplayName())
-				)
-			){	
-				if(existingEntity.isEquivalent(entity)) {
-					entity = (Entity) existingEntity;
-					hasEquivalentEntity = true;
-					break;
-				}
-			}
-		}
-		
-		if(!hasEquivalentEntity)
-			bpModel.add(entity);
 		
 		return entity;
 	}
