@@ -615,7 +615,7 @@ public class PatternBox
 	}
 
 	/**
-	 * Constructs a pattern where first and last proteins are participants of a
+	 * Constructs a pattern where first and last molecules are participants of a
 	 * MolecularInteraction.
 	 * @return the pattern
 	 */
@@ -628,6 +628,11 @@ public class PatternBox
 		p.add(new PathConstraint("PhysicalEntity/participantOf:MolecularInteraction"), "PE1", "MI");
 		p.add(participant(), "MI", "PE2");
 		p.add(equal(false), "PE1", "PE2");
+
+		// participants are not both baits or preys
+		p.add(new NOT(new AND(new MappedConst(isPrey(), 0), new MappedConst(isPrey(), 1))), "PE1", "PE2");
+		p.add(new NOT(new AND(new MappedConst(isBait(), 0), new MappedConst(isBait(), 1))), "PE1", "PE2");
+
 		p.add(linkToSpecific(), "PE2", "SPE2");
 		p.add(type(SequenceEntity.class), "SPE2");
 		p.add(new PEChainsIntersect(false), "SPE1", "PE1", "SPE2", "PE2");

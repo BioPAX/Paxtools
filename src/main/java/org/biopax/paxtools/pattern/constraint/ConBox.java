@@ -626,4 +626,24 @@ public class ConBox
 		String acStr = "PhysicalEntity/cellularLocation/term";
 		return new Field(acStr, acStr, Field.Operation.NOT_EMPTY_AND_NOT_INTERSECT);
 	}
+
+	/**
+	 * Checks if the molecule is a prey of a Y2H experiment.
+	 * @return the constraint
+	 */
+	public static Constraint isPrey()
+	{
+		return new Field("PhysicalEntity/evidence/experimentalForm/experimentalFormDescription/term",
+			Field.Operation.INTERSECT, "prey");
+	}
+
+	/**
+	 * Checks if the molecule is a bait of a Y2H experiment.
+	 * @return the constraint
+	 */
+	public static Constraint isBait()
+	{
+		return new Field("PhysicalEntity/evidence/experimentalForm/experimentalFormDescription/term",
+			Field.Operation.INTERSECT, "bait");
+	}
 }
