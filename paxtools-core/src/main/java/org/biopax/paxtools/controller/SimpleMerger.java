@@ -115,7 +115,7 @@ public class SimpleMerger
 				 * properties with the corresponding ones from the source, even
 				 * though SimpleMerger is not supposed to do this; also, is such cases,
 				 * the number of times this loop body is called can be less that
-				 * the number of elements in sourceElements set that were't
+				 * the number of elements in sourceElements set that weren't
 				 * originally present in the target model, or - even equals to
 				 * one)
 				 */
@@ -148,35 +148,39 @@ public class SimpleMerger
 
 	/**
 	 * Updates each value of <em>existing</em> element, using the value(s) of <em>update</em>.
-	 * @param update BioPAX element of which values are used for update
+	 * @param source BioPAX element of which values are used for update
+	 * @param target
 	 */
-	private void updateObjectFields(BioPAXElement update, Model target)
+	private void updateObjectFields(BioPAXElement source, Model target)
 	{
-		Set<PropertyEditor> editors = map.getEditorsOf(update);
+		Set<PropertyEditor> editors = map.getEditorsOf(source);
 		for (PropertyEditor editor : editors)
 		{
 			if (editor instanceof ObjectPropertyEditor)
 			{
 				Set<BioPAXElement> values = new HashSet<BioPAXElement>(
-					(Set<BioPAXElement>) editor.getValueFromBean(update));
+					(Set<BioPAXElement>) editor.getValueFromBean(source));
 				for (BioPAXElement value : values) // threw concurrent modification exception here; fixed above.
 				{
-					migrateToTarget(update, target, editor, value);
+					migrateToTarget(source, target, editor, value);
 				}
 			}
 		}
 	}
 	
 
-	private void migrateToTarget(BioPAXElement update, Model target, PropertyEditor editor, BioPAXElement value)
+	private void migrateToTarget(BioPAXElement source, Model target, PropertyEditor editor, BioPAXElement value)
 	{
 		if (value != null)
 		{
-			BioPAXElement newValue = target.getByID(value.getRDFId());			
+			BioPAXElement newValue = target.getByID(value.getRDFId());
+			//not null at this point, because every source element was found 
+			//and either added to the target model, or target had an object with the same URI (to replace this value).
 			assert newValue != null : "'newValue' is null (there's a design flow in the 'merge' method)";
+			
 			if (newValue != null && newValue != value) {//not using 'equals' here intentionally
-				editor.removeValueFromBean(value, update);
-				editor.setValueToBean(newValue, update);
+				editor.removeValueFromBean(value, source);
+				editor.setValueToBean(newValue, source);
 			} 
 		}
 	}
