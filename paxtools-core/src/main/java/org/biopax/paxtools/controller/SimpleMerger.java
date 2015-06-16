@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.util.Filter;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,23 +12,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This is a "simple" BioPAX merger, a utility class to merge
+ * A "simple" BioPAX merger, a utility class to merge
  * 'source' BioPAX models or a set of elements into the target model,
- * using the RDFId (URI) identity only. Merging into a normalized,
- * self-consistent model normally gives "better" results 
+ * using (URI) identity only. Merging into a normalized,
+ * self-consistent model normally gives better results 
  * (it depends on the application though).
  * 
  * One can also "merge" a model to itself, i.e.: merge(target,target),
  * or to an empty one, which adds all implicit child elements 
- * to the model and makes it complete.
+ * to the model and makes it self-integral.
  * 
- * Note, "RDFId (URI) identity" means that it skips, i.e., does not copy
- * a source's element to the target model, if the target already contains the element 
- * with the same URI. However, it will update (re-wire) all the object properties
- * to make sure they do not refer to objects outside the updated target model anymore.
+ * Note, "URI identity" means that it does not copy
+ * a source element to the target model if the target already has an element 
+ * with the same URI. However, it will update (re-wire) all the object 
+ * properties of new elements to make sure they do not refer to any objects 
+ * outside the updated target model.
  * 
- * We not guarantee the integrity of the source models after the merge is done
- * (those may be still usable; all object properties will refer to target's elements).
+ * We do not guarantee the integrity of the source models after the merge is done
+ * (some object properties will refer to target elements).
  * 
  * Finally, although called Simple Merger, it is in fact an advanced BioPAX utility,
  * which should be used wisely. Otherwise, it can actually waste resources.
@@ -40,6 +42,8 @@ public class SimpleMerger
 	private static final Log LOG = LogFactory.getLog(SimpleMerger.class);
 
 	private final EditorMap map;
+	
+	private Filter<BioPAXElement> mergeObjPropOf;
 
 	/**
 	 * @param map a class to editor map for the elements to be modified.
@@ -49,6 +53,20 @@ public class SimpleMerger
 		this.map = map;
 	}
 
+	/** 
+	 * @param map a class to editor map for the elements to be modified.
+	 * @param mergeObjPropOf when not null, all multiple-cardinality object properties 
+	 * 						of a source biopax object that passes this filter are updated
+	 * 						and also copied to the corresponding (same URI) target object,
+	 *                      unless the source and target are the same thing 
+	 *                      (in which case, we simply migrate object properties 
+	 *                      to target model objects). 
+	 */
+	public SimpleMerger(EditorMap map, Filter<BioPAXElement> mergeObjPropOf)
+	{
+		this(map);
+		this.mergeObjPropOf = mergeObjPropOf;
+	}
 
 	/**
 	 * Merges the <em>source</em> models into <em>target</em> model,
@@ -153,16 +171,35 @@ public class SimpleMerger
 	 */
 	private void updateObjectFields(BioPAXElement source, Model target)
 	{
+		//Skip if target model had another object with the same URI, 
+		//provided that "always copy" filters were not set;
+		//i.e., source is to be entirely replaced with another object 
+		//with the same URI already present in the target model.
+		BioPAXElement keep = target.getByID(source.getRDFId());
+		if(keep != source && mergeObjPropOf==null) 
+		{
+			return; //nothing to do
+		}
+		
 		Set<PropertyEditor> editors = map.getEditorsOf(source);
 		for (PropertyEditor editor : editors)
 		{
 			if (editor instanceof ObjectPropertyEditor)
 			{
+				//copy set of prop. values (to avoid concurrent modification exception)
 				Set<BioPAXElement> values = new HashSet<BioPAXElement>(
-					(Set<BioPAXElement>) editor.getValueFromBean(source));
-				for (BioPAXElement value : values) // threw concurrent modification exception here; fixed above.
+						(Set<BioPAXElement>) editor.getValueFromBean(source));
+				if(keep == source) 
 				{
-					migrateToTarget(source, target, editor, value);
+					for (BioPAXElement value : values) {
+						migrateToTarget(source, target, editor, value);
+					}
+				} else if(mergeObjPropOf!=null && mergeObjPropOf.filter(source)
+						&& editor.isMultipleCardinality()) //copy only for mul. card. props
+				{
+					for (BioPAXElement value : values) {
+						mergeToTarget(keep, target, editor, value);
+					}
 				}
 			}
 		}
@@ -176,12 +213,20 @@ public class SimpleMerger
 			BioPAXElement newValue = target.getByID(value.getRDFId());
 			//not null at this point, because every source element was found 
 			//and either added to the target model, or target had an object with the same URI (to replace this value).
-			assert newValue != null : "'newValue' is null (there's a design flow in the 'merge' method)";
-			
-			if (newValue != null && newValue != value) {//not using 'equals' here intentionally
+			assert newValue != null : "'newValue' is null (a design flaw in the 'merge' method)";		
+			if (newValue != value) { //not using 'equals' intentionally
 				editor.removeValueFromBean(value, source);
 				editor.setValueToBean(newValue, source);
 			} 
+		}
+	}
+	
+	private void mergeToTarget(BioPAXElement targetElement, Model target, PropertyEditor editor, BioPAXElement value)
+	{
+		if (value != null) {
+			BioPAXElement newValue = target.getByID(value.getRDFId());
+			editor.removeValueFromBean(newValue, targetElement);
+			editor.setValueToBean(newValue, targetElement);
 		}
 	}
 
