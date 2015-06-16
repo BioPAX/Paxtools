@@ -55,7 +55,7 @@ public class SimpleMerger
 
 	/** 
 	 * @param map a class to editor map for the elements to be modified.
-	 * @param mergeObjPropOf when not null, all multiple-cardinality object properties 
+	 * @param mergeObjPropOf when not null, all multiple-cardinality properties 
 	 * 						of a source biopax object that passes this filter are updated
 	 * 						and also copied to the corresponding (same URI) target object,
 	 *                      unless the source and target are the same thing 
@@ -201,6 +201,15 @@ public class SimpleMerger
 						mergeToTarget(keep, target, editor, value);
 					}
 				}
+			} else //primitive or string property editor (e.g., comment, name)
+				if(mergeObjPropOf!=null && mergeObjPropOf.filter(source)
+					&& editor.isMultipleCardinality()) //copy only for mul. card. props
+			{
+				Set<Object> values = new HashSet<Object>(
+						(Set<Object>) editor.getValueFromBean(source));
+				for (Object value : values) {
+					mergeToTarget(keep, target, editor, value);
+				}
 			}
 		}
 	}
@@ -221,10 +230,11 @@ public class SimpleMerger
 		}
 	}
 	
-	private void mergeToTarget(BioPAXElement targetElement, Model target, PropertyEditor editor, BioPAXElement value)
+	private void mergeToTarget(BioPAXElement targetElement, Model target, PropertyEditor editor, Object value)
 	{
 		if (value != null) {
-			BioPAXElement newValue = target.getByID(value.getRDFId());
+			Object newValue = (value instanceof BioPAXElement) 
+					? target.getByID(((BioPAXElement)value).getRDFId()) : value;
 			editor.removeValueFromBean(newValue, targetElement);
 			editor.setValueToBean(newValue, targetElement);
 		}
