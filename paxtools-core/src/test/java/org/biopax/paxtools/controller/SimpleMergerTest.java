@@ -6,13 +6,13 @@ package org.biopax.paxtools.controller;
 import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.Filter;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author rodche
@@ -104,6 +104,53 @@ public class SimpleMergerTest {
     	merger.merge(model, bs); 
     	
     	assertEquals(2, model.getObjects().size());
+	}
+	
+	@Test
+	public final void testMergeWithFilter() {
+		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+		Model model = factory.createModel();
+
+    	//this one is originally in the (target) model
+    	ProteinReference pr = model.addNew(ProteinReference.class, "pr");
+    	pr.setDisplayName("one");
+    	
+    	//the one with the same URI to merge into target
+    	ProteinReference pr1 = factory.create(ProteinReference.class, "pr");
+		Xref ux = factory.create(UnificationXref.class, "ux");
+    	ux.setDb("UniProt"); 
+    	ux.setId("P12345"); 
+    	pr1.addName("one");
+    	pr1.addName("two");
+    	pr1.addXref(ux);
+    	
+    	
+    	//merge w/o using filter (to force copying mul. cadr. properties of same-uri objects)
+    	SimpleMerger merger = new SimpleMerger(SimpleEditorMap.L3);
+    	merger.merge(model, pr1); 
+    	
+    	assertEquals(2, model.getObjects().size());
+    	ProteinReference mergedPr = (ProteinReference) model.getByID("pr");
+    	assertTrue(mergedPr.getXref().isEmpty()); //xref wasn't copied
+    	assertEquals("one", mergedPr.getDisplayName());
+    	assertEquals(1, mergedPr.getName().size()); //"two" wasn't copied
+    	
+    	// with a filter
+    	merger = new SimpleMerger(SimpleEditorMap.L3, new Filter<BioPAXElement>() {		
+			public boolean filter(BioPAXElement object) {
+				return object instanceof EntityReference;
+			}
+		});
+    	model = factory.createModel();
+    	model.add(pr);
+    	
+    	merger.merge(model, pr1); 
+    	
+    	assertEquals(2, model.getObjects().size());
+    	mergedPr = (ProteinReference) model.getByID("pr");
+    	assertFalse(mergedPr.getXref().isEmpty());
+    	assertEquals("one", mergedPr.getDisplayName());
+    	assertEquals(2,mergedPr.getName().size());
 	}
 
 }

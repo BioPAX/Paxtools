@@ -235,7 +235,6 @@ public class SimpleMerger
 		if (value != null) {
 			Object newValue = (value instanceof BioPAXElement) 
 					? target.getByID(((BioPAXElement)value).getRDFId()) : value;
-			editor.removeValueFromBean(newValue, targetElement);
 			editor.setValueToBean(newValue, targetElement);
 		}
 	}
