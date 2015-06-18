@@ -1127,18 +1127,19 @@ class EntryMapper {
 			Arrays.asList("0", "-1", "NULL", "NIL", "NONE", "N/A");
 	
 	private UnificationXref unificationXref(String db, String id) {
-		if(db == null || db.isEmpty()) {
+		if(db == null || db.trim().isEmpty()) {
 			LOG.warn("unificationXref(), db is null, id=" + id);
 			return null;
 		}
 		
 		db = dbQuickFix(db);
 		
-		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
-			LOG.warn("unificationXref(), illegal id=" + id);
+		if(id == null || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
+			LOG.warn("unificationXref(), illegal or empty id:" + id);
 			return  null;
 		}
 		
+		id = id.trim();
 		String xuri = xmlBase + "UnificationXref_" + encode(db.toLowerCase() + "_" + id);
 		UnificationXref x = (UnificationXref) bpModel.getByID(xuri);
 		if(x==null) {
@@ -1157,10 +1158,12 @@ class EntryMapper {
 		
 		db = dbQuickFix(db);
 		
-		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
+		if(id == null || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
 			LOG.warn("publicationXref(), illegal id=" + id);
 			return  null;
 		}
+		
+		id = id.trim();
 		
 		String xuri = xmlBase + "PublicationXref_" + encode(db.toLowerCase() + "_" + id);
 		PublicationXref x = (PublicationXref) bpModel.getByID(xuri);
@@ -1360,17 +1363,19 @@ class EntryMapper {
 
 	private RelationshipXref relationshipXref(String db, String id, String refType, String refTypeAc)
 	{	
-		if(db == null || db.isEmpty()) {
+		if(db == null || db.trim().isEmpty()) {
 			LOG.warn("relationshipXref(), db is null, id=" + id);
 			return null;
 		}
 		
 		db = dbQuickFix(db);
 		
-		if(id == null || BAD_ID_VALS.contains(id.toUpperCase())) {
+		if(id == null || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
 			LOG.warn("relationshipXref(), illegal id=" + id);
 			return  null;
 		}
+		
+		id = id.trim();
 		
 		//generate URI
 		String uri = xmlBase + "RelationshipXref_";
