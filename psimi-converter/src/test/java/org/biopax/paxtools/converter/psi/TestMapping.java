@@ -80,6 +80,8 @@ public class TestMapping  {
 	 * A test data excerpt from BIND PSI-MI XML
 	 */
 	private static final String BIND_TEST_FILE = "bind-test.psimi.xml";
+	
+	private static final String INTACT_TEST_FILE = "human_31.xml";
 
     @Test
     public void testApi() throws Exception {
@@ -234,6 +236,28 @@ public class TestMapping  {
 		assertTrue(pr.getName().contains("Max"));
 		assertTrue(pr.getName().contains("Myc-associated factor X"));
 		
+	}
+    
+    @Test
+    public void testMappingIntAct() {
+		Model bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();   	
+		try {
+			PsimiXmlReader reader = new PsimiXmlReader();
+            InputStream is = getClass().getClassLoader().getResourceAsStream(INTACT_TEST_FILE);
+			EntrySet es = reader.read(is);
+			is.close();
+			Collection<Entry> entries =  es.getEntries();		
+			// we should only have 1 entry
+            assertEquals(11, entries.size());
+			Entry entry = (Entry)entries.iterator().next();
+			EntryMapper mapper = new EntryMapper(bpModel, false);
+			mapper.run(entry);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}			
+		assertNotNull(bpModel);
+		assertFalse(bpModel.getObjects().isEmpty());
 	}
     
     private void save(Model model, String file) throws IOException {

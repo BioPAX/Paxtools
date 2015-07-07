@@ -808,8 +808,7 @@ class EntryMapper {
 			// set ER
 			((SimplePhysicalEntity)entity).setEntityReference(entityReference);		
 			
-		} else { //i.e., entity is Gene	(otherwise, entityReferenceClass != null by design of this psimi converter)
-			assert entity instanceof Gene : "Must be Gene instead: " + entity.getModelInterface().getSimpleName();
+		} else { //i.e., entity is a Gene or Complex
 			//add gene's other names, xrefs, organism (for non-genes, these're added to the ER)
 			if (synonyms != null) {
 				for (String synonym : synonyms) {
@@ -819,8 +818,9 @@ class EntryMapper {
 			if (bpXrefsOfInteractor != null) {
 				for (Xref xref : bpXrefsOfInteractor)
 					entity.addXref((Xref) xref);
-			}			
-			((Gene)entity).setOrganism(bioSource);
+			}
+			if(entity instanceof Gene) //can be Complex here as well
+				((Gene)entity).setOrganism(bioSource);
 		}
 		
 		//Merge some of equivalent entities to avoid unnecessary duplicates 
@@ -907,16 +907,16 @@ class EntryMapper {
 		// tissue (can be null)
 		TissueVocabulary tissue = findOrCreateControlledVocabulary(organism.getTissue(), TissueVocabulary.class);
 
-		// set the BioPXElement URI and taxonomy xref id
+		// set the BioPAXElement URI and taxonomy xref id
 		String ncbiId = Integer.toString(organism.getNcbiTaxId());
 		String name = null;
 		
 		if (organism.hasNames()) {
 			name = getName(organism.getNames());
 			//a hack for BIND data (and perhaps other DBs)
-			if((name.equalsIgnoreCase("homo sapiens")
-					|| name.equalsIgnoreCase("human"))
-					&& !ncbiId.equals("9606")) {
+			if(name != null && ("homo sapiens".equalsIgnoreCase(name)
+					|| "human".equalsIgnoreCase(name))
+					&& !"9606".equals(ncbiId)) {
 				LOG.error("Taxonomy: " 
 					+ ncbiId + " of organism: " + organism 
 					+ ", interactor: " + interactor.getId() 
