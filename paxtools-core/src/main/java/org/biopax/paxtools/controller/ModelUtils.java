@@ -119,10 +119,10 @@ public final class ModelUtils
 							"Incompatible type! Attempted to replace " 
 							+ value.getRDFId() + " (" + value + "; "
 							+ value.getModelInterface().getSimpleName() + ") with "
-							+ ((replacement != null) ? replacement.getRDFId() :
-							"") + " (" + replacement + "); for property: " 
-							+ editor.getProperty() + " of bean: " 
-							+ domain.getRDFId() + " (" + domain + "; " 
+							+ replacement.getRDFId() + " (" + replacement + "; "
+							+ replacement.getModelInterface().getSimpleName() + "); "
+							+ "for property: " + editor.getProperty() 
+							+ " of bean: " + domain.getRDFId() + " (" + domain + "; " 
 							+ domain.getModelInterface().getSimpleName() + ")");
 					}
 
