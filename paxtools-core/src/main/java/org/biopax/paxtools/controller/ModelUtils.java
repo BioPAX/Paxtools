@@ -117,12 +117,11 @@ public final class ModelUtils
 					{
 						throw new IllegalBioPAXArgumentException(
 							"Incompatible type! Attempted to replace " 
-							+ value.getRDFId() + " (" + value + "; "
-							+ value.getModelInterface().getSimpleName() + ") with "
-							+ replacement.getRDFId() + " (" + replacement + "; "
+							+ value.getRDFId() + " (" + value.getModelInterface().getSimpleName() 
+							+ ") with " + replacement.getRDFId() + " (" 
 							+ replacement.getModelInterface().getSimpleName() + "); "
-							+ "for property: " + editor.getProperty() 
-							+ " of bean: " + domain.getRDFId() + " (" + domain + "; " 
+							+ "property: " + editor.getProperty() 
+							+ " of bean: " + domain.getRDFId() + " ("  
 							+ domain.getModelInterface().getSimpleName() + ")");
 					}
 
