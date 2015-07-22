@@ -224,9 +224,9 @@
 	</profiles>
 
 	<scm>
-		<connection>scm:hg:http://hg.code.sf.net/p/biopax/paxtools</connection>
-		<developerConnection>scm:hg:ssh://${scm.username}@hg.code.sf.net/p/biopax/paxtools</developerConnection>
-		<url>http://sourceforge.net/p/biopax/paxtools</url>
+		<connection>scm:git:git://github.com/BioPAX/Paxtools.git</connection>
+		<developerConnection>scm:git:git@github.com:BioPAX/Paxtools.git</developerConnection>
+		<url>https://github.com/BioPAX/Paxtools.git</url>
 <!-- 	  	<tag>tip</tag> -->
 	  <tag>HEAD</tag>
   </scm>
