@@ -14,10 +14,10 @@ import java.util.*;
 
 /**
  * Provides a simple editor map for a level with a given factory.
- * <p/>
+ * 
  * This class initializes 3 singletons( 1 for each level) from a tab delimited text resources that lists the
  * properties and their domains. This is done to remove any dependencies to Jena.
- * <p/>
+ * 
  * The recommended usage is to use the {@link #get(org.biopax.paxtools.model.BioPAXLevel)} method.
  * @author Emek Demir
  */

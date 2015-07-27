@@ -17,8 +17,6 @@ import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.client.BiopaxValidatorClient;
 import org.biopax.paxtools.client.BiopaxValidatorClient.RetFormat;
 import org.biopax.validator.jaxb.Behavior;
-import org.mskcc.psibiopax.converter.PSIMIBioPAXConverter;
-import org.mskcc.psibiopax.converter.PSIMIConverter;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -46,63 +44,6 @@ public class PaxtoolsMain {
 	        Command.valueOf(command).run(argv);
         }
     }
-
-    /**
-     * PSI-MI to BioPAX (MolecularInteraction objects) conversion.
-     * Supports PSI-MI Level 2.5 (compact) model and BioPAX Level 2 or 3.
-     * 
-     * @deprecated in favor of {@link #toLevel3(String[])}
-     * @param argv
-     * @throws IOException
-     */
-    public static void fromPsimi(String[] argv) throws IOException {
-
-        // some utility info
-        System.out.println("PSI-MI to BioPAX Conversion Tool");
-        System.out.println("Supports PSI-MI Level 2.5 (compact) model and BioPAX Level 2 or 3.");
-
-        // check args - proper bp level
-        Integer bpLevelArg = null;
-        try {
-            bpLevelArg = Integer.valueOf(argv[1]);
-            if (bpLevelArg != 2 && bpLevelArg != 3) {
-                throw new NumberFormatException();
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("Incorrect BioPAX level specified: " + argv[1] 
-            	+ " .  Please select level 2 or 3.");
-        }
-
-        // set strings vars
-        String inputFile = argv[2];
-        String outputFile = argv[3];
-
-        // check args - input file exists
-        if (!((File) (new File(inputFile))).exists()) {
-            System.err.println("input filename: " + inputFile + " does not exist!");
-        }
-
-        // create converter and convert file
-        try {
-            // set bp level
-            BioPAXLevel bpLevel = (bpLevelArg == 2) ? BioPAXLevel.L2 : BioPAXLevel.L3;
-
-            // create input/output streams
-            FileInputStream fis = new FileInputStream(inputFile);
-            FileOutputStream fos = new FileOutputStream(outputFile);
-
-            // create converter
-			PSIMIConverter converter = (argv.length>4) 
-				? new PSIMIBioPAXConverter(bpLevel, argv[4])
-				: new PSIMIBioPAXConverter(bpLevel);
-
-            // note streams will be closed by converter
-            converter.convert(fis, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public static void toGSEA(String[] argv) throws IOException
     {
@@ -729,9 +670,6 @@ public class PaxtoolsMain {
         		"to force PSI Interaction to BioPAX Complex convertion instead of \n" +
         		"to MolecularInteraction (default).")
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
-        fromPsimi("<level> <file1> <output> [<xml:base>]\n" +
-        		"\t- (deprecated) converts PSI-MI Level 2.5 to biopax level 2 or 3 file")
-		        {public void run(String[] argv) throws IOException{fromPsimi(argv);} },
         toGSEA("<file1> <output> <database> [crossSpeciesCheck]\n" +
         		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
                 + "\tUses that database identifier or the biopax URI if database is \"NONE\".\n"

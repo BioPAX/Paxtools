@@ -28,7 +28,7 @@ public class ReusedPEPHelper
     private final Map<physicalEntityParticipant, physicalEntityParticipant> duplicatedPeps;
 
     /**
-     * @param model
+     * @param model the biopax model
      */
     public ReusedPEPHelper(Model model)
     {
@@ -161,6 +161,5 @@ public class ReusedPEPHelper
             }
         }
 	}
-
 
 }

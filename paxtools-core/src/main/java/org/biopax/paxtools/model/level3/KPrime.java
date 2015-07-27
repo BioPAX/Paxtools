@@ -6,14 +6,14 @@ package org.biopax.paxtools.model.level3;
  * refer to the total concentrations of all forms of particular biochemical reactants. For example,
  * in the equilibrium constant equation for the biochemical reaction in which ATP is hydrolyzed to ADP and inorganic
  * phosphate:
- * <p/>
+ * 
  * K' = [ADP][P<sub>i</sub>]/[ATP],
- * <p/>
+ * <
  * The concentration of ATP refers to the total concentration of all of the following species:
- * <p/>
+ * 
  * [ATP] = [ATP<sup>4-</sup>] + [HATP<sup>3-</sup>] + [H<sub>2</sub>ATP<sup>2-</sup>] + [MgATP<sup>2-</sup>] +
  * [MgHATP<sup>-</sup>] + [Mg<sub>2</sub>ATP].
- * <p/>
+ * 
  * The apparent equilibrium constant is formally dimensionless, and can be kept so by inclusion of as many of the
  * terms (1 mol/dm3) in the numerator or denominator as necessary.  It is a function of temperature (T),
  * ionic strength (I), pH, and pMg (pMg = -log10[Mg2+]). Therefore, these quantities must be specified to be precise,
@@ -24,20 +24,19 @@ package org.biopax.paxtools.model.level3;
 public interface KPrime extends ChemicalConstant
 {
 
-
 	/**
 	 * The apparent equilibrium constant K'. Concentrations in the equilibrium constant equation refer to the total
 	 * concentrations of  all forms of particular biochemical reactants. For example,
 	 * in the equilibrium constant equation for the biochemical reaction in which ATP is hydrolyzed to ADP and
 	 * inorganic phosphate:
-	 * <p/>
+	 * 
 	 * K' = [ADP][P<sub>i</sub>]/[ATP],
-	 * <p/>
+	 * 
 	 * The concentration of ATP refers to the total concentration of all of the following species:
-	 * <p/>
+	 * 
 	 * [ATP] = [ATP<sup>4-</sup>] + [HATP<sup>3-</sup>] + [H<sub>2</sub>ATP<sup>2-</sup>] + [MgATP<sup>2-</sup>] +
 	 * [MgHATP<sup>-</sup>] + [Mg<sub>2</sub>ATP].
-	 * <p/>
+	 * 
 	 * The apparent equilibrium constant is formally dimensionless, and can be kept so by inclusion of as many of
 	 * the terms (1 mol/dm<sup>3</sup>) in the numerator or denominator as necessary.  It is a function of
 	 * temperature (T), ionic strength (I), pH, and pMg (pMg = -log<sub>10</sub>[Mg<sup>2+</sup>]).
@@ -50,14 +49,14 @@ public interface KPrime extends ChemicalConstant
 	 * concentrations of  all forms of particular biochemical reactants. For example,
 	 * in the equilibrium constant equation for the biochemical reaction in which ATP is hydrolyzed to ADP and
 	 * inorganic phosphate:
-	 * <p/>
+	 * 
 	 * K' = [ADP][P<sub>i</sub>]/[ATP],
-	 * <p/>
+	 * 
 	 * The concentration of ATP refers to the total concentration of all of the following species:
-	 * <p/>
+	 * 
 	 * [ATP] = [ATP<sup>4-</sup>] + [HATP<sup>3-</sup>] + [H<sub>2</sub>ATP<sup>2-</sup>] + [MgATP<sup>2-</sup>] +
 	 * [MgHATP<sup>-</sup>] + [Mg<sub>2</sub>ATP].
-	 * <p/>
+	 * 
 	 * The apparent equilibrium constant is formally dimensionless, and can be kept so by inclusion of as many of
 	 * the terms (1 mol/dm<sup>3</sup>) in the numerator or denominator as necessary.  It is a function of
 	 * temperature (T), ionic strength (I), pH, and pMg (pMg = -log<sub>10</sub>[Mg<sup>2+</sup>]).
@@ -65,7 +64,5 @@ public interface KPrime extends ChemicalConstant
 	 * @param kPrime The apparent equilibrium constant K'
 	 */
 	void setKPrime(float kPrime);
-
-
 
 }

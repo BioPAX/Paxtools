@@ -52,10 +52,10 @@ public class Merger implements Visitor
 	 * Checks whether <em>model</em> contains <em>bpe</em> element, and if it does, then it updates the
 	 * value of the equivalent element for <em>bpe</em> by using the specific <em>editor</em>.
 	 *
-	 * @param domain
-	 * @param range
+	 * @param domain owner 
+	 * @param range property value
 	 * @param model  model containing the equivalent element's equivalent
-	 * @param editor editor specific for the value type to be updated
+	 * @param editor biopax property editor specific for the value type to be updated
 	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{

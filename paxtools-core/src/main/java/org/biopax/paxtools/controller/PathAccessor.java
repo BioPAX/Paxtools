@@ -13,15 +13,15 @@ import java.util.*;
 /**
  * This class is a composite property accessor that allows users to chain multiple
  * property accessors to define paths in the BioPAX object graph.
- * <p/>
+ * 
  * The path can be defined by either explicitly providing a set of property accessors or
  * by an xPath like syntax.
- * <p/>
+ * 
  * The path can contain transitive and or restricted sub paths:
  * A transitive sub-path is traversed recursively as many times as possible. e.g. Complex/component* will
  * return all components of the complex and the components of the components if those components
  * are complex recursively.
- * <p/>
+ * 
  * A restricted subpath is restricted with a class and only follows through the domains that are
  * assignable from the the restriction class. e.g. Control/controlled:Pathway/name will only return the
  * names of the pathways that are being controlled, but not interactions.
@@ -44,6 +44,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	 * level. In the case one accessor's range can not be assigned by the domain of the next( broken path),
 	 * this accessor will return an empty set.
 	 * @param objectAccessors A list of object accessors.
+	 * @param level biopax level
 	 */
 	public PathAccessor(List<PropertyAccessor<? extends BioPAXElement, ?>> objectAccessors, BioPAXLevel level)
 	{
@@ -235,7 +236,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	 * @return a merged set of all values that is reachable by the paths starting from all applicable objects in
 	 * the model. For example running ProteinReference/xref:UnificationXref on the model will get all the
 	 * unification xrefs of all ProteinReferences.
-	 * @throws IllegalBioPAXArgumentException
+	 * @throws IllegalBioPAXArgumentException 
 	 */
 	public Set getValueFromModel(Model model) throws IllegalBioPAXArgumentException
 	{

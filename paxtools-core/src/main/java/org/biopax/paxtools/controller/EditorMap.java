@@ -34,6 +34,7 @@ public interface EditorMap
      *
      * @param property name of the property for which editor will be called
      * @param javaClass class of the element
+     * @param <D> domain
      * @return null if there is no such editor
      */
 	<D extends BioPAXElement> PropertyEditor<? super D,?> getEditorForProperty(String property, Class<D> javaClass);
@@ -62,6 +63,8 @@ public interface EditorMap
 	  * a specific domain class.
 	  *
 	  * @param property name of the property for which editor will be called
+	  * @param domain
+	  * @param <D> domain biopax type
 	  * @return empty set if there are no such editors
 	  */
 
@@ -85,9 +88,8 @@ public interface EditorMap
 	 * Most OWL reasoners can query the inverse of a property at no additional cost, but for most OO implementations
 	 * this would require an expensive O(n) lookup.
 	 * An OO implementation requires keeping additional properties for efficiency purposes.
-
 	 * Inverse editors are read-only editors that captures these "inverse" part of the bidirectional properties
-	 * specifically implemented in Paxtools. They have the pattern <it>PropertyName</it>Of  e.g. entityReferenceOf.
+	 * specifically implemented in Paxtools. They have the pattern <em>PropertyName</em>Of  e.g. entityReferenceOf.
 	 * @param bpe  BioPAX element for which the available inverse editors will be returned.
 	 * @return all inverse editors  for this entity's class type.
 	 */
@@ -99,6 +101,7 @@ public interface EditorMap
      * can be used for class filtering methods.
      *
      * @param javaClass the class whose subclasses will be returned
+     * @param <E> biopax type (biopax object model interface)
      * @return an empty set if there are no such editors
      */
     <E extends BioPAXElement> Set<? extends Class<E>> getKnownSubClassesOf(Class<E> javaClass);
@@ -129,9 +132,8 @@ public interface EditorMap
 	 * Most OWL reasoners can query the inverse of a property at no additional cost, but for most OO implementations
 	 * this would require an expensive O(n) lookup.
 	 * An OO implementation requires keeping additional properties for efficiency purposes.
-
 	 * Inverse editors are read-only editors that captures these "inverse" part of the bidirectional properties
-	 * specifically implemented in Paxtools. They have the pattern <it>PropertyName</it>Of  e.g. entityReferenceOf.
+	 * specifically implemented in Paxtools. They have the pattern <em>PropertyName</em>Of  e.g. entityReferenceOf.
 	 * @param domain of the inverse property
 	 * @return all inverse editors  for this class type.
 	 */

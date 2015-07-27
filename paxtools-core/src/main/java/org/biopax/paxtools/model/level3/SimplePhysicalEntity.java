@@ -20,11 +20,12 @@ public interface SimplePhysicalEntity extends PhysicalEntity
 
 	/**
 	* This method returns:
-	*     <ul>The entity reference of this PhysicalEntity plus</ul>
-	*     <ul>If this PhysicalEntity has member PhysicalEntities their generic EntityReferences iteratively
-    *     plus</ul>
-	 *     <ul>If the EntityReference of this PhysicalEntity has member EntityReferences their members iteratively</ul>
-	 */
+	* <ul>
+	*  <li>The entity reference of this PhysicalEntity plus</li>
+	*  <li>If this PhysicalEntity has member PhysicalEntities their generic EntityReferences iteratively plus</li>
+	*  <li>If the EntityReference of this PhysicalEntity has member EntityReferences their members iteratively</li>
+	* </ul>
+	*/
 	Set<EntityReference> getGenericEntityReferences();
 
 }

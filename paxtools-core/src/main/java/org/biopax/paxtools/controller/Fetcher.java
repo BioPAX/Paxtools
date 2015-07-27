@@ -110,8 +110,8 @@ public class Fetcher {
      * different objects with the same URI if these
      * are present among child elements)
      * 
-     * @param element
-     * @param model
+     * @param element to traverse into
+     * @return a set of child biopax objects
      */
     public Set<BioPAXElement> fetch(BioPAXElement element) {
     	return fetch(element, -1);
@@ -125,10 +125,9 @@ public class Fetcher {
      * different objects with the same URI if these
      * are present among child elements)
      * 
-     * @param element
-     * @param depth <=0 means unlimited (default); 1 means get direct children only, etc.
-     * 
-     * @param model
+     * @param element to traverse into its properties
+     * @param depth negative value means unlimited (default); 1 means get direct children only, etc.
+     * @return set of child objects
      */
     public Set<BioPAXElement> fetch(BioPAXElement element, final int depth)
 	{
@@ -168,8 +167,10 @@ public class Fetcher {
      * different objects with the same URI if these
      * are present among child elements)
      * 
-     * @param element
-     * @param model
+     * @param element to fetch child objects from
+     * @param filterByType biopax type filter
+     * @param <T> biopax type
+     * @return set of biopax objects
      */
     public <T extends BioPAXElement> Set<T> fetch(final BioPAXElement element, final Class<T> filterByType)
 	{
@@ -206,9 +207,9 @@ public class Fetcher {
      * with specified URI and class (including its sub-classes). 
      * is found.
      * 
-     * @param root
-     * @param uri
-     * @param type
+     * @param root biopax element to process
+     * @param uri URI to match
+     * @param type class to match
      * 
      * @return true if the match found; false - otherwise
      */

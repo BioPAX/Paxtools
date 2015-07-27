@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * Definition: An interaction in which molecules of one or more {@link PhysicalEntity} pools are physically
  * transformed and become a member of one or more other PhysicalEntity pools.
- * <p/>
+ * 
  * Rationale: Conversion and pools of entities are two central abstractions of chemistry. They can be quantized with
  * rate and concentration respectively. A conversion in BioPAX, similar to chemistry,
  * is stoichiometric and closed world, i.e. it is assumed that all of the participants are listed. These properties
@@ -13,13 +13,13 @@ import java.util.Set;
  * controlling the controlled and everything that is not listed is assumed to be unknown. Conversions in BioPAX can
  * be reversible -- the property names Left and Right were preferred specifically because they are direction neutral
  * as opposed to substrate and product or input and output.
- * <p/>
+ * 
  * Usage: Subclasses of conversion represent different types of transformation reflected by the properties of
  * different physicalEntity. {@link BiochemicalReaction}s will change the {@link ModificationFeature}s on a
  * {@link PhysicalEntity}, {@link Transport} will change the Cellular Location and {@link ComplexAssembly} will
  * change {@link BindingFeature}s. Generic Conversion class should only be used when the modification does not fit
  * into a any of these classes.
- * <p/>
+ * 
  * Example: Opening of a voltage gated channel.
  */
 public interface Conversion extends Interaction
@@ -106,7 +106,7 @@ public interface Conversion extends Interaction
 
 	/**
 	 * Specifies whether a conversion occurs spontaneously or not.
-	 * <p/>
+	 * 
 	 * If the spontaneity is not known,this property should not be specified.
 	 * @return whether if this conversion is spontaneous.
 	 */
@@ -114,7 +114,7 @@ public interface Conversion extends Interaction
 
 	/**
 	 * Specifies whether a conversion occurs spontaneously or not.
-	 * <p/>
+	 * 
 	 * If the spontaneity is not known,this property should not be specified.
 	 * @param spontaneous Whether if this conversion is spontaneous.
 	 */

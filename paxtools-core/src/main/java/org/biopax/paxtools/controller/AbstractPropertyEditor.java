@@ -66,7 +66,16 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-	public AbstractPropertyEditor(String property, Method getMethod, Class<D> domain, Class<R> range,
+	/**
+	 * Constructor.
+	 * 
+	 * @param property
+	 * @param getMethod
+	 * @param domain
+	 * @param range
+	 * @param multipleCardinality
+	 */
+    public AbstractPropertyEditor(String property, Method getMethod, Class<D> domain, Class<R> range,
 			boolean multipleCardinality)
 	{
 		super(domain, range, multipleCardinality, getMethod);
@@ -99,12 +108,13 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 		return def;
 	}
 
-
 	/**
 	 * This method creates a property reflecting on the domain and property. Proper subclass is chosen
 	 * based on the range of the property.
 	 * @param domain paxtools level2 interface that maps to the corresponding owl level2.
 	 * @param property to be managed by the constructed controller.
+	 * @param <D> domain
+	 * @param <R> range
 	 * @return a property controller to manipulate the beans for the given property.
 	 */
 	public static <D extends BioPAXElement, R> PropertyEditor<D, R> createPropertyEditor(Class<D> domain,

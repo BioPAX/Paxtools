@@ -1,9 +1,12 @@
 package org.biopax.paxtools.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.Model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -17,6 +20,8 @@ import java.util.Set;
  */
 public class Cloner implements Visitor
 {
+	private static final Log LOG = LogFactory.getLog(Cloner.class);
+	
 	Traverser traverser;
 	private BioPAXFactory factory;
 	private Model targetModel;
@@ -24,7 +29,8 @@ public class Cloner implements Visitor
 	public Cloner(EditorMap map, BioPAXFactory factory)
 	{
 		this.factory = factory;
-		traverser = new Traverser(map, this);
+		this.traverser = new Traverser(map, this);
+		this.targetModel = null;
 	}
 
 	
@@ -35,17 +41,21 @@ public class Cloner implements Visitor
 	 * that refer to BioPAX elements not in 'toBeCloned' list
 	 * are ignored.
 	 * 
-	 * @param source
-	 * @param toBeCloned
-	 * @return
+	 * @param source model
+	 * @param toBeCloned elements to clone
+	 * @return a new model containing the cloned biopax objects
 	 */
 	public Model clone(Model source, Set<BioPAXElement> toBeCloned)
 	{
-		targetModel = factory.createModel();
+		this.targetModel = factory.createModel();
 
-		for (BioPAXElement bpe : toBeCloned)
+		for (BioPAXElement bpe : new HashSet<BioPAXElement>(toBeCloned))
 		{
 			// make a copy (all properties are empty except for ID)
+			if(targetModel.containsID(bpe.getRDFId())) {
+				throw new RuntimeException("There are same URI different objects "
+						+ "in the input set, uri:" + bpe.getRDFId());
+			}
 			targetModel.addNew(bpe.getModelInterface(), bpe.getRDFId());
 		}
 

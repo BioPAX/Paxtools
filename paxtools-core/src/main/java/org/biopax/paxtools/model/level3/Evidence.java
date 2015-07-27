@@ -5,14 +5,14 @@ import java.util.Set;
 
 /**
  * Definition: The support for a particular assertion, such as the existence of an interaction or pathway.
- * <p/>
+ * 
  * Usage: At least one of confidence, evidenceCode, or experimentalForm must be instantiated when creating an
  * evidence instance. XREF may reference a publication describing the experimental evidence using a publicationXref
  * or may store a description of the experiment in an experimental description database using a unificationXref (if
  * the referenced experiment is the same) or relationshipXref (if it is not identical,
  * but similar in some way e.g. similar in protocol). Evidence is meant to provide more information than just an xref
  * to the source paper.
- * <p/>
+ * 
  * Examples: A description of a molecular binding assay that was used to detect a protein-protein interaction.
  */
 public interface Evidence extends UtilityClass, XReferrable

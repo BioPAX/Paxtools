@@ -23,7 +23,7 @@ public interface BiochemicalReaction extends Conversion
 	/**
 	 * Standard transformed Gibbs energy change for a reaction written in terms of biochemical
 	 * reactants (sums of species), delta-G'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * Since Delta-G can change based on multiple factors including ionic strength and temperature a
 	 * reaction can have multiple DeltaG values.
 	 * @return a set of DeltaG's for this reaction.
@@ -33,7 +33,7 @@ public interface BiochemicalReaction extends Conversion
 	/**
 	 * Standard transformed Gibbs energy change for a reaction written in terms of biochemical
 	 * reactants (sums of species), delta-G'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * Since Delta-G can change based on multiple factors including ionic strength and temperature a
 	 * reaction can have multiple DeltaG values.
 	 * @param deltaG to be added.
@@ -43,7 +43,7 @@ public interface BiochemicalReaction extends Conversion
 	/**
 	 * Standard transformed Gibbs energy change for a reaction written in terms of biochemical
 	 * reactants (sums of species), delta-G'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * Since Delta-G can change based on multiple factors including ionic strength and temperature a
 	 * reaction can have multiple DeltaG values.
 	 * @param deltaG to be removed.
@@ -54,11 +54,11 @@ public interface BiochemicalReaction extends Conversion
 	/**
 	 * For biochemical reactions this property refers to the standard transformed enthalpy change for a reaction
 	 * written in terms of biochemical reactants (sums of species), delta-H'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * delta-G'<sup>o</sup> = delta-H'<sup>o</sup> - T delta-S'<sup>o</sup>
-	 * <p/>
+	 * 
 	 * Units: kJ/mole
-	 * <p/>
+	 * 
 	 * @return standard transformed enthalpy change
 	 */
 	Set<Float> getDeltaH();
@@ -66,11 +66,11 @@ public interface BiochemicalReaction extends Conversion
 	/**
 	 * For biochemical reactions this property refers to the standard transformed enthalpy change for a reaction
 	 * written in terms of biochemical reactants (sums of species), delta-H'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * delta-G'<sup>o</sup> = delta-H'<sup>o</sup> - T delta-S'<sup>o</sup>
-	 * <p/>
+	 * 
 	 * Units: kJ/mole
-	 * <p/>
+	 * 
 	 * @param delta_h standard transformed enthalpy change
 	 */
 	void addDeltaH(float delta_h);
@@ -78,11 +78,11 @@ public interface BiochemicalReaction extends Conversion
 	/**
 	 * For biochemical reactions this property refers to the standard transformed enthalpy change for a reaction
 	 * written in terms of biochemical reactants (sums of species), delta-H'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * delta-G'<sup>o</sup> = delta-H'<sup>o</sup> - T delta-S'<sup>o</sup>
-	 * <p/>
+	 * 
 	 * Units: kJ/mole
-	 * <p/>
+	 * 
 	 * @param delta_h standard transformed enthalpy change
 	 */
 	void removeDeltaH(float delta_h);
@@ -91,7 +91,7 @@ public interface BiochemicalReaction extends Conversion
 	/**
 	 * For biochemical reactions, this property refers to the standard transformed entropy change for a reaction
 	 * written in terms of biochemical reactants (sums of species), delta-S'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * delta-G'<sup>o</sup> = delta-H'<sup>o</sup> - T delta-S'<sup>o</sup>
 	 * @return standard transformed entropy change
 	 */
@@ -100,18 +100,18 @@ public interface BiochemicalReaction extends Conversion
 	/**
 	 * For biochemical reactions, this property refers to the standard transformed entropy change for a reaction
 	 * written in terms of biochemical reactants (sums of species), delta-S'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * delta-G'<sup>o</sup> = delta-H'<sup>o</sup> - T delta-S'<sup>o</sup>
-	 * @return standard transformed entropy change
+	 * standard transformed entropy change
 	 */
 	void addDeltaS(float delta_s);
 
 	/**
 	 * For biochemical reactions, this property refers to the standard transformed entropy change for a reaction
 	 * written in terms of biochemical reactants (sums of species), delta-S'<sup>o</sup>.
-	 * <p/>
+	 * 
 	 * delta-G'<sup>o</sup> = delta-H'<sup>o</sup> - T delta-S'<sup>o</sup>
-	 * @return standard transformed entropy change
+	 * standard transformed entropy change
 	 */
 	void removeDeltaS(float delta_s);
 
@@ -144,14 +144,14 @@ public interface BiochemicalReaction extends Conversion
 	 * K'.  Concentrations in the equilibrium constant equation refer to the total concentrations of  all forms of
 	 * particular biochemical reactants. For example, in the equilibrium constant equation for the biochemical
 	 * reaction in which ATP is hydrolyzed to ADP and inorganic phosphate:
-	 * <p/>
+	 * 
 	 * K' = [ADP][P<sub>i</sub>]/[ATP],
-	 * <p/>
+	 * 
 	 * The concentration of ATP refers to the total concentration of all of the following species:
-	 * <p/>
+	 * 
 	 * [ATP] = [ATP<sup>4-</sup>] + [HATP<sup>3-</sup>] + [H<sub>2</sub>ATP<sup>2-</sup>] + [MgATP<sup>2-</sup>] +
 	 * [MgHATP<sup>-</sup>] + [Mg<sub>2</sub>ATP].
-	 * <p/>
+	 * 
 	 * The apparent equilibrium constant is formally dimensionless, and can be kept so by inclusion of as many of
 	 * the terms (1 mol/dm<sup>3</sup>) in the numerator or denominator as necessary.  It is a function of
 	 * temperature (T), ionic strength (I), pH, and pMg (pMg = -log<sub>10</sub>[Mg<sup>2+</sup>]). Therefore,
@@ -169,14 +169,14 @@ public interface BiochemicalReaction extends Conversion
 	 * K'.  Concentrations in the equilibrium constant equation refer to the total concentrations of  all forms of
 	 * particular biochemical reactants. For example, in the equilibrium constant equation for the biochemical
 	 * reaction in which ATP is hydrolyzed to ADP and inorganic phosphate:
-	 * <p/>
+	 * 
 	 * K' = [ADP][P<sub>i</sub>]/[ATP],
-	 * <p/>
+	 * 
 	 * The concentration of ATP refers to the total concentration of all of the following species:
-	 * <p/>
+	 * 
 	 * [ATP] = [ATP<sup>4-</sup>] + [HATP<sup>3-</sup>] + [H<sub>2</sub>ATP<sup>2-</sup>] + [MgATP<sup>2-</sup>] +
 	 * [MgHATP<sup>-</sup>] + [Mg<sub>2</sub>ATP].
-	 * <p/>
+	 * 
 	 * The apparent equilibrium constant is formally dimensionless, and can be kept so by inclusion of as many of
 	 * the terms (1 mol/dm<sup>3</sup>) in the numerator or denominator as necessary.  It is a function of
 	 * temperature (T), ionic strength (I), pH, and pMg (pMg = -log<sub>10</sub>[Mg<sup>2+</sup>]). Therefore,
@@ -194,14 +194,14 @@ public interface BiochemicalReaction extends Conversion
 	 * K'.  Concentrations in the equilibrium constant equation refer to the total concentrations of  all forms of
 	 * particular biochemical reactants. For example, in the equilibrium constant equation for the biochemical
 	 * reaction in which ATP is hydrolyzed to ADP and inorganic phosphate:
-	 * <p/>
+	 * 
 	 * K' = [ADP][P<sub>i</sub>]/[ATP],
-	 * <p/>
+	 * 
 	 * The concentration of ATP refers to the total concentration of all of the following species:
-	 * <p/>
+	 * 
 	 * [ATP] = [ATP<sup>4-</sup>] + [HATP<sup>3-</sup>] + [H<sub>2</sub>ATP<sup>2-</sup>] + [MgATP<sup>2-</sup>] +
 	 * [MgHATP<sup>-</sup>] + [Mg<sub>2</sub>ATP].
-	 * <p/>
+	 * 
 	 * The apparent equilibrium constant is formally dimensionless, and can be kept so by inclusion of as many of
 	 * the terms (1 mol/dm<sup>3</sup>) in the numerator or denominator as necessary.  It is a function of
 	 * temperature (T), ionic strength (I), pH, and pMg (pMg = -log<sub>10</sub>[Mg<sup>2+</sup>]). Therefore,

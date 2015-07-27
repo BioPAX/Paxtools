@@ -7,7 +7,7 @@ import java.util.Set;
  * multiple names, and exactly one standardName and exactly one shortName. standardName and
  * shortName are OWL subproperties of name in BioPAX, so these are automatically considered as a
  * name if defined. Paxtools refle
- * <p/>
+ * 
  * Warning: There is a potential OWL-JAVA semantic mismatch when manipulating names. If a user
  * decides to assign a different name to standardName or shortName, what happens to the old name is
  * not well defined - they can be "demoted" to a regular name or removed from the names list
@@ -18,7 +18,7 @@ public interface Named extends XReferrable
 {
 	/**
 	 * Names for this entity, including standardName and shortName if defined.
-	 * <p/>
+	 * 
 	 * The contents of this set can be modified directly but semantic consistency is not guaranteed.
 	 * Using {@link #addName} and {@link #removeName} is recommended.
 	 *

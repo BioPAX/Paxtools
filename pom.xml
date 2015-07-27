@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+	
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
 	<version>4.3.1-SNAPSHOT</version>
-
-	<name>Paxtools</name>
 	
-	<packaging>pom</packaging>
+	<name>Paxtools</name>
 	
 	<description>Paxtools is a Java library that allows software to read, write, analyze and manipulate BioPAX models.
 		Paxtools provide a consistent, fully implemented, validating BioPAX API that significantly reduces development
@@ -16,7 +16,7 @@
 		independent to be easily embedded into applications.
 	</description>
 	
-	<url>${siteUrl}</url>
+	<url>https://github.com/BioPAX/Paxtools</url>
 	
 	<organization>
 		<name>BioPAX</name>
@@ -39,14 +39,9 @@
 	</modules>
 
 	<properties>
+		<github.global.server>github</github.global.server>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
-<!-- with maven 3, unlike ${project.version}, the ${biopax.site.url} is somehow not resolved 
- (from local settings.xml), and then 'modules' links suck; so - will use the firm URL prefix: -->
-<!-- <siteDeployUrl>${biopax.site.url}/paxtools-${project.version}</siteDeployUrl> -->
-		<siteDeployUrl>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2site/paxtools-${project.version}</siteDeployUrl>
-		<siteUrl>http://www.biopax.org/m2site/paxtools-${project.version}</siteUrl>	
 		
 		<junit.version>4.10</junit.version>
 		<commons-logging.version>1.1.1</commons-logging.version>
@@ -56,18 +51,25 @@
 		<commons-lang.version>2.6</commons-lang.version>
 		<collections-generic.version>4.01</collections-generic.version>
 		
-		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
-		<maven-war-plugin.version>2.3</maven-war-plugin.version>
-		<maven-release-plugin.version>2.4</maven-release-plugin.version>
-		<wagon-ssh.version>2.0</wagon-ssh.version>
-		<maven-surefire-plugin.version>2.12</maven-surefire-plugin.version>
-		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
-		
-		<maven-site-plugin.version>3.3</maven-site-plugin.version>
-		<maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
-		<maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
-		<maven-project-info-reports-plugin.version>2.6</maven-project-info-reports-plugin.version>
+		<maven.version.range>[3.0,3.1)</maven.version.range>
+		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+		<maven-war-plugin.version>2.6</maven-war-plugin.version>
+		<maven-resources-plugin>2.7</maven-resources-plugin>
+		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
+		<wagon-ssh.version>2.8</wagon-ssh.version>
+		<wagon-scm.version>2.8</wagon-scm.version>
+		<maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
+		<maven-source-plugin.version>2.4</maven-source-plugin.version>
+		<maven-site-plugin.version>3.4</maven-site-plugin.version>
+		<maven-javadoc-plugin.version>2.10.2</maven-javadoc-plugin.version>
+		<maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
+		<maven-project-info-reports-plugin.version>2.8</maven-project-info-reports-plugin.version>
+		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<nexus-staging-maven-plugin.version>1.6.5</nexus-staging-maven-plugin.version>
+		<site-maven-plugin.version>0.11</site-maven-plugin.version>
+		<doxia-integration-tools.version>1.6</doxia-integration-tools.version>	
 	</properties>
 
 	<developers>
@@ -119,7 +121,7 @@
 			<roles>
 				<role>developer</role>
 			</roles>
-		</developer>
+		</developer>		
 	</developers>
 
 	<mailingLists>
@@ -138,118 +140,99 @@
 	</licenses>
 
 	<issueManagement>
-		<system>SF</system>
-		<url>http://sourceforge.net/p/biopax/bugs/</url>
-	</issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/BioPAX/Paxtools/issues</url>
+	</issueManagement>	
 
 	<ciManagement>
-		<system>jenkins</system>
-		<url>http://cbiojenkins.no-ip.org:8080/job/Paxtools</url>
+		<system>Travis CI</system>
+        <url>https://travis-ci.org/BioPAX/Paxtools</url>
 	</ciManagement>
 	
-	<!--
-	     See the following wiki document for details on how to do the setup for deploying/releasing
-	     http://sourceforge.net/apps/mediawiki/biopax/index.php?title=Deploying_Paxtools
-	-->
-	<!-- basically, two things: 
-	 1) for maven artifacts deployment (mvn deploy), e.g. by Jenkins, have biopax.snapshot.url 
-	 and biopax.release.url set in your .m2/settings.xml and point to a local directory, which
-	 then can be synchronized (rsync) with the remote public biopax repositories as needed 
-	 (recommended method, which is quick, does not require you start the remote shell service 
-	 in advance, and also respects your intranet/firewall/security policies). 
-	 So, do NOT: mvn deploy -Psourceforge, because it's slow, may violate network policy (brute force), etc.
-	 
-	 2) try: mvn clean site site:stage -DstagingDirectory=/some/local/path/paxtools-${version}
-	 (though some of resulting links won't be right), but not site-stage...; 
-	 finally, once satisfied, start sf.net shell and do: mvn clean site-deploy -Psourceforge 
-	 (this deploys directly to the public website, where all links should work)
-	-->
 	<profiles>
-		<profile>
-			<id>sourceforge</id>
-			<properties>
-				<biopax.snapshot.url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/snapshots</biopax.snapshot.url>
-				<biopax.release.url>scp://shell.sourceforge.net/home/project-web/biopax/htdocs/m2repo/releases</biopax.release.url>
-			</properties>
-		</profile>
-		<profile>
-			<id>maven-3</id>
-			<activation>
-				<file>
-					<exists>${basedir}</exists>
-				</file>
-			</activation>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-site-plugin</artifactId>
-							<version>${maven-site-plugin.version}</version>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-site-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-descriptor</id>
-								<goals>
-									<goal>attach-descriptor</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-		<id>local-deploy</id>
-		  <distributionManagement>
-			<snapshotRepository>
-				<id>biopax.snapshots</id>
-				<name>BioPAX Snapshots Repository</name>
-				<url>${biopax.snapshot.url}</url>
-			</snapshotRepository>
-			<repository>
-				<id>biopax.releases</id>
-				<name>BioPAX Releases Repository</name>
-				<url>${biopax.release.url}</url>
-			</repository>
-			<downloadUrl>http://www.biopax.org/downloads/paxtools/</downloadUrl>
-		  </distributionManagement>
-		</profile>
+        <profile>
+            <id>sonatype-release-profile</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+<!--                             <autoReleaseAfterClose>true</autoReleaseAfterClose> -->
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 	</profiles>
 
 	<scm>
 		<connection>scm:git:git://github.com/BioPAX/Paxtools.git</connection>
 		<developerConnection>scm:git:git@github.com:BioPAX/Paxtools.git</developerConnection>
 		<url>https://github.com/BioPAX/Paxtools.git</url>
-<!-- 	  	<tag>tip</tag> -->
-	  <tag>HEAD</tag>
-  </scm>
-
-
+	</scm>
+	
 	<distributionManagement>
 		<site>
-			<id>biopax.sf.net</id>
-			<name>BioPAX Sourceforge site</name>
-			<url>${siteDeployUrl}</url>
-		</site>	
-		<snapshotRepository>
-			<id>ossrh.snapshots</id>
-			<name>OSSRH Snapshots Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>biopax.releases</id>
-			<name>OSSRH Releases Repository</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-		</repository>
-		<downloadUrl>http://www.biopax.org/downloads/</downloadUrl>
-	</distributionManagement>
+			<!-- Do mvn site site:stage -DstagingDirectory=/tmp/path first 
+			(site-deploy immediately pushes to gh-pages on GitHub)-->
+			<id>github</id>
+			<name>BioPAX/Paxtools GitHub Pages</name>
+			<url>${project.version}</url>
+		<!--	temporarily change to full URL for site:stage to work
+			<url>http://biopax.github.io/Paxtools/${project.version}</url>
+		-->
+		</site>
+        <repository>
+            <id>ossrh</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <downloadUrl>http://www.biopax.org/downloads/paxtools/</downloadUrl>
+	</distributionManagement>	
 
 	<build>
 		<pluginManagement>
@@ -266,24 +249,31 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>${maven-jar-plugin.version}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>test-jar</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
 					<version>${maven-source-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>					
 				</plugin>
 				<plugin>
-        			<groupId>org.apache.maven.plugins</groupId>
-        			<artifactId>maven-release-plugin</artifactId>
-        			<version>${maven-release-plugin.version}</version>
-      			</plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>${maven-release-plugin.version}</version>
+                    <configuration>
+                        <goals>deploy site-deploy</goals>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <releaseProfiles>sonatype-release-profile</releaseProfiles>
+                    </configuration>
+				</plugin>
       			<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -305,11 +295,36 @@
 					<version>${maven-project-info-reports-plugin.version}</version>
 				</plugin>
 				<plugin>
-					<!-- when not using maven 3.x -->
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>2.3</version>
+					<version>${maven-site-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-descriptor</id>
+							<goals>
+								<goal>attach-descriptor</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<skipDeploy>true</skipDeploy>
+					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.github.github</groupId>
+					<artifactId>site-maven-plugin</artifactId>
+					<version>${site-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>${nexus-staging-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+                	<artifactId>maven-gpg-plugin</artifactId>
+                	<groupId>org.apache.maven.plugins</groupId>
+                	<version>${maven-gpg-plugin.version}</version>
+                </plugin>				
 			</plugins>
 		</pluginManagement>
 		<extensions>
@@ -318,7 +333,17 @@
 				<artifactId>wagon-ssh</artifactId>
 				<version>${wagon-ssh.version}</version>
 			</extension>
-		</extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-scm</artifactId>
+				<version>${wagon-scm.version}</version>
+			</extension>
+        	<extension>
+            	<groupId>org.apache.maven.doxia</groupId>
+            	<artifactId>doxia-integration-tools</artifactId>
+           		<version>${doxia-integration-tools.version}</version>
+        	</extension>
+		</extensions>		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -344,10 +369,25 @@
      	 	<plugin>
         		<groupId>org.apache.maven.plugins</groupId>
         		<artifactId>maven-release-plugin</artifactId>
-        		<configuration>
-        			<autoVersionSubmodules>true</autoVersionSubmodules>
-        		</configuration>
       		</plugin> 
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<configuration>
+					<message>Creating site for ${project.artifactId}, ${project.version}</message>
+					<path>${project.distributionManagement.site.url}</path>
+					<merge>true</merge>
+				</configuration>
+				<executions>
+					<execution>
+						<id>github-site</id>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>site-deploy</phase>
+					</execution>
+				</executions>
+			</plugin>	
 		</plugins>
 	</build>
 
@@ -430,6 +470,12 @@
 	</dependencies>
 
 	<repositories>
+		<!-- we'd remove repos below if everything were on OSSRH and Maven Central... -->
+        <repository>
+            <id>ossrh</id>
+            <name>OSSRH Repository</name>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
 		<repository>
 			<id>biopax.snapshots</id>
 			<name>BioPAX Snapshots Repository at Sourceforge</name>
@@ -486,27 +532,38 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
 				<configuration>
               		<linksource>true</linksource>
               		<notimestamp>true</notimestamp>
               	<links combine.children="append">
-              		<link>http://docs.jboss.org/hibernate/search/4.2/api/</link>
-              		<link>http://docs.jboss.org/hibernate/core/4.2/javadocs/</link>
+              		<link>http://docs.jboss.org/hibernate/search/4.3/api/</link>
+              		<link>http://docs.jboss.org/hibernate/core/4.3/javadocs/</link>
+              		<link>http://download.oracle.com/javase/7/docs/api/</link>
               	</links>
+              	<level>public</level>
             	</configuration>
-            	<reportSets>
-              		<reportSet>
-                		<id>aggregate</id>
-                		<inherited>false</inherited>
-                		<reports>
-                  			<report>aggregate</report>
-                		</reports>
-              		</reportSet>
-            	</reportSets>
+				<reportSets>
+					<reportSet>
+						<id>default</id>
+						<reports>
+							<!-- no test-javadoc -->
+							<report>javadoc</report>
+						</reports>
+					</reportSet>				
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
+				<version>${maven-jxr-plugin.version}</version>
 				<reportSets>
               		<reportSet>
                 		<id>aggregate</id>
@@ -520,6 +577,33 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>${maven-project-info-reports-plugin.version}</version>
+				<configuration>
+					<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				</configuration>				
+				<reportSets>
+                    <reportSet>
+                        <reports>
+                        	<report>index</report>
+                        	<report>summary</report>
+                            <report>modules</report>                       	
+<!--                             <report>cim</report> -->
+                            <report>dependencies</report>
+<!--                             <report>dependency-convergence</report> -->
+                            <report>dependency-info</report>
+                            <report>dependency-management</report>
+                            <report>distribution-management</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+<!--                             <report>plugin-management</report> -->
+<!--                             <report>plugins</report> -->
+                            <report>project-team</report>
+                            <report>mailing-list</report>
+                            <report>scm</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>				
 			</plugin>
 		</plugins>
 	</reporting>

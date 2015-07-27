@@ -35,20 +35,15 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 	 * @param bean the object whose property is requested
 	 * @return an object as the value
 	 */
-
 	Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException;
-
 
 	/**
 	 * Returns the values for a collection of <em>beans</em> using the default getMethod.
 	 *
-	 *
-	 * @param beans@return an object as the value
+	 * @param beans
+	 * @return an object as the value
 	 */
-
 	Set<? extends R> getValueFromBeans(Collection<? extends D> beans) throws IllegalBioPAXArgumentException;
-
-
 
 	/**
 	 * Checks if the <em>value</em> is unkown. In this context a <em>value</em> is regarded to be
@@ -57,7 +52,4 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 	 * @return true if the value is unknown
 	 */
 	public boolean isUnknown(Object value);
-
-
-
 }

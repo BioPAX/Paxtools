@@ -5,20 +5,20 @@ import java.util.Set;
 
 /**
  * Definition: A biological relationship between two or more entities.
- * <p/>
+ * 
  * Rationale: In BioPAX, interactions are atomic from a database modeling perspective,
  * i.e. interactions can not be decomposed into sub-interactions. When representing non-atomic continuants with
  * explicit subevents the pathway class should be used instead. Interactions are not necessarily  temporally atomic,
  * for example genetic interactions cover a large span of time. Interactions as a formal concept is a continuant,
  * it retains its identitiy regardless of time, or any differences in specific states or properties.
- * <p/>
+ * 
  * Usage: Interaction is a highly abstract class and in almost all cases it is more appropriate to use one of the
  * subclasses of interaction.
  * It is partially possible to define generic reactions by using generic participants. A more comprehensive method is
  * planned for BioPAX L4 for covering all generic cases like oxidization of a generic alcohol.
- * <p/>
+ * 
  * Synonyms: Process, relationship, event.
- * <p/>
+ * 
  * Examples: protein-protein interaction, biochemical reaction, enzyme catalysis
  */
 public interface Interaction extends Process
@@ -32,8 +32,8 @@ public interface Interaction extends Process
 	 * browsable at:
 	 * <a href =
 	 * "http://www.ebi.ac.uk/ontology-lookup/browse.do?ontName=MI&termId=MI%3A0190&termName=interaction%20type">
-	 * OLS: PSI-MI<a/>
-	 * <p/>
+	 * OLS: PSI-MI</a>
+	 * 
 	 * Contents of this set should not be modified. Use add/remove instead.
 	 * @return Controlled vocabulary term annotating the interaction type.
 	 */
@@ -47,8 +47,8 @@ public interface Interaction extends Process
 	 * browsable at:
 	 * <a href =
 	 * "http://www.ebi.ac.uk/ontology-lookup/browse.do?ontName=MI&termId=MI%3A0190&termName=interaction%20type">
-	 * OLS: PSI-MI<a/>
-	 * <p/>
+	 * OLS: PSI-MI</a>
+	 * 
 	 * Contents of this set should not be modified. Use add/remove instead.
 	 * @param newinteractionType Controlled vocabulary term annotating the interaction type.
 	 */
@@ -62,8 +62,8 @@ public interface Interaction extends Process
 	 * browsable at:
 	 * <a href =
 	 * "http://www.ebi.ac.uk/ontology-lookup/browse.do?ontName=MI&termId=MI%3A0190&termName=interaction%20type">
-	 * OLS: PSI-MI<a/>
-	 * <p/>
+	 * OLS: PSI-MI</a>
+	 * 
 	 * Contents of this set should not be modified. Use add/remove instead.
 	 * @param oldinteractionType Controlled vocabulary term annotating the interaction type.
 	 */
@@ -104,6 +104,5 @@ public interface Interaction extends Process
 	 * @param participant The entities that participate in this interaction.
 	 */
 	void removeParticipant(Entity participant);
-
-
+	
 }

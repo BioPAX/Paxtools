@@ -52,7 +52,7 @@ public interface Entity extends Level3Element, Observable, Named
 	 * source in many or few instances) is up to the user. It is intended that
 	 * this property report the last data source, not all data sources that the
 	 * data has passed through from creation.
-	 * <p/>
+	 * 
 	 * The contents of this set can be modified but semantic consistency is not
 	 * guaranteed. Using {@link #addDataSource(Provenance)} and {@link #removeDataSource(Provenance)} is
 	 * recommended.

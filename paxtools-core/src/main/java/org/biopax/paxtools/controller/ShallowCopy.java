@@ -54,10 +54,10 @@ public class ShallowCopy implements Visitor
 	 * Creates a copy of the BioPAX object with all its properties
 	 * are the same, and also adds it to a model.
 	 *
-	 * @param model
-     * @param source
-	 * @param newID
-     * @return
+	 * @param model target biopax model
+     * @param source a biopax object to copy
+	 * @param newID new (copy) biopax object's URI
+     * @return copy of the source biopax element
 	 */
 	public <T extends BioPAXElement> T copy(Model model, T source, String newID)
 	{
@@ -71,10 +71,10 @@ public class ShallowCopy implements Visitor
 	 * Returns a copy of the BioPAX element 
 	 * (with all the property values are same)
 	 * 
-	 * @param <T>
-	 * @param source
-	 * @param newID
-	 * @return
+	 * @param <T> biopax type
+	 * @param source biopax element to copy
+	 * @param newID copy biopax element's absolute URI
+	 * @return a copy of the source biopax element
 	 */
 	public <T extends BioPAXElement> T copy(T source, String newID) 
 	{
@@ -92,6 +92,9 @@ public class ShallowCopy implements Visitor
 	
 // --------------------- Interface Visitor ---------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
         editor.setValueToBean(range, copy);

@@ -19,7 +19,7 @@ public interface PhysicalEntity extends Entity, Controller
 	 * known. If an interaction is known to occur in multiple locations, separate interactions (and
 	 * physicalEntities) must be created for each different location.  If the location of a participant
 	 * in a complex is unspecified, it may be assumed to be the same location as that of the complex.
-	 * <p/>
+	 * 
 	 * A molecule in two different cellular locations are considered two different physical entities.
 	 *
 	 * @return cellular location of this physical entity
@@ -33,7 +33,7 @@ public interface PhysicalEntity extends Entity, Controller
 	 * known. If an interaction is known to occur in multiple locations, separate interactions (and
 	 * physicalEntities) must be created for each different location.  If the location of a participant
 	 * in a complex is unspecified, it may be assumed to be the same location as that of the complex.
-	 * <p/>
+	 * 
 	 * A molecule in two different cellular locations are considered two different physical entities.
 	 *
 	 * @param newCellularLocation for this physical entity

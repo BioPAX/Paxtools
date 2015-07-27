@@ -57,6 +57,7 @@ public abstract class AbstractTraverser extends Traverser
 	 * 
 	 * @param range is property value
 	 * @param domain is parent BioPAX element
+	 * @param model the BioPAX model of interest
 	 * @param editor is the property editor
 	 */
 	protected abstract void visit(Object range, BioPAXElement domain, Model model, PropertyEditor<?,?> editor);
@@ -68,7 +69,7 @@ public abstract class AbstractTraverser extends Traverser
 	 * 
 	 * @param domain BioPAX Element
 	 * @param range property value (can be BioPAX element, primitive, enum, string)
-	 * @param model 
+	 * @param model the BioPAX model of interest
 	 * @param editor parent's property PropertyEditor
 	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?,?> editor) {

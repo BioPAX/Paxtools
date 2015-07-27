@@ -28,15 +28,15 @@ public interface BioSource extends UtilityClass, Named
 
 
 	/**
-	 * An external controlled vocabulary of tissue types. A reference to the  <a href = http://www.brenda-enzymes
-	 * .info/>BRENDA</a>
+	 * An external controlled vocabulary of tissue types. A reference to the  
+	 * <a href="http://www.brenda-enzymes.info/">BRENDA</a>
 	 * @return An external controlled vocabulary of tissue types.
 	 */
 	TissueVocabulary getTissue();
 
 	/**
-	 * An external controlled vocabulary of tissue types. A reference to the  <a href = http://www.brenda-enzymes
-	 * .info/>BRENDA</a>
+	 * An external controlled vocabulary of tissue types. A reference to the  
+	 * <a href="http://www.brenda-enzymes.info/">BRENDA</a>
 	 * @param tissue An external controlled vocabulary of tissue types.
 	 */
 	void setTissue(TissueVocabulary tissue);

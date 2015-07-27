@@ -57,7 +57,7 @@ public interface PropertyEditor<D extends BioPAXElement, R> extends PropertyAcce
 	 * context a <em>value</em> is regarded to be unknown if it is null (unset);
 	 * in a primitive property context it depends (can be e.g.,
 	 * {@link org.biopax.paxtools.model.BioPAXElement#UNKNOWN_FLOAT})
-	 * @return
+	 * @return null or what it means that the property value is unknown
 	 */
 	R getUnknown();
 

@@ -79,22 +79,22 @@ public final class ModelUtils
 	/**
 	 * Replaces BioPAX elements in the model with ones from the map,
 	 * updates corresponding BioPAX object references.
-	 * <p/>
+	 * 
 	 * It does not neither remove the old nor add new elements in the model
 	 * (if required, one can do this before/after this method, e.g., using
 	 * the same 'subs' map)
-	 * <p/>
+	 * 
 	 * This does visit all object properties of each "explicit" element
 	 * in the model, but does not traverse deeper into one's sub-properties
 	 * to replace something there as well (e.g., nested member entity references
 	 * are not replaced unless parent entity reference present in the model)
-	 * <p/>
+	 * 
 	 * This does not automatically move/migrate old (replaced) object's
 	 * children to new objects (the replacement ones are supposed to have
 	 * their own properties already set or to be set shortly; otherwise,
 	 * consider using of something like {@link #fixDanglingInverseProperties(BioPAXElement, Model)} after.
 	 * 
-	 * @param model
+	 * @param model biopax model where the objects are to be replaced
 	 * @param subs the replacements map (many-to-one, old-to-new)
 	 * @exception IllegalBioPAXArgumentException if there is an incompatible type replacement object
 	 */
@@ -148,12 +148,13 @@ public final class ModelUtils
 	/**
 	 * Finds "root" BioPAX objects that belong to a particular class (incl. sub-classes)
 	 * in the model.
-	 * <p/>
+	 * 
 	 * Note: however, such "root" elements may or may not be, a property of other
 	 * elements, not included in the model.
-	 * @param model
-	 * @param filterClass
-	 * @return
+	 * @param model biopax model to work with
+	 * @param filterClass filter class (including subclasses)
+	 * @param <T> biopax type
+	 * @return set of the root biopax objects of given type
 	 */
 	public static <T extends BioPAXElement> Set<T> getRootElements(final Model model, final Class<T> filterClass)
 	{
@@ -196,13 +197,13 @@ public final class ModelUtils
 	 * remove everything from the model). Do not use basic Entity.class either
 	 * (but a sub-class is OK) for the same reason (it would delete everything).
 	 * 
-	 * <p/>
 	 * This, however, does not change relationships
 	 * among objects, particularly, some inverse properties,
 	 * such as entityReferenceOf or xrefOf, may still
 	 * refer to a removed object.
-	 * @param model
-	 * @param clazz filter-class
+	 * @param model to modify
+	 * @param clazz filter-class (filter by this type and sub-classes)
+	 * @param <T> biopax type
 	 * @return removed objects
 	 */
 	public static <T extends BioPAXElement> Set<BioPAXElement> removeObjectsIfDangling(Model model, Class<T> clazz)
@@ -254,9 +255,9 @@ public final class ModelUtils
 	 * If the property is multiple cardinality property, it will add
 	 * new values, otherwise - it will set it only if was empty;
 	 * in both cases it won't delete/override existing values!
-	 * @param model
+	 * @param model biopax object model to process
 	 * @param property property name
-	 * @param forClasses (optional) infer/set the property for these types only
+	 * @param forClasses (optional) class-filter to infer/set the property for these biopax types only
 	 * @see PropertyReasoner
 	 */
 	public static void inferPropertyFromParent(Model model, final String property,
@@ -293,10 +294,9 @@ public final class ModelUtils
 	 * new values, otherwise - it will set it only if it was empty;
 	 * in both cases it won't delete/override existing values!
 	 * 
-	 * @param model
+	 * @param model biopax model to work with
 	 * @param properties BioPAX properties (names) to infer values of
-	 * @param forClasses (optional) infer/set the property for these types only
-	 * @throws InterruptedException 
+	 * @param forClasses (optional) class-filter; infer/set the property for these types and sub-classes only
 	 * @see PropertyReasoner
 	 */
 	public static void inferPropertiesFromParent(Model model, final Set<String> properties,
@@ -336,9 +336,12 @@ public final class ModelUtils
 	 * and have object properties "fixed", i.e., dangling values
 	 * become null/empty, and inverse properties (e.g. xrefOf)
 	 * re-calculated. The original model is unchanged.
-	 * @param model
+	 * 
+	 * Note: this method will fail for very large models 
+	 * (if resulting RDF/XML utf8 string is longer than approx. 1Gb)
+	 * 
+	 * @param model biopax model to process
 	 * @return copy of the model
-	 * @exception IOException
 	 */
 	public static Model writeRead(Model model)
 	{
@@ -352,7 +355,7 @@ public final class ModelUtils
 	/**
 	 * Gets direct children of a given BioPAX element
 	 * and adds them to a new model.
-	 * @param bpe
+	 * @param bpe biopax element/object
 	 * @return new model
 	 */
 	public static Model getDirectChildren(BioPAXElement bpe)
@@ -380,14 +383,13 @@ public final class ModelUtils
 	 * Gets all the child BioPAX elements of a given BioPAX element
 	 * (using the "tuned" {@link Fetcher}) and adds them to a
 	 * new model.
-	 * @param bpe
+	 * @param bpe biopax object
 	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
-	 * @return
+	 * @return new biopax Model that contain all the child objects
 	 */
 	public static Model getAllChildren(BioPAXElement bpe, 
 		@SuppressWarnings("rawtypes") Filter<PropertyEditor>... filters)
 	{
-
 		Model m = factory.createModel();
 		if (filters.length == 0)
 		{
@@ -403,12 +405,10 @@ public final class ModelUtils
 
 	/**
 	 * Collects direct children of a given BioPAX element.
-	 * 
-	 * @param model
-	 * @param bpe
-	 * @return
+	 * @param bpe biopax object (parent)
+	 * @return set of child biopax objects
 	 */
-	public static Set<BioPAXElement> getDirectChildrenAsSet(Model model, BioPAXElement bpe)
+	public static Set<BioPAXElement> getDirectChildrenAsSet(BioPAXElement bpe)
 	{
 		final Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
 
@@ -433,9 +433,8 @@ public final class ModelUtils
 	/**
 	 * Generates simple counts of different elements in the model.
 	 * 
-	 * 
-	 * @param model
-	 * @return
+	 * @param model biopax model to analyze
+	 * @return a biopax types - to counts of objects of each type map
 	 */
 	public static Map<Class<? extends BioPAXElement>, Integer> generateClassMetrics(Model model)
 	{
@@ -460,9 +459,10 @@ public final class ModelUtils
 	 * A more strict, type-safe way to ask for a biopax object
 	 * from the model, unlike {@link Model#getByID(String)}.
 	 * 
-	 * @param model
-	 * @param uri
-	 * @param clazz
+	 * @param model biopax model to query
+	 * @param uri absolute URI of a biopax element
+	 * @param clazz class-filter (to filter by the biopax type and its sub-types)
+	 * @param <T> biopax type
 	 * @return the biopax object or null (if no such element, or element with this URI is of incompatible type)
 	 */
 	public static <T extends BioPAXElement> T getObject(Model model, String uri, Class<T> clazz)
@@ -486,7 +486,7 @@ public final class ModelUtils
 	 * new unique URIs, database primary keys, etc.
 	 * 
 	 * 
-	 * @param id
+	 * @param id some identifier, e.g., URI
 	 * @return the 32-byte digest string
 	 */
 	public static String md5hex(String id)
@@ -505,6 +505,7 @@ public final class ModelUtils
 	/**
 	 * Unlinks <em>object properties</em> of the BioPAX object
 	 * from values the model does not have.
+	 * 
 	 * @param bpe a biopax object
 	 * @param model the model to look for objects in
 	 */
@@ -554,7 +555,7 @@ public final class ModelUtils
 	}
 
 
-	// moved from FeatureUtils; provides operations for comparing features of physical entities.
+	// Moved from FeatureUtils; provides operations for comparing features of physical entities.
 
 	static enum FeatureType
 	{
@@ -563,16 +564,7 @@ public final class ModelUtils
 		UNKNOWN_FEATURE;
 	}
 
-
-	/**
-	 * TODO annotate
-	 * 
-	 * @param first
-	 * @param firstClass
-	 * @param second
-	 * @param secondClass
-	 * @return
-	 */
+	// TODO annotate
 	public static Set<EntityFeature> getFeatureIntersection(PhysicalEntity first, FeatureType firstClass,
 			PhysicalEntity second, FeatureType secondClass)
 	{
@@ -581,13 +573,7 @@ public final class ModelUtils
 		return intersection;
 	}
 
-	/**
-	 * TODO annotate
-	 * 
-	 * @param pe
-	 * @param type
-	 * @return
-	 */
+	// TODO annotate
 	public static Set<EntityFeature> getFeatureSetByType(PhysicalEntity pe, FeatureType type)
 	{
 
@@ -626,9 +612,9 @@ public final class ModelUtils
 	 * (i.e., an EntityFeature instance can only belong to one and only one
 	 * EntityReference object).  
 	 * 
-	 * @param er
-	 * @param fix
-	 * @return
+	 * @param er entity reference object
+	 * @param fix flag
+	 * @return true or false
 	 */
 	public static boolean checkERFeatureSet(EntityReference er, boolean fix)
 	{
@@ -660,7 +646,7 @@ public final class ModelUtils
 	 * (so the answer 'true' or 'false' can be wrong if there are equivalent
 	 * but different EntityFeature instances)
 	 * 
-	 * @param pe
+	 * @param pe physical entity object
 	 * @return true iif 'feature' and 'notFeature' sets do not intersect.
 	 * @deprecated looks, it's not used and not a good measure...
 	 */
@@ -675,7 +661,6 @@ public final class ModelUtils
 		}
 	}
 
-	
 	private static boolean scanAndAddToFeatureSet(EntityReference er, boolean fix, boolean check, EntityFeature ef)
 	{
 		if (!er.getEntityFeature().contains(ef))
@@ -690,14 +675,7 @@ public final class ModelUtils
 		return check;
 	}
 
-	/**
-	 * TODO annotate
-	 * 
-	 * @param first
-	 * @param second
-	 * @param fix
-	 * @return
-	 */
+	// TODO annotate
 	public static Set<EntityFeature> findFeaturesAddedToSecond(PhysicalEntity first, PhysicalEntity second,
 			boolean fix)
 	{
@@ -731,8 +709,6 @@ public final class ModelUtils
 		explicit.retainAll(negativeImplicit);
 		return explicit;
 	}
-
-	
 	
 	private static boolean checkCommonEntityReferenceForTwoPEs(PhysicalEntity first, PhysicalEntity second,
 			boolean fix)
@@ -788,7 +764,7 @@ public final class ModelUtils
 	 * (using PhysicalEntity/entityReference/memberEntityReference), and 
 	 * this will probably be deprecated in the future BioPAX releases.
 	 * 
-	 * @param model
+	 * @param model biopax model to fix
 	 */
 	public static void normalizeGenerics(Model model)
 	{
@@ -865,9 +841,9 @@ public final class ModelUtils
 	 * but instead adds relationship xrefs using the same 
 	 * db and id values as source's unification xrefs.
 	 * 
-	 * @param model
-	 * @param source
-	 * @param target
+	 * @param model the biopax model where the source and target objects belong
+	 * @param source from
+	 * @param target to
 	 */
 	public static void copySimplePointers(Model model, Named source, Named target)
 	{
@@ -904,9 +880,9 @@ public final class ModelUtils
 
 	
 	/**
-	 * TODO annotate
+	 * TODO annotate or deprecate...
 	 * 
-	 * @param model
+	 * @param model biopax model to edit
 	 */
 	public static void resolveFeatures(Model model)
 	{
@@ -1115,10 +1091,10 @@ public final class ModelUtils
 	 * Collects all data type (not object) property
 	 * values (can be then used for full-text indexing).
 	 * 
-	 * @param biopaxElement
-	 * @param depth 0 means use this objects' 
-	 *        data properties only, 1 - add child's data properties, etc.
-	 * @return
+	 * @param biopaxElement biopax object
+	 * @param depth 0 means use this object's 
+	 *        data properties only; 1 - add child's data properties; etc.
+	 * @return set of keywords
 	 */
 	public static Set<String> getKeywords(BioPAXElement biopaxElement, int depth) {
 		
@@ -1164,8 +1140,8 @@ public final class ModelUtils
 	 * biopax entities.
  	 * 
 	 * 
-	 * @param biopaxElement
-	 * @return
+	 * @param biopaxElement biopax object
+	 * @return organism names
 	 */
 	public static Set<BioSource> getOrganisms(BioPAXElement biopaxElement) {		
 		final Set<BioSource> biosources = new HashSet<BioSource>();
@@ -1222,8 +1198,8 @@ public final class ModelUtils
 	 *   to associate common self-descriptive biopax utility classes with 
 	 *   particular pathway data sources)
 	 * 
-	 * @param biopaxElement
-	 * @return
+	 * @param biopaxElement a biopax object
+	 * @return Provenance objects set
 	 */
 	public static Set<Provenance> getDatasources(BioPAXElement biopaxElement) {
 		
@@ -1260,8 +1236,8 @@ public final class ModelUtils
 	 * traversing inverse object properties of the
 	 * biopax element.
 	 * 
-	 * @param biopaxElement
-	 * @return
+	 * @param biopaxElement biopax object
+	 * @return pathways
 	 */
 	public static Set<Pathway> getParentPathways(BioPAXElement biopaxElement) {
 		
@@ -1308,13 +1284,20 @@ public final class ModelUtils
 	}
 
 
+	/**
+	 * Merges equivalent interactions.
+	 * 
+	 * Note (warning): please check if the result is desirable; 
+	 * the result of the merging very much depends on actual pathway data quality...
+	 * 
+	 * @param model to edit/update
+	 */
 	public static void mergeEquivalentInteractions(Model model)
 	{
 		EquivalenceGrouper<Conversion> groups = new EquivalenceGrouper(model.getObjects(Conversion.class));
 
 		for (List<Conversion> group : groups.getBuckets())
 		{
-
 			if (group.size() > 1)
 			{
 				HashSet<Conversion> tobeRemoved = new HashSet<Conversion>();
@@ -1344,9 +1327,7 @@ public final class ModelUtils
 							}
 
 						}
-
 						tobeRemoved.add(conversion);
-
 					}
 				}
 				for (Conversion conversion : tobeRemoved)
@@ -1354,14 +1335,12 @@ public final class ModelUtils
 					cleanAllInverse(conversion);
 					model.remove(conversion);
 				}
-
 			}
 		}
 	}
 
 	private static void cleanAllInverse(Conversion conversion)
 	{
-
 		Set<PhysicalEntity> concSafe = new HashSet<PhysicalEntity>(conversion.getLeft());
 		for (PhysicalEntity pe : concSafe)
 		{
@@ -1382,8 +1361,6 @@ public final class ModelUtils
 		{
 			pathway.removePathwayComponent(conversion);
 		}
-
-
 	}
 
 }

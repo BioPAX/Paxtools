@@ -55,8 +55,8 @@ public class PropertyReasoner extends AbstractTraverser
 	 * {@link #visit(Object, BioPAXElement, Model, PropertyEditor)}
 	 * for each *object* property, except for 'nextStep'.
 	 * 
-	 * @param property
-	 * @param editorMap
+	 * @param property biopax property name
+	 * @param editorMap biopax property editors map
 	 */
 	public PropertyReasoner(String property, EditorMap editorMap) 
 	{
@@ -80,7 +80,7 @@ public class PropertyReasoner extends AbstractTraverser
 
 
 	/**
-	 * @param property the BioPAX property name to use
+	 * @param propertyName the BioPAX property name to use
 	 */
 	public void setPropertyName(String propertyName) {
 		this.property = propertyName;
@@ -362,7 +362,7 @@ public class PropertyReasoner extends AbstractTraverser
 	 * @see #setDomains(Class...)
 	 * @see #setOverride(boolean)
 	 *  
-	 * @param element
+	 * @param element biopax object
 	 * @param defaultValue a default values or set of values
 	 */
     protected void run(BioPAXElement element, Object defaultValue)
@@ -393,7 +393,7 @@ public class PropertyReasoner extends AbstractTraverser
      * 
      * @see PropertyReasoner#run(BioPAXElement, Object)
      * 
-     * @param element
+     * @param element biopax object
      */
     public void clearProperty(BioPAXElement element)
 	{
@@ -411,8 +411,8 @@ public class PropertyReasoner extends AbstractTraverser
      *  
      * @see PropertyReasoner#run(BioPAXElement, Object)
      *  
-     * @param element
-     * @param defaultValue
+     * @param element biopax object
+     * @param defaultValue a value to use as default (object)
      */
     public void resetPropertyValue(BioPAXElement element, Object defaultValue)
 	{
@@ -431,17 +431,18 @@ public class PropertyReasoner extends AbstractTraverser
     
     
     /**
-     * For the element and its children,
-     * where it's empty, desired (in {@link #domains}) and allowed, 
-     * it adds or sets the {@link #property} from parents's 
-     * (if the top-most, a parent element that has this property,
-     * does not have any values, then given values will be set, and
-     * children may inherit it)
+     * Infer of add a property value 
+     * for the element and its children,
+     * where it was empty, wanted (in {@link #domains}) and allowed. 
+     * It adds or sets the {@link #property} from parents's property. 
+     * (If it's the top/parent element that has such property, but 
+     * it does not have any values yet, then given value will be set, and
+     * children elements may then inherit the value as well.)
      * 
      * @see PropertyReasoner#run(BioPAXElement, Object)
      * 
-     * @param element
-     * @param addValue
+     * @param element biopax object
+     * @param addValue new property value to use if none was present/inherited
      */
     public void inferPropertyValue(BioPAXElement element, Object addValue)
 	{
@@ -460,7 +461,7 @@ public class PropertyReasoner extends AbstractTraverser
      * 
      * @see PropertyReasoner#run(BioPAXElement, Object)
      * 
-     * @param element
+     * @param element biopax object
      */
     public void inferPropertyValue(BioPAXElement element)
 	{
