@@ -150,6 +150,22 @@
 	</ciManagement>
 	
 	<profiles>
+		<profile>
+			<!-- A profile to deploy to a local directory -->
+			<id>local-deploy</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>biopax.snapshots</id>
+					<name>BioPAX Snapshots Repository</name>
+					<url>${biopax.snapshot.url}</url>
+				</snapshotRepository>
+				<repository>
+					<id>biopax.releases</id>
+					<name>BioPAX Releases Repository</name>
+					<url>${biopax.release.url}</url>
+				</repository>
+			</distributionManagement>
+		</profile>	
         <profile>
             <id>sonatype-release-profile</id>
             <build>
