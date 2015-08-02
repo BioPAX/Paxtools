@@ -22,6 +22,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 /**
  * A command line accessible utility for basic Paxtools operations.
@@ -47,7 +48,7 @@ public class PaxtoolsMain {
 
     public static void toGSEA(String[] argv) throws IOException
     {
-    	Model model = io.convertFromOWL(new FileInputStream(argv[1]));
+    	Model model = io.convertFromOWL(getInputStream(argv[1]));
     	Boolean specCheckEnabled = (argv.length>4) ? new Boolean(argv[4]) : Boolean.FALSE;
         (new GSEAConverter(argv[3], specCheckEnabled)).writeToGSEA(model, new FileOutputStream(argv[2]));
     }
@@ -60,7 +61,7 @@ public class PaxtoolsMain {
         String out = argv[3];
 
         // read BioPAX from the file
-        Model model = io.convertFromOWL(new FileInputStream(in));
+        Model model = io.convertFromOWL(getInputStream(in));
 
         // get elements (entities)
         Set<BioPAXElement> elements = new HashSet<BioPAXElement>();
@@ -100,7 +101,7 @@ public class PaxtoolsMain {
         String[] uris = argv[2].split(",");
         String out = argv[3];
 
-        Model model = io.convertFromOWL(new FileInputStream(in));
+        Model model = io.convertFromOWL(getInputStream(in));
         io.setFactory(model.getLevel().getDefaultFactory());
         // extract and save the sub-model (defined by ids)
         io.convertToOWL(model, new FileOutputStream(out), uris);
@@ -121,7 +122,7 @@ public class PaxtoolsMain {
     public static void toLevel3(String[] argv) throws IOException {
     	final String input = argv[1];
     	final String output = argv[2];
-    	FileInputStream is = new FileInputStream(input);
+    	InputStream is = getInputStream(input);
     	FileOutputStream os = new FileOutputStream(output);
     	
     	boolean forcePsiInteractionToComplex = false;
@@ -200,7 +201,7 @@ public class PaxtoolsMain {
         String input = argv[1];
         String output = argv[2];
 
-        Model model = io.convertFromOWL(new FileInputStream(input));
+        Model model = io.convertFromOWL(getInputStream(input));
         L3ToSBGNPDConverter l3ToSBGNPDConverter = new L3ToSBGNPDConverter();
         l3ToSBGNPDConverter.writeSBGN(model, output);
     }
@@ -289,7 +290,7 @@ public class PaxtoolsMain {
                 Model m = null;
                 msg = "";
                 try {
-                    m = io.convertFromOWL(new FileInputStream(f));
+                    m = io.convertFromOWL(getInputStream(f.getPath()));
                     msg = "Model that contains "
                             + m.getObjects().size()
                             + " elements is successfully created from " 
@@ -420,13 +421,11 @@ public class PaxtoolsMain {
         for (Command cmd : Command.values()) {
             System.out.println(cmd.name() + " " + cmd.description);
         }
-
+        System.out.println("Commands can also use compressed input files (only '.gz').\n");
     }
 
-    private static Model getModel(BioPAXIOHandler io,
-                                  String fName) throws FileNotFoundException {
-        FileInputStream file = new FileInputStream(fName);
-        return io.convertFromOWL(file);
+    private static Model getModel(BioPAXIOHandler io, String fName) throws IOException {
+        return io.convertFromOWL(getInputStream(fName));
     }
 
 	//----- Section: Printing summary -------------------------------------------------------------|
@@ -638,6 +637,13 @@ public class PaxtoolsMain {
 		if (!cnt.containsKey(key)) cnt.put(key, 0);
 		cnt.put(key, cnt.get(key) + 1);
 	}
+	
+	
+	// gets new IS - either FIS or GzipIS if .gz extension present
+	private static InputStream getInputStream(String path) throws IOException {
+		InputStream is = new FileInputStream(path);
+		return (path.endsWith(".gz")) ? new GZIPInputStream(is) : is ;
+	}
 
 	//-- End of Section; Printing summary ---------------------------------------------------------|
 	
@@ -645,10 +651,10 @@ public class PaxtoolsMain {
         merge("<file1> <file2> <output>\n" +
         		"\t- merges file2 into file1 and writes it into output")
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
-        toSif("<file1> <output> [hgnc|uniprot]\n" +
+        toSif("<input> <output> [hgnc|uniprot]\n" +
         		"\t- converts model to the simple interaction format; will use blacklist.txt file in the current directory, if present")
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("<file1> <output> [hgnc|uniprot] [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
+        toSifnx("<input> <output> [hgnc|uniprot] [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
         		"\t- converts model to the extended simple interaction format; will use blacklist.txt file in the current directory, if present")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         toSbgn("<biopax.owl> <output.sbgn>\n" +
@@ -664,28 +670,28 @@ public class PaxtoolsMain {
         integrate("<file1> <file2> <output>\n" +
         		"\t- integrates file2 into file1 and writes it into output (experimental)")
 		        {public void run(String[] argv) throws IOException{integrate(argv);} },
-        toLevel3("<file1> <output>\n" +
+        toLevel3("<input> <output>\n" +
         		"\t- converts BioPAX level 1 or 2, PSI-MI 2.5 and PSI-MITAB to the level 3 file;\n" +
         		"use -Dpaxtools.converter.psi.interaction=complex java option \n" +
         		"to force PSI Interaction to BioPAX Complex convertion instead of \n" +
         		"to MolecularInteraction (default).")
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
-        toGSEA("<file1> <output> <database> [crossSpeciesCheck]\n" +
+        toGSEA("<input> <output> <database> [crossSpeciesCheck]\n" +
         		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
                 + "\tUses that database identifier or the biopax URI if database is \"NONE\".\n"
                 + "\tCross species check ensures participant protein is from same species\n" +
                 "\tas pathway (set to true or false; if false, taxonomy/organism value there will be always 'unspecified').")
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
-        fetch("<file1> <Uri1,Uri2,..> <output>\n" +
+        fetch("<input> <Uri1,Uri2,..> <output>\n" +
         		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output.")
 		        {public void run(String[] argv) throws IOException{fetch(argv);} },
-        getNeighbors("<file1> <id1,id2,..> <output>\n" +
+        getNeighbors("<input> <id1,id2,..> <output>\n" +
         		"\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)")
 		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
-        summarize("<file> [<output>]\n" +
+        summarize("<input> [<output>]\n" +
         		"\t- prints a summary of the contents of the model to the output file (if not provided - to stdout)")
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
-		blacklist("<file> <output>\n" +
+		blacklist("<input> <output>\n" +
 		        "\t- creates a blacklist of ubiquitous small molecules, like ATP, "
 		        + "from the BioPAX model and writes it to the output file. The blacklist can be used with "
 		        + "paxtools graph queries or when converting from the SAME BioPAX data to the SIF formats.")
