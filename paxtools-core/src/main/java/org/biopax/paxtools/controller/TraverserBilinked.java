@@ -10,14 +10,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Ozgun Babur  //TODO annotate
+ * A bi-directional BioPAX properties traverser.
+ * 
+ * To traverse both biopax element's standard properties, such as 'xref',  
+ * and (Paxtools') inverse properties, such as 'xrefOf', etc.
+ * 
+ * @author Ozgun Babur 
  */
 public class TraverserBilinked extends Traverser
 {
 	private boolean isInverseOnly = false;
 	private final static Log log = LogFactory.getLog(TraverserBilinked.class);
 	
-	
+	/**
+	 * Constructor.
+	 * 
+	 * @param editorMap biopax property editors map
+	 * @param visitor user's implementation; if it recursively 
+	 * 		calls {@link #traverse(BioPAXElement, Model)} method, then care must be taken to prevent infinite loops.
+	 * @param filters bidirectional property filters
+	 */
 	public TraverserBilinked(EditorMap editorMap, Visitor visitor, PropertyFilterBilinked... filters)
 	{
 		super(editorMap, visitor, filters);
@@ -53,7 +65,7 @@ public class TraverserBilinked extends Traverser
 					if (!valueSet.isEmpty()) for (BioPAXElement value : valueSet)
 					{
 						if(value != null) {
-							//TODO design issue: how visitor will know whether it's called from inverse or normal property (e.g., to modify value)?
+							//TODO how visitor knows whether it's called from inverse or normal property (e.g., to modify a value)?
 							visitor.visit(element, value, model, editor); 
 						}
 					}

@@ -39,6 +39,18 @@ public class TransitiveAccessorTest
 		assertThat(true, is(components.contains(base)));
 		assertThat(true, is(components.contains(inner)));
 		assertThat(true, is(components.contains(innermost)));
-
+		
+		
+		//create a loop (bad idea, but it does happen in real data, not only with 'component' prop.)
+		components.clear();
+		innermost.addComponent(outer);
+		inner.addComponent(outer);
+		ta = TransitivePropertyAccessor.create(pe);
+		components = ta.getValueFromBean(outer); //should not fail or loop infinitely
+		assertThat(true, is(components.size() == 4));
+		assertThat(true, is(components.contains(base)));
+		assertThat(true, is(components.contains(inner)));
+		assertThat(true, is(components.contains(innermost)));
+		assertThat(true, is(components.contains(outer)));
 	}
 }
