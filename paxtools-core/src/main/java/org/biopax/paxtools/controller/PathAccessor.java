@@ -261,7 +261,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			{
 				if (ope.property.equals(forwardName))
 				{
-					if (simple == null) simple = ope.getInverseAccessor();
+					if (simple == null) simple = ope.getInverseAccessor();//TODO why not simply break, after assignment, instead using 'if'?
 				}
 
 			}
