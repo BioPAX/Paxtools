@@ -33,7 +33,7 @@ public class TransitiveAccessorTest
 		ObjectPropertyEditor<Complex, PhysicalEntity> pe =
 				(ObjectPropertyEditor<Complex, PhysicalEntity>) SimpleEditorMap.get(BioPAXLevel.L3).getEditorForProperty(
 						"component", Complex.class);
-		TransitivePropertyAccessor<Complex, PhysicalEntity> ta = TransitivePropertyAccessor.create(pe);
+		TransitivePropertyAccessor<PhysicalEntity, Complex> ta = TransitivePropertyAccessor.create(pe);
 		Set components = ta.getValueFromBean(outer);
 		assertThat(true, is(components.size() == 3));
 		assertThat(true, is(components.contains(base)));

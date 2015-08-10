@@ -122,7 +122,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 			} else if (s.equals("*"))
 			{
-				PropertyAccessor<? extends BioPAXElement, ?> lastAccessor = accessors.remove(accessors.size() - 1);
+				PropertyAccessor lastAccessor =
+						accessors.remove(accessors.size() - 1);
 				accessors.add(TransitivePropertyAccessor.create(lastAccessor));
 
 			} else if (s.equals(":"))
