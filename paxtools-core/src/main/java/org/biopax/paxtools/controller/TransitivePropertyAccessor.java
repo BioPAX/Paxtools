@@ -50,10 +50,8 @@ public class TransitivePropertyAccessor<R extends BioPAXElement, D extends R> ex
 					visited.pop();
 				}
 			} else {
-				//report loop
-				log.warn("Escaped an inf. loop in transitiveGet: already processed element: "
-				         + impl+" "
-						+ value.getRDFId());
+				if(log.isDebugEnabled())
+					log.debug("Inf. loop: " + impl + " " + value.getRDFId());
 			}
 		}
 	}
