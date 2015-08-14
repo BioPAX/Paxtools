@@ -7,6 +7,7 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * This class is a transitive decorator for PropertyAccessors. BioPAX has transitive properties, 
@@ -29,24 +30,26 @@ public class TransitivePropertyAccessor<R extends BioPAXElement, D extends R> ex
 	@Override public Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
 	{
 		Set<R> values = new HashSet<R>();
-
-		transitiveGet(bean, values);
+		Stack<BioPAXElement> visited = new Stack<BioPAXElement>();
+		visited.push(bean);
+		transitiveGet(bean, values, visited);
 		return values;
 	}
 
 
-	private void transitiveGet(D bean, Set<R> values)
+	private void transitiveGet(D bean, Set<R> values, Stack<BioPAXElement> visited)
 	{
 		Set<? extends R> valuesFromBean = impl.getValueFromBean(bean);
 		for (R value : valuesFromBean)
 		{
-			if(values.add(value))
-			{
-				//if(impl.getDomain().isInstance(value))
-				//This check is unnecessary as the impl also does that check
-				transitiveGet((D) value, values);
-			}
-			else {
+			values.add(value);
+			if(!visited.contains(value)) {
+				if(getDomain().isInstance(value)) {
+					visited.push(value);
+					transitiveGet((D) value, values, visited);
+					visited.pop();
+				}
+			} else {
 				//report loop
 				log.warn("Escaped an inf. loop in transitiveGet: already processed element: "
 				         + impl+" "

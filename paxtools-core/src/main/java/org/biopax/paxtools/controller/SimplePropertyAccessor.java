@@ -81,4 +81,9 @@ public class SimplePropertyAccessor<D extends BioPAXElement, R> extends Property
 	{
 		return value == null || (value instanceof Set ? ((Set) value).isEmpty() : false);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s %s %s", domain.getSimpleName(), getMethod.getName(), range.getSimpleName());
+	}
 }
