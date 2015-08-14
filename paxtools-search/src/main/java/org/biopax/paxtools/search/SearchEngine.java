@@ -392,7 +392,7 @@ public class SearchEngine implements Indexer, Searcher {
 			exec.execute(new Runnable() {
 				public void run() {					
 					// get or infer some important values if possible from this, child or parent objects:
-					Set<String> keywords = ModelUtils.getKeywords(bpe, 3);
+					Set<String> keywords = ModelUtils.getKeywords(bpe, 3); //TODO use Filter<DataPropertyEditor>... args
 					
 					// a hack to remove special (debugging) biopax comments
 					for(String s : new HashSet<String>(keywords)) {

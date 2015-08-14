@@ -14,7 +14,6 @@ import org.biopax.paxtools.util.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -737,7 +736,7 @@ public final class ModelUtils
 		} else
 		{
 			LOG.warn("These two physicalEntities do not share an EntityReference. They can not be compared! " +
-			         "Skipping");
+					"Skipping");
 			return false;
 		}
 
@@ -1088,32 +1087,37 @@ public final class ModelUtils
 
 
 	/**
-	 * Collects all data type (not object) property
+	 * Collects data type (not object) property
 	 * values (can be then used for full-text indexing).
 	 * 
 	 * @param biopaxElement biopax object
-	 * @param depth 0 means use this object's 
+	 * @param depth 0 means use this object's
 	 *        data properties only; 1 - add child's data properties; etc.
+	 * @param dataPropertyFilters - biopax data property filters to optionally
+	 *                        either skip e.g. properties 'sequence', 'temperature',
+	 *                        or only accept 'term', 'comment', 'name', etc.
 	 * @return set of keywords
 	 */
-	public static Set<String> getKeywords(BioPAXElement biopaxElement, int depth) {
-		
+	public static Set<String> getKeywords(BioPAXElement biopaxElement, int depth,
+										  Filter<DataPropertyEditor>... dataPropertyFilters)
+	{
 		LOG.debug("getKeywords called: " + biopaxElement.getRDFId());
 		
 		EditorMap em = SimpleEditorMap.L3;
 		Set<String> ss = new HashSet<String>();
-		
-		Set<BioPAXElement> elms = new Fetcher(em, Fetcher.nextStepFilter)
-			.fetch(biopaxElement, depth);
+		//fetch all the child biopax objects, given depth (ignoring PathwayStep.nextStep property)
+		Set<BioPAXElement> elms = new Fetcher(em, Fetcher.nextStepFilter).fetch(biopaxElement, depth);
 		//add this one too
 		elms.add(biopaxElement);
 		
 		for (BioPAXElement bpe : elms) {
 			Set<PropertyEditor> props = em.getEditorsOf(bpe);
 			for (PropertyEditor pe : props) {
-				if (pe instanceof ObjectPropertyEditor)
-					continue; //skip object props
-				
+				//skip for object prop. or one that fails to pass a filter
+				if (pe instanceof ObjectPropertyEditor
+						|| !filter((DataPropertyEditor)pe, dataPropertyFilters))
+					continue;
+
 				Set values = pe.getValueFromBean(bpe);
 				for (Object v : values) {
 					if (!pe.isUnknown(v)) {
@@ -1125,8 +1129,22 @@ public final class ModelUtils
 		
 		return ss;
 	}
-	
-	
+
+
+	private static <T extends PropertyEditor> boolean filter(T pe, Filter<T>... propertyFilters) {
+		if(propertyFilters.length==0)
+			return true;
+
+		for(Filter<T> pf : propertyFilters) {
+			if (!pf.filter(pe)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
 	/**
 	 * Collects BioSource objects from this or
 	 * related elements (where it makes sense;

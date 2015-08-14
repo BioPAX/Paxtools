@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * @see PropertyEditor
  */
 public class EnumeratedPropertyEditor<D extends BioPAXElement, R extends Enum>
-		extends AbstractPropertyEditor<D, R>
+		extends AbstractPropertyEditor<D, R> implements DataPropertyEditor<D,R>
 {
 // --------------------------- CONSTRUCTORS ---------------------------
 

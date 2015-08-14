@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
  * @see PropertyEditor
  */
 public class StringPropertyEditor<D extends BioPAXElement> extends AbstractPropertyEditor<D, String>
+		implements DataPropertyEditor<D,String>
 {
 // --------------------------- CONSTRUCTORS ---------------------------
 

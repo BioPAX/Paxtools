@@ -97,8 +97,9 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 	@Override
 	public String toString()
 	{
-		//TODO cardinalities are not being read
-		String def = domain.getSimpleName() + " " + property + " " + range.getSimpleName();
+		String def = String.format("%s %s %s", domain.getSimpleName(), property, range.getSimpleName());
+
+		//TODO cardinalities are not being read!
 		for (Class aClass : maxCardinalities.keySet())
 		{
 			Integer cardinality = maxCardinalities.get(aClass);

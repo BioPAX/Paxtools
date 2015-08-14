@@ -14,7 +14,7 @@ import java.util.Set;
  * @see PropertyEditor
  */
 public class PrimitivePropertyEditor<D extends BioPAXElement, R>
-		extends AbstractPropertyEditor<D, R>
+		extends AbstractPropertyEditor<D, R> implements DataPropertyEditor<D,R>
 {
 // ------------------------------ FIELDS ------------------------------
 
