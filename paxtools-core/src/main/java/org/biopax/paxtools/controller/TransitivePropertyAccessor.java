@@ -42,15 +42,12 @@ public class TransitivePropertyAccessor<R extends BioPAXElement, D extends R> ex
 		{
 			if(values.add(value))
 			{
-				//if(impl.getDomain().isInstance(value))
-				//This check is unnecessary as the impl also does that check
+				//if(impl.getDomain().isInstance(value)) - unnecessary as the impl does that check
 				transitiveGet((D) value, values);
 			}
 			else {
 				//report loop
-				log.warn("Escaped an inf. loop in transitiveGet: already processed element: "
-				         + impl+" "
-						+ value.getRDFId());
+				log.debug("Escaped an inf. loop (" + impl+ ") at " + value.getRDFId());
 			}
 		}
 	}
