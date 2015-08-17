@@ -6,6 +6,24 @@
 	<artifactId>pattern</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 
+	<url>https://github.com/BioPAX/pattern</url>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/BioPAX/pattern/issues</url>
+	</issueManagement>	
+
+	<ciManagement>
+		<system>Travis CI</system>
+        <url>https://travis-ci.org/BioPAX/pattern</url>
+	</ciManagement>
+
+   	<scm>
+		<connection>scm:git:git://github.com/BioPAX/pattern.git</connection>
+		<developerConnection>scm:git:git@github.com:BioPAX/pattern.git</developerConnection>
+		<url>https://github.com/BioPAX/pattern.git</url>
+	</scm>
+
 	<repositories>
 		<repository>
 			<id>central</id>
@@ -22,16 +40,10 @@
             <url>http://download.java.net/maven/2</url>
         </repository>
         <repository>
-            <id>biopax.releases</id>
-            <name>BioPAX Releases Repository at Sourceforge</name>
-            <url>http://biopax.sourceforge.net/m2repo/releases/</url>
+            <id>ossrh</id>
+            <name>OSSRH Repository</name>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
-		<repository>
-			<id>biopax.snapshots</id>
-			<name>BioPAX Snapshots Repository at Sourceforge</name>
-			<url>http://biopax.sourceforge.net/m2repo/snapshots/</url>
-            <snapshots><enabled>true</enabled></snapshots>
-		</repository>
 	</repositories>
 
 	<build>
@@ -91,7 +103,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
+    
     <distributionManagement>
         <repository>
             <id>pattern.repo</id>
@@ -101,6 +113,32 @@
     </distributionManagement>
 
 	<profiles>
+		<profile>
+			<id>ossrh</id>
+			<distributionManagement>
+				<site>
+					<!-- Do mvn site site:stage -DstagingDirectory=/tmp/path first 
+					(site-deploy immediately pushes to gh-pages on GitHub)-->
+					<id>github</id>
+					<name>BioPAX/pattern GitHub Pages</name>
+					<url>${project.version}</url>
+					<!--	temporarily change to full URL for site:stage to work
+					<url>http://biopax.github.io/pattern/${project.version}</url>
+				-->
+				</site>
+        		<repository>
+            		<id>ossrh</id>
+            		<name>Nexus Release Repository</name>
+            		<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        		</repository>
+        		<snapshotRepository>
+            		<id>ossrh</id>
+            		<name>Sonatype Nexus Snapshots</name>
+            		<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        		</snapshotRepository>
+        		<downloadUrl>http://www.biopax.org/downloads/</downloadUrl>
+			</distributionManagement>	
+		</profile>
 		<profile>
 			<id>local-deploy</id>
 			<distributionManagement>
