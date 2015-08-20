@@ -1,9 +1,8 @@
 # pattern
-## Pattern search software for BioPAX models ##
+## Pattern search for BioPAX models
 
-Please read the [wiki](https://github.com/BioPAX/pattern/wiki/Pattern).
+Please read the [wiki](https://github.com/BioPAX/Paxtools/wiki/Pattern).
 
-### How to cite ###
 If biopax-pattern framework was useful for your research, please cite the below article in your publications.
 
 Ö Babur, BA Aksoy, I Rodchenkov, SO Sümer, C Sander, E Demir [Pattern search in BioPAX models](http://bioinformatics.oxfordjournals.org/content/30/1/139.full.html) Bioinformatics (2014) 30 (1): 139-140.
