@@ -415,7 +415,7 @@ public class PaxtoolsMain {
 		blacklist.write(new FileOutputStream(argv[2]));
     }
    
-    static void help() {
+    public static void help() {
 
         System.out.println("(Paxtools Console) Available Operations:\n");
         for (Command cmd : Command.values()) {
@@ -423,6 +423,10 @@ public class PaxtoolsMain {
         }
         System.out.println("Commands can also use compressed input files (only '.gz').\n");
     }
+
+	public static void pattern(String[] argv) {
+		Dialog.main(argv);
+	}
 
     private static Model getModel(BioPAXIOHandler io, String fName) throws IOException {
         return io.convertFromOWL(getInputStream(fName));
@@ -672,9 +676,9 @@ public class PaxtoolsMain {
 		        {public void run(String[] argv) throws IOException{integrate(argv);} },
         toLevel3("<input> <output>\n" +
         		"\t- converts BioPAX level 1 or 2, PSI-MI 2.5 and PSI-MITAB to the level 3 file;\n" +
-        		"use -Dpaxtools.converter.psi.interaction=complex java option \n" +
-        		"to force PSI Interaction to BioPAX Complex convertion instead of \n" +
-        		"to MolecularInteraction (default).")
+        		"\tuse -Dpaxtools.converter.psi.interaction=complex java option \n" +
+        		"\tto force PSI Interaction to BioPAX Complex convertion instead of \n" +
+        		"\tto MolecularInteraction (default).")
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
         toGSEA("<input> <output> <database> [crossSpeciesCheck]\n" +
         		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
@@ -692,11 +696,13 @@ public class PaxtoolsMain {
         		"\t- prints a summary of the contents of the model to the output file (if not provided - to stdout)")
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
 		blacklist("<input> <output>\n" +
-		        "\t- creates a blacklist of ubiquitous small molecules, like ATP, "
-		        + "from the BioPAX model and writes it to the output file. The blacklist can be used with "
-		        + "paxtools graph queries or when converting from the SAME BioPAX data to the SIF formats.")
-				{public void run(String[] argv) throws IOException{blacklist(argv);} },		        
-        help("\t- prints this screen and exits")
+		        "\t- creates a blacklist of ubiquitous small molecules, like ATP, \n"
+		        + "\tfrom the BioPAX model and writes it to the output file. The blacklist can be used with\n "
+		        + "\tpaxtools graph queries or when converting from the SAME BioPAX data to the SIF formats.")
+				{public void run(String[] argv) throws IOException{blacklist(argv);} },
+		pattern("\n\t- BioPAX pattern search tool (opens a new dialog window)")
+				{public void run(String[] argv) throws IOException{pattern(argv);} },
+        help("\n\t- prints this screen and exits\n")
 		        {public void run(String[] argv) throws IOException{help();} };
 
         String description;

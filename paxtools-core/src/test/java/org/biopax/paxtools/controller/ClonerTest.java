@@ -10,6 +10,6 @@ public class ClonerTest
 	@Test
 	public void testClone() throws Exception
 	{
-		
+		//TODO empty body (add assertions)
 	}
 }
