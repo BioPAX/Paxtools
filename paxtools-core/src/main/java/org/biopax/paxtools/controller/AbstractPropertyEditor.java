@@ -339,6 +339,9 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 
 	@Override public void removeValueFromBean(R value, D bean)
 	{
+		if(value == null)
+			return;
+
 		try
 		{
 			if (removeMethod != null)

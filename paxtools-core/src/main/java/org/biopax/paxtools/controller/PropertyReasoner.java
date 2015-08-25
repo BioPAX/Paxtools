@@ -55,36 +55,19 @@ public class PropertyReasoner extends AbstractTraverser
 	 * {@link #visit(Object, BioPAXElement, Model, PropertyEditor)}
 	 * for each *object* property, except for 'nextStep'.
 	 * 
-	 * @param property biopax property name
+	 * @param property biopax property name, e.g., "organism", "dataSource"
 	 * @param editorMap biopax property editors map
 	 */
 	public PropertyReasoner(String property, EditorMap editorMap) 
 	{
         this(property, editorMap, new Filter<PropertyEditor>() {
 			public boolean filter(PropertyEditor editor) {
-				return (editor instanceof ObjectPropertyEditor)
+				return (editor instanceof ObjectPropertyEditor) //i.e., visit only object properties, except -
 						&& !editor.getProperty().equals("nextStep")
 						&& !editor.getProperty().equals("NEXT-STEP");
 			}
 		});
     }
-	
-	
-
-	/**
-	 * @return the BioPAX property name
-	 */
-	public String getPropertyName() {
-		return property;
-	}
-
-
-	/**
-	 * @param propertyName the BioPAX property name to use
-	 */
-	public void setPropertyName(String propertyName) {
-		this.property = propertyName;
-	}
 
 
 	/**
@@ -167,65 +150,57 @@ public class PropertyReasoner extends AbstractTraverser
 	@Override
 	public void traverse(BioPAXElement bpe, Model model)
 	{
-		if (bpe == null)
-			return;
-		
 		PropertyEditor editor = editorMap
 			.getEditorForProperty(property, bpe.getModelInterface());
-		
+
+		//we care only about one BioPAX property
 		if (editor != null) { // so, property values may be considered for children...
 			if (isInstanceofOneOf(domains, bpe)) { // when is allowed to modify
-				Set existingValues = editor.getValueFromBean(bpe);
-				if (!editor.isMultipleCardinality()) { 
+				Set<?> currentValues = editor.getValueFromBean(bpe);
+
+				if (!editor.isMultipleCardinality()) {
 					//this is for a single cardinality prop. -
-					Set value = this.valueStack.peek(); 
-					
-					//thus, both sets are an empty set or singleton!
-					assert(value.isEmpty() || value.size()==1);
-					assert(existingValues.isEmpty() || existingValues.size()==1);
-					
-					if (editor.isUnknown(existingValues)) {
-						if(!editor.isUnknown(value)) { // skip repl. unknown with unknown
-							editor.setValueToBean(value, bpe);
-							comment(bpe, value, false);
+					Set<?> parentValues = valueStack.peek();
+
+					if (editor.isUnknown(currentValues)) {
+						if(!editor.isUnknown(parentValues)) { // skip repl. unknown with unknown
+							editor.setValueToBean(parentValues, bpe);
+							comment(bpe, parentValues, false);
 						}
-					} 
-					else if(override 
-							// and not replicate the same -
-							&& !existingValues.equals(value) 
-							&& !existingValues.containsAll(value)) 
-					{
-							editor.setValueToBean(value, bpe);
-							comment(bpe, existingValues, true);
-							comment(bpe, value, false);
 					}
-				} 
+					else if(override // and not replicate the same -
+						&& !currentValues.equals(parentValues)
+						&& !currentValues.containsAll(parentValues))
+					{
+							editor.setValueToBean(parentValues, bpe);
+							comment(bpe, currentValues, true);
+							comment(bpe, parentValues, false);
+					}
+				}
 				else { // - for a multiple cardinality property
 					// to add all from the stack
-					if(override && !this.valueStack.contains(existingValues)) 
+					if(override)
 					{ // clear, skipping those to stay
-						for (Object v : existingValues) {
+						for (Object v : currentValues) {
 								editor.removeValueFromBean(v, bpe);
 								comment(bpe, v, true); //removed
 						}
 					}
-					
-					// add all new values (sets)
-					for (Set v : this.valueStack) {
-						if(!existingValues.containsAll(v)) {
-							editor.setValueToBean(v, bpe);
-							comment(bpe, v, false); // added
-						}
+
+					// add all new values (from all sets in the stack); duplicates are ignored
+					for (Set<?> v : valueStack) {
+						editor.setValueToBean(v, bpe);
+						comment(bpe, v, false); // added
 					}
 				}
-			} 
+			}
 
 			if (!override) {
 				// save current values (does not matter modified or not)
-				this.valueStack.push(editor.getValueFromBean(bpe));
+				valueStack.push(editor.getValueFromBean(bpe));
 			} else {
-				// just repeat the same
-				this.valueStack.push(this.valueStack.peek());
+				// just repeat the same values
+				valueStack.push(valueStack.peek());
 			}
 		}
 		
@@ -234,23 +209,21 @@ public class PropertyReasoner extends AbstractTraverser
 		
 		if(editor != null) {
 			// return to previous parent values/state
-			this.valueStack.pop();
+			valueStack.pop();
 		}
 	}
 	
 
 	/**
-	 * Simply, calls {@link #traverse(BioPAXElement, Model)} 
+	 * Simply, calls {@link #traverse(BioPAXElement, Model)}
 	 * and goes deeper when the {@link #property} range/values is a BioPAX object.
 	 */
 	@Override
     protected void visit(Object range, BioPAXElement bpe, 
     		Model model, PropertyEditor editor)
-	{    	
-    	if (range instanceof BioPAXElement)
-		{
-    		traverse((BioPAXElement) range, model);
-		}
+	{
+		//range is a BioPAXElement, because of the filter defined in the Constructor
+		traverse((BioPAXElement)range, model);
 	}
 
 	
@@ -368,7 +341,9 @@ public class PropertyReasoner extends AbstractTraverser
     protected void run(BioPAXElement element, Object defaultValue)
 	{
     	valueStack.clear();
-		// default
+		reset();
+
+		// init default values
     	Set valueInSet; 
 		if(defaultValue instanceof Set) {
 			valueInSet = (Set) defaultValue;
@@ -383,6 +358,8 @@ public class PropertyReasoner extends AbstractTraverser
 		}
 				
     	valueStack.push(valueInSet);
+
+		//start traversing
     	traverse(element, null);
 	}
     
@@ -399,8 +376,10 @@ public class PropertyReasoner extends AbstractTraverser
 	{
     	boolean override = isOverride();
     	setOverride(true);
+
     	run(element, null);
-    	setOverride(override);
+
+		setOverride(override);
 	}
     
     
@@ -425,7 +404,9 @@ public class PropertyReasoner extends AbstractTraverser
     	
     	boolean override = isOverride();
     	setOverride(true);
-    	run(element, defaultValue);
+
+		run(element, defaultValue);
+
     	setOverride(override);
 	}
     
@@ -448,7 +429,9 @@ public class PropertyReasoner extends AbstractTraverser
 	{
     	boolean override = isOverride();
     	setOverride(false);
-    	run(element, addValue);
+
+		run(element, addValue);
+
     	setOverride(override);
 	}
     
@@ -467,8 +450,11 @@ public class PropertyReasoner extends AbstractTraverser
 	{
     	boolean override = isOverride();
     	setOverride(false);
-    	run(element, null);
-    	setOverride(override);
+
+		run(element, null);
+
+		setOverride(override);
 	}
+
 }
 

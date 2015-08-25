@@ -145,7 +145,7 @@ public class Fetcher {
     			{
     				BioPAXElement bpe = (BioPAXElement) range;
     				children.add(bpe);
-    				if(depth < 1 || depth > getVisited().size())
+    				if(depth < 1 || depth > getVisited().size()) //TODO make sure visited.size is current depth...
     					traverse(bpe, model);
     			}
     		}

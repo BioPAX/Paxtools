@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -134,8 +135,8 @@ public class ModelUtilsTest {
 	@Test
 	public final void testInferPropertyFromParent() {
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
-		Provenance pro1 = model.addNew(Provenance.class, "urn:miriam:pid.pathway");
-		Provenance pro2 = model.addNew(Provenance.class, "urn:miriam:signaling-gateway");
+		Provenance pro1 = model.addNew(Provenance.class, "pid.pathway");
+		Provenance pro2 = model.addNew(Provenance.class, "signaling-gateway");
 		Pathway pw1 = model.addNew(Pathway.class, "pathway");
 		pw1.addDataSource(pro1);
 		pw1.setStandardName("Pathway");
@@ -330,13 +331,46 @@ public class ModelUtilsTest {
 
 		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
 	}
-//
-//	@SuppressWarnings("unchecked")
-//	@Test
-//	public final void testForEndlessLoopOrOutOfMemory() {
-//		Model model = new SimpleIOHandler()
-//			.convertFromOWL(getClass().getResourceAsStream("/pathway812.owl"));		
-//		ModelUtils.inferPropertiesFromParent(model, 
-//				new HashSet<String>(Arrays.asList("dataSource", "organism","organism")));	
-//	}
+
+	@Test
+	public final void testForEndlessLoopOrOutOfMemory() {
+		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
+		Pathway pw1 = model.addNew(Pathway.class, "pathway1");
+		pw1.setStandardName("Pathway1");
+		Pathway pw2 = model.addNew(Pathway.class, "pathway2");
+		pw2.setStandardName("Pathway2");
+		Pathway pw3 = model.addNew(Pathway.class, "pathway3");
+		pw3.setStandardName("Pathway3");
+		Pathway pw4 = model.addNew(Pathway.class, "pathway4");
+		pw3.setStandardName("Pathway4");
+
+		pw1.addPathwayComponent(pw2);
+		pw1.addPathwayComponent(pw3);
+		pw1.addPathwayComponent(pw4);
+		pw2.addPathwayComponent(pw3);
+		pw2.addPathwayComponent(pw4);
+		pw3.addPathwayComponent(pw4);
+		pw3.addPathwayComponent(pw1); //loop
+		pw4.addPathwayComponent(pw2); //loop
+
+		Protein p1 = model.addNew(Protein.class, "p1");
+		Conversion conv1 = model.addNew(Conversion.class, "conv1");
+		pw1.addPathwayComponent(conv1);
+		pw3.addPathwayComponent(conv1);
+		conv1.addLeft(p1);
+		conv1.addRight(p1);
+
+		Protein p2 = model.addNew(Protein.class, "p2");
+		Control con1 = model.addNew(Control.class, "con1");
+		con1.addControlled(conv1);
+		con1.addController(p2);
+
+		pw3.addPathwayComponent(conv1);
+		pw4.addPathwayComponent(con1);
+
+		Set<Protein> proteins = new Fetcher(SimpleEditorMap.L3).fetch(pw1, Protein.class);
+
+		//TODO add assertions (if the above did not fail/loop/went out of memory...)
+		assertEquals(2, proteins.size());
+	}
 }

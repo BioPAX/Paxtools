@@ -361,16 +361,14 @@ public final class ModelUtils
 	{
 		Model m = factory.createModel();
 
-		@SuppressWarnings("unchecked")
-		final AbstractTraverser traverser = new AbstractTraverser(em)
-		{
+		Traverser traverser = new Traverser(em, new Visitor() {
 			@Override
-			protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor<?,?> editor)
+			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?,?> editor)
 			{
 				if (range instanceof BioPAXElement && !model.containsID(((BioPAXElement) range).getRDFId()))
 					model.add((BioPAXElement) range);
 			}
-		};
+		});
 
 		traverser.traverse(bpe, m);
 
@@ -411,20 +409,18 @@ public final class ModelUtils
 	{
 		final Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
 
-		@SuppressWarnings("unchecked")
-		final AbstractTraverser traverser = new AbstractTraverser(em)
-		{
-			@Override
-			protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor<?,?> editor)
-			{
-				if (range instanceof BioPAXElement)
-				{
-					toReturn.add((BioPAXElement) range);
+		Traverser traverser = new Traverser(em, new Visitor() {
+				@Override
+				public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?, ?> editor) {
+					if (range instanceof BioPAXElement) {
+						toReturn.add((BioPAXElement) range);
+					}
 				}
 			}
-		};
+		);
 
 		traverser.traverse(bpe, null);
+
 		return toReturn;
 	}
 	

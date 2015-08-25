@@ -26,8 +26,8 @@ public class PropertyReasonerTest {
 	public void setUp() throws Exception {
 		// TODO create/refresh test elements that make sense for the following tests only...
 		model = BioPAXLevel.L3.getDefaultFactory().createModel();
-		pro1 = model.addNew(Provenance.class, "urn:miriam:pid.pathway");
-		pro2 = model.addNew(Provenance.class, "urn:miriam:signaling-gateway");
+		pro1 = model.addNew(Provenance.class, "pid.pathway");
+		pro2 = model.addNew(Provenance.class, "signaling-gateway");
 		pw1 = model.addNew(Pathway.class, "pathway");
 		pw2 = model.addNew(Pathway.class, "sub_pathway"); // no 'organism' will be set
 		p1 = model.addNew(Protein.class, "p1"); // no dataSource
@@ -84,7 +84,7 @@ public class PropertyReasonerTest {
 	
 	@Test
 	public final void testRun_Basic() {	
-		// singular object property
+		// for a singular cardinality object property
 		PropertyReasoner prr = new PropertyReasoner("organism", SimpleEditorMap.L3);
 		prr.inferPropertyValue(pw1);
 		
@@ -93,34 +93,25 @@ public class PropertyReasonerTest {
 		assertEquals(mm, pr1.getOrganism());
 		assertEquals(mm, g1.getOrganism()); // inferred from the parent pathway!
 		assertEquals(1, g1.getComment().size()); // a new comment was generated!
-		
-		// TODO singular primitive property
-		prr.setPropertyName("ph");
-		
-		// multiple cardinality object property
-		prr.setPropertyName("dataSource");
+
+		// for a multiple cardinality object property
+		prr = new PropertyReasoner("dataSource", SimpleEditorMap.L3);
 		assertTrue(p1.getDataSource().isEmpty());
 		assertEquals(1, pw1.getDataSource().size());
+		//run
 		prr.inferPropertyValue(pw1);
 		assertEquals(1, p1.getDataSource().size());
 		assertEquals(2, pw2.getDataSource().size());
+
 		//TODO add more checks
-		
-		// TODO multiple primitive property
-		// Note: in practice, it's not a good idea to infer names though ;-)
-		prr.setPropertyName("name");
-		
 	}
 
 	
 	@Test
 	public final void testRun_Clear() {
-		PropertyReasoner prr = new PropertyReasoner(null,SimpleEditorMap.L3);
-		prr.setPropertyName("organism");
+		PropertyReasoner prr = new PropertyReasoner("organism",SimpleEditorMap.L3);
 		prr.clearProperty(pw1);
-		
-		//printModel();
-		
+
 		assertNull(pr2.getOrganism());
 		assertEquals(2, pr2.getComment().size());
 		assertNull(pr1.getOrganism());
@@ -133,9 +124,8 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_AutoOverride() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
-		prr.setPropertyName("organism");
-		
+		PropertyReasoner prr = new PropertyReasoner("organism", SimpleEditorMap.L3);
+
 		assertNull(pr1.getOrganism());
 		assertEquals(mm, pw1.getOrganism());
 		
@@ -154,8 +144,6 @@ public class PropertyReasonerTest {
 		pr2.setOrganism(mm);
 		
 		prr.inferPropertyValue(pw1, hs); // use default value
-		
-		//printModel();
 
 		assertEquals(hs, pw1.getOrganism());
 		assertEquals(hs, pr1.getOrganism());
@@ -167,14 +155,11 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_AutoOverride1() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
-		prr.setPropertyName("organism");
-		
+		PropertyReasoner prr = new PropertyReasoner("organism", SimpleEditorMap.L3);
+
 		assertNull(pr1.getOrganism());
 		
 		prr.inferPropertyValue(conv1, hs); // use optional default value
-		
-		//printModel();
 
 		assertEquals(hs, pr1.getOrganism());
 		assertEquals(1, pr1.getComment().size());
@@ -184,9 +169,8 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_AutoOverride2() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
-		prr.setPropertyName("organism");
-		
+		PropertyReasoner prr = new PropertyReasoner("organism", SimpleEditorMap.L3);
+
 		assertNull(pr1.getOrganism());
 		
 		prr.inferPropertyValue(conv1, null); // no default value - same as prr.inferPropertyValue(conv1)
@@ -198,17 +182,14 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_DefaultOverride() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
-		prr.setPropertyName("organism");
-		
+		PropertyReasoner prr = new PropertyReasoner("organism", SimpleEditorMap.L3);
+
 		assertEquals(hs, pr2.getOrganism());
 		assertNull(pr1.getOrganism());
 		assertNull(g1.getOrganism()); 
 		
 		prr.resetPropertyValue(pw1, mm);
-		
-		//printModel();
-		
+
 		assertEquals(0, pw1.getComment().size()); // was already 'mouse'
 		assertEquals(mm, pw2.getOrganism());
 		assertEquals(1, pw2.getComment().size()); //added
@@ -226,8 +207,7 @@ public class PropertyReasonerTest {
 	@Test
 	public final void testRun_NullOverride() {
 		// single cardinality
-		PropertyReasoner prr = new PropertyReasoner(null, SimpleEditorMap.L3);
-		prr.setPropertyName("organism");
+		PropertyReasoner prr = new PropertyReasoner("organism", SimpleEditorMap.L3);
 		try {
 			prr.resetPropertyValue(pw1, null);
 			fail("Must fail!");
