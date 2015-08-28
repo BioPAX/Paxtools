@@ -131,82 +131,7 @@ public class ModelUtilsTest {
 		assertEquals(pr1, p1.getEntityReference());
 	}
 
-	
-	@Test
-	public final void testInferPropertyFromParent() {
-		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
-		Provenance pro1 = model.addNew(Provenance.class, "pid.pathway");
-		Provenance pro2 = model.addNew(Provenance.class, "signaling-gateway");
-		Pathway pw1 = model.addNew(Pathway.class, "pathway");
-		pw1.addDataSource(pro1);
-		pw1.setStandardName("Pathway");
-		Pathway pw2 = model.addNew(Pathway.class, "sub_pathway");
-		pw2.setStandardName("Sub-Pathway");
-		pw2.addDataSource(pro2);
-		pw1.addPathwayComponent(pw2);
-		
-		
-		Protein p1 = model.addNew(Protein.class, "p1"); // no dataSource
-		Conversion conv1 = model.addNew(Conversion.class, "conv1"); // no dataSource
-		pw1.addPathwayComponent(conv1);
-		pw2.addPathwayComponent(conv1); //smoke/loop test: because hardly a conv1 (thus p1) can belong to 2 such pathways...
-		conv1.addLeft(p1);
-		
-		ModelUtils.inferPropertyFromParent(model, "dataSource", Pathway.class); // apply to pathways only
-		
-		assertEquals(2, pw2.getDataSource().size());
-		assertEquals(1, pw1.getDataSource().size());
-		//a protein without dataSource must still have it empty (when Pathway.class used to filter)
-		assertEquals(0, p1.getDataSource().size());
-		
-		ModelUtils.inferPropertyFromParent(model, "dataSource"); // no filters
-		
-		assertEquals(2, pw2.getDataSource().size());
-		assertEquals(1, pw1.getDataSource().size());
-		assertEquals(2, p1.getDataSource().size()); // because conv1 belongs to pw1 and pw2!
-	}
-	
-	
-	@Test
-	public final void testInferPropertyFromParent2() {
-		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
-		Pathway pw1 = model.addNew(Pathway.class, "pathway1");
-		BioSource mm = model.addNew(BioSource.class, "mouse");
-		pw1.setOrganism(mm); // 
-		Protein p1 = model.addNew(Protein.class, "p1"); 
-		ProteinReference pr1 = model.addNew(ProteinReference.class, "pr1"); 
-		p1.setEntityReference(pr1);
-		Protein p2 = model.addNew(Protein.class, "p2"); 
-		ProteinReference pr2 = model.addNew(ProteinReference.class, "pr2"); 
-		p2.setEntityReference(pr2);
-		BioSource hs = model.addNew(BioSource.class, "human");
-		pr2.setOrganism(hs);
-		Conversion conv1 = model.addNew(Conversion.class, "conv1");
-		conv1.addLeft(p1);
-		pw1.addPathwayComponent(conv1);
-		pw1.setStandardName("Pathway1");
-		Gene g1 = model.addNew(Gene.class, "gene1");
-		PathwayStep s1 = model.addNew(PathwayStep.class, "step1");
-		Catalysis ca1 = model.addNew(Catalysis.class, "catalysis1");
-		ca1.addControlled(conv1);
-		GeneticInteraction gi1 = model.addNew(GeneticInteraction.class, "gi1");
-		pw1.addPathwayComponent(gi1);
-		pw1.addPathwayComponent(ca1);
-		pw1.addPathwayOrder(s1);
-		gi1.addParticipant(g1);
-		s1.addStepProcess(ca1);
-		s1.addStepProcess(gi1);
-		
-		ModelUtils.inferPropertyFromParent(model, "organism", Gene.class, Pathway.class); // but not for SequenceEntityReference.class in this test ;)
-		
-		assertEquals(hs, pr2.getOrganism()); // still human, because it wasn't empty!
-		assertEquals(mm, g1.getOrganism()); // inferred from the parent pathway!
-		assertEquals(1, g1.getComment().size()); // - he-he, and a new comment was generated!
-		assertNull(pr1.getOrganism()); // because ERs were filtered!
-		
-		//printModel(model);
-	}
-		
+
 	private void printModel(Model model) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		new SimpleIOHandler().convertToOWL(model, bytes);
@@ -330,47 +255,5 @@ public class ModelUtilsTest {
 		ModelUtils.mergeEquivalentInteractions(model);
 
 		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
-	}
-
-	@Test
-	public final void testForEndlessLoopOrOutOfMemory() {
-		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
-		Pathway pw1 = model.addNew(Pathway.class, "pathway1");
-		pw1.setStandardName("Pathway1");
-		Pathway pw2 = model.addNew(Pathway.class, "pathway2");
-		pw2.setStandardName("Pathway2");
-		Pathway pw3 = model.addNew(Pathway.class, "pathway3");
-		pw3.setStandardName("Pathway3");
-		Pathway pw4 = model.addNew(Pathway.class, "pathway4");
-		pw3.setStandardName("Pathway4");
-
-		pw1.addPathwayComponent(pw2);
-		pw1.addPathwayComponent(pw3);
-		pw1.addPathwayComponent(pw4);
-		pw2.addPathwayComponent(pw3);
-		pw2.addPathwayComponent(pw4);
-		pw3.addPathwayComponent(pw4);
-		pw3.addPathwayComponent(pw1); //loop
-		pw4.addPathwayComponent(pw2); //loop
-
-		Protein p1 = model.addNew(Protein.class, "p1");
-		Conversion conv1 = model.addNew(Conversion.class, "conv1");
-		pw1.addPathwayComponent(conv1);
-		pw3.addPathwayComponent(conv1);
-		conv1.addLeft(p1);
-		conv1.addRight(p1);
-
-		Protein p2 = model.addNew(Protein.class, "p2");
-		Control con1 = model.addNew(Control.class, "con1");
-		con1.addControlled(conv1);
-		con1.addController(p2);
-
-		pw3.addPathwayComponent(conv1);
-		pw4.addPathwayComponent(con1);
-
-		Set<Protein> proteins = new Fetcher(SimpleEditorMap.L3).fetch(pw1, Protein.class);
-
-		//TODO add assertions (if the above did not fail/loop/went out of memory...)
-		assertEquals(2, proteins.size());
 	}
 }

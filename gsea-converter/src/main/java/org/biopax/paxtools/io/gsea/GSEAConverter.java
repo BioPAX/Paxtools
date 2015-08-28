@@ -54,6 +54,8 @@ public class GSEAConverter
 	
 	private final String database;
 	private final boolean crossSpeciesCheckEnabled;
+	private final boolean skipSubPathways;
+	//TODO add a new property: Set<Provenance> skipSubPathwaysOfDatasources
 
 	/**
 	 * Constructor.
@@ -65,7 +67,7 @@ public class GSEAConverter
 
 	/**
 	 * Constructor.
-	 * <p/>
+	 *
 	 * See class declaration for more information.
 	 * @param database - identifier type, name of the resource, either the string value 
 	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
@@ -77,8 +79,28 @@ public class GSEAConverter
 	 */
 	public GSEAConverter(final String database, boolean crossSpeciesCheckEnabled)
 	{
+		this(database, crossSpeciesCheckEnabled, false);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * See class declaration for more information.
+	 * @param database - identifier type, name of the resource, either the string value
+	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
+	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
+	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs
+	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt;
+	 *                   (it depends on the actual data; so double-check before using in this constructor).
+	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
+	 * @param skipSubPathways - if true, do not traverse into sub-pathways to collect entity references
+	 *                       (useful when a model, such as converted to BioPAX KEGG data, has lots of sub-pathways, loops.)
+	 */
+	public GSEAConverter(final String database, boolean crossSpeciesCheckEnabled, boolean skipSubPathways)
+	{
 		this.database = database;
 		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
+		this.skipSubPathways = skipSubPathways;
 	}
 
 	/**
@@ -107,7 +129,7 @@ public class GSEAConverter
 	 */
 	public Collection<GSEAEntry> convert(final Model model)
 	{
-		Collection<GSEAEntry> toReturn = new TreeSet<GSEAEntry>(new Comparator<GSEAEntry>() {
+		final Collection<GSEAEntry> toReturn = new TreeSet<GSEAEntry>(new Comparator<GSEAEntry>() {
 			@Override
 			public int compare(GSEAEntry o1, GSEAEntry o2) {
 				return o1.toString().compareTo(o2.toString());
@@ -123,35 +145,55 @@ public class GSEAConverter
 		
 		//a modifiable copy of the set of all PRs in the model - 
 		//simply to keep, after all, all the PRs that do not belong to any pathway
-		Set<ProteinReference> prs = new HashSet<ProteinReference>(
-				l3Model.getObjects(ProteinReference.class));
-		
-		Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
+		final Set<ProteinReference> prs = Collections.synchronizedSet(
+				new HashSet<ProteinReference>(l3Model.getObjects(ProteinReference.class))
+		);
+
+		ExecutorService exe = Executors.newFixedThreadPool(10);
+		final Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
 		for (Pathway pathway : pathways) 
 		{
-			String name = (pathway.getDisplayName() == null) 
+			String name = (pathway.getDisplayName() == null)
 					? pathway.getStandardName() : pathway.getDisplayName();
 			LOG.info("Processing " + name + "pathway, uri=" + pathway.getRDFId());
 			
 			if(name == null || name.isEmpty()) 
 				name = pathway.getRDFId();
-			
-			Set<ProteinReference> pathwayProteinRefs = 
-				(new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter))
-					.fetch(pathway, ProteinReference.class);
-			LOG.info("- fetched PRs: " + pathwayProteinRefs.size());
-			if(!pathwayProteinRefs.isEmpty()) {
-				LOG.info("- grouping the PRs by organism...");
-				Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(pathwayProteinRefs);			
-				// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
-				String dataSource = getDataSource(pathway.getDataSource());
-				LOG.info("- creating GSEA/GMT entries...");
-				Collection<GSEAEntry> entries = createGseaEntries(name, dataSource, orgToPrsMap);
-				if(!entries.isEmpty())
-					toReturn.addAll(entries);
-				prs.removeAll(pathwayProteinRefs);//there left not yet processed PRs (PR can be processed multiple times anyway)
-				LOG.info("- collected " + entries.size() + "entries.");
-			}
+
+			final Pathway currentPathway = pathway;
+			final String currentPathwayName = name;
+
+			exe.submit(new Runnable() {
+				@Override
+				public void run() {
+					Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
+					fetcher.setSkipSubPathways(skipSubPathways);
+
+					Set<ProteinReference> pathwayProteinRefs = fetcher
+							.fetch(currentPathway, ProteinReference.class);
+
+					LOG.info("- fetched PRs: " + pathwayProteinRefs.size());
+					if(!pathwayProteinRefs.isEmpty()) {
+						LOG.info("- grouping the PRs by organism...");
+						Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(pathwayProteinRefs);
+						// create GSEA/GMT entries - one entry per organism (null organism also makes one)
+						String dataSource = getDataSource(currentPathway.getDataSource());
+						LOG.info("- creating GSEA/GMT entries...");
+						Collection<GSEAEntry> entries = createGseaEntries(currentPathwayName, dataSource, orgToPrsMap);
+						if(!entries.isEmpty())
+							toReturn.addAll(entries);
+						prs.removeAll(pathwayProteinRefs);//there left not yet processed PRs (PR can be processed multiple times anyway)
+						LOG.info("- collected " + entries.size() + "entries.");
+					}
+				}
+			});
+		}
+
+		exe.shutdown();
+		try {
+			exe.awaitTermination(48, TimeUnit.HOURS);
+		} catch (InterruptedException e) {
+			throw new RuntimeException("Interrupted unexpectedly!");
 		}
 		
 		//when there're no pathways, only empty pathays, pathways w/o PRs, then use all/rest of PRs -
@@ -175,7 +217,7 @@ public class GSEAConverter
 	{
 		// generate GSEA entries for each taxId in parallel threads; await till all done (before returning)
 		final Collection<GSEAEntry> toReturn = Collections.synchronizedList(new ArrayList<GSEAEntry>());	
-		ExecutorService exe = Executors.newFixedThreadPool(10);
+		ExecutorService exe = Executors.newFixedThreadPool(5);
 		for (final String org : orgToPrsMap.keySet()) {
 			if(orgToPrsMap.get(org).size() > 0) {
 				exe.submit(new Runnable() {

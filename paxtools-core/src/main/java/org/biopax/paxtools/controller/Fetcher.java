@@ -4,8 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.util.Filter;
 
 /**
@@ -24,7 +26,8 @@ public class Fetcher {
     
 	private final EditorMap editorMap;
     private final Filter<PropertyEditor>[] filters;
-	
+
+	private boolean skipSubPathways;
 
 	/**
 	 * This property filter can be used to ignore 'nextStep' ('NEXT-STEP' in L2) 
@@ -59,23 +62,54 @@ public class Fetcher {
 		}
 	};
 
+
+	private final Filter<PropertyEditor> objectPropertiesOnlyFilter = new Filter<PropertyEditor>()
+	{
+		public boolean filter(PropertyEditor editor)
+		{
+			return (editor instanceof ObjectPropertyEditor);
+		}
+	};
+
 	
     /**
      * Constructor.
      * 
      * @param editorMap BioPAX property editors map implementation
      * @param filters optional, biopax object property filters 
-     *        to skip traversing/visiting into some property values.
+     *        to skip traversing/visiting into some object property values
+	 *        (the default 'object properties only' filter to is always enabled).
      */
 	public Fetcher(EditorMap editorMap, Filter<PropertyEditor>... filters) {
         this.editorMap = editorMap;
-        this.filters = filters;
+        this.filters = (Filter<PropertyEditor>[])ArrayUtils.add(filters, objectPropertiesOnlyFilter);
+		this.skipSubPathways = false;
     }
 
 
-    /**
-     * Adds the element and all its children to the model.
-     * 
+	/**
+	 * Use this property to optionally
+	 * skip (if true) traversing into sub-pathways;
+	 * i.e., when a biopax property, such as pathwayComponent
+	 * or controlled, value is a Pathway.
+	 *
+	 * @param skipSubPathways
+	 */
+	public void setSkipSubPathways(boolean skipSubPathways) {
+		this.skipSubPathways = skipSubPathways;
+	}
+
+	public boolean isSkipSubPathways() {
+		return skipSubPathways;
+	}
+
+	/**
+     * Adds the element and all its children
+	 * (found via traversing into object properties that
+	 * pass all the filters defined in the Constructor, and
+	 * also taking #isSkipSubPathways into account)
+	 * to the target model.
+     *
      * This method fails if there are different child objects
      * with the same ID, because normally a good (self-consistent) 
      * model does not contain duplicate BioPAX elements. Consider
@@ -85,87 +119,104 @@ public class Fetcher {
      * @param element the BioPAX element to be added into the model
      * @param model model into which elements will be added
      */
-    public void fetch(BioPAXElement element, Model model)
+    public void fetch(final BioPAXElement element, final Model model)
 	{
     	if(!model.containsID(element.getRDFId()))
     		model.add(element);
     	
     	Set<BioPAXElement> children = fetch(element);
     	
-        for(BioPAXElement e : children)
-        	if(!model.containsID(e.getRDFId())) {
-        		model.add(e);
-        	} else if(!model.contains(e)) 
-        		throw new AssertionError(
-        		"fetch(bioPAXElement, model): found different child objects " +
-        		"with the same URI: " + e.getRDFId() +
-        		"(replace/merge, or use fetch(bioPAXElement) instead!)"); 
+        for(BioPAXElement e : children) {
+			if (!model.containsID(e.getRDFId())) {
+				model.add(e);
+			} else if (!model.contains(e)) {
+				throw new AssertionError("fetch(bioPAXElement, model): found different child objects " +
+						"with the same URI: " + e.getRDFId() +
+						"(replace/merge, or use fetch(bioPAXElement) instead!)");
+			}
+		}
 	}
  
     
     /**
-     * Recursively finds and collects all child objects.
+     * Recursively finds and collects all child objects,
+	 * while escaping possible infinite loops.
      * 
-     * (warn: this method can eventually return 
+     * This method can eventually return
      * different objects with the same URI if these
-     * are present among child elements)
+     * are present among child elements.
      * 
      * @param element to traverse into
      * @return a set of child biopax objects
      */
-    public Set<BioPAXElement> fetch(BioPAXElement element) {
-    	return fetch(element, -1);
+    public Set<BioPAXElement> fetch(final BioPAXElement element) {
+    	return fetch(element, BioPAXElement.class);
     }
     
     
     /**
-     * Recursively finds and collects all child objects.
+     * Recursively collects unique child objects from
+	 * BioPAX object type properties that pass
+	 * all the filters (as set via Constructor).
+	 *
+	 * The #isSkipSubPathways flag is ignored.
      * 
-     * (warn: this method can eventually return 
-     * different objects with the same URI if these
-     * are present among child elements)
+     * Note: this method might return
+     * different objects with the same URI if such
+     * are present among the child elements for some reason
+	 * (in a self-integral BioPAX Model, this should never be allowed,
+	 * but can happen as the result of cloning/replacing in some other methods).
      * 
-     * @param element to traverse into its properties
-     * @param depth negative value means unlimited (default); 1 means get direct children only, etc.
+     * @param bpe biopax object to traverse into properties of
+     * @param depth >0; 1 means - get only direct children, 2 - include children of children, etc.;
      * @return set of child objects
+	 * @throws IllegalArgumentException when depth <= 0
      */
-    public Set<BioPAXElement> fetch(BioPAXElement element, final int depth)
+    public Set<BioPAXElement> fetch(final BioPAXElement bpe, int depth)
 	{
-    	final Set<BioPAXElement> children = new HashSet<BioPAXElement>();
-    	
-    	Traverser traverser = new AbstractTraverser(editorMap, filters) {  		
-    	    /**
-    	     * Adds the BioPAX element into the model and traverses the element
-    	     * for its dependent elements.
-    	     */
-    	    @Override
-    	    protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
-    		{
-    			if (range instanceof BioPAXElement && !children.contains((BioPAXElement) range))
-    			{
-    				BioPAXElement bpe = (BioPAXElement) range;
-    				children.add(bpe);
-    				if(depth < 1 || depth > getVisited().size()) //TODO make sure visited.size is current depth...
-    					traverse(bpe, model);
-    			}
-    		}
-    	};
+		//a sanity check
+		if(depth <= 0) {
+			throw new IllegalArgumentException("fetch(..), not a positive 'depth':" + depth);
+		}
 
-    	traverser.traverse(element, null);
-    	
-    	return children;
+		final Set<BioPAXElement> children = new HashSet<BioPAXElement>();
+
+		//create a simple traverser to collect direct child elements
+		Traverser traverser = new Traverser(SimpleEditorMap.L3,
+				new Visitor() {
+					@Override
+					public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?, ?> editor) {
+							children.add((BioPAXElement) range);
+					}
+				}, filters);
+		//run
+		traverser.traverse(bpe, null);
+
+		if(!children.isEmpty() && --depth > 0) {
+			for (BioPAXElement element : new HashSet<BioPAXElement>(children)) {
+				Set<BioPAXElement> nextLevelElements = fetch(element, depth); //recursion goes on
+				children.addAll(nextLevelElements);
+			}
+		}
+
+		//remove itself (if added due to tricky loops in the model...)
+		children.remove(bpe);
+
+		return children;
 	}
-    
-    
+
     
     /**
-     * Recursively goes over child objects of the given biopax element, 
-     * its child's child objects, etc., but collects only biopax 
-     * elements of the specified type (including its sub-classes).
+     * Goes over object type biopax properties to collect nested objects
+	 * (using only properties that pass all the filters set in Constructor,
+	 * and taking #isSkipSubPathways into account)
+	 * of the given biopax element, its children, etc.
+	 * (it also escapes any infinite semantic loops in the biopax model)
+	 * It saves only biopax objects of the given type, incl. sub-types.
      * 
-     * (warn: this method can eventually return 
+     * Note: this method can eventually return
      * different objects with the same URI if these
-     * are present among child elements)
+     * are present among child elements.
      * 
      * @param element to fetch child objects from
      * @param filterByType biopax type filter
@@ -175,24 +226,24 @@ public class Fetcher {
     public <T extends BioPAXElement> Set<T> fetch(final BioPAXElement element, final Class<T> filterByType)
 	{
     	final Set<T> children = new HashSet<T>();
-    	
-    	Traverser traverser = new AbstractTraverser(editorMap, filters) {  		
-    	    /**
-    	     * Adds the BioPAX element into the model and traverses the element
-    	     * for its dependent elements.
+
+		AbstractTraverser traverser = new AbstractTraverser(editorMap, filters) {
+    	    /*
+    	     * Adds the BioPAX element into the model and traverses the element's properties
+    	     * to collect all dependent/nested elements.
     	     */
-    	    @Override
     	    protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
     		{
-    			if (range instanceof BioPAXElement && !children.contains((BioPAXElement) range))
-    			{
-    				BioPAXElement bpe = (BioPAXElement) range;
-    				if(filterByType.isInstance(bpe))
-    					children.add((T) bpe);
-    				//continue deeper...
-    				traverse(bpe, model);
-    			}
-    		}
+   				//by design (see Constructor, filters), it'll visit only object properties.
+				BioPAXElement bpe = (BioPAXElement) range;
+
+				if(filterByType.isInstance(bpe)) {
+					children.add((T) bpe);
+				}
+
+				if(!(skipSubPathways && (range instanceof Pathway)))
+					traverse(bpe, null); //go deeper only if it's a new object
+			}
     	};
 
     	traverser.traverse(element, null);
@@ -228,7 +279,8 @@ public class Fetcher {
     				if( ((BioPAXElement) range).getRDFId().equals(uri) )
     					found.set(true); //set global flag; done.
     				else
-    					traverse((BioPAXElement)range, model);
+						if(!(skipSubPathways && (range instanceof Pathway)))
+    						traverse((BioPAXElement)range, model);
     			}
     		}
     	};

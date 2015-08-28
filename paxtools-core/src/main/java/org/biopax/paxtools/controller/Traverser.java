@@ -66,11 +66,6 @@ public class Traverser
 	 */
 	public <D extends BioPAXElement> void traverse(D element, Model model)
 	{
-		if (element == null)
-		{
-			return;
-		}
-
 		Set<PropertyEditor> editors = editorMap.getEditorsOf(element);
 
 		if (editors == null)

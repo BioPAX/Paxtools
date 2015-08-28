@@ -248,87 +248,6 @@ public final class ModelUtils
 
 
 	/**
-	 * For the specified model, this method
-	 * iteratively copies given property values
-	 * from parent BioPAX elements to children.
-	 * If the property is multiple cardinality property, it will add
-	 * new values, otherwise - it will set it only if was empty;
-	 * in both cases it won't delete/override existing values!
-	 * @param model biopax object model to process
-	 * @param property property name
-	 * @param forClasses (optional) class-filter to infer/set the property for these biopax types only
-	 * @see PropertyReasoner
-	 */
-	public static void inferPropertyFromParent(Model model, final String property,
-			final Class<? extends BioPAXElement>... forClasses)
-	{
-		// for each ROOT element (puts a strict top-down order on the following)
-		ExecutorService exec = Executors.newCachedThreadPool();		
-		Set<BioPAXElement> roots = getRootElements(model, BioPAXElement.class);
-		for (final BioPAXElement bpe : roots) {
-			exec.execute(new Runnable() {
-						@Override
-						public void run() {
-							PropertyReasoner reasoner = new PropertyReasoner(property, em);
-							reasoner.setDomains(forClasses);
-							reasoner.inferPropertyValue(bpe);
-						}
-					}	
-			);
-		}
-		exec.shutdown();
-		try {
-			exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			throw new RuntimeException("Interrupted!", e);
-		}
-	}
-
-	
-	/**
-	 * Iteratively copies given property values
-	 * from parent BioPAX elements to children.
-	 * 
-	 * If the property is multiple cardinality property, it will add
-	 * new values, otherwise - it will set it only if it was empty;
-	 * in both cases it won't delete/override existing values!
-	 * 
-	 * @param model biopax model to work with
-	 * @param properties BioPAX properties (names) to infer values of
-	 * @param forClasses (optional) class-filter; infer/set the property for these types and sub-classes only
-	 * @see PropertyReasoner
-	 */
-	public static void inferPropertiesFromParent(Model model, final Set<String> properties,
-			final Class<? extends BioPAXElement>... forClasses)
-	{
-		ExecutorService exec = Executors.newCachedThreadPool();
-
-		Set<BioPAXElement> roots = getRootElements(model, BioPAXElement.class);
-		for (final BioPAXElement bpe : roots) {	
-			for(String property : properties) {
-				final String p = property;
-				exec.execute(new Runnable() {
-							@Override
-							public void run() {
-								PropertyReasoner reasoner = new PropertyReasoner(p, em);
-								reasoner.setDomains(forClasses);
-								reasoner.inferPropertyValue(bpe);
-							}
-						}	
-				);
-			}
-		}
-		
-		exec.shutdown();
-		try {
-			exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			throw new RuntimeException("Interrupted!", e);
-		}
-	}
-	
-	
-	/**
 	 * Cuts the BioPAX model off other models and BioPAX objects
 	 * by essentially performing write/read to/from OWL.
 	 * The resulting model contains new objects with same IDs
@@ -630,30 +549,6 @@ public final class ModelUtils
 			}
 		}
 		return check;
-	}
-
-
-	/**
-	 * Tests whether a physical entity's 'feature' and 'notFeature' 
-	 * property value sets are mutually exclusive (intersect or not).
-	 * 
-	 * This method does not take EntityFeature equivalence into account
-	 * (so the answer 'true' or 'false' can be wrong if there are equivalent
-	 * but different EntityFeature instances)
-	 * 
-	 * @param pe physical entity object
-	 * @return true iif 'feature' and 'notFeature' sets do not intersect.
-	 * @deprecated looks, it's not used and not a good measure...
-	 */
-	public static boolean checkMutuallyExclusiveSets(PhysicalEntity pe)
-	{
-		if (pe.getFeature().isEmpty() || pe.getNotFeature().isEmpty()) return true;
-		else
-		{
-			Set<EntityFeature> test = new HashSet<EntityFeature>(pe.getFeature());
-			test.retainAll(pe.getNotFeature());
-			return test.size() == 0;
-		}
 	}
 
 	private static boolean scanAndAddToFeatureSet(EntityReference er, boolean fix, boolean check, EntityFeature ef)
@@ -1087,8 +982,9 @@ public final class ModelUtils
 	 * values (can be then used for full-text indexing).
 	 * 
 	 * @param biopaxElement biopax object
-	 * @param depth 0 means use this object's
-	 *        data properties only; 1 - add child's data properties; etc.
+	 * @param depth >= 0: 0 means use this object's
+	 *        data properties only; 1 - add child's data properties, etc.;
+	 *        (the meaning is slightly different from that of Fetcher.fetch(..) method)
 	 * @param dataPropertyFilters - biopax data property filters to optionally
 	 *                        either skip e.g. properties 'sequence', 'temperature',
 	 *                        or only accept 'term', 'comment', 'name', etc.
@@ -1101,9 +997,13 @@ public final class ModelUtils
 		
 		EditorMap em = SimpleEditorMap.L3;
 		Set<String> ss = new HashSet<String>();
-		//fetch all the child biopax objects, given depth (ignoring PathwayStep.nextStep property)
-		Set<BioPAXElement> elms = new Fetcher(em, Fetcher.nextStepFilter).fetch(biopaxElement, depth);
-		//add this one too
+
+		//if depth>0, fetch child biopax objects (ignoring PathwayStep.nextStep property)
+		Set<BioPAXElement> elms = (depth > 0)
+			? new Fetcher(em, Fetcher.nextStepFilter).fetch(biopaxElement, depth)
+				: new HashSet<BioPAXElement>();
+
+		//add this one
 		elms.add(biopaxElement);
 		
 		for (BioPAXElement bpe : elms) {

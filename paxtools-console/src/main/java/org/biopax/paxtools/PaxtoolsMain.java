@@ -50,7 +50,9 @@ public class PaxtoolsMain {
     {
     	Model model = io.convertFromOWL(getInputStream(argv[1]));
     	Boolean specCheckEnabled = (argv.length>4) ? new Boolean(argv[4]) : Boolean.FALSE;
-        (new GSEAConverter(argv[3], specCheckEnabled)).writeToGSEA(model, new FileOutputStream(argv[2]));
+		Boolean skipSubPathways = (argv.length>5) ? new Boolean(argv[5]) : Boolean.FALSE;
+        GSEAConverter gseaConverter = new GSEAConverter(argv[3], specCheckEnabled, skipSubPathways);
+		gseaConverter.writeToGSEA(model, new FileOutputStream(argv[2]));
     }
 
     public static void getNeighbors(String[] argv) throws IOException
@@ -680,11 +682,11 @@ public class PaxtoolsMain {
         		"\tto force PSI Interaction to BioPAX Complex convertion instead of \n" +
         		"\tto MolecularInteraction (default).")
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
-        toGSEA("<input> <output> <database> [crossSpeciesCheck]\n" +
+        toGSEA("<input> <output> <database> [crossSpeciesCheck] [skipSubPathways]\n" +
         		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
                 + "\tUses that database identifier or the biopax URI if database is \"NONE\".\n"
-                + "\tCross species check ensures participant protein is from same species\n" +
-                "\tas pathway (set to true or false; if false, taxonomy/organism value there will be always 'unspecified').")
+                + "\tCross species check ensures participant protein is from same species\n"
+                + "\tas pathway (true/false; if false, taxonomy/organism there will be always 'unspecified').")
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
         fetch("<input> <Uri1,Uri2,..> <output>\n" +
         		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output.")
