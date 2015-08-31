@@ -3,12 +3,13 @@ package org.biopax.paxtools.io.gsea;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.biopax.paxtools.controller.Fetcher;
-import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.LevelUpgrader;
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -55,7 +56,7 @@ public class GSEAConverter
 	private final String database;
 	private final boolean crossSpeciesCheckEnabled;
 	private final boolean skipSubPathways;
-	//TODO add a new property: Set<Provenance> skipSubPathwaysOfDatasources
+	private final Set<Provenance> skipSubPathwaysOf;
 
 	/**
 	 * Constructor.
@@ -77,7 +78,7 @@ public class GSEAConverter
 	 *                   (it depends on the actual data; so double-check before using in this constructor).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 */
-	public GSEAConverter(final String database, boolean crossSpeciesCheckEnabled)
+	public GSEAConverter(String database, boolean crossSpeciesCheckEnabled)
 	{
 		this(database, crossSpeciesCheckEnabled, false);
 	}
@@ -93,15 +94,43 @@ public class GSEAConverter
 	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt;
 	 *                   (it depends on the actual data; so double-check before using in this constructor).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
-	 * @param skipSubPathways - if true, do not traverse into sub-pathways to collect entity references
+	 * @param skipSubPathways - if true, do not traverse into any sub-pathways to collect entity references
 	 *                       (useful when a model, such as converted to BioPAX KEGG data, has lots of sub-pathways, loops.)
 	 */
-	public GSEAConverter(final String database, boolean crossSpeciesCheckEnabled, boolean skipSubPathways)
+	public GSEAConverter(String database, boolean crossSpeciesCheckEnabled, boolean skipSubPathways)
 	{
 		this.database = database;
 		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
 		this.skipSubPathways = skipSubPathways;
+		this.skipSubPathwaysOf = Collections.emptySet();
 	}
+
+	/**
+	 * Constructor.
+	 *
+	 * See class declaration for more information.
+	 * @param database - identifier type, name of the resource, either the string value
+	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
+	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
+	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs
+	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt, such as 'hgnc.symbol', 'uniprot'
+	 *                   (it depends on the actual data; so double-check before using in this constructor).
+	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
+	 * @param skipSubPathwaysOf - do not look inside sub-pathways of pathways of given data sources to collect entity references
+	 *                       (useful when a model, such as converted to BioPAX KEGG data, has lots of sub-pathways, loops.)
+	 */
+	public GSEAConverter(String database, boolean crossSpeciesCheckEnabled, Set<Provenance> skipSubPathwaysOf)
+	{
+		this.database = database;
+		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
+
+		if(skipSubPathwaysOf == null)
+			skipSubPathwaysOf = Collections.emptySet();
+		this.skipSubPathwaysOf = skipSubPathwaysOf;
+
+		this.skipSubPathways = false;
+	}
+
 
 	/**
 	 * Converts model to GSEA and writes to out.  
@@ -167,11 +196,37 @@ public class GSEAConverter
 				public void run() {
 					LOG.info("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getRDFId());
 
-					Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
-					fetcher.setSkipSubPathways(skipSubPathways);
+					final Set<ProteinReference> pathwayProteinRefs = new HashSet<ProteinReference>();
 
-					Set<ProteinReference> pathwayProteinRefs = fetcher
-							.fetch(currentPathway, ProteinReference.class);
+					Traverser traverser = new AbstractTraverser(SimpleEditorMap.L3,
+							Fetcher.nextStepFilter, Fetcher.objectPropertiesOnlyFilter)
+					{
+						protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
+						{
+							//by design (- objectPropertiesOnlyFilter is used), it'll visit only object properties.
+							BioPAXElement bpe = (BioPAXElement) range;
+
+							if(bpe instanceof ProteinReference) {
+								pathwayProteinRefs.add((ProteinReference) bpe);
+							}
+
+							if(bpe instanceof Pathway) {
+								Pathway subPathway = (Pathway) bpe;
+								if(skipSubPathways || SetEquivalenceChecker
+										.hasEquivalentIntersection(skipSubPathwaysOf, subPathway.getDataSource()))
+								{	//do not traverse into the sub-pathway; log
+									LOG.info("Skipping sub-pathway: " + subPathway.getRDFId());
+								} else {
+									traverse(subPathway, null);
+								}
+							} else {
+								traverse(bpe, null);
+							}
+						}
+					};
+					//run it - collect all PRs from the pathway
+					traverser.traverse(currentPathway, null);
+
 
 					LOG.info("- fetched PRs: " + pathwayProteinRefs.size());
 					if(!pathwayProteinRefs.isEmpty()) {

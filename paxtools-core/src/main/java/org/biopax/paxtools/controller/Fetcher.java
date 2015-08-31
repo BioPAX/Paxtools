@@ -63,7 +63,10 @@ public class Fetcher {
 	};
 
 
-	private final Filter<PropertyEditor> objectPropertiesOnlyFilter = new Filter<PropertyEditor>()
+	/**
+	 * A property filter to visit only biopax object type properties.
+	 */
+	public static final Filter<PropertyEditor> objectPropertiesOnlyFilter = new Filter<PropertyEditor>()
 	{
 		public boolean filter(PropertyEditor editor)
 		{
@@ -93,7 +96,7 @@ public class Fetcher {
 	 * i.e., when a biopax property, such as pathwayComponent
 	 * or controlled, value is a Pathway.
 	 *
-	 * @param skipSubPathways
+	 * @param skipSubPathways true/false
 	 */
 	public void setSkipSubPathways(boolean skipSubPathways) {
 		this.skipSubPathways = skipSubPathways;

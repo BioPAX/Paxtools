@@ -49,9 +49,43 @@ public class PaxtoolsMain {
     public static void toGSEA(String[] argv) throws IOException
     {
     	Model model = io.convertFromOWL(getInputStream(argv[1]));
-    	Boolean specCheckEnabled = (argv.length>4) ? new Boolean(argv[4]) : Boolean.FALSE;
-		Boolean skipSubPathways = (argv.length>5) ? new Boolean(argv[5]) : Boolean.FALSE;
-        GSEAConverter gseaConverter = new GSEAConverter(argv[3], specCheckEnabled, skipSubPathways);
+		GSEAConverter gseaConverter; //to be initialized below
+
+    	boolean specCheckEnabled = (argv.length>4) && Boolean.parseBoolean(argv[4]);
+
+		if(argv.length < 6 || argv[5].equalsIgnoreCase("false")) {
+			log.info("Collecting proteins for a pathway, the converter will also consider " +
+					"its sub-pathways, their sub-pathways, etc.");
+			gseaConverter = new GSEAConverter(argv[3], specCheckEnabled);
+		} else {
+			boolean skipAllSubPathways = Boolean.parseBoolean(argv[5]);
+			if (skipAllSubPathways) {
+				log.info("The converter won't traverse into sub-pathways of any pathway to collect its protein IDs.");
+				gseaConverter = new GSEAConverter(argv[3], specCheckEnabled, true);
+			} else { //must be a list of data source URIs, or it's an error...
+				final Set<Provenance> skipSubPathways = new HashSet<Provenance>();
+
+				for(String uri: argv[5].split(";")) {
+					Provenance pro = (Provenance) model.getByID(uri);
+					if(pro != null) {
+						skipSubPathways.add(pro);
+					} else {
+						log.warn("No Provenance found by uri: " + uri);
+					}
+				}
+
+				if(skipSubPathways.isEmpty()) {
+					throw new IllegalArgumentException("The last arg. of the Paxtools command is bad; " +
+							"no known Provenance found (if these were semicolon-separated Provenance URIs): " + argv[5]);
+				} else {
+					log.info("Collecting proteins, the converter will skip sub-pathways of pathways " +
+							"of the following datasources: " + skipSubPathways.toString());
+					gseaConverter = new GSEAConverter(argv[3], specCheckEnabled, skipSubPathways);
+				}
+			}
+		}
+
+		//convert and write
 		gseaConverter.writeToGSEA(model, new FileOutputStream(argv[2]));
     }
 
@@ -118,7 +152,7 @@ public class PaxtoolsMain {
      * java option can be used to generate Complex 
      * instead of MolecularInteraction entities from PSI interactions).
      * 
-     * @param argv
+     * @param argv parameters
      * @throws IOException
      */
     public static void toLevel3(String[] argv) throws IOException {
@@ -215,7 +249,7 @@ public class PaxtoolsMain {
      * 
      * @see <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
      * 
-     * @param argv
+     * @param argv parameters
      * @throws IOException
      */
     public static void validate(String[] argv) throws IOException 
@@ -289,10 +323,8 @@ public class PaxtoolsMain {
             os.write(msg.getBytes());
 
             for (File f : files) {
-                Model m = null;
-                msg = "";
                 try {
-                    m = io.convertFromOWL(getInputStream(f.getPath()));
+                    Model m = io.convertFromOWL(getInputStream(f.getPath()));
                     msg = "Model that contains "
                             + m.getObjects().size()
                             + " elements is successfully created from " 
@@ -685,8 +717,11 @@ public class PaxtoolsMain {
         toGSEA("<input> <output> <database> [crossSpeciesCheck] [skipSubPathways]\n" +
         		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
                 + "\tUses that database identifier or the biopax URI if database is \"NONE\".\n"
-                + "\tCross species check ensures participant protein is from same species\n"
-                + "\tas pathway (true/false; if false, taxonomy/organism there will be always 'unspecified').")
+                + "\t[crossSpeciesCheck] - optional cross-species check ensures participant protein is from same species\n"
+                + "\tas pathway (values: true/false; if false, organism there will be always 'unspecified').\n"
+				+ "\t[skipSubPathways] - optional, true (always), false (never), or a semicolon-separated list of\n"
+				+ "\tProvenance_uri1;Provenance_uri2;.. for which the converter won't traverse\n"
+				+ "\tinto sub-pathways of each pathway in order to collect all the proteins (useful e.g., with KEGG data).")
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
         fetch("<input> <Uri1,Uri2,..> <output>\n" +
         		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output.")
