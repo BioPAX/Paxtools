@@ -136,7 +136,7 @@ public class GSEAConverter
 			}
 		});
 
-		Model l3Model = null;
+		Model l3Model;
 		// convert to level 3 in necessary
 		if (model.getLevel() == BioPAXLevel.L1 || model.getLevel() == BioPAXLevel.L2)
 			l3Model = (new LevelUpgrader()).filter(model);
@@ -155,7 +155,6 @@ public class GSEAConverter
 		{
 			String name = (pathway.getDisplayName() == null)
 					? pathway.getStandardName() : pathway.getDisplayName();
-			LOG.info("Processing " + name + "pathway, uri=" + pathway.getRDFId());
 			
 			if(name == null || name.isEmpty()) 
 				name = pathway.getRDFId();
@@ -166,6 +165,8 @@ public class GSEAConverter
 			exe.submit(new Runnable() {
 				@Override
 				public void run() {
+					LOG.info("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getRDFId());
+
 					Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
 					fetcher.setSkipSubPathways(skipSubPathways);
 
