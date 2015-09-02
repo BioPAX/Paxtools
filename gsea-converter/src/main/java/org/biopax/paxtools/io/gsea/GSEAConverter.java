@@ -1,5 +1,6 @@
 package org.biopax.paxtools.io.gsea;
 
+import org.apache.commons.collections15.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -190,6 +191,8 @@ public class GSEAConverter
 
 			final Pathway currentPathway = pathway;
 			final String currentPathwayName = name;
+			final boolean ignoreSubPathways = skipSubPathways ||
+				(!skipSubPathwaysOf.isEmpty() && shareSomeObjects(currentPathway.getDataSource(), skipSubPathwaysOf));
 
 			exe.submit(new Runnable() {
 				@Override
@@ -212,8 +215,7 @@ public class GSEAConverter
 
 							if(bpe instanceof Pathway) {
 								Pathway subPathway = (Pathway) bpe;
-								if(skipSubPathways || SetEquivalenceChecker
-										.hasEquivalentIntersection(skipSubPathwaysOf, subPathway.getDataSource()))
+								if(ignoreSubPathways)
 								{	//do not traverse into the sub-pathway; log
 									LOG.info("Skipping sub-pathway: " + subPathway.getRDFId());
 								} else {
@@ -406,5 +408,9 @@ public class GSEAConverter
 		}
 
 		return ""; //unspecified/all species
+	}
+
+	private boolean shareSomeObjects(Set<?> setA, Set<?> setB) {
+		return (!setA.isEmpty() && !setB.isEmpty())	? !CollectionUtils.intersection(setA, setB).isEmpty() : false;
 	}
 }

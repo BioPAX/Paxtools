@@ -103,15 +103,11 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 		{
 			if (this.stepConversion == null || this.stepConversion == process)
 			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("Ignoring duplicate request to add stepConversion as a  stepProcess - this is already " +
-					          "implied");
-				}
+				log.debug("Ignoring request to add a Conversion as stepProcess");
 			} else
 			{
 				throw new IllegalBioPAXArgumentException(
-						"Biochemical Pathway Step can have only one conversion. Did you want to use" +
+					"Biochemical Pathway Step can have only one conversion. Did you want to use" +
 						"the setStepConversion method? ");
 			}
 		}

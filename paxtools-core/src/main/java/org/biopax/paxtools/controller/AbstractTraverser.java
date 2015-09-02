@@ -6,7 +6,8 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
 
-import java.util.Stack;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This is an all-in-one Traverser/Visitor combination 
@@ -26,17 +27,15 @@ import java.util.Stack;
 public abstract class AbstractTraverser extends Traverser implements Visitor
 {
 	private final static Log log = LogFactory.getLog(AbstractTraverser.class);
-	protected final Stack<BioPAXElement> path;
+	protected final Set<BioPAXElement> visited;
 		
 	public AbstractTraverser(EditorMap editorMap, 
 		@SuppressWarnings("rawtypes") Filter<PropertyEditor>... filters)
 	{
 		super(editorMap, null, filters);
 		setVisitor(this);
-		this.path = new Stack<BioPAXElement>();
+		visited = new HashSet<BioPAXElement>();
 	}
-
-	protected Stack<BioPAXElement> getVisited() { return path; }
 
 	/**
 	 * This is to implement a real action here: 
@@ -67,19 +66,20 @@ public abstract class AbstractTraverser extends Traverser implements Visitor
 
 	@Override
 	public <D extends BioPAXElement> void traverse(D element, Model model) {
-		if(!path.contains(element)) {
-			path.push(element);
+		if(visited.add(element)) {
 			super.traverse(element, model);//calls visit method for each property value, taking prop. filters into acc.
-			path.pop();
 		} else {
-			log.debug("Escaped a loop: " + path.toString() + ", again " + element.getRDFId());
+			log.debug("Escaped a loop: again " + element.getRDFId());
 		}
 	}
 
+
 	/**
-	 * Clears the state from the last use.
+	 * Clears the internal set of traversed biopax objects.
+	 * Apply if you're re-using the same traverser instance but
+	 * start over from a different root biopax element.
 	 */
 	public void reset() {
-		path.clear();
+		visited.clear();
 	}
 }
