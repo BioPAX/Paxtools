@@ -470,7 +470,9 @@ public class PaxtoolsMain {
 	
 	public static void summarize(String[] argv) throws IOException {
 
+		log.debug("Importing the input model from " + argv[1] + "...");
 		Model model = getModel(io, argv[1]);
+		log.debug("Analyzing...");
 		summarize(model, argv.length > 2 ? new PrintStream(argv[2]) : null);
 	}
 		
