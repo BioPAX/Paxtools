@@ -982,7 +982,7 @@ public final class ModelUtils
 	 * values (can be then used for full-text indexing).
 	 * 
 	 * @param biopaxElement biopax object
-	 * @param depth >= 0: 0 means use this object's
+	 * @param depth greater or equals 0: 0 means use this object's
 	 *        data properties only; 1 - add child's data properties, etc.;
 	 *        (the meaning is slightly different from that of Fetcher.fetch(..) method)
 	 * @param dataPropertyFilters - biopax data property filters to optionally
@@ -1146,55 +1146,80 @@ public final class ModelUtils
 
 	
 	/**
-	 * Collects parent Pathway objects recursively
-	 * traversing inverse object properties of the
-	 * biopax element.
+	 * Collects all parent Pathway objects recursively
+	 * traversing the inverse object properties of the
+	 * biopax element. It ignores all BioPAX types except (incl. sub-classes of):
+	 * Pathway, Interaction, PathwayStep, PhysicalEntity, EntityReference, and Gene.
 	 * 
 	 * @param biopaxElement biopax object
-	 * @return pathways
+	 * @return inferred parent pathways
 	 */
 	public static Set<Pathway> getParentPathways(BioPAXElement biopaxElement) {
-		
+		final Set<BioPAXElement> visited = new HashSet<BioPAXElement>();
+		return getParentPathwaysRecursively(biopaxElement, visited);
+	}
+
+	// recursively finds all the parent pathways of the object, while escaping infinite loops
+	private static Set<Pathway> getParentPathwaysRecursively(
+			final BioPAXElement biopaxElement, final Set<BioPAXElement> visited) {
+
 		final Set<Pathway> pathways = new HashSet<Pathway>();
 		
-		//shortcut
-		if(biopaxElement == null)
+		//shortcut, when bpe is null or already processed
+		if(biopaxElement == null || !visited.add(biopaxElement)) {
+			LOG.info("Ignored null or previously visited object:" + biopaxElement);
 			return pathways;
+		}
 		
 		LOG.debug("getParentPathways called: " + biopaxElement.getRDFId());
-				
+
 		if(biopaxElement instanceof Process) {
 			if(biopaxElement instanceof Pathway) // add itself
 				pathways.add((Pathway) biopaxElement);
 			// continue looking up to parent pathways (until all top ones reached)
 			for(Pathway pw : ((Process)biopaxElement).getPathwayComponentOf())
-				pathways.addAll(getParentPathways(pw));
+				pathways.addAll(getParentPathwaysRecursively(pw, visited)); //TODO bug: in PC2v8 (thanks to kegg), inf. loop here (StackOverFlow)
 			for(Interaction it : ((Process)biopaxElement).getParticipantOf())
-				pathways.addAll(getParentPathways(it));
+				pathways.addAll(getParentPathwaysRecursively(it, visited));
 			for(PathwayStep pt : ((Process)biopaxElement).getStepProcessOf())
-				pathways.addAll(getParentPathways(pt));
+				pathways.addAll(getParentPathwaysRecursively(pt, visited));
 		} else if(biopaxElement instanceof PathwayStep) {
-			pathways.addAll(getParentPathways(((PathwayStep)biopaxElement).getPathwayOrderOf()));
+			pathways.addAll(getParentPathwaysRecursively(((PathwayStep) biopaxElement).getPathwayOrderOf(), visited));
 		} else if(biopaxElement instanceof PhysicalEntity ) {
 			for(PhysicalEntity pe : ((PhysicalEntity)biopaxElement).getMemberPhysicalEntityOf())
-				pathways.addAll(getParentPathways(pe));
+				pathways.addAll(getParentPathwaysRecursively(pe, visited));
 			for(Interaction it : ((Entity)biopaxElement).getParticipantOf())
-				pathways.addAll(getParentPathways(it));
+				pathways.addAll(getParentPathwaysRecursively(it, visited));
 			for(Complex c : ((PhysicalEntity)biopaxElement).getComponentOf())
-				pathways.addAll(getParentPathways(c));
+				pathways.addAll(getParentPathwaysRecursively(c, visited));
 		} else if(biopaxElement instanceof EntityReference) {
 			for(EntityReference er : ((EntityReference) biopaxElement).getMemberEntityReferenceOf())
-				pathways.addAll(getParentPathways(er));
+				pathways.addAll(getParentPathwaysRecursively(er, visited));
 			for(SimplePhysicalEntity spe : ((EntityReference) biopaxElement).getEntityReferenceOf())
-				pathways.addAll(getParentPathways(spe));
+				pathways.addAll(getParentPathwaysRecursively(spe, visited));
 		} else if (biopaxElement instanceof Gene ) { 
 			for(Interaction it : ((Entity) biopaxElement).getParticipantOf())
-				pathways.addAll(getParentPathways(it));
+				pathways.addAll(getParentPathwaysRecursively(it, visited));
 		} else {
 			// ignore
 		}
 		
 		return pathways;
+	}
+
+
+	/**
+	 * Given BioPAX model, for each BioPAX object of the listed classes and their sub-classes,
+	 * such as e.g. Entity and EntityReference (if no types are provided - for all objects in the model),
+	 * creates (parent) an annotation map entry with key: "pathway", value: a set of URIs of parent pathways.
+	 *
+	 * @param model BioPAX model
+	 * @param directParentsOnly use only direct or nearest parent (sub-)pathways of a BioPAX object in the annotation
+	 * @param types optional list of BioPAX types to annotate); default: BioPAXElement.class (i.e., everything)
+	 */
+	public static void addPathwayAnnotations(
+			Model model, boolean directParentsOnly, Class<? extends BioPAXElement>... types) {
+		//TODO implement addPathwayAnnotations
 	}
 
 

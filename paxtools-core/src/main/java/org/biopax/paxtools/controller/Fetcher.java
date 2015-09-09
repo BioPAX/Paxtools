@@ -171,9 +171,9 @@ public class Fetcher {
 	 * but can happen as the result of cloning/replacing in some other methods).
      * 
      * @param bpe biopax object to traverse into properties of
-     * @param depth >0; 1 means - get only direct children, 2 - include children of children, etc.;
+     * @param depth positive int.; 1 means - get only direct children, 2 - include children of children, etc.;
      * @return set of child objects
-	 * @throws IllegalArgumentException when depth <= 0
+	 * @throws IllegalArgumentException when depth is less or equals 0
      */
     public Set<BioPAXElement> fetch(final BioPAXElement bpe, int depth)
 	{

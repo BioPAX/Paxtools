@@ -1,6 +1,8 @@
 package org.biopax.paxtools.converter;
 
 import org.biopax.paxtools.io.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.model.level2.protein;
@@ -13,7 +15,16 @@ import java.io.*;
 
 public class LevelUpgraderTest {
 
-    @Test
+
+	@Test
+	public final void testGetLocalId() {
+		BioPAXElement bpe = BioPAXLevel.L2.getDefaultFactory().create("protein", "http://example.com#someid");
+		assertEquals("someid",LevelUpgrader.getLocalId(bpe));
+		bpe = BioPAXLevel.L2.getDefaultFactory().create("protein", "http://example.com/someid");
+		assertEquals("someid",LevelUpgrader.getLocalId(bpe));
+	}
+
+	@Test
 	public final void testFilter() throws IOException {
 		SimpleIOHandler io = new SimpleIOHandler();
 		Model model = io.convertFromOWL(

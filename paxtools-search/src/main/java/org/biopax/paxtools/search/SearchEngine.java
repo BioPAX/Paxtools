@@ -254,18 +254,10 @@ public class SearchEngine implements Indexer, Searcher {
 	}
 
 	
-	/** Returns a SearchResult 
-	 * that contains a List<BioPAXElement>, some parameters, totals, etc.
-	 * 
-	 * 
-	 * @param query
-	 * @param searcher
-	 * @param highlight
-	 * @param topDocs
-	 * 
-	 * @return
-	 * @throws CorruptIndexException
-	 * @throws IOException
+	/**
+	 * Returns a SearchResult
+	 * that contains a List<BioPAXElement>,
+	 * some parameters, totals, etc.
 	 */
 	private SearchResult transform(Query query, IndexSearcher searcher, boolean highlight, TopDocs topDocs) 
 			throws CorruptIndexException, IOException 
@@ -348,7 +340,7 @@ public class SearchEngine implements Indexer, Searcher {
 			if(doc.get(FIELD_SIZE)!=null && !bpe.getAnnotations().containsKey(HitAnnotation.HIT_SIZE.name()))
 				bpe.getAnnotations().put(HitAnnotation.HIT_SIZE.name(), Integer.valueOf(doc.get(FIELD_SIZE))); 
 			
-//TODO if debugging, store the Lucene's score and explanation.
+			//store the Lucene's score and explanation.
 			String excerpt = (String) bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name());
 			if(excerpt == null) excerpt = "";
 			excerpt += " -SCORE- " + scoreDoc.score + " -EXPLANATION- " + searcher.explain(query, scoreDoc.doc);

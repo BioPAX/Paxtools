@@ -90,10 +90,9 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 	
 	/**
 	 * Constructor
-	 * @param factory
-	 * @throws IOException
+	 * @param factory BioPAX objects factory implementation
 	 */
-	public LevelUpgrader(BioPAXFactory factory) throws IOException{
+	public LevelUpgrader(BioPAXFactory factory) {
 		this();
 		this.factory = factory;
 	}
@@ -101,8 +100,8 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 	/**
 	 * Converts a BioPAX Model, Level 1 or 2, to the Level 3.
 	 *
-	 * @param model
-	 * @return
+	 * @param model BioPAX model to upgrade
+	 * @return new Level3 model
 	 */
 	public Model filter(Model model) {
 		if(model == null || model.getLevel() != BioPAXLevel.L2) 
@@ -508,12 +507,12 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
     /**
      * Gets the local part of the BioPAX element ID.
      * 
-     * @param bpe
-     * @return
+     * @param bpe BioPAX object
+     * @return id - local part of the URI
      */
    	static public String getLocalId(BioPAXElement bpe) {
 		String id = bpe.getRDFId();
-		return (id != null) ? id.replaceFirst("^.+#", "") : null;
+		return (id != null) ? id.replaceFirst("^.+[#/]", "") : null; //greedy pattern matches everything up to the last '/' or '#'
 	}
 
 	protected Object getMatchingEnum(Object o)
