@@ -40,6 +40,8 @@ public class Blacklist
 
 	/**
 	 * Constructor with resource file name.
+	 *
+	 * @param filename file path to import the blacklist entries from
 	 */
 	public Blacklist(String filename)
 	{
@@ -49,6 +51,8 @@ public class Blacklist
 
 	/**
 	 * Constructor with resource input stream.
+	 *
+	 * @param is input stream to read/init the blacklist from
 	 */
 	public Blacklist(InputStream is)
 	{
@@ -72,6 +76,7 @@ public class Blacklist
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * Reads data from the input stream and loads itself.
 	 */
@@ -286,6 +291,9 @@ public class Blacklist
 
 	/**
 	 * Checks if the given entity is blacklisted in at least one context.
+	 *
+	 * @param pe physical entity BioPAX object
+	 * @return true/false
 	 */
 	public boolean isUbique(PhysicalEntity pe)
 	{
@@ -295,6 +303,9 @@ public class Blacklist
 
 	/**
 	 * Checks if the given entity is blacklisted in both context together.
+	 *
+	 * @param pe physical entity BioPAX object
+	 * @return true/false
 	 */
 	public boolean isUbiqueInBothContexts(PhysicalEntity pe)
 	{
@@ -305,6 +316,12 @@ public class Blacklist
 	/**
 	 * Checks if the given entity is blacklisted for the given Conversion assuming the Conversion
 	 * flows towards the given direction, and the entity is in given context.
+	 *
+	 * @param pe physical entity BioPAX object
+	 * @param conv conversion interaction (BioPAX)
+	 * @param dir conversion direction
+	 * @param context relationship type - context
+	 * @return true/false
 	 */
 	public boolean isUbique(PhysicalEntity pe, Conversion conv, ConversionDirectionType dir,
 		RelType context)

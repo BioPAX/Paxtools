@@ -32,12 +32,7 @@ public class GOUnificationXREFtoRelationshipXREFConverter
    
 	static BioPAXIOHandler reader = new SimpleIOHandler();
 
-    /**
-     *
-     * @param args a space seperated list of owl files to be processed
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     */
+    //args - a space seperated list of owl files to be processed
     public static void main(String[] args)
 		throws IllegalAccessException, InvocationTargetException
 	{
@@ -64,9 +59,6 @@ public class GOUnificationXREFtoRelationshipXREFConverter
      * Main conversion method. Demonstrates how to read and write a BioPAX
      * model and accessing its objects.
      * @param arg file name to be processed
-     * @throws FileNotFoundException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
      */
     private static void processXrefs(String arg) throws
 		FileNotFoundException,

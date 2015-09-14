@@ -30,6 +30,7 @@ public final class UseOfReflection {
 	 * 
 	 * @param bpe BioPAX object
 	 * @param property BioPAX property
+	 * @return the BioPAX object property values or empty set
 	 */
 	public static Set<? extends BioPAXElement> getObjectBiopaxPropertyValues(BioPAXElement bpe, String property) {
 		Set<BioPAXElement> values = new HashSet<BioPAXElement>();
@@ -62,6 +63,7 @@ public final class UseOfReflection {
 	 *
 	 * @param bpe BioPAX object
 	 * @param property BioPAX property
+	 * @return the BioPAX property values or null
 	 */
 	public static Set getBiopaxPropertyValues(BioPAXElement bpe, String property) {
 

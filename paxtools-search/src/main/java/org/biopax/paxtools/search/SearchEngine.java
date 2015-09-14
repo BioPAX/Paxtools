@@ -139,7 +139,7 @@ public class SearchEngine implements Indexer, Searcher {
 	 * Main Constructor.
 	 *
 	 * @param model BioPAX object model to be indexed or searched.
-	 * @param indexLocation
+	 * @param indexLocation full path to the index directory
 	 */
 	public SearchEngine(Model model, String indexLocation) {
 		this.model = model;
@@ -164,7 +164,7 @@ public class SearchEngine implements Indexer, Searcher {
 	/**
 	 * Sets the maximum no. hits per search results page (pagination).
 	 *
-	 * @param maxHitsPerPage
+	 * @param maxHitsPerPage positive int value; otherwise - unlimited
 	 */
 	public void setMaxHitsPerPage(int maxHitsPerPage) {
 		this.maxHitsPerPage = maxHitsPerPage;
@@ -172,6 +172,7 @@ public class SearchEngine implements Indexer, Searcher {
 
 	/**
 	 * Gets the maximum no. hits per search results page (pagination parameter).
+	 * @return int value
 	 */
 	 public int getMaxHitsPerPage() {
 		return maxHitsPerPage;

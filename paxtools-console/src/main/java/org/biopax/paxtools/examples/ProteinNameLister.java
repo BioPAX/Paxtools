@@ -131,7 +131,7 @@ public class ProteinNameLister
 
 	/**
 	 * Here is a more elegant way of doing the previous method!
-	 * @param model
+	 * @param model BioPAX object Model
 	 */
 	public static void listUnificationXrefsPerPathway(Model model)
 	{

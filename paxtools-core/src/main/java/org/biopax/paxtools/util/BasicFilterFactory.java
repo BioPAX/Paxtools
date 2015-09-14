@@ -30,7 +30,7 @@ public abstract class BasicFilterFactory {
 	private final String searchField;
 
 	/**
-	 * @param searchField
+	 * @param searchField search/index field name
 	 */
 	public BasicFilterFactory(String searchField) {
 		this.searchField = searchField;

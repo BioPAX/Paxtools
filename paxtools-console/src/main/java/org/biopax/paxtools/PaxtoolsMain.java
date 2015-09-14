@@ -144,16 +144,13 @@ public class PaxtoolsMain {
     }
 
     
-    /**
+    /*
      * Detects and converts a BioPAX Level 1, 2,
      * or PSI-MI/MITAB model to BioPAX Level3.
      * 
      * (-Dpaxtools.converter.psi.interaction=complex
      * java option can be used to generate Complex 
      * instead of MolecularInteraction entities from PSI interactions).
-     * 
-     * @param argv parameters
-     * @throws IOException
      */
     public static void toLevel3(String[] argv) throws IOException {
     	final String input = argv[1];
@@ -229,8 +226,9 @@ public class PaxtoolsMain {
 			return Type.PSIMITAB; //default/guess
 	}
 
-    /**
+    /*
      *  Converts a BioPAX file to SBGN and saves it in a file.
+	 *
      */
     public static void toSBGN(String[] argv) throws IOException
     {
@@ -243,14 +241,10 @@ public class PaxtoolsMain {
     }
 
     
-    /**
-     * Checks files by the online BioPAX validator 
-     * using the validator client.
+    /*
+     * Checks files by the online BioPAX validator using the built-in BioPAX validator client.
      * 
-     * @see <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
-     * 
-     * @param argv parameters
-     * @throws IOException
+     * See about <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
      */
     public static void validate(String[] argv) throws IOException 
     {
@@ -433,14 +427,11 @@ public class PaxtoolsMain {
         io.convertToOWL(model1, new FileOutputStream(argv[3]));
     }
 
-	/**
+	/*
      * Generates a blacklist file
      * (to optionally use it to exclude ubiquitous small molecules, 
      * like ATP, when performing graph queries and exporting to
      * SIF formats).
-     *     
-     * @throws RuntimeException (when I/O errors), 
-     * 			IllegalStateException (when not in maintenance mode)
      */
     public static void blacklist(String[] argv) throws IOException {
     	Model model = getModel(io, argv[1]);

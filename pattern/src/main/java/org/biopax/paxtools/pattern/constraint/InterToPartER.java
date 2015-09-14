@@ -58,6 +58,7 @@ public class InterToPartER extends ConstraintAdapter
 	 * elements will be fetched from the current match. The direction is left, or right, or both
 	 * sides of the Conversion.
 	 *
+	 * @param direction ide(s) of an interaction to consider
 	 * @param numOfTabooElements the number of entities to exclude from the analysis
 	 */
 	public InterToPartER(Direction direction, int numOfTabooElements)

@@ -133,10 +133,13 @@ public class BiopaxValidatorClient {
      * @param autofix true/false (experimental)
      * @param profile validation profile name
      * @param retFormat xml, html, or owl (no errors, just modified owl, if autofix=true)
+	 * @param filterBy filter validation issues by the error/warning level
+	 * @param maxErrs errors threshold - max no. critical errors to collect before quitting
+	 *                (warnings not counted; null/0/negative value means unlimited)
      * @param biopaxUrl check the BioPAX at the URL
      * @param biopaxFiles an array of BioPAX files to validate
-     * @param out
-     * @throws IOException
+     * @param out validation report data output stream
+     * @throws IOException when there is an I/O error
      */
     public void validate(boolean autofix, String profile, RetFormat retFormat, Behavior filterBy,
     		Integer maxErrs, String biopaxUrl, File[] biopaxFiles, OutputStream out) throws IOException 
@@ -193,11 +196,10 @@ public class BiopaxValidatorClient {
     
     /**
      * Converts a biopax-validator XML response to the java object.
-     * 
-     * 
-     * @param xml
-     * @return
-     * @throws JAXBException
+     *
+     * @param xml input XML data - validation report - to import
+     * @return validation report object
+     * @throws JAXBException when there is an JAXB unmarshalling error
      */
     public static ValidatorResponse unmarshal(String xml) throws JAXBException {
     	JAXBContext jaxbContext = JAXBContext.newInstance("org.biopax.validator.jaxb");
