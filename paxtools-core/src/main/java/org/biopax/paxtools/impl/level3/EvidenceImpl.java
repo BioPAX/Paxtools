@@ -70,7 +70,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 
 	/**
 	 * Confidence in the containing instance.  Usually a statistical measure.
-	 * <p/>
+	 *
 	 * WARNING: This method should only be used for batch operations and with care. For regular
 	 * manipulation use add/remove instead.
 	 *
@@ -124,7 +124,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 * A pointer to a term in an external controlled vocabulary, such as the GO, PSI-MI or BioCyc
 	 * evidence codes, that describes the nature of the support, such as 'traceable author statement'
 	 * or 'yeast two-hybrid'.
-	 * <p/>
+	 *
 	 * WARNING: This method should only be used for batch operations and with care. For regular
 	 * manipulation use add/remove instead.
 	 *

@@ -63,7 +63,7 @@ public interface EditorMap
 	  * a specific domain class.
 	  *
 	  * @param property name of the property for which editor will be called
-	  * @param domain
+	  * @param domain biopax type/class the property belongs to
 	  * @param <D> domain biopax type
 	  * @return empty set if there are no such editors
 	  */

@@ -9,21 +9,21 @@ public interface pathwayStep extends utilityClass, pathwayComponent
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public void addNEXT_STEP(pathwayStep NEXT_STEP);
+	void addNEXT_STEP(pathwayStep NEXT_STEP);
 
-	public void addSTEP_INTERACTIONS(process processStep);
+	void addSTEP_INTERACTIONS(process processStep);
 
 
-	public Set<pathwayStep> getNEXT_STEP();
+	Set<pathwayStep> getNEXT_STEP();
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public Set<process> getSTEP_INTERACTIONS();
+	Set<process> getSTEP_INTERACTIONS();
 
-	public Set<pathwayStep> isNEXT_STEPof();
+	Set<pathwayStep> isNEXT_STEPof();
 
-	public void removeNEXT_STEP(pathwayStep NEXT_STEP);
+	void removeNEXT_STEP(pathwayStep NEXT_STEP);
 
-	public void removeSTEP_INTERACTIONS(process processStep);
+	void removeSTEP_INTERACTIONS(process processStep);
 
 	void setNEXT_STEP(Set<pathwayStep> NEXT_STEP);
 

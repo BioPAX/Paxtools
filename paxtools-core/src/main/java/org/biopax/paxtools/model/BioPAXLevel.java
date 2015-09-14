@@ -162,6 +162,12 @@ public enum BioPAXLevel
 	}
 
 
+	/**
+	 * Gets the BioPAX type (java interface) by name.
+	 * @param localName a BioPAX type name
+	 * @return the BioPAX interface class
+	 * @throws IllegalBioPAXArgumentException when there is no such type / class not found.
+	 */
 	public Class<? extends BioPAXElement> getInterfaceForName(String localName)
 	{
         try

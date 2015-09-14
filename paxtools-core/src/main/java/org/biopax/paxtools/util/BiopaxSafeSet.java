@@ -11,9 +11,9 @@ import java.util.*;
  * A thread-safe set of BioPAX objects that also prevents adding several elements 
  * having the same URI. It also allows to quickly get a BioPAX 
  * object by URI. This set is used internally by all multiple cardinality
- * biopax object property and inverse propery implementations (since v4.2, 2013).
+ * BioPAX object property and inverse property implementations (since v4.2, 2013).
  *
- * @param <E>
+ * @author rodche
  */
 public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 {
@@ -29,14 +29,12 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 		map = empty;
 	}
 
-	@Override
 	public Iterator<E> iterator() {
 		synchronized (map) {
 			return map.values().iterator();
 		}
 	}
 
-	@Override
 	public int size()
 	{
 		synchronized (map) {
@@ -61,8 +59,7 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 				map.put(uri, bpe);
 				return true;
 			} else {
-				// do not throw an ex., because duplicate attempts occur
-				// naturally
+				// do not throw an ex., because duplicate attempts occur naturally
 				// (e.g., same PE on both left and right sides of a reaction
 				// causes same participant/participantOf is touched twice)
 				LOG.debug("ignored duplicate:" + uri);
@@ -87,7 +84,7 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 	/**
 	 * Gets a BioPAX element by URI.
 	 * 
-	 * @param uri
+	 * @param uri absolute URI of a BioPAX individual
 	 * @return BioPAX object or null
 	 */
 	public E get(String uri) {

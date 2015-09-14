@@ -7,12 +7,12 @@ public interface interaction extends process
 {
 	// --------------------- ACCESORS and MUTATORS---------------------
 
-	public void addPARTICIPANTS(InteractionParticipant aParticipant);
+	void addPARTICIPANTS(InteractionParticipant aParticipant);
 
-	public Set<InteractionParticipant> getPARTICIPANTS();
+	Set<InteractionParticipant> getPARTICIPANTS();
 
-	public void removePARTICIPANTS(InteractionParticipant aParticipant);
+	void removePARTICIPANTS(InteractionParticipant aParticipant);
 
-	public void setPARTICIPANTS(Set<InteractionParticipant> PARTICIPANTS);
+	void setPARTICIPANTS(Set<InteractionParticipant> PARTICIPANTS);
 	
 }

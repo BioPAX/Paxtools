@@ -74,6 +74,11 @@ public abstract class MinerAdapter implements Miner
 		this.blacklist = blacklist;
 	}
 
+
+	/**
+	 * Sets the ID fetcher to use during SIF search.
+	 * @param idFetcher ID generator from BioPAX object
+	 */
 	public void setIDFetcher(IDFetcher idFetcher)
 	{
 		this.idFetcher = idFetcher;
@@ -781,6 +786,7 @@ public abstract class MinerAdapter implements Miner
 	/**
 	 * Creates a SIF interaction for the given match.
 	 * @param m match to use for SIF creation
+	 * @param fetcher ID generator from BioPAX object
 	 * @return SIF interaction
 	 */
 	public Set<SIFInteraction> createSIFInteraction(Match m, IDFetcher fetcher)

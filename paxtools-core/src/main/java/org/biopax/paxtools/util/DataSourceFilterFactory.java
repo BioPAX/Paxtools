@@ -10,6 +10,7 @@ import org.biopax.paxtools.impl.level3.PhysicalEntityImpl;
  * but any other (one) indexed entity can be used as well.
  * 
  * @author rodche
+ * @deprecated Hibernate ORM/Search will be removed in v5
  */
 public class DataSourceFilterFactory extends BasicFilterFactory{
 

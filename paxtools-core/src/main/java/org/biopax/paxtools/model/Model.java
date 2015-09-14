@@ -29,7 +29,8 @@ public interface Model extends Serializable
      * This method creates a new object using the model's factory, adds it
      * to the model and returns it.
      *
-     * @param aClass a biopax model interface
+     * @param <T> a BioPAX type
+     * @param aClass the BioPAX model interface class
      * @param id     of the new object
      * @return newly created object
      */
@@ -89,6 +90,8 @@ public interface Model extends Serializable
     /**
      * This method returns a set of objects in the model of the given class.
      * Contents of this set should not be modified.
+     *
+     * @param <T> a BioPAX type
      * @param filterBy class to be used as a filter.
      * @return an unmodifiable set of objects of the given class.
      */
@@ -153,8 +156,8 @@ public interface Model extends Serializable
      * of the same or possibly equivalent type,
      * and updates all the affected references to it (object properties).
      * 
-     * @param existing
-     * @param replacement
+     * @param existing object to be replaced
+     * @param replacement the replacement BioPAX object
      */
     void replace(BioPAXElement existing, BioPAXElement replacement);
     
@@ -162,7 +165,6 @@ public interface Model extends Serializable
     /**
      * Attempts to repair the model,
      * i.e., make it self-consistent, integral.
-     * 
      */
     void repair();
 
@@ -180,8 +182,19 @@ public interface Model extends Serializable
 
      
      /**
-      * Gets the model's xml:base (URI prefix).
-      * 
+      * Gets the model's xml:base (URI prefix/namespace), which
+      * normally the majority of the BioPAX object's absolute URIs
+      * in the model begin with.
+      *
+      * Note: it's not required that all the BioPAX objects
+      * in the model have the same URI prefix/namespace;
+      * e.g., there are can be (and perfectly legal) objects
+      * that use other URI bases, such as http://identifiers.org/,
+      * http://purl.org/, etc. (- usually these are well-known
+      * standard xml bases, or these result from merging several BioPAX
+      * models of different data providers into one model.)
+      *
+      * @return xml:base value
       */
      String getXmlBase();
 }

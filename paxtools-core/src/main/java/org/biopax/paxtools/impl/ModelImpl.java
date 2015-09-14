@@ -125,8 +125,8 @@ public class ModelImpl implements Model
 	 * is the same object ("==") as the object stored in the model
 	 * usually (for self-consistent models) but not necessarily under the element's ID.
 	 * 
-	 * @param aBioPAXElement
-	 * @return
+	 * @param aBioPAXElement BioPAX object (individual)
+	 * @return true/false - whether this model contains the object or not
 	 */
 	public synchronized boolean contains(BioPAXElement aBioPAXElement)
 	{

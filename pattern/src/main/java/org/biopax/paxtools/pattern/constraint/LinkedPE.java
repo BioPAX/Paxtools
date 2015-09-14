@@ -67,6 +67,7 @@ public class LinkedPE extends ConstraintAdapter
 	/**
 	 * Constructor with the linking type.
 	 * @param type type of desired linking
+	 * @param blacklist a skip-list of ubiquitous molecules
 	 */
 	public LinkedPE(Type type, Blacklist blacklist)
 	{

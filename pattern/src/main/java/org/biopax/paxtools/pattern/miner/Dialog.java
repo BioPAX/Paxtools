@@ -163,7 +163,9 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 
 	/**
 	 * Constructor for the dialog.
-	 * @throws HeadlessException
+	 *
+	 * @param miners a list of BioPAX pattern miners
+	 * @throws HeadlessException when the initialization fails
 	 */
 	public Dialog(Miner... miners) throws HeadlessException
 	{

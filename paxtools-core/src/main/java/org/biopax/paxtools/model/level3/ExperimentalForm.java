@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * Definition: The form of a physical entity in a particular experiment, as it may be modified for purposes of
  * experimental design.
- * <p/>
+ *
  * Examples: A His-tagged protein in a binding assay. A protein can be tagged by multiple tags,
  * so can have more than 1 experimental form type terms
  */

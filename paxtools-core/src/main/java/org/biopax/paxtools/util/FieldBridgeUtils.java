@@ -13,6 +13,7 @@ import org.hibernate.search.bridge.LuceneOptions;
  * build and use biopax full-text search model.
  * 
  * @author rodche
+ * @deprecated Hibernate ORM/Search will be removed in v5
  */
 final class FieldBridgeUtils {
 	private FieldBridgeUtils() {

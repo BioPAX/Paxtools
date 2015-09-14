@@ -20,7 +20,7 @@ import java.util.Set;
  * represent these). The strength of binding and the topology of the components
  * cannot be described currently, but may be included in future versions of the
  * ontology, depending on community need.
- * <p/>
+ *
  * <b>Examples:</b> Ribosome, RNA polymerase II. Other examples of this class
  * include complexes of multiple protein monomers and complexes of proteins and
  *  small molecules.
@@ -29,16 +29,16 @@ public interface complex extends physicalEntity
 {
 
 
-    public Set<physicalEntityParticipant> getCOMPONENTS();
+    Set<physicalEntityParticipant> getCOMPONENTS();
 
-    public void setCOMPONENTS(Set<physicalEntityParticipant> COMPONENTS);
+    void setCOMPONENTS(Set<physicalEntityParticipant> COMPONENTS);
 
-    public void addCOMPONENTS(physicalEntityParticipant COMPONENTS);
+    void addCOMPONENTS(physicalEntityParticipant COMPONENTS);
 
-    public void removeCOMPONENTS(physicalEntityParticipant COMPONENTS);
+    void removeCOMPONENTS(physicalEntityParticipant COMPONENTS);
 
 
-    public bioSource getORGANISM();
+    bioSource getORGANISM();
 
-    public void setORGANISM(bioSource ORGANISM);
+    void setORGANISM(bioSource ORGANISM);
 }

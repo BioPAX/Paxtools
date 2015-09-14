@@ -7,10 +7,10 @@ public interface physicalEntity extends entity
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public Set<physicalEntityParticipant> isPHYSICAL_ENTITYof();
+	Set<physicalEntityParticipant> isPHYSICAL_ENTITYof();
 
-	public Set<interaction> getAllInteractions();
-	public <T extends interaction> Set<T> getAllInteractions(
+	Set<interaction> getAllInteractions();
+	<T extends interaction> Set<T> getAllInteractions(
 		Class<T> ofType);
 
 	void addPHYSICAL_ENTITYof(physicalEntityParticipant pep);

@@ -19,7 +19,7 @@ import org.hibernate.search.bridge.LuceneOptions;
  * one could only find an instance of {@link Xref} by 'id' or URI.
  * 
  * @author rodche
- *
+ * @deprecated Hibernate ORM/Search will be removed in v5
  */
 public final class XrefFieldBridge implements FieldBridge {
 

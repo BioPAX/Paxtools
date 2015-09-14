@@ -18,6 +18,7 @@ import org.hibernate.search.bridge.LuceneOptions;
  * to parent BioPAX element's index.
  * 
  * @author rodche
+ * @deprecated Hibernate ORM/Search will be removed in v5
  */
 public final class OrganismFieldBridge implements FieldBridge {
 

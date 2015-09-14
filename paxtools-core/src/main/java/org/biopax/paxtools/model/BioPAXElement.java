@@ -78,7 +78,7 @@ public interface BioPAXElement extends Serializable, Cloneable
      * about the BioPAX element, such as statistics,
      * inferred fields, etc.
      * 
-     * @return
+     * @return additional (not BioPAX standard) annotations
      */
     public Map<String, Object> getAnnotations();
     	

@@ -6,32 +6,32 @@ public interface deltaGprimeO extends utilityClass
 // -------------------------- OTHER METHODS --------------------------
 
 // --------------------- ACCESORS and MUTATORS---------------------
-	public float getDELTA_G_PRIME_O();
+	float getDELTA_G_PRIME_O();
 
 
-	public float getIONIC_STRENGTH();
+	float getIONIC_STRENGTH();
 
 
-	public float getPH();
+	float getPH();
 
 
-	public float getPMG();
+	float getPMG();
 
 
-	public float getTEMPERATURE();
+	float getTEMPERATURE();
 
 
-	public void setDELTA_G_PRIME_O(float DELTA_G_PRIME_O);
+	void setDELTA_G_PRIME_O(float DELTA_G_PRIME_O);
 
 
-	public void setIONIC_STRENGTH(float IONIC_STRENGTH);
+	void setIONIC_STRENGTH(float IONIC_STRENGTH);
 
 
-	public void setPH(float PH);
+	void setPH(float PH);
 
 
-	public void setPMG(float PMG);
+	void setPMG(float PMG);
 
 
-	public void setTEMPERATURE(float TEMPERATURE);
+	void setTEMPERATURE(float TEMPERATURE);
 }

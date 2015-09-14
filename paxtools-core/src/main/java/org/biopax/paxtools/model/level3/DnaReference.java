@@ -5,7 +5,7 @@ package org.biopax.paxtools.model.level3;
  * sequence and genomic position.  Members can differ in celular location,
  * sequence features, SNPs, mutations and bound partners. For more detailed
  * information on semantics see {@link EntityReference}.
- * <p/>
+ *
  * Comments : Note that this is not a reference gene. A gene can possibly span
  * multiple DNA molecules, sometimes even across chromosomes due to regulatory
  * regions. Similarly a gene is not necessarily made up of deoxyribonucleic acid

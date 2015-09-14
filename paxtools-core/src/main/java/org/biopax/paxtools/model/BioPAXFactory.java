@@ -36,7 +36,7 @@ public abstract class BioPAXFactory
     /**
      * Gets the level.
      * 
-     * @return
+     * @return the biopax level
      */
     public abstract BioPAXLevel getLevel();
 
@@ -51,6 +51,11 @@ public abstract class BioPAXFactory
     /**
      * Universal method that creates a new BioPAX object.
      * (works with non-public, other package, implementations)
+	 *
+	 * @param <T> type
+	 * @param aClass the class that corresponds to the BioPAX type
+	 * @param uri absolute URI of the new BioPAX object
+	 * @return new BioPAX object
      */
 	public <T extends BioPAXElement> T create(Class<T> aClass, String uri) {
 		T bpe = null;
@@ -92,8 +97,8 @@ public abstract class BioPAXFactory
      * can be created (some types are not official BioPAX 
      * types, abstract classes).
      * 
-     * @param aClass
-     * @return
+     * @param aClass BioPAX interface class
+     * @return whether this factory can create an instance of the type
      */
     public boolean canInstantiate(Class<? extends BioPAXElement> aClass) 
     {
@@ -110,7 +115,11 @@ public abstract class BioPAXFactory
     }
 
 
-    public Model createModel() {
+	/**
+	 * Creates a new BioPAX model.
+	 * @return BioPAX object model implementation
+	 */
+	public Model createModel() {
         return new ModelImpl(this);
     }
 
@@ -122,9 +131,9 @@ public abstract class BioPAXFactory
      * some DAO and web service controllers; it also returns such 
      * abstract BioPAX "adapters" as XReferrableImpl, ProcessImpl, etc.
      * 
-     * @param <T>
-     * @param aModelInterfaceClass
-     * @return
+     * @param <T> BioPAX type/interface
+     * @param aModelInterfaceClass interface class for the BioPAX type
+     * @return concrete class that implements the BioPAX interface and can be created with this factory
      */
 	public <T extends BioPAXElement> Class<T> getImplClass(
 			Class<T> aModelInterfaceClass) 
@@ -135,7 +144,9 @@ public abstract class BioPAXFactory
 			String name = mapClassName(aModelInterfaceClass);
 			try {
 				implClass = (Class<T>) Class.forName(name);
-			} catch (ClassNotFoundException e) {} //TODO log?
+			} catch (ClassNotFoundException e) {
+				log.error(String.format("getImplClass(%s), %s" , aModelInterfaceClass, e));
+			}
 		}
 
 		return implClass;

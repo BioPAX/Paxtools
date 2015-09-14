@@ -8,14 +8,14 @@ import java.util.Set;
  * Definition: An entity reference is a grouping of several physical entities across different
  * contexts and molecular states, that share common physical properties and often named and treated
  * as a single entity with multiple states by biologists.
- * <p/>
+ *
  * Rationale:   Many protein, small molecule and gene databases share this point of view, and such a
  * grouping is an important prerequisite for interoperability with those databases. Biologists would
  * often group different pools of molecules in different contexts under the same name. For example
  * cytoplasmic and extracellular calcium have different effects on the cell's behavior, but they are
  * still called calcium. For DNA, RNA and Proteins the grouping is defined based on a wildtype
  * sequence, for small molecules it is defined by the chemical structure.
- * <p/>
+ *
  * Usage: Entity references store the information common to a set of molecules in various states
  * described in the BioPAX document, including database cross-references. For instance, the P53
  * protein can be phosphorylated in multiple different ways. Each separate P53 protein (pool) in a
@@ -23,7 +23,7 @@ import java.util.Set;
  * all things common to all P53 proteins, including all possible phosphorylation sites, the sequence
  * common to all of them and common references to protein databases containing more information
  * about P53 would be stored in a Entity Reference.
- * <p/>
+ *
  * Comments: This grouping has three semantic implications: <ol> <li>Members of different pools
  * share many physical and biochemical properties. This includes their chemical structure, sequence,
  * organism and set of molecules they react with. They will also share a lot of secondary

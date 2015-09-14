@@ -9,35 +9,33 @@ import java.util.Set;
 public interface process extends entity, pathwayComponent
 {
 
-
 	/**
 	 * This method adds the given evidence to this process.
 	 *
-	 * @param EVIDENCE
+	 * @param EVIDENCE value to add
 	 */
-	public void addEVIDENCE(evidence EVIDENCE);
+	void addEVIDENCE(evidence EVIDENCE);
 
 	/**
 	 * This method remmoves the given evidence from this process. If process does
 	 * not already contain this evidence this method does nothing
 	 *
-	 * @param EVIDENCE
+	 * @param EVIDENCE to remove
 	 */
-	public void removeEVIDENCE(evidence EVIDENCE);
+	void removeEVIDENCE(evidence EVIDENCE);
 
 	/**
-	 * 
-	 * @return
+	 * Gets all evidence objects.
+	 * @return all the evidence objects attached directly to this process
 	 */
-	public Set<evidence> getEVIDENCE();
+	Set<evidence> getEVIDENCE();
 
 	void setEVIDENCE(Set<evidence> EVIDENCE);
 
-	public Set<control> isCONTROLLEDOf();
+	Set<control> isCONTROLLEDOf();
 
 	Set<pathway> isPATHWAY_COMPONENTSof();
 
-	public Set<pathwayStep> isSTEP_INTERACTIONSOf();
-
+	Set<pathwayStep> isSTEP_INTERACTIONSOf();
 
 }

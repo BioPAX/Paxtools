@@ -71,7 +71,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
      * to get BioPAX element's URI and use it in 
      * data analysis.
      * 
-     * @return
+     * @return primary key (for persistence)
      */
 	@Id
 	@Column(name="pk", length=32) // enough to save MD5 digest Hex.

@@ -78,6 +78,8 @@ public class ConBox
 	/**
 	 * From simple PhysicalEntity to related Conversion. The relation can be through complexes and
 	 * generics.
+	 *
+	 * @param type relationship type
 	 * @return generative constraint
 	 */
 	public static Constraint simplePEToConv(RelType type)
@@ -359,6 +361,8 @@ public class ConBox
 	/**
 	 * Gets a constraint to ensure that ensures only one of the two PhysicalEntities has an
 	 * activity. Size of this constraint is 2.
+	 *
+	 * @param activating true/false (TODO explain)
 	 * @return constraint to make sure only one of the PhysicalEntity has an activity
 	 */
 	public static Constraint differentialActivity(boolean activating)
@@ -537,6 +541,8 @@ public class ConBox
 	/**
 	 * Makes a linker constraint from PhysicalEntity to its linked PhysicalEntity towards complex
 	 * direction.
+	 *
+	 * @param equal true/false (TODO explain)
 	 * @return the constraint
 	 */
 	public static Constraint equal(boolean equal)
@@ -546,6 +552,8 @@ public class ConBox
 
 	/**
 	 * Creates an element type constraint.
+	 *
+	 * @param clazz a BioPAX type, i.e., corresponding interface class
 	 * @return the constraint
 	 */
 	public static Constraint type(Class<? extends BioPAXElement> clazz)
@@ -565,6 +573,8 @@ public class ConBox
 	/**
 	 * Makes sure the participant degree (number of Conversions that this is a participant) of the
 	 * PhysicalEntity is less than or equal to the parameter.
+	 *
+	 * @param limit max degree limit
 	 * @return the constraint
 	 */
 	public static Constraint maxDegree(int limit)

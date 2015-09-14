@@ -22,6 +22,7 @@ import org.hibernate.search.filter.StandardFilterKey;
  * @see FullTextFilterDef
  * 
  * @author rodche
+ * @deprecated Hibernate ORM/Search will be removed in v5
  */
 public abstract class BasicFilterFactory {
 	

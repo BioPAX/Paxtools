@@ -24,6 +24,7 @@ public class HasAnID extends ConstraintAdapter
 	/**
 	 * Constructor with the ID fetcher.
 	 * @param fetcher ID generator
+	 * @param idMap map of IDs
 	 */
 	public HasAnID(IDFetcher fetcher, Map<BioPAXElement, Set<String>> idMap)
 	{

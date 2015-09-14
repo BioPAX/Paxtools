@@ -66,6 +66,8 @@ public class PatternBox
 	/**
 	 * Pattern for a ProteinReference has a member PhysicalEntity that is controlling a reaction
 	 * that changes cellular location of a small molecule.
+	 *
+	 * @param blacklist a skip-list of ubiquitous molecules
 	 * @return the pattern
 	 */
 	public static Pattern controlsTransportOfChemical(Blacklist blacklist)
@@ -164,6 +166,9 @@ public class PatternBox
 	/**
 	 * Pattern for a Conversion has an input PhysicalEntity and another output PhysicalEntity that
 	 * belongs to the same EntityReference.
+	 *
+	 * @param p pattern to update
+	 * @param ctrlLabel label
 	 * @return the pattern
 	 */
 	public static Pattern stateChange(Pattern p, String ctrlLabel)
@@ -186,6 +191,8 @@ public class PatternBox
 	/**
 	 * Pattern for an entity is producing a small molecule, and the small molecule controls state
 	 * change of another molecule.
+	 *
+	 * @param blacklist a skip-list of ubiquitous molecules
 	 * @return the pattern
 	 */
 	public static Pattern controlsStateChangeThroughControllerSmallMolecule(Blacklist blacklist)
@@ -224,6 +231,8 @@ public class PatternBox
 	/**
 	 * Pattern for an entity is producing a small molecule, and the small molecule controls state
 	 * change of another molecule.
+	 *
+	 * @param blacklist a skip-list of ubiquitous molecules
 	 * @return the pattern
 	 */
 	public static Pattern controlsStateChangeThroughBindingSmallMolecule(Blacklist blacklist)
@@ -294,6 +303,9 @@ public class PatternBox
 
 	/**
 	 * Pattern for a Protein controlling a reaction whose participant is a small molecule.
+	 *
+	 * @param blacklist a skip-list of ubiquitous molecules
+	 * @param consumption true/false (TODO explain)
 	 * @return the pattern
 	 */
 	public static Pattern controlsMetabolicCatalysis(Blacklist blacklist, boolean consumption)
@@ -327,6 +339,7 @@ public class PatternBox
 	/**
 	 * Pattern for detecting two EntityReferences are controlling consecutive reactions, where
 	 * output of one reaction is input to the other.
+	 *
 	 * @param blacklist to detect ubiquitous small molecules
 	 * @return the pattern
 	 */
@@ -501,6 +514,8 @@ public class PatternBox
 
 	/**
 	 * A small molecule is in a complex with a protein.
+	 *
+	 * @param blacklist a skip-list of ubiquitous molecules
 	 * @return pattern
 	 */
 	public static Pattern chemicalAffectsProteinThroughBinding(Blacklist blacklist)
@@ -566,6 +581,8 @@ public class PatternBox
 	/**
 	 * Constructs a pattern where first and last small molecules are substrates to the same
 	 * biochemical reaction.
+	 *
+	 * @param blacklist a skip-list of ubiquitous molecules
 	 * @return the pattern
 	 */
 	public static Pattern reactsWith(Blacklist blacklist)
@@ -592,6 +609,8 @@ public class PatternBox
 	 * Constructs a pattern where first small molecule is an input a biochemical reaction that
 	 * produces the second small molecule.
 	 * biochemical reaction.
+	 *
+	 * @param blacklist a skip-list of ubiquitous molecules
 	 * @return the pattern
 	 */
 	public static Pattern usedToProduce(Blacklist blacklist)
@@ -648,6 +667,8 @@ public class PatternBox
 	/**
 	 * Finds ProteinsReference related to an interaction. If specific types of interactions are
 	 * desired, they should be sent as parameter, otherwise leave the parameter empty.
+	 *
+	 * @param seedType specific BioPAX interaction sub-types (interface classes)
 	 * @return pattern
 	 */
 	public static Pattern relatedProteinRefOfInter(Class<? extends Interaction>... seedType)

@@ -28,8 +28,8 @@ public final class UseOfReflection {
 	 * domain and range of the property nor write many if-else statements to
 	 * find out.
 	 * 
-	 * @param entity
-	 * @param organisms
+	 * @param bpe BioPAX object
+	 * @param property BioPAX property
 	 */
 	public static Set<? extends BioPAXElement> getObjectBiopaxPropertyValues(BioPAXElement bpe, String property) {
 		Set<BioPAXElement> values = new HashSet<BioPAXElement>();
@@ -59,9 +59,9 @@ public final class UseOfReflection {
 	 * is not known at runtime, and you do not want to always remember the
 	 * domain and range of the property nor write many if-else statements to
 	 * find out.
-	 * 
-	 * @param entity
-	 * @param organisms
+	 *
+	 * @param bpe BioPAX object
+	 * @param property BioPAX property
 	 */
 	public static Set getBiopaxPropertyValues(BioPAXElement bpe, String property) {
 
@@ -80,6 +80,5 @@ public final class UseOfReflection {
 		} else 
 			return null;
 	}
-	
-	
+
 }

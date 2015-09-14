@@ -7,12 +7,12 @@ public interface sequenceEntity extends physicalEntity
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public bioSource getORGANISM();
+	bioSource getORGANISM();
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public String getSEQUENCE();
+	String getSEQUENCE();
 
-	public void setORGANISM(bioSource ORGANISM);
+	void setORGANISM(bioSource ORGANISM);
 
-	public void setSEQUENCE(String SEQUENCE);
+	void setSEQUENCE(String SEQUENCE);
 }

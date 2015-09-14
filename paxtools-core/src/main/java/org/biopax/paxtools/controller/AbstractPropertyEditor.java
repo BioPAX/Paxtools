@@ -69,11 +69,11 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 	/**
 	 * Constructor.
 	 * 
-	 * @param property
-	 * @param getMethod
-	 * @param domain
-	 * @param range
-	 * @param multipleCardinality
+	 * @param property biopax property name
+	 * @param getMethod getter
+	 * @param domain class the property belongs to
+	 * @param range property values type/class
+	 * @param multipleCardinality whether more than one value is allowed
 	 */
     public AbstractPropertyEditor(String property, Method getMethod, Class<D> domain, Class<R> range,
 			boolean multipleCardinality)

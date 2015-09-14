@@ -3,11 +3,11 @@ package org.biopax.paxtools.model.level3;
 
 /**
  * Definition: The chemical structure of a small molecule.
- * <p/>
- * Usage: Structure information is stored in the property structureData, in one of the three formats: <a
- * href ="www.xml-cml.org">CML</a>, <a href = "www.daylight.com/dayhtml/smiles/">SMILES</a> or <a href="http://www
- * .iupac.org/inchi/">InChI</a>.The structureFormat property specifies which format is used.
- * <p/>
+ *
+ * Usage: Structure information is stored in the property structureData, in one of the three formats:
+ * <a href="www.xml-cml.org">CML</a>, <a href="www.daylight.com/dayhtml/smiles/">SMILES</a> or
+ * <a href="http://www.iupac.org/inchi/">InChI</a>.The structureFormat property specifies which format is used.
+ *
  * Examples: The following SMILES string describes the structure of glucose-6-phosphate: 'C(OP(=O)(O)O)[CH]1([CH](O)
  * [CH](O)[CH](O)[CH](O)O1)'.
  */

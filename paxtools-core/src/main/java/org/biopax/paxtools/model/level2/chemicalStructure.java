@@ -7,7 +7,7 @@ package org.biopax.paxtools.model.level2;
  * www.xml-cml.org), the SMILES format (see www.daylight.com/dayhtml/smiles/)
  * or the InChI format (http://www.iupac.org/inchi/). The STRUCTURE-FORMAT
  * property specifies which format is used.
- * <p/>
+ *
  * <b>Comment:</b> By virtue of the expressivity of CML, an instance of this
  * class can also provide additional information about a small molecule, such as
  * its chemical formula, names, and synonyms, if CML is used as the structure
@@ -20,11 +20,11 @@ package org.biopax.paxtools.model.level2;
 public interface chemicalStructure extends utilityClass
 {
 
-    public String getSTRUCTURE_DATA();
+    String getSTRUCTURE_DATA();
 
-    public String getSTRUCTURE_FORMAT();
+    String getSTRUCTURE_FORMAT();
 
-    public void setSTRUCTURE_DATA(String STRUCTURE_DATA);
+    void setSTRUCTURE_DATA(String STRUCTURE_DATA);
 
-    public void setSTRUCTURE_FORMAT(String STRUCTURE_FORMAT);
+    void setSTRUCTURE_FORMAT(String STRUCTURE_FORMAT);
 }

@@ -103,6 +103,8 @@ public interface BiochemicalReaction extends Conversion
 	 * 
 	 * delta-G'<sup>o</sup> = delta-H'<sup>o</sup> - T delta-S'<sup>o</sup>
 	 * standard transformed entropy change
+	 *
+	 * @param delta_s value
 	 */
 	void addDeltaS(float delta_s);
 
@@ -112,6 +114,8 @@ public interface BiochemicalReaction extends Conversion
 	 * 
 	 * delta-G'<sup>o</sup> = delta-H'<sup>o</sup> - T delta-S'<sup>o</sup>
 	 * standard transformed entropy change
+	 *
+	 * @param delta_s value
 	 */
 	void removeDeltaS(float delta_s);
 

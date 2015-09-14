@@ -155,8 +155,8 @@ public class SimpleMerger
 	 * 
 	 * @see #merge(Model, Collection)
 	 * 
-	 * @param target
-	 * @param source
+	 * @param target the BioPAX model to merge into
+	 * @param source object to add or merge
 	 */
 	public void merge(Model target, BioPAXElement source)
 	{
@@ -167,7 +167,7 @@ public class SimpleMerger
 	/**
 	 * Updates each value of <em>existing</em> element, using the value(s) of <em>update</em>.
 	 * @param source BioPAX element of which values are used for update
-	 * @param target
+	 * @param target the BioPAX model
 	 */
 	private void updateObjectFields(BioPAXElement source, Model target)
 	{

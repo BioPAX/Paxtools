@@ -8,7 +8,7 @@ import java.util.Set;
  * to function as a biological unit; in general, the temporary association of an enzyme with its substrate(s) should not
  * be considered or represented as a complex. A complex is the physical product of an interaction (complexAssembly) and
  * is not itself considered an interaction.
- * <p/>
+ *
  * <b>Comment</b>: In general, complexes should not be defined recursively so that smaller complexes exist within larger
  * complexes, i.e. a complex should not be a COMPONENT of another complex (see comments on the COMPONENT property). The
  * boundaries on the size of complexes described by this class are not defined here, although elements of the cell as
@@ -16,7 +16,7 @@ import java.util.Set;
  * ontology may include a cellularComponent class to represent these). The strength of binding and the topology of the
  * components cannot be described currently, but may be included in future versions of the ontology, depending on
  * community need.
- * <p/>
+ *
  * <b>Examples</b>: Ribosome, RNA polymerase II. Other examples of this class include complexes of multiple protein
  * monomers and complexes of proteins and small molecules.
  */
@@ -74,8 +74,6 @@ public interface Complex extends PhysicalEntity {
      */
     void removeComponent(PhysicalEntity component);
 
-
-
     /**
      * The stoichiometry of components in a complex.
      *
@@ -110,7 +108,7 @@ public interface Complex extends PhysicalEntity {
      * Gets the <code>EntityReference</code>s of the member simple physical entities. When the complex is nested,
      * contents of the member complexes are retrieved recursively.
      *
-     * @return
+     * @return non-complex members' entity references
      */
     Set<EntityReference> getMemberReferences();
 

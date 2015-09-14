@@ -147,8 +147,10 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 	 * by the Hibernate Search framework (indexer), if it is used, 
 	 * or never called.
      * 
-     * @return
+     * @return keywords, annotations associated with the biopax element
+     * @deprecated use getAnnotations() instead
      */
+    @Deprecated
 	@Transient
 	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
 	@FieldBridge(impl=SetStringBridge.class)
@@ -165,8 +167,10 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 	 * by the Hibernate Search framework (indexer),
 	 * or never called.
      * 
-     * @return
+     * @return organisms (if any set/inferred explicitly by some external app.)
+     * @deprecated use getAnnotations() instead
      */
+    @Deprecated
 	@Transient
 	@Field(name=FIELD_ORGANISM, store=Store.YES, analyze=Analyze.NO)
 	@FieldBridge(impl=OrganismFieldBridge.class)
@@ -183,8 +187,10 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 	 * by the Hibernate Search framework (indexer), if used, 
 	 * or never called otherwise.
 	 *   
-     * @return
+     * @return data sources (if set/inferred by some external app.)
+     * @deprecated use getAnnotations() instead
      */
+    @Deprecated
 	@Transient
 	@Field(name=FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
 	@FieldBridge(impl=DataSourceFieldBridge.class)
@@ -206,8 +212,10 @@ public abstract class L3ElementImpl extends BioPAXElementImpl
 	 * by the Hibernate Search framework (indexer), 
 	 * or never called.
 	 *   
-     * @return
+     * @return parent pathways (if explicitly inferred and set by some external tool)
+     * @deprecated use getAnnotations() instead
      */
+    @Deprecated
 	@Transient
 	@Field(name=FIELD_PATHWAY, store=Store.YES, analyze=Analyze.NO)
 	//this bridge simply adds pathways URIs and names to the 'pathway' index field.

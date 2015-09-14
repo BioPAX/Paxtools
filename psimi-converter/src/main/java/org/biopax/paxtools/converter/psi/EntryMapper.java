@@ -232,8 +232,8 @@ class EntryMapper {
 	 * corresponds to the psi interaction.
 	 *
 	 * Note:
-	 * psi.interactionElementType                 -> biopax Complex, MolecularInteraction, or GeneticInteraction
-	 * psi.interactionElementType.participantList -> biopax interaction/complex participants/components
+	 * psi.interactionElementType                 -&gt; biopax Complex, MolecularInteraction, or GeneticInteraction
+	 * psi.interactionElementType.participantList -&gt; biopax interaction/complex participants/components
 	 */
 	private Entity processInteraction(Interaction interaction, Set<String> avail, 
 			Provenance pro, boolean isComplex) 

@@ -59,6 +59,8 @@ public class SIFSearcher
 
 	/**
 	 * Constructor with ID fetcher and binary interaction types.
+	 *
+	 * @param idFetcher ID fetcher
 	 * @param types sif types
 	 */
 	public SIFSearcher(IDFetcher idFetcher, SIFType... types)
@@ -71,6 +73,8 @@ public class SIFSearcher
 
 	/**
 	 * Constructor with ID fetcher and miners.
+	 *
+	 * @param idFetcher ID fetcher
 	 * @param miners sif miners
 	 */
 	public SIFSearcher(IDFetcher idFetcher, SIFMiner... miners)

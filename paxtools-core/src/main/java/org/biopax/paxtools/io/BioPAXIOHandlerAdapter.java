@@ -68,8 +68,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	/**
 	 * Updates the level and factory for this I/O
 	 * (final - because used in the constructor)
-	 * @param level
-	 * @param factory
+	 * @param level BioPAX Level
+	 * @param factory concrete BioPAX factory impl.
 	 */
 	protected final void resetLevel(BioPAXLevel level, BioPAXFactory factory)
 	{
@@ -119,7 +119,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	/**
 	 * A workaround for a common issue that was present in BioCyc exports. For non-present values BioCyc exports
 	 * contained the string "NIL".
-	 * @param treatNILasNull
+	 * @param treatNILasNull true/false
 	 * @deprecated This problem is fixed and this option is no longer needed for recent BioCyc exports. Enable only if
 	 *             you are parsing a legacy export.
 	 */
@@ -130,7 +130,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	/**
 	 * This method enables silent conversion of Level1 to Level2. If disabled the method will throw an error.
-	 * @param convertingFromLevel1ToLevel2
+	 * @param convertingFromLevel1ToLevel2 true/false
 	 * @deprecated BioPAX Level 1 exports are extremely rare and obsolete.
 	 */
 	public void setConvertingFromLevel1ToLevel2(boolean convertingFromLevel1ToLevel2)
@@ -150,7 +150,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	/**
 	 * @return true is converting Level1 to Level2 silently.
-	 * @deprecated BioPAX Level 1 exports are extremely rare and obsolete.
 	 */
 	public boolean isConvertingFromLevel1ToLevel2()
 	{
@@ -161,7 +160,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 * Workaround for a very common Level 2 issue. Most level2 exports in the past reused PhysicalEntityParticipants
 	 * as if they represent states. This is problematic because PEPs also contain stoichiometry information which is
 	 * specific to a reaction. BioPAX spec says that PEPs should not be reused across reactions.
-	 * <p/>
+	 *
 	 * As Level2 exports getting obsolete this method is slated for deprecation.
 	 * @return true if this Handler automatically splits reused PEPs to interaction specific PEPS.
 	 */
@@ -171,53 +170,52 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	}
 
 	/**
-	 * This is a helper class initialized only if FixReusedPEPs is true.
-	 * @return
+	 * This is a helper class initialized only if fixReusedPEPs is true.
+	 * @return helper object
 	 */
 	protected ReusedPEPHelper getReusedPEPHelper()
 	{
 		return reusedPEPHelper;
 	}
 
-	/**
 
-	 */
 	public BioPAXFactory getFactory()
 	{
 		return factory;
 	}
 
 
-	@Override public void setFactory(BioPAXFactory factory)
+	public void setFactory(BioPAXFactory factory)
 	{
 		this.factory = factory;
 	}
 
 
-	@Override public EditorMap getEditorMap()
+	public EditorMap getEditorMap()
 	{
 		return editorMap;
 	}
 
-	@Override public void setEditorMap(EditorMap editorMap)
+	public void setEditorMap(EditorMap editorMap)
 	{
 		this.editorMap = editorMap;
 	}
 
-	@Override public BioPAXLevel getLevel()
+	public BioPAXLevel getLevel()
 	{
 		return level;
 	}
 
 	/**
 	 * This method reads multiple files and returns a merged model.
-	 * This is experimental and is not complete. Files have to be given in dependency order. i.e. a
-	 * former file should not point to the latter. Use it at your own risk.
+	 * @deprecated  experimental and incomplete; e.g., files are to be ordered, i.e.,
+	 * 				a former file should not point to the latter. Use it at your own risk.
+	 * 				Or, use #convertFromOWL to get independent models; then, try merging them...
 	 * @param files Dependency ordered biopax owl file names
 	 * @return a merged model.
-	 * @exception java.io.FileNotFoundException if any file can not be found
+	 * @throws java.io.FileNotFoundException when any file can not be found
 	 */
-
+	@Deprecated
 	public Model convertFromMultipleOwlFiles(String... files) throws FileNotFoundException
 	{
 		Model model = this.factory.createModel();
@@ -229,7 +227,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			{
 				log.debug("start reading file:" + file);
 			}
-//			createAndBind(in, model);
+//			createAndBind(in, model); //TODO why this line is currently commented out; since when?..
 
 			if (log.isDebugEnabled())
 			{
@@ -292,7 +290,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			throw new RuntimeException("Failed to close the file");
 		}
 
-	}	
+	}
+
 	private void autodetectBiopaxLevel()
 	{
 		BioPAXLevel filelevel = null;
@@ -322,7 +321,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 * This method is called by the reader for each OWL instance in the OWL model. It creates a POJO instance, with
 	 * the given id and inserts it into the model. The inserted object is "clean" in the sense that its properties are
 	 * not set yet.
-	 * <p/>
+	 *
 	 * Implementers of this abstract class can override this method to inject code during object creation.
 	 * @param model to be inserted
 	 * @param id of the new object. The model should not contain another object with the same ID.
@@ -354,6 +353,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	/**
 	 * This method provides a hook for the implementers of this abstract class to perform the initial reading from the
 	 * input stream.
+	 *
+	 * @param in BioPAX RDF/XML input stream
 	 */
 	protected abstract void init(InputStream in);
 
@@ -494,10 +495,9 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 * interface (e.g., {@link SimpleIOHandler}).
 	 * @param model model to be converted into OWL format
 	 * @param outputStream output stream into which the output will be written
-	 * @param ids the list of "root" element IDs to export (with all their properties/children altogether)
-	 * @exception java.io.IOException in case of I/O problems
+	 * @param ids optional list of "root" element absolute URIs (all direct/indirect child objects are auto-exported as well)
 	 */
-	@Override public void convertToOWL(Model model, OutputStream outputStream, String... ids)
+	public void convertToOWL(Model model, OutputStream outputStream, String... ids)
 	{
 		if (ids.length == 0)
 		{

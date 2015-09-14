@@ -28,8 +28,10 @@ public interface Named extends XReferrable
 
 
 	/**
-	 * This method is reserved for batch operations and should not be used for normal use. Use add/remove name
-	 * methods to manipulate the names instead.
+	 * This method is reserved for batch operations and should not be used for normal use.
+	 * Use add/remove name methods to manipulate the names instead.
+	 *
+	 * @param names new names to set (or replace all existing ones)
 	 */
 	public void setName(Set<String> names);
 
@@ -63,7 +65,7 @@ public interface Named extends XReferrable
 	 * visualization application to label a graphical element that represents this entity. If no short
 	 * name is available, an xref may be used for this purpose by the visualization application.
 	 *
-	 * @param displayName
+	 * @param displayName new display name (preferably a short one)
 	 */
 	public void setDisplayName(String displayName);
 

@@ -18,6 +18,7 @@ import org.hibernate.search.bridge.LuceneOptions;
  * index field that contain their parent pathway URIs and names. 
  * 
  * @author rodche
+ * @deprecated Hibernate ORM/Search will be removed in v5
  */
 public final class ParentPathwayFieldBridge implements FieldBridge {
 

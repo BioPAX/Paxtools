@@ -15,5 +15,5 @@ public interface InteractionParticipant extends Level2Element
 	 *
 	 * @return a set of interactions that
 	 */
-	public Set<interaction> isPARTICIPANTSof();
+	Set<interaction> isPARTICIPANTSof();
 }

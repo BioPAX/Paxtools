@@ -7,7 +7,7 @@ import java.util.Set;
  * rate of a conversion interaction by lowering its activation energy. Instances
  * of this class describe a pairing between a catalyzing entity and a catalyzed
  * conversion.
- * <p/>
+ *
  * <b>Comment:</b>  A separate catalysis instance should be created for each
  * different conversion that a physicalEntity may catalyze and for each
  * different physicalEntity that may catalyze a conversion. For example, a
@@ -20,13 +20,13 @@ import java.util.Set;
  * class is obvious. In the cases where a catalyzed reaction is known to occur
  * but the enzyme is not known, a catalysis instance should be created without a
  * controller specified (i.e. the CONTROLLER property should remain empty).
- * <p/>
+ *
  * <b>Synonyms:</b> facilitation, acceleration.
- * <p/>
+ *
  * <b>Examples:</b> The catalysis of a biochemical reaction by an enzyme, the
  * enabling of a transport interaction by a membrane pore complex, and the
  * facilitation of a complex assembly by a scaffold protein.
- * Hexokinase -> (The "Glucose + ATP -> Glucose-6-phosphate +ADP" reaction).
+ * Hexokinase -&gt; (The "Glucose + ATP -&gt; Glucose-6-phosphate +ADP" reaction).
  * A plasma membrane Na+/K+ ATPase is an active transporter (antiport pump)
  * using the energy of ATP to pump Na+ out of the cell and K+ in. Na+ from
  * cytoplasm to extracellular space would be described in a transport instance.
@@ -42,16 +42,16 @@ import java.util.Set;
 public interface catalysis extends control
 {
 
-    public void addCOFACTOR(physicalEntityParticipant COFACTOR);
+    void addCOFACTOR(physicalEntityParticipant COFACTOR);
 
-    public void removeCOFACTOR(physicalEntityParticipant COFACTOR);
+    void removeCOFACTOR(physicalEntityParticipant COFACTOR);
 
-    public void setCOFACTOR(Set<physicalEntityParticipant> COFACTOR);
+    void setCOFACTOR(Set<physicalEntityParticipant> COFACTOR);
 
-    public Set<physicalEntityParticipant> getCOFACTOR();
+    Set<physicalEntityParticipant> getCOFACTOR();
 
 
-    public Direction getDIRECTION();
+    Direction getDIRECTION();
 
-    public void setDIRECTION(Direction DIRECTION);
+    void setDIRECTION(Direction DIRECTION);
 }

@@ -6,24 +6,24 @@ public interface control extends physicalInteraction
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public void addCONTROLLED(process CONTROLLED);
+	void addCONTROLLED(process CONTROLLED);
 
-	public void addCONTROLLER(physicalEntityParticipant CONTROLLER);
+	void addCONTROLLER(physicalEntityParticipant CONTROLLER);
 
-	public Set<process> getCONTROLLED();
+	Set<process> getCONTROLLED();
 
-	public Set<physicalEntityParticipant> getCONTROLLER();
+	Set<physicalEntityParticipant> getCONTROLLER();
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public ControlType getCONTROL_TYPE();
+	ControlType getCONTROL_TYPE();
 
-	public void removeCONTROLLED(process CONTROLLED);
+	void removeCONTROLLED(process CONTROLLED);
 
-	public void removeCONTROLLER(physicalEntityParticipant CONTROLLER);
+	void removeCONTROLLER(physicalEntityParticipant CONTROLLER);
 
-	public void setCONTROLLED(Set<process> CONTROLLED);
+	void setCONTROLLED(Set<process> CONTROLLED);
 
-	public void setCONTROLLER(Set<physicalEntityParticipant> CONTROLLER);
+	void setCONTROLLER(Set<physicalEntityParticipant> CONTROLLER);
 
-	public void setCONTROL_TYPE(ControlType CONTROL_TYPE);
+	void setCONTROL_TYPE(ControlType CONTROL_TYPE);
 }

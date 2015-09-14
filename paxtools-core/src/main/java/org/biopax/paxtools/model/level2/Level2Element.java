@@ -13,11 +13,11 @@ import java.util.Set;
  */
 public interface Level2Element extends BioPAXElement
 {
-    public Set<String> getCOMMENT();
+    Set<String> getCOMMENT();
 
-    public void setCOMMENT(Set<String> COMMENT);
+    void setCOMMENT(Set<String> COMMENT);
 
-    public void addCOMMENT(String COMMENT);
+    void addCOMMENT(String COMMENT);
 
-    public void removeCOMMENT(String COMMENT);
+    void removeCOMMENT(String COMMENT);
 }

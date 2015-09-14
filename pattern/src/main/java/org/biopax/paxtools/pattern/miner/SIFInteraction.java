@@ -135,6 +135,8 @@ public class SIFInteraction implements Comparable
 
 	/**
 	 * Gets the mediator IDs in a String with a space between each ID.
+	 *
+	 * @return mediator IDs joined with spaces.
 	 */
 	public String getMediatorsInString()
 	{

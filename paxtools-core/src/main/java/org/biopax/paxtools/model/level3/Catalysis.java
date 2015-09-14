@@ -7,12 +7,12 @@ import java.util.Set;
  * Definition: A control interaction in which a physical entity (a catalyst) increases the rate of a conversion
  * interaction by lowering its activation energy. Instances of this class describe a pairing between a catalyzing
  * entity and a catalyzed conversion.
- * <p/>
+ *
  * Rationale: Catalysis, theoretically, is always bidirectional since it acts by lowering the activation energy.
  * Physiologically, however, it can have a direction because of the concentration of the participants. For example,
  * the oxidative decarboxylation catalyzed by Isocitrate dehydrogenase always happens in one direction under
  * physiological conditions since the produced carbon dioxide is constantly removed from the system.
- * <p/>
+ *
  * Usage: A separate catalysis instance should be created for each different conversion that a physicalEntity may
  * catalyze and for each different physicalEntity that may catalyze a conversion. For example,
  * a bifunctional enzyme that catalyzes two different biochemical reactions would be linked to each of those
@@ -21,12 +21,12 @@ import java.util.Set;
  * it only includes small molecules). Generally, the enzyme catalyzing a conversion is known and the use of this
  * class is obvious, however, in the cases where a catalyzed reaction is known to occur but the enzyme is not known,
  * a catalysis instance can be created without a controller specified.
- * <p/>
+ *
  * Synonyms: facilitation, acceleration.
- * <p/>
+ *
  * Examples: The catalysis of a biochemical reaction by an enzyme, the enabling of a transport interaction by a
- * membrane pore complex, and the facilitation of a complex assembly by a scaffold protein. Hexokinase -> (The
- * "Glucose + ATP -> Glucose-6-phosphate +ADP" reaction). A plasma membrane Na+/K+ ATPase is an active transporter
+ * membrane pore complex, and the facilitation of a complex assembly by a scaffold protein. Hexokinase -&gt; (The
+ * "Glucose + ATP -&gt; Glucose-6-phosphate +ADP" reaction). A plasma membrane Na+/K+ ATPase is an active transporter
  * (antiport pump) using the energy of ATP to pump Na+ out of the cell and K+ in. Na+ from cytoplasm to extracellular
  * space would be described in a transport instance. K+ from extracellular space to cytoplasm would be described in a
  * transport instance. The ATPase pump would be stored in a catalysis instance controlling each of the above

@@ -76,9 +76,9 @@ public abstract class InteractionRuleL3Adaptor implements InteractionRuleL3
 
 	/**
 	 *
-	 * @param pes
-	 * @param set
-	 * @return
+	 * @param pes physical entities
+	 * @param set inferred binary interactions
+	 * @return BioPAX objects
 	 */
 	protected Set<BioPAXElement> collectEntities(Set<PhysicalEntity> pes, InteractionSetL3 set)
 	{

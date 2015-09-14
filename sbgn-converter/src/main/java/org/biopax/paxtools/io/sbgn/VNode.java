@@ -79,6 +79,7 @@ public class VNode implements Updatable
 
     /**
      * Default Constructor, sets the geometry of the bounds which are attributes of this class
+     * @param g glyph
      * */
     public VNode(Glyph g)
     {
@@ -108,11 +109,10 @@ public class VNode implements Updatable
     }
 
     /**
-     *
      * Function that will take place when VNode objects will update in layout process of ChiLay
-     * @Override
+     *
      * @param lGraphObj LGraphObject for whom the update will take place.
-     * */
+     */
     public void update(LGraphObject lGraphObj)
     {
         if (lGraphObj instanceof CoSEGraph)
@@ -131,7 +131,7 @@ public class VNode implements Updatable
      * Sets the bound of this VNode by given width and height
      * @param w new width
      * @param h new height
-     * */
+     */
     public void setBounds(float w, float h)
     {
         this.glyph.getBbox().setW(w);
@@ -140,14 +140,14 @@ public class VNode implements Updatable
 
     /**
      * Chooses a proper bound for this VNode according to its class.
-     * */
+     */
     public void setSizeAccordingToClass()
     {
         String glyphClass = this.glyph.getClazz();
 		
 		/*
 		 * need to add bbox objects
-		 * */
+		 */
         Bbox b = new Bbox();
         this.glyph.setBbox(b);
 

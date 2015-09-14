@@ -7,18 +7,18 @@ public interface pathway extends process
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public void addPATHWAY_COMPONENTS(pathwayComponent PATHWAY_COMPONENT);
+	void addPATHWAY_COMPONENTS(pathwayComponent PATHWAY_COMPONENT);
 
 
-	public bioSource getORGANISM();
+	bioSource getORGANISM();
 // --------------------- ACCESORS and MUTATORS---------------------
 
 
-	public Set<pathwayComponent> getPATHWAY_COMPONENTS();
+	Set<pathwayComponent> getPATHWAY_COMPONENTS();
 
-	public void removePATHWAY_COMPONENTS(pathwayComponent PATHWAY_COMPONENT);
+	void removePATHWAY_COMPONENTS(pathwayComponent PATHWAY_COMPONENT);
 
-	public void setORGANISM(bioSource ORGANISM);
+	void setORGANISM(bioSource ORGANISM);
 
 	void setPATHWAY_COMPONENTS(Set<pathwayComponent> PATHWAY_COMPONENTS);
 }

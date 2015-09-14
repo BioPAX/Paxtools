@@ -25,6 +25,7 @@ import java.util.Set;
  * It might not work universally or return unexpected results for untested data sets. Use with caution.
  *
  * @author Emek Demir
+ * @deprecated
  */
 public class ActivityNetworkAnalyzer
 {
@@ -101,7 +102,7 @@ public class ActivityNetworkAnalyzer
 	}
 
 	/**
-	 * @param spe
+	 * @param spe a physical entity but complex
 	 * @return all preceding states of a SimplePhysicalEntity. Preceding states are other spes of the
 	 * same EntityReference that are converted into this spe in one conversion.
 	 */
@@ -126,7 +127,7 @@ public class ActivityNetworkAnalyzer
 		return stateChangeMap.get(er);
 	}
 	/**
-	 * @param spe
+	 * @param spe a physical entity but complex
 	 * @return all succeeding states of a SimplePhysicalEntity. Preceding states are other spes of the
 	 * same EntityReference that this spe is converted into in one conversion.
 	 */
@@ -149,8 +150,8 @@ public class ActivityNetworkAnalyzer
 	/**
 	 * This method writes out the results of the stateNetworkAnalysis for each detected state change.
 	 *
-	 * @param out
-	 * @throws IOException
+	 * @param out output stream
+	 * @throws IOException when an I/O error happens
 	 */
 	public void writeStateNetworkAnalysis(OutputStream out) throws IOException
 	{

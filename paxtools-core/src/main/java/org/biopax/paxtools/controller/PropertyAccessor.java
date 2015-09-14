@@ -40,7 +40,7 @@ public interface PropertyAccessor<D extends BioPAXElement, R>
 	/**
 	 * Returns the values for a collection of <em>beans</em> using the default getMethod.
 	 *
-	 * @param beans
+	 * @param beans collection of BioPAX objects
 	 * @return an object as the value
 	 */
 	Set<? extends R> getValueFromBeans(Collection<? extends D> beans) throws IllegalBioPAXArgumentException;

@@ -6,7 +6,8 @@ import org.hibernate.search.bridge.StringBridge;
 import java.util.Set;
 
 /**
- * Hibernate - Lucene bridge between Set<String> and String.
+ * Hibernate - Lucene bridge between a Set&lt;String&gt; and String.
+ * @deprecated Hibernate ORM/Search will be removed in v5
  */
 public class SetStringBridge implements StringBridge {
 

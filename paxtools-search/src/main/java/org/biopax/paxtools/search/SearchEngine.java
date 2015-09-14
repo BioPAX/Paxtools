@@ -137,8 +137,9 @@ public class SearchEngine implements Indexer, Searcher {
 	
 	/**
 	 * Main Constructor.
+	 *
+	 * @param model BioPAX object model to be indexed or searched.
 	 * @param indexLocation
-	 * @throws IOException 
 	 */
 	public SearchEngine(Model model, String indexLocation) {
 		this.model = model;
@@ -159,15 +160,22 @@ public class SearchEngine implements Indexer, Searcher {
 			LOG.warn("Could not create a searcher: " + e);
 		}
 	}
-	
+
+	/**
+	 * Sets the maximum no. hits per search results page (pagination).
+	 *
+	 * @param maxHitsPerPage
+	 */
 	public void setMaxHitsPerPage(int maxHitsPerPage) {
 		this.maxHitsPerPage = maxHitsPerPage;
 	}
-	
-	public int getMaxHitsPerPage() {
+
+	/**
+	 * Gets the maximum no. hits per search results page (pagination parameter).
+	 */
+	 public int getMaxHitsPerPage() {
 		return maxHitsPerPage;
 	}
-	
 
 	public SearchResult search(String query, int page,
 			Class<? extends BioPAXElement> filterByType, String[] datasources,
@@ -397,7 +405,7 @@ public class SearchEngine implements Indexer, Searcher {
 					bpe.getAnnotations().put(FIELD_DATASOURCE, ModelUtils.getDatasources(bpe));
 					bpe.getAnnotations().put(FIELD_ORGANISM, ModelUtils.getOrganisms(bpe));
 					bpe.getAnnotations().put(FIELD_PATHWAY, ModelUtils.getParentPathways(bpe)); //- includes itself if bpe is a pathway
-					
+
 					// for bio processes, also save the total number of member interactions or pathways:
 					if(bpe instanceof org.biopax.paxtools.model.level3.Process) {
 						int size = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
@@ -438,7 +446,7 @@ public class SearchEngine implements Indexer, Searcher {
 	/**
 	 * Creates a new Lucene Document that corresponds to a BioPAX object.
 	 * It does not check whether the document exists (should not be there,
-	 * because the {@link #index(Model)} method cleans up the index)
+	 * because the {@link #index()} method cleans up the index)
 	 * 
 	 * Some fields also include biopax data type property values not only from 
 	 * the biopax object but also from its child elements, up to some depth 
@@ -459,8 +467,8 @@ public class SearchEngine implements Indexer, Searcher {
 	 *  
 	 *  'size' - number of child processes, an integer as string; analyze=no, store=yes
 	 * 
-	 * @param bpe
-	 * @param indexWriter
+	 * @param bpe BioPAX object
+	 * @param indexWriter index writer
 	*/
 	void index(BioPAXElement bpe, IndexWriter indexWriter) {		
 		// create a new document

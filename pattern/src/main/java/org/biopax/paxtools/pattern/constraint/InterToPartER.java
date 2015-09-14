@@ -44,6 +44,8 @@ public class InterToPartER extends ConstraintAdapter
 	 * Constructor with parameters. A taboo element is the participant that we want to exclude from
 	 * the analysis. User should provide the number of taboo elements, then during execution, these
 	 * elements will be fetched from the current match.
+	 *
+	 * @param numOfTabooElements the number of entities to exclude from the analysis
 	 */
 	public InterToPartER(int numOfTabooElements)
 	{
@@ -55,6 +57,8 @@ public class InterToPartER extends ConstraintAdapter
 	 * the analysis. User should provide the number of taboo elements, then during execution, these
 	 * elements will be fetched from the current match. The direction is left, or right, or both
 	 * sides of the Conversion.
+	 *
+	 * @param numOfTabooElements the number of entities to exclude from the analysis
 	 */
 	public InterToPartER(Direction direction, int numOfTabooElements)
 	{
@@ -72,6 +76,9 @@ public class InterToPartER extends ConstraintAdapter
 
 	/**
 	 * Constructor with direction. There are no taboo elements.
+	 *
+	 * @param direction - side(s) of an interaction to consider;
+	 *                    see {@link org.biopax.paxtools.pattern.constraint.InterToPartER.Direction}
 	 */
 	public InterToPartER(Direction direction)
 	{
@@ -112,10 +119,10 @@ public class InterToPartER extends ConstraintAdapter
 	}
 
 	/**
-	 * Gets the related entity references of the given interaction,
-	 * @param inter
-	 * @param taboo
-	 * @return
+	 * Gets the related entity references of the given interaction.
+	 * @param inter interaction
+	 * @param taboo entities to ignore/skip
+	 * @return entity references
 	 */
 	protected Collection<BioPAXElement> generate(Interaction inter, Set<Entity> taboo)
 	{
@@ -134,9 +141,10 @@ public class InterToPartER extends ConstraintAdapter
 
 	/**
 	 * Gets the related entity references of the given interaction,
-	 * @param conv
-	 * @param taboo
-	 * @return
+	 * @param conv conversion interaction
+	 * @param direction which side(s) participants of the conversion to consider
+	 * @param taboo skip list of entities
+	 * @return entity references
 	 */
 	protected Collection<BioPAXElement> generate(Conversion conv, Direction direction,
 		Set<Entity> taboo)

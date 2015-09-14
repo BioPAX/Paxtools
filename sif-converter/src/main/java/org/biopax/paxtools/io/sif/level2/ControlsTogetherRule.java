@@ -15,24 +15,22 @@ import java.util.List;
 import static org.biopax.paxtools.io.sif.BinaryInteractionType.CO_CONTROL;
 
 /**
- * <p/>
  * Implements Co-Control rule, which means A and B have a control over the same interaction.
- * <p/>
- * <p/>
+ *
  * This class performs a recursive search both downwards and and upwards of a
  * control that A is a controller. Upwards search always proceed to upwards, i.e.
  * never switch back to downwards at any point. If this is directly upwards of the
  * first control that we start the search, then all reachable B have dependent
  * activity to A. Downward search, however, is different. It can switch to an
  * upwards search when possible, to infer independent controls.
- * <p/>
+ *
  * There appears three possible search patterns, starting from the first control
  * (of A), each provides only dependent or independent relations:
- * <p/>
+ *
  * <ul>
- * <li>Upwards only --> dependent relation</li>
- * <li>Downwards only --> dependent relation</li>
- * <li>Downwards then upwards --> independent relation</li>
+ * <li>Upwards only --&gt; dependent relation</li>
+ * <li>Downwards only --&gt; dependent relation</li>
+ * <li>Downwards then upwards --&gt; independent relation</li>
  * </ul>
  * @author Emek Demir
  * @author Ozgun Babur

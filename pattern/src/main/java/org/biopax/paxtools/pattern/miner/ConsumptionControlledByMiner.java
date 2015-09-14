@@ -19,6 +19,8 @@ public class ConsumptionControlledByMiner extends AbstractSIFMiner
 
 	/**
 	 * Constructor for extension purposes.
+	 *
+	 * @param type SIF type
 	 */
 	protected ConsumptionControlledByMiner(SIFType type)
 	{

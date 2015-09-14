@@ -32,6 +32,7 @@ public interface SIFMiner extends Miner
 	/**
 	 * Creates SIF interactions for the given match.
 	 * @param m match to use for SIF creation
+	 * @param fetcher ID generator from BioPAX object
 	 * @return SIF interaction
 	 */
 	public Set<SIFInteraction> createSIFInteraction(Match m, IDFetcher fetcher);
@@ -44,7 +45,7 @@ public interface SIFMiner extends Miner
 
 	/**
 	 * Sets the idFetcher that helps to fasten the search.
-	 * @param idFetcher ID generator from BioPAx object
+	 * @param idFetcher ID generator from BioPAX object
 	 */
 	public void setIDFetcher(IDFetcher idFetcher);
 }

@@ -39,6 +39,7 @@ public interface Miner
 	 * Writes the text output to the given stream.
 	 * @param matches pattern search result
 	 * @param out output stream
+	 * @throws IOException when there's a problem writing to the output stream
 	 */
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out) throws IOException;
 }

@@ -35,6 +35,7 @@ public class FieldOfMultiple extends Field
 	 *
 	 * @param con the generative constraint of size 2 whose generated values will be checked
 	 * @param accessorString accessor string for the element
+	 * @param oper operation
 	 * @param value desired value
 	 */
 	public FieldOfMultiple(MappedConst con, String accessorString, Operation oper, Object value)
@@ -51,6 +52,7 @@ public class FieldOfMultiple extends Field
 	 * @param accessorString1 accessor string for the first element
 	 * @param con2 the generative constraint of size 2 for the second group of elements
 	 * @param accessorString2 accessor string for the second element
+	 * @param oper operation
 	 */
 	public FieldOfMultiple(MappedConst con1, String accessorString1, MappedConst con2,
 		String accessorString2, Operation oper)

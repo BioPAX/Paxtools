@@ -30,7 +30,8 @@ public class ParticipatingPE extends ConstraintAdapter
 
 	/**
 	 * Constructor with parameters.
-	 * @param type direction from the Conversion
+	 * @param type direction from the Conversion - input or output type
+	 * @param blacklist a skip-list of ubiquitous molecules
 	 */
 	public ParticipatingPE(RelType type, Blacklist blacklist)
 	{

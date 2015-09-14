@@ -7,8 +7,7 @@ package org.biopax.paxtools.model.level3;
  * in the equilibrium constant equation for the biochemical reaction in which ATP is hydrolyzed to ADP and inorganic
  * phosphate:
  * 
- * K' = [ADP][P<sub>i</sub>]/[ATP],
- * <
+ * K' = [ADP][P<sub>i</sub>]/[ATP].
  * The concentration of ATP refers to the total concentration of all of the following species:
  * 
  * [ATP] = [ATP<sup>4-</sup>] + [HATP<sup>3-</sup>] + [H<sub>2</sub>ATP<sup>2-</sup>] + [MgATP<sup>2-</sup>] +

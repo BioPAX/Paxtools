@@ -8,9 +8,9 @@ import java.util.Set;
  * of biochemical reactions are defined in terms of sums of species.
  * This is convention in biochemistry, and, in principle, all of the EC
  * reactions should be biochemical reactions.
- * <p/>
+ *
  * <b>Examples:</b> ATP + H2O = ADP + Pi
- * <p/>
+ *
  * <b>Comment:</b> In the example reaction above, ATP is considered to be an
  * equilibrium mixture of several species, namely ATP4-, HATP3-, H2ATP2-,
  * MgATP2-, MgHATP-, and Mg2ATP. Additional species may also need to be
@@ -30,48 +30,48 @@ public interface biochemicalReaction extends conversion
 {
 // -------------------------- OTHER METHODS --------------------------
 
-    public Set<deltaGprimeO> getDELTA_G();
+    Set<deltaGprimeO> getDELTA_G();
 
-    public void setDELTA_G(Set<deltaGprimeO> DELTA_G);
+    void setDELTA_G(Set<deltaGprimeO> DELTA_G);
 
-    public void addDELTA_G(deltaGprimeO DELTA_G);
+    void addDELTA_G(deltaGprimeO DELTA_G);
 
-    public void removeDELTA_G(deltaGprimeO DELTA_G);
-
-
-    public Set<Double> getDELTA_H();
-
-    public void setDELTA_H(Set<Double> DELTA_H);
-
-    public void addDELTA_H(double DELTA_H);
-
-    public void removeDELTA_H(double DELTA_H);
+    void removeDELTA_G(deltaGprimeO DELTA_G);
 
 
-    public Set<Double> getDELTA_S();
+    Set<Double> getDELTA_H();
 
-    public void setDELTA_S(Set<Double> DELTA_S);
+    void setDELTA_H(Set<Double> DELTA_H);
 
-    public void addDELTA_S(double DELTA_S);
+    void addDELTA_H(double DELTA_H);
 
-    public void removeDELTA_S(double DELTA_S);
-
-
-    public Set<String> getEC_NUMBER();
-
-    public void setEC_NUMBER(Set<String> EC_NUMBER);
-
-    public void addEC_NUMBER(String EC_NUMBER);
-
-    public void removeEC_NUMBER(String EC_NUMBER);
+    void removeDELTA_H(double DELTA_H);
 
 
-    public Set<kPrime> getKEQ();
+    Set<Double> getDELTA_S();
 
-    public void setKEQ(Set<kPrime> KEQ);
+    void setDELTA_S(Set<Double> DELTA_S);
 
-    public void addKEQ(kPrime KEQ);
+    void addDELTA_S(double DELTA_S);
 
-    public void removeKEQ(kPrime KEQ);
+    void removeDELTA_S(double DELTA_S);
+
+
+    Set<String> getEC_NUMBER();
+
+    void setEC_NUMBER(Set<String> EC_NUMBER);
+
+    void addEC_NUMBER(String EC_NUMBER);
+
+    void removeEC_NUMBER(String EC_NUMBER);
+
+
+    Set<kPrime> getKEQ();
+
+    void setKEQ(Set<kPrime> KEQ);
+
+    void addKEQ(kPrime KEQ);
+
+    void removeKEQ(kPrime KEQ);
 
 }

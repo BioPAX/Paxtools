@@ -13,22 +13,22 @@ public interface bioSource extends externalReferenceUtilityClass
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    public openControlledVocabulary getCELLTYPE();
+    openControlledVocabulary getCELLTYPE();
 
-    public void setCELLTYPE(openControlledVocabulary CELLTYPE);
-
-
-    public String getNAME();
-
-    public void setNAME(String NAME);
+    void setCELLTYPE(openControlledVocabulary CELLTYPE);
 
 
-    public unificationXref getTAXON_XREF();
+    String getNAME();
 
-    public void setTAXON_XREF(unificationXref TAXON_XREF);
+    void setNAME(String NAME);
 
 
-    public openControlledVocabulary getTISSUE();
+    unificationXref getTAXON_XREF();
 
-    public void setTISSUE(openControlledVocabulary TISSUE);
+    void setTAXON_XREF(unificationXref TAXON_XREF);
+
+
+    openControlledVocabulary getTISSUE();
+
+    void setTISSUE(openControlledVocabulary TISSUE);
 }

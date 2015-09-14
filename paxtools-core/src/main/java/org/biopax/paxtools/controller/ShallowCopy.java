@@ -54,6 +54,7 @@ public class ShallowCopy implements Visitor
 	 * Creates a copy of the BioPAX object with all its properties
 	 * are the same, and also adds it to a model.
 	 *
+	 * @param <T> BioPAX type/class of the source and copy elements
 	 * @param model target biopax model
      * @param source a biopax object to copy
 	 * @param newID new (copy) biopax object's URI

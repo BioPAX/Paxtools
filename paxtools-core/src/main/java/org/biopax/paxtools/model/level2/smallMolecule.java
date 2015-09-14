@@ -7,21 +7,21 @@ public interface smallMolecule extends physicalEntity
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public void addSTRUCTURE(chemicalStructure STRUCTURE);
+	void addSTRUCTURE(chemicalStructure STRUCTURE);
 
-	public String getCHEMICAL_FORMULA();
-
-
-	public double getMOLECULAR_WEIGHT();
+	String getCHEMICAL_FORMULA();
 
 
-	public Set<chemicalStructure> getSTRUCTURE();
+	double getMOLECULAR_WEIGHT();
 
-	public void removeSTRUCTURE(chemicalStructure STRUCTURE);
 
-	public void setCHEMICAL_FORMULA(String CHEMICAL_FORMULA);
+	Set<chemicalStructure> getSTRUCTURE();
 
-	public void setMOLECULAR_WEIGHT(double MOLECULAR_WEIGHT);
+	void removeSTRUCTURE(chemicalStructure STRUCTURE);
+
+	void setCHEMICAL_FORMULA(String CHEMICAL_FORMULA);
+
+	void setMOLECULAR_WEIGHT(double MOLECULAR_WEIGHT);
 
 	void setSTRUCTURE(Set<chemicalStructure> STRUCTURE);
 }

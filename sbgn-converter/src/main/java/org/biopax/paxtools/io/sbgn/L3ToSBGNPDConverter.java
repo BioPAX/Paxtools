@@ -27,7 +27,7 @@ import static org.sbgn.ArcClazz.*;
 /**
  * This class converts BioPAX L3 model into SBGN PD. It does not layout the objects, leaves location
  * information unassigned.
- * <p>
+ *
  * This version ignores several BioPAX L3 features during conversion:
  * <ul>
  * <li>Parent-child relationship between physical entities</li>

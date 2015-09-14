@@ -114,7 +114,7 @@ public class GSEAConverter
 	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
 	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
 	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs
-	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt, such as 'hgnc.symbol', 'uniprot'
+	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt;, such as 'hgnc.symbol', 'uniprot'
 	 *                   (it depends on the actual data; so double-check before using in this constructor).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 * @param skipSubPathwaysOf - do not look inside sub-pathways of pathways of given data sources to collect entity references
@@ -134,9 +134,12 @@ public class GSEAConverter
 
 
 	/**
-	 * Converts model to GSEA and writes to out.  
+	 * Converts model to GSEA (GMT) and writes to out.
 	 * See class declaration for more information.
+	 *
 	 * @param model Model
+	 * @param out output stream to write the result to
+	 * @throws IOException when there's an output stream error
 	 */
 	public void writeToGSEA(final Model model, OutputStream out) throws IOException
 	{

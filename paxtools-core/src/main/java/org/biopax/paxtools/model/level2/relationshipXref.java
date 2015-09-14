@@ -6,8 +6,7 @@ public interface relationshipXref extends xref
 // -------------------------- OTHER METHODS --------------------------
 
 // --------------------- ACCESORS and MUTATORS---------------------
-	public String getRELATIONSHIP_TYPE();
+	String getRELATIONSHIP_TYPE();
 
-
-	public void setRELATIONSHIP_TYPE(String RELATIONSHIP_TYPE);
+	void setRELATIONSHIP_TYPE(String RELATIONSHIP_TYPE);
 }

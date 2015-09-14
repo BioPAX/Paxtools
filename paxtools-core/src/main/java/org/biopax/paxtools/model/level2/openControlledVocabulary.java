@@ -8,12 +8,12 @@ public interface openControlledVocabulary
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public void addTERM(String TERM);
+	void addTERM(String TERM);
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public Set<String> getTERM();
+	Set<String> getTERM();
 
-	public void removeTERM(String TERM);
+	void removeTERM(String TERM);
 
 	void setTERM(Set<String> TERM);
 }

@@ -6,11 +6,11 @@ import java.util.Set;
 public interface physicalInteraction extends interaction
 {
 
-	public void addINTERACTION_TYPE(openControlledVocabulary INTERACTION_TYPE);
+	void addINTERACTION_TYPE(openControlledVocabulary INTERACTION_TYPE);
 
-	public Set<openControlledVocabulary> getINTERACTION_TYPE();
+	Set<openControlledVocabulary> getINTERACTION_TYPE();
 
-	public void removeINTERACTION_TYPE(
+	void removeINTERACTION_TYPE(
 		openControlledVocabulary INTERACTION_TYPE);
 
 	void setINTERACTION_TYPE(Set<openControlledVocabulary> INTERACTION_TYPE);

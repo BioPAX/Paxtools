@@ -5,27 +5,23 @@ import java.util.Set;
 
 public interface conversion extends physicalInteraction
 {
+	Set<physicalEntityParticipant> getLEFT();
 
+	Set<physicalEntityParticipant> getRIGHT();
 
+	SpontaneousType getSPONTANEOUS();
 
-	public Set<physicalEntityParticipant> getLEFT();
+	void addLEFT(physicalEntityParticipant LEFT);
 
-	public Set<physicalEntityParticipant> getRIGHT();
+	void addRIGHT(physicalEntityParticipant RIGHT);
 
+	void removeLEFT(physicalEntityParticipant LEFT);
 
-	public SpontaneousType getSPONTANEOUS();
+	void removeRIGHT(physicalEntityParticipant RIGHT);
 
-	public void addLEFT(physicalEntityParticipant LEFT);
+	void setLEFT(Set<physicalEntityParticipant> LEFT);
 
-	public void addRIGHT(physicalEntityParticipant RIGHT);
+	void setRIGHT(Set<physicalEntityParticipant> RIGHT);
 
-	public void removeLEFT(physicalEntityParticipant LEFT);
-
-	public void removeRIGHT(physicalEntityParticipant RIGHT);
-
-	public void setLEFT(Set<physicalEntityParticipant> LEFT);
-
-	public void setRIGHT(Set<physicalEntityParticipant> RIGHT);
-
-	public void setSPONTANEOUS(SpontaneousType SPONTANEOUS);
+	void setSPONTANEOUS(SpontaneousType SPONTANEOUS);
 }

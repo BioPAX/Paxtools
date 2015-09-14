@@ -17,7 +17,7 @@ import java.util.Set;
  * to the BioPAX element's Lucene index.
  * 
  * @author rodche
- *
+ * @deprecated Hibernate ORM/Search will be removed in v5
  */
 public final class DataSourceFieldBridge implements FieldBridge {
 

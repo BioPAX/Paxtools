@@ -7,41 +7,41 @@ public interface publicationXref extends xref
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public void addAUTHORS(String AUTHORS);
+	void addAUTHORS(String AUTHORS);
 
-	public void addSOURCE(String SOURCE);
+	void addSOURCE(String SOURCE);
 
-	public void addURL(String URL);
+	void addURL(String URL);
 
 
-	public Set<String> getAUTHORS();
+	Set<String> getAUTHORS();
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public Set<String> getSOURCE();
+	Set<String> getSOURCE();
 
 
-	public String getTITLE();
+	String getTITLE();
 
 
-	public Set<String> getURL();
+	Set<String> getURL();
 
 
-	public int getYEAR();
+	int getYEAR();
 
-	public void removeAUTHORS(String AUTHORS);
+	void removeAUTHORS(String AUTHORS);
 
-	public void removeSOURCE(String SOURCE);
+	void removeSOURCE(String SOURCE);
 
-	public void removeURL(String URL);
+	void removeURL(String URL);
 
 	void setAUTHORS(Set<String> AUTHORS);
 
 	void setSOURCE(Set<String> SOURCE);
 
-	public void setTITLE(String TITLE);
+	void setTITLE(String TITLE);
 
 	void setURL(Set<String> URL);
 
-	public void setYEAR(int YEAR);
+	void setYEAR(int YEAR);
 }

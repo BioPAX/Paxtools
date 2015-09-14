@@ -5,32 +5,32 @@ public interface kPrime extends utilityClass
 {
 // -------------------------- OTHER METHODS --------------------------
 
-	public float getIONIC_STRENGTH();
+	float getIONIC_STRENGTH();
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public float getK_PRIME();
+	float getK_PRIME();
 
 
-	public float getPH();
+	float getPH();
 
 
-	public float getPMG();
+	float getPMG();
 
 
-	public float getTEMPERATURE();
+	float getTEMPERATURE();
 
 
-	public void setIONIC_STRENGTH(float IONIC_STRENGTH);
+	void setIONIC_STRENGTH(float IONIC_STRENGTH);
 
 
-	public void setK_PRIME(float K_PRIME);
+	void setK_PRIME(float K_PRIME);
 
 
-	public void setPH(float PH);
+	void setPH(float PH);
 
 
-	public void setPMG(float PMG);
+	void setPMG(float PMG);
 
 
-	public void setTEMPERATURE(float TEMPERATURE);
+	void setTEMPERATURE(float TEMPERATURE);
 }

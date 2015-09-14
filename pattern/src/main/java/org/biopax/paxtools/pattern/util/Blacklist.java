@@ -114,6 +114,8 @@ public class Blacklist
 
 	/**
 	 * Gets the IDs of the blacklisted molecules.
+	 *
+	 * @return IDs
 	 */
 	public Set<String> getListed()
 	{
@@ -122,6 +124,8 @@ public class Blacklist
 
 	/**
 	 * Dumps data to the given file.
+	 *
+	 * @param filename output file name
 	 */
 	public void write(String filename)
 	{
@@ -137,6 +141,8 @@ public class Blacklist
 
 	/**
 	 * Dumps data to the given output stream.
+	 *
+	 * @param os output stream
 	 */
 	public void write(OutputStream os)
 	{

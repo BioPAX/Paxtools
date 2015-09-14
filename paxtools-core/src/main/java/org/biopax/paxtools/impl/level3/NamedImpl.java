@@ -73,7 +73,7 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	{
 		return displayName;
 	}
-	
+
 	public void setDisplayName(String displayName)
 	{
 		addName(this.displayName = displayName);
@@ -92,6 +92,12 @@ public abstract class NamedImpl extends XReferrableImpl implements Named
 	public void setName(Set<String> names)
 	{
 		allNames = names;
+
+		//also include the display and standard names if they're set
+		if(displayName!=null && !displayName.isEmpty())
+			allNames.add(displayName);
+		if(standardName!=null && !standardName.isEmpty())
+			allNames.add(standardName);
 	}
 	
 	public void addName(String name)

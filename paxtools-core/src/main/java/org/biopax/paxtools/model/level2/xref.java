@@ -8,22 +8,21 @@ public interface xref extends externalReferenceUtilityClass
 // -------------------------- OTHER METHODS --------------------------
 
 // --------------------- ACCESORS and MUTATORS---------------------
-	public String getDB();
+	String getDB();
 
-	public String getDB_VERSION();
+	String getDB_VERSION();
 
-	public String getID();
+	String getID();
 
+	String getID_VERSION();
 
-	public String getID_VERSION();
+	Set<XReferrable> isXREFof();
 
-	public Set<XReferrable> isXREFof();
+	void setDB(String DB);
 
-	public void setDB(String DB);
+	void setDB_VERSION(String DB_VERSION);
 
-	public void setDB_VERSION(String DB_VERSION);
+	void setID(String ID);
 
-	public void setID(String ID);
-
-	public void setID_VERSION(String ID_VERSION);
+	void setID_VERSION(String ID_VERSION);
 }

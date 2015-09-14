@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * This class implements a directed binary interaction between two entities. Most bioinformatics
  * software and algorithms consumes such interactions.
- * <p/>
+ *
  * User: demir Date: Dec 28, 2007 Time: 3:33:45 PM
  */
 public class SimpleInteraction

@@ -14,9 +14,9 @@ public abstract class AbstractEdge implements Edge
 	/**
 	 * Edges should know their source and target nodes, and their graph.
 	 *
-	 * @param source
-	 * @param target
-	 * @param graph
+	 * @param source source node
+	 * @param target target node
+	 * @param graph graph
 	 */
 	public AbstractEdge(Node source, Node target, Graph graph)
 	{

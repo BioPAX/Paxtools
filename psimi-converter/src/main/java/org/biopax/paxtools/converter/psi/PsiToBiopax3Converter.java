@@ -58,11 +58,6 @@ public class PsiToBiopax3Converter {
 	private final String xmlBase; //common URI prefix
 
 	/**
-	 * Indicates whether conversion is complete.
-	 */
-	protected boolean conversionIsComplete;
-
-	/**
 	 * Constructor.
 	 * Will use the default empty string xml:base.
 	 *
@@ -74,7 +69,7 @@ public class PsiToBiopax3Converter {
 	/**
 	 * Constructor.
 	 * 
-	 * @param xmlBase
+	 * @param xmlBase xml:base to be used when generating non-canonical BioPAX objects' URIs
 	 */
 	public PsiToBiopax3Converter(String xmlBase) {
 		this.xmlBase = xmlBase;
@@ -85,16 +80,15 @@ public class PsiToBiopax3Converter {
 	 * Converts the PSI-MI inputStream into BioPAX outputStream.
 	 * Streams will be closed by the converter.
 	 * 
-	 * Note: for huge models (> 1 or 2 Gb data), and when a ByteArrayOutputStream 
-	 * is used, the OutOfMemoryError will be thrown (increasing the "heap" RAM won't help;
-	 * but using a FileOutputStream will do).
+	 * Warning: for very large models (about 1-2Gb if serialized), and when ByteArrayOutputStream
+	 * is used, OutOfMemoryError might be thrown (increasing the "heap" RAM won't help; but using FileOutputStream will).
 	 *
 	 * @param inputStream PSI-MI
 	 * @param outputStream BioPAX
 	 * @param forceInteractionToComplex - always generate Complex instead of MolecularInteraction
 	 *
-	 * @throws IOException
-	 * @throws PsimiXmlReaderException
+	 * @throws IOException when an I/O error occur
+	 * @throws PsimiXmlReaderException when an error in the PSI-MI parser happens
 	 */
 	public void convert(InputStream inputStream, OutputStream outputStream, 
 			boolean forceInteractionToComplex) throws IOException, PsimiXmlReaderException {
@@ -119,12 +113,12 @@ public class PsiToBiopax3Converter {
 	 * Converts the PSI-MITAB inputStream into BioPAX outputStream.
 	 * Streams will be closed by the converter.
 	 *
-	 * @param inputStream psimitab
+	 * @param inputStream psi-mitab
 	 * @param outputStream biopax
 	 * @param forceInteractionToComplex - always generate Complex instead of MolecularInteraction
 	 *
-	 * @throws IOException
-	 * @throws PsimiTabException
+	 * @throws IOException when an I/O error occur
+	 * @throws PsimiTabException when there's a problem within the PSI-MITAB parser
 	 */
 	public void convertTab(InputStream inputStream, OutputStream outputStream, 
 			boolean forceInteractionToComplex) throws IOException, PsimiTabException {
@@ -157,9 +151,9 @@ public class PsiToBiopax3Converter {
 	 * Converts the PSI interactions from the EntrySet and places into BioPAX output stream.
 	 * Stream will be closed by the converter.
 	 *
-	 * @param entrySet
-	 * @param outputStream
-	 * @param forceInteractionToComplex - always generate Complex instead of MolecularInteraction
+	 * @param entrySet PSI-MI entry set
+	 * @param outputStream output stream for writing the BioPAX RDF/XML result
+	 * @param forceInteractionToComplex true/false - whether to always generate Complex instead of MolecularInteraction
 	 */
 	public void convert(EntrySet entrySet, OutputStream outputStream, 
 			boolean forceInteractionToComplex) {
@@ -191,7 +185,7 @@ public class PsiToBiopax3Converter {
 	}
 
 	/**
-	 * @return the xmlBase
+	 * @return the xml:base, a namespace for the converter-generated BioPAX objects' URIs.
 	 */
 	public String getXmlBase() {
 		return xmlBase;

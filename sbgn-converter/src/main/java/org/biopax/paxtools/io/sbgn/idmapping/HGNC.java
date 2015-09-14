@@ -25,8 +25,8 @@ public class HGNC
 
 	/**
 	 * Provides HGNC ID of the given approved gene symbol.
-	 * @param symbol
-	 * @return
+	 * @param symbol HGNC Symbol (aka gene name/symbol)
+	 * @return HGNC ID
 	 */
 	public static String getID(String symbol)
 	{

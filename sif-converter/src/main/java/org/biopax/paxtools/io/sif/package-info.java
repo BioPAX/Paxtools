@@ -6,9 +6,8 @@
  * parse, and easy to load into Cytoscape and other third-party applications.
  *
  * Relations in a SIF file are formatted as:
- *  <\p>
+ *
  * source relationship type target
- *  <\p>
  *
  * where source and target are a valid primary id and relationship type is one of the interaction inference rules.
  *

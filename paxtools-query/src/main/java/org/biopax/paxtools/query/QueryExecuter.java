@@ -70,6 +70,7 @@ public class QueryExecuter
 	 * @param sourceSet Seed to the query
 	 * @param model BioPAX model
 	 * @param limit Length limit for the paths to be found
+	 * @param filters optional filters - for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
 	public static Set<BioPAXElement> runPathsBetween(Set<BioPAXElement> sourceSet, Model model,
@@ -97,6 +98,7 @@ public class QueryExecuter
 	 * @param sourceSet Seed to the query
 	 * @param model BioPAX model
 	 * @param limit Length limit for the paths to be found
+	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 * @deprecated Use runPathsBetween instead
 	 */
@@ -116,6 +118,7 @@ public class QueryExecuter
 	 * @param model BioPAX model
 	 * @param limitType either NORMAL or SHORTEST_PLUS_K
 	 * @param limit Length limit fothe paths to be found
+	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
 	public static Set<BioPAXElement> runPathsFromTo(
@@ -148,6 +151,7 @@ public class QueryExecuter
 	 * @param model BioPAX model
 	 * @param direction UPSTREAM or DOWNSTREAM
 	 * @param limit Length limit for the search
+	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
 	public static Set<BioPAXElement> runCommonStream(
@@ -182,6 +186,7 @@ public class QueryExecuter
 	 * @param model BioPAX model
 	 * @param direction UPSTREAM or DOWNSTREAM
 	 * @param limit Length limit for the search
+	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
 	public static Set<BioPAXElement> runCommonStreamWithPOI(
@@ -250,6 +255,7 @@ public class QueryExecuter
 	 * Converts the query result from wrappers to wrapped BioPAX elements.
 	 * @param resultWrappers Wrappers of the result set
 	 * @param graph Queried graph
+	 * @param removeDisconnected whether to remove disconnected non-complex type physical entities
 	 * @return Set of elements in the result
 	 */
 	private static Set<BioPAXElement> convertQueryResult(
@@ -535,8 +541,9 @@ public class QueryExecuter
 	/**
 	 * Extracts the querible interactions from the elements.
 	 *
-	 * @param elements Elements to search
-	 * @return Querible Interactions
+	 * @param elements BioPAX elements to search
+	 * @param graph graph model
+	 * @return Querible Interactions (nodes)
 	 */
 	public static Set<Node> getSeedInteractions(Collection<BioPAXElement> elements, Graph graph)
 	{

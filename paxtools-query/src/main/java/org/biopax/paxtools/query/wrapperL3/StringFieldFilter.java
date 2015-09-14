@@ -33,6 +33,7 @@ public abstract class StringFieldFilter extends Filter
 	 * Constructor.
 	 * 
 	 * @param emptyOK whether to always accept empty field when traversing the graph or reject
+	 * @param valid filter values (strings' capitalization does not matter)
 	 */
 	protected StringFieldFilter(boolean emptyOK, String[] valid)
 	{

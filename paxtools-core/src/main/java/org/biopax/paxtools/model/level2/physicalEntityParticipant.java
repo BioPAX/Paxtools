@@ -9,22 +9,22 @@ public interface physicalEntityParticipant
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	public physicalEntity getPHYSICAL_ENTITY();
-	public void setPHYSICAL_ENTITY(physicalEntity PHYSICAL_ENTITY);
+	physicalEntity getPHYSICAL_ENTITY();
+	void setPHYSICAL_ENTITY(physicalEntity PHYSICAL_ENTITY);
 
-	public double getSTOICHIOMETRIC_COEFFICIENT();
-	public void setSTOICHIOMETRIC_COEFFICIENT(
+	double getSTOICHIOMETRIC_COEFFICIENT();
+	void setSTOICHIOMETRIC_COEFFICIENT(
 		double STOICHIOMETRIC_COEFFICIENT);
 
-	public complex isCOMPONENTof();
-    public void setCOMPONENTSof(complex aComplex);
+	complex isCOMPONENTof();
+    void setCOMPONENTSof(complex aComplex);
 
-	public openControlledVocabulary getCELLULAR_LOCATION();
+	openControlledVocabulary getCELLULAR_LOCATION();
 
-	public void setCELLULAR_LOCATION(
+	void setCELLULAR_LOCATION(
 		openControlledVocabulary CELLULAR_LOCATION);
 
 
 	boolean isInEquivalentState(physicalEntityParticipant that);
-	public int stateCode();
+	int stateCode();
 }

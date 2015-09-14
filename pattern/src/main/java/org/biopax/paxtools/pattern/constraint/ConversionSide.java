@@ -39,6 +39,8 @@ public class ConversionSide extends ConstraintAdapter
 
 	/**
 	 * Constructor.
+	 *
+	 * @param type side type (same side or the other)
 	 */
 	public ConversionSide(Type type)
 	{
@@ -48,6 +50,10 @@ public class ConversionSide extends ConstraintAdapter
 	/**
 	 * Constructor. The relType parameter is using during blacklisting, and only if the blacklist is
 	 * not null.
+	 *
+	 * @param type side type
+	 * @param blacklist blacklist of ubiquitous molecules
+	 * @param relType relationship type (used together with and during blacklisting)
 	 */
 	public ConversionSide(Type type, Blacklist blacklist, RelType relType)
 	{

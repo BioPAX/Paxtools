@@ -71,7 +71,8 @@ public interface PhysicalEntity extends Entity, Controller
 	 * unless absolutely sure/required, for there is an alternative way 
 	 * (using PhysicalEntity/entityReference/memberEntityReference), and 
 	 * this will probably be deprecated in the future BioPAX releases.
-	 * @return
+	 * It's usually hard to say what this relationship (grouping) means...
+	 * @return member physical entities
 	 */
 	Set<PhysicalEntity> getMemberPhysicalEntity();
 

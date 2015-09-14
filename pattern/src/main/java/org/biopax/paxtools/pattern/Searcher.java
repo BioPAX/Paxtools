@@ -220,6 +220,8 @@ public class Searcher
 	/**
 	 * Searches a model for the given pattern, then collects the specified elements of the matches
 	 * and returns.
+	 *
+	 * @param <T> BioPAX type
 	 * @param model model to search in
 	 * @param pattern pattern to search for
 	 * @param index index of the element in the match to collect
@@ -235,6 +237,8 @@ public class Searcher
 	/**
 	 * Searches the given pattern starting from the given elements, then collects the specified
 	 * elements of the matches and returns.
+	 *
+	 * @param <T> BioPAX type
 	 * @param eles elements to start from
 	 * @param pattern pattern to search for
 	 * @param index index of the element in the match to collect
@@ -256,6 +260,8 @@ public class Searcher
 	/**
 	 * Searches the given pattern starting from the given element, then collects the specified
 	 * elements of the matches and returns.
+	 *
+	 * @param <T> BioPAX type
 	 * @param ele element to start from
 	 * @param pattern pattern to search for
 	 * @param index index of the element in the match to collect
@@ -297,7 +303,7 @@ public class Searcher
 	 * @param p pattern to search for
 	 * @param inFile filename for the model to search in
 	 * @param outFile filename for the result model
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException when no file exists
 	 */
 	public static void searchInFile(Pattern p, String inFile, String outFile) throws FileNotFoundException
 	{
@@ -314,7 +320,7 @@ public class Searcher
 	 * @param outFile filename for the result model
 	 * @param seedLimit max number of starting elements
 	 * @param graphPerSeed max number of matches for a starting element
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException when no file exists
 	 */
 	public static void searchInFile(Pattern p, String inFile, String outFile, int seedLimit,
 		int graphPerSeed) throws FileNotFoundException

@@ -25,6 +25,8 @@ import java.util.*;
 /**
  * Converts a BioPAX model to SIF (simple interaction format), by inferring the interactions in the
  * model, and describing them in terms of simple interactions.
+ *
+ * @deprecated use the pattern (new Paxtools' module) api instead
  */
 public class SimpleInteractionConverter
 {
@@ -361,24 +363,30 @@ public class SimpleInteractionConverter
 	}
 
 	/**
-	 * This method outputs inferred interactions in sif annotation extended (sifnx). Sifnx is a tab
-	 * delimited file with two sections. First section (interactions) is similar to sif - however
-	 * there might be publication references(optional) next to each interaction line.
-	 * <p/>
-	 * The second section entities allows users easily define the properties they would like to
-	 * extract from BioPAX model related to the interacting entities. It is in the form id <tab>
-	 * property1 <tab> property2 <tab> property3. If the cardinality of property is multiple values
-	 * are separated by a semi column. For example the call
-	 * converter.writeInteractionsInSIFNX(level2,out,true,"NAME","XREF");
-	 * <p/>
-	 * will output:
-	 * <p/>
-	 * id    aName   uniprot:xxx;entrez-gene:yyy
-	 * <p/>
-	 * in the entity section
-	 * @param model
-	 * @param edgeStream
-	 * @exception IOException
+	 * This method outputs inferred interactions in SIF annotation extended format (Sifnx).
+	 *
+	 * It's a tab-delimited text data format. The result is written to two separate files or streams -
+	 * for edges and nodes, respectively (also, files can later be merged into one having there
+	 * two sections separated by single blank line; we still call it Sifnx format).
+	 *
+	 * The first section/file (that describes interactions) is similar to SIF, however,
+	 * there might be publication references (optional) next to each interaction line, etc.
+	 *
+	 * The second one (about interacting entities, i.e., nodes), lists the IDs and corresponding
+	 * BioPAX property values users wanted from a BioPAX model, for each participant.
+	 * It is in the form: "ID\tproperty_value\tproperty_value\tproperty_values...".
+	 * If the cardinality of property is multiple, the values are separated by a semi column;
+	 * e.g.:
+	 *
+	 * id    aName   uniprot:P12345;entrez-gene:1234
+	 *
+	 * @param model model to convert
+	 * @param edgeStream output stream for interactions (edges)
+	 * @param nodeStream output stream for nodes (second section)
+	 * @param interactorPropertyPaths interactor property paths
+	 * @param mediatorPropertyPaths mediator property paths
+	 * @param writeEntityTypes whether to output participants' BioPAX types
+	 * @exception IOException when there is an output stream error
 	 */
 	public void writeInteractionsInSIFNX(Model model, OutputStream edgeStream, OutputStream nodeStream,
 			List<String> interactorPropertyPaths, List<String> mediatorPropertyPaths, boolean writeEntityTypes)

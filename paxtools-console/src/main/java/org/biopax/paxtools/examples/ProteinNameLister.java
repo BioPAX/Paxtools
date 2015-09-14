@@ -22,14 +22,14 @@ import java.util.Set;
 /**
  * This example class processes all the Level2 BioPAX OWL
  * files in the input directory to find all the protein names
- * <p/>
+ *
  * Notes:
- * <p/>
+ *
  * - recent fix: it doesn't traverse into the NEXT-STEP property,
  * as it may lead beyond the boundaries of the pathway of interest!
- * <p/>
+ *
  * - one may prefer using the Paxtools' jenaIO instead of the simpleIO:
- * <p/>
+ *
  * import org.biopax.paxtools.io.jena.JenaIOHandler;
  * JenaIOHandler handler = new JenaIOHandler(null, BioPAXLevel.L2);
  */

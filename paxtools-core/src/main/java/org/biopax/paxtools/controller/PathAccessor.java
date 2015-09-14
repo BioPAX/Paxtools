@@ -184,13 +184,14 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		return domain;
 	}
 
-	@Override public Set getValueFromBean(BioPAXElement bean) throws IllegalBioPAXArgumentException
+	public Set getValueFromBean(BioPAXElement bean) throws IllegalBioPAXArgumentException
 	{
 		Set<BioPAXElement> bpes = new HashSet<BioPAXElement>();
 		bpes.add(bean);
 		return getValueFromBeans(bpes);
 	}
 
+	@Override
 	public Set getValueFromBeans(Collection<? extends BioPAXElement> beans) throws IllegalBioPAXArgumentException
 	{
 		Collection<? extends BioPAXElement> bpes = beans;
@@ -237,9 +238,8 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	 * @return a merged set of all values that is reachable by the paths starting from all applicable objects in
 	 * the model. For example running ProteinReference/xref:UnificationXref on the model will get all the
 	 * unification xrefs of all ProteinReferences.
-	 * @throws IllegalBioPAXArgumentException 
 	 */
-	public Set getValueFromModel(Model model) throws IllegalBioPAXArgumentException
+	public Set getValueFromModel(Model model)
 	{
 		Set<? extends BioPAXElement> domains = new HashSet<BioPAXElement>(model.getObjects(this.getDomain()));
 		return getValueFromBeans(domains);

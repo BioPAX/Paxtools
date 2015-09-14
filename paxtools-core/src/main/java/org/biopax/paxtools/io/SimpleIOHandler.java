@@ -25,7 +25,7 @@ import static javax.xml.stream.XMLStreamConstants.*;
 
 /**
  * Simple BioPAX reader/writer.
- * <p/>
+ *
  * This class provides a JAXP based I/O handler. As compared to Jena based implementation it offers ~10x performance,
  * significantly less memory requirements when reading large files and a lightweight deployement. It, however,
  * is not as robust as the Jena based reader and can not read non-RDF/XML OWL formats or non-UTF encodings.For those,
@@ -94,9 +94,9 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	}
 
 	/**
-	 * If set to true, the reader will merge duplicate individuals,i.e. individuals that has the same ID. Otherwise
+	 * If set to true, the reader will merge duplicate individuals, i.e. individuals that has the same ID. Otherwise
 	 * it will throw an exception. By default it is set to false.
-	 * @param mergeDuplicates
+	 * @param mergeDuplicates true/false
 	 */
 	public void mergeDuplicates(boolean mergeDuplicates)
 	{
@@ -109,7 +109,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 *
 	 * WARNING: This is a static parameter and will change behaviour for the whole thread. Do not change unless you
 	 * need to read a (relatively exotic) BioPAX export that violates subclass level restrictions.
-	 * @param checkRestrictions
+	 * @param checkRestrictions true/false
 	 */
 	public void checkRestrictions(boolean checkRestrictions)
 	{
@@ -130,11 +130,11 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	/**
 	 * This may be required for external applications to access the specific information (e.g.,
 	 * location) when reporting XML exceptions.
-	 * @return
+	 * @return current XML stream state summary
 	 */
 	public String getXmlStreamInfo()
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		int event = r.getEventType();
 		if (event == START_ELEMENT || event == END_ELEMENT || event == ENTITY_REFERENCE)
@@ -264,7 +264,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 						{
 							String lname = r.getLocalName();
 							BioPAXLevel level = getLevel();
-							Class<? extends BioPAXElement> clazz = null;
+							Class<? extends BioPAXElement> clazz;
 							try
 							{
 								clazz = level.getInterfaceForName(lname);
@@ -291,7 +291,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 					case CHARACTERS:
 						if (log.isTraceEnabled())
 						{
-							StringBuffer sb = new StringBuffer("Ignoring text ");
+							StringBuilder sb = new StringBuilder("Ignoring text ");
 							if (r.hasName()) sb.append(r.getLocalName());
 							if (r.hasText()) sb.append(r.getText());
 							log.trace(sb.toString());
@@ -335,7 +335,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	/**
 	 * Binds property.
-	 * <p/>
+	 *
 	 * This method also throws exceptions related to binding.
 	 * @param triple A java object that represents an RDF Triple - domain-property-range.
 	 * @param model that is being populated.
@@ -357,7 +357,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	private String processIndividual(Model model) throws XMLStreamException
 	{
 		String s = r.getLocalName();
-		String id = null;
+		String id;
 		try
 		{
 			id = getId();
@@ -369,15 +369,19 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		if (factory.canInstantiate((level.getInterfaceForName(s))))
 		{
-
-			if (!mergeDuplicates || (model.getByID(id)) == null)
+			BioPAXElement bpe = model.getByID(id);
+			if (!mergeDuplicates || bpe == null)
 			{
-				createBpe(s, id, model);
+				createBpe(s, id, model); //throws an exception when (mergeDuplicates==false && bpe!=null)
+			} else if(!s.equals(bpe.getModelInterface().getSimpleName())) {
+				//i.e., type mismatch,
+				//whereas (mergeDuplicates==true && bpe != null) is true already -
+				throw new BioPaxIOException(String.format("processIndividual: " +
+						"despite mergeDuplicates is True, failed/skipped creating an instance " +
+						"of %s, URI:%s, because previously added object (same URI) was of different type: %s",
+						s, id, bpe.getModelInterface().getSimpleName()));
 			}
-
-		} else
-		{
-
+		} else {
 			if (r.hasText())
 			{
 				log.warn("Unknown class :" + r.getText());
@@ -479,9 +483,9 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 				{
 					if (!found && r.getEventType() == CHARACTERS)
 					{
-						StringBuffer buff = new StringBuffer(r.getText());
+						StringBuilder buff = new StringBuilder(r.getText());
 						r.next();
-						while (r.getEventType() == CHARACTERS) 
+						while (r.getEventType() == CHARACTERS)
 						{
 							buff.append(r.getText());
 							r.next();
@@ -535,14 +539,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		@Override
 		public String toString()
 		{
-			StringBuffer sb = new StringBuffer();
-			sb.append("domain: ");
-			sb.append(domain);
-			sb.append(", property: ");
-			sb.append(property);
-			sb.append(", range: ");
-			sb.append(range);
-			return sb.toString();
+			return String.format("domain: %s, property: %s, range: %s", domain, property, range);
 		}
 
 	}
@@ -552,7 +549,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * Converts a model into BioPAX (OWL) format, and writes it into
 	 * the outputStream. Saved data can be then read via {@link BioPAXIOHandler}
 	 * interface (e.g., {@link SimpleIOHandler}).
-	 * <p/>
+	 *
 	 * Note: When the model is incomplete (i.e., contains elements that refer externals,
 	 * dangling BioPAX elements) and is exported by this method, it works; however one
 	 * will find corresponding object properties set to NULL later,
@@ -564,7 +561,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * 
 	 * @param model model to be converted into OWL format
 	 * @param outputStream output stream into which the output will be written
-	 * @exception BioPaxIOException in case of I/O problems
+	 * @throws BioPaxIOException in case of I/O problems
 	 */
 	public void convertToOWL(Model model, OutputStream outputStream)
 	{
@@ -586,13 +583,13 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	/**
 	 * Writes the XML representation of individual BioPAX element that
 	 * is BioPAX-like but only for display or debug purpose (incomplete).
-	 * <p/>
+	 *
 	 * Note: use {@link BioPAXIOHandler#convertToOWL(org.biopax.paxtools.model.Model, java.io.OutputStream)}
 	 * convertToOWL(org.biopax.paxtools.model.Model, Object)} instead
 	 * if you have a model and want to save and later restore it.
-	 * @param out
-	 * @param bean
-	 * @exception IOException
+	 * @param out output
+	 * @param bean BioPAX object
+	 * @throws IOException when the output writer throws
 	 */
 	public void writeObject(Writer out, BioPAXElement bean) throws IOException
 	{
@@ -609,7 +606,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		for (PropertyEditor editor : editors)
 		{
-			Set value = editor.getValueFromBean(bean); //value is never null
+			Set value = editor.getValueFromBean(bean); //is never null
 			for (Object valueElement : value)
 			{
 				if (!editor.isUnknown(valueElement)) writeStatementFor(bean, editor, valueElement, out);
@@ -643,7 +640,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		if (editor.getProperty().equalsIgnoreCase("name") && bean instanceof Named)
 		{ // the latter maybe not necessary...
 			Named named = (Named) bean;
-			if (value != null && (value.equals(named.getDisplayName()) || value.equals(named.getStandardName())))
+			if(value.equals(named.getDisplayName()) || value.equals(named.getStandardName()))
 			{
 				return;
 			}
@@ -652,7 +649,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		if (editor.getProperty().equalsIgnoreCase("stepProcess") && bean instanceof BiochemicalPathwayStep)
 		{
 			BiochemicalPathwayStep bps = (BiochemicalPathwayStep) bean;
-			if (value != null && value.equals(bps.getStepConversion())) 
+			if(value.equals(bps.getStepConversion()))
 			{
 				return;
 			}
@@ -749,7 +746,6 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		String rdfPre = null;
 		String xsdPre = null;
 
-		Map<String, String> reverseMap = new HashMap<String, String>();
 		for (String pre : namespaces.keySet())
 		{
 			String ns = namespaces.get(pre);
@@ -763,28 +759,20 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			{
 				xsdPre = pre;
 			}
-
-			if (ns != null)
-			{
-				reverseMap.put(ns, pre);
-			}
 		}
 
 		if (owlPre != null)
 		{
-			reverseMap.remove(namespaces.get(owlPre));
 			namespaces.remove(owlPre);
 		}
 
 		if (rdfPre != null)
 		{
-			reverseMap.remove(namespaces.get(rdfPre));
 			namespaces.remove(rdfPre);
 		}
 
 		if (xsdPre != null)
 		{
-			reverseMap.remove(namespaces.get(xsdPre));
 			namespaces.remove(xsdPre);
 		}
 
@@ -805,8 +793,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			if (!pre.equals("bp"))
 			{
 				out.write(newline + " xmlns" +
-				          (("".equals(pre) || pre == null) ? "" : ":" + pre) +
-				          "=\"" + namespaces.get(pre) + "\"");
+				          (("".equals(pre)) ? "" : ":" + pre) + "=\"" + namespaces.get(pre) + "\"");
 			}
 		}
 		// write 'xmlns:bp'
@@ -829,18 +816,19 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * true - to always write full URI in rdf:resource and use 
 	 * rdf:about instead rdf:ID (does not matter xml:base is set or not).
 	 * This is good for the data loading a RDF/SPARQL servers, such as Virtuoso,
-	 * so they generate correct and resolvable links from biopax URIs
+	 * so they generate correct and resolvable links from BioPAX URIs
 	 * (use of rdf:ID="localId" and rdf:resource="#localID" is known to make
 	 * them insert extra '#' between xml:base and localId).
 	 * 
-	 * @param absoluteUris
+	 * @param absoluteUris true/false - whether to force writing absolute URIs (thus, never use rdf:ID)
 	 */
 	public void absoluteUris(boolean absoluteUris) {
 		this.absoluteUris = absoluteUris;
 	}
 		
 	/**
-	 * @see #absoluteUris()
+	 * @see #absoluteUris(boolean)
+	 * @return true/false
 	 */
 	public boolean isAbsoluteUris()
 	{
@@ -852,7 +840,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * Sets the flag used when exporting a BioPAX model to RDF/XML:
 	 * true - to clean up current namespaces (e.g., those read from a file)
 	 * and use defaults instead (prefixes: 'rdf', 'rdfs', 'owl', 'xsd')
-	 * @param normalizeNameSpaces
+	 * @param normalizeNameSpaces true/false
 	 */
 	public void normalizeNameSpaces(boolean normalizeNameSpaces)
 	{
@@ -861,6 +849,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	/**
 	 * @see #normalizeNameSpaces()
+	 * @return true/false
 	 */
 	public boolean isNormalizeNameSpaces()
 	{
@@ -869,6 +858,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	/**
 	 * @see #mergeDuplicates(boolean)
+	 * @return true/false
 	 */
 	public boolean isMergeDuplicates()
 	{
@@ -877,17 +867,19 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 
 	/**
-	 * Serializes a BioPAX model to the RDF/XML (OWL) format.
-	 * @param model
-	 * @return
-	 * @exception IllegalArgumentException if model is null
-	 * @throws OutOfMemoryError when model is very large, and the byte array cannot exceed 2Gb.
+	 * Serializes a (not too large) BioPAX model to the RDF/XML (OWL) formatted string.
+	 *
+	 * @param model a BioPAX object model to convert to the RDF/XML format
+	 * @return the BioPAX data in the RDF/XML format
+	 * @throws IllegalArgumentException if model is null
+	 * @throws OutOfMemoryError when it cannot be stored in a byte array (max 2Gb).
 	 */
 	public static String convertToOwl(Model model)
 	{
 		if (model == null) throw new IllegalArgumentException();
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
 		(new SimpleIOHandler(model.getLevel())).convertToOWL(model, outputStream);
 
 		try

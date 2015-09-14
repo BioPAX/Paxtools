@@ -521,7 +521,7 @@ public class SBGNLayoutManager
 
     /**
      * This method replaces ports of arc objects with their owners.
-     * @param arcs Arc list of sbgn model
+     * @param arcs Arc list of SBGN model
      * */
     public void removePortsFromArcs(List<Arc> arcs)
     {
@@ -545,7 +545,7 @@ public class SBGNLayoutManager
 
     /**
      * This method initializes map for glyphs and their respective ports.
-     * @param glyphs Glyph list of sbgn model
+     * @param glyphs Glyph list of SBGN model
      * */
     public void initPortIdToGlyphMap(List<Glyph> glyphs)
     {
@@ -561,8 +561,9 @@ public class SBGNLayoutManager
     }
 
     /**
-     * Returns true if a glyph includes child glyphs(state and info glyphs are out of count !)
+     * Returns true if a glyph includes child glyphs (state and info glyphs are out of count!)
      * @param targetGlyph target glyph that will be queried.
+     * @return true/false
      * */
     public boolean isChildless(Glyph targetGlyph)
     {

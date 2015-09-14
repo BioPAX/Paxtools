@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * This class is an editor map that uses Jena to read BioPAX OWL definition and creates property
  * editors for BioPAX interfaces.
- * <p/>
+ *
  * This editor map is extensively used for I/O, modification, and querying operations applied on the
  * model.
  */
