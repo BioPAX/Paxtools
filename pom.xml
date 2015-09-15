@@ -229,14 +229,11 @@
 	
 	<distributionManagement>
 		<site>
-			<!-- Do mvn site site:stage -DstagingDirectory=/tmp/path first 
-			(site-deploy immediately pushes to gh-pages on GitHub)-->
+		<!--	mvn site-deploy immediately pushes to the gh-pages branch on GitHub -->
 			<id>github</id>
 			<name>BioPAX/Paxtools GitHub Pages</name>
 			<url>${project.version}</url>
-		<!--	temporarily change to full URL for site:stage to work
-			<url>http://biopax.github.io/Paxtools/${project.version}</url>
-		-->
+		<!-- actual site url: http://biopax.github.io/Paxtools/${project.version} -->
 		</site>
         <repository>
             <id>ossrh</id>
