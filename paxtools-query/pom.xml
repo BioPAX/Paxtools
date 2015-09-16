@@ -10,7 +10,8 @@
 
     <packaging>jar</packaging>
 
-    <name>Graph-Theoretic Querying Module</name>
+    <name>Graph-Theoretic Querying</name>
+    <url>http://biopax.github.io/Paxtools</url>
 
     <dependencies>
         <dependency>

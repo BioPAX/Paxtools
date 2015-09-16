@@ -8,8 +8,9 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>psimi-converter</artifactId>
-  <name>PSI-MI Converter</name>
+  <name>PSI-MI/MITAB to BioPAX Converter</name>
   <description>Converts PSI-MI v2.5 (compact) files to BioPAX.</description>
+  <url>http://biopax.github.io/Paxtools</url>
  
   <dependencies>
    	<dependency>

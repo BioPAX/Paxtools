@@ -16,7 +16,7 @@
 		independent to be easily embedded into applications.
 	</description>
 	
-	<url>https://github.com/BioPAX/Paxtools</url>
+	<url>http://biopax.github.io/Paxtools</url>
 	
 	<organization>
 		<name>BioPAX</name>
@@ -229,11 +229,10 @@
 	
 	<distributionManagement>
 		<site>
-		<!--	mvn site-deploy immediately pushes to the gh-pages branch on GitHub -->
 			<id>github</id>
-			<name>BioPAX/Paxtools GitHub Pages</name>
-			<url>${project.version}</url>
-		<!-- actual site url: http://biopax.github.io/Paxtools/${project.version} -->
+			<name>BioPAX/Paxtools Maven site</name>
+			<url>http://biopax.github.io/Paxtools/${project.version}</url>
+		<!-- http://biopax.github.io/Paxtools/${project.version} -->
 		</site>
         <repository>
             <id>ossrh</id>
@@ -312,17 +311,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>${maven-site-plugin.version}</version>
-					<executions>
-						<execution>
-							<id>attach-descriptor</id>
-							<goals>
-								<goal>attach-descriptor</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<skipDeploy>true</skipDeploy>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>com.github.github</groupId>
@@ -338,7 +326,7 @@
                 	<artifactId>maven-gpg-plugin</artifactId>
                 	<groupId>org.apache.maven.plugins</groupId>
                 	<version>${maven-gpg-plugin.version}</version>
-                </plugin>				
+                </plugin>
 			</plugins>
 		</pluginManagement>
 		<extensions>
@@ -384,24 +372,42 @@
         		<groupId>org.apache.maven.plugins</groupId>
         		<artifactId>maven-release-plugin</artifactId>
       		</plugin> 
+			<!--<plugin>-->
+				<!--<groupId>com.github.github</groupId>-->
+				<!--<artifactId>site-maven-plugin</artifactId>-->
+				<!--<configuration>-->
+					<!--<message>Creating site for ${project.artifactId}, ${project.version}</message>-->
+					<!--<path>${project.distributionManagement.site.url}</path>-->
+					<!--<merge>true</merge>-->
+					<!--<repositoryName>Paxtools</repositoryName>-->
+					<!--<repositoryOwner>BioPAX</repositoryOwner>-->
+					<!--<server>github</server>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>github-site</id>-->
+						<!--<goals>-->
+							<!--<goal>site</goal>-->
+						<!--</goals>-->
+						<!--<phase>site-deploy</phase>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
 			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<configuration>
-					<message>Creating site for ${project.artifactId}, ${project.version}</message>
-					<path>${project.distributionManagement.site.url}</path>
-					<merge>true</merge>
-				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>github-site</id>
+						<id>attach-descriptor</id>
 						<goals>
-							<goal>site</goal>
+							<goal>attach-descriptor</goal>
 						</goals>
-						<phase>site-deploy</phase>
 					</execution>
 				</executions>
-			</plugin>	
+				<configuration>
+					<skipDeploy>true</skipDeploy>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -490,22 +496,6 @@
             <name>OSSRH Repository</name>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
-		<repository>
-			<id>biopax.snapshots</id>
-			<name>BioPAX Snapshots Repository at Sourceforge</name>
-			<url>http://www.biopax.org/m2repo/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>biopax.releases</id>
-			<name>BioPAX Repository at Sourceforge</name>
-			<url>http://www.biopax.org/m2repo/releases/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
 		<repository>
 			<id>ebi-repo</id>
 			<name>The EBI internal repository</name>

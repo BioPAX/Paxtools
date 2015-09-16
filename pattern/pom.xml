@@ -10,6 +10,9 @@
 
 	<artifactId>pattern</artifactId>
 
+	<name>BioPAX Pattern Search</name>
+	<url>http://biopax.github.io/Paxtools</url>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

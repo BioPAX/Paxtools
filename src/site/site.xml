@@ -7,12 +7,6 @@
     <href>http://code.google.com/p/pathway-commons/</href>
 </bannerLeft>
 
-<bannerRight>
-	<name>Sourceforge</name>
-    <src>http://sflogo.sourceforge.net/sflogo.php?group_id=102411&amp;type=2</src>
-    <href>http://sourceforge.net</href>
-</bannerRight>
-
 <skin>
 	<groupId>org.apache.maven.skins</groupId>
 	<artifactId>maven-fluido-skin</artifactId>
@@ -36,21 +30,18 @@
 <body>
 
 <breadcrumbs>
-	<item name="Projects" href="../"/>
-	<item name="Paxtools ${project.version}" href="./" />
+	<item name="Versions" href="../"/>
+	<item name="${project.version}" href="./" />
 </breadcrumbs>
 
 <links>
 <item name="Javadoc" href="apidocs/index.html"/>
 <item name="BioPAX" href="http://www.biopax.org/" />
-<item name="Paxtools" href="http://www.biopax.org/paxtools" />
-<item name="Changelog" href="http://biopax.hg.sourceforge.net/hgweb/biopax/paxtools/shortlog/tip" />
+<item name="Wiki" href="http://www.biopax.org/paxtools" />
 </links>
 
 <menu ref="modules" />
-
 <menu ref="reports" inherit="top" />
-
 
 </body>
 

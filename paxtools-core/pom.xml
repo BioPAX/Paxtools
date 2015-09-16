@@ -10,7 +10,10 @@
 	<artifactId>paxtools-core</artifactId>
 	<packaging>jar</packaging>	
 	
-	<name>Paxtools Core</name>
+	<name>Paxtools Core (BioPAX object model, I/O API, implementation and extras)</name>
+
+	<url>http://biopax.github.io/Paxtools</url>
+
 	<dependencies>
 		<dependency>
 			<groupId>net.sourceforge.collections</groupId>

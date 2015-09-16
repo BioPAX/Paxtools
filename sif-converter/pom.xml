@@ -10,7 +10,8 @@
 	<artifactId>sif-converter</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Simple Interaction Format Converter</name>
+	<name>BioPAX to SIF Converter (deprecated)</name>
+	<url>http://biopax.github.io/Paxtools</url>
 
 	<dependencies>
 		<dependency>

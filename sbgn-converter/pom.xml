@@ -11,7 +11,9 @@
 
     <packaging>jar</packaging>
 
-    <name>SBGN-ML Converter Module</name>
+    <name>BioPAX to SBGN-ML Converter</name>
+
+    <url>http://biopax.github.io/Paxtools</url>
 
     <repositories>
     <repository>

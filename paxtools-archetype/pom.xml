@@ -11,7 +11,8 @@
 	<artifactId>paxtools-archetype</artifactId>
 	<packaging>maven-archetype</packaging>
 
-	<name>paxtools-archetype</name>
+	<name>Paxtools Maven Archetype</name>
+	<url>http://biopax.github.io/Paxtools</url>
 
 	<build>
 		<extensions>

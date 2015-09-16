@@ -7,9 +7,10 @@
 		<version>4.3.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>paxtools-search</artifactId>
-	<name>BioPAX full-text search</name>
+	<name>BioPAX Full-text Search</name>
 	<description>BioPAX full-text indexing and searching (Lucene based)</description>
-	
+	<url>http://biopax.github.io/Paxtools</url>
+
 	<properties>
 		<lucene.version>4.10.2</lucene.version>
 		<slf4j.version>1.7.7</slf4j.version>

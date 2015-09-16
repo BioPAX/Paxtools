@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 	<name>Paxtools Console Application</name>
 	<description>Paxtools Console Application and Examples</description>
-
+	<url>http://biopax.github.io/Paxtools</url>
 	<build>
 		<plugins>
 			<plugin>
