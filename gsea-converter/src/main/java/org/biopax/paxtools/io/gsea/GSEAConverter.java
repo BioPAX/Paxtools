@@ -10,7 +10,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.SetEquivalenceChecker;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -316,7 +315,7 @@ public class GSEAConverter
 		
 		if (crossSpeciesCheckEnabled) {
 			for (ProteinReference r : proteinRefs) {
-				String key = getTaxID(r.getOrganism()); // null org. is ok (key == "")
+				String key = getOrganismKey(r.getOrganism()); // null org. is ok (key == "")
 				Set<ProteinReference> prs = map.get(key);
 				if (prs == null) {
 					prs = new HashSet<ProteinReference>();
@@ -337,7 +336,7 @@ public class GSEAConverter
 		for (ProteinReference aProteinRef : prs)
 		{
 			// we only process PRs that belong to the same species (as for targetEntry) if crossSpeciesCheckEnabled==true
-			if (crossSpeciesCheckEnabled && !targetEntry.taxID().equals(getTaxID(aProteinRef.getOrganism())))
+			if (crossSpeciesCheckEnabled && !targetEntry.taxID().equals(getOrganismKey(aProteinRef.getOrganism())))
 				continue;
 				
 			if (database != null && !database.isEmpty())
@@ -403,14 +402,38 @@ public class GSEAConverter
 	}
 
 	
-	private String getTaxID(BioSource org) {
+	private String getOrganismKey(BioSource org) {
+		String key = ""; //default value: unspecified/all species
+
 		if (org != null) {
-			for (Xref xref : org.getXref()) 
-				if (xref.getDb().equalsIgnoreCase("taxonomy"))
-					return xref.getId();
+			Set<Xref> xrefs = org.getXref();
+
+			if(!xrefs.isEmpty()) {
+				for (Xref xref : xrefs) {
+					if (xref instanceof UnificationXref
+						&& xref.getDb().equalsIgnoreCase("taxonomy")) {
+							if(key.isEmpty())
+								key = xref.getId();
+							else
+								LOG.warn("BioSource " + org + " has multiple taxonomy ID unification xrefs; " +
+										"I use " + key + " and ignore other, but the conversion might go wrong...");
+					}
+				}
+			}
+
+			//when there're no Taxonomy xrefs - use a name
+			if(key.isEmpty()) {
+				if (org.getStandardName()!=null) {
+					key = org.getStandardName().toLowerCase();
+				} else if(org.getDisplayName()!=null) {
+					key = org.getDisplayName().toLowerCase();
+				} else if(!org.getName().isEmpty()) {
+					key = org.getName().iterator().next().toLowerCase();
+				}
+			}
 		}
 
-		return ""; //unspecified/all species
+		return key;
 	}
 
 	private boolean shareSomeObjects(Set<?> setA, Set<?> setB) {

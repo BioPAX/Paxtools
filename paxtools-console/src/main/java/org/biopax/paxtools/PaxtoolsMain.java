@@ -69,8 +69,10 @@ public class PaxtoolsMain {
 					Provenance pro = (Provenance) model.getByID(uri);
 					if(pro != null) {
 						skipSubPathways.add(pro);
+						log.info("GSEA converter won't traverse into sub-pathways of pathways from the data source: "
+								+ uri);
 					} else {
-						log.warn("No Provenance found by uri: " + uri);
+						log.error("No Provenance found by uri: " + uri + " (thus - ignored)");
 					}
 				}
 
