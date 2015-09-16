@@ -15,18 +15,6 @@
 
     <url>http://biopax.github.io/Paxtools</url>
 
-    <repositories>
-    <repository>
-        <id>chilay-repo</id>
-        <name>Repository for chilay project</name>
-        <url>http://maven-repo.chilay.googlecode.com/hg/</url>
-        <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-        </snapshots>
-    </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.biopax.paxtools</groupId>
