@@ -15,8 +15,8 @@ import java.util.Set;
  * A "simple" BioPAX merger, a utility class to merge
  * 'source' BioPAX models or a set of elements into the target model,
  * using (URI) identity only. Merging into a normalized,
- * self-consistent model normally gives better results 
- * (it depends on the application though).
+ * self-integral model normally makes sense and gives better results
+ * (but it depends on the application though).
  * 
  * One can also "merge" a model to itself, i.e.: merge(target,target),
  * or to an empty one, which adds all implicit child elements 
@@ -171,10 +171,10 @@ public class SimpleMerger
 	 */
 	private void updateObjectFields(BioPAXElement source, Model target)
 	{
-		//Skip if target model had another object with the same URI, 
-		//provided that "always copy" filters were not set;
-		//i.e., source is to be entirely replaced with another object 
-		//with the same URI already present in the target model.
+		//Skip if target model had a different object with the same URI as the source's,
+		//and no Filter was set (mergeObjPropOf is null); i.e., when
+		//we simply want the source to be replaced with an object
+		//having the same type, URI that was already in the target model.
 		BioPAXElement keep = target.getByID(source.getRDFId());
 		if(keep != source && mergeObjPropOf==null) 
 		{
@@ -186,29 +186,31 @@ public class SimpleMerger
 		{
 			if (editor instanceof ObjectPropertyEditor)
 			{
-				//copy set of prop. values (to avoid concurrent modification exception)
-				Set<BioPAXElement> values = new HashSet<BioPAXElement>(
-						(Set<BioPAXElement>) editor.getValueFromBean(source));
-				if(keep == source) 
+				//copy prop. values (to avoid concurrent modification exception)
+				Set<BioPAXElement> values = new HashSet<BioPAXElement>((Set<BioPAXElement>) editor.getValueFromBean(source));
+				if(keep == source) //i.e., it has been just added to the target, - simply update properties
 				{
 					for (BioPAXElement value : values) {
 						migrateToTarget(source, target, editor, value);
 					}
-				} else if(mergeObjPropOf!=null && mergeObjPropOf.filter(source)
-						&& editor.isMultipleCardinality()) //copy only for mul. card. props
+				} else //source is normally to be entirely replaced, but if it passes the filter,
+					if(mergeObjPropOf!=null && mergeObjPropOf.filter(source)
+						&& editor.isMultipleCardinality()) //and the prop. is multi-cardinality,
 				{
+					//then we want to copy some values
 					for (BioPAXElement value : values) {
 						mergeToTarget(keep, target, editor, value);
 					}
 				}
-			} else //primitive or string property editor (e.g., comment, name)
-				if(mergeObjPropOf!=null && mergeObjPropOf.filter(source)
-					&& editor.isMultipleCardinality()) //copy only for mul. card. props
-			{
-				Set<Object> values = new HashSet<Object>(
-						(Set<Object>) editor.getValueFromBean(source));
-				for (Object value : values) {
-					mergeToTarget(keep, target, editor, value);
+
+			} else { //primitive or enum property
+				//primitive, enum, or string property editor (e.g., comment, name)
+				if (mergeObjPropOf != null && mergeObjPropOf.filter(source) && editor.isMultipleCardinality()) {
+					Set<Object> values = new HashSet<Object>(
+							(Set<Object>) editor.getValueFromBean(source));
+					for (Object value : values) {
+						mergeToTarget(keep, target, editor, value);
+					}
 				}
 			}
 		}
