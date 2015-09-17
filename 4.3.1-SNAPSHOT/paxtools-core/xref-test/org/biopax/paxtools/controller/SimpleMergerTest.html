@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>SimpleMergerTest xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../../Paxtools-gh-pages/4.3.1-SNAPSHOT/biopax.github.io/Paxtools/4.3.1-SNAPSHOT/paxtools-core/testapidocs/org/biopax/paxtools/controller/SimpleMergerTest.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">package</strong> org.biopax.paxtools.controller;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.io.*;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.*;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.level3.*;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.util.Filter;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> org.junit.Before;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> java.io.ByteArrayOutputStream;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.*;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * @author rodche</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/biopax/paxtools/controller/SimpleMergerTest.html">SimpleMergerTest</a> {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  	@Test
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> testMergeModel() {
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  		Model model = factory.createModel();
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  		Xref ref =  model.addNew(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"Xref1"</span>);
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      	ref.setDb(<span class="jxr_string">"uniprotkb"</span>); <em class="jxr_comment">// will be converted to 'uniprot'</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      	ref.setId(<span class="jxr_string">"Q0VCL1"</span>); 
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      	Xref uniprotX = ref;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      	ProteinReference pr = model.addNew(ProteinReference.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"ProteinReference"</span>);
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      	pr.setDisplayName(<span class="jxr_string">"ProteinReference"</span>);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      	pr.addXref(uniprotX);
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      	ref = model.addNew(RelationshipXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"Xref2"</span>);
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      	ref.setDb(<span class="jxr_string">"refseq"</span>);
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      	ref.setId(<span class="jxr_string">"NP_001734"</span>);
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  		pr.addXref(ref);
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  		<em class="jxr_comment">// normalizer won't merge diff. types of xref with the same db:id</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  	   	ref = model.addNew(PublicationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"Xref3"</span>);
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      	ref.setDb(<span class="jxr_string">"pubmed"</span>);
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      	ref.setId(<span class="jxr_string">"2549346"</span>); <em class="jxr_comment">// the same id</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      	pr.addXref(ref);
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  	   	ref = model.addNew(RelationshipXref.<strong class="jxr_keyword">class</strong>,<span class="jxr_string">"Xref4"</span>);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      	ref.setDb(<span class="jxr_string">"pubmed"</span>); 
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      	ref.setId(<span class="jxr_string">"2549346"</span>); <em class="jxr_comment">// the same id</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      	pr.addXref(ref);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      	
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      	<em class="jxr_comment">// create the following, add as value to corr. properties,</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      	<em class="jxr_comment">// but not add to the model explicitely (merger should find and add them!)</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  		BioSource bs = factory.create(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"Mouse"</span>);
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      	ref = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"Xref5"</span>);
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      	ref.setDb(<span class="jxr_string">"taxonomy"</span>); 
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      	ref.setId(<span class="jxr_string">"10090"</span>); <em class="jxr_comment">// the same id</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  		bs.addXref(ref);
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  		pr.setOrganism(bs);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  		
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  		assertEquals(5, model.getObjects().size());
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  		
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  		<em class="jxr_comment">// do merge</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  		SimpleMerger merger = <strong class="jxr_keyword">new</strong> SimpleMerger(SimpleEditorMap.L3);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  		merger.merge(model, model); <em class="jxr_comment">// to itself</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  		<em class="jxr_comment">// - can use model.merge(model) or model.repair() instead</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  		
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_comment">/*		try {</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_comment">			ByteArrayOutputStream out = new ByteArrayOutputStream();</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_comment">			(new SimpleIOHandler(BioPAXLevel.L3)).convertToOWL(model, out);</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_comment">			System.out.println(out.toString());</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_comment">		} catch (Exception e) {</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_comment">			fail(e.toString());</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_comment">		}*/</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  		
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  		bs = (BioSource) model.getByID(<span class="jxr_string">"Mouse"</span>);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  		assertEquals(1, bs.getXref().size());
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  		pr = (ProteinReference) model.getByID(<span class="jxr_string">"ProteinReference"</span>);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  		assertEquals(4, pr.getXref().size());
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  		assertEquals(7, model.getObjects().size()); <em class="jxr_comment">// Bug fixed: SimpleMerger adds BioSource to the model but not its children (xref)!</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  	}
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  	
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  	@Test
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> testMergeObject() {
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  		SimpleMerger merger = <strong class="jxr_keyword">new</strong> SimpleMerger(SimpleEditorMap.L3);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  		Model model = factory.createModel();
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>   	
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  		Xref ref = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      	ref.setDb(<span class="jxr_string">"Taxonomy"</span>); 
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      	ref.setId(<span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  		BioSource bs = factory.create(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"Human"</span>);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  		bs.addXref(ref);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  		merger.merge(model, ref);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  		assertEquals(1, model.getObjects().size());
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  		<em class="jxr_comment">//merge the other object, having child xref (same as already merged)</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  		merger.merge(model, bs);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  		assertEquals(2, model.getObjects().size());
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  		<em class="jxr_comment">//merge into an empty target</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  		model = factory.createModel();
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      	merger.merge(model, bs);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     	assertEquals(2, model.getObjects().size()); <em class="jxr_comment">//has bs, ref</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 	}
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 	@Test
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> testMergeToInconsistentModel() {
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 		<em class="jxr_comment">// Let's merge an object having one xref into a model that</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 		<em class="jxr_comment">// implicitly "contains" a different xref with the same URI;</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 		<em class="jxr_comment">// merged model will explicitly contain only the xref</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 		<em class="jxr_comment">// of the just merged object (not the original, implicit one;</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 		<em class="jxr_comment">// and therefore the model is still not self-integral;</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 		<em class="jxr_comment">// let's begin...</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 		Model model = factory.createModel(); <em class="jxr_comment">//target model</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> 
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 		<em class="jxr_comment">//create an xref outside the model,</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 		Xref mref =factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"10090"</span>);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 		mref.setDb(<span class="jxr_string">"Taxonomy"</span>);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 		mref.setId(<span class="jxr_string">"10090"</span>);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 		<em class="jxr_comment">//and a BioSource - in the model</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 		BioSource mouse = model.addNew(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"mouse"</span>);
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> 		mouse.addXref(mref);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 		<em class="jxr_comment">//mref is owned by the mouse but is not in the model explicitly</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 		assertEquals(1, model.getObjects().size());
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> 		<em class="jxr_comment">//Create two more objects outside the model, one owns the other -</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 		Xref href = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 		href.setDb(<span class="jxr_string">"Taxonomy"</span>);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 		href.setId(<span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 		BioSource human = factory.create(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"human"</span>);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 		human.addXref(href);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 		<em class="jxr_comment">//do merge</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 		SimpleMerger merger = <strong class="jxr_keyword">new</strong> SimpleMerger(SimpleEditorMap.L3);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 		merger.merge(model, human);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 		assertEquals(3, model.getObjects().size()); <em class="jxr_comment">//there's no mref - Xref 10090!</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 		assertNull(model.getByID(<span class="jxr_string">"10090"</span>));
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> 
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> 		<em class="jxr_comment">// now, if both xrefs had the same URI, such as 'ref',</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 		<em class="jxr_comment">// then 'human' would become pointing to the mouse taxID,</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 		<em class="jxr_comment">// or vice versa, depending on whether the initial model</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 		<em class="jxr_comment">// was self-integral or not.</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 		model = factory.createModel(); <em class="jxr_comment">//fresh target model</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 		<em class="jxr_comment">//create an xref outside the model,</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 		mref = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"ref"</span>);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 		mref.setDb(<span class="jxr_string">"Taxonomy"</span>);
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> 		mref.setId(<span class="jxr_string">"10090"</span>);
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 		mouse = model.addNew(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"mouse"</span>);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 		mouse.addXref(mref);
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 		<em class="jxr_comment">//Create two more objects outside the model, one owns the other -</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 		href = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"ref"</span>); <em class="jxr_comment">//on purpose - same URI, different xref!</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> 		href.setDb(<span class="jxr_string">"Taxonomy"</span>);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> 		href.setId(<span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> 		human = factory.create(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"human"</span>);
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> 		human.addXref(href);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> 
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 		merger.merge(model, human);
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 		assertEquals(3, model.getObjects().size()); <em class="jxr_comment">// - there's no Xref 10090</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> 		Xref x = (UnificationXref)model.getByID(<span class="jxr_string">"ref"</span>);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> 		assertNotNull(x);
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> 		assertEquals(<span class="jxr_string">"9606"</span>, x.getId());
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 		BioSource bs = (BioSource) model.getByID(<span class="jxr_string">"mouse"</span>);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 		assertNotNull(bs);
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 		assertEquals(<span class="jxr_string">"10090"</span>, bs.getXref().iterator().next().getId()); <em class="jxr_comment">//but that xref is not in the model</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> 		assertEquals(<span class="jxr_string">"9606"</span>, human.getXref().iterator().next().getId());
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> 		<em class="jxr_comment">//But.</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> 		<em class="jxr_comment">//If the initial target model contained both the mouse and mref,</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> 		model = factory.createModel(); <em class="jxr_comment">//fresh target model</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 		mref = model.addNew(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"ref"</span>);
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 		mref.setDb(<span class="jxr_string">"Taxonomy"</span>);
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> 		mref.setId(<span class="jxr_string">"10090"</span>);
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> 		mouse = model.addNew(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"mouse"</span>);
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> 		mouse.addXref(mref);
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> 		<em class="jxr_comment">//then</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 		merger.merge(model, human);
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> 		<em class="jxr_comment">//makes the human have mouse xref -</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> 		assertEquals(3, model.getObjects().size());
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 		x = (UnificationXref)model.getByID(<span class="jxr_string">"ref"</span>);
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> 		assertNotNull(x);
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> 		assertEquals(<span class="jxr_string">"10090"</span>, x.getId()); <em class="jxr_comment">//aha</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> 		bs = (BioSource) model.getByID(<span class="jxr_string">"mouse"</span>);
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> 		assertNotNull(bs);
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> 		assertEquals(<span class="jxr_string">"10090"</span>, bs.getXref().iterator().next().getId()); <em class="jxr_comment">//ok</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> 		assertNotNull(model.getByID(<span class="jxr_string">"human"</span>));
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> 		assertEquals(<span class="jxr_string">"10090"</span>, human.getXref().iterator().next().getId());
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> 		<em class="jxr_comment">//- 'human' (as well as 'mouse') BioSource now points to mouse's taxID xref!</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> 
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> 		<em class="jxr_comment">//PS:</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> 		<em class="jxr_comment">//in order to make a model self-integral, one can try merging it to itself,</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> 		<em class="jxr_comment">//which make all implicit objects become explicit members of the model, or fails,</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> 		<em class="jxr_comment">//if there are different objects using same URIs somewhere...</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> 	}
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> 	@Test
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> testMergeWithoutFilter() {
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> 		Model model = factory.createModel();
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> 		<em class="jxr_comment">//create a PR, BS, etc., in the (target) model</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> 		BioSource human = model.addNew(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"human"</span>);
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> 		human.setStandardName(<span class="jxr_string">"Homo sapiens"</span>); <em class="jxr_comment">//no displayName, no other names</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> 		UnificationXref uxHuman = model.addNew(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> 		human.addXref(uxHuman);
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> 		ProteinReference pr = model.addNew(ProteinReference.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"pr"</span>);
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> 		pr.setDisplayName(<span class="jxr_string">"one"</span>);
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> 		pr.setOrganism(human);
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> 
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> 		<em class="jxr_comment">//another PR with the SAME URI to be merged into the target model</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> 		ProteinReference pr1 = factory.create(ProteinReference.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"pr"</span>);
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> 		Xref ux = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"ux"</span>);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> 		ux.setDb(<span class="jxr_string">"UniProt"</span>);
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> 		ux.setId(<span class="jxr_string">"P12345"</span>);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> 		pr1.addName(<span class="jxr_string">"one"</span>);
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> 		pr1.addName(<span class="jxr_string">"two"</span>);
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> 		pr1.addXref(ux);
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> 		UnificationXref uxHuman1 = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"9606"</span>); <em class="jxr_comment">//also, the same URI as for uxHuman above</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> 		BioSource human1 = factory.create(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"human"</span>); <em class="jxr_comment">//same URI as for the other BioSource above</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> 		human1.addXref(uxHuman1);
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> 		human1.setDisplayName(<span class="jxr_string">"human"</span>); <em class="jxr_comment">//but - no standardName nor other names are set</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> 		pr1.setOrganism(human1);
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> 		PublicationXref px = factory.create(PublicationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"publication"</span>);
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> 		human1.addXref(px);
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> 
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> 		<em class="jxr_comment">//merge NOT using any filters (in the Constructor)</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> 		SimpleMerger merger = <strong class="jxr_keyword">new</strong> SimpleMerger(SimpleEditorMap.L3);
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> 		merger.merge(model, pr1);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 		assertEquals(5, model.getObjects().size());
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> 		ProteinReference mergedPr = (ProteinReference) model.getByID(<span class="jxr_string">"pr"</span>);
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> 		assertTrue(mergedPr.getXref().isEmpty()); <em class="jxr_comment">//xref wasn't copied</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> 		assertEquals(<span class="jxr_string">"one"</span>, mergedPr.getDisplayName());
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 		assertEquals(1, mergedPr.getName().size()); <em class="jxr_comment">//name "two" wasn't copied (when no Filter used)</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> 		assertEquals(<span class="jxr_string">"Homo sapiens"</span>, mergedPr.getOrganism().getStandardName());
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> 		assertNull(mergedPr.getOrganism().getDisplayName());
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> 		assertEquals(1, mergedPr.getOrganism().getName().size()); <em class="jxr_comment">//there's only displayName ('name' is a sub-prop. of that)</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> 		assertNotNull(model.getByID(<span class="jxr_string">"publication"</span>)); <em class="jxr_comment">//the pub.xref was merged</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> 		<em class="jxr_comment">// but it's dangling, because</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> 		assertEquals(1, mergedPr.getOrganism().getXref().size());
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 		assertEquals(uxHuman, mergedPr.getOrganism().getXref().iterator().next());
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> 	}
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> 
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> 
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> 	@Test
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> testMergeWithFilter() {
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 		Model model = factory.createModel();
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     	<em class="jxr_comment">//create a PR, BS, etc., in the (target) model</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 		BioSource human = model.addNew(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"human"</span>);
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> 		human.setStandardName(<span class="jxr_string">"Homo sapiens"</span>); <em class="jxr_comment">//no displayName, no other names</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 		UnificationXref uxHuman = model.addNew(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> 		uxHuman.setDb(<span class="jxr_string">"taxonomy"</span>);
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> 		uxHuman.setId(<span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> 		human.addXref(uxHuman);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     	ProteinReference pr = model.addNew(ProteinReference.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"pr"</span>);
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     	pr.setDisplayName(<span class="jxr_string">"one"</span>);
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> 		pr.setOrganism(human);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     	
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     	<em class="jxr_comment">//another PR with the same URI to be merged into the target model</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>     	ProteinReference pr1 = factory.create(ProteinReference.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"pr"</span>);
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> 		Xref ux = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"ux"</span>);
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     	ux.setDb(<span class="jxr_string">"UniProt"</span>); 
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>     	ux.setId(<span class="jxr_string">"P12345"</span>); 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     	pr1.addName(<span class="jxr_string">"one"</span>);
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     	pr1.addName(<span class="jxr_string">"two"</span>);
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>     	pr1.addXref(ux);
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> 		UnificationXref uxHuman1 = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"9606"</span>); <em class="jxr_comment">//use the same URI as for uxHuman above</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> 		uxHuman1.setDb(<span class="jxr_string">"Taxonomy"</span>); <em class="jxr_comment">//Capitalized, unlike the uxHuman above</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> 		uxHuman1.setId(<span class="jxr_string">"9606"</span>);
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>     	BioSource human1 = factory.create(BioSource.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"human"</span>); <em class="jxr_comment">//same URI as for the other BioSource above</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     	human1.addXref(uxHuman1);
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> 		human1.setDisplayName(<span class="jxr_string">"human"</span>); <em class="jxr_comment">//but - no standardName nor other names are set</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> 		pr1.setOrganism(human1);
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> 		PublicationXref px = factory.create(PublicationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"publication"</span>);
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> 		px.setId(<span class="jxr_string">"00000"</span>);
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> 		px.setDb(<span class="jxr_string">"PubMed"</span>);
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 		human1.addXref(px);
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> 
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     	<em class="jxr_comment">// Merge using a Filter, which</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>     	<em class="jxr_comment">// enables copying mul. card. property values of same-URI source EntityReference objects</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     	<em class="jxr_comment">// (for all other types, if the target model has a same-type object with the same URI as in the sources</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>     	<em class="jxr_comment">// , incl. nested objects, then )</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     	SimpleMerger merger = <strong class="jxr_keyword">new</strong> SimpleMerger(SimpleEditorMap.L3, <strong class="jxr_keyword">new</strong> Filter&lt;BioPAXElement&gt;() {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> 			<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> filter(BioPAXElement object) {
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> 				<strong class="jxr_keyword">return</strong> object instanceof EntityReference;
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> 			}
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> 		});
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     	merger.merge(model, pr1); 
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     	
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>     	assertEquals(5, model.getObjects().size());
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     	ProteinReference mergedPr = (ProteinReference) model.getByID(<span class="jxr_string">"pr"</span>);
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>     	assertFalse(mergedPr.getXref().isEmpty());
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     	assertEquals(<span class="jxr_string">"one"</span>, mergedPr.getDisplayName());
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     	assertEquals(2, mergedPr.getName().size());
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> 
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> 		assertEquals(<span class="jxr_string">"Homo sapiens"</span>, mergedPr.getOrganism().getStandardName());
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> 		assertNull(mergedPr.getOrganism().getDisplayName());
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> 		<em class="jxr_comment">//and, because BioSource is not considered in the Filter (see SimpleMerger's constructor parameter),</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 		<em class="jxr_comment">// the 'human' name and publication xref px were not copied from source (human1) to the target (human) BioSource:</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 		assertEquals(1, mergedPr.getOrganism().getName().size());
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> 		assertEquals(1, mergedPr.getOrganism().getXref().size());
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> 		px = (PublicationXref)model.getByID(<span class="jxr_string">"publication"</span>);
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> 		assertNotNull(px); <em class="jxr_comment">//the pub.xref was merged to the target model,</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> 		<em class="jxr_comment">// but it's dangling, because -</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> 		<strong class="jxr_keyword">for</strong>(XReferrable xReferrable : px.getXrefOf())
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> 			assertFalse(model.contains(xReferrable));
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> 
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 		<em class="jxr_comment">// Well.</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> 		<em class="jxr_comment">// Next, merge using another Filter (adding BioSource type there)</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> 		merger = <strong class="jxr_keyword">new</strong> SimpleMerger(SimpleEditorMap.L3, <strong class="jxr_keyword">new</strong> Filter&lt;BioPAXElement&gt;() {
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> 			<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> filter(BioPAXElement object) {
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> 				<strong class="jxr_keyword">return</strong> object instanceof EntityReference
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> 						|| object instanceof BioSource; <em class="jxr_comment">//i.e., enable copying BioSource's props too</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> 			}
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> 		});
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> 		model = factory.createModel(); <em class="jxr_comment">//a fresh empty model</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> 		model.add(pr);
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> 		model.add(human);
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> 		model.add(uxHuman);
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> 
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> 		merger.merge(model, pr1);
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> 
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> 		assertEquals(5, model.getObjects().size());
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> 		mergedPr = (ProteinReference) model.getByID(<span class="jxr_string">"pr"</span>);
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> 		assertFalse(mergedPr.getXref().isEmpty());
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> 		assertEquals(<span class="jxr_string">"one"</span>, mergedPr.getDisplayName());
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> 		assertEquals(2, mergedPr.getName().size());
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 		assertEquals(<span class="jxr_string">"Homo sapiens"</span>, mergedPr.getOrganism().getStandardName()); <em class="jxr_comment">//it's the BioSource from orig. 'pr'</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> 		assertNull(mergedPr.getOrganism().getDisplayName()); <em class="jxr_comment">//single-cardinality prop. were not touched</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> 		<em class="jxr_comment">//and, because BioSource is now part of the Filter,</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> 		<em class="jxr_comment">//the 'human' (name) and publication xref px are copied from human1 to human BioSource:</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> 		assertEquals(2, mergedPr.getOrganism().getName().size());
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> 		assertTrue(mergedPr.getOrganism().getName().contains(<span class="jxr_string">"human"</span>)); <em class="jxr_comment">//originally, it wasn't there</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> 		assertEquals(2, mergedPr.getOrganism().getXref().size()); <em class="jxr_comment">//both xrefs</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> 		px = (PublicationXref)model.getByID(<span class="jxr_string">"publication"</span>);
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> 		assertNotNull(px); <em class="jxr_comment">//the pub.xref was copied; it's NOT dangling -</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> 		assertTrue(mergedPr.getOrganism().getXref().contains(px));
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> 		<em class="jxr_comment">//the same URI uni.xref did actually not overwrite the original uxHuman (having lowercase "taxonomy" as its db)</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> 		assertTrue(mergedPr.getOrganism().getXref().contains(uxHuman));
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> 		assertFalse(mergedPr.getOrganism().getXref().contains(uxHuman1));
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> 	}
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> 
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2015 <a href="http://www.biopax.org">BioPAX</a>. All rights reserved.</div>
+</body>
+</html>

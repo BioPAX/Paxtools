@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.biopax.paxtools.model.level2;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import java.util.Set;<a name="line.3"></a>
+<span class="sourceLineNo">004</span><a name="line.4"></a>
+<span class="sourceLineNo">005</span>/**<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * A conversion interaction in which one or more entities (substrates) undergo<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * ovalent changes to become one or more other entities (products). The substrates<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * of biochemical reactions are defined in terms of sums of species.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * This is convention in biochemistry, and, in principle, all of the EC<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * reactions should be biochemical reactions.<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * &lt;b&gt;Examples:&lt;/b&gt; ATP + H2O = ADP + Pi<a name="line.12"></a>
+<span class="sourceLineNo">013</span> *<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * &lt;b&gt;Comment:&lt;/b&gt; In the example reaction above, ATP is considered to be an<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * equilibrium mixture of several species, namely ATP4-, HATP3-, H2ATP2-,<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * MgATP2-, MgHATP-, and Mg2ATP. Additional species may also need to be<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * considered if other ions (e.g. Ca2+) that bind ATP are present.<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * Similar considerations apply to ADP and to inorganic phosphate (Pi).<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * When writing biochemical reactions, it is not necessary to attach charges to<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * the biochemical reactants or to include ions such as H+ and Mg2+ in the<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * equation. The reaction is written in the direction specified by the EC<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * nomenclature system, if applicable, regardless of the physiological<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * direction(s) in which the reaction proceeds. Polymerization reactions<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * involving large polymers whose structure is not explicitly captured should<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * generally be represented as unbalanced reactions in which the monomer is<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * consumed but the polymer remains unchanged, e.g. glycogen + glucose =<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * glycogen.<a name="line.27"></a>
+<span class="sourceLineNo">028</span> */<a name="line.28"></a>
+<span class="sourceLineNo">029</span>public interface biochemicalReaction extends conversion<a name="line.29"></a>
+<span class="sourceLineNo">030</span>{<a name="line.30"></a>
+<span class="sourceLineNo">031</span>// -------------------------- OTHER METHODS --------------------------<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>    Set&lt;deltaGprimeO&gt; getDELTA_G();<a name="line.33"></a>
+<span class="sourceLineNo">034</span><a name="line.34"></a>
+<span class="sourceLineNo">035</span>    void setDELTA_G(Set&lt;deltaGprimeO&gt; DELTA_G);<a name="line.35"></a>
+<span class="sourceLineNo">036</span><a name="line.36"></a>
+<span class="sourceLineNo">037</span>    void addDELTA_G(deltaGprimeO DELTA_G);<a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>    void removeDELTA_G(deltaGprimeO DELTA_G);<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>    Set&lt;Double&gt; getDELTA_H();<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>    void setDELTA_H(Set&lt;Double&gt; DELTA_H);<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>    void addDELTA_H(double DELTA_H);<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>    void removeDELTA_H(double DELTA_H);<a name="line.48"></a>
+<span class="sourceLineNo">049</span><a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>    Set&lt;Double&gt; getDELTA_S();<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>    void setDELTA_S(Set&lt;Double&gt; DELTA_S);<a name="line.53"></a>
+<span class="sourceLineNo">054</span><a name="line.54"></a>
+<span class="sourceLineNo">055</span>    void addDELTA_S(double DELTA_S);<a name="line.55"></a>
+<span class="sourceLineNo">056</span><a name="line.56"></a>
+<span class="sourceLineNo">057</span>    void removeDELTA_S(double DELTA_S);<a name="line.57"></a>
+<span class="sourceLineNo">058</span><a name="line.58"></a>
+<span class="sourceLineNo">059</span><a name="line.59"></a>
+<span class="sourceLineNo">060</span>    Set&lt;String&gt; getEC_NUMBER();<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>    void setEC_NUMBER(Set&lt;String&gt; EC_NUMBER);<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>    void addEC_NUMBER(String EC_NUMBER);<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>    void removeEC_NUMBER(String EC_NUMBER);<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>    Set&lt;kPrime&gt; getKEQ();<a name="line.69"></a>
+<span class="sourceLineNo">070</span><a name="line.70"></a>
+<span class="sourceLineNo">071</span>    void setKEQ(Set&lt;kPrime&gt; KEQ);<a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72"></a>
+<span class="sourceLineNo">073</span>    void addKEQ(kPrime KEQ);<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>    void removeKEQ(kPrime KEQ);<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>}<a name="line.77"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

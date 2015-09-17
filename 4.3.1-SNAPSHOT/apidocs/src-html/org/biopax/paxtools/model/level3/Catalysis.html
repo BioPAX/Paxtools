@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.biopax.paxtools.model.level3;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import java.util.Set;<a name="line.3"></a>
+<span class="sourceLineNo">004</span><a name="line.4"></a>
+<span class="sourceLineNo">005</span><a name="line.5"></a>
+<span class="sourceLineNo">006</span>/**<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * Definition: A control interaction in which a physical entity (a catalyst) increases the rate of a conversion<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * interaction by lowering its activation energy. Instances of this class describe a pairing between a catalyzing<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * entity and a catalyzed conversion.<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Rationale: Catalysis, theoretically, is always bidirectional since it acts by lowering the activation energy.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Physiologically, however, it can have a direction because of the concentration of the participants. For example,<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * the oxidative decarboxylation catalyzed by Isocitrate dehydrogenase always happens in one direction under<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * physiological conditions since the produced carbon dioxide is constantly removed from the system.<a name="line.14"></a>
+<span class="sourceLineNo">015</span> *<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * Usage: A separate catalysis instance should be created for each different conversion that a physicalEntity may<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * catalyze and for each different physicalEntity that may catalyze a conversion. For example,<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * a bifunctional enzyme that catalyzes two different biochemical reactions would be linked to each of those<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * biochemical reactions by two separate instances of the catalysis class. Also, catalysis reactions from multiple<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * different organisms could be linked to the same generic biochemical reaction (a biochemical reaction is generic if<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * it only includes small molecules). Generally, the enzyme catalyzing a conversion is known and the use of this<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * class is obvious, however, in the cases where a catalyzed reaction is known to occur but the enzyme is not known,<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * a catalysis instance can be created without a controller specified.<a name="line.23"></a>
+<span class="sourceLineNo">024</span> *<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * Synonyms: facilitation, acceleration.<a name="line.25"></a>
+<span class="sourceLineNo">026</span> *<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * Examples: The catalysis of a biochemical reaction by an enzyme, the enabling of a transport interaction by a<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * membrane pore complex, and the facilitation of a complex assembly by a scaffold protein. Hexokinase -&amp;gt; (The<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * "Glucose + ATP -&amp;gt; Glucose-6-phosphate +ADP" reaction). A plasma membrane Na+/K+ ATPase is an active transporter<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * (antiport pump) using the energy of ATP to pump Na+ out of the cell and K+ in. Na+ from cytoplasm to extracellular<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * space would be described in a transport instance. K+ from extracellular space to cytoplasm would be described in a<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * transport instance. The ATPase pump would be stored in a catalysis instance controlling each of the above<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * transport instances. A biochemical reaction that does not occur by itself under physiological conditions,<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * but has been observed to occur in the presence of cell extract, likely via one or more unknown enzymes present in<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * the extract, would be stored in the CONTROLLED property, with the CONTROLLER property empty.<a name="line.35"></a>
+<span class="sourceLineNo">036</span> */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>public interface Catalysis extends Control<a name="line.37"></a>
+<span class="sourceLineNo">038</span>{<a name="line.38"></a>
+<span class="sourceLineNo">039</span><a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>        /**<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         * Any cofactor(s) or coenzyme(s) required for catalysis of the conversion by the enzyme. This is a suproperty<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         * of participants.<a name="line.43"></a>
+<span class="sourceLineNo">044</span>         * @return cofactor(s) or coenzyme(s) required for catalysis of the conversion<a name="line.44"></a>
+<span class="sourceLineNo">045</span>         */<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        Set&lt;PhysicalEntity&gt; getCofactor();<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>        /**<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * Any cofactor(s) or coenzyme(s) required for catalysis of the conversion by the enzyme. This is a suproperty<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         * of participants.<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         * @param cofactor cofactor(s) or coenzyme(s) required for catalysis of the conversion<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         */<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        void addCofactor(PhysicalEntity cofactor);<a name="line.53"></a>
+<span class="sourceLineNo">054</span><a name="line.54"></a>
+<span class="sourceLineNo">055</span>        /**<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * Any cofactor(s) or coenzyme(s) required for catalysis of the conversion by the enzyme. This is a suproperty<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * of participants.<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * @param cofactor cofactor(s) or coenzyme(s) required for catalysis of the conversion<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         */<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        void removeCofactor(PhysicalEntity cofactor);<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>        /**<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * This property represents the direction of this catalysis under all physiological conditions if there is one.<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * Note that chemically a catalyst will increase the rate of the reaction in both directions. In biology,<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * however, there are cases where the enzyme is expressed only when the controlled bidirectional conversion is<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         * on one side of the chemical equilibrium. olled bidirectional conversion is on one side of the chemical<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * equilibrium. For example E.Coli's lac operon ensures that lacZ gene is only synthesized when there is enough<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * lactose in the medium. If that is the case and the controller, under biological conditions,<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * is always catalyzing the conversion in one direction then this fact can be captured using this property. If<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * the enzyme is active for both directions, or the conversion is not bidirectional,<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * this property should be left empty.<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * @return direction of this catalysis under all physiological conditions if there is one<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         */<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        CatalysisDirectionType getCatalysisDirection();<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>        /**<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * This property represents the direction of this catalysis under all physiological conditions if there is one.<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * Note that chemically a catalyst will increase the rate of the reaction in both directions. In biology,<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * however, there are cases where the enzyme is expressed only when the controlled bidirectional conversion is<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * on one side of the chemical equilibrium. olled bidirectional conversion is on one side of the chemical<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * equilibrium. For example E.Coli's lac operon ensures that lacZ gene is only synthesized when there is enough<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * lactose in the medium. If that is the case and the controller, under biological conditions,<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * is always catalyzing the conversion in one direction then this fact can be captured using this property. If<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * the enzyme is active for both directions, or the conversion is not bidirectional,<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         * this property should be left empty.<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         * @param catalysisDirection direction of this catalysis under all physiological conditions if there is one<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         */<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        void setCatalysisDirection(CatalysisDirectionType catalysisDirection);<a name="line.89"></a>
+<span class="sourceLineNo">090</span>}<a name="line.90"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
