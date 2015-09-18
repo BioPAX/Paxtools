@@ -10,6 +10,9 @@
 	<name>Paxtools Console Application</name>
 	<description>Paxtools Console Application and Examples</description>
 	<url>http://biopax.github.io/Paxtools</url>
+
+	<scm><url>https://github.com/BioPAX/Paxtools</url></scm>
+
 	<build>
 		<plugins>
 			<plugin>

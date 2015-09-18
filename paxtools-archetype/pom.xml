@@ -12,7 +12,12 @@
 	<packaging>maven-archetype</packaging>
 
 	<name>Paxtools Maven Archetype</name>
+	<description>
+		Paxtools Maven archetype - sample Java project to quickly start using Paxtools library and BioPAX data.
+	</description>
 	<url>http://biopax.github.io/Paxtools</url>
+
+	<scm><url>https://github.com/BioPAX/Paxtools</url></scm>
 
 	<build>
 		<extensions>

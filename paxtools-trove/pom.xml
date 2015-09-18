@@ -8,13 +8,16 @@
 	</parent>
 
 	<artifactId>paxtools-trove</artifactId>
-	<name>Paxtools-Trove</name>	
+	<name>Paxtools-Trove</name>
+	<description>A Trove4j based java collections provider for the paxtools-core BioPAX model.</description>
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
 
 	<url>http://biopax.github.io/Paxtools</url>
-	
+
+	<scm><url>https://github.com/BioPAX/Paxtools</url></scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.biopax.paxtools</groupId>
@@ -27,4 +30,5 @@
 			<version>3.0.3</version>
 		</dependency>
 	</dependencies>
+
 </project>

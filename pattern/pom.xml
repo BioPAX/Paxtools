@@ -11,7 +11,12 @@
 	<artifactId>pattern</artifactId>
 
 	<name>BioPAX Pattern Search</name>
+	<description>
+		The BioPAX Pattern Search library; also, e.g., converts BioPAX model to SIF (simple binary interactions) text format.
+	</description>
 	<url>http://biopax.github.io/Paxtools</url>
+
+	<scm><url>https://github.com/BioPAX/Paxtools</url></scm>
 
 	<dependencies>
 		<dependency>

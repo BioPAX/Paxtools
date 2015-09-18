@@ -11,6 +11,8 @@
 	<description>BioPAX full-text indexing and searching (Lucene based)</description>
 	<url>http://biopax.github.io/Paxtools</url>
 
+	<scm><url>https://github.com/BioPAX/Paxtools</url></scm>
+
 	<properties>
 		<lucene.version>4.10.2</lucene.version>
 		<slf4j.version>1.7.7</slf4j.version>

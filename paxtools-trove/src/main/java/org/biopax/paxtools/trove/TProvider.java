@@ -8,6 +8,13 @@ import org.biopax.paxtools.util.BPCollections;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A Trove4j based java collections (Set, Map) provider for the paxtools-core BioPAX model.
+ *
+ * Enabled by adding the JVM option:
+ * -Dpaxtools.CollectionProvider=org.biopax.paxtools.trove.TProvider
+ * when running Paxtools or another paxtools-based JAR.
+ */
 public class TProvider implements BPCollections.CollectionProvider
 {
 

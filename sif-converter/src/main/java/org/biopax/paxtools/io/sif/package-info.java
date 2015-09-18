@@ -15,6 +15,8 @@
  * capable of storing rich biological semantics, including multi-participant relationships,
  * states and locations of entities, complexes and complex control relationships. A SIF network, on the other hand,
  * is only capable of storing pairwise interactions between entity references.
+ *
+ * @deprecated please use Paxtools pattern module for exporting to the SIF and extended SIF formats.
  */
 package org.biopax.paxtools.io.sif;
 

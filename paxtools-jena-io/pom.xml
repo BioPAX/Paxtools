@@ -10,7 +10,11 @@
     <packaging>jar</packaging>
 
     <name>Jena based IO</name>
+    <description>Provides an additional I/O support for BioPAX OWL models using Jena library.</description>
+    
     <url>http://biopax.github.io/Paxtools</url>
+
+    <scm><url>https://github.com/BioPAX/Paxtools</url></scm>
 
     <dependencies>
         <dependency>
@@ -23,6 +27,5 @@
         	<artifactId>jena</artifactId>
         </dependency>
     </dependencies>
-    
-    <description>Provides an additional I/O support for BioPAX OWL models using Jena library</description>
+
 </project>

@@ -10,6 +10,9 @@
 	<name>BioPAX to/from JSON Converter</name>
 	<description>BioPAX to/from JSON Converters</description>
 	<url>http://biopax.github.io/Paxtools</url>
+
+	<scm><url>https://github.com/BioPAX/Paxtools</url></scm>
+
 	<build>
 		<plugins>
 			<plugin>

@@ -312,11 +312,11 @@
 					<artifactId>maven-site-plugin</artifactId>
 					<version>${maven-site-plugin.version}</version>
 				</plugin>
-				<plugin>
+<!--				<plugin>
 					<groupId>com.github.github</groupId>
 					<artifactId>site-maven-plugin</artifactId>
 					<version>${site-maven-plugin.version}</version>
-				</plugin>
+				</plugin>-->
 				<plugin>
 					<groupId>org.sonatype.plugins</groupId>
 					<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -471,7 +471,6 @@
         </dependency>
 	</dependencies>	
 	</dependencyManagement>
-
 
 	<dependencies>
 		<dependency>
