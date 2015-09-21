@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
-		<version>4.3.1-SNAPSHOT</version>
+		<version>4.3.1</version>
 	</parent>
 	<artifactId>paxtools-console</artifactId>
 	<packaging>jar</packaging>
@@ -11,7 +11,8 @@
 	<description>Paxtools Console Application and Examples</description>
 	<url>http://biopax.github.io/Paxtools</url>
 
-	<scm><url>https://github.com/BioPAX/Paxtools</url></scm>
+	<scm><url>https://github.com/BioPAX/Paxtools</url>  <tag>v4.3.1</tag>
+  </scm>
 
 	<build>
 		<plugins>
@@ -21,8 +22,7 @@
 				<version>2.0</version>
 				<configuration>
 					<transformers>
-						<transformer
-							implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+						<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 							<mainClass>org.biopax.paxtools.PaxtoolsMain</mainClass>
 						</transformer>
 					</transformers>

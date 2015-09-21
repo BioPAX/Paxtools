@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
-		<version>4.3.1-SNAPSHOT</version>
+		<version>4.3.1</version>
 	</parent>
 
 	<artifactId>paxtools-archetype</artifactId>
@@ -17,7 +17,8 @@
 	</description>
 	<url>http://biopax.github.io/Paxtools</url>
 
-	<scm><url>https://github.com/BioPAX/Paxtools</url></scm>
+	<scm><url>https://github.com/BioPAX/Paxtools</url>  <tag>v4.3.1</tag>
+  </scm>
 
 	<build>
 		<extensions>
