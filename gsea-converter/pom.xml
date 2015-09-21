@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.biopax.paxtools</groupId>
     <artifactId>paxtools</artifactId>
-    <version>4.3.1</version>
+    <version>5.0.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -11,7 +11,7 @@
   <description>Converts data to the GESA (.gmt) format.</description>
   <url>http://biopax.github.io/Paxtools</url>
 
-  <scm><url>https://github.com/BioPAX/Paxtools</url>  <tag>v4.3.1</tag>
+  <scm><url>https://github.com/BioPAX/Paxtools</url>  <tag>HEAD</tag>
   </scm>
 
   <dependencies>
