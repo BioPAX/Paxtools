@@ -26,7 +26,6 @@
 	<modules>
 		<module>paxtools-core</module>
 		<module>paxtools-jena-io</module>
-		<module>sif-converter</module>
 		<module>gsea-converter</module>
 		<module>psimi-converter</module>
 		<module>sbgn-converter</module>
@@ -63,7 +62,7 @@
 		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
 		<maven-source-plugin.version>2.4</maven-source-plugin.version>
 		<maven-site-plugin.version>3.4</maven-site-plugin.version>
-		<maven-javadoc-plugin.version>2.10.2</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
 		<maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
 		<maven-project-info-reports-plugin.version>2.8</maven-project-info-reports-plugin.version>
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
@@ -151,24 +150,11 @@
 	</ciManagement>
 	
 	<profiles>
-		<profile>
-			<!-- A profile to deploy to a local directory -->
-			<id>local-deploy</id>
-			<distributionManagement>
-				<snapshotRepository>
-					<id>biopax.snapshots</id>
-					<name>BioPAX Snapshots Repository</name>
-					<url>${biopax.snapshot.url}</url>
-				</snapshotRepository>
-				<repository>
-					<id>biopax.releases</id>
-					<name>BioPAX Releases Repository</name>
-					<url>${biopax.release.url}</url>
-				</repository>
-			</distributionManagement>
-		</profile>	
         <profile>
-            <id>sonatype-release-profile</id>
+	<!-- It's auto-enabled during mvn release:perform; 
+	for manual releasing (not snapshots): mvn clean deploy -P sonatype-release 
+	-->
+            <id>sonatype-release</id>
             <build>
                 <plugins>
                     <plugin>
@@ -225,27 +211,27 @@
 		<connection>scm:git:git://github.com/BioPAX/Paxtools.git</connection>
 		<developerConnection>scm:git:git@github.com:BioPAX/Paxtools.git</developerConnection>
 		<url>https://github.com/BioPAX/Paxtools</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 	
 	<distributionManagement>
 		<site>
 			<id>github</id>
 			<name>BioPAX/Paxtools Maven site</name>
 			<url>http://biopax.github.io/Paxtools/${project.version}</url>
-		<!-- http://biopax.github.io/Paxtools/${project.version} -->
+			<!-- ${project.version} -->
 		</site>
-        <repository>
-            <id>ossrh</id>
-            <name>Nexus Release Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <downloadUrl>http://www.biopax.org/downloads/paxtools/</downloadUrl>
+		<repository>
+			<id>ossrh</id>
+			<name>Nexus Release Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</snapshotRepository>
+		<downloadUrl>http://www.biopax.org/downloads/paxtools/</downloadUrl>
 	</distributionManagement>	
 
 	<build>
@@ -281,14 +267,14 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>${maven-release-plugin.version}</version>
-                    <configuration>
-                        <goals>deploy site-deploy</goals>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <useReleaseProfile>false</useReleaseProfile>
-                        <releaseProfiles>sonatype-release-profile</releaseProfiles>
-                    </configuration>
+                    			<configuration>
+                        			<goals>deploy site-deploy</goals>
+                        			<autoVersionSubmodules>true</autoVersionSubmodules>
+                        			<useReleaseProfile>false</useReleaseProfile>
+                        			<releaseProfiles>sonatype-release</releaseProfiles>
+                    			</configuration>
 				</plugin>
-      			<plugin>
+      				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven-surefire-plugin.version}</version>
@@ -297,6 +283,9 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${maven-javadoc-plugin.version}</version>
+					<configuration>
+						<excludePackageNames>org.biopax.validator.*</excludePackageNames>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -324,10 +313,10 @@
 					<version>${nexus-staging-maven-plugin.version}</version>
 				</plugin>
 				<plugin>
-                	<artifactId>maven-gpg-plugin</artifactId>
-                	<groupId>org.apache.maven.plugins</groupId>
-                	<version>${maven-gpg-plugin.version}</version>
-                </plugin>
+                			<artifactId>maven-gpg-plugin</artifactId>
+                			<groupId>org.apache.maven.plugins</groupId>
+                			<version>${maven-gpg-plugin.version}</version>
+                		</plugin>
 			</plugins>
 		</pluginManagement>
 		<extensions>
@@ -341,11 +330,11 @@
 				<artifactId>wagon-scm</artifactId>
 				<version>${wagon-scm.version}</version>
 			</extension>
-        	<extension>
-            	<groupId>org.apache.maven.doxia</groupId>
-            	<artifactId>doxia-integration-tools</artifactId>
-           		<version>${doxia-integration-tools.version}</version>
-        	</extension>
+        		<extension>
+            			<groupId>org.apache.maven.doxia</groupId>
+            			<artifactId>doxia-integration-tools</artifactId>
+           			<version>${doxia-integration-tools.version}</version>
+        		</extension>
 		</extensions>		
 		<plugins>
 			<plugin>
