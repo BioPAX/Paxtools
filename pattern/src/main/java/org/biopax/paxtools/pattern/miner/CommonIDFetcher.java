@@ -4,7 +4,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,9 +29,9 @@ public class CommonIDFetcher implements IDFetcher
 
 			return set;
 		}
-		else if (useUniprotIDs && ele.getRDFId().startsWith("http://identifiers.org/uniprot/"))
+		else if (useUniprotIDs && ele.getUri().startsWith("http://identifiers.org/uniprot/"))
 		{
-			set.add(ele.getRDFId().substring(ele.getRDFId().lastIndexOf("/") + 1));
+			set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
 		}
 		else if (ele instanceof XReferrable)
 		{

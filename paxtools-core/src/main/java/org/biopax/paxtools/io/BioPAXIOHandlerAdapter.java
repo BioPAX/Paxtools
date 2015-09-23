@@ -391,13 +391,13 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			if (editor.getProperty().equals("DELTA-G"))
 			{
-				deltaGprimeO aDeltaGprime0 = model.addNew(deltaGprimeO.class, (bpe.getRDFId() + "-DELTA-G"));
+				deltaGprimeO aDeltaGprime0 = model.addNew(deltaGprimeO.class, (bpe.getUri() + "-DELTA-G"));
 				aDeltaGprime0.setDELTA_G_PRIME_O(Float.valueOf(value));
 				created = aDeltaGprime0;
 			}
 			if (editor.getProperty().equals("KEQ"))
 			{
-				kPrime aKPrime = model.addNew(kPrime.class, (bpe.getRDFId() + "-KEQ"));
+				kPrime aKPrime = model.addNew(kPrime.class, (bpe.getUri() + "-KEQ"));
 				aKPrime.setK_PRIME(Float.valueOf(value));
 				created = aKPrime;
 			}
@@ -450,7 +450,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 				if (value == null)
 				{
 					throw new IllegalBioPAXArgumentException(
-							"Illegal or Dangling Value/Reference: " + valueString + " (element: " + bpe.getRDFId() +
+							"Illegal or Dangling Value/Reference: " + valueString + " (element: " + bpe.getUri() +
 							" property: " + editor.getProperty() + ")");
 				}
 			} else if (this.isTreatNilAsNull() && valueString.trim().equalsIgnoreCase("NIL"))

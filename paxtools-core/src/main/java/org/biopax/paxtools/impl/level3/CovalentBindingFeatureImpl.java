@@ -3,22 +3,8 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.CovalentBindingFeature;
 import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass= CovalentBindingFeature.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements CovalentBindingFeature
 {
 	private SequenceModificationVocabulary modificationType;
@@ -26,13 +12,12 @@ public class CovalentBindingFeatureImpl extends BindingFeatureImpl implements Co
 	public CovalentBindingFeatureImpl() {
 	}
 	
-	@Override @Transient
+	@Override
 	public Class<? extends CovalentBindingFeature> getModelInterface()
 	{
 		return CovalentBindingFeature.class;
 	}
 
-	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return this.modificationType;

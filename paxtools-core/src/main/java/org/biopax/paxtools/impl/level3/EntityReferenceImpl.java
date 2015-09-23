@@ -5,17 +5,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
 
-import javax.persistence.Entity;
-import javax.persistence.*;
 import java.util.Set;
 
-@Entity
-@Proxy(proxyClass= EntityReference.class)
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
 {
@@ -41,20 +34,11 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		this.ownerEntityReference= BPCollections.I.createSafeSet();
 	}
 
-	@Transient
 	public Class<? extends EntityReference> getModelInterface()
 	{
 		return EntityReference.class;
 	}
 
-	/**
-	 * The contents of this set should NOT be modified. For manipulating the contents use addNew and
-	 * remove instead.
-	 *
-	 * @return A set of entity features for the reference entity.
-	 */
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = EntityFeatureImpl.class, mappedBy = "entityFeatureOf")
 	public Set<EntityFeature> getEntityFeature()
 	{
 		return entityFeature;
@@ -62,18 +46,18 @@ public abstract class EntityReferenceImpl extends NamedImpl
 
 	public void addEntityFeature(EntityFeature entityFeature)
 	{
-		if (entityFeature != null) synchronized (entityFeature)
+		if (entityFeature != null)
 		{
 			EntityReference eFof = entityFeature.getEntityFeatureOf();
 			
 			if (eFof != null && !eFof.equals(this))
-			{				
-				log.warn("addEntityFeature: violated the inverse-functional OWL constraint; to fix, " 
-					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
+			{
+				//we neither fix nor fail here (currently, biopax-validator detects and optionally fixes it).
+				log.warn("addEntityFeature: violated the inverse-functional OWL constraint; to fix, "
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getUri()
 					+ " should be REMOVED from " 
-					+ eFof.getModelInterface().getSimpleName() + " " + eFof.getRDFId());
-				//TODO eFof.removeEntityFeature(entityFeature) or an exception would be a breaking change (let's shelve for v5.0.0)
-				//so, we neither fix nor fail here (currently, biopax-validator detects and optionally fixes it).
+					+ eFof.getModelInterface().getSimpleName() + " " + eFof.getUri());
+				//TODO use eFof.removeEntityFeature(entityFeature) or throw an exception...
 			} 
 
 			((EntityFeatureImpl) entityFeature).setEntityFeatureOf(this);	
@@ -94,40 +78,28 @@ public abstract class EntityReferenceImpl extends NamedImpl
 				//Don't set entityFeatureOf to null here 
 				//(looks, this EF was previously moved to another ER)
 				log.warn("removeEntityFeature: removed " 
-					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
-					+ " from " + getModelInterface().getSimpleName() + " " + getRDFId() 
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getUri()
+					+ " from " + getModelInterface().getSimpleName() + " " + getUri()
 					+ "; though entityFeatureOf was another " 
 					+ entityFeature.getEntityFeatureOf().getModelInterface().getSimpleName() 
-					+ " " + entityFeature.getEntityFeatureOf().getRDFId());
+					+ " " + entityFeature.getEntityFeatureOf().getUri());
 			} else {
 				log.warn("removeEntityFeature: removed " 
-					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getRDFId() 
-					+ " from " + getModelInterface().getSimpleName() + " " + getRDFId()
+					+ entityFeature.getModelInterface().getSimpleName() + " " + entityFeature.getUri()
+					+ " from " + getModelInterface().getSimpleName() + " " + getUri()
 					+ ", but entityFeatureOf was already NULL (illegal state)");
 			}
 		} else {
 			log.warn("removeEntityFeature: did nothing, because "
-					+ getRDFId() + " does not contain feature " + entityFeature.getRDFId());
+					+ getUri() + " does not contain feature " + entityFeature.getUri());
 		}
 	}
 
-	
-	protected void setEntityFeature(Set<EntityFeature> entityFeature)
-	{
-		this.entityFeature = entityFeature;
-	}
-
-
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity= SimplePhysicalEntityImpl.class, mappedBy = "entityReferenceX")
 	public Set<SimplePhysicalEntity> getEntityReferenceOf()
 	{
 		return entityReferenceOf;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EntityReferenceTypeVocabularyImpl.class)
-	@JoinTable(name="entityReferenceType")
 	public Set<EntityReferenceTypeVocabulary> getEntityReferenceType()
 	{
 		return entityReferenceType;
@@ -147,15 +119,6 @@ public abstract class EntityReferenceImpl extends NamedImpl
 			this.entityReferenceType.remove(entityReferenceType);
 	}
 
-	protected void setEntityReferenceType(
-			Set<EntityReferenceTypeVocabulary> entityReferenceType)
-	{
-		this.entityReferenceType=entityReferenceType;
-	}
-
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EntityReferenceImpl.class) //TODO generify?
-	@JoinTable(name="memberEntityReference")
 	public Set<EntityReference> getMemberEntityReference()
 	{
 		return memberEntityReference;
@@ -177,28 +140,11 @@ public abstract class EntityReferenceImpl extends NamedImpl
 		}
 	}
 
-	public void setMemberEntityReference(Set<EntityReference> memberEntity)
-	{
-		this.memberEntityReference = memberEntity;
-
-	}
-
-
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EntityReferenceImpl.class, mappedBy = "memberEntityReference")
 	public Set<EntityReference> getMemberEntityReferenceOf()
 	{
 		return ownerEntityReference;
 	}
 
-	protected  void setMemberEntityReferenceOf(Set<EntityReference> newOwnerEntityReferenceSet)
-	{
-		this.ownerEntityReference = newOwnerEntityReferenceSet;
-	}
-
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EvidenceImpl.class)
-	@JoinTable(name="evidence")	
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
@@ -214,21 +160,6 @@ public abstract class EntityReferenceImpl extends NamedImpl
 	{
 		if(evidence != null)
 			this.evidence.remove(evidence);
-	}
-
-	public void setEvidence(Set<Evidence> evidence)
-	{
-		this.evidence = evidence;
-	}
-
-	protected void setEntityReferenceOf(Set<SimplePhysicalEntity> entityReferenceOf)
-	{
-		this.entityReferenceOf = entityReferenceOf;
-	}
-
-	protected void setMemberEntity(Set<EntityReference> memberEntity)
-	{
-		this.memberEntityReference = memberEntity;
 	}
 
 }

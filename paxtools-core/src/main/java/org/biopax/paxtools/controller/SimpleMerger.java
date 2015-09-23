@@ -124,7 +124,7 @@ public class SimpleMerger
 			 * be soon replaced with the target's, same id, one 
 			 * in all parent objects)
 			 */
-			if (!target.containsID(bpe.getRDFId()))
+			if (!target.containsID(bpe.getUri()))
 			{
 				/*
 				 * Warning: other than the default (ModelImpl) target Model 
@@ -175,7 +175,7 @@ public class SimpleMerger
 		//and no Filter was set (mergeObjPropOf is null); i.e., when
 		//we simply want the source to be replaced with an object
 		//having the same type, URI that was already in the target model.
-		BioPAXElement keep = target.getByID(source.getRDFId());
+		BioPAXElement keep = target.getByID(source.getUri());
 		if(keep != source && mergeObjPropOf==null) 
 		{
 			return; //nothing to do
@@ -221,7 +221,7 @@ public class SimpleMerger
 	{
 		if (value != null)
 		{
-			BioPAXElement newValue = target.getByID(value.getRDFId());
+			BioPAXElement newValue = target.getByID(value.getUri());
 			//not null at this point, because every source element was found 
 			//and either added to the target model, or target had an object with the same URI (to replace this value).
 			assert newValue != null : "'newValue' is null (a design flaw in the 'merge' method)";		
@@ -236,7 +236,7 @@ public class SimpleMerger
 	{
 		if (value != null) {
 			Object newValue = (value instanceof BioPAXElement) 
-					? target.getByID(((BioPAXElement)value).getRDFId()) : value;
+					? target.getByID(((BioPAXElement)value).getUri()) : value;
 			editor.setValueToBean(newValue, targetElement);
 		}
 	}

@@ -124,17 +124,17 @@ public class Fetcher {
      */
     public void fetch(final BioPAXElement element, final Model model)
 	{
-    	if(!model.containsID(element.getRDFId()))
+    	if(!model.containsID(element.getUri()))
     		model.add(element);
     	
     	Set<BioPAXElement> children = fetch(element);
     	
         for(BioPAXElement e : children) {
-			if (!model.containsID(e.getRDFId())) {
+			if (!model.containsID(e.getUri())) {
 				model.add(e);
 			} else if (!model.contains(e)) {
 				throw new AssertionError("fetch(bioPAXElement, model): found different child objects " +
-						"with the same URI: " + e.getRDFId() +
+						"with the same URI: " + e.getUri() +
 						"(replace/merge, or use fetch(bioPAXElement) instead!)");
 			}
 		}
@@ -279,7 +279,7 @@ public class Fetcher {
     		{
     			if (range instanceof BioPAXElement && !found.get())
     			{
-    				if( ((BioPAXElement) range).getRDFId().equals(uri) )
+    				if( ((BioPAXElement) range).getUri().equals(uri) )
     					found.set(true); //set global flag; done.
     				else
 						if(!(skipSubPathways && (range instanceof Pathway)))

@@ -47,7 +47,7 @@ public class PhysicalEntityChain
 		if (pes == null)
 		{
 			throw new IllegalArgumentException("No link found between small PE = " +
-				small.getRDFId() + " and big PE = " + big.getRDFId());
+				small.getUri() + " and big PE = " + big.getUri());
 		}
 		assert !containsNull(pes);
 	}

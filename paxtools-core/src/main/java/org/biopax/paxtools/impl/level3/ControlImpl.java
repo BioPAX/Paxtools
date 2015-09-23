@@ -4,21 +4,12 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Proxy(proxyClass= Control.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class  ControlImpl extends InteractionImpl
 		implements Control
 {
@@ -40,7 +31,6 @@ public class  ControlImpl extends InteractionImpl
 
 // ------------------------ INTERFACE METHODS ------------------------
 
-	@Transient
 	public Class<? extends Control> getModelInterface()
 	{
 		return Control.class;
@@ -50,7 +40,6 @@ public class  ControlImpl extends InteractionImpl
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-	@Enumerated
 	public ControlType getControlType()
 	{
 		return controlType;
@@ -61,17 +50,9 @@ public class  ControlImpl extends InteractionImpl
 		this.controlType = ControlType;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = ProcessImpl.class)
-	@JoinTable(name="controlled")
 	public Set<Process> getControlled()
 	{
 		return this.controlled;
-	}
-
-	protected void setControlled(Set<Process> controlled)
-	{
-		this.controlled = controlled;
 	}
 
 	public void addControlled(Process controlled)
@@ -80,11 +61,10 @@ public class  ControlImpl extends InteractionImpl
 			if (!checkControlled(controlled)) {
 				throw new IllegalBioPAXArgumentException(
 						"Illegal argument. Attempting to set "
-								+ controlled.getRDFId() + " to "
-								+ this.getRDFId());
+								+ controlled.getUri() + " to "
+								+ this.getUri());
 
-			}
-			if (controlled != null) {
+			} else {
 				this.controlled.add(controlled);
 				controlled.getControlledOf().add(this);
 				super.addParticipant(controlled);
@@ -101,7 +81,6 @@ public class  ControlImpl extends InteractionImpl
 		}
 	}
 
-	@Transient
 	public Set<Controller> getController()
 	{
 		Set<Controller> controller = new HashSet<Controller>(this.getPeController());
@@ -129,8 +108,11 @@ public class  ControlImpl extends InteractionImpl
 			controller.getControllerOf().remove(this);
 			if (controller instanceof Pathway) {
 				pathwayController.remove(controller);
-			} else {
+			} else if(controller instanceof PhysicalEntity) {
 				peController.remove(controller);
+			} else { //hardly ever possible, anyway -
+				throw new IllegalBioPAXArgumentException("removeController: argument " + controller.getUri()
+					+ " is neither Pathway nor PE - " + controller.getModelInterface().getSimpleName());
 			}
 		}
 	}
@@ -142,31 +124,14 @@ public class  ControlImpl extends InteractionImpl
 		return true;
 	}
 
-	
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PathwayImpl.class)//, cascade={CascadeType.ALL})
-	@JoinTable(name="pathwayController")
 	protected Set<Pathway> getPathwayController()
 	{
 		return pathwayController;
 	}
 
-	protected void setPathwayController(Set<Pathway> pathwayController)
-	{
-		this.pathwayController = pathwayController;
-	}
-
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="peController")
 	protected Set<PhysicalEntity> getPeController()
 	{
 		return peController;
-	}
-
-	protected void setPeController(Set<PhysicalEntity> peController)
-	{
-		this.peController = peController;
 	}
 
 }

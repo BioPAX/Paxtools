@@ -188,7 +188,7 @@ public class Match implements Cloneable
 			else if (!n.getName().isEmpty() && n.getName().iterator().next().length() > 0)
 				name = n.getName().iterator().next();
 		}
-		if (name == null ) name = ele.getRDFId();
+		if (name == null ) name = ele.getUri();
 		
 		return name + " (" + ele.getModelInterface().getName().substring(
 			ele.getModelInterface().getName().lastIndexOf(".") + 1) + ")";

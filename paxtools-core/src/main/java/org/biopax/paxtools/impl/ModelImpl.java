@@ -59,7 +59,7 @@ public class ModelImpl implements Model
     public synchronized BioPAXElement getByID(String id) {
     	BioPAXElement ret = this.idMap.get(id);
     	if(ret != null) {
-    		assert ret.getRDFId().equals(id);
+    		assert ret.getUri().equals(id);
     	}
         return ret;
     }
@@ -110,7 +110,7 @@ public class ModelImpl implements Model
 	public synchronized void remove(BioPAXElement aBioPAXElement)
 	{		
 		if(this.contains(aBioPAXElement))
-			this.idMap.remove(aBioPAXElement.getRDFId());
+			this.idMap.remove(aBioPAXElement.getUri());
 	}
                             
 	public synchronized <T extends BioPAXElement> T addNew(Class<T> c, String id)
@@ -130,14 +130,14 @@ public class ModelImpl implements Model
 	 */
 	public synchronized boolean contains(BioPAXElement aBioPAXElement)
 	{
-		return this.idMap.get(aBioPAXElement.getRDFId()) == aBioPAXElement;
+		return this.idMap.get(aBioPAXElement.getUri()) == aBioPAXElement;
 	}
 
 // -------------------------- OTHER METHODS --------------------------
 
 	public synchronized void add(BioPAXElement aBioPAXElement)
 	{
-		String rdfId = aBioPAXElement.getRDFId();
+		String rdfId = aBioPAXElement.getUri();
         if(!this.level.hasElement(aBioPAXElement))
         {
             throw new IllegalBioPAXArgumentException(

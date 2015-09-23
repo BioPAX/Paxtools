@@ -37,20 +37,19 @@ public interface BioPAXElement extends Serializable, Cloneable
     Class<? extends BioPAXElement> getModelInterface();
 
     /**
-     * This method returns the full URI of the element
-     * (despite it is called RDFId). 
+     * This method returns the absolute URI of the element.
      * BioPAX data providers are responsible 
      * for generating globally unique and standard URIs
      * for their BioPAX elements.
      * 
-     * @return the unique URI for this object.
+     * @return unique URI for this object.
      */
-    String getRDFId();
+    String getUri();
 
 
     /**
      * This method compares the given element for equivalency. This is different
-     * from equals(), as BioPAX elements resolve equality based on RDF ID.
+     * from equals(), as BioPAX elements resolve equality based on URI.
      * Equivalent returns true if elements are equal or if
      *  <ul>
      *   <li> both elements implement the same model interface AND

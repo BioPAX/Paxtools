@@ -365,7 +365,7 @@ public class Blacklist
 		if (pe instanceof SmallMolecule)
 		{
 			EntityReference er = ((SmallMolecule) pe).getEntityReference();
-			if (er != null) return er.getRDFId();
+			if (er != null) return er.getUri();
 		}
 		return null;
 	}
@@ -389,9 +389,9 @@ public class Blacklist
 			{
 				EntityReference er = ((SmallMolecule) pe).getEntityReference();
 
-				if (er != null && isUbique(er.getRDFId(), context))
+				if (er != null && isUbique(er.getUri(), context))
 				{
-					ubiques.put(er.getRDFId(), (SmallMolecule) pe);
+					ubiques.put(er.getUri(), (SmallMolecule) pe);
 				}
 				else
 				{

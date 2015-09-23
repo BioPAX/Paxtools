@@ -44,7 +44,7 @@ public class ReusedPEPHelper
         if (duplicated(pep, bpe))
         {
         	if(log.isWarnEnabled())
-        		log.warn(pep.getRDFId() +
+        		log.warn(pep.getUri() +
                      " is reused, duplicating it to fix");
 
         	String syntheticID = createSyntheticID(pep, bpe);
@@ -105,7 +105,7 @@ public class ReusedPEPHelper
                                      BioPAXElement bpe)
     {
         return "http://patywaycommons.org/synthetic"
-               + createDataStringFromURI(pep.getRDFId(),bpe.getRDFId());
+               + createDataStringFromURI(pep.getUri(),bpe.getUri());
     }
 
     private String createDataStringFromURI(String... uris)

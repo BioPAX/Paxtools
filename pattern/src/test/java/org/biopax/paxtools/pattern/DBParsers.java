@@ -1,10 +1,8 @@
 package org.biopax.paxtools.pattern;
 
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.util.HGNC;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,9 +15,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.*;
-
-import static org.biopax.paxtools.pattern.constraint.ConBox.*;
-import static org.biopax.paxtools.pattern.constraint.ConBox.equal;
 
 /**
  * @author Ozgun Babur
@@ -330,8 +325,8 @@ public class DBParsers
 
 		for (Control ctrl : model.getObjects(Control.class))
 		{
-			System.out.println(ctrl.getRDFId());
-			String id = ctrl.getRDFId().substring(ctrl.getRDFId().indexOf("#") + 1);
+			System.out.println(ctrl.getUri());
+			String id = ctrl.getUri().substring(ctrl.getUri().indexOf("#") + 1);
 			Set<String>[] sets = parseSpikeControl(id);
 
 			if (sets[0].isEmpty() || sets[1].isEmpty())

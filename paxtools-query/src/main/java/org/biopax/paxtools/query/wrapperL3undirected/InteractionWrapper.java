@@ -5,7 +5,6 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.model.AbstractNode;
 import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.Graph;
-import org.biopax.paxtools.query.model.Node;
 
 /**
  * Wrapper for Interaction class, excluding Control objects.
@@ -118,7 +117,7 @@ public class InteractionWrapper extends EventWrapper
 	 */
 	public String getKey()
 	{
-		return interaction.getRDFId();
+		return interaction.getUri();
 	}
 
 	/**

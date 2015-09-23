@@ -176,7 +176,7 @@ public final class JenaIOHandler extends BioPAXIOHandlerAdapter
 						catch (ConversionException e)
 						{
 							throw new IllegalBioPAXArgumentException(
-									"Unknown property! " + predicate + " bpe:" + bpe.getRDFId(), e);
+									"Unknown property! " + predicate + " bpe:" + bpe.getUri(), e);
 						}
 						checkCardinalityAndBindValue(bpe, individual, model, ontProperty, editor);
 					} else if (log.isDebugEnabled())
@@ -214,7 +214,7 @@ public final class JenaIOHandler extends BioPAXIOHandlerAdapter
 		}
 		catch (ConversionException e)
 		{
-			throw new IllegalBioPAXArgumentException("Unknown property! " + predicate + " bpe:" + bpe.getRDFId(), e);
+			throw new IllegalBioPAXArgumentException("Unknown property! " + predicate + " bpe:" + bpe.getUri(), e);
 		}
 		String localName = ontProperty.getLocalName();
 		PropertyEditor editor = this.getEditorMap().getEditorForProperty(localName, bpe.getModelInterface());
@@ -224,7 +224,7 @@ public final class JenaIOHandler extends BioPAXIOHandlerAdapter
 		} else
 		{
 			throw new IllegalBioPAXArgumentException(
-					"Could not locate editor! " + predicate + " element:" + bpe.getRDFId() + " property:" +
+					"Could not locate editor! " + predicate + " element:" + bpe.getUri() + " property:" +
 					localName);
 		}
 	}
@@ -304,7 +304,7 @@ public final class JenaIOHandler extends BioPAXIOHandlerAdapter
 				log.trace("ontClass = " + ontClass);
 			}
 
-			Individual individual = ontModel.createIndividual(bp.getRDFId(), ontClass);
+			Individual individual = ontModel.createIndividual(bp.getUri(), ontClass);
 			if (log.isTraceEnabled())
 			{
 				log.trace("individual = " + individual);

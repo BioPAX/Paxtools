@@ -72,7 +72,7 @@ public class ProvenanceImpl extends NamedImpl implements Provenance
 			// possible issues - when in a persistent context (e.g., lazy
 			// collections init...)
 			LOG.warn("toString: ", e);
-			return getRDFId();
+			return getUri();
 		}
 	}
 }

@@ -47,7 +47,7 @@ public class TransitivePropertyAccessor<R extends BioPAXElement, D extends R> ex
 			}
 			else {
 				//report loop
-				log.debug("Escaped an inf. loop (" + impl+ ") at " + value.getRDFId());
+				log.debug("Escaped an inf. loop (" + impl+ ") at " + value.getUri());
 			}
 		}
 	}

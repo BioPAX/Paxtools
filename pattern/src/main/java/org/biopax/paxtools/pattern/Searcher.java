@@ -65,8 +65,8 @@ public class Searcher
 		List<Match> result = new ArrayList<Match>();
 
 		// debug code
-//		if (match.get(2) != null && match.get(2).getRDFId().equals("http://pid.nci.nih.gov/biopaxpid_39918") &&
-//			match.get(6) != null && match.get(6).getRDFId().equals("http://pid.nci.nih.gov/biopaxpid_12411"))
+//		if (match.get(2) != null && match.get(2).getUri().equals("http://pid.nci.nih.gov/biopaxpid_39918") &&
+//			match.get(6) != null && match.get(6).getUri().equals("http://pid.nci.nih.gov/biopaxpid_12411"))
 //		{
 //			System.out.println();
 //		}
@@ -382,7 +382,7 @@ public class Searcher
 
 			for (Interaction anInt : ints)
 			{
-				pathway.addPathwayComponent((Process) clonedModel.getByID(anInt.getRDFId()));
+				pathway.addPathwayComponent((Process) clonedModel.getByID(anInt.getUri()));
 			}
 		}
 

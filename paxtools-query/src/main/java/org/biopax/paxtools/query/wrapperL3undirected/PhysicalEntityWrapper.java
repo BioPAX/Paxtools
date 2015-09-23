@@ -187,7 +187,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	 */
 	public String getKey()
 	{
-		return pe.getRDFId();
+		return pe.getUri();
 	}
 
 	/**
@@ -204,6 +204,6 @@ public class PhysicalEntityWrapper extends AbstractNode
 	@Override
 	public String toString()
 	{
-		return pe.getDisplayName() + " -- "+ pe.getRDFId();
+		return pe.getDisplayName() + " -- "+ pe.getUri();
 	}
 }

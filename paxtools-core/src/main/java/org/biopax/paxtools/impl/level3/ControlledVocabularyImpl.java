@@ -10,24 +10,9 @@ import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
-import org.biopax.paxtools.util.SetStringBridge;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
-
-import javax.persistence.*;
-import javax.persistence.Entity;
 
 import java.util.Set;
 
-@Entity
-@Proxy(proxyClass= ControlledVocabulary.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {
@@ -48,7 +33,6 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	@Transient
 	public Class<? extends ControlledVocabulary> getModelInterface()
 	{
 		return ControlledVocabulary.class;
@@ -63,11 +47,6 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 
 	// Property term
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ElementCollection(fetch=FetchType.EAGER)
-	@JoinTable(name="term")
-	@Field(name = FIELD_TERM, analyze=Analyze.YES)
-	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getTerm()
 	{
 		return term;
@@ -110,7 +89,7 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 	@Override
 	public String toString()
 	{
-		String ret = getRDFId();
+		String ret = getUri();
 		try {
 			// in a persistent context, there can be lazy collection initialization exception...
 			if(!term.isEmpty())

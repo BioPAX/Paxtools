@@ -70,7 +70,7 @@ public class UnificationIDtoRDFIDLister
 			{
 				System.out
 					.print(uni.getDB() + " : " + uni.getID() + " refers to " +
-						((physicalEntity) referrable).getRDFId());
+						((physicalEntity) referrable).getUri());
 			}
 		}
 	}

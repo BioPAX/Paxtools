@@ -70,12 +70,12 @@ public class RelatedGenesOfInteractionsMiner extends MinerAdapter
 
 			if (syms.size() > 1)
 			{
-				writer.write("\n" + ele.getRDFId());
+				writer.write("\n" + ele.getUri());
 
 				for (Object o : controlAcc.getValueFromBean(ele))
 				{
 					Control ctrl = (Control) o;
-					writer.write(" " + ctrl.getRDFId());
+					writer.write(" " + ctrl.getUri());
 				}
 
 				for (String sym : syms)

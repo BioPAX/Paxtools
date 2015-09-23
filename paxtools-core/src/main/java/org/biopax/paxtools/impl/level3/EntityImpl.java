@@ -5,27 +5,12 @@ import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.biopax.paxtools.util.DataSourceFieldBridge;
-import org.biopax.paxtools.util.SetStringBridge;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Store;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import java.util.Set;
 
 import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
 
-
-@javax.persistence.Entity
-@Proxy(proxyClass= Entity.class)
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class EntityImpl extends NamedImpl implements Entity
 {
 // ------------------------------ FIELDS ------------------------------
@@ -70,11 +55,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ElementCollection
-	@JoinTable(name="availability")
-	@Field(name=FIELD_AVAILABILITY, analyze=Analyze.YES)
-	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAvailability()
 	{
 		return availability;
@@ -97,11 +77,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 			this.availability.remove(availability_text);
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = ProvenanceImpl.class)
-	@JoinTable(name="dataSource")
-	@Field(name=FIELD_DATASOURCE, store=Store.YES, analyze=Analyze.NO)
-	@FieldBridge(impl=DataSourceFieldBridge.class)
 	public Set<Provenance> getDataSource()
 	{
 		return dataSource;
@@ -126,25 +101,16 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 
 // --------------------- Interface entity ---------------------
 
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = InteractionImpl.class, mappedBy = "participant")
 	public Set<Interaction> getParticipantOf()
 	{
 		return participantOf;
 	}
 
-	protected void setParticipantOf(Set<Interaction> participantOf)
-	{
-		this.participantOf= participantOf;
-	}
 
 	//
 	// observable interface implementation
 	//
 	/////////////////////////////////////////////////////////////////////////////
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EvidenceImpl.class)
-	@JoinTable(name="evidence")
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;

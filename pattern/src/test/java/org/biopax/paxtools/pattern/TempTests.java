@@ -11,7 +11,6 @@ import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.HGNC;
-import org.biopax.paxtools.pattern.util.RelType;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -46,7 +45,7 @@ public class TempTests
 			{
 				if (prc instanceof Conversion)
 				{
-					System.out.println(prc.getRDFId());
+					System.out.println(prc.getUri());
 					System.exit(0);
 				}
 			}
@@ -62,7 +61,7 @@ public class TempTests
 //
 //					if (cnv.getLeft().contains(sm) && cnv.getRight().contains(sm))
 //					{
-//						System.out.println(sm.getDisplayName() + "\t" + cnv.getRDFId());
+//						System.out.println(sm.getDisplayName() + "\t" + cnv.getUri());
 //					}
 //				}
 //			}
@@ -97,7 +96,7 @@ public class TempTests
 		for (Pathway pat : pats)
 		{
 			System.out.println(pat.getPathwayComponent().size() + "\t" + pat.getDisplayName());
-			System.out.println(pat.getRDFId());
+			System.out.println(pat.getUri());
 		}
 	}
 
@@ -468,7 +467,7 @@ public class TempTests
 				Catalysis cat = (Catalysis) model1.getByID(contURI);
 				for (Process prc : cat.getControlled())
 				{
-					System.out.println("prc = " + prc.getRDFId());
+					System.out.println("prc = " + prc.getUri());
 				}
 				System.out.println(f);
 			}
@@ -508,7 +507,7 @@ public class TempTests
 		{
 			if (!map2.containsKey(ele))
 			{
-				System.out.println(ele.getRDFId());
+				System.out.println(ele.getUri());
 			}
 		}
 
@@ -523,7 +522,7 @@ public class TempTests
 	{
 		for (BioPAXElement e1 : m1.getObjects())
 		{
-			BioPAXElement e2 = m2.getByID(e1.getRDFId());
+			BioPAXElement e2 = m2.getByID(e1.getUri());
 
 			if (!e1.equals(e2)) System.out.println("Not equal!!");
 		}

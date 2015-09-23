@@ -69,7 +69,7 @@ public abstract class AbstractTraverser extends Traverser implements Visitor
 		if(visited.add(element)) {
 			super.traverse(element, model);//calls visit method for each property value, taking prop. filters into acc.
 		} else {
-			log.debug("Escaped a loop: again " + element.getRDFId());
+			log.debug("Escaped a loop: again " + element.getUri());
 		}
 	}
 

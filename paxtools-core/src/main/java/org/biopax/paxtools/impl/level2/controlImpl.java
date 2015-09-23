@@ -70,8 +70,8 @@ class controlImpl extends physicalInteractionAdapter
 			if (!checkCONTROLLED(aProcess))
 			{
 				throw new IllegalBioPAXArgumentException("Illegal argument "
-					+ "Attempting to set " + aProcess + " (id:" + aProcess.getRDFId() + ") to " +
-					this + " (id:" + this.getRDFId() + ")");
+					+ "Attempting to set " + aProcess + " (id:" + aProcess.getUri() + ") to " +
+					this + " (id:" + this.getUri() + ")");
 			}
 		}
 		updatePARTICIPANTS(this.CONTROLLED, this.CONTROLLED = CONTROLLED);
@@ -82,8 +82,8 @@ class controlImpl extends physicalInteractionAdapter
 		if (!checkCONTROLLED(CONTROLLED))
 		{
 			throw new IllegalBioPAXArgumentException("Illegal argument "
-				+ "Attempting to set " + CONTROLLED.getRDFId() + " to " +
-				this.getRDFId());
+				+ "Attempting to set " + CONTROLLED.getUri() + " to " +
+				this.getUri());
 		}
 
 		this.CONTROLLED.add(CONTROLLED);

@@ -85,7 +85,7 @@ public class GOUnificationXREFtoRelationshipXREFConverter
             if (uni.getDB().equalsIgnoreCase("GO"))
 			{
 				//this it to avoid concurrent modification.
-				log.info("scheduling " + uni.getRDFId());
+				log.info("scheduling " + uni.getUri());
 				gos.add(uni);
 
 			}
@@ -117,7 +117,7 @@ public class GOUnificationXREFtoRelationshipXREFConverter
 
         //Create the new relationship xref in the model.
         relationshipXref relationshipXref =
-        	level2.addNew(relationshipXref.class, uni.getRDFId());
+        	level2.addNew(relationshipXref.class, uni.getUri());
 
         //Copy the fields from uni
 		relationshipXref.setCOMMENT(uni.getCOMMENT());

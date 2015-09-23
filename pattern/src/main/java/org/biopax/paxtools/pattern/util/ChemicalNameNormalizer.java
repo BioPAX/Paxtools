@@ -57,7 +57,7 @@ public class ChemicalNameNormalizer
 
 		for (SmallMoleculeReference smr : model.getObjects(SmallMoleculeReference.class))
 		{
-			if (smr.getRDFId().startsWith("http://identifiers")) standard.add(smr);
+			if (smr.getUri().startsWith("http://identifiers")) standard.add(smr);
 			else other.add(smr);
 		}
 

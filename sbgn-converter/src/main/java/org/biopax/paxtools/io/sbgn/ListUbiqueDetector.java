@@ -33,6 +33,6 @@ public class ListUbiqueDetector implements UbiqueDetector
 	@Override
 	public boolean isUbique(PhysicalEntity pe)
 	{
-		return ubiqueIDs.contains(pe.getRDFId());
+		return ubiqueIDs.contains(pe.getUri());
 	}
 }

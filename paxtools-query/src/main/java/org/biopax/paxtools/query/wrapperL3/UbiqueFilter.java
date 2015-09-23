@@ -33,6 +33,6 @@ public class UbiqueFilter extends Filter
 	@Override
 	public boolean okToTraverse(Level3Element ele)
 	{
-		return !ubiqueIDs.contains(ele.getRDFId());
+		return !ubiqueIDs.contains(ele.getUri());
 	}
 }

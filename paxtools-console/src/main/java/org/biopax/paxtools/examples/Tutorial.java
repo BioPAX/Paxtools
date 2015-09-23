@@ -242,7 +242,7 @@ public class Tutorial
   Set<BioPAXElement> elementSet = model.getObjects();
   for (BioPAXElement currentElement : elementSet)
   {
-   String rdfId = currentElement.getRDFId();
+   String rdfId = currentElement.getUri();
    String className = currentElement.getClass().getName();
    System.out.println("Element:  " + rdfId + ": " + className);
   }

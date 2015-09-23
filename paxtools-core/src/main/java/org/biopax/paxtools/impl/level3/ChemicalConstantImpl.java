@@ -3,21 +3,10 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ChemicalConstant;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Proxy;
-
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 import static java.lang.Float.compare;
 
-@Entity
-@Proxy(proxyClass=ChemicalConstant.class)
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public abstract class ChemicalConstantImpl extends L3ElementImpl implements ChemicalConstant {
     float ionicStrength;
     float ph;
@@ -63,8 +52,7 @@ public abstract class ChemicalConstantImpl extends L3ElementImpl implements Chem
         this.temperature = temperature;
     }
 
-    @Transient
-        public Class<? extends ChemicalConstant> getModelInterface() {
+    public Class<? extends ChemicalConstant> getModelInterface() {
         return ChemicalConstant.class;
     }
 

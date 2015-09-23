@@ -52,11 +52,11 @@ public class Cloner implements Visitor
 		for (BioPAXElement bpe : new HashSet<BioPAXElement>(toBeCloned))
 		{
 			// make a copy (all properties are empty except for ID)
-			if(targetModel.containsID(bpe.getRDFId())) {
+			if(targetModel.containsID(bpe.getUri())) {
 				throw new RuntimeException("There are same URI different objects "
-						+ "in the input set, uri:" + bpe.getRDFId());
+						+ "in the input set, uri:" + bpe.getUri());
 			}
-			targetModel.addNew(bpe.getModelInterface(), bpe.getRDFId());
+			targetModel.addNew(bpe.getModelInterface(), bpe.getUri());
 		}
 
 		// a hack to avoid unnecessary checks for the valid sub-model being cloned, 
@@ -78,12 +78,12 @@ public class Cloner implements Visitor
 
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-		BioPAXElement targetDomain = targetModel.getByID(domain.getRDFId());
+		BioPAXElement targetDomain = targetModel.getByID(domain.getUri());
 		
 		if (range instanceof BioPAXElement)
 		{
 			BioPAXElement bpe = (BioPAXElement) range;
-			BioPAXElement existing = targetModel.getByID(bpe.getRDFId());
+			BioPAXElement existing = targetModel.getByID(bpe.getUri());
 			//set the property value if the value is already present in the target 
 			if (existing != null) {
 				editor.setValueToBean(existing, targetDomain);

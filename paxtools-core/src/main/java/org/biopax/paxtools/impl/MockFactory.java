@@ -164,10 +164,10 @@ public class MockFactory extends BioPAXFactory
 			ArrayList<String> list = new ArrayList<String>(4);
 			for (String str : strings)
 			{
-				list.add(bpe.getRDFId() + str);
+				list.add(bpe.getUri() + str);
 			}
 			return list;
-		} else return bpe.getRDFId() + strings.get(3);
+		} else return bpe.getUri() + strings.get(3);
 	}
 
 	private HashSet<BioPAXElement> createRestrictedMock(ObjectPropertyEditor propertyEditor, BioPAXElement bpe, int k)

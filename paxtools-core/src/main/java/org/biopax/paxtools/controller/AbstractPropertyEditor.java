@@ -432,7 +432,7 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 					this.getPrimarySetMethod().getName() + " bean:" + bean + " val:" + value);
 		} else
 		{
-			log.error("setMethod is null; " + " bean:" + bean + " (" + bean.getRDFId() + ") val:" + value);
+			log.error("setMethod is null; " + " bean:" + bean + " (" + bean.getUri() + ") val:" + value);
 		}
 
 		// 'null' definitely means 'unknown'for single cardinality props

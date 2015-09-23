@@ -63,7 +63,7 @@ public class ReactomeEntitySetUnificationXrefFix
 				for (unificationXref uni : unis)
 				{
 					relationshipXref rel;
-					String rid = uni.getRDFId() + "-r";
+					String rid = uni.getUri() + "-r";
 					BioPAXElement exists = level2.getByID(rid);
 					if (exists != null)
 					{

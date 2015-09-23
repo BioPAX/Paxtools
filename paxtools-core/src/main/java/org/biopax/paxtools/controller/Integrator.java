@@ -355,22 +355,22 @@ public class Integrator {
             conversion conv1 = convScore.getConversion1(),
                        conv2 = convScore.getConversion2();
             // If they are already the same, pass
-            if( conv1.getRDFId().equals(conv2.getRDFId()) )
+            if( conv1.getUri().equals(conv2.getUri()) )
                 continue;
 
             // Do not modify it twice
             if( doNotModifySet.contains(conv2) ) {
-                log.info(conv2.getRDFId() + " has already been modified. Skipped.");
+                log.info(conv2.getUri() + " has already been modified. Skipped.");
                 continue;
             }
 
             // Self remove operations
             if( isSelfRemove() ) {
                 // Remove "conv2" from target, if the corresponding flag is set true
-                BioPAXElement eqBPE = target.getByID(conv2.getRDFId());
+                BioPAXElement eqBPE = target.getByID(conv2.getUri());
                 if( eqBPE != null ) {
                     target.remove( eqBPE );
-                    log.info("Self removing: " + eqBPE.getRDFId());
+                    log.info("Self removing: " + eqBPE.getUri());
 
                     // Collect other matches of will-be-removed element.
                     for(ConversionScore tempCS: similarConversions) {
@@ -426,18 +426,18 @@ public class Integrator {
     private void equalize(BioPAXElement e1, BioPAXElement e2) {
         // Operation below is enough for the time being
     	// TODO re-factoring: setRDFId is not available anymore! (We don't really want to change rdfIDs, do we?..)
-        //e2.setRDFId(e1.getRDFId());
+        //e2.setRDFId(e1.getUri());
 
     	throw new UnsupportedOperationException("This needs re-factoring: bpe.setRDFId is not available anymore!");
 
     	//TODO ? use some alternative way to store that a1 equals e2, e.g., Set<String> matched,
-    	//matched.add(e1.getRDFId()+e2.getRDFId()); matched.add(e2.getRDFId()+e1.getRDFId());
+    	//matched.add(e1.getUri()+e2.getUri()); matched.add(e2.getUri()+e1.getUri());
     }
 
     private boolean equals(BioPAXElement a, BioPAXElement b) {
     	throw new UnsupportedOperationException("not implemented yet.");
     	// TODO ? implement equals(BioPAXElement a, BioPAXElement b): can be smth. like the following... and use below
-    	//return (a == null) ? b == null : a.equals(b) || matched.contains(a.getRDFId()+b.getRDFId());
+    	//return (a == null) ? b == null : a.equals(b) || matched.contains(a.getUri()+b.getUri());
     }
 
     private void equalizePEP(physicalEntityParticipant controller1, physicalEntityParticipant controller2) {
@@ -550,7 +550,7 @@ public class Integrator {
                     continue;
                 }
 
-                if( conv1.getRDFId().equals(conv2.getRDFId())) { // If they are the same
+                if( conv1.getUri().equals(conv2.getUri())) { // If they are the same
                     convCnt++;
                     continue;
                 }
@@ -943,13 +943,13 @@ public class Integrator {
                     = ((physicalEntityParticipant) pep).getCELLULAR_LOCATION();
 
             if( ov == null ) {
-                if( model.getByID(mostlyUsed.getRDFId()) == null ) {
-                    ov = model.addNew(openControlledVocabulary.class, mostlyUsed.getRDFId());
+                if( model.getByID(mostlyUsed.getUri()) == null ) {
+                    ov = model.addNew(openControlledVocabulary.class, mostlyUsed.getUri());
                     ov.setCOMMENT( mostlyUsed.getCOMMENT() );
                     ov.setTERM( mostlyUsed.getTERM() );
                     ov.setXREF( mostlyUsed.getXREF() );
                 } else {
-                    ov = (openControlledVocabulary) model.getByID(mostlyUsed.getRDFId());
+                    ov = (openControlledVocabulary) model.getByID(mostlyUsed.getUri());
                 }
 
                 ((physicalEntityParticipant) pep).setCELLULAR_LOCATION(ov);

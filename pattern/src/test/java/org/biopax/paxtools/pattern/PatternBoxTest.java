@@ -128,6 +128,6 @@ public class PatternBoxTest
 	protected String name(BioPAXElement ele)
 	{
 		if (ele instanceof Named) return ((Named) ele).getDisplayName();
-		return ele.getRDFId();
+		return ele.getUri();
 	}
 }

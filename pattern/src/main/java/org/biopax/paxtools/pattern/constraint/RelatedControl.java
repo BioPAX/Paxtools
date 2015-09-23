@@ -8,7 +8,6 @@ import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.RelType;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -82,7 +81,7 @@ public class RelatedControl extends ConstraintAdapter
 			(peType == RelType.OUTPUT && getConvParticipants(conv, RelType.OUTPUT).contains(pe))))
 			throw new IllegalArgumentException("peType = " + peType +
 				", and related participant set does not contain this PE. Conv dir = " +
-				getDirection(conv) + " conv.id=" + conv.getRDFId() + " pe.id=" +pe.getRDFId());
+				getDirection(conv) + " conv.id=" + conv.getUri() + " pe.id=" +pe.getUri());
 
 		boolean rightContains = conv.getRight().contains(pe);
 		boolean leftContains = conv.getLeft().contains(pe);

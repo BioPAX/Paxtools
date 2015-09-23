@@ -77,7 +77,7 @@ public class ControlWrapper extends AbstractNode
 	 */
 	public String getKey()
 	{
-		return ctrl.getRDFId();
+		return ctrl.getUri();
 	}
 
 	/**

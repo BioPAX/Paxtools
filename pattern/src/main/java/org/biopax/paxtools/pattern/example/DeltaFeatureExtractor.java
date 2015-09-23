@@ -119,7 +119,7 @@ public class DeltaFeatureExtractor
 								List<BioPAXElement> meds = m.get(getMediatorLabels(), getPattern());
 								for (BioPAXElement med : meds)
 								{
-									mediators.get(s1s).get(s2s).add(med.getRDFId());
+									mediators.get(s1s).get(s2s).add(med.getUri());
 								}
 
 								// record modifications and cellular locations of the source molecule

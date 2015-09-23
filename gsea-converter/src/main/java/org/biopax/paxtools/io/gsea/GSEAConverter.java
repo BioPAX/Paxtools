@@ -189,7 +189,7 @@ public class GSEAConverter
 					? pathway.getStandardName() : pathway.getDisplayName();
 			
 			if(name == null || name.isEmpty()) 
-				name = pathway.getRDFId();
+				name = pathway.getUri();
 
 			final Pathway currentPathway = pathway;
 			final String currentPathwayName = name;
@@ -199,7 +199,7 @@ public class GSEAConverter
 			exe.submit(new Runnable() {
 				@Override
 				public void run() {
-					LOG.info("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getRDFId());
+					LOG.info("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getUri());
 
 					final Set<ProteinReference> pathwayProteinRefs = new HashSet<ProteinReference>();
 
@@ -219,7 +219,7 @@ public class GSEAConverter
 								Pathway subPathway = (Pathway) bpe;
 								if(ignoreSubPathways)
 								{	//do not traverse into the sub-pathway; log
-									LOG.info("Skipping sub-pathway: " + subPathway.getRDFId());
+									LOG.info("Skipping sub-pathway: " + subPathway.getUri());
 								} else {
 									traverse(subPathway, null);
 								}
@@ -344,11 +344,11 @@ public class GSEAConverter
 				String lowercaseDb = database.toLowerCase();
 				// a shortcut if we are converting validated normalized BioPAX model:
 				// get the primary ID from the URI of the ProteinReference
-				final String lowcaseUri = aProteinRef.getRDFId().toLowerCase();
+				final String lowcaseUri = aProteinRef.getUri().toLowerCase();
 				if (lowcaseUri.startsWith("http://identifiers.org/")
 					&& lowcaseUri.contains(lowercaseDb))
 				{
-					String accession = aProteinRef.getRDFId();
+					String accession = aProteinRef.getUri();
 					accession = accession.substring(accession.lastIndexOf("/") + 1);
 					targetEntry.getIdentifiers().add(accession);
 				} 
@@ -374,7 +374,7 @@ public class GSEAConverter
 				}
 			} else {
 				// use URI (not really useful for GSEA software, but good for testing/hacking)
-				targetEntry.getIdentifiers().add(aProteinRef.getRDFId());
+				targetEntry.getIdentifiers().add(aProteinRef.getUri());
 			}
 		}
 	}

@@ -371,7 +371,7 @@ public class L3ToSBGNPDConverter
 	 */
 	private Glyph createGlyph(PhysicalEntity pe)
 	{
-		String id = convertID(pe.getRDFId());
+		String id = convertID(pe.getUri());
 		if (glyphMap.containsKey(id)) return glyphMap.get(id);
 
 		// Create its glyph and register
@@ -432,7 +432,7 @@ public class L3ToSBGNPDConverter
 		String s = typeMatchMap.get(pe.getModelInterface());
 
 		Glyph g = factory.createGlyph();
-		g.setId(convertID(pe.getRDFId()));
+		g.setId(convertID(pe.getUri()));
 		g.setClazz(s);
 
 		// Set the label
@@ -457,7 +457,7 @@ public class L3ToSBGNPDConverter
 		if (idIsFinal)
 		{
 			sbgn2BPMap.put(g.getId(), new HashSet<String>());
-			sbgn2BPMap.get(g.getId()).add(pe.getRDFId());
+			sbgn2BPMap.get(g.getId()).add(pe.getUri());
 		}
 		return g;
 	}
@@ -472,16 +472,16 @@ public class L3ToSBGNPDConverter
 	{
 		if (ubiqueDet == null || !ubiqueDet.isUbique(pe))
 		{
-			return glyphMap.get(convertID(pe.getRDFId()));
+			return glyphMap.get(convertID(pe.getUri()));
 		}
 		else
 		{
 			// Create a new glyph for each use of ubique
 			Glyph g = createGlyphBasics(pe, false);
-			g.setId(convertID(pe.getRDFId()) + linkID);
+			g.setId(convertID(pe.getUri()) + linkID);
 
 			sbgn2BPMap.put(g.getId(), new HashSet<String>());
-			sbgn2BPMap.get(g.getId()).add(pe.getRDFId());
+			sbgn2BPMap.get(g.getId()).add(pe.getUri());
 
 			assignLocation(pe, g);
 			ubiqueSet.add(g);
@@ -496,7 +496,7 @@ public class L3ToSBGNPDConverter
 	 */
 	private void createComplexContent(Complex cx)
 	{
-		Glyph cg = glyphMap.get(convertID(cx.getRDFId()));
+		Glyph cg = glyphMap.get(convertID(cx.getUri()));
 
 		if (flattenComplexContent)
 		{
@@ -611,7 +611,7 @@ public class L3ToSBGNPDConverter
 		glyphMap.put(g.getId(), g);
 
 		sbgn2BPMap.put(g.getId(), new HashSet<String>());
-		sbgn2BPMap.get(g.getId()).add(pe.getRDFId());
+		sbgn2BPMap.get(g.getId()).add(pe.getUri());
 
 		return g;
 	}
@@ -906,7 +906,7 @@ public class L3ToSBGNPDConverter
 
 		Glyph process = factory.createGlyph();
 		process.setClazz(PROCESS.getClazz());
-		process.setId(convertID(cnv.getRDFId()) + direction);
+		process.setId(convertID(cnv.getUri()) + direction);
 		glyphMap.put(process.getId(), process);
 
 		// Determine input and output sets
@@ -967,7 +967,7 @@ public class L3ToSBGNPDConverter
 		// Record mapping
 
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
-		sbgn2BPMap.get(process.getId()).add(cnv.getRDFId());
+		sbgn2BPMap.get(process.getId()).add(cnv.getUri());
 	}
 
 	/**
@@ -996,7 +996,7 @@ public class L3ToSBGNPDConverter
 
 		Glyph process = factory.createGlyph();
 		process.setClazz(PROCESS.getClazz());
-		process.setId(convertID(tr.getRDFId()));
+		process.setId(convertID(tr.getUri()));
 		glyphMap.put(process.getId(), process);
 
 		// Add input and output ports
@@ -1029,7 +1029,7 @@ public class L3ToSBGNPDConverter
 		// Record mapping
 
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
-		sbgn2BPMap.get(process.getId()).add(tr.getRDFId());
+		sbgn2BPMap.get(process.getId()).add(tr.getUri());
 	}
 
 	/**
@@ -1051,7 +1051,7 @@ public class L3ToSBGNPDConverter
 
 		else if (controllers.size() == 1 && getControllerSize(ctrl.getControlledOf()) == 0)
 		{
-			cg = getGlyphToLink(controllers.iterator().next(), convertID(ctrl.getRDFId()));
+			cg = getGlyphToLink(controllers.iterator().next(), convertID(ctrl.getUri()));
 		}
 
 		else
@@ -1061,7 +1061,7 @@ public class L3ToSBGNPDConverter
 
 			// Bundle controllers if necessary
 
-			Glyph gg = handlePEGroup(controllers, convertID(ctrl.getRDFId()));
+			Glyph gg = handlePEGroup(controllers, convertID(ctrl.getUri()));
 			if(gg != null)
 				toConnect.add(gg);
 
@@ -1088,7 +1088,7 @@ public class L3ToSBGNPDConverter
 			if (ctrl instanceof Catalysis)
 			{
 				Set<PhysicalEntity> cofs = ((Catalysis) ctrl).getCofactor();
-				Glyph g = handlePEGroup(cofs, convertID(ctrl.getRDFId()));
+				Glyph g = handlePEGroup(cofs, convertID(ctrl.getUri()));
 				if (g != null) 
 					toConnect.add(g);
 			}
@@ -1123,7 +1123,7 @@ public class L3ToSBGNPDConverter
 			List<Glyph> gs = getGlyphsOfPEs(pes, context);
 			return connectWithAND(gs);
 		}
-		else if (sz == 1 && glyphMap.containsKey(convertID(pes.iterator().next().getRDFId())))
+		else if (sz == 1 && glyphMap.containsKey(convertID(pes.iterator().next().getUri())))
 		{
 			return getGlyphToLink(pes.iterator().next(), context);
 		}
@@ -1143,7 +1143,7 @@ public class L3ToSBGNPDConverter
 		List<Glyph> gs = new ArrayList<Glyph>();
 		for (PhysicalEntity pe : pes)
 		{
-			if (glyphMap.containsKey(convertID(pe.getRDFId())))
+			if (glyphMap.containsKey(convertID(pe.getUri())))
 			{
 				gs.add(getGlyphToLink(pe, context));
 			}
@@ -1293,7 +1293,7 @@ public class L3ToSBGNPDConverter
 		Set<PhysicalEntity> controllers = new HashSet<PhysicalEntity>();
 		for (Controller clr : ctrl.getController())
 		{
-			if (clr instanceof PhysicalEntity && glyphMap.containsKey(convertID(clr.getRDFId())))
+			if (clr instanceof PhysicalEntity && glyphMap.containsKey(convertID(clr.getUri())))
 			{
 				controllers.add((PhysicalEntity) clr);
 			}

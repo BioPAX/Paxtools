@@ -4,21 +4,10 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 import java.util.Set;
-import javax.persistence.Entity;
 
-@Entity
-@Proxy(proxyClass= Complex.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class ComplexImpl extends PhysicalEntityImpl implements Complex
 {
 // ------------------------------ FIELDS ------------------------------
@@ -39,8 +28,6 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 
 // --------------------- Interface BioPAXElement ---------------------
 
-
-	@Transient
 	public Class<? extends Complex> getModelInterface()
 	{
 		return Complex.class;
@@ -49,10 +36,6 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 // --------------------- Interface Complex ---------------------
 
 // --------------------- ACCESORS and MUTATORS---------------------
-	
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="component")
 	public Set<PhysicalEntity> getComponent()
 	{
 		return component;
@@ -79,9 +62,6 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		this.component = component;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = StoichiometryImpl.class)
-	@JoinTable(name="complexstoichiometry")		
 	public Set<Stoichiometry> getComponentStoichiometry()
 	{
 		return componentStoichiometry;
@@ -106,13 +86,11 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		this.componentStoichiometry = stoichiometry;
 	}
 
-	@Transient
 	public Set<SimplePhysicalEntity> getSimpleMembers()
 	{
 		return getSimpleMembers(BPCollections.I.<SimplePhysicalEntity>createSet());
 	}
 
-	@Transient
 	protected Set<SimplePhysicalEntity> getSimpleMembers(Set<SimplePhysicalEntity> set)
 	{
 		for (PhysicalEntity pe : this.getComponent())
@@ -138,7 +116,6 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		}
 	}
 
-	@Transient
 	public Set<EntityReference> getMemberReferences()
 	{
 		Set<EntityReference> set = BPCollections.I.createSet();
@@ -151,20 +128,11 @@ public class ComplexImpl extends PhysicalEntityImpl implements Complex
 		return set;
 	}
 
-	@Transient
-	public Class<? extends PhysicalEntity> getPhysicalEntityClass()
-	{
-		return Complex.class;
-	}
-
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		if (!(element instanceof Complex))
-			return false;
-		
-		return SetEquivalenceChecker
-				.isEquivalent(this.getComponent(), ((Complex) element).getComponent())
-				&& super.semanticallyEquivalent(element);
+		return (element instanceof Complex) &&
+				SetEquivalenceChecker.isEquivalent(this.getComponent(), ((Complex) element).getComponent())
+					&& super.semanticallyEquivalent(element);
 	}
 }

@@ -5,10 +5,6 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.model.AbstractNode;
 import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.Graph;
-import org.biopax.paxtools.query.model.Node;
-
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Wrapper for TemplateReaction class.
@@ -120,7 +116,7 @@ public class TemplateReactionWrapper extends EventWrapper
 	 */
 	public String getKey()
 	{
-		return tempReac.getRDFId();
+		return tempReac.getUri();
 	}
 
 	/**

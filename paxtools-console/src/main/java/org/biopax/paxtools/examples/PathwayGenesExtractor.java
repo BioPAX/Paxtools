@@ -170,7 +170,7 @@ public class PathwayGenesExtractor implements Visitor {
 	
 	// Gets the local part of the RDF ID (- beyond the last '#')
 	static String getLocalId(BioPAXElement bpe) {
-		String id = bpe.getRDFId();
+		String id = bpe.getUri();
 		return id.replaceFirst("^.+?#", "");
 	}
 

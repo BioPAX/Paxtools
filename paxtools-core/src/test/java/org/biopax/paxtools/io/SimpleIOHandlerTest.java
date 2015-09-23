@@ -314,7 +314,7 @@ public class SimpleIOHandlerTest
         // Let's do a simple check to see if whether new model is OK
         for(BioPAXElement bpe: model.getObjects())
         {
-            assertTrue(newModel.containsID(bpe.getRDFId()));
+            assertTrue(newModel.containsID(bpe.getUri()));
         }
     }
     

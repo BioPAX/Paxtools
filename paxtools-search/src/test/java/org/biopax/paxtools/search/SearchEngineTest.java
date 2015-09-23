@@ -127,13 +127,13 @@ public class SearchEngineTest {
 		int i=0;
 		for(BioPAXElement bpe : response.getHits()) {
 			System.out.println(String.format("Hit %d: %s; size: %s; excerpt: %s", 
-					++i, bpe.getRDFId(), 
+					++i, bpe.getUri(),
 					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
 		}		
 		assertEquals(3, response.getHits().size());
 		assertEquals(3, response.getTotalHits());
-		assertEquals("http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b", response.getHits().get(0).getRDFId());	
+		assertEquals("http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b", response.getHits().get(0).getUri());
 		//the order of hits is alright, though we'd love to see REACT_12034.3 on top...
 		
 		// more accurate search in all the default fields using quotation marks around -
@@ -141,21 +141,21 @@ public class SearchEngineTest {
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());
 		assertEquals(1, response.getTotalHits());
-		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getRDFId());	
+		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getUri());
 		
 		//Next, narrow search in 'name' field only using quoted string
 		response = searchEngine.search("name:\"Signaling by BMP\"", 0, Pathway.class, null, null);
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());
 //		for(BioPAXElement bpe : response.getHits()) {
-//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
+//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
 //					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 //					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
 //		}
 		//there are three BMP pathways (one is an empty pathway), and a sub-pathway (should not match) -
 		assertEquals(1, response.getHits().size());
 		assertEquals(1, response.getTotalHits());
-		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getRDFId());
+		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getUri());
 		
 		
 		//Next, search in 'pathway' field only, using quoted string
@@ -163,20 +163,20 @@ public class SearchEngineTest {
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());		
 //		for(BioPAXElement bpe : response.getHits()) {
-//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
+//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
 //					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 //					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
 //		}		
 		//there is one pathway, and no sub-pathways of it
 		assertEquals(1, response.getHits().size());
 		assertEquals(1, response.getTotalHits());
-		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getRDFId());
+		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getUri());
 		
 		response = searchEngine.search("pathway:\"bmp receptor signaling\"", 0, Pathway.class, null, null);
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());		
 //		for(BioPAXElement bpe : response.getHits()) {
-//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getRDFId(), 
+//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
 //					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 //					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
 //		}	
@@ -184,6 +184,6 @@ public class SearchEngineTest {
 		// - the second pathway is a trivial one, member of Pathway_3f75176b9a6272a62f9257f0540dc63b and of many other parent pathways.
 		
 		//check the top pathway is the main one (parent)
-		assertEquals("http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b", response.getHits().get(0).getRDFId());
+		assertEquals("http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b", response.getHits().get(0).getUri());
 	}
 }

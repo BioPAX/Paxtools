@@ -114,7 +114,7 @@ public class GraphL3Undirected extends AbstractGraph
 	{
 		if (wrapped instanceof BioPAXElement)
 		{
-			return ((BioPAXElement) wrapped).getRDFId();
+			return ((BioPAXElement) wrapped).getUri();
 		}
 
 		throw new IllegalArgumentException("Object cannot be wrapped: " + wrapped);

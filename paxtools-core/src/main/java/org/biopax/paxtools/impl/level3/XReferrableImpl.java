@@ -3,7 +3,6 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.BPCollections;
-import org.biopax.paxtools.util.XrefFieldBridge;
 import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Boost;

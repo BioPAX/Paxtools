@@ -180,7 +180,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 				if (ip instanceof physicalEntity) { 
 					physicalEntity pe = (physicalEntity) ip;
 					// create a new pEP
-					String newId = itr.getRDFId() + "_"	+ getLocalId(pe);
+					String newId = itr.getUri() + "_"	+ getLocalId(pe);
 					physicalEntityParticipant pep = model.addNew(physicalEntityParticipant.class, newId);
 					pep.setPHYSICAL_ENTITY(pe);
 					// no other properties though
@@ -218,13 +218,13 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 		
 		if(bpe instanceof physicalEntityParticipant)
 		{
-			String id = pep2PE.get(bpe.getRDFId());
+			String id = pep2PE.get(bpe.getUri());
 
 			if(id == null) {
-				log.warn("No mapping possible for " + bpe.getRDFId());
+				log.warn("No mapping possible for " + bpe.getUri());
 				return null;
 			}
-			else if (id.equals(bpe.getRDFId()))
+			else if (id.equals(bpe.getUri()))
 			{
 				// create a new simplePhysicalEntity
 				//(excluding Complex and basic PhysicalEntity that map directly and have no ERs)
@@ -238,7 +238,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 			String newType = classesmap.getProperty(type).trim();
 			if (newType != null && factory.canInstantiate(factory.getLevel().getInterfaceForName(newType)))
             {
-				newElement = (Level3Element) factory.create(newType, bpe.getRDFId());
+				newElement = (Level3Element) factory.create(newType, bpe.getUri());
 			} else {
 				if(log.isDebugEnabled())
 					log.debug("No mapping found for " + type);
@@ -258,7 +258,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 	 */
 	private SimplePhysicalEntity createSimplePhysicalEntity(physicalEntityParticipant pep) {
 		physicalEntity pe2 = pep.getPHYSICAL_ENTITY();
-		return createSimplePhysicalEntity(pe2, pep.getRDFId());
+		return createSimplePhysicalEntity(pe2, pep.getUri());
 	}
 
 	private SimplePhysicalEntity createSimplePhysicalEntity(physicalEntity pe2, String id) {
@@ -283,7 +283,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 	private ControlledVocabulary convertAndAddVocabulary(openControlledVocabulary value,
 			Level2Element parent, Model newModel, PropertyEditor newEditor)
 	{
-		String id = ((BioPAXElement) value).getRDFId();
+		String id = ((BioPAXElement) value).getUri();
 
 		if (!newModel.containsID(id)) {
 			if (newEditor != null) {
@@ -322,7 +322,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 			if(parent instanceof physicalEntityParticipant) {
 				newParent = getMappedPE((physicalEntityParticipant) parent, newModel);
 			} else {
-				newParent = newModel.getByID(parent.getRDFId());
+				newParent = newModel.getByID(parent.getUri());
 			}
 
 			// bug check!
@@ -350,18 +350,18 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 						PhysicalEntity pe3 = (PhysicalEntity) newValue;
 						Stoichiometry stoichiometry = factory
 							.create(Stoichiometry.class,
-                                    pe3.getRDFId() + "-stoichiometry" + Math.random());
+                                    pe3.getUri() + "-stoichiometry" + Math.random());
 						stoichiometry.setStoichiometricCoefficient(coeff);
 						stoichiometry.setPhysicalEntity(pe3);
 						//System.out.println("parent=" + parent + "; phy.ent.=" + pep + "; coeff=" + coeff);
 						if (parent instanceof conversion) {
 							// (pep) value participates in the conversion interaction
 							Conversion conv = (Conversion) newModel
-								.getByID(parent.getRDFId());
+								.getByID(parent.getUri());
 							conv.addParticipantStoichiometry(stoichiometry);	
 						} else {
 							// this (pep) value is component of the complex
-							Complex cplx = (Complex) newModel.getByID(parent.getRDFId());
+							Complex cplx = (Complex) newModel.getByID(parent.getUri());
 							cplx.addComponentStoichiometry(stoichiometry);
 						} 
 						
@@ -385,7 +385,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 				}
 				else
 				{
-					String id = ((Level2Element) value).getRDFId();
+					String id = ((Level2Element) value).getUri();
 					newValue = newModel.getByID(id);
 				}
 			}
@@ -411,7 +411,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 			
 			if(newValue == null) {
 				log.warn("Skipping:  " + parent + "." + editor.getProperty() 
-					+ "=" + value + " ==> " + newParent.getRDFId() 
+					+ "=" + value + " ==> " + newParent.getUri()
 					+ "." + newProp	+ "=NULL");
 				return;
 			}
@@ -470,12 +470,12 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 	 */
 	private PhysicalEntity getMappedPE(physicalEntityParticipant pep, Model newModel)
 	{
-		String id = pep2PE.get(pep.getRDFId());
+		String id = pep2PE.get(pep.getUri());
 		physicalEntity pe2er = pep.getPHYSICAL_ENTITY();
 		
 		if(id == null || pe2er == null)
 			throw new IllegalAccessError("Illegal pEP (cannot convert): " 
-				+ pep.getRDFId()); 
+				+ pep.getUri());
 		
 		BioPAXElement pe = newModel.getByID(id);
 		String inf = "pEP " + pep + " that contains " 
@@ -483,8 +483,8 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 		if(!isSimplePhysicalEntity(pe2er)) {
 			if(pe == null) {
 				if(log.isDebugEnabled())
-					log.debug(inf + " gets new ID: " + pe2er.getRDFId());
-				pe = newModel.getByID(pe2er.getRDFId());
+					log.debug(inf + " gets new ID: " + pe2er.getUri());
+				pe = newModel.getByID(pe2er.getUri());
 			} else { // error: complex and basic p.entity's pEP 
 				throw new IllegalAccessError("Illegal conversion of pEP: " + inf); 
 			}
@@ -511,7 +511,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
      * @return id - local part of the URI
      */
    	static public String getLocalId(BioPAXElement bpe) {
-		String id = bpe.getRDFId();
+		String id = bpe.getUri();
 		return (id != null) ? id.replaceFirst("^.+[#/]", "") : null; //greedy pattern matches everything up to the last '/' or '#'
 	}
 
@@ -635,7 +635,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 
 			for (physicalEntityParticipant pep : set)
 			{
-				map.put(pep.getRDFId(), first.getRDFId());
+				map.put(pep.getUri(), first.getUri());
 			}
 		}
 		return map;

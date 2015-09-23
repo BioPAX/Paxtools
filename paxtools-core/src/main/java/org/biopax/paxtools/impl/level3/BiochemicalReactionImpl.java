@@ -4,23 +4,10 @@ import org.biopax.paxtools.model.level3.BiochemicalReaction;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.KPrime;
 import org.biopax.paxtools.util.BPCollections;
-import org.biopax.paxtools.util.SetStringBridge;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.Set;
 
-@Entity
-@Proxy(proxyClass= BiochemicalReaction.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class BiochemicalReactionImpl extends ConversionImpl
 	implements BiochemicalReaction
 {
@@ -50,7 +37,6 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 // --------------------- Interface BioPAXElement ---------------------
 
-	@Transient
 	public Class<? extends BiochemicalReaction> getModelInterface()
 	{
 		return BiochemicalReaction.class;
@@ -58,9 +44,6 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 // --------------------- Interface BiochemicalReaction ---------------------
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = DeltaGImpl.class)
-	@JoinTable(name="deltaG")	
 	public Set<DeltaG> getDeltaG()
 	{
 		return deltaG;
@@ -83,17 +66,9 @@ public class BiochemicalReactionImpl extends ConversionImpl
 			this.deltaG.remove(deltaG);
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ElementCollection
-	@JoinTable(name="deltaH")	
 	public Set<Float> getDeltaH()
 	{
 		return deltaH;
-	}
-
-	protected void setDeltaH(Set<Float> deltaH)
-	{
-		this.deltaH = deltaH;
 	}
 
 	public void addDeltaH(float deltaH)
@@ -106,17 +81,9 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		this.deltaH.remove(deltaH);
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ElementCollection
-	@JoinTable(name="deltaS")	
 	public Set<Float> getDeltaS()
 	{
 		return deltaS;
-	}
-
-	protected void setDeltaS(Set<Float> deltaS)
-	{
-		this.deltaS = deltaS;
 	}
 
 	public void addDeltaS(float deltaS)
@@ -129,19 +96,9 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		this.deltaS.remove(new Float(deltaS));
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ElementCollection
-	@JoinTable(name="ECNumber")	
-	@Field(name=FIELD_ECNUMBER, analyze=Analyze.YES)
-	@FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getECNumber()
 	{
 		return eCNumber;
-	}
-
-	protected void setECNumber(Set<String> eCNumber)
-	{
-		this.eCNumber = eCNumber;
 	}
 
 	public void addECNumber(String eCNumber)
@@ -154,17 +111,9 @@ public class BiochemicalReactionImpl extends ConversionImpl
 		this.eCNumber.remove(eCNumber);
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = KPrimeImpl.class)
-	@JoinTable(name="keq")		
 	public Set<KPrime> getKEQ()
 	{
 		return kEQ;
-	}
-
-	protected void setKEQ(Set<KPrime> kEQ)
-	{
-		this.kEQ = kEQ;
 	}
 
 	public void addKEQ(KPrime kEQ)

@@ -154,7 +154,7 @@ public class ConversionWrapper extends EventWrapper
 	 */
 	public String getKey()
 	{
-		return conv.getRDFId() + "|" + direction;
+		return conv.getUri() + "|" + direction;
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class ConversionWrapper extends EventWrapper
 	@Override
 	public String toString()
 	{
-		return conv.getDisplayName() + " -- " + conv.getRDFId();
+		return conv.getDisplayName() + " -- " + conv.getUri();
 	}
 
 	/**

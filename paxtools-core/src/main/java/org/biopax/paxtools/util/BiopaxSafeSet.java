@@ -52,7 +52,7 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 			}
 		}
 			
-		String uri = bpe.getRDFId();
+		String uri = bpe.getUri();
 		
 		synchronized (map) { //sync on the new map instance		
 			if (!map.containsKey(uri)) {
@@ -76,7 +76,7 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 		
 		synchronized (map) {//to sync due to two operations
 			return super.contains(o) 
-				&& ( get(((E)o).getRDFId()) == o );
+				&& ( get(((E)o).getUri()) == o );
 		}
 	}
 	

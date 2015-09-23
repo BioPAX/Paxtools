@@ -42,15 +42,11 @@
 		<github.global.server>github</github.global.server>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
 		<junit.version>4.10</junit.version>
 		<commons-logging.version>1.1.1</commons-logging.version>
 		<log4j.version>1.2.13</log4j.version>
-		<hibernate-core.version>4.2.11.Final</hibernate-core.version>
-		<hibernate-search.version>4.3.0.Final</hibernate-search.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<collections-generic.version>4.01</collections-generic.version>
-		
 		<maven.version.range>[3.0,4)</maven.version.range>
 		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
 		<maven-war-plugin.version>2.6</maven-war-plugin.version>
@@ -62,13 +58,13 @@
 		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
 		<maven-source-plugin.version>2.4</maven-source-plugin.version>
 		<maven-site-plugin.version>3.4</maven-site-plugin.version>
-		<maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>2.10.2</maven-javadoc-plugin.version>
 		<maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
 		<maven-project-info-reports-plugin.version>2.8</maven-project-info-reports-plugin.version>
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<nexus-staging-maven-plugin.version>1.6.5</nexus-staging-maven-plugin.version>
-		<site-maven-plugin.version>0.12</site-maven-plugin.version>
+		<!--<site-maven-plugin.version>0.12</site-maven-plugin.version>-->
 		<doxia-integration-tools.version>1.6</doxia-integration-tools.version>	
 	</properties>
 
@@ -267,14 +263,14 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>${maven-release-plugin.version}</version>
-                    			<configuration>
-                        			<goals>deploy site-deploy</goals>
-                        			<autoVersionSubmodules>true</autoVersionSubmodules>
-                        			<useReleaseProfile>false</useReleaseProfile>
-                        			<releaseProfiles>sonatype-release</releaseProfiles>
-                    			</configuration>
+						<configuration>
+							<goals>deploy site-deploy</goals>
+							<autoVersionSubmodules>true</autoVersionSubmodules>
+							<useReleaseProfile>false</useReleaseProfile>
+							<releaseProfiles>sonatype-release</releaseProfiles>
+						</configuration>
 				</plugin>
-      				<plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven-surefire-plugin.version}</version>
@@ -313,10 +309,10 @@
 					<version>${nexus-staging-maven-plugin.version}</version>
 				</plugin>
 				<plugin>
-                			<artifactId>maven-gpg-plugin</artifactId>
-                			<groupId>org.apache.maven.plugins</groupId>
-                			<version>${maven-gpg-plugin.version}</version>
-                		</plugin>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<groupId>org.apache.maven.plugins</groupId>
+					<version>${maven-gpg-plugin.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<extensions>
@@ -331,11 +327,11 @@
 				<version>${wagon-scm.version}</version>
 			</extension>
         		<extension>
-            			<groupId>org.apache.maven.doxia</groupId>
-            			<artifactId>doxia-integration-tools</artifactId>
+					<groupId>org.apache.maven.doxia</groupId>
+					<artifactId>doxia-integration-tools</artifactId>
            			<version>${doxia-integration-tools.version}</version>
         		</extension>
-		</extensions>		
+			</extensions>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -422,24 +418,6 @@
 			<scope>test</scope>
 		</dependency>
         <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.1.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search</artifactId>
-            <version>${hibernate-search.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate-core.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
 			<groupId>net.sourceforge.collections</groupId>
 			<artifactId>collections-generic</artifactId>
 			<version>${collections-generic.version}</version>
@@ -523,8 +501,6 @@
               		<linksource>true</linksource>
               		<notimestamp>true</notimestamp>
               		<links combine.children="append">
-              			<link>http://docs.jboss.org/hibernate/search/4.3/api/</link>
-              			<link>http://docs.jboss.org/hibernate/core/4.3/javadocs/</link>
               			<link>http://download.oracle.com/javase/7/docs/api/</link>
               		</links>
               		<level>public</level>

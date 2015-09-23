@@ -45,6 +45,6 @@ public class IDConstraint extends ConstraintAdapter
 	@Override
 	public boolean satisfies(Match match, int... ind)
 	{
-		return ids.contains(match.get(ind[0]).getRDFId());
+		return ids.contains(match.get(ind[0]).getUri());
 	}
 }

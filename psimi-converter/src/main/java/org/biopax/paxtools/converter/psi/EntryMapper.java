@@ -499,13 +499,13 @@ class EntryMapper {
 					if(experimentalInteractor.hasExperiments()) {
 						for(ExperimentDescription exp : experimentalInteractor.getExperiments()) {
 							LOG.debug("createBiopaxEntity, making EFs for exp: " 
-									+ exp.getId() + "; exp.ent: " + expEntity.getRDFId());
+									+ exp.getId() + "; exp.ent: " + expEntity.getUri());
 							createAddExperimentalForm(participant, participantEvidence, expEntity, exp);
 							
 						}
 					} else {
 						LOG.debug("createBiopaxEntity, making a EForm - one for all experiments " 
-								+ "; exp.ent: " + expEntity.getRDFId());
+								+ "; exp.ent: " + expEntity.getUri());
 						createAddExperimentalForm(participant, participantEvidence, expEntity, null);
 					}
 				}		

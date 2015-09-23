@@ -7,19 +7,9 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.*;
 import java.util.Set;
 
-@Entity
-@Proxy(proxyClass= Conversion.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ConversionImpl extends InteractionImpl
 		implements Conversion
 {
@@ -43,7 +33,6 @@ public class ConversionImpl extends InteractionImpl
 
 // --------------------- Interface BioPAXElement ---------------------
 
-	@Override @Transient
 	public Class<? extends Conversion> getModelInterface()
 	{
 		return Conversion.class;
@@ -53,17 +42,9 @@ public class ConversionImpl extends InteractionImpl
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="rightParticipant")
 	public Set<PhysicalEntity> getRight()
 	{
 		return right;
-	}
-
-	protected void setRight(Set<PhysicalEntity> right)
-	{
-		this.right= right;
 	}
 
 	public void addRight(PhysicalEntity right)
@@ -82,17 +63,9 @@ public class ConversionImpl extends InteractionImpl
 		}
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="leftParticipant")
 	public Set<PhysicalEntity> getLeft()
 	{
 		return left;
-	}
-
-	protected void setLeft(Set<PhysicalEntity> left)
-	{
-		this.left = left;
 	}
 
 	public void addLeft(PhysicalEntity left)
@@ -122,9 +95,6 @@ public class ConversionImpl extends InteractionImpl
 		this.spontaneous = spontaneous;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = StoichiometryImpl.class)
-	@JoinTable(name="conversionstoichiometry")		
 	public Set<Stoichiometry> getParticipantStoichiometry()
 	{
 		return participantStoichiometry;
@@ -142,14 +112,6 @@ public class ConversionImpl extends InteractionImpl
 		this.participantStoichiometry.remove(participantStoichiometry);
 	}
 
-	protected void setParticipantStoichiometry(
-			Set<Stoichiometry> participantStoichiometry)
-	{
-		this.participantStoichiometry = participantStoichiometry;
-	}
-
-
-	@Enumerated
 	public ConversionDirectionType getConversionDirection()
 	{
 		return conversionDirection;

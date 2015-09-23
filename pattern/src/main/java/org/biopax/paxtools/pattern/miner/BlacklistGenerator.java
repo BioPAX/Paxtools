@@ -126,7 +126,7 @@ public class BlacklistGenerator
 
 			if (decider.isUbique(neighSize, upstrOnly, dwstrOnly))
 			{
-				blacklist.addEntry(smr.getRDFId(),
+				blacklist.addEntry(smr.getUri(),
 					decider.getScore(neighSize, upstrOnly, dwstrOnly),
 					decider.getContext(neighSize, upstrOnly, dwstrOnly));
 			}

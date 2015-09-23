@@ -197,9 +197,9 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 			if(log.isWarnEnabled())
 				log.warn("Redundant attempt to set the inverse link! " 
 						+ " this " + getModelInterface().getSimpleName() 
-						+ " " + getRDFId() + " and - " 
+						+ " " + getUri() + " and - "
 						+ feature.getModelInterface().getSimpleName() + " "
-						+ feature.getRDFId());
+						+ feature.getUri());
 		}
 		target.add(this);
 	}

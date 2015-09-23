@@ -476,7 +476,7 @@ public class SearchEngine implements Indexer, Searcher {
 		final Document doc = new Document();
 		
 		// save URI (not indexed field)
-		Field field = new StoredField(FIELD_URI, bpe.getRDFId());
+		Field field = new StoredField(FIELD_URI, bpe.getUri());
 		doc.add(field);
 		
 		// index and store but not analyze/tokenize the biopax class name:
@@ -563,7 +563,7 @@ public class SearchEngine implements Indexer, Searcher {
 		try {
 			indexWriter.addDocument(doc);
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to index; " + bpe.getRDFId(), e);
+			throw new RuntimeException("Failed to index; " + bpe.getUri(), e);
 		}
 	}
 
@@ -578,7 +578,7 @@ public class SearchEngine implements Indexer, Searcher {
 		for (Provenance p : set) {
 			// Index and store URI (untokinized) - 
 			// required to accurately calculate no. entities or to filter by data source (diff. datasources may share same names)
-			doc.add(new StringField(FIELD_DATASOURCE, p.getRDFId(), Field.Store.YES));
+			doc.add(new StringField(FIELD_DATASOURCE, p.getUri(), Field.Store.YES));
 			// index names as well
 			for (String s : p.getName())
 				doc.add(new TextField(FIELD_DATASOURCE, s.toLowerCase(), Field.Store.NO));
@@ -588,7 +588,7 @@ public class SearchEngine implements Indexer, Searcher {
 	private void addOrganisms(Set<BioSource> set, Document doc) {	
 		for(BioSource bs : set) {
 			// store URI as is (not indexed, untokinized)
-			doc.add(new StoredField(FIELD_ORGANISM, bs.getRDFId()));
+			doc.add(new StoredField(FIELD_ORGANISM, bs.getUri()));
 				
 			// add organism names
 			for(String s : bs.getName()) {
@@ -617,7 +617,7 @@ public class SearchEngine implements Indexer, Searcher {
 	private void addPathways(Set<Pathway> set, Document doc) {
 		for(Pathway pw : set) {
 			//add URI as is (do not lowercase; do not index; store=yes - required to report hits, e.g., as xml)
-			doc.add(new StoredField(FIELD_PATHWAY, pw.getRDFId()));
+			doc.add(new StoredField(FIELD_PATHWAY, pw.getUri()));
 			
 			// add names to the 'pathway' (don't store) and 'keywords' (store, don't index) fields
 			for (String s : pw.getName()) {

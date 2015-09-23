@@ -7,19 +7,13 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.model.level3.StepDirection;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.*;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-@Entity @Proxy(proxyClass = BiochemicalPathwayStep.class) @Indexed @DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements BiochemicalPathwayStep
 {
 	private Conversion stepConversion;
@@ -32,14 +26,12 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 
 	public BiochemicalPathwayStepImpl()
 	{
-
 	}
 
 	//
 	// utilityClass interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-	@Transient
 	public Class<? extends BiochemicalPathwayStep> getModelInterface()
 	{
 		return BiochemicalPathwayStep.class;
@@ -50,28 +42,12 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-
-	//trivial private setter/getter for ORM frameworks only
-	@ManyToOne(targetEntity = ConversionImpl.class) Conversion getStepConversionX()
-	{
-		return stepConversion;
-	}
-
-	void setStepConversionX(Conversion conversion)
-	{
-		this.stepConversion = conversion;
-	}
-
 	// Property stepConversion
-	@Transient
 	public Conversion getStepConversion()
 	{
 		return stepConversion;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setStepConversion(Conversion highLander)
 
 	{
@@ -115,8 +91,6 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	}
 
 	// Property STEP-DIRECTION
-
-	@Enumerated(EnumType.STRING)
 	public StepDirection getStepDirection()
 	{
 		return stepDirection;
@@ -127,7 +101,8 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 		stepDirection = newSTEP_DIRECTION;
 	}
 
-	@Transient @Override public Set<Process> getStepProcess()
+	@Override
+	public Set<Process> getStepProcess()
 	{
 		return stepProcess;
 	}

@@ -68,7 +68,7 @@ public class Merger implements Visitor
 			if (!model.contains(bpe))
 			{
 				//if there is an identical
-				if (model.getByID(bpe.getRDFId()) != null)
+				if (model.getByID(bpe.getUri()) != null)
 				{
 					if (editor.isMultipleCardinality())
 					{
@@ -150,7 +150,7 @@ public class Merger implements Visitor
 		if (!target.contains(bpe))
 		{
 			//if there is an identical (in fact, "equal") object
-			BioPAXElement ibpe = target.getByID(bpe.getRDFId());
+			BioPAXElement ibpe = target.getByID(bpe.getUri());
 			if (ibpe != null && ibpe.equals(bpe))
 			/* - ibpe.equals(bpe) can be 'false' here, because, 
 			 * even though the above !target.contains(bpe) is true,
@@ -214,7 +214,7 @@ public class Merger implements Visitor
 			updateObjectFieldsForEditor(editor, update, existing, target);
 		}
 
-//		if (!update.getRDFId().equals(existing.getRDFId()))
+//		if (!update.getUri().equals(existing.getUri()))
 //		{
 //TODO addNew a unification xref
 //			if(existing instanceof XReferrable)
@@ -286,7 +286,7 @@ public class Merger implements Visitor
 			//Now there are two possibilities
 
 
-			BioPAXElement ibpe = target.getByID(bpe.getRDFId());
+			BioPAXElement ibpe = target.getByID(bpe.getUri());
 			//1. has an identical in the target
 			if (ibpe != null)
 			{

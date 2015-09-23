@@ -462,7 +462,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			log.warn("rdfs:comment is converted into the bp:comment; " +
 			         "however, this can be overridden " +
 			         "if there exists another bp:comment (element: " +
-			         paxElement.getRDFId() + " text: " + text + ")");
+			         paxElement.getUri() + " text: " + text + ")");
 			gotoEndElement();
 		} else if (bp != null && bp.equals(r.getNamespaceURI()))
 		{
@@ -599,7 +599,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		Set<PropertyEditor> editors = editorMap.getEditorsOf(bean);
 		if (editors == null || editors.isEmpty())
 		{
-			log.info("no editors for " + bean.getRDFId() + " | " + bean.getModelInterface().getSimpleName());
+			log.info("no editors for " + bean.getUri() + " | " + bean.getModelInterface().getSimpleName());
 			out.write(newline + "</" + name + ">");
 			return;
 		}
@@ -660,7 +660,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		if (value instanceof BioPAXElement)
 		{
-			String id = ((BioPAXElement) value).getRDFId();
+			String id = ((BioPAXElement) value).getUri();
 			assert id != null;
 			if (!absoluteUris && base != null && id.startsWith(base))
 			{
@@ -708,7 +708,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	{
 
 		out.write(newline + newline + "<" + name + " ");
-		String s = bpe.getRDFId();
+		String s = bpe.getUri();
 		if (!absoluteUris &&  base != null && s.startsWith(base))
 		{
 			String id = s.substring(base.length());

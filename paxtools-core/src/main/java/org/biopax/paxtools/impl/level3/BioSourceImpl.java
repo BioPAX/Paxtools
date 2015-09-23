@@ -11,22 +11,8 @@ import org.biopax.paxtools.model.level3.TissueVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass= BioSource.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class BioSourceImpl extends NamedImpl implements BioSource
 {
 	private final static Log LOG = LogFactory.getLog(BioSourceImpl.class);
@@ -42,8 +28,6 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	// BioPAXElement interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-
-	@Transient
 	public Class<? extends BioSource> getModelInterface()
 	{
 		return BioSource.class;
@@ -80,8 +64,6 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	// BioSource interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-
-    @ManyToOne(targetEntity = CellVocabularyImpl.class)
 	public CellVocabulary getCellType()
 	{
 		return celltype;
@@ -92,7 +74,6 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 		this.celltype = celltype;
 	}
 
-	@ManyToOne(targetEntity = TissueVocabularyImpl.class)
 	public TissueVocabulary getTissue()
 	{
 		return tissue;
@@ -108,7 +89,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 	public String toString() {
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append(getRDFId()).append(" ");
+			sb.append(getUri()).append(" ");
 			sb.append(getName().toString());
 			if (tissue != null)
 				sb.append(" tissue: ").append(tissue.getTerm().toString());
@@ -119,7 +100,7 @@ public class BioSourceImpl extends NamedImpl implements BioSource
 		} catch (Exception e) {
 			// possible issues - when in a persistent context (e.g., lazy collections init...)
 			LOG.warn("Error in toString(): ", e);
-			return getRDFId();
+			return getUri();
 		}
 	}
 }

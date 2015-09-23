@@ -87,13 +87,13 @@ public class UbiquitousIDMiner extends MinerAdapter
 	 */
 	private String getRelatedIDs(SmallMoleculeReference smr)
 	{
-		String ids = smr.getRDFId();
+		String ids = smr.getUri();
 
 		for (Object o : new PathAccessor(
 			"SmallMoleculeReference/entityReferenceOf").getValueFromBean(smr))
 		{
 			SimplePhysicalEntity spe = (SimplePhysicalEntity) o;
-			ids += "\n" + spe.getRDFId();
+			ids += "\n" + spe.getUri();
 		}
 		return ids;
 	}

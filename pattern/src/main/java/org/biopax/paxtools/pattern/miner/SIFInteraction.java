@@ -128,7 +128,7 @@ public class SIFInteraction implements Comparable
 
 		for (BioPAXElement ele : mediators)
 		{
-			ids.add(ele.getRDFId());
+			ids.add(ele.getUri());
 		}
 		return ids;
 	}
