@@ -12,13 +12,13 @@ import java.util.Set;
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
 {
-	private final Log log = LogFactory.getLog(EntityReferenceImpl.class);
+	private final static Log log = LogFactory.getLog(EntityReferenceImpl.class);
 	
 	private Set<EntityFeature> entityFeature;
 	private Set<SimplePhysicalEntity> entityReferenceOf;
 	private Set<Evidence> evidence;
-	Set<EntityReferenceTypeVocabulary> entityReferenceType;
-	Set<EntityReference> memberEntityReference;
+	private Set<EntityReferenceTypeVocabulary> entityReferenceType;
+	private Set<EntityReference> memberEntityReference;
 	private Set<EntityReference> ownerEntityReference;
 
 	/**

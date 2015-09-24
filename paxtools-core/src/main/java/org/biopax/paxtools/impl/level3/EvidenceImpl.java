@@ -5,21 +5,11 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.*;
 import java.util.Set;
 
 import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
-@Entity
-@Proxy(proxyClass=Evidence.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EvidenceImpl extends XReferrableImpl implements Evidence
 {
 
@@ -42,7 +32,6 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	@Transient
 	public Class<? extends Evidence> getModelInterface()
 	{
 		return Evidence.class;
@@ -60,26 +49,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of scores representing confidence
 	 */
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@OneToMany(targetEntity = ScoreImpl.class)//, cascade={CascadeType.ALL})
-	@JoinTable(name="confidence")		
 	public Set<Score> getConfidence()
 	{
 		return confidence;
-	}
-
-	/**
-	 * Confidence in the containing instance.  Usually a statistical measure.
-	 *
-	 * WARNING: This method should only be used for batch operations and with care. For regular
-	 * manipulation use add/remove instead.
-	 *
-	 * @param confidence a set of scores representing confidence
-	 */
-
-	public void setConfidence(Set<Score> confidence)
-	{
-		this.confidence = confidence;
 	}
 
 	/**
@@ -104,7 +76,6 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 			this.confidence.remove(confidence);
 	}
 
-
 	/**
 	 * A pointer to a term in an external controlled vocabulary, such as the GO, PSI-MI or BioCyc
 	 * evidence codes, that describes the nature of the support, such as 'traceable author statement'
@@ -112,27 +83,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 *
 	 * @return a set of evidence codes  for this evidence type.
 	 */
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EvidenceCodeVocabularyImpl.class)
-	@JoinTable(name="evidencecode")
 	public Set<EvidenceCodeVocabulary> getEvidenceCode()
 	{
 		return evidenceCode;
-	}
-
-	/**
-	 * A pointer to a term in an external controlled vocabulary, such as the GO, PSI-MI or BioCyc
-	 * evidence codes, that describes the nature of the support, such as 'traceable author statement'
-	 * or 'yeast two-hybrid'.
-	 *
-	 * WARNING: This method should only be used for batch operations and with care. For regular
-	 * manipulation use add/remove instead.
-	 *
-	 * @param evidenceCode a new set of evidence codes  for this evidence type.
-	 */
-	public void setEvidenceCode(Set<EvidenceCodeVocabulary> evidenceCode)
-	{
-		this.evidenceCode = evidenceCode;
 	}
 
 	/**
@@ -161,17 +114,9 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 			this.evidenceCode.remove(evidenceCode);
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = ExperimentalFormImpl.class)//, cascade={CascadeType.ALL})
-	@JoinTable(name="experimentalForm")	
 	public Set<ExperimentalForm> getExperimentalForm()
 	{
 		return experimentalForm;
-	}
-
-	public void setExperimentalForm(Set<ExperimentalForm> experimentalForm)
-	{
-		this.experimentalForm = experimentalForm;
 	}
 
 	public void addExperimentalForm(ExperimentalForm experimentalForm)
@@ -194,7 +139,6 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 * for comparison...)
 	 * 
 	 * TODO: review; add comparing ExperimentalForm and Confidence values...
-	 * 
 	 */
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element) {

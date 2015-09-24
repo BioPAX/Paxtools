@@ -32,7 +32,7 @@ public class Example {
 
         // Print participants in BiochemicalReactions
         for (BiochemicalReaction rawModelObject : rawModelObjects) {
-            String tmp = "BiochemicalReaction: " + rawModelObject.getRDFId();
+            String tmp = "BiochemicalReaction: " + rawModelObject.getUri();
 
             System.out.println(tmp);
             out.println(tmp);
@@ -60,7 +60,7 @@ public class Example {
                     Set<Xref> xrefs = er.getXref();
 
                     for(Xref xref : xrefs) {
-                        tmp = "\tID: " + bpe.getRDFId() +
+                        tmp = "\tID: " + bpe.getUri() +
                                 " NAME: " + bpe.getDisplayName() +
                                 " DB: " + xref.getDb() + " DB_ID: " + xref.getId();
 

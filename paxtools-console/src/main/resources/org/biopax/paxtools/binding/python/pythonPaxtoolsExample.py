@@ -46,7 +46,7 @@ unificationXrefClass = java.lang.Class.forName("org.biopax.paxtools.model.level3
 #        (in a real-world scenario, we would also add at least a protein reference with one unification xref)
 
 protein = l3Factory.create(proteinClass, xmlBase + "protein1")
-protein.addComment("python: created " + protein.getRDFId())
+protein.addComment("python: created " + protein.getUri())
 
 #NOTE: despite xmlBase was set for the entire model, you still have to use 
 #      absolute URIs when creating your BioPAX objects; i.e., use this URI prefix 
@@ -61,13 +61,13 @@ model.add(protein)
 protein.addAvailability("availability text")
 cellLoc = l3Factory.create(cellularLocationCvClass, "http://identifiers.org/obo.go/GO:0005737")
 model.add(cellLoc)
-cellLoc.addComment("python: created " + cellLoc.getRDFId())
+cellLoc.addComment("python: created " + cellLoc.getUri())
 cellLoc.addTerm("cytoplasm")
 protein.setCellularLocation(cellLoc)
 
 #alternatively, one can create, set the id (URI), and add the element in one step
 protein2 = model.addNew(proteinClass, xmlBase + "protein2")
-protein2.addComment("created " + protein2.getRDFId())
+protein2.addComment("created " + protein2.getUri())
 # let's add a unification xref to the CV
 ux = model.addNew(unificationXrefClass, xmlBase + "XREF_GO_0005737")
 ux.setDb("GO")

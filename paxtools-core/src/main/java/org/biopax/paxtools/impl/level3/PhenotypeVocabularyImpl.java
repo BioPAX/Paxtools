@@ -1,27 +1,8 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
-/**
- */
-@Entity
-@Proxy(proxyClass= PhenotypeVocabulary.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
 	implements PhenotypeVocabulary
 {
@@ -30,14 +11,11 @@ public class PhenotypeVocabularyImpl extends ControlledVocabularyImpl
 	public PhenotypeVocabularyImpl() {
 	}
 	
-	@Override @Transient 
+	@Override
     public Class<? extends PhenotypeVocabulary> getModelInterface() {
         return PhenotypeVocabulary.class;
     }
 
-	
-	@Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-	@Boost(1.1f)
 	public String getPatoData()
 	{
 		return patoData;

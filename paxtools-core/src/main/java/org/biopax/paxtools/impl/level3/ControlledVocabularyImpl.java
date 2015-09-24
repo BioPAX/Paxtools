@@ -13,6 +13,7 @@ import org.biopax.paxtools.util.SetEquivalenceChecker;
 
 import java.util.Set;
 
+
 public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {

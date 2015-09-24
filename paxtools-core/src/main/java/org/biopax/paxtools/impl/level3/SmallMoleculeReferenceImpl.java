@@ -3,26 +3,8 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ChemicalStructure;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass= SmallMoleculeReference.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements SmallMoleculeReference
 {
 	private String chemicalFormula;
@@ -38,16 +20,12 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-    @Override  @Transient
+    @Override
 	public Class<? extends SmallMoleculeReference> getModelInterface()
 	{
 		return SmallMoleculeReference.class;
 	}
 
-    
-    
-    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-    @Boost(1.1f)
     public String getChemicalFormula()
 	{
 		return chemicalFormula;
@@ -71,7 +49,6 @@ public class SmallMoleculeReferenceImpl extends EntityReferenceImpl implements S
 	}
 
     // Property structure
-    @ManyToOne(targetEntity = ChemicalStructureImpl.class)//, cascade={CascadeType.ALL})
     public ChemicalStructure getStructure()
 	{
 		return structure;

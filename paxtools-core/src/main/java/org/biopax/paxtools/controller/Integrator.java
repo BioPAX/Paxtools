@@ -421,14 +421,14 @@ public class Integrator {
     }
 
     /**
-     * @deprecated setRDFId is not available anymore!
+     * @deprecated setRDFId (or setUri) is not available anymore!
      */
     private void equalize(BioPAXElement e1, BioPAXElement e2) {
         // Operation below is enough for the time being
-    	// TODO re-factoring: setRDFId is not available anymore! (We don't really want to change rdfIDs, do we?..)
-        //e2.setRDFId(e1.getUri());
+    	// TODO re-factoring: setRDFId/setUri is not available anymore! (changing URIs directly is dangerous)
+        //e2.setUri(e1.getUri());
 
-    	throw new UnsupportedOperationException("This needs re-factoring: bpe.setRDFId is not available anymore!");
+    	throw new UnsupportedOperationException("This needs re-factoring: bpe.setUri is not available anymore!");
 
     	//TODO ? use some alternative way to store that a1 equals e2, e.g., Set<String> matched,
     	//matched.add(e1.getUri()+e2.getUri()); matched.add(e2.getUri()+e1.getUri());

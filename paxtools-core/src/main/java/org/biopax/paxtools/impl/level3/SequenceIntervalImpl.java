@@ -3,22 +3,8 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.SequenceInterval;
 import org.biopax.paxtools.model.level3.SequenceSite;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass = SequenceInterval.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SequenceIntervalImpl extends SequenceLocationImpl
         implements SequenceInterval {
 
@@ -32,7 +18,6 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
     // utilityClass (BioPAXElement) interface implementation
     //
     ////////////////////////////////////////////////////////////////////////////
-    @Transient
     public Class<? extends SequenceInterval> getModelInterface() {
         return SequenceInterval.class;
     }
@@ -62,7 +47,6 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
     // sequenceInterval interface implementation
     //
     ////////////////////////////////////////////////////////////////////////////
-    @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
     public SequenceSite getSequenceIntervalBegin() {
         return sequenceIntervalBegin;
     }
@@ -71,7 +55,6 @@ public class SequenceIntervalImpl extends SequenceLocationImpl
         this.sequenceIntervalBegin = sequenceIntervalBegin;
     }
 
-    @ManyToOne(targetEntity = SequenceSiteImpl.class)//, cascade={CascadeType.ALL})
     public SequenceSite getSequenceIntervalEnd() {
         return sequenceIntervalEnd;
     }

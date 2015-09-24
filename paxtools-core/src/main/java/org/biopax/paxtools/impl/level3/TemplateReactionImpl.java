@@ -5,18 +5,10 @@ import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.TemplateDirectionType;
 import org.biopax.paxtools.model.level3.TemplateReaction;
 import org.biopax.paxtools.util.BPCollections;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.*;
 import java.util.Set;
 
-@javax.persistence.Entity
-@Proxy(proxyClass= TemplateReaction.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
     private Set<PhysicalEntity> product;
     private NucleicAcid template;
@@ -27,15 +19,11 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
         this.product = BPCollections.I.createSafeSet();
     }
 	
-	@Transient
     public Class<? extends TemplateReaction> getModelInterface()
 	{
 		return TemplateReaction.class;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @ManyToMany(targetEntity = PhysicalEntityImpl.class) //TODO: make sequence entity?
-    @JoinTable(name="product") 	
     public Set<PhysicalEntity> getProduct()
     {
         return product;
@@ -62,15 +50,6 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
     	}
     }
 
-	@ManyToOne(targetEntity = NucleicAcidImpl.class)//, cascade = { CascadeType.ALL })
-	protected NucleicAcid getTemplateX() {
-		return this.template;
-	}
-	protected void setTemplateX(NucleicAcid template) {
-		this.template = template;
-	}
-    
-    @Transient
 	public NucleicAcid getTemplate()
      {
          return this.template;
@@ -88,7 +67,6 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
          }
     }
 
-    @Enumerated
 	public TemplateDirectionType getTemplateDirection()
 	{
 		return templateDirection;

@@ -4,25 +4,12 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.BPCollections;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Field;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 import java.util.Set;
 
 
-@Entity
-@Proxy(proxyClass= Xref.class)
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class XrefImpl extends L3ElementImpl implements Xref
 {
-
 	private String db;
 	private String dbVersion;
 	private String idVersion;
@@ -72,8 +59,6 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		return result;
 	}
 
-	
-	@Field(name=FIELD_XREFDB, analyze=Analyze.YES)
     public String getDb()
 	{
 		return db;
@@ -104,21 +89,7 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.idVersion = idVersion;
 	}
 
-	//getId() caused exceptions in the indexer; so we changed to getIdx/setIdx pair
-    @Field(name=FIELD_XREFID, analyze=Analyze.YES)
-    @Boost(1.1f)
-    @Column(name="id")
-	public String getIdx()
-	{
-		return refId;
-	}
 
-	public void setIdx(String id)
-	{
-		this.refId = id;
-	}
-    
-    @Transient //non-transient 'getId()' used to cause Hibernate/Search trouble; so getIdx() was created.
     public String getId()
 	{
 		return refId;
@@ -129,17 +100,9 @@ public abstract class XrefImpl extends L3ElementImpl implements Xref
 		this.refId = id;
 	}
 
-
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = XReferrableImpl.class, mappedBy = "xref")
 	public Set<XReferrable> getXrefOf()
 	{
 		return xrefOf;
-	}
-
-	protected void setXrefOf(Set<XReferrable> xrefOf)
-	{
-		this.xrefOf = xrefOf;
 	}
 
 	@Override

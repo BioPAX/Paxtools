@@ -3,21 +3,8 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.Catalysis;
 import org.biopax.paxtools.model.level3.Modulation;
 import org.biopax.paxtools.model.level3.Process;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass= Modulation.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ModulationImpl extends ControlImpl implements Modulation
 {
 	
@@ -29,15 +16,13 @@ public class ModulationImpl extends ControlImpl implements Modulation
 
 // --------------------- Interface BioPAXElement ---------------------
 
-    @Override @Transient
+    @Override
 	public Class<? extends Modulation> getModelInterface()
 	{
 		return Modulation.class;
 	}
 
 // -------------------------- OTHER METHODS --------------------------
-
-
 
 	protected boolean checkControlled(Process controlled)
 	{

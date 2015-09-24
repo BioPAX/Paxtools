@@ -31,14 +31,11 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	/**
 	 * This Set keeps evidence related to this entity
 	 */
-
 	private Set<Evidence> evidence;
 
 	/**
 	 * Helper object for managing names
 	 */
-
-
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -58,11 +55,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	public Set<String> getAvailability()
 	{
 		return availability;
-	}
-
-	public void setAvailability(Set<String> availability)
-	{
-		this.availability = availability;
 	}
 
 	public void addAvailability(String availability_text)
@@ -127,12 +119,6 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 		if(oldEvidence != null)
 			this.evidence.remove(oldEvidence);
 	}
-
-	protected void setEvidence(Set<Evidence> newEvidence)
-	{
-		this.evidence = newEvidence;
-	}
-
 
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)

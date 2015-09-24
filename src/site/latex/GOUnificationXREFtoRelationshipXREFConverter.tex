@@ -127,7 +127,7 @@
 \hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if }\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getDB}\hlstd{}\hlsym{().}\hlstd{}\hlkwd{equalsIgnoreCase}\hlstd{}\hlsym{(}\hlstd{}\hlstr{"GO"}\hlstd{}\hlsym{))}\hspace*{\fill}\\
 \hlstd{}\hlstd{\ \ \ }\hlstd{}\hlsym{\{}\hspace*{\fill}\\
 \hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlslc{//this it to avoid concurrent modification.}\hspace*{\fill}\\
-\hlstd{}\hlstd{\ \ \ \ }\hlstd{log}\hlsym{.}\hlstd{}\hlkwd{info}\hlstd{}\hlsym{(}\hlstd{}\hlstr{"scheduling "}\hlstd{ }\hlsym{+ }\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getRDFId}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{log}\hlsym{.}\hlstd{}\hlkwd{info}\hlstd{}\hlsym{(}\hlstd{}\hlstr{"scheduling "}\hlstd{ }\hlsym{+ }\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getUri}\hlstd{}\hlsym{());}\hspace*{\fill}\\
 \hlstd{}\hlstd{\ \ \ \ }\hlstd{gos}\hlsym{.}\hlstd{}\hlkwd{add}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{);}\hspace*{\fill}\\
 \hlstd{\hspace*{\fill}\\
 }\hlstd{\ \ \ }\hlstd{}\hlsym{\}}\hspace*{\fill}\\
@@ -162,7 +162,7 @@
 \hlstd{}\hlstd{\ \ \ }\hlstd{factory}\hlsym{.}\hlstd{}\hlkwd{createRelationshipXref}\hlstd{}\hlsym{();}\hspace*{\fill}\\
 \hlstd{\hspace*{\fill}\\
 }\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//Copy the fields from uni}\hspace*{\fill}\\
-\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setRDFId}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getRDFId}\hlstd{}\hlsym{());}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setUri}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getUri}\hlstd{}\hlsym{());}\hspace*{\fill}\\
 \hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setCOMMENT}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getCOMMENT}\hlstd{}\hlsym{());}\hspace*{\fill}\\
 \hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setDB}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getDB}\hlstd{}\hlsym{());}\hspace*{\fill}\\
 \hlstd{}\hlstd{\ \ }\hlstd{relationshipXref}\hlsym{.}\hlstd{}\hlkwd{setDB\textunderscore VERSION}\hlstd{}\hlsym{(}\hlstd{uni}\hlsym{.}\hlstd{}\hlkwd{getDB\textunderscore VERSION}\hlstd{}\hlsym{());}\hspace*{\fill}\\

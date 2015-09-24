@@ -2,25 +2,10 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.KPrime;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
-
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 import static java.lang.Float.compare;
 
-/**
- */
-@Entity
-@Proxy(proxyClass=KPrime.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class KPrimeImpl extends ChemicalConstantImpl implements KPrime
 {
 
@@ -35,7 +20,6 @@ public class KPrimeImpl extends ChemicalConstantImpl implements KPrime
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	@Transient
 	public Class<? extends KPrime> getModelInterface()
 	{
 		return KPrime.class;

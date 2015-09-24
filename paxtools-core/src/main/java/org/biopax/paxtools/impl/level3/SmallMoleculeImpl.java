@@ -5,28 +5,15 @@ import org.biopax.paxtools.model.level3.EntityFeature;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SmallMolecule;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass= SmallMolecule.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SmallMoleculeImpl extends SimplePhysicalEntityImpl
 		implements SmallMolecule
 {
 	public SmallMoleculeImpl() {
 	}
 	
-	@Override @Transient
+	@Override
 	public Class<? extends PhysicalEntity> getModelInterface() {
 		return SmallMolecule.class;
 	}

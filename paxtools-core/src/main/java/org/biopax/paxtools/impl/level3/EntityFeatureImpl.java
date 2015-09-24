@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
-	private final Log LOG = LogFactory.getLog(EntityFeatureImpl.class);
+	private final static Log LOG = LogFactory.getLog(EntityFeatureImpl.class);
 	
 	private Set<Evidence> evidence;
 	private EntityReference ownerEntityReference;

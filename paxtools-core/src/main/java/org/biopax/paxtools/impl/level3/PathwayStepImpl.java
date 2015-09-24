@@ -3,23 +3,12 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.BPCollections;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Indexed;
-
-import javax.persistence.Entity;
-import javax.persistence.*;
 
 import java.util.Set;
 
-@Entity
-@Proxy(proxyClass=PathwayStep.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 {
-
 	private Set<Process> stepProcess;
 	private Set<PathwayStep> nextStep;
 	private Set<PathwayStep> nextStepOf;
@@ -37,15 +26,11 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		this.evidence = BPCollections.I.createSafeSet();
 	}
 
-	@Transient
 	public Class<? extends PathwayStep> getModelInterface()
 	{
 		return PathwayStep.class;
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PathwayStepImpl.class)
-	@JoinTable(name="nextStep")
 	public Set<PathwayStep> getNextStep()
 	{
 		return nextStep;
@@ -67,42 +52,14 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		}
 	}
 
-	protected void setNextStep(Set<PathwayStep> nextStep)
-	{
-		this.nextStep = nextStep;
-	}
-
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PathwayStepImpl.class, mappedBy = "nextStep")
 	public Set<PathwayStep> getNextStepOf()
 	{
 		return nextStepOf;
 	}
 
-	protected void setNextStepOf(Set<PathwayStep> nextStepOf)
-	{
-		this.nextStepOf = nextStepOf;
-	}
-
-	@Transient
 	public Set<Process> getStepProcess()
-	{	
-		return this.getStepProcessX();
-	}
-	
-	//private setter for ORM frameworks only
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = ProcessImpl.class)
-	@JoinTable(name="stepProcess",
-		joinColumns={@JoinColumn(name="STEPPROCESS_PK", referencedColumnName="PK")},
-		inverseJoinColumns={@JoinColumn(name="STEPPROCESSOF_PK", referencedColumnName="PK")})
-	Set<Process> getStepProcessX()
 	{
 		return stepProcess;
-	}
-	void setStepProcessX(Set<Process> stepProcess)
-	{
-		this.stepProcess = stepProcess;
 	}
 
 	public void addStepProcess(Process processStep)
@@ -122,9 +79,6 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 		}
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EvidenceImpl.class)
-	@JoinTable(name="evidence") 	
 	public Set<Evidence> getEvidence()
 	{
 		return evidence;
@@ -142,17 +96,10 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 			this.evidence.remove(evidence);
 	}
 
-	public void setEvidence(Set<Evidence> evidence)
-	{
-		this.evidence = evidence;
-	}
-
-	@ManyToOne(targetEntity = PathwayImpl.class)
 	public Pathway getPathwayOrderOf()
 	{
 		return this.pathwayOrderOf;
 	}
-
 
 	protected void setPathwayOrderOf(Pathway pathwayOrderOf)
 	{

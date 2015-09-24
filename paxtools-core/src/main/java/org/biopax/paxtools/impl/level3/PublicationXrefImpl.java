@@ -3,19 +3,10 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PublicationXref;
 import org.biopax.paxtools.util.BPCollections;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.*;
 
-import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.Set;
 
-@Entity
-@Proxy(proxyClass= PublicationXref.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 {
 	private String title;
@@ -34,7 +25,6 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 		this.author = BPCollections.I.createSet();
 	}
 
-	@Transient
     public Class<? extends PublicationXref> getModelInterface()
 	{
 		return PublicationXref.class;
@@ -46,20 +36,9 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	////////////////////////////////////////////////////////////////////////////
 
     // Property author
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @ElementCollection
-    @JoinTable(name="author")
-    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-    @Boost(1.1f)
-    @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getAuthor()
 	{
 		return author;
-	}
-
-	public void setAuthor(Set<String> author)
-	{
-		this.author = author;
 	}
 
 	public void addAuthor(String author)
@@ -74,20 +53,9 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 			this.author.remove(author);
 	}
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @ElementCollection
-    @JoinTable(name="source")
-    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-    @Boost(1.1f)
-    @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getSource()
 	{
 		return source;
-	}
-
-	public void setSource(Set<String> source)
-	{
-		this.source = source;
 	}
 
 	public void addSource(String source)
@@ -102,11 +70,7 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 			this.source.remove(source);
 	}
 
-    
-    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-    @Boost(1.1f)
-	@Column(columnDefinition="LONGTEXT")
- 	public String getTitle()
+	public String getTitle()
 	{
 		return title;
 	}
@@ -116,21 +80,9 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 		this.title = title;
 	}
 
-        // Property url
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @ElementCollection
-    @JoinTable(name="url")
-    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-    @Boost(1.1f)
-    @FieldBridge(impl=SetStringBridge.class)
 	public Set<String> getUrl()
 	{
 		return url;
-	}
-
-	public void setUrl(Set<String> url)
-	{
-		this.url = url;
 	}
 
 	public void addUrl(String url)
@@ -146,10 +98,6 @@ public class PublicationXrefImpl extends XrefImpl implements PublicationXref
 	}
 
     // Property year
-    
-    @Column(name="published") //default one caused MySQLIntegrityConstraintViolationException: Column 'year' in field list is ambiguous
-    @Field(name=FIELD_KEYWORD, store=Store.YES, analyze=Analyze.YES)
-    @Boost(1.1f)
 	public int getYear()
 	{
 		return year;

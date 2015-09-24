@@ -26,7 +26,7 @@ public abstract class BioPAXFactory
      */
     protected BioPAXFactory() {
     	try {
-			setUriMethod = BioPAXElementImpl.class.getDeclaredMethod("setRDFId", String.class);
+			setUriMethod = BioPAXElementImpl.class.getDeclaredMethod("setUri", String.class);
 			setUriMethod.setAccessible(true);
 		} catch (Throwable e) {
 			throw new RuntimeException("BioPAXFactory Constructor failed", e);

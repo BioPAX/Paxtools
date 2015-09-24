@@ -3,22 +3,8 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Stoichiometry;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass= Stoichiometry.class)
-@Indexed//(index = BioPAXElementImpl.SEARCH_INDEX_NAME)
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 {
 	private float stoichiometricCoefficient = UNKNOWN_FLOAT;
@@ -27,7 +13,6 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 
 	public StoichiometryImpl() {}
 
-	@Transient
 	public Class<? extends Stoichiometry> getModelInterface()
 	{
 		return Stoichiometry.class;
@@ -61,7 +46,6 @@ public class StoichiometryImpl extends L3ElementImpl implements Stoichiometry
 	        : 0);
 	}
 
-	@ManyToOne(targetEntity = PhysicalEntityImpl.class)
 	public PhysicalEntity getPhysicalEntity()
 	{
 		return physicalEntity;

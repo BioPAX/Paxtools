@@ -3,22 +3,8 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.RelationshipTypeVocabulary;
 import org.biopax.paxtools.model.level3.RelationshipXref;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass= RelationshipXref.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 {
 
@@ -32,7 +18,6 @@ public class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	@Transient
     public Class<? extends RelationshipXref> getModelInterface()
 	{
 		return RelationshipXref.class;
@@ -42,8 +27,6 @@ public class RelationshipXrefImpl extends XrefImpl implements RelationshipXref
 	// RelationshipXref interface implementation
 	//
 	////////////////////////////////////////////////////////////////////////////
-
-    @ManyToOne(targetEntity = RelationshipTypeVocabularyImpl.class)
 	public RelationshipTypeVocabulary getRelationshipType()
 	{
 		return relationshipType;

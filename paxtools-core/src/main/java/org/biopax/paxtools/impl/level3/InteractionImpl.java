@@ -6,25 +6,9 @@ import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.biopax.paxtools.util.BPCollections;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 import java.util.Set;
 
-/**
- *
- */
-
-@javax.persistence.Entity
-@Proxy(proxyClass= Interaction.class)
-@Indexed
-@Boost(1.5f)
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class InteractionImpl extends ProcessImpl implements Interaction
 {
 // ------------------------------ FIELDS ------------------------------
@@ -46,9 +30,6 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- Interface BioPAXElement ---------------------
 
-
-
-	@Transient
 	public Class<? extends Interaction> getModelInterface()
 	{
 		return Interaction.class;
@@ -58,9 +39,6 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 // --------------------- ACCESORS and MUTATORS---------------------
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = InteractionVocabularyImpl.class)
-	@JoinTable(name="interactionType")
 	public Set<InteractionVocabulary> getInteractionType()
 	{
 	   return interactionType;
@@ -80,16 +58,6 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 			this.interactionType.remove(oldinteractionType);
 	}
 
-	public void setInteractionType(
-		Set<InteractionVocabulary> interactionType)
-	{
-	   this.interactionType = interactionType;
-	}
-
-
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EntityImpl.class)
-	@JoinTable(name="participant")
 	public Set<Entity> getParticipant()
 	{
 		return participant;
@@ -121,5 +89,4 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 			aParticipant.getParticipantOf().remove(this);
 		}
 	}
-    
 }

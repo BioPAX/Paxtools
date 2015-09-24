@@ -3,33 +3,13 @@ package org.biopax.paxtools.impl.level3;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.util.*;
-import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.*;
 
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import java.util.Set;
 
-@javax.persistence.Entity
-@Proxy(proxyClass=PhysicalEntity.class)
-@Indexed
-@Boost(1.3f)
-@FullTextFilterDefs( { //these filters are global (can be defined on any @Indexed entity), names - unique!
-    @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_ORGANISM, impl = OrganismFilterFactory.class), 
-    @FullTextFilterDef(name = BioPAXElementImpl.FILTER_BY_DATASOURCE, impl = DataSourceFilterFactory.class) 
-})
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 {
 	private CellularLocationVocabulary cellularLocation;
@@ -38,7 +18,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	private Set<EntityFeature> feature;
 	private Set<EntityFeature> notFeature;
 	private Set<Control> controllerOf;
-	private final Log log = LogFactory.getLog(PhysicalEntityImpl.class);
+	private static final Log log = LogFactory.getLog(PhysicalEntityImpl.class);
 	private Set<PhysicalEntity> memberPhysicalEntityOf;
 
 	public PhysicalEntityImpl()
@@ -51,20 +31,16 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		memberPhysicalEntity = BPCollections.I.createSafeSet();
 	}
 
-	@Transient
 	public Class<? extends PhysicalEntity> getModelInterface()
 	{
 		return PhysicalEntity.class;
 	}
 
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = ComplexImpl.class, mappedBy = "component")
 	public Set<Complex> getComponentOf()
 	{
 		return componentOf;
 	}
 
-	@ManyToOne(targetEntity = CellularLocationVocabularyImpl.class)
 	public CellularLocationVocabulary getCellularLocation()
 	{
 		return cellularLocation;
@@ -75,9 +51,6 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 		this.cellularLocation = location;
 	}
 
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EntityFeatureImpl.class)
-	@JoinTable(name="feature")
 	public Set<EntityFeature> getFeature()
 	{
 		return feature;
@@ -86,69 +59,40 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	public void addFeature(EntityFeature feature)
 	{
 		if (feature != null) {
-			checkAndAddFeature(feature, feature.getFeatureOf());
 			this.feature.add(feature);
+			feature.getFeatureOf().add(this);
 		}
 	}
-
 
 	public void removeFeature(EntityFeature feature)
 	{
 		if (feature != null) {
-			synchronized (feature) {
-				assert feature.getFeatureOf().contains(this) ^ feature.getNotFeatureOf().contains(this) 
-				: feature + " is both 'feature' and 'notFeature' of " + this; 
-				//TODO even if the assertion fails, so what? (in any case, we still want to remove this PE from the set)
-				feature.getFeatureOf().remove(this);
-			}
 			this.feature.remove(feature);
+			feature.getFeatureOf().remove(this);
 		}
 	}
 
-	protected void setFeature(Set<EntityFeature> feature)
-	{
-		this.feature = feature;
-	}
-
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = EntityFeatureImpl.class)
-	@JoinTable(name="notfeature")
 	public Set<EntityFeature> getNotFeature()
 	{
 		return notFeature;
 	}
 
-
 	public void addNotFeature(EntityFeature feature)
 	{
 		if (feature != null) {
-			checkAndAddFeature(feature, feature.getNotFeatureOf());
 			this.notFeature.add(feature);
+			feature.getNotFeatureOf().add(this);
 		}
 	}
 
 	public void removeNotFeature(EntityFeature feature)
 	{
 		if (feature != null) {
-			synchronized (feature) {
-				assert feature.getFeatureOf().contains(this) ^ feature.getNotFeatureOf().contains(this) 
-				: feature + " is both 'feature' and 'notFeature' of " + this; 
-				//TODO even if the assertion fails, so what? (in any case, we still want to remove this PE from the set)
-				feature.getNotFeatureOf().remove(this);
-			}
 			this.notFeature.remove(feature);
+			feature.getNotFeatureOf().remove(this);
 		}
 	}
 
-	protected void setNotFeature(Set<EntityFeature> featureSet)
-	{
-		this.notFeature = featureSet;
-	}
-
-
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class)
-	@JoinTable(name="memberPhysicalEntity") 	
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
 		return this.memberPhysicalEntity;    //TODO (what?)
@@ -158,9 +102,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	{
 		if (newMember != null) {
 			this.memberPhysicalEntity.add(newMember);
-			synchronized (newMember) {
-				newMember.getMemberPhysicalEntityOf().add(this);
-			}
+			newMember.getMemberPhysicalEntityOf().add(this);
 		}
 	}
 
@@ -168,40 +110,13 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	{
 		if (oldMember != null) {
 			this.memberPhysicalEntity.remove(oldMember);
-			synchronized (oldMember) {
-				oldMember.getMemberPhysicalEntityOf().remove(this);
-			}
+			oldMember.getMemberPhysicalEntityOf().remove(this);
 		}
 	}
 
-	protected void setMemberPhysicalEntity(Set<PhysicalEntity> memberPhysicalEntity)
-	{
-		this.memberPhysicalEntity = memberPhysicalEntity; //TODO (what?)
-	}
-
-
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = PhysicalEntityImpl.class, mappedBy = "memberPhysicalEntity")
 	public Set<PhysicalEntity> getMemberPhysicalEntityOf()
 	{
 		return memberPhysicalEntityOf;
-	}
-
-
-	private void checkAndAddFeature(EntityFeature feature,
-	                                Set<PhysicalEntity> target)
-	{
-		if (feature.getFeatureOf().contains(this) ||
-		    feature.getNotFeatureOf().contains(this))
-		{
-			if(log.isWarnEnabled())
-				log.warn("Redundant attempt to set the inverse link! " 
-						+ " this " + getModelInterface().getSimpleName() 
-						+ " " + getUri() + " and - "
-						+ feature.getModelInterface().getSimpleName() + " "
-						+ feature.getUri());
-		}
-		target.add(this);
 	}
 
 	// --------------------- Interface BioPAXElement ---------------------
@@ -261,25 +176,9 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	}
 
-	@ManyToMany(targetEntity = ControlImpl.class, mappedBy = "peController")
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;
-	}
-
-	protected void setControllerOf(Set<Control> controllerOf)
-	{
-		this.controllerOf = controllerOf;
-	}
-
-	protected void setMemberPhysicalEntityOf(Set<PhysicalEntity> memberPhysicalEntityOf)
-	{
-		this.memberPhysicalEntityOf = memberPhysicalEntityOf;
-	}
-
-	protected void setComponentOf(Set<Complex> componentOf)
-	{
-		this.componentOf = componentOf;
 	}
 
 }

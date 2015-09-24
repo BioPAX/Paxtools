@@ -3,24 +3,8 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ModificationFeature;
 import org.biopax.paxtools.model.level3.SequenceModificationVocabulary;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-/**
- */
-@Entity
-@Proxy(proxyClass= ModificationFeature.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ModificationFeatureImpl extends EntityFeatureImpl
 		implements ModificationFeature
 {
@@ -49,14 +33,11 @@ public class ModificationFeatureImpl extends EntityFeatureImpl
         return sb.toString();
     }
 
-    @Transient
 	public Class<? extends ModificationFeature> getModelInterface()
 	{
 		return ModificationFeature.class;
 	}
 
-
-	@ManyToOne(targetEntity = SequenceModificationVocabularyImpl.class)
 	public SequenceModificationVocabulary getModificationType()
 	{
 		return modificationType;

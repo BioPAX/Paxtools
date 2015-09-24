@@ -463,7 +463,7 @@ Model model = handler.convertFromOWL(fin);
 Set<BioPAXElement> elementSet = model.getObjects();
 for (BioPAXElement currentElement : elementSet)
 {
- String rdfId = currentElement.getRDFId();
+ String rdfId = currentElement.getUri();
  String className = 
  currentElement.getClass().getName();
  System.out.println("Element: " + rdfId + ": " + className);
@@ -1042,7 +1042,7 @@ unificationXrefClass = java.lang.Class.forName(
 #Let's create a simple protein state using the factory method and unique identifier (URI)
 
 protein = l3Factory.create(proteinClass, xmlBase + "protein1")
-protein.addComment("python: created " + protein.getRDFId())
+protein.addComment("python: created " + protein.getUri())
 
 #And add it to the model
 model.add(protein)
@@ -1052,13 +1052,13 @@ protein.addAvailability("availability text")
 cellLoc = l3Factory.create(
  cellularLocationCvClass, "http://identifiers.org/obo.go/GO:0005737")
 model.add(cellLoc)
-cellLoc.addComment("python: created " + cellLoc.getRDFId())
+cellLoc.addComment("python: created " + cellLoc.getUri())
 cellLoc.addTerm("cytoplasm")
 protein.setCellularLocation(cellLoc)
 
 #alternatively, one can create, set the id (URI), and add the element in one step
 protein2 = model.addNew(proteinClass, xmlBase + "protein2")
-protein2.addComment("created " + protein2.getRDFId())
+protein2.addComment("created " + protein2.getUri())
 \end{pythoncode}
 
 

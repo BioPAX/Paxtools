@@ -2,26 +2,13 @@ package org.biopax.paxtools.impl.level3;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.FragmentFeature;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
-@Entity
-@Proxy(proxyClass= FragmentFeature.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class FragmentFeatureImpl extends EntityFeatureImpl implements FragmentFeature
 {
 	public FragmentFeatureImpl() {}
 	
-	@Override @Transient
+	@Override
 	public Class<? extends FragmentFeature> getModelInterface()
 	{
 		return FragmentFeature.class;

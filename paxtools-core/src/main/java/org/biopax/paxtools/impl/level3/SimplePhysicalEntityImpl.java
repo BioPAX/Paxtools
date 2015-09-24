@@ -7,16 +7,10 @@ import org.biopax.paxtools.model.level3.EntityReference;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.util.BPCollections;
-import org.hibernate.annotations.*;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import java.util.Set;
 
-@Entity
-@Proxy(proxyClass= SimplePhysicalEntity.class)
-@DynamicUpdate @DynamicInsert
+
 public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 		implements SimplePhysicalEntity
 {
@@ -24,18 +18,7 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
   	Log log = LogFactory.getLog(SimplePhysicalEntityImpl.class);
 	public SimplePhysicalEntityImpl() {
 	}
-	
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToOne(targetEntity = EntityReferenceImpl.class)
-	public EntityReference getEntityReferenceX()
-	{
-		return entityReference;
-	}
-	public void setEntityReferenceX(EntityReference entityReference) {
-		this.entityReference = entityReference;
-	}
 
-	@Transient
 	public Set<EntityReference> getGenericEntityReferences()
 	{
 		Set<EntityReference> ger = BPCollections.I.createSet();
@@ -55,7 +38,6 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 		return ger;
 	}
 
-	@Transient
 	public EntityReference getEntityReference()
 	{
 		return entityReference;
@@ -65,16 +47,12 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	{
 		if (this.entityReference != null)
 		{
-			synchronized (this.entityReference) {
-				this.entityReference.getEntityReferenceOf().remove(this);
-			}
+			this.entityReference.getEntityReferenceOf().remove(this);
 		}
 		this.entityReference = entityReference;
 		if (this.entityReference != null)
 		{
-			synchronized (this.entityReference) {
-				this.entityReference.getEntityReferenceOf().add(this);
-			}
+			this.entityReference.getEntityReferenceOf().add(this);
 		}
 	}
 
@@ -82,7 +60,6 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	@Override
 	public int equivalenceCode()
 	{
-       
         return this.entityReference==null? hashCode():31 * super.locationAndFeatureCode() +
 		       entityReference.equivalenceCode();
 	}

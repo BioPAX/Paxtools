@@ -149,8 +149,9 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 
 		@Override public boolean contains(Object o)
 		{
-			return o != null && ((stepConversion != null && stepConversion.equals(o)) || BiochemicalPathwayStepImpl
-					.super.getStepProcess().contains(o));
+			return o != null &&
+				((stepConversion != null && stepConversion.equals(o))
+					|| BiochemicalPathwayStepImpl.super.getStepProcess().contains(o));
 		}
 
 	}

@@ -4,24 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.Xref;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate; 
-import org.hibernate.search.annotations.Indexed;
-
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 import java.util.Comparator;
 import java.util.TreeSet;
 
-@Entity
-@Proxy(proxyClass= Provenance.class)
-@Indexed
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class ProvenanceImpl extends NamedImpl implements Provenance
 {
 	private final static Log LOG = LogFactory.getLog(ProvenanceImpl.class);
@@ -29,7 +16,6 @@ public class ProvenanceImpl extends NamedImpl implements Provenance
 	public ProvenanceImpl() {
 	}
 
-	@Transient
     public Class<? extends Provenance> getModelInterface()
 	{
 		return Provenance.class;

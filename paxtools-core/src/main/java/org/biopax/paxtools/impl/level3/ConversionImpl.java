@@ -10,6 +10,7 @@ import org.biopax.paxtools.util.SetEquivalenceChecker;
 
 import java.util.Set;
 
+
 public class ConversionImpl extends InteractionImpl
 		implements Conversion
 {

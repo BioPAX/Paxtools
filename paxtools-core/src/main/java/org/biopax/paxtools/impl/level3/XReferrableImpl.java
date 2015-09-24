@@ -3,15 +3,7 @@ package org.biopax.paxtools.impl.level3;
 import org.biopax.paxtools.model.level3.XReferrable;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.BPCollections;
-import org.hibernate.annotations.*;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import java.util.Set;
 
 /**
@@ -19,10 +11,6 @@ import java.util.Set;
  *
  * @author Emek Demir
  */
-@Entity
-@Proxy(proxyClass= XReferrable.class)
-@DynamicUpdate @DynamicInsert
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class XReferrableImpl extends L3ElementImpl implements XReferrable
 {
 // ------------------------------ FIELDS ------------------------------
@@ -45,11 +33,6 @@ public abstract class XReferrableImpl extends L3ElementImpl implements XReferrab
 
 // -------------------------- OTHER METHODS --------------------------
 
-	
-	@Field(name=FIELD_XREFID, analyze=Analyze.NO, bridge = @FieldBridge(impl=XrefFieldBridge.class), boost=@Boost(1.5f))
-	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	@ManyToMany(targetEntity = XrefImpl.class)
-	@JoinTable(name="xref")
 	public Set<Xref> getXref()
 	{
 		return xref;
