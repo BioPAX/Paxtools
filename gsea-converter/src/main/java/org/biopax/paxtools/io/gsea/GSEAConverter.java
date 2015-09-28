@@ -170,7 +170,7 @@ public class GSEAConverter
 
 		Model l3Model;
 		// convert to level 3 in necessary
-		if (model.getLevel() == BioPAXLevel.L1 || model.getLevel() == BioPAXLevel.L2)
+		if (model.getLevel() == BioPAXLevel.L2)
 			l3Model = (new LevelUpgrader()).filter(model);
 		else
 			l3Model = model;

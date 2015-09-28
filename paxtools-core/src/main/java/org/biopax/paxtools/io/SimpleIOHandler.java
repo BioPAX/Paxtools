@@ -280,9 +280,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 							} else
 							{
 								if (log.isTraceEnabled())
-								{
 									log.trace("Ignoring element: " + lname);
-								}
 								skip();
 							}
 
@@ -294,20 +292,17 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 							StringBuilder sb = new StringBuilder("Ignoring text ");
 							if (r.hasName()) sb.append(r.getLocalName());
 							if (r.hasText()) sb.append(r.getText());
-							log.trace(sb.toString());
+							if (log.isTraceEnabled())
+								log.trace(sb.toString());
 						}
 						break;
 					case END_ELEMENT:
 						if (log.isTraceEnabled())
-						{
 							log.trace(r);
-						}
 						break;
 					default:
 						if (log.isTraceEnabled())
-						{
 							log.trace("Test this!:" + type);
-						}  //TODO
 				}
 				r.next();
 

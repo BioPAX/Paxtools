@@ -9,12 +9,10 @@ import java.io.InputStream;
 /**
  * Enumeration type for BioPAX levels.
  */
-
 public enum BioPAXLevel
 {
 	// define enum constants using default BioPAX factories
-	// (L1 is auto-upgraded and uses L2 factory)
-	L1("biopax-level1.owl", new Level2FactoryImpl(), "org.biopax.paxtools.model.level2"),
+	// (L1 is not supported anymore)
 	L2("biopax-level2.owl", new Level2FactoryImpl(), "org.biopax.paxtools.model.level2"),
 	L3("biopax-level3.owl", new Level3FactoryImpl(), "org.biopax.paxtools.model.level3");
 
@@ -27,7 +25,7 @@ public enum BioPAXLevel
 
 	private final String packageName;
 	
-	// default L2 (also for L1) factory implementation
+	// default L2 factory implementation
 	private static class Level2FactoryImpl extends BioPAXFactory {
 	    @Override
 	    public BioPAXLevel getLevel() {

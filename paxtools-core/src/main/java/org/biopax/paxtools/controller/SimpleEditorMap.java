@@ -24,7 +24,6 @@ import java.util.*;
 public enum SimpleEditorMap implements EditorMap
 {
 
-	L1(BioPAXLevel.L1),
 	L2(BioPAXLevel.L2),
 	L3(BioPAXLevel.L3);
 
@@ -41,7 +40,7 @@ public enum SimpleEditorMap implements EditorMap
 	/**
 	 * To obtain a copy of the editor map for the corresponding level, use the
 	 * @param level the BioPAX level
-	 * @return SimpleEditorMap implementation for the BioPAX L1, L2, or L3
+	 * @return SimpleEditorMap implementation for the BioPAX L2 or L3
 	 */
 	public static SimpleEditorMap get(BioPAXLevel level)
 	{
