@@ -18,25 +18,66 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.4.1</version>
+				<executions>
+					<execution>
+						<id>enforce-banned-dependencies</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<bannedDependencies>
+									<searchTransitive>true</searchTransitive>
+									<excludes>
+										<exclude>javassist:javassist</exclude><!-- org.javassist is the
+											new one -->
+										<exclude>aspectj:aspectj*</exclude> <!-- org.aspectj is the new one -->
+										<exclude>org.slf4j:1.5*</exclude>
+										<exclude>org.springframework:2.*</exclude>
+										<exclude>org.springframework:3.0.*</exclude>
+										<exclude>jaxax.xml.bind:*</exclude>
+										<exclude>com.sun.xml.bind:*</exclude>
+									</excludes>
+								</bannedDependencies>
+								<requireMavenVersion>
+									<version>${maven.version.range}</version>
+								</requireMavenVersion>
+							</rules>
+							<fail>true</fail>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.0</version>
-				<configuration>
-					<transformers>
-						<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-							<mainClass>org.biopax.paxtools.PaxtoolsMain</mainClass>
-						</transformer>
-					</transformers>
-					<finalName>paxtools</finalName>
-					<shadedArtifactAttached>true</shadedArtifactAttached>
-				</configuration>
+				<version>2.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
 						</goals>
+						<configuration>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>org.biopax.paxtools.PaxtoolsMain</mainClass>
+								</transformer>
+							</transformers>
+							<finalName>paxtools</finalName>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+						</configuration>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.google.guava</groupId>
+						<artifactId>guava</artifactId>
+						<version>18.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -94,6 +135,12 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>psimi-converter</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-impl</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -104,6 +151,12 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>sbgn-converter</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-impl</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -130,6 +183,13 @@
 			<artifactId>paxtools-trove</artifactId>
 			<version>${project.version}</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

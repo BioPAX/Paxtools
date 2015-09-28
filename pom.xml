@@ -7,7 +7,7 @@
 	<groupId>org.biopax.paxtools</groupId>
 	<artifactId>paxtools</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
-	
+
 	<name>Paxtools</name>
 	
 	<description>Paxtools is a Java library that allows software to read, write, analyze and manipulate BioPAX models.
@@ -44,7 +44,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<junit.version>4.10</junit.version>
 		<commons-logging.version>1.1.1</commons-logging.version>
-		<log4j.version>1.2.13</log4j.version>
+		<log4j.version>1.2.17</log4j.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<collections-generic.version>4.01</collections-generic.version>
 		<maven.version.range>[3.0,4)</maven.version.range>
@@ -405,13 +405,6 @@
 			<version>${commons-logging.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
@@ -437,6 +430,11 @@
         	<artifactId>jena</artifactId>
         	<version>2.5.7</version>
         </dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
 	</dependencies>	
 	</dependencyManagement>
 
@@ -448,6 +446,7 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
