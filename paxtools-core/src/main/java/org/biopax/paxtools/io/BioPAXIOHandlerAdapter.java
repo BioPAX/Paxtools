@@ -17,14 +17,8 @@ import java.io.*;
 import java.util.Map;
 
 
-/**
- *
- */
 public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 {
-	private boolean treatNilAsNull;
-
-	private boolean convertingFromLevel1ToLevel2 = false;
 
 	private boolean fixReusedPEPs = false;
 
@@ -77,11 +71,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		this.factory = (factory != null) ? factory : this.level.getDefaultFactory();
 
 		// default flags
-		if (this.level == BioPAXLevel.L1)
-		{
-			this.convertingFromLevel1ToLevel2 = true;
-			this.fixReusedPEPs = true;
-		} else if (this.level == BioPAXLevel.L2)
+		if (this.level == BioPAXLevel.L2)
 		{
 			this.fixReusedPEPs = true;
 		}
@@ -114,46 +104,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	public void fixReusedPEPs(boolean fixReusedPEPs)
 	{
 		this.fixReusedPEPs = fixReusedPEPs;
-	}
-
-	/**
-	 * A workaround for a common issue that was present in BioCyc exports. For non-present values BioCyc exports
-	 * contained the string "NIL".
-	 * @param treatNILasNull true/false
-	 * @deprecated This problem is fixed and this option is no longer needed for recent BioCyc exports. Enable only if
-	 *             you are parsing a legacy export.
-	 */
-	public void treatNilAsNull(boolean treatNILasNull)
-	{
-		this.treatNilAsNull = treatNILasNull;
-	}
-
-	/**
-	 * This method enables silent conversion of Level1 to Level2. If disabled the method will throw an error.
-	 * @param convertingFromLevel1ToLevel2 true/false
-	 * @deprecated BioPAX Level 1 exports are extremely rare and obsolete.
-	 */
-	public void setConvertingFromLevel1ToLevel2(boolean convertingFromLevel1ToLevel2)
-	{
-		this.convertingFromLevel1ToLevel2 = convertingFromLevel1ToLevel2;
-	}
-
-	/**
-	 * @return true if this reader is treating string 'NIL' as Null
-	 * @deprecated This problem is fixed and this option is no longer needed for recent BioCyc exports. Enable only if
-	 *             you are parsing a legacy export.
-	 */
-	public boolean isTreatNilAsNull()
-	{
-		return treatNilAsNull;
-	}
-
-	/**
-	 * @return true is converting Level1 to Level2 silently.
-	 */
-	public boolean isConvertingFromLevel1ToLevel2()
-	{
-		return convertingFromLevel1ToLevel2;
 	}
 
 	/**
@@ -205,38 +155,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	{
 		return level;
 	}
-
-	/**
-	 * This method reads multiple files and returns a merged model.
-	 * @deprecated  experimental and incomplete; e.g., files are to be ordered, i.e.,
-	 * 				a former file should not point to the latter. Use it at your own risk.
-	 * 				Or, use #convertFromOWL to get independent models; then, try merging them...
-	 * @param files Dependency ordered biopax owl file names
-	 * @return a merged model.
-	 * @throws java.io.FileNotFoundException when any file can not be found
-	 */
-	@Deprecated
-	public Model convertFromMultipleOwlFiles(String... files) throws FileNotFoundException
-	{
-		Model model = this.factory.createModel();
-
-		for (String file : files)
-		{
-			FileInputStream in = new FileInputStream(new File(file));
-			if (log.isDebugEnabled())
-			{
-				log.debug("start reading file:" + file);
-			}
-//			createAndBind(in, model); //TODO why this line is currently commented out; since when?..
-
-			if (log.isDebugEnabled())
-			{
-				log.debug("read file: " + file);
-			}
-		}
-		return model;
-	}
-
 
 	/**
 	 * Reads a BioPAX model from an OWL file input stream (<em>in</em>) and converts it to a model.
@@ -372,42 +290,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	protected abstract void createAndBind(Model model);
 
 	/**
-	 * Several workarounds for two properties, DeltaG and KEQ, that changed from Level1 for Level2
-	 * @param editor that is responsible for the property that is currently being assigned to the bpe. This method
-	 * will only react if the editor is one of Delta-G or KEQ. These two properties have integer values in L1 but were
-	 * upgraded to 5-tuples called DeltaGPrime0 and KPrime in L2.
-	 * @param bpe that is being bound.
-	 * @param model that is being populated.
-	 * @param value of the property which is an integer.
-	 * @return a modified BioPAX L2 element, DeltaGPrime0 or Kprime if the editor is Delta-G or KEQ respectively.
-	 *         Null otherwise.
-	 * @deprecated BioPAX Level 1 exports are extremely rare and obsolete.
-	 */
-	protected BioPAXElement L1ToL2Fixes(PropertyEditor editor, BioPAXElement bpe, Model model, String value)
-	{
-		BioPAXElement created = null;
-
-		if (this.isConvertingFromLevel1ToLevel2())
-		{
-			if (editor.getProperty().equals("DELTA-G"))
-			{
-				deltaGprimeO aDeltaGprime0 = model.addNew(deltaGprimeO.class, (bpe.getUri() + "-DELTA-G"));
-				aDeltaGprime0.setDELTA_G_PRIME_O(Float.valueOf(value));
-				created = aDeltaGprime0;
-			}
-			if (editor.getProperty().equals("KEQ"))
-			{
-				kPrime aKPrime = model.addNew(kPrime.class, (bpe.getUri() + "-KEQ"));
-				aKPrime.setK_PRIME(Float.valueOf(value));
-				created = aKPrime;
-			}
-
-		}
-
-		return created;
-	}
-
-	/**
 	 * This method currently only fixes reusedPEPs if the option is set. As L2 is becoming obsolete this method will be
 	 * slated for deprecation.
 	 * @param bpe to be bound
@@ -433,7 +315,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 */
 	protected void bindValue(String valueString, PropertyEditor editor, BioPAXElement bpe, Model model)
 	{
-
 		if (log.isDebugEnabled())
 		{
 			log.debug("Binding: " + bpe + '(' + bpe.getModelInterface() + " has  " + editor + ' ' + valueString);
@@ -446,16 +327,9 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			value = resourceFixes(bpe, value);
 			if (value == null)
 			{
-				value = L1ToL2Fixes(editor, bpe, model, valueString);
-				if (value == null)
-				{
-					throw new IllegalBioPAXArgumentException(
-							"Illegal or Dangling Value/Reference: " + valueString + " (element: " + bpe.getUri() +
-							" property: " + editor.getProperty() + ")");
-				}
-			} else if (this.isTreatNilAsNull() && valueString.trim().equalsIgnoreCase("NIL"))
-			{
-				value = null;
+				throw new IllegalBioPAXArgumentException(
+					"Illegal or Dangling Value/Reference: " + valueString + " (element: " + bpe.getUri() +
+					" property: " + editor.getProperty() + ")");
 			}
 		}
 		if (editor == null)
@@ -495,7 +369,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 * interface (e.g., {@link SimpleIOHandler}).
 	 * @param model model to be converted into OWL format
 	 * @param outputStream output stream into which the output will be written
-	 * @param ids optional list of "root" element absolute URIs (all direct/indirect child objects are auto-exported as well)
+	 * @param ids optional list of "root" element absolute URIs;
+	 *            direct/indirect child objects are auto-exported as well.
 	 */
 	public void convertToOWL(Model model, OutputStream outputStream, String... ids)
 	{
@@ -507,9 +382,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 			Model m = model.getLevel().getDefaultFactory().createModel();
 			m.setXmlBase(model.getXmlBase());
 
-			//to avoid 'nextStep' that may lead to infinite loops -
-			Fetcher fetcher = new Fetcher(SimpleEditorMap.get(model.getLevel()), 
-					Fetcher.nextStepFilter);
+			Fetcher fetcher = new Fetcher(SimpleEditorMap.get(model.getLevel())); //no Filters anymore
 
 			for (String uri : ids)
 			{
