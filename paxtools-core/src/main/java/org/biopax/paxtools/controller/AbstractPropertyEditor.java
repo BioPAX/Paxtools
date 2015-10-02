@@ -450,11 +450,10 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 		}
 		catch (Exception e)
 		{
-			log.error("Failed to set value: " + value + " to bean " + bean 
-					+ "; bean class: " + bean.getClass().getSimpleName() 
-					+ "; primary set method: " + getPrimarySetMethod() 
-			        + ((value != null) ? "; value class: " + value.getClass().getSimpleName() : "") 
-			        + ". Error: " + e + ", Cause: " + e.getCause());
+			log.error("Failed to set " + ((value != null) ? value.getClass().getSimpleName() : "")
+					+ " value: " + value + " to " + bean.getClass().getSimpleName()
+					+ " (" + bean.getUri() + ") using method: " + getPrimarySetMethod().getName()
+					+ ". " + e.getMessage());
 		}
 	}
 
