@@ -9,9 +9,12 @@ import java.util.Set;
 
 /**
  * Tries to get Gene Symbols or UniProt IDs for genes
- * and - display names for small molecules.
+ * and - display names for small molecules;
  *
- * @author Ozgun Babur
+ * This id-fetcher is mainly to use with the BioPAX pathway data
+ * from Pathway Commons (PC2) db (normalized and enriched with xrefs).
+ *
+ * @author Ozgun Babur et al.
  */
 public class CommonIDFetcher implements IDFetcher
 {
@@ -22,9 +25,9 @@ public class CommonIDFetcher implements IDFetcher
 	{
 		Set<String> set = new HashSet<String>();
 
-		if (ele instanceof SmallMoleculeReference)
+		if (ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 		{
-			SmallMoleculeReference smr = (SmallMoleculeReference) ele;
+			Named smr = (Named) ele;
 
 			if (smr.getDisplayName() != null)
 				set.add(smr.getDisplayName());
@@ -75,8 +78,11 @@ public class CommonIDFetcher implements IDFetcher
 		}
 
 		if (set.isEmpty()) {
-			if (ele instanceof DnaReference || ele instanceof RnaReference) {
+			if (ele instanceof NucleicAcidReference || ele instanceof NucleicAcid)
+			{
 				for (Xref xr : ((XReferrable) ele).getXref()) {
+					if(xr instanceof PublicationXref) continue;
+
 					String db = xr.getDb();
 					if (db != null) {
 						db = db.toLowerCase();
@@ -88,7 +94,7 @@ public class CommonIDFetcher implements IDFetcher
 					}
 				}
 			} else {
-				//TODO any db id?
+				//TODO use other id or a name?
 			}
 		}
 

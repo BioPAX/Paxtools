@@ -61,13 +61,17 @@ public abstract class AbstractSIFMiner extends MinerAdapter implements SIFMiner
 		writeResultAsSIF(matches, out, type.isDirected(), getSourceLabel(), getTargetLabel());
 	}
 
-	@Override
 	public SIFType getSIFType()
 	{
 		return type;
 	}
 
-	public void setType(SIFType type)
+	/**
+	 * Sets the SIF type
+	 *
+	 * @param type
+	 */
+	protected void setType(SIFType type)
 	{
 		this.type = type;
 	}

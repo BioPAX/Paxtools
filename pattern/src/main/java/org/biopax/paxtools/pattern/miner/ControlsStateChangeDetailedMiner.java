@@ -35,7 +35,6 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 	 * Constructs the pattern.
 	 * @return pattern
 	 */
-	@Override
 	public Pattern constructPattern()
 	{
 		return PatternBox.controlsStateChange();
@@ -47,7 +46,6 @@ public class ControlsStateChangeDetailedMiner extends MinerAdapter
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
-	@Override
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{

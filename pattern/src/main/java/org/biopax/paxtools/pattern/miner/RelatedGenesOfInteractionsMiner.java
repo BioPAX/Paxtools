@@ -21,6 +21,8 @@ import java.util.Set;
  */
 public class RelatedGenesOfInteractionsMiner extends MinerAdapter
 {
+	private static final PathAccessor controlAcc = new PathAccessor("Interaction/controlledOf*");
+
 	/**
 	 * Constructor that sets name and description.
 	 */
@@ -35,7 +37,6 @@ public class RelatedGenesOfInteractionsMiner extends MinerAdapter
 	 * Constructs the pattern.
 	 * @return pattern
 	 */
-	@Override
 	public Pattern constructPattern()
 	{
 		return PatternBox.relatedProteinRefOfInter(
@@ -43,14 +44,11 @@ public class RelatedGenesOfInteractionsMiner extends MinerAdapter
 			TemplateReaction.class);
 	}
 
-	private static final PathAccessor controlAcc = new PathAccessor("Interaction/controlledOf*");
-
 	/**
 	 * Writes the IDs of interaction, then gene symbols of related proteins in a line.
 	 * @param matches pattern search result
 	 * @param out output stream
 	 */
-	@Override
 	public void writeResult(Map<BioPAXElement, List<Match>> matches, OutputStream out)
 		throws IOException
 	{

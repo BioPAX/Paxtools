@@ -583,7 +583,7 @@ public abstract class MinerAdapter implements Miner
 	 * @param label2 label for the second ProteinReference in the result matches
 	 * @throws IOException if cannot write to output stream
 	 */
-	public void writeResultAsSIF(Map<BioPAXElement, List<Match>> matches, OutputStream out,
+	protected void writeResultAsSIF(Map<BioPAXElement, List<Match>> matches, OutputStream out,
 		boolean directed, String label1, String label2) throws IOException
 	{
 		if (matches.isEmpty()) return;
@@ -639,7 +639,7 @@ public abstract class MinerAdapter implements Miner
 	 * @param out output stream for text output
 	 * @throws IOException if cannot write to output stream
 	 */
-	public void writeSIFsUsingSIFFramework(Map<BioPAXElement, List<Match>> matches,
+	protected void writeSIFsUsingSIFFramework(Map<BioPAXElement, List<Match>> matches,
 		OutputStream out) throws IOException
 	{
 		Map<SIFInteraction, SIFInteraction> sifMap = new HashMap<SIFInteraction, SIFInteraction>();
@@ -680,7 +680,7 @@ public abstract class MinerAdapter implements Miner
 	 * relationship type between gene symbol pairs.
 	 * @return type of the relation
 	 */
-	public String getRelationType()
+	protected String getRelationType()
 	{
 		if (this instanceof SIFMiner)
 		{
@@ -708,7 +708,7 @@ public abstract class MinerAdapter implements Miner
 	 * @param columns number of columns in the result
 	 * @throws IOException if cannot write to the stream
 	 */
-	public void writeResultDetailed(Map<BioPAXElement, List<Match>> matches, OutputStream out,
+	protected void writeResultDetailed(Map<BioPAXElement, List<Match>> matches, OutputStream out,
 		int columns) throws IOException
 	{
 		OutputStreamWriter writer = new OutputStreamWriter(out);
@@ -871,7 +871,7 @@ public abstract class MinerAdapter implements Miner
 	 * @param label label of the related EntityReference in the pattern
 	 * @return identifier
 	 */
-	public Set<String> getIdentifiers(Match m, String label)
+	protected Set<String> getIdentifiers(Match m, String label)
 	{
 		BioPAXElement el = m.get(label, getPattern());
 
@@ -895,7 +895,7 @@ public abstract class MinerAdapter implements Miner
 	 * @param smr small molecule ref
 	 * @return a name
 	 */
-	public String getCompoundName(SmallMoleculeReference smr)
+	protected String getCompoundName(SmallMoleculeReference smr)
 	{
 		return smr.getDisplayName();
 	}
