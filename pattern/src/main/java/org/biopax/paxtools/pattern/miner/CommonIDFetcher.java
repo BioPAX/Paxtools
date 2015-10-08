@@ -8,7 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Tries to get gene symbols or uniprot IDs for genes and display names for small molecules.
+ * Tries to get Gene Symbols or UniProt IDs for genes
+ * and - display names for small molecules.
  *
  * @author Ozgun Babur
  */
@@ -24,10 +25,14 @@ public class CommonIDFetcher implements IDFetcher
 		if (ele instanceof SmallMoleculeReference)
 		{
 			SmallMoleculeReference smr = (SmallMoleculeReference) ele;
-			if (smr.getDisplayName() != null) set.add(smr.getDisplayName());
-			else if (!smr.getName().isEmpty()) set.add(smr.getName().iterator().next());
+
+			if (smr.getDisplayName() != null)
+				set.add(smr.getDisplayName());
+			else if (!smr.getName().isEmpty())
+				set.add(smr.getName().iterator().next());
 
 			return set;
+
 		}
 		else if (useUniprotIDs && ele.getUri().startsWith("http://identifiers.org/uniprot/"))
 		{
@@ -37,6 +42,9 @@ public class CommonIDFetcher implements IDFetcher
 		{
 			for (Xref xr : ((XReferrable) ele).getXref())
 			{
+				if(xr instanceof PublicationXref)
+					continue;
+
 				String db = xr.getDb();
 				if (db != null)
 				{
@@ -46,6 +54,7 @@ public class CommonIDFetcher implements IDFetcher
 						String id = xr.getId();
 						if (id != null)
 						{
+							//id is either a HGNC:1234 ID or Symbol (gene name)
 							String symbol = HGNC.getSymbol(id);
 							if (symbol != null && !symbol.isEmpty())
 							{
@@ -65,21 +74,21 @@ public class CommonIDFetcher implements IDFetcher
 			}
 		}
 
-		if (set.isEmpty() && (ele instanceof DnaReference || ele instanceof RnaReference))
-		{
-			for (Xref xr : ((XReferrable) ele).getXref())
-			{
-				String db = xr.getDb();
-				if (db != null)
-				{
-					db = db.toLowerCase();
-
-					if (db.equals("mirbase sequence"))
-					{
-						String id = xr.getId();
-						if (id != null && !id.isEmpty()) set.add(id);
+		if (set.isEmpty()) {
+			if (ele instanceof DnaReference || ele instanceof RnaReference) {
+				for (Xref xr : ((XReferrable) ele).getXref()) {
+					String db = xr.getDb();
+					if (db != null) {
+						db = db.toLowerCase();
+						if (db.equals("mirbase sequence")) {
+							String id = xr.getId();
+							if (id != null && !id.isEmpty())
+								set.add(id);
+						}
 					}
 				}
+			} else {
+				//TODO any db id?
 			}
 		}
 

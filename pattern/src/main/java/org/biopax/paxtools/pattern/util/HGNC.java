@@ -19,11 +19,6 @@ public class HGNC
 	private static Map<String, String> id2sym;
 	private static Map<String, String> old2new;
 
-	public static void main(String[] args)
-	{
-		System.out.println(getSymbol("PKCA"));
-	}
-
 	public static String getSymbol(String idOrSymbol)
 	{
 		if (id2sym.containsKey(idOrSymbol)) return id2sym.get(idOrSymbol);

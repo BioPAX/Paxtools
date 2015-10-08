@@ -791,11 +791,11 @@ public abstract class MinerAdapter implements Miner
 	 */
 	public Set<SIFInteraction> createSIFInteraction(Match m, IDFetcher fetcher)
 	{
-		BioPAXElement sourceER = m.get(((SIFMiner) this).getSourceLabel(), getPattern());
-		BioPAXElement targetER = m.get(((SIFMiner) this).getTargetLabel(), getPattern());
+		BioPAXElement sourceBpe = m.get(((SIFMiner) this).getSourceLabel(), getPattern());
+		BioPAXElement targetBpe = m.get(((SIFMiner) this).getTargetLabel(), getPattern());
 
-		Set<String> sources = fetchIDs(sourceER, fetcher);
-		Set<String> targets = fetchIDs(targetER, fetcher);
+		Set<String> sources = fetchIDs(sourceBpe, fetcher);
+		Set<String> targets = fetchIDs(targetBpe, fetcher);
 
 		SIFType sifType = ((SIFMiner) this).getSIFType();
 
@@ -808,14 +808,14 @@ public abstract class MinerAdapter implements Miner
 				if (source.equals(target)) continue;
 				else if (sifType.isDirected() || source.compareTo(target) < 0)
 				{
-					set.add(new SIFInteraction(source, target, sourceER, targetER, sifType,
+					set.add(new SIFInteraction(source, target, sourceBpe, targetBpe, sifType,
 						new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())),
 						new HashSet<BioPAXElement>(m.get(getSourcePELabels(), getPattern())),
 						new HashSet<BioPAXElement>(m.get(getTargetPELabels(), getPattern()))));
 				}
 				else
 				{
-					set.add(new SIFInteraction(target, source, targetER, sourceER, sifType,
+					set.add(new SIFInteraction(target, source, targetBpe, sourceBpe, sifType,
 						new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())),
 						new HashSet<BioPAXElement>(m.get(getTargetPELabels(), getPattern())),
 						new HashSet<BioPAXElement>(m.get(getSourcePELabels(), getPattern()))));
@@ -880,7 +880,6 @@ public abstract class MinerAdapter implements Miner
 		Set<String> set = new HashSet<String>();
 		if (el instanceof ProteinReference)
 		{
-//			set.add(getUniprotNameForHuman(m, label));
 			set.add(getGeneSymbol((ProteinReference) el));
 		}
 		else if (el instanceof SmallMoleculeReference)
