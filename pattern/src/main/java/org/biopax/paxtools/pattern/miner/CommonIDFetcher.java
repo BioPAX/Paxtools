@@ -34,7 +34,7 @@ public class CommonIDFetcher implements IDFetcher
 			else if (!smr.getName().isEmpty())
 				set.add(smr.getName().iterator().next());
 
-			return set;
+			return set; //TODO why now (what if SM/SMR has no names but has xrefs, e.g., ChEBI, Pubchem)?
 
 		}
 		else if (useUniprotIDs && ele.getUri().startsWith("http://identifiers.org/uniprot/"))
@@ -49,29 +49,22 @@ public class CommonIDFetcher implements IDFetcher
 					continue;
 
 				String db = xr.getDb();
-				if (db != null)
+				String id = xr.getId();
+				if (db != null && id != null && !id.isEmpty())
 				{
 					db = db.toLowerCase();
 					if (!useUniprotIDs && db.startsWith("hgnc"))
 					{
-						String id = xr.getId();
-						if (id != null)
+						//valid id is either a HGNC:1234 ID or Symbol (gene name)
+						String symbol = HGNC.getSymbol(id);
+						if (symbol != null && !symbol.isEmpty())
 						{
-							//id is either a HGNC:1234 ID or Symbol (gene name)
-							String symbol = HGNC.getSymbol(id);
-							if (symbol != null && !symbol.isEmpty())
-							{
-								set.add(symbol);
-							}
+							set.add(symbol);
 						}
 					}
 					else if (useUniprotIDs && db.startsWith("uniprot"))
 					{
-						String id = xr.getId();
-						if (id != null)
-						{
-							set.add(id);
-						}
+						set.add(id);
 					}
 				}
 			}
@@ -84,21 +77,20 @@ public class CommonIDFetcher implements IDFetcher
 					if(xr instanceof PublicationXref) continue;
 
 					String db = xr.getDb();
-					if (db != null) {
+					String id = xr.getId();
+					if (db != null && id != null && !id.isEmpty()) {
 						db = db.toLowerCase();
 						if (db.equals("mirbase sequence")) {
-							String id = xr.getId();
-							if (id != null && !id.isEmpty())
-								set.add(id);
+							set.add(id);
 						}
 					}
 				}
 			} else {
-				//TODO use other id or a name?
+				//TODO perhaps use other id or a name?
 			}
 		}
 
-		return set;
+		return set; //TODO what if it's still empty (some entities will be missing in the SIF output or not?)
 	}
 
 	public void setUseUniprotIDs(boolean useUniprotIDs)
