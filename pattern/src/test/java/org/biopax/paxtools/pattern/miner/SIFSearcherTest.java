@@ -2,16 +2,12 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
-import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.Pathway;
-import org.biopax.paxtools.model.level3.Protein;
-import org.biopax.paxtools.model.level3.SmallMolecule;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.PatternBoxTest;
 import org.biopax.paxtools.pattern.util.AdjacencyMatrix;
 import org.biopax.paxtools.pattern.util.Blacklist;
-import org.biopax.paxtools.trove.TProvider;
-import org.biopax.paxtools.util.BPCollections;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,7 +15,11 @@ import org.junit.Test;
 import java.io.*;
 import java.util.*;
 
+import static org.junit.Assert.*;
+
 /**
+ * TODO replace temporary/ignored "tests" (hard-coded local input paths) with normal test resources and assertions.
+ *
  * @author Ozgun Babur
  */
 public class SIFSearcherTest extends PatternBoxTest
@@ -228,12 +228,70 @@ public class SIFSearcherTest extends PatternBoxTest
 
 
 	@Test
-	@Ignore
 	public void testSIFSearcher() throws IOException
 	{
-		generate("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl",
-//		generate("/home/ozgun/Desktop/temp.owl",
-				"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
+//		generate("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl",
+//				"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
+
+
+		// Test CommonIdFetcher vs. NamedIDFetcher SIF seatch output results.
+		final SIFType[] sifTypes = new SIFType[]{SIFEnum.IN_COMPLEX_WITH};
+		final SIFSearcher commonSifSearcher = new SIFSearcher(null, sifTypes); //CommonIDFetcher is used by def.
+		final SIFSearcher namedSifSearcher = new SIFSearcher(new NamedIDFetcher(), sifTypes);
+
+		// Make a simple model with one interaction/complex, two participants
+		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
+		Complex c = model.addNew(Complex.class, "complex");
+		c.setDisplayName("KRAS-Ca2+"); //perhaps, not a real thing
+		Protein p = model.addNew(Protein.class, "kras");
+		p.setDisplayName("KRAS");
+		SmallMolecule mol = model.addNew(SmallMolecule.class, "calcium2plus");
+		mol.setDisplayName("Ca2+");
+		c.addComponent(p);
+		c.addComponent(mol);
+
+		// Test searcher.searchSIF(model) - check no. interactions, not empty, etc...
+		Set<SIFInteraction> sifInteractions = namedSifSearcher.searchSIF(model);
+		assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
+		sifInteractions = commonSifSearcher.searchSIF(model);
+		assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
+
+		//add xrefs to PEs
+		Xref prx = model.addNew(RelationshipXref.class,"prx");
+		prx.setDb("HGNC Symbol");
+		prx.setId("KRAS");
+		Xref mrx = model.addNew(RelationshipXref.class,"mrx");
+		mrx.setDb("ChEBI");
+		mrx.setId("CHEBI:29108"); //Ca2+
+		p.addXref(prx);
+		mol.addXref(mrx);
+		sifInteractions = commonSifSearcher.searchSIF(model);
+		assertTrue(sifInteractions.isEmpty()); //still no result (due to - no ERs?)
+		sifInteractions = namedSifSearcher.searchSIF(model);
+		assertTrue(sifInteractions.isEmpty());
+
+		//well, let's add entity references
+		SmallMoleculeReference smr = model.addNew(SmallMoleculeReference.class,"calcium2plus_ref");
+		smr.setStandardName("calcium(2+)");
+		mol.setEntityReference(smr);
+		smr.addXref(mrx);
+		ProteinReference pr = model.addNew(ProteinReference.class,"kras_ref");
+		pr.setStandardName("KRAS");
+		p.setEntityReference(pr);
+		pr.addXref(prx);
+
+		assertEquals(7, model.getObjects().size());
+
+		sifInteractions = namedSifSearcher.searchSIF(model);
+		assertTrue(sifInteractions.isEmpty());//TODO why empty result?
+		sifInteractions = commonSifSearcher.searchSIF(model);
+		assertTrue(sifInteractions.isEmpty());//TODO why??
+
+
+		//export to text and check nodes, edges, IDs are still there
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+		//TODO write and check...
 	}
 
 	public static void generate(String inputModelFile, String ubiqueIDFile, String outputFile)
@@ -267,23 +325,4 @@ public class SIFSearcherTest extends PatternBoxTest
 		return searcher.searchSIF(model);
 	}
 
-	@Test
-	@Ignore
-	public void testTemp()
-	{
-		FileInputStream fin;
-		try {
-			fin = new FileInputStream("/home/ozgun/Downloads/testmodel.owl");
-			BioPAXIOHandler handler = new SimpleIOHandler();
-			Model model = handler.convertFromOWL(fin); //THIS LINE OF CODE CAUSES THE ERROR
-
-			for (SmallMolecule sm : model.getObjects(SmallMolecule.class))
-			{
-				System.out.println("protein.getDisplayName() = " + sm.getName().iterator().next());
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
 }

@@ -51,7 +51,7 @@ public enum SIFEnum implements SIFType
 	 * @param description description of the edge type
 	 * @param directed whether the edge type is directed
 	 */
-	private SIFEnum(String description, boolean directed, Class<? extends SIFMiner>... miners)
+	SIFEnum(String description, boolean directed, Class<? extends SIFMiner>... miners)
 	{
 		this.description = description;
 		this.directed = directed;
@@ -100,7 +100,6 @@ public enum SIFEnum implements SIFType
 		return description;
 	}
 
-	@Override
 	public List<Class<? extends SIFMiner>> getMiners()
 	{
 		return miners;
