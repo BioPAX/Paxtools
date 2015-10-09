@@ -13,7 +13,7 @@ import java.util.Set;
 public interface Model extends Serializable
 {
     /**
-     * This method add the given onject to this model. If the object
+     * This method adds the given object to this model. If the object
      * points to other objects that are not in the model, it is user's
      * responsibility to add them into the model as well.
      * If an object with the same id already exists, it will throw
