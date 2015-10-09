@@ -25,7 +25,6 @@
 
 	<modules>
 		<module>paxtools-core</module>
-		<module>paxtools-jena-io</module>
 		<module>gsea-converter</module>
 		<module>psimi-converter</module>
 		<module>sbgn-converter</module>

@@ -17,8 +17,8 @@ java.lang.System.out.println("hello world")
 shutdownJVM()
 
 2. Download Paxtools
-Get either the paxtools*-no-jena.jar (smaller) or paxtools*.jar (has additional jenaIO module)
-'fat' JAR from http://sourceforge.net/projects/biopax/files/paxtools/
+Get the paxtools*.jar
+'fat' JAR from http://www.biopax.org/downloads/paxtools/
 
 3. Program in python using paxtools
 See pythonPaxtoolsExample.py example script that creates
