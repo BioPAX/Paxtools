@@ -27,12 +27,11 @@ public class CommonIDFetcher implements IDFetcher
 
 		if (ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 		{
-			Named smr = (Named) ele;
-
-			if (smr.getDisplayName() != null)
-				set.add(smr.getDisplayName());
-			else if (!smr.getName().isEmpty())
-				set.add(smr.getName().iterator().next());
+			Named e = (Named) ele;
+			if (e.getDisplayName() != null)
+				set.add(e.getDisplayName());
+			else if (!e.getName().isEmpty())
+				set.add(e.getName().iterator().next());
 
 			return set; //TODO why now (what if SM/SMR has no names but has xrefs, e.g., ChEBI, Pubchem)?
 
@@ -85,9 +84,15 @@ public class CommonIDFetcher implements IDFetcher
 						}
 					}
 				}
-			} else {
-				//TODO perhaps use other id or a name?
 			}
+		}
+
+		if (set.isEmpty() && ele instanceof Named) {
+			Named e = (Named) ele;
+			if (e.getDisplayName() != null)
+				set.add(e.getDisplayName());
+			else if (!e.getName().isEmpty())
+				set.add(e.getName().iterator().next());
 		}
 
 		return set; //TODO what if it's still empty (some entities will be missing in the SIF output or not?)

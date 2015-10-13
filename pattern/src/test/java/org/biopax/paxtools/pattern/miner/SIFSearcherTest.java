@@ -228,12 +228,16 @@ public class SIFSearcherTest extends PatternBoxTest
 
 
 	@Test
-	public void testSIFSearcher() throws IOException
+	@Ignore
+	public void testSIFSearcher2() throws IOException
 	{
 //		generate("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl",
 //				"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
+	}
 
-
+	@Test
+	public void testSIFSearcher() throws IOException
+	{
 		// Test CommonIdFetcher vs. NamedIDFetcher SIF seatch output results.
 		final SIFType[] sifTypes = new SIFType[]{SIFEnum.IN_COMPLEX_WITH};
 		final SIFSearcher commonSifSearcher = new SIFSearcher(null, sifTypes); //CommonIDFetcher is used by def.
@@ -242,13 +246,13 @@ public class SIFSearcherTest extends PatternBoxTest
 		// Make a simple model with one interaction/complex, two participants
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
 		Complex c = model.addNew(Complex.class, "complex");
-		c.setDisplayName("KRAS-Ca2+"); //perhaps, not a real thing
+		c.setDisplayName("KRAS-PIK3"); //perhaps, not a real thing
 		Protein p = model.addNew(Protein.class, "kras");
-		p.setDisplayName("KRAS");
-		SmallMolecule mol = model.addNew(SmallMolecule.class, "calcium2plus");
-		mol.setDisplayName("Ca2+");
+		p.setDisplayName("RAS");
+		Protein pp = model.addNew(Protein.class, "pik3");
+		pp.setDisplayName("PIK3");
 		c.addComponent(p);
-		c.addComponent(mol);
+		c.addComponent(pp);
 
 		// Test searcher.searchSIF(model) - check no. interactions, not empty, etc...
 		Set<SIFInteraction> sifInteractions = namedSifSearcher.searchSIF(model);
@@ -256,42 +260,67 @@ public class SIFSearcherTest extends PatternBoxTest
 		sifInteractions = commonSifSearcher.searchSIF(model);
 		assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
 
-		//add xrefs to PEs
+		//adding xrefs to PEs only does not help inferring the SIF interaction
 		Xref prx = model.addNew(RelationshipXref.class,"prx");
 		prx.setDb("HGNC Symbol");
 		prx.setId("KRAS");
-		Xref mrx = model.addNew(RelationshipXref.class,"mrx");
-		mrx.setDb("ChEBI");
-		mrx.setId("CHEBI:29108"); //Ca2+
 		p.addXref(prx);
-		mol.addXref(mrx);
+		Xref pprx = model.addNew(RelationshipXref.class,"pprx");
+		pprx.setDb("HGNC Symbol");
+		pprx.setId("PIK3C3");
+		//note: if xref.id were unknown/misspelled, tests would pass anyway (ER's name will be used instead) ;)
+		pp.addXref(pprx);
 		sifInteractions = commonSifSearcher.searchSIF(model);
 		assertTrue(sifInteractions.isEmpty()); //still no result (due to - no ERs?)
 		sifInteractions = namedSifSearcher.searchSIF(model);
 		assertTrue(sifInteractions.isEmpty());
 
-		//well, let's add entity references
-		SmallMoleculeReference smr = model.addNew(SmallMoleculeReference.class,"calcium2plus_ref");
-		smr.setStandardName("calcium(2+)");
-		mol.setEntityReference(smr);
-		smr.addXref(mrx);
-		ProteinReference pr = model.addNew(ProteinReference.class,"kras_ref");
-		pr.setStandardName("KRAS");
+		//let's add entity references without any xrefs yet -
+		ProteinReference ppr = model.addNew(ProteinReference.class,"pik3_ref");
+		ppr.setDisplayName("PIK3 family");
+		pp.setEntityReference(ppr);
+		ProteinReference pr = model.addNew(ProteinReference.class,"ras_ref");
+		pr.setDisplayName("RAS family");
 		p.setEntityReference(pr);
-		pr.addXref(prx);
 
 		assertEquals(7, model.getObjects().size());
 
 		sifInteractions = namedSifSearcher.searchSIF(model);
-		assertTrue(sifInteractions.isEmpty());//TODO why empty result?
-		sifInteractions = commonSifSearcher.searchSIF(model);
-		assertTrue(sifInteractions.isEmpty());//TODO why??
-
-
-		//export to text and check nodes, edges, IDs are still there
+		assertFalse(sifInteractions.isEmpty());
+		assertEquals(1, sifInteractions.size());
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		namedSifSearcher.searchSIF(model, bos);
+		System.out.println(bos.toString());//prints (using names): "PIK3 family	in-complex-with	RAS family"
+		//commonSifSearcher now also gets the same result after having recently being modified to use names when no xrefs found
+		sifInteractions = commonSifSearcher.searchSIF(model);
+		assertFalse(sifInteractions.isEmpty()); //OK
+		assertEquals(1, sifInteractions.size());
+		bos = new ByteArrayOutputStream();
+		commonSifSearcher.searchSIF(model, bos);
+		System.out.println(bos.toString());
 
-		//TODO write and check...
+		//add xrefs to Ers and repeat the SIF export
+		ppr.addXref(pprx);
+		pr.addXref(prx);
+//		bos = new ByteArrayOutputStream();
+//		new SimpleIOHandler().convertToOWL(model,bos);
+//		System.out.println(bos.toString());
+
+		sifInteractions = namedSifSearcher.searchSIF(model);
+		assertFalse(sifInteractions.isEmpty());
+		assertEquals(1, sifInteractions.size()); //OK
+		bos = new ByteArrayOutputStream();
+		namedSifSearcher.searchSIF(model, bos);
+		System.out.println(bos.toString());
+
+		sifInteractions = commonSifSearcher.searchSIF(model);
+		assertFalse(sifInteractions.isEmpty());
+		assertEquals(1, sifInteractions.size()); //OK
+		bos = new ByteArrayOutputStream();
+		commonSifSearcher.searchSIF(model, bos);
+		System.out.println(bos.toString());
+
+		//TODO more...
 	}
 
 	public static void generate(String inputModelFile, String ubiqueIDFile, String outputFile)
