@@ -508,7 +508,7 @@ public class PatternBox
 		p.add(peToER(), "SPE2", "generic Protein 2");
 		p.add(linkedER(false), "generic Protein 2", "Protein 2");
 		p.add(equal(false), "Protein 1", "Protein 2");
-		p.add(new Type(ProteinReference.class), "Protein 2");
+		p.add(new Type(SequenceEntityReference.class), "Protein 2");
 		return p;
 	}
 
