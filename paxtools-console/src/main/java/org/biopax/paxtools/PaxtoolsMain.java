@@ -16,6 +16,7 @@ import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.client.BiopaxValidatorClient;
 import org.biopax.paxtools.client.BiopaxValidatorClient.RetFormat;
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.validator.jaxb.Behavior;
 
 import java.io.*;
@@ -470,14 +471,11 @@ public class PaxtoolsMain {
 	}
 		
 	public static void summarize(Model model, PrintStream out) throws IOException {
-        // Produce a simplified version of the summary
-
 		if (out == null) out = System.out;
 
         HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
-		final SimpleEditorMap em = (model.getLevel() == BioPAXLevel.L3) 
-				? SimpleEditorMap.L3 : SimpleEditorMap.L2;
+		final SimpleEditorMap em = SimpleEditorMap.get(model.getLevel());
 
 		for (Class<? extends BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
 		{
@@ -594,6 +592,37 @@ public class PaxtoolsMain {
 			out.println();
 		}
 
+		//other
+		int speLackingEr = 0;
+		int speLackingErAndId = 0;
+		int protLackingErAndId = 0;
+		int molLackingErAndId = 0;
+		for(SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class)) {
+			if(spe.getEntityReference()==null) {
+				speLackingEr++;
+				if(spe.getXref().isEmpty() || new ClassFilterSet<Xref,PublicationXref>(spe.getXref(), PublicationXref.class)
+						.size() == spe.getXref().size())
+					{
+						speLackingErAndId++;
+						if(spe instanceof Protein)
+							protLackingErAndId++;
+						else if(spe instanceof SmallMolecule)
+							molLackingErAndId++;
+					}
+			}
+		}
+		out.println("\nSimplePhysicalEntity having NULL entityReference: "+speLackingEr+"\n");
+		out.println("\n\t- including those having no (but perhaps PublicationXref) xrefs/ids: "+speLackingErAndId+" \n");
+		out.println("\n\t\t-- including Protein without any xrefs/ids: "+protLackingErAndId+"\n");
+		out.println("\n\t\t-- including SmallMolecule without any xrefs/ids: "+molLackingErAndId+"\n");
+
+		int erLackingId = 0;
+		for(EntityReference er : model.getObjects(EntityReference.class)) {
+			if(er.getXref().isEmpty() || new ClassFilterSet<Xref,PublicationXref>(er.getXref(), PublicationXref.class)
+					.size() == er.getXref().size())
+				erLackingId++;
+		}
+		out.println("\nEntityReference lacking xrefs/ids: "+erLackingId+"\n");
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(Set<? extends Class<? extends BioPAXElement>>
