@@ -242,6 +242,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		final SIFType[] sifTypes = new SIFType[]{SIFEnum.IN_COMPLEX_WITH};
 		final SIFSearcher commonSifSearcher = new SIFSearcher(null, sifTypes); //CommonIDFetcher is used by def.
 		final SIFSearcher namedSifSearcher = new SIFSearcher(new NamedIDFetcher(), sifTypes);
+		final SIFSearcher simpleSifSearcher = new SIFSearcher(new SimpleIDFetcher(), sifTypes);
 
 		// Make a simple model with one interaction/complex, two participants
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
@@ -297,6 +298,14 @@ public class SIFSearcherTest extends PatternBoxTest
 		assertEquals(1, sifInteractions.size());
 		bos = new ByteArrayOutputStream();
 		commonSifSearcher.searchSIF(model, bos);
+		System.out.println(bos.toString());
+
+		//using SimpleIDFetcher gets the result
+		sifInteractions = simpleSifSearcher.searchSIF(model);
+		assertFalse(sifInteractions.isEmpty()); //OK
+		assertEquals(1, sifInteractions.size());
+		bos = new ByteArrayOutputStream();
+		simpleSifSearcher.searchSIF(model, bos);
 		System.out.println(bos.toString());
 
 		//add xrefs to Ers and repeat the SIF export

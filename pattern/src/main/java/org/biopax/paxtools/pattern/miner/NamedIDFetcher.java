@@ -16,6 +16,9 @@ import java.util.Set;
  */
 public class NamedIDFetcher implements IDFetcher
 {
+
+	//TODO add a 'xrefDb' field
+
 	@Override
 	public Set<String> fetchID(BioPAXElement ele)
 	{
