@@ -26,8 +26,9 @@ public class OldFormatWriter
 		new PathAccessor("XReferrable/xref:RelationshipXref")};
 
 	/**
-	 * Writes down the given interactions into the given output stream in the old
-	 * EXTENDED_BINARY_SIF format. Closes the stream at the end.
+	 * Writes down the given interactions into the given output stream
+	 * using the Pathway Commons EXTENDED_BINARY_SIF format.
+	 * Closes the stream at the end.
 	 * @param inters binary interactions
 	 * @param out stream to write
 	 * @return true if any output produced successfully
@@ -52,6 +53,72 @@ public class OldFormatWriter
 				{
 					writer.write("\n" + stt.convert(inter));
 				}
+				writeSourceAndTargetDetails(inters, writer);
+				writer.close();
+				return true;
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Writes down the given interactions into the given "edges"
+	 * output stream in the Pathway Commons EXTENDED_BINARY_SIF format.
+	 * Closes the stream at the end.
+	 * @param inters binary interactions
+	 * @param out stream to write
+	 * @return true if any output produced successfully
+	 */
+	public static boolean writeInteractions(Set<SIFInteraction> inters, OutputStream out)
+	{
+		SIFToText stt = new CustomFormat(
+				OutputColumn.Type.RESOURCE.name(),
+				OutputColumn.Type.PUBMED.name(),
+				OutputColumn.Type.PATHWAY.name());
+
+		if (!inters.isEmpty())
+		{
+			List<SIFInteraction> interList = new ArrayList<SIFInteraction>(inters);
+			Collections.sort(interList);
+			try
+			{
+				OutputStreamWriter writer = new OutputStreamWriter(out);
+				writer.write("PARTICIPANT_A\tINTERACTION_TYPE\tPARTICIPANT_B\t" +
+						"INTERACTION_DATA_SOURCE\tINTERACTION_PUBMED_ID\tPATHWAY_NAMES");
+				for (SIFInteraction inter : interList)
+				{
+					writer.write("\n" + stt.convert(inter));
+				}
+				writer.close();
+				return true;
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Writes down the interaction participants' details
+	 * to the given output stream using Pathway Commons
+	 * EXTENDED_BINARY_SIF format. Closes the stream at the end.
+	 * @param inters binary interactions
+	 * @param out stream to write
+	 * @return true if any output produced successfully
+	 */
+	public static boolean writeParticipants(Set<SIFInteraction> inters, OutputStream out)
+	{
+		if (!inters.isEmpty())
+		{
+			try
+			{
+				OutputStreamWriter writer = new OutputStreamWriter(out);
 				writeSourceAndTargetDetails(inters, writer);
 				writer.close();
 				return true;
