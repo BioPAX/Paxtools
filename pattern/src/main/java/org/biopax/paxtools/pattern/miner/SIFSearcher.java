@@ -68,7 +68,7 @@ public class SIFSearcher
 		this.idFetcher = idFetcher;
 		this.types = new HashSet<SIFType>(Arrays.asList(types));
 
-		if (idFetcher == null) this.idFetcher = new CommonIDFetcher();
+		if (idFetcher == null) this.idFetcher = new SimpleIDFetcher();//gets URIs
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SIFSearcher
 		this.idFetcher = idFetcher;
 		this.miners = Arrays.asList(miners);
 
-		if (idFetcher == null) this.idFetcher = new CommonIDFetcher();
+		if (idFetcher == null) this.idFetcher = new SimpleIDFetcher();
 	}
 
 	private void initMiners()
@@ -159,14 +159,6 @@ public class SIFSearcher
 				for (Match m : matchList)
 				{
 					Set<SIFInteraction> sifs = miner.createSIFInteraction(m, idFetcher);
-
-					//----debug-block
-//					if (sif.sourceID.equals("limonin") && sif.targetID.equals("GNG11"))
-//					{
-//						System.out.println();
-//					}
-					//----end-of-debug-block
-
 					for (SIFInteraction sif : sifs)
 					{
 						if (sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID) &&

@@ -341,6 +341,7 @@ public class PaxtoolsMain {
         }
     }
 
+	//Exports a biopax model to the special Pathway Commons' extended binary SIF format
     public static void toSifnx(String[] argv) throws IOException {
         CommonIDFetcher idFetcher = new CommonIDFetcher();
 		idFetcher.setUseUniprotIDs(argv.length > 3 && argv[3].equals("uniprot"));
@@ -360,7 +361,6 @@ public class PaxtoolsMain {
 
     public static void toSif(String[] argv) throws IOException {
 		CommonIDFetcher idFetcher = new CommonIDFetcher();
-
 		List<String> otherParam = new ArrayList<String>();
 		otherParam.addAll(Arrays.asList(argv).subList(3, argv.length));
 

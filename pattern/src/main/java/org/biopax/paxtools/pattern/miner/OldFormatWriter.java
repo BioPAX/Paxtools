@@ -53,6 +53,7 @@ public class OldFormatWriter
 				{
 					writer.write("\n" + stt.convert(inter));
 				}
+				writer.write("\n\n");//last line's EOL, + one blank line
 				writeSourceAndTargetDetails(inters, writer);
 				writer.close();
 				return true;
@@ -135,14 +136,11 @@ public class OldFormatWriter
 		throws IOException
 	{
 		Map<String, Set<BioPAXElement>> map = collectEntityRefs(inters);
-
-		writer.write("\n\nPARTICIPANT\tPARTICIPANT_TYPE\tPARTICIPANT_NAME\t" +
-			"UNIFICATION_XREF\tRELATIONSHIP_XREF");
-
+		//write the column headers row first
+		writer.write("PARTICIPANT\tPARTICIPANT_TYPE\tPARTICIPANT_NAME\tUNIFICATION_XREF\tRELATIONSHIP_XREF");
 		for (String id : map.keySet())
 		{
 			writer.write("\n" + id + "\t" + getParticipantTypes(map.get(id)));
-
 			for (PathAccessor acc : ACCS)
 			{
 				writer.write("\t" + getValue(map.get(id), acc));
