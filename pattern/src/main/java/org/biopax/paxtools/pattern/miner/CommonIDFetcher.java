@@ -20,7 +20,6 @@ public class CommonIDFetcher implements IDFetcher
 {
 	boolean useUniprotIDs = false;
 
-	@Override
 	public Set<String> fetchID(BioPAXElement ele)
 	{
 		Set<String> set = new HashSet<String>();

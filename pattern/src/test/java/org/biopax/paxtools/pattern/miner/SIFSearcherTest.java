@@ -1,6 +1,5 @@
 package org.biopax.paxtools.pattern.miner;
 
-import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -18,7 +17,7 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 /**
- * TODO replace temporary/ignored "tests" (hard-coded local input paths) with normal test resources and assertions.
+ * TODO replace the ignored "tests" (hard-coded local input paths) with normal test resources and assertions.
  *
  * @author Ozgun Babur
  */
@@ -226,22 +225,13 @@ public class SIFSearcherTest extends PatternBoxTest
 		System.out.println("present ubique = " + present);
 	}
 
-
-	@Test
-	@Ignore
-	public void testSIFSearcher2() throws IOException
-	{
-//		generate("/home/ozgun/Projects/biopax-pattern/All-Human-Data.owl",
-//				"/home/ozgun/Projects/biopax-pattern/ubiquitous-ids.txt", "SIF.txt");
-	}
-
 	@Test
 	public void testSIFSearcher() throws IOException
 	{
-		// Test CommonIdFetcher vs. NamedIDFetcher SIF seatch output results.
+		// Test CommonIdFetcher vs. ConfigurableIDFetcher SIF seatch output results.
 		final SIFType[] sifTypes = new SIFType[]{SIFEnum.IN_COMPLEX_WITH};
 		final SIFSearcher commonSifSearcher = new SIFSearcher(null, sifTypes); //CommonIDFetcher is used by def.
-		final SIFSearcher namedSifSearcher = new SIFSearcher(new NamedIDFetcher(), sifTypes);
+		final SIFSearcher customSifSearcher = new SIFSearcher(new ConfigurableIDFetcher(), sifTypes);
 		final SIFSearcher simpleSifSearcher = new SIFSearcher(new SimpleIDFetcher(), sifTypes);
 
 		// Make a simple model with one interaction/complex, two participants
@@ -256,7 +246,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		c.addComponent(pp);
 
 		// Test searcher.searchSIF(model) - check no. interactions, not empty, etc...
-		Set<SIFInteraction> sifInteractions = namedSifSearcher.searchSIF(model);
+		Set<SIFInteraction> sifInteractions = customSifSearcher.searchSIF(model);
 		assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
 		sifInteractions = commonSifSearcher.searchSIF(model);
 		assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
@@ -273,7 +263,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		pp.addXref(pprx);
 		sifInteractions = commonSifSearcher.searchSIF(model);
 		assertTrue(sifInteractions.isEmpty()); //still no result (due to - no ERs?)
-		sifInteractions = namedSifSearcher.searchSIF(model);
+		sifInteractions = customSifSearcher.searchSIF(model);
 		assertTrue(sifInteractions.isEmpty());
 
 		//let's add entity references without any xrefs yet -
@@ -286,11 +276,11 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		assertEquals(7, model.getObjects().size());
 
-		sifInteractions = namedSifSearcher.searchSIF(model);
+		sifInteractions = customSifSearcher.searchSIF(model);
 		assertFalse(sifInteractions.isEmpty());
 		assertEquals(1, sifInteractions.size());
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		namedSifSearcher.searchSIF(model, bos);
+		customSifSearcher.searchSIF(model, bos);
 		System.out.println(bos.toString());//prints (using names): "PIK3 family	in-complex-with	RAS family"
 		//commonSifSearcher now also gets the same result after having recently being modified to use names when no xrefs found
 		sifInteractions = commonSifSearcher.searchSIF(model);
@@ -315,11 +305,11 @@ public class SIFSearcherTest extends PatternBoxTest
 //		new SimpleIOHandler().convertToOWL(model,bos);
 //		System.out.println(bos.toString());
 
-		sifInteractions = namedSifSearcher.searchSIF(model);
+		sifInteractions = customSifSearcher.searchSIF(model);
 		assertFalse(sifInteractions.isEmpty());
 		assertEquals(1, sifInteractions.size()); //OK
 		bos = new ByteArrayOutputStream();
-		namedSifSearcher.searchSIF(model, bos);
+		customSifSearcher.searchSIF(model, bos);
 		System.out.println(bos.toString());
 
 		sifInteractions = commonSifSearcher.searchSIF(model);
