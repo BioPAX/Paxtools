@@ -24,16 +24,13 @@ public class CommonIDFetcher implements IDFetcher
 	{
 		Set<String> set = new HashSet<String>();
 
-		if (ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
+		if (ele instanceof SmallMoleculeReference)
 		{
 			Named e = (Named) ele;
 			if (e.getDisplayName() != null)
 				set.add(e.getDisplayName());
 			else if (!e.getName().isEmpty())
 				set.add(e.getName().iterator().next());
-
-			return set; //TODO why now (what if SM/SMR has no names but has xrefs, e.g., ChEBI, Pubchem)?
-
 		}
 		else if (useUniprotIDs && ele.getUri().startsWith("http://identifiers.org/uniprot/"))
 		{
@@ -69,7 +66,8 @@ public class CommonIDFetcher implements IDFetcher
 		}
 
 		if (set.isEmpty()) {
-			if (ele instanceof NucleicAcidReference || ele instanceof NucleicAcid)
+			// a hack - try getting mirtarbase ids for some NucleicAcidReference...
+			if (ele instanceof NucleicAcidReference)
 			{
 				for (Xref xr : ((XReferrable) ele).getXref()) {
 					if(xr instanceof PublicationXref) continue;
@@ -86,15 +84,12 @@ public class CommonIDFetcher implements IDFetcher
 			}
 		}
 
-		if (set.isEmpty() && ele instanceof Named) {
-			Named e = (Named) ele;
-			if (e.getDisplayName() != null)
-				set.add(e.getDisplayName());
-			else if (!e.getName().isEmpty())
-				set.add(e.getName().iterator().next());
-		}
+		//if it's still empty - fall back to using the URI
+		//(if we return the empty set, then some entities will be missing from the SIF output)
+		if(set.isEmpty())
+			set.add(ele.getUri());
 
-		return set; //TODO what if it's still empty (some entities will be missing in the SIF output or not?)
+		return set;
 	}
 
 	public void setUseUniprotIDs(boolean useUniprotIDs)
