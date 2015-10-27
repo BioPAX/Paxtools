@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<name>BioPAX Normalizer and MiriamLink</name>
+	<description>A BioPAX Normalizer and modified off-line MiriamLink (MIRIAM, EBI, OLS)</description>
+	
+	<inceptionYear>2009-2015</inceptionYear>
+	
+	<parent>
+		<artifactId>paxtools</artifactId>
+		<groupId>org.biopax.paxtools</groupId>
+		<version>5.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>normalizer</artifactId>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<clearOutputDir>false</clearOutputDir>
+					<packageName>net.biomodels.miriam</packageName>
+					<failOnNoSchemas>true</failOnNoSchemas>
+					<schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
+					<!--<arguments>-enableIntrospection</arguments>-->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>paxtools-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+</project>

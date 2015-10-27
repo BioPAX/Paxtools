@@ -35,6 +35,7 @@
 		<module>json-converter</module>
  		<module>paxtools-search</module>
 		<module>pattern</module>
+		<module>normalizer</module>
 	</modules>
 
 	<properties>
