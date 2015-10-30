@@ -231,8 +231,12 @@ public class SIFSearcherTest extends PatternBoxTest
 		// Test CommonIdFetcher vs. ConfigurableIDFetcher SIF seatch output results.
 		final SIFType[] sifTypes = new SIFType[]{SIFEnum.IN_COMPLEX_WITH};
 		final SIFSearcher commonSifSearcher = new SIFSearcher(null, sifTypes); //CommonIDFetcher is used by def.
-		final SIFSearcher customSifSearcher = new SIFSearcher(new ConfigurableIDFetcher(), sifTypes);
 		final SIFSearcher simpleSifSearcher = new SIFSearcher(new SimpleIDFetcher(), sifTypes);
+
+		// Configure an IDFetcher to collects HGNC Symbols (for seq. entities), or names (molecules), or URIs (fallback)
+		IDFetcher configurableIDFetcher = new ConfigurableIDFetcher().seqDbStartsWithOrEquals("hgnc symbol");
+		//TODO add tests using .seqDbStartsWithOrEquals with: "hgnc","uniprot","ncbi","mirbase", and .chemDbStartsWithOrEquals("chebi")
+		final SIFSearcher customSifSearcher = new SIFSearcher(configurableIDFetcher, sifTypes);
 
 		// Make a simple model with one interaction/complex, two participants
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();

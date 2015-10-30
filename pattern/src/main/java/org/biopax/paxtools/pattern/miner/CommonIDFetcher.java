@@ -3,6 +3,7 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,13 +25,15 @@ public class CommonIDFetcher implements IDFetcher
 	{
 		Set<String> set = new HashSet<String>();
 
-		if (ele instanceof SmallMoleculeReference)
+		if (ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 		{
 			Named e = (Named) ele;
 			if (e.getDisplayName() != null)
 				set.add(e.getDisplayName());
+			else if (e.getStandardName() != null)
+				set.add(e.getStandardName());
 			else if (!e.getName().isEmpty())
-				set.add(e.getName().iterator().next());
+				set.add(e.getName().toString());
 		}
 		else if (useUniprotIDs && ele.getUri().startsWith("http://identifiers.org/uniprot/"))
 		{
@@ -66,8 +69,8 @@ public class CommonIDFetcher implements IDFetcher
 		}
 
 		if (set.isEmpty()) {
-			// a hack - try getting mirtarbase ids for some NucleicAcidReference...
-			if (ele instanceof NucleicAcidReference)
+			// a second try - getting mirtarbase ids for a nucleic acid...
+			if (ele instanceof NucleicAcidReference || ele instanceof NucleicAcid)
 			{
 				for (Xref xr : ((XReferrable) ele).getXref()) {
 					if(xr instanceof PublicationXref) continue;

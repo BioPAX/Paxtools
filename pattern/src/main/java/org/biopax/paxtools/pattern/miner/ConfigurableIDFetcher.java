@@ -3,113 +3,137 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Tries to get preferred IDs or names for entity references.
- * This id-fetcher can be optionally used when converting BioPAX to SIF.
+ * Tries to get preferred type IDs, or a name, or URI (at last)
+ * of an entity reference.
+ *
+ * This id-fetcher can be optionally used
+ * when converting (reducing) BioPAX to the binary SIF format.
  */
 public class ConfigurableIDFetcher implements IDFetcher
 {
-	//TODO use Builder pattern (fluent API)
-
-	private String dbStartsWith;
-	private String dbEquals;
-
+	private final List<String> seqDbStartsWithOrEquals;
+	private final List<String> chemDbStartsWithOrEquals;
+	private boolean useNameWhenNoDbMatch;
 
 	/**
 	 * Constructor.
 	 */
 	public ConfigurableIDFetcher() {
-		dbStartsWith = "uniprot"; //default
-		dbEquals = null;
+		seqDbStartsWithOrEquals = new ArrayList<String>();
+		chemDbStartsWithOrEquals = new ArrayList<String>();
+		useNameWhenNoDbMatch = true;
 	}
 
 	/**
-	 * Set to prefer collecting IDs of such Xrefs
-	 * where the 'db' starts with given string,
-	 * ignoring case.
+	 * Set to prefer collecting gene/sequence IDs of such Xrefs
+	 * where the db starts with or equals given string,
+	 * ignoring case. You can chain this method calls like
+	 * seqDbStartsWithOrEquals(A).seqDbStartsWithOrEquals(B)... -
+	 * it will try to match a xref.db and collect xref.id
+	 * in the given order/priority.
 	 *
-	 * @param dbStartsWith
+	 * @param dbStartsWithOrEquals the Xref.db value or prefix (case-insensitive)
 	 * @return this id-fetcher instance
 	 */
-	public ConfigurableIDFetcher dbStartsWith(String dbStartsWith) {
-		this.dbStartsWith = dbStartsWith;
+	public ConfigurableIDFetcher seqDbStartsWithOrEquals(String dbStartsWithOrEquals) {
+		this.seqDbStartsWithOrEquals.add(dbStartsWithOrEquals.toLowerCase());
 		return this;
 	}
 
 	/**
-	 * Set to prefer collecting IDs of such Xrefs
-	 * where the 'db' name equals given string,
-	 * ignoring case.
+	 * Set to prefer collecting chemical IDs of such Xrefs
+	 * where the small molecules db starts with or equals given string,
+	 * ignoring case. You can chain this method calls like
+	 * chemDbStartsWithOrEquals(A).chemDbStartsWithOrEquals(B)... -
+	 * it will try to match a xref.db and collect xref.id
+	 * in the given order/priority.
 	 *
-	 * @param dbEquals
+	 * @param dbStartsWithOrEquals the Xref.db value or prefix (case-insensitive)
 	 * @return this id-fetcher instance
 	 */
-	public ConfigurableIDFetcher dbEquals(String dbEquals) {
-		this.dbEquals = dbEquals;
+	public ConfigurableIDFetcher chemDbStartsWithOrEquals(String dbStartsWithOrEquals) {
+		this.chemDbStartsWithOrEquals.add(dbStartsWithOrEquals.toLowerCase());
 		return this;
 	}
 
-
+	/**
+	 * Set the flag to use the entity reference's names
+	 * when no desired ID type can be found (none of xref.db
+	 * matched before, or there're no xrefs at all).
+	 *
+	 * @param useNameWhenNoDbMatch true/false (default is 'true' - when this method's never been called)
+	 * @return this id-fetcher instance
+	 */
+	public ConfigurableIDFetcher useNameWhenNoDbMatch(boolean useNameWhenNoDbMatch) {
+		this.useNameWhenNoDbMatch = useNameWhenNoDbMatch;
+		return this;
+	}
 
 	public Set<String> fetchID(BioPAXElement ele)
 	{
 		Set<String> set = new HashSet<String>();
 
+//		if(!(ele instanceof EntityReference || ele instanceof PhysicalEntity) && !(ele instanceof Gene)) {
+//TODO:			throw new IllegalBioPAXArgumentException("fetchID, unsupported type: "
+//					+ ele.getUri() + " is not a ER/Gene but " + ele.getModelInterface().getSimpleName());
+//		}
+
 		if(ele instanceof XReferrable) {
-			for (Xref xr : ((XReferrable) ele).getXref())
-			{
-				if(xr instanceof PublicationXref)
-					continue;
+			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
+			List<String> dbStartsWithOrEquals =
+					(ele instanceof SmallMoleculeReference || ele instanceof SmallMoleculeReference)
+							? chemDbStartsWithOrEquals : seqDbStartsWithOrEquals;
 
-				String db = xr.getDb();
-				String id = xr.getId();
-
-				if (db != null && id != null && !id.isEmpty())
+			for (String dbStartsWith : dbStartsWithOrEquals) {
+				for (Xref x : ((XReferrable)ele).getXref()) //interface Named extends XReferrable
 				{
-					db = db.toLowerCase();
+					//skip for PublicationXref
+					if (x instanceof PublicationXref) continue;
 
-					if (!(ele instanceof SmallMoleculeReference) && db.startsWith("hgnc"))
-					{//i.e., for PR and NucleicAcidReference
-						String symbol = HGNC.getSymbol(id);
-						if (symbol != null && !symbol.isEmpty())
-						{
-							set.add(symbol);
+					String db = x.getDb();
+					String id = x.getId();
+
+					if (db != null && id != null && !id.trim().isEmpty()) {
+						db = db.toLowerCase();
+						if (db.startsWith(dbStartsWith)) {
+							//for a (PR/NAR) HGNC case, call HGNC.getSymbol(id) mapping
+							if (db.startsWith("hgnc"))
+								id = HGNC.getSymbol(id);
+
+							if (id != null && !id.isEmpty())
+								set.add(id);
 						}
 					}
-					else if (ele instanceof SequenceEntityReference &&
-						(db.equals("mirbase sequence") || db.startsWith("ensg") || db.startsWith("enst")
-							|| db.startsWith("entrez") || db.startsWith("ncbi gene") || db.startsWith("nucleotide")))
-					{
-						set.add(id);
-					}
-					else if (ele instanceof SmallMolecule && ((SmallMolecule) ele).getName().isEmpty() && db.startsWith("chebi"))
-					{
-						set.add(id);
-					}
 				}
+				if (!set.isEmpty())
+					break; //we collected all the IDs of a kind; no need to try alternative prefixes from the rest of the list
 			}
 		}
 
-		if (set.isEmpty() && ele instanceof Named)
+		if (set.isEmpty() && ele instanceof Named && useNameWhenNoDbMatch)
 		{
-			Named named = (Named) ele;
-
-			if (named.getDisplayName() != null)
-				set.add(named.getDisplayName());
-			else if (!named.getName().isEmpty())
-				set.add(named.getName().iterator().next());
+			Named e = (Named) ele;
+			if (e.getDisplayName() != null)
+				set.add(e.getDisplayName());
+			else if (e.getStandardName() != null)
+				set.add(e.getStandardName());
+			else if (!e.getName().isEmpty())
+				set.add(e.getName().toString());
 		}
 
-		//still empty? - use URI
+		//still empty? - use URI (default fallback)
 		if(set.isEmpty()) {
 			set.add(ele.getUri());
 		}
 
 		return set;
 	}
-
 }

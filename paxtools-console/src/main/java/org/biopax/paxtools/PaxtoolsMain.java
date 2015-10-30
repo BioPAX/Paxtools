@@ -482,12 +482,9 @@ public class PaxtoolsMain {
 			Set<? extends BioPAXElement> set = model.getObjects(clazz);
 			int initialSize = set.size();
 			set = filterToExactClass(set, clazz);
-			
 			String s = clazz.getSimpleName() + " = " + set.size();
-
 			if (initialSize != set.size()) 
 				s += " (and " + (initialSize - set.size()) + " children)";
-			
 			out.println(s);
 
 			Set<PropertyEditor> editors = em.getEditorsOf(clazz);
@@ -546,12 +543,10 @@ public class PaxtoolsMain {
 			}
 		}
 
-		String[] props = (model.getLevel() == BioPAXLevel.L3) 
+		out.println("\nOther property counts\n");
+		String[] props = (model.getLevel() == BioPAXLevel.L3)
 			? new String[]{"UnificationXref/db","RelationshipXref/db"}
 			: new String[]{"unificationXref/DB","relationshipXref/DB"};
-
-		out.println("\nOther property counts\n");
-
 		for (String prop : props)
 		{
 			Map<Object, Integer> cnt = new HashMap<Object, Integer>();
@@ -591,23 +586,8 @@ public class PaxtoolsMain {
 			}
 			out.println();
 		}
-	}
 
-	/*
-	 * A simple additional quality control/analysis for a BioPAX file.
-	 * Prints a human-readable summary of issues that matter for,
-	 * e.g., pathway data analysis, visualization, or converting/reducing
-	 * the BioPAX to other formats.
-	 *
-	 * NOTE: this does not call nor should be used instead the BioPAX Validator,
-	 * which performs much deeper syntax and semantic validation.
-	 */
-	public static void qc(String[] argv) throws IOException {
-		log.info("Importing the input model from " + argv[1] + "...");
-		Model model = getModel(io, argv[1]);
-		log.info("Analyzing...");
-
-		//1. check for null entityReference values
+		//Count simple PEs that have null entityReference
 		int speLackingEr = 0;
 		int speLackingErAndId = 0;
 		int protLackingErAndId = 0;
@@ -620,9 +600,11 @@ public class PaxtoolsMain {
 				speLackingEr++;
 				String providers = spe.getDataSource().toString();
 				Integer n = numSpeLackErByProvider.get(providers);
-				if(n==null) numSpeLackErByProvider.put(providers, 1); else ++n;
+				n = (n==null) ? 1 : n + 1;
+				numSpeLackErByProvider.put(providers, n);
 
-				if(spe.getXref().isEmpty() || new ClassFilterSet<Xref,PublicationXref>(spe.getXref(), PublicationXref.class)
+				if(spe.getXref().isEmpty() ||
+					new ClassFilterSet<Xref,PublicationXref>(spe.getXref(), PublicationXref.class)
 						.size() == spe.getXref().size())
 				{
 					speLackingErAndId++;
@@ -634,16 +616,14 @@ public class PaxtoolsMain {
 			}
 		}
 
-		log.info("Printing results...");
-		PrintStream out = (argv.length > 2) ? new PrintStream(argv[2]) : System.out;
-
-		out.println("\nSimplePhysicalEntity having NULL entityReference: "+speLackingEr+"\n");
+		out.println("\n" + speLackingEr + " simple physical entities have NULL 'entityReference';\n");
+		out.println("\n\tby data source:\n");
 		for(String key : numSpeLackErByProvider.keySet()) {
-			out.println("\n\t- by data source: "+numSpeLackErByProvider.get(key)+"\n");
+			out.println(String.format("\n\t\t-- %s -> %d\n", key, numSpeLackErByProvider.get(key)));
 		}
-		out.println("\n\t- including those having no (but perhaps PublicationXref) xrefs/ids: "+speLackingErAndId+" \n");
-		out.println("\n\t\t-- including Protein without any xrefs/ids: "+protLackingErAndId+"\n");
-		out.println("\n\t\t-- including SmallMolecule without any xrefs/ids: "+molLackingErAndId+"\n");
+		out.println("\n\t- also having no (xref) ID (except publication): "+speLackingErAndId+" \n");
+		out.println("\n\t\t-- proteins: "+protLackingErAndId+"\n");
+		out.println("\n\t\t-- small molecules: "+molLackingErAndId+"\n");
 
 		int erLackingId = 0;
 		for(EntityReference er : model.getObjects(EntityReference.class)) {
@@ -651,7 +631,7 @@ public class PaxtoolsMain {
 					.size() == er.getXref().size())
 				erLackingId++;
 		}
-		out.println("\nEntityReference lacking xrefs/ids: "+erLackingId+"\n");
+		out.println("\n" + erLackingId + " entity references have no (xref) ID.\n");
 
 
 		//Calc. the no. non-generic ERs having >1 different HGNC symbols or different HGNC IDs...
@@ -683,9 +663,9 @@ public class PaxtoolsMain {
 				haveMultipleHgnc.add(ser);
 		}
 		//print
-		out.println("\nNon-generic SequenceEntityReferences having more than one different " +
-				"HGNC symbol or ID xrefs: "	+ haveMultipleHgnc.size() + "\n");
-		//TODO can also print the URIs of such ERs
+		out.println("\n" + haveMultipleHgnc.size() +
+			"Non-generic SequenceEntityReferences having more than one different HGNC Symbol/ID xrefs.\n");
+		//TODO could also print the URIs of such ERs here...
 
 		//The number of sequence ERs (not generic), Genes, Pathways, where 'organism' property is empty -
 		int genesLackingOrganism = 0;
@@ -700,7 +680,6 @@ public class PaxtoolsMain {
 			String.format("\nProperty 'organism' is null for: %d Genes, %d Pathways, %d SequenceEntityReferences\n",
 				genesLackingOrganism, pwLackingOrganism, serLackingOrganism)
 		);
-
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(Set<? extends Class<? extends BioPAXElement>>
@@ -832,14 +811,8 @@ public class PaxtoolsMain {
         		"\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)")
 		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
         summarize("<input> [<output>]\n" +
-        		"\t- prints a summary of the contents of the model to the output file (if not provided - to stdout)")
+        		"\t- prints a summary of the model and some statistics to the output file (if not provided - to stdout)")
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
-		qc("<input> [<output>]\n" +
-				"\t- a simple additional quality control/analysis for a BioPAX file.\n" +
-				"\tPrints a human-readable summary of issues that matter for\n" +
-				"\tpathway data analysis, visualization, or converting/reducing\n" +
-				"\tthe BioPAX to other formats.")
-				{public void run(String[] argv) throws IOException{qc(argv);} },
 		blacklist("<input> <output>\n" +
 		        "\t- creates a blacklist of ubiquitous small molecules, like ATP, \n"
 		        + "\tfrom the BioPAX model and writes it to the output file. The blacklist can be used with\n "
