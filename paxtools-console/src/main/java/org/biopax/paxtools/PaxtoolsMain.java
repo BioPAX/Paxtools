@@ -343,8 +343,17 @@ public class PaxtoolsMain {
 
 	//Exports a biopax model to the special Pathway Commons' extended binary SIF format
     public static void toSifnx(String[] argv) throws IOException {
-        CommonIDFetcher idFetcher = new CommonIDFetcher();
-		idFetcher.setUseUniprotIDs(argv.length > 3 && argv[3].equals("uniprot"));
+		ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher();
+		//process the optional parameter (ignore the rest, if any)
+		if(argv.length > 3) {
+			String param = argv[3];
+			if (param.startsWith("seqDb=")) {
+				//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is gonna be fine too)
+				for (String db : param.substring(6).split(","))
+					idFetcher.seqDbStartsWithOrEquals(db);
+			}
+		}
+
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
 		File blacklistFile = new File("blacklist.txt");
 		if(blacklistFile.exists()) {
@@ -353,6 +362,7 @@ public class PaxtoolsMain {
 		} else {
 			log.info("toSifnx: not blacklisting ubiquitous molecules (no blacklist.txt found)");
 		}
+
         Model model = getModel(io, argv[1]);
         ModelUtils.mergeEquivalentInteractions(model);
 		Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
@@ -360,12 +370,22 @@ public class PaxtoolsMain {
     }
 
     public static void toSif(String[] argv) throws IOException {
-		CommonIDFetcher idFetcher = new CommonIDFetcher();
-		List<String> otherParam = new ArrayList<String>();
-		otherParam.addAll(Arrays.asList(argv).subList(3, argv.length));
+		//create and configure the IDFetcher
+		ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher();
 
-		idFetcher.setUseUniprotIDs(otherParam.contains("uniprot"));
+		if(argv.length > 3) {
+			for (int i=3; i < argv.length; i++) {
+				String param = argv[i];
+				if (param.startsWith("seqDb=")) {
+					//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is gonna be fine too)
+					for (String db : param.substring(6).split(","))
+						idFetcher.seqDbStartsWithOrEquals(db);
+				}
+			}
+		}
+
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
+
 		File blacklistFile = new File("blacklist.txt");
 		if(blacklistFile.exists()) {
 			log.info("toSif: will use the blacklist.txt (found in the current directory)");
@@ -376,13 +396,15 @@ public class PaxtoolsMain {
 
 		// check for custom fields
 		List<String> fieldList = new ArrayList<String>();
-		for (String param : otherParam)
+		for (int i=3; i < argv.length; i++)
 		{
-			OutputColumn.Type type = OutputColumn.Type.getType(param);
-			if ((type != null && type != OutputColumn.Type.CUSTOM) ||
-				param.contains("/"))
-			{
-				fieldList.add(param);
+			String param = argv[i];
+			if(!param.startsWith("seqDb=")) {
+				OutputColumn.Type type = OutputColumn.Type.getType(param);
+				if ((type != null && type != OutputColumn.Type.CUSTOM) ||
+						param.contains("/")) {
+					fieldList.add(param);
+				}
 			}
 		}
 
@@ -592,9 +614,9 @@ public class PaxtoolsMain {
 		int speLackingErAndId = 0;
 		int protLackingErAndId = 0;
 		int molLackingErAndId = 0;
+		int naLackingErAndId = 0; //rem: na - nucleic acid
 		//a map that contains the no. SPEs that have null entityReference by data source
 		Map<String,Integer> numSpeLackErByProvider = new TreeMap<String, Integer>();
-
 		for(SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class)) {
 			if(spe.getEntityReference()==null) {
 				speLackingEr++;
@@ -612,38 +634,47 @@ public class PaxtoolsMain {
 						protLackingErAndId++;
 					else if(spe instanceof SmallMolecule)
 						molLackingErAndId++;
+					else if(spe instanceof NucleicAcid)
+						naLackingErAndId++;
 				}
 			}
 		}
 
 		out.println("\n" + speLackingEr + " simple physical entities have NULL 'entityReference';\n");
-		out.println("\n\tby data source:\n");
+		out.println("\n\t- by data source:\n");
 		for(String key : numSpeLackErByProvider.keySet()) {
 			out.println(String.format("\n\t\t-- %s -> %d\n", key, numSpeLackErByProvider.get(key)));
 		}
-		out.println("\n\t- also having no (xref) ID (except publication): "+speLackingErAndId+" \n");
-		out.println("\n\t\t-- proteins: "+protLackingErAndId+"\n");
-		out.println("\n\t\t-- small molecules: "+molLackingErAndId+"\n");
+		out.println("\n\t- " + speLackingErAndId + " neither have 'entityReference' nor xref/id (except publications):\n");
+		out.println("\n\t\t-- proteins: " + protLackingErAndId + "\n");
+		out.println("\n\t\t-- small molecules: " + molLackingErAndId + "\n");
+		out.println("\n\t\t-- nucl. acids: " + naLackingErAndId + "\n");
 
 		int erLackingId = 0;
 		for(EntityReference er : model.getObjects(EntityReference.class)) {
-			if(er.getXref().isEmpty() || new ClassFilterSet<Xref,PublicationXref>(er.getXref(), PublicationXref.class)
-					.size() == er.getXref().size())
+			if(er.getMemberEntityReference().isEmpty() &&
+				(er.getXref().isEmpty() || new ClassFilterSet<Xref,PublicationXref>(er.getXref(), PublicationXref.class)
+					.size() == er.getXref().size()))
+			{
 				erLackingId++;
+			}
 		}
-		out.println("\n" + erLackingId + " entity references have no (xref) ID.\n");
-
+		out.println("\n" + erLackingId + " non-generic entity references have no xref/id.\n");
 
 		//Calc. the no. non-generic ERs having >1 different HGNC symbols or different HGNC IDs...
 		Set<SequenceEntityReference> haveMultipleHgnc = new HashSet<SequenceEntityReference>();
 		int serLackingOrganism = 0;
+		int narLackingOrganism = 0;
 		for(SequenceEntityReference ser : model.getObjects(SequenceEntityReference.class)) {
 			//skip generic ERs
 			if(!ser.getMemberEntityReference().isEmpty())
 				continue;
 
-			if(ser.getOrganism() == null)
+			if(ser.getOrganism() == null) {
 				++serLackingOrganism;
+				if(ser instanceof NucleicAcidReference)
+					++narLackingOrganism;
+			}
 
 			Set<String> hgncSymbols = new HashSet<String>();
 			Set<String> hgncIds = new HashSet<String>();
@@ -664,7 +695,7 @@ public class PaxtoolsMain {
 		}
 		//print
 		out.println("\n" + haveMultipleHgnc.size() +
-			"Non-generic SequenceEntityReferences having more than one different HGNC Symbol/ID xrefs.\n");
+			" of non-generic SequenceEntityReferences have more than one different HGNC Symbol/ID xrefs.\n");
 		//TODO could also print the URIs of such ERs here...
 
 		//The number of sequence ERs (not generic), Genes, Pathways, where 'organism' property is empty -
@@ -677,9 +708,14 @@ public class PaxtoolsMain {
 				++pwLackingOrganism;
 		}
 		out.println(
-			String.format("\nProperty 'organism' is null for: %d Genes, %d Pathways, %d SequenceEntityReferences\n",
-				genesLackingOrganism, pwLackingOrganism, serLackingOrganism)
+			String.format(
+				"\n%d Genes, %d Pathways, %d SequenceEntityReferences " +
+				"(%d in NucleicAcidRef. and %d in PRs) have NULL 'organism'.\n",
+				genesLackingOrganism, pwLackingOrganism, serLackingOrganism,
+				narLackingOrganism, serLackingOrganism-narLackingOrganism
+			)
 		);
+
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(Set<? extends Class<? extends BioPAXElement>>
@@ -770,11 +806,18 @@ public class PaxtoolsMain {
         merge("<file1> <file2> <output>\n" +
         		"\t- merges file2 into file1 and writes it into output")
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
-        toSif("<input> <output> [hgnc|uniprot]\n" +
-        		"\t- converts model to the simple interaction format; will use blacklist.txt file in the current directory, if present")
+        toSif("<input> <output> [\"seqDb=db1,db2,..\"] [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
+        		"\t- converts (reduces) a BioPAX model to a custom simple binary interaction format; \n" +
+				"\t  will use blacklist.txt file in the current directory, if present;\n" +
+				"\t  one can optionally (highly recommended) list one or several standard sequence/gene db name(s),\n" +
+				"\t  in full or just a prefix, to match actual xref/db values in the model (input file), using the 'seqDb=' parameter;\n" +
+				"\t  e.g., \"seqDb=uniprot,hgnc,refseq,mirbase,ncbi gene\", and that (and order) means if a UniProt entity ID is found,\n" +
+				"\t  other ID types ain't used; otherwise, if an 'hgnc' ID/Symbol is found... and so on;\n" +
+				"\t  when not specified or nothing's matched, and always for small molecules, name(s) is the first pick, and URI - the last.")
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("<input> <output> [hgnc|uniprot] [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
-        		"\t- converts model to the extended simple interaction format; will use blacklist.txt file in the current directory, if present")
+        toSifnx("<input> <output> [\"seqDb=db1,db2,..\"]\n" +
+        		"\t- converts model to the (Pathway Commons' alike) extended binary simple interaction format;\n" +
+				"\t  will use blacklist.txt file in the current directory, if present.")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         toSbgn("<biopax.owl> <output.sbgn>\n" +
         		"\t- converts model to the SBGN format.")
