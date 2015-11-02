@@ -445,7 +445,13 @@ public final class Normalizer {
 		//normalize BioSource objects (better, as it is here, go after Xrefs and CVs)
 		log.info("Normalizing organisms..." + description);
 		normalizeBioSources(model);
-		
+
+		// auto-generate missing entity references:
+		for(SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class)) {
+			//it skips if spe has entityReference or memberPE already
+			ModelUtils.addMissingEntityReference(model, spe);
+		}
+
 		log.info("Normalizing entity references..." + description);
 		normalizeERs(model);
 		
@@ -454,7 +460,6 @@ public final class Normalizer {
 		model.repair(); // it does not remove dangling utility class objects (can be done separately, later, if needed)
 		
 		log.info("Optional tasks (reasoning)..." + description);
-		
 	}
 
 	
