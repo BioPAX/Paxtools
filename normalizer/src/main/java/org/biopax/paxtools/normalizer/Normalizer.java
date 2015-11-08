@@ -447,7 +447,7 @@ public final class Normalizer {
 		normalizeBioSources(model);
 
 		// auto-generate missing entity references:
-		for(SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class)) {
+		for(SimplePhysicalEntity spe : new HashSet<SimplePhysicalEntity>(model.getObjects(SimplePhysicalEntity.class))) {
 			//it skips if spe has entityReference or memberPE already
 			ModelUtils.addMissingEntityReference(model, spe);
 		}
