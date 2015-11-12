@@ -5,10 +5,7 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Tries to get preferred type IDs, or a name, or URI (at last)
@@ -121,12 +118,19 @@ public class ConfigurableIDFetcher implements IDFetcher
 		if (set.isEmpty() && ele instanceof Named && useNameWhenNoDbMatch)
 		{
 			Named e = (Named) ele;
-			if (e.getDisplayName() != null)
+			//avoid shortened/incomplete names -
+			if (e.getDisplayName() != null && !e.getDisplayName().contains("..."))
 				set.add(e.getDisplayName());
-			else if (e.getStandardName() != null)
+			else if (e.getStandardName() != null && !e.getStandardName().contains("..."))
 				set.add(e.getStandardName());
-			else if (!e.getName().isEmpty())
-				set.add(e.getName().toString());
+			else if (!e.getName().isEmpty()) {
+				Set<String> names = new TreeSet<String>();
+				for(String name : e.getName()) {
+					if(!name.contains("..."))
+						names.add(name);
+				}
+				set.add(names.toString());
+			}
 		}
 
 		//still empty? - use URI (default fallback)

@@ -5,8 +5,10 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Tries to get Gene Symbols or UniProt IDs for genes
@@ -28,12 +30,19 @@ public class CommonIDFetcher implements IDFetcher
 		if (ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 		{
 			Named e = (Named) ele;
-			if (e.getDisplayName() != null)
+			//avoid shortened/incomplete names -
+			if (e.getDisplayName() != null && !e.getDisplayName().contains("..."))
 				set.add(e.getDisplayName());
-			else if (e.getStandardName() != null)
+			else if (e.getStandardName() != null && !e.getStandardName().contains("..."))
 				set.add(e.getStandardName());
-			else if (!e.getName().isEmpty())
-				set.add(e.getName().toString());
+			else if (!e.getName().isEmpty()) {
+				Set<String> names = new TreeSet<String>();
+				for(String name : e.getName()) {
+					if(!name.contains("..."))
+						names.add(name);
+				}
+				set.add(names.toString());
+			}
 		}
 		else if (useUniprotIDs && ele.getUri().startsWith("http://identifiers.org/uniprot/"))
 		{

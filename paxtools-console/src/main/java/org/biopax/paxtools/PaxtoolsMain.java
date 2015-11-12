@@ -611,6 +611,7 @@ public class PaxtoolsMain {
 
 		//Count simple PEs that have null entityReference
 		int speLackingEr = 0;
+		int genericSpeLackingEr = 0;
 		int speLackingErAndId = 0;
 		int protLackingErAndId = 0;
 		int molLackingErAndId = 0;
@@ -620,6 +621,9 @@ public class PaxtoolsMain {
 		for(SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class)) {
 			if(spe.getEntityReference()==null) {
 				speLackingEr++;
+				if(!spe.getMemberPhysicalEntity().isEmpty())
+					genericSpeLackingEr++;
+
 				String providers = spe.getDataSource().toString();
 				Integer n = numSpeLackErByProvider.get(providers);
 				n = (n==null) ? 1 : n + 1;
@@ -641,14 +645,17 @@ public class PaxtoolsMain {
 		}
 
 		out.println("\n" + speLackingEr + " simple physical entities have NULL 'entityReference';\n");
+		out.println("\n\t-" + genericSpeLackingEr + " of which have member physical entities (are generic).\n");
 		out.println("\n\t- by data source:\n");
 		for(String key : numSpeLackErByProvider.keySet()) {
 			out.println(String.format("\n\t\t-- %s -> %d\n", key, numSpeLackErByProvider.get(key)));
 		}
 		out.println("\n\t- " + speLackingErAndId + " neither have 'entityReference' nor xref/id (except publications):\n");
-		out.println("\n\t\t-- proteins: " + protLackingErAndId + "\n");
-		out.println("\n\t\t-- small molecules: " + molLackingErAndId + "\n");
-		out.println("\n\t\t-- nucl. acids: " + naLackingErAndId + "\n");
+		if(speLackingErAndId > 0) {
+			out.println("\n\t\t-- proteins: " + protLackingErAndId + "\n");
+			out.println("\n\t\t-- small molecules: " + molLackingErAndId + "\n");
+			out.println("\n\t\t-- nucl. acids: " + naLackingErAndId + "\n");
+		}
 
 		int erLackingId = 0;
 		for(EntityReference er : model.getObjects(EntityReference.class)) {
