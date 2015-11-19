@@ -96,11 +96,6 @@ public class CommonIDFetcher implements IDFetcher
 			}
 		}
 
-		//if it's still empty - fall back to using the URI
-		//(if we return the empty set, then some entities will be missing from the SIF output)
-		if(set.isEmpty())
-			set.add(ele.getUri());
-
 		return set;
 	}
 
