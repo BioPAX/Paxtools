@@ -669,6 +669,7 @@ public class PaxtoolsMain {
 		out.println("\n" + erLackingId + " non-generic entity references have no xref/id.\n");
 
 		//Calc. the no. non-generic ERs having >1 different HGNC symbols or different HGNC IDs...
+		//TODO move the code (about HGNC xrefs) to cPath2 cpath-importer (Analysis<Model> impl)
 		Set<SequenceEntityReference> haveMultipleHgnc = new HashSet<SequenceEntityReference>();
 		int serLackingOrganism = 0;
 		int narLackingOrganism = 0;
@@ -703,7 +704,7 @@ public class PaxtoolsMain {
 		//print
 		out.println("\n" + haveMultipleHgnc.size() +
 			" of non-generic SequenceEntityReferences have more than one different HGNC Symbol/ID xrefs.\n");
-		//TODO could also print the URIs of such ERs here...
+
 
 		//The number of sequence ERs (not generic), Genes, Pathways, where 'organism' property is empty -
 		int genesLackingOrganism = 0;

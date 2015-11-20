@@ -78,9 +78,9 @@ public class ConfigurableIDFetcher implements IDFetcher
 	{
 		Set<String> set = new HashSet<String>();
 
-//		if(!(ele instanceof EntityReference || ele instanceof PhysicalEntity) && !(ele instanceof Gene)) {
-//TODO:			throw new IllegalBioPAXArgumentException("fetchID, unsupported type: "
-//					+ ele.getUri() + " is not a ER/Gene but " + ele.getModelInterface().getSimpleName());
+//		if(!(ele instanceof EntityReference || ele instanceof PhysicalEntity || ele instanceof Gene)) {
+//			throw new IllegalBioPAXArgumentException("fetchID, unsupported type: "
+//					+ ele.getUri() + " is not a ER/PE/Gene but " + ele.getModelInterface().getSimpleName());
 //		}
 
 		if(ele instanceof XReferrable) {
@@ -131,11 +131,6 @@ public class ConfigurableIDFetcher implements IDFetcher
 				}
 				set.add(names.toString());
 			}
-		}
-
-		//still empty? - use URI (default fallback)
-		if(set.isEmpty()) {
-			set.add(ele.getUri());
 		}
 
 		return set;
