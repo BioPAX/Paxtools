@@ -668,52 +668,21 @@ public class PaxtoolsMain {
 		}
 		out.println("\n" + erLackingId + " non-generic entity references have no xref/id.\n");
 
-		//Calc. the no. non-generic ERs having >1 different HGNC symbols or different HGNC IDs...
-		//TODO move the code (about HGNC xrefs) to cPath2 cpath-importer (Analysis<Model> impl)
-		Set<SequenceEntityReference> haveMultipleHgnc = new HashSet<SequenceEntityReference>();
-		int serLackingOrganism = 0;
-		int narLackingOrganism = 0;
-		for(SequenceEntityReference ser : model.getObjects(SequenceEntityReference.class)) {
-			//skip generic ERs
-			if(!ser.getMemberEntityReference().isEmpty())
-				continue;
-
-			if(ser.getOrganism() == null) {
-				++serLackingOrganism;
-				if(ser instanceof NucleicAcidReference)
-					++narLackingOrganism;
-			}
-
-			Set<String> hgncSymbols = new HashSet<String>();
-			Set<String> hgncIds = new HashSet<String>();
-			for(Xref x : ser.getXref()) {
-				if(x instanceof PublicationXref || x.getDb()==null || x.getId()==null)
-					continue; //skip
-
-				if(x.getDb().toLowerCase().startsWith("hgnc") && !x.getId().toLowerCase().startsWith("hgnc:")) {
-					hgncSymbols.add(x.getId().toLowerCase());
-				}
-				else if(x.getDb().toLowerCase().startsWith("hgnc") && x.getId().toLowerCase().startsWith("hgnc:")) {
-					hgncIds.add(x.getId().toLowerCase());
-				}
-			}
-
-			if(hgncIds.size()>1 || hgncSymbols.size()>1)
-				haveMultipleHgnc.add(ser);
-		}
-		//print
-		out.println("\n" + haveMultipleHgnc.size() +
-			" of non-generic SequenceEntityReferences have more than one different HGNC Symbol/ID xrefs.\n");
-
-
 		//The number of sequence ERs (not generic), Genes, Pathways, where 'organism' property is empty -
 		int genesLackingOrganism = 0;
 		int pwLackingOrganism = 0;
+		int serLackingOrganism = 0;
+		int narLackingOrganism = 0;
 		for(BioPAXElement bpe : model.getObjects()) {
 			if(bpe instanceof Gene && ((Gene) bpe).getOrganism()==null)
 				++genesLackingOrganism;
 			else if(bpe instanceof Pathway && ((Pathway) bpe).getOrganism()==null)
 				++pwLackingOrganism;
+			else if(bpe instanceof SequenceEntityReference && ((SequenceEntityReference)bpe).getOrganism() == null) {
+				++serLackingOrganism;
+				if(bpe instanceof NucleicAcidReference)
+					++narLackingOrganism;
+			}
 		}
 		out.println(
 			String.format(
@@ -723,7 +692,6 @@ public class PaxtoolsMain {
 				narLackingOrganism, serLackingOrganism-narLackingOrganism
 			)
 		);
-
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(Set<? extends Class<? extends BioPAXElement>>
