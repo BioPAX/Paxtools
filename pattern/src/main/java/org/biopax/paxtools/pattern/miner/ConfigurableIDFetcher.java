@@ -8,8 +8,7 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import java.util.*;
 
 /**
- * Tries to get preferred type IDs, or a name, or URI (at last)
- * of an entity reference.
+ * Tries to get preferred type IDs of an entity reference.
  *
  * This id-fetcher can be optionally used
  * when converting (reducing) BioPAX to the binary SIF format.
@@ -26,7 +25,7 @@ public class ConfigurableIDFetcher implements IDFetcher
 	public ConfigurableIDFetcher() {
 		seqDbStartsWithOrEquals = new ArrayList<String>();
 		chemDbStartsWithOrEquals = new ArrayList<String>();
-		useNameWhenNoDbMatch = true;
+		useNameWhenNoDbMatch = false;
 	}
 
 	/**
@@ -78,11 +77,6 @@ public class ConfigurableIDFetcher implements IDFetcher
 	{
 		Set<String> set = new HashSet<String>();
 
-//		if(!(ele instanceof EntityReference || ele instanceof PhysicalEntity || ele instanceof Gene)) {
-//			throw new IllegalBioPAXArgumentException("fetchID, unsupported type: "
-//					+ ele.getUri() + " is not a ER/PE/Gene but " + ele.getModelInterface().getSimpleName());
-//		}
-
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
 			List<String> dbStartsWithOrEquals =
@@ -90,6 +84,13 @@ public class ConfigurableIDFetcher implements IDFetcher
 							? chemDbStartsWithOrEquals : seqDbStartsWithOrEquals;
 
 			for (String dbStartsWith : dbStartsWithOrEquals) {
+				//a shortcut for URI like "http://identifiers.org/uniprot/", "http://identifiers.org/chebi/"
+				//this prevents collecting lots of secondary IDs of the same type
+				if(ele.getUri().startsWith("http://identifiers.org/"+dbStartsWith)) {
+					set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
+					break;
+				}
+
 				for (Xref x : ((XReferrable)ele).getXref()) //interface Named extends XReferrable
 				{
 					//skip for PublicationXref

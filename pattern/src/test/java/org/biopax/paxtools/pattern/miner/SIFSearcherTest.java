@@ -234,7 +234,8 @@ public class SIFSearcherTest extends PatternBoxTest
 		final SIFSearcher simpleSifSearcher = new SIFSearcher(new SimpleIDFetcher(), sifTypes);
 
 		// Configure an IDFetcher to collects HGNC Symbols (for seq. entities), or names (molecules), or URIs (fallback)
-		IDFetcher configurableIDFetcher = new ConfigurableIDFetcher().seqDbStartsWithOrEquals("hgnc symbol");
+		IDFetcher configurableIDFetcher = new ConfigurableIDFetcher()
+				.seqDbStartsWithOrEquals("hgnc").useNameWhenNoDbMatch(true);
 		//TODO add tests using .seqDbStartsWithOrEquals with: "hgnc","uniprot","ncbi","mirbase", and .chemDbStartsWithOrEquals("chebi")
 		final SIFSearcher customSifSearcher = new SIFSearcher(configurableIDFetcher, sifTypes);
 
