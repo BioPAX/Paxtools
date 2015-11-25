@@ -427,6 +427,10 @@ public final class Normalizer {
 			throw new IllegalArgumentException("Not Level3 model. " +
 				"Consider converting it first (e.g., with the PaxTools).");
 		
+		//if set, update the xml:base
+		if(xmlBase != null && !xmlBase.isEmpty())
+			model.setXmlBase(xmlBase);
+
 		// Normalize/merge xrefs, first, and then CVs
 		// (also because some of original xrefs might have "normalized" URIs 
 		// that, in fact, must be used for other biopax types, such as CV or ProteinReference)
