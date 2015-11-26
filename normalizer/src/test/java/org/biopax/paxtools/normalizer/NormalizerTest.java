@@ -30,6 +30,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
@@ -210,14 +211,12 @@ public class NormalizerTest {
 		bpe = model.getByID("http://identifiers.org/uniprot/Q0VCL1");
 		assertTrue(bpe instanceof ProteinReference);
 		assertTrue(model.containsID("Xref7")); //RX is not normalized unless (by mistake) it has identifiers.org uri
-//		assertTrue(model.containsID(Normalizer.uri(model.getXmlBase(), "PUBMED", "2549346", RelationshipXref.class)));
 		
 		//test BioSource
 		assertFalse(model.containsID("BioSource_Mouse_Tissue"));
-//		bpe = model.getByID("http://identifiers.org/taxonomy/10090");
-		bpe = model.getByID(Normalizer.uri(model.getXmlBase(), "Taxonomy", "10090", BioSource.class)); //"taxonomy" - capitalization can be any
+		bpe = model.getByID(Normalizer.uri(model.getXmlBase(), "taxonomy", "10090", BioSource.class)); //"taxonomy" - capitalization can be any
 		assertTrue(bpe instanceof BioSource);
-		normUri = Normalizer.uri(model.getXmlBase(), "TAXONOMY", "10090", UnificationXref.class);
+		normUri = Normalizer.uri(model.getXmlBase(), "taxonomy", "10090", UnificationXref.class);
 		bpe = model.getByID(normUri);
 		assertTrue(bpe instanceof UnificationXref);
 		

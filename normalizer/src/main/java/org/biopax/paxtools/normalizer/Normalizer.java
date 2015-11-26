@@ -105,7 +105,7 @@ public final class Normalizer {
 	 * are in fact to be used for other biopax types (e.g., CV or ProteinReference); therefore
 	 * this method will replace URI also for "bad" xrefs, i.e., those with empty/illegal 'db' or 'id' values.
 	 * 
-	 * @param model
+	 * @param model biopax model to update
 	 */
 	private void normalizeXrefs(Model model) {
 		
@@ -154,24 +154,24 @@ public final class Normalizer {
 				try {
 					db = MiriamLink.getName(ref.getDb());
 					if(db != null) 
-						ref.setDb(db);
+						ref.setDb(db.toLowerCase());
 				} catch (IllegalArgumentException e) {}
 			
 				// a hack for uniprot isoform xrefs that were previously cut off the isoform number part...
 				if (db.toUpperCase().startsWith("UNIPROT")) {
 					//fix for possibly incorrect db name
-					if (Normalizer.uri(xmlBase, "UniProt Isoform", ref.getId(), ProteinReference.class)
+					if (Normalizer.uri(xmlBase, "uniprot isoform", ref.getId(), ProteinReference.class)
 							.startsWith("http://identifiers.org/uniprot.isoform/")) 
 					{
-						ref.setDb("UniProt Isoform");
+						ref.setDb("uniprot isoform");
 						idPart = ref.getId();
 					} 
 					else if (ref.getIdVersion() != null) {
 						final String isoformId = ref.getId() + "-" + ref.getIdVersion();
-						if(Normalizer.uri(xmlBase, "UniProt Isoform", isoformId, ProteinReference.class)
+						if(Normalizer.uri(xmlBase, "uniprot isoform", isoformId, ProteinReference.class)
 								.startsWith("http://identifiers.org/uniprot.isoform/")) 
 						{
-							ref.setDb("UniProt Isoform");
+							ref.setDb("uniprot isoform");
 							ref.setId(isoformId);
 							ref.setIdVersion(null);
 							idPart = isoformId;
@@ -179,7 +179,10 @@ public final class Normalizer {
 					} 
 				}	
 			}
-						
+
+			//lowercase all db names (these are not case-sensitive)
+			ref.setDb(ref.getDb().toLowerCase());
+
 			// shelve it for URI replace
 			map.put(ref, Normalizer.uri(xmlBase, ref.getDb(), idPart, ref.getModelInterface()));						
 		}
@@ -247,8 +250,7 @@ public final class Normalizer {
 		}
 		
 		String localPart = sb.toString();
-		String strategy = System
-			.getProperty(PROPERTY_NORMALIZER_URI_STRATEGY, VALUE_NORMALIZER_URI_STRATEGY_MD5);
+		String strategy = System.getProperty(PROPERTY_NORMALIZER_URI_STRATEGY, VALUE_NORMALIZER_URI_STRATEGY_MD5);
 		if(VALUE_NORMALIZER_URI_STRATEGY_SIMPLE.equals(strategy) 
 				//for xrefs, always use the simple URI strategy (makes them human-readable)
 				|| Xref.class.isAssignableFrom(type))
@@ -261,7 +263,7 @@ public final class Normalizer {
 		}
 		
 		// create URI using the xml:base and digest of other values:
-		return ((xmlBase!=null)?xmlBase:"") + type.getSimpleName() + "_" + localPart;		
+		return ((xmlBase != null) ? xmlBase : "") + type.getSimpleName() + "_" + localPart;
 	}
 
 	
