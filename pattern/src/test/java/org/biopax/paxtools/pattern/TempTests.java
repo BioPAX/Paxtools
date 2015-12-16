@@ -16,7 +16,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 /**
  * @author Ozgun Babur
@@ -32,7 +35,53 @@ public class TempTests
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
 //		model = h.convertFromOWL(new FileInputStream("HumanCyc.owl"));
-//		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/humancyc_premerge.owl"));
+//		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Downloads/Pathway Commons.7.NCI Pathway Interaction Database: Pathway.BIOPAX.owl"));
+	}
+
+	@Test
+	@Ignore
+	public void compareSIFFIles() throws IOException
+	{
+		Set<String> set7 = load("/home/ozgun/Temp/sif7.txt");
+		Set<String> set8 = load("/home/ozgun/Temp/sif8.txt");
+
+		set8.removeAll(set7);
+		for (String s : set8)
+		{
+			System.out.println(s);
+		}
+	}
+
+	private Set<String> load(String file) throws FileNotFoundException
+	{
+		Set<String> set = new HashSet<String>();
+		Scanner sc = new Scanner(new File(file));
+		while (sc.hasNextLine())
+		{
+			String[] token = sc.nextLine().split("\t");
+			set.add(token[0] + "\t" + token[1] + "\t" + token[2]);
+		}
+		return set;
+	}
+
+	@Test
+	@Ignore
+	public void generateSIF() throws IOException
+	{
+//		String base = "http://www.pathwaycommons.org/pc2/downloads/";
+		String base = "http://pathwaycommons.baderlab.org/downloads/";
+		SimpleIOHandler h = new SimpleIOHandler();
+//		Model model = h.convertFromOWL(new GZIPInputStream(new URL(base + "Pathway%20Commons.8.pid.BIOPAX.owl.gz").openStream()));
+		Model model = h.convertFromOWL(new GZIPInputStream(new URL(base + "Pathway%20Commons.8.Detailed.BIOPAX.owl.gz").openStream()));
+
+//		SIFSearcher searcher = new SIFSearcher(new CommonIDFetcher(), SIFEnum.CONTROLS_STATE_CHANGE_OF);
+//		searcher.setBlacklist(new Blacklist(new URL(base + "blacklist.txt").openStream()));
+
+		BlacklistGenerator2 gen = new BlacklistGenerator2();
+		gen.generateBlacklist(model);
+
+
+//		searcher.searchSIF(model, new FileOutputStream("/home/ozgun/Temp/sif2.txt"), true);
 	}
 
 	@Test

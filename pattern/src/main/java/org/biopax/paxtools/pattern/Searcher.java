@@ -312,7 +312,7 @@ public class Searcher
 
 	/**
 	 * Searches a pattern reading the model from the given file, and creates another model that is
-	 * excised using the matching patterns. USers can limit the max number of starting element, and
+	 * excised using the matching patterns. Users can limit the max number of starting element, and
 	 * max number of matches for any starting element. These parameters is good for limiting the
 	 * size of the result graph.
 	 * @param p pattern to search for

@@ -297,7 +297,8 @@ public class ChemicalNameNormalizer
 				getNameNormalizedMatching(smr, smrs) :
 				getMatching(smr, smrs, smrNames, smNames);
 
-			assert normalizeName || !matching.isEmpty(); // it should at least detect itself
+			// it should at least detect itself, if it has a name
+			assert normalizeName || !matching.isEmpty() || smr.getName().isEmpty();
 
 			matching.remove(smr);
 			if (!matching.isEmpty()) map.put(smr, matching);

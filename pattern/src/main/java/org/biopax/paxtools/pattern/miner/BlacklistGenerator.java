@@ -124,6 +124,8 @@ public class BlacklistGenerator
 			int upstrOnly = upstrMap.containsKey(name) ? upstrMap.get(name).size() : 0;
 			int dwstrOnly = dwstrMap.containsKey(name) ? dwstrMap.get(name).size() : 0;
 
+//			if (neighSize > 30) System.out.println(name + "\t" + neighSize + "\t" + upstrOnly + "\t" + dwstrOnly);
+
 			if (decider.isUbique(neighSize, upstrOnly, dwstrOnly))
 			{
 				blacklist.addEntry(smr.getUri(),
