@@ -1,8 +1,6 @@
 package org.biopax.paxtools.pattern;
 
 import org.biopax.paxtools.pattern.miner.SIFEnum;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,8 +12,12 @@ import java.util.zip.GZIPInputStream;
  */
 public class PCSiteSIFTest
 {
-	@Test
-	@Ignore
+	public static void main(String[] args) throws IOException
+	{
+		PCSiteSIFTest test = new PCSiteSIFTest();
+		test.compare();
+	}
+
 	public void compare() throws IOException
 	{
 		String site1 = "http://www.pathwaycommons.org/pc2/downloads";

@@ -1,6 +1,5 @@
 package org.biopax.paxtools.pattern;
 
-import junit.framework.Assert;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -11,9 +10,6 @@ import org.biopax.paxtools.pattern.constraint.*;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.HGNC;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -29,8 +25,7 @@ public class TempTests
 {
 	Model model;
 
-	@Before
-	public void setUp() throws Exception
+	public TempTests()
 	{
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
@@ -38,8 +33,6 @@ public class TempTests
 //		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Downloads/Pathway Commons.7.NCI Pathway Interaction Database: Pathway.BIOPAX.owl"));
 	}
 
-	@Test
-	@Ignore
 	public void compareSIFFIles() throws IOException
 	{
 		Set<String> set7 = load("/home/ozgun/Temp/sif7.txt");
@@ -64,8 +57,6 @@ public class TempTests
 		return set;
 	}
 
-	@Test
-	@Ignore
 	public void generateSIF() throws IOException
 	{
 //		String base = "http://www.pathwaycommons.org/pc2/downloads/";
@@ -84,8 +75,6 @@ public class TempTests
 //		searcher.searchSIF(model, new FileOutputStream("/home/ozgun/Temp/sif2.txt"), true);
 	}
 
-	@Test
-	@Ignore
 	public void checkSomethingOnModel()
 	{
 		for (PathwayStep step : model.getObjects(PathwayStep.class))
@@ -117,8 +106,6 @@ public class TempTests
 //		}
 	}
 
-	@Test
-	@Ignore
 	public void namesOfPathwaysThatContainReversibleReactions()
 	{
 		Pattern p = new Pattern(Pathway.class, "Pathway");
@@ -149,8 +136,6 @@ public class TempTests
 		}
 	}
 
-	@Test
-	@Ignore
 	public void capturePattern() throws Throwable
 	{
 		Pattern p = PatternBox.controlsStateChangeThroughDegradation();
@@ -158,8 +143,6 @@ public class TempTests
 		Searcher.searchInFile(p, "All-Human-Data.owl", "Captured-controls-degradation.owl", 100, 1);
 	}
 
-	@Test
-	@Ignore
 	public void extractSignalink() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/signalink-raw.txt"));
@@ -205,8 +188,6 @@ public class TempTests
 		System.out.println("set.size() = " + set.size());
 	}
 
-	@Test
-	@Ignore
 	public void debugPattern() throws Throwable
 	{
 
@@ -222,8 +203,6 @@ public class TempTests
 	}
 
 
-	@Test
-	@Ignore
 	public void searchAndWriteWithMiners() throws Throwable
 	{
 		Blacklist blacklist = new Blacklist("blacklist.txt");
@@ -250,8 +229,6 @@ public class TempTests
 		}
 	}
 
-	@Test
-	@Ignore
 	public void printVennIntersections() throws FileNotFoundException
 	{
 //		SimpleIOHandler h = new SimpleIOHandler();
@@ -336,8 +313,6 @@ public class TempTests
 		System.out.println("Total: " + all.size());
 	}
 
-	@Test
-	@Ignore
 	public void checkOverlap() throws Throwable
 	{
 //		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
@@ -349,8 +324,6 @@ public class TempTests
 		printOverlaps(map, types.subList(0, 8), false);
 		printOverlaps(map, types.subList(8, 12), true);
 		printOverlaps(map, types.subList(12, 14), true);
-
-		Assert.assertTrue(2 + 2 == 4);
 	}
 
 	private void printOverlaps(Map<SIFType, Set<String>> map, List<SIFType> types,
@@ -462,8 +435,6 @@ public class TempTests
 		return map;
 	}
 
-	@Test
-	@Ignore
 	public void separateInteractions() throws IOException
 	{
 		Map<SIFType, Set<String>> map = readSIFFile2("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
@@ -491,8 +462,6 @@ public class TempTests
 
 	}
 
-	@Test
-	@Ignore
 	public void tempCode() throws FileNotFoundException
 	{
 		String uri = "http://identifiers.org/uniprot/F7GJZ7";
