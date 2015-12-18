@@ -221,16 +221,16 @@ public final class Normalizer {
 				// try to get the preferred/standard name
 				// for any type, for consistency
 				dbName = MiriamLink.getName(dbName);
-				
 				// a shortcut: a standard and resolvable URI exists for some BioPAX types
 				if ((type.equals(PublicationXref.class) && "pubmed".equalsIgnoreCase(dbName))
 					|| type.equals(RelationshipTypeVocabulary.class)
 					|| ProteinReference.class.isAssignableFrom(type)
-					|| SmallMoleculeReference.class.isAssignableFrom(type))
+					|| SmallMoleculeReference.class.isAssignableFrom(type)
+					|| (type.equals(BioSource.class) && "taxonomy".equalsIgnoreCase(dbName) && idPart.matches("^\\d+$"))
+				)
 				{	//get the standard URI and quit (success), or fail and continue making a new URI below...
 					return MiriamLink.getIdentifiersOrgURI(dbName, idPart);
-				} 
-				
+				}
 			} catch (IllegalArgumentException e) {
 				log.debug("uri: not a standard db name or synonym: " + dbName, e);
 			}
@@ -502,16 +502,23 @@ public final class Normalizer {
 			UnificationXref uref = findPreferredUnificationXref(bs);
 			//normally, the xref db is 'Taxonomy' (or a valid synonym)
 			if (uref != null
-					&& (uref.getDb().toLowerCase().contains("taxonomy") || uref.getDb().equalsIgnoreCase("newt"))) 
+				&& (uref.getDb().toLowerCase().contains("taxonomy") || uref.getDb().equalsIgnoreCase("newt")))
 			{	
-				String 	idPart = uref.getId(); //tissue/cellType terms can be added below:
+				String 	idPart = uref.getId();
+
+				//tissue/cellType terms can be added below:
 				if(bs.getTissue()!=null && !bs.getTissue().getTerm().isEmpty()) 
 					idPart += "_" + bs.getTissue().getTerm().iterator().next();
 				if(bs.getCellType()!=null && !bs.getCellType().getTerm().isEmpty()) 
 					idPart += "_" + bs.getCellType().getTerm().iterator().next();
 				
-				String uri = uri(xmlBase, uref.getDb(), idPart, BioSource.class);
+				String uri = (idPart.equals(uref.getId()) //- no tissue or celltype were attached
+						&& idPart.matches("^\\d+$")) //- is positive integer id
+					? uri(xmlBase, uref.getDb(), idPart, BioSource.class)
+						: "http://identifiers.org/taxonomy/" + idPart;
+
 				map.put(bs, uri);
+
 			} else 
 				log.debug("Won't normalize BioSource" 
 					+ " : no taxonomy unification xref found in " + bs.getUri()

@@ -78,6 +78,12 @@ public class NormalizerTest {
 		 
 		 //when there're special symbols, spaces in the 'id' part
 		 assertEquals("UnificationXref_foo_bar", Normalizer.uri(null, null, "foo bar", UnificationXref.class));
+
+		assertEquals("http://identifiers.org/taxonomy/9606", Normalizer.uri(null, "taxonomy", "9606", BioSource.class));
+		assertEquals("http://identifiers.org/taxonomy/9606", Normalizer.uri(null, "NCBI Taxonomy", "9606", BioSource.class));
+		assertEquals("http://identifiers.org/taxonomy/9606", Normalizer.uri(null, "NEWT", "9606", BioSource.class));
+		//when organism's id is not taxID (e.g., if the BioSource has tissue, cellType CVs...)
+		assertNotSame("http://identifiers.org/taxonomy/9606",Normalizer.uri(null, "taxonomy", "9606_blah_blah", BioSource.class));
 	}
 	
 	
