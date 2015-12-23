@@ -25,7 +25,7 @@ public class TempTests
 {
 	Model model;
 
-	public TempTests()
+	private TempTests()
 	{
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
@@ -33,7 +33,7 @@ public class TempTests
 //		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Downloads/Pathway Commons.7.NCI Pathway Interaction Database: Pathway.BIOPAX.owl"));
 	}
 
-	public void compareSIFFIles() throws IOException
+	private void compareSIFFIles() throws IOException
 	{
 		Set<String> set7 = load("/home/ozgun/Temp/sif7.txt");
 		Set<String> set8 = load("/home/ozgun/Temp/sif8.txt");
@@ -57,7 +57,7 @@ public class TempTests
 		return set;
 	}
 
-	public void generateSIF() throws IOException
+	private void generateSIF() throws IOException
 	{
 //		String base = "http://www.pathwaycommons.org/pc2/downloads/";
 		String base = "http://pathwaycommons.baderlab.org/downloads/";
@@ -75,7 +75,7 @@ public class TempTests
 //		searcher.searchSIF(model, new FileOutputStream("/home/ozgun/Temp/sif2.txt"), true);
 	}
 
-	public void checkSomethingOnModel()
+	private void checkSomethingOnModel()
 	{
 		for (PathwayStep step : model.getObjects(PathwayStep.class))
 		{
@@ -106,7 +106,7 @@ public class TempTests
 //		}
 	}
 
-	public void namesOfPathwaysThatContainReversibleReactions()
+	private void namesOfPathwaysThatContainReversibleReactions()
 	{
 		Pattern p = new Pattern(Pathway.class, "Pathway");
 		p.add(new PathConstraint("Pathway/pathwayComponent:Conversion"), "Pathway", "Conv");
@@ -136,14 +136,14 @@ public class TempTests
 		}
 	}
 
-	public void capturePattern() throws Throwable
+	private void capturePattern() throws Throwable
 	{
 		Pattern p = PatternBox.controlsStateChangeThroughDegradation();
 
 		Searcher.searchInFile(p, "All-Human-Data.owl", "Captured-controls-degradation.owl", 100, 1);
 	}
 
-	public void extractSignalink() throws IOException
+	private void extractSignalink() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/signalink-raw.txt"));
 
@@ -188,7 +188,7 @@ public class TempTests
 		System.out.println("set.size() = " + set.size());
 	}
 
-	public void debugPattern() throws Throwable
+	private void debugPattern() throws Throwable
 	{
 
 		Pattern p = PatternBox.controlsExpressionWithTemplateReac();
@@ -203,7 +203,7 @@ public class TempTests
 	}
 
 
-	public void searchAndWriteWithMiners() throws Throwable
+	private void searchAndWriteWithMiners() throws Throwable
 	{
 		Blacklist blacklist = new Blacklist("blacklist.txt");
 		SIFMiner[] miner = new SIFMiner[]{
@@ -229,7 +229,7 @@ public class TempTests
 		}
 	}
 
-	public void printVennIntersections() throws FileNotFoundException
+	private void printVennIntersections() throws FileNotFoundException
 	{
 //		SimpleIOHandler h = new SimpleIOHandler();
 //		Model model = h.convertFromOWL(new FileInputStream("All-Data.owl"));
@@ -313,7 +313,7 @@ public class TempTests
 		System.out.println("Total: " + all.size());
 	}
 
-	public void checkOverlap() throws Throwable
+	private void checkOverlap() throws Throwable
 	{
 //		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
 		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/PC.sif");
@@ -462,78 +462,10 @@ public class TempTests
 
 	}
 
-	public void tempCode() throws FileNotFoundException
+	private void tempCode() throws FileNotFoundException
 	{
-		String uri = "http://identifiers.org/uniprot/F7GJZ7";
-		String convURI = "http://www.pantherdb.org/pathways/biopax#STATE_TRANSITION_LEFT__Lck-RIGHT__Pi-_Lck-_r4";
-		String contURI = "http://www.pantherdb.org/pathways/biopax#_CATALYSIS___CD45_r4m1_r4";
-
-		Model model1 = BioPAXLevel.L3.getDefaultFactory().createModel();
-		File directory = new File("/home/ozgun/Desktop/Panther/"); // just my directory
-
-		SimpleIOHandler importer = new SimpleIOHandler(BioPAXLevel.L3);
-
-		for (File f : directory.listFiles()) {
-			model1.merge(importer.convertFromOWL(new FileInputStream(f.getAbsoluteFile())));
-			model1 = importer.convertFromOWL(new FileInputStream(f.getAbsoluteFile()));
-			if (model1.getByID(convURI) != null)
-			{
-				System.out.println(f);
-			}
-			if (model1.getByID(contURI) != null)
-			{
-				Catalysis cat = (Catalysis) model1.getByID(contURI);
-				for (Process prc : cat.getControlled())
-				{
-					System.out.println("prc = " + prc.getUri());
-				}
-				System.out.println(f);
-			}
-		}
-
-		System.exit(0);
-
-		Pattern p = new Pattern(ProteinReference.class, "PR1");
-		p.add(new IDConstraint(Collections.singleton(uri)), "PR1");
-		p.add(ConBox.erToPE(), "PR1", "P1");
-		p.add(ConBox.peToControl(), "P1", "Cont1");
-		p.add(ConBox.controlToConv(), "Cont1", "Conv1");
-		p.add(ConBox.right(),  "Conv1", "linker");
-		p.add(ConBox.participatesInConv(),  "linker", "Conv2");
-		p.add(ConBox.left(),  "Conv2","linker");
-		p.add(ConBox.convToControl(), "Conv2", "Cont2");
-		p.add(ConBox.controllerPE(), "Cont2", "P2");
-		p.add(ConBox.peToER(), "P2", "PR2");
-		p.add(new Type(Protein.class),"P2");
-		p.add(ConBox.equal(false), "linker", "P2");
-		p.add(ConBox.equal(false), "PR2", "PR1");
-		p.add(ConBox.equal(false), "P2", "P1");
-		p.add(ConBox.equal(false), "linker", "P1");
-		p.add(ConBox.equal(false), "Conv1", "Conv2");
-
-		Map<BioPAXElement, List<Match>> map1 = Searcher.search(model1, p);
-		System.out.println("map.size() = " + map1.size());
-
-		String model_filename = "/home/ozgun/Temp/temp.owl";
-		importer.convertToOWL(model1, new FileOutputStream(model_filename));
-		Model model2 = importer.convertFromOWL(new FileInputStream(model_filename));
-
-		Map<BioPAXElement, List<Match>> map2 = Searcher.search(model2, p);
-		System.out.println("map.size() = " + map2.size());
-
-		for (BioPAXElement ele : map1.keySet())
-		{
-			if (!map2.containsKey(ele))
-			{
-				System.out.println(ele.getUri());
-			}
-		}
-
-		Conversion conv1 = (Conversion) model1.getByID(convURI);
-		Conversion conv2 = (Conversion) model2.getByID(convURI);
-
-		System.out.println(conv1.getControlledOf().size());
-		System.out.println(conv2.getControlledOf().size());
+		String dir = System.getProperty("java.io.tmpdir") + File.separator;
+		System.out.println("dir = " + dir);
 	}
 
 	private void compareModels(Model m1, Model m2)
@@ -574,9 +506,9 @@ public class TempTests
 
 	public static void main(String[] args) throws FileNotFoundException
 	{
-		compareSIFs();
-//		TempTests tt = new TempTests();
-//		tt.tempCode();
+//		compareSIFs();
+		TempTests tt = new TempTests();
+		tt.tempCode();
 	}
 
 }

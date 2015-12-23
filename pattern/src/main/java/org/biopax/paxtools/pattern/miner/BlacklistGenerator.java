@@ -134,8 +134,6 @@ public class BlacklistGenerator
 			}
 		}
 
-		blacklist.write("blacklist.txt");
-
 		return blacklist;
 	}
 

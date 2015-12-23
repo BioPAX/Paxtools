@@ -34,7 +34,8 @@ public class BlacklistGenerator2
 		this.decider = decider;
 	}
 
-	final String MAPPING_FILE = "chem-name-mapping-curated.txt";
+	final String MAPPING_FILE = "chem-name-mapping.txt";
+	final String WHITELIST_FILE = "whitelist.txt";
 
 	/**
 	 * Default constructor.
@@ -76,7 +77,10 @@ public class BlacklistGenerator2
 		if (nameMapping == null)
 		{
 			generateNameMappingFileToCurate(model);
-			return null;
+			throw new RuntimeException("Small molecule name mapping file not found. Generated a " +
+				"mapping file, but it needs manual curation before use.\nPlease go over some top " +
+				"portion of this file and delete invalid lines and any uncurated bottom part.\n" +
+				"After that, you can rerun this method.");
 		}
 
 		SIFSearcher searcher = new SIFSearcher(new Fetcher(nameMapping), SIFEnum.USED_TO_PRODUCE);
@@ -124,6 +128,8 @@ public class BlacklistGenerator2
 //		writeTheGuideRankingToTuneTheDecider(model, nameMapping, upstrMap, dwstrMap, neighMap);
 //		if (true) return null;
 
+		Set<String> white = readWhitelist();
+
 		Blacklist blacklist = new Blacklist();
 
 		// populate the blacklist
@@ -134,6 +140,8 @@ public class BlacklistGenerator2
 			Set<String> names = nameFetcher.fetchID(smr);
 			if (names.isEmpty()) continue;
 			String name = names.iterator().next();
+
+			if (white != null && white.contains(name)) continue;
 
 			int neighSize = neighMap.containsKey(name) ? neighMap.get(name).size() : 0;
 			int upstrOnly = upstrMap.containsKey(name) ? upstrMap.get(name).size() : 0;
@@ -146,8 +154,6 @@ public class BlacklistGenerator2
 					decider.getContext(neighSize, upstrOnly, dwstrOnly));
 			}
 		}
-
-		blacklist.write("blacklist.txt");
 
 		return blacklist;
 	}
@@ -182,7 +188,6 @@ public class BlacklistGenerator2
 			if (!affectMap.containsKey(source)) affectMap.put(source, new HashSet<String>());
 			affectMap.get(source).add(target);
 		}
-
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter("ubique-stats.txt"));
 
@@ -236,7 +241,9 @@ public class BlacklistGenerator2
 
 		// Find and record name mapping
 
-		BufferedWriter writer = new BufferedWriter(new FileWriter(MAPPING_FILE));
+		String dir = System.getProperty("java.io.tmpdir") + File.separator;
+
+		BufferedWriter writer = new BufferedWriter(new FileWriter(dir + MAPPING_FILE));
 
 		List<String> remaining = new ArrayList<String>();
 		for (String name : names)
@@ -260,9 +267,9 @@ public class BlacklistGenerator2
 		}
 
 		writer.close();
-		System.out.println("A small molecule name mapping file is generated (" + MAPPING_FILE +
-			"). Please curate the top portion of this file, delete invalid lines, " +
-			"and re-run this code.");
+		System.out.println("A small molecule name mapping file is generated (" + dir +
+			MAPPING_FILE + "). Please curate the top portion of this file, delete invalid lines, " +
+			"copy the curated file into the working directory, and re-run this code.");
 	}
 
 	private Set<Set<String>> collectNameSets(Model model)
@@ -406,6 +413,24 @@ public class BlacklistGenerator2
 			map.put(token[1], token[0]);
 		}
 		return map;
+	}
+
+	private Set<String> readWhitelist() throws FileNotFoundException
+	{
+		if (!new File(WHITELIST_FILE).exists())
+		{
+			System.out.println("No whitelist file found (" + WHITELIST_FILE + "). " +
+				"Not whitelisting anything.");
+			return null;
+		}
+		Set<String> names = new HashSet<String>();
+		Scanner sc = new Scanner(new File(WHITELIST_FILE));
+		while (sc.hasNextLine())
+		{
+			String name = sc.nextLine().split("\t")[0];
+			names.add(name);
+		}
+		return names;
 	}
 
 	/**

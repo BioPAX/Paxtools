@@ -18,7 +18,7 @@ public class PCSiteSIFTest
 		test.compare();
 	}
 
-	public void compare() throws IOException
+	private void compare() throws IOException
 	{
 		String site1 = "http://www.pathwaycommons.org/pc2/downloads";
 		String site2 = "http://pathwaycommons.baderlab.org/downloads";
