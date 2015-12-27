@@ -1026,8 +1026,17 @@ class EntryMapper {
 		
 		// create the list of all other psimi xrefs
 		List<DbReference> psiDBRefList = new ArrayList<DbReference>();
-		
-		psiDBRefList.add(psiXREF.getPrimaryRef());
+
+		DbReference primaryRef = psiXREF.getPrimaryRef();
+		if(primaryRef != null) { //looks, it should never be null in a valid PSI-MI model
+            if ("identity".equals(primaryRef.getRefType()) || "identical object".equals(primaryRef.getRefType())) {
+                UnificationXref bpXref = unificationXref(primaryRef.getDb(), primaryRef.getId());
+				toReturn.add(bpXref);
+            } else {
+				psiDBRefList.add(psiXREF.getPrimaryRef());
+			}
+		}
+
 		if (psiXREF.hasSecondaryRef()) {
 			psiDBRefList.addAll(psiXREF.getSecondaryRef());
 		}
@@ -1051,16 +1060,8 @@ class EntryMapper {
         // If multiple ids given with comma separated values, then split them.
         for (String dbRefId : psiDBRefId.split(",")) {	
         	Xref bpXref = null;
-        	
-// Let's never make UnificationXref - RelationshipXref is more safe and makes sense 
-// (e.g., often an entrez gene or omim ID is a protein's Xref id with 'identity' ref. type)
-//            if ("identity".equals(refType) || "identical object".equals(refType)) {
-//                bpXref = unificationXref(psiDBRefDb, dbRefId);
-//            } 
-//            else if("secondary-ac".equals(refType) ) {
-//            	bpXref = unificationXref(psiDBRefDb, dbRefId);
-//            } 
-//            else        	
+			// Let's not make UnificationXrefs. RelationshipXref is more safe.
+			// Often, a gene or omim ID (can be another species') is a protein's xref id with 'identity' type...
             if(!"pubmed".equalsIgnoreCase(psiDBRefDb)) {
             	bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
             }
@@ -1072,7 +1073,6 @@ class EntryMapper {
             if (bpXref != null) 
             	bpXrefs.add(bpXref);
         }
-		
 	}
 
 
