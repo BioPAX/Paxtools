@@ -805,19 +805,27 @@ public final class ModelUtils
 			}
 			target.addXref(xref);
 		}
-		// copy comments
-		for(String comm : source.getComment()) {
-			target.addComment(comm);
-		}
-		//copy evidence and dataSource
-		if(source instanceof Entity) {
+		//copy evidence and dataSource if (Named) source and target are same sub-type - either Entity or ER only:
+		if(source instanceof Entity && target instanceof Entity) {
 			Entity src = (Entity) source;
 			for (Evidence ev : src.getEvidence()) {
-//TODO				if(ev.getExperimentalForm().isEmpty()) //copy only if there're no exp. forms..?
 				((Entity) target).addEvidence(ev);
 			}
 			for (Provenance prov : src.getDataSource()) {
 				((Entity) target).addDataSource(prov);
+			}
+			// copy comments
+			for(String comm : source.getComment()) {
+				target.addComment(comm);
+			}
+		} else if(source instanceof EntityReference && target instanceof EntityReference) {
+			EntityReference src = (EntityReference) source;
+			for (Evidence ev : src.getEvidence()) {
+				((EntityReference) target).addEvidence(ev);
+			}
+			// copy comments
+			for(String comm : source.getComment()) {
+				target.addComment(comm);
 			}
 		}
 	}
