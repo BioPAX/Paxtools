@@ -283,11 +283,20 @@ public class ModelUtilsTest {
 		assertTrue(model.contains(proteins[2])^model.contains(proteins[3]));
 		assertTrue(ctl[1].getController().contains(proteins[0])^ctl[1].getController().contains(proteins[1]));
 		assertTrue(ctl[1].getController().contains(proteins[0])^ctl[1].getController().contains(proteins[1]));
+		assertEquals(1, rxn[0].getRight().size());
+		assertEquals(1, rxn[1].getRight().size());
+		assertEquals(1, rxn[0].getLeft().size());
+		assertEquals(1, rxn[1].getLeft().size());
 		if(model.contains(proteins[2])) {
-			assertEquals(proteins[2], rxn[0].getRight());
-			assertEquals(proteins[2], rxn[1].getRight());
-			assertEquals(proteins[2], rxn[0].getLeft());
-			assertEquals(proteins[2], rxn[1].getLeft());
+			assertTrue(rxn[0].getRight().contains(proteins[2]));
+			assertTrue(rxn[1].getRight().contains(proteins[2]));
+			assertTrue(rxn[0].getLeft().contains(proteins[2]));
+			assertTrue(rxn[1].getLeft().contains(proteins[2]));
+		} else if(model.contains(proteins[3])) {
+			assertTrue(rxn[0].getRight().contains(proteins[3]));
+			assertTrue(rxn[1].getRight().contains(proteins[3]));
+			assertTrue(rxn[0].getLeft().contains(proteins[3]));
+			assertTrue(rxn[1].getLeft().contains(proteins[3]));
 		}
 
 		//merge interactions and test it
