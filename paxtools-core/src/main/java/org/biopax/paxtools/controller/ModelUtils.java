@@ -765,9 +765,8 @@ public final class ModelUtils
 
 	
 	/**
-	 * Copies names and xrefs from source to target 
-	 * biopax object; it does not copy unification xrefs 
-	 * but instead adds relationship xrefs using the same 
+	 * Copies names, xrefs, comments, evidence, data sources from source to target biopax object;
+	 * it does not copy unification xrefs but instead adds relationship xrefs using the same
 	 * db and id values as source's unification xrefs.
 	 * 
 	 * @param model the biopax model where the source and target objects belong
@@ -776,18 +775,20 @@ public final class ModelUtils
 	 */
 	private static void copySimplePointers(Model model, Named source, Named target)
 	{
+		//copy names
 		target.setDisplayName(source.getDisplayName());
 		target.setStandardName(source.getStandardName());
 		for (String name : source.getName())
 		{
 			target.addName(name);
 		}
+		// copy xrefs, converting UXs to RXs on the go
 		for (Xref xref : source.getXref())
 		{
 			if (xref instanceof UnificationXref)
 			{
 				// generate URI using model's xml:base and xref's properties
-				String uri = model.getXmlBase() + "RelationshipXref_"+ md5hex(xref.getDb()+xref.getId()+xref.getUri());
+				String uri = model.getXmlBase() + "RelationshipXref_"+ md5hex(xref.getDb()+xref.getId());
 				Xref byID = (Xref) model.getByID(uri);
 				if (byID == null)
 				{
@@ -803,6 +804,21 @@ public final class ModelUtils
 				}
 			}
 			target.addXref(xref);
+		}
+		// copy comments
+		for(String comm : source.getComment()) {
+			target.addComment(comm);
+		}
+		//copy evidence and dataSource
+		if(source instanceof Entity) {
+			Entity src = (Entity) source;
+			for (Evidence ev : src.getEvidence()) {
+//TODO				if(ev.getExperimentalForm().isEmpty()) //copy only if there're no exp. forms..?
+				((Entity) target).addEvidence(ev);
+			}
+			for (Provenance prov : src.getDataSource()) {
+				((Entity) target).addDataSource(prov);
+			}
 		}
 	}
 
@@ -1295,6 +1311,49 @@ public final class ModelUtils
 				{
 					cleanAllInverse(conversion);
 					model.remove(conversion);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Merges equivalent physical entities.
+	 *
+	 * This can greatly decrease model's size and improve some visualizations, but
+	 * can also introduce (or uncover hidden) semantic problems, such as when a physical entity is both
+	 * component of a complex and independently participates in an interaction
+	 * (this can happen when location and mod. features of a protein are not defined -
+	 * only names, xrefs and perhaps entity reference - are there).
+	 *
+	 * Note (warning): please check if the result is desirable;
+	 * the result of the merging very much depends on actual pathway data quality
+	 * (in fact, such merging is better if decided and done by a data provider before releasing the data)...
+	 *
+	 * @param model to edit/update
+	 */
+	public static void mergeEquivalentPhysicalEntities(Model model)
+	{
+		EquivalenceGrouper<PhysicalEntity> groups = new EquivalenceGrouper(model.getObjects(PhysicalEntity.class));
+		for (List<PhysicalEntity> group : groups.getBuckets()) {
+			if (group.size() > 1) {
+				HashMap<BioPAXElement,BioPAXElement> subs = new HashMap<BioPAXElement, BioPAXElement>();
+
+				PhysicalEntity primus = null;
+				for (PhysicalEntity pe : group) {
+					if (primus == null) {
+						primus = pe;
+					} else {
+						copySimplePointers(model, pe, primus);
+						subs.put(pe,primus); //put to the replacement map
+					}
+				}
+
+				//do replace equivalent objects in the model
+				replace(model, subs);
+
+				//remove replaced ones
+				for (BioPAXElement pe : subs.keySet()) {
+					model.remove(pe);
 				}
 			}
 		}

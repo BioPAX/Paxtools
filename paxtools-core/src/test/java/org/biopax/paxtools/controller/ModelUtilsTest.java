@@ -241,7 +241,7 @@ public class ModelUtilsTest {
 
 		Protein[] proteins = mock.create(model, Protein.class, 4);
 
-		mock.bindInPairs("entityReference",  proteins[0], pr[0], proteins[1], pr[0], proteins[2], pr[1],proteins[3], pr[1]);
+		mock.bindInPairs("entityReference", proteins[0], pr[0], proteins[1], pr[0], proteins[2], pr[1], proteins[3], pr[1]);
 
 		BiochemicalReaction[] rxn = mock.create(model, BiochemicalReaction.class, 2);
 
@@ -250,10 +250,48 @@ public class ModelUtilsTest {
 
 		Catalysis[] ctl = mock.create(model, Catalysis.class,2);
 		mock.bindArrays("controlled", ctl, rxn);
-		mock.bindInPairs("controller", ctl[0],proteins[0],ctl[1], proteins[1]);
+		mock.bindInPairs("controller", ctl[0], proteins[0], ctl[1], proteins[1]);
 
 		ModelUtils.mergeEquivalentInteractions(model);
 
+		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
+	}
+
+	@Test
+	public void testMergeEquivalentPhysicalEntities()
+	{
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		Model model = mock.createModel();
+
+		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
+		Protein[] proteins = mock.create(model, Protein.class, 4);
+		mock.bindInPairs("entityReference", proteins[0], pr[0], proteins[1], pr[0], proteins[2], pr[1], proteins[3], pr[1]);
+
+		//generate two semantically equivalent reactions
+		BiochemicalReaction[] rxn = mock.create(model, BiochemicalReaction.class, 2);
+		mock.bindInPairs("left", rxn[0], proteins[2], rxn[1], proteins[2]);
+		mock.bindInPairs("right", rxn[0], proteins[3], rxn[1], proteins[3]);
+
+		Catalysis[] ctl = mock.create(model, Catalysis.class,2);
+		mock.bindArrays("controlled", ctl, rxn);
+		mock.bindInPairs("controller", ctl[0], proteins[0], ctl[1], proteins[1]);
+
+		ModelUtils.mergeEquivalentPhysicalEntities(model);
+
+		//either 0 or 1 kept by chance (and the other gets replaced)
+		assertTrue(model.contains(proteins[0])^model.contains(proteins[1]));
+		assertTrue(model.contains(proteins[2])^model.contains(proteins[3]));
+		assertTrue(ctl[1].getController().contains(proteins[0])^ctl[1].getController().contains(proteins[1]));
+		assertTrue(ctl[1].getController().contains(proteins[0])^ctl[1].getController().contains(proteins[1]));
+		if(model.contains(proteins[2])) {
+			assertEquals(proteins[2], rxn[0].getRight());
+			assertEquals(proteins[2], rxn[1].getRight());
+			assertEquals(proteins[2], rxn[0].getLeft());
+			assertEquals(proteins[2], rxn[1].getLeft());
+		}
+
+		//merge interactions and test it
+		ModelUtils.mergeEquivalentInteractions(model);
 		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
 	}
 }
