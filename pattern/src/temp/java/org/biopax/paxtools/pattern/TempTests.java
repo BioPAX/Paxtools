@@ -504,11 +504,20 @@ public class TempTests
 		}
 	}
 
+	private void generateBlacklist() throws FileNotFoundException
+	{
+		SimpleIOHandler h = new SimpleIOHandler();
+		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Downloads/Pathway Commons.7.NCI Pathway Interaction Database: Pathway.BIOPAX.owl"));
+		BlacklistGenerator3 bg = new BlacklistGenerator3("blacklist-names.txt");
+		Blacklist blacklist = bg.generateBlacklist(model);
+		blacklist.write("blacklist-temp.txt");
+	}
+
 	public static void main(String[] args) throws FileNotFoundException
 	{
 //		compareSIFs();
 		TempTests tt = new TempTests();
-		tt.tempCode();
+		tt.generateBlacklist();
 	}
 
 }
