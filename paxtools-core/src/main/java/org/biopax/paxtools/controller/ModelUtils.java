@@ -1344,29 +1344,34 @@ public final class ModelUtils
 	 */
 	public static void mergeEquivalentPhysicalEntities(Model model)
 	{
+		HashMap<BioPAXElement,BioPAXElement> subs = new HashMap<BioPAXElement, BioPAXElement>();
+
 		EquivalenceGrouper<PhysicalEntity> groups = new EquivalenceGrouper(model.getObjects(PhysicalEntity.class));
 		for (List<PhysicalEntity> group : groups.getBuckets()) {
 			if (group.size() > 1) {
-				HashMap<BioPAXElement,BioPAXElement> subs = new HashMap<BioPAXElement, BioPAXElement>();
-
 				PhysicalEntity primus = null;
 				for (PhysicalEntity pe : group) {
 					if (primus == null) {
 						primus = pe;
 					} else {
 						copySimplePointers(model, pe, primus);
-						subs.put(pe,primus); //put to the replacement map
+						//put in the map to replace pe with primus later on
+						if(!subs.containsKey(pe))
+							subs.put(pe,primus);
+						else // this must not ever happen unless there's a bug in EquivalenceGrouper...
+							throw new AssertionError("mergeEquivalentPhysicalEntities: equivalence groups do intersect; "
+								+ pe.getUri() + " was in the other group as well");
 					}
 				}
-
-				//do replace equivalent objects in the model
-				replace(model, subs);
-
-				//remove replaced ones
-				for (BioPAXElement pe : subs.keySet()) {
-					model.remove(pe);
-				}
 			}
+		}
+
+		//do replace equivalent objects in the model
+		replace(model, subs);
+
+		//remove replaced ones
+		for (BioPAXElement pe : subs.keySet()) {
+			model.remove(pe);
 		}
 	}
 
