@@ -776,12 +776,14 @@ public final class ModelUtils
 	private static void copySimplePointers(Model model, Named source, Named target)
 	{
 		//copy names
-		target.setDisplayName(source.getDisplayName());
-		target.setStandardName(source.getStandardName());
-		for (String name : source.getName())
-		{
+		if(source.getDisplayName()!=null)
+			target.setDisplayName(source.getDisplayName());
+		if(source.getStandardName()!=null)
+			target.setStandardName(source.getStandardName());
+		for (String name : source.getName()) {
 			target.addName(name);
 		}
+
 		// copy xrefs, converting UXs to RXs on the go
 		for (Xref xref : source.getXref())
 		{
@@ -805,6 +807,7 @@ public final class ModelUtils
 			}
 			target.addXref(xref);
 		}
+
 		//copy evidence and dataSource if (Named) source and target are same sub-type - either Entity or ER only:
 		if(source instanceof Entity && target instanceof Entity) {
 			Entity src = (Entity) source;
