@@ -1,0 +1,49 @@
+water
+h2o
+proton
+h+
+hydron
+dioxygen
+o2	I
+nadph(4-)
+nad(p)h
+nadph
+nadp(3-)
+nadp(+)
+nad(p)(+)
+tpn
+nadp
+nad(p)
+atp(4-)	I
+atp	I
+adp	O
+adp(3-)	O
+nadh(2-)
+nadh
+nadh+h+
+nad(1-)
+nad(+)
+nad
+carbon dioxide	O
+co2	O
+diphosphoric acid	O
+diphosphate	O
+diphosphate group	O
+diphosphate(4-)	O
+pyrophosphate	O
+hydrogenphosphate	O
+phosphate ion	O
+phosphate(3-)	O
+orthophosphate	O
+pi	O
+phosphoric acid	O
+amp
+adenosine 2'-phosphate(2-)
+3'-amp
+amp(2-)
+fadh2(2-)
+fadh2
+gdp
+gdp(3-)
+gtp(4-)
+gtp

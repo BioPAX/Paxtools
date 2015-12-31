@@ -50,6 +50,14 @@ public class BlacklistGenerator3
 	}
 
 	/**
+	 * Empty constructor uses the default blacklisted small molecule names in the resources.
+	 */
+	public BlacklistGenerator3()
+	{
+		this(BlacklistGenerator3.class.getResourceAsStream("blacklist-names.txt"));
+	}
+
+	/**
 	 * Generates the blacklist.
 	 * @param model model to use
 	 * @return the blacklist
