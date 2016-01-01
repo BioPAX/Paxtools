@@ -127,13 +127,14 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 		if (element instanceof Entity)
 		{
 			Entity otherEntity = (Entity) element;
-
-			equivalance = hasEquivalentIntersection(dataSource, otherEntity.getDataSource())
-			              && hasEquivalentIntersection(
+			equivalance =
+				hasEquivalentIntersection(dataSource, otherEntity.getDataSource())
+			    && hasEquivalentIntersection(
 					new ClassFilterSet<Xref, UnificationXref>(getXref(), UnificationXref.class),
 					new ClassFilterSet<Xref, UnificationXref>(otherEntity.getXref(), UnificationXref.class))
-			              && hasEquivalentIntersection(evidence, otherEntity.getEvidence());
+			    && hasEquivalentIntersection(evidence, otherEntity.getEvidence());
 		}
 		return equivalance;
 	}
+
 }

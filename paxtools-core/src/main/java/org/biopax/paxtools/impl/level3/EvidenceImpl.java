@@ -138,7 +138,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 	 * (Currently, it considers only member UnificationXrefs and EvidenceCodeVocabularies
 	 * for comparison...)
 	 * 
-	 * TODO: review; add comparing ExperimentalForm and Confidence values...
+	 * TODO: review; compare ExperimentalForm and Confidence values; or - simply always return false!
 	 */
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element) {
@@ -188,7 +188,7 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 				new ClassFilterSet<Xref, PublicationXref>(getXref(), PublicationXref.class),
 				new ClassFilterSet<Xref, PublicationXref>(that.getXref(), PublicationXref.class));
 		
-		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes && hasAllEquivEvidenceCodes;
+		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes && hasCommonPublicationXref;
 	}
 
 }
