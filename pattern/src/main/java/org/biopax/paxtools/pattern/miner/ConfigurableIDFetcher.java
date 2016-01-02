@@ -3,7 +3,6 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
-import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.*;
 

@@ -10,6 +10,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.ClassFilterSet;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -45,9 +46,8 @@ import java.util.concurrent.TimeUnit;
  * db="Taxonomy" and some taxonomy id.
  *
  * Note, this code assumes that the model has successfully been validated
- * and perhaps even normalized (using the BioPAX Validator/Normalizer). 
- * A BioPAX L1 or L2 model is first converted to the L3 
- * (this is a lossless conversion if there are no BioPAX errors).
+ * and perhaps normalized (using the BioPAX Validator, Paxtools Normalizer).
+ * A BioPAX L1 or L2 model is first converted to the L3 (lossless conversion if there are no BioPAX errors).
  */
 public class GSEAConverter
 {
@@ -196,6 +196,8 @@ public class GSEAConverter
 	 * Creates GSEA entries from the pathways contained in the model.
 	 * @param model Model
 	 * @return a set of GSEA entries
+	 *
+	 * TODO make it protected or default (package-private) instead of public?
 	 */
 	public Collection<GSEAEntry> convert(final Model model)
 	{
@@ -268,9 +270,12 @@ public class GSEAConverter
 					//run it - collect all PRs from the pathway
 					traverser.traverse(currentPathway, null);
 
-					LOG.info("- fetched PRs: " + pathwayProteinRefs.size());
 					if(!pathwayProteinRefs.isEmpty()) {
-						LOG.info("- grouping the PRs by organism...");
+						if(pathwayProteinRefs.size() > 99) {
+							LOG.warn("Pathway " + currentPathwayName + " (" + currentPathway.getUri()
+									+ ") has lots of PRs: " + pathwayProteinRefs.size());
+						}
+						LOG.info("- fetched PRs: " + pathwayProteinRefs.size() + "; now grouping by organism...");
 						Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(pathwayProteinRefs);
 						// create GSEA/GMT entries - one entry per organism (null organism also makes one)
 						String dataSource = getDataSource(currentPathway.getDataSource());
@@ -320,8 +325,7 @@ public class GSEAConverter
 					@Override
 					public void run() {
 						LOG.info("adding " + database + " IDs of " + org + 
-							" proteins (PRs) from '" + name + "', " + 
-							dataSource + " pathway...");
+								" proteins (PRs) from '" + name + "', " + dataSource + " pathway...");
 						GSEAEntry gseaEntry = new GSEAEntry(name, org, database, "datasource: " + dataSource);
 						processProteinReferences(orgToPrsMap.get(org), gseaEntry);
 						toReturn.add(gseaEntry);
@@ -331,7 +335,7 @@ public class GSEAConverter
 		}
 		exe.shutdown();
 		try {
-			exe.awaitTermination(4, TimeUnit.HOURS);
+			exe.awaitTermination(2, TimeUnit.HOURS);
 		} catch (InterruptedException e) {
 			throw new RuntimeException("Interrupted unexpectedly!");
 		}
@@ -380,48 +384,54 @@ public class GSEAConverter
 
 	void processProteinReferences(Set<ProteinReference> prs, GSEAEntry targetEntry)
 	{
-		for (ProteinReference aProteinRef : prs)
+		prs_loop: for (ProteinReference pr : prs)
 		{
-			// we only process PRs that belong to the same species (as for targetEntry) if crossSpeciesCheckEnabled==true
-			if (crossSpeciesCheckEnabled && !targetEntry.taxID().equals(getOrganismKey(aProteinRef.getOrganism())))
+			// process PRs that belong to the same species (as targetEntry's) if crossSpeciesCheckEnabled==true
+			if (crossSpeciesCheckEnabled && !targetEntry.taxID().equals(getOrganismKey(pr.getOrganism())))
 				continue;
 				
 			if (database != null && !database.isEmpty())
 			{
-				String lowercaseDb = database.toLowerCase();
+				final String db = database.toLowerCase();
 				// a shortcut if we are converting validated normalized BioPAX model:
 				// get the primary ID from the URI of the ProteinReference
-				final String lowcaseUri = aProteinRef.getUri().toLowerCase();
-				if (lowcaseUri.startsWith("http://identifiers.org/")
-					&& lowcaseUri.contains(lowercaseDb))
+				final String uri = pr.getUri();
+				if (uri.startsWith("http://identifiers.org/") && uri.contains(db))
 				{
-					String accession = aProteinRef.getUri();
+					String accession = pr.getUri();
 					accession = accession.substring(accession.lastIndexOf("/") + 1);
 					targetEntry.getIdentifiers().add(accession);
-				} 
-				else { // simply pick one xref with matching db value (any one)
-					TreeSet<Xref> orderedXrefs = new TreeSet<Xref>(new Comparator<Xref>() {
-						@Override
-						public int compare(Xref o1, Xref o2) {
-							return o1.toString().compareTo(o2.toString());
-						}
-					});
-					
-					orderedXrefs.addAll(aProteinRef.getXref());
-					for (Xref aXref : orderedXrefs)
+				}
+				else {
+					int added = 0;
+					for (Xref aXref : pr.getXref())
 					{
-						if (aXref.getId() != null && aXref.getDb() != null && 
-							(aXref.getDb().toLowerCase().startsWith(lowercaseDb) 
-							|| aXref.getId().toLowerCase().startsWith(lowercaseDb + ":")
-							|| aXref.getId().toLowerCase().startsWith(lowercaseDb + "_"))
-						) {
+						if(aXref instanceof UnificationXref
+								&& aXref.getId() != null && aXref.getDb() != null
+								&& aXref.getDb().toLowerCase().startsWith(db))
+						{
 							targetEntry.getIdentifiers().add(aXref.getId());
+							++added;
 						}
 					}
+					if(added == 0) for (Xref aXref : pr.getXref())
+					{
+						if(aXref instanceof RelationshipXref
+								&& aXref.getId() != null && aXref.getDb() != null
+								&& aXref.getDb().toLowerCase().startsWith(db))
+						{
+							targetEntry.getIdentifiers().add(aXref.getId());
+							++added;
+						}
+					}
+
+					if(added > 10)
+						LOG.warn("In GSEA entry: " + targetEntry.taxID() + " " + targetEntry.name() +
+								", PR " + pr.getUri() + " got " + added + " '" + db + "' identifiers...");
 				}
 			} else {
-				// use URI (not really useful for GSEA software, but good for testing/hacking)
-				targetEntry.getIdentifiers().add(aProteinRef.getUri());
+				// fallback - use URI (not really useful for the GSEA software)
+				targetEntry.getIdentifiers().add(pr.getUri());
 			}
 		}
 	}

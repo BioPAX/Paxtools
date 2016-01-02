@@ -2,8 +2,8 @@ package org.biopax.paxtools.io.gsea;
 
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * This package-private class represents an entry found in a GSEA (GMT format) file.
@@ -26,7 +26,7 @@ class GSEAEntry {
 		this.taxID = taxID;
 		this.idType = idType;
 		this.description = description;		
-		this.identifiers = new HashSet<String>();
+		this.identifiers = new TreeSet<String>();
 	}
     
     
