@@ -53,27 +53,23 @@ class GSEAEntry {
     
     /**
      * Creates GSEA (.gmt) file entry (line):
-     * 
-     *  
      */
     public String toString() {
     	StringBuilder toReturn = new StringBuilder();
-    	
-    	if (!identifiers.isEmpty()) {
-    		String tax = ((taxID.isEmpty()) ? "unspecified" : taxID);
-    		toReturn 
-    		// the (unique) 'name' column comes first
-    			.append(tax).append(": ").append(name)
-    			.append("\t")
-    		// next, comes the description column
-    			.append(description)
-    			.append("; organism: ").append(tax)
-    			.append("; id type: ").append(idType);
-    		// finally, - all data (identifiers) columns
-    		for (String id : identifiers) {
-    			toReturn.append("\t").append(id);
-    		}
-    	}
+
+		String tax = ((taxID.isEmpty()) ? "unspecified" : taxID);
+		toReturn
+				// the (unique) 'name' column comes first
+				.append(tax).append(": ").append(name)
+				.append("\t")
+				// next, comes the description column
+				.append(description)
+				.append("; organism: ").append(tax)
+				.append("; id type: ").append(idType);
+		// finally, - all data (identifiers) columns
+		for (String id : identifiers) {
+			toReturn.append("\t").append(id);
+		}
 
         return toReturn.toString();
     }

@@ -55,8 +55,11 @@ public class GSEAConverter
 	
 	private final String database;
 	private final boolean crossSpeciesCheckEnabled;
+	private Set<String> allowedOrganisms;
 	private final boolean skipSubPathways;
 	private final Set<Provenance> skipSubPathwaysOf;
+	private boolean skipOutsidePathways = false;
+	private int minNumOfGenesPerEntry = 1;
 
 	/**
 	 * Constructor.
@@ -123,14 +126,46 @@ public class GSEAConverter
 	{
 		this.database = database;
 		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
-
 		if(skipSubPathwaysOf == null)
 			skipSubPathwaysOf = Collections.emptySet();
 		this.skipSubPathwaysOf = skipSubPathwaysOf;
-
 		this.skipSubPathways = false;
 	}
 
+	/**
+	 * If true, then only GSEA entries that (genes) correspond to a Pathway
+	 * are printed to the output.
+	 * @return true/false
+     */
+	public boolean isSkipOutsidePathways() {
+		return skipOutsidePathways;
+	}
+
+	public void setSkipOutsidePathways(boolean skipOutsidePathways) {
+		this.skipOutsidePathways = skipOutsidePathways;
+	}
+
+	public Set<String> getAllowedOrganisms() {
+		return allowedOrganisms;
+	}
+
+	public void setAllowedOrganisms(Set<String> allowedOrganisms) {
+		this.allowedOrganisms = allowedOrganisms;
+	}
+
+	/**
+	 * If this value is greater than 0, and the number of proteins/genes
+	 * in a gene set is less than that value, then this gene set is to skip
+	 * (no GSEA entry is written).
+	 * @return the min. value
+     */
+	public int getMinNumOfGenesPerEntry() {
+		return minNumOfGenesPerEntry;
+	}
+
+	public void setMinNumOfGenesPerEntry(int minNumOfGenesPerEntry) {
+		this.minNumOfGenesPerEntry = minNumOfGenesPerEntry;
+	}
 
 	/**
 	 * Converts model to GSEA (GMT) and writes to out.
@@ -146,9 +181,12 @@ public class GSEAConverter
 		if (entries.size() > 0)
 		{
 			Writer writer = new OutputStreamWriter(out);
-			for (GSEAEntry entry : entries)
-			{
-				writer.write(entry.toString() + "\n");
+			for (GSEAEntry entry : entries) {
+				if ((minNumOfGenesPerEntry <= 1 && !entry.getIdentifiers().isEmpty())
+						|| entry.getIdentifiers().size() >= minNumOfGenesPerEntry)
+				{
+					writer.write(entry.toString() + "\n");
+				}
 			}
 			writer.flush();
 		}
@@ -185,16 +223,15 @@ public class GSEAConverter
 		final Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
 		for (Pathway pathway : pathways) 
 		{
-			String name = (pathway.getDisplayName() == null)
-					? pathway.getStandardName() : pathway.getDisplayName();
-			
+			String name = (pathway.getDisplayName() == null) ? pathway.getStandardName() : pathway.getDisplayName();
 			if(name == null || name.isEmpty()) 
 				name = pathway.getUri();
 
 			final Pathway currentPathway = pathway;
 			final String currentPathwayName = name;
-			final boolean ignoreSubPathways = skipSubPathways ||
-				(!skipSubPathwaysOf.isEmpty() && shareSomeObjects(currentPathway.getDataSource(), skipSubPathwaysOf));
+			final boolean ignoreSubPathways =
+				(!skipSubPathwaysOf.isEmpty() && shareSomeObjects(currentPathway.getDataSource(), skipSubPathwaysOf))
+					|| skipSubPathways;
 
 			exe.submit(new Runnable() {
 				@Override
@@ -231,7 +268,6 @@ public class GSEAConverter
 					//run it - collect all PRs from the pathway
 					traverser.traverse(currentPathway, null);
 
-
 					LOG.info("- fetched PRs: " + pathwayProteinRefs.size());
 					if(!pathwayProteinRefs.isEmpty()) {
 						LOG.info("- grouping the PRs by organism...");
@@ -242,7 +278,7 @@ public class GSEAConverter
 						Collection<GSEAEntry> entries = createGseaEntries(currentPathwayName, dataSource, orgToPrsMap);
 						if(!entries.isEmpty())
 							toReturn.addAll(entries);
-						prs.removeAll(pathwayProteinRefs);//there left not yet processed PRs (PR can be processed multiple times anyway)
+						prs.removeAll(pathwayProteinRefs);//keep not processed PRs (a PR can be processed multiple times)
 						LOG.info("- collected " + entries.size() + "entries.");
 					}
 				}
@@ -251,15 +287,15 @@ public class GSEAConverter
 
 		exe.shutdown();
 		try {
-			exe.awaitTermination(48, TimeUnit.HOURS);
+			exe.awaitTermination(1, TimeUnit.HOURS); //this should not take too long even for a very large model
 		} catch (InterruptedException e) {
 			throw new RuntimeException("Interrupted unexpectedly!");
 		}
 		
 		//when there're no pathways, only empty pathays, pathways w/o PRs, then use all/rest of PRs -
 		//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
-		LOG.info("Creating entries for the rest fo (unused) PRs...");
-		if(!prs.isEmpty()) { //all or not processed above
+		if(!prs.isEmpty() && !skipOutsidePathways) {
+			LOG.info("Creating entries for the rest of PRs (outside any pathway)...");
 			Map<String,Set<ProteinReference>> orgToPrsMap = organismToProteinRefsMap(prs);
 			if(!orgToPrsMap.isEmpty()) {
 				// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
@@ -316,15 +352,26 @@ public class GSEAConverter
 		if (crossSpeciesCheckEnabled) {
 			for (ProteinReference r : proteinRefs) {
 				String key = getOrganismKey(r.getOrganism()); // null org. is ok (key == "")
-				Set<ProteinReference> prs = map.get(key);
-				if (prs == null) {
-					prs = new HashSet<ProteinReference>();
-					map.put(key, prs);
+				//collect PRs only from allowed organisms
+				if(allowedOrganisms==null || allowedOrganisms.isEmpty() || allowedOrganisms.contains(key)) {
+					Set<ProteinReference> prs = map.get(key);
+					if (prs == null) {
+						prs = new HashSet<ProteinReference>();
+						map.put(key, prs);
+					}
+					prs.add(r);
 				}
-				prs.add(r);
 			}
 		} else {
-			map.put("", proteinRefs); //all PRs
+			final Set<ProteinReference> prs = new HashSet<ProteinReference>();
+			for (ProteinReference r : proteinRefs) {
+				String key = getOrganismKey(r.getOrganism());
+				//collect PRs only from allowed organisms
+				if(allowedOrganisms==null || allowedOrganisms.isEmpty() || allowedOrganisms.contains(key)) {
+					prs.add(r);
+				}
+			}
+			map.put("", prs);
 		}
 				
 		return map;
@@ -415,8 +462,8 @@ public class GSEAConverter
 							if(key.isEmpty())
 								key = xref.getId();
 							else
-								LOG.warn("BioSource " + org + " has multiple taxonomy ID unification xrefs; " +
-										"I use " + key + " and ignore other, but the conversion might go wrong...");
+								LOG.warn("BioSource " + org + " has multiple taxonomy unification xrefs; " +
+										"I will use " + key);
 					}
 				}
 			}
