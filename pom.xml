@@ -356,6 +356,8 @@
 										<exclude>hsqldb:hsqldb</exclude> <!-- org.hsqldb is the new one -->
 										<exclude>org.springframework</exclude>
 										<exclude>com.sun.xml.bind</exclude>
+										<exclude>javax.xml.bind</exclude>
+										<exclude>net.sf.saxon</exclude>
 										<exclude>c3p0:c3p0</exclude> <!-- com.mchange:c3p0 is the new one -->
 										<exclude>org.apache.commons:com.springsource.org.apache.commons.logging</exclude>
 										<exclude>log4j:log4j</exclude>
