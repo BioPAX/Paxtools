@@ -1,10 +1,10 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class Cloner implements Visitor
 {
-	private static final Log LOG = LogFactory.getLog(Cloner.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Cloner.class);
 	
 	Traverser traverser;
 	private BioPAXFactory factory;

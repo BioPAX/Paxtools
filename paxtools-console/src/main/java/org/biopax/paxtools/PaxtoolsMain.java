@@ -1,6 +1,4 @@
 package org.biopax.paxtools;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
@@ -18,6 +16,8 @@ import org.biopax.paxtools.client.BiopaxValidatorClient;
 import org.biopax.paxtools.client.BiopaxValidatorClient.RetFormat;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.validator.jaxb.Behavior;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -30,7 +30,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class PaxtoolsMain {
 
-    public static Log log = LogFactory.getLog(PaxtoolsMain.class);
+    public static Logger log = LoggerFactory.getLogger(PaxtoolsMain.class);
     private static SimpleIOHandler io = new SimpleIOHandler();
 
     public static void main(String[] argv) throws IOException, 

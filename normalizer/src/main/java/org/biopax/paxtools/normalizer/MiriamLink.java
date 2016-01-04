@@ -15,9 +15,9 @@ import javax.xml.bind.Unmarshaller;
 
 import net.biomodels.miriam.*;
 import net.biomodels.miriam.Miriam.Datatype;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Singleton local MIRIAM data resolver with all methods static.
@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MiriamLink
 {
-	private static final Log log = LogFactory.getLog(MiriamLink.class);
+	private static final Logger log = LoggerFactory.getLogger(MiriamLink.class);
 	private static final String[] ARRAY_OF_STRINGS = {}; // a template to convert a Collection<T> to String[]
 	
 	

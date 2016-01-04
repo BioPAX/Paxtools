@@ -1,11 +1,11 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.util.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -18,7 +18,7 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 	private Set<EntityFeature> feature;
 	private Set<EntityFeature> notFeature;
 	private Set<Control> controllerOf;
-	private static final Log log = LogFactory.getLog(PhysicalEntityImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(PhysicalEntityImpl.class);
 	private Set<PhysicalEntity> memberPhysicalEntityOf;
 
 	public PhysicalEntityImpl()

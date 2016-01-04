@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.BioSource;
@@ -53,6 +51,8 @@ import org.biopax.paxtools.model.level3.TissueVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.Xref;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import psidev.psi.mi.xml.model.*;
 
 
@@ -73,7 +73,7 @@ import psidev.psi.mi.xml.model.*;
  */
 class EntryMapper {
 
-	private static final Log LOG = LogFactory.getLog(EntryMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(EntryMapper.class);
 	
 	private static final ArrayList<String> GENETIC_INTERACTIONS;
 	

@@ -2,8 +2,6 @@ package org.biopax.paxtools.impl.level3;
 
 import static org.biopax.paxtools.util.SetEquivalenceChecker.hasEquivalentIntersection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.CellVocabulary;
@@ -11,11 +9,13 @@ import org.biopax.paxtools.model.level3.TissueVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
 import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class BioSourceImpl extends NamedImpl implements BioSource
 {
-	private final static Log LOG = LogFactory.getLog(BioSourceImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(BioSourceImpl.class);
 	
 	private CellVocabulary celltype;
 	private TissueVocabulary tissue;

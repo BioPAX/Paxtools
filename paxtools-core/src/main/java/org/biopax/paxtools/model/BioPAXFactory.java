@@ -1,10 +1,9 @@
 package org.biopax.paxtools.model;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.impl.ModelImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -17,7 +16,7 @@ import java.lang.reflect.Modifier;
 
 public abstract class BioPAXFactory
 {
-    private static final Log log = LogFactory.getLog(BioPAXFactory.class);
+    private static final Logger log = LoggerFactory.getLogger(BioPAXFactory.class);
 	
     private final Method setUriMethod;
     

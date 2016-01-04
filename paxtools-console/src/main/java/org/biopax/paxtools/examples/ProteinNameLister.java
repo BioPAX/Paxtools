@@ -1,7 +1,5 @@
 package org.biopax.paxtools.examples;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
@@ -11,6 +9,8 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +37,7 @@ public class ProteinNameLister
 {
 // ------------------------------ FIELDS ------------------------------
 
-	private static Log log = LogFactory.getLog(ProteinNameLister.class);
+	private static Logger log = LoggerFactory.getLogger(ProteinNameLister.class);
 
 	private static Fetcher fetcher;
 

@@ -1,8 +1,8 @@
 package org.biopax.paxtools.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 {
-	private final static Log LOG = LogFactory.getLog(BiopaxSafeSet.class);
+	private final static Logger LOG = LoggerFactory.getLogger(BiopaxSafeSet.class);
 	
 	//initial map is to be reset to a modifiable instance on first write
 	private final static Map empty = Collections.unmodifiableMap(Collections.emptyMap());

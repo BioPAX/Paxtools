@@ -1,9 +1,9 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -20,7 +20,7 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 {
 // ------------------------------ FIELDS ------------------------------
 
-	protected static final Log log = LogFactory.getLog(AbstractPropertyEditor.class);
+	protected static final Logger log = LoggerFactory.getLogger(AbstractPropertyEditor.class);
 
 	/**
 	 * This variable stores the method to invoke for setting a property to the to the given value. If
@@ -216,10 +216,7 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 					range = int.class;
 				}
 			}
-			if (log.isTraceEnabled())
-			{
-				log.trace(range);
-			}
+			if (log.isTraceEnabled()) log.trace(range.getCanonicalName());
 		}
 
 		return range;
@@ -368,7 +365,7 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 		}
 		catch (Exception e)
 		{
-			log.error(e);
+			log.error("removeValueFromBean failed", e);
 		}
 	}
 

@@ -1,7 +1,5 @@
 package org.biopax.paxtools.io.sbgn;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.sbgn.idmapping.HGNC;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -10,6 +8,8 @@ import org.biopax.paxtools.model.level3.*;
 import org.sbgn.Language;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -53,7 +53,7 @@ public class L3ToSBGNPDConverter
 	/**
 	 * Log for logging.
 	 */
-	private static final Log log = LogFactory.getLog(L3ToSBGNPDConverter.class);
+	private static final Logger log = LoggerFactory.getLogger(L3ToSBGNPDConverter.class);
 
 	/**
 	 * Ubique label.
@@ -211,7 +211,10 @@ public class L3ToSBGNPDConverter
 		}
 		catch (JAXBException e)
 		{
-			if (log.isErrorEnabled()) log.error(e.getCause(), e);
+			if(e.getCause()!=null)
+				log.error("writeSBGN SbgnUtil.writeToFile failed", e.getCause());
+			else
+				log.error("writeSBGN SbgnUtil.writeToFile failed", e);
 		}
 	}
 
@@ -238,7 +241,11 @@ public class L3ToSBGNPDConverter
 		}
 		catch (JAXBException e)
 		{
-			if (log.isErrorEnabled()) log.error(e.getCause(), e);
+			if(e.getCause()!=null)
+				log.error("writeSBGN SbgnUtil.writeToFile failed", e.getCause());
+			else
+				log.error("writeSBGN SbgnUtil.writeToFile failed", e);
+
 			e.printStackTrace(new PrintWriter(stream));
 		}
 	}

@@ -1,12 +1,12 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
 import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.model.level3.StepDirection;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -22,7 +22,7 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 
 	private Set<Process> stepProcess = new StepProcessSet();
 
-	private Log log = LogFactory.getLog(BiochemicalPathwayStepImpl.class);
+	private Logger log = LoggerFactory.getLogger(BiochemicalPathwayStepImpl.class);
 
 	public BiochemicalPathwayStepImpl()
 	{

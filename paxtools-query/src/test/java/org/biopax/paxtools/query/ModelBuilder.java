@@ -1,4 +1,4 @@
-package org.paxtools.query;
+package org.biopax.paxtools.query;
 
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
@@ -44,7 +44,6 @@ public class ModelBuilder
 
 		BioPAXIOHandler io = new SimpleIOHandler();
 		io.convertToOWL(model, new FileOutputStream(DIR + "temp2.owl"));
-//		return model;
 	}
 
 	public static void createStateChange(String name, Model model)

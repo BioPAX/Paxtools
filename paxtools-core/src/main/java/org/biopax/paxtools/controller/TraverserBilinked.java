@@ -1,10 +1,10 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,7 @@ import java.util.Set;
 public class TraverserBilinked extends Traverser
 {
 	private boolean isInverseOnly = false;
-	private final static Log log = LogFactory.getLog(TraverserBilinked.class);
+	private final static Logger log = LoggerFactory.getLogger(TraverserBilinked.class);
 	
 	/**
 	 * Constructor.

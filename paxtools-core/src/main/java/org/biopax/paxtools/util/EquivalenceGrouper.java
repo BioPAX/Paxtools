@@ -1,8 +1,8 @@
 package org.biopax.paxtools.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -26,11 +26,9 @@ import java.util.Set;
  */
 public class EquivalenceGrouper<T extends BioPAXElement>
 {
-
-
 	HashSet<EquivalanceBucket<T>> buckets;
 
-	Log log = LogFactory.getLog(EquivalenceGrouper.class);
+	private static final Logger log = LoggerFactory.getLogger(EquivalenceGrouper.class);
 
 	public EquivalenceGrouper(Set<? extends T> bpes)
 	{

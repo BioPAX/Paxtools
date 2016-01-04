@@ -1,9 +1,9 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class TransitivePropertyAccessor<R extends BioPAXElement, D extends R> extends DecoratingPropertyAccessor<D, R>
 {
-	private final static Log log = LogFactory.getLog(TransitivePropertyAccessor.class);
+	private final static Logger log = LoggerFactory.getLogger(TransitivePropertyAccessor.class);
 	
 	private TransitivePropertyAccessor(PropertyAccessor<D, R> accessor)
 	{

@@ -1,10 +1,10 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +39,7 @@ import java.util.Set;
  */
 public class SimpleMerger
 {
-	private static final Log LOG = LogFactory.getLog(SimpleMerger.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SimpleMerger.class);
 
 	private final EditorMap map;
 	

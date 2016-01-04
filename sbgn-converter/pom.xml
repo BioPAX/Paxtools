@@ -32,6 +32,12 @@
         	<groupId>org.ivis</groupId>
         	<artifactId>chilay-sbgn</artifactId>
         	<version>[2,3)</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

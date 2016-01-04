@@ -19,10 +19,13 @@ import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 import org.biopax.paxtools.search.SearchEngine.HitAnnotation;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class SearchEngineTest {
 	final String indexLocation = System.getProperty("java.io.tmpdir") + File.separator;
+	final static Logger log = LoggerFactory.getLogger(SearchEngineTest.class);
 
 	@Test
 	public final void testSearch() throws IOException {
@@ -126,9 +129,8 @@ public class SearchEngineTest {
 		assertFalse(response.getHits().isEmpty());		
 		int i=0;
 		for(BioPAXElement bpe : response.getHits()) {
-			System.out.println(String.format("Hit %d: %s; size: %s; excerpt: %s", 
-					++i, bpe.getUri(),
-					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
+			log.debug(String.format("Hit %d: %s; size: %s; excerpt: %s",
+					++i, bpe.getUri(), bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
 		}		
 		assertEquals(3, response.getHits().size());
@@ -148,7 +150,7 @@ public class SearchEngineTest {
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());
 //		for(BioPAXElement bpe : response.getHits()) {
-//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
+//			log.debug(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
 //					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 //					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
 //		}
@@ -163,7 +165,7 @@ public class SearchEngineTest {
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());		
 //		for(BioPAXElement bpe : response.getHits()) {
-//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
+//			log.debug(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
 //					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 //					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
 //		}		
@@ -176,7 +178,7 @@ public class SearchEngineTest {
 		assertNotNull(response);
 		assertFalse(response.getHits().isEmpty());		
 //		for(BioPAXElement bpe : response.getHits()) {
-//			System.out.println(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
+//			log.debug(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
 //					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
 //					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
 //		}	

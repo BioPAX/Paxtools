@@ -1,4 +1,4 @@
-package org.paxtools.query;
+package org.biopax.paxtools.query;
 
 import org.biopax.paxtools.controller.Cloner;
 import org.biopax.paxtools.controller.Completer;
@@ -9,7 +9,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
-import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.query.algorithm.LimitType;
 import org.biopax.paxtools.query.wrapperL3.DataSourceFilter;

@@ -22,8 +22,6 @@ package org.biopax.paxtools.client;
  * #L%
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,6 +33,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.biopax.validator.jaxb.Behavior;
 import org.biopax.validator.jaxb.ValidatorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -58,7 +58,7 @@ import java.nio.charset.Charset;
  *
  */
 public class BiopaxValidatorClient {
-	private static final Log log = LogFactory.getLog(BiopaxValidatorClient.class);
+	private static final Logger log = LoggerFactory.getLogger(BiopaxValidatorClient.class);
 	
 	/**
 	 * Default BioPAX Validator's URL

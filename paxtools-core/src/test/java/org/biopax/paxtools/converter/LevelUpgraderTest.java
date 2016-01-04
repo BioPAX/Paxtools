@@ -40,8 +40,7 @@ public class LevelUpgraderTest {
 		
 		if (model != null) {
 			io.convertToOWL(model, new FileOutputStream(
-					getClass().getClassLoader().getResource("").getFile() 
-	        		+ File.separator + "converted.owl"));
+					getClass().getClassLoader().getResource("").getFile() + File.separator + "converted.owl"));
 		}
 		
 		
@@ -63,8 +62,7 @@ public class LevelUpgraderTest {
 		model = (new LevelUpgrader()).filter(model);
 		if (model != null) {
 			io.convertToOWL(model, new FileOutputStream(
-					getClass().getClassLoader().getResource("").getFile() 
-	        		+ File.separator + "converted-big.owl"));
+					getClass().getClassLoader().getResource("").getFile() + File.separator + "converted-big.owl"));
 		}
 	}
 }

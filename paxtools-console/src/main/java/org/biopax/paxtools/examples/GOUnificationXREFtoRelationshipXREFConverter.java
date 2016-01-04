@@ -1,13 +1,13 @@
 package org.biopax.paxtools.examples;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.XReferrable;
 import org.biopax.paxtools.model.level2.relationshipXref;
 import org.biopax.paxtools.model.level2.unificationXref;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,8 +27,7 @@ import java.util.Set;
  */
 public class GOUnificationXREFtoRelationshipXREFConverter
 {
-	private static Log log = LogFactory.getLog(
-		GOUnificationXREFtoRelationshipXREFConverter.class);
+	private static Logger log = LoggerFactory.getLogger(GOUnificationXREFtoRelationshipXREFConverter.class);
    
 	static BioPAXIOHandler reader = new SimpleIOHandler();
 

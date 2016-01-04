@@ -1,7 +1,5 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -11,6 +9,8 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,7 +33,7 @@ import java.util.*;
  */
 public final class ModelUtils
 {
-	private static final Log LOG = LogFactory.getLog(ModelUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ModelUtils.class);
 
 	/**
 	 * Protected Constructor
@@ -1098,7 +1098,7 @@ public final class ModelUtils
 		
 		//shortcut, when bpe is null or already processed
 		if(biopaxElement == null || !visited.add(biopaxElement)) {
-			LOG.info("Ignored null or previously visited object:" + biopaxElement);
+			LOG.debug("Ignored null or previously visited object:" + biopaxElement);
 			return pathways;
 		}
 		

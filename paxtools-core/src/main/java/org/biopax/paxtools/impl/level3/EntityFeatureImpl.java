@@ -1,17 +1,17 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
 
 public class EntityFeatureImpl extends L3ElementImpl implements EntityFeature
 {
-	private final static Log LOG = LogFactory.getLog(EntityFeatureImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(EntityFeatureImpl.class);
 	
 	private Set<Evidence> evidence;
 	private EntityReference ownerEntityReference;

@@ -1,7 +1,5 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level2.control;
@@ -11,6 +9,8 @@ import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.util.AbstractFilterSet;
 import org.biopax.paxtools.util.CompositeIterator;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -50,7 +50,7 @@ public  class EditorMapImpl implements EditorMap {
             new HashMap<Class<? extends BioPAXElement>, Set<PropertyEditor>>();
 
 
-    private static final Log log = LogFactory.getLog(EditorMapImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(EditorMapImpl.class);
 
 	protected final BioPAXLevel level;
 

@@ -13,14 +13,14 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
+
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-
 public class JsonldBiopaxConverter implements JsonldConverter {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(JsonldBiopaxConverter.class);
+	private final static Logger LOG = LoggerFactory.getLogger(JsonldBiopaxConverter.class);
 
 	/*
 	 * Convert inputstream in owl/rdf format to outputsream in jsonld format
@@ -29,11 +29,11 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 			throws IOException {
 		
 		File inputProcessedFile = preProcessFile(in);
-		LOGGER.info("OWl File processed successfully ");
+		LOG.info("OWl File processed successfully ");
 		
 		// print current time
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		LOGGER.info("Conversion RDF to JSONLD started "
+		LOG.info("Conversion RDF to JSONLD started "
 				+ sdf.format(Calendar.getInstance().getTime()));
 
 		// create an empty model
@@ -42,13 +42,13 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 
 		// read the RDF/XML file
 		RDFDataMgr.read(modelJena, internalInputStream, Lang.RDFXML);
-		LOGGER.info("Read into Model finished "
+		LOG.info("Read into Model finished "
 				+ sdf.format(Calendar.getInstance().getTime()));
 
 		RDFDataMgr.write(os, modelJena, Lang.JSONLD);
-		LOGGER.info("Conversion RDF to JSONLD finished "
+		LOG.info("Conversion RDF to JSONLD finished "
 				+ sdf.format(Calendar.getInstance().getTime()));
-		LOGGER.info(" JSONLD file " + " is written successfully.");
+		LOG.info(" JSONLD file " + " is written successfully.");
 
 		try { //close, flush quietly
 			os.close();
@@ -75,7 +75,7 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 		modelJena.read(in, null, "JSONLD");
 
 		RDFDataMgr.write(out, modelJena, Lang.RDFXML);
-		LOGGER.info(" RDF file " + " is written successfully.");
+		LOG.info(" RDF file " + " is written successfully.");
 
 	}
 
@@ -84,7 +84,7 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 	public File preProcessFile(InputStream in) throws IOException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		LOGGER.info("BIOPAX Conversion started "
+		LOG.info("BIOPAX Conversion started "
 				+ sdf.format(Calendar.getInstance().getTime()));
 
 		if (in == null) {
@@ -114,7 +114,7 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 
 		model = null;
 
-		LOGGER.info("BIOPAX Conversion finished "
+		LOG.info("BIOPAX Conversion finished "
 				+ sdf.format(Calendar.getInstance().getTime()));
 		return fullUriBiopaxInput;
 	}

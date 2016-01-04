@@ -1,9 +1,8 @@
 package org.biopax.paxtools.util;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +16,7 @@ public enum BPCollections
 
 	private CollectionProvider cProvider;
 
-	private final Log log = LogFactory.getLog(BPCollections.class);
+	private final Logger log = LoggerFactory.getLogger(BPCollections.class);
 
 	private BPCollections()
 	{

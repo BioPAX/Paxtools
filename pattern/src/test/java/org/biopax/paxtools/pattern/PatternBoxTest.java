@@ -68,7 +68,7 @@ public class PatternBoxTest
 		int size = list.size();
 		Assert.assertTrue(size > 0);
 
-		printMatches(list, 0, 5, 10);
+//		printMatches(list, 0, 5, 10);
 
 		Blacklist b = new Blacklist();
 		b.addEntry("urn:miriam:chebi:29888", 0, null);
@@ -85,8 +85,7 @@ public class PatternBoxTest
 
 		Assert.assertTrue(list.size() > 15);
 
-		System.out.println();
-		printMatches(list, 0, 5, 10);
+//		printMatches(list, 0, 5, 10);
 
 	}
 
@@ -102,7 +101,7 @@ public class PatternBoxTest
 
 		List<Match> list = Searcher.searchPlain(model_P53, p);
 
-		printMatches(list, 0, 5, 10);
+//		printMatches(list, 0, 5, 10);
 
 	}
 
@@ -114,6 +113,7 @@ public class PatternBoxTest
 	
 	protected void printMatches(Collection<Match> matches, int ... ind)
 	{
+		System.out.println();
 		for (Match match : matches)
 		{
 			System.out.print(name(match.get(ind[0])));

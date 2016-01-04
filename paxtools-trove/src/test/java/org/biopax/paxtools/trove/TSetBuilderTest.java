@@ -30,11 +30,8 @@ public class TSetBuilderTest
 				for (int j = 0; j < 1000; j++)
 				{
 					model.addNew(aClass, "mock://ModelCoverageTest/id/" + i++);
-
 				}
-
 			}
 		}
-
 	}
 }

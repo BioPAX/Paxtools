@@ -16,8 +16,6 @@
  * as processing of the file involved creation Jena model in the memory. 
  * This step is very memory intensive.
  * 
- * An example how to run conversion methods from java code is in Main.java file.
- * 
  * In short:
  * To convert owl/rdf file to jsonld format use method convertToJsonld in interface JsonldConverter:
  * 

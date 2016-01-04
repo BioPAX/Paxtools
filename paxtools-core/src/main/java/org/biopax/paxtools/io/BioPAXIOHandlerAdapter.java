@@ -1,7 +1,5 @@
 package org.biopax.paxtools.io;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
@@ -12,6 +10,8 @@ import org.biopax.paxtools.model.level2.kPrime;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Map;
@@ -22,7 +22,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	private boolean fixReusedPEPs = false;
 
-	private static final Log log = LogFactory.getLog(BioPAXIOHandlerAdapter.class);
+	private static final Logger log = LoggerFactory.getLogger(BioPAXIOHandlerAdapter.class);
 
 	protected BioPAXLevel level;
 

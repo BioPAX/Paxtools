@@ -1,7 +1,5 @@
 package org.biopax.paxtools.converter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
@@ -10,6 +8,8 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +29,7 @@ import java.util.*;
  *
  */
 public final class LevelUpgrader extends AbstractTraverser implements ModelFilter {
-	private static final Log log = LogFactory.getLog(LevelUpgrader.class);
+	private static final Logger log = LoggerFactory.getLogger(LevelUpgrader.class);
 	private static final String l3PackageName = "org.biopax.paxtools.model.level3.";
 
 	private BioPAXFactory factory;
@@ -104,12 +104,8 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 	 * @return new Level3 model
 	 */
 	public Model filter(Model model) {
-		if(model == null || model.getLevel() != BioPAXLevel.L2) 
-		{
-			if(model != null && log.isInfoEnabled()) 
-				log.info("Model is " + model.getLevel());
+		if(model == null || model.getLevel() != BioPAXLevel.L2)
 			return model; // nothing to do
-		}
 
 		preparePep2PEIDMap(model);
 
@@ -126,9 +122,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 			if(l3element != null) {
 				newModel.add(l3element);
 			} else {
-				if(log.isDebugEnabled())
-					log.debug("Skipping " + bpe 
-						+ " " + bpe.getModelInterface().getSimpleName());
+				log.debug("Skipping " + bpe + " " + bpe.getModelInterface().getSimpleName());
 			}
 		}
 		
@@ -146,10 +140,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 			traverse((Level2Element) e, newModel);
 		}
 
-		if(log.isInfoEnabled())
-			log.info("Done. The new model contains " 
-					+ newModel.getObjects().size()
-					+ " BioPAX individuals.");
+		log.info("Done: new L3 model contains " + newModel.getObjects().size() + " BioPAX individuals.");
 		
 		// fix new model (e.g., add PathwayStep's processes to the pathway components ;))
 		normalize(newModel);
@@ -291,8 +282,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 				// copy properties
 				traverse(value, newModel);
 			} else {
-				log.warn("Cannot Convert CV: " + value
-					+ " (for prop.: " + newEditor + ")");
+				log.warn("Cannot Convert CV: " + value + " (for prop.: " + newEditor + ")");
 			}
 		} 
 		
@@ -370,8 +360,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 					  } else {
 						if (log.isDebugEnabled())
 							log.debug(pep + " STOICHIOMETRIC_COEFFICIENT is "
-							+ coeff	+ ", but the pEP's parent is not " +
-							"a conversion or complex - " + parent);
+								+ coeff	+ ", but the pEP's parent is not a conversion or complex - " + parent);
 					  }
 					}
 					
@@ -410,17 +399,16 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 			}
 			
 			if(newValue == null) {
-				log.warn("Skipping:  " + parent + "." + editor.getProperty() 
-					+ "=" + value + " ==> " + newParent.getUri()
-					+ "." + newProp	+ "=NULL");
+				log.debug("Skipped for  " + parent + "." + editor.getProperty()
+					+ "=" + value + " ==> " + newParent.getUri() + "." + newProp	+ " = NULL");
 				return;
 			}
 			
 			if (newProp != null) {
 				if (newEditor != null){
 					setNewProperty(newParent, newValue, newEditor);
-				} else // Special mapping for 'AVAILABILITY' and 'DATA-SOURCE'!
-				  if(parent instanceof physicalEntity) {
+				} else if(parent instanceof physicalEntity) {
+					// Special mapping for 'AVAILABILITY' and 'DATA-SOURCE'
 					// find parent pEP(s)
 					Set<physicalEntityParticipant> ppeps = ((physicalEntity)parent).isPHYSICAL_ENTITYof();
 					// if several pEPs use the same phy.entity, we get this property/value cloned...
@@ -428,28 +416,19 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 						//find proper L3 physical entity
 						newParent = getMappedPE(pep, newModel);
 						if(newParent != null) {
-							newEditor = 
-								SimpleEditorMap.L3.getEditorForProperty(
-										newProp, newParent.getModelInterface());
+							newEditor = SimpleEditorMap.L3.getEditorForProperty(newProp, newParent.getModelInterface());
 							setNewProperty(newParent, newValue, newEditor);
 						} else { // bug!
 							log.error("Cannot find converted PE to map the property " 
-								+ editor.getProperty() 
-								+ " of physicalEntity " 
-								+ parent + " (" + parentType + ")");
+								+ editor.getProperty() + " of physicalEntity " + parent + " (" + parentType + ")");
 						}
 					}
 				} else {
-					log.info("Skipping property " 
-						+ editor.getProperty() 
-						+ " in " + parentType + " to " +
-						newParent.getModelInterface().getSimpleName() 
-						+ " convertion (" + parent + ")");
+					log.debug("Skipped property " + editor.getProperty() + " in " + parentType + " to " +
+						newParent.getModelInterface().getSimpleName() + " conversion (" + parent + ")");
 				}
 			} else {
-				log.warn("No mapping defined for property: " 
-						+ parentType + "."
-						+ editor.getProperty());
+				log.warn("No mapping defined for property: " + parentType + "." + editor.getProperty());
 			} 
 		}
 

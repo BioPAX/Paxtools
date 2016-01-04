@@ -1,7 +1,7 @@
 package org.biopax.paxtools.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements Filter<F>
 {
-	final Log log = LogFactory.getLog(ClassFilterSet.class);
+	private static final Logger log = LoggerFactory.getLogger(ClassFilterSet.class);
 
 	int size = -1;
 

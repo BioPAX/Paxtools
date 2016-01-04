@@ -1,12 +1,12 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.model.level2.sequenceFeature;
 import org.biopax.paxtools.model.level2.sequenceParticipant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,9 +22,9 @@ import java.util.Set;
  */
 public class ReusedPEPHelper
 {
-    private static final Log log = LogFactory.getLog(ReusedPEPHelper.class);
-    private final Model model;
+    private static final Logger log = LoggerFactory.getLogger(ReusedPEPHelper.class);
 
+    private final Model model;
     private final Map<physicalEntityParticipant, physicalEntityParticipant> duplicatedPeps;
 
     /**
@@ -33,19 +33,14 @@ public class ReusedPEPHelper
     public ReusedPEPHelper(Model model)
     {
         this.model = model;
-
-        duplicatedPeps =
-                new HashMap<physicalEntityParticipant, physicalEntityParticipant>();
-
+        duplicatedPeps = new HashMap<physicalEntityParticipant, physicalEntityParticipant>();
     }
 
     public Object fixReusedPEP(physicalEntityParticipant pep, BioPAXElement bpe)
     {
         if (duplicated(pep, bpe))
         {
-        	if(log.isWarnEnabled())
-        		log.warn(pep.getUri() +
-                     " is reused, duplicating it to fix");
+        	log.info(pep.getUri() + " is reused, duplicating it to fix");
 
         	String syntheticID = createSyntheticID(pep, bpe);
             
@@ -72,10 +67,7 @@ public class ReusedPEPHelper
         {
             if (pep.isPARTICIPANTSof().iterator().next().equals(bpe))
             {
-                if (log.isDebugEnabled())
-                {
-                    log.debug("Unexpected multiple participant statements");
-                }
+                log.debug("Unexpected multiple participant statements");
             }
             else
             {
@@ -86,10 +78,7 @@ public class ReusedPEPHelper
         {
             if (pep.isCOMPONENTof().equals(bpe))
             {
-                if (log.isDebugEnabled())
-                {
-                    log.debug("Unexpected multiple participant statements");
-                }
+                log.debug("Unexpected multiple participant statements");
             }
             else
             {
@@ -131,13 +120,11 @@ public class ReusedPEPHelper
 
     public void copyPEPFields()
     {
-        Set<physicalEntityParticipant> physicalEntityParticipants =
-                duplicatedPeps.keySet();
+        Set<physicalEntityParticipant> physicalEntityParticipants = duplicatedPeps.keySet();
         for (physicalEntityParticipant dup : physicalEntityParticipants)
         {
             copyPEPFields(dup, duplicatedPeps.get(dup));
         }
-
     }
 
     private void copyPEPFields(physicalEntityParticipant duplicated,
@@ -145,9 +132,7 @@ public class ReusedPEPHelper
     {
         duplicated.setCELLULAR_LOCATION(pep.getCELLULAR_LOCATION());
         duplicated.setCOMMENT(pep.getCOMMENT());
-        duplicated
-                .setSTOICHIOMETRIC_COEFFICIENT(
-                        pep.getSTOICHIOMETRIC_COEFFICIENT());
+        duplicated.setSTOICHIOMETRIC_COEFFICIENT(pep.getSTOICHIOMETRIC_COEFFICIENT());
         duplicated.setPHYSICAL_ENTITY(pep.getPHYSICAL_ENTITY());
         if (pep instanceof sequenceParticipant)
         {

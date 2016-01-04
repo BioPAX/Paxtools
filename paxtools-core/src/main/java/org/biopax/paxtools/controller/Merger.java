@@ -1,9 +1,9 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -17,7 +17,7 @@ public class Merger implements Visitor
 {
 // ------------------------------ FIELDS ------------------------------
 
-	private static final Log log = LogFactory.getLog(Merger.class);
+	private static final Logger log = LoggerFactory.getLogger(Merger.class);
 
 	private final Traverser traverser;
 

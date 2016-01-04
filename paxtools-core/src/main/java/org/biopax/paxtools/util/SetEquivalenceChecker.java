@@ -1,8 +1,8 @@
 package org.biopax.paxtools.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class SetEquivalenceChecker {
 
-	private static final Log LOG = LogFactory.getLog(SetEquivalenceChecker.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SetEquivalenceChecker.class);
 
 	/**
 	 * @param set1 First set to be checked.

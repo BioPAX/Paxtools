@@ -1,12 +1,11 @@
 package org.biopax.paxtools.query.algorithm;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -21,7 +20,7 @@ import java.util.Set;
  */
 public class BFS
 {
-	private static Log LOG = LogFactory.getLog(BFS.class); 
+	private static Logger LOG = LoggerFactory.getLogger(BFS.class);
 	
 	/**
 	 * Distance labels. Missing label interpreted as infinitive.

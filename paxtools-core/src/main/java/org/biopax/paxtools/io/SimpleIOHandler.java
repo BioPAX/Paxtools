@@ -1,8 +1,6 @@
 package org.biopax.paxtools.io;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.AbstractPropertyEditor;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
@@ -14,6 +12,8 @@ import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -33,7 +33,7 @@ import static javax.xml.stream.XMLStreamConstants.*;
  */
 public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 {
-	private static final Log log = LogFactory.getLog(SimpleIOHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(SimpleIOHandler.class);
 
 	private XMLStreamReader r;
 
@@ -271,7 +271,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 							}
 							catch (IllegalBioPAXArgumentException e)
 							{
-								log.fatal("Unknown BioPAX element location " + lname + " at " + r.getLocation());
+								log.error("Unknown BioPAX element location " + lname + " at " + r.getLocation());
 								throw e; // for backward compatibility
 							}
 							if (this.getFactory().canInstantiate(clazz))
@@ -298,7 +298,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 						break;
 					case END_ELEMENT:
 						if (log.isTraceEnabled())
-							log.trace(r);
+							log.trace(String.valueOf(r));
 						break;
 					default:
 						if (log.isTraceEnabled())
@@ -338,9 +338,8 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	private void bindValue(Triple triple, Model model)
 	{
 		if (log.isDebugEnabled())
-		{
-			log.debug(triple);
-		}
+			log.debug(String.valueOf(triple));
+
 		BioPAXElement domain = model.getByID(triple.domain);
 
 		PropertyEditor editor = this.getEditorMap().getEditorForProperty(triple.property, domain.getModelInterface());
@@ -883,7 +882,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		}
 		catch (UnsupportedEncodingException e)
 		{
-			log.error(e);
+			log.error("convertToOwl, outputStream.toString failed", e);
 			return outputStream.toString();
 		}
 	}

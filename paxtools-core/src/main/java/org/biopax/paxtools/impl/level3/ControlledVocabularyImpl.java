@@ -1,8 +1,6 @@
 package org.biopax.paxtools.impl.level3;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.ControlledVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
@@ -10,6 +8,8 @@ import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.SetEquivalenceChecker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 public class ControlledVocabularyImpl extends XReferrableImpl implements
 	ControlledVocabulary
 {
-	private final static Log LOG = LogFactory.getLog(CellVocabularyImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(CellVocabularyImpl.class);
 	
 	private Set<String> term;
 

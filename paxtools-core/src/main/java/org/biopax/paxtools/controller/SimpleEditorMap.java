@@ -1,10 +1,10 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public enum SimpleEditorMap implements EditorMap
 	L2(BioPAXLevel.L2),
 	L3(BioPAXLevel.L3);
 
-	private static final Log log = LogFactory.getLog(EditorMapImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(EditorMapImpl.class);
 
 	private final SimpleEditorMapImpl impl;
 

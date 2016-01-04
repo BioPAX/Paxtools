@@ -1,12 +1,11 @@
 package org.biopax.paxtools.controller;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -35,7 +34,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 	List<Class<? extends BioPAXElement>> domainOrder = new ArrayList<Class<? extends BioPAXElement>>();
 
-	public static final Log log = LogFactory.getLog(PathAccessor.class);
+	public static final Logger log = LoggerFactory.getLogger(PathAccessor.class);
 
 	BioPAXLevel level;
 
@@ -198,7 +197,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		for (int i = 0; i < accessors.size() - 1; i++)
 		{
 			PropertyAccessor accessor = accessors.get(i);
-			if (log.isTraceEnabled()) log.trace(accessor);
+			if (log.isTraceEnabled()) log.trace(String.valueOf(accessor));
 			HashSet<BioPAXElement> nextBpes = new HashSet<BioPAXElement>();
 			for (BioPAXElement bpe : bpes)
 			{
@@ -216,7 +215,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		HashSet values = new HashSet();
 		PropertyAccessor lastStep = accessors.get(accessors.size() - 1);
 		Class<? extends BioPAXElement> lastDomain = domainOrder.get(domainOrder.size() - 1);
-		log.trace(lastStep);
+		if(log.isTraceEnabled()) log.trace(String.valueOf(lastStep));
 		for (BioPAXElement bpe : bpes)
 		{
 			if (!lastDomain.isInstance(bpe)) continue;

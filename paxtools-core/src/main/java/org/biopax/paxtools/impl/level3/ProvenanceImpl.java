@@ -1,9 +1,9 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.Xref;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -11,7 +11,7 @@ import java.util.TreeSet;
 
 public class ProvenanceImpl extends NamedImpl implements Provenance
 {
-	private final static Log LOG = LogFactory.getLog(ProvenanceImpl.class);
+	private final static Logger log = LoggerFactory.getLogger(ProvenanceImpl.class);
 	
 	public ProvenanceImpl() {
 	}
@@ -57,7 +57,7 @@ public class ProvenanceImpl extends NamedImpl implements Provenance
 		} catch (Exception e) {
 			// possible issues - when in a persistent context (e.g., lazy
 			// collections init...)
-			LOG.warn("toString: ", e);
+			log.warn("toString: ", e);
 			return getUri();
 		}
 	}

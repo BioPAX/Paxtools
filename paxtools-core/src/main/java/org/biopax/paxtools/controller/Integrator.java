@@ -1,10 +1,10 @@
 package org.biopax.paxtools.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -27,7 +27,7 @@ import java.util.*;
  */
 public class Integrator {
 
-    private static final Log log = LogFactory.getLog(Integrator.class);
+    private static final Logger log = LoggerFactory.getLogger(Integrator.class);
     private EditorMap editorMap;
     private Merger merger;
     private Model target, mergedSources = null;

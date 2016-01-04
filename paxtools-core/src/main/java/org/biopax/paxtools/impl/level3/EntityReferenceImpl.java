@@ -1,10 +1,9 @@
 package org.biopax.paxtools.impl.level3;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -12,7 +11,7 @@ import java.util.Set;
 public abstract class EntityReferenceImpl extends NamedImpl
 		implements EntityReference
 {
-	private final static Log log = LogFactory.getLog(EntityReferenceImpl.class);
+	private final static Logger log = LoggerFactory.getLogger(EntityReferenceImpl.class);
 	
 	private Set<EntityFeature> entityFeature;
 	private Set<SimplePhysicalEntity> entityReferenceOf;

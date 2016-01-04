@@ -2,8 +2,6 @@ package org.biopax.paxtools.normalizer;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.controller.ShallowCopy;
 import org.biopax.paxtools.converter.LevelUpgrader;
@@ -14,6 +12,8 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,7 +28,7 @@ import java.util.*;
  * @author rodche
  */
 public final class Normalizer {
-	private static final Log log = LogFactory.getLog(Normalizer.class);
+	private static final Logger log = LoggerFactory.getLogger(Normalizer.class);
 	
 	private SimpleIOHandler biopaxReader;
 	private String description = "";
@@ -232,7 +232,7 @@ public final class Normalizer {
 					return MiriamLink.getIdentifiersOrgURI(dbName, idPart);
 				}
 			} catch (IllegalArgumentException e) {
-				log.debug("uri: not a standard db name or synonym: " + dbName, e);
+				log.debug("uri: not a standard db name or synonym: " + dbName + ". " + e.getMessage());
 			}
 		}
 
@@ -556,7 +556,7 @@ public final class Normalizer {
 					log.error("Cannot get a Miriam standard ID for " + bpe 
 							+ " (" + bpe.getModelInterface().getSimpleName()
 							+ ") " + ", using " + db + ":" + id 
-							+ ". " + e + ". ");
+							+ ". " + e.getMessage());
 					return;
 				}
 

@@ -35,6 +35,7 @@ public class GSEAConverterTest {
 		GSEAConverter gseaConverter = new GSEAConverter("GENE_SYMBOL", true);
 		Collection<GSEAEntry> entries = gseaConverter.convert(level2);
 		// assert some things
+		//for(GSEAEntry gseaEntry : entries) System.out.println("gsea: " + gseaEntry.toString());
 		assertEquals(1, entries.size());
 		GSEAEntry entry = entries.iterator().next();
 		assertEquals("mTOR signaling pathway", entry.name());

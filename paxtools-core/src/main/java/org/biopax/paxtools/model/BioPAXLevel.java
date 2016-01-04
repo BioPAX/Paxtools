@@ -1,7 +1,5 @@
 package org.biopax.paxtools.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.io.InputStream;
@@ -17,7 +15,6 @@ public enum BioPAXLevel
 	L3("biopax-level3.owl", new Level3FactoryImpl(), "org.biopax.paxtools.model.level3");
 
 	// ------------------------------ FIELDS ------------------------------
-	private static Log log = LogFactory.getLog(BioPAXLevel.class);
 
 	private final String filename;
 

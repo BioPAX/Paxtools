@@ -20,40 +20,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.4.1</version>
-				<executions>
-					<execution>
-						<id>enforce-banned-dependencies</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<bannedDependencies>
-									<searchTransitive>true</searchTransitive>
-									<excludes>
-										<exclude>javassist:javassist</exclude><!-- org.javassist is the
-											new one -->
-										<exclude>aspectj:aspectj*</exclude> <!-- org.aspectj is the new one -->
-										<exclude>org.slf4j:1.5*</exclude>
-										<exclude>org.springframework:2.*</exclude>
-										<exclude>org.springframework:3.0.*</exclude>
-										<exclude>jaxax.xml.bind:*</exclude>
-										<exclude>com.sun.xml.bind:*</exclude>
-									</excludes>
-								</bannedDependencies>
-								<requireMavenVersion>
-									<version>${maven.version.range}</version>
-								</requireMavenVersion>
-							</rules>
-							<fail>true</fail>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>2.4</version>
 				<executions>
@@ -120,12 +86,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>psimi-converter</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sun.xml.bind</groupId>
-					<artifactId>jaxb-impl</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -136,12 +96,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>sbgn-converter</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sun.xml.bind</groupId>
-					<artifactId>jaxb-impl</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -162,6 +116,12 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>
 			<version>4.3.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -175,10 +135,9 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
 			<scope>runtime</scope>
-			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

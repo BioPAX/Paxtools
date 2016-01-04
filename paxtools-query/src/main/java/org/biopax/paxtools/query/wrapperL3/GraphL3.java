@@ -1,7 +1,5 @@
 package org.biopax.paxtools.query.wrapperL3;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -9,6 +7,8 @@ import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.query.model.AbstractGraph;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -29,7 +29,7 @@ public class GraphL3 extends AbstractGraph
 	/**
 	 * Log for logging.
 	 */
-	protected final Log log = LogFactory.getLog(GraphL3.class);
+	protected final Logger log = LoggerFactory.getLogger(GraphL3.class);
 
 	/**
 	 * Constructor with the model and the IDs of the ubiquitous molecules. IDs can be null, meaning

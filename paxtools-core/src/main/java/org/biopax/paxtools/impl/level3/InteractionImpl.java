@@ -1,11 +1,11 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.biopax.paxtools.util.BPCollections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -15,7 +15,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	Set<Entity> participant;
 	private Set<InteractionVocabulary> interactionType;
-    private final Log log = LogFactory.getLog(InteractionImpl.class);
+    private final Logger log = LoggerFactory.getLogger(InteractionImpl.class);
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
