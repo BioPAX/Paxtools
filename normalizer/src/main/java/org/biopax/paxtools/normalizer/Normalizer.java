@@ -59,10 +59,11 @@ public final class Normalizer {
 	 * the result as BioPAX OWL (string).
 	 * 
 	 * This public method is actually intended to use 
-	 * outside the BioPAX Validator framework.
+	 * outside the BioPAX Validator framework, with not too large models.
 	 * 
-	 * @param biopaxOwlData
-	 * @return
+	 * @param biopaxOwlData RDF/XML BioPAX content string
+	 * @return normalized BioPAX RDF/XML
+	 * @deprecated this method will fail if the data exceeds ~1Gb (max UTF8 java String length)
 	 */
 	public String normalize(String biopaxOwlData) {
 		
@@ -109,88 +110,92 @@ public final class Normalizer {
 	 */
 	private void normalizeXrefs(Model model) {
 		
-		NormalizerMap map = new NormalizerMap(model);
-		
+		final NormalizerMap map = new NormalizerMap(model);
 		final String xmlBase = getXmlBase(model); //current base, the default or model's one, if set.
 		
 		// use a copy of the xrefs set (to avoid concurrent modif. exception)
 		Set<? extends Xref> xrefs = new HashSet<Xref>(model.getObjects(Xref.class));
-		for(Xref ref : xrefs) {
-			String idPart = null;
-			if(ref.getId() != null) { 
-				idPart = ref.getId();
-				if(ref.getIdVersion()!=null)
+		for(Xref ref : xrefs)
+		{
+			//skip not well-defined ones (incl. PublicationXrefs w/o db/id - won't normalize)
+			if(ref.getDb() == null || ref.getId() == null)
+				continue;
+
+			ref.setDb(ref.getDb().toLowerCase()); //set lowercase
+			String idPart = ref.getId();
+
+			if(ref instanceof RelationshipXref) {
+				// only normalize (replace URI of) RXs that could potentially clash with other RX, CVs, ERs;
+				// skip, won't bother, for all other RXs...
+				if(!ref.getUri().startsWith("http://identifiers.org/"))
+					continue;
+
+				//RXs might have the same db, id but different rel. type.
+				RelationshipTypeVocabulary cv = ((RelationshipXref) ref).getRelationshipType();
+				if(ref.getIdVersion()!=null) {
 					idPart += "_" + ref.getIdVersion();
+				}
+				if(cv != null && !cv.getTerm().isEmpty()) {
+					idPart += "_" + StringUtils.join(cv.getTerm(), '_').toLowerCase();
+				}
 			}
+			else if(ref instanceof UnificationXref) {
+				// first, try to normalize the db name (using MIRIAM EBI registry)
+				try {
+					ref.setDb(MiriamLink.getName(ref.getDb()).toLowerCase());
+				} catch (IllegalArgumentException e) {
+					// - unknown/unmatched db name (normalize using defaults)
+					if(ref.getIdVersion()!=null) {
+						idPart += "_" + ref.getIdVersion();
+					}
+					map.put(ref, Normalizer.uri(xmlBase, ref.getDb(), idPart, ref.getModelInterface()));
+					continue; //shortcut (non-standard db name)
+				}
 			
-			if(ref instanceof PublicationXref)
-			{
-				//skip if db or id is null
-				if(ref.getDb() == null || ref.getId() == null)
-					continue;	
-			}		
-			else if(ref instanceof RelationshipXref)
-			{
-				//only do RXs that potentially clash with normalized CVs or ERs
-				if(ref.getUri().startsWith("http://identifiers.org/")) {
-					//RXs might have the same db,id but different type.	
-					RelationshipTypeVocabulary cv = ((RelationshipXref) ref).getRelationshipType();
-					if(cv != null && !cv.getTerm().isEmpty()) {
-						if(idPart!=null)
-							idPart += "_" + StringUtils.join(cv.getTerm(), '_').toLowerCase();
-						else 
-							idPart = StringUtils.join(cv.getTerm(), '_').toLowerCase();
+				// a hack for uniprot/isoform xrefs
+				if (ref.getDb().startsWith("uniprot")) {
+					//auto-fix (guess) for possibly incorrect db/id (can be 'uniprot isoform' with/no idVersion, etc..)
+					if (ref.getId().matches(".+?-\\d+$")) //must be isoform id (fix if it's not) only
+					{
+						if(isValidDbId("uniprot isoform", ref.getId()))
+							ref.setDb("uniprot isoform"); //fix the db
+					}
+					else {
+						//id does not end with "-\\d+", i.e., not a isoform id
+						//(idVersion is a different thing, but id db was "uniprot isoform" they probably misused idVersion)
+						if(ref.getDb().equals("uniprot isoform"))
+						{
+							if(ref.getIdVersion() != null && ref.getIdVersion().matches("^\\d+$"))
+								idPart = ref.getId()+"-"+ref.getIdVersion(); //guess, by idVersion, they actually meant isoform
+							if(isValidDbId(ref.getDb(), idPart)) {
+								ref.setId(idPart); //moved the isoform # to the ID
+								ref.setIdVersion(null);
+							}
+							else if(!isValidDbId(ref.getDb(), ref.getId())) {
+								//certainly not isoform (might not even uniprot, but try...)
+								ref.setDb("uniprot knowledgebase"); //guess, fix
+							}
+							idPart = ref.getId();
+						}
 					}
 				}
-				else continue;
 			}
-			else if(ref instanceof UnificationXref)
-			{
-				if(ref.getDb() == null || ref.getId() == null)
-					continue; //skip not well-defined ones			
-				
-				// try to normalize db name (if known to MIRIAM EBI registry)
-				String db = ref.getDb();
-				try {
-					db = MiriamLink.getName(ref.getDb());
-					if(db != null) 
-						ref.setDb(db.toLowerCase());
-				} catch (IllegalArgumentException e) {}
-			
-				// a hack for uniprot isoform xrefs that were previously cut off the isoform number part...
-				if (db.toUpperCase().startsWith("UNIPROT")) {
-					//fix for possibly incorrect db name
-					if (Normalizer.uri(xmlBase, "uniprot isoform", ref.getId(), ProteinReference.class)
-							.startsWith("http://identifiers.org/uniprot.isoform/")) 
-					{
-						ref.setDb("uniprot isoform");
-						idPart = ref.getId();
-					} 
-					else if (ref.getIdVersion() != null) {
-						final String isoformId = ref.getId() + "-" + ref.getIdVersion();
-						if(Normalizer.uri(xmlBase, "uniprot isoform", isoformId, ProteinReference.class)
-								.startsWith("http://identifiers.org/uniprot.isoform/")) 
-						{
-							ref.setDb("uniprot isoform");
-							ref.setId(isoformId);
-							ref.setIdVersion(null);
-							idPart = isoformId;
-						}
-					} 
-				}	
-			}
-
-			//lowercase all db names (these are not case-sensitive)
-			ref.setDb(ref.getDb().toLowerCase());
 
 			// shelve it for URI replace
-			map.put(ref, Normalizer.uri(xmlBase, ref.getDb(), idPart, ref.getModelInterface()));						
+			map.put(ref, Normalizer.uri(xmlBase, ref.getDb(), idPart, ref.getModelInterface()));
 		}
 		
 		// execute replace xrefs
 		map.doSubs();
-	}	
+	}
 
+	/*
+	 * @param db must be valid MIRIAM db name or sinonym
+	 * @trows IllegalArgumentException when db is unknown name.
+	 */
+	private boolean isValidDbId(String db, String id) {
+		return MiriamLink.checkRegExp(id, db);
+	}
 
 	/**
 	 * Consistently generates a new BioPAX element URI 
@@ -232,12 +237,11 @@ public final class Normalizer {
 					return MiriamLink.getIdentifiersOrgURI(dbName, idPart);
 				}
 			} catch (IllegalArgumentException e) {
-				log.debug("uri: not a standard db name or synonym: " + dbName + ". " + e.getMessage());
+				log.debug("uri, not (MIRIAM) standard db/id: " + dbName + "/" + idPart + ". " + e.getMessage());
 			}
 		}
 
-		// If not returned above this point yet -
-		// no standard URI (Identifiers.org) was found for this object, class -
+		// If not returned above this point - no standard URI (Identifiers.org) was found -
 		// then let's consistently build a new URI from args, anyway, the other way around:
 		
 		StringBuilder sb = new StringBuilder();		
@@ -350,7 +354,7 @@ public final class Normalizer {
 
 	
 	/**
-	 * Finds preferred unification xref, if possible.
+	 * Finds one preferred unification xref, if possible.
 	 * Preferred db values are:
 	 * "ncbi gene" - for NucleicAcidReference and the sub-classes;
 	 * "uniprot" or "refseq" for ProteinReference;
@@ -399,12 +403,14 @@ public final class Normalizer {
 			if(x instanceof UnificationXref && x.getId() != null && x.getDb() != null
 					&& x.getDb().toLowerCase().startsWith(dbStartsWith))
 			{
-				if(ret == null) {
+				if(ret == null)
+				{
 					ret = (UnificationXref)x;
-				} else {
-					//another same kind xref is found;
-					//can't test here if several IDs map to the same thing;
-					//so, give up (for safety) - return null.
+				}
+				else if (ret.getDb().equalsIgnoreCase(x.getDb()) && !ret.getId().equals(x.getId())) {
+					//exactly the same kind (same 'db') xref is found;
+					//we can't test here if several IDs map to the same thing;
+					//so, give up - for safety - and return null.
 					ret = null;
 					break;
 				}

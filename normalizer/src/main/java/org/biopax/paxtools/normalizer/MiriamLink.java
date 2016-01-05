@@ -407,8 +407,7 @@ public class MiriamLink
     public static boolean checkRegExp(String identifier, String datatype)
     {
     	Datatype dt = getDatatype(datatype);
-    	Pattern pattern = Pattern.compile(dt.getPattern());
-    	return pattern.matcher(identifier).find();
+    	return Pattern.compile(dt.getPattern()).matcher(identifier).find();
     } 
         
 

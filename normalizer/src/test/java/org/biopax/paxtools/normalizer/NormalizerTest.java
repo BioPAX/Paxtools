@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
@@ -59,11 +60,18 @@ public class NormalizerTest {
 		assertEquals("http://identifiers.org/taxonomy/9606", Normalizer.uri(null, "NEWT", "9606", BioSource.class));
 		//when organism's id is not taxID (e.g., if the BioSource has tissue, cellType CVs...)
 		assertNotSame("http://identifiers.org/taxonomy/9606",Normalizer.uri(null, "taxonomy", "9606_blah_blah", BioSource.class));
+
+		String uri = Normalizer.uri("", "UniProt", "W0C7J9", UnificationXref.class);
+		assertEquals("UnificationXref_uniprot_knowledgebase_W0C7J9", uri);
 	}
 	
 	
 	@Test
 	public final void testNormalize() throws UnsupportedEncodingException {
+
+		// Note: a UniProt AC version (e.g. P68250.1 .. P68250.94)
+		// is not the same thing as isoform ID!
+
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
     	Xref ref = model.addNew(UnificationXref.class, "Xref1");
     	ref.setDb("uniprotkb");
@@ -77,7 +85,7 @@ public class NormalizerTest {
     	ref.setIdVersion("1");  // this xref won't be removed by norm. (version matters in xrefs comparing!)
 		pr.addXref(ref);
 	   	ref = model.addNew(UnificationXref.class, "Xref3");
-    	ref.setDb("uniprotkb"); // will be converted to 'uniprot'
+    	ref.setDb("uniprotkb"); // will be converted to 'uniprot knowledgebase'
     	/* The following ID is the secondary accession of P68250, 
     	 * but Normalizer won't complain (it's Validator's and - later - Merger's job)!
     	 * However, if it were P68250, the normalize(model) would throw exception
@@ -138,7 +146,7 @@ public class NormalizerTest {
 		
 		// add data to test uniprot isoform xref and PR normalization
     	ref = model.addNew(UnificationXref.class, "Xref9");
-    	ref.setDb("UniProt"); // normalizer will detect/change to "UniProt Isoform"
+    	ref.setDb("UniProt"); // normalizer will change it to "uniprot isoform"
     	ref.setId("P68250-2");
     	pr = model.addNew(ProteinReference.class, "ProteinReference4");
     	pr.setDisplayName("ProteinReference1isoformA");
@@ -148,23 +156,24 @@ public class NormalizerTest {
     	// and also merge xrefs #9,#10 and PRs #4,#5 into one PR with one xref
     	//below, uniprot xref's idVersion='2' will be moved back to the id value, and db set to "UniProt Isoform" -
     	ref = model.addNew(UnificationXref.class, "Xref10");
-    	ref.setDb("UniProtKb");
+    	ref.setDb("UniProtKb"); // NOT to be replaced with "UniProt Isoform" (version and isoform # are not the same thing)
     	ref.setId("P68250");
-    	ref.setIdVersion("2");
+    	ref.setIdVersion("2"); //may be lost after merging with two other P68250 xrefs
+		// (version is not the same as isoform, unless db name is 'uniprot isoform')
     	pr = model.addNew(ProteinReference.class, "ProteinReference5");
     	pr.setDisplayName("ProteinReference1isoformB");
     	pr.addXref(ref);   	
     	
-		// All following three Xrefs and PRs must be normalized to uniprot.isoform:P68250-1 and merged into one!
+		// Following three Xrefs and PRs will be normalized to uniprot.isoform:P68250-1 and merged into one
     	ref = model.addNew(UnificationXref.class, "Xref11");
-    	ref.setDb("UniProt Isoform");
-    	ref.setId("P68250-1"); //- same as the canonical P68250
+    	ref.setDb("UniProtKb"); // will be replaced with "uniprot isoform"
+    	ref.setId("P68250-1");
     	pr = model.addNew(ProteinReference.class, "ProteinReference6");
     	pr.addXref(ref);
     	ref = model.addNew(UnificationXref.class, "Xref12");
-    	ref.setDb("UniProt");
-    	ref.setId("P68250");
-    	ref.setIdVersion("1");
+    	ref.setDb("UniProt Isoform"); // because this is standard (isoform) db name (special case) ->
+    	ref.setId("P68250"); //- this id will set to "P68250-1",
+    	ref.setIdVersion("1"); //- and idVersion will be cleared!
     	pr = model.addNew(ProteinReference.class, "ProteinReference7");
     	pr.addXref(ref);   	
     	ref = model.addNew(UnificationXref.class, "Xref13");
@@ -172,17 +181,38 @@ public class NormalizerTest {
     	ref.setId("P68250-1");
     	pr = model.addNew(ProteinReference.class, "ProteinReference8");
     	pr.addXref(ref);
-    	
-		//model.setXmlBase(null); //default
+
+		//special dangling UXs to test/catch a weird bug that accidentally makes db='uniprot isoform'...
+		UnificationXref ux = model.addNew(UnificationXref.class, "UniprotUX1");
+		ux.setDb("uniprot");
+		ux.setId("W0C7J9");
+		ux = model.addNew(UnificationXref.class, "UniprotUX2");
+		ux.setDb("uniprot");
+		ux.setId("W0C7J9.1"); //NOT to be changed to 'uniprot isoform'
+		ux = model.addNew(UnificationXref.class, "UniprotUX3");
+		ux.setDb("uniprot");
+		ux.setId("W0C7J9"); //NOT to be changed to 'uniprot isoform'
+		ux.setIdVersion("1");
+		ux = model.addNew(UnificationXref.class, "UniprotUX4");
+		ux.setDb("uniprot"); //will be changed to 'uniprot isoform'
+		ux.setId("W0C7J9-1");
     	
 		// go normalize!	
 		Normalizer normalizer = new Normalizer();
 		normalizer.normalize(model); 
 		
+//		//tmp test print
 //		ByteArrayOutputStream out = new ByteArrayOutputStream();
 //		simpleIO.convertToOWL(model, out);
 //		System.out.println(out.toString());
-		
+
+		// test for a bug that causes db='uniprot' become 'uniprot isoform' (the id matches both patterns)
+		assertTrue(model.containsID("UnificationXref_uniprot_knowledgebase_W0C7J9"));
+		assertFalse(model.containsID("UnificationXref_uniprot_isoform_W0C7J9"));
+		assertTrue(model.containsID("UnificationXref_uniprot_knowledgebase_W0C7J9_1"));
+		assertTrue(model.containsID("UnificationXref_uniprot_isoform_W0C7J9-1"));
+		assertTrue(model.containsID("UnificationXref_uniprot_knowledgebase_W0C7J9"));
+
 		// check Xref
 		String normUri = Normalizer.uri(model.getXmlBase(), "uniprot", "P68250", UnificationXref.class);
 		BioPAXElement bpe = model.getByID(normUri);
