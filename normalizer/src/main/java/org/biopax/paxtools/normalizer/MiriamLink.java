@@ -63,12 +63,10 @@ public class MiriamLink
 			URL url = new URL(XML_LOCATION);
             JAXBContext jc = JAXBContext.newInstance(BINDING);
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            
             Miriam mir = null;
-            //mir = (Miriam) unmarshaller.unmarshal(conn.getInputStream());
             try {
             	mir = (Miriam) unmarshaller.unmarshal(url.openStream());
-       			log.info("Got the latest Miriam XML db from " + XML_LOCATION);
+       			log.info("Got the latest Miriam XML from " + XML_LOCATION);
             } catch (IOException e) {
             	// fall-back (to using local Miriam.xml)
             	log.warn("Cannot connect to Miriam resource: " + e
