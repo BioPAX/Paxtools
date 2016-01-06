@@ -154,10 +154,10 @@ public final class Normalizer {
 				// a hack for uniprot/isoform xrefs
 				if (ref.getDb().startsWith("uniprot")) {
 					//auto-fix (guess) for possibly incorrect db/id (can be 'uniprot isoform' with/no idVersion, etc..)
-					if (isValidDbId("uniprot isoform", ref.getId()) && ref.getId().contains("-"))
+					if (isValidDbId("uniprot isoform", ref.getId())
+							&& ref.getId().contains("-")) //the second condition is important
 					{	//then it's certainly an isoform id; so - fix the db name
-						if(isValidDbId("uniprot isoform", ref.getId()))
-							ref.setDb("uniprot isoform"); //fix the db
+						ref.setDb("uniprot isoform"); //fix the db
 					}
 					else {
 						//id does not end with "-\\d+", i.e., not a isoform id

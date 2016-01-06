@@ -8,7 +8,7 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
+//import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
@@ -68,9 +68,7 @@ public class NormalizerTest {
 	
 	@Test
 	public final void testNormalize() throws UnsupportedEncodingException {
-
-		// Note: a UniProt AC version (e.g. P68250.1 .. P68250.94)
-		// is not the same thing as isoform ID!
+		// Note: a UniProt AC version (e.g. P68250.1 .. P68250.94) is not the same thing as isoform ID!
 
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
     	Xref ref = model.addNew(UnificationXref.class, "Xref1");
@@ -196,6 +194,9 @@ public class NormalizerTest {
 		ux = model.addNew(UnificationXref.class, "UniprotUX4");
 		ux.setDb("uniprot"); //will be changed to 'uniprot isoform'
 		ux.setId("W0C7J9-1");
+		ux = model.addNew(UnificationXref.class, "UniprotUX5");
+		ux.setDb("uniprot"); //will be changed to 'uniprot isoform'
+		ux.setId("P68250-3");
     	
 		// go normalize!	
 		Normalizer normalizer = new Normalizer();
@@ -211,6 +212,7 @@ public class NormalizerTest {
 		assertFalse(model.containsID("UnificationXref_uniprot_isoform_W0C7J9"));
 		assertTrue(model.containsID("UnificationXref_uniprot_knowledgebase_W0C7J9_1"));
 		assertTrue(model.containsID("UnificationXref_uniprot_isoform_W0C7J9-1"));
+		assertTrue(model.containsID("UnificationXref_uniprot_isoform_P68250-3"));
 		assertTrue(model.containsID("UnificationXref_uniprot_knowledgebase_W0C7J9"));
 
 		// check Xref
