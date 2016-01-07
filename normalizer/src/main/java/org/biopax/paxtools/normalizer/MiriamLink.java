@@ -1,7 +1,7 @@
 package org.biopax.paxtools.normalizer;
 
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
@@ -28,11 +28,11 @@ public class MiriamLink
 {
 	private static final Logger log = LoggerFactory.getLogger(MiriamLink.class);
 	private static final String[] ARRAY_OF_STRINGS = {}; // a template to convert a Collection<T> to String[]
-	
-	
-	/** default address to access to the services */
+
+	/** default web service URL to get the Miriam.xml db content; see also: http://www.ebi.ac.uk/miriam/main/export/.
+	 * Sometimes (e.g., 2016/01/07) the connection becomes EXTREMELY slow (1MB takes dozens minutes to download or stuck).
+	 * */
 	public static final String XML_LOCATION = "http://www.ebi.ac.uk/miriam/main/export/xml/";
-		//"http://www.ebi.ac.uk/miriam/main/XMLExport";
 	/** package name for jaxb to use */
 	public static final String BINDING = "net.biomodels.miriam";
 	public static final String SCHEMA_LOCATION = "http://www.ebi.ac.uk/compneur-srv/miriam/static/main/xml/MiriamXML.xsd";
@@ -60,39 +60,35 @@ public class MiriamLink
 	{
 		try
 	    {
-			URL url = new URL(XML_LOCATION);
+//			URL url = new URL(XML_LOCATION);
             JAXBContext jc = JAXBContext.newInstance(BINDING);
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             Miriam mir = null;
-            try {
-            	mir = (Miriam) unmarshaller.unmarshal(url.openStream());
-       			log.info("Got the latest Miriam XML from " + XML_LOCATION);
-            } catch (IOException e) {
+//            try {
+//            	mir = (Miriam) unmarshaller.unmarshal(url.openStream());
+//       			log.info("Got the latest Miriam XML from " + XML_LOCATION);
+//            } catch (IOException e) {
             	// fall-back (to using local Miriam.xml)
-            	log.warn("Cannot connect to Miriam resource: " + e
-            		+ "; now trying to find/use Miriam.xml from classpath...");
+//            	log.warn("Failed to download Miriam.xml; now trying to find /Miriam.xml on the classpath...");
             	InputStream is = MiriamLink.class.getResourceAsStream("/Miriam.xml");
             	if(is != null) {
             		mir = (Miriam) unmarshaller.unmarshal(is);
             	} else {
-            		throw new RuntimeException("Miriam.xml is neither available online " 
-            			+ " at " + XML_LOCATION +
-            			" nor it can be found in the root of classpath!");
+            		throw new RuntimeException("Miriam.xml db is missing or broken. " +
+						"Please download the XML and schema from http://www.ebi.ac.uk/miriam/main/export/ " +
+							"and put at the classpath's root");
             	}
-			}
-            
+//			}
             miriam = mir;
-            
-            log.info("MIRIAM XML imported, version: "
-	                + miriam.getDataVersion() + ", datatypes: "
-	                + miriam.getDatatype().size());
+            log.info("MIRIAM XML imported, version: " + miriam.getDataVersion() + ", datatypes: "
+					+ miriam.getDatatype().size());
 	    }
 	    catch (JAXBException e) {
 	        throw new RuntimeException(e);
 	    }
-	    catch (MalformedURLException e) {
-	    	throw new RuntimeException(e);
-		}
+//	    catch (MalformedURLException e) {
+//	    	throw new RuntimeException(e);
+//		}
 	    
 	    // build the name-datatype static hash (once!)
 		for(Datatype dt : miriam.getDatatype()) {
