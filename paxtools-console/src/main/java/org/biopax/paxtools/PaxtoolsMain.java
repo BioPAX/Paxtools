@@ -460,7 +460,7 @@ public class PaxtoolsMain {
      */
     public static void blacklist(String[] argv) throws IOException {
     	Model model = getModel(io, argv[1]);
-		BlacklistGenerator gen = new BlacklistGenerator();
+		BlacklistGenerator3 gen = new BlacklistGenerator3();
 		Blacklist blacklist = gen.generateBlacklist(model);
 		blacklist.write(new FileOutputStream(argv[2]));
     }
