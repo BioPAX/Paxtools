@@ -484,7 +484,7 @@ public final class Normalizer {
 			//it does not check/fix the CV terms though (but a validation rule can do if run before the normalizer)...
 			UnificationXref uref = findPreferredUnificationXref(cv); //usually, there's only one such xref
 			if (uref != null) {
-				// so let's generate a safe URI instead of standard identifiers.org
+				// so let's generate a consistent URI
 				map.put(cv, uri(xmlBase, uref.getDb(), uref.getId(), cv.getModelInterface()));
 			} else if(!cv.getTerm().isEmpty()) {
 				map.put(cv, uri(xmlBase, null, cv.getTerm().iterator().next(), cv.getModelInterface()));

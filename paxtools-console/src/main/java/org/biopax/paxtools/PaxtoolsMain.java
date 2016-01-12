@@ -52,6 +52,8 @@ public class PaxtoolsMain {
     	Model model = io.convertFromOWL(getInputStream(argv[1]));
 		GSEAConverter gseaConverter; //to be initialized below
 
+		//TODO re-factor: see the help() and process the argv accordingly
+
     	boolean specCheckEnabled = (argv.length>4) && Boolean.parseBoolean(argv[4]);
 
 		if(argv.length < 6 || argv[5].equalsIgnoreCase("false")) {
@@ -838,14 +840,16 @@ public class PaxtoolsMain {
         		"\tto force PSI Interaction to BioPAX Complex convertion instead of \n" +
         		"\tto MolecularInteraction (default).")
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
-        toGSEA("<input> <output> <database> [crossSpeciesCheck] [skipSubPathways]\n" +
+        toGSEA("<input> <output> <database> [crossSpeciesCheck=true/false] [skipSubPathways=true/false] [skipOutsidePathways=true/false] [organisms=9606,..]\n" +
         		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
-                + "\tUses that database identifier or the biopax URI if database is \"NONE\".\n"
+                + "\t<database> - use this type IDs of reference proteins.\n"
                 + "\t[crossSpeciesCheck] - optional cross-species check ensures participant protein is from same species\n"
-                + "\tas pathway (values: true/false; if false, organism there will be always 'unspecified').\n"
-				+ "\t[skipSubPathways] - optional, true (always), false (never), or a semicolon-separated list of\n"
-				+ "\tProvenance_uri1;Provenance_uri2;.. for which the converter won't traverse\n"
-				+ "\tinto sub-pathways of each pathway in order to collect all the proteins (useful e.g., with KEGG data).")
+                + "\t  as pathway (true/false; if false, organism there will be always 'unspecified');\n"
+				+ "\t[skipSubPathways] - optional, for extremely loopy pathway models, - whether to skip or traverse\n"
+				+ "\t  into sub-pathways of a pathway when collecting member protein IDs;\n"
+				+ "\t[skipOutsidePathways] - optional, true/false - whether to created records for protein references,\n"
+				+ "\t  which cannot be reached by traversing into components of any pathway in the model;\n"
+				+ "\t[taxonomyIds] - optional, a comma-separated list of taxIDs (to skip other species proteins)\n")
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
         fetch("<input> <Uri1,Uri2,..> <output>\n" +
         		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output.")
