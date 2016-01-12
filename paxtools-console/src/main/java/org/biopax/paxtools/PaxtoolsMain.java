@@ -341,19 +341,11 @@ public class PaxtoolsMain {
         }
     }
 
-	//Exports a biopax model to the special Pathway Commons' extended binary SIF format
-    public static void toSifnx(String[] argv) throws IOException {
+	//Exports a biopax model to the customizable "extended SIF" format
+	//(it's not classic SIF; it will be >3 columns with the nodes descr. section at the bottom, after a blank line)
+    public static void toSifnx(String[] argv) throws IOException
+	{
 		ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher();
-		//process the optional parameter (ignore the rest, if any)
-		if(argv.length > 3) {
-			String param = argv[3];
-			if (param.startsWith("seqDb=")) {
-				//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is gonna be fine too)
-				for (String db : param.substring(6).split(","))
-					idFetcher.seqDbStartsWithOrEquals(db);
-			}
-		}
-
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
 		File blacklistFile = new File("blacklist.txt");
 		if(blacklistFile.exists()) {
@@ -365,13 +357,62 @@ public class PaxtoolsMain {
 
         Model model = getModel(io, argv[1]);
         ModelUtils.mergeEquivalentInteractions(model);
-		Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
-		OldFormatWriter.write(binaryInts, new FileOutputStream(argv[2]));
+
+		//process optional parameters
+		final List<String> fieldList = new ArrayList<String>(); //there may be custom field names (SIF mediators)
+		if(argv.length > 3) {
+			String param = argv[3];
+			if (param.startsWith("seqDb=")) {
+				//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is gonna be fine too)
+				for (String db : param.substring(6).split(","))
+					idFetcher.seqDbStartsWithOrEquals(db);
+			}
+			else if (param.startsWith("chemDb=")) {
+				for (String db : param.substring(7).split(","))
+					idFetcher.chemDbStartsWithOrEquals(db);
+			}
+			else {
+				OutputColumn.Type type = OutputColumn.Type.getType(param);
+				if ((type != null && type != OutputColumn.Type.CUSTOM) ||
+						param.contains("/")) {
+					fieldList.add(param);
+				}
+			}
+		}
+
+		//fall back to defaults when no ID types were provided
+		if(idFetcher.getChemDbStartsWithOrEquals().isEmpty()) {
+			idFetcher.chemDbStartsWithOrEquals("chebi");
+			idFetcher.useNameWhenNoDbMatch(true);
+		}
+		if(idFetcher.getSeqDbStartsWithOrEquals().isEmpty()) {
+			idFetcher.chemDbStartsWithOrEquals("hgnc");
+		}
+
+		if (fieldList.isEmpty()) {
+			Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
+			OldFormatWriter.write(binaryInts, new FileOutputStream(argv[2]));
+		}
+		else if (fieldList.size() == 1 && fieldList.contains(OutputColumn.Type.MEDIATOR.name().toLowerCase())) {
+			searcher.searchSIF(model, new FileOutputStream(argv[2]), true);
+		}
+		else {
+			searcher.searchSIF(model, new FileOutputStream(argv[2]),
+					new CustomFormat(fieldList.toArray(new String[fieldList.size()])));
+		}
     }
 
     public static void toSif(String[] argv) throws IOException {
 		//create and configure the IDFetcher
 		ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher();
+		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
+		File blacklistFile = new File("blacklist.txt");
+		if(blacklistFile.exists()) {
+			log.info("toSif: will use the blacklist.txt (found in the current directory)");
+			searcher.setBlacklist(new Blacklist(new FileInputStream(blacklistFile)));
+		} else {
+			log.info("toSif: not blacklisting ubiquitous molecules (no blacklist.txt found)");
+		}
 
 		if(argv.length > 3) {
 			for (int i=3; i < argv.length; i++) {
@@ -381,50 +422,26 @@ public class PaxtoolsMain {
 					for (String db : param.substring(6).split(","))
 						idFetcher.seqDbStartsWithOrEquals(db);
 				}
-			}
-		}
-
-		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
-
-		File blacklistFile = new File("blacklist.txt");
-		if(blacklistFile.exists()) {
-			log.info("toSif: will use the blacklist.txt (found in the current directory)");
-			searcher.setBlacklist(new Blacklist(new FileInputStream(blacklistFile)));
-		} else {
-			log.info("toSif: not blacklisting ubiquitous molecules (no blacklist.txt found)");
-		}
-
-		// check for custom fields
-		List<String> fieldList = new ArrayList<String>();
-		for (int i=3; i < argv.length; i++)
-		{
-			String param = argv[i];
-			if(!param.startsWith("seqDb=")) {
-				OutputColumn.Type type = OutputColumn.Type.getType(param);
-				if ((type != null && type != OutputColumn.Type.CUSTOM) ||
-						param.contains("/")) {
-					fieldList.add(param);
+				else if (param.startsWith("chemDb=")) {
+					for (String db : param.substring(7).split(","))
+						idFetcher.chemDbStartsWithOrEquals(db);
 				}
 			}
+		}
+
+		//fall back to defaults when no ID types were provided
+		if(idFetcher.getChemDbStartsWithOrEquals().isEmpty()) {
+			idFetcher.chemDbStartsWithOrEquals("chebi");
+			idFetcher.useNameWhenNoDbMatch(true);
+		}
+		if(idFetcher.getSeqDbStartsWithOrEquals().isEmpty()) {
+			idFetcher.chemDbStartsWithOrEquals("hgnc");
 		}
 
 		Model model = getModel(io, argv[1]);
 		ModelUtils.mergeEquivalentInteractions(model);
 
-		if (fieldList.isEmpty())
-		{
-			searcher.searchSIF(model, new FileOutputStream(argv[2]), false);
-		}
-		else if (fieldList.size() == 1 &&
-			fieldList.contains(OutputColumn.Type.MEDIATOR.name().toLowerCase()))
-		{
-			searcher.searchSIF(model, new FileOutputStream(argv[2]), true);
-		}
-		else
-		{
-			searcher.searchSIF(model, new FileOutputStream(argv[2]),
-				new CustomFormat(fieldList.toArray(new String[fieldList.size()])));
-		}
+		searcher.searchSIF(model, new FileOutputStream(argv[2]), false);
     }
 
     public static void integrate(String[] argv) throws IOException {
@@ -782,18 +799,25 @@ public class PaxtoolsMain {
         merge("<file1> <file2> <output>\n" +
         		"\t- merges file2 into file1 and writes it into output")
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
-        toSif("<input> <output> [\"seqDb=db1,db2,..\"] [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
-        		"\t- converts (reduces) a BioPAX model to a custom simple binary interaction format; \n" +
+        toSif("<input> <output> [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"]\n" +
+        		"\t- exports a BioPAX model to the simple binary interaction (SIF) format (\"A interaction_type B\");\n" +
 				"\t  will use blacklist.txt file in the current directory, if present;\n" +
-				"\t  one can optionally (highly recommended) list one or several standard sequence/gene db name(s),\n" +
-				"\t  in full or just a prefix, to match actual xref/db values in the model (input file), using the 'seqDb=' parameter;\n" +
-				"\t  e.g., \"seqDb=uniprot,hgnc,refseq,mirbase,ncbi gene\", and that (and order) means if a UniProt entity ID is found,\n" +
+				"\t  one may list one or several standard sequence/gene/chemical db names,\n" +
+				"\t  (can use a unique prefix) to match actual xref db values in the model, using 'seqDb=' and 'chemDb=';\n" +
+				"\t  e.g., \"seqDb=uniprot,hgnc,refseq,mirbase\", and that order, means: if a UniProt entity ID is found,\n" +
 				"\t  other ID types ain't used; otherwise, if an 'hgnc' ID/Symbol is found... and so on;\n" +
-				"\t  when not specified or nothing's matched, and always for small molecules, name(s) is the first pick, and URI - the last.")
+				"\t  when not specified, then 'hgnc' is the default value for 'seqDb',\n" +
+				"\t  and ChEBI is the first pick, name - last, for chemicals.")
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("<input> <output> [\"seqDb=db1,db2,..\"]\n" +
-        		"\t- converts model to the (Pathway Commons' alike) extended binary simple interaction format;\n" +
-				"\t  will use blacklist.txt file in the current directory, if present.")
+        toSifnx("<input> <output> [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"] [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
+        		"\t- exports a BioPAX model to customizable \"extended SIF\" format (more columns, interactors description section);\n" +
+				"\t  will use blacklist.txt file in the current directory, if present;\n" +
+				"\t  one may list one or several standard sequence/gene/chemical db names,\n" +
+				"\t  (can use a unique prefix) to match actual xref db values in the model, using 'seqDb=' and 'chemDb=';\n" +
+				"\t  e.g., \"seqDb=uniprot,hgnc,refseq\", and that order, means: if a UniProt entity ID is found,\n" +
+				"\t  other ID types ain't used; otherwise, if an 'hgnc' ID/Symbol is found... and so on;\n" +
+				"\t  when not specified, then 'hgnc' is the default value for 'seqDb',\n" +
+				"\t  and ChEBI is the first pick, name - last, for chemicals.")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         toSbgn("<biopax.owl> <output.sbgn>\n" +
         		"\t- converts model to the SBGN format.")

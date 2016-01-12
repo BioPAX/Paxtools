@@ -43,6 +43,10 @@ public class ConfigurableIDFetcher implements IDFetcher
 		return this;
 	}
 
+	public List<String> getSeqDbStartsWithOrEquals() {
+		return Collections.unmodifiableList(seqDbStartsWithOrEquals);
+	}
+
 	/**
 	 * Set to prefer collecting chemical IDs of such Xrefs
 	 * where the small molecules db starts with or equals given string,
@@ -57,6 +61,10 @@ public class ConfigurableIDFetcher implements IDFetcher
 	public ConfigurableIDFetcher chemDbStartsWithOrEquals(String dbStartsWithOrEquals) {
 		this.chemDbStartsWithOrEquals.add(dbStartsWithOrEquals.toLowerCase());
 		return this;
+	}
+
+	public List<String> getChemDbStartsWithOrEquals() {
+		return Collections.unmodifiableList(chemDbStartsWithOrEquals);
 	}
 
 	/**
