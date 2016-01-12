@@ -144,11 +144,7 @@ public class PaxtoolsMain {
     
     /*
      * Detects and converts a BioPAX Level 1, 2,
-     * or PSI-MI/MITAB model to BioPAX Level3.
-     * 
-     * (-Dpaxtools.converter.psi.interaction=complex
-     * java option can be used to generate Complex 
-     * instead of MolecularInteraction entities from PSI interactions).
+     * or PSI-MI/MITAB model to BioPAX Level3..
      */
     public static void toLevel3(String[] argv) throws IOException {
     	final String input = argv[1];
@@ -157,34 +153,39 @@ public class PaxtoolsMain {
     	FileOutputStream os = new FileOutputStream(output);
     	
     	boolean forcePsiInteractionToComplex = false;
-    	String val = System.getProperty("paxtools.converter.psi.interaction");
-    	if("complex".equalsIgnoreCase(val))
-    		forcePsiInteractionToComplex = true;    	
-    	Type type = detect(input);
+		if(argv.length > 3) {
+			for(int i=3; i<argv.length; i++) {
+				String param = argv[i];
+				if (param.equalsIgnoreCase("-psimiToComplexes")) {
+					forcePsiInteractionToComplex = true;
+				}
+			}
+		}
+
+		Type type = detect(input);
 
     	try {
     		switch (type) {
+				case BIOPAX:
+					Model model = io.convertFromOWL(is);
+					model = (new LevelUpgrader()).filter(model);
+					if (model != null) {
+						io.setFactory(model.getLevel().getDefaultFactory());
+						io.convertToOWL(model, os); //os is closed already
+					}
+					break;
 
-    		case BIOPAX:
-    			Model model = io.convertFromOWL(is);
-    			model = (new LevelUpgrader()).filter(model);
-    			if (model != null) {
-    				io.setFactory(model.getLevel().getDefaultFactory());
-    				io.convertToOWL(model, os); //os is closed already
-    			}
-    			break;
+				case PSIMI:
+					PsiToBiopax3Converter psimiConverter = new PsiToBiopax3Converter();
+					psimiConverter.convert(is, os, forcePsiInteractionToComplex);
+					os.close();
+					break;
 
-    		case PSIMI:
-    			PsiToBiopax3Converter psimiConverter = new PsiToBiopax3Converter();
-    			psimiConverter.convert(is, os, forcePsiInteractionToComplex);
-    			os.close();
-    			break;
-
-    		default: //MITAB
-    			psimiConverter = new PsiToBiopax3Converter();
-    			psimiConverter.convertTab(is, os, forcePsiInteractionToComplex);
-    			os.close();
-    			break;
+				default: //MITAB
+					psimiConverter = new PsiToBiopax3Converter();
+					psimiConverter.convertTab(is, os, forcePsiInteractionToComplex);
+					os.close();
+					break;
     		}
 
     	} catch (Exception e) {
@@ -228,7 +229,7 @@ public class PaxtoolsMain {
      *  Converts a BioPAX file to SBGN and saves it in a file.
 	 *
      */
-    public static void toSBGN(String[] argv) throws IOException
+    public static void toSbgn(String[] argv) throws IOException
     {
         String input = argv[1];
         String output = argv[2];
@@ -342,6 +343,8 @@ public class PaxtoolsMain {
 	{
 		ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher();
 		SIFSearcher searcher = new SIFSearcher(idFetcher, SIFEnum.values());
+
+		//load and set blacklist.txt file if exists
 		File blacklistFile = new File("blacklist.txt");
 		if(blacklistFile.exists()) {
 			log.info("toSifnx: will use the blacklist.txt (found in the current directory)");
@@ -350,27 +353,31 @@ public class PaxtoolsMain {
 			log.info("toSifnx: not blacklisting ubiquitous molecules (no blacklist.txt found)");
 		}
 
-        Model model = getModel(io, argv[1]);
-        ModelUtils.mergeEquivalentInteractions(model);
+		boolean andSif = false;
+		boolean mergeInteractions = true;
 
 		//process optional parameters
 		final List<String> fieldList = new ArrayList<String>(); //there may be custom field names (SIF mediators)
 		if(argv.length > 3) {
-			String param = argv[3];
-			if (param.startsWith("seqDb=")) {
-				//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is gonna be fine too)
-				for (String db : param.substring(6).split(","))
-					idFetcher.seqDbStartsWithOrEquals(db);
-			}
-			else if (param.startsWith("chemDb=")) {
-				for (String db : param.substring(7).split(","))
-					idFetcher.chemDbStartsWithOrEquals(db);
-			}
-			else {
-				OutputColumn.Type type = OutputColumn.Type.getType(param);
-				if ((type != null && type != OutputColumn.Type.CUSTOM) ||
-						param.contains("/")) {
-					fieldList.add(param);
+			for(int i=3; i<argv.length; i++) {
+				String param = argv[i];
+				if (param.startsWith("seqDb=")) {
+					//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is gonna be fine too)
+					for (String db : param.substring(6).split(","))
+						idFetcher.seqDbStartsWithOrEquals(db);
+				} else if (param.startsWith("chemDb=")) {
+					for (String db : param.substring(7).split(","))
+						idFetcher.chemDbStartsWithOrEquals(db);
+				} else if (param.equalsIgnoreCase("-andSif")) {
+					andSif = true;
+				} else if (param.equalsIgnoreCase("-dontMergeInteractions")) {
+					mergeInteractions = false;
+				} else {
+					OutputColumn.Type type = OutputColumn.Type.getType(param);
+					if ((type != null && type != OutputColumn.Type.CUSTOM) ||
+							param.contains("/")) {
+						fieldList.add(param);
+					}
 				}
 			}
 		}
@@ -384,17 +391,31 @@ public class PaxtoolsMain {
 			idFetcher.chemDbStartsWithOrEquals("hgnc");
 		}
 
+		Model model = getModel(io, argv[1]);
+
+		if(mergeInteractions)
+			ModelUtils.mergeEquivalentInteractions(model);
+
+		File sifnxFile = new File(argv[2]);
+		OutputStream outputStream = new FileOutputStream(sifnxFile);
 		if (fieldList.isEmpty()) {
 			Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
-			OldFormatWriter.write(binaryInts, new FileOutputStream(argv[2]));
+			OldFormatWriter.write(binaryInts, outputStream);
 		}
 		else if (fieldList.size() == 1 && fieldList.contains(OutputColumn.Type.MEDIATOR.name().toLowerCase())) {
-			searcher.searchSIF(model, new FileOutputStream(argv[2]), true);
+			searcher.searchSIF(model, outputStream, true);
 		}
 		else {
-			searcher.searchSIF(model, new FileOutputStream(argv[2]),
-					new CustomFormat(fieldList.toArray(new String[fieldList.size()])));
+			searcher.searchSIF(model, outputStream, new CustomFormat(fieldList.toArray(new String[fieldList.size()])));
 		}
+		//outputStream is closed at this point (inside the methods)
+		try{outputStream.close();} catch (Exception e){}; //close quietly.
+
+
+		if(andSif) {
+			//TODO convert the file into classic thee-column SIF format
+		}
+
     }
 
     public static void toSif(String[] argv) throws IOException {
@@ -794,7 +815,7 @@ public class PaxtoolsMain {
         merge("<file1> <file2> <output>\n" +
         		"\t- merges file2 into file1 and writes it into output")
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
-        toSif("<input> <output> [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"]\n" +
+        toSIF("<input> <output> [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"]\n" +
         		"\t- exports a BioPAX model to the simple binary interaction (SIF) format (\"A interaction_type B\");\n" +
 				"\t  will use blacklist.txt file in the current directory, if present;\n" +
 				"\t  one may list one or several standard sequence/gene/chemical db names,\n" +
@@ -804,7 +825,8 @@ public class PaxtoolsMain {
 				"\t  when not specified, then 'hgnc' is the default value for 'seqDb',\n" +
 				"\t  and ChEBI is the first pick, name - last, for chemicals.")
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSifnx("<input> <output> [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"] [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
+        toSIFnx("<input> <output> [-andSif] [-dontMergeInteractions] [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"]" +
+				" [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
         		"\t- exports a BioPAX model to customizable \"extended SIF\" format (more columns, interactors description section);\n" +
 				"\t  will use blacklist.txt file in the current directory, if present;\n" +
 				"\t  one may list one or several standard sequence/gene/chemical db names,\n" +
@@ -814,9 +836,9 @@ public class PaxtoolsMain {
 				"\t  when not specified, then 'hgnc' is the default value for 'seqDb',\n" +
 				"\t  and ChEBI is the first pick, name - last, for chemicals.")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
-        toSbgn("<biopax.owl> <output.sbgn>\n" +
+        toSBGN("<biopax.owl> <output.sbgn>\n" +
         		"\t- converts model to the SBGN format.")
-                {public void run(String[] argv) throws IOException { toSBGN(argv); } },
+                {public void run(String[] argv) throws IOException { toSbgn(argv); } },
         validate("<path> <out> [xml|html|biopax] [auto-fix] [only-errors] [maxerrors=n] [notstrict]\n" +
         		"\t- validate BioPAX file/directory (up to ~25MB in total size, -\n" +
         		"\totherwise download and run the stand-alone validator)\n" +
@@ -827,11 +849,9 @@ public class PaxtoolsMain {
         integrate("<file1> <file2> <output>\n" +
         		"\t- integrates file2 into file1 and writes it into output (experimental)")
 		        {public void run(String[] argv) throws IOException{integrate(argv);} },
-        toLevel3("<input> <output>\n" +
+        toLevel3("<input> <output> [-psimiToComplexes]\n" +
         		"\t- converts BioPAX level 1 or 2, PSI-MI 2.5 and PSI-MITAB to the level 3 file;\n" +
-        		"\tuse -Dpaxtools.converter.psi.interaction=complex java option \n" +
-        		"\tto force PSI Interaction to BioPAX Complex convertion instead of \n" +
-        		"\tto MolecularInteraction (default).")
+        		"\t-psimiToComplexes forces PSI-MI Interactions become BioPAX Complexes instead MolecularInteractions.")
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
         toGSEA("<input> <output> <db> [-crossSpecies] [-subPathways] [-notPathway] [organisms=9606,human,rat,..]\n" +
         		"\t- converts BioPAX data to the GSEA software format (GMT); options/flags:\n"
