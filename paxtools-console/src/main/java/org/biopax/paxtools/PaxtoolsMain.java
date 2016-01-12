@@ -47,51 +47,44 @@ public class PaxtoolsMain {
         }
     }
 
-    public static void toGSEA(String[] argv) throws IOException
-    {
-    	Model model = io.convertFromOWL(getInputStream(argv[1]));
-		GSEAConverter gseaConverter; //to be initialized below
+	/*
+	 * using arguments:
+	 * <input> <output> <db> [-crossSpecies] [-subPathways] [-notPathway] [organisms=9606,mouse,10090,rat,human,..]
+	 */
+    public static void toGSEA(String[] argv) throws IOException {
+		//argv[0] is the command name ('toGsea')
+		boolean crossSpecies = false; //cross-check is enabled (i.e., no mixing different species IDs in one row)
+		boolean subPathways = false; //no sub-pathways (i.e., going into sub-pathways is not enabled)
+		boolean notPathways = false;
+		Set<String> organisms = new HashSet<String>();
 
-		//TODO re-factor: see the help() and process the argv accordingly
+		if (argv.length < 4)
+			throw new IllegalArgumentException("Not enough arguments: " + argv);
 
-    	boolean specCheckEnabled = (argv.length>4) && Boolean.parseBoolean(argv[4]);
-
-		if(argv.length < 6 || argv[5].equalsIgnoreCase("false")) {
-			log.info("Collecting proteins for a pathway, the converter will also consider " +
-					"its sub-pathways, their sub-pathways, etc.");
-			gseaConverter = new GSEAConverter(argv[3], specCheckEnabled);
-		} else {
-			boolean skipAllSubPathways = Boolean.parseBoolean(argv[5]);
-			if (skipAllSubPathways) {
-				log.info("The converter won't traverse into sub-pathways of any pathway to collect its protein IDs.");
-				gseaConverter = new GSEAConverter(argv[3], specCheckEnabled, true);
-			} else { //must be a list of data source URIs, or it's an error...
-				final Set<Provenance> skipSubPathways = new HashSet<Provenance>();
-
-				for(String uri: argv[5].split(";")) {
-					Provenance pro = (Provenance) model.getByID(uri);
-					if(pro != null) {
-						skipSubPathways.add(pro);
-						log.info("GSEA converter won't traverse into sub-pathways of pathways from the data source: "
-								+ uri);
-					} else {
-						log.error("No Provenance found by uri: " + uri + " (thus - ignored)");
-					}
+		if (argv.length > 4) {
+			for (int i = 4; i < argv.length; i++) {
+				if("-crossSpecies".equalsIgnoreCase(argv[i])) {
+					crossSpecies = true;
 				}
-
-				if(skipSubPathways.isEmpty()) {
-					throw new IllegalArgumentException("The last arg. of the Paxtools command is bad; " +
-							"no known Provenance found (if these were semicolon-separated Provenance URIs): " + argv[5]);
-				} else {
-					log.info("Collecting proteins, the converter will skip sub-pathways of pathways " +
-							"of the following datasources: " + skipSubPathways.toString());
-					gseaConverter = new GSEAConverter(argv[3], specCheckEnabled, skipSubPathways);
+				else if("-subPathways".equalsIgnoreCase(argv[i])) {
+					subPathways = true;
+				}
+				else if("-notPathway".equalsIgnoreCase(argv[i])) {
+					notPathways = true;
+				}
+				else if(argv[i].startsWith("organisms=")) {
+					for(String o : argv[i].substring(10).split(",")) {
+						organisms.add(o.trim().toLowerCase());
+					}
 				}
 			}
 		}
 
-		//convert and write
-		gseaConverter.writeToGSEA(model, new FileOutputStream(argv[2]));
+		// The Constructor args: GSEAConverter(idTypeNameOrPrefix, crossSpeciesCheckEnabled?, skipSubPathways?)
+		GSEAConverter gseaConverter = new GSEAConverter(argv[3], !crossSpecies, !subPathways);
+		gseaConverter.setSkipOutsidePathways(!notPathways);
+		gseaConverter.setAllowedOrganisms(organisms);//if organisms is empty then all species are allowed (no filtering)
+		gseaConverter.writeToGSEA(io.convertFromOWL(getInputStream(argv[1])), new FileOutputStream(argv[2]));
     }
 
     public static void getNeighbors(String[] argv) throws IOException
@@ -840,16 +833,14 @@ public class PaxtoolsMain {
         		"\tto force PSI Interaction to BioPAX Complex convertion instead of \n" +
         		"\tto MolecularInteraction (default).")
 		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
-        toGSEA("<input> <output> <database> [crossSpeciesCheck=true/false] [skipSubPathways=true/false] [skipOutsidePathways=true/false] [organisms=9606,..]\n" +
-        		"\t- converts Level 1 or 2 or 3 to GSEA output.\n"
-                + "\t<database> - use this type IDs of reference proteins.\n"
-                + "\t[crossSpeciesCheck] - optional cross-species check ensures participant protein is from same species\n"
-                + "\t  as pathway (true/false; if false, organism there will be always 'unspecified');\n"
-				+ "\t[skipSubPathways] - optional, for extremely loopy pathway models, - whether to skip or traverse\n"
-				+ "\t  into sub-pathways of a pathway when collecting member protein IDs;\n"
-				+ "\t[skipOutsidePathways] - optional, true/false - whether to created records for protein references,\n"
-				+ "\t  which cannot be reached by traversing into components of any pathway in the model;\n"
-				+ "\t[taxonomyIds] - optional, a comma-separated list of taxIDs (to skip other species proteins)\n")
+        toGSEA("<input> <output> <db> [-crossSpecies] [-subPathways] [-notPathway] [organisms=9606,human,rat,..]\n" +
+        		"\t- converts BioPAX data to the GSEA software format (GMT); options/flags:\n"
+                + "\t<db> - gene/protein ID type; values: uniprot, hgnc, refseq, etc. (a name or prefix to match\n"
+				+ "\t  ProteinReference/xref/db property values in the input BioPAX model).\n"
+                + "\t-crossSpecies - allows printing on the same line gene/protein IDs from different species;\n"
+				+ "\t-subPathways - traverse into sub-pathways to collect all protein IDs for a pathway.\n"
+				+ "\t-notPathway - also list those protein/gene IDs that cannot be reached from pathways.\n"
+				+ "\torganisms - optional filter; a comma-separated list of taxonomy IDs and/or names\n")
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
         fetch("<input> <Uri1,Uri2,..> <output>\n" +
         		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output.")

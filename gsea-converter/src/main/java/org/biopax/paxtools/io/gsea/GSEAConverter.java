@@ -16,9 +16,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.*;
-//import java.util.concurrent.ExecutorService;
-//import java.util.concurrent.Executors;
-//import java.util.concurrent.TimeUnit;
 
 /**
  * Converts a BioPAX model to the GMT format (used by GSEA software).
@@ -215,11 +212,7 @@ public class GSEAConverter
 		//a modifiable copy of the set of all PRs in the model - 
 		//after all, it has all the PRs that do not belong to any pathway
 		final Set<SequenceEntityReference> sequenceEntityReferences =
-//			Collections.synchronizedSet(
 				new HashSet<SequenceEntityReference>(l3Model.getObjects(SequenceEntityReference.class));
-//		);
-
-//		ExecutorService exe = Executors.newFixedThreadPool(10);
 
 		final Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
 		for (Pathway pathway : pathways) 
@@ -235,62 +228,50 @@ public class GSEAConverter
 				(!skipSubPathwaysOf.isEmpty() && shareSomeObjects(currentPathway.getDataSource(), skipSubPathwaysOf))
 					|| skipSubPathways;
 
-//			exe.submit(new Runnable() {
-//				@Override
-//				public void run() {
-					LOG.info("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getUri());
-					final Set<SequenceEntityReference> pathwaySers = new HashSet<SequenceEntityReference>();
-					final Traverser traverser = new AbstractTraverser(SimpleEditorMap.L3,
-							Fetcher.nextStepFilter, Fetcher.objectPropertiesOnlyFilter) {
-						@Override
-						protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
-						{
-							//by design (objectPropertiesOnlyFilter is used), it'll visit only object properties.
-							BioPAXElement bpe = (BioPAXElement) range;
-							if(bpe instanceof SequenceEntityReference) {
-								pathwaySers.add((SequenceEntityReference) bpe);
-							}
-							if(bpe instanceof Pathway) {
-								if(ignoreSubPathways)
-								{	//do not traverse into the sub-pathway; log
-									LOG.info("Skipping sub-pathway: " + bpe.getUri());
-								} else {
-									traverse(bpe, model);
-								}
-							} else {
-								traverse(bpe, model);
-							}
-						}
-					};
-					//run it - collect all PRs from the pathway
-					traverser.traverse(currentPathway, null);
-
-					if(!pathwaySers.isEmpty()) {
-						if(pathwaySers.size() > 99) {
-							LOG.warn("Pathway " + currentPathwayName + " (" + currentPathway.getUri()
-									+ ") has lots of PRs: " + pathwaySers.size());
-						}
-						LOG.info("- fetched PRs: " + pathwaySers.size() + "; now grouping by organism...");
-						Map<String,Set<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(pathwaySers);
-						// create GSEA/GMT entries - one entry per organism (null organism also makes one)
-						String dataSource = getDataSource(currentPathway.getDataSource());
-						LOG.info("- creating GSEA/GMT entries...");
-						Collection<GSEAEntry> entries = createGseaEntries(currentPathwayName, dataSource, orgToPrsMap);
-						if(!entries.isEmpty())
-							toReturn.addAll(entries);
-						sequenceEntityReferences.removeAll(pathwaySers);//keep not processed PRs (a PR can be processed multiple times)
-						LOG.info("- collected " + entries.size() + "entries.");
+			LOG.debug("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getUri());
+			final Set<SequenceEntityReference> pathwaySers = new HashSet<SequenceEntityReference>();
+			final Traverser traverser = new AbstractTraverser(SimpleEditorMap.L3,
+					Fetcher.nextStepFilter, Fetcher.objectPropertiesOnlyFilter) {
+				@Override
+				protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
+				{
+					//by design (objectPropertiesOnlyFilter is used), it'll visit only object properties.
+					BioPAXElement bpe = (BioPAXElement) range;
+					if(bpe instanceof SequenceEntityReference) {
+						pathwaySers.add((SequenceEntityReference) bpe);
 					}
-//				}
-//			});
-		}
+					if(bpe instanceof Pathway) {
+						if(ignoreSubPathways)
+						{	//do not traverse into the sub-pathway; log
+							LOG.debug("Skipping sub-pathway: " + bpe.getUri());
+						} else {
+							traverse(bpe, model);
+						}
+					} else {
+						traverse(bpe, model);
+					}
+				}
+			};
+			//run it - collect all PRs from the pathway
+			traverser.traverse(currentPathway, null);
 
-//		exe.shutdown();
-//		try {
-//			exe.awaitTermination(1, TimeUnit.HOURS); //this should not take too long even for a very large model
-//		} catch (InterruptedException e) {
-//			throw new RuntimeException("Interrupted unexpectedly!");
-//		}
+			if(!pathwaySers.isEmpty()) {
+				if(pathwaySers.size() > 199) {
+					LOG.debug("Pathway " + currentPathwayName + " (" + currentPathway.getUri()
+							+ ") has lots of PRs: " + pathwaySers.size());
+				}
+				LOG.debug("- fetched PRs: " + pathwaySers.size() + "; now grouping by organism...");
+				Map<String,Set<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(pathwaySers);
+				// create GSEA/GMT entries - one entry per organism (null organism also makes one)
+				String dataSource = getDataSource(currentPathway.getDataSource());
+				LOG.debug("- creating GSEA/GMT entries...");
+				Collection<GSEAEntry> entries = createGseaEntries(currentPathwayName, dataSource, orgToPrsMap);
+				if(!entries.isEmpty())
+					toReturn.addAll(entries);
+				sequenceEntityReferences.removeAll(pathwaySers);//keep not processed PRs (a PR can be processed multiple times)
+				LOG.debug("- collected " + entries.size() + "entries.");
+			}
+		}
 		
 		//when there're no pathways, only empty pathays, pathways w/o PRs, then use all/rest of PRs -
 		//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
@@ -299,7 +280,8 @@ public class GSEAConverter
 			Map<String,Set<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(sequenceEntityReferences);
 			if(!orgToPrsMap.isEmpty()) {
 				// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
-				toReturn.addAll(createGseaEntries("Not pathway", getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
+				toReturn.addAll(createGseaEntries("Not pathway",
+						getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
 			}
 		}
 					
@@ -313,7 +295,7 @@ public class GSEAConverter
 		final Collection<GSEAEntry> toReturn = new ArrayList<GSEAEntry>();
 		for (final String org : orgToPrsMap.keySet()) {
 			if(orgToPrsMap.get(org).size() > 0) {
-				LOG.info("adding " + database + " IDs of " + org +
+				LOG.debug("adding " + database + " IDs of " + org +
 						" proteins (PRs) from '" + name + "', " + dataSource + " pathway...");
 				GSEAEntry gseaEntry = new GSEAEntry(name, org, database, "datasource: " + dataSource);
 				processEntityReferences(orgToPrsMap.get(org), gseaEntry);
@@ -404,8 +386,8 @@ public class GSEAConverter
 						}
 					}
 
-					if(added > 10)
-						LOG.warn("In GSEA entry: " + targetEntry.taxID() + " " + targetEntry.name() +
+					if(added > 12)
+						LOG.info("In GSEA entry: " + targetEntry.taxID() + " " + targetEntry.name() +
 								", sER " + ser.getUri() + " got " + added + " '" + db + "' identifiers...");
 				}
 			} else {

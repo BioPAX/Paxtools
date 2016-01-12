@@ -19,7 +19,7 @@
     <logger name="org.biopax.paxtools.examples" level="info" />
     <logger name="org.biopax.paxtools.client" level="info" />
     <logger name="org.biopax.paxtools.PaxtoolsMain" level="info" />
-    <logger name="org.biopax.paxtools.io.gsea" level="info" />
+    <!--<logger name="org.biopax.paxtools.io.gsea" level="info" />-->
 
   <root level="warn">
     <appender-ref ref="console" />
