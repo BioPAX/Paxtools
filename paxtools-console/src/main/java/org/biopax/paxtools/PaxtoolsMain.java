@@ -1,4 +1,5 @@
 package org.biopax.paxtools;
+import org.apache.commons.lang.StringUtils;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
@@ -355,6 +356,7 @@ public class PaxtoolsMain {
 
 		boolean andSif = false;
 		boolean mergeInteractions = true;
+		boolean useNameIfNoId = false;
 
 		//process optional parameters
 		final List<String> fieldList = new ArrayList<String>(); //there may be custom field names (SIF mediators)
@@ -372,6 +374,8 @@ public class PaxtoolsMain {
 					andSif = true;
 				} else if (param.equalsIgnoreCase("-dontMergeInteractions")) {
 					mergeInteractions = false;
+				} else if (param.equalsIgnoreCase("-useNameIfNoId")) {
+					useNameIfNoId = true;
 				} else {
 					OutputColumn.Type type = OutputColumn.Type.getType(param);
 					if ((type != null && type != OutputColumn.Type.CUSTOM) ||
@@ -385,11 +389,11 @@ public class PaxtoolsMain {
 		//fall back to defaults when no ID types were provided
 		if(idFetcher.getChemDbStartsWithOrEquals().isEmpty()) {
 			idFetcher.chemDbStartsWithOrEquals("chebi");
-			idFetcher.useNameWhenNoDbMatch(true);
 		}
 		if(idFetcher.getSeqDbStartsWithOrEquals().isEmpty()) {
 			idFetcher.chemDbStartsWithOrEquals("hgnc");
 		}
+		idFetcher.useNameWhenNoDbMatch(useNameIfNoId);
 
 		Model model = getModel(io, argv[1]);
 
@@ -411,11 +415,10 @@ public class PaxtoolsMain {
 		//outputStream is closed at this point (inside the methods)
 		try{outputStream.close();} catch (Exception e){}; //close quietly.
 
-
 		if(andSif) {
-			//TODO convert the file into classic thee-column SIF format
+			//convert the file into classic thee-column SIF format
+			sifnxToSif(sifnxFile.getPath(), sifnxFile.getPath()+".sif");
 		}
-
     }
 
     public static void toSif(String[] argv) throws IOException {
@@ -430,6 +433,9 @@ public class PaxtoolsMain {
 			log.info("toSif: not blacklisting ubiquitous molecules (no blacklist.txt found)");
 		}
 
+		boolean mergeInteractions = true;
+		boolean useNameIfNoId = false;
+
 		if(argv.length > 3) {
 			for (int i=3; i < argv.length; i++) {
 				String param = argv[i];
@@ -437,18 +443,21 @@ public class PaxtoolsMain {
 					//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is gonna be fine too)
 					for (String db : param.substring(6).split(","))
 						idFetcher.seqDbStartsWithOrEquals(db);
-				}
-				else if (param.startsWith("chemDb=")) {
+				} else if (param.startsWith("chemDb=")) {
 					for (String db : param.substring(7).split(","))
 						idFetcher.chemDbStartsWithOrEquals(db);
+				} else if (param.equalsIgnoreCase("-dontMergeInteractions")) {
+					mergeInteractions = false;
+				} else if (param.equalsIgnoreCase("-useNameIfNoId")) {
+					useNameIfNoId = true;
 				}
 			}
 		}
 
+		idFetcher.useNameWhenNoDbMatch(useNameIfNoId);
 		//fall back to defaults when no ID types were provided
 		if(idFetcher.getChemDbStartsWithOrEquals().isEmpty()) {
 			idFetcher.chemDbStartsWithOrEquals("chebi");
-			idFetcher.useNameWhenNoDbMatch(true);
 		}
 		if(idFetcher.getSeqDbStartsWithOrEquals().isEmpty()) {
 			idFetcher.chemDbStartsWithOrEquals("hgnc");
@@ -459,6 +468,23 @@ public class PaxtoolsMain {
 
 		searcher.searchSIF(model, new FileOutputStream(argv[2]), false);
     }
+
+	public static void sifnxToSif(String inputFile, String outputFile) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(getInputStream(inputFile)));
+		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(outputFile));
+		//skip the first line (headers)
+		if(reader.ready()) reader.readLine();
+		while(reader.ready()) {
+			String line = reader.readLine();
+			//stop at the first blank line (because next come nodes with attributes)
+			if(line==null || line.isEmpty())
+				break;
+			//keep only the first three columns (otherwise, it's not gonna be SIF format)
+			writer.write(StringUtils.join(Arrays.copyOfRange(line.split("\t", 4), 0, 3), '\t') + '\n');
+		}
+		reader.close();
+		writer.close();
+	}
 
     public static void integrate(String[] argv) throws IOException {
 
@@ -815,7 +841,7 @@ public class PaxtoolsMain {
         merge("<file1> <file2> <output>\n" +
         		"\t- merges file2 into file1 and writes it into output")
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
-        toSIF("<input> <output> [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"]\n" +
+        toSIF("<input> <output> [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"] [-dontMergeInteractions] [-useNameIfNoId]\n" +
         		"\t- exports a BioPAX model to the simple binary interaction (SIF) format (\"A interaction_type B\");\n" +
 				"\t  will use blacklist.txt file in the current directory, if present;\n" +
 				"\t  one may list one or several standard sequence/gene/chemical db names,\n" +
@@ -825,7 +851,7 @@ public class PaxtoolsMain {
 				"\t  when not specified, then 'hgnc' is the default value for 'seqDb',\n" +
 				"\t  and ChEBI is the first pick, name - last, for chemicals.")
 		        {public void run(String[] argv) throws IOException{toSif(argv);} },
-        toSIFnx("<input> <output> [-andSif] [-dontMergeInteractions] [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"]" +
+        toSIFnx("<input> <output> [-andSif] [\"seqDb=db1,db2,..\"] [\"chemDb=db1,db2,..\"] [-dontMergeInteractions] [-useNameIfNoId]" +
 				" [mediator] [pubmed] [pathway] [resource] [source_loc] [target_loc] [path/to/a/mediator/field]\n" +
         		"\t- exports a BioPAX model to customizable \"extended SIF\" format (more columns, interactors description section);\n" +
 				"\t  will use blacklist.txt file in the current directory, if present;\n" +

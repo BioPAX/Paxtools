@@ -87,7 +87,7 @@ public class ConfigurableIDFetcher implements IDFetcher
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
 			List<String> dbStartsWithOrEquals =
-					(ele instanceof SmallMoleculeReference || ele instanceof SmallMoleculeReference)
+					(ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 							? chemDbStartsWithOrEquals : seqDbStartsWithOrEquals;
 
 			for (String dbStartsWith : dbStartsWithOrEquals) {
@@ -98,28 +98,28 @@ public class ConfigurableIDFetcher implements IDFetcher
 					break;
 				}
 
-				for (Xref x : ((XReferrable)ele).getXref()) //interface Named extends XReferrable
+				for (Xref x : ((XReferrable)ele).getXref()) //Named extends XReferrable
 				{
 					//skip for PublicationXref
 					if (x instanceof PublicationXref) continue;
 
 					String db = x.getDb();
 					String id = x.getId();
-
-					if (db != null && id != null && !id.trim().isEmpty()) {
+					if (db != null && id != null && !id.isEmpty()) {
 						db = db.toLowerCase();
 						if (db.startsWith(dbStartsWith)) {
 							//for a (PR/NAR) HGNC case, call HGNC.getSymbol(id) mapping
 							if (db.startsWith("hgnc"))
 								id = HGNC.getSymbol(id);
 
-							if (id != null && !id.isEmpty())
+							if (id != null)
 								set.add(id);
 						}
 					}
 				}
+				//once we've collected some IDs, - no need to try the rest of the list
 				if (!set.isEmpty())
-					break; //we collected all the IDs of a kind; no need to try alternative prefixes from the rest of the list
+					break;
 			}
 		}
 
