@@ -102,9 +102,10 @@ public class SIFInteraction implements Comparable
 	@Override
 	public String toString()
 	{
-		return toString(false);
+		return sourceID + "\t" + type.getTag() + "\t" + targetID;
 	}
 
+	@Deprecated
 	public String toString(boolean withMediators)
 	{
 		String s = sourceID + "\t" + type.getTag() + "\t" + targetID;

@@ -10,12 +10,12 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * This class is used for writing the binary interactions to a text output stream in the old
- * EXTENDED_BINARY_SIF format.
+ * This class is used for writing the binary interactions to a text output stream in the
+ * so called Pathway Commons EXTENDED_BINARY_SIF format.
  *
  * @author Ozgun Babur
  */
-public class OldFormatWriter
+public class ExtendedSIFWriter
 {
 	/**
 	 * Path accessors for participant properties.
@@ -26,9 +26,11 @@ public class OldFormatWriter
 		new PathAccessor("XReferrable/xref:RelationshipXref")};
 
 	/**
-	 * Writes down the given interactions into the given output stream
-	 * using the Pathway Commons EXTENDED_BINARY_SIF format.
-	 * Closes the stream at the end.
+	 * Writes down the given inferred binary interactions into the output stream
+	 * using the Pathway Commons one-file EXTENDED_BINARY_SIF format,
+	 * where edges (interactions) are written first, followed by a single
+	 * blank line, followed by the nodes section (participant details and annotations).
+	 * Closes the output stream at the end.
 	 * @param inters binary interactions
 	 * @param out stream to write
 	 * @return true if any output produced successfully
@@ -38,19 +40,18 @@ public class OldFormatWriter
 		SIFToText stt = new CustomFormat(
 			OutputColumn.Type.RESOURCE.name(),
 			OutputColumn.Type.PUBMED.name(),
-			OutputColumn.Type.PATHWAY.name());
+			OutputColumn.Type.PATHWAY.name(),
+			OutputColumn.Type.MEDIATOR.name());
 
 		if (!inters.isEmpty())
 		{
 			List<SIFInteraction> interList = new ArrayList<SIFInteraction>(inters);
 			Collections.sort(interList);
-			try
-			{
+			try {
 				OutputStreamWriter writer = new OutputStreamWriter(out);
 				writer.write("PARTICIPANT_A\tINTERACTION_TYPE\tPARTICIPANT_B\t" +
-					"INTERACTION_DATA_SOURCE\tINTERACTION_PUBMED_ID\tPATHWAY_NAMES");
-				for (SIFInteraction inter : interList)
-				{
+								"INTERACTION_DATA_SOURCE\tINTERACTION_PUBMED_ID\tPATHWAY_NAMES\tMEDIATOR_IDS");
+				for (SIFInteraction inter : interList) {
 					writer.write("\n" + stt.convert(inter));
 				}
 				writer.write("\n\n");//last line's EOL, + one blank line
@@ -58,18 +59,18 @@ public class OldFormatWriter
 				writer.close();
 				return true;
 			}
-			catch (IOException e)
-			{
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+
 		return false;
 	}
 
 	/**
-	 * Writes down the given interactions into the given "edges"
-	 * output stream in the Pathway Commons EXTENDED_BINARY_SIF format.
+	 * Writes down the given interactions into the given "edges" output stream.
 	 * Closes the stream at the end.
+	 *
 	 * @param inters binary interactions
 	 * @param out stream to write
 	 * @return true if any output produced successfully
@@ -107,9 +108,9 @@ public class OldFormatWriter
 	}
 
 	/**
-	 * Writes down the interaction participants' details
-	 * to the given output stream using Pathway Commons
-	 * EXTENDED_BINARY_SIF format. Closes the stream at the end.
+	 * Writes down the interaction participants' (nodes) details
+	 * to the given output stream. Closes the stream at the end.
+	 *
 	 * @param inters binary interactions
 	 * @param out stream to write
 	 * @return true if any output produced successfully
@@ -208,8 +209,10 @@ public class OldFormatWriter
 		boolean first = true;
 		for (String s : col)
 		{
-			if (first) first = false;
-			else b.append(";");
+			if (first)
+				first = false;
+			else
+				b.append(";");
 
 			b.append(s);
 		}

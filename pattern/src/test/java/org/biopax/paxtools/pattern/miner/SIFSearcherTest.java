@@ -98,7 +98,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		SimpleIOHandler handler = new SimpleIOHandler();
 		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/AR.TP53.owl"));
 		Set<SIFInteraction> sif = s.searchSIF(model);
-		OldFormatWriter.write(sif, new FileOutputStream("temp.sif"));
+		ExtendedSIFWriter.write(sif, new FileOutputStream("temp.sif"));
 	}
 
 	@Test

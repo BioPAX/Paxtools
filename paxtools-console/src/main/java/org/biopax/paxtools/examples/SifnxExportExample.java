@@ -6,7 +6,7 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 //import org.biopax.paxtools.io.sif.InteractionRule;
 //import org.biopax.paxtools.io.sif.SimpleInteractionConverter;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.pattern.miner.OldFormatWriter;
+import org.biopax.paxtools.pattern.miner.ExtendedSIFWriter;
 import org.biopax.paxtools.pattern.miner.SIFEnum;
 import org.biopax.paxtools.pattern.miner.SIFInteraction;
 import org.biopax.paxtools.pattern.miner.SIFSearcher;
@@ -74,7 +74,7 @@ public final class SifnxExportExample {
 //		searcher.setBlacklist(blacklist); //good to have a blacklist of ubiquitous molecules
 		Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
 		OutputStream out = new FileOutputStream(args[1]);
-		OldFormatWriter.write(binaryInts, out);
+		ExtendedSIFWriter.write(binaryInts, out);
 		try {out.close();} catch(Throwable t) {}
 	}
 

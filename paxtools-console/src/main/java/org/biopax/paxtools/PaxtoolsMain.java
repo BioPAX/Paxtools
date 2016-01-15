@@ -338,8 +338,9 @@ public class PaxtoolsMain {
         }
     }
 
-	//Exports a biopax model to the customizable "extended SIF" format
-	//(it's not classic SIF; it will be >3 columns with the nodes descr. section at the bottom, after a blank line)
+	// Exports a biopax model to the customizable "Extended SIF" format
+	// (it's not classic SIF; >3 data columns and the nodes description
+	// section at the bottom, after a blank line).
     public static void toSifnx(String[] argv) throws IOException
 	{
 		ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher();
@@ -359,7 +360,7 @@ public class PaxtoolsMain {
 		boolean useNameIfNoId = false;
 
 		//process optional parameters
-		final List<String> fieldList = new ArrayList<String>(); //there may be custom field names (SIF mediators)
+		final List<String> customFieldList = new ArrayList<String>(); //there may be custom field names (SIF mediators)
 		if(argv.length > 3) {
 			for(int i=3; i<argv.length; i++) {
 				String param = argv[i];
@@ -380,7 +381,7 @@ public class PaxtoolsMain {
 					OutputColumn.Type type = OutputColumn.Type.getType(param);
 					if ((type != null && type != OutputColumn.Type.CUSTOM) ||
 							param.contains("/")) {
-						fieldList.add(param);
+						customFieldList.add(param);
 					}
 				}
 			}
@@ -402,18 +403,15 @@ public class PaxtoolsMain {
 
 		File sifnxFile = new File(argv[2]);
 		OutputStream outputStream = new FileOutputStream(sifnxFile);
-		if (fieldList.isEmpty()) {
+		if (customFieldList.isEmpty()) {
 			Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
-			OldFormatWriter.write(binaryInts, outputStream);
-		}
-		else if (fieldList.size() == 1 && fieldList.contains(OutputColumn.Type.MEDIATOR.name().toLowerCase())) {
-			searcher.searchSIF(model, outputStream, true);
+			ExtendedSIFWriter.write(binaryInts, outputStream);
 		}
 		else {
-			searcher.searchSIF(model, outputStream, new CustomFormat(fieldList.toArray(new String[fieldList.size()])));
+			searcher.searchSIF(model, outputStream,
+					new CustomFormat(customFieldList.toArray(new String[customFieldList.size()])));
 		}
-		//outputStream is closed at this point (inside the methods)
-		try{outputStream.close();} catch (Exception e){}; //close quietly.
+		//the outputStream is closed at this point (inside searchSIF or write methods above)
 
 		if(andSif) {
 			//convert the file into classic thee-column SIF format
@@ -464,9 +462,10 @@ public class PaxtoolsMain {
 		}
 
 		Model model = getModel(io, argv[1]);
-		ModelUtils.mergeEquivalentInteractions(model);
+		if(mergeInteractions)
+			ModelUtils.mergeEquivalentInteractions(model);
 
-		searcher.searchSIF(model, new FileOutputStream(argv[2]), false);
+		searcher.searchSIF(model, new FileOutputStream(argv[2]));
     }
 
 	public static void sifnxToSif(String inputFile, String outputFile) throws IOException {
