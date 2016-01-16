@@ -3,6 +3,7 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.util.ClassFilterSet;
 
 import java.util.*;
 
@@ -91,33 +92,27 @@ public class ConfigurableIDFetcher implements IDFetcher
 							? chemDbStartsWithOrEquals : seqDbStartsWithOrEquals;
 
 			for (String dbStartsWith : dbStartsWithOrEquals) {
-				//a shortcut for URI like "http://identifiers.org/uniprot/", "http://identifiers.org/chebi/"
+				//a shortcut for URI like "http://identifiers.org/uniprot/", "http://identifiers.org/chebi/";
 				//this prevents collecting lots of secondary IDs of the same type
 				if(ele.getUri().startsWith("http://identifiers.org/"+dbStartsWith)) {
 					set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
-					break;
 				}
-
-				for (Xref x : ((XReferrable)ele).getXref()) //Named extends XReferrable
+				else
 				{
-					//skip for PublicationXref
-					if (x instanceof PublicationXref) continue;
-
-					String db = x.getDb();
-					String id = x.getId();
-					if (db != null && id != null && !id.isEmpty()) {
-						db = db.toLowerCase();
-						if (db.startsWith(dbStartsWith)) {
-							//for a (PR/NAR) HGNC case, call HGNC.getSymbol(id) mapping
-							if (db.startsWith("hgnc"))
-								id = HGNC.getSymbol(id);
-
-							if (id != null)
-								set.add(id);
+					for (UnificationXref x : new ClassFilterSet<Xref, UnificationXref>(((XReferrable) ele).getXref(),
+							UnificationXref.class)) {
+						collectXrefIdIfDbLike(x, dbStartsWith, set);
+					}
+					//if none was found in unif. xrefs, try rel, xrefs
+					if (set.isEmpty()) {
+						for (RelationshipXref x : new ClassFilterSet<Xref, RelationshipXref>(((XReferrable) ele).getXref(),
+								RelationshipXref.class)) {
+							collectXrefIdIfDbLike(x, dbStartsWith, set);
 						}
 					}
 				}
-				//once we've collected some IDs, - no need to try the rest of the list
+
+				//once we've found some ID, no need to try another id type
 				if (!set.isEmpty())
 					break;
 			}
@@ -143,4 +138,21 @@ public class ConfigurableIDFetcher implements IDFetcher
 
 		return set;
 	}
+
+	private void collectXrefIdIfDbLike(final Xref x, final String dbStartsWith, final Set<String> set) {
+		String db = x.getDb();
+		String id = x.getId();
+		if (db != null && id != null && !id.isEmpty()) {
+			db = db.toLowerCase();
+			if (db.startsWith(dbStartsWith)) {
+				//for a (PR/NAR) HGNC case, call HGNC.getSymbol(id) mapping
+				if (db.startsWith("hgnc"))
+					id = HGNC.getSymbol(id);
+
+				if (id != null)
+					set.add(id);
+			}
+		}
+	}
+
 }
