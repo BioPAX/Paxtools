@@ -132,7 +132,7 @@ public class OutputColumn
 		{
 			for (Type type : values())
 			{
-				if (type.name().toLowerCase().equals(name.toLowerCase())) return type;
+				if (type.name().equalsIgnoreCase(name)) return type;
 			}
 			return null;
 		}
