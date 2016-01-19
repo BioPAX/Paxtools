@@ -144,7 +144,7 @@ public abstract class BioPAXFactory
 			try {
 				implClass = (Class<T>) Class.forName(name);
 			} catch (ClassNotFoundException e) {
-				log.error(String.format("getImplClass(%s), %s" , aModelInterfaceClass, e));
+				log.debug(String.format("getImplClass(%s), %s" , aModelInterfaceClass, e));
 			}
 		}
 
