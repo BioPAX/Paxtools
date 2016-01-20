@@ -48,7 +48,6 @@ $ paxtools help
 * Older BioPAX [snapshots](http://www.biopax.org/m2repo/snapshots/) and [releases](http://www.biopax.org/m2repo/releases/) Maven2 repository
 * [Downloads](http://www.biopax.org/downloads/paxtools/)
 
-
-More information about Paxtools can be found in [the publication](http://dx.plos.org/10.1371/journal.pcbi.1003194),  [wiki](http://www.biopax.org/paxtools), and [BioPAX forum](https://groups.google.com/d/msg/biopax-discuss/zwtwDG23T1E/Vu1OK7iXBQAJ).
+More information about Paxtools can be found in [the publication](http://dx.plos.org/10.1371/journal.pcbi.1003194),  [wiki archive](http://www.biopax.org/mediawiki/index.php/Paxtools), and [BioPAX forum](https://groups.google.com/d/msg/biopax-discuss/zwtwDG23T1E/Vu1OK7iXBQAJ).
 
 (_TODO_: move the Paxtools description here and deprecate that wiki soon.)
