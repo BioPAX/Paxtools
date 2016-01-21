@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.biopax.paxtools.model.level3;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>/**<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * Definition : Genetic interactions between genes occur when two genetic perturbations (e.g. mutations) have a<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * combined phenotypic effect not caused by either perturbation alone. A gene participant in a genetic interaction<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * represents the gene that is perturbed. Genetic interactions are not physical interactions but logical (AND)<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * relationships. Their physical manifestations can be complex and span an arbitarily long duration.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Rationale: Currently,  BioPAX provides a simple definition that can capture most genetic interactions described in<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * the literature. In the future, if required, the definition can be extended to capture other logical relationships<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * and different, participant specific phenotypes.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> *<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * Example: A synthetic lethal interaction occurs when cell growth is possible without either gene A OR B,<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * but not without both gene A AND B. If you knock out A and B together, the cell will die.<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span>public interface GeneticInteraction extends Interaction<a name="line.16"></a>
+<span class="sourceLineNo">017</span>{<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>        /**<a name="line.19"></a>
+<span class="sourceLineNo">020</span>         * @return The phenotype quality used to define this genetic interaction e.g. viability.<a name="line.20"></a>
+<span class="sourceLineNo">021</span>         */<a name="line.21"></a>
+<span class="sourceLineNo">022</span>        PhenotypeVocabulary getPhenotype();<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>        /**<a name="line.24"></a>
+<span class="sourceLineNo">025</span>         * @param phenotype The phenotype quality used to define this genetic interaction e.g. viability.<a name="line.25"></a>
+<span class="sourceLineNo">026</span>         */<a name="line.26"></a>
+<span class="sourceLineNo">027</span>        void setPhenotype(PhenotypeVocabulary phenotype);<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>        /**<a name="line.29"></a>
+<span class="sourceLineNo">030</span>         * @return The score of an interaction e.g. a genetic interaction score.<a name="line.30"></a>
+<span class="sourceLineNo">031</span>         */<a name="line.31"></a>
+<span class="sourceLineNo">032</span>        Score getInteractionScore();<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>        /**<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         * @param interactionScore The score of an interaction e.g. a genetic interaction score.<a name="line.35"></a>
+<span class="sourceLineNo">036</span>         */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        void setInteractionScore(Score interactionScore);<a name="line.37"></a>
+<span class="sourceLineNo">038</span>}<a name="line.38"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

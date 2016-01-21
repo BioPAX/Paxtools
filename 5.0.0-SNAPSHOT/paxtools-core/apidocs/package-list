@@ -1,0 +1,11 @@
+org.biopax.paxtools.command
+org.biopax.paxtools.controller
+org.biopax.paxtools.converter
+org.biopax.paxtools.impl
+org.biopax.paxtools.impl.level2
+org.biopax.paxtools.impl.level3
+org.biopax.paxtools.io
+org.biopax.paxtools.model
+org.biopax.paxtools.model.level2
+org.biopax.paxtools.model.level3
+org.biopax.paxtools.util

@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.biopax.paxtools.io.sbgn;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import org.biopax.paxtools.model.level3.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import org.sbgn.bindings.Glyph;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import org.sbgn.bindings.ObjectFactory;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>import java.io.BufferedReader;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import java.io.InputStream;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import java.io.InputStreamReader;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import java.util.HashMap;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import java.util.Map;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import java.util.Set;<a name="line.12"></a>
+<span class="sourceLineNo">013</span><a name="line.13"></a>
+<span class="sourceLineNo">014</span>/**<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * Prepares displayable Stat class to generate labels like "pY@123" for modification features and<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * like x[30 - 122] for fragment features.<a name="line.16"></a>
+<span class="sourceLineNo">017</span> *<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * @author Ozgun Babur<a name="line.18"></a>
+<span class="sourceLineNo">019</span> */<a name="line.19"></a>
+<span class="sourceLineNo">020</span>public class CommonFeatureStringGenerator implements FeatureDecorator<a name="line.20"></a>
+<span class="sourceLineNo">021</span>{<a name="line.21"></a>
+<span class="sourceLineNo">022</span>        /**<a name="line.22"></a>
+<span class="sourceLineNo">023</span>         * Map from modification term to its symbol.<a name="line.23"></a>
+<span class="sourceLineNo">024</span>         */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        private static Map&lt;String, String&gt; symbolMapping;<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>        /**<a name="line.27"></a>
+<span class="sourceLineNo">028</span>         * Map from location term (amino acid name) to is symbol (letter).<a name="line.28"></a>
+<span class="sourceLineNo">029</span>         */<a name="line.29"></a>
+<span class="sourceLineNo">030</span>        private static Map&lt;String, String&gt; locMapping;<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>        /**<a name="line.32"></a>
+<span class="sourceLineNo">033</span>         * Creates State to represent the entity feature.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>         * @param ef feature to represent<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         * @param factory factory that can create the State class<a name="line.35"></a>
+<span class="sourceLineNo">036</span>         * @return State representing the feature<a name="line.36"></a>
+<span class="sourceLineNo">037</span>         */<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        @Override<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        public Glyph.State createStateVar(EntityFeature ef, ObjectFactory factory)<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        {<a name="line.40"></a>
+<span class="sourceLineNo">041</span>                if (ef instanceof FragmentFeature)<a name="line.41"></a>
+<span class="sourceLineNo">042</span>                {<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                        FragmentFeature ff = (FragmentFeature) ef;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                        SequenceLocation loc = ff.getFeatureLocation();<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                        if (loc instanceof SequenceInterval)<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                        {<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                                SequenceInterval si = (SequenceInterval) loc;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                                SequenceSite begin = si.getSequenceIntervalBegin();<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                                SequenceSite end = si.getSequenceIntervalEnd();<a name="line.49"></a>
+<span class="sourceLineNo">050</span>                                <a name="line.50"></a>
+<span class="sourceLineNo">051</span>                                if (begin != null &amp;&amp; end != null)<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                                {<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                                        Glyph.State state = factory.createGlyphState();<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                                        state.setValue("x[" + begin.getSequencePosition() + " - " +<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                                                end.getSequencePosition() + "]");<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                                        return state;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                                }<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                        }<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                }<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                else if (ef instanceof ModificationFeature)<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                {<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                        ModificationFeature mf = (ModificationFeature) ef;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                        SequenceModificationVocabulary modType = mf.getModificationType();<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                        <a name="line.64"></a>
+<span class="sourceLineNo">065</span>                        if (modType != null)<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                        {<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                                Set&lt;String&gt; terms = modType.getTerm();<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                                if (terms != null &amp;&amp; !terms.isEmpty())<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                                {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                                        String orig = terms.iterator().next();<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                                        String term = orig.toLowerCase();<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                                        <a name="line.72"></a>
+<span class="sourceLineNo">073</span>                                        String s = symbolMapping.containsKey(term) ? symbolMapping.get(term) : orig;<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>                                        Glyph.State state = factory.createGlyphState();<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                                        state.setValue(s);<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                                        <a name="line.77"></a>
+<span class="sourceLineNo">078</span>                                        SequenceLocation loc = mf.getFeatureLocation();<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                                        if (locMapping.containsKey(term))<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                                        {<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                                                state.setVariable(locMapping.get(term));<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                                        }<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>                                        if (loc instanceof SequenceSite)<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                                        {<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                                                SequenceSite ss = (SequenceSite) loc;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                                                if (ss.getSequencePosition() &gt; 0)<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                                                {<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                                                        state.setVariable(<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                                                                (state.getVariable() != null ? state.getVariable() : "") +<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                                                                ss.getSequencePosition());<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                                                }<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                                        }<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                                        <a name="line.94"></a>
+<span class="sourceLineNo">095</span>                                        return state;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                                }<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                        }<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                }<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>                // Binding features are ignored<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                return null;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        }<a name="line.102"></a>
+<span class="sourceLineNo">103</span><a name="line.103"></a>
+<span class="sourceLineNo">104</span>        /**<a name="line.104"></a>
+<span class="sourceLineNo">105</span>         * Initializes resources.<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         */<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        static<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        {<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                symbolMapping = new HashMap&lt;String, String&gt;();<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                locMapping = new HashMap&lt;String, String&gt;();<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                <a name="line.111"></a>
+<span class="sourceLineNo">112</span>                try<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                {<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                        InputStream is = CommonFeatureStringGenerator.class.getResourceAsStream(<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                                "feature-shorts.txt");<a name="line.115"></a>
+<span class="sourceLineNo">116</span><a name="line.116"></a>
+<span class="sourceLineNo">117</span>                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>                        for (String line = reader.readLine(); line != null; line = reader.readLine())<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                        {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                                String[] token = line.split("\t");<a name="line.121"></a>
+<span class="sourceLineNo">122</span><a name="line.122"></a>
+<span class="sourceLineNo">123</span>                                if (token.length &gt; 1 &amp;&amp; token[1] != null &amp;&amp; token[1].length() &gt; 0)<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                                {<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                                        String key = token[0].replace("\"", "").toLowerCase();<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                                        symbolMapping.put(key, token[1].replace("\"", ""));<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                                        <a name="line.127"></a>
+<span class="sourceLineNo">128</span>                                        if (token.length &gt; 2 &amp;&amp; token[2] != null &amp;&amp; token[2].length() &gt; 0)<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                                        {<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                                                locMapping.put(key, token[2].replace("\"", ""));<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                                        }<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                                }<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                        }<a name="line.133"></a>
+<span class="sourceLineNo">134</span><a name="line.134"></a>
+<span class="sourceLineNo">135</span>                        reader.close();<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                }<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                catch(Exception e){e.printStackTrace();}<a name="line.137"></a>
+<span class="sourceLineNo">138</span>        }<a name="line.138"></a>
+<span class="sourceLineNo">139</span>}<a name="line.139"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

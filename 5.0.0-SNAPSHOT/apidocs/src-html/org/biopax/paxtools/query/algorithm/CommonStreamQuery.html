@@ -1,0 +1,237 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.biopax.paxtools.query.algorithm;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import org.biopax.paxtools.query.model.GraphObject;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import org.biopax.paxtools.query.model.Node;<a name="line.4"></a>
+<span class="sourceLineNo">005</span><a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.util.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span><a name="line.7"></a>
+<span class="sourceLineNo">008</span>/**<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Searches common downstream or common upstream of a specified set of entities<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * based on the given direction within the boundaries of a specified length<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * limit. Takes a source set of entities, direction of the query and<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * distance limit.<a name="line.12"></a>
+<span class="sourceLineNo">013</span> *<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * @author Ozgun Babur<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * @author Merve Cakir<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * @author Shatlyk Ashyralyev<a name="line.16"></a>
+<span class="sourceLineNo">017</span> */<a name="line.17"></a>
+<span class="sourceLineNo">018</span>public class CommonStreamQuery<a name="line.18"></a>
+<span class="sourceLineNo">019</span>{<a name="line.19"></a>
+<span class="sourceLineNo">020</span>        /**<a name="line.20"></a>
+<span class="sourceLineNo">021</span>         * Collection of Set of nodes.<a name="line.21"></a>
+<span class="sourceLineNo">022</span>         * Each Set contains all states of corresponding physical entity or<a name="line.22"></a>
+<span class="sourceLineNo">023</span>         * contains one of the selected nodes<a name="line.23"></a>
+<span class="sourceLineNo">024</span>         */<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        private Collection&lt;Set&lt;Node&gt;&gt; sourceSet;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>        <a name="line.26"></a>
+<span class="sourceLineNo">027</span>        /**<a name="line.27"></a>
+<span class="sourceLineNo">028</span>         * The direction to determine whether the search will be to look for common<a name="line.28"></a>
+<span class="sourceLineNo">029</span>         * downstream or common upstream.<a name="line.29"></a>
+<span class="sourceLineNo">030</span>         */<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        private Direction direction;<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>        /**<a name="line.33"></a>
+<span class="sourceLineNo">034</span>         * Stop distance.<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>        private int limit;<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>        /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>         * The map to hold the reached counts of graph objects. Reached count<a name="line.39"></a>
+<span class="sourceLineNo">040</span>         * represents whether the particular graph object is in the boundaries<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         * of BFS.<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         */<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        Map&lt;GraphObject, Integer&gt; reachedCount = new HashMap&lt;GraphObject, Integer&gt;();<a name="line.43"></a>
+<span class="sourceLineNo">044</span><a name="line.44"></a>
+<span class="sourceLineNo">045</span>        /**<a name="line.45"></a>
+<span class="sourceLineNo">046</span>         * Constructor for Common Stream with Selected Nodes.<a name="line.46"></a>
+<span class="sourceLineNo">047</span>         * @param sourceNodeSet Source nodes<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         * @param direction Common upstream or downstream. Cannot be bothstream<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * @param limit Search length limit<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         */<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        public CommonStreamQuery(Set&lt;Node&gt; sourceNodeSet, Direction direction, int limit)<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        {<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                if (direction != Direction.UPSTREAM &amp;&amp; direction != Direction.DOWNSTREAM)<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                        throw new IllegalArgumentException("Direction has to be either upstream or downstream");<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>                this.sourceSet = new LinkedHashSet&lt;Set&lt;Node&gt;&gt;();<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                <a name="line.57"></a>
+<span class="sourceLineNo">058</span>                //Each set contains only one selected Node<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                for (Node node : sourceNodeSet)<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                {<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                        Set&lt;Node&gt; sourceNode = new HashSet&lt;Node&gt;();<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                        sourceNode.add(node);<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                        sourceSet.add(sourceNode);<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                }<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                <a name="line.65"></a>
+<span class="sourceLineNo">066</span>                this.direction = direction;<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                this.limit = limit;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        }  <a name="line.68"></a>
+<span class="sourceLineNo">069</span>        <a name="line.69"></a>
+<span class="sourceLineNo">070</span>        /**<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * Constructor for Common Stream with Entity States.<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * @param sourceStateSet Collection of source node sets<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * @param direction Common upstream or downstream. Cannot be bothstream<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         * @param limit Search length limit<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         */<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        public CommonStreamQuery(Collection&lt;Set&lt;Node&gt;&gt; sourceStateSet, Direction direction, int limit)<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                if (direction != Direction.UPSTREAM &amp;&amp; direction != Direction.DOWNSTREAM)<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                        throw new IllegalArgumentException("Direction has to be either upstream or downstream");<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>                this.sourceSet = sourceStateSet;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                this.direction = direction;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                this.limit = limit;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        }<a name="line.84"></a>
+<span class="sourceLineNo">085</span><a name="line.85"></a>
+<span class="sourceLineNo">086</span>        /**<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         * Method to run the query.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * @return Common stream<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         */<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        public Set&lt;GraphObject&gt; run()<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        {<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                /**<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                 * Candidate contains all the graph objects that are the results of BFS.<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                 * Eliminating nodes from candidate according to the reached counts<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                 * will yield result.<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                 */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                Map&lt;GraphObject, Integer&gt; candidate = new HashMap&lt;GraphObject, Integer&gt;();<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                Set&lt;GraphObject&gt; result = new HashSet&lt;GraphObject&gt;();<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                <a name="line.99"></a>
+<span class="sourceLineNo">100</span>                //for each set of states of entity, run BFS separately<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                for (Set&lt;Node&gt; source : sourceSet)<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                        //run BFS for set of states of each entity<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                        BFS bfs = new BFS (source, null, direction, limit);<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                        Map&lt;GraphObject, Integer&gt; BFSResult = new HashMap&lt;GraphObject, Integer&gt;();<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                        BFSResult.putAll(bfs.run());<a name="line.106"></a>
+<span class="sourceLineNo">107</span><a name="line.107"></a>
+<span class="sourceLineNo">108</span>                        /**<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                         * Reached counts of the graph objects that are in BFSResult will<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                         * be incremented by 1.<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                         */<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                        for (GraphObject go : BFSResult.keySet())<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                        {<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                                setLabel(go, (getLabel(go) + 1));<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                        }<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                        <a name="line.116"></a>
+<span class="sourceLineNo">117</span>                        //put BFS Result into candidate set<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                        candidate.putAll(BFSResult);<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                }<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                        <a name="line.120"></a>
+<span class="sourceLineNo">121</span>                /**<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                 * Having a reached count equal to number of nodes in the source set<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                 * indicates being in common stream. <a name="line.123"></a>
+<span class="sourceLineNo">124</span>                 */<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                for(GraphObject go : candidate.keySet())<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                {<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                        if (getLabel(go) == sourceSet.size())<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                        {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                                result.add(go);<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                        }<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                }<a name="line.131"></a>
+<span class="sourceLineNo">132</span><a name="line.132"></a>
+<span class="sourceLineNo">133</span>                //Return the result of query<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                return result;<a name="line.134"></a>
+<span class="sourceLineNo">135</span>        }<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        <a name="line.136"></a>
+<span class="sourceLineNo">137</span>        /**<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         * Method for getting Label of GraphObject.<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * If Label is absent, then it returns 0.<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         * @param go Graph object to get its label<a name="line.140"></a>
+<span class="sourceLineNo">141</span>         * @return Label of the graph object<a name="line.141"></a>
+<span class="sourceLineNo">142</span>         */<a name="line.142"></a>
+<span class="sourceLineNo">143</span>        private int getLabel(GraphObject go)<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        {<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                if (!reachedCount.containsKey(go))<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                {<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        // Absence of label is interpreted as zero<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                        return 0;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                }<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                else<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                {<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                        return reachedCount.get(go);<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                }<a name="line.153"></a>
+<span class="sourceLineNo">154</span>        }<a name="line.154"></a>
+<span class="sourceLineNo">155</span><a name="line.155"></a>
+<span class="sourceLineNo">156</span>        /**<a name="line.156"></a>
+<span class="sourceLineNo">157</span>         * Method for setting the Label of GraphObject<a name="line.157"></a>
+<span class="sourceLineNo">158</span>         * @param go Graph object to set its label<a name="line.158"></a>
+<span class="sourceLineNo">159</span>         * @param label New label of the graph object<a name="line.159"></a>
+<span class="sourceLineNo">160</span>         */<a name="line.160"></a>
+<span class="sourceLineNo">161</span>        private void setLabel(GraphObject go, int label)<a name="line.161"></a>
+<span class="sourceLineNo">162</span>        {<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                reachedCount.put(go, label);<a name="line.163"></a>
+<span class="sourceLineNo">164</span>        }<a name="line.164"></a>
+<span class="sourceLineNo">165</span>}<a name="line.165"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

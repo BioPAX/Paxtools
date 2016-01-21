@@ -1,0 +1,30 @@
+-classpath
+'/Users/rodche/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar:/Users/rodche/.m2/repository/org/biopax/paxtools/paxtools-core/5.0.0-SNAPSHOT/paxtools-core-5.0.0-SNAPSHOT.jar:/Users/rodche/.m2/repository/commons-lang/commons-lang/2.6/commons-lang-2.6.jar:/Users/rodche/.m2/repository/net/sourceforge/collections/collections-generic/4.01/collections-generic-4.01.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/Users/rodche/Paxtools/normalizer/src/main/java:/Users/rodche/Paxtools/normalizer/target/generated-sources/jaxb'
+-author
+-bottom
+'Copyright &#169; 2009-2015&#x2013;2016 <a href="http://www.biopax.org">BioPAX</a>. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/rodche/Paxtools/normalizer/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'BioPAX Normalizer and MiriamLink 5.0.0-SNAPSHOT API'
+-link
+'http://download.oracle.com/javase/7/docs/api'
+-linkoffline
+'http://docs.oracle.com/javase/6/docs/api' '/Users/rodche/Paxtools/normalizer/target/javadoc-bundle-options'
+-linkoffline
+'https://biopax.github.io/Paxtools/apidocs' '/Users/rodche/Paxtools/paxtools-core/target/site/apidocs'
+-linksource
+-notimestamp
+-use
+-version
+-windowtitle
+'BioPAX Normalizer and MiriamLink 5.0.0-SNAPSHOT API'
