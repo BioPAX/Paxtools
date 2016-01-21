@@ -8,10 +8,16 @@
 	<artifactId>json-converter</artifactId>
 	<name>BioPAX to/from JSON Converter</name>
 	<description>BioPAX to/from JSON Converters</description>
-	<url>http://biopax.github.io/Paxtools</url>
 
-	<scm><url>https://github.com/BioPAX/Paxtools</url>  <tag>HEAD</tag>
-  </scm>
+	<url>https://biopax.github.io/Paxtools</url>
+
+	<!--<properties>-->
+		<!--<github.site.path>${project.version}/${project.artifactId}</github.site.path>-->
+	<!--</properties>-->
+
+	<scm><url>https://github.com/BioPAX/Paxtools</url>
+		<tag>HEAD</tag>
+	</scm>
 
 	<build>
 		<plugins>
@@ -28,7 +34,6 @@
 						<!--</manifest>-->
 					<!--</archive>-->
 				</configuration>
-
 				<executions>
 					<execution>
 						<id>make-assembly</id>

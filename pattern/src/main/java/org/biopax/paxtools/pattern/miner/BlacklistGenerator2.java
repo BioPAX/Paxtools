@@ -70,6 +70,7 @@ public class BlacklistGenerator2
 	 * Generates the blacklist.
 	 * @param model model to use
 	 * @return the blacklist
+	 * @throws IOException when there is an I/O problem
 	 */
 	public Blacklist generateBlacklist(Model model) throws IOException
 	{

@@ -9,9 +9,15 @@
   <artifactId>gsea-converter</artifactId>
   <name>BioPAX to GSEA (.gmt) Converter</name>
   <description>Converts data to the GESA (.gmt) format.</description>
-  <url>http://biopax.github.io/Paxtools</url>
 
-  <scm><url>https://github.com/BioPAX/Paxtools</url>  <tag>HEAD</tag>
+  <url>https://biopax.github.io/Paxtools</url>
+
+  <!--<properties>-->
+    <!--<github.site.path>${project.version}/${project.artifactId}</github.site.path>-->
+  <!--</properties>-->
+
+  <scm><url>https://github.com/BioPAX/Paxtools</url>
+      <tag>HEAD</tag>
   </scm>
 
   <dependencies>
@@ -21,5 +27,5 @@
     	<version>${project.version}</version>
     </dependency> 
  </dependencies>
- 
+
 </project>

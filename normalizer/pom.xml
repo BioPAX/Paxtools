@@ -1,19 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	
+
+	<artifactId>normalizer</artifactId>
 	<name>BioPAX Normalizer and MiriamLink</name>
 	<description>A BioPAX Normalizer and modified off-line MiriamLink (MIRIAM, EBI, OLS)</description>
-	
 	<inceptionYear>2009-2015</inceptionYear>
-	
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>normalizer</artifactId>
+	<url>https://biopax.github.io/Paxtools</url>
+
+	<!--<properties>-->
+		<!--<github.site.path>${project.version}/${project.artifactId}</github.site.path>-->
+	<!--</properties>-->
 
 	<build>
 		<plugins>

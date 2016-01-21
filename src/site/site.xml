@@ -30,7 +30,7 @@
 <body>
 
 <breadcrumbs>
-	<item name="Versions" href="../"/>
+	<item name="Paxtools" href="../"/>
 	<item name="${project.version}" href="./" />
 </breadcrumbs>
 

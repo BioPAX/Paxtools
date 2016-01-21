@@ -26,7 +26,9 @@ public class BlacklistGenerator3
 	private Map<String, RelType> knownNames;
 
 	/**
-	 * Default constructor.
+	 * Constructor.
+	 *
+	 * @param knownNamesIS a special file that lists the known names of ubiquitous unwanted chemicals
 	 */
 	public BlacklistGenerator3(InputStream knownNamesIS)
 	{
@@ -42,15 +44,9 @@ public class BlacklistGenerator3
 	}
 
 	/**
-	 * Default constructor.
-	 */
-	public BlacklistGenerator3(String knownNamesFile) throws FileNotFoundException
-	{
-		this(new FileInputStream(knownNamesFile));
-	}
-
-	/**
-	 * Empty constructor uses the default blacklisted small molecule names in the resources.
+	 * Default Constructor.
+	 *
+	 * Uses the blacklisted small molecule names file from the classpath.
 	 */
 	public BlacklistGenerator3()
 	{

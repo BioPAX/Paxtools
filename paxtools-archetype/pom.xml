@@ -10,15 +10,20 @@
 
 	<artifactId>paxtools-archetype</artifactId>
 	<packaging>maven-archetype</packaging>
-
 	<name>Paxtools Maven Archetype</name>
 	<description>
 		Paxtools Maven archetype - sample Java project to quickly start using Paxtools library and BioPAX data.
 	</description>
-	<url>http://biopax.github.io/Paxtools</url>
 
-	<scm><url>https://github.com/BioPAX/Paxtools</url>  <tag>HEAD</tag>
-  </scm>
+	<url>https://biopax.github.io/Paxtools</url>
+
+	<!--<properties>-->
+		<!--<github.site.path>${project.version}/${project.artifactId}</github.site.path>-->
+	<!--</properties>-->
+
+	<scm><url>https://github.com/BioPAX/Paxtools</url>
+		<tag>HEAD</tag>
+	</scm>
 
 	<build>
 		<extensions>
@@ -28,7 +33,6 @@
 				<version>2.3</version>
 			</extension>
 		</extensions>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>

@@ -40,16 +40,15 @@ public class MiriamLink
     /** object of the generated from the Miriam schema type */
     private static final Miriam miriam;
     
-    /** */
+
     private static final Map<String,Datatype> datatypesHash = new HashMap<String, Miriam.Datatype>();
-    
-    
+
     public static boolean useObsoleteDatatypes = true;
     public static boolean useObsoleteResources = true;
 	
 	/**
 	 * Default constructor: initialization of some parameters
-	 */
+	 * */
 	protected MiriamLink() {
     }
 	
@@ -406,10 +405,11 @@ public class MiriamLink
         
 
     /**
-     * Retrieves the unique (official) URI of a data type (example: "urn:miriam:uniprot").
+     * Retrieves the unique (official) URI of a data type
+	 * (example: "http://identifiers.org/uniprot").
      * 
      * @param datatype net.biomodels.miriam.Miriam.Datatype
-     * @return
+     * @return URI
      */
     public static String getOfficialDataTypeURI(Datatype datatype) {
     	for(Uris uris : datatype.getUris()) {
@@ -437,7 +437,7 @@ public class MiriamLink
      * Gets Miriam Datatype by its ID, Name, Synonym, or URI (URN/URL) 
      * 
      * @param datatypeKey - a datatype ID, name, synonym, or URI
-     * @return
+     * @return MIRIAM Datatype bean
      * 
 	 * @throws IllegalArgumentException when not found
      */
@@ -485,7 +485,7 @@ public class MiriamLink
      * Retrieves the resource by id (for example: "MIR:00100008" (bind) ).
      * 
      * @param resourceId - resource identifier (similar to, but not a data type identifier!)
-     * @return
+     * @return MIRIAM Resource bean
      */
     public static Resource getResource(String resourceId)
     {
@@ -505,7 +505,7 @@ public class MiriamLink
      * name (any synonym) or identifier (case insensitive)
      *  
      * @param searchKey  - ID, name, or synonym (case insensitive)
-     * @return
+     * @return true/false
      */
     public static boolean containsIdOrName(String searchKey) {
     	return datatypesHash.keySet().contains(searchKey.toUpperCase());
@@ -517,7 +517,7 @@ public class MiriamLink
      * (case sensitive)
      * 
      * @param searchUri - URI (case sensitive)
-     * @return
+     * @return true/false
      */
     public static boolean containsUri(String searchUri) {
     	return datatypesHash.keySet().contains(searchUri);
@@ -529,8 +529,8 @@ public class MiriamLink
      * the datatype, also taking the 'obsolete' flag/state
      * into account.
      * 
-     * @param datatype
-     * @return
+     * @param datatype a MIRIAM Datatype
+     * @return the list of MIRIAM Resources in that datatype
      */
     private static List<Resource> getResources(Datatype datatype) {
     	List<Resource> toReturn = new ArrayList<Resource>();

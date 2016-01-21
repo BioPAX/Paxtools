@@ -583,7 +583,7 @@ public final class Normalizer {
 	 * Auto-generates standard and other names for the datasource
 	 * from either its ID (if URN) or one of its existing names (preferably - standard name)
 	 * 
-	 * @param pro
+	 * @param pro data source (BioPAX Provenance)
 	 */
 	public static void autoName(Provenance pro) {
 		if(!(pro.getUri().startsWith("urn:miriam:") || pro.getUri().startsWith("http://identifiers.org/"))
@@ -643,8 +643,13 @@ public final class Normalizer {
 	/**
 	 * Converts BioPAX L1 or L2 RDF/XML string data to BioPAX L3 string.
 	 *
+	 * WARN: this is not for huge (larger than 1GB) BioPAX RDF/XML data
+	 * due to use of (UTF-8) String and Byte Array internally.
+	 * This can be and is used by online web apps, such as the
+	 * BioPAX Validator.
+	 *
 	 * @param biopaxData String
-	 * @return
+	 * @return BioPAX Level3 RDF/XML string
 	 */
 	public static String convertToLevel3(final String biopaxData) {
 		String toReturn = "";
@@ -679,15 +684,13 @@ public final class Normalizer {
 	 * Gets the xml:base to use with newly created BioPAX elements.
 	 * 
 	 * @param modelToNormalize
-	 * @return
+	 * @return BioPAX model's xml:base or empty string if it's null
 	 */
 	private String getXmlBase(Model modelToNormalize) {
-		if(xmlBase != null && !xmlBase.isEmpty())
-			return xmlBase; //this one is preferred
+		if(xmlBase != null)
+			return xmlBase;
 		else
-			return 
-				(modelToNormalize.getXmlBase() != null) 
-					? modelToNormalize.getXmlBase() : "";
+			return "";
 	}
 	
 	

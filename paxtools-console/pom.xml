@@ -9,7 +9,12 @@
 	<packaging>jar</packaging>
 	<name>Paxtools Console Application</name>
 	<description>Paxtools Console Application and Examples</description>
-	<url>http://biopax.github.io/Paxtools</url>
+
+	<url>https://biopax.github.io/Paxtools</url>
+
+	<!--<properties>-->
+		<!--<github.site.path>${project.version}/${project.artifactId}</github.site.path>-->
+	<!--</properties>-->
 
 	<scm>
 		<url>https://github.com/BioPAX/Paxtools</url>

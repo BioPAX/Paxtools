@@ -16,7 +16,7 @@
 		independent to be easily embedded into applications.
 	</description>
 	
-	<url>http://biopax.github.io/Paxtools</url>
+	<url>https://biopax.github.io/Paxtools</url>
 	
 	<organization>
 		<name>BioPAX</name>
@@ -65,9 +65,12 @@
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<nexus-staging-maven-plugin.version>1.6.5</nexus-staging-maven-plugin.version>
-		<!--<site-maven-plugin.version>0.12</site-maven-plugin.version>-->
 		<doxia-integration-tools.version>1.6</doxia-integration-tools.version>
 		<maven-enforcer-plugin>1.4</maven-enforcer-plugin>
+		<!--<site-maven-plugin.version>0.12</site-maven-plugin.version>-->
+		<!--<github.host>github.com</github.host>-->
+		<!--<github.server.id>github</github.server.id> -->
+		<!--<github.site.path>${project.version}</github.site.path>-->
 	</properties>
 
 	<developers>
@@ -216,8 +219,7 @@
 		<site>
 			<id>github</id>
 			<name>BioPAX/Paxtools Maven site</name>
-			<url>http://biopax.github.io/Paxtools/${project.version}</url>
-			<!-- ${project.version} -->
+			<url>https://biopax.github.io/Paxtools/${project.version}</url>
 		</site>
 		<repository>
 			<id>ossrh</id>
@@ -283,6 +285,7 @@
 					<version>${maven-javadoc-plugin.version}</version>
 					<configuration>
 						<excludePackageNames>org.biopax.validator.*</excludePackageNames>
+						<failOnError>false</failOnError>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -299,12 +302,15 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>${maven-site-plugin.version}</version>
+					<!--<configuration>-->
+						<!--<skipDeploy>true</skipDeploy>-->
+					<!--</configuration>-->
 				</plugin>
-<!--				<plugin>
+				<plugin>
 					<groupId>com.github.github</groupId>
 					<artifactId>site-maven-plugin</artifactId>
 					<version>${site-maven-plugin.version}</version>
-				</plugin>-->
+				</plugin>
 				<plugin>
 					<groupId>org.sonatype.plugins</groupId>
 					<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -404,12 +410,13 @@
 				<!--<groupId>com.github.github</groupId>-->
 				<!--<artifactId>site-maven-plugin</artifactId>-->
 				<!--<configuration>-->
-					<!--<message>Creating site for ${project.artifactId}, ${project.version}</message>-->
-					<!--<path>${project.distributionManagement.site.url}</path>-->
+					<!--<message>Creating site ${project.url} for ${project.artifactId}:${project.version}</message>-->
+					<!--<host>${github.host}</host>-->
+					<!--<server>${github.server.id}</server>-->
+					<!--<path>${github.site.path}</path>-->
 					<!--<merge>true</merge>-->
 					<!--<repositoryName>Paxtools</repositoryName>-->
 					<!--<repositoryOwner>BioPAX</repositoryOwner>-->
-					<!--<server>github</server>-->
 				<!--</configuration>-->
 				<!--<executions>-->
 					<!--<execution>-->
@@ -513,11 +520,6 @@
 			<artifactId>jul-to-slf4j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>org.slf4j</groupId>-->
-			<!--<artifactId>log4j-over-slf4j</artifactId>-->
-			<!--<scope>runtime</scope>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -578,7 +580,9 @@
               			<link>http://download.oracle.com/javase/7/docs/api/</link>
               		</links>
               		<level>public</level>
+					<!--<excludePackageNames>org.biopax.validator.*,net.biomodels.miriam</excludePackageNames>-->
 					<excludePackageNames>org.biopax.validator.*</excludePackageNames>
+					<failOnError>false</failOnError>
             	</configuration>
 				<reportSets>
 					<reportSet>

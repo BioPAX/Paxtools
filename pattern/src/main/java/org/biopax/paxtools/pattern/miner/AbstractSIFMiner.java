@@ -69,7 +69,7 @@ public abstract class AbstractSIFMiner extends MinerAdapter implements SIFMiner
 	/**
 	 * Sets the SIF type
 	 *
-	 * @param type
+	 * @param type interaction type
 	 */
 	protected void setType(SIFType type)
 	{

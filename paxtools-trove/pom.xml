@@ -14,10 +14,15 @@
 
 	<packaging>jar</packaging>
 
-	<url>http://biopax.github.io/Paxtools</url>
+	<url>https://biopax.github.io/Paxtools</url>
 
-	<scm><url>https://github.com/BioPAX/Paxtools</url>  <tag>HEAD</tag>
-  </scm>
+	<!--<properties>-->
+		<!--<github.site.path>${project.version}/${project.artifactId}</github.site.path>-->
+	<!--</properties>-->
+
+	<scm><url>https://github.com/BioPAX/Paxtools</url>
+		<tag>HEAD</tag>
+	</scm>
 
 	<dependencies>
 		<dependency>
