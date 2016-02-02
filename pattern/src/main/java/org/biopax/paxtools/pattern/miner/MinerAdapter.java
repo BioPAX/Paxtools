@@ -62,7 +62,7 @@ public abstract class MinerAdapter implements Miner
 	{
 		this.name = name;
 		this.description = description;
-		this.idMap = new HashMap<BioPAXElement, Set<String>>();
+		this.idMap = Collections.synchronizedMap(new HashMap<BioPAXElement, Set<String>>());
 	}
 
 	/**
@@ -147,7 +147,7 @@ public abstract class MinerAdapter implements Miner
 
 	public void setIdMap(Map<BioPAXElement, Set<String>> idMap)
 	{
-		this.idMap = idMap;
+		this.idMap = Collections.synchronizedMap(new HashMap<BioPAXElement, Set<String>>(idMap));
 	}
 
 	/**

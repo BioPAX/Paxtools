@@ -29,7 +29,7 @@ public class HasAnID extends ConstraintAdapter
 	public HasAnID(IDFetcher fetcher, Map<BioPAXElement, Set<String>> idMap)
 	{
 		this.idFetcher = fetcher;
-		this.idMap = idMap;
+		this.idMap = idMap; //better be synchronized (see in MinerAdapter) to make it thread-safe
 	}
 
 	/**
@@ -52,7 +52,10 @@ public class HasAnID extends ConstraintAdapter
 	public boolean satisfies(Match match, int... ind)
 	{
 		BioPAXElement ele = match.get(ind[0]);
-		if (!idMap.containsKey(ele)) idMap.put(ele, idFetcher.fetchID(ele));
+
+		if (!idMap.containsKey(ele))
+			idMap.put(ele, idFetcher.fetchID(ele));
+
 		return idMap.get(ele) != null && !idMap.get(ele).isEmpty();
 	}
 }
