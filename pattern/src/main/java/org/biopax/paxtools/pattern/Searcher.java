@@ -16,6 +16,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Searcher for searching a given pattern in a model.
@@ -63,14 +67,6 @@ public class Searcher
 	public static List<Match> searchRecursive(Match match, List<MappedConst> mc, int index) 
 	{
 		List<Match> result = new ArrayList<Match>();
-
-		// debug code
-//		if (match.get(2) != null && match.get(2).getUri().equals("http://pid.nci.nih.gov/biopaxpid_39918") &&
-//			match.get(6) != null && match.get(6).getUri().equals("http://pid.nci.nih.gov/biopaxpid_12411"))
-//		{
-//			System.out.println();
-//		}
-		// debug code
 
 		Constraint con = mc.get(index).getConstr();
 		int[] ind = mc.get(index).getInds();
@@ -169,27 +165,38 @@ public class Searcher
 	 * @param prg progress watcher to keep track of the progress
 	 * @return map from starting elements to the list matching results
 	 */
-	public static Map<BioPAXElement, List<Match>> search(Model model, Pattern pattern,
-		ProgressWatcher prg)
+	public static Map<BioPAXElement, List<Match>> search(final Model model, final Pattern pattern,
+														 final ProgressWatcher prg)
 	{
-		Map<BioPAXElement, List<Match>> map = new HashMap<BioPAXElement, List<Match>>();
+		final Map<BioPAXElement, List<Match>> map = new ConcurrentHashMap<BioPAXElement, List<Match>>();
+		final ExecutorService exec = Executors.newFixedThreadPool(10);
 
 		Set<? extends BioPAXElement> eles = model.getObjects(pattern.getStartingClass());
-
 		if (prg != null) prg.setTotalTicks(eles.size());
 
-		for (BioPAXElement ele : eles)
+		for (final BioPAXElement ele : eles)
 		{
-			List<Match> matches = search(ele, pattern);
-			
-			if (!matches.isEmpty())
-			{
-				map.put(ele, matches);
-			}
-
-			if (prg != null) prg.tick(1);
+			exec.execute(new Runnable() {
+				@Override
+				public void run() {
+					List<Match> matches = search(ele, pattern);
+					if (!matches.isEmpty())
+					{
+						map.put(ele, matches);
+					}
+					if (prg != null) prg.tick(1);
+				}
+			});
 		}
-		return map;
+
+		exec.shutdown();
+		try {
+			exec.awaitTermination(10, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			throw new RuntimeException("search, failed due to exec timed out.", e);
+		}
+
+		return Collections.unmodifiableMap(map);
 	}
 
 	/**
@@ -198,23 +205,35 @@ public class Searcher
 	 * @param pattern pattern to search for
 	 * @return map from starting element to the matching results
 	 */
-	public static Map<BioPAXElement, List<Match>> search(Collection<? extends BioPAXElement> eles,
-		Pattern pattern)
+	public static Map<BioPAXElement, List<Match>> search(final Collection<? extends BioPAXElement> eles,
+														 final Pattern pattern)
 	{
-		Map<BioPAXElement, List<Match>> map = new HashMap<BioPAXElement, List<Match>>();
+		final Map<BioPAXElement, List<Match>> map = new ConcurrentHashMap<BioPAXElement, List<Match>>();
+		final ExecutorService exec = Executors.newFixedThreadPool(10);
 
-		for (BioPAXElement ele : eles)
+		for (final BioPAXElement ele : eles)
 		{
 			if (!pattern.getStartingClass().isAssignableFrom(ele.getModelInterface())) continue;
 			
-			List<Match> matches = search(ele, pattern);
-			
-			if (!matches.isEmpty())
-			{
-				map.put(ele, matches);
-			}
+			exec.execute(new Runnable() {
+				@Override
+				public void run() {
+					List<Match> matches = search(ele, pattern);
+					if (!matches.isEmpty()) {
+						map.put(ele, matches);
+					}
+				}
+			});
 		}
-		return map;
+
+		exec.shutdown();
+		try {
+			exec.awaitTermination(10, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			throw new RuntimeException("search, failed due to exec timed out.", e);
+		}
+
+		return Collections.unmodifiableMap(new HashMap<BioPAXElement, List<Match>>(map));
 	}
 
 	/**

@@ -500,13 +500,13 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		ProgressWatcher prg = new ProgressWatcher()
 		{
 			@Override
-			public void setTotalTicks(int total)
+			public synchronized  void setTotalTicks(int total)
 			{
 				prgBar.setMaximum(total);
 			}
 
 			@Override
-			public void tick(int times)
+			public synchronized  void tick(int times)
 			{
 				prgBar.setValue(prgBar.getValue() + times);
 			}

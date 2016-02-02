@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Searches a model and generates SIF network using the pattern matches.
@@ -140,41 +144,53 @@ public class SIFSearcher
 	 * @param model model to search
 	 * @return sif interactions
 	 */
-	public Set<SIFInteraction> searchSIF(Model model)
+	public Set<SIFInteraction> searchSIF(final Model model)
 	{
 		if (miners == null) initMiners();
 
-		Map<SIFInteraction, SIFInteraction> map = new HashMap<SIFInteraction, SIFInteraction>();
+		final Map<SIFInteraction, SIFInteraction> map = new ConcurrentHashMap<SIFInteraction, SIFInteraction>();
+		final ExecutorService exec = Executors.newCachedThreadPool();
 
-		Map<BioPAXElement, Set<String>> idMap = new HashMap<BioPAXElement, Set<String>>();
-
-		for (SIFMiner miner : miners)
+		for (final SIFMiner miner : miners)
 		{
-			if (miner instanceof MinerAdapter) ((MinerAdapter) miner).setIdMap(idMap);
+			exec.execute(
+					new Runnable() {
+						@Override
+						public void run() {
+							if (miner instanceof MinerAdapter)
+								((MinerAdapter) miner).setIdMap(new HashMap<BioPAXElement, Set<String>>());
 
-			Map<BioPAXElement,List<Match>> matches = Searcher.search(model, miner.getPattern());
-
-			for (List<Match> matchList : matches.values())
-			{
-				for (Match m : matchList)
-				{
-					Set<SIFInteraction> sifs = miner.createSIFInteraction(m, idFetcher);
-					for (SIFInteraction sif : sifs)
-					{
-						if (sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID) &&
-							(types == null || types.contains(sif.type)))
-						{
-							if (map.containsKey(sif))
+							Map<BioPAXElement,List<Match>> matches = Searcher.search(model, miner.getPattern());
+							for (final List<Match> matchList : matches.values())
 							{
-								SIFInteraction existing = map.get(sif);
-								existing.mergeWith(sif);
+								for (Match m : matchList)
+								{
+									Set<SIFInteraction> sifs = miner.createSIFInteraction(m, idFetcher);
+									for (SIFInteraction sif : sifs)
+									{
+										if ( sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID)
+												&& (types == null || types.contains(sif.type)) )
+										{
+											SIFInteraction existing = map.get(sif);
+											if(existing != null)
+												existing.mergeWith(sif);
+											else
+												map.put(sif, sif);
+										}
+									}
+								}
 							}
-							else map.put(sif, sif);
 						}
 					}
-				}
-			}
+			);
 		}
+		exec.shutdown();
+		try {
+			exec.awaitTermination(3, TimeUnit.HOURS);
+		} catch (InterruptedException e) {
+			throw new RuntimeException("searchSIF(model) failed due to thread execution timed out.", e);
+		}
+
 		return new HashSet<SIFInteraction>(map.values());
 	}
 

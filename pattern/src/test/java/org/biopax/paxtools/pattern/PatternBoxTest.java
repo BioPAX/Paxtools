@@ -40,13 +40,12 @@ public class PatternBoxTest
 		
 		Assert.assertTrue(list.size() == 1);
 
-
-		Map<BioPAXElement,List<Match>> map = Searcher.search(model_P53, PatternBox.inSameComplex());
-
-		for (BioPAXElement ele : map.keySet())
-		{
+//		Map<BioPAXElement,List<Match>> map = Searcher.search(model_P53, PatternBox.inSameComplex());
+//
+//		for (BioPAXElement ele : map.keySet())
+//		{
 //			printMatches(map.get(ele), 0, 4);
-		}
+//		}
 	}
 
 	@Test
