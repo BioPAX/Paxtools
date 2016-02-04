@@ -43,8 +43,6 @@ public class PaxtoolsMain {
             help();
         } else {
 	        String command = argv[0];
-	        if(command.startsWith("--"))  //accept both w and w/out --
-		        command = command.substring(2);
 	        Command.valueOf(command).run(argv);
         }
     }
@@ -134,12 +132,25 @@ public class PaxtoolsMain {
 
         // set strings vars
         String in = argv[1];
-        String[] uris = argv[2].split(",");
-        String out = argv[3];
+        String out = argv[2];
+		String[] uris = new String[]{}; //empty means - all
+		boolean absoluteUris = false;
+		if(argv.length > 3) {
+			for(int i=3; i<argv.length; i++) {
+				String param = argv[i];
+				if (param.startsWith("uris=")) {
+					uris = param.substring(5).split(",");
+				}
+				else if(param.startsWith("-absolute")) {
+					absoluteUris = true;
+				}
+			}
+		}
 
         Model model = io.convertFromOWL(getInputStream(in));
         io.setFactory(model.getLevel().getDefaultFactory());
-        // extract and save the sub-model (defined by ids)
+        // extract and save the model or sub-model
+		io.absoluteUris(absoluteUris);
         io.convertToOWL(model, new FileOutputStream(out), uris);
     }
 
@@ -869,8 +880,10 @@ public class PaxtoolsMain {
 				+ "\t-notPathway - also list those protein/gene IDs that cannot be reached from pathways.\n"
 				+ "\torganisms - optional filter; a comma-separated list of taxonomy IDs and/or names\n")
 		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
-        fetch("<input> <Uri1,Uri2,..> <output>\n" +
-        		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output.")
+        fetch("<input> <output> [uris=URI1,..] [-absolute] \n" +
+        		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output; options:\n" +
+				"\turi=... - an optional list of existing in the model BioPAX elements' full URIs;\n" +
+				"\t-absolute - set this flag to write full/absolute URIs to the output (i.e., 'rdf:about' instead 'rdf:ID').")
 		        {public void run(String[] argv) throws IOException{fetch(argv);} },
         getNeighbors("<input> <id1,id2,..> <output>\n" +
         		"\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)")
