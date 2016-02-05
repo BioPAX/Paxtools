@@ -21,24 +21,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
  * Paxtools console application
- * (useful BioPAX utilities).
+ * (very useful BioPAX utilities).
  */
 public class PaxtoolsMain {
+    final static Logger log = LoggerFactory.getLogger(PaxtoolsMain.class);
 
-    public static Logger log = LoggerFactory.getLogger(PaxtoolsMain.class);
-    private static SimpleIOHandler io = new SimpleIOHandler();
+    private static SimpleIOHandler io;
 
-    public static void main(String[] argv) throws IOException, 
-    InvocationTargetException, IllegalAccessException 
-    {
-        io.mergeDuplicates(true);
+    public static void main(String[] argv) throws Exception
+	{
+		io = new SimpleIOHandler();
+		io.mergeDuplicates(true);
+
         if (argv.length == 0) {
             help();
         } else {
@@ -129,11 +129,10 @@ public class PaxtoolsMain {
     }
 
     public static void fetch(String[] argv) throws IOException {
-
         // set strings vars
         String in = argv[1];
         String out = argv[2];
-		String[] uris = new String[]{}; //empty means - all
+		String[] uris = new String[0]; //empty means - all
 		boolean absoluteUris = false;
 		if(argv.length > 3) {
 			for(int i=3; i<argv.length; i++) {
@@ -147,11 +146,20 @@ public class PaxtoolsMain {
 			}
 		}
 
+		// import the model
+		log.info("Loading the BioPAX model from " + in);
         Model model = io.convertFromOWL(getInputStream(in));
-        io.setFactory(model.getLevel().getDefaultFactory());
-        // extract and save the model or sub-model
-		io.absoluteUris(absoluteUris);
-        io.convertToOWL(model, new FileOutputStream(out), uris);
+		log.info("Successfully loaded the BioPAX model. Writing to the output: " + out);
+
+		// extract and save the (sub-)model
+		SimpleIOHandler biopaxWriter = new SimpleIOHandler(model.getLevel());
+		biopaxWriter.absoluteUris(absoluteUris);
+		if(uris.length > 0)
+			biopaxWriter.convertToOWL(model, new FileOutputStream(out), uris);
+		else
+			biopaxWriter.convertToOWL(model, new FileOutputStream(out));
+
+		log.info("Done.");
     }
 
     
@@ -484,8 +492,7 @@ public class PaxtoolsMain {
         Model model1 = getModel(io, argv[1]);
         Model model2 = getModel(io, argv[2]);
 
-        Integrator integrator =
-                new Integrator(SimpleEditorMap.get(model1.getLevel()), model1, model2);
+        Integrator integrator = new Integrator(SimpleEditorMap.get(model1.getLevel()), model1, model2);
         integrator.integrate();
 
         io.setFactory(model1.getLevel().getDefaultFactory());
