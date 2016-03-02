@@ -50,13 +50,15 @@ public class VNode implements Updatable
     private static final  String TAG = "tag";
     private static final  String NUCLEIC_ACID_FEATURE = "nucleic acid feature";
     private static final  String UNSPECIFIED_ENTITY = "unspecified entity";
+    private static final  String NONE = "NA";
+
 
     // Constats used for determining "state of information" and "unit of information" glyph widths according to
     // their labels
     private static final  int LOWERCASE_LETTER_PIXEL_WIDTH = 6;
     private static final  int UPPERCASE_LETTER_PIXEL_WIDTH = 9;
-    private static final  int MAX_STATE_AND_INFO_WIDTH = 50;
-    private static final  int MAX_STATE_AND_INFO_HEIGHT = 15;
+    private static final  int MAX_STATE_AND_INFO_WIDTH = 35;
+    private static final  int MAX_STATE_AND_INFO_HEIGHT = 10;
     private static final  int OFFSET_BTW_INFO_GLYPHS = 5;
     private static final  int MAX_INFO_BOX_NUMBER = 4;
     private static final  int MAX_MACROMOLECULE_HEIGHT_WITH_INFO_BOXES = 25;
@@ -105,6 +107,15 @@ public class VNode implements Updatable
 
         this.glyph = g;
 
+        /*
+		 * need to add bbox objects
+		 */
+        Bbox b = new Bbox();
+        this.glyph.setBbox(b);
+
+        if (this.glyph.getClazz() == null)
+            this.glyph.setClazz(NONE);
+
         this.setSizeAccordingToClass();
     }
 
@@ -144,75 +155,73 @@ public class VNode implements Updatable
     public void setSizeAccordingToClass()
     {
         String glyphClass = this.glyph.getClazz();
-		
-		/*
-		 * need to add bbox objects
-		 */
-        Bbox b = new Bbox();
-        this.glyph.setBbox(b);
 
-        if (glyphClass == SOURCE_AND_SINK)
+        //If glyph class is not specified return here
+        if (glyphClass.equalsIgnoreCase(NONE))
+            return;
+
+        if (glyphClass.equalsIgnoreCase(SOURCE_AND_SINK))
         {
             setBounds(SOURCE_AND_SINK_BOUND.getWidth(), SOURCE_AND_SINK_BOUND.getHeight());
         }
 
-        else if (glyphClass == AND || glyphClass == OR || glyphClass == NOT )
+        else if (glyphClass.equalsIgnoreCase(AND) || glyphClass.equalsIgnoreCase(OR) || glyphClass.equalsIgnoreCase(NOT))
         {
             setBounds(LOGICAL_OPERATOR_BOUND.getWidth(), LOGICAL_OPERATOR_BOUND.getHeight());
         }
 
-        else if (glyphClass == ASSOCIATION || glyphClass == DISSOCIATION || glyphClass == OMITTED_PROCESS ||
-                glyphClass == UNCERTAIN_PROCESS || glyphClass  == PROCESS)
+        else if (glyphClass.equalsIgnoreCase(ASSOCIATION) || glyphClass.equalsIgnoreCase(DISSOCIATION) || glyphClass.equalsIgnoreCase(OMITTED_PROCESS) ||
+                glyphClass.equalsIgnoreCase(UNCERTAIN_PROCESS) || glyphClass.equalsIgnoreCase(PROCESS))
         {
             setBounds(PROCESS_NODES_BOUND.getWidth(), PROCESS_NODES_BOUND.getHeight());
         }
 
-        else if (glyphClass == SIMPLE_CHEMICAL)
+        else if (glyphClass.equalsIgnoreCase(SIMPLE_CHEMICAL))
         {
             setBounds(SIMPLE_CHEMICAL_BOUND.getWidth(), SIMPLE_CHEMICAL_BOUND.getHeight());
         }
 
-        else if (glyphClass == UNSPECIFIED_ENTITY)
+        else if (glyphClass.equalsIgnoreCase(UNSPECIFIED_ENTITY))
         {
             setBounds(UNSPECIFIED_ENTITY_BOUND.getWidth(), UNSPECIFIED_ENTITY_BOUND.getHeight());
         }
 
-        else if (glyphClass == MACROMOLECULE)
+        else if (glyphClass.equalsIgnoreCase(MACROMOLECULE))
         {
             setBounds(MACROMOLECULE_BOUND.getWidth(), MACROMOLECULE_BOUND.getHeight());
         }
 
-        else if (glyphClass == NUCLEIC_ACID_FEATURE)
+        else if (glyphClass.equalsIgnoreCase(NUCLEIC_ACID_FEATURE))
         {
             setBounds(NUCLEIC_ACID_FEATURE_BOUND.getWidth(), NUCLEIC_ACID_FEATURE_BOUND.getHeight());
         }
 
-        else if (glyphClass == STATE_VARIABLE)
+        else if (glyphClass.equalsIgnoreCase(STATE_VARIABLE))
         {
             setBounds(STATE_BOUND.getWidth(), STATE_BOUND.getHeight());
         }
 
-        else if (glyphClass == UNIT_OF_INFORMATION)
+        else if (glyphClass.equalsIgnoreCase(UNIT_OF_INFORMATION))
         {
             setBounds(INFO_BOUND.getWidth(), INFO_BOUND.getHeight());
         }
 
-        else if (glyphClass == PHENOTYPE)
+        else if (glyphClass.equalsIgnoreCase(PHENOTYPE))
         {
             setBounds(PHENOTYPE_BOUND.getWidth(), PHENOTYPE_BOUND.getHeight());
         }
 
-        else if (glyphClass == PERTURBING_AGENT)
+        else if (glyphClass.equalsIgnoreCase(PERTURBING_AGENT))
         {
             setBounds(PERTURBING_AGENT_BOUND.getWidth(), PERTURBING_AGENT_BOUND.getHeight());
         }
 
-        else if (glyphClass == TAG)
+        else if (glyphClass.equalsIgnoreCase(TAG))
         {
             setBounds(TAG_BOUND.getWidth(), TAG_BOUND.getHeight());
         }
 
-        else if (glyphClass == COMPLEX)
+        else if (glyphClass.equalsIgnoreCase(COMPLEX))
         {
             setBounds(COMPLEX_BOUND.getWidth(), COMPLEX_BOUND.getHeight());
         }
@@ -223,7 +232,7 @@ public class VNode implements Updatable
             setBounds(3*glyphBbox.getW()/4, 3*glyphBbox.getH()/4);
         }
 
-        if (glyphClass == MACROMOLECULE || glyphClass == NUCLEIC_ACID_FEATURE || glyphClass == SIMPLE_CHEMICAL || glyphClass == COMPLEX)
+        if (glyphClass.equalsIgnoreCase(MACROMOLECULE) || glyphClass.equalsIgnoreCase(NUCLEIC_ACID_FEATURE) || glyphClass.equalsIgnoreCase(SIMPLE_CHEMICAL) || glyphClass.equalsIgnoreCase(COMPLEX))
         {
             updateSizeForStateAndInfo();
         }
