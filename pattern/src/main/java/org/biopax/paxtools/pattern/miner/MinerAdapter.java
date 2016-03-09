@@ -33,11 +33,6 @@ public abstract class MinerAdapter implements Miner
 	protected String description;
 
 	/**
-	 * Pattern to use for mining.
-	 */
-	protected Pattern pattern;
-
-	/**
 	 * Blacklist for identifying ubiquitous small molecules.
 	 */
 	protected Blacklist blacklist;
@@ -96,18 +91,15 @@ public abstract class MinerAdapter implements Miner
 	 */
 	public Pattern getPattern()
 	{
-		if (pattern == null)
+		final Pattern pattern = constructPattern();
+
+		if (this instanceof SIFMiner && idFetcher != null && idMap != null)
 		{
-			pattern = constructPattern();
-
-			if (this instanceof SIFMiner && idFetcher != null && idMap != null)
-			{
-				pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getSourceLabel());
-				pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getTargetLabel());
-			}
-
-			pattern.optimizeConstraintOrder();
+			pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getSourceLabel());
+			pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getTargetLabel());
 		}
+
+		pattern.optimizeConstraintOrder();
 
 		return pattern;
 	}

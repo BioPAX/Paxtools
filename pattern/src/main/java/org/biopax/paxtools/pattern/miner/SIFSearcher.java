@@ -149,46 +149,32 @@ public class SIFSearcher
 		if (miners == null) initMiners();
 
 		final Map<SIFInteraction, SIFInteraction> map = new ConcurrentHashMap<SIFInteraction, SIFInteraction>();
-		final ExecutorService exec = Executors.newCachedThreadPool();
 
 		for (final SIFMiner miner : miners)
 		{
-			exec.execute(
-					new Runnable() {
-						@Override
-						public void run() {
-							if (miner instanceof MinerAdapter)
-								((MinerAdapter) miner).setIdMap(new HashMap<BioPAXElement, Set<String>>());
+			if (miner instanceof MinerAdapter)
+				((MinerAdapter) miner).setIdMap(new HashMap<BioPAXElement, Set<String>>());
 
-							Map<BioPAXElement,List<Match>> matches = Searcher.search(model, miner.getPattern());
-							for (final List<Match> matchList : matches.values())
-							{
-								for (Match m : matchList)
-								{
-									Set<SIFInteraction> sifs = miner.createSIFInteraction(m, idFetcher);
-									for (SIFInteraction sif : sifs)
-									{
-										if ( sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID)
-												&& (types == null || types.contains(sif.type)) )
-										{
-											SIFInteraction existing = map.get(sif);
-											if(existing != null)
-												existing.mergeWith(sif);
-											else
-												map.put(sif, sif);
-										}
-									}
-								}
-							}
+			Map<BioPAXElement,List<Match>> matches = Searcher.search(model, miner.getPattern());
+			for (final List<Match> matchList : matches.values())
+			{
+				for (Match m : matchList)
+				{
+					Set<SIFInteraction> sifs = miner.createSIFInteraction(m, idFetcher);
+					for (SIFInteraction sif : sifs)
+					{
+						if ( sif != null && sif.hasIDs() && !sif.sourceID.equals(sif.targetID)
+								&& (types == null || types.contains(sif.type)) )
+						{
+							SIFInteraction existing = map.get(sif);
+							if(existing != null)
+								existing.mergeWith(sif);
+							else
+								map.put(sif, sif);
 						}
 					}
-			);
-		}
-		exec.shutdown();
-		try {
-			exec.awaitTermination(3, TimeUnit.HOURS);
-		} catch (InterruptedException e) {
-			throw new RuntimeException("searchSIF(model) failed due to thread execution timed out.", e);
+				}
+			}
 		}
 
 		return new HashSet<SIFInteraction>(map.values());

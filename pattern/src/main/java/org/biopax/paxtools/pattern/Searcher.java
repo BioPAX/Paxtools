@@ -169,7 +169,7 @@ public class Searcher
 														 final ProgressWatcher prg)
 	{
 		final Map<BioPAXElement, List<Match>> map = new ConcurrentHashMap<BioPAXElement, List<Match>>();
-		final ExecutorService exec = Executors.newFixedThreadPool(10);
+		final ExecutorService exec = Executors.newFixedThreadPool(20);
 
 		Set<? extends BioPAXElement> eles = model.getObjects(pattern.getStartingClass());
 		if (prg != null) prg.setTotalTicks(eles.size());
