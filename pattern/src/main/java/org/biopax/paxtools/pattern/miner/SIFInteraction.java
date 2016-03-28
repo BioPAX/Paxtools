@@ -207,7 +207,7 @@ public class SIFInteraction implements Comparable
 		return set;
 	}
 
-	private static final PathAccessor pathwayAcc1 = new PathAccessor("Interaction/pathwayComponentOf*");
+	private static final PathAccessor pathwayAcc1 = new PathAccessor("Interaction/pathwayComponentOf");
 	private static final PathAccessor pathwayAcc2 = new PathAccessor("Interaction/stepProcessOf/pathwayOrderOf");
 
 	/**
