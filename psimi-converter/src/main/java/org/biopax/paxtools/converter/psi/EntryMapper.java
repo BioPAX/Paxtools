@@ -1063,11 +1063,11 @@ class EntryMapper {
 			// Let's not make UnificationXrefs. RelationshipXref is more safe.
 			// Often, a gene or omim ID (can be another species') is a protein's xref id with 'identity' type...
             if(!"pubmed".equalsIgnoreCase(psiDBRefDb)) {
-            	bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
+				bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
             }
             else {
             	//TODO shall we skip PublicationXref here (IntAct puts the same PSIMI paper pmid everywhere...)?
-        		bpXref = publicationXref(psiDBRefDb, dbRefId);
+				bpXref = publicationXref(psiDBRefDb, dbRefId);
             }
 
             if (bpXref != null) 
@@ -1159,11 +1159,17 @@ class EntryMapper {
 		db = dbQuickFix(db);
 		
 		if(id == null || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
-			LOG.warn("publicationXref(), illegal id=" + id);
+			LOG.warn("publicationXref(), skip illegal id=" + id);
 			return  null;
 		}
 		
 		id = id.trim();
+
+		//add only if it's a valid PMID, and not the default (IntAct) one
+		if(("pubmed".equalsIgnoreCase(db) && !id.matches("\\d+")) || "14755292".equals(id)) {
+			LOG.warn("publicationXref(), skip illegal or dummy publication id=" + id);
+			return  null;
+		}
 		
 		String xuri = xmlBase + "PublicationXref_" + encode(db.toLowerCase() + "_" + id);
 		PublicationXref x = (PublicationXref) bpModel.getByID(xuri);
