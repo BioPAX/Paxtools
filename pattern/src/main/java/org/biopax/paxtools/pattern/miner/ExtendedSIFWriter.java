@@ -2,6 +2,7 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.RelationshipXref;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -190,7 +191,17 @@ public class ExtendedSIFWriter
 		Set<String> set = new HashSet<String>();
 		for (Object o : pa.getValueFromBeans(elements))
 		{
-			set.add(o.toString());
+			if(o instanceof RelationshipXref)
+			{
+				RelationshipXref rx = (RelationshipXref) o;
+				if(rx.getRelationshipType() != null
+						&& rx.getRelationshipType().toString().toLowerCase().contains("identity")) {
+					set.add(rx.toString());
+				}
+			}
+			else {
+				set.add(o.toString());
+			}
 		}
 		List<String> list = new ArrayList<String>(set);
 		Collections.sort(list);
