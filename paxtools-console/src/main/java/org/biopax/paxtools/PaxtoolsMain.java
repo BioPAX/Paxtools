@@ -547,13 +547,24 @@ public class PaxtoolsMain {
 
 		log.debug("Importing the input model from " + argv[1] + "...");
 		Model model = getModel(io, argv[1]);
+		PrintStream out = argv.length > 2 ? new PrintStream(argv[2]) : System.out;
 		log.debug("Analyzing...");
-		summarize(model, argv.length > 2 ? new PrintStream(argv[2]) : null);
+		summarize(model, out);
+		pathwaysInfo(model, out);
 	}
-		
-	public static void summarize(Model model, PrintStream out) throws IOException {
-		if (out == null) out = System.out;
 
+	private static void pathwaysInfo(Model model, PrintStream out) throws IOException {
+		final PathAccessor directChildPathwaysAccessor = new PathAccessor("Pathway/pathwayComponent:Pathway");
+		//TODO
+	}
+
+	/**
+	 * Produces a summary
+	 * @param model input Model
+	 * @param out output file
+	 * @throws IOException when an I/O exception occurs
+     */
+	public static void summarize(Model model, PrintStream out) throws IOException {
         HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
 		final SimpleEditorMap em = SimpleEditorMap.get(model.getLevel());
