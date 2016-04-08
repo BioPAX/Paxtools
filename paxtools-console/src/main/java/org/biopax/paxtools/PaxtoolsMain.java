@@ -1,5 +1,6 @@
 package org.biopax.paxtools;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.mutable.MutableInt;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
@@ -541,25 +542,284 @@ public class PaxtoolsMain {
         return io.convertFromOWL(getInputStream(fName));
     }
 
-	//----- Section: Printing summary -------------------------------------------------------------|
-	
-	public static void summarize(String[] argv) throws IOException {
 
+	public static void summarize(String[] argv) throws IOException {
 		log.debug("Importing the input model from " + argv[1] + "...");
-		Model model = getModel(io, argv[1]);
-		PrintStream out = argv.length > 2 ? new PrintStream(argv[2]) : System.out;
-		log.debug("Analyzing...");
-		summarize(model, out);
-		pathwaysInfo(model, out);
+		final Model model = getModel(io, argv[1]);
+		final PrintStream out = new PrintStream(argv[2]);
+		//process options and execute corresp. summary analyses -
+		if(argv.length>3) {
+			for(int i=3; i < argv.length; i++) {
+				if(argv[i].equals("--model")) {
+					summarize(model, out);
+				} else if(argv[i].equals("--pathways")) {
+					summarizePathways(model, out);
+				} else if(argv[i].equals("--hgnc-ids")) {
+					summarizeHgncIds(model, out);
+				} else if(argv[i].equals("--uniprot-ids")) {
+					summarizeUniprotIds(model, out);
+				} else if(argv[i].equals("--chebi-ids")) {
+					summarizeChebiIds(model, out);
+				}
+			}
+		} else {
+			summarize(model, out);
+		}
+		out.close();
 	}
 
-	private static void pathwaysInfo(Model model, PrintStream out) throws IOException {
+	private static void summarizePathways(Model model, PrintStream out) throws IOException {
 		final PathAccessor directChildPathwaysAccessor = new PathAccessor("Pathway/pathwayComponent:Pathway");
-		//TODO
+		final PathAccessor pathwayComponentAccessor = new PathAccessor("Pathway/pathwayComponent");
+		final PathAccessor pathwayOrderStepProcessAccessor = new PathAccessor("Pathway/pathwayOrder/stepProcess");
+		//get all pathways sorted by name (or URI if no display name found)
+		Set<Pathway> pathways = new TreeSet<Pathway>(new Comparator<Pathway>() {
+			@Override
+			public int compare(Pathway o1, Pathway o2) {
+				return (o1.getDisplayName()!=null && o2.getDisplayName()!=null)
+					? o1.getDisplayName().compareTo(o2.getDisplayName())
+						: o1.getUri().compareTo(o2.getUri());
+			}
+		});
+		pathways.addAll(model.getObjects(Pathway.class));
+
+		//print column titles
+		out.println("\nPATHWAY_URI\tDISPLAY_NAME\tDIRECT_SUB_PATHWAY_URIS\tALL_SUB_PATHWAY_URIS");
+		for(Pathway pathway : pathways) {
+			StringBuilder sb = new StringBuilder();
+			//write URI and name
+			sb.append(pathway.getUri()).append('\t').append(pathway.getDisplayName()).append('\t');
+			//add direct sub-pathways
+			for(Object o : directChildPathwaysAccessor.getValueFromBean(pathway)) {
+				Pathway p = (Pathway) o;
+				sb.append(p.getUri()).append(";");
+			}
+			sb.append("\t");
+			//add all sub-pathways
+			Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
+			for(Pathway p : fetcher.fetch(pathway, Pathway.class)) {
+				sb.append(p.getUri()).append(";");
+			}
+			out.println(sb.toString());
+		}
+		// print pathway names, etc. after a blank line and title line
+		out.println("\nPATHWAY_URI\tDATASOURCE\tDISPLAY_NAME\tALL_NAMES" +
+				"\tNUM_DIRECT_COMPONENT_OR_STEP_PROCESSES");
+		for(Pathway pathway : pathways) {
+			final int size = pathwayComponentAccessor.getValueFromBean(pathway).size()
+					+ pathwayOrderStepProcessAccessor.getValueFromBean(pathway).size();
+			//pathways in PC2 normally has only one dataSource (Provenance)
+			String datasource = pathway.getDataSource().iterator().next().getDisplayName();
+			StringBuilder sb = new StringBuilder();
+			sb.append(pathway.getUri()).append('\t')
+				.append(datasource).append('\t')
+				.append(pathway.getDisplayName()).append('\t');
+			//all names
+			for(String name : pathway.getName())
+				sb.append('"').append(name).append('"').append(";");
+			//"size"
+			sb.append('\t').append(size);
+			out.println(sb.toString());
+		}
+	}
+
+	private static void summarizeHgncIds(Model model, PrintStream out) {
+		boolean verbose = true; //TODO use another parameter here
+
+		//Analyse SERs (Protein-, Dna* and Rna* references) - HGNC usage, coverage,..
+		//Calc. the no. non-generic ERs having >1 different HGNC symbols and IDs, or none, etc.
+		Set<SequenceEntityReference> haveMultipleHgnc = new HashSet<SequenceEntityReference>();
+		Map<Provenance,MutableInt> numErs = new HashMap<Provenance,MutableInt>();
+		Map<Provenance,MutableInt> numProblematicErs = new HashMap<Provenance,MutableInt>();
+		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf/dataSource", model.getLevel());
+		Set<String> problemErs = new TreeSet<String>();
+		for(EntityReference ser : model.getObjects(EntityReference.class)) {
+			//skip if it's a SMR or generic
+			if(ser instanceof SmallMoleculeReference || !ser.getMemberEntityReference().isEmpty())
+				continue;
+
+			Set<String> hgncSymbols = new HashSet<String>();
+			Set<String> hgncIds = new HashSet<String>();
+
+			if(ser.getUri().startsWith("http://identifiers.org/hgnc")) {
+				String s = ser.getUri().substring(ser.getUri().lastIndexOf("/")+1);
+				if(s.startsWith("HGNC:"))
+					hgncIds.add(s);
+				else
+					hgncSymbols.add(s);
+			}
+
+			for(Xref x : ser.getXref()) {
+				if(x instanceof PublicationXref || x.getDb()==null || x.getId()==null)
+					continue; //skip
+
+				if(x.getDb().toLowerCase().startsWith("hgnc") && !x.getId().toLowerCase().startsWith("hgnc:")) {
+					hgncSymbols.add(x.getId().toLowerCase());
+				}
+				else if(x.getDb().toLowerCase().startsWith("hgnc") && x.getId().toLowerCase().startsWith("hgnc:")) {
+					hgncIds.add(x.getId().toLowerCase());
+				}
+			}
+
+			if(hgncIds.size()>1 || hgncSymbols.size()>1)
+				haveMultipleHgnc.add((SequenceEntityReference) ser);
+
+			//increment "no hgnc" and "total" counts by data source
+			for(Object provenance : pa.getValueFromBean(ser)) {
+				if (hgncSymbols.isEmpty() && hgncIds.isEmpty()) {
+					if (verbose) {
+						problemErs.add(String.format("%s\t%s\t%s",
+								((Provenance) provenance).getDisplayName(), ser.getDisplayName(), ser.getUri()));
+					}
+
+					MutableInt n = numProblematicErs.get(provenance);
+					if (n == null)
+						numProblematicErs.put((Provenance) provenance, new MutableInt(1));
+					else
+						n.increment();
+				}
+
+				MutableInt tot = numErs.get(provenance);
+				if (tot == null)
+					numErs.put((Provenance) provenance, new MutableInt(1));
+				else
+					tot.increment();
+			}
+		}
+		//print results
+		if(verbose) {
+			out.println("SequenceEntityReferences (not generics) without any HGNC Symbol:");
+			for(String line : problemErs) out.println(line);
+		}
+		out.println("The number of SERs (not generic) having more than one HGNC Symbols: " + haveMultipleHgnc.size());
+		out.println("\nNumber of SequenceEntityReferences (not generics) without any HGNC ID, by data source:");
+		int totalPrs = 0;
+		int numPrsNoHgnc = 0;
+		for(Provenance ds : numProblematicErs.keySet()) {
+			int n = numProblematicErs.get(ds).intValue();
+			numPrsNoHgnc += n;
+			int t = numErs.get(ds).intValue();
+			totalPrs += t;
+			out.println(String.format("%s\t\t%d\t(%3.1f%%)", ds.getUri(), n, ((float)n)/t*100));
+		}
+		out.println(String.format("Total\t\t%d\t(%3.1f%%)", numPrsNoHgnc, ((float)numPrsNoHgnc)/totalPrs*100));
+	}
+
+	private static void summarizeUniprotIds(Model model, PrintStream out) {
+		boolean verbose = true; //TODO use another parameter here
+
+		//Analyse PRs - UniProt ID coverage,..
+		Map<Provenance,MutableInt> numErs = new HashMap<Provenance,MutableInt>();
+		Map<Provenance,MutableInt> numProblematicErs = new HashMap<Provenance,MutableInt>();
+		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf:Protein/dataSource", model.getLevel());
+		Set<String> problemErs = new TreeSet<String>();
+		for(ProteinReference pr : model.getObjects(ProteinReference.class)) {
+			//skip a generic one
+			if(!pr.getMemberEntityReference().isEmpty())
+				continue;
+
+			for(Object provenance : pa.getValueFromBean(pr)) {
+				if(!pr.getUri().startsWith("http://identifiers.org/uniprot")
+						&& !pr.getXref().toString().toLowerCase().contains("uniprot")) {
+
+					if (verbose) {
+						problemErs.add(String.format("%s\t%s\t%s",
+								((Provenance) provenance).getDisplayName(), pr.getDisplayName(), pr.getUri()));
+					}
+
+					MutableInt n = numProblematicErs.get(provenance);
+					if (n == null)
+						numProblematicErs.put((Provenance) provenance, new MutableInt(1));
+					else
+						n.increment();
+				}
+
+				//increment total PRs per datasource
+				MutableInt tot = numErs.get(provenance);
+				if(tot == null)
+					numErs.put((Provenance)provenance, new MutableInt(1));
+				else
+					tot.increment();
+			}
+		}
+
+		//print results
+		if(verbose) {
+			out.println("\nProteinReferences (not generics) without any UniProt AC:");
+			for(String line : problemErs) out.println(line);
+		}
+		out.println("\nNumber of ProteinReferences (not generics) without any UniProt AC, by data source:");
+		int totalErs = 0;
+		int problematicErs = 0;
+		for(Provenance ds : numProblematicErs.keySet()) {
+			int n = numProblematicErs.get(ds).intValue();
+			problematicErs += n;
+			int t = numErs.get(ds).intValue();
+			totalErs += t;
+			out.println(String.format("%s\t\t%d\t(%3.1f%%)", ds.getUri(), n, ((float)n)/t*100));
+		}
+		out.println(String.format("Total\t\t%d\t(%3.1f%%)", problematicErs, ((float)problematicErs)/totalErs*100));
+	}
+
+	private static void summarizeChebiIds(Model model, PrintStream out) {
+		boolean verbose = true; //TODO use another parameter here
+		//Analyse SMRs - ChEBI usage, coverage,..
+		Map<Provenance,MutableInt> numErs = new HashMap<Provenance,MutableInt>();
+		Map<Provenance,MutableInt> numProblematicErs = new HashMap<Provenance,MutableInt>();
+		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf:SmallMolecule/dataSource", model.getLevel());
+		Set<String> problemErs = new TreeSet<String>();
+		for(SmallMoleculeReference smr : model.getObjects(SmallMoleculeReference.class)) {
+			//skip a generic SMR
+			if(!smr.getMemberEntityReference().isEmpty())
+				continue;
+
+			for(Object provenance : pa.getValueFromBean(smr)) {
+				if(!smr.getUri().startsWith("http://identifiers.org/chebi/CHEBI:")
+						&& !smr.getXref().toString().contains("CHEBI:")) {
+
+					if (verbose) {
+						problemErs.add(String.format("%s\t%s\t%s",
+								((Provenance) provenance).getDisplayName(), smr.getDisplayName(), smr.getUri()));
+					}
+
+					MutableInt n = numProblematicErs.get(provenance);
+					if (n == null)
+						numProblematicErs.put((Provenance) provenance, new MutableInt(1));
+					else
+						n.increment();
+				}
+
+				//increment total SMRs per datasource
+				MutableInt tot = numErs.get(provenance);
+				if(tot == null)
+					numErs.put((Provenance)provenance, new MutableInt(1));
+				else
+					tot.increment();
+			}
+		}
+
+		//print results
+		if(verbose) {
+			out.println("\nSmallMoleculeReferences (not generics) without any ChEBI ID:");
+			for(String line : problemErs) out.println(line);
+		}
+		out.println("\nNumber of SmallMoleculeReferences (not generics) without any ChEBI ID, by data source:");
+		int totalSmrs = 0;
+		int numSmrsNoChebi = 0;
+		for(Provenance ds : numProblematicErs.keySet()) {
+			int n = numProblematicErs.get(ds).intValue();
+			numSmrsNoChebi += n;
+			int t = numErs.get(ds).intValue();
+			totalSmrs += t;
+			out.println(String.format("%s\t\t%d\t(%3.1f%%)", ds.getUri(), n, ((float)n)/t*100));
+		}
+		out.println(String.format("Total\t\t%d\t(%3.1f%%)", numSmrsNoChebi, ((float)numSmrsNoChebi)/totalSmrs*100));
 	}
 
 	/**
-	 * Produces a summary
+	 * A summary of BioPAX class and property values in the model
+	 * (experimental; for troubleshooting and debugging).
+	 *
 	 * @param model input Model
 	 * @param out output file
 	 * @throws IOException when an I/O exception occurs
@@ -906,8 +1166,15 @@ public class PaxtoolsMain {
         getNeighbors("<input> <id1,id2,..> <output>\n" +
         		"\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)")
 		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
-        summarize("<input> [<output>]\n" +
-        		"\t- prints a summary of the model and some statistics to the output file (if not provided - to stdout)")
+        summarize("<input> <output> [--model] [--pathways] [--hgnc-ids] [--uniprot-ids] [--chebi-ids]\n" +
+        		"\t- (experimental/troubleshooting) command to summarize the input BioPAX model;\n " +
+				"\truns one or several selected analyses and writes to the output text file;\n " +
+				"\t'--model' - the default mode, is about BioPAX classes, properties and values;\n " +
+				"\t'--pathways' - pathways and their sub-pathways summary;\n " +
+				"\t'--hgnc-ids' - about HGNC IDs/Symbols in the sequence entity references;\n " +
+				"\t'--uniprot-ids' - about UniProt IDs in the protein references;\n " +
+				"\t'--chebi-ids' - about ChEBI IDs in the small molecule references;\n " +
+				"\tthe options' order defines the results output order.")
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
 		blacklist("<input> <output>\n" +
 		        "\t- creates a blacklist of ubiquitous small molecules, like ATP, \n"
