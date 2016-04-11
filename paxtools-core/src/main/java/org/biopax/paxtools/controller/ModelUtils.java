@@ -1139,10 +1139,11 @@ public final class ModelUtils
 	}
 
 	/**
-	 * Merges equivalent interactions.
-	 * 
-	 * Note (warning): please check if the result is desirable; 
-	 * the result of the merging very much depends on actual pathway data quality...
+	 * Merges equivalent interactions (currently - Conversions only).
+	 * TODO: shall we rename to mergeEquivalentConversions instead (this is what it does)?
+	 *
+	 * Warning: experimental; - check if the result is desirable;
+	 * 			the result very much depends on actual pathway data quality...
 	 * 
 	 * @param model to edit/update
 	 */
@@ -1154,8 +1155,9 @@ public final class ModelUtils
 		{
 			if (group.size() > 1)
 			{
-				HashSet<Conversion> tobeRemoved = new HashSet<Conversion>();
-				Interaction primus = null;
+				HashMap<Conversion,Conversion> subs = new HashMap<Conversion, Conversion>();//to replace in the model
+//				HashSet<Conversion> tobeRemoved = new HashSet<Conversion>();
+				Conversion primus = null;
 				for (Conversion conversion : group)
 				{
 					if (primus == null)
@@ -1164,29 +1166,35 @@ public final class ModelUtils
 					} else
 					{
 						copySimplePointers(model, conversion, primus);
-						Set<Control> controlledOf = conversion.getControlledOf();
-						for (Control control : controlledOf)
-						{
-							if (!control.getControlled().contains(primus))
-							{
-								control.addControlled(primus);
-							}
-						}
-						Set<Pathway> owners = conversion.getPathwayComponentOf();
-						for (Pathway pathway : owners)
-						{
-							if(!pathway.getPathwayComponent().contains(primus))
-							{
-								pathway.addPathwayComponent(primus);
-							}
+						subs.put(conversion, primus);
 
-						}
-						tobeRemoved.add(conversion);
+//						Set<Control> controlledOf = conversion.getControlledOf();
+//						for (Control control : controlledOf)
+//						{
+//							if (!control.getControlled().contains(primus))
+//							{
+//								control.addControlled(primus);
+//							}
+//						}
+//						Set<Pathway> owners = conversion.getPathwayComponentOf();
+//						for (Pathway pathway : owners)
+//						{
+//							if(!pathway.getPathwayComponent().contains(primus))
+//							{
+//								pathway.addPathwayComponent(primus);
+//							}
+//
+//						}
+//
+//						tobeRemoved.add(conversion);
 					}
 				}
-				for (Conversion conversion : tobeRemoved)
+
+				ModelUtils.replace(model, subs);
+
+				for (Conversion conversion : subs.keySet())
 				{
-					cleanAllInverse(conversion);
+//					cleanAllInverse(conversion);
 					model.remove(conversion);
 				}
 			}
