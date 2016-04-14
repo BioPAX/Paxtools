@@ -2,6 +2,7 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +125,8 @@ public class SimpleMerger
 			 * be soon replaced with the target's, same id, one 
 			 * in all parent objects)
 			 */
-			if (!target.containsID(bpe.getUri()))
+			final String uri = bpe.getUri();
+			if (!target.containsID(uri))
 			{
 				/*
 				 * Warning: other than the default (ModelImpl) target Model 
@@ -138,14 +140,20 @@ public class SimpleMerger
 				 * one)
 				 */
 				target.add(bpe);
-			} 
+			}
+			else if(bpe.getModelInterface() != target.getByID(uri).getModelInterface()) {
+				throw new BioPaxIOException(String.format(
+					"Different class BioPAX objects: %s (to merge) and %s (target model), have the same URI:%s",
+						bpe.getModelInterface().getSimpleName(),
+							target.getByID(uri).getModelInterface().getSimpleName(), uri));
+			}
 		}
 
 		// Finally, update object references
 		for (BioPAXElement bpe : sources) {
 			updateObjectFields(bpe, target);
 		}
-		
+
 	}
 
 
@@ -195,22 +203,21 @@ public class SimpleMerger
 					}
 				} else //source is normally to be entirely replaced, but if it passes the filter,
 					if(mergeObjPropOf!=null && mergeObjPropOf.filter(source)
-						&& editor.isMultipleCardinality()) //and the prop. is multi-cardinality,
+						&& editor.isMultipleCardinality()) // and the prop. is multi-cardinality,
 				{
-					//then we want to copy some values
+					// - then we want to copy some values
 					for (BioPAXElement value : values) {
 						mergeToTarget(keep, target, editor, value);
 					}
 				}
 
-			} else { //primitive or enum property
-				//primitive, enum, or string property editor (e.g., comment, name)
-				if (mergeObjPropOf != null && mergeObjPropOf.filter(source) && editor.isMultipleCardinality()) {
-					Set<Object> values = new HashSet<Object>(
-							(Set<Object>) editor.getValueFromBean(source));
-					for (Object value : values) {
-						mergeToTarget(keep, target, editor, value);
-					}
+			}
+			else // - primitive, enum, or string property editor (e.g., comment, name), and -
+				if (mergeObjPropOf != null && mergeObjPropOf.filter(source) && editor.isMultipleCardinality())
+			{
+				Set<Object> values = new HashSet<Object>((Set<Object>) editor.getValueFromBean(source));
+				for (Object value : values) {
+					mergeToTarget(keep, target, editor, value);
 				}
 			}
 		}
