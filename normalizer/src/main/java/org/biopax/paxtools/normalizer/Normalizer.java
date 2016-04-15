@@ -34,13 +34,12 @@ public final class Normalizer {
 	private boolean fixDisplayName;
 	private String xmlBase;
 	
-	
 	// Normalizer will generate URIs using a strategy specified by the system property
 	// (the default is biopax.normalizer.uri.strategy=md5, to generate 32-byte digest hex string for xrefs's uris)
 	public static final String PROPERTY_NORMALIZER_URI_STRATEGY = "biopax.normalizer.uri.strategy";
 	public static final String VALUE_NORMALIZER_URI_STRATEGY_SIMPLE = "simple";
 	public static final String VALUE_NORMALIZER_URI_STRATEGY_MD5 = "md5"; //default strategy
-	
+	public static final String VALUE_NORMALIZER_URI_STRATEGY_BASE62 = "base62";
 	
 	/**
 	 * Constructor
@@ -215,8 +214,7 @@ public final class Normalizer {
 		String dbName, final String idPart, Class<? extends BioPAXElement> type)
 	{
 		if(type == null || (dbName == null && idPart == null))
-			throw new IllegalArgumentException("'Either type' is null, " +
-					"or both dbName and idPart are nulls.");		
+			throw new IllegalArgumentException("'Either type' is null, or both dbName and idPart are nulls.");
 			
 		// try to find a standard URI, if exists, for a publication xref, 
 		// or at least a standard name:
@@ -236,7 +234,8 @@ public final class Normalizer {
 					return MiriamLink.getIdentifiersOrgURI(dbName, idPart);
 				}
 			} catch (IllegalArgumentException e) {
-				log.debug("uri, not (MIRIAM) standard db/id: " + dbName + "/" + idPart + ". " + e.getMessage());
+				log.info(String.format("uri(for a %s): db:%s, id:%s are not standard; %s)",
+						type.getSimpleName(), dbName, idPart, e.getMessage()));
 			}
 		}
 
@@ -254,13 +253,19 @@ public final class Normalizer {
 		
 		String localPart = sb.toString();
 		String strategy = System.getProperty(PROPERTY_NORMALIZER_URI_STRATEGY, VALUE_NORMALIZER_URI_STRATEGY_MD5);
-		if(VALUE_NORMALIZER_URI_STRATEGY_SIMPLE.equals(strategy) 
-				//for xrefs, always use the simple URI strategy (makes them human-readable)
-				|| Xref.class.isAssignableFrom(type))
+		if(VALUE_NORMALIZER_URI_STRATEGY_SIMPLE.equals(strategy) || Xref.class.isAssignableFrom(type))
+		//i.e., for xrefs, always use the simple URI strategy (makes them human-readable)
 		{
 			//simply replace "unsafe" symbols with underscore (some uri clashes might be possible but rare...)
 			localPart = localPart.replaceAll("[^-\\w]", "_");
-		} else {
+		}
+		else if(VALUE_NORMALIZER_URI_STRATEGY_BASE62.equals(strategy))
+		{
+			//TODO
+			throw new IllegalAccessError("uri: BASE62 strategy is not implemented (TODO)");
+		}
+		else
+		{
 			//replace the local part with its md5 sum string (32-byte)
 			localPart = ModelUtils.md5hex(localPart);
 		}
