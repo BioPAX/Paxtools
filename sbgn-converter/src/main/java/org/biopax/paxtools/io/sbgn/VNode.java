@@ -62,6 +62,7 @@ public class VNode implements Updatable
     private static final  int OFFSET_BTW_INFO_GLYPHS = 5;
     private static final  int MAX_INFO_BOX_NUMBER = 4;
     private static final  int MAX_MACROMOLECULE_HEIGHT_WITH_INFO_BOXES = 25;
+    private static final  int NON_SUPPORTED_GLYPH_OFFSET = 2;
 
     /*Glyph Size Constants for layout*/
     private static Bound  SOURCE_AND_SINK_BOUND;
@@ -89,7 +90,7 @@ public class VNode implements Updatable
         LOGICAL_OPERATOR_BOUND = new Bound(15,15);
         PROCESS_NODES_BOUND = new Bound(15,15);
 
-        MACROMOLECULE_BOUND = new Bound(48,20);
+        MACROMOLECULE_BOUND = new Bound(48,25);
         NUCLEIC_ACID_FEATURE_BOUND = new Bound(50,20);
 
         SIMPLE_CHEMICAL_BOUND = new Bound(48,20);
@@ -320,7 +321,6 @@ public class VNode implements Updatable
      * */
     public void updateSizeForStateAndInfo()
     {
-
         // Find all state and info glyphs
         for (Glyph glyph : this.glyph.getGlyph())
         {
@@ -368,7 +368,7 @@ public class VNode implements Updatable
         int numOfStates = stateGlyphs.size();
         int numOfInfos = infoGlyphs.size();
 
-        //Adjust heights so that inf obox offsets are taken into account in layout.
+        //Adjust heights so that info box offsets are taken into account in layout.
         if(numOfStates > 0 || numOfInfos > 0)
             this.glyph.getBbox().setH(this.glyph.getBbox().getH()-MAX_STATE_AND_INFO_HEIGHT/2);
 
@@ -378,50 +378,104 @@ public class VNode implements Updatable
         float parentWidth = this.glyph.getBbox().getW();
         String parentID = this.glyph.getId();
 
+        int maxNumberOfStates =   stateGlyphs.size();
+        int maxNumberOfInfos =  infoGlyphs.size();
+        if (maxNumberOfInfos + maxNumberOfStates > 4)
+        {
+            if(maxNumberOfInfos < 2 || maxNumberOfStates < 2)
+            {
+                int minimum = Math.min(maxNumberOfInfos,maxNumberOfStates);
+
+                if (maxNumberOfInfos - minimum == 0)
+                {
+                    maxNumberOfInfos = minimum;
+                    maxNumberOfStates = maxNumberOfInfos - maxNumberOfInfos;
+                }
+                else
+                {
+                    maxNumberOfStates = minimum;
+                    maxNumberOfInfos = maxNumberOfStates - maxNumberOfStates;
+                }
+            }
+        }
+        //else normal placement 
+        
+        //Some variables for placement of state and info boxes
+        int totalNumberOfStateAndInfos = maxNumberOfInfos+maxNumberOfStates;
+        Glyph tmpglyph = null;
+        int infoIndex = 0;
+        int stateIndex = 0;
         int usedWidth = 0;
-        for (int i = 0; i < numOfStates; i++)
+        int additionalStateInfoOffset = 0;
+        boolean placeTopFlag = true;
+
+        //Place state and info glyphs
+        for (int i = 0; i < totalNumberOfStateAndInfos; i++)
         {
-            Glyph tmpglyph = stateGlyphs.get(i);
-            if(numOfStates == 1)
+            int offsetMultiplier = (i+1)%2 == 0 ? 2 : 1;
+
+            if (maxNumberOfInfos - i > 0 && infoGlyphs.size() > 0)
+                tmpglyph =  infoGlyphs.get(infoIndex++);
+            else if (stateGlyphs.size() > 0)
+                tmpglyph = stateGlyphs.get(stateIndex++);
+
+            //Top placement
+            if (placeTopFlag)
             {
-                tmpglyph.getBbox().setX(parent_x_up+parentWidth/2-tmpglyph.getBbox().getW()/2);
-                tmpglyph.getBbox().setY(parent_y_bot);
-                //set dummy id
-                tmpglyph.setId(parentID + ".state." + (i+1) );
-                break;
+                if( totalNumberOfStateAndInfos == 1)
+                {
+                    tmpglyph.getBbox().setX(parent_x_up+parentWidth/2-tmpglyph.getBbox().getW()/2);
+                    tmpglyph.getBbox().setY(parent_y_up - additionalStateInfoOffset);
+                    //set dummy id
+                    tmpglyph.setId(parentID + ".info." + (i+1) );
+                }
+                else
+                {
+                    //set dummy id
+                    tmpglyph.setId(parentID + ".info." + (i+1) );
+
+                    tmpglyph.getBbox().setX(parent_x_up+ offsetMultiplier * OFFSET_BTW_INFO_GLYPHS + usedWidth);
+                    tmpglyph.getBbox().setY(parent_y_up - additionalStateInfoOffset);
+                }
+
+                usedWidth += tmpglyph.getBbox().getW();
+            }
+            //bottom placement
+            else
+            {
+                if((i == totalNumberOfStateAndInfos-1) && (totalNumberOfStateAndInfos == 3))
+                {
+                    tmpglyph.getBbox().setX(parent_x_up+parentWidth/2-tmpglyph.getBbox().getW()/2);
+                    tmpglyph.getBbox().setY(parent_y_bot + additionalStateInfoOffset);
+                    //set dummy id
+                    tmpglyph.setId(parentID + ".state." + (i+1) );
+                }
+                else
+                {
+                    //set dummy id
+                    tmpglyph.setId(parentID + ".state." + (i+1) );
+                    tmpglyph.getBbox().setX(parent_x_up+ offsetMultiplier *OFFSET_BTW_INFO_GLYPHS + usedWidth);
+                    tmpglyph.getBbox().setY(parent_y_bot + additionalStateInfoOffset);
+                }
+
+                usedWidth += tmpglyph.getBbox().getW();
+
             }
 
-            //set dummy id
-            tmpglyph.setId(parentID + ".state." + (i+1) );
-
-            tmpglyph.getBbox().setX(parent_x_up+(i+1)*OFFSET_BTW_INFO_GLYPHS + usedWidth);
-            tmpglyph.getBbox().setY(parent_y_bot);
-
-            usedWidth += tmpglyph.getBbox().getW();
-
-        }
-
-        usedWidth = 0;
-        for (int i = 0; i < numOfInfos; i++)
-        {
-            Glyph tmpglyph = infoGlyphs.get(i);
-            if(numOfInfos == 1)
+            // At most 2 state and info glyph is placed on top
+            // else place bottom
+            if ((i+1)%2 == 0)
             {
-                tmpglyph.getBbox().setX(parent_x_up+parentWidth/2-tmpglyph.getBbox().getW()/2);
-                tmpglyph.getBbox().setY(parent_y_up);
-                //set dummy id
-                tmpglyph.setId(parentID + ".info." + (i+1) );
-                break;
+                placeTopFlag = !placeTopFlag;
+                usedWidth = 0;
             }
 
-            //set dummy id
-            tmpglyph.setId(parentID + ".info." + (i+1) );
-
-            tmpglyph.getBbox().setX(parent_x_up+(i+1)*OFFSET_BTW_INFO_GLYPHS + usedWidth);
-            tmpglyph.getBbox().setY(parent_y_up);
-
-            usedWidth += tmpglyph.getBbox().getW();
+            //More than 4 state and info glyps are placed with an offset on top of previously placed state and info boxes
+            //This can be easily filtered out on the application side where the resultant graphs of this layout is used.
+            if ((i+1)%4 == 0 )
+                additionalStateInfoOffset += NON_SUPPORTED_GLYPH_OFFSET;
         }
+
     }
 
     /**
