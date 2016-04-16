@@ -1273,6 +1273,44 @@ public final class ModelUtils
 		}
 	}
 
+
+	// base62 encoding/decoding for (not too long) URI shortening
+	private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	private static final int BASE = ALPHABET.length();
+
+	public static String encodeBase62(String str) {
+		// encode to base10 (long) first -
+		char[] chars = new StringBuilder(str).reverse().toString().toCharArray();
+		long n = 0;
+		for (int i = chars.length - 1; i >= 0; i--) {
+			n += ALPHABET.indexOf(chars[i]) * Math.pow(BASE, i);
+		}
+
+		// convert the long number to a base62 short string
+		StringBuilder sb = new StringBuilder("");
+		while (n > 0) {
+			int rem = (int)(n % BASE);
+			sb.append(ALPHABET.charAt(rem));
+			n = n / BASE;
+		}
+
+		return sb.reverse().toString();
+	}
+
+	/**
+	 * Creates a short URI from the URI,
+	 * given the xml:base. One have to
+	 * check the new URI is unique before
+	 * using in a model (if not - e.g., add some
+	 * suffix to the xmlBase parameter and try again).
+	 *
+	 * @param xmlbase
+	 * @param uri
+     * @return a short URI
+     */
+	public static String shortenUri(String xmlbase, String uri) {
+		return xmlbase + encodeBase62(uri);
+	}
 }
 
 

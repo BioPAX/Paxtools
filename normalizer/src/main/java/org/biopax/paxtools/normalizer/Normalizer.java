@@ -39,7 +39,6 @@ public final class Normalizer {
 	public static final String PROPERTY_NORMALIZER_URI_STRATEGY = "biopax.normalizer.uri.strategy";
 	public static final String VALUE_NORMALIZER_URI_STRATEGY_SIMPLE = "simple";
 	public static final String VALUE_NORMALIZER_URI_STRATEGY_MD5 = "md5"; //default strategy
-	public static final String VALUE_NORMALIZER_URI_STRATEGY_BASE62 = "base62";
 	
 	/**
 	 * Constructor
@@ -258,11 +257,6 @@ public final class Normalizer {
 		{
 			//simply replace "unsafe" symbols with underscore (some uri clashes might be possible but rare...)
 			localPart = localPart.replaceAll("[^-\\w]", "_");
-		}
-		else if(VALUE_NORMALIZER_URI_STRATEGY_BASE62.equals(strategy))
-		{
-			//TODO
-			throw new IllegalAccessError("uri: BASE62 strategy is not implemented (TODO)");
 		}
 		else
 		{
@@ -794,7 +788,7 @@ public final class Normalizer {
 		private void map(BioPAXElement bpe, BioPAXElement newBpe) {
 			subs.put(bpe, newBpe);
 			uriToSub.put(newBpe.getUri(), newBpe);
-		}	
+		}
 	}
 	
 }

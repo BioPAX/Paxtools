@@ -9,6 +9,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -302,5 +303,15 @@ public class ModelUtilsTest {
 		//merge interactions and test it
 		ModelUtils.mergeEquivalentInteractions(model);
 		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
+	}
+
+	@Test
+	public void testBase62() {
+		final String longUri = "http://www.ctdbase.org/#process_RXN_%5BCFTR+protein+inhibits+the+reaction+%5B%5B" +
+				"Colforsin+co-treated+with+Genistein%5D+results+in+increased+transport+of+Iodides%5D%5D";
+		String shortStr = ModelUtils.encodeBase62(longUri);
+		Assert.assertEquals("k9viXaDIiOW", shortStr);
+		String shortUri = ModelUtils.shortenUri("http://www.ctdbase.org/", longUri);
+		Assert.assertEquals("http://www.ctdbase.org/k9viXaDIiOW", shortUri);
 	}
 }
