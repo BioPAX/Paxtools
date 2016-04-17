@@ -2,7 +2,6 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,10 +141,11 @@ public class SimpleMerger
 				target.add(bpe);
 			}
 			else if(bpe.getModelInterface() != target.getByID(uri).getModelInterface()) {
-				throw new BioPaxIOException(String.format(
-					"Different class BioPAX objects: %s (to merge) and %s (target model), have the same URI:%s",
-						bpe.getModelInterface().getSimpleName(),
-							target.getByID(uri).getModelInterface().getSimpleName(), uri));
+				// source object/model(s) have to be fixed (URI conflicts resolved) before merging by URI
+				throw new RuntimeException(String.format(
+					"URI:%s of %s (to merge) is also URI of %s in target model (different class)",
+						uri, bpe.getModelInterface().getSimpleName(),
+							target.getByID(uri).getModelInterface().getSimpleName()));
 			}
 		}
 

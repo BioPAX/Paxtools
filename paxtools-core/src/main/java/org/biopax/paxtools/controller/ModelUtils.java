@@ -1,5 +1,6 @@
 package org.biopax.paxtools.controller;
 
+import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -1310,6 +1312,40 @@ public final class ModelUtils
      */
 	public static String shortenUri(String xmlbase, String uri) {
 		return xmlbase + encodeBase62(uri);
+	}
+
+
+	/**
+	 * Replaces the URI of a BioPAX object in the Model using java reflection.
+	 * If the element also belongs to other BioPAX models, those will become inconsistent
+	 * unless this method is called for each such model.
+	 *
+	 * Warnings:
+	 *  - one should not normally use this method at all;
+	 *  - but if you do, then don't use a URI of another object from the same model.
+	 *
+	 * @param model model (can be null; if the object in fact belongs to a model, the model will be inconsistent)
+	 * @param el biopax object
+	 * @param newUri URI - not null/empty URI
+	 */
+	public static  void updateUri(Model model, BioPAXElement el, String newUri) {
+		if(newUri == null || newUri.isEmpty())
+			throw new IllegalArgumentException("New URI is null or empty.");
+
+		if(model != null)
+			model.remove(el);
+
+		try {
+			Method m = BioPAXElementImpl.class.getDeclaredMethod("setUri", String.class);
+			m.setAccessible(true);
+			m.invoke(el, newUri);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+		if(model != null)
+			model.add(el);
 	}
 }
 
