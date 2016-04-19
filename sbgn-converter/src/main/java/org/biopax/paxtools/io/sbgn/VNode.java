@@ -363,8 +363,7 @@ public class VNode implements Updatable
     /**
      * Places state and info glyphs of this node
      * */
-    public void placeStateAndInfoGlyphs()
-    {
+    public void placeStateAndInfoGlyphs() {
         int numOfStates = stateGlyphs.size();
         int numOfInfos = infoGlyphs.size();
 
@@ -389,12 +388,12 @@ public class VNode implements Updatable
                 if (maxNumberOfInfos - minimum == 0)
                 {
                     maxNumberOfInfos = minimum;
-                    maxNumberOfStates = maxNumberOfInfos - maxNumberOfInfos;
+                    maxNumberOfStates = maxNumberOfStates - maxNumberOfInfos;
                 }
                 else
                 {
                     maxNumberOfStates = minimum;
-                    maxNumberOfInfos = maxNumberOfStates - maxNumberOfStates;
+                    maxNumberOfInfos = maxNumberOfInfos - maxNumberOfStates;
                 }
             }
         }
