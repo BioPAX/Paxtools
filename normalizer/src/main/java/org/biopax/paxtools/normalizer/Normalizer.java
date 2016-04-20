@@ -520,7 +520,7 @@ public final class Normalizer {
 						&& idPart.matches("^\\d+$")) //- is positive integer id
 					? uri(xmlBase, uref.getDb(), idPart, BioSource.class)
 						: "http://identifiers.org/taxonomy/" + idPart;
-
+					// the latter is intentionally invalid identifiers.org/taxonomy URI - good (and important) for merging
 				map.put(bs, uri);
 
 			} else 
