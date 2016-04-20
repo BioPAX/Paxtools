@@ -91,7 +91,7 @@ public class VNode implements Updatable
         PROCESS_NODES_BOUND = new Bound(15,15);
 
         MACROMOLECULE_BOUND = new Bound(48,25);
-        NUCLEIC_ACID_FEATURE_BOUND = new Bound(50,20);
+        NUCLEIC_ACID_FEATURE_BOUND = new Bound(50,25);
 
         SIMPLE_CHEMICAL_BOUND = new Bound(48,20);
         UNSPECIFIED_ENTITY_BOUND = new Bound(40,40);
@@ -342,21 +342,20 @@ public class VNode implements Updatable
         int numOfStates = stateGlyphs.size();
         int numOfInfos = infoGlyphs.size();
 
+
+
+        //set a maximum width to glyph according to state and info boxes
+        int totNumStateInfo = numOfInfos + numOfStates;
+        int multiplier = totNumStateInfo <= 2 ? 2 : 3;
+        float requiredWidth = multiplier * OFFSET_BTW_INFO_GLYPHS + (multiplier-1) * MAX_STATE_AND_INFO_WIDTH;
+
         //Adjust heights so that info box offsets are taken into account in layout.
-        if(numOfStates > 0 || numOfInfos > 0)
+        if(totNumStateInfo > 0 )
             this.glyph.getBbox().setH(this.glyph.getBbox().getH()+MAX_STATE_AND_INFO_HEIGHT/2);
 
-        //Half of the info boxes on the upper side, half on the bottom side.
-        numOfStates = (numOfStates >= MAX_INFO_BOX_NUMBER/2) ? MAX_INFO_BOX_NUMBER/2 : numOfStates;
-        numOfInfos  = (numOfInfos  >= MAX_INFO_BOX_NUMBER/2) ? MAX_INFO_BOX_NUMBER/2 : numOfInfos;
-
-        float requiredWidthForStates = (numOfStates+1) * OFFSET_BTW_INFO_GLYPHS + wholeWidthOfStates;
-        float requiredWidthForInfos =  (numOfInfos+1)  * OFFSET_BTW_INFO_GLYPHS + wholeWidthOfInfos;
-
-
-        if (this.glyph.getBbox().getW() < requiredWidthForStates || this.glyph.getBbox().getW() < requiredWidthForInfos )
+        if (this.glyph.getBbox().getW() < requiredWidth  )
         {
-            this.glyph.getBbox().setW(Math.max(requiredWidthForStates, requiredWidthForInfos));
+            this.glyph.getBbox().setW(requiredWidth);
         }
     }
 
@@ -366,6 +365,7 @@ public class VNode implements Updatable
     public void placeStateAndInfoGlyphs() {
         int numOfStates = stateGlyphs.size();
         int numOfInfos = infoGlyphs.size();
+
 
         //Adjust heights so that info box offsets are taken into account in layout.
         if(numOfStates > 0 || numOfInfos > 0)
@@ -404,14 +404,16 @@ public class VNode implements Updatable
         Glyph tmpglyph = null;
         int infoIndex = 0;
         int stateIndex = 0;
-        int usedWidth = 0;
+        int topUsedWidth = 0;
+        int bottomUsedWidth = 0;
         int additionalStateInfoOffset = 0;
         boolean placeTopFlag = true;
 
         //Place state and info glyphs
         for (int i = 0; i < totalNumberOfStateAndInfos; i++)
         {
-            int offsetMultiplier = (i+1)%2 == 0 ? 2 : 1;
+            //Adjust offsets between state and info boxes
+            int offsetMultiplier = i % 4 <= 1 ? 1 : 2;
 
             if (maxNumberOfInfos - i > 0 && infoGlyphs.size() > 0)
                 tmpglyph =  infoGlyphs.get(infoIndex++);
@@ -421,7 +423,7 @@ public class VNode implements Updatable
             //Top placement
             if (placeTopFlag)
             {
-                if( totalNumberOfStateAndInfos == 1)
+                if( totalNumberOfStateAndInfos <= 2 )
                 {
                     tmpglyph.getBbox().setX(parent_x_up+parentWidth/2-tmpglyph.getBbox().getW()/2);
                     tmpglyph.getBbox().setY(parent_y_up - additionalStateInfoOffset);
@@ -433,16 +435,16 @@ public class VNode implements Updatable
                     //set dummy id
                     tmpglyph.setId(parentID + ".info." + (i+1) );
 
-                    tmpglyph.getBbox().setX(parent_x_up+ offsetMultiplier * OFFSET_BTW_INFO_GLYPHS + usedWidth);
+                    tmpglyph.getBbox().setX(parent_x_up + offsetMultiplier * OFFSET_BTW_INFO_GLYPHS + topUsedWidth);
                     tmpglyph.getBbox().setY(parent_y_up - additionalStateInfoOffset);
                 }
 
-                usedWidth += tmpglyph.getBbox().getW();
+                topUsedWidth += tmpglyph.getBbox().getW();
             }
             //bottom placement
             else
             {
-                if((i == totalNumberOfStateAndInfos-1) && (totalNumberOfStateAndInfos == 3))
+                if(( i % 2 == 1 ) && ( totalNumberOfStateAndInfos == 2 || totalNumberOfStateAndInfos == 3 ))
                 {
                     tmpglyph.getBbox().setX(parent_x_up+parentWidth/2-tmpglyph.getBbox().getW()/2);
                     tmpglyph.getBbox().setY(parent_y_bot + additionalStateInfoOffset);
@@ -453,25 +455,19 @@ public class VNode implements Updatable
                 {
                     //set dummy id
                     tmpglyph.setId(parentID + ".state." + (i+1) );
-                    tmpglyph.getBbox().setX(parent_x_up+ offsetMultiplier *OFFSET_BTW_INFO_GLYPHS + usedWidth);
+                    tmpglyph.getBbox().setX(parent_x_up+ offsetMultiplier *OFFSET_BTW_INFO_GLYPHS + bottomUsedWidth);
                     tmpglyph.getBbox().setY(parent_y_bot + additionalStateInfoOffset);
                 }
 
-                usedWidth += tmpglyph.getBbox().getW();
-
+                bottomUsedWidth += tmpglyph.getBbox().getW();
             }
 
-            // At most 2 state and info glyph is placed on top
-            // else place bottom
-            if ((i+1)%2 == 0)
-            {
-                placeTopFlag = !placeTopFlag;
-                usedWidth = 0;
-            }
+            // Alternate between placing top and bottom
+            placeTopFlag = !placeTopFlag;
 
             //More than 4 state and info glyps are placed with an offset on top of previously placed state and info boxes
             //This can be easily filtered out on the application side where the resultant graphs of this layout is used.
-            if ((i+1)%4 == 0 )
+            if ( ( i + 1 ) % 4 == 0 )
                 additionalStateInfoOffset += NON_SUPPORTED_GLYPH_OFFSET;
         }
 
