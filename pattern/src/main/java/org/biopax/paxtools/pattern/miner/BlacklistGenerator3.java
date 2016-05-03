@@ -1,6 +1,7 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.RelType;
@@ -13,22 +14,21 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * This class generates a blacklist for the given model. It is important that the given model is the
- * very big integrated corpus. It won't work on tiny little model.
+ * This class generates a blacklist for the given model. It uses a list of known ubiquitous molecule names.
  *
  * @author Ozgun Babur
  */
 public class BlacklistGenerator3
 {
 	/**
-	 * Known ubiquitous small molecule names along with their
+	 * Known ubiquitous small molecule names along with their classification (ubiquitous as input, as output or both)
 	 */
 	private Map<String, RelType> knownNames;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param knownNamesIS a special file that lists the known names of ubiquitous unwanted chemicals
+	 * @param knownNamesIS a special file that lists the known names of ubiquitous unwanted-to-traverse chemicals
 	 */
 	public BlacklistGenerator3(InputStream knownNamesIS)
 	{
@@ -70,11 +70,14 @@ public class BlacklistGenerator3
 			if (name == null) continue;
 			name = name.toLowerCase();
 
-
 			if (knownNames.containsKey(name))
 			{
-				blacklist.addEntry(smr.getUri(), 1,
-					knownNames.get(name));
+				blacklist.addEntry(smr.getUri(), 1, knownNames.get(name));
+
+				for (SimplePhysicalEntity spe : smr.getEntityReferenceOf())
+				{
+					blacklist.addEntry(spe.getUri(), 1, knownNames.get(name));
+				}
 			}
 		}
 
