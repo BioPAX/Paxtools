@@ -146,7 +146,7 @@ public class SIFInteraction implements Comparable
 		{
 			m+= " " + mid;
 		}
-		return m.trim();
+		return m.trim().replaceAll(" ", ";");
 	}
 
 	/**
