@@ -36,7 +36,7 @@
         <dependency>
         	<groupId>org.ivis</groupId>
         	<artifactId>chilay-sbgn</artifactId>
-        	<version>[2,3)</version>
+        	<version>2.0.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>

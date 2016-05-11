@@ -555,14 +555,22 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>chilay-repo</id>
-			<name>Repository for chilay project</name>
-			<url>http://maven-repo.chilay.googlecode.com/hg/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
+		<!--<repository>&lt;!&ndash; TODO: this repo's gone... &ndash;&gt;-->
+			<!--<id>chilay-repo</id>-->
+			<!--<name>Repository for chilay project</name>-->
+			<!--<url>http://maven-repo.chilay.googlecode.com/hg/</url>-->
+			<!--<snapshots>-->
+				<!--<enabled>true</enabled>-->
+				<!--<updatePolicy>always</updatePolicy>-->
+			<!--</snapshots>-->
+		<!--</repository>-->
+		<repository><!-- currently, it's only to get org.sbgn:libsbgn:0.2 -->
+			<id>biopax.snapshots</id>
+			<name>BioPAX.org Repository</name>
+			<url>http://www.biopax.org/m2repo/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
 		</repository>
 	</repositories>
 
