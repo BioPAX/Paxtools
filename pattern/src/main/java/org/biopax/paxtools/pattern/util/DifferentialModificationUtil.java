@@ -30,6 +30,28 @@ public class DifferentialModificationUtil
 		set1.removeAll(set2);
 		set2.removeAll(temp);
 
+		// Remove common features that can be deemed semantically equivalent
+
+		Set<Modification> furtherRemove = new HashSet<Modification>();
+
+		for (Modification m1 : set1)
+		{
+			for (Modification m2 : set2)
+			{
+				if (furtherRemove.contains(m2)) continue;
+
+				if (m1.getKey().equals(m2.getKey()))
+				{
+					furtherRemove.add(m1);
+					furtherRemove.add(m2);
+					break;
+				}
+			}
+		}
+
+		set1.removeAll(furtherRemove);
+		set2.removeAll(furtherRemove);
+
 		return new Set[]{collectFeatures(set2), collectFeatures(set1)};
 	}
 
@@ -145,6 +167,42 @@ public class DifferentialModificationUtil
 			return mf.getFeatureLocation().equivalenceCode() ==
 				m.mf.getFeatureLocation().equivalenceCode();
 		}
+
+		public String getKey()
+		{
+			String k = "";
+			if (mf.getModificationType() != null && !mf.getModificationType().getTerm().isEmpty())
+			{
+				k = mf.getModificationType().getTerm().iterator().next();
+
+				if (mf.getFeatureLocation() instanceof SequenceSite)
+				{
+					SequenceSite ss = (SequenceSite) mf.getFeatureLocation();
+					int site = ss.getSequencePosition();
+					// 100,000 is a relaxed upper bound for possible size of a human protein
+					if (site > 0 && site < 1E5)
+					{
+						k += "@" + site;
+					}
+				}
+				else if (mf.getFeatureLocation() instanceof SequenceInterval)
+				{
+					SequenceInterval si = (SequenceInterval) mf.getFeatureLocation();
+
+					if (si.getSequenceIntervalBegin() != null && si.getSequenceIntervalEnd() != null)
+					{
+						int begin = si.getSequenceIntervalBegin().getSequencePosition();
+						int end = si.getSequenceIntervalEnd().getSequencePosition();
+
+						if (begin > 0 && begin < end && end < 1E5)
+						{
+							k += "@[" + begin + "-" + end + "]";
+						}
+					}
+				}
+			}
+			return k;
+		}
 	}
 
 	private static String getPhosphoSiteLetter(ModificationFeature mf)
@@ -174,4 +232,5 @@ public class DifferentialModificationUtil
 		}
 		return -1;
 	}
+
 }
