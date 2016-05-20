@@ -508,13 +508,13 @@
 <span class="sourceLineNo">500</span>                ProgressWatcher prg = new ProgressWatcher()<a name="line.500"></a>
 <span class="sourceLineNo">501</span>                {<a name="line.501"></a>
 <span class="sourceLineNo">502</span>                        @Override<a name="line.502"></a>
-<span class="sourceLineNo">503</span>                        public void setTotalTicks(int total)<a name="line.503"></a>
+<span class="sourceLineNo">503</span>                        public synchronized  void setTotalTicks(int total)<a name="line.503"></a>
 <span class="sourceLineNo">504</span>                        {<a name="line.504"></a>
 <span class="sourceLineNo">505</span>                                prgBar.setMaximum(total);<a name="line.505"></a>
 <span class="sourceLineNo">506</span>                        }<a name="line.506"></a>
 <span class="sourceLineNo">507</span><a name="line.507"></a>
 <span class="sourceLineNo">508</span>                        @Override<a name="line.508"></a>
-<span class="sourceLineNo">509</span>                        public void tick(int times)<a name="line.509"></a>
+<span class="sourceLineNo">509</span>                        public synchronized  void tick(int times)<a name="line.509"></a>
 <span class="sourceLineNo">510</span>                        {<a name="line.510"></a>
 <span class="sourceLineNo">511</span>                                prgBar.setValue(prgBar.getValue() + times);<a name="line.511"></a>
 <span class="sourceLineNo">512</span>                        }<a name="line.512"></a>

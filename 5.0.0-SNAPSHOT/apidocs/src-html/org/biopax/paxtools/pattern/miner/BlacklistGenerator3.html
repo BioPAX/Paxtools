@@ -9,34 +9,34 @@
 <pre><span class="sourceLineNo">001</span>package org.biopax.paxtools.pattern.miner;<a name="line.1"></a>
 <span class="sourceLineNo">002</span><a name="line.2"></a>
 <span class="sourceLineNo">003</span>import org.biopax.paxtools.model.Model;<a name="line.3"></a>
-<span class="sourceLineNo">004</span>import org.biopax.paxtools.model.level3.SmallMoleculeReference;<a name="line.4"></a>
-<span class="sourceLineNo">005</span>import org.biopax.paxtools.pattern.util.Blacklist;<a name="line.5"></a>
-<span class="sourceLineNo">006</span>import org.biopax.paxtools.pattern.util.RelType;<a name="line.6"></a>
-<span class="sourceLineNo">007</span><a name="line.7"></a>
-<span class="sourceLineNo">008</span>import java.io.FileInputStream;<a name="line.8"></a>
-<span class="sourceLineNo">009</span>import java.io.FileNotFoundException;<a name="line.9"></a>
-<span class="sourceLineNo">010</span>import java.io.InputStream;<a name="line.10"></a>
-<span class="sourceLineNo">011</span>import java.util.HashMap;<a name="line.11"></a>
-<span class="sourceLineNo">012</span>import java.util.Map;<a name="line.12"></a>
-<span class="sourceLineNo">013</span>import java.util.Scanner;<a name="line.13"></a>
-<span class="sourceLineNo">014</span><a name="line.14"></a>
-<span class="sourceLineNo">015</span>/**<a name="line.15"></a>
-<span class="sourceLineNo">016</span> * This class generates a blacklist for the given model. It is important that the given model is the<a name="line.16"></a>
-<span class="sourceLineNo">017</span> * very big integrated corpus. It won't work on tiny little model.<a name="line.17"></a>
+<span class="sourceLineNo">004</span>import org.biopax.paxtools.model.level3.SimplePhysicalEntity;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import org.biopax.paxtools.model.level3.SmallMoleculeReference;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import org.biopax.paxtools.pattern.util.Blacklist;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import org.biopax.paxtools.pattern.util.RelType;<a name="line.7"></a>
+<span class="sourceLineNo">008</span><a name="line.8"></a>
+<span class="sourceLineNo">009</span>import java.io.FileInputStream;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import java.io.FileNotFoundException;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import java.io.InputStream;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import java.util.HashMap;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import java.util.Map;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import java.util.Scanner;<a name="line.14"></a>
+<span class="sourceLineNo">015</span><a name="line.15"></a>
+<span class="sourceLineNo">016</span>/**<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * This class generates a blacklist for the given model. It uses a list of known ubiquitous molecule names.<a name="line.17"></a>
 <span class="sourceLineNo">018</span> *<a name="line.18"></a>
 <span class="sourceLineNo">019</span> * @author Ozgun Babur<a name="line.19"></a>
 <span class="sourceLineNo">020</span> */<a name="line.20"></a>
 <span class="sourceLineNo">021</span>public class BlacklistGenerator3<a name="line.21"></a>
 <span class="sourceLineNo">022</span>{<a name="line.22"></a>
 <span class="sourceLineNo">023</span>        /**<a name="line.23"></a>
-<span class="sourceLineNo">024</span>         * Known ubiquitous small molecule names along with their<a name="line.24"></a>
+<span class="sourceLineNo">024</span>         * Known ubiquitous small molecule names along with their classification (ubiquitous as input, as output or both)<a name="line.24"></a>
 <span class="sourceLineNo">025</span>         */<a name="line.25"></a>
 <span class="sourceLineNo">026</span>        private Map&lt;String, RelType&gt; knownNames;<a name="line.26"></a>
 <span class="sourceLineNo">027</span><a name="line.27"></a>
 <span class="sourceLineNo">028</span>        /**<a name="line.28"></a>
 <span class="sourceLineNo">029</span>         * Constructor.<a name="line.29"></a>
 <span class="sourceLineNo">030</span>         *<a name="line.30"></a>
-<span class="sourceLineNo">031</span>         * @param knownNamesIS a special file that lists the known names of ubiquitous unwanted chemicals<a name="line.31"></a>
+<span class="sourceLineNo">031</span>         * @param knownNamesIS a special file that lists the known names of ubiquitous unwanted-to-traverse chemicals<a name="line.31"></a>
 <span class="sourceLineNo">032</span>         */<a name="line.32"></a>
 <span class="sourceLineNo">033</span>        public BlacklistGenerator3(InputStream knownNamesIS)<a name="line.33"></a>
 <span class="sourceLineNo">034</span>        {<a name="line.34"></a>
@@ -78,17 +78,20 @@
 <span class="sourceLineNo">070</span>                        if (name == null) continue;<a name="line.70"></a>
 <span class="sourceLineNo">071</span>                        name = name.toLowerCase();<a name="line.71"></a>
 <span class="sourceLineNo">072</span><a name="line.72"></a>
-<span class="sourceLineNo">073</span><a name="line.73"></a>
-<span class="sourceLineNo">074</span>                        if (knownNames.containsKey(name))<a name="line.74"></a>
-<span class="sourceLineNo">075</span>                        {<a name="line.75"></a>
-<span class="sourceLineNo">076</span>                                blacklist.addEntry(smr.getUri(), 1,<a name="line.76"></a>
-<span class="sourceLineNo">077</span>                                        knownNames.get(name));<a name="line.77"></a>
-<span class="sourceLineNo">078</span>                        }<a name="line.78"></a>
-<span class="sourceLineNo">079</span>                }<a name="line.79"></a>
-<span class="sourceLineNo">080</span><a name="line.80"></a>
-<span class="sourceLineNo">081</span>                return blacklist;<a name="line.81"></a>
-<span class="sourceLineNo">082</span>        }<a name="line.82"></a>
-<span class="sourceLineNo">083</span>}<a name="line.83"></a>
+<span class="sourceLineNo">073</span>                        if (knownNames.containsKey(name))<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                        {<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                                blacklist.addEntry(smr.getUri(), 1, knownNames.get(name));<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>                                for (SimplePhysicalEntity spe : smr.getEntityReferenceOf())<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                                {<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                                        blacklist.addEntry(spe.getUri(), 1, knownNames.get(name));<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                                }<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        }<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                }<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>                return blacklist;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        }<a name="line.85"></a>
+<span class="sourceLineNo">086</span>}<a name="line.86"></a>
 
 
 

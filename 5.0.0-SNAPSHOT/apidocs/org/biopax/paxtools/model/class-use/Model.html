@@ -212,7 +212,10 @@
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><span class="typeNameLabel">PaxtoolsMain.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/PaxtoolsMain.html#summarize-org.biopax.paxtools.model.Model-java.io.PrintStream-">summarize</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
-         <a href="http://download.oracle.com/javase/7/docs/api/java/io/PrintStream.html?is-external=true" title="class or interface in java.io">PrintStream</a>&nbsp;out)</code>&nbsp;</td>
+         <a href="http://download.oracle.com/javase/7/docs/api/java/io/PrintStream.html?is-external=true" title="class or interface in java.io">PrintStream</a>&nbsp;out)</code>
+<div class="block">A summary of BioPAX class and property values in the model
+ (experimental; for troubleshooting and debugging).</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -447,7 +450,7 @@
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><span class="typeNameLabel">ModelUtils.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/ModelUtils.html#mergeEquivalentInteractions-org.biopax.paxtools.model.Model-">mergeEquivalentInteractions</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
-<div class="block">Merges equivalent interactions.</div>
+<div class="block">Merges equivalent interactions (currently - Conversions only).</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -515,16 +518,21 @@
                 <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;?&gt;&nbsp;valueSet)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ShallowCopy.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/ShallowCopy.html#visit-org.biopax.paxtools.model.BioPAXElement-java.lang.Object-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
-     <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;range,
-     <a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
-     <a href="../../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&nbsp;editor)</code>
-<div class="block">An implementation of this method should perform a BioPAX element
- and editor dependent operation on the <em>model</em>.</div>
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><span class="typeNameLabel">ModelUtils.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/ModelUtils.html#updateUri-org.biopax.paxtools.model.Model-org.biopax.paxtools.model.BioPAXElement-java.lang.String-">updateUri</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+         <a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;el,
+         <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newUri)</code>
+<div class="block">Replaces the URI of a BioPAX object in the Model using java reflection.</div>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="typeNameLabel">Completer.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/Completer.html#visit-org.biopax.paxtools.model.BioPAXElement-java.lang.Object-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
+     <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;range,
+     <a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+     <a href="../../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&nbsp;editor)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><span class="typeNameLabel">Merger.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/Merger.html#visit-org.biopax.paxtools.model.BioPAXElement-java.lang.Object-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
      <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;range,
@@ -534,29 +542,22 @@
  value of the equivalent element for <em>bpe</em> by using the specific <em>editor</em>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">Completer.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/Completer.html#visit-org.biopax.paxtools.model.BioPAXElement-java.lang.Object-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
+<td class="colLast"><span class="typeNameLabel">ShallowCopy.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/ShallowCopy.html#visit-org.biopax.paxtools.model.BioPAXElement-java.lang.Object-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
      <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;range,
      <a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
-     <a href="../../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&nbsp;editor)</code>&nbsp;</td>
+     <a href="../../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&nbsp;editor)</code>
+<div class="block">An implementation of this method should perform a BioPAX element
+ and editor dependent operation on the <em>model</em>.</div>
+</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><span class="typeNameLabel">Cloner.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/Cloner.html#visit-org.biopax.paxtools.model.BioPAXElement-java.lang.Object-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
      <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;range,
      <a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
      <a href="../../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&nbsp;editor)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">Visitor.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/Visitor.html#visit-org.biopax.paxtools.model.BioPAXElement-java.lang.Object-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
-     <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;range,
-     <a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
-     <a href="../../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&lt;?,?&gt;&nbsp;editor)</code>
-<div class="block">An implementation of this method should perform a BioPAX element
- and editor dependent operation on the <em>model</em>.</div>
-</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -569,6 +570,16 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="typeNameLabel">Visitor.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/Visitor.html#visit-org.biopax.paxtools.model.BioPAXElement-java.lang.Object-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
+     <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;range,
+     <a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+     <a href="../../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&lt;?,?&gt;&nbsp;editor)</code>
+<div class="block">An implementation of this method should perform a BioPAX element
+ and editor dependent operation on the <em>model</em>.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected abstract void</code></td>
 <td class="colLast"><span class="typeNameLabel">AbstractTraverser.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/AbstractTraverser.html#visit-java.lang.Object-org.biopax.paxtools.model.BioPAXElement-org.biopax.paxtools.model.Model-org.biopax.paxtools.controller.PropertyEditor-">visit</a></span>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;range,
      <a href="../../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;domain,
@@ -579,7 +590,7 @@
  into the child (range) element's properties if it's a BioPAX object.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a></code></td>
 <td class="colLast"><span class="typeNameLabel">ModelUtils.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/controller/ModelUtils.html#writeRead-org.biopax.paxtools.model.Model-">writeRead</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">Cuts the BioPAX model off other models and BioPAX objects
@@ -787,15 +798,15 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a></code></td>
-<td class="colLast"><span class="typeNameLabel">BioPAXIOHandlerAdapter.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandlerAdapter.html#convertFromOWL-java.io.InputStream-">convertFromOWL</a></span>(<a href="http://download.oracle.com/javase/7/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;in)</code>
-<div class="block">Reads a BioPAX model from an OWL file input stream (<em>in</em>) and converts it to a model.</div>
+<td class="colLast"><span class="typeNameLabel">BioPAXIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandler.html#convertFromOWL-java.io.InputStream-">convertFromOWL</a></span>(<a href="http://download.oracle.com/javase/7/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;in)</code>
+<div class="block">This method will read the OWL document given by the input stream
+ and will convert it into an in memory BioPAX model.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a></code></td>
-<td class="colLast"><span class="typeNameLabel">BioPAXIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandler.html#convertFromOWL-java.io.InputStream-">convertFromOWL</a></span>(<a href="http://download.oracle.com/javase/7/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;in)</code>
-<div class="block">This method will read the OWL document given by the input stream
- and will convert it into an in memory BioPAX model.</div>
+<td class="colLast"><span class="typeNameLabel">BioPAXIOHandlerAdapter.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandlerAdapter.html#convertFromOWL-java.io.InputStream-">convertFromOWL</a></span>(<a href="http://download.oracle.com/javase/7/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;in)</code>
+<div class="block">Reads a BioPAX model from an OWL file input stream (<em>in</em>) and converts it to a model.</div>
 </td>
 </tr>
 </tbody>
@@ -824,20 +835,29 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><span class="typeNameLabel">BioPAXIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandler.html#convertToOWL-org.biopax.paxtools.model.Model-java.io.OutputStream-">convertToOWL</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+            <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;outputStream)</code>
+<div class="block">This method will write the model to the output stream.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><span class="typeNameLabel">SimpleIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/SimpleIOHandler.html#convertToOWL-org.biopax.paxtools.model.Model-java.io.OutputStream-">convertToOWL</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
             <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;outputStream)</code>
 <div class="block">Converts a model into BioPAX (OWL) format, and writes it into
  the outputStream.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">BioPAXIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandler.html#convertToOWL-org.biopax.paxtools.model.Model-java.io.OutputStream-">convertToOWL</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
-            <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;outputStream)</code>
-<div class="block">This method will write the model to the output stream.</div>
+<td class="colLast"><span class="typeNameLabel">BioPAXIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandler.html#convertToOWL-org.biopax.paxtools.model.Model-java.io.OutputStream-java.lang.String...-">convertToOWL</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+            <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;outputStream,
+            <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;ids)</code>
+<div class="block">This method will "excise" a new model from the given model that contains
+ the objects with given ids and their dependents.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><span class="typeNameLabel">BioPAXIOHandlerAdapter.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandlerAdapter.html#convertToOWL-org.biopax.paxtools.model.Model-java.io.OutputStream-java.lang.String...-">convertToOWL</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
             <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;outputStream,
@@ -846,15 +866,6 @@
  java.io.OutputStream)</code></a> (org.biopax.paxtools.model.Model, Object)}, but
  extracts a sub-model, converts it into BioPAX (OWL) format,
  and writes it into the outputStream.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">BioPAXIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandler.html#convertToOWL-org.biopax.paxtools.model.Model-java.io.OutputStream-java.lang.String...-">convertToOWL</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
-            <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;outputStream,
-            <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;ids)</code>
-<div class="block">This method will "excise" a new model from the given model that contains
- the objects with given ids and their dependents.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -866,15 +877,15 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected void</code></td>
-<td class="colLast"><span class="typeNameLabel">SimpleIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/SimpleIOHandler.html#createAndBind-org.biopax.paxtools.model.Model-">createAndBind</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>protected abstract void</code></td>
 <td class="colLast"><span class="typeNameLabel">BioPAXIOHandlerAdapter.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/BioPAXIOHandlerAdapter.html#createAndBind-org.biopax.paxtools.model.Model-">createAndBind</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">This method provides a hook for the implementers of this abstract class to create objects themselves and bind
  the properties to the objects.</div>
 </td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><span class="typeNameLabel">SimpleIOHandler.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/io/SimpleIOHandler.html#createAndBind-org.biopax.paxtools.model.Model-">createAndBind</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -1074,19 +1085,19 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../org/biopax/paxtools/pattern/util/Blacklist.html" title="class in org.biopax.paxtools.pattern.util">Blacklist</a></code></td>
-<td class="colLast"><span class="typeNameLabel">BlacklistGenerator3.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator3.html#generateBlacklist-org.biopax.paxtools.model.Model-">generateBlacklist</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
+<td class="colLast"><span class="typeNameLabel">BlacklistGenerator2.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator2.html#generateBlacklist-org.biopax.paxtools.model.Model-">generateBlacklist</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">Generates the blacklist.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/biopax/paxtools/pattern/util/Blacklist.html" title="class in org.biopax.paxtools.pattern.util">Blacklist</a></code></td>
-<td class="colLast"><span class="typeNameLabel">BlacklistGenerator2.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator2.html#generateBlacklist-org.biopax.paxtools.model.Model-">generateBlacklist</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
+<td class="colLast"><span class="typeNameLabel">BlacklistGenerator.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html#generateBlacklist-org.biopax.paxtools.model.Model-">generateBlacklist</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">Generates the blacklist.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../../../org/biopax/paxtools/pattern/util/Blacklist.html" title="class in org.biopax.paxtools.pattern.util">Blacklist</a></code></td>
-<td class="colLast"><span class="typeNameLabel">BlacklistGenerator.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html#generateBlacklist-org.biopax.paxtools.model.Model-">generateBlacklist</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
+<td class="colLast"><span class="typeNameLabel">BlacklistGenerator3.</span><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator3.html#generateBlacklist-org.biopax.paxtools.model.Model-">generateBlacklist</a></span>(<a href="../../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">Generates the blacklist.</div>
 </td>
 </tr>

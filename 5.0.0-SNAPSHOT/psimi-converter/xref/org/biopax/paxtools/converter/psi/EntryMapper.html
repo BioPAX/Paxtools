@@ -1071,11 +1071,11 @@
 <a class="jxr_linenumber" name="L1063" href="#L1063">1063</a> 			<em class="jxr_comment">// Let's not make UnificationXrefs. RelationshipXref is more safe.</em>
 <a class="jxr_linenumber" name="L1064" href="#L1064">1064</a> 			<em class="jxr_comment">// Often, a gene or omim ID (can be another species') is a protein's xref id with 'identity' type...</em>
 <a class="jxr_linenumber" name="L1065" href="#L1065">1065</a>             <strong class="jxr_keyword">if</strong>(!<span class="jxr_string">"pubmed"</span>.equalsIgnoreCase(psiDBRefDb)) {
-<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a>             	bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
+<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a> 				bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
 <a class="jxr_linenumber" name="L1067" href="#L1067">1067</a>             }
 <a class="jxr_linenumber" name="L1068" href="#L1068">1068</a>             <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>             	<em class="jxr_comment">//TODO shall we skip PublicationXref here (IntAct puts the same PSIMI paper pmid everywhere...)?</em>
-<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a>         		bpXref = publicationXref(psiDBRefDb, dbRefId);
+<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a> 				bpXref = publicationXref(psiDBRefDb, dbRefId);
 <a class="jxr_linenumber" name="L1071" href="#L1071">1071</a>             }
 <a class="jxr_linenumber" name="L1072" href="#L1072">1072</a> 
 <a class="jxr_linenumber" name="L1073" href="#L1073">1073</a>             <strong class="jxr_keyword">if</strong> (bpXref != <strong class="jxr_keyword">null</strong>) 
@@ -1167,438 +1167,444 @@
 <a class="jxr_linenumber" name="L1159" href="#L1159">1159</a> 		db = dbQuickFix(db);
 <a class="jxr_linenumber" name="L1160" href="#L1160">1160</a> 		
 <a class="jxr_linenumber" name="L1161" href="#L1161">1161</a> 		<strong class="jxr_keyword">if</strong>(id == <strong class="jxr_keyword">null</strong> || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
-<a class="jxr_linenumber" name="L1162" href="#L1162">1162</a> 			LOG.warn(<span class="jxr_string">"publicationXref(), illegal id="</span> + id);
+<a class="jxr_linenumber" name="L1162" href="#L1162">1162</a> 			LOG.warn(<span class="jxr_string">"publicationXref(), skip illegal id="</span> + id);
 <a class="jxr_linenumber" name="L1163" href="#L1163">1163</a> 			<strong class="jxr_keyword">return</strong>  <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1164" href="#L1164">1164</a> 		}
 <a class="jxr_linenumber" name="L1165" href="#L1165">1165</a> 		
 <a class="jxr_linenumber" name="L1166" href="#L1166">1166</a> 		id = id.trim();
-<a class="jxr_linenumber" name="L1167" href="#L1167">1167</a> 		
-<a class="jxr_linenumber" name="L1168" href="#L1168">1168</a> 		String xuri = xmlBase + <span class="jxr_string">"PublicationXref_"</span> + encode(db.toLowerCase() + <span class="jxr_string">"_"</span> + id);
-<a class="jxr_linenumber" name="L1169" href="#L1169">1169</a> 		PublicationXref x = (PublicationXref) bpModel.getByID(xuri);
-<a class="jxr_linenumber" name="L1170" href="#L1170">1170</a> 		<strong class="jxr_keyword">if</strong>(x==<strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1171" href="#L1171">1171</a> 			x= bpModel.addNew(PublicationXref.<strong class="jxr_keyword">class</strong>, xuri);
-<a class="jxr_linenumber" name="L1172" href="#L1172">1172</a> 			x.setDb(db);
-<a class="jxr_linenumber" name="L1173" href="#L1173">1173</a> 			x.setId(id);
-<a class="jxr_linenumber" name="L1174" href="#L1174">1174</a> 		}
-<a class="jxr_linenumber" name="L1175" href="#L1175">1175</a> 		<strong class="jxr_keyword">return</strong> x;
-<a class="jxr_linenumber" name="L1176" href="#L1176">1176</a> 	}	
-<a class="jxr_linenumber" name="L1177" href="#L1177">1177</a> 
-<a class="jxr_linenumber" name="L1178" href="#L1178">1178</a> 
-<a class="jxr_linenumber" name="L1179" href="#L1179">1179</a> 	<strong class="jxr_keyword">private</strong> String encode(String id) {
-<a class="jxr_linenumber" name="L1180" href="#L1180">1180</a> 			<strong class="jxr_keyword">return</strong> id.replaceAll(<span class="jxr_string">"[^-&#92;&#92;w]"</span>, <span class="jxr_string">"_"</span>);
-<a class="jxr_linenumber" name="L1181" href="#L1181">1181</a> 	}
-<a class="jxr_linenumber" name="L1182" href="#L1182">1182</a> 
+<a class="jxr_linenumber" name="L1167" href="#L1167">1167</a> 
+<a class="jxr_linenumber" name="L1168" href="#L1168">1168</a> 		<em class="jxr_comment">//add only if it's a valid PMID, and not the default (IntAct) one</em>
+<a class="jxr_linenumber" name="L1169" href="#L1169">1169</a> 		<strong class="jxr_keyword">if</strong>((<span class="jxr_string">"pubmed"</span>.equalsIgnoreCase(db) &amp;&amp; !id.matches(<span class="jxr_string">"&#92;&#92;d+"</span>)) || <span class="jxr_string">"14755292"</span>.equals(id)) {
+<a class="jxr_linenumber" name="L1170" href="#L1170">1170</a> 			LOG.warn(<span class="jxr_string">"publicationXref(), skip illegal or dummy publication id="</span> + id);
+<a class="jxr_linenumber" name="L1171" href="#L1171">1171</a> 			<strong class="jxr_keyword">return</strong>  <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1172" href="#L1172">1172</a> 		}
+<a class="jxr_linenumber" name="L1173" href="#L1173">1173</a> 		
+<a class="jxr_linenumber" name="L1174" href="#L1174">1174</a> 		String xuri = xmlBase + <span class="jxr_string">"PublicationXref_"</span> + encode(db.toLowerCase() + <span class="jxr_string">"_"</span> + id);
+<a class="jxr_linenumber" name="L1175" href="#L1175">1175</a> 		PublicationXref x = (PublicationXref) bpModel.getByID(xuri);
+<a class="jxr_linenumber" name="L1176" href="#L1176">1176</a> 		<strong class="jxr_keyword">if</strong>(x==<strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1177" href="#L1177">1177</a> 			x= bpModel.addNew(PublicationXref.<strong class="jxr_keyword">class</strong>, xuri);
+<a class="jxr_linenumber" name="L1178" href="#L1178">1178</a> 			x.setDb(db);
+<a class="jxr_linenumber" name="L1179" href="#L1179">1179</a> 			x.setId(id);
+<a class="jxr_linenumber" name="L1180" href="#L1180">1180</a> 		}
+<a class="jxr_linenumber" name="L1181" href="#L1181">1181</a> 		<strong class="jxr_keyword">return</strong> x;
+<a class="jxr_linenumber" name="L1182" href="#L1182">1182</a> 	}	
 <a class="jxr_linenumber" name="L1183" href="#L1183">1183</a> 
-<a class="jxr_linenumber" name="L1184" href="#L1184">1184</a> 	<em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L1185" href="#L1185">1185</a> <em class="jxr_comment">	 * Given a psi-mi experiment type, returns a set of open</em>
-<a class="jxr_linenumber" name="L1186" href="#L1186">1186</a> <em class="jxr_comment">	 * controlled vocabulary objects which represent evidence code(s).</em>
-<a class="jxr_linenumber" name="L1187" href="#L1187">1187</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1188" href="#L1188">1188</a> 	<strong class="jxr_keyword">private</strong> Set&lt;EvidenceCodeVocabulary&gt; getEvidenceCodes(ExperimentDescription experimentDescription) {
-<a class="jxr_linenumber" name="L1189" href="#L1189">1189</a> 		Set&lt;EvidenceCodeVocabulary&gt; toReturn = <strong class="jxr_keyword">new</strong> HashSet&lt;EvidenceCodeVocabulary&gt;();
-<a class="jxr_linenumber" name="L1190" href="#L1190">1190</a> 
-<a class="jxr_linenumber" name="L1191" href="#L1191">1191</a> 		<em class="jxr_comment">// get experiment methods</em>
-<a class="jxr_linenumber" name="L1192" href="#L1192">1192</a> 		Set&lt;CvType&gt; cvTypeSet = <strong class="jxr_keyword">new</strong> HashSet&lt;CvType&gt;(3);
-<a class="jxr_linenumber" name="L1193" href="#L1193">1193</a> 		<em class="jxr_comment">//skip if "unspecified method" (MI:0686) is the interaction detection method</em>
-<a class="jxr_linenumber" name="L1194" href="#L1194">1194</a> 		<strong class="jxr_keyword">if</strong>(experimentDescription.getInteractionDetectionMethod() != <strong class="jxr_keyword">null</strong> 
-<a class="jxr_linenumber" name="L1195" href="#L1195">1195</a> 				&amp;&amp; !<span class="jxr_string">"MI:0686"</span>.equalsIgnoreCase(experimentDescription.getInteractionDetectionMethod().getXref().getPrimaryRef().getId()))
-<a class="jxr_linenumber" name="L1196" href="#L1196">1196</a> 			cvTypeSet.add(experimentDescription.getInteractionDetectionMethod());
-<a class="jxr_linenumber" name="L1197" href="#L1197">1197</a> 		<strong class="jxr_keyword">if</strong>(experimentDescription.getParticipantIdentificationMethod() != <strong class="jxr_keyword">null</strong> 
-<a class="jxr_linenumber" name="L1198" href="#L1198">1198</a> 				&amp;&amp; !<span class="jxr_string">"MI:0686"</span>.equalsIgnoreCase(experimentDescription.getParticipantIdentificationMethod().getXref().getPrimaryRef().getId()))
-<a class="jxr_linenumber" name="L1199" href="#L1199">1199</a> 			cvTypeSet.add(experimentDescription.getParticipantIdentificationMethod());
-<a class="jxr_linenumber" name="L1200" href="#L1200">1200</a> 		<strong class="jxr_keyword">if</strong>(experimentDescription.getFeatureDetectionMethod() != <strong class="jxr_keyword">null</strong> 
-<a class="jxr_linenumber" name="L1201" href="#L1201">1201</a> 				&amp;&amp; !<span class="jxr_string">"MI:0686"</span>.equalsIgnoreCase(experimentDescription.getFeatureDetectionMethod().getXref().getPrimaryRef().getId()))
-<a class="jxr_linenumber" name="L1202" href="#L1202">1202</a> 			cvTypeSet.add(experimentDescription.getFeatureDetectionMethod());
-<a class="jxr_linenumber" name="L1203" href="#L1203">1203</a> 
-<a class="jxr_linenumber" name="L1204" href="#L1204">1204</a> 		<em class="jxr_comment">// create openControlledVocabulary objects for each detection method</em>
-<a class="jxr_linenumber" name="L1205" href="#L1205">1205</a> 		<strong class="jxr_keyword">for</strong> (CvType cvtype : cvTypeSet) {
-<a class="jxr_linenumber" name="L1206" href="#L1206">1206</a> 			EvidenceCodeVocabulary ecv = findOrCreateControlledVocabulary(cvtype, EvidenceCodeVocabulary.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L1207" href="#L1207">1207</a> 			<strong class="jxr_keyword">if</strong> (ecv != <strong class="jxr_keyword">null</strong>) 
-<a class="jxr_linenumber" name="L1208" href="#L1208">1208</a> 				toReturn.add(ecv);
-<a class="jxr_linenumber" name="L1209" href="#L1209">1209</a> 		}
-<a class="jxr_linenumber" name="L1210" href="#L1210">1210</a> 
-<a class="jxr_linenumber" name="L1211" href="#L1211">1211</a> 		<strong class="jxr_keyword">return</strong> toReturn;
-<a class="jxr_linenumber" name="L1212" href="#L1212">1212</a> 	}
-<a class="jxr_linenumber" name="L1213" href="#L1213">1213</a> 
-<a class="jxr_linenumber" name="L1214" href="#L1214">1214</a> 	<em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L1215" href="#L1215">1215</a> <em class="jxr_comment">	 * Given a psi-mi confidence object, returns a paxtools confidence object.</em>
-<a class="jxr_linenumber" name="L1216" href="#L1216">1216</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1217" href="#L1217">1217</a> 	<strong class="jxr_keyword">private</strong> Score getScoreOrConfidence(Confidence psiConfidence) {
-<a class="jxr_linenumber" name="L1218" href="#L1218">1218</a> 
-<a class="jxr_linenumber" name="L1219" href="#L1219">1219</a> 		<em class="jxr_comment">// check args</em>
-<a class="jxr_linenumber" name="L1220" href="#L1220">1220</a> 		<strong class="jxr_keyword">if</strong> (psiConfidence == <strong class="jxr_keyword">null</strong>) 
-<a class="jxr_linenumber" name="L1221" href="#L1221">1221</a> 			<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1222" href="#L1222">1222</a> 
-<a class="jxr_linenumber" name="L1223" href="#L1223">1223</a> 		<em class="jxr_comment">// psiConfidence.value maps to confidence.confidence-value</em>
-<a class="jxr_linenumber" name="L1224" href="#L1224">1224</a> 		String value = psiConfidence.getValue();
-<a class="jxr_linenumber" name="L1225" href="#L1225">1225</a> 
-<a class="jxr_linenumber" name="L1226" href="#L1226">1226</a> 		<em class="jxr_comment">// get psiConfidence unit</em>
-<a class="jxr_linenumber" name="L1227" href="#L1227">1227</a> 		OpenCvType ocv = psiConfidence.getUnit(); 
+<a class="jxr_linenumber" name="L1184" href="#L1184">1184</a> 
+<a class="jxr_linenumber" name="L1185" href="#L1185">1185</a> 	<strong class="jxr_keyword">private</strong> String encode(String id) {
+<a class="jxr_linenumber" name="L1186" href="#L1186">1186</a> 			<strong class="jxr_keyword">return</strong> id.replaceAll(<span class="jxr_string">"[^-&#92;&#92;w]"</span>, <span class="jxr_string">"_"</span>);
+<a class="jxr_linenumber" name="L1187" href="#L1187">1187</a> 	}
+<a class="jxr_linenumber" name="L1188" href="#L1188">1188</a> 
+<a class="jxr_linenumber" name="L1189" href="#L1189">1189</a> 
+<a class="jxr_linenumber" name="L1190" href="#L1190">1190</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L1191" href="#L1191">1191</a> <em class="jxr_comment">	 * Given a psi-mi experiment type, returns a set of open</em>
+<a class="jxr_linenumber" name="L1192" href="#L1192">1192</a> <em class="jxr_comment">	 * controlled vocabulary objects which represent evidence code(s).</em>
+<a class="jxr_linenumber" name="L1193" href="#L1193">1193</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1194" href="#L1194">1194</a> 	<strong class="jxr_keyword">private</strong> Set&lt;EvidenceCodeVocabulary&gt; getEvidenceCodes(ExperimentDescription experimentDescription) {
+<a class="jxr_linenumber" name="L1195" href="#L1195">1195</a> 		Set&lt;EvidenceCodeVocabulary&gt; toReturn = <strong class="jxr_keyword">new</strong> HashSet&lt;EvidenceCodeVocabulary&gt;();
+<a class="jxr_linenumber" name="L1196" href="#L1196">1196</a> 
+<a class="jxr_linenumber" name="L1197" href="#L1197">1197</a> 		<em class="jxr_comment">// get experiment methods</em>
+<a class="jxr_linenumber" name="L1198" href="#L1198">1198</a> 		Set&lt;CvType&gt; cvTypeSet = <strong class="jxr_keyword">new</strong> HashSet&lt;CvType&gt;(3);
+<a class="jxr_linenumber" name="L1199" href="#L1199">1199</a> 		<em class="jxr_comment">//skip if "unspecified method" (MI:0686) is the interaction detection method</em>
+<a class="jxr_linenumber" name="L1200" href="#L1200">1200</a> 		<strong class="jxr_keyword">if</strong>(experimentDescription.getInteractionDetectionMethod() != <strong class="jxr_keyword">null</strong> 
+<a class="jxr_linenumber" name="L1201" href="#L1201">1201</a> 				&amp;&amp; !<span class="jxr_string">"MI:0686"</span>.equalsIgnoreCase(experimentDescription.getInteractionDetectionMethod().getXref().getPrimaryRef().getId()))
+<a class="jxr_linenumber" name="L1202" href="#L1202">1202</a> 			cvTypeSet.add(experimentDescription.getInteractionDetectionMethod());
+<a class="jxr_linenumber" name="L1203" href="#L1203">1203</a> 		<strong class="jxr_keyword">if</strong>(experimentDescription.getParticipantIdentificationMethod() != <strong class="jxr_keyword">null</strong> 
+<a class="jxr_linenumber" name="L1204" href="#L1204">1204</a> 				&amp;&amp; !<span class="jxr_string">"MI:0686"</span>.equalsIgnoreCase(experimentDescription.getParticipantIdentificationMethod().getXref().getPrimaryRef().getId()))
+<a class="jxr_linenumber" name="L1205" href="#L1205">1205</a> 			cvTypeSet.add(experimentDescription.getParticipantIdentificationMethod());
+<a class="jxr_linenumber" name="L1206" href="#L1206">1206</a> 		<strong class="jxr_keyword">if</strong>(experimentDescription.getFeatureDetectionMethod() != <strong class="jxr_keyword">null</strong> 
+<a class="jxr_linenumber" name="L1207" href="#L1207">1207</a> 				&amp;&amp; !<span class="jxr_string">"MI:0686"</span>.equalsIgnoreCase(experimentDescription.getFeatureDetectionMethod().getXref().getPrimaryRef().getId()))
+<a class="jxr_linenumber" name="L1208" href="#L1208">1208</a> 			cvTypeSet.add(experimentDescription.getFeatureDetectionMethod());
+<a class="jxr_linenumber" name="L1209" href="#L1209">1209</a> 
+<a class="jxr_linenumber" name="L1210" href="#L1210">1210</a> 		<em class="jxr_comment">// create openControlledVocabulary objects for each detection method</em>
+<a class="jxr_linenumber" name="L1211" href="#L1211">1211</a> 		<strong class="jxr_keyword">for</strong> (CvType cvtype : cvTypeSet) {
+<a class="jxr_linenumber" name="L1212" href="#L1212">1212</a> 			EvidenceCodeVocabulary ecv = findOrCreateControlledVocabulary(cvtype, EvidenceCodeVocabulary.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L1213" href="#L1213">1213</a> 			<strong class="jxr_keyword">if</strong> (ecv != <strong class="jxr_keyword">null</strong>) 
+<a class="jxr_linenumber" name="L1214" href="#L1214">1214</a> 				toReturn.add(ecv);
+<a class="jxr_linenumber" name="L1215" href="#L1215">1215</a> 		}
+<a class="jxr_linenumber" name="L1216" href="#L1216">1216</a> 
+<a class="jxr_linenumber" name="L1217" href="#L1217">1217</a> 		<strong class="jxr_keyword">return</strong> toReturn;
+<a class="jxr_linenumber" name="L1218" href="#L1218">1218</a> 	}
+<a class="jxr_linenumber" name="L1219" href="#L1219">1219</a> 
+<a class="jxr_linenumber" name="L1220" href="#L1220">1220</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L1221" href="#L1221">1221</a> <em class="jxr_comment">	 * Given a psi-mi confidence object, returns a paxtools confidence object.</em>
+<a class="jxr_linenumber" name="L1222" href="#L1222">1222</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1223" href="#L1223">1223</a> 	<strong class="jxr_keyword">private</strong> Score getScoreOrConfidence(Confidence psiConfidence) {
+<a class="jxr_linenumber" name="L1224" href="#L1224">1224</a> 
+<a class="jxr_linenumber" name="L1225" href="#L1225">1225</a> 		<em class="jxr_comment">// check args</em>
+<a class="jxr_linenumber" name="L1226" href="#L1226">1226</a> 		<strong class="jxr_keyword">if</strong> (psiConfidence == <strong class="jxr_keyword">null</strong>) 
+<a class="jxr_linenumber" name="L1227" href="#L1227">1227</a> 			<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1228" href="#L1228">1228</a> 
-<a class="jxr_linenumber" name="L1229" href="#L1229">1229</a> 		<em class="jxr_comment">// psiConfidence.unit.xref maps to confidence.xref</em>
-<a class="jxr_linenumber" name="L1230" href="#L1230">1230</a> 		Set&lt;Xref&gt; bpXrefs = <strong class="jxr_keyword">new</strong> HashSet&lt;Xref&gt;();
-<a class="jxr_linenumber" name="L1231" href="#L1231">1231</a> 		<strong class="jxr_keyword">if</strong> (ocv != <strong class="jxr_keyword">null</strong> &amp;&amp; ocv.getXref() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1232" href="#L1232">1232</a> 			bpXrefs.addAll(getXrefs(ocv.getXref()));
-<a class="jxr_linenumber" name="L1233" href="#L1233">1233</a> 		}
+<a class="jxr_linenumber" name="L1229" href="#L1229">1229</a> 		<em class="jxr_comment">// psiConfidence.value maps to confidence.confidence-value</em>
+<a class="jxr_linenumber" name="L1230" href="#L1230">1230</a> 		String value = psiConfidence.getValue();
+<a class="jxr_linenumber" name="L1231" href="#L1231">1231</a> 
+<a class="jxr_linenumber" name="L1232" href="#L1232">1232</a> 		<em class="jxr_comment">// get psiConfidence unit</em>
+<a class="jxr_linenumber" name="L1233" href="#L1233">1233</a> 		OpenCvType ocv = psiConfidence.getUnit(); 
 <a class="jxr_linenumber" name="L1234" href="#L1234">1234</a> 
-<a class="jxr_linenumber" name="L1235" href="#L1235">1235</a> 		<em class="jxr_comment">// used to store names and attributes</em>
-<a class="jxr_linenumber" name="L1236" href="#L1236">1236</a> 		Set&lt;String&gt; comments = <strong class="jxr_keyword">new</strong> HashSet&lt;String&gt;();
-<a class="jxr_linenumber" name="L1237" href="#L1237">1237</a> 
-<a class="jxr_linenumber" name="L1238" href="#L1238">1238</a> 		<em class="jxr_comment">// psiConfidence.unit.names maps to confidence comment</em>
-<a class="jxr_linenumber" name="L1239" href="#L1239">1239</a> 		<strong class="jxr_keyword">if</strong> (ocv != <strong class="jxr_keyword">null</strong> &amp;&amp; ocv.getNames() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1240" href="#L1240">1240</a> 			String unitName = getName(ocv.getNames());
-<a class="jxr_linenumber" name="L1241" href="#L1241">1241</a> 			<strong class="jxr_keyword">if</strong> (unitName != <strong class="jxr_keyword">null</strong>) comments.add(unitName);
-<a class="jxr_linenumber" name="L1242" href="#L1242">1242</a> 		}
+<a class="jxr_linenumber" name="L1235" href="#L1235">1235</a> 		<em class="jxr_comment">// psiConfidence.unit.xref maps to confidence.xref</em>
+<a class="jxr_linenumber" name="L1236" href="#L1236">1236</a> 		Set&lt;Xref&gt; bpXrefs = <strong class="jxr_keyword">new</strong> HashSet&lt;Xref&gt;();
+<a class="jxr_linenumber" name="L1237" href="#L1237">1237</a> 		<strong class="jxr_keyword">if</strong> (ocv != <strong class="jxr_keyword">null</strong> &amp;&amp; ocv.getXref() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1238" href="#L1238">1238</a> 			bpXrefs.addAll(getXrefs(ocv.getXref()));
+<a class="jxr_linenumber" name="L1239" href="#L1239">1239</a> 		}
+<a class="jxr_linenumber" name="L1240" href="#L1240">1240</a> 
+<a class="jxr_linenumber" name="L1241" href="#L1241">1241</a> 		<em class="jxr_comment">// used to store names and attributes</em>
+<a class="jxr_linenumber" name="L1242" href="#L1242">1242</a> 		Set&lt;String&gt; comments = <strong class="jxr_keyword">new</strong> HashSet&lt;String&gt;();
 <a class="jxr_linenumber" name="L1243" href="#L1243">1243</a> 
-<a class="jxr_linenumber" name="L1244" href="#L1244">1244</a> 		<em class="jxr_comment">// unit.attributelist maps to confidence.comment</em>
-<a class="jxr_linenumber" name="L1245" href="#L1245">1245</a> 		<strong class="jxr_keyword">if</strong> (ocv.hasAttributes()) {
-<a class="jxr_linenumber" name="L1246" href="#L1246">1246</a> 			comments.addAll(getAttributes(ocv.getAttributes()));
-<a class="jxr_linenumber" name="L1247" href="#L1247">1247</a> 		}
-<a class="jxr_linenumber" name="L1248" href="#L1248">1248</a> 
-<a class="jxr_linenumber" name="L1249" href="#L1249">1249</a> 		Score ret = createScore(value, bpXrefs, comments);
-<a class="jxr_linenumber" name="L1250" href="#L1250">1250</a> 		
-<a class="jxr_linenumber" name="L1251" href="#L1251">1251</a> 		<strong class="jxr_keyword">return</strong> ret;
-<a class="jxr_linenumber" name="L1252" href="#L1252">1252</a> 	}
-<a class="jxr_linenumber" name="L1253" href="#L1253">1253</a> 
-<a class="jxr_linenumber" name="L1254" href="#L1254">1254</a> 	<em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L1255" href="#L1255">1255</a> <em class="jxr_comment">	 * Given a psi-mi attributes list, returns a string set, where</em>
-<a class="jxr_linenumber" name="L1256" href="#L1256">1256</a> <em class="jxr_comment">	 * each string is concatenation of name/value pairs.</em>
-<a class="jxr_linenumber" name="L1257" href="#L1257">1257</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1258" href="#L1258">1258</a> 	<strong class="jxr_keyword">private</strong> Set&lt;String&gt; getAttributes(Collection&lt;Attribute&gt; attributes) {
+<a class="jxr_linenumber" name="L1244" href="#L1244">1244</a> 		<em class="jxr_comment">// psiConfidence.unit.names maps to confidence comment</em>
+<a class="jxr_linenumber" name="L1245" href="#L1245">1245</a> 		<strong class="jxr_keyword">if</strong> (ocv != <strong class="jxr_keyword">null</strong> &amp;&amp; ocv.getNames() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1246" href="#L1246">1246</a> 			String unitName = getName(ocv.getNames());
+<a class="jxr_linenumber" name="L1247" href="#L1247">1247</a> 			<strong class="jxr_keyword">if</strong> (unitName != <strong class="jxr_keyword">null</strong>) comments.add(unitName);
+<a class="jxr_linenumber" name="L1248" href="#L1248">1248</a> 		}
+<a class="jxr_linenumber" name="L1249" href="#L1249">1249</a> 
+<a class="jxr_linenumber" name="L1250" href="#L1250">1250</a> 		<em class="jxr_comment">// unit.attributelist maps to confidence.comment</em>
+<a class="jxr_linenumber" name="L1251" href="#L1251">1251</a> 		<strong class="jxr_keyword">if</strong> (ocv.hasAttributes()) {
+<a class="jxr_linenumber" name="L1252" href="#L1252">1252</a> 			comments.addAll(getAttributes(ocv.getAttributes()));
+<a class="jxr_linenumber" name="L1253" href="#L1253">1253</a> 		}
+<a class="jxr_linenumber" name="L1254" href="#L1254">1254</a> 
+<a class="jxr_linenumber" name="L1255" href="#L1255">1255</a> 		Score ret = createScore(value, bpXrefs, comments);
+<a class="jxr_linenumber" name="L1256" href="#L1256">1256</a> 		
+<a class="jxr_linenumber" name="L1257" href="#L1257">1257</a> 		<strong class="jxr_keyword">return</strong> ret;
+<a class="jxr_linenumber" name="L1258" href="#L1258">1258</a> 	}
 <a class="jxr_linenumber" name="L1259" href="#L1259">1259</a> 
-<a class="jxr_linenumber" name="L1260" href="#L1260">1260</a> 		<em class="jxr_comment">// set to return</em>
-<a class="jxr_linenumber" name="L1261" href="#L1261">1261</a> 		Set&lt;String&gt; toReturn = <strong class="jxr_keyword">new</strong> HashSet&lt;String&gt;();
-<a class="jxr_linenumber" name="L1262" href="#L1262">1262</a> 
-<a class="jxr_linenumber" name="L1263" href="#L1263">1263</a> 		<em class="jxr_comment">// iterate over the attributes</em>
-<a class="jxr_linenumber" name="L1264" href="#L1264">1264</a> 		<strong class="jxr_keyword">for</strong> (Attribute attribute : attributes) {
-<a class="jxr_linenumber" name="L1265" href="#L1265">1265</a> 			String attributeStr = <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="L1266" href="#L1266">1266</a> 			<strong class="jxr_keyword">if</strong> (attribute.hasValue()) {
-<a class="jxr_linenumber" name="L1267" href="#L1267">1267</a> 				attributeStr = attribute.getValue();
-<a class="jxr_linenumber" name="L1268" href="#L1268">1268</a> 			}
-<a class="jxr_linenumber" name="L1269" href="#L1269">1269</a> 			String name = attribute.getName();
-<a class="jxr_linenumber" name="L1270" href="#L1270">1270</a> 			attributeStr = (name != <strong class="jxr_keyword">null</strong>) ? attributeStr += <span class="jxr_string">" "</span> + name : attributeStr;
-<a class="jxr_linenumber" name="L1271" href="#L1271">1271</a> 			<strong class="jxr_keyword">if</strong> (attribute.hasNameAc()) {
-<a class="jxr_linenumber" name="L1272" href="#L1272">1272</a> 				attributeStr += <span class="jxr_string">" "</span> + attribute.getNameAc();
-<a class="jxr_linenumber" name="L1273" href="#L1273">1273</a> 			}
-<a class="jxr_linenumber" name="L1274" href="#L1274">1274</a> 			<strong class="jxr_keyword">if</strong> (attributeStr.length() &gt; 0) toReturn.add(attributeStr);
-<a class="jxr_linenumber" name="L1275" href="#L1275">1275</a> 		}
-<a class="jxr_linenumber" name="L1276" href="#L1276">1276</a> 
-<a class="jxr_linenumber" name="L1277" href="#L1277">1277</a> 		<strong class="jxr_keyword">return</strong> toReturn;
-<a class="jxr_linenumber" name="L1278" href="#L1278">1278</a> 	}
-<a class="jxr_linenumber" name="L1279" href="#L1279">1279</a> 
-<a class="jxr_linenumber" name="L1280" href="#L1280">1280</a> 	<em class="jxr_comment">/* Builds a new ExperimentalForm.</em>
-<a class="jxr_linenumber" name="L1281" href="#L1281">1281</a> <em class="jxr_comment">	 * </em>
-<a class="jxr_linenumber" name="L1282" href="#L1282">1282</a> <em class="jxr_comment">	 * @param expEntity - if null, then either the interaction participant entity</em>
-<a class="jxr_linenumber" name="L1283" href="#L1283">1283</a> <em class="jxr_comment">	 * 					itsef is the experimental entity, or exp. interactor is unspecified;</em>
-<a class="jxr_linenumber" name="L1284" href="#L1284">1284</a> <em class="jxr_comment">	 * 					in both cases we set ExperimentalForm.experimentalFormEntity to null</em>
-<a class="jxr_linenumber" name="L1285" href="#L1285">1285</a> <em class="jxr_comment">	 * 					to avoid endless loop: entity/evidence/form/entity/evidence/...</em>
-<a class="jxr_linenumber" name="L1286" href="#L1286">1286</a> <em class="jxr_comment">	 * @param participant - PSI-MI interaction's participant object;</em>
-<a class="jxr_linenumber" name="L1287" href="#L1287">1287</a> <em class="jxr_comment">	 * @param exp - interaction's experiment desc. or null (which actually means all experiments)</em>
-<a class="jxr_linenumber" name="L1288" href="#L1288">1288</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1289" href="#L1289">1289</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createAddExperimentalForm(Participant participant, 
-<a class="jxr_linenumber" name="L1290" href="#L1290">1290</a> 			Evidence pEvidence, Entity expEntity, ExperimentDescription exp) 
-<a class="jxr_linenumber" name="L1291" href="#L1291">1291</a> 	{	 		
-<a class="jxr_linenumber" name="L1292" href="#L1292">1292</a> 		Set&lt;EntityFeature&gt; efs = <strong class="jxr_keyword">new</strong> HashSet&lt;EntityFeature&gt;();
-<a class="jxr_linenumber" name="L1293" href="#L1293">1293</a> 		<strong class="jxr_keyword">for</strong>(Feature f : participant.getFeatures()) {
-<a class="jxr_linenumber" name="L1294" href="#L1294">1294</a> 			<strong class="jxr_keyword">if</strong>(exp==<strong class="jxr_keyword">null</strong> || f.getExperiments().contains(exp) || f.getExperiments().isEmpty()) {
-<a class="jxr_linenumber" name="L1295" href="#L1295">1295</a> 				EntityFeature feature = getFeature(ModificationFeature.<strong class="jxr_keyword">class</strong>, f);			
-<a class="jxr_linenumber" name="L1296" href="#L1296">1296</a> 				<strong class="jxr_keyword">if</strong>(feature != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1297" href="#L1297">1297</a> 					efs.add(feature);
-<a class="jxr_linenumber" name="L1298" href="#L1298">1298</a> 				}
-<a class="jxr_linenumber" name="L1299" href="#L1299">1299</a> 			}
-<a class="jxr_linenumber" name="L1300" href="#L1300">1300</a> 		}
-<a class="jxr_linenumber" name="L1301" href="#L1301">1301</a> 
-<a class="jxr_linenumber" name="L1302" href="#L1302">1302</a> 		Set&lt;ExperimentalFormVocabulary&gt; efvs = <strong class="jxr_keyword">new</strong> HashSet&lt;ExperimentalFormVocabulary&gt;();
-<a class="jxr_linenumber" name="L1303" href="#L1303">1303</a> 		<strong class="jxr_keyword">if</strong> (participant.hasExperimentalRoles()) {
-<a class="jxr_linenumber" name="L1304" href="#L1304">1304</a> 			<strong class="jxr_keyword">for</strong> (ExperimentalRole role : participant.getExperimentalRoles()) {
-<a class="jxr_linenumber" name="L1305" href="#L1305">1305</a> 				<strong class="jxr_keyword">if</strong>(exp==<strong class="jxr_keyword">null</strong> || role.getExperiments().contains(exp) || role.getExperiments().isEmpty()) {
-<a class="jxr_linenumber" name="L1306" href="#L1306">1306</a> 					<em class="jxr_comment">//create/find ExperimentalFormVocabulary (skip for "unspecified role")</em>
-<a class="jxr_linenumber" name="L1307" href="#L1307">1307</a> 					ExperimentalFormVocabulary efv = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1308" href="#L1308">1308</a> 					<em class="jxr_comment">//if(experimentalRole.hasNames() &amp;&amp; !"unspecified role".equalsIgnoreCase(experimentalRole.getNames().getShortLabel()))</em>
-<a class="jxr_linenumber" name="L1309" href="#L1309">1309</a> 					<strong class="jxr_keyword">if</strong>(role.getXref() != <strong class="jxr_keyword">null</strong> &amp;&amp; !<span class="jxr_string">"MI:0499"</span>.equalsIgnoreCase(role.getXref().getPrimaryRef().getId())) {
-<a class="jxr_linenumber" name="L1310" href="#L1310">1310</a> 						efv = findOrCreateControlledVocabulary(role, ExperimentalFormVocabulary.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L1311" href="#L1311">1311</a> 						<strong class="jxr_keyword">if</strong>(efv != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1312" href="#L1312">1312</a> 							efvs.add(efv);
-<a class="jxr_linenumber" name="L1313" href="#L1313">1313</a> 						}
-<a class="jxr_linenumber" name="L1314" href="#L1314">1314</a> 					}
-<a class="jxr_linenumber" name="L1315" href="#L1315">1315</a> 				}
-<a class="jxr_linenumber" name="L1316" href="#L1316">1316</a> 			}
-<a class="jxr_linenumber" name="L1317" href="#L1317">1317</a> 		}
-<a class="jxr_linenumber" name="L1318" href="#L1318">1318</a> 		
-<a class="jxr_linenumber" name="L1319" href="#L1319">1319</a> 		<strong class="jxr_keyword">if</strong>( efs.isEmpty() &amp;&amp; efvs.isEmpty() &amp;&amp; expEntity == <strong class="jxr_keyword">null</strong>)
-<a class="jxr_linenumber" name="L1320" href="#L1320">1320</a> 			<strong class="jxr_keyword">return</strong>; <em class="jxr_comment">//skip creating empty useless ExperimentalForm		</em>
-<a class="jxr_linenumber" name="L1321" href="#L1321">1321</a> 		
-<a class="jxr_linenumber" name="L1322" href="#L1322">1322</a> 		ExperimentalForm ef = bpModel.addNew(ExperimentalForm.<strong class="jxr_keyword">class</strong>, genUri(ExperimentalForm.<strong class="jxr_keyword">class</strong>, bpModel));	
-<a class="jxr_linenumber" name="L1323" href="#L1323">1323</a> 		
-<a class="jxr_linenumber" name="L1324" href="#L1324">1324</a> 		<em class="jxr_comment">//add all exp. features to the exp. form</em>
-<a class="jxr_linenumber" name="L1325" href="#L1325">1325</a> 		<strong class="jxr_keyword">if</strong>(!efs.isEmpty()) {
-<a class="jxr_linenumber" name="L1326" href="#L1326">1326</a> 			ef.addComment(efs.toString());
-<a class="jxr_linenumber" name="L1327" href="#L1327">1327</a> 			<strong class="jxr_keyword">for</strong>(EntityFeature f : efs)
-<a class="jxr_linenumber" name="L1328" href="#L1328">1328</a> 				ef.addExperimentalFeature(f);
-<a class="jxr_linenumber" name="L1329" href="#L1329">1329</a> 		}
-<a class="jxr_linenumber" name="L1330" href="#L1330">1330</a> 		
-<a class="jxr_linenumber" name="L1331" href="#L1331">1331</a> 		<em class="jxr_comment">//add all exp. form vocabularies (roles) to the exp. form</em>
-<a class="jxr_linenumber" name="L1332" href="#L1332">1332</a> 		<strong class="jxr_keyword">if</strong>(!efvs.isEmpty()) {
-<a class="jxr_linenumber" name="L1333" href="#L1333">1333</a> 			ef.addComment(efvs.toString());
-<a class="jxr_linenumber" name="L1334" href="#L1334">1334</a> 			<strong class="jxr_keyword">for</strong>(ExperimentalFormVocabulary efv : efvs)
-<a class="jxr_linenumber" name="L1335" href="#L1335">1335</a> 				ef.addExperimentalFormDescription(efv);
-<a class="jxr_linenumber" name="L1336" href="#L1336">1336</a> 		}
-<a class="jxr_linenumber" name="L1337" href="#L1337">1337</a> 				
-<a class="jxr_linenumber" name="L1338" href="#L1338">1338</a> 		<strong class="jxr_keyword">if</strong>(expEntity != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1339" href="#L1339">1339</a> 			ef.setExperimentalFormEntity(expEntity);
-<a class="jxr_linenumber" name="L1340" href="#L1340">1340</a> 			ef.addComment(EXPERIMENTAL_FORM_ENTITY_COMMENT + <span class="jxr_string">": "</span> + expEntity.getDisplayName());
-<a class="jxr_linenumber" name="L1341" href="#L1341">1341</a> 		}
-<a class="jxr_linenumber" name="L1342" href="#L1342">1342</a> 
-<a class="jxr_linenumber" name="L1343" href="#L1343">1343</a> 		<em class="jxr_comment">//add the ef to participant's evidence</em>
-<a class="jxr_linenumber" name="L1344" href="#L1344">1344</a> 		pEvidence.addExperimentalForm(ef);
-<a class="jxr_linenumber" name="L1345" href="#L1345">1345</a> 
-<a class="jxr_linenumber" name="L1346" href="#L1346">1346</a> 	}
-<a class="jxr_linenumber" name="L1347" href="#L1347">1347</a> 
-<a class="jxr_linenumber" name="L1348" href="#L1348">1348</a> 	<em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L1349" href="#L1349">1349</a> <em class="jxr_comment">	 * Given a PSI Names object, returns a name.</em>
-<a class="jxr_linenumber" name="L1350" href="#L1350">1350</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1351" href="#L1351">1351</a> 	<strong class="jxr_keyword">private</strong> String getName(Names name) {		
-<a class="jxr_linenumber" name="L1352" href="#L1352">1352</a> 
-<a class="jxr_linenumber" name="L1353" href="#L1353">1353</a> 		<strong class="jxr_keyword">if</strong> (name.hasShortLabel()) {
-<a class="jxr_linenumber" name="L1354" href="#L1354">1354</a> 			<strong class="jxr_keyword">return</strong> name.getShortLabel();
-<a class="jxr_linenumber" name="L1355" href="#L1355">1355</a> 		}
-<a class="jxr_linenumber" name="L1356" href="#L1356">1356</a> 		<strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (name.hasFullName()) {
-<a class="jxr_linenumber" name="L1357" href="#L1357">1357</a> 			<strong class="jxr_keyword">return</strong> name.getFullName();
-<a class="jxr_linenumber" name="L1358" href="#L1358">1358</a> 		}
-<a class="jxr_linenumber" name="L1359" href="#L1359">1359</a> 
-<a class="jxr_linenumber" name="L1360" href="#L1360">1360</a> 		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1361" href="#L1361">1361</a> 	}
-<a class="jxr_linenumber" name="L1362" href="#L1362">1362</a> 
-<a class="jxr_linenumber" name="L1363" href="#L1363">1363</a> 
-<a class="jxr_linenumber" name="L1364" href="#L1364">1364</a> 	<strong class="jxr_keyword">private</strong> RelationshipXref relationshipXref(String db, String id, String refType, String refTypeAc)
-<a class="jxr_linenumber" name="L1365" href="#L1365">1365</a> 	{	
-<a class="jxr_linenumber" name="L1366" href="#L1366">1366</a> 		<strong class="jxr_keyword">if</strong>(db == <strong class="jxr_keyword">null</strong> || db.trim().isEmpty()) {
-<a class="jxr_linenumber" name="L1367" href="#L1367">1367</a> 			LOG.warn(<span class="jxr_string">"relationshipXref(), db is null, id="</span> + id);
-<a class="jxr_linenumber" name="L1368" href="#L1368">1368</a> 			<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1369" href="#L1369">1369</a> 		}
-<a class="jxr_linenumber" name="L1370" href="#L1370">1370</a> 		
-<a class="jxr_linenumber" name="L1371" href="#L1371">1371</a> 		db = dbQuickFix(db);
-<a class="jxr_linenumber" name="L1372" href="#L1372">1372</a> 		
-<a class="jxr_linenumber" name="L1373" href="#L1373">1373</a> 		<strong class="jxr_keyword">if</strong>(id == <strong class="jxr_keyword">null</strong> || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
-<a class="jxr_linenumber" name="L1374" href="#L1374">1374</a> 			LOG.warn(<span class="jxr_string">"relationshipXref(), illegal id="</span> + id);
-<a class="jxr_linenumber" name="L1375" href="#L1375">1375</a> 			<strong class="jxr_keyword">return</strong>  <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1376" href="#L1376">1376</a> 		}
-<a class="jxr_linenumber" name="L1377" href="#L1377">1377</a> 		
-<a class="jxr_linenumber" name="L1378" href="#L1378">1378</a> 		id = id.trim();
-<a class="jxr_linenumber" name="L1379" href="#L1379">1379</a> 		
-<a class="jxr_linenumber" name="L1380" href="#L1380">1380</a> 		<em class="jxr_comment">//generate URI</em>
-<a class="jxr_linenumber" name="L1381" href="#L1381">1381</a> 		String uri = xmlBase + <span class="jxr_string">"RelationshipXref_"</span>;
-<a class="jxr_linenumber" name="L1382" href="#L1382">1382</a> 		<strong class="jxr_keyword">if</strong>(refType!=<strong class="jxr_keyword">null</strong> &amp;&amp; !refType.isEmpty())
-<a class="jxr_linenumber" name="L1383" href="#L1383">1383</a> 			uri += encode(db.toLowerCase()+<span class="jxr_string">"_"</span>+id+<span class="jxr_string">"_"</span>+refType);
-<a class="jxr_linenumber" name="L1384" href="#L1384">1384</a> 		<strong class="jxr_keyword">else</strong>
-<a class="jxr_linenumber" name="L1385" href="#L1385">1385</a> 			uri += encode(db.toLowerCase()+<span class="jxr_string">"_"</span>+id);	
-<a class="jxr_linenumber" name="L1386" href="#L1386">1386</a> 		
-<a class="jxr_linenumber" name="L1387" href="#L1387">1387</a>         RelationshipXref x = (RelationshipXref) bpModel.getByID(uri);                 
-<a class="jxr_linenumber" name="L1388" href="#L1388">1388</a>         
-<a class="jxr_linenumber" name="L1389" href="#L1389">1389</a>         <strong class="jxr_keyword">if</strong> (x == <strong class="jxr_keyword">null</strong>) { <em class="jxr_comment">//create/add a new RX</em>
-<a class="jxr_linenumber" name="L1390" href="#L1390">1390</a>         	x = bpModel.addNew(RelationshipXref.<strong class="jxr_keyword">class</strong>, uri);
-<a class="jxr_linenumber" name="L1391" href="#L1391">1391</a>         	x.setDb(db);
-<a class="jxr_linenumber" name="L1392" href="#L1392">1392</a>         	x.setId(id);
-<a class="jxr_linenumber" name="L1393" href="#L1393">1393</a>         	<strong class="jxr_keyword">if</strong> (refType != <strong class="jxr_keyword">null</strong>) <em class="jxr_comment">//use the standard CV term and accession</em>
-<a class="jxr_linenumber" name="L1394" href="#L1394">1394</a>         	{
-<a class="jxr_linenumber" name="L1395" href="#L1395">1395</a>         		String cvUri = (refTypeAc!=<strong class="jxr_keyword">null</strong>) ? <span class="jxr_string">"http://identifiers.org/psimi/"</span> + refTypeAc
-<a class="jxr_linenumber" name="L1396" href="#L1396">1396</a>         			: xmlBase + <span class="jxr_string">"RTV_"</span> + encode(refType);<em class="jxr_comment">//the latter should not happen often (ever, in a valid PSI-MI XML)			</em>
-<a class="jxr_linenumber" name="L1397" href="#L1397">1397</a>         		RelationshipTypeVocabulary rtv = (RelationshipTypeVocabulary) bpModel.getByID(cvUri);
-<a class="jxr_linenumber" name="L1398" href="#L1398">1398</a>         		<strong class="jxr_keyword">if</strong>(rtv == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1399" href="#L1399">1399</a>         			rtv = bpModel.addNew(RelationshipTypeVocabulary.<strong class="jxr_keyword">class</strong>, cvUri);
-<a class="jxr_linenumber" name="L1400" href="#L1400">1400</a>         			rtv.addTerm(refType);
-<a class="jxr_linenumber" name="L1401" href="#L1401">1401</a>         			<strong class="jxr_keyword">if</strong>(refTypeAc != <strong class="jxr_keyword">null</strong> &amp;&amp; !refTypeAc.isEmpty()) {<em class="jxr_comment">//null happens, e.g., for 'uniprot-removed-ac' terms...</em>
-<a class="jxr_linenumber" name="L1402" href="#L1402">1402</a>         				UnificationXref cvx = bpModel
-<a class="jxr_linenumber" name="L1403" href="#L1403">1403</a>         					.addNew(UnificationXref.<strong class="jxr_keyword">class</strong>, genUri(UnificationXref.<strong class="jxr_keyword">class</strong>, bpModel));
-<a class="jxr_linenumber" name="L1404" href="#L1404">1404</a>         				cvx.setDb(<span class="jxr_string">"PSI-MI"</span>);
-<a class="jxr_linenumber" name="L1405" href="#L1405">1405</a>         				cvx.setId(refTypeAc);
-<a class="jxr_linenumber" name="L1406" href="#L1406">1406</a>         				rtv.addXref(cvx);
-<a class="jxr_linenumber" name="L1407" href="#L1407">1407</a>         			}
-<a class="jxr_linenumber" name="L1408" href="#L1408">1408</a>         		}			
-<a class="jxr_linenumber" name="L1409" href="#L1409">1409</a>         		x.setRelationshipType(rtv);
-<a class="jxr_linenumber" name="L1410" href="#L1410">1410</a>         	}		
-<a class="jxr_linenumber" name="L1411" href="#L1411">1411</a>         }
-<a class="jxr_linenumber" name="L1412" href="#L1412">1412</a>         
-<a class="jxr_linenumber" name="L1413" href="#L1413">1413</a> 		<strong class="jxr_keyword">return</strong> x;
-<a class="jxr_linenumber" name="L1414" href="#L1414">1414</a> 	}
-<a class="jxr_linenumber" name="L1415" href="#L1415">1415</a> 
-<a class="jxr_linenumber" name="L1416" href="#L1416">1416</a> 
-<a class="jxr_linenumber" name="L1417" href="#L1417">1417</a> 	<em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L1418" href="#L1418">1418</a> <em class="jxr_comment">	 * Gets a confidence/score object.</em>
-<a class="jxr_linenumber" name="L1419" href="#L1419">1419</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1420" href="#L1420">1420</a> 	<strong class="jxr_keyword">private</strong> Score createScore(String value, 
-<a class="jxr_linenumber" name="L1421" href="#L1421">1421</a> 			Set&lt;? <strong class="jxr_keyword">extends</strong> Xref&gt; bpXrefs, Set&lt;String&gt; comments)
-<a class="jxr_linenumber" name="L1422" href="#L1422">1422</a> 	{
-<a class="jxr_linenumber" name="L1423" href="#L1423">1423</a> 		Score bpScore = bpModel.addNew(Score.<strong class="jxr_keyword">class</strong>, genUri(Score.<strong class="jxr_keyword">class</strong>, bpModel));
-<a class="jxr_linenumber" name="L1424" href="#L1424">1424</a> 		<strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">null</strong>)
-<a class="jxr_linenumber" name="L1425" href="#L1425">1425</a> 		{
-<a class="jxr_linenumber" name="L1426" href="#L1426">1426</a> 			bpScore.setValue(value);
-<a class="jxr_linenumber" name="L1427" href="#L1427">1427</a> 		}
-<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a> 		<strong class="jxr_keyword">if</strong> (bpXrefs != <strong class="jxr_keyword">null</strong> &amp;&amp; !bpXrefs.isEmpty())
-<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a> 		{
-<a class="jxr_linenumber" name="L1430" href="#L1430">1430</a> 			<strong class="jxr_keyword">for</strong> (Xref xref : bpXrefs) {
-<a class="jxr_linenumber" name="L1431" href="#L1431">1431</a> 				bpScore.addXref(xref);
-<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a> 			}
+<a class="jxr_linenumber" name="L1260" href="#L1260">1260</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L1261" href="#L1261">1261</a> <em class="jxr_comment">	 * Given a psi-mi attributes list, returns a string set, where</em>
+<a class="jxr_linenumber" name="L1262" href="#L1262">1262</a> <em class="jxr_comment">	 * each string is concatenation of name/value pairs.</em>
+<a class="jxr_linenumber" name="L1263" href="#L1263">1263</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1264" href="#L1264">1264</a> 	<strong class="jxr_keyword">private</strong> Set&lt;String&gt; getAttributes(Collection&lt;Attribute&gt; attributes) {
+<a class="jxr_linenumber" name="L1265" href="#L1265">1265</a> 
+<a class="jxr_linenumber" name="L1266" href="#L1266">1266</a> 		<em class="jxr_comment">// set to return</em>
+<a class="jxr_linenumber" name="L1267" href="#L1267">1267</a> 		Set&lt;String&gt; toReturn = <strong class="jxr_keyword">new</strong> HashSet&lt;String&gt;();
+<a class="jxr_linenumber" name="L1268" href="#L1268">1268</a> 
+<a class="jxr_linenumber" name="L1269" href="#L1269">1269</a> 		<em class="jxr_comment">// iterate over the attributes</em>
+<a class="jxr_linenumber" name="L1270" href="#L1270">1270</a> 		<strong class="jxr_keyword">for</strong> (Attribute attribute : attributes) {
+<a class="jxr_linenumber" name="L1271" href="#L1271">1271</a> 			String attributeStr = <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L1272" href="#L1272">1272</a> 			<strong class="jxr_keyword">if</strong> (attribute.hasValue()) {
+<a class="jxr_linenumber" name="L1273" href="#L1273">1273</a> 				attributeStr = attribute.getValue();
+<a class="jxr_linenumber" name="L1274" href="#L1274">1274</a> 			}
+<a class="jxr_linenumber" name="L1275" href="#L1275">1275</a> 			String name = attribute.getName();
+<a class="jxr_linenumber" name="L1276" href="#L1276">1276</a> 			attributeStr = (name != <strong class="jxr_keyword">null</strong>) ? attributeStr += <span class="jxr_string">" "</span> + name : attributeStr;
+<a class="jxr_linenumber" name="L1277" href="#L1277">1277</a> 			<strong class="jxr_keyword">if</strong> (attribute.hasNameAc()) {
+<a class="jxr_linenumber" name="L1278" href="#L1278">1278</a> 				attributeStr += <span class="jxr_string">" "</span> + attribute.getNameAc();
+<a class="jxr_linenumber" name="L1279" href="#L1279">1279</a> 			}
+<a class="jxr_linenumber" name="L1280" href="#L1280">1280</a> 			<strong class="jxr_keyword">if</strong> (attributeStr.length() &gt; 0) toReturn.add(attributeStr);
+<a class="jxr_linenumber" name="L1281" href="#L1281">1281</a> 		}
+<a class="jxr_linenumber" name="L1282" href="#L1282">1282</a> 
+<a class="jxr_linenumber" name="L1283" href="#L1283">1283</a> 		<strong class="jxr_keyword">return</strong> toReturn;
+<a class="jxr_linenumber" name="L1284" href="#L1284">1284</a> 	}
+<a class="jxr_linenumber" name="L1285" href="#L1285">1285</a> 
+<a class="jxr_linenumber" name="L1286" href="#L1286">1286</a> 	<em class="jxr_comment">/* Builds a new ExperimentalForm.</em>
+<a class="jxr_linenumber" name="L1287" href="#L1287">1287</a> <em class="jxr_comment">	 * </em>
+<a class="jxr_linenumber" name="L1288" href="#L1288">1288</a> <em class="jxr_comment">	 * @param expEntity - if null, then either the interaction participant entity</em>
+<a class="jxr_linenumber" name="L1289" href="#L1289">1289</a> <em class="jxr_comment">	 * 					itsef is the experimental entity, or exp. interactor is unspecified;</em>
+<a class="jxr_linenumber" name="L1290" href="#L1290">1290</a> <em class="jxr_comment">	 * 					in both cases we set ExperimentalForm.experimentalFormEntity to null</em>
+<a class="jxr_linenumber" name="L1291" href="#L1291">1291</a> <em class="jxr_comment">	 * 					to avoid endless loop: entity/evidence/form/entity/evidence/...</em>
+<a class="jxr_linenumber" name="L1292" href="#L1292">1292</a> <em class="jxr_comment">	 * @param participant - PSI-MI interaction's participant object;</em>
+<a class="jxr_linenumber" name="L1293" href="#L1293">1293</a> <em class="jxr_comment">	 * @param exp - interaction's experiment desc. or null (which actually means all experiments)</em>
+<a class="jxr_linenumber" name="L1294" href="#L1294">1294</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1295" href="#L1295">1295</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createAddExperimentalForm(Participant participant, 
+<a class="jxr_linenumber" name="L1296" href="#L1296">1296</a> 			Evidence pEvidence, Entity expEntity, ExperimentDescription exp) 
+<a class="jxr_linenumber" name="L1297" href="#L1297">1297</a> 	{	 		
+<a class="jxr_linenumber" name="L1298" href="#L1298">1298</a> 		Set&lt;EntityFeature&gt; efs = <strong class="jxr_keyword">new</strong> HashSet&lt;EntityFeature&gt;();
+<a class="jxr_linenumber" name="L1299" href="#L1299">1299</a> 		<strong class="jxr_keyword">for</strong>(Feature f : participant.getFeatures()) {
+<a class="jxr_linenumber" name="L1300" href="#L1300">1300</a> 			<strong class="jxr_keyword">if</strong>(exp==<strong class="jxr_keyword">null</strong> || f.getExperiments().contains(exp) || f.getExperiments().isEmpty()) {
+<a class="jxr_linenumber" name="L1301" href="#L1301">1301</a> 				EntityFeature feature = getFeature(ModificationFeature.<strong class="jxr_keyword">class</strong>, f);			
+<a class="jxr_linenumber" name="L1302" href="#L1302">1302</a> 				<strong class="jxr_keyword">if</strong>(feature != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1303" href="#L1303">1303</a> 					efs.add(feature);
+<a class="jxr_linenumber" name="L1304" href="#L1304">1304</a> 				}
+<a class="jxr_linenumber" name="L1305" href="#L1305">1305</a> 			}
+<a class="jxr_linenumber" name="L1306" href="#L1306">1306</a> 		}
+<a class="jxr_linenumber" name="L1307" href="#L1307">1307</a> 
+<a class="jxr_linenumber" name="L1308" href="#L1308">1308</a> 		Set&lt;ExperimentalFormVocabulary&gt; efvs = <strong class="jxr_keyword">new</strong> HashSet&lt;ExperimentalFormVocabulary&gt;();
+<a class="jxr_linenumber" name="L1309" href="#L1309">1309</a> 		<strong class="jxr_keyword">if</strong> (participant.hasExperimentalRoles()) {
+<a class="jxr_linenumber" name="L1310" href="#L1310">1310</a> 			<strong class="jxr_keyword">for</strong> (ExperimentalRole role : participant.getExperimentalRoles()) {
+<a class="jxr_linenumber" name="L1311" href="#L1311">1311</a> 				<strong class="jxr_keyword">if</strong>(exp==<strong class="jxr_keyword">null</strong> || role.getExperiments().contains(exp) || role.getExperiments().isEmpty()) {
+<a class="jxr_linenumber" name="L1312" href="#L1312">1312</a> 					<em class="jxr_comment">//create/find ExperimentalFormVocabulary (skip for "unspecified role")</em>
+<a class="jxr_linenumber" name="L1313" href="#L1313">1313</a> 					ExperimentalFormVocabulary efv = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1314" href="#L1314">1314</a> 					<em class="jxr_comment">//if(experimentalRole.hasNames() &amp;&amp; !"unspecified role".equalsIgnoreCase(experimentalRole.getNames().getShortLabel()))</em>
+<a class="jxr_linenumber" name="L1315" href="#L1315">1315</a> 					<strong class="jxr_keyword">if</strong>(role.getXref() != <strong class="jxr_keyword">null</strong> &amp;&amp; !<span class="jxr_string">"MI:0499"</span>.equalsIgnoreCase(role.getXref().getPrimaryRef().getId())) {
+<a class="jxr_linenumber" name="L1316" href="#L1316">1316</a> 						efv = findOrCreateControlledVocabulary(role, ExperimentalFormVocabulary.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L1317" href="#L1317">1317</a> 						<strong class="jxr_keyword">if</strong>(efv != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1318" href="#L1318">1318</a> 							efvs.add(efv);
+<a class="jxr_linenumber" name="L1319" href="#L1319">1319</a> 						}
+<a class="jxr_linenumber" name="L1320" href="#L1320">1320</a> 					}
+<a class="jxr_linenumber" name="L1321" href="#L1321">1321</a> 				}
+<a class="jxr_linenumber" name="L1322" href="#L1322">1322</a> 			}
+<a class="jxr_linenumber" name="L1323" href="#L1323">1323</a> 		}
+<a class="jxr_linenumber" name="L1324" href="#L1324">1324</a> 		
+<a class="jxr_linenumber" name="L1325" href="#L1325">1325</a> 		<strong class="jxr_keyword">if</strong>( efs.isEmpty() &amp;&amp; efvs.isEmpty() &amp;&amp; expEntity == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1326" href="#L1326">1326</a> 			<strong class="jxr_keyword">return</strong>; <em class="jxr_comment">//skip creating empty useless ExperimentalForm		</em>
+<a class="jxr_linenumber" name="L1327" href="#L1327">1327</a> 		
+<a class="jxr_linenumber" name="L1328" href="#L1328">1328</a> 		ExperimentalForm ef = bpModel.addNew(ExperimentalForm.<strong class="jxr_keyword">class</strong>, genUri(ExperimentalForm.<strong class="jxr_keyword">class</strong>, bpModel));	
+<a class="jxr_linenumber" name="L1329" href="#L1329">1329</a> 		
+<a class="jxr_linenumber" name="L1330" href="#L1330">1330</a> 		<em class="jxr_comment">//add all exp. features to the exp. form</em>
+<a class="jxr_linenumber" name="L1331" href="#L1331">1331</a> 		<strong class="jxr_keyword">if</strong>(!efs.isEmpty()) {
+<a class="jxr_linenumber" name="L1332" href="#L1332">1332</a> 			ef.addComment(efs.toString());
+<a class="jxr_linenumber" name="L1333" href="#L1333">1333</a> 			<strong class="jxr_keyword">for</strong>(EntityFeature f : efs)
+<a class="jxr_linenumber" name="L1334" href="#L1334">1334</a> 				ef.addExperimentalFeature(f);
+<a class="jxr_linenumber" name="L1335" href="#L1335">1335</a> 		}
+<a class="jxr_linenumber" name="L1336" href="#L1336">1336</a> 		
+<a class="jxr_linenumber" name="L1337" href="#L1337">1337</a> 		<em class="jxr_comment">//add all exp. form vocabularies (roles) to the exp. form</em>
+<a class="jxr_linenumber" name="L1338" href="#L1338">1338</a> 		<strong class="jxr_keyword">if</strong>(!efvs.isEmpty()) {
+<a class="jxr_linenumber" name="L1339" href="#L1339">1339</a> 			ef.addComment(efvs.toString());
+<a class="jxr_linenumber" name="L1340" href="#L1340">1340</a> 			<strong class="jxr_keyword">for</strong>(ExperimentalFormVocabulary efv : efvs)
+<a class="jxr_linenumber" name="L1341" href="#L1341">1341</a> 				ef.addExperimentalFormDescription(efv);
+<a class="jxr_linenumber" name="L1342" href="#L1342">1342</a> 		}
+<a class="jxr_linenumber" name="L1343" href="#L1343">1343</a> 				
+<a class="jxr_linenumber" name="L1344" href="#L1344">1344</a> 		<strong class="jxr_keyword">if</strong>(expEntity != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1345" href="#L1345">1345</a> 			ef.setExperimentalFormEntity(expEntity);
+<a class="jxr_linenumber" name="L1346" href="#L1346">1346</a> 			ef.addComment(EXPERIMENTAL_FORM_ENTITY_COMMENT + <span class="jxr_string">": "</span> + expEntity.getDisplayName());
+<a class="jxr_linenumber" name="L1347" href="#L1347">1347</a> 		}
+<a class="jxr_linenumber" name="L1348" href="#L1348">1348</a> 
+<a class="jxr_linenumber" name="L1349" href="#L1349">1349</a> 		<em class="jxr_comment">//add the ef to participant's evidence</em>
+<a class="jxr_linenumber" name="L1350" href="#L1350">1350</a> 		pEvidence.addExperimentalForm(ef);
+<a class="jxr_linenumber" name="L1351" href="#L1351">1351</a> 
+<a class="jxr_linenumber" name="L1352" href="#L1352">1352</a> 	}
+<a class="jxr_linenumber" name="L1353" href="#L1353">1353</a> 
+<a class="jxr_linenumber" name="L1354" href="#L1354">1354</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L1355" href="#L1355">1355</a> <em class="jxr_comment">	 * Given a PSI Names object, returns a name.</em>
+<a class="jxr_linenumber" name="L1356" href="#L1356">1356</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1357" href="#L1357">1357</a> 	<strong class="jxr_keyword">private</strong> String getName(Names name) {		
+<a class="jxr_linenumber" name="L1358" href="#L1358">1358</a> 
+<a class="jxr_linenumber" name="L1359" href="#L1359">1359</a> 		<strong class="jxr_keyword">if</strong> (name.hasShortLabel()) {
+<a class="jxr_linenumber" name="L1360" href="#L1360">1360</a> 			<strong class="jxr_keyword">return</strong> name.getShortLabel();
+<a class="jxr_linenumber" name="L1361" href="#L1361">1361</a> 		}
+<a class="jxr_linenumber" name="L1362" href="#L1362">1362</a> 		<strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (name.hasFullName()) {
+<a class="jxr_linenumber" name="L1363" href="#L1363">1363</a> 			<strong class="jxr_keyword">return</strong> name.getFullName();
+<a class="jxr_linenumber" name="L1364" href="#L1364">1364</a> 		}
+<a class="jxr_linenumber" name="L1365" href="#L1365">1365</a> 
+<a class="jxr_linenumber" name="L1366" href="#L1366">1366</a> 		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1367" href="#L1367">1367</a> 	}
+<a class="jxr_linenumber" name="L1368" href="#L1368">1368</a> 
+<a class="jxr_linenumber" name="L1369" href="#L1369">1369</a> 
+<a class="jxr_linenumber" name="L1370" href="#L1370">1370</a> 	<strong class="jxr_keyword">private</strong> RelationshipXref relationshipXref(String db, String id, String refType, String refTypeAc)
+<a class="jxr_linenumber" name="L1371" href="#L1371">1371</a> 	{	
+<a class="jxr_linenumber" name="L1372" href="#L1372">1372</a> 		<strong class="jxr_keyword">if</strong>(db == <strong class="jxr_keyword">null</strong> || db.trim().isEmpty()) {
+<a class="jxr_linenumber" name="L1373" href="#L1373">1373</a> 			LOG.warn(<span class="jxr_string">"relationshipXref(), db is null, id="</span> + id);
+<a class="jxr_linenumber" name="L1374" href="#L1374">1374</a> 			<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1375" href="#L1375">1375</a> 		}
+<a class="jxr_linenumber" name="L1376" href="#L1376">1376</a> 		
+<a class="jxr_linenumber" name="L1377" href="#L1377">1377</a> 		db = dbQuickFix(db);
+<a class="jxr_linenumber" name="L1378" href="#L1378">1378</a> 		
+<a class="jxr_linenumber" name="L1379" href="#L1379">1379</a> 		<strong class="jxr_keyword">if</strong>(id == <strong class="jxr_keyword">null</strong> || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
+<a class="jxr_linenumber" name="L1380" href="#L1380">1380</a> 			LOG.warn(<span class="jxr_string">"relationshipXref(), illegal id="</span> + id);
+<a class="jxr_linenumber" name="L1381" href="#L1381">1381</a> 			<strong class="jxr_keyword">return</strong>  <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1382" href="#L1382">1382</a> 		}
+<a class="jxr_linenumber" name="L1383" href="#L1383">1383</a> 		
+<a class="jxr_linenumber" name="L1384" href="#L1384">1384</a> 		id = id.trim();
+<a class="jxr_linenumber" name="L1385" href="#L1385">1385</a> 		
+<a class="jxr_linenumber" name="L1386" href="#L1386">1386</a> 		<em class="jxr_comment">//generate URI</em>
+<a class="jxr_linenumber" name="L1387" href="#L1387">1387</a> 		String uri = xmlBase + <span class="jxr_string">"RelationshipXref_"</span>;
+<a class="jxr_linenumber" name="L1388" href="#L1388">1388</a> 		<strong class="jxr_keyword">if</strong>(refType!=<strong class="jxr_keyword">null</strong> &amp;&amp; !refType.isEmpty())
+<a class="jxr_linenumber" name="L1389" href="#L1389">1389</a> 			uri += encode(db.toLowerCase()+<span class="jxr_string">"_"</span>+id+<span class="jxr_string">"_"</span>+refType);
+<a class="jxr_linenumber" name="L1390" href="#L1390">1390</a> 		<strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L1391" href="#L1391">1391</a> 			uri += encode(db.toLowerCase()+<span class="jxr_string">"_"</span>+id);	
+<a class="jxr_linenumber" name="L1392" href="#L1392">1392</a> 		
+<a class="jxr_linenumber" name="L1393" href="#L1393">1393</a>         RelationshipXref x = (RelationshipXref) bpModel.getByID(uri);                 
+<a class="jxr_linenumber" name="L1394" href="#L1394">1394</a>         
+<a class="jxr_linenumber" name="L1395" href="#L1395">1395</a>         <strong class="jxr_keyword">if</strong> (x == <strong class="jxr_keyword">null</strong>) { <em class="jxr_comment">//create/add a new RX</em>
+<a class="jxr_linenumber" name="L1396" href="#L1396">1396</a>         	x = bpModel.addNew(RelationshipXref.<strong class="jxr_keyword">class</strong>, uri);
+<a class="jxr_linenumber" name="L1397" href="#L1397">1397</a>         	x.setDb(db);
+<a class="jxr_linenumber" name="L1398" href="#L1398">1398</a>         	x.setId(id);
+<a class="jxr_linenumber" name="L1399" href="#L1399">1399</a>         	<strong class="jxr_keyword">if</strong> (refType != <strong class="jxr_keyword">null</strong>) <em class="jxr_comment">//use the standard CV term and accession</em>
+<a class="jxr_linenumber" name="L1400" href="#L1400">1400</a>         	{
+<a class="jxr_linenumber" name="L1401" href="#L1401">1401</a>         		String cvUri = (refTypeAc!=<strong class="jxr_keyword">null</strong>) ? <span class="jxr_string">"http://identifiers.org/psimi/"</span> + refTypeAc
+<a class="jxr_linenumber" name="L1402" href="#L1402">1402</a>         			: xmlBase + <span class="jxr_string">"RTV_"</span> + encode(refType);<em class="jxr_comment">//the latter should not happen often (ever, in a valid PSI-MI XML)			</em>
+<a class="jxr_linenumber" name="L1403" href="#L1403">1403</a>         		RelationshipTypeVocabulary rtv = (RelationshipTypeVocabulary) bpModel.getByID(cvUri);
+<a class="jxr_linenumber" name="L1404" href="#L1404">1404</a>         		<strong class="jxr_keyword">if</strong>(rtv == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1405" href="#L1405">1405</a>         			rtv = bpModel.addNew(RelationshipTypeVocabulary.<strong class="jxr_keyword">class</strong>, cvUri);
+<a class="jxr_linenumber" name="L1406" href="#L1406">1406</a>         			rtv.addTerm(refType);
+<a class="jxr_linenumber" name="L1407" href="#L1407">1407</a>         			<strong class="jxr_keyword">if</strong>(refTypeAc != <strong class="jxr_keyword">null</strong> &amp;&amp; !refTypeAc.isEmpty()) {<em class="jxr_comment">//null happens, e.g., for 'uniprot-removed-ac' terms...</em>
+<a class="jxr_linenumber" name="L1408" href="#L1408">1408</a>         				UnificationXref cvx = bpModel
+<a class="jxr_linenumber" name="L1409" href="#L1409">1409</a>         					.addNew(UnificationXref.<strong class="jxr_keyword">class</strong>, genUri(UnificationXref.<strong class="jxr_keyword">class</strong>, bpModel));
+<a class="jxr_linenumber" name="L1410" href="#L1410">1410</a>         				cvx.setDb(<span class="jxr_string">"PSI-MI"</span>);
+<a class="jxr_linenumber" name="L1411" href="#L1411">1411</a>         				cvx.setId(refTypeAc);
+<a class="jxr_linenumber" name="L1412" href="#L1412">1412</a>         				rtv.addXref(cvx);
+<a class="jxr_linenumber" name="L1413" href="#L1413">1413</a>         			}
+<a class="jxr_linenumber" name="L1414" href="#L1414">1414</a>         		}			
+<a class="jxr_linenumber" name="L1415" href="#L1415">1415</a>         		x.setRelationshipType(rtv);
+<a class="jxr_linenumber" name="L1416" href="#L1416">1416</a>         	}		
+<a class="jxr_linenumber" name="L1417" href="#L1417">1417</a>         }
+<a class="jxr_linenumber" name="L1418" href="#L1418">1418</a>         
+<a class="jxr_linenumber" name="L1419" href="#L1419">1419</a> 		<strong class="jxr_keyword">return</strong> x;
+<a class="jxr_linenumber" name="L1420" href="#L1420">1420</a> 	}
+<a class="jxr_linenumber" name="L1421" href="#L1421">1421</a> 
+<a class="jxr_linenumber" name="L1422" href="#L1422">1422</a> 
+<a class="jxr_linenumber" name="L1423" href="#L1423">1423</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L1424" href="#L1424">1424</a> <em class="jxr_comment">	 * Gets a confidence/score object.</em>
+<a class="jxr_linenumber" name="L1425" href="#L1425">1425</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1426" href="#L1426">1426</a> 	<strong class="jxr_keyword">private</strong> Score createScore(String value, 
+<a class="jxr_linenumber" name="L1427" href="#L1427">1427</a> 			Set&lt;? <strong class="jxr_keyword">extends</strong> Xref&gt; bpXrefs, Set&lt;String&gt; comments)
+<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a> 	{
+<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a> 		Score bpScore = bpModel.addNew(Score.<strong class="jxr_keyword">class</strong>, genUri(Score.<strong class="jxr_keyword">class</strong>, bpModel));
+<a class="jxr_linenumber" name="L1430" href="#L1430">1430</a> 		<strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1431" href="#L1431">1431</a> 		{
+<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a> 			bpScore.setValue(value);
 <a class="jxr_linenumber" name="L1433" href="#L1433">1433</a> 		}
-<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a> 		<strong class="jxr_keyword">if</strong> (comments != <strong class="jxr_keyword">null</strong> &amp;&amp; !comments.isEmpty())
+<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a> 		<strong class="jxr_keyword">if</strong> (bpXrefs != <strong class="jxr_keyword">null</strong> &amp;&amp; !bpXrefs.isEmpty())
 <a class="jxr_linenumber" name="L1435" href="#L1435">1435</a> 		{
-<a class="jxr_linenumber" name="L1436" href="#L1436">1436</a> 			<strong class="jxr_keyword">for</strong> (String comment : comments) {
-<a class="jxr_linenumber" name="L1437" href="#L1437">1437</a> 				bpScore.addComment(comment);
+<a class="jxr_linenumber" name="L1436" href="#L1436">1436</a> 			<strong class="jxr_keyword">for</strong> (Xref xref : bpXrefs) {
+<a class="jxr_linenumber" name="L1437" href="#L1437">1437</a> 				bpScore.addXref(xref);
 <a class="jxr_linenumber" name="L1438" href="#L1438">1438</a> 			}
 <a class="jxr_linenumber" name="L1439" href="#L1439">1439</a> 		}
-<a class="jxr_linenumber" name="L1440" href="#L1440">1440</a> 		<strong class="jxr_keyword">return</strong> bpScore;
-<a class="jxr_linenumber" name="L1441" href="#L1441">1441</a> 	}
-<a class="jxr_linenumber" name="L1442" href="#L1442">1442</a> 
-<a class="jxr_linenumber" name="L1443" href="#L1443">1443</a> 
-<a class="jxr_linenumber" name="L1444" href="#L1444">1444</a> 	<em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L1445" href="#L1445">1445</a> <em class="jxr_comment">	 * New a molecular interaction.</em>
-<a class="jxr_linenumber" name="L1446" href="#L1446">1446</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1447" href="#L1447">1447</a> 	<strong class="jxr_keyword">private</strong> MolecularInteraction createMolecularInteraction(
-<a class="jxr_linenumber" name="L1448" href="#L1448">1448</a> 			Set&lt;? <strong class="jxr_keyword">extends</strong> Entity&gt; participants,
-<a class="jxr_linenumber" name="L1449" href="#L1449">1449</a> 			Set&lt;InteractionVocabulary&gt; interactionVocabularies)
-<a class="jxr_linenumber" name="L1450" href="#L1450">1450</a> 	{
-<a class="jxr_linenumber" name="L1451" href="#L1451">1451</a> 		MolecularInteraction toReturn =
-<a class="jxr_linenumber" name="L1452" href="#L1452">1452</a> 				bpModel.addNew(MolecularInteraction.<strong class="jxr_keyword">class</strong>, genUri(MolecularInteraction.<strong class="jxr_keyword">class</strong>, bpModel));
-<a class="jxr_linenumber" name="L1453" href="#L1453">1453</a> 
-<a class="jxr_linenumber" name="L1454" href="#L1454">1454</a> 		<strong class="jxr_keyword">if</strong> (participants != <strong class="jxr_keyword">null</strong> &amp;&amp; !participants.isEmpty())
-<a class="jxr_linenumber" name="L1455" href="#L1455">1455</a> 		{
-<a class="jxr_linenumber" name="L1456" href="#L1456">1456</a> 			<strong class="jxr_keyword">for</strong> (Entity participant : participants) {
-<a class="jxr_linenumber" name="L1457" href="#L1457">1457</a> 				toReturn.addParticipant((PhysicalEntity)participant);
-<a class="jxr_linenumber" name="L1458" href="#L1458">1458</a> 			}
-<a class="jxr_linenumber" name="L1459" href="#L1459">1459</a> 		}
-<a class="jxr_linenumber" name="L1460" href="#L1460">1460</a> 			
-<a class="jxr_linenumber" name="L1461" href="#L1461">1461</a> 		<strong class="jxr_keyword">for</strong>(InteractionVocabulary iv : interactionVocabularies) {
-<a class="jxr_linenumber" name="L1462" href="#L1462">1462</a> 			toReturn.addInteractionType(iv);
-<a class="jxr_linenumber" name="L1463" href="#L1463">1463</a> 		}
-<a class="jxr_linenumber" name="L1464" href="#L1464">1464</a> 			
-<a class="jxr_linenumber" name="L1465" href="#L1465">1465</a> 		<strong class="jxr_keyword">return</strong> toReturn;
-<a class="jxr_linenumber" name="L1466" href="#L1466">1466</a> 	}
-<a class="jxr_linenumber" name="L1467" href="#L1467">1467</a> 	
-<a class="jxr_linenumber" name="L1468" href="#L1468">1468</a> 	<strong class="jxr_keyword">private</strong> GeneticInteraction createGeneticInteraction(
-<a class="jxr_linenumber" name="L1469" href="#L1469">1469</a> 			Set&lt;? <strong class="jxr_keyword">extends</strong> Entity&gt; participants,
-<a class="jxr_linenumber" name="L1470" href="#L1470">1470</a> 			Set&lt;InteractionVocabulary&gt; interactionVocabularies)
-<a class="jxr_linenumber" name="L1471" href="#L1471">1471</a> 	{
-<a class="jxr_linenumber" name="L1472" href="#L1472">1472</a> 		GeneticInteraction toReturn =
-<a class="jxr_linenumber" name="L1473" href="#L1473">1473</a> 				bpModel.addNew(GeneticInteraction.<strong class="jxr_keyword">class</strong>, genUri(GeneticInteraction.<strong class="jxr_keyword">class</strong>, bpModel));
-<a class="jxr_linenumber" name="L1474" href="#L1474">1474</a> 
-<a class="jxr_linenumber" name="L1475" href="#L1475">1475</a> 		<strong class="jxr_keyword">if</strong> (participants != <strong class="jxr_keyword">null</strong> &amp;&amp; !participants.isEmpty())
-<a class="jxr_linenumber" name="L1476" href="#L1476">1476</a> 		{
-<a class="jxr_linenumber" name="L1477" href="#L1477">1477</a> 			<strong class="jxr_keyword">for</strong> (Entity participant : participants) {
-<a class="jxr_linenumber" name="L1478" href="#L1478">1478</a> 				toReturn.addParticipant((Gene)participant);
-<a class="jxr_linenumber" name="L1479" href="#L1479">1479</a> 			}
-<a class="jxr_linenumber" name="L1480" href="#L1480">1480</a> 		}
-<a class="jxr_linenumber" name="L1481" href="#L1481">1481</a> 
-<a class="jxr_linenumber" name="L1482" href="#L1482">1482</a> 		<strong class="jxr_keyword">for</strong>(InteractionVocabulary iv : interactionVocabularies) {
-<a class="jxr_linenumber" name="L1483" href="#L1483">1483</a> 			toReturn.addInteractionType(iv);
-<a class="jxr_linenumber" name="L1484" href="#L1484">1484</a> 		}
-<a class="jxr_linenumber" name="L1485" href="#L1485">1485</a> 
-<a class="jxr_linenumber" name="L1486" href="#L1486">1486</a> 		<strong class="jxr_keyword">return</strong> toReturn;
-<a class="jxr_linenumber" name="L1487" href="#L1487">1487</a> 	}
-<a class="jxr_linenumber" name="L1488" href="#L1488">1488</a> 
-<a class="jxr_linenumber" name="L1489" href="#L1489">1489</a> 
-<a class="jxr_linenumber" name="L1490" href="#L1490">1490</a> 	<strong class="jxr_keyword">private</strong> Complex createComplex(Set&lt;? <strong class="jxr_keyword">extends</strong> Entity&gt; participants)
-<a class="jxr_linenumber" name="L1491" href="#L1491">1491</a> 	{
-<a class="jxr_linenumber" name="L1492" href="#L1492">1492</a> 		Complex toReturn = bpModel.addNew(Complex.<strong class="jxr_keyword">class</strong>, genUri(Complex.<strong class="jxr_keyword">class</strong>, bpModel));
-<a class="jxr_linenumber" name="L1493" href="#L1493">1493</a> 
-<a class="jxr_linenumber" name="L1494" href="#L1494">1494</a> 		<strong class="jxr_keyword">if</strong> (participants != <strong class="jxr_keyword">null</strong> &amp;&amp; !participants.isEmpty())
-<a class="jxr_linenumber" name="L1495" href="#L1495">1495</a> 		{
-<a class="jxr_linenumber" name="L1496" href="#L1496">1496</a> 			<strong class="jxr_keyword">for</strong> (Entity participant : participants) {
-<a class="jxr_linenumber" name="L1497" href="#L1497">1497</a> 				toReturn.addComponent((PhysicalEntity)participant);
-<a class="jxr_linenumber" name="L1498" href="#L1498">1498</a> 			}
-<a class="jxr_linenumber" name="L1499" href="#L1499">1499</a> 		}
-<a class="jxr_linenumber" name="L1500" href="#L1500">1500</a> 			
-<a class="jxr_linenumber" name="L1501" href="#L1501">1501</a> 		<strong class="jxr_keyword">return</strong> toReturn;
-<a class="jxr_linenumber" name="L1502" href="#L1502">1502</a> 	}
-<a class="jxr_linenumber" name="L1503" href="#L1503">1503</a> 	
-<a class="jxr_linenumber" name="L1504" href="#L1504">1504</a> 
-<a class="jxr_linenumber" name="L1505" href="#L1505">1505</a> 	<strong class="jxr_keyword">private</strong> &lt;T <strong class="jxr_keyword">extends</strong> EntityFeature&gt; T getFeature(Class&lt;T&gt; featureClass, Feature psiFeature)
-<a class="jxr_linenumber" name="L1506" href="#L1506">1506</a> 	{					
-<a class="jxr_linenumber" name="L1507" href="#L1507">1507</a> 		String entityFeatureUri = genUri(featureClass, bpModel); 		
-<a class="jxr_linenumber" name="L1508" href="#L1508">1508</a> 		T entityFeature = (T) bpModel.addNew(featureClass, entityFeatureUri);
-<a class="jxr_linenumber" name="L1509" href="#L1509">1509</a> 		
-<a class="jxr_linenumber" name="L1510" href="#L1510">1510</a> 		<em class="jxr_comment">// feature location</em>
-<a class="jxr_linenumber" name="L1511" href="#L1511">1511</a> 		Set&lt;SequenceInterval&gt; featureLocations = getSequenceLocation(psiFeature.getRanges());
-<a class="jxr_linenumber" name="L1512" href="#L1512">1512</a> 		<strong class="jxr_keyword">if</strong> (featureLocations != <strong class="jxr_keyword">null</strong>)
-<a class="jxr_linenumber" name="L1513" href="#L1513">1513</a> 			<strong class="jxr_keyword">for</strong> (SequenceLocation featureLocation : featureLocations) 
-<a class="jxr_linenumber" name="L1514" href="#L1514">1514</a> 				entityFeature.setFeatureLocation(featureLocation);
+<a class="jxr_linenumber" name="L1440" href="#L1440">1440</a> 		<strong class="jxr_keyword">if</strong> (comments != <strong class="jxr_keyword">null</strong> &amp;&amp; !comments.isEmpty())
+<a class="jxr_linenumber" name="L1441" href="#L1441">1441</a> 		{
+<a class="jxr_linenumber" name="L1442" href="#L1442">1442</a> 			<strong class="jxr_keyword">for</strong> (String comment : comments) {
+<a class="jxr_linenumber" name="L1443" href="#L1443">1443</a> 				bpScore.addComment(comment);
+<a class="jxr_linenumber" name="L1444" href="#L1444">1444</a> 			}
+<a class="jxr_linenumber" name="L1445" href="#L1445">1445</a> 		}
+<a class="jxr_linenumber" name="L1446" href="#L1446">1446</a> 		<strong class="jxr_keyword">return</strong> bpScore;
+<a class="jxr_linenumber" name="L1447" href="#L1447">1447</a> 	}
+<a class="jxr_linenumber" name="L1448" href="#L1448">1448</a> 
+<a class="jxr_linenumber" name="L1449" href="#L1449">1449</a> 
+<a class="jxr_linenumber" name="L1450" href="#L1450">1450</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L1451" href="#L1451">1451</a> <em class="jxr_comment">	 * New a molecular interaction.</em>
+<a class="jxr_linenumber" name="L1452" href="#L1452">1452</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1453" href="#L1453">1453</a> 	<strong class="jxr_keyword">private</strong> MolecularInteraction createMolecularInteraction(
+<a class="jxr_linenumber" name="L1454" href="#L1454">1454</a> 			Set&lt;? <strong class="jxr_keyword">extends</strong> Entity&gt; participants,
+<a class="jxr_linenumber" name="L1455" href="#L1455">1455</a> 			Set&lt;InteractionVocabulary&gt; interactionVocabularies)
+<a class="jxr_linenumber" name="L1456" href="#L1456">1456</a> 	{
+<a class="jxr_linenumber" name="L1457" href="#L1457">1457</a> 		MolecularInteraction toReturn =
+<a class="jxr_linenumber" name="L1458" href="#L1458">1458</a> 				bpModel.addNew(MolecularInteraction.<strong class="jxr_keyword">class</strong>, genUri(MolecularInteraction.<strong class="jxr_keyword">class</strong>, bpModel));
+<a class="jxr_linenumber" name="L1459" href="#L1459">1459</a> 
+<a class="jxr_linenumber" name="L1460" href="#L1460">1460</a> 		<strong class="jxr_keyword">if</strong> (participants != <strong class="jxr_keyword">null</strong> &amp;&amp; !participants.isEmpty())
+<a class="jxr_linenumber" name="L1461" href="#L1461">1461</a> 		{
+<a class="jxr_linenumber" name="L1462" href="#L1462">1462</a> 			<strong class="jxr_keyword">for</strong> (Entity participant : participants) {
+<a class="jxr_linenumber" name="L1463" href="#L1463">1463</a> 				toReturn.addParticipant((PhysicalEntity)participant);
+<a class="jxr_linenumber" name="L1464" href="#L1464">1464</a> 			}
+<a class="jxr_linenumber" name="L1465" href="#L1465">1465</a> 		}
+<a class="jxr_linenumber" name="L1466" href="#L1466">1466</a> 			
+<a class="jxr_linenumber" name="L1467" href="#L1467">1467</a> 		<strong class="jxr_keyword">for</strong>(InteractionVocabulary iv : interactionVocabularies) {
+<a class="jxr_linenumber" name="L1468" href="#L1468">1468</a> 			toReturn.addInteractionType(iv);
+<a class="jxr_linenumber" name="L1469" href="#L1469">1469</a> 		}
+<a class="jxr_linenumber" name="L1470" href="#L1470">1470</a> 			
+<a class="jxr_linenumber" name="L1471" href="#L1471">1471</a> 		<strong class="jxr_keyword">return</strong> toReturn;
+<a class="jxr_linenumber" name="L1472" href="#L1472">1472</a> 	}
+<a class="jxr_linenumber" name="L1473" href="#L1473">1473</a> 	
+<a class="jxr_linenumber" name="L1474" href="#L1474">1474</a> 	<strong class="jxr_keyword">private</strong> GeneticInteraction createGeneticInteraction(
+<a class="jxr_linenumber" name="L1475" href="#L1475">1475</a> 			Set&lt;? <strong class="jxr_keyword">extends</strong> Entity&gt; participants,
+<a class="jxr_linenumber" name="L1476" href="#L1476">1476</a> 			Set&lt;InteractionVocabulary&gt; interactionVocabularies)
+<a class="jxr_linenumber" name="L1477" href="#L1477">1477</a> 	{
+<a class="jxr_linenumber" name="L1478" href="#L1478">1478</a> 		GeneticInteraction toReturn =
+<a class="jxr_linenumber" name="L1479" href="#L1479">1479</a> 				bpModel.addNew(GeneticInteraction.<strong class="jxr_keyword">class</strong>, genUri(GeneticInteraction.<strong class="jxr_keyword">class</strong>, bpModel));
+<a class="jxr_linenumber" name="L1480" href="#L1480">1480</a> 
+<a class="jxr_linenumber" name="L1481" href="#L1481">1481</a> 		<strong class="jxr_keyword">if</strong> (participants != <strong class="jxr_keyword">null</strong> &amp;&amp; !participants.isEmpty())
+<a class="jxr_linenumber" name="L1482" href="#L1482">1482</a> 		{
+<a class="jxr_linenumber" name="L1483" href="#L1483">1483</a> 			<strong class="jxr_keyword">for</strong> (Entity participant : participants) {
+<a class="jxr_linenumber" name="L1484" href="#L1484">1484</a> 				toReturn.addParticipant((Gene)participant);
+<a class="jxr_linenumber" name="L1485" href="#L1485">1485</a> 			}
+<a class="jxr_linenumber" name="L1486" href="#L1486">1486</a> 		}
+<a class="jxr_linenumber" name="L1487" href="#L1487">1487</a> 
+<a class="jxr_linenumber" name="L1488" href="#L1488">1488</a> 		<strong class="jxr_keyword">for</strong>(InteractionVocabulary iv : interactionVocabularies) {
+<a class="jxr_linenumber" name="L1489" href="#L1489">1489</a> 			toReturn.addInteractionType(iv);
+<a class="jxr_linenumber" name="L1490" href="#L1490">1490</a> 		}
+<a class="jxr_linenumber" name="L1491" href="#L1491">1491</a> 
+<a class="jxr_linenumber" name="L1492" href="#L1492">1492</a> 		<strong class="jxr_keyword">return</strong> toReturn;
+<a class="jxr_linenumber" name="L1493" href="#L1493">1493</a> 	}
+<a class="jxr_linenumber" name="L1494" href="#L1494">1494</a> 
+<a class="jxr_linenumber" name="L1495" href="#L1495">1495</a> 
+<a class="jxr_linenumber" name="L1496" href="#L1496">1496</a> 	<strong class="jxr_keyword">private</strong> Complex createComplex(Set&lt;? <strong class="jxr_keyword">extends</strong> Entity&gt; participants)
+<a class="jxr_linenumber" name="L1497" href="#L1497">1497</a> 	{
+<a class="jxr_linenumber" name="L1498" href="#L1498">1498</a> 		Complex toReturn = bpModel.addNew(Complex.<strong class="jxr_keyword">class</strong>, genUri(Complex.<strong class="jxr_keyword">class</strong>, bpModel));
+<a class="jxr_linenumber" name="L1499" href="#L1499">1499</a> 
+<a class="jxr_linenumber" name="L1500" href="#L1500">1500</a> 		<strong class="jxr_keyword">if</strong> (participants != <strong class="jxr_keyword">null</strong> &amp;&amp; !participants.isEmpty())
+<a class="jxr_linenumber" name="L1501" href="#L1501">1501</a> 		{
+<a class="jxr_linenumber" name="L1502" href="#L1502">1502</a> 			<strong class="jxr_keyword">for</strong> (Entity participant : participants) {
+<a class="jxr_linenumber" name="L1503" href="#L1503">1503</a> 				toReturn.addComponent((PhysicalEntity)participant);
+<a class="jxr_linenumber" name="L1504" href="#L1504">1504</a> 			}
+<a class="jxr_linenumber" name="L1505" href="#L1505">1505</a> 		}
+<a class="jxr_linenumber" name="L1506" href="#L1506">1506</a> 			
+<a class="jxr_linenumber" name="L1507" href="#L1507">1507</a> 		<strong class="jxr_keyword">return</strong> toReturn;
+<a class="jxr_linenumber" name="L1508" href="#L1508">1508</a> 	}
+<a class="jxr_linenumber" name="L1509" href="#L1509">1509</a> 	
+<a class="jxr_linenumber" name="L1510" href="#L1510">1510</a> 
+<a class="jxr_linenumber" name="L1511" href="#L1511">1511</a> 	<strong class="jxr_keyword">private</strong> &lt;T <strong class="jxr_keyword">extends</strong> EntityFeature&gt; T getFeature(Class&lt;T&gt; featureClass, Feature psiFeature)
+<a class="jxr_linenumber" name="L1512" href="#L1512">1512</a> 	{					
+<a class="jxr_linenumber" name="L1513" href="#L1513">1513</a> 		String entityFeatureUri = genUri(featureClass, bpModel); 		
+<a class="jxr_linenumber" name="L1514" href="#L1514">1514</a> 		T entityFeature = (T) bpModel.addNew(featureClass, entityFeatureUri);
 <a class="jxr_linenumber" name="L1515" href="#L1515">1515</a> 		
-<a class="jxr_linenumber" name="L1516" href="#L1516">1516</a> 		<em class="jxr_comment">// set biopax featureLocationType prop. (find/create a SequenceRegionVocabulary)</em>
-<a class="jxr_linenumber" name="L1517" href="#L1517">1517</a> 		String term = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1518" href="#L1518">1518</a> 		<strong class="jxr_keyword">if</strong> (psiFeature.hasNames())
-<a class="jxr_linenumber" name="L1519" href="#L1519">1519</a> 			term = getName(psiFeature.getNames());
-<a class="jxr_linenumber" name="L1520" href="#L1520">1520</a> 		<em class="jxr_comment">//xref and primaryRef must exist</em>
-<a class="jxr_linenumber" name="L1521" href="#L1521">1521</a> 		UnificationXref uref = getPrimaryUnificationXref(psiFeature.getXref());
-<a class="jxr_linenumber" name="L1522" href="#L1522">1522</a> 		SequenceRegionVocabulary srv = findOrCreateControlledVocabulary(term, 
-<a class="jxr_linenumber" name="L1523" href="#L1523">1523</a> 				uref, SequenceRegionVocabulary.<strong class="jxr_keyword">class</strong>); <em class="jxr_comment">//can be null</em>
-<a class="jxr_linenumber" name="L1524" href="#L1524">1524</a> 		entityFeature.setFeatureLocationType(srv);				
-<a class="jxr_linenumber" name="L1525" href="#L1525">1525</a> 		
-<a class="jxr_linenumber" name="L1526" href="#L1526">1526</a> 		<strong class="jxr_keyword">if</strong> (psiFeature.hasFeatureType()) {
-<a class="jxr_linenumber" name="L1527" href="#L1527">1527</a> 			<em class="jxr_comment">// set modificationType (get/create a SequenceModificationVocabulary)</em>
-<a class="jxr_linenumber" name="L1528" href="#L1528">1528</a> 			<strong class="jxr_keyword">if</strong>(featureClass == ModificationFeature.<strong class="jxr_keyword">class</strong>) {
-<a class="jxr_linenumber" name="L1529" href="#L1529">1529</a> 				SequenceModificationVocabulary smv = findOrCreateControlledVocabulary(
-<a class="jxr_linenumber" name="L1530" href="#L1530">1530</a> 						psiFeature.getFeatureType(), SequenceModificationVocabulary.<strong class="jxr_keyword">class</strong>); <em class="jxr_comment">//can be null</em>
-<a class="jxr_linenumber" name="L1531" href="#L1531">1531</a> 				((ModificationFeature)entityFeature).setModificationType(smv);
-<a class="jxr_linenumber" name="L1532" href="#L1532">1532</a> 			} 
-<a class="jxr_linenumber" name="L1533" href="#L1533">1533</a> 		}
-<a class="jxr_linenumber" name="L1534" href="#L1534">1534</a> 		
-<a class="jxr_linenumber" name="L1535" href="#L1535">1535</a> 		<strong class="jxr_keyword">return</strong> entityFeature;
-<a class="jxr_linenumber" name="L1536" href="#L1536">1536</a> 	}
-<a class="jxr_linenumber" name="L1537" href="#L1537">1537</a> 
-<a class="jxr_linenumber" name="L1538" href="#L1538">1538</a> 	
-<a class="jxr_linenumber" name="L1539" href="#L1539">1539</a> 	<strong class="jxr_keyword">private</strong> SequenceInterval getSequenceLocation(<strong class="jxr_keyword">long</strong> beginSequenceInterval,
-<a class="jxr_linenumber" name="L1540" href="#L1540">1540</a> 	                                            <strong class="jxr_keyword">long</strong> endSequenceInterval)
-<a class="jxr_linenumber" name="L1541" href="#L1541">1541</a> 	{
-<a class="jxr_linenumber" name="L1542" href="#L1542">1542</a> 			SequenceInterval toReturn =
-<a class="jxr_linenumber" name="L1543" href="#L1543">1543</a> 					bpModel.addNew(SequenceInterval.<strong class="jxr_keyword">class</strong>, genUri(SequenceInterval.<strong class="jxr_keyword">class</strong>, bpModel));
-<a class="jxr_linenumber" name="L1544" href="#L1544">1544</a> 			SequenceSite bpSequenceSiteBegin =
-<a class="jxr_linenumber" name="L1545" href="#L1545">1545</a> 					bpModel.addNew(SequenceSite.<strong class="jxr_keyword">class</strong>, genUri(SequenceSite.<strong class="jxr_keyword">class</strong>, bpModel));
-<a class="jxr_linenumber" name="L1546" href="#L1546">1546</a> 			bpSequenceSiteBegin.setSequencePosition((<strong class="jxr_keyword">int</strong>) beginSequenceInterval);
-<a class="jxr_linenumber" name="L1547" href="#L1547">1547</a> 			toReturn.setSequenceIntervalBegin(bpSequenceSiteBegin);
-<a class="jxr_linenumber" name="L1548" href="#L1548">1548</a> 			SequenceSite bpSequenceSiteEnd =
-<a class="jxr_linenumber" name="L1549" href="#L1549">1549</a> 					bpModel.addNew(SequenceSite.<strong class="jxr_keyword">class</strong>, genUri(SequenceSite.<strong class="jxr_keyword">class</strong>, bpModel));
-<a class="jxr_linenumber" name="L1550" href="#L1550">1550</a> 			bpSequenceSiteEnd.setSequencePosition((<strong class="jxr_keyword">int</strong>) endSequenceInterval);
-<a class="jxr_linenumber" name="L1551" href="#L1551">1551</a> 			toReturn.setSequenceIntervalEnd(bpSequenceSiteEnd);
-<a class="jxr_linenumber" name="L1552" href="#L1552">1552</a> 			
-<a class="jxr_linenumber" name="L1553" href="#L1553">1553</a> 			<strong class="jxr_keyword">return</strong> toReturn;
-<a class="jxr_linenumber" name="L1554" href="#L1554">1554</a> 	}
-<a class="jxr_linenumber" name="L1555" href="#L1555">1555</a> 	
-<a class="jxr_linenumber" name="L1556" href="#L1556">1556</a> 
-<a class="jxr_linenumber" name="L1557" href="#L1557">1557</a> 	<em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L1558" href="#L1558">1558</a> <em class="jxr_comment">	 * Given a set of evidence objects, determines if interaction (that evidence obj is derived from)</em>
-<a class="jxr_linenumber" name="L1559" href="#L1559">1559</a> <em class="jxr_comment">	 * is a genetic interaction.</em>
-<a class="jxr_linenumber" name="L1560" href="#L1560">1560</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1561" href="#L1561">1561</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> isGeneticInteraction(Set&lt;Evidence&gt; bpEvidence)
-<a class="jxr_linenumber" name="L1562" href="#L1562">1562</a> 	{
-<a class="jxr_linenumber" name="L1563" href="#L1563">1563</a> 			<strong class="jxr_keyword">if</strong> (bpEvidence != <strong class="jxr_keyword">null</strong> &amp;&amp; !bpEvidence.isEmpty()) {
-<a class="jxr_linenumber" name="L1564" href="#L1564">1564</a> 				<strong class="jxr_keyword">for</strong> (Evidence e : (Set&lt;Evidence&gt;) bpEvidence) {
-<a class="jxr_linenumber" name="L1565" href="#L1565">1565</a> 					Set&lt;EvidenceCodeVocabulary&gt; evidenceCodes = e.getEvidenceCode();
-<a class="jxr_linenumber" name="L1566" href="#L1566">1566</a> 					<strong class="jxr_keyword">if</strong> (evidenceCodes != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1567" href="#L1567">1567</a> 						<strong class="jxr_keyword">for</strong> (EvidenceCodeVocabulary cv : evidenceCodes) {
-<a class="jxr_linenumber" name="L1568" href="#L1568">1568</a> 							Set&lt;String&gt; terms = cv.getTerm();
-<a class="jxr_linenumber" name="L1569" href="#L1569">1569</a> 							<strong class="jxr_keyword">if</strong> (terms != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1570" href="#L1570">1570</a> 								<strong class="jxr_keyword">for</strong> (String term : terms) {
-<a class="jxr_linenumber" name="L1571" href="#L1571">1571</a> 									<strong class="jxr_keyword">if</strong> (GENETIC_INTERACTIONS.contains(term.toLowerCase()))
-<a class="jxr_linenumber" name="L1572" href="#L1572">1572</a> 										<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L1573" href="#L1573">1573</a> 								}
-<a class="jxr_linenumber" name="L1574" href="#L1574">1574</a> 							}
-<a class="jxr_linenumber" name="L1575" href="#L1575">1575</a> 						}
-<a class="jxr_linenumber" name="L1576" href="#L1576">1576</a> 					}
-<a class="jxr_linenumber" name="L1577" href="#L1577">1577</a> 				}
-<a class="jxr_linenumber" name="L1578" href="#L1578">1578</a> 			}
-<a class="jxr_linenumber" name="L1579" href="#L1579">1579</a> 		<strong class="jxr_keyword">return</strong> false;
-<a class="jxr_linenumber" name="L1580" href="#L1580">1580</a> 	}
-<a class="jxr_linenumber" name="L1581" href="#L1581">1581</a> 
-<a class="jxr_linenumber" name="L1582" href="#L1582">1582</a> 	
-<a class="jxr_linenumber" name="L1583" href="#L1583">1583</a> 	<em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L1584" href="#L1584">1584</a> <em class="jxr_comment">	 * Generates a URI of a BioPAX object using the xml base, model interface name </em>
-<a class="jxr_linenumber" name="L1585" href="#L1585">1585</a> <em class="jxr_comment">	 * and generated number (sequential).</em>
-<a class="jxr_linenumber" name="L1586" href="#L1586">1586</a> <em class="jxr_comment">	 * The idea is virtually never ever return the same URI here (taking into account </em>
-<a class="jxr_linenumber" name="L1587" href="#L1587">1587</a> <em class="jxr_comment">	 * that there are multiple threads converting different PSIMI Entries, one per thread, </em>
-<a class="jxr_linenumber" name="L1588" href="#L1588">1588</a> <em class="jxr_comment">	 * simultaneously)</em>
-<a class="jxr_linenumber" name="L1589" href="#L1589">1589</a> <em class="jxr_comment">	 */</em>
-<a class="jxr_linenumber" name="L1590" href="#L1590">1590</a> 	<strong class="jxr_keyword">private</strong> String genUri(Class&lt;? <strong class="jxr_keyword">extends</strong> BioPAXElement&gt; type, Model model) {
-<a class="jxr_linenumber" name="L1591" href="#L1591">1591</a> 		<strong class="jxr_keyword">return</strong> xmlBase + type.getSimpleName() + <span class="jxr_string">"_"</span> + (counter++);
-<a class="jxr_linenumber" name="L1592" href="#L1592">1592</a> 	}	
-<a class="jxr_linenumber" name="L1593" href="#L1593">1593</a> }
+<a class="jxr_linenumber" name="L1516" href="#L1516">1516</a> 		<em class="jxr_comment">// feature location</em>
+<a class="jxr_linenumber" name="L1517" href="#L1517">1517</a> 		Set&lt;SequenceInterval&gt; featureLocations = getSequenceLocation(psiFeature.getRanges());
+<a class="jxr_linenumber" name="L1518" href="#L1518">1518</a> 		<strong class="jxr_keyword">if</strong> (featureLocations != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1519" href="#L1519">1519</a> 			<strong class="jxr_keyword">for</strong> (SequenceLocation featureLocation : featureLocations) 
+<a class="jxr_linenumber" name="L1520" href="#L1520">1520</a> 				entityFeature.setFeatureLocation(featureLocation);
+<a class="jxr_linenumber" name="L1521" href="#L1521">1521</a> 		
+<a class="jxr_linenumber" name="L1522" href="#L1522">1522</a> 		<em class="jxr_comment">// set biopax featureLocationType prop. (find/create a SequenceRegionVocabulary)</em>
+<a class="jxr_linenumber" name="L1523" href="#L1523">1523</a> 		String term = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1524" href="#L1524">1524</a> 		<strong class="jxr_keyword">if</strong> (psiFeature.hasNames())
+<a class="jxr_linenumber" name="L1525" href="#L1525">1525</a> 			term = getName(psiFeature.getNames());
+<a class="jxr_linenumber" name="L1526" href="#L1526">1526</a> 		<em class="jxr_comment">//xref and primaryRef must exist</em>
+<a class="jxr_linenumber" name="L1527" href="#L1527">1527</a> 		UnificationXref uref = getPrimaryUnificationXref(psiFeature.getXref());
+<a class="jxr_linenumber" name="L1528" href="#L1528">1528</a> 		SequenceRegionVocabulary srv = findOrCreateControlledVocabulary(term, 
+<a class="jxr_linenumber" name="L1529" href="#L1529">1529</a> 				uref, SequenceRegionVocabulary.<strong class="jxr_keyword">class</strong>); <em class="jxr_comment">//can be null</em>
+<a class="jxr_linenumber" name="L1530" href="#L1530">1530</a> 		entityFeature.setFeatureLocationType(srv);				
+<a class="jxr_linenumber" name="L1531" href="#L1531">1531</a> 		
+<a class="jxr_linenumber" name="L1532" href="#L1532">1532</a> 		<strong class="jxr_keyword">if</strong> (psiFeature.hasFeatureType()) {
+<a class="jxr_linenumber" name="L1533" href="#L1533">1533</a> 			<em class="jxr_comment">// set modificationType (get/create a SequenceModificationVocabulary)</em>
+<a class="jxr_linenumber" name="L1534" href="#L1534">1534</a> 			<strong class="jxr_keyword">if</strong>(featureClass == ModificationFeature.<strong class="jxr_keyword">class</strong>) {
+<a class="jxr_linenumber" name="L1535" href="#L1535">1535</a> 				SequenceModificationVocabulary smv = findOrCreateControlledVocabulary(
+<a class="jxr_linenumber" name="L1536" href="#L1536">1536</a> 						psiFeature.getFeatureType(), SequenceModificationVocabulary.<strong class="jxr_keyword">class</strong>); <em class="jxr_comment">//can be null</em>
+<a class="jxr_linenumber" name="L1537" href="#L1537">1537</a> 				((ModificationFeature)entityFeature).setModificationType(smv);
+<a class="jxr_linenumber" name="L1538" href="#L1538">1538</a> 			} 
+<a class="jxr_linenumber" name="L1539" href="#L1539">1539</a> 		}
+<a class="jxr_linenumber" name="L1540" href="#L1540">1540</a> 		
+<a class="jxr_linenumber" name="L1541" href="#L1541">1541</a> 		<strong class="jxr_keyword">return</strong> entityFeature;
+<a class="jxr_linenumber" name="L1542" href="#L1542">1542</a> 	}
+<a class="jxr_linenumber" name="L1543" href="#L1543">1543</a> 
+<a class="jxr_linenumber" name="L1544" href="#L1544">1544</a> 	
+<a class="jxr_linenumber" name="L1545" href="#L1545">1545</a> 	<strong class="jxr_keyword">private</strong> SequenceInterval getSequenceLocation(<strong class="jxr_keyword">long</strong> beginSequenceInterval,
+<a class="jxr_linenumber" name="L1546" href="#L1546">1546</a> 	                                            <strong class="jxr_keyword">long</strong> endSequenceInterval)
+<a class="jxr_linenumber" name="L1547" href="#L1547">1547</a> 	{
+<a class="jxr_linenumber" name="L1548" href="#L1548">1548</a> 			SequenceInterval toReturn =
+<a class="jxr_linenumber" name="L1549" href="#L1549">1549</a> 					bpModel.addNew(SequenceInterval.<strong class="jxr_keyword">class</strong>, genUri(SequenceInterval.<strong class="jxr_keyword">class</strong>, bpModel));
+<a class="jxr_linenumber" name="L1550" href="#L1550">1550</a> 			SequenceSite bpSequenceSiteBegin =
+<a class="jxr_linenumber" name="L1551" href="#L1551">1551</a> 					bpModel.addNew(SequenceSite.<strong class="jxr_keyword">class</strong>, genUri(SequenceSite.<strong class="jxr_keyword">class</strong>, bpModel));
+<a class="jxr_linenumber" name="L1552" href="#L1552">1552</a> 			bpSequenceSiteBegin.setSequencePosition((<strong class="jxr_keyword">int</strong>) beginSequenceInterval);
+<a class="jxr_linenumber" name="L1553" href="#L1553">1553</a> 			toReturn.setSequenceIntervalBegin(bpSequenceSiteBegin);
+<a class="jxr_linenumber" name="L1554" href="#L1554">1554</a> 			SequenceSite bpSequenceSiteEnd =
+<a class="jxr_linenumber" name="L1555" href="#L1555">1555</a> 					bpModel.addNew(SequenceSite.<strong class="jxr_keyword">class</strong>, genUri(SequenceSite.<strong class="jxr_keyword">class</strong>, bpModel));
+<a class="jxr_linenumber" name="L1556" href="#L1556">1556</a> 			bpSequenceSiteEnd.setSequencePosition((<strong class="jxr_keyword">int</strong>) endSequenceInterval);
+<a class="jxr_linenumber" name="L1557" href="#L1557">1557</a> 			toReturn.setSequenceIntervalEnd(bpSequenceSiteEnd);
+<a class="jxr_linenumber" name="L1558" href="#L1558">1558</a> 			
+<a class="jxr_linenumber" name="L1559" href="#L1559">1559</a> 			<strong class="jxr_keyword">return</strong> toReturn;
+<a class="jxr_linenumber" name="L1560" href="#L1560">1560</a> 	}
+<a class="jxr_linenumber" name="L1561" href="#L1561">1561</a> 	
+<a class="jxr_linenumber" name="L1562" href="#L1562">1562</a> 
+<a class="jxr_linenumber" name="L1563" href="#L1563">1563</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L1564" href="#L1564">1564</a> <em class="jxr_comment">	 * Given a set of evidence objects, determines if interaction (that evidence obj is derived from)</em>
+<a class="jxr_linenumber" name="L1565" href="#L1565">1565</a> <em class="jxr_comment">	 * is a genetic interaction.</em>
+<a class="jxr_linenumber" name="L1566" href="#L1566">1566</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1567" href="#L1567">1567</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> isGeneticInteraction(Set&lt;Evidence&gt; bpEvidence)
+<a class="jxr_linenumber" name="L1568" href="#L1568">1568</a> 	{
+<a class="jxr_linenumber" name="L1569" href="#L1569">1569</a> 			<strong class="jxr_keyword">if</strong> (bpEvidence != <strong class="jxr_keyword">null</strong> &amp;&amp; !bpEvidence.isEmpty()) {
+<a class="jxr_linenumber" name="L1570" href="#L1570">1570</a> 				<strong class="jxr_keyword">for</strong> (Evidence e : (Set&lt;Evidence&gt;) bpEvidence) {
+<a class="jxr_linenumber" name="L1571" href="#L1571">1571</a> 					Set&lt;EvidenceCodeVocabulary&gt; evidenceCodes = e.getEvidenceCode();
+<a class="jxr_linenumber" name="L1572" href="#L1572">1572</a> 					<strong class="jxr_keyword">if</strong> (evidenceCodes != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1573" href="#L1573">1573</a> 						<strong class="jxr_keyword">for</strong> (EvidenceCodeVocabulary cv : evidenceCodes) {
+<a class="jxr_linenumber" name="L1574" href="#L1574">1574</a> 							Set&lt;String&gt; terms = cv.getTerm();
+<a class="jxr_linenumber" name="L1575" href="#L1575">1575</a> 							<strong class="jxr_keyword">if</strong> (terms != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1576" href="#L1576">1576</a> 								<strong class="jxr_keyword">for</strong> (String term : terms) {
+<a class="jxr_linenumber" name="L1577" href="#L1577">1577</a> 									<strong class="jxr_keyword">if</strong> (GENETIC_INTERACTIONS.contains(term.toLowerCase()))
+<a class="jxr_linenumber" name="L1578" href="#L1578">1578</a> 										<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L1579" href="#L1579">1579</a> 								}
+<a class="jxr_linenumber" name="L1580" href="#L1580">1580</a> 							}
+<a class="jxr_linenumber" name="L1581" href="#L1581">1581</a> 						}
+<a class="jxr_linenumber" name="L1582" href="#L1582">1582</a> 					}
+<a class="jxr_linenumber" name="L1583" href="#L1583">1583</a> 				}
+<a class="jxr_linenumber" name="L1584" href="#L1584">1584</a> 			}
+<a class="jxr_linenumber" name="L1585" href="#L1585">1585</a> 		<strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L1586" href="#L1586">1586</a> 	}
+<a class="jxr_linenumber" name="L1587" href="#L1587">1587</a> 
+<a class="jxr_linenumber" name="L1588" href="#L1588">1588</a> 	
+<a class="jxr_linenumber" name="L1589" href="#L1589">1589</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L1590" href="#L1590">1590</a> <em class="jxr_comment">	 * Generates a URI of a BioPAX object using the xml base, model interface name </em>
+<a class="jxr_linenumber" name="L1591" href="#L1591">1591</a> <em class="jxr_comment">	 * and generated number (sequential).</em>
+<a class="jxr_linenumber" name="L1592" href="#L1592">1592</a> <em class="jxr_comment">	 * The idea is virtually never ever return the same URI here (taking into account </em>
+<a class="jxr_linenumber" name="L1593" href="#L1593">1593</a> <em class="jxr_comment">	 * that there are multiple threads converting different PSIMI Entries, one per thread, </em>
+<a class="jxr_linenumber" name="L1594" href="#L1594">1594</a> <em class="jxr_comment">	 * simultaneously)</em>
+<a class="jxr_linenumber" name="L1595" href="#L1595">1595</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L1596" href="#L1596">1596</a> 	<strong class="jxr_keyword">private</strong> String genUri(Class&lt;? <strong class="jxr_keyword">extends</strong> BioPAXElement&gt; type, Model model) {
+<a class="jxr_linenumber" name="L1597" href="#L1597">1597</a> 		<strong class="jxr_keyword">return</strong> xmlBase + type.getSimpleName() + <span class="jxr_string">"_"</span> + (counter++);
+<a class="jxr_linenumber" name="L1598" href="#L1598">1598</a> 	}	
+<a class="jxr_linenumber" name="L1599" href="#L1599">1599</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2016 <a href="http://www.biopax.org">BioPAX</a>. All rights reserved.</div>

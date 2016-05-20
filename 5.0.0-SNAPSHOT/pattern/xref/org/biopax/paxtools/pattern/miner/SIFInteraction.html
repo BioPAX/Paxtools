@@ -154,7 +154,7 @@
 <a class="jxr_linenumber" name="L146" href="#L146">146</a> 		{
 <a class="jxr_linenumber" name="L147" href="#L147">147</a> 			m+= <span class="jxr_string">" "</span> + mid;
 <a class="jxr_linenumber" name="L148" href="#L148">148</a> 		}
-<a class="jxr_linenumber" name="L149" href="#L149">149</a> 		<strong class="jxr_keyword">return</strong> m.trim();
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 		<strong class="jxr_keyword">return</strong> m.trim().replaceAll(<span class="jxr_string">" "</span>, <span class="jxr_string">";"</span>);
 <a class="jxr_linenumber" name="L150" href="#L150">150</a> 	}
 <a class="jxr_linenumber" name="L151" href="#L151">151</a> 
 <a class="jxr_linenumber" name="L152" href="#L152">152</a> 	<em class="jxr_javadoccomment">/**</em>
@@ -215,7 +215,7 @@
 <a class="jxr_linenumber" name="L207" href="#L207">207</a> 		<strong class="jxr_keyword">return</strong> set;
 <a class="jxr_linenumber" name="L208" href="#L208">208</a> 	}
 <a class="jxr_linenumber" name="L209" href="#L209">209</a> 
-<a class="jxr_linenumber" name="L210" href="#L210">210</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> PathAccessor pathwayAcc1 = <strong class="jxr_keyword">new</strong> PathAccessor(<span class="jxr_string">"Interaction/pathwayComponentOf*"</span>);
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> PathAccessor pathwayAcc1 = <strong class="jxr_keyword">new</strong> PathAccessor(<span class="jxr_string">"Interaction/pathwayComponentOf"</span>);
 <a class="jxr_linenumber" name="L211" href="#L211">211</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> PathAccessor pathwayAcc2 = <strong class="jxr_keyword">new</strong> PathAccessor(<span class="jxr_string">"Interaction/stepProcessOf/pathwayOrderOf"</span>);
 <a class="jxr_linenumber" name="L212" href="#L212">212</a> 
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> 	<em class="jxr_javadoccomment">/**</em>

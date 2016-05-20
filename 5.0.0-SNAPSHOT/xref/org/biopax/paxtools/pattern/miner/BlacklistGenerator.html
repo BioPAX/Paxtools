@@ -28,14 +28,14 @@
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">	 * For deciding if the molecule is ubiquitous and for determining the score and context.</em>
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  	<strong class="jxr_keyword">private</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator2.html">Decider</a> decider;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  	<strong class="jxr_keyword">private</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">Decider</a> decider;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">	 * Constructor with decider. This decider should be optimized for the specific resource that the</em>
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment">	 * user deals with.</em>
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment">	 * @param decider decides if the molecule is ubique</em>
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">BlacklistGenerator</a>(<a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator2.html">Decider</a> decider)
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">BlacklistGenerator</a>(<a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">Decider</a> decider)
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  	{
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  		<strong class="jxr_keyword">this</strong>.decider = decider;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  	}
@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">BlacklistGenerator</a>()
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  	{
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  		<strong class="jxr_keyword">this</strong>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator2.html">Decider</a>()
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  		<strong class="jxr_keyword">this</strong>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">Decider</a>()
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  		{
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  			@Override
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  			<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isUbique(<strong class="jxr_keyword">int</strong> neighborSize, <strong class="jxr_keyword">int</strong> upstrOnly, <strong class="jxr_keyword">int</strong> dwstrOnly)
@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../../../org/biopax/paxtools/pattern/util/Blacklist.html">Blacklist</a> generateBlacklist(<a href="../../../../../org/biopax/paxtools/model/Model.html">Model</a> model)
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  	{
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  		ChemicalNameNormalizer normalizer = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/pattern/util/ChemicalNameNormalizer.html">ChemicalNameNormalizer</a>(model);
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  		SIFSearcher searcher = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/SIFSearcher.html">SIFSearcher</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator2.html">Fetcher</a>(normalizer), SIFEnum.USED_TO_PRODUCE);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  		SIFSearcher searcher = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/SIFSearcher.html">SIFSearcher</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">Fetcher</a>(normalizer), SIFEnum.USED_TO_PRODUCE);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  		Set&lt;SIFInteraction&gt; sifs = searcher.searchSIF(model);
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  
@@ -148,7 +148,7 @@
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> 	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">	 * Class to fetch the ID of the small molecule.</em>
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L143" href="#L143">143</a> 	<strong class="jxr_keyword">class</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator2.html">Fetcher</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/IDFetcher.html">IDFetcher</a>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 	<strong class="jxr_keyword">class</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">Fetcher</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/IDFetcher.html">IDFetcher</a>
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> 	{
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> 		ChemicalNameNormalizer normalizer;
 <a class="jxr_linenumber" name="L146" href="#L146">146</a> 
@@ -172,7 +172,7 @@
 <a class="jxr_linenumber" name="L164" href="#L164">164</a> 	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">	 * The class to decide if a molecule is ubique, its score and its context of ubiquity.</em>
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L167" href="#L167">167</a> 	<strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator2.html">Decider</a>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 	<strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/biopax/paxtools/pattern/miner/BlacklistGenerator.html">Decider</a>
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 	{
 <a class="jxr_linenumber" name="L169" href="#L169">169</a> 		<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">		 * Tells if the molecule is ubique in at least one context.</em>

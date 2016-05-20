@@ -173,12 +173,6 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <div class="block">Name of the miner.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected <a href="../../../../../org/biopax/paxtools/pattern/Pattern.html" title="class in org.biopax.paxtools.pattern">Pattern</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/biopax/paxtools/pattern/miner/MinerAdapter.html#pattern">pattern</a></span></code>
-<div class="block">Pattern to use for mining.</div>
-</td>
-</tr>
 </table>
 </li>
 </ul>
@@ -551,23 +545,13 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <div class="block">Description of the miner.</div>
 </li>
 </ul>
-<a name="pattern">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>pattern</h4>
-<pre>protected&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/Pattern.html" title="class in org.biopax.paxtools.pattern">Pattern</a> <a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.38">pattern</a></pre>
-<div class="block">Pattern to use for mining.</div>
-</li>
-</ul>
 <a name="blacklist">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>blacklist</h4>
-<pre>protected&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/util/Blacklist.html" title="class in org.biopax.paxtools.pattern.util">Blacklist</a> <a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.43">blacklist</a></pre>
+<pre>protected&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/util/Blacklist.html" title="class in org.biopax.paxtools.pattern.util">Blacklist</a> <a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.38">blacklist</a></pre>
 <div class="block">Blacklist for identifying ubiquitous small molecules.</div>
 </li>
 </ul>
@@ -577,7 +561,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>idFetcher</h4>
-<pre>protected&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/miner/IDFetcher.html" title="interface in org.biopax.paxtools.pattern.miner">IDFetcher</a> <a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.48">idFetcher</a></pre>
+<pre>protected&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/miner/IDFetcher.html" title="interface in org.biopax.paxtools.pattern.miner">IDFetcher</a> <a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.43">idFetcher</a></pre>
 <div class="block">ID fetcher is used for skipping objects that cannot generate a valid ID during the search.</div>
 </li>
 </ul>
@@ -587,7 +571,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockListLast">
 <li class="blockList">
 <h4>idMap</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt; <a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.54">idMap</a></pre>
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt; <a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.49">idMap</a></pre>
 <div class="block">Memory for object IDs. This is needed for performance issues. Without this, half of SIF
  conversion is spent for fetchIDs().</div>
 </li>
@@ -606,7 +590,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockListLast">
 <li class="blockList">
 <h4>MinerAdapter</h4>
-<pre>protected&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.61">MinerAdapter</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
+<pre>protected&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.56">MinerAdapter</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name,
                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description)</pre>
 <div class="block">Constructor with name and description.</div>
 <dl>
@@ -630,7 +614,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>setBlacklist</h4>
-<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.72">setBlacklist</a>(<a href="../../../../../org/biopax/paxtools/pattern/util/Blacklist.html" title="class in org.biopax.paxtools.pattern.util">Blacklist</a>&nbsp;blacklist)</pre>
+<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.67">setBlacklist</a>(<a href="../../../../../org/biopax/paxtools/pattern/util/Blacklist.html" title="class in org.biopax.paxtools.pattern.util">Blacklist</a>&nbsp;blacklist)</pre>
 <div class="block">Sets the blacklist to use during SIF search.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -644,7 +628,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>setIDFetcher</h4>
-<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.82">setIDFetcher</a>(<a href="../../../../../org/biopax/paxtools/pattern/miner/IDFetcher.html" title="interface in org.biopax.paxtools.pattern.miner">IDFetcher</a>&nbsp;idFetcher)</pre>
+<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.77">setIDFetcher</a>(<a href="../../../../../org/biopax/paxtools/pattern/miner/IDFetcher.html" title="interface in org.biopax.paxtools.pattern.miner">IDFetcher</a>&nbsp;idFetcher)</pre>
 <div class="block">Sets the ID fetcher to use during SIF search.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -658,7 +642,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>constructPattern</h4>
-<pre>public abstract&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/Pattern.html" title="class in org.biopax.paxtools.pattern">Pattern</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.91">constructPattern</a>()</pre>
+<pre>public abstract&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/Pattern.html" title="class in org.biopax.paxtools.pattern">Pattern</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.86">constructPattern</a>()</pre>
 <div class="block">Constructs the pattern to use for mining.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -672,7 +656,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getPattern</h4>
-<pre>public&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/Pattern.html" title="class in org.biopax.paxtools.pattern">Pattern</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.97">getPattern</a>()</pre>
+<pre>public&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/Pattern.html" title="class in org.biopax.paxtools.pattern">Pattern</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.92">getPattern</a>()</pre>
 <div class="block">Gets the pattern, constructs if null.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -688,7 +672,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getName</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.119">getName</a>()</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.111">getName</a>()</pre>
 <div class="block">Gets the name of the miner.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -704,7 +688,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getDescription</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.128">getDescription</a>()</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.120">getDescription</a>()</pre>
 <div class="block">Gets the description of the miner.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -720,7 +704,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>setName</h4>
-<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.133">setName</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</pre>
+<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.125">setName</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</pre>
 </li>
 </ul>
 <a name="setDescription-java.lang.String-">
@@ -729,7 +713,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>setDescription</h4>
-<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.138">setDescription</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description)</pre>
+<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.130">setDescription</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;description)</pre>
 </li>
 </ul>
 <a name="getIdMap--">
@@ -738,7 +722,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getIdMap</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.143">getIdMap</a>()</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.135">getIdMap</a>()</pre>
 </li>
 </ul>
 <a name="setIdMap-java.util.Map-">
@@ -747,7 +731,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>setIdMap</h4>
-<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.148">setIdMap</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;&nbsp;idMap)</pre>
+<pre>public&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.140">setIdMap</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&gt;&nbsp;idMap)</pre>
 </li>
 </ul>
 <a name="toString--">
@@ -756,7 +740,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>toString</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.158">toString</a>()</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.150">toString</a>()</pre>
 <div class="block">Uses the name as sting representation of the miner.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
@@ -772,7 +756,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getGeneSymbol</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.170">getGeneSymbol</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ProteinReference.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ProteinReference</a>&nbsp;pr)</pre>
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.162">getGeneSymbol</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ProteinReference.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ProteinReference</a>&nbsp;pr)</pre>
 <div class="block">Searches for the gene symbol of the given EntityReference.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -788,7 +772,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getUniprotNameForHuman</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.201">getUniprotNameForHuman</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ProteinReference.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ProteinReference</a>&nbsp;pr)</pre>
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.193">getUniprotNameForHuman</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ProteinReference.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ProteinReference</a>&nbsp;pr)</pre>
 <div class="block">Searches for the uniprot name of the given human EntityReference.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -804,7 +788,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getGeneSymbol</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.216">getGeneSymbol</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.208">getGeneSymbol</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;label)</pre>
 <div class="block">Searches for the gene symbol of the given EntityReference.</div>
 <dl>
@@ -822,7 +806,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getUniprotNameForHuman</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.228">getUniprotNameForHuman</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.220">getUniprotNameForHuman</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                         <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;label)</pre>
 <div class="block">Searches for the uniprot name of the given human EntityReference.</div>
 <dl>
@@ -840,7 +824,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>isInhibition</h4>
-<pre>public&nbsp;boolean&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.239">isInhibition</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/Control.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">Control</a>&nbsp;ctrl)</pre>
+<pre>public&nbsp;boolean&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.231">isInhibition</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/Control.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">Control</a>&nbsp;ctrl)</pre>
 <div class="block">Checks if the type of a Control is inhibition.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -856,7 +840,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>toStringSet</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.281">toStringSet</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ModificationFeature.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ModificationFeature</a>&gt;&nbsp;set)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.273">toStringSet</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ModificationFeature.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ModificationFeature</a>&gt;&nbsp;set)</pre>
 <div class="block">Sorts the modifications and gets them in a String.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -872,7 +856,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getModificationTerm</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.335">getModificationTerm</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ModificationFeature.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ModificationFeature</a>&nbsp;mf)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.327">getModificationTerm</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ModificationFeature.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ModificationFeature</a>&nbsp;mf)</pre>
 <div class="block">Gets the String term of the modification feature.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -888,7 +872,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getPositionStart</h4>
-<pre>public&nbsp;int&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.347">getPositionStart</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ModificationFeature.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ModificationFeature</a>&nbsp;mf)</pre>
+<pre>public&nbsp;int&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.339">getPositionStart</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ModificationFeature.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ModificationFeature</a>&nbsp;mf)</pre>
 <div class="block">Gets the first position of the modification feature.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -904,7 +888,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getPositionInString</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.371">getPositionInString</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ModificationFeature.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ModificationFeature</a>&nbsp;mf)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.363">getPositionInString</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/ModificationFeature.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">ModificationFeature</a>&nbsp;mf)</pre>
 <div class="block">Gets the position of the modification feature as a String.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -920,7 +904,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getModifications</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.410">getModifications</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.402">getModifications</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;label)</pre>
 <div class="block">Gets modifications of the given element in a string. The element has to be a PhysicalEntity.</div>
 <dl>
@@ -938,7 +922,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getModifications</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.425">getModifications</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.417">getModifications</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;memLabel,
                                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;comLabel)</pre>
 <div class="block">Gets modifications of the given elements in a string set. The elements has to be a
@@ -960,7 +944,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getCellularLocations</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.440">getCellularLocations</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.432">getCellularLocations</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                            <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;memLabel,
                                            <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;comLabel)</pre>
 <div class="block">Gets cellular locations of the given elements in a string set. The elements has to be a
@@ -982,7 +966,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getDeltaModifications</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.457">getDeltaModifications</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.449">getDeltaModifications</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                               <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;memLabel1,
                                               <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;comLabel1,
                                               <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;memLabel2,
@@ -1007,7 +991,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getDeltaCompartments</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.484">getDeltaCompartments</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.476">getDeltaCompartments</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                              <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;memLabel1,
                                              <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;comLabel1,
                                              <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;memLabel2,
@@ -1032,7 +1016,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getChain</h4>
-<pre>protected&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/util/PhysicalEntityChain.html" title="class in org.biopax.paxtools.pattern.util">PhysicalEntityChain</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.497">getChain</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="../../../../../org/biopax/paxtools/pattern/util/PhysicalEntityChain.html" title="class in org.biopax.paxtools.pattern.util">PhysicalEntityChain</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.489">getChain</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;memLabel,
                                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;comLabel)</pre>
 </li>
@@ -1043,7 +1027,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>removeCommon</h4>
-<pre>protected&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.503">removeCommon</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;set1,
+<pre>protected&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.495">removeCommon</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;set1,
                             <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;set2)</pre>
 </li>
 </ul>
@@ -1053,7 +1037,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>concat</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.517">concat</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;set,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.509">concat</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;set,
                         <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;sep)</pre>
 <div class="block">Converts the set of string to a single string.</div>
 <dl>
@@ -1071,7 +1055,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>sign</h4>
-<pre>protected&nbsp;int&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.535">sign</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/Control.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">Control</a>&nbsp;ctrl)</pre>
+<pre>protected&nbsp;int&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.527">sign</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/Control.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">Control</a>&nbsp;ctrl)</pre>
 <div class="block">Identifies negative and positive controls. Assumes positive by default.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1087,7 +1071,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>sign</h4>
-<pre>protected&nbsp;int&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.548">sign</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;int&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.540">sign</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                    <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;ctrlLabel)</pre>
 <div class="block">Checks the cumulative sign of the chained controls.</div>
 <dl>
@@ -1105,7 +1089,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>labeledInactive</h4>
-<pre>protected&nbsp;boolean&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.567">labeledInactive</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;boolean&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.559">labeledInactive</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                   <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;simpleLabel,
                                   <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;complexLabel)</pre>
 <div class="block">Checks if a PE chain is labeled as inactive.</div>
@@ -1125,7 +1109,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>writeResultAsSIF</h4>
-<pre>protected&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.586">writeResultAsSIF</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&gt;&gt;&nbsp;matches,
+<pre>protected&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.578">writeResultAsSIF</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&gt;&gt;&nbsp;matches,
                                 <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;out,
                                 boolean&nbsp;directed,
                                 <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;label1,
@@ -1151,7 +1135,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>writeSIFsUsingSIFFramework</h4>
-<pre>protected&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.642">writeSIFsUsingSIFFramework</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&gt;&gt;&nbsp;matches,
+<pre>protected&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.634">writeSIFsUsingSIFFramework</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&gt;&gt;&nbsp;matches,
                                           <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;out)
                                    throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <div class="block">This method writes the output as pairs of gene symbols of the given two ProteinReference.
@@ -1171,7 +1155,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getRelationType</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.683">getRelationType</a>()</pre>
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.675">getRelationType</a>()</pre>
 <div class="block">Checks if the relation captured by match has a type. THis method just returns null but any
  child class using <code>writeResultAsSIF</code> method can implement this to have a
  relationship type between gene symbol pairs.</div>
@@ -1187,7 +1171,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getHeader</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.697">getHeader</a>()</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.689">getHeader</a>()</pre>
 <div class="block">Gets the first line of the result file. This method should be overridden to customize the
  header of the result file.</div>
 <dl>
@@ -1202,7 +1186,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>writeResultDetailed</h4>
-<pre>protected&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.711">writeResultDetailed</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&gt;&gt;&nbsp;matches,
+<pre>protected&nbsp;void&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.703">writeResultDetailed</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>,<a href="http://download.oracle.com/javase/7/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&gt;&gt;&nbsp;matches,
                                    <a href="http://download.oracle.com/javase/7/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io">OutputStream</a>&nbsp;out,
                                    int&nbsp;columns)
                             throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
@@ -1223,7 +1207,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getValue</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.781">getValue</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.773">getValue</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                        int&nbsp;col)</pre>
 <div class="block">This method has to be overridden if <code>writeResultDetailed</code> method is used. It
  creates the column value of the given Match. If this method returns <code>null</code> for any
@@ -1243,7 +1227,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>createSIFInteraction</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../org/biopax/paxtools/pattern/miner/SIFInteraction.html" title="class in org.biopax.paxtools.pattern.miner">SIFInteraction</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.792">createSIFInteraction</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../../org/biopax/paxtools/pattern/miner/SIFInteraction.html" title="class in org.biopax.paxtools.pattern.miner">SIFInteraction</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.784">createSIFInteraction</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                                 <a href="../../../../../org/biopax/paxtools/pattern/miner/IDFetcher.html" title="interface in org.biopax.paxtools.pattern.miner">IDFetcher</a>&nbsp;fetcher)</pre>
 <div class="block">Creates a SIF interaction for the given match.</div>
 <dl>
@@ -1261,7 +1245,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>fetchIDs</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.828">fetchIDs</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;ele,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.820">fetchIDs</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/BioPAXElement.html?is-external=true" title="class or interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;ele,
                                <a href="../../../../../org/biopax/paxtools/pattern/miner/IDFetcher.html" title="interface in org.biopax.paxtools.pattern.miner">IDFetcher</a>&nbsp;fetcher)</pre>
 </li>
 </ul>
@@ -1271,7 +1255,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getMediatorLabels</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.843">getMediatorLabels</a>()</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.835">getMediatorLabels</a>()</pre>
 <div class="block">If a SIF miner wants to tell which essential BioPAX elements mediated this relation, then
  they need to override this method and pass the labels of elements.</div>
 <dl>
@@ -1286,7 +1270,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getSourcePELabels</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.853">getSourcePELabels</a>()</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.845">getSourcePELabels</a>()</pre>
 <div class="block">If a SIF miner wants to tell which PhysicalEntity objects acted as source of the relation,
  they need to override this method and pass the labels of elements.</div>
 <dl>
@@ -1301,7 +1285,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getTargetPELabels</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.863">getTargetPELabels</a>()</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.855">getTargetPELabels</a>()</pre>
 <div class="block">If a SIF miner wants to tell which PhysicalEntity objects acted as source of the relation,
  they need to override this method and pass the labels of elements.</div>
 <dl>
@@ -1316,7 +1300,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>getIdentifiers</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.874">getIdentifiers</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.866">getIdentifiers</a>(<a href="../../../../../org/biopax/paxtools/pattern/Match.html" title="class in org.biopax.paxtools.pattern">Match</a>&nbsp;m,
                                      <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;label)</pre>
 <div class="block">Uses uniprot name or gene symbol as identifier.</div>
 <dl>
@@ -1334,7 +1318,7 @@ implements <a href="../../../../../org/biopax/paxtools/pattern/miner/Miner.html"
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getCompoundName</h4>
-<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.898">getCompoundName</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/SmallMoleculeReference.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">SmallMoleculeReference</a>&nbsp;smr)</pre>
+<pre>protected&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/org/biopax/paxtools/pattern/miner/MinerAdapter.html#line.890">getCompoundName</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/level3/SmallMoleculeReference.html?is-external=true" title="class or interface in org.biopax.paxtools.model.level3">SmallMoleculeReference</a>&nbsp;smr)</pre>
 <div class="block">Gets the name of the small molecule to use in SIF.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

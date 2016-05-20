@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -109,7 +109,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <hr>
 <br>
-<pre>public final class <a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.34">ModelUtils</a>
+<pre>public final class <a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.36">ModelUtils</a>
 extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">Several useful algorithms and examples, e.g., to extract root or child
  BioPAX L3 elements, remove dangling, replace elements
@@ -164,12 +164,16 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#encodeBase62-java.lang.String-">encodeBase62</a></span>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;str)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#findFeaturesAddedToSecond-org.biopax.paxtools.model.level3.PhysicalEntity-org.biopax.paxtools.model.level3.PhysicalEntity-boolean-">findFeaturesAddedToSecond</a></span>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;first,
                          <a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;second,
                          boolean&nbsp;fix)</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#fixDanglingInverseProperties-org.biopax.paxtools.model.BioPAXElement-org.biopax.paxtools.model.Model-">fixDanglingInverseProperties</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
                             <a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
@@ -177,7 +181,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  from values the model does not have.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#fixDanglingObjectProperties-org.biopax.paxtools.model.BioPAXElement-org.biopax.paxtools.model.Model-">fixDanglingObjectProperties</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
                            <a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
@@ -185,13 +189,13 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  from values the model does not have.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;,<a href="http://download.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#generateClassMetrics-org.biopax.paxtools.model.Model-">generateClassMetrics</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">Generates simple counts of different elements in the model.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getAllChildren-org.biopax.paxtools.model.BioPAXElement-org.biopax.paxtools.util.Filter...-">getAllChildren</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
               <a href="../../../../org/biopax/paxtools/util/Filter.html" title="interface in org.biopax.paxtools.util">Filter</a>&lt;<a href="../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&gt;...&nbsp;filters)</code>
@@ -200,7 +204,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  new model.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/Provenance.html" title="interface in org.biopax.paxtools.model.level3">Provenance</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getDatasources-org.biopax.paxtools.model.BioPAXElement-">getDatasources</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</code>
 <div class="block">Collects all Provenance objects 
@@ -212,32 +216,32 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
    dataSource values from associated entities.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getDirectChildren-org.biopax.paxtools.model.BioPAXElement-">getDirectChildren</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe)</code>
 <div class="block">Gets direct children of a given BioPAX element
  and adds them to a new model.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getDirectChildrenAsSet-org.biopax.paxtools.model.BioPAXElement-">getDirectChildrenAsSet</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe)</code>
 <div class="block">Collects direct children of a given BioPAX element.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getFeatureIntersection-org.biopax.paxtools.model.level3.PhysicalEntity-org.biopax.paxtools.controller.ModelUtils.FeatureType-org.biopax.paxtools.model.level3.PhysicalEntity-org.biopax.paxtools.controller.ModelUtils.FeatureType-">getFeatureIntersection</a></span>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;first,
                       org.biopax.paxtools.controller.ModelUtils.FeatureType&nbsp;firstClass,
                       <a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;second,
                       org.biopax.paxtools.controller.ModelUtils.FeatureType&nbsp;secondClass)</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getFeatureSetByType-org.biopax.paxtools.model.level3.PhysicalEntity-org.biopax.paxtools.controller.ModelUtils.FeatureType-">getFeatureSetByType</a></span>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;pe,
                    org.biopax.paxtools.controller.ModelUtils.FeatureType&nbsp;type)</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getKeywords-org.biopax.paxtools.model.BioPAXElement-int-org.biopax.paxtools.util.Filter...-">getKeywords</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement,
            int&nbsp;depth,
@@ -246,7 +250,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  values (can be then used for full-text indexing).</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static &lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;<br>T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getObject-org.biopax.paxtools.model.Model-java.lang.String-java.lang.Class-">getObject</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
          <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;uri,
@@ -255,7 +259,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  from the model, unlike <a href="../../../../org/biopax/paxtools/model/Model.html#getByID-java.lang.String-"><code>Model.getByID(String)</code></a>.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/BioSource.html" title="interface in org.biopax.paxtools.model.level3">BioSource</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getOrganisms-org.biopax.paxtools.model.BioPAXElement-">getOrganisms</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</code>
 <div class="block">Collects BioSource objects from this or
@@ -264,7 +268,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  or empty 'organism' property at all.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/Pathway.html" title="interface in org.biopax.paxtools.model.level3">Pathway</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getParentPathways-org.biopax.paxtools.model.BioPAXElement-">getParentPathways</a></span>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</code>
 <div class="block">Collects all parent Pathway objects recursively
@@ -272,32 +276,32 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  biopax element.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static &lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;<br><a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#getRootElements-org.biopax.paxtools.model.Model-java.lang.Class-">getRootElements</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
                <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;filterClass)</code>
 <div class="block">Finds "root" BioPAX objects that belong to a particular class (incl.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#md5hex-java.lang.String-">md5hex</a></span>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</code>
 <div class="block">Calculates MD5 hash code (as 32-byte hex.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#mergeEquivalentInteractions-org.biopax.paxtools.model.Model-">mergeEquivalentInteractions</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
-<div class="block">Merges equivalent interactions.</div>
+<div class="block">Merges equivalent interactions (currently - Conversions only).</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#mergeEquivalentPhysicalEntities-org.biopax.paxtools.model.Model-">mergeEquivalentPhysicalEntities</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">Merges equivalent physical entities.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#normalizeGenerics-org.biopax.paxtools.model.Model-">normalizeGenerics</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">Converts generic simple physical entities, 
@@ -309,7 +313,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  generic molecules in BioPAX L3.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>static &lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;<br><a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#removeObjectsIfDangling-org.biopax.paxtools.model.Model-java.lang.Class-">removeObjectsIfDangling</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;clazz)</code>
@@ -317,7 +321,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  e.g.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#replace-org.biopax.paxtools.model.Model-java.util.Map-">replace</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
        <a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;? extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>,? extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;subs)</code>
@@ -325,13 +329,29 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
  updates corresponding BioPAX object references.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#replaceEquivalentFeatures-org.biopax.paxtools.model.Model-">replaceEquivalentFeatures</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">This method iterates over the features in a model and tries to find equivalent objects and merges them.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
+<td class="colFirst"><code>static <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#shortenUri-java.lang.String-java.lang.String-">shortenUri</a></span>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;xmlbase,
+          <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;uri)</code>
+<div class="block">Creates a short URI from the URI,
+ given the xml:base.</div>
+</td>
+</tr>
+<tr id="i26" class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#updateUri-org.biopax.paxtools.model.Model-org.biopax.paxtools.model.BioPAXElement-java.lang.String-">updateUri</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+         <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;el,
+         <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newUri)</code>
+<div class="block">Replaces the URI of a BioPAX object in the Model using java reflection.</div>
+</td>
+</tr>
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/biopax/paxtools/controller/ModelUtils.html#writeRead-org.biopax.paxtools.model.Model-">writeRead</a></span>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</code>
 <div class="block">Cuts the BioPAX model off other models and BioPAX objects
@@ -366,7 +386,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>replace</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.91">replace</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.93">replace</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
                            <a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;? extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>,? extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;subs)</pre>
 <div class="block">Replaces BioPAX elements in the model with ones from the map,
  updates corresponding BioPAX object references.
@@ -399,7 +419,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getRootElements</h4>
-<pre>public static&nbsp;&lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;T&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.149">getRootElements</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+<pre>public static&nbsp;&lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;T&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.151">getRootElements</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
                                                                <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;filterClass)</pre>
 <div class="block">Finds "root" BioPAX objects that belong to a particular class (incl. sub-classes)
  in the model.
@@ -423,7 +443,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>removeObjectsIfDangling</h4>
-<pre>public static&nbsp;&lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.199">removeObjectsIfDangling</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+<pre>public static&nbsp;&lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.201">removeObjectsIfDangling</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
                                                                                    <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;clazz)</pre>
 <div class="block">Iteratively removes "dangling" elements of given type and its sub-types,
  e.g. Xref.class objects, from the BioPAX model. 
@@ -455,7 +475,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>writeRead</h4>
-<pre>public static&nbsp;<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.255">writeRead</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
+<pre>public static&nbsp;<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.257">writeRead</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
 <div class="block">Cuts the BioPAX model off other models and BioPAX objects
  by essentially performing write/read to/from OWL.
  The resulting model contains new objects with same IDs
@@ -479,7 +499,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getDirectChildren</h4>
-<pre>public static&nbsp;<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.270">getDirectChildren</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe)</pre>
+<pre>public static&nbsp;<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.272">getDirectChildren</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe)</pre>
 <div class="block">Gets direct children of a given BioPAX element
  and adds them to a new model.</div>
 <dl>
@@ -496,7 +516,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getAllChildren</h4>
-<pre>public static&nbsp;<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.297">getAllChildren</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
+<pre>public static&nbsp;<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.299">getAllChildren</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
                                    <a href="../../../../org/biopax/paxtools/util/Filter.html" title="interface in org.biopax.paxtools.util">Filter</a>&lt;<a href="../../../../org/biopax/paxtools/controller/PropertyEditor.html" title="interface in org.biopax.paxtools.controller">PropertyEditor</a>&gt;...&nbsp;filters)</pre>
 <div class="block">Gets all the child BioPAX elements of a given BioPAX element
  (using the "tuned" <a href="../../../../org/biopax/paxtools/controller/Fetcher.html" title="class in org.biopax.paxtools.controller"><code>Fetcher</code></a>) and adds them to a
@@ -516,7 +536,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getDirectChildrenAsSet</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.318">getDirectChildrenAsSet</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe)</pre>
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.320">getDirectChildrenAsSet</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe)</pre>
 <div class="block">Collects direct children of a given BioPAX element.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -532,7 +552,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>generateClassMetrics</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;,<a href="http://download.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.344">generateClassMetrics</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;,<a href="http://download.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.346">generateClassMetrics</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
 <div class="block">Generates simple counts of different elements in the model.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -548,7 +568,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getObject</h4>
-<pre>public static&nbsp;&lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;T&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.373">getObject</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+<pre>public static&nbsp;&lt;T extends <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&gt;&nbsp;T&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.375">getObject</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
                                                     <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;uri,
                                                     <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;T&gt;&nbsp;clazz)</pre>
 <div class="block">A more strict, type-safe way to ask for a biopax object
@@ -571,7 +591,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>md5hex</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.397">md5hex</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</pre>
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.399">md5hex</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</pre>
 <div class="block">Calculates MD5 hash code (as 32-byte hex. string).
  
  This method is not BioPAX specific. Can be
@@ -591,7 +611,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>fixDanglingObjectProperties</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.417">fixDanglingObjectProperties</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.419">fixDanglingObjectProperties</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
                                                <a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
 <div class="block">Unlinks <em>object properties</em> of the BioPAX object
  from values the model does not have.</div>
@@ -608,7 +628,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>fixDanglingInverseProperties</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.444">fixDanglingInverseProperties</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.446">fixDanglingInverseProperties</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;bpe,
                                                 <a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
 <div class="block">Unlinks <em>inverse properties</em> of the BioPAX object
  from values the model does not have.</div>
@@ -625,7 +645,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getFeatureIntersection</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.473">getFeatureIntersection</a>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;first,
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.475">getFeatureIntersection</a>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;first,
                                                         org.biopax.paxtools.controller.ModelUtils.FeatureType&nbsp;firstClass,
                                                         <a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;second,
                                                         org.biopax.paxtools.controller.ModelUtils.FeatureType&nbsp;secondClass)</pre>
@@ -637,7 +657,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getFeatureSetByType</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.482">getFeatureSetByType</a>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;pe,
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.484">getFeatureSetByType</a>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;pe,
                                                      org.biopax.paxtools.controller.ModelUtils.FeatureType&nbsp;type)</pre>
 </li>
 </ul>
@@ -647,7 +667,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>checkERFeatureSet</h4>
-<pre>public static&nbsp;boolean&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.524">checkERFeatureSet</a>(<a href="../../../../org/biopax/paxtools/model/level3/EntityReference.html" title="interface in org.biopax.paxtools.model.level3">EntityReference</a>&nbsp;er,
+<pre>public static&nbsp;boolean&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.526">checkERFeatureSet</a>(<a href="../../../../org/biopax/paxtools/model/level3/EntityReference.html" title="interface in org.biopax.paxtools.model.level3">EntityReference</a>&nbsp;er,
                                         boolean&nbsp;fix)</pre>
 <div class="block">Finds and adds all (missing) entity features 
  to given entity reference from all its owner 
@@ -673,7 +693,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>findFeaturesAddedToSecond</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.560">findFeaturesAddedToSecond</a>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;first,
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/EntityFeature.html" title="interface in org.biopax.paxtools.model.level3">EntityFeature</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.562">findFeaturesAddedToSecond</a>(<a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;first,
                                                            <a href="../../../../org/biopax/paxtools/model/level3/PhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">PhysicalEntity</a>&nbsp;second,
                                                            boolean&nbsp;fix)</pre>
 </li>
@@ -684,7 +704,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>normalizeGenerics</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.649">normalizeGenerics</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.651">normalizeGenerics</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
 <div class="block">Converts generic simple physical entities, 
  i.e., physical entities except Complexes 
  that have not empty memberPhysicalEntity property,
@@ -714,7 +734,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>addMissingEntityReference</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.727">addMissingEntityReference</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.729">addMissingEntityReference</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
                                              <a href="../../../../org/biopax/paxtools/model/level3/SimplePhysicalEntity.html" title="interface in org.biopax.paxtools.model.level3">SimplePhysicalEntity</a>&nbsp;pe)</pre>
 <div class="block">For a non-generic simple physical entity (memberPhysicalEntity property is empty)
  that does not have entityReference property defined, this method generates and adds
@@ -734,7 +754,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>replaceEquivalentFeatures</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.841">replaceEquivalentFeatures</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.843">replaceEquivalentFeatures</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
 <div class="block">This method iterates over the features in a model and tries to find equivalent objects and merges them.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -748,7 +768,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getKeywords</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.924">getKeywords</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement,
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.926">getKeywords</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement,
                                       int&nbsp;depth,
                                       <a href="../../../../org/biopax/paxtools/util/Filter.html" title="interface in org.biopax.paxtools.util">Filter</a>&lt;<a href="../../../../org/biopax/paxtools/controller/DataPropertyEditor.html" title="interface in org.biopax.paxtools.controller">DataPropertyEditor</a>&gt;...&nbsp;dataPropertyFilters)</pre>
 <div class="block">Collects data type (not object) property
@@ -773,7 +793,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getOrganisms</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/BioSource.html" title="interface in org.biopax.paxtools.model.level3">BioSource</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.991">getOrganisms</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</pre>
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/BioSource.html" title="interface in org.biopax.paxtools.model.level3">BioSource</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.993">getOrganisms</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</pre>
 <div class="block">Collects BioSource objects from this or
  related elements (where it makes sense;
  though the biopax element might have no 
@@ -798,7 +818,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getDatasources</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/Provenance.html" title="interface in org.biopax.paxtools.model.level3">Provenance</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1049">getDatasources</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</pre>
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/Provenance.html" title="interface in org.biopax.paxtools.model.level3">Provenance</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1051">getDatasources</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</pre>
 <div class="block">Collects all Provenance objects 
  associated with this one as follows:
  - if the element is Entity (has 'dataSource' property) 
@@ -823,7 +843,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getParentPathways</h4>
-<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/Pathway.html" title="interface in org.biopax.paxtools.model.level3">Pathway</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1088">getParentPathways</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</pre>
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="../../../../org/biopax/paxtools/model/level3/Pathway.html" title="interface in org.biopax.paxtools.model.level3">Pathway</a>&gt;&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1090">getParentPathways</a>(<a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;biopaxElement)</pre>
 <div class="block">Collects all parent Pathway objects recursively
  traversing the inverse object properties of the
  biopax element. It ignores all BioPAX types except (incl. sub-classes of):
@@ -842,11 +862,12 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>mergeEquivalentInteractions</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1149">mergeEquivalentInteractions</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
-<div class="block">Merges equivalent interactions.
- 
- Note (warning): please check if the result is desirable; 
- the result of the merging very much depends on actual pathway data quality...</div>
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1152">mergeEquivalentInteractions</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
+<div class="block">Merges equivalent interactions (currently - Conversions only).
+ TODO: shall we rename to mergeEquivalentConversions instead (this is what it does)?
+
+ Warning: experimental; - check if the result is desirable;
+                        the result very much depends on actual pathway data quality...</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>model</code> - to edit/update</dd>
@@ -856,10 +877,10 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <a name="mergeEquivalentPhysicalEntities-org.biopax.paxtools.model.Model-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>mergeEquivalentPhysicalEntities</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1211">mergeEquivalentPhysicalEntities</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1221">mergeEquivalentPhysicalEntities</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model)</pre>
 <div class="block">Merges equivalent physical entities.
 
  This can greatly decrease model's size and improve some visualizations, but
@@ -874,6 +895,61 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>model</code> - to edit/update</dd>
+</dl>
+</li>
+</ul>
+<a name="encodeBase62-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>encodeBase62</h4>
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1283">encodeBase62</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;str)</pre>
+</li>
+</ul>
+<a name="shortenUri-java.lang.String-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>shortenUri</h4>
+<pre>public static&nbsp;<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1313">shortenUri</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;xmlbase,
+                                <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;uri)</pre>
+<div class="block">Creates a short URI from the URI,
+ given the xml:base. One have to
+ check the new URI is unique before
+ using in a model (if not - e.g., add some
+ suffix to the xmlBase parameter and try again).</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>xmlbase</code> - </dd>
+<dd><code>uri</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a short URI</dd>
+</dl>
+</li>
+</ul>
+<a name="updateUri-org.biopax.paxtools.model.Model-org.biopax.paxtools.model.BioPAXElement-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>updateUri</h4>
+<pre>public static&nbsp;void&nbsp;<a href="../../../../src-html/org/biopax/paxtools/controller/ModelUtils.html#line.1331">updateUri</a>(<a href="../../../../org/biopax/paxtools/model/Model.html" title="interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+                             <a href="../../../../org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a>&nbsp;el,
+                             <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;newUri)</pre>
+<div class="block">Replaces the URI of a BioPAX object in the Model using java reflection.
+ If the element also belongs to other BioPAX models, those will become inconsistent
+ unless this method is called for each such model.
+
+ Warnings:
+  - one should not normally use this method at all;
+  - but if you do, then don't use a URI of another object from the same model.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>model</code> - model (can be null; if the object in fact belongs to a model, the model will be inconsistent)</dd>
+<dd><code>el</code> - biopax object</dd>
+<dd><code>newUri</code> - URI - not null/empty URI</dd>
 </dl>
 </li>
 </ul>

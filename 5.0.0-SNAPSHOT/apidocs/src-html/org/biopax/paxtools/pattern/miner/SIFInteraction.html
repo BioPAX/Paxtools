@@ -154,7 +154,7 @@
 <span class="sourceLineNo">146</span>                {<a name="line.146"></a>
 <span class="sourceLineNo">147</span>                        m+= " " + mid;<a name="line.147"></a>
 <span class="sourceLineNo">148</span>                }<a name="line.148"></a>
-<span class="sourceLineNo">149</span>                return m.trim();<a name="line.149"></a>
+<span class="sourceLineNo">149</span>                return m.trim().replaceAll(" ", ";");<a name="line.149"></a>
 <span class="sourceLineNo">150</span>        }<a name="line.150"></a>
 <span class="sourceLineNo">151</span><a name="line.151"></a>
 <span class="sourceLineNo">152</span>        /**<a name="line.152"></a>
@@ -215,7 +215,7 @@
 <span class="sourceLineNo">207</span>                return set;<a name="line.207"></a>
 <span class="sourceLineNo">208</span>        }<a name="line.208"></a>
 <span class="sourceLineNo">209</span><a name="line.209"></a>
-<span class="sourceLineNo">210</span>        private static final PathAccessor pathwayAcc1 = new PathAccessor("Interaction/pathwayComponentOf*");<a name="line.210"></a>
+<span class="sourceLineNo">210</span>        private static final PathAccessor pathwayAcc1 = new PathAccessor("Interaction/pathwayComponentOf");<a name="line.210"></a>
 <span class="sourceLineNo">211</span>        private static final PathAccessor pathwayAcc2 = new PathAccessor("Interaction/stepProcessOf/pathwayOrderOf");<a name="line.211"></a>
 <span class="sourceLineNo">212</span><a name="line.212"></a>
 <span class="sourceLineNo">213</span>        /**<a name="line.213"></a>

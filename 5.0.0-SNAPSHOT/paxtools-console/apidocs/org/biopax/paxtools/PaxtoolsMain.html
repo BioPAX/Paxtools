@@ -75,13 +75,13 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -112,32 +112,13 @@ var activeTableTab = "activeTableTab";
 <pre>public class <a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.33">PaxtoolsMain</a>
 extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">Paxtools console application
- (useful BioPAX utilities).</div>
+ (very useful BioPAX utilities).</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== FIELD SUMMARY =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.summary">
-<!--   -->
-</a>
-<h3>Field Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
-<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Field and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static org.slf4j.Logger</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/biopax/paxtools/PaxtoolsMain.html#log">log</a></span></code>&nbsp;</td>
-</tr>
-</table>
-</li>
-</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.summary">
@@ -207,7 +188,10 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/biopax/paxtools/PaxtoolsMain.html#summarize-org.biopax.paxtools.model.Model-java.io.PrintStream-">summarize</a></span>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/Model.html?is-external=true" title="class or interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
-         <a href="http://download.oracle.com/javase/7/docs/api/java/io/PrintStream.html?is-external=true" title="class or interface in java.io">PrintStream</a>&nbsp;out)</code>&nbsp;</td>
+         <a href="http://download.oracle.com/javase/7/docs/api/java/io/PrintStream.html?is-external=true" title="class or interface in java.io">PrintStream</a>&nbsp;out)</code>
+<div class="block">A summary of BioPAX class and property values in the model
+ (experimental; for troubleshooting and debugging).</div>
+</td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static void</code></td>
@@ -249,23 +233,6 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ============ FIELD DETAIL =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.detail">
-<!--   -->
-</a>
-<h3>Field Detail</h3>
-<a name="log">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>log</h4>
-<pre>public static&nbsp;org.slf4j.Logger <a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.35">log</a></pre>
-</li>
-</ul>
-</li>
-</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.detail">
@@ -296,14 +263,10 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <li class="blockList">
 <h4>main</h4>
 <pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.38">main</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
-                 throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a>,
-                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/reflect/InvocationTargetException.html?is-external=true" title="class or interface in java.lang.reflect">InvocationTargetException</a>,
-                        <a href="http://download.oracle.com/javase/7/docs/api/java/lang/IllegalAccessException.html?is-external=true" title="class or interface in java.lang">IllegalAccessException</a></pre>
+                 throws <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang">Exception</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
-<dd><code><a href="http://download.oracle.com/javase/7/docs/api/java/lang/reflect/InvocationTargetException.html?is-external=true" title="class or interface in java.lang.reflect">InvocationTargetException</a></code></dd>
-<dd><code><a href="http://download.oracle.com/javase/7/docs/api/java/lang/IllegalAccessException.html?is-external=true" title="class or interface in java.lang">IllegalAccessException</a></code></dd>
+<dd><code><a href="http://download.oracle.com/javase/7/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang">Exception</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -313,7 +276,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>toGSEA</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.56">toGSEA</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.55">toGSEA</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                    throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -327,7 +290,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getNeighbors</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.92">getNeighbors</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.91">getNeighbors</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                          throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -341,7 +304,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>fetch</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.133">fetch</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.132">fetch</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                   throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -355,7 +318,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>toLevel3</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.151">toLevel3</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.171">toLevel3</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                      throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -369,7 +332,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>toSbgn</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.234">toSbgn</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.254">toSbgn</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                    throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -383,7 +346,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>validate</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.250">validate</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.270">validate</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                      throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -397,7 +360,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>toSifnx</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.345">toSifnx</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.365">toSifnx</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                     throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -411,7 +374,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>sifnxToSif</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.454">sifnxToSif</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;inputFile,
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.474">sifnxToSif</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;inputFile,
                               <a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;outputFile)
                        throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
@@ -426,7 +389,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>integrate</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.471">integrate</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.491">integrate</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                       throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -440,7 +403,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>merge</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.484">merge</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.503">merge</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                   throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -454,7 +417,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>blacklist</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.502">blacklist</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.521">blacklist</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                       throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -468,7 +431,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>help</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.509">help</a>()</pre>
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.528">help</a>()</pre>
 </li>
 </ul>
 <a name="pattern-java.lang.String:A-">
@@ -477,7 +440,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>pattern</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.518">pattern</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)</pre>
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.537">pattern</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)</pre>
 </li>
 </ul>
 <a name="summarize-java.lang.String:A-">
@@ -486,7 +449,7 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>summarize</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.528">summarize</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.546">summarize</a>(<a href="http://download.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;argv)
                       throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -500,12 +463,17 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="blockListLast">
 <li class="blockList">
 <h4>summarize</h4>
-<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.536">summarize</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/Model.html?is-external=true" title="class or interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
+<pre>public static&nbsp;void&nbsp;<a href="../../../src-html/org/biopax/paxtools/PaxtoolsMain.html#line.827">summarize</a>(<a href="https://biopax.github.io/Paxtools/apidocs/org/biopax/paxtools/model/Model.html?is-external=true" title="class or interface in org.biopax.paxtools.model">Model</a>&nbsp;model,
                              <a href="http://download.oracle.com/javase/7/docs/api/java/io/PrintStream.html?is-external=true" title="class or interface in java.io">PrintStream</a>&nbsp;out)
                       throws <a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<div class="block">A summary of BioPAX class and property values in the model
+ (experimental; for troubleshooting and debugging).</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>model</code> - input Model</dd>
+<dd><code>out</code> - output file</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
+<dd><code><a href="http://download.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - when an I/O exception occurs</dd>
 </dl>
 </li>
 </ul>
@@ -563,13 +531,13 @@ extends <a href="http://download.oracle.com/javase/7/docs/api/java/lang/Object.h
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

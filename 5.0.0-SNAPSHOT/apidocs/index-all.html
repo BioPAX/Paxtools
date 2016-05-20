@@ -2488,6 +2488,8 @@
 <dd>
 <div class="block">Option to accept objects if the field is empty or null.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#encodeBase62-java.lang.String-">encodeBase62(String)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/pattern/constraint/LinkedPE.html#enrichWithCM-java.util.Set-java.util.Set-">enrichWithCM(Set&lt;BioPAXElement&gt;, Set&lt;BioPAXElement&gt;)</a></span> - Method in class org.biopax.paxtools.pattern.constraint.<a href="org/biopax/paxtools/pattern/constraint/LinkedPE.html" title="class in org.biopax.paxtools.pattern.constraint">LinkedPE</a></dt>
 <dd>
 <div class="block">Gets parent complexes or complex members recursively according to the type of the linkage.</div>
@@ -6658,8 +6660,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/PathAccessor.html#log">log</a></span> - Static variable in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/PathAccessor.html" title="class in org.biopax.paxtools.controller">PathAccessor</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/biopax/paxtools/PaxtoolsMain.html#log">log</a></span> - Static variable in class org.biopax.paxtools.<a href="org/biopax/paxtools/PaxtoolsMain.html" title="class in org.biopax.paxtools">PaxtoolsMain</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/query/wrapperL3/GraphL3.html#log">log</a></span> - Variable in class org.biopax.paxtools.query.wrapperL3.<a href="org/biopax/paxtools/query/wrapperL3/GraphL3.html" title="class in org.biopax.paxtools.query.wrapperL3">GraphL3</a></dt>
 <dd>
 <div class="block">Log for logging.</div>
@@ -6808,7 +6808,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#mergeEquivalentInteractions-org.biopax.paxtools.model.Model-">mergeEquivalentInteractions(Model)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
 <dd>
-<div class="block">Merges equivalent interactions.</div>
+<div class="block">Merges equivalent interactions (currently - Conversions only).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#mergeEquivalentPhysicalEntities-org.biopax.paxtools.model.Model-">mergeEquivalentPhysicalEntities(Model)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
 <dd>
@@ -7525,10 +7525,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="net/biomodels/miriam/Miriam.Datatype.html#pattern">pattern</a></span> - Variable in class net.biomodels.miriam.<a href="net/biomodels/miriam/Miriam.Datatype.html" title="class in net.biomodels.miriam">Miriam.Datatype</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/biopax/paxtools/pattern/miner/MinerAdapter.html#pattern">pattern</a></span> - Variable in class org.biopax.paxtools.pattern.miner.<a href="org/biopax/paxtools/pattern/miner/MinerAdapter.html" title="class in org.biopax.paxtools.pattern.miner">MinerAdapter</a></dt>
-<dd>
-<div class="block">Pattern to use for mining.</div>
-</dd>
 <dt><a href="org/biopax/paxtools/pattern/Pattern.html" title="class in org.biopax.paxtools.pattern"><span class="typeNameLink">Pattern</span></a> - Class in <a href="org/biopax/paxtools/pattern/package-summary.html">org.biopax.paxtools.pattern</a></dt>
 <dd>
 <div class="block">A pattern is a list of mapped constraints.</div>
@@ -7552,7 +7548,7 @@
 <dt><a href="org/biopax/paxtools/PaxtoolsMain.html" title="class in org.biopax.paxtools"><span class="typeNameLink">PaxtoolsMain</span></a> - Class in <a href="org/biopax/paxtools/package-summary.html">org.biopax.paxtools</a></dt>
 <dd>
 <div class="block">Paxtools console application
- (useful BioPAX utilities).</div>
+ (very useful BioPAX utilities).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/PaxtoolsMain.html#PaxtoolsMain--">PaxtoolsMain()</a></span> - Constructor for class org.biopax.paxtools.<a href="org/biopax/paxtools/PaxtoolsMain.html" title="class in org.biopax.paxtools">PaxtoolsMain</a></dt>
 <dd>&nbsp;</dd>
@@ -9871,6 +9867,11 @@
 <dd>
 <div class="block">Empty constructos that defaults to BioPAX L3.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#shortenUri-java.lang.String-java.lang.String-">shortenUri(String, String)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
+<dd>
+<div class="block">Creates a short URI from the URI,
+ given the xml:base.</div>
+</dd>
 <dt><a href="org/biopax/paxtools/pattern/miner/SIFEnum.html" title="enum in org.biopax.paxtools.pattern.miner"><span class="typeNameLink">SIFEnum</span></a> - Enum in <a href="org/biopax/paxtools/pattern/miner/package-summary.html">org.biopax.paxtools.pattern.miner</a></dt>
 <dd>
 <div class="block">Enum for representing supported SIF edge types.</div>
@@ -10111,7 +10112,10 @@
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/PaxtoolsMain.html#summarize-java.lang.String:A-">summarize(String[])</a></span> - Static method in class org.biopax.paxtools.<a href="org/biopax/paxtools/PaxtoolsMain.html" title="class in org.biopax.paxtools">PaxtoolsMain</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/PaxtoolsMain.html#summarize-org.biopax.paxtools.model.Model-java.io.PrintStream-">summarize(Model, PrintStream)</a></span> - Static method in class org.biopax.paxtools.<a href="org/biopax/paxtools/PaxtoolsMain.html" title="class in org.biopax.paxtools">PaxtoolsMain</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">A summary of BioPAX class and property values in the model
+ (experimental; for troubleshooting and debugging).</div>
+</dd>
 <dt><span class="memberNameLink"><a href="net/biomodels/miriam/Synonyms.html#synonym">synonym</a></span> - Variable in class net.biomodels.miriam.<a href="net/biomodels/miriam/Synonyms.html" title="class in net.biomodels.miriam">Synonyms</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="net/biomodels/miriam/Miriam.Datatype.html#synonyms">synonyms</a></span> - Variable in class net.biomodels.miriam.<a href="net/biomodels/miriam/Miriam.Datatype.html" title="class in net.biomodels.miriam">Miriam.Datatype</a></dt>
@@ -10468,6 +10472,10 @@
 <dd>
 <div class="block">If glyph attribute of this VNode object includes any "state of information" or "unit of information" glyphs, this method updates the
   size of VNode accordingly.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#updateUri-org.biopax.paxtools.model.Model-org.biopax.paxtools.model.BioPAXElement-java.lang.String-">updateUri(Model, BioPAXElement, String)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
+<dd>
+<div class="block">Replaces the URI of a BioPAX object in the Model using java reflection.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/query/model/AbstractNode.html#upperEquivalent">upperEquivalent</a></span> - Variable in class org.biopax.paxtools.query.model.<a href="org/biopax/paxtools/query/model/AbstractNode.html" title="class in org.biopax.paxtools.query.model">AbstractNode</a></dt>
 <dd>

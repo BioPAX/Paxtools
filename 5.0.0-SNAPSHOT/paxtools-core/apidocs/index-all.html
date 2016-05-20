@@ -1142,6 +1142,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/EditorMapImpl.html#EditorMapImpl-org.biopax.paxtools.model.BioPAXLevel-">EditorMapImpl(BioPAXLevel)</a></span> - Constructor for class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/EditorMapImpl.html" title="class in org.biopax.paxtools.controller">EditorMapImpl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#encodeBase62-java.lang.String-">encodeBase62(String)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/biopax/paxtools/model/level2/entity.html" title="interface in org.biopax.paxtools.model.level2"><span class="typeNameLink">entity</span></a> - Interface in <a href="org/biopax/paxtools/model/level2/package-summary.html">org.biopax.paxtools.model.level2</a></dt>
 <dd>
 <div class="block">This class represents a discrete biological unit used when describing
@@ -3186,7 +3188,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#mergeEquivalentInteractions-org.biopax.paxtools.model.Model-">mergeEquivalentInteractions(Model)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
 <dd>
-<div class="block">Merges equivalent interactions.</div>
+<div class="block">Merges equivalent interactions (currently - Conversions only).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#mergeEquivalentPhysicalEntities-org.biopax.paxtools.model.Model-">mergeEquivalentPhysicalEntities(Model)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
 <dd>
@@ -4861,6 +4863,11 @@
 <dd>
 <div class="block">Empty constructos that defaults to BioPAX L3.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#shortenUri-java.lang.String-java.lang.String-">shortenUri(String, String)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
+<dd>
+<div class="block">Creates a short URI from the URI,
+ given the xml:base.</div>
+</dd>
 <dt><a href="org/biopax/paxtools/controller/SimpleEditorMap.html" title="enum in org.biopax.paxtools.controller"><span class="typeNameLink">SimpleEditorMap</span></a> - Enum in <a href="org/biopax/paxtools/controller/package-summary.html">org.biopax.paxtools.controller</a></dt>
 <dd>
 <div class="block">Provides a simple editor map for a level with a given factory.</div>
@@ -5120,6 +5127,10 @@
 <dt><span class="memberNameLink"><a href="org/biopax/paxtools/model/BioPAXElement.html#UNKNOWN_INT">UNKNOWN_INT</a></span> - Static variable in interface org.biopax.paxtools.model.<a href="org/biopax/paxtools/model/BioPAXElement.html" title="interface in org.biopax.paxtools.model">BioPAXElement</a></dt>
 <dd>
 <div class="block">Constant for representing unknown integers.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/biopax/paxtools/controller/ModelUtils.html#updateUri-org.biopax.paxtools.model.Model-org.biopax.paxtools.model.BioPAXElement-java.lang.String-">updateUri(Model, BioPAXElement, String)</a></span> - Static method in class org.biopax.paxtools.controller.<a href="org/biopax/paxtools/controller/ModelUtils.html" title="class in org.biopax.paxtools.controller">ModelUtils</a></dt>
+<dd>
+<div class="block">Replaces the URI of a BioPAX object in the Model using java reflection.</div>
 </dd>
 <dt><a href="org/biopax/paxtools/model/level2/utilityClass.html" title="interface in org.biopax.paxtools.model.level2"><span class="typeNameLink">utilityClass</span></a> - Interface in <a href="org/biopax/paxtools/model/level2/package-summary.html">org.biopax.paxtools.model.level2</a></dt>
 <dd>&nbsp;</dd>
