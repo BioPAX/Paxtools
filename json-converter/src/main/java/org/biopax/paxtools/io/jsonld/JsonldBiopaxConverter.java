@@ -39,21 +39,22 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 		// create an empty model
 		com.hp.hpl.jena.rdf.model.Model modelJena = ModelFactory.createDefaultModel();
 		InputStream internalInputStream = new FileInputStream(inputProcessedFile);
-
 		// read the RDF/XML file
 		RDFDataMgr.read(modelJena, internalInputStream, Lang.RDFXML);
-		LOG.info("Read into Model finished "
-				+ sdf.format(Calendar.getInstance().getTime()));
+		LOG.info("Read into Model finished " + sdf.format(Calendar.getInstance().getTime()));
+
+		try { //close quietly and delete the temp. input file
+			internalInputStream.close();
+			inputProcessedFile.delete();
+		} catch(Exception e) {}
 
 		RDFDataMgr.write(os, modelJena, Lang.JSONLD);
-		LOG.info("Conversion RDF to JSONLD finished "
-				+ sdf.format(Calendar.getInstance().getTime()));
+		LOG.info("Conversion RDF to JSONLD finished " + sdf.format(Calendar.getInstance().getTime()));
 		LOG.info(" JSONLD file " + " is written successfully.");
 
 		try { //close, flush quietly
 			os.close();
 		} catch(Exception e) {}
-
 	}
 
 	
@@ -79,8 +80,15 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 
 	}
 
-	// Instantiate a simple (StAX based) biopax reader/writer - SimpleIOHandler
-
+	/**
+	 * Converts the BioPAX data (stream) to an equivalent temporary
+	 * BioPAX RDF/XML file that contains absolute instead of (possibly)
+	 * relative URIs for all the BioPAX elements out there; and returns that file.
+	 *
+	 * @param in biopax input stream
+	 * @return a temporary file
+	 * @throws IOException
+     */
 	public File preProcessFile(InputStream in) throws IOException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -93,16 +101,15 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 
 		SimpleIOHandler simpleIO = new SimpleIOHandler(BioPAXLevel.L3);
 
-		// create a Paxtools Model from the BioPAX L3 RDF/XML input file
-		// (stream)
-
+		// create a Paxtools Model from the BioPAX L3 RDF/XML input file (stream)
 		org.biopax.paxtools.model.Model model = simpleIO.convertFromOWL(in);
+		// - and the input stream 'in' gets closed inside the above method call
 
 		// set for the IO to output full URIs:
 
 		simpleIO.absoluteUris(true);
 
-		File fullUriBiopaxInput = File.createTempFile("biopaxTemp", "owl");
+		File fullUriBiopaxInput = File.createTempFile("paxtools", ".owl");
 
 		fullUriBiopaxInput.deleteOnExit(); // delete on JVM exits
 		FileOutputStream outputStream = new FileOutputStream(fullUriBiopaxInput);
@@ -114,8 +121,7 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 
 		model = null;
 
-		LOG.info("BIOPAX Conversion finished "
-				+ sdf.format(Calendar.getInstance().getTime()));
+		LOG.info("BIOPAX Conversion finished " + sdf.format(Calendar.getInstance().getTime()));
 		return fullUriBiopaxInput;
 	}
 
