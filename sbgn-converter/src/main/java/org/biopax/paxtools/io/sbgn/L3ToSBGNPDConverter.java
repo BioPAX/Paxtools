@@ -759,8 +759,9 @@ public class L3ToSBGNPDConverter
 	private String extractGeneSymbol(Xref xref)
 	{
 		if (xref.getDb() != null && (
-			xref.getDb().equals("HGNC") ||
-			xref.getDb().equals("Gene Symbol")))
+			xref.getDb().equalsIgnoreCase("HGNC Symbol") ||
+			xref.getDb().equalsIgnoreCase("Gene Symbol") ||
+			xref.getDb().equalsIgnoreCase("HGNC")))
 		{
 			String ref = xref.getId();
 
@@ -770,7 +771,8 @@ public class L3ToSBGNPDConverter
 				if (ref.contains(":")) ref = ref.substring(ref.indexOf(":") + 1);
 				if (ref.contains("_")) ref = ref.substring(ref.indexOf("_") + 1);
 
-				if (!HGNC.containsSymbol(ref))
+				// if the reference is an HGNC ID, then convert it to a symbol
+				if (!HGNC.containsSymbol(ref) && Character.isDigit(ref.charAt(0)))
 				{
 					ref = HGNC.getSymbol(ref);
 				}
@@ -1318,8 +1320,8 @@ public class L3ToSBGNPDConverter
 	{
 		Port inputPort = factory.createPort();
 		Port outputPort = factory.createPort();
-		inputPort.setId(g.getId() + ".input");
-		outputPort.setId(g.getId() + ".output");
+		inputPort.setId(g.getId() + "-input");
+		outputPort.setId(g.getId() + "-output");
 		g.getPort().add(inputPort);
 		g.getPort().add(outputPort);
 	}

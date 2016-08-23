@@ -60,6 +60,7 @@ public class HGNC
 			sym2id = new HashMap<String, String>();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 				HGNC.class.getResourceAsStream("HGNC.txt")));
+			reader.readLine(); // skip header
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 			{
 				String[] token = line.split("\t");
