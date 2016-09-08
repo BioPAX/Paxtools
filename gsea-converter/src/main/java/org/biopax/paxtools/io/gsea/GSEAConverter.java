@@ -1,7 +1,7 @@
 package org.biopax.paxtools.io.gsea;
 
 import org.apache.commons.collections15.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.model.BioPAXElement;
