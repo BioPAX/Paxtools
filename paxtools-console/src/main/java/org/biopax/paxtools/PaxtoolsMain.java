@@ -572,19 +572,10 @@ public class PaxtoolsMain {
 		final PathAccessor directChildPathwaysAccessor = new PathAccessor("Pathway/pathwayComponent:Pathway");
 		final PathAccessor pathwayComponentAccessor = new PathAccessor("Pathway/pathwayComponent");
 		final PathAccessor pathwayOrderStepProcessAccessor = new PathAccessor("Pathway/pathwayOrder/stepProcess");
-		//get all pathways sorted by name (or URI if no display name found)
-		Set<Pathway> pathways = new TreeSet<Pathway>(new Comparator<Pathway>() {
-			@Override
-			public int compare(Pathway o1, Pathway o2) {
-				return (o1.getDisplayName()!=null && o2.getDisplayName()!=null)
-					? o1.getDisplayName().compareTo(o2.getDisplayName())
-						: o1.getUri().compareTo(o2.getUri());
-			}
-		});
-		pathways.addAll(model.getObjects(Pathway.class));
 
+		Set<Pathway> pathways = model.getObjects(Pathway.class);
 		//print column titles
-		out.println("\nPATHWAY_URI\tDISPLAY_NAME\tDIRECT_SUB_PATHWAY_URIS\tALL_SUB_PATHWAY_URIS");
+		out.println("PATHWAY_URI\tDISPLAY_NAME\tDIRECT_SUB_PATHWAY_URIS\tALL_SUB_PATHWAY_URIS");
 		for(Pathway pathway : pathways) {
 			StringBuilder sb = new StringBuilder();
 			//write URI and name
@@ -1028,10 +1019,7 @@ public class PaxtoolsMain {
 			classes)
 	{
 		List<Class<? extends BioPAXElement>> list = new ArrayList<Class<? extends BioPAXElement>>(classes);
-
-		Collections.sort(
-				list, new Comparator<Class<? extends  BioPAXElement>>()
-		{
+		Collections.sort(list, new Comparator<Class<? extends  BioPAXElement>>() {
 			public int compare(Class<? extends BioPAXElement> clazz1, Class<? extends BioPAXElement> clazz2)
 			{
 				return clazz1.getName().substring(clazz1.getName().lastIndexOf(".")+1).compareTo(

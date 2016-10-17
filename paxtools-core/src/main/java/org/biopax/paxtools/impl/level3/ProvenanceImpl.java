@@ -44,7 +44,7 @@ public class ProvenanceImpl extends NamedImpl implements Provenance
 						return o1.toString().compareTo(o2.toString());
 					}					
 				});
-				xrefs.addAll(getXref());
+				xrefs.addAll(getXref()); //this also removes duplicate equivalent xrefs (having same id/db)
 				
 				s.append(" (");
 				for (Xref anXref : xrefs)

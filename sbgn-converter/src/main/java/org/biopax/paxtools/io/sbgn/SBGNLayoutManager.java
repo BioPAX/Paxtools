@@ -279,7 +279,6 @@ public class SBGNLayoutManager
             // Finally sort the hashmap to obtain the compartment that includes majority of the neighbours of the targetNode 
             List<Map.Entry<String,Integer>> entries = new LinkedList<Map.Entry<String,Integer>>(compartmentsOfTargetNode.entrySet());
             Collections.sort(entries, new Comparator<Map.Entry<String,Integer>>() {
-
                 @Override
                 public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2)
                 {

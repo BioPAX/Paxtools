@@ -330,23 +330,22 @@ public final class Normalizer {
 
 	private Collection<UnificationXref> getUnificationXrefsSorted(XReferrable r) {
 
-		Collection<UnificationXref> urefs = new TreeSet<UnificationXref>(
-				new Comparator<UnificationXref>() {
-					public int compare(UnificationXref o1, UnificationXref o2) {
-						String s1 = o1.getDb() + o1.getId();
-						String s2 = o2.getDb() + o2.getId();
-						return s1.compareTo(s2);
-					}
-				}
-		);
-
+		List<UnificationXref> urefs = new ArrayList<UnificationXref>();
 		for(UnificationXref ux : new ClassFilterSet<Xref,UnificationXref>(r.getXref(), UnificationXref.class))
 		{
 			if(ux.getDb() != null && ux.getId() != null) {
 				urefs.add(ux);
 			} 
 		}
-		
+
+		Collections.sort(urefs, new Comparator<UnificationXref>() {
+			public int compare(UnificationXref o1, UnificationXref o2) {
+				String s1 = o1.getDb() + o1.getId();
+				String s2 = o2.getDb() + o2.getId();
+				return s1.compareTo(s2);
+			}
+		});
+
 		return urefs;
 	}
 
