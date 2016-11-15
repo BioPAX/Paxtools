@@ -588,8 +588,8 @@
               			<link>http://download.oracle.com/javase/7/docs/api/</link>
               		</links>
               		<level>public</level>
-					<!--<excludePackageNames>org.biopax.validator.*,net.biomodels.miriam</excludePackageNames>-->
-					<excludePackageNames>org.biopax.validator.*</excludePackageNames>
+					<excludePackageNames>org.biopax.validator.*,net.biomodels.miriam</excludePackageNames>
+					<!--<excludePackageNames>org.biopax.validator.*</excludePackageNames>-->
 					<failOnError>false</failOnError>
             	</configuration>
 				<reportSets>
