@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  *
- * This class is intended to merge and to integrate biopax models
+ * This class is intended to merge and to integrate <em>BioPAX Level2</em> models
  * not necessarily from the same resource - if models allow such a
  * thing. This class has very similar functionality to the controller.Merger
  * but it differs in means of merging/integrating methodology.
