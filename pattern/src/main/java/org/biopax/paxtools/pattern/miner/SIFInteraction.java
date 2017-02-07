@@ -105,20 +105,6 @@ public class SIFInteraction implements Comparable
 		return sourceID + "\t" + type.getTag() + "\t" + targetID;
 	}
 
-	@Deprecated
-	public String toString(boolean withMediators)
-	{
-		String s = sourceID + "\t" + type.getTag() + "\t" + targetID;
-
-		if (withMediators)
-		{
-			String m = getMediatorsInString();
-			if (!m.isEmpty()) s += "\t" + m;
-		}
-
-		return s;
-	}
-
 	/**
 	 * Collects IDs of mediators.
 	 * @return mediator IDs
