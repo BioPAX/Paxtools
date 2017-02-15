@@ -164,11 +164,8 @@ public class Fetcher {
 	 *
 	 * The #isSkipSubPathways flag is ignored.
      * 
-     * Note: this method might return
-     * different objects with the same URI if such
-     * are present among the child elements for some reason
-	 * (in a self-integral BioPAX Model, this should never be allowed,
-	 * but can happen as the result of cloning/replacing in some other methods).
+     * Note: this method might return different objects with the same URI if such
+     * are present among the child elements for some reason (for a self-integral BioPAX Model, this should not happen).
      * 
      * @param bpe biopax object to traverse into properties of
      * @param depth positive int.; 1 means - get only direct children, 2 - include children of children, etc.;
@@ -185,7 +182,7 @@ public class Fetcher {
 		final Set<BioPAXElement> children = new HashSet<BioPAXElement>();
 
 		//create a simple traverser to collect direct child elements
-		Traverser traverser = new Traverser(SimpleEditorMap.L3,
+		Traverser traverser = new Traverser(editorMap,
 				new Visitor() {
 					@Override
 					public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?, ?> editor) {
@@ -244,8 +241,8 @@ public class Fetcher {
 					children.add((T) bpe);
 				}
 
-				if(!(skipSubPathways && (range instanceof Pathway)))
-					traverse(bpe, null); //go deeper only if it's a new object
+				if(!(skipSubPathways && (bpe instanceof Pathway)))
+					traverse(bpe, null); //(does nothing when bpe has been previously visited)
 			}
     	};
 
