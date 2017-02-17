@@ -30,6 +30,12 @@
             <artifactId>paxtools-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.biopax.paxtools</groupId>
+            <artifactId>pattern</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
