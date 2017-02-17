@@ -134,7 +134,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		confirmPresenceOfUbiques(model, blacklist);
 
 		long start = System.currentTimeMillis();
-		s.searchSIF(model, new FileOutputStream(dir + name + ".sif"), false);
+		s.searchSIF(model, new FileOutputStream(dir + name + ".sif"));
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
@@ -162,7 +162,8 @@ public class SIFSearcherTest extends PatternBoxTest
 		Blacklist blacklist = gen.generateBlacklist(model);
 		s.setBlacklist(blacklist);
 //		s.setBlacklist(new Blacklist("blacklist.txt"));
-		s.searchSIF(model, new FileOutputStream(dir + "temp.sif"), true);
+		s.searchSIF(model, new FileOutputStream(dir + "temp.sif"),
+				new CustomFormat(OutputColumn.Type.MEDIATOR.name()));
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));

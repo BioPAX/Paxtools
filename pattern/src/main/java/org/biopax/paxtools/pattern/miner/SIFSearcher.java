@@ -207,26 +207,6 @@ public class SIFSearcher
 	 * output stream. Closes the stream at the end.
 	 * @param model model to search
 	 * @param out stream to write
-	 * @param withMediators whether to write the IDs of the mediator elements to the output
-	 * @return true if any output produced successfully
-	 * @deprecated use {@link #searchSIF(Model, OutputStream, SIFToText)} instead
-	 */
-	public boolean searchSIF(Model model, OutputStream out, final boolean withMediators)
-	{
-		return searchSIF(model, out, new SIFToText() {
-			@Override
-			public String convert(SIFInteraction inter)
-			{
-				return inter.toString(withMediators);
-			}
-		});
-	}
-
-	/**
-	 * Searches the given model with the contained miners. Writes the textual result to the given
-	 * output stream. Closes the stream at the end.
-	 * @param model model to search
-	 * @param out stream to write
 	 * @param stt sif to text converter
 	 * @return true if any output produced successfully
 	 */
