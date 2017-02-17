@@ -2,10 +2,13 @@ package org.biopax.paxtools.pattern.miner;
 
 import org.biopax.paxtools.controller.PathAccessor;
 import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.level3.Entity;
+import org.biopax.paxtools.model.level3.Level3Element;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PublicationXref;
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * @author Ozgun Babur
@@ -150,15 +153,15 @@ public class SIFInteraction implements Comparable
 	}
 
 	/**
-	 * Collects PMIDs from mediators.
-	 * @return PMIDs
+	 * Collects Pubmed or PMC ids
+	 * @return publication IDs
 	 */
-	public List<String> getPubmedIDs()
+	public List<String> getPublicationIDs(boolean pubmed)
 	{
 		if (mediators == null) return Collections.emptyList();
 
-		Set<String> set = harvestPMIDs(harvestPublicationXrefs(
-			mediators.toArray(new BioPAXElement[mediators.size()])));
+		Set<PublicationXref> xrefs = harvestPublicationXrefs(mediators.toArray(new BioPAXElement[mediators.size()]));
+		Set<String> set = pubmed ? harvestPMIDs(xrefs) : harvestPMCIDs(xrefs);
 
 		List<String> list = new ArrayList<String>(set);
 		Collections.sort(list);
@@ -190,17 +193,37 @@ public class SIFInteraction implements Comparable
 	}
 
 	/**
-	 * Collects PubMed IDs fromt the given publication xrefs.
+	 * Collects PubMed IDs from the given publication xrefs.
 	 * @param xrefs publication xrefs
 	 * @return PMIDs
 	 */
 	private Set<String> harvestPMIDs(Set<PublicationXref> xrefs)
 	{
+		return harvestXrefs(xrefs, "pubmed");
+	}
+
+	/**
+	 * Collects PubMed Central IDs from the given publication xrefs.
+	 * @param xrefs publication xrefs
+	 * @return PMIDs
+	 */
+	private Set<String> harvestPMCIDs(Set<PublicationXref> xrefs)
+	{
+		return harvestXrefs(xrefs, "PMC International");
+	}
+
+	/**
+	 * Collects things from given xrefs.
+	 * @param xrefs
+	 * @return whatever collected
+	 */
+	private Set<String> harvestXrefs(Set<PublicationXref> xrefs, String dbID)
+	{
 		Set<String> set = new HashSet<String>();
 
 		for (PublicationXref xref : xrefs)
 		{
-			if (xref.getDb() != null && xref.getDb().equalsIgnoreCase("pubmed"))
+			if (xref.getDb() != null && xref.getDb().equalsIgnoreCase(dbID))
 				if (xref.getId() != null && !xref.getId().isEmpty())
 					set.add(xref.getId());
 		}
@@ -303,7 +326,19 @@ public class SIFInteraction implements Comparable
 		return set;
 	}
 
-
+	/**
+	 * Collects comments strings of mediator objects.
+	 * @return comments
+	 */
+	public Set<String> getMediatorComments()
+	{
+		Set<String> comments = new HashSet<String>();
+		for (BioPAXElement med : mediators)
+		{
+			if (med instanceof Level3Element) comments.addAll(((Level3Element) med).getComment());
+		}
+		return comments;
+	}
 
 	//---- Section: Static methods ----------------------------------------------------------------|
 
