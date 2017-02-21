@@ -72,10 +72,12 @@ public class OutputColumn
 		{
 			case MEDIATOR: return concat(inter.getMediatorIDs());
 			case PATHWAY: return concat(inter.getPathwayNames());
-			case PUBMED: return concat(inter.getPubmedIDs());
+			case PUBMED: return concat(inter.getPublicationIDs(true));
+			case PMC: return concat(inter.getPublicationIDs(false));
 			case RESOURCE: return concat(inter.getDataSources());
 			case SOURCE_LOC: return concat(inter.getCellularLocationsOfSource());
 			case TARGET_LOC: return concat(inter.getCellularLocationsOfTarget());
+			case COMMENTS: return concat(inter.getMediatorComments());
 			case CUSTOM:
 			{
 				Set<String> set = new HashSet<String>();
@@ -122,6 +124,8 @@ public class OutputColumn
 	{
 		MEDIATOR,
 		PUBMED,
+		PMC,
+		COMMENTS,
 		PATHWAY,
 		RESOURCE,
 		SOURCE_LOC,

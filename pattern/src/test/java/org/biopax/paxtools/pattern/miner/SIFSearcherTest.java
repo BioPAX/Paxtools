@@ -80,7 +80,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		Set<String> pubmedIDs = new HashSet<String>();
 		for (SIFInteraction si : sif)
 		{
-			pubmedIDs.addAll(si.getPubmedIDs());
+			pubmedIDs.addAll(si.getPublicationIDs(true));
 		}
 
 		Assert.assertFalse(pubmedIDs.isEmpty());
@@ -99,6 +99,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		Model model = handler.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/AR.TP53.owl"));
 		Set<SIFInteraction> sif = s.searchSIF(model);
 		ExtendedSIFWriter.write(sif, new FileOutputStream("temp.sif"));
+		s.searchSIF(model, new FileOutputStream("output.sif"));
 	}
 
 	@Test
