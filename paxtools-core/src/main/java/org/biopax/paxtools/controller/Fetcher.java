@@ -194,6 +194,9 @@ public class Fetcher {
 
 		if(!children.isEmpty() && --depth > 0) {
 			for (BioPAXElement element : new HashSet<BioPAXElement>(children)) {
+				if(skipSubPathways && (element instanceof Pathway))
+					continue;
+
 				Set<BioPAXElement> nextLevelElements = fetch(element, depth); //recursion goes on
 				children.addAll(nextLevelElements);
 			}
