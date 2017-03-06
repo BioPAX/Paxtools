@@ -2,6 +2,8 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level2.pathway;
+import org.biopax.paxtools.model.level3.Pathway;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -20,6 +22,8 @@ public class Completer implements Visitor
 	protected TraverserBilinked traverser;
 
 	private final Set<BioPAXElement> completed;
+
+	private boolean skipSubPathways;
 
 	public Completer(EditorMap map)
 	{
@@ -65,8 +69,25 @@ public class Completer implements Visitor
 			if (!completed.contains(element))
 			{
 				completed.add(element);
-				traverser.traverse(element, model);
+
+				if( !(skipSubPathways && (element instanceof Pathway || element instanceof pathway)) )
+					traverser.traverse(element, model);
 			}
 		}
+	}
+
+	/**
+	 * Use this property to optionally
+	 * skip (if true) traversing into sub-pathways;
+	 * i.e., when the value of BioPAX property 'pathwayComponent' or 'controlled' is a pathway.
+	 *
+	 * @param skipSubPathways true/false
+	 */
+	public void setSkipSubPathways(boolean skipSubPathways) {
+		this.skipSubPathways = skipSubPathways;
+	}
+
+	public boolean isSkipSubPathways() {
+		return skipSubPathways;
 	}
 }
