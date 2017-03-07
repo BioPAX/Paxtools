@@ -45,7 +45,17 @@ public class Completer implements Visitor
 		completed = new HashSet<BioPAXElement>();
 	}
 
-	public Set<BioPAXElement> complete(Collection<BioPAXElement> elements, Model model)
+	/**
+	 * @deprecated use {@link #complete(Collection)} instead (- model is never explicitly used there)
+	 * @param elements
+	 * @param model
+	 * @return
+	 */
+	public Set<BioPAXElement> complete(Collection<BioPAXElement> elements, Model model) {
+		return complete(elements);
+	}
+
+	public Set<BioPAXElement> complete(Collection<BioPAXElement> elements)
 	{
 		completed.clear();
 
@@ -54,7 +64,7 @@ public class Completer implements Visitor
 			if (!completed.contains(element))
 			{
 				completed.add(element);
-				traverser.traverse(element, model);
+				traverser.traverse(element, null); //model is not required here because of 'visit' impl. below
 			}
 		}
 
@@ -71,7 +81,7 @@ public class Completer implements Visitor
 				completed.add(element);
 
 				if( !(skipSubPathways && (element instanceof Pathway || element instanceof pathway)) )
-					traverser.traverse(element, model);
+					traverser.traverse(element, null);
 			}
 		}
 	}
