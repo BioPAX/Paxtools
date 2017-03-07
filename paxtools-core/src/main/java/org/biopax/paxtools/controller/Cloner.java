@@ -15,8 +15,6 @@ import java.util.Set;
  * puts them to the new model using the visitor and traverser framework;
  * ignores elements that are not in the source list (compare to {@link Fetcher}).
  *
- * Note: it's not thread safe (use a separate Cloner instance per thread or web container method)
- *
  * @see org.biopax.paxtools.controller.Visitor
  * @see org.biopax.paxtools.controller.Traverser
  */
@@ -24,18 +22,33 @@ public class Cloner implements Visitor
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Cloner.class);
 	
-	Traverser traverser;
-	private BioPAXFactory factory;
-	private Model targetModel;
+	private final Traverser traverser;
+	private final BioPAXFactory factory;
 
 	public Cloner(EditorMap map, BioPAXFactory factory)
 	{
 		this.factory = factory;
 		this.traverser = new Traverser(map, this);
-		this.targetModel = null;
 	}
 
-	
+
+	/**
+	 * For each element from the 'toBeCloned' list,
+	 * it creates a copy in the new model, setting all
+	 * the data properties; however, object property values
+	 * that refer to BioPAX elements not in 'toBeCloned' list
+	 * are ignored.
+	 *
+	 *	@deprecated use {@link #clone(Set)} instead ('source' model was not used in previous versions)
+	 *
+	 * @param source - actually, is never used... can be null all the same
+	 * @param toBeCloned elements to clone
+	 * @return a new model containing the cloned biopax objects
+	 */
+	public Model clone(Model source, Set<BioPAXElement> toBeCloned) {
+		return clone(toBeCloned);
+	}
+
 	/**
 	 * For each element from the 'toBeCloned' list,
 	 * it creates a copy in the new model, setting all 
@@ -43,13 +56,12 @@ public class Cloner implements Visitor
 	 * that refer to BioPAX elements not in 'toBeCloned' list
 	 * are ignored.
 	 * 
-	 * @param source model
 	 * @param toBeCloned elements to clone
 	 * @return a new model containing the cloned biopax objects
 	 */
-	public synchronized Model clone(Model source, Set<BioPAXElement> toBeCloned)
+	public Model clone(Set<BioPAXElement> toBeCloned)
 	{
-		targetModel = factory.createModel();
+		final Model targetModel = factory.createModel();
 
 		for (BioPAXElement bpe : new HashSet<BioPAXElement>(toBeCloned))
 		{
@@ -69,7 +81,7 @@ public class Cloner implements Visitor
 		
 		for (BioPAXElement bpe : toBeCloned)
 		{
-			traverser.traverse(bpe, source);
+			traverser.traverse(bpe, targetModel);
 		}
 		
 		AbstractPropertyEditor.checkRestrictions.set(true); //back to the default mode
@@ -77,9 +89,8 @@ public class Cloner implements Visitor
 		return targetModel;
 	}
 
-// --------------------- Interface Visitor ---------------------
-
-	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
+	//  Implement interface: Visitor
+	public void visit(BioPAXElement domain, Object range, Model targetModel, PropertyEditor editor)
 	{
 		BioPAXElement targetDomain = targetModel.getByID(domain.getUri());
 		
