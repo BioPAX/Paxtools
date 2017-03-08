@@ -61,9 +61,8 @@ public class Completer implements Visitor
 
 		for (BioPAXElement element : elements)
 		{
-			if (!completed.contains(element))
+			if (completed.add(element))
 			{
-				completed.add(element);
 				traverser.traverse(element, null); //model is not required here because of 'visit' impl. below
 			}
 		}
@@ -78,10 +77,15 @@ public class Completer implements Visitor
 			BioPAXElement element = (BioPAXElement) range;
 			if (!completed.contains(element))
 			{
-				completed.add(element);
-
-				if( !(skipSubPathways && (element instanceof Pathway || element instanceof pathway)) )
+				// Ignore sub-pathways if skipSubPathways is true
+				//(the effect must be the same as if @AutoComplete(forward=false) annotation
+				// would be set on properties pathwayComponent and controlled, which unfortunately we cannot do
+				// for values of type Pathway only via the property getter annotations,
+				// because these properties' range is Process - Interaction or Pathway...)
+				if( !(skipSubPathways && (element instanceof Pathway || element instanceof pathway)) ) {
+					completed.add(element);
 					traverser.traverse(element, null);
+				}
 			}
 		}
 	}
