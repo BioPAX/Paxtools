@@ -1347,6 +1347,36 @@ public final class ModelUtils
 		if(model != null)
 			model.add(el);
 	}
+
+
+	/**
+	 * Removes cyclic pathway inclusions, non-trivial infinite loops, in 'pathwayComponent' biopax property.
+	 * Such loops usually do not make much sense and only can cause trouble in pathway data analysis.
+	 * This tool recursively removes parent pathways from sub pathways' pathwayComponent set.
+	 *
+	 * @param model a model that contains Pathways; will be modified as the result
+	 */
+	public static void breakPathwayComponentCycle(final Model model) {
+		for(Pathway pathway : model.getObjects(Pathway.class))
+			breakPathwayComponentCycle(new HashSet<Pathway>(), pathway, pathway);
+	}
+
+	//Recursively, though, avoiding infinite loops (KEGG pathways can cause it),
+	// removes cyclic pathway inclusions like pathwayA/pathwayA or pathwayA/pathwayB/pathwayA, etc.
+	private static void breakPathwayComponentCycle(final Set<Pathway> visited, final Pathway rootPathway,
+											final Pathway currentPathway)
+	{
+		if(!visited.add(currentPathway))
+			return; // already processed
+
+		if(currentPathway.getPathwayComponent().contains(rootPathway)) {
+			currentPathway.removePathwayComponent(rootPathway);
+		}
+
+		for(Process proc : currentPathway.getPathwayComponent())
+			if(proc instanceof Pathway)
+				breakPathwayComponentCycle(visited, rootPathway, (Pathway) proc);
+	}
 }
 
 
