@@ -123,18 +123,18 @@ public abstract class EntityImpl extends NamedImpl implements Entity
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		boolean equivalance = false;
+		boolean equivalence = false;
 		if (element instanceof Entity)
 		{
 			Entity otherEntity = (Entity) element;
-			equivalance =
+			equivalence =
 				hasEquivalentIntersection(dataSource, otherEntity.getDataSource())
 			    && hasEquivalentIntersection(
 					new ClassFilterSet<Xref, UnificationXref>(getXref(), UnificationXref.class),
 					new ClassFilterSet<Xref, UnificationXref>(otherEntity.getXref(), UnificationXref.class))
 			    && hasEquivalentIntersection(evidence, otherEntity.getEvidence());
 		}
-		return equivalance;
+		return equivalence;
 	}
 
 }
