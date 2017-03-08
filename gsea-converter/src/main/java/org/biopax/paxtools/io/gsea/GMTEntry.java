@@ -6,11 +6,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * This package-private class represents an entry found in a GSEA (GMT format) file.
+ * This package-private class represents an entry found in a GMT format file.
  * 
  * Thread-safe.
  */
-class GSEAEntry {
+final class GMTEntry {
 
     final private String name;
     final private String taxID;
@@ -18,7 +18,7 @@ class GSEAEntry {
     final private String description;
     private final Set<String> identifiers;
 
-    public GSEAEntry(String name, String taxID, String idType, String description) {
+    public GMTEntry(String name, String taxID, String idType, String description) {
     	if(name == null || taxID == null || idType == null || description == null) 
     		throw new IllegalArgumentException("Null paraneter (not allowed)");
     	
@@ -42,7 +42,7 @@ class GSEAEntry {
         return description;
     }
    
-    Collection<String> getIdentifiers() {
+    public Collection<String> identifiers() {
     	return identifiers; 
     }
 
@@ -57,15 +57,19 @@ class GSEAEntry {
     public String toString() {
     	StringBuilder toReturn = new StringBuilder();
 
-		String tax = ((taxID.isEmpty()) ? "unspecified" : taxID);
 		toReturn
 				// the (unique) 'name' column comes first
-				.append(tax).append(": ").append(name)
+				.append(name)
 				.append("\t")
 				// next, comes the description column
-				.append(description)
-				.append("; organism: ").append(tax)
-				.append("; id type: ").append(idType);
+				.append(description);
+
+		if(!taxID.isEmpty())
+			toReturn.append("; organism: ").append(taxID);
+
+		if(!idType.isEmpty())
+			toReturn.append("; idtype: ").append(idType);
+
 		// finally, - all data (identifiers) columns
 		for (String id : identifiers) {
 			toReturn.append("\t").append(id);

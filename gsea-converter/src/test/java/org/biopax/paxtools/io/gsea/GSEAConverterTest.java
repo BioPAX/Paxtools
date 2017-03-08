@@ -12,8 +12,7 @@ import java.util.Collection;
 import static org.junit.Assert.*;
 
 /**
- * GSEA conversion test.
- * TODO: need to check accuracy of GSEA content
+ * GSEA (GMT) conversion test.
  */
 public class GSEAConverterTest {
 
@@ -33,16 +32,18 @@ public class GSEAConverterTest {
 		InputStream in = getClass().getResourceAsStream("/L2/biopax_id_557861_mTor_signaling.owl");
 		Model level2 = handler.convertFromOWL(in);
 		GSEAConverter gseaConverter = new GSEAConverter("GENE_SYMBOL", true);
-		Collection<GSEAEntry> entries = gseaConverter.convert(level2);
+		Collection<GMTEntry> entries = gseaConverter.convert(level2);
 		// assert some things
-		//for(GSEAEntry gseaEntry : entries) System.out.println("gsea: " + gseaEntry.toString());
+		//for(GMTEntry gseaEntry : entries) System.out.println("gsea: " + gseaEntry.toString());
 		assertEquals(1, entries.size());
-		GSEAEntry entry = entries.iterator().next();
-		assertEquals("mTOR signaling pathway", entry.name());
+		GMTEntry entry = entries.iterator().next();
+		//CPATH-557861
+		assertEquals("http://cbio.mskcc.org/cpathCPATH-557861", entry.name());
+		assertTrue(entry.description().contains("mTOR signaling pathway"));
 		assertTrue(entry.description().contains("nci-nature"));
 		assertEquals("9606", entry.taxID());
 		assertEquals("GENE_SYMBOL", entry.idType());
-		assertEquals(27, entry.getIdentifiers().size());
+		assertEquals(27, entry.identifiers().size());
 		// dump the output
 		(new GSEAConverter("GENE_SYMBOL", true)).writeToGSEA(level2, out);
 
@@ -52,8 +53,8 @@ public class GSEAConverterTest {
 		entries = gseaConverter.convert(level2);
 		assertEquals(1, entries.size());
 		entry = entries.iterator().next();
-		assertEquals("mTOR signaling pathway", entry.name());
-		assertTrue(entry.getIdentifiers().isEmpty());
+		assertEquals("http://cbio.mskcc.org/cpathCPATH-557861", entry.name());
+		assertTrue(entry.identifiers().isEmpty());
 
 		gseaConverter = new GSEAConverter("ref_seq", true); //test data has this non-standard name (instead RefSeq)
 		entries.clear();
@@ -61,11 +62,11 @@ public class GSEAConverterTest {
 		// assert some things
 		assertEquals(1, entries.size());
 		entry = entries.iterator().next();
-		assertEquals("mTOR signaling pathway", entry.name());
+		assertEquals("http://cbio.mskcc.org/cpathCPATH-557861", entry.name());
 		assertTrue(entry.description().contains("nci-nature"));
 		assertEquals("9606", entry.taxID());
 		assertEquals("ref_seq", entry.idType());
-		assertEquals(33, entry.getIdentifiers().size());
+		assertEquals(33, entry.identifiers().size());
 		(new GSEAConverter("NP", true)).writeToGSEA(level2, out);
 	}
     
@@ -76,7 +77,7 @@ public class GSEAConverterTest {
 		InputStream in = getClass().getResourceAsStream("/L3/biopax3-short-metabolic-pathway.owl");
 		Model level3 = handler.convertFromOWL(in);
 		GSEAConverter gseaConverter = new GSEAConverter("uniprot", true);
-		Collection<? extends GSEAEntry> entries = gseaConverter.convert(level3);
+		Collection<? extends GMTEntry> entries = gseaConverter.convert(level3);
 		//TODO check anything?
 		(new GSEAConverter("uniprot", true)).writeToGSEA(level3, out);
 	}

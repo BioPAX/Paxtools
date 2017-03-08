@@ -20,36 +20,34 @@ import java.util.*;
 /**
  * Converts a BioPAX model to the GMT format (used by GSEA software).
  * 
- * It creates GSEA entries from the protein reference (PR) xrefs 
- * in the BioPAX model as follows: 
- * <ul>
- * <li>Each entry (row) consists of three columns (tab separated): 
- * name (e.g., "taxonomyID: pathway_name"), 
- * description (e.g. "datasource: pid;reactome; organism: 9606 id type: uniprot"), and
- * the list of identifiers (of the same type). For all PRs not associated with any pathway,
- * "Not pathway" is used instead of the pathway name.</li>
- * <li>The "id type" is what specified by Constructor parameter 'database'. 
- * </li>
- * <li>The list may have one or more IDs of the same type per PR, 
- * e.g., UniProt IDs or HGNC Symbols; PRs not having an xref of 
- * given db/id type are ignored. If there are less than three protein 
- * referencesper entry, it will not be printed.</li>
- * </ul>
+ * It creates GSEA entries from sequence entity reference xrefs
+ * in the BioPAX model as follows:
+ *
+ *   Each entry (row) consists of three columns (tab separated):
+ * name (we use pathway URI),
+ * description (e.g. "name: Apoptosis; datasource: reactome; organism: 9606 idtype: uniprot"),
+ * and the list of identifiers (of the same type). For participants not associated with any pathway,
+ * "other" is used for the pathway name and uri.
+ *
+ *   The list may have one or more IDs of the same type per entity reference,
+ * e.g., UniProt IDs or HGNC Symbols; entity references that do not have any xref of
+ * given db/id type are ignored. Optionally, if there are less than three protein
+ * references per entry, it will not be printed.
  * 
  * Note, to effectively enforce cross-species violation, 
- * 'organism' property of PRs and pathways must be set 
+ * 'organism' property and pathways must be set
  * to a BioSource object that has a valid unification xref: 
- * db="Taxonomy" and some taxonomy id.
+ * db="Taxonomy" and id= some valid taxonomy id.
  *
  * Note, this code assumes that the model has successfully been validated
  * and perhaps normalized (using the BioPAX Validator, Paxtools Normalizer).
- * A BioPAX L1 or L2 model is first converted to the L3 (lossless conversion if there are no BioPAX errors).
+ * A BioPAX L1 or L2 model is first converted to the L3.
  */
 public class GSEAConverter
 {
 	private final static Logger LOG = LoggerFactory.getLogger(GSEAConverter.class);
 	
-	private final String database;
+	private final String idType;
 	private final boolean crossSpeciesCheckEnabled;
 	private Set<String> allowedOrganisms;
 	private final boolean skipSubPathways;
@@ -69,7 +67,7 @@ public class GSEAConverter
 	 * Constructor.
 	 *
 	 * See class declaration for more information.
-	 * @param database - identifier type, name of the resource, either the string value 
+	 * @param idType - identifier type, name of the resource, either the string value
 	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
 	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
 	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs 
@@ -77,16 +75,16 @@ public class GSEAConverter
 	 *                   (it depends on the actual data; so double-check before using in this constructor).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 */
-	public GSEAConverter(String database, boolean crossSpeciesCheckEnabled)
+	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled)
 	{
-		this(database, crossSpeciesCheckEnabled, false);
+		this(idType, crossSpeciesCheckEnabled, false);
 	}
 
 	/**
 	 * Constructor.
 	 *
 	 * See class declaration for more information.
-	 * @param database - identifier type, name of the resource, either the string value
+	 * @param idType - identifier type, name of the resource, either the string value
 	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
 	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
 	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs
@@ -96,9 +94,9 @@ public class GSEAConverter
 	 * @param skipSubPathways - if true, do not traverse into any sub-pathways to collect entity references
 	 *                       (useful when a model, such as converted to BioPAX KEGG data, has lots of sub-pathways, loops.)
 	 */
-	public GSEAConverter(String database, boolean crossSpeciesCheckEnabled, boolean skipSubPathways)
+	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled, boolean skipSubPathways)
 	{
-		this.database = database;
+		this.idType = idType;
 		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
 		this.skipSubPathways = skipSubPathways;
 		this.skipSubPathwaysOf = Collections.emptySet();
@@ -108,7 +106,7 @@ public class GSEAConverter
 	 * Constructor.
 	 *
 	 * See class declaration for more information.
-	 * @param database - identifier type, name of the resource, either the string value
+	 * @param idType - identifier type, name of the resource, either the string value
 	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
 	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
 	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs
@@ -118,9 +116,9 @@ public class GSEAConverter
 	 * @param skipSubPathwaysOf - do not look inside sub-pathways of pathways of given data sources to collect entity references
 	 *                       (useful when a model, such as converted to BioPAX KEGG data, has lots of sub-pathways, loops.)
 	 */
-	public GSEAConverter(String database, boolean crossSpeciesCheckEnabled, Set<Provenance> skipSubPathwaysOf)
+	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled, Set<Provenance> skipSubPathwaysOf)
 	{
-		this.database = database;
+		this.idType = idType;
 		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
 		if(skipSubPathwaysOf == null)
 			skipSubPathwaysOf = Collections.emptySet();
@@ -173,13 +171,13 @@ public class GSEAConverter
 	 */
 	public void writeToGSEA(final Model model, OutputStream out) throws IOException
 	{
-		Collection<GSEAEntry> entries = convert(model);
+		Collection<GMTEntry> entries = convert(model);
 		if (entries.size() > 0)
 		{
 			Writer writer = new OutputStreamWriter(out);
-			for (GSEAEntry entry : entries) {
-				if ((minNumOfGenesPerEntry <= 1 && !entry.getIdentifiers().isEmpty())
-						|| entry.getIdentifiers().size() >= minNumOfGenesPerEntry)
+			for (GMTEntry entry : entries) {
+				if ((minNumOfGenesPerEntry <= 1 && !entry.identifiers().isEmpty())
+						|| entry.identifiers().size() >= minNumOfGenesPerEntry)
 				{
 					writer.write(entry.toString() + "\n");
 				}
@@ -193,11 +191,11 @@ public class GSEAConverter
 	 * @param model Model
 	 * @return a set of GSEA entries
 	 */
-	public Collection<GSEAEntry> convert(final Model model)
+	public Collection<GMTEntry> convert(final Model model)
 	{
-		final Collection<GSEAEntry> toReturn = new TreeSet<GSEAEntry>(new Comparator<GSEAEntry>() {
+		final Collection<GMTEntry> toReturn = new TreeSet<GMTEntry>(new Comparator<GMTEntry>() {
 			@Override
-			public int compare(GSEAEntry o1, GSEAEntry o2) {
+			public int compare(GMTEntry o1, GMTEntry o2) {
 				return o1.toString().compareTo(o2.toString());
 			}
 		});
@@ -256,16 +254,13 @@ public class GSEAConverter
 			traverser.traverse(currentPathway, null);
 
 			if(!pathwaySers.isEmpty()) {
-				if(pathwaySers.size() > 199) {
-					LOG.debug("Pathway " + currentPathwayName + " (" + currentPathway.getUri()
-							+ ") has lots of PRs: " + pathwaySers.size());
-				}
-				LOG.debug("- fetched PRs: " + pathwaySers.size() + "; now grouping by organism...");
+				LOG.debug("For pathway: " + currentPathwayName + " (" + currentPathway.getUri()
+						+ "), got " + pathwaySers.size() + " sERs; now - grouping by organism...");
 				Map<String,Set<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(pathwaySers);
 				// create GSEA/GMT entries - one entry per organism (null organism also makes one)
 				String dataSource = getDataSource(currentPathway.getDataSource());
-				LOG.debug("- creating GSEA/GMT entries...");
-				Collection<GSEAEntry> entries = createGseaEntries(currentPathwayName, dataSource, orgToPrsMap);
+				Collection<GMTEntry> entries = createGseaEntries(currentPathway.getUri(),
+						currentPathwayName, dataSource, orgToPrsMap);
 				if(!entries.isEmpty())
 					toReturn.addAll(entries);
 				sequenceEntityReferences.removeAll(pathwaySers);//keep not processed PRs (a PR can be processed multiple times)
@@ -280,26 +275,27 @@ public class GSEAConverter
 			Map<String,Set<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(sequenceEntityReferences);
 			if(!orgToPrsMap.isEmpty()) {
 				// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
-				toReturn.addAll(createGseaEntries("Not pathway",
-						getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
+				toReturn.addAll(createGseaEntries("other",
+						"other", getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
 			}
 		}
 					
 		return toReturn;
 	}
 
-	private Collection<GSEAEntry> createGseaEntries(final String name, final String dataSource, 
-			final Map<String, Set<SequenceEntityReference>> orgToPrsMap)
+	private Collection<GMTEntry> createGseaEntries(String uri, final String name, final String dataSource,
+												   final Map<String, Set<SequenceEntityReference>> orgToPrsMap)
 	{
 		// generate GSEA entries for each taxId
-		final Collection<GSEAEntry> toReturn = new ArrayList<GSEAEntry>();
+		final Collection<GMTEntry> toReturn = new ArrayList<GMTEntry>();
 		for (final String org : orgToPrsMap.keySet()) {
 			if(orgToPrsMap.get(org).size() > 0) {
-				LOG.debug("adding " + database + " IDs of " + org +
+				LOG.debug("adding " + idType + " IDs of " + org +
 						" proteins (PRs) from '" + name + "', " + dataSource + " pathway...");
-				GSEAEntry gseaEntry = new GSEAEntry(name, org, database, "datasource: " + dataSource);
-				processEntityReferences(orgToPrsMap.get(org), gseaEntry);
-				toReturn.add(gseaEntry);
+				GMTEntry GMTEntry = new GMTEntry(uri, org, idType,
+						String.format("name: %s; datasource: %s",name, dataSource));
+				processEntityReferences(orgToPrsMap.get(org), GMTEntry);
+				toReturn.add(GMTEntry);
 			}
 		}
 		return toReturn;
@@ -343,7 +339,7 @@ public class GSEAConverter
 	}
 
 
-	void processEntityReferences(Set<SequenceEntityReference> sers, GSEAEntry targetEntry)
+	void processEntityReferences(Set<SequenceEntityReference> sers, GMTEntry targetEntry)
 	{
 		prs_loop: for (SequenceEntityReference ser : sers)
 		{
@@ -351,9 +347,9 @@ public class GSEAConverter
 			if (crossSpeciesCheckEnabled && !targetEntry.taxID().equals(getOrganismKey(ser.getOrganism())))
 				continue;
 				
-			if (database != null && !database.isEmpty())
+			if (idType != null && !idType.isEmpty())
 			{
-				final String db = database.toLowerCase();
+				final String db = idType.toLowerCase();
 				// a shortcut if we are converting validated normalized BioPAX model:
 				// get the primary ID from the URI of the ProteinReference
 				final String uri = ser.getUri();
@@ -361,7 +357,7 @@ public class GSEAConverter
 				{
 					String accession = ser.getUri();
 					accession = accession.substring(accession.lastIndexOf("/") + 1);
-					targetEntry.getIdentifiers().add(accession);
+					targetEntry.identifiers().add(accession);
 				}
 				else {
 					int added = 0;
@@ -371,7 +367,7 @@ public class GSEAConverter
 								&& aXref.getId() != null && aXref.getDb() != null
 								&& aXref.getDb().toLowerCase().startsWith(db))
 						{
-							targetEntry.getIdentifiers().add(aXref.getId());
+							targetEntry.identifiers().add(aXref.getId());
 							++added;
 						}
 					}
@@ -381,7 +377,7 @@ public class GSEAConverter
 								&& aXref.getId() != null && aXref.getDb() != null
 								&& aXref.getDb().toLowerCase().startsWith(db))
 						{
-							targetEntry.getIdentifiers().add(aXref.getId());
+							targetEntry.identifiers().add(aXref.getId());
 							++added;
 						}
 					}
@@ -392,7 +388,7 @@ public class GSEAConverter
 				}
 			} else {
 				// fallback - use URI (not really useful for the GSEA software)
-				targetEntry.getIdentifiers().add(ser.getUri());
+				targetEntry.identifiers().add(ser.getUri());
 			}
 		}
 	}
