@@ -33,7 +33,7 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 		for (PhysicalEntity pe : this.getMemberPhysicalEntity())
 		{
 			if(pe instanceof SimplePhysicalEntity)
-			ger.addAll(((SimplePhysicalEntity) pe).getGenericEntityReferences());
+				ger.addAll(((SimplePhysicalEntity) pe).getGenericEntityReferences());
 			else
 				log.error("Member PE is of different class! Skipping..");
 		}
