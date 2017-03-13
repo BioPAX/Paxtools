@@ -43,6 +43,7 @@ public class Completer implements Visitor
 		});
 
 		completed = new HashSet<BioPAXElement>();
+		skipSubPathways = true; //makes default - skip sub-pathways
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class Completer implements Visitor
 	 * skip (if true) traversing into sub-pathways;
 	 * i.e., when the value of BioPAX property 'pathwayComponent' or 'controlled' is a pathway.
 	 *
-	 * @param skipSubPathways true/false
+	 * @param skipSubPathways true/false (default is 'true' - do skip)
 	 */
 	public void setSkipSubPathways(boolean skipSubPathways) {
 		this.skipSubPathways = skipSubPathways;
