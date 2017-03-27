@@ -20,6 +20,9 @@ import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.sbgn.GlyphClazz.*;
 import static org.sbgn.ArcClazz.*;
@@ -319,18 +322,28 @@ public class L3ToSBGNPDConverter
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
 		sbgn.setMap(map);
 		map.setLanguage(Language.PD.toString());
-		
 		map.getGlyph().addAll(getRootGlyphs(glyphMap.values()));
 		map.getGlyph().addAll(getRootGlyphs(ubiqueSet));
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
 		if (doLayout)
-		{
-			/*------------------ChiLay layout modification ----------------------------*/
-			//Apply Layout to SBGN objects
-			SBGNLayoutManager coseLayoutManager = new SBGNLayoutManager();
-			sbgn = coseLayoutManager.createLayout(sbgn);
+		{ // run in a new thread; fail after reasonable waiting time
+			ExecutorService exec = Executors.newSingleThreadExecutor();
+			final Sbgn[] a = new Sbgn[]{sbgn};
+			exec.execute(new Runnable() {
+				@Override
+				public void run() {
+					a[0] = (new SBGNLayoutManager()).createLayout(a[0]);
+				}
+			});
+			exec.shutdown(); //no more tasks
+			try {
+				exec.awaitTermination(15, TimeUnit.SECONDS);
+				sbgn = a[0];
+			} catch (InterruptedException e) {
+				log.warn("SBGN layout failed (timeout)", e);
+			}
 		}
 		
 		return sbgn;
