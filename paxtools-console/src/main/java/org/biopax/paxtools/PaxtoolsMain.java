@@ -7,6 +7,8 @@ import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
 import org.biopax.paxtools.io.*;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
+import org.biopax.paxtools.io.sbgn.ListUbiqueDetector;
+import org.biopax.paxtools.io.sbgn.UbiqueDetector;
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
@@ -249,16 +251,37 @@ public class PaxtoolsMain {
 
     /*
      *  Converts a BioPAX file to SBGN and saves it in a file.
-	 *
      */
     public static void toSbgn(String[] argv) throws IOException
     {
         String input = argv[1];
-        String output = argv[2];
+		String output = argv[2];
+		Model model = io.convertFromOWL(getInputStream(input));
 
-        Model model = io.convertFromOWL(getInputStream(input));
-        L3ToSBGNPDConverter l3ToSBGNPDConverter = new L3ToSBGNPDConverter();
-        l3ToSBGNPDConverter.writeSBGN(model, output);
+		boolean doLayout = true;
+		if(argv.length > 3) {
+			for(int i=3; i<argv.length; i++) {
+				String param = argv[i];
+				if (param.equalsIgnoreCase("-nolayout")) {
+					doLayout = false;
+					break;
+				}
+			}
+		}
+
+		//use blacklist.txt file if exists
+		Blacklist blackList = null;
+		File blacklistFile = new File("blacklist.txt");
+		if(blacklistFile.exists()) {
+			log.info("toSBGN: using blacklist.txt from current directory");
+			blackList = new Blacklist(new FileInputStream(blacklistFile));
+		} else {
+			log.info("toSBGN: not blacklisting any ubiquitous molecules (no blacklist.txt found)");
+		}
+		final UbiqueDetector ubd = (blackList != null) ? new ListUbiqueDetector(blackList.getListed()) : null;
+
+        L3ToSBGNPDConverter l3ToSBGNPDConverter = new L3ToSBGNPDConverter(ubd, null, doLayout);
+		l3ToSBGNPDConverter.writeSBGN(model, output);
     }
 
     
@@ -1120,8 +1143,8 @@ public class PaxtoolsMain {
 				"\t  if also '-andSif' flag is present (which only makes sense together with -extended), then the second\n" +
 				"\t  output file, classic SIF, is also created (with the same name as the output's, plus '.sif' extension)")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
-        toSBGN("<biopax.owl> <output.sbgn>\n" +
-        		"\t- converts model to the SBGN format.")
+        toSBGN("<biopax.owl> <output.sbgn> [-nolayout]\n" +
+        		"\t- converts model to the SBGN format and applies COSE layout unless optional -nolayout flag is set.")
                 {public void run(String[] argv) throws IOException { toSbgn(argv); } },
         validate("<path> <out> [xml|html|biopax] [auto-fix] [only-errors] [maxerrors=n] [notstrict]\n" +
         		"\t- validate BioPAX file/directory (up to ~25MB in total size, -\n" +
