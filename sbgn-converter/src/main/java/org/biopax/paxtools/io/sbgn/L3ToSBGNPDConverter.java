@@ -407,8 +407,7 @@ public class L3ToSBGNPDConverter
 	private void assignLocation(PhysicalEntity pe, Glyph g)
 	{
 		// Create compartment -- add this inside the compartment
-
-		Glyph loc = getCompartment(getCompartment(pe));
+		Glyph loc = getCompartment(pe);
 		if (loc != null) 
 		{
 			g.setCompartmentRef(loc);
@@ -855,19 +854,16 @@ public class L3ToSBGNPDConverter
 
 	//-- Section: Create compartments -------------------------------------------------------------|
 
-	/**
-	 * Creates or gets the compartment with the given name.
-	 *
-	 * @param name name of the compartment
-	 * @return the compartment glyph
-	 */
 	private Glyph getCompartment(String name)
 	{
-		if (name == null) return null;
-		if (compartmentMap.containsKey(name)) return compartmentMap.get(name);
+		if (name == null)
+			return null;
+
+		if (compartmentMap.containsKey(name))
+			return compartmentMap.get(name);
 
 		Glyph comp = factory.createGlyph();
-		comp.setId(name);
+		comp.setId(convertID(name));
 		Label label = factory.createLabel();
 		label.setText(name);
 		comp.setLabel(label);
@@ -883,17 +879,15 @@ public class L3ToSBGNPDConverter
 	 * @param pe PhysicalEntity to look for its compartment
 	 * @return name of compartment or null if there is none
 	 */
-	private String getCompartment(PhysicalEntity pe)
+	private Glyph getCompartment(PhysicalEntity pe)
 	{
 		CellularLocationVocabulary cl = pe.getCellularLocation();
-		if (cl != null)
+		if (cl != null && !cl.getTerm().isEmpty())
 		{
-			if (!cl.getTerm().isEmpty())
-			{
-				return cl.getTerm().iterator().next().replaceAll(" ", "_");
-			}
-		}
-		return null;
+			String name = cl.getTerm().iterator().next().toLowerCase();
+			return getCompartment(name);
+		} else
+			return null;
 	}
 
 	//-- Section: Create reactions ----------------------------------------------------------------|
@@ -1419,10 +1413,12 @@ public class L3ToSBGNPDConverter
 		return sbgn2BPMap;
 	}
 
-	private String convertID(String biopaxID)
+
+	private String convertID(String id)
 	{
-		return biopaxID.replaceAll("[^-\\w]", "_");
+		return id.replaceAll("[^-\\w]", "_");
 	}
+
 
 	//-- Section: Static initialization -----------------------------------------------------------|
 
