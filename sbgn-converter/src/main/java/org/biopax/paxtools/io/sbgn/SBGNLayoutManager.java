@@ -54,7 +54,7 @@ public class SBGNLayoutManager
         ArrayList <Glyph> deletedList = new ArrayList<Glyph>();
 
         LGraphManager graphMgr = this.layout.getGraphManager();
-        LGraph lRoot = graphMgr.addRoot();
+        graphMgr.addRoot();
         this.root = new VCompound(new Glyph());
 
         // Detect compartment glyphs and put them in a hashmap, also set compartment glyphs of members of complexes.

@@ -1,16 +1,12 @@
 package org.biopax.paxtools.io.sbgn;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.sbgn.bindings.Port;
 import org.ivis.layout.LGraphObject;
 import org.ivis.layout.LNode;
 import org.ivis.layout.Updatable;
-import org.ivis.layout.sbgn.SbgnProcessNode;
 import org.sbgn.bindings.Glyph;
-import org.sbgn.bindings.Port;
 import org.sbgn.bindings.Bbox;
 import org.ivis.layout.cose.CoSEGraph;
 
