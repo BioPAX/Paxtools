@@ -17,11 +17,10 @@ import org.ivis.layout.cose.CoSEGraph;
  * @author: Istemi Bahceci
  * */
 
-public class VNode implements Updatable
+class VNode implements Updatable
 {
     //Glyph attribute of this VNode
     public Glyph glyph;
-    public int clusterID;
 
     ArrayList <Glyph> stateGlyphs;
     ArrayList <Glyph> infoGlyphs;

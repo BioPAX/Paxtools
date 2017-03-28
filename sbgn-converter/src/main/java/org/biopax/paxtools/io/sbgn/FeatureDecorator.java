@@ -17,5 +17,5 @@ public interface FeatureDecorator
 	 * @param factory factory that can create State class
 	 * @return State representing the feature
 	 */
-	public Glyph.State createStateVar(EntityFeature ef, ObjectFactory factory);
+	Glyph.State createStateVar(EntityFeature ef, ObjectFactory factory);
 }

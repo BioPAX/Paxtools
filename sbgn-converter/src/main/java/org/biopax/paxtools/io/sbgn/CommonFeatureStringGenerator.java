@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Ozgun Babur
  */
-public class CommonFeatureStringGenerator implements FeatureDecorator
+class CommonFeatureStringGenerator implements FeatureDecorator
 {
 	/**
 	 * Map from modification term to its symbol.
@@ -35,7 +35,6 @@ public class CommonFeatureStringGenerator implements FeatureDecorator
 	 * @param factory factory that can create the State class
 	 * @return State representing the feature
 	 */
-	@Override
 	public Glyph.State createStateVar(EntityFeature ef, ObjectFactory factory)
 	{
 		if (ef instanceof FragmentFeature)

@@ -16,20 +16,16 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.sbgn.GlyphClazz.*;
 import static org.sbgn.ArcClazz.*;
 
 /**
- * This class converts BioPAX L3 model into SBGN PD. It does not layout the objects, leaves location
- * information unassigned.
+ * This class converts BioPAX L3 model into SBGN PD.
+ * It optionally applies COSE layout.
  *
  * This version ignores several BioPAX L3 features during conversion:
  * <ul>
@@ -51,11 +47,6 @@ import static org.sbgn.ArcClazz.*;
  */
 public class L3ToSBGNPDConverter
 {
-	//-- Section: Static fields -------------------------------------------------------------------|
-
-	/**
-	 * Log for logging.
-	 */
 	private static final Logger log = LoggerFactory.getLogger(L3ToSBGNPDConverter.class);
 
 	/**
@@ -156,12 +147,8 @@ public class L3ToSBGNPDConverter
 		boolean doLayout)
 	{
 		this.ubiqueDet = ubiqueDet;		
-		this.featStrGen = featStrGen;
+		this.featStrGen = (featStrGen != null) ? featStrGen : new CommonFeatureStringGenerator();
 		this.doLayout = doLayout;
-		
-		if (this.featStrGen == null)
-			this.featStrGen = new CommonFeatureStringGenerator();
-
 		this.useTwoGlyphsForReversibleConversion = true;
 		this.sbgn2BPMap = new HashMap<String, Set<String>>();
 		this.flattenComplexContent = true;
@@ -207,17 +194,11 @@ public class L3ToSBGNPDConverter
 		Sbgn sbgn = createSBGN(model);
 
 		// Write in file
-
-		try
-		{
+		try {
 			SbgnUtil.writeToFile(sbgn, new File(file));
 		}
-		catch (JAXBException e)
-		{
-			if(e.getCause()!=null)
-				log.error("writeSBGN SbgnUtil.writeToFile failed", e.getCause());
-			else
-				log.error("writeSBGN SbgnUtil.writeToFile failed", e);
+		catch (JAXBException e) {
+			throw new RuntimeException("writeSBGN, SbgnUtil.writeToFile failed", e);
 		}
 	}
 
@@ -229,27 +210,16 @@ public class L3ToSBGNPDConverter
 	 */
 	public void writeSBGN(Model model, OutputStream stream)
 	{
-		// Create the model
 		Sbgn sbgn = createSBGN(model);
 
-		// Write in file
-
-		try
-		{
-			sbgn.toString();
+		try {
 			JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			marshaller.marshal(sbgn, stream);
 		}
-		catch (JAXBException e)
-		{
-			if(e.getCause()!=null)
-				log.error("writeSBGN SbgnUtil.writeToFile failed", e.getCause());
-			else
-				log.error("writeSBGN SbgnUtil.writeToFile failed", e);
-
-			e.printStackTrace(new PrintWriter(stream));
+		catch (JAXBException e) {
+			throw new RuntimeException("writeSBGN: JAXB marshalling failed", e);
 		}
 	}
 
@@ -269,7 +239,6 @@ public class L3ToSBGNPDConverter
 		ubiqueSet = new HashSet<Glyph>();
 
 		// Create glyphs for Physical Entities
-
 		for (PhysicalEntity entity : model.getObjects(PhysicalEntity.class))
 		{
 			if (needsToBeCreatedInitially(entity))
@@ -279,7 +248,6 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Create glyph for conversions and link with arcs
-
 		for (Conversion conv : model.getObjects(Conversion.class))
 		{
 			// For each conversion we check if we need to create a left-to-right and/or
@@ -310,15 +278,13 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Create glyph for template reactions and link with arcs
-
-		for (TemplateReaction tr : model.getObjects(TemplateReaction.class))
-		{
+		for (TemplateReaction tr : model.getObjects(TemplateReaction.class)) {
 			createProcessAndConnections(tr);
 		}
 
 		// Register created objects into sbgn construct
 
-		Sbgn sbgn = factory.createSbgn();
+		final Sbgn sbgn = factory.createSbgn();
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
 		sbgn.setMap(map);
 		map.setLanguage(Language.PD.toString());
@@ -327,23 +293,8 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
-		if (doLayout)
-		{ // run in a new thread; fail after reasonable waiting time
-			ExecutorService exec = Executors.newSingleThreadExecutor();
-			final Sbgn[] a = new Sbgn[]{sbgn};
-			exec.execute(new Runnable() {
-				@Override
-				public void run() {
-					a[0] = (new SBGNLayoutManager()).createLayout(a[0]);
-				}
-			});
-			exec.shutdown(); //no more tasks
-			try {
-				exec.awaitTermination(15, TimeUnit.SECONDS);
-				sbgn = a[0];
-			} catch (InterruptedException e) {
-				log.warn("SBGN layout failed (timeout)", e);
-			}
+		if (doLayout) {
+			(new SBGNLayoutManager()).createLayout(sbgn);
 		}
 		
 		return sbgn;

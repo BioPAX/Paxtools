@@ -14,10 +14,8 @@ import org.ivis.layout.cose.CoSEGraph;
 /**
  * VCompound Class
  * @author: Istemi Bahceci
- * */
- 
-
-public class VCompound extends VNode implements Updatable
+ */
+class VCompound extends VNode implements Updatable
 {
 	public List<VNode> children;
 	

@@ -14,5 +14,5 @@ public interface UbiqueDetector
 	 * @param pe PhysicalEntity to check
 	 * @return true if ubique
 	 */
-	public boolean isUbique(PhysicalEntity pe);
+	boolean isUbique(PhysicalEntity pe);
 }
