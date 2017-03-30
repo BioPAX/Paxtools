@@ -26,10 +26,10 @@ import java.util.Set;
  */
 public class SBGNConverterTest
 {
-	static BioPAXIOHandler handler =  new SimpleIOHandler();
+	static final BioPAXIOHandler handler =  new SimpleIOHandler();
 
 	@Test
-	public void testSBGNConversion() throws JAXBException, IOException, SAXException
+	public void testSBGNConversion() throws Exception
 	{
 		String input = "/AR-TP53";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -84,7 +84,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testNestedComplexes() throws JAXBException, IOException, SAXException
+	public void testNestedComplexes() throws Exception
 	{
 		String input = "/translation-initiation-complex-formation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -135,7 +135,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testStoichiometry() throws JAXBException, IOException, SAXException
+	public void testStoichiometry() throws Exception
 	{
 		String input = "/Stoic";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -143,7 +143,7 @@ public class SBGNConverterTest
 
 		String out = "target/" + input + ".sbgn";
 
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, true);
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, false); //no layout
 
 		conv.writeSBGN(level3, out);
 
@@ -151,9 +151,9 @@ public class SBGNConverterTest
 		boolean isValid = SbgnUtil.isValid(outFile);
 
 		if (isValid)
-			System.out.println ("Validation succeeded");
+			System.out.println ("success: " + out + " is valid SBGN");
 		else
-			System.out.println ("Validation failed");
+			System.out.println ("warning: " + out + " is invalid SBGN");
 
 		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
 		Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -171,5 +171,45 @@ public class SBGNConverterTest
 		}
 
 		assertTrue(stoicFound);
+	}
+
+	@Test
+	public void testSbgnConversion2() throws Exception
+	{
+		String input = "/signaling-by-bmp";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+
+		String out = "target/" + input + ".sbgn";
+
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(); //also it runs CoSE layout
+		conv.writeSBGN(level3, out);
+
+		File outFile = new File(out);
+		boolean isValid = SbgnUtil.isValid(outFile);
+
+		if (isValid)
+			System.out.println ("success: " + out + " is valid SBGN");
+		else
+			System.out.println ("warning: " + out + " is invalid SBGN");
+
+		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		// Now read from "f" and put the result in "sbgn"
+		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
+
+		// Assert that the sbgn result contains glyphs
+		assertTrue(!result.getMap().getGlyph().isEmpty());
+
+		// Assert that compartments do not contain members inside
+		for (Glyph g : result.getMap().getGlyph())
+			if (g.getClazz().equals("compartment"));
+
+		// Assert that the id mapping is not empty.
+		assertFalse(conv.getSbgn2BPMap().isEmpty());
+
+		for (Set<String> set : conv.getSbgn2BPMap().values())
+			assertFalse(set.isEmpty());
 	}
 }

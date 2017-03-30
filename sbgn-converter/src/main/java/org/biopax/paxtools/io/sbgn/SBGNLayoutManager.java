@@ -107,7 +107,8 @@ class SBGNLayoutManager
 
         // Create LEdges for ChiLay layout component
         createLEdges(sbgn.getMap().getArc());
-//        graphMgr.updateBounds();
+
+        graphMgr.updateBounds(); //TODO: why is it called here and again after the layout is done?
 
         // Apply layout
         layout.runLayout();

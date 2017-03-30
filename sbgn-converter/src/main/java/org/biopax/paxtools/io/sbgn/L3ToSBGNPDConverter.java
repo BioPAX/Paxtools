@@ -293,7 +293,7 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
-		if (doLayout) {
+		if (doLayout && sbgn.getMap().getGlyph().size() < 1000) { //TODO: always skip layout for graphs >1000 glyphs?
 			(new SBGNLayoutManager()).createLayout(sbgn);
 		}
 		
@@ -312,26 +312,35 @@ public class L3ToSBGNPDConverter
 	 */
 	private boolean needsToBeCreatedInitially(PhysicalEntity entity)
 	{
-		// Inner complexes will be created during creation of the top complex
-		if (entity instanceof Complex)
-		{
+		boolean ret = true; //means - do create a node
+
+		if (entity instanceof Complex) {
 			Complex c = (Complex) entity;
-			if (c.getParticipantOf().isEmpty() && !c.getComponentOf().isEmpty())
-			{
-				return false;
+			if (c.getParticipantOf().isEmpty() && !c.getComponentOf().isEmpty()) {
+				// Inner complex will be created during creation of the top complex
+				ret = false;
 			}
 		}
-		// Complex members will be created during creation of parent complex
-		else if (entity.getParticipantOf().isEmpty() && !entity.getComponentOf().isEmpty())
-		{
-			return false;
+		else if (entity.getParticipantOf().isEmpty() && !entity.getComponentOf().isEmpty()) {
+			// Complex members will be created during creation of parent complex
+			ret = false;
 		}
-		// Ubiques will be created when they are used
-		else if (ubiqueDet != null && ubiqueDet.isUbique(entity))
-		{
-			return false;
+		else if(entity.getParticipantOf().isEmpty() && entity.getComponentOf().isEmpty()) {
+			// won't create a node for either a dangling, experimental form entity, or memberPhysicalEntity
+			if(!entity.getMemberPhysicalEntityOf().isEmpty())
+				log.debug("skip a memberPhysicalEntity (- also not a participant/component of another entity): "
+						+ entity.getUri());
+			else
+				log.debug("skip a dangling or experimental form phys. entity: " + entity.getUri());
+
+			ret = false;
 		}
-		return true;
+		else if (ubiqueDet != null && ubiqueDet.isUbique(entity)) {
+			// Ubiques will be created when they are used
+			ret = false;
+		}
+
+		return ret;
 	}
 
 	/**
