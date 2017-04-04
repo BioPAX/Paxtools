@@ -59,12 +59,11 @@ public class Merger implements Visitor
 	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-		if (range != null && range instanceof BioPAXElement)
+		if (range instanceof BioPAXElement)
 		{
 			BioPAXElement bpe = (BioPAXElement) range;
 
 			// do nothing if you already inserted this
-
 			if (!model.contains(bpe))
 			{
 				//if there is an identical
@@ -225,8 +224,8 @@ public class Merger implements Visitor
 	}
 
 	/**
-	 * Updates the value of <em>existing</em> element, using the value of <em>update</em>. Editor is
-	 * the used for the modification.
+	 * Updates the value of <em>existing</em> element, using the value of <em>update</em>.
+	 * Editor is used for the modification.
 	 *
 	 * @param editor   editor for the specific value to be updated
 	 * @param update   BioPAX element of which value is used for the update
@@ -247,24 +246,19 @@ public class Merger implements Visitor
 		}
 		else
 		{
-			Object existingValue = editor.getValueFromBean(existing);
-			Object updateValue = editor.getValueFromBean(update);
-
+			Set existingValue = editor.getValueFromBean(existing);
+			Set updateValue = editor.getValueFromBean(update);
 			if (editor.isUnknown(existingValue))
 			{
 				if (!editor.isUnknown(updateValue))
 				{
-					updateField(editor, updateValue, existing, target);
+					updateField(editor, updateValue.iterator().next(), existing, target);
 				}
 			}
-			else
-			{
+			else {
 				if (!existingValue.equals(updateValue))
-				{
-					log.warn("Mismatch in single cardinality field:" +
-					         existingValue + ":" + updateValue);
-					log.warn("Using existing value");
-				}
+					log.info("Keep existing single cardinality property value: " +
+						existingValue + " (ignore: " + updateValue + ")" );
 			}
 		}
 	}
