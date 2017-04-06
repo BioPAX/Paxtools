@@ -57,7 +57,14 @@ public abstract class BioPAXFactory
 	 * @param uri absolute URI of the new BioPAX object
 	 * @return new BioPAX object
      */
-	public <T extends BioPAXElement> T create(Class<T> aClass, String uri) {
+	public <T extends BioPAXElement> T create(Class<T> aClass, String uri)
+	{
+//		//TODO: good to have the following shortcut, but it might hurt performance of creating/reading large valid models
+//		if(!canInstantiate(aClass)) {
+//			log.error("Non-instantiable: cannot create BioPAX object, uri:"+uri+", with abstract type: " + aClass);
+//			return null;
+//		}
+
 		T bpe = null;
 
 		// create a new instance of the BioPAX type
@@ -70,14 +77,11 @@ public abstract class BioPAXFactory
 				setUriMethod.invoke(bpe, uri);
 			} else {
 				log.error("Could not find a class implementing " + aClass);
-				return null;
 			}
 		} catch (InvocationTargetException e) { //this happened, weird (might due to lack of memory or busy...)
-			log.error("Could not instantiate BioPAX Type: " + aClass
-					+ "; URI: " + uri + " - " + e, e.getCause());
+			log.error("Failed creating BioPAX object: " + aClass + ", URI: " + uri + " - " + e, e.getCause());
 		} catch (Exception e) {
-			log.error("Could not instantiate BioPAX Type: " + aClass 
-					+ "; URI: " + uri, e);
+			log.error("Failed creating BioPAX object: " + aClass + ", URI: " + uri, e);
 		} 
 
 		return bpe;
@@ -138,8 +142,7 @@ public abstract class BioPAXFactory
      * @param aModelInterfaceClass interface class for the BioPAX type
      * @return concrete class that implements the BioPAX interface and can be created with this factory
      */
-	public <T extends BioPAXElement> Class<T> getImplClass(
-			Class<T> aModelInterfaceClass) 
+	public <T extends BioPAXElement> Class<T> getImplClass(Class<T> aModelInterfaceClass)
 	{
 		Class<T> implClass = null;
 
