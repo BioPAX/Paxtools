@@ -13,7 +13,7 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 {
 // ------------------------------ FIELDS ------------------------------
 
-	Set<Entity> participant;
+	private Set<Entity> participant;
 	private Set<InteractionVocabulary> interactionType;
     private final Logger log = LoggerFactory.getLogger(InteractionImpl.class);
 
@@ -71,14 +71,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	public void addParticipant(Entity aParticipant)
 	{
 		if (aParticipant != null) {
-			if (aParticipant != null) {
-				this.participant.add(aParticipant);
-				aParticipant.getParticipantOf().add(this);
-			} else {
-				if (log.isWarnEnabled())
-					log.warn("Null object passed to addParticipant @"
-							+ this.getUri());
-			}
+			this.participant.add(aParticipant);
+			aParticipant.getParticipantOf().add(this);
 		}
     }
 
