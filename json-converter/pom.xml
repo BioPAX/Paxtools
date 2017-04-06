@@ -27,12 +27,6 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-					<!--<archive>-->
-						<!--<manifest>-->
-							<!--<mainClass>org.biopax.paxtools.io.json.Main</mainClass>-->
-							<!--<addClasspath>true</addClasspath>-->
-						<!--</manifest>-->
-					<!--</archive>-->
 				</configuration>
 				<executions>
 					<execution>

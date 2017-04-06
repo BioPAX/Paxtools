@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -71,6 +72,9 @@ public abstract class BioPAXFactory
 				log.error("Could not find a class implementing " + aClass);
 				return null;
 			}
+		} catch (InvocationTargetException e) { //this happened, weird (might due to lack of memory or busy...)
+			log.error("Could not instantiate BioPAX Type: " + aClass
+					+ "; URI: " + uri + " - " + e, e.getCause());
 		} catch (Exception e) {
 			log.error("Could not instantiate BioPAX Type: " + aClass 
 					+ "; URI: " + uri, e);
