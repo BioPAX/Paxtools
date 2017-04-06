@@ -47,7 +47,22 @@
 			<artifactId>apache-jena-libs</artifactId>
 			<type>pom</type>
 			<!-- This is the last Java 6 compatible version -->
-			<version>2.11.2</version>
+			<!--<version>2.11.2</version>-->
+			<version>3.2.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.hp.hpl.jena</groupId>
+			<artifactId>jena</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>log4j</groupId>

@@ -9,12 +9,13 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 				+ sdf.format(Calendar.getInstance().getTime()));
 
 		// create an empty model
-		com.hp.hpl.jena.rdf.model.Model modelJena = ModelFactory.createDefaultModel();
+		Model modelJena = ModelFactory.createDefaultModel();
 		InputStream internalInputStream = new FileInputStream(inputProcessedFile);
 		// read the RDF/XML file
 		RDFDataMgr.read(modelJena, internalInputStream, Lang.RDFXML);
@@ -63,7 +64,7 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 	 */
 	public void convertFromJsonld(InputStream in, OutputStream out) {
 
-		com.hp.hpl.jena.rdf.model.Model modelJena = ModelFactory.createDefaultModel();
+		Model modelJena = ModelFactory.createDefaultModel();
 
 		if (in == null) {
 			throw new IllegalArgumentException("Input File: " + " not found");
@@ -116,10 +117,7 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 
 		// write to an output stream (back to RDF/XML)
 
-		simpleIO.convertToOWL((org.biopax.paxtools.model.Model) model,
-				outputStream); // it closes the stream internally
-
-		model = null;
+		simpleIO.convertToOWL((org.biopax.paxtools.model.Model) model,	outputStream); // it closes the stream internally
 
 		LOG.info("BIOPAX Conversion finished " + sdf.format(Calendar.getInstance().getTime()));
 		return fullUriBiopaxInput;
