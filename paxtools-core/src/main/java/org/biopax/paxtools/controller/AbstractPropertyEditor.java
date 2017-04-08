@@ -445,12 +445,14 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 			if (value != null && checkRestrictions.get()) checkRestrictions(value, bean);
 			invokeMethod(this.getPrimarySetMethod(), bean, value);
 		}
-		catch (Exception e)
-		{
-			log.error("Failed to set " + ((value != null) ? value.getClass().getSimpleName() : "")
-					+ " value: " + value + " to " + bean.getClass().getSimpleName()
-					+ " (" + bean.getUri() + ") using method: " + getPrimarySetMethod().getName()
-					+ ". " + e.getMessage());
+		catch (Exception e) {
+			if(log.isDebugEnabled())
+				log.debug("setValueToBean failed to set value: " + value
+						+ ( (value != null) ? " of type: "+ value.getClass().getSimpleName() : "" )
+						+ " to " + bean.getClass().getSimpleName()
+						+ " (" + bean.getUri() + ") using: " + getPrimarySetMethod().getName(), e);
+			else
+				log.warn("setValueToBean, failed: " + e.getMessage());
 		}
 	}
 
