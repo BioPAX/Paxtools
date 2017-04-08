@@ -1,9 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
-import org.biopax.paxtools.model.level3.Conversion;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.model.level3.StepDirection;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +47,6 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	}
 
 	public void setStepConversion(Conversion highLander)
-
 	{
 		if (this.stepConversion != null)
 		{
@@ -69,25 +66,31 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 				this.stepConversion.getStepProcessOf().add(this);
 			}
 		}
-
 	}
 
 	@Override
 	public void addStepProcess(Process process)
 	{
 		if (process instanceof Conversion)
-		{
-			if (this.stepConversion == null || this.stepConversion == process)
-			{
-				log.debug("Ignoring request to add a Conversion as stepProcess");
-			} else
-			{
+		{ // restriction: BiochemicalPathwayStep.stepProcess can contain Control interactions only
+			if (this.stepConversion == null) {
+				//auto-fix gently...
+				log.warn("Auto-fix: put Conversion " + process.getUri() +
+						" as stepConversion instead of stepProcess of the BiochemicalPathwayStep");
+				setStepConversion((Conversion) process);
+			} else if (this.stepConversion == process) {
+				log.info("Ignoring addStepProcess as the Conversion was set as BiochemicalPathwayStep/stepConversion");
+			} else {
 				throw new IllegalBioPAXArgumentException(
-					"Biochemical Pathway Step can have only one conversion. Did you want to use" +
-						"the setStepConversion method? ");
+					"BiochemicalPathwayStep can have only one Conversion. Did you mean to use " +
+						"the setStepConversion method instead?");
 			}
+		} else if (process == null || process instanceof Control){
+			super.addStepProcess(process);
+		} else {
+			throw new IllegalBioPAXArgumentException(
+					"Only Control processes can be in BiochemicalPathwayStep/stepProcess");
 		}
-		super.addStepProcess(process);
 	}
 
 	// Property STEP-DIRECTION
