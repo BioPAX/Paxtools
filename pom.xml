@@ -67,10 +67,6 @@
 		<nexus-staging-maven-plugin.version>1.6.5</nexus-staging-maven-plugin.version>
 		<doxia-integration-tools.version>1.6</doxia-integration-tools.version>
 		<maven-enforcer-plugin>1.4</maven-enforcer-plugin>
-		<!--<site-maven-plugin.version>0.12</site-maven-plugin.version>-->
-		<!--<github.host>github.com</github.host>-->
-		<!--<github.server.id>github</github.server.id> -->
-		<!--<github.site.path>${project.version}</github.site.path>-->
 	</properties>
 
 	<developers>
@@ -306,11 +302,6 @@
 						<!--<skipDeploy>true</skipDeploy>-->
 					<!--</configuration>-->
 				</plugin>
-				<!--<plugin>-->
-					<!--<groupId>com.github.github</groupId>-->
-					<!--<artifactId>site-maven-plugin</artifactId>-->
-					<!--<version>${site-maven-plugin.version}</version>-->
-				<!--</plugin>-->
 				<plugin>
 					<groupId>org.sonatype.plugins</groupId>
 					<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -532,23 +523,6 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
-		<!--<repository>&lt;!&ndash; TODO: this repo's gone... &ndash;&gt;-->
-			<!--<id>chilay-repo</id>-->
-			<!--<name>Repository for chilay project</name>-->
-			<!--<url>http://maven-repo.chilay.googlecode.com/hg/</url>-->
-			<!--<snapshots>-->
-				<!--<enabled>true</enabled>-->
-				<!--<updatePolicy>always</updatePolicy>-->
-			<!--</snapshots>-->
-		<!--</repository>-->
-		<repository><!-- currently, it's only to get org.sbgn:libsbgn:0.2 -->
-			<id>biopax.snapshots</id>
-			<name>BioPAX.org Repository</name>
-			<url>http://www.biopax.org/m2repo/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
 		</repository>
 	</repositories>
 

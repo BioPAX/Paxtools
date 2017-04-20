@@ -22,7 +22,6 @@
 	<properties>
 		<lucene.version>4.10.2</lucene.version>
 		<slf4j.version>1.7.7</slf4j.version>
-		<!--<github.site.path>${project.version}/${project.artifactId}</github.site.path>-->
 	</properties>
 	
 	<dependencies>

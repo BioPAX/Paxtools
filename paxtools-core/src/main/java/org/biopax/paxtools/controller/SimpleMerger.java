@@ -2,6 +2,8 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.BiochemicalPathwayStep;
+import org.biopax.paxtools.model.level3.Conversion;
 import org.biopax.paxtools.util.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -244,6 +246,20 @@ public class SimpleMerger
 		if (value != null) {
 			Object newValue = (value instanceof BioPAXElement) 
 					? target.getByID(((BioPAXElement)value).getUri()) : value;
+
+			//a "dirty" fix (avoid warnings in the log that can be ignored)
+			if(targetElement instanceof BiochemicalPathwayStep
+					&& editor.getProperty().equalsIgnoreCase("stepProcess")
+					&& value instanceof Conversion) {
+				// In this case, the Conversion should be set via stepConversion property editor, which is
+				// sub-property of stepProcess (getStepProcess can include a step conversion as well, but
+				// Conversion is not supposed to be set explicitly via stepProcess)
+				if(LOG.isDebugEnabled())
+					LOG.debug("mergeToTarget, ignored an attempt to set a Conversion via " +
+						"BiochemicalPathwayStep.stepProcess property editor; target URI:" + targetElement.getUri());
+				return;
+			}
+
 			editor.setValueToBean(newValue, targetElement);
 		}
 	}
