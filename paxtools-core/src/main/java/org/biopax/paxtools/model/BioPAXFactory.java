@@ -59,7 +59,7 @@ public abstract class BioPAXFactory
      */
 	public <T extends BioPAXElement> T create(Class<T> aClass, String uri)
 	{
-//		//TODO: good to have the following shortcut, but it might hurt performance of creating/reading large valid models
+//		//could use the following shortcut, but it might hurt performance of creating/reading large valid models
 //		if(!canInstantiate(aClass)) {
 //			log.error("Non-instantiable: cannot create BioPAX object, uri:"+uri+", with abstract type: " + aClass);
 //			return null;

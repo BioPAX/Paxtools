@@ -74,7 +74,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A full-text searcher/indexer for BioPAX L3 models.
- * 
+ *
+ * TODO: upgrade to the latest Lucene API and copy some changes from cPath2 project.
+ *
  * @author rodche
  */
 public class SearchEngine implements Indexer, Searcher {
@@ -292,7 +294,8 @@ public class SearchEngine implements Indexer, Searcher {
 				//but not for term/prefix queries, i.e, q=name:insulin*, q=pathway:brca2. TODO
 				scorer.setExpandMultiTermQuery(true);	
 				
-				//TODO use PostingsHighlighter once it's stable (see http://lucene.apache.org/core/4_10_0/highlighter/org/apache/lucene/search/postingshighlight/PostingsHighlighter.html)				
+				//TODO try PostingsHighlighter once it's stable...
+				// (see http://lucene.apache.org/core/4_10_0/highlighter/org/apache/lucene/search/postingshighlight/PostingsHighlighter.html)
 				SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class='hitHL'>", "</span>");
 				Highlighter highlighter = new Highlighter(formatter, scorer);
 				highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 80));
