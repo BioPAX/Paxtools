@@ -286,6 +286,9 @@
 </bp:SequenceSite>
 
 <bp:CellularLocationVocabulary rdf:about="urn:miriam:obo.go:GO%3A0005886">
+ <!--added two more terms (which is not good but happens in real data anyway) for tests-->
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Plasma Membrane</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005886</bp:term>
  <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">plasma membrane</bp:term>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005886" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>

@@ -832,6 +832,8 @@ public class L3ToSBGNPDConverter
 		if (name == null)
 			return null;
 
+		name = name.toLowerCase();
+
 		if (compartmentMap.containsKey(name))
 			return compartmentMap.get(name);
 

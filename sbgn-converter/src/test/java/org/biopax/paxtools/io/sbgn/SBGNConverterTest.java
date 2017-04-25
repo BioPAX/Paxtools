@@ -1,20 +1,19 @@
 package org.biopax.paxtools.io.sbgn;
 
 import static junit.framework.Assert.*;
+
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.sbgn.GlyphClazz;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.Arc;
 import org.sbgn.bindings.Glyph;
 import org.sbgn.bindings.Sbgn;
-import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.Arrays;
@@ -71,6 +70,9 @@ public class SBGNConverterTest
 			if (g.getClazz().equals("compartment"))
 			{
 				assertTrue(g.getGlyph().isEmpty());
+				String label = g.getLabel().getText();
+				assertFalse(label.matches("go:"));
+				assertTrue(StringUtils.isAllLowerCase(label.substring(0,1)));
 			}
 		}
 
