@@ -45,7 +45,7 @@ public class SimpleMerger
 
 	private final EditorMap map;
 	
-	private Filter<BioPAXElement> mergeObjPropOf;
+	private Filter<BioPAXElement> mergePropOf;
 
 	/**
 	 * @param map a class to editor map for the elements to be modified.
@@ -57,17 +57,17 @@ public class SimpleMerger
 
 	/** 
 	 * @param map a class to editor map for the elements to be modified.
-	 * @param mergeObjPropOf when not null, all multiple-cardinality properties 
+	 * @param mergePropOf when not null, all multiple-cardinality properties
 	 * 						of a source biopax object that passes this filter are updated
 	 * 						and also copied to the corresponding (same URI) target object,
 	 *                      unless the source and target are the same thing 
 	 *                      (in which case, we simply migrate object properties 
 	 *                      to target model objects). 
 	 */
-	public SimpleMerger(EditorMap map, Filter<BioPAXElement> mergeObjPropOf)
+	public SimpleMerger(EditorMap map, Filter<BioPAXElement> mergePropOf)
 	{
 		this(map);
-		this.mergeObjPropOf = mergeObjPropOf;
+		this.mergePropOf = mergePropOf;
 	}
 
 	/**
@@ -182,11 +182,11 @@ public class SimpleMerger
 	private void updateObjectFields(BioPAXElement source, Model target)
 	{
 		//Skip if target model had a different object with the same URI as the source's,
-		//and no Filter was set (mergeObjPropOf is null); i.e., when
-		//we simply want the source to be replaced with an object
-		//having the same type, URI that was already in the target model.
+		//and no Filter was set (mergePropOf is null); i.e., when
+		//we simply want the source to be replaced with the object
+		//having the same type and URI and that's already present in the target model.
 		BioPAXElement keep = target.getByID(source.getUri());
-		if(keep != source && mergeObjPropOf==null) 
+		if(keep != source && mergePropOf ==null)
 		{
 			return; //nothing to do
 		}
@@ -204,7 +204,7 @@ public class SimpleMerger
 						migrateToTarget(source, target, editor, value);
 					}
 				} else //source is normally to be entirely replaced, but if it passes the filter,
-					if(mergeObjPropOf!=null && mergeObjPropOf.filter(source)
+					if(mergePropOf !=null && mergePropOf.filter(source)
 						&& editor.isMultipleCardinality()) // and the prop. is multi-cardinality,
 				{
 					// - then we want to copy some values
@@ -215,7 +215,7 @@ public class SimpleMerger
 
 			}
 			else // - primitive, enum, or string property editor (e.g., comment, name), and -
-				if (mergeObjPropOf != null && mergeObjPropOf.filter(source) && editor.isMultipleCardinality())
+				if (mergePropOf != null && mergePropOf.filter(source) && editor.isMultipleCardinality())
 			{
 				Set<Object> values = new HashSet<Object>((Set<Object>) editor.getValueFromBean(source));
 				for (Object value : values) {
