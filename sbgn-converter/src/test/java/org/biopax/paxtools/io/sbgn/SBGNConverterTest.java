@@ -212,4 +212,10 @@ public class SBGNConverterTest
 		for (Set<String> set : conv.getSbgn2BPMap().values())
 			assertFalse(set.isEmpty());
 	}
+
+	@Test
+	public void quickTest() {
+		assertTrue("go:0005758".matches("(go|so):\\d+"));
+		assertTrue("so:0000000".matches("(go|so):\\d+"));
+	}
 }

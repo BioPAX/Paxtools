@@ -857,7 +857,16 @@ public class L3ToSBGNPDConverter
 		CellularLocationVocabulary cl = pe.getCellularLocation();
 		if (cl != null && !cl.getTerm().isEmpty())
 		{
-			String name = cl.getTerm().iterator().next().toLowerCase();
+			String name = null;
+			// get a cv term,
+			// ignoring IDs (should not be there but happens)
+			for(String term : cl.getTerm()) {
+				term = term.toLowerCase();
+				if(!term.matches("(go|so|mi|bto|cl|pato|mod):")) {
+				 name = term;
+				 break;
+				}
+			}
 			return getCompartment(name);
 		} else
 			return null;
