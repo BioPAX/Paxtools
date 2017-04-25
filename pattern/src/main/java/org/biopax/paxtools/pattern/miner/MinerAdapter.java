@@ -48,6 +48,8 @@ public abstract class MinerAdapter implements Miner
 	 */
 	protected Map<BioPAXElement, Set<String>> idMap;
 
+	private Pattern pattern;
+
 	/**
 	 * Constructor with name and description.
 	 * @param name name of the miner
@@ -91,16 +93,14 @@ public abstract class MinerAdapter implements Miner
 	 */
 	public Pattern getPattern()
 	{
-		final Pattern pattern = constructPattern();
-
-		if (this instanceof SIFMiner && idFetcher != null && idMap != null)
-		{
-			pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getSourceLabel());
-			pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getTargetLabel());
+		if(pattern == null) {
+			pattern = constructPattern();
+			if (this instanceof SIFMiner && idFetcher != null && idMap != null) {
+				pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getSourceLabel());
+				pattern.add(new HasAnID(idFetcher, idMap), ((SIFMiner) this).getTargetLabel());
+			}
+			pattern.optimizeConstraintOrder();
 		}
-
-		pattern.optimizeConstraintOrder();
-
 		return pattern;
 	}
 
