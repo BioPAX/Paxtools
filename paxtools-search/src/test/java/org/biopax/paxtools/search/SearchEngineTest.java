@@ -50,9 +50,10 @@ public class SearchEngineTest {
 		assertEquals(1, response.getHits().size());
 		
 		BioPAXElement hit = response.getHits().get(0);
-		assertEquals(4, hit.getAnnotations().get(SearchEngine.HitAnnotation.HIT_SIZE.name()));
+		assertEquals(4, hit.getAnnotations().get(HitAnnotation.HIT_PROCESSES.name()));
+		assertEquals(7, hit.getAnnotations().get(HitAnnotation.HIT_PARTICIPANTS.name()));
 		assertTrue(hit instanceof Pathway);
-		assertEquals(5, hit.getAnnotations().keySet().size());
+		assertEquals(6, hit.getAnnotations().keySet().size());
 		
 		//test a special implementation for wildcard queries
 		response = searchEngine.search("*", 0, Pathway.class, null, null);
@@ -129,10 +130,11 @@ public class SearchEngineTest {
 		assertFalse(response.getHits().isEmpty());		
 		int i=0;
 		for(BioPAXElement bpe : response.getHits()) {
-			log.debug(String.format("Hit %d: %s; size: %s; excerpt: %s",
-					++i, bpe.getUri(), bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
-					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
-		}		
+			log.debug(String.format("Hit %d: %s; participants: %s; processes: %s; excerpt: %s",
+					++i, bpe.getUri(), bpe.getAnnotations().get(HitAnnotation.HIT_PARTICIPANTS.name()),
+					bpe.getAnnotations().get(HitAnnotation.HIT_PROCESSES.name()),
+					bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
+		}
 		assertEquals(3, response.getHits().size());
 		assertEquals(3, response.getTotalHits());
 		assertEquals("http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b", response.getHits().get(0).getUri());

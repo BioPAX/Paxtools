@@ -53,20 +53,14 @@ import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Version;
+import org.biopax.paxtools.controller.DataPropertyEditor;
 import org.biopax.paxtools.controller.Fetcher;
 import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.BioSource;
-import org.biopax.paxtools.model.level3.Level3Element;
-import org.biopax.paxtools.model.level3.Named;
-import org.biopax.paxtools.model.level3.Pathway;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.model.level3.Provenance;
-import org.biopax.paxtools.model.level3.UnificationXref;
-import org.biopax.paxtools.model.level3.XReferrable;
-import org.biopax.paxtools.model.level3.Xref;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,11 +79,12 @@ public class SearchEngine implements Indexer, Searcher {
 	// search fields
 	public static final String FIELD_URI = "uri";
 	public static final String FIELD_KEYWORD = "keyword"; //anything, e.g., names, terms, comments, incl. - from child elements 
-	public static final String FIELD_NAME = "name"; // standardName, displayName, other names
-	public static final String FIELD_XREFDB = "xrefdb"; //xref.db
+	public static final String FIELD_NAME = "name";
 	public static final String FIELD_XREFID = "xrefid"; //xref.id
 	public static final String FIELD_PATHWAY = "pathway"; //parent/owner pathways; to be inferred from the whole biopax model
-	public static final String FIELD_SIZE = "size";	
+	public static final String FIELD_N_PARTICIPANTS = "participants"; // num. of PEs or Genes in a process or Complex
+	public static final String FIELD_N_PROCESSES = "processes"; // is same as 'size' used to be before cPath2 v7
+	public static final String FIELD_N = "n"; // also num. of processes, but indexed to use in range queries, e.g., n:>3
 	// Full-text search/filter fields (case sensitive) -
 	//index organism names, cell/tissue type (term), taxonomy id, but only store BioSource URIs	
 	public static final String FIELD_ORGANISM = "organism";
@@ -106,12 +101,6 @@ public class SearchEngine implements Indexer, Searcher {
 			// also from child elements up to given depth (3), also includes pathway names (inferred)
 			FIELD_NAME, // standardName, displayName, other names
 			FIELD_XREFID, //xref.id (also direct child's xref.id, i.e., can find both xref and its owners using a xrefid:<id> query string)
-			FIELD_SIZE, // find entities with a given no. child/associated processes...
-//			FIELD_PATHWAY, // only this/parent pathway URIs are stored in the index, not indexed/analyzed; names get indexed but not stored
-// the following fields are for filtering only (thus excluded):
-//			FIELD_ORGANISM,	
-//			FIELD_DATASOURCE, 
-//			FIELD_TYPE,
 	};
 	
 	/**
@@ -123,7 +112,8 @@ public class SearchEngine implements Indexer, Searcher {
 	public enum HitAnnotation 
 	{
 		HIT_EXCERPT,
-		HIT_SIZE,
+		HIT_PROCESSES,
+		HIT_PARTICIPANTS,
 		HIT_ORGANISM,
 		HIT_DATASOURCE,
 		HIT_PATHWAY,
@@ -315,7 +305,7 @@ public class SearchEngine implements Indexer, Searcher {
 				LOG.warn("Highlighter skipped, because KEYWORD field was null; hit: " 
 						+ uri + ", " + bpe.getModelInterface().getSimpleName());
 			}
-											
+
 			// extract organisms (URI only) if not done before
 			if(doc.get(FIELD_ORGANISM) != null && !bpe.getAnnotations().containsKey(HitAnnotation.HIT_ORGANISM.name())) {
 				Set<String> uniqueVals = new TreeSet<String>();
@@ -349,15 +339,17 @@ public class SearchEngine implements Indexer, Searcher {
 			}
 			
 			//store the no. processes in the sub-network if not previously done
-			if(doc.get(FIELD_SIZE)!=null && !bpe.getAnnotations().containsKey(HitAnnotation.HIT_SIZE.name()))
-				bpe.getAnnotations().put(HitAnnotation.HIT_SIZE.name(), Integer.valueOf(doc.get(FIELD_SIZE))); 
-			
+			if(doc.get(FIELD_N_PARTICIPANTS)!=null && !bpe.getAnnotations().containsKey(HitAnnotation.HIT_PARTICIPANTS.name()))
+				bpe.getAnnotations().put(HitAnnotation.HIT_PARTICIPANTS.name(), Integer.valueOf(doc.get(FIELD_N_PARTICIPANTS)));
+			if(doc.get(FIELD_N_PROCESSES)!=null && !bpe.getAnnotations().containsKey(HitAnnotation.HIT_PROCESSES.name()))
+				bpe.getAnnotations().put(HitAnnotation.HIT_PROCESSES.name(), Integer.valueOf(doc.get(FIELD_N_PROCESSES)));
+
 			//store the Lucene's score and explanation.
 			String excerpt = (String) bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name());
 			if(excerpt == null) excerpt = "";
 			excerpt += " -SCORE- " + scoreDoc.score + " -EXPLANATION- " + searcher.explain(query, scoreDoc.doc);
 			bpe.getAnnotations().put(HitAnnotation.HIT_EXCERPT.name(), excerpt);
-			
+
 			hits.add(bpe);
 		}
 						
@@ -391,13 +383,37 @@ public class SearchEngine implements Indexer, Searcher {
 		ExecutorService exec = Executors.newFixedThreadPool(30);
 		
 		final AtomicInteger numLeft = new AtomicInteger(numObjects);
+
+		final org.biopax.paxtools.util.Filter<DataPropertyEditor> dataPropertiesToConsider
+				= new org.biopax.paxtools.util.Filter<DataPropertyEditor>() {
+			@Override
+			public boolean filter(DataPropertyEditor editor) {
+				final String prop = editor.getProperty();
+				//to include in the index, as keywords, only the following properties
+				// (basically, to exclude float type properties, embedded xml, db names, etc.):
+				return (prop.equalsIgnoreCase("author") || prop.equalsIgnoreCase("availability")
+						|| prop.equalsIgnoreCase("chemicalFormula") || prop.equalsIgnoreCase("comment")
+						|| prop.equalsIgnoreCase("controlType") || prop.equalsIgnoreCase("conversionDirection")
+						|| prop.equalsIgnoreCase("eCNumber") || prop.equalsIgnoreCase("id")
+						|| prop.equalsIgnoreCase("name") || prop.equalsIgnoreCase("displayName")
+						|| prop.equalsIgnoreCase("standardName") || prop.equalsIgnoreCase("sequence")
+						|| prop.equalsIgnoreCase("source") || prop.equalsIgnoreCase("year")
+						|| prop.equalsIgnoreCase("term") || prop.equalsIgnoreCase("stepDirection")
+						|| prop.equalsIgnoreCase("structureData") || prop.equalsIgnoreCase("templateDirection")
+						|| prop.equalsIgnoreCase("title") || prop.equalsIgnoreCase("url")
+				);
+			}
+		};
+
+		final Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
+		fetcher.setSkipSubPathways(true);
+
 		for(final BioPAXElement bpe : model.getObjects()) {	
 			// prepare & index each element in a separate thread
 			exec.execute(new Runnable() {
 				public void run() {					
 					// get or infer some important values if possible from this, child or parent objects:
-					Set<String> keywords = ModelUtils.getKeywords(bpe, 3); //TODO use Filter<DataPropertyEditor>... args
-					
+					Set<String> keywords = ModelUtils.getKeywords(bpe, 3, dataPropertiesToConsider);
 					// a hack to remove special (debugging) biopax comments
 					for(String s : new HashSet<String>(keywords)) {
 						//exclude additional comments generated by normalizer, merger, etc.
@@ -408,13 +424,46 @@ public class SearchEngine implements Indexer, Searcher {
 					bpe.getAnnotations().put(FIELD_KEYWORD, keywords);
 					bpe.getAnnotations().put(FIELD_DATASOURCE, ModelUtils.getDatasources(bpe));
 					bpe.getAnnotations().put(FIELD_ORGANISM, ModelUtils.getOrganisms(bpe));
-					bpe.getAnnotations().put(FIELD_PATHWAY, ModelUtils.getParentPathways(bpe)); //- includes itself if bpe is a pathway
+					bpe.getAnnotations().put(FIELD_PATHWAY, ModelUtils.getParentPathways(bpe));
+					//- includes itself if bpe is a pathway
 
-					// for bio processes, also save the total number of member interactions or pathways:
+					//set <numparticipants> (PEs/Genes), <numprocesses> (interactions/pathways) index fields:
 					if(bpe instanceof org.biopax.paxtools.model.level3.Process) {
-						int size = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
-								.fetch(bpe, Process.class).size();						
-						bpe.getAnnotations().put(FIELD_SIZE, Integer.toString(size)); 
+						int numProc = fetcher.fetch(bpe, Process.class).size(); //except itself
+						int numPeAndG = fetcher.fetch(bpe, PhysicalEntity.class).size()
+								+ fetcher.fetch(bpe, Gene.class).size();
+						bpe.getAnnotations().put(FIELD_N_PARTICIPANTS, Integer.toString(numPeAndG));
+						bpe.getAnnotations().put(FIELD_N_PROCESSES, Integer.toString(numProc));
+					} else if(bpe instanceof Complex) {
+						int numPEs = fetcher.fetch(bpe, PhysicalEntity.class).size();
+						bpe.getAnnotations().put(FIELD_N_PARTICIPANTS, Integer.toString(numPEs));
+					}
+
+					//add IDs of uni. and rel. xrefs of this element and its children
+					if(bpe instanceof Entity || bpe instanceof EntityReference)
+					{
+						final Set<String> ids = new HashSet<String>();
+
+						//fetch all children of (implicit) type XReferrable, which means - either
+						//BioSource or ControlledVocabulary or Evidence or Provenance or Entity or EntityReference
+						//(we actually want only the latter two types and their sub-types; will skip the rest later on):
+						Set<XReferrable> children = fetcher.fetch(bpe, XReferrable.class);
+						//include itself (- for fetcher only gets child elements)
+						children.add((XReferrable) bpe);
+						for(XReferrable child : children) {
+							//skip IDs of Evidence,CV,Provenance (included into 'keyword' field anyway)
+							if(!(child instanceof Entity || child instanceof EntityReference))
+								continue;
+							// collect standard bio IDs (skip publications); try/use id-mapping to associate more IDs:
+							for(Xref x : child.getXref()) {
+								if (!(x instanceof PublicationXref) && x.getId()!=null && x.getDb()!=null) {
+									ids.add(x.getId());
+								}
+							}
+						}
+						if(!ids.isEmpty()) {
+							bpe.getAnnotations().put(SearchEngine.FIELD_XREFID, ids);
+						}
 					}
 
 					index(bpe, indexWriter);
@@ -500,68 +549,60 @@ public class SearchEngine implements Indexer, Searcher {
 			if(bpe.getAnnotations().containsKey(FIELD_KEYWORD)) {
 				addKeywords((Set<String>)bpe.getAnnotations().get(FIELD_KEYWORD), doc);
 			}
-			if(bpe.getAnnotations().containsKey(FIELD_SIZE)) {
-				field = new IntField(FIELD_SIZE, 
-					Integer.parseInt((String)bpe.getAnnotations()
-					.get(FIELD_SIZE)), Field.Store.YES);
+			if(bpe.getAnnotations().containsKey(FIELD_N_PARTICIPANTS)) {
+				field = new StoredField(FIELD_N_PARTICIPANTS,
+						Integer.parseInt((String)bpe.getAnnotations().get(FIELD_N_PARTICIPANTS)));
 				doc.add(field);
+			}
+			if(bpe.getAnnotations().containsKey(FIELD_N_PROCESSES)) {
+				field = new IntField(FIELD_N,
+						Integer.parseInt((String)bpe.getAnnotations().get(FIELD_N_PROCESSES)), Field.Store.NO);
+				doc.add(field);
+				field = new StoredField(FIELD_N_PROCESSES,
+						Integer.parseInt((String)bpe.getAnnotations().get(FIELD_N_PROCESSES)));
+				doc.add(field);
+			}
+			if(bpe.getAnnotations().containsKey(FIELD_XREFID)) {
+				//index biological IDs as keywords
+				addKeywords((Set<String>)bpe.getAnnotations().get(FIELD_XREFID), doc);
+
+				//index all IDs using "xrefid" fields
+				for (String id : (Set<String>)bpe.getAnnotations().get(FIELD_XREFID)) {
+					Field f = new StringField(FIELD_XREFID, id.toLowerCase(), Field.Store.NO);
+					doc.add(f);
+				}
 			}
 		}
 		bpe.getAnnotations().remove(FIELD_KEYWORD);
 		bpe.getAnnotations().remove(FIELD_DATASOURCE);
 		bpe.getAnnotations().remove(FIELD_ORGANISM);
 		bpe.getAnnotations().remove(FIELD_PATHWAY);
-		bpe.getAnnotations().remove(FIELD_SIZE);
-			
+		bpe.getAnnotations().remove(FIELD_N_PARTICIPANTS);
+		bpe.getAnnotations().remove(FIELD_N_PROCESSES);
+		bpe.getAnnotations().remove(FIELD_XREFID);
+
 		// name
 		if(bpe instanceof Named) {
 			Named named = (Named) bpe;
 			if(named.getStandardName() != null) {
 				field = new TextField(FIELD_NAME, named.getStandardName(), Field.Store.NO);
-				field.setBoost(3.0f);
+				field.setBoost(3.5f);
 				doc.add(field);
 			}
 			if(named.getDisplayName() != null && !named.getDisplayName().equalsIgnoreCase(named.getStandardName())) {
 				field = new TextField(FIELD_NAME, named.getDisplayName(), Field.Store.NO);
-				field.setBoost(2.5f);
+				field.setBoost(3.0f);
 				doc.add(field);
 			}
 			for(String name : named.getName()) {
 				if(name.equalsIgnoreCase(named.getDisplayName()) || name.equalsIgnoreCase(named.getStandardName()))
 					continue;
 				field = new TextField(FIELD_NAME, name.toLowerCase(), Field.Store.NO);
-				field.setBoost(2.0f);
+				field.setBoost(2.5f);
 				doc.add(field);
 			}
 		}
-		
-		// XReferrable.xref - build 'xrefid' index field from all Xrefs)
-		if(bpe instanceof XReferrable) {
-			XReferrable xr = (XReferrable) bpe;
-			for(Xref xref : xr.getXref()) {
-				if (xref.getId() != null) {
-					//the filed is not_analyzed; so in order to make search case-insensitive 
-					//(when searcher uses standard analyzer), we turn the value to lowercase.
-					field = new StringField(FIELD_XREFID, xref.getId().toLowerCase(), Field.Store.NO);
-//					field.setBoost(1.5f); //cannot do for such field/store type
-					doc.add(field);
-				}
-			}
-		}
-		
-		// Xref db/id (these are for a precise search by standard bio ID)
-		if(bpe instanceof Xref) {
-			Xref xref = (Xref) bpe;
-			if (xref.getId() != null) {
-				field = new StringField(FIELD_XREFID, xref.getId().toLowerCase(), Field.Store.NO);
-				doc.add(field);
-			}
-			if (xref.getDb() != null) {
-				field = new TextField(FIELD_XREFDB, xref.getDb().toLowerCase(), Field.Store.NO);
-				doc.add(field);
-			}
-		}
-		
+
 		// write
 		try {
 			indexWriter.addDocument(doc);
@@ -640,23 +681,6 @@ public class SearchEngine implements Indexer, Searcher {
 		}
 	}
 
-	
-	private String getTaxonId(BioSource bioSource) {
-		String id = null;
-		if(!bioSource.getXref().isEmpty()) {
-			Set<UnificationXref> uxs = new 
-				ClassFilterSet<Xref,UnificationXref>(bioSource.getXref(), 
-						UnificationXref.class);
-			for(UnificationXref ux : uxs) {
-				if("taxonomy".equalsIgnoreCase(ux.getDb())) {
-					id = ux.getId();
-					break;
-				}
-			}
-		}
-		return id;
-	}
-	
 	/** 
 	 * Creates a search filter like 
 	 * type AND (datasource OR datasource...) 
@@ -747,5 +771,5 @@ public class SearchEngine implements Indexer, Searcher {
 		
 		return query;
 	}
-	
+
 }
