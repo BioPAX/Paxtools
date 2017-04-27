@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>CovalentBindingFeature xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../apidocs/org/biopax/paxtools/model/level3/CovalentBindingFeature.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> org.biopax.paxtools.model.level3;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> * &lt;b&gt;Definition:&lt;/b&gt; An entity feature that represent the covalently bound state of  a physical entity.</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> * Rationale: Most frequent covalent modifications to proteins and DNA, such as phosphorylation and</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> * metylation are covered by the ModificationFeature class. In these cases, the added groups are</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> * simple and stateless therefore they can be captured by a controlled vocabulary. In other cases,</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> * such as ThiS-Thilacyl-disulfide, the covalently linked molecules are best represented as a</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> * molecular complex. CovalentBindingFeature should be used to model such covalently linked</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> * complexes.</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> * Usage: Using this construct, it is possible to represent small molecules as a covalent complex of</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> * two other small molecules. The demarcation of small molecules is a general problem and is</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> * delegated to small molecule databases.The best practice is not to model using covalent complexes</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> * unless at least one of the participants is a protein, DNA or RNA.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * Examples: disulfide bond UhpC + glc-6P -&amp;gt; Uhpc-glc-6p acetyl-ACP -&amp;gt; decenoyl-ACP charged tRNA</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../../../org/biopax/paxtools/model/level3/CovalentBindingFeature.html">CovalentBindingFeature</a> <strong class="jxr_keyword">extends</strong> BindingFeature, <a href="../../../../../org/biopax/paxtools/model/level3/ModificationFeature.html">ModificationFeature</a>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2017 <a href="http://www.biopax.org">BioPAX</a>. All rights reserved.</div>
+</body>
+</html>
