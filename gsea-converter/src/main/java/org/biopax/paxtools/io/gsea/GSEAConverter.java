@@ -4,7 +4,6 @@ import org.apache.commons.collections15.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.LevelUpgrader;
-import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
@@ -227,31 +226,12 @@ public class GSEAConverter
 					|| skipSubPathways;
 
 			LOG.debug("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getUri());
-			final Set<SequenceEntityReference> pathwaySers = new HashSet<SequenceEntityReference>();
-			final Traverser traverser = new AbstractTraverser(SimpleEditorMap.L3,
-					Fetcher.nextStepFilter, Fetcher.objectPropertiesOnlyFilter) {
-				@Override
-				protected void visit(Object range, BioPAXElement domain, Model model, PropertyEditor editor)
-				{
-					//by design (objectPropertiesOnlyFilter is used), it'll visit only object properties.
-					BioPAXElement bpe = (BioPAXElement) range;
-					if(bpe instanceof SequenceEntityReference) {
-						pathwaySers.add((SequenceEntityReference) bpe);
-					}
-					if(bpe instanceof Pathway) {
-						if(ignoreSubPathways)
-						{	//do not traverse into the sub-pathway; log
-							LOG.debug("Skipping sub-pathway: " + bpe.getUri());
-						} else {
-							traverse(bpe, model);
-						}
-					} else {
-						traverse(bpe, model);
-					}
-				}
-			};
-			//run it - collect all PRs from the pathway
-			traverser.traverse(currentPathway, null);
+
+			// collect sequence entity references from current pathway
+			//TODO: add Fetcher.evidenceFilter?
+			Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
+			fetcher.setSkipSubPathways(ignoreSubPathways);
+			Set<SequenceEntityReference> pathwaySers = fetcher.fetch(currentPathway, SequenceEntityReference.class);
 
 			if(!pathwaySers.isEmpty()) {
 				LOG.debug("For pathway: " + currentPathwayName + " (" + currentPathway.getUri()
