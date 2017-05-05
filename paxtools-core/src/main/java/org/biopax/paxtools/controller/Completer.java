@@ -83,8 +83,9 @@ public class Completer implements Visitor
 				// would be set on properties pathwayComponent and controlled, which unfortunately we cannot do
 				// for values of type Pathway only via the property getter annotations,
 				// because these properties' range is Process - Interaction or Pathway...)
+				completed.add(element);
+				//traverse unless we are to ignore sub-pathways (in fact - sub-pathway's member objects)
 				if( !(skipSubPathways && (element instanceof Pathway || element instanceof pathway)) ) {
-					completed.add(element);
 					traverser.traverse(element, null);
 				}
 			}
