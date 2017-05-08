@@ -28,6 +28,8 @@ public class ModelImpl implements Model
     private final transient Set<BioPAXElement> exposedObjectSet;
     private boolean addDependencies = false;
     private String xmlBase;
+    private String uri;
+    private String name;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -134,6 +136,22 @@ public class ModelImpl implements Model
 	}
 
 // -------------------------- OTHER METHODS --------------------------
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String modelUri) {
+		this.uri = modelUri;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String modelName) {
+		this.name = modelName;
+	}
 
 	public synchronized void add(BioPAXElement aBioPAXElement)
 	{

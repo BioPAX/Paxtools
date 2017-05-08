@@ -31,7 +31,6 @@ public class Cloner implements Visitor
 		this.traverser = new Traverser(map, this);
 	}
 
-
 	/**
 	 * For each element from the 'toBeCloned' list,
 	 * it creates a copy in the new model, setting all
@@ -39,7 +38,7 @@ public class Cloner implements Visitor
 	 * that refer to BioPAX elements not in 'toBeCloned' list
 	 * are ignored.
 	 *
-	 *	@deprecated use {@link #clone(Set)} instead ('source' model was not used in previous versions)
+	 * @deprecated use {@link #clone(Set)} instead ('source' model was not used in previous versions)
 	 *
 	 * @param source - actually, is never used... can be null all the same
 	 * @param toBeCloned elements to clone
@@ -54,7 +53,8 @@ public class Cloner implements Visitor
 	 * it creates a copy in the new model, setting all 
 	 * the data properties; however, object property values
 	 * that refer to BioPAX elements not in 'toBeCloned' list
-	 * are ignored.
+	 * are ignored. As the result, e.g., a Pathway can be incomplete,
+	 * missing some or all its sub-processes, xrefs, pathway steps.
 	 * 
 	 * @param toBeCloned elements to clone
 	 * @return a new model containing the cloned biopax objects
@@ -65,13 +65,9 @@ public class Cloner implements Visitor
 
 		for (BioPAXElement bpe : new HashSet<BioPAXElement>(toBeCloned))
 		{
-			// make a copy (all properties are empty except for ID)
-			if(targetModel.containsID(bpe.getUri())) {
-				throw new RuntimeException("There're different objects having the same URI"
-						+ " in the target/cloned model and input set:" + bpe.getUri());
-			} else {
-				targetModel.addNew(bpe.getModelInterface(), bpe.getUri());
-			}
+			// create a new empty object using the URI (all the biopax properties are empty;
+			// addNew fails when there are several objects having the same URI)
+			targetModel.addNew(bpe.getModelInterface(), bpe.getUri());
 		}
 
 		// a hack to avoid unnecessary checks for the valid sub-model being cloned, 

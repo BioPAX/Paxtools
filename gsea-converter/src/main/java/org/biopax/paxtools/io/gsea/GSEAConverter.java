@@ -254,9 +254,14 @@ public class GSEAConverter
 			LOG.info("Creating entries for the rest of PRs (outside any pathway)...");
 			Map<String,Set<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(sequenceEntityReferences);
 			if(!orgToPrsMap.isEmpty()) {
-				// create GSEA/GMT entries - one entry per organism (null organism also makes one) 
-				toReturn.addAll(createGseaEntries("other",
-						"other", getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
+				// create GSEA/GMT entries - one entry per organism (null organism also makes one)
+				if(model.getUri()==null) {
+					toReturn.addAll(createGseaEntries(
+						"other", "other", getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
+				} else {
+					toReturn.addAll(createGseaEntries(model.getUri()
+						, model.getName(), getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
+				}
 			}
 		}
 					
@@ -266,14 +271,12 @@ public class GSEAConverter
 	private Collection<GMTEntry> createGseaEntries(String uri, final String name, final String dataSource,
 												   final Map<String, Set<SequenceEntityReference>> orgToPrsMap)
 	{
-		// generate GSEA entries for each taxId
+		// generate GSEA entries for each species
 		final Collection<GMTEntry> toReturn = new ArrayList<GMTEntry>();
 		for (final String org : orgToPrsMap.keySet()) {
 			if(orgToPrsMap.get(org).size() > 0) {
-				LOG.debug("adding " + idType + " IDs of " + org +
-						" proteins (PRs) from '" + name + "', " + dataSource + " pathway...");
 				GMTEntry GMTEntry = new GMTEntry(uri, org, idType,
-						String.format("name: %s; datasource: %s",name, dataSource));
+						String.format("name: %s; datasource: %s", name, dataSource));
 				processEntityReferences(orgToPrsMap.get(org), GMTEntry);
 				toReturn.add(GMTEntry);
 			}

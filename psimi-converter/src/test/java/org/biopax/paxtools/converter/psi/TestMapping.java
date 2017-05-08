@@ -53,6 +53,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.zip.GZIPInputStream;
 
 /**
  *
@@ -68,7 +69,7 @@ public class TestMapping  {
 	/**
 	 * psi-mi test file
 	 */
-	private static final String PSI_MI_TEST_FILE = "10523676-compact.xml";
+	private static final String PSI_MI_TEST_FILE = "10523676-compact.xml.gz";
 	
 	/**
 	 * psi-mitab test file
@@ -81,14 +82,14 @@ public class TestMapping  {
 	 */
 	private static final String BIND_TEST_FILE = "bind-test.psimi.xml";
 	
-	private static final String INTACT_TEST_FILE = "human_31.xml";
+	private static final String INTACT_TEST_FILE = "human_31.xml.gz";
 
     @Test
     public void testApi() throws Exception {
 
     	// unmarshall the data, close the stream
     	PsimiXmlReader reader = new PsimiXmlReader();
-    	InputStream is = getClass().getClassLoader().getResourceAsStream(PSI_MI_TEST_FILE);
+    	InputStream is = new GZIPInputStream(getClass().getClassLoader().getResourceAsStream(PSI_MI_TEST_FILE));
     	EntrySet es = reader.read(is);
     	is.close();
     	Collection<Entry> entries =  es.getEntries();			
@@ -146,7 +147,7 @@ public class TestMapping  {
 		try {
 			// unmarshall the data, close the stream
 			PsimiXmlReader reader = new PsimiXmlReader();
-            InputStream is = getClass().getClassLoader().getResourceAsStream(PSI_MI_TEST_FILE);
+            InputStream is = new GZIPInputStream(getClass().getClassLoader().getResourceAsStream(PSI_MI_TEST_FILE));
 			EntrySet es = reader.read(is);
 			is.close();
 			Collection<Entry> entries =  es.getEntries();
@@ -243,7 +244,7 @@ public class TestMapping  {
 		Model bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();   	
 		try {
 			PsimiXmlReader reader = new PsimiXmlReader();
-            InputStream is = getClass().getClassLoader().getResourceAsStream(INTACT_TEST_FILE);
+            InputStream is = new GZIPInputStream(getClass().getClassLoader().getResourceAsStream(INTACT_TEST_FILE));
 			EntrySet es = reader.read(is);
 			is.close();
 			Collection<Entry> entries =  es.getEntries();		

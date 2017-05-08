@@ -285,6 +285,7 @@ public class L3ToSBGNPDConverter
 		// Register created objects into sbgn construct
 
 		final Sbgn sbgn = factory.createSbgn();
+		//TODO: somehow annotate the SBGN model with BioPAX Model's URI and name (if present)
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
 		sbgn.setMap(map);
 		map.setLanguage(Language.PD.toString());
