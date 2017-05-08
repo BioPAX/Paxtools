@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/BioPAX/Paxtools.svg?branch=master)](https://travis-ci.org/BioPAX/Paxtools)
 
+[![codebeat badge](https://codebeat.co/badges/42fe4ae5-bf26-4268-9bb1-c6e07a0a2b92)](https://codebeat.co/projects/github-com-biopax-paxtools-master)
+
 The [BioPAX](http://www.biopax.org) Object Model, API and utilities implemented in Java.
 Paxtools is developed at [Computational Biology Centre at MSKCC](http://cbio.mskcc.org/) and [Bader Lab, Donnelly Centre, University of Toronto](http://baderlab.org/).
 
