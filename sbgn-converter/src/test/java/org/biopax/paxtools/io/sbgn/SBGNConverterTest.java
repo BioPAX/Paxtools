@@ -216,8 +216,26 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void quickTest() {
-		assertTrue("go:0005758".matches("(go|so):\\d+"));
-		assertTrue("so:0000000".matches("(go|so):\\d+"));
+	public void testSbgnLayoutKegg51() throws Exception
+	{
+		File sbgnFile = new File(getClass().getResource("/hsa00051.sbgn").getFile());
+
+		if (!SbgnUtil.isValid(sbgnFile))
+			System.out.println ("invalid input SBGN");
+
+		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		// Now read from "f" and put the result in "sbgn"
+		Sbgn result = (Sbgn)unmarshaller.unmarshal (sbgnFile);
+		// Assert that the sbgn result contains glyphs
+		assertTrue(!result.getMap().getGlyph().isEmpty());
+
+
+		SBGNLayoutManager lm = new SBGNLayoutManager();
+//		lm.createLayout(result); // infinite loop in
+
+		//TODO: run, add assertions
 	}
+
 }

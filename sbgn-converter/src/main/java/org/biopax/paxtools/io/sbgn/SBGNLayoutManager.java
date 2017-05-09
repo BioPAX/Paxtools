@@ -24,13 +24,13 @@ class SBGNLayoutManager
     private VCompound root;
 
     // mapping between view and layout level
-    private HashMap <VNode, LNode> viewToLayout;
-    private HashMap <String, VNode> layoutToView;
-    private HashMap <Glyph,VNode>  glyphToVNode;
-    private HashMap <String, Glyph> idToGLyph;
-    private HashMap <String, Glyph> idToCompartmentGlyphs;
-    private HashMap <String, Glyph> portIDToOwnerGlyph;
-    private HashMap <String,Arc> idToArcs;
+    private Map <VNode, LNode> viewToLayout;
+    private Map <String, VNode> layoutToView;
+    private Map <Glyph,VNode>  glyphToVNode;
+    private Map <String, Glyph> idToGLyph;
+    private Map <String, Glyph> idToCompartmentGlyphs;
+    private Map <String, Glyph> portIDToOwnerGlyph;
+    private Map <String,Arc> idToArcs;
 
     /**
      * Applies CoSE layout to the given SBGN PD model.
@@ -51,7 +51,7 @@ class SBGNLayoutManager
         layout = new SbgnPDLayout();
 
         // This list holds the glyphs that will be deleted after corresponding glyph is added to child glyph of another glyph.
-        ArrayList <Glyph> deletedList = new ArrayList<Glyph>();
+        List <Glyph> deletedList = new ArrayList<Glyph>();
 
         LGraphManager graphMgr = layout.getGraphManager();
         graphMgr.addRoot(); //TODO: why is it here (some initialisation)?..
@@ -120,7 +120,7 @@ class SBGNLayoutManager
         // add this information to libSbgn objects
         for(Object lNode: layout.getAllNodes())
         {
-            if( (LNode)lNode instanceof SbgnProcessNode)
+            if(lNode instanceof SbgnProcessNode)
             {
                 //Set geometry of corresponding node
                 VNode vNode = layoutToView.get(((SbgnProcessNode) lNode).label);
