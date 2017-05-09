@@ -32,7 +32,7 @@
         <dependency>
         	<groupId>pathwaycommons</groupId>
         	<artifactId>chilay-sbgn</artifactId>
-        	<version>3.0.0</version>
+        	<version>3.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
