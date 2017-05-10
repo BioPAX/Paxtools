@@ -14,6 +14,7 @@ import org.sbgn.bindings.Glyph;
 import org.sbgn.bindings.Sbgn;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.Arrays;
@@ -236,6 +237,10 @@ public class SBGNConverterTest
 //		lm.createLayout(result); // infinite loop in
 
 		//TODO: run, add assertions
+
+		Marshaller marshaller = context.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		marshaller.marshal(result, new FileOutputStream("target/hsa00051.out.sbgn"));
 	}
 
 }
