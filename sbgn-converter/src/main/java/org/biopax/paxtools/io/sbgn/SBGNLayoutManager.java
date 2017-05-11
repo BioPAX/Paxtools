@@ -3,9 +3,9 @@ package org.biopax.paxtools.io.sbgn;
 import java.util.*;
 
 import org.ivis.layout.*;
+import org.ivis.layout.sbgn.SbgnPDLayout;
 import org.ivis.layout.sbgn.SbgnPDNode;
 import org.ivis.layout.sbgn.SbgnProcessNode;
-import org.ivis.layout.sbgn.SbgnPDLayout;
 import org.sbgn.bindings.Arc;
 import org.sbgn.bindings.Port;
 import org.sbgn.bindings.Glyph;
@@ -36,8 +36,9 @@ class SBGNLayoutManager
      * Applies CoSE layout to the given SBGN PD model.
      *
      * @param sbgn model where layout is performed and stored
+     * @param doLayout whether to actually run the CoSE or just complete the SBGN model
      */
-    public void createLayout(final Sbgn sbgn)
+    public void createLayout(final Sbgn sbgn, boolean doLayout)
     {
         viewToLayout = new HashMap();
         glyphToVNode = new HashMap();
@@ -47,14 +48,10 @@ class SBGNLayoutManager
         layoutToView = new HashMap();
         idToArcs = new HashMap<String, Arc>();
 
-        // Using the Compound Spring Embedder layout algorithm
-        layout = new SbgnPDLayout();
+        this.layout = new SbgnPDLayout();
+        final LGraphManager graphMgr = layout.getGraphManager();
+        graphMgr.addRoot();
 
-        // This list holds the glyphs that will be deleted after corresponding glyph is added to child glyph of another glyph.
-        List <Glyph> deletedList = new ArrayList<Glyph>();
-
-        LGraphManager graphMgr = layout.getGraphManager();
-        graphMgr.addRoot(); //TODO: why is it here (some initialisation)?..
         root = new VCompound(new Glyph());
 
         // Detect compartment glyphs and put them in a hashmap;
@@ -64,7 +61,6 @@ class SBGNLayoutManager
             if(g.getClazz().equals("compartment")) {
                 idToCompartmentGlyphs.put(g.getId(), g);
             }
-
             //Set compartmentRef to all children of a Complex node.
             Glyph compartment = (Glyph)g.getCompartmentRef();
             if(compartment != null && g.getClazz().equals("complex")) {
@@ -73,18 +69,21 @@ class SBGNLayoutManager
         }
 
         // Nest glyphs inside compartment glyphs according to their compartmentRef.
-        for (Glyph g: sbgn.getMap().getGlyph())
-        {
-            Glyph containerCompartment = (Glyph)g.getCompartmentRef();
-            if(containerCompartment != null) {
-                idToCompartmentGlyphs.get(containerCompartment.getId()).getGlyph().add(g);
-                deletedList.add(g);
+        // This list holds the glyphs that will be deleted after corresponding glyph
+        // is added to child glyph of another glyph.
+        if(!idToCompartmentGlyphs.isEmpty()) {
+            List<Glyph> deletedList = new ArrayList<Glyph>();
+            for (Glyph g : sbgn.getMap().getGlyph()) {
+                Glyph containerCompartment = (Glyph) g.getCompartmentRef();
+                if (containerCompartment != null) {
+                    idToCompartmentGlyphs.get(containerCompartment.getId()).getGlyph().add(g);
+                    deletedList.add(g);
+                }
             }
-        }
-
-        // Delete the duplicate glyphs, after they are moved to corresponding compartment glyph.
-        for (Glyph g: deletedList) {
-            sbgn.getMap().getGlyph().remove(g);
+            // Delete the duplicate glyphs, after they are moved to corresponding compartment glyph.
+            for (Glyph g : deletedList) {
+                sbgn.getMap().getGlyph().remove(g);
+            }
         }
 
         // initialize the map for keeping ports and their owner glyphs
@@ -108,24 +107,22 @@ class SBGNLayoutManager
         // Create LEdges for ChiLay layout component
         createLEdges(sbgn.getMap().getArc());
 
-        graphMgr.updateBounds(); //TODO: why is it called here and again after the layout is done?
-
         // Apply layout
-        layout.runLayout();
+        if(doLayout) {
+            layout.runLayout();
+        }
 
         graphMgr.updateBounds();
 
         // Here if any SbgnProcessNode node is returned from SBGNPD Layout
         // this means that we will have two additional port info. We should
         // add this information to libSbgn objects
-        for(Object lNode: layout.getAllNodes())
-        {
-            if(lNode instanceof SbgnProcessNode)
-            {
+        for (Object lNode : layout.getAllNodes()) {
+            if (lNode instanceof SbgnProcessNode) {
                 //Set geometry of corresponding node
                 VNode vNode = layoutToView.get(((SbgnProcessNode) lNode).label);
                 Bbox tempBbox = vNode.glyph.getBbox();
-                tempBbox.setX((float)(((SbgnProcessNode) lNode).getLeft()));
+                tempBbox.setX((float) (((SbgnProcessNode) lNode).getLeft()));
                 tempBbox.setY((float) (((SbgnProcessNode) lNode).getTop()));
                 vNode.glyph.setBbox(tempBbox);
 
@@ -139,10 +136,10 @@ class SBGNLayoutManager
 
                 // Set port attributes
                 inputPort.setX((float) (inputLPort.getCenterX()));
-                inputPort.setY((float)(inputLPort.getCenterY()));
+                inputPort.setY((float) (inputLPort.getCenterY()));
                 inputPort.setId(inputLPort.label);
 
-                outputPort.setX((float)(outputLPort.getCenterX()));
+                outputPort.setX((float) (outputLPort.getCenterX()));
                 outputPort.setY((float) (outputLPort.getCenterY()));
                 outputPort.setId((outputLPort.label));
 
@@ -222,12 +219,14 @@ class SBGNLayoutManager
         for(Glyph glyph: glyphList)
         {
             // Here logical operator nodes and process nodes are interested !
-            if(glyph.getClazz().equals("process") ||glyph.getClazz().equals("omitted process")||glyph.getClazz().equals( "uncertain process") || glyph.getClazz().equals("phenotype")||
-                    glyph.getClazz().equals("association") || glyph.getClazz().equals("dissociation") ||glyph.getClazz().equals("and")||glyph.getClazz().equals("or")||glyph.getClazz().equals("not"))
+            if(glyph.getClazz().equals("process") || glyph.getClazz().equals("omitted process")
+                    || glyph.getClazz().equals( "uncertain process") || glyph.getClazz().equals("phenotype")
+                    || glyph.getClazz().equals("association") || glyph.getClazz().equals("dissociation")
+                    || glyph.getClazz().equals("and") || glyph.getClazz().equals("or") || glyph.getClazz().equals("not"))
             {
                 // Add a new value to hash map and also store the node as target node
                 String processGlyphID = glyph.getId();
-                String rootID = "root";
+//                String rootID = "root"; //was not used anywhere
                 nodetoNeighbours.put(processGlyphID, new HashMap<String, Integer>());
                 targetNodes.add(glyph);
 
@@ -285,12 +284,13 @@ class SBGNLayoutManager
                     continue;
 
                 Glyph compartment = idToCompartmentGlyphs.get(entries.get(0).getKey());
-                //Set compartmentRef of process glyph also!
-                glyph.setCompartmentRef(compartment);
-                compartment.getGlyph().add(glyph);
-
-                //Remove it from sbgn also
-                sbgn.getMap().getGlyph().remove(glyph);
+                if(compartment != null) {
+                    //Set compartmentRef of process glyph also!
+                    glyph.setCompartmentRef(compartment);
+                    compartment.getGlyph().add(glyph);
+                    //Remove it from sbgn also
+                    sbgn.getMap().getGlyph().remove(glyph);
+                }
             }
         }
     }
@@ -397,7 +397,6 @@ class SBGNLayoutManager
                 if(!isChildless(glyph))
                 {
                     VCompound v = new VCompound(glyph);
-
                     idToGLyph.put(glyph.getId(), glyph);
                     glyphToVNode.put(glyph, v);
                     parent.children.add(v);
@@ -446,7 +445,7 @@ class SBGNLayoutManager
 
     private void createLNode(VNode vNode, VNode parent)
     {
-        LNode lNode = ((SbgnPDLayout)layout).newNode(vNode);
+        LNode lNode = layout.newNode(vNode);
         lNode.type  = vNode.glyph.getClazz();
         lNode.label = vNode.glyph.getId();
         LGraph rootLGraph = layout.getGraphManager().getRoot();

@@ -50,11 +50,6 @@ public class L3ToSBGNPDConverter
 	private static final Logger log = LoggerFactory.getLogger(L3ToSBGNPDConverter.class);
 
 	/**
-	 * Ubique label.
-	 */
-	public static final String IS_UBIQUE = "IS_UBIQUE";
-
-	/**
 	 * A matching between physical entities and SBGN classes.
 	 */
 	private static Map<Class<? extends BioPAXElement>, String> typeMatchMap;
@@ -134,7 +129,7 @@ public class L3ToSBGNPDConverter
 	 */
 	public L3ToSBGNPDConverter()
 	{
-		this(null, null, true);
+		this(null, null, false);
 	}
 
 	/**
@@ -152,6 +147,10 @@ public class L3ToSBGNPDConverter
 		this.useTwoGlyphsForReversibleConversion = true;
 		this.sbgn2BPMap = new HashMap<String, Set<String>>();
 		this.flattenComplexContent = true;
+	}
+
+	public void setDoLayout(boolean doLayout) {
+		this.doLayout = doLayout;
 	}
 
 	/**
@@ -250,9 +249,7 @@ public class L3ToSBGNPDConverter
 		// Create glyph for conversions and link with arcs
 		for (Conversion conv : model.getObjects(Conversion.class))
 		{
-			// For each conversion we check if we need to create a left-to-right and/or
-			// right-to-left process.
-
+			// For each conversion we check if we need to create a left-to-right and/or right-to-left process.
 			if (conv.getConversionDirection() == null ||
 				conv.getConversionDirection().equals(ConversionDirectionType.LEFT_TO_RIGHT) ||
 				(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
@@ -260,16 +257,14 @@ public class L3ToSBGNPDConverter
 			{
 				createProcessAndConnections(conv, ConversionDirectionType.LEFT_TO_RIGHT);
 			}
-
-			if (conv.getConversionDirection() != null &&
+			else if (conv.getConversionDirection() != null &&
 				(conv.getConversionDirection().equals(ConversionDirectionType.RIGHT_TO_LEFT) ||
 				(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE)) &&
 				useTwoGlyphsForReversibleConversion))
 			{
 				createProcessAndConnections(conv, ConversionDirectionType.RIGHT_TO_LEFT);
 			}
-
-			if (conv.getConversionDirection() != null &&
+			else if (conv.getConversionDirection() != null &&
 				conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
 				!useTwoGlyphsForReversibleConversion)
 			{
@@ -285,7 +280,7 @@ public class L3ToSBGNPDConverter
 		// Register created objects into sbgn construct
 
 		final Sbgn sbgn = factory.createSbgn();
-		//TODO: somehow annotate the SBGN model with BioPAX Model's URI and name (if present)
+		//TODO: how to annotate the SBGN model with BioPAX Model's URI and name?
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
 		sbgn.setMap(map);
 		map.setLanguage(Language.PD.toString());
@@ -294,10 +289,9 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
-		if (doLayout && sbgn.getMap().getGlyph().size() < 1000) { //TODO: always skip layout for graphs >1000 glyphs?
-			(new SBGNLayoutManager()).createLayout(sbgn);
-		}
-		
+		//TODO: always skip layout for graphs >1000 glyphs?
+		(new SBGNLayoutManager()).createLayout(sbgn, doLayout && sbgn.getMap().getGlyph().size() < 1000);
+
 		return sbgn;
 	}
 
@@ -1340,6 +1334,7 @@ public class L3ToSBGNPDConverter
 			label.setText(new DecimalFormat("0.##").format(stoic.getStoichiometricCoefficient()));
 			card.setLabel(label);
 			arc.getGlyph().add(card);
+//			card.setId(convertID(stoic.getUri()+"_"+arc.getId()));
 		}
 
 		Arc.Start start = new Arc.Start();
@@ -1413,7 +1408,6 @@ public class L3ToSBGNPDConverter
 	static
 	{
 		factory = new ObjectFactory();
-
 		typeMatchMap = new HashMap<Class<? extends BioPAXElement>, String>();
 		typeMatchMap.put(Protein.class, MACROMOLECULE.getClazz());
 		typeMatchMap.put(SmallMolecule.class, SIMPLE_CHEMICAL.getClazz());

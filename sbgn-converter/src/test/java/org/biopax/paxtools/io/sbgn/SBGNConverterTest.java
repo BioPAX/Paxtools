@@ -146,8 +146,8 @@ public class SBGNConverterTest
 
 		String out = "target/" + input + ".sbgn";
 
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, false); //no layout
-
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
+		conv.setDoLayout(true);
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
@@ -177,43 +177,45 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testSbgnConversion2() throws Exception
+	public void testConvertBmpPathway() throws Exception
 	{
 		String input = "/signaling-by-bmp";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-
 		String out = "target/" + input + ".sbgn";
 
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(); //also it runs CoSE layout
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
+		conv.setDoLayout(true); //this is not the default anymore
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
 		boolean isValid = SbgnUtil.isValid(outFile);
-
 		if (isValid)
 			System.out.println ("success: " + out + " is valid SBGN");
 		else
 			System.out.println ("warning: " + out + " is invalid SBGN");
 
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-
-		// Now read from "f" and put the result in "sbgn"
-		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
+		// Now read the SBGN model back
+		Sbgn result = (Sbgn) JAXBContext.newInstance("org.sbgn.bindings")
+				.createUnmarshaller().unmarshal (outFile);
 
 		// Assert that the sbgn result contains glyphs
 		assertTrue(!result.getMap().getGlyph().isEmpty());
 
 		// Assert that compartments do not contain members inside
-		for (Glyph g : result.getMap().getGlyph())
-			if (g.getClazz().equals("compartment"));
+		for (Glyph g : result.getMap().getGlyph()) {
+			if (g.getClazz().equals("compartment")) {
+				assertTrue(g.getGlyph().isEmpty());
+			}
+		}
 
 		// Assert that the id mapping is not empty.
 		assertFalse(conv.getSbgn2BPMap().isEmpty());
 
-		for (Set<String> set : conv.getSbgn2BPMap().values())
+		for (Set<String> set : conv.getSbgn2BPMap().values()) {
 			assertFalse(set.isEmpty());
+		}
+
 	}
 
 	@Test
@@ -232,10 +234,8 @@ public class SBGNConverterTest
 		// Assert that the sbgn result contains glyphs
 		assertTrue(!result.getMap().getGlyph().isEmpty());
 
-
-		SBGNLayoutManager lm = new SBGNLayoutManager();
-//		lm.createLayout(result); // infinite loop in
-
+		// infinite loop in LGraph.updateConnected if true
+		(new SBGNLayoutManager()).createLayout(result,false);
 		//TODO: run, add assertions
 
 		Marshaller marshaller = context.createMarshaller();
