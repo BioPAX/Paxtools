@@ -17,9 +17,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
@@ -184,7 +182,14 @@ public class SBGNConverterTest
 		Model level3 = handler.convertFromOWL(in);
 		String out = "target/" + input + ".sbgn";
 
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
+		//use Pathway Commons blacklist.txt
+		Scanner scanner = new Scanner(getClass().getResourceAsStream("/blacklist.txt"));
+		Set<String> bl = new HashSet<String>();
+		while(scanner.hasNextLine()) {
+			bl.add(scanner.nextLine().split("\\t")[0]);
+		}
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(
+				new ListUbiqueDetector(bl),null, false);
 		conv.setDoLayout(true); //this is not the default anymore
 		conv.writeSBGN(level3, out);
 
@@ -234,8 +239,8 @@ public class SBGNConverterTest
 		// Assert that the sbgn result contains glyphs
 		assertTrue(!result.getMap().getGlyph().isEmpty());
 
-		// infinite loop in LGraph.updateConnected if true
-		(new SBGNLayoutManager()).createLayout(result,false);
+		// infinite loop in LGraph.updateConnected when SbgnPDLayout is used
+		(new SBGNLayoutManager()).createLayout(result, true);
 		//TODO: run, add assertions
 
 		Marshaller marshaller = context.createMarshaller();
