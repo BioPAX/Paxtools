@@ -14,11 +14,10 @@ import org.sbgn.bindings.Glyph;
 import org.sbgn.bindings.Sbgn;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Ozgun Babur
@@ -145,8 +144,8 @@ public class SBGNConverterTest
 
 		String out = "target/" + input + ".sbgn";
 
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, false); //no layout
-
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
+		conv.setDoLayout(true);
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
@@ -176,48 +175,77 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testSbgnConversion2() throws Exception
+	public void testConvertBmpPathway() throws Exception
 	{
 		String input = "/signaling-by-bmp";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-
 		String out = "target/" + input + ".sbgn";
 
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(); //also it runs CoSE layout
+		//use Pathway Commons blacklist.txt
+		Scanner scanner = new Scanner(getClass().getResourceAsStream("/blacklist.txt"));
+		Set<String> bl = new HashSet<String>();
+		while(scanner.hasNextLine()) {
+			bl.add(scanner.nextLine().split("\\t")[0]);
+		}
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(
+				new ListUbiqueDetector(bl),null, false);
+		conv.setDoLayout(true); //this is not the default anymore
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
 		boolean isValid = SbgnUtil.isValid(outFile);
-
 		if (isValid)
 			System.out.println ("success: " + out + " is valid SBGN");
 		else
 			System.out.println ("warning: " + out + " is invalid SBGN");
 
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-
-		// Now read from "f" and put the result in "sbgn"
-		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
+		// Now read the SBGN model back
+		Sbgn result = (Sbgn) JAXBContext.newInstance("org.sbgn.bindings")
+				.createUnmarshaller().unmarshal (outFile);
 
 		// Assert that the sbgn result contains glyphs
 		assertTrue(!result.getMap().getGlyph().isEmpty());
 
 		// Assert that compartments do not contain members inside
-		for (Glyph g : result.getMap().getGlyph())
-			if (g.getClazz().equals("compartment"));
+		for (Glyph g : result.getMap().getGlyph()) {
+			if (g.getClazz().equals("compartment")) {
+				assertTrue(g.getGlyph().isEmpty());
+			}
+		}
 
 		// Assert that the id mapping is not empty.
 		assertFalse(conv.getSbgn2BPMap().isEmpty());
 
-		for (Set<String> set : conv.getSbgn2BPMap().values())
+		for (Set<String> set : conv.getSbgn2BPMap().values()) {
 			assertFalse(set.isEmpty());
+		}
+
 	}
 
 	@Test
-	public void quickTest() {
-		assertTrue("go:0005758".matches("(go|so):\\d+"));
-		assertTrue("so:0000000".matches("(go|so):\\d+"));
+	public void testSbgnLayoutKegg51() throws Exception
+	{
+		File sbgnFile = new File(getClass().getResource("/hsa00051.sbgn").getFile());
+
+		if (!SbgnUtil.isValid(sbgnFile))
+			System.out.println ("invalid input SBGN");
+
+		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		// Now read from "f" and put the result in "sbgn"
+		Sbgn result = (Sbgn)unmarshaller.unmarshal (sbgnFile);
+		// Assert that the sbgn result contains glyphs
+		assertTrue(!result.getMap().getGlyph().isEmpty());
+
+		// infinite loop in LGraph.updateConnected when SbgnPDLayout is used
+		(new SBGNLayoutManager()).createLayout(result, true);
+		//TODO: run, add assertions
+
+		Marshaller marshaller = context.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		marshaller.marshal(result, new FileOutputStream("target/hsa00051.out.sbgn"));
 	}
+
 }

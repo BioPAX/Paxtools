@@ -13,6 +13,32 @@ import java.util.Set;
 public interface Model extends Serializable
 {
     /**
+     * URI of this BioPAX Model.
+     *
+     * This can be used in many ways to refer to this model when:
+     *  - logging;
+     *  - merging several models;
+     *  - converting to or from another data format, such as GMT (GSEA);
+     *  - saving to or reading from RDF/XML file (e.g., save/read a special Provenance object)
+     *
+     * @return model's uri
+     */
+    String getUri();
+
+    void setUri(String modelUri);
+
+    /**
+     * URI of this BioPAX Model.
+     *
+     * This can be used in many ways; see {@link #getUri()}.
+     *
+     * @return model's name
+     */
+    String getName();
+
+    void setName(String modelName);
+
+    /**
      * This method adds the given object to this model. If the object
      * points to other objects that are not in the model, it is user's
      * responsibility to add them into the model as well.

@@ -60,25 +60,6 @@
  <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
 </bp:Stoichiometry>
 
-<bp:Protein rdf:ID="Protein_8450d461babe21846d0456bad2e135ab">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201448" />
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMPR1A</bp:displayName>
- <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_756afcdbc4334f3a86d1a0d5fde2360d" />
- <bp:feature rdf:resource="#ModificationFeature_ef51b638716a6d21119e9487fb5d1362" />
- <bp:feature rdf:resource="#ModificationFeature_54c7c3ceb6b9bb29f7ddd5397c8faf07" />
- <bp:feature rdf:resource="#ModificationFeature_25c4758b3ceede844a39fbc4ac2ae4bf" />
- <bp:feature rdf:resource="#FragmentFeature_5b4bd174c60ccfba2fd2f18722f61075" />
- <bp:feature rdf:resource="#ModificationFeature_3353dd72f0897952f83df52e16c7d64e" />
- <bp:entityReference rdf:resource="http://identifiers.org/uniprot/P36894" />
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p-S215,S216,S218,S220-BMPR1A</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMRA_HUMAN</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phospho-Bone morphogenetic protein receptor type IA</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p-4S-BMPR1A</bp:name>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6364</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201448</bp:comment>
- <bp:dataSource rdf:resource="#reactome" />
-</bp:Protein>
-
 <bp:SequenceSite rdf:ID="SequenceSite_a0270a25e198477933c19805ce4cce33">
  <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">283</bp:sequencePosition>
  <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
@@ -138,6 +119,11 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite1558</bp:comment>
 </bp:SequenceSite>
 
+<bp:RelationshipXref rdf:ID="RelationshipXref_064b1991da601a9d74e058fa8f66414c">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201804</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:RelationshipXref>
+
 <bp:SequenceInterval rdf:ID="SequenceInterval_9e93152063632e5717bc54a8b877a7e5">
  <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_7851ddc2530ec624b6ce348f95df910e" />
  <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_aa9acd9d58ee8b99347c7c4b7d55e415" />
@@ -169,13 +155,14 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BSP1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mad-related protein 1</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD1_HUMAN Reviewed; 465 AA.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_4086</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.gene-regulation.com/#proteinref_gene_4086</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-38538N_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_001003688</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_rcsb_pdb_1KHU_see-also</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_4086</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_005891</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Transcriptional modulator activated by BMP (bonemorphogenetic proteins) type 1 receptor kinase. SMAD1 is areceptor-regulated SMAD (R-SMAD). SMAD1/OAZ1/PSMB4 complexmediates the degradation of the CREBBP/EP300 repressor SNIP1. Mayact synergistically with SMAD4 and YY1 in bone morphogeneticprotein (BMP)-mediated cardiac-specific gene expression.{ECO:0000269|PubMed:12097147}.SUBUNIT: Found in a complex with SMAD4 and YY1. Interacts withHGS, NANOG and ZCCHC12 (By similarity). Upon C-terminusphosphorylation: forms trimers with another SMAD1 and the co-SMADSMAD4. Interacts with PEBP2-alpha subunit, CREB-binding protein(CBP), p300, SMURF1, SMURF2, USP15 and HOXC8. Associates withZNF423 or ZNF521 in response to BMP2 leading to activatetranscription of BMP target genes. Interacts with SKOR1. Interacts(via MH2 domain) with LEMD3. Binding to LEMD3 results in at leasta partial reduction of receptor-mediated phosphorylation. Forms aternary complex with PSMB4 and OAZ1 before PSMB4 is incorporatedinto the 20S proteasome. Found in a macromolecular complex withFAM83G. Interacts (via MH2 domain) with FAM83G (via MH2 domain);in a SMAD4-independent manner. Interacts with ZC3H3 (Bysimilarity). Interacts with TMEM119 (By similarity). Interacts(via MH1 and MH2 domains) with ZNF8 (By similarity).{ECO:0000250|UniProtKB:P70340, ECO:0000269|PubMed:10660046,ECO:0000269|PubMed:11779505, ECO:0000269|PubMed:12097147,ECO:0000269|PubMed:14630787, ECO:0000269|PubMed:15647271,ECO:0000269|PubMed:17292623, ECO:0000269|PubMed:21947082,ECO:0000269|PubMed:24554596}.SUBCELLULAR LOCATION: Cytoplasm {ECO:0000269|PubMed:15647271}.Nucleus {ECO:0000269|PubMed:15647271,ECO:0000269|PubMed:22781750}. Note=Cytoplasmic in the absence ofligand. Migrates to the nucleus when complexed with SMAD4(PubMed:15647271). Co-localizes with LEMD3 at the nucleus innermembrane (PubMed:15647271). {ECO:0000269|PubMed:15647271}.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=1;IsoId=Q15797-1; Sequence=Displayed;Name=2;IsoId=Q15797-2; Sequence=VSP_057163, VSP_057164, VSP_057165,VSP_057166;Note=No experimental confirmation available.;TISSUE SPECIFICITY: Ubiquitous. Highest expression seen in theheart and skeletal muscle.DOMAIN: The MH2 domain mediates phosphorylation-dependenttrimerization through L3 loop binding of phosphoserines in theadjacent subunit. {ECO:0000269|PubMed:11779505}.PTM: Phosphorylation of the C-terminal SVS motif by BMP type 1receptor kinase activates SMAD1 by promoting dissociation from thereceptor and trimerization with SMAD4.{ECO:0000269|PubMed:11779505, ECO:0000269|PubMed:21690388,ECO:0000269|PubMed:9136927}.PTM: Ubiquitinated by SMAD-specific E3 ubiquitin ligase SMURF1,leading to its degradation. Monoubiquitinated, leading to preventDNA-binding. Deubiquitination by USP15 alleviates inhibition andpromotes activation of TGF-beta target genes.{ECO:0000269|PubMed:21947082}.DISEASE: Note=SMAD1 variants may be associated with susceptibilityto pulmonary hypertension, a disorder characterized by plexiformlesions of proliferating endothelial cells in pulmonaryarterioles. The lesions lead to elevated pulmonary arterialpression, right ventricular failure, and death. The disease canoccur from infancy throughout life and it has a mean age at onsetof 36 years. Penetrance is reduced. Although familial pulmonaryhypertension is rare, cases secondary to known etiologies are morecommon and include those associated with the appetite-suppressantdrugs. {ECO:0000269|PubMed:21898662}.SIMILARITY: Belongs to the dwarfin/SMAD family. {ECO:0000305}.SIMILARITY: Contains 1 MH1 (MAD homology 1) domain.{ECO:0000255|PROSITE-ProRule:PRU00438}.SIMILARITY: Contains 1 MH2 (MAD homology 2) domain.{ECO:0000255|PROSITE-ProRule:PRU00439}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A4086</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/XP_011530265</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.phosphosite.org/phosphosite.owl#po_1044</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED ProteinRef_SMAD1__9606</bp:comment>
@@ -227,7 +214,6 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: On ligand binding, forms a receptor complex consistingof two type II and two type I transmembrane serine/threoninekinases. Type II receptors phosphorylate and activate type Ireceptors which autophosphorylate, then bind and activate SMADtranscriptional regulators. Receptor for BMP2, BMP4, GDF5 andGDF6. Positively regulates chondrocyte differentiation throughGDF5 interaction. Mediates induction of adipogenesis by GDF6.{ECO:0000250|UniProtKB:P36895}.CATALYTIC ACTIVITY: ATP + [receptor-protein] = ADP + [receptor-protein] phosphate.COFACTOR:Name=Mg(2+); Xref=ChEBI:CHEBI:18420; Evidence={ECO:0000250};Name=Mn(2+); Xref=ChEBI:CHEBI:29035; Evidence={ECO:0000250};SUBUNIT: Interacts with BMP2 (PubMed:10881198, PubMed:18937504).Interacts with low affinity with GDF5; positively regulateschondrocyte differentiation (PubMed:24098149).{ECO:0000269|PubMed:10881198, ECO:0000269|PubMed:18937504,ECO:0000269|PubMed:24098149}.SUBCELLULAR LOCATION: Membrane; Single-pass type I membraneprotein.TISSUE SPECIFICITY: Highly expressed in skeletal muscle.DISEASE: Juvenile polyposis syndrome (JPS) [MIM:174900]: Autosomaldominant gastrointestinal hamartomatous polyposis syndrome inwhich patients are at risk for developing gastrointestinalcancers. The lesions are typified by a smooth histologicalappearance, predominant stroma, cystic spaces and lack of a smoothmuscle core. Multiple juvenile polyps usually occur in a number ofMendelian disorders. Sometimes, these polyps occur withoutassociated features as in JPS; here, polyps tend to occur in thelarge bowel and are associated with an increased risk of colon andother gastrointestinal cancers. {ECO:0000269|PubMed:11536076,ECO:0000269|PubMed:12136244, ECO:0000269|PubMed:12417513,ECO:0000269|PubMed:12630959}. Note=The disease is caused bymutations affecting the gene represented in this entry.DISEASE: Polyposis syndrome, mixed hereditary 2 (HMPS2)[MIM:610069]: A disease is characterized by atypical juvenilepolyps, colonic adenomas, and colorectal carcinomas. Note=Thedisease is caused by mutations affecting the gene represented inthis entry.DISEASE: Note=A microdeletion of chromosome 10q23 involving BMPR1Aand PTEN is a cause of chromosome 10q23 deletion syndrome, whichshows overlapping features of the following three disorders:Bannayan-Zonana syndrome, Cowden disease and juvenile polyposissyndrome. {ECO:0000269|PubMed:11381269,ECO:0000269|PubMed:16525031}.SIMILARITY: Belongs to the protein kinase superfamily. TKL Ser/Thrprotein kinase family. TGFB receptor subfamily. {ECO:0000305}.SIMILARITY: Contains 1 GS domain. {ECO:0000255|PROSITE-ProRule:PRU00585}.SIMILARITY: Contains 1 protein kinase domain.{ECO:0000255|PROSITE-ProRule:PRU00159}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_uniprotkb_P36894_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-5793N_identity</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A657</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMR1A_HUMAN Reviewed; 532 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_004320</bp:comment>
 </bp:ProteinReference>
@@ -320,11 +306,6 @@
  <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_9f3d6eab406bce649cd22ff7e2e743d2" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceInterval5647</bp:comment>
 </bp:SequenceInterval>
-
-<bp:SequenceSite rdf:ID="SequenceSite_022c1950e11f4e829c4a4d6f9cfbb32f">
- <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">939</bp:sequencePosition>
- <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
-</bp:SequenceSite>
 
 <bp:SequenceSite rdf:ID="SequenceSite_18cdbc37c0f1e6a8d50d768a6a4fb5b3">
  <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
@@ -681,11 +662,6 @@
  <bp:featureLocation rdf:resource="#SequenceSite_84252c81a82fb8c799f8355cd9dc870c" />
 </bp:ModificationFeature>
 
-<bp:FragmentFeature rdf:ID="FragmentFeature_04610bd433f7645732cd9bf5d09f24ec">
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5628</bp:comment>
- <bp:featureLocation rdf:resource="#SequenceInterval_9e93152063632e5717bc54a8b877a7e5" />
-</bp:FragmentFeature>
-
 <bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-201841">
  <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-201841.1</bp:comment>
@@ -717,6 +693,11 @@
  <bp:xref rdf:resource="#UnificationXref_gene_ontology_GO_0031901" />
  <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">early endosome membrane</bp:term>
 </bp:CellularLocationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_392f8c921d3b936c856433e00d8286a3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201826</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:RelationshipXref>
 
 <bp:UnificationXref rdf:ID="UnificationXref_gene_ontology_GO_0031901">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0031901</bp:id>
@@ -824,37 +805,33 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite12251</bp:comment>
 </bp:SequenceSite>
 
-<bp:ModificationFeature rdf:ID="ModificationFeature_a03a8530856c88faf89f65d65b119039">
- <bp:modificationType rdf:resource="#SequenceModificationVocabulary_ac5aeb4d5f08ef74331fc7aa49f56564" />
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#ModificationFeature1096</bp:comment>
- <bp:featureLocation rdf:resource="#SequenceSite_19104c18eecaf2cc3bbbc2d5e2d415ea" />
-</bp:ModificationFeature>
+<bp:PathwayStep rdf:ID="PathwayStep_a8303fe3da3ed312533f2fc00bfc7794">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#PathwayStep2507</bp:comment>
+ <bp:stepProcess rdf:resource="http://identifiers.org/reactome/R-HSA-201423" />
+</bp:PathwayStep>
 
 <bp:SequenceSite rdf:ID="SequenceSite_b1cbd9e0f2119843c2fab701f378419d">
  <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">87</bp:sequencePosition>
  <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
 </bp:SequenceSite>
 
-<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-201828">
- <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-201828.1</bp:comment>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201828</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+<bp:UnificationXref rdf:ID="UnificationXref_uniprot_knowledgebase_O43541">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O43541</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot knowledgebase</bp:db>
 </bp:UnificationXref>
 
-<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-201826">
- <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-201826.1</bp:comment>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201826</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
-</bp:UnificationXref>
+<bp:SequenceSite rdf:ID="SequenceSite_9f3d6eab406bce649cd22ff7e2e743d2">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite12264</bp:comment>
+</bp:SequenceSite>
 
 <bp:Protein rdf:ID="Protein_076a42db0f188c8e1f4be84a9827439f">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-173530" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_d450c80701fe55bcb6f3fc19769a44b7" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_ec1638b7e97732652864ba8c8300ef99" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Nuclear ubiquitin ligase</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:entityReference rdf:resource="#ProteinReference_e56f63f95d725d9e5c54baa484cc7e05" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ubiquitin conjugating enzyme</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 173530</bp:comment>
@@ -880,17 +857,14 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
 </bp:UnificationXref>
 
-<bp:PublicationXref rdf:about="http://identifiers.org/pubmed/7791754">
- <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1995</bp:year>
- <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Liu, F</bp:author>
- <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ventura, F</bp:author>
- <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Massague, J</bp:author>
- <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Doody, J</bp:author>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">7791754</bp:id>
- <bp:source rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mol Cell Biol 15:3479-86</bp:source>
- <bp:title rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Human type II receptor for bone morphogenic proteins (BMPs): extension of the two-kinase receptor model to the BMPs</bp:title>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
-</bp:PublicationXref>
+<bp:ProteinReference rdf:ID="ProteinReference_47a5cac95ce0df52d64e02d7865b28a3">
+ <bp:xref rdf:resource="#RelationshipXref_392f8c921d3b936c856433e00d8286a3" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/O00238" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/P36894" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p-4S-BMPRI</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phospho-Type I receptor</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">auto-generated generic entity reference</bp:comment>
+</bp:ProteinReference>
 
 <bp:PublicationXref rdf:about="http://identifiers.org/pubmed/15975920">
  <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">2005</bp:year>
@@ -985,12 +959,12 @@
 </bp:PublicationXref>
 
 <bp:Protein rdf:ID="Protein_555ce941be098258c9e940abc5e71afa">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201444" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_a396b71dd2ffd3623024f47c14b0be6a" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_e0680baeb4b55e7453ea6e5336accc57" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_2c1ada6ac22c310f255c29ad6891aca3" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phospho-R-SMAD1/5/9</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:entityReference rdf:resource="#ProteinReference_1dbbe41a40e4a2eac7353b64ab6a18e5" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6381</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201444</bp:comment>
@@ -1047,12 +1021,10 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
 </bp:UnificationXref>
 
-<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-201804">
- <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-201804.1</bp:comment>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201804</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
-</bp:UnificationXref>
+<bp:SequenceSite rdf:ID="SequenceSite_022c1950e11f4e829c4a4d6f9cfbb32f">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">939</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+</bp:SequenceSite>
 
 <bp:SequenceSite rdf:ID="SequenceSite_1c3b428f54377bf3c9112014bec56be5">
  <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1539</bp:sequencePosition>
@@ -1096,11 +1068,11 @@
 </bp:SequenceSite>
 
 <bp:Protein rdf:ID="Protein_ca0845258d5f992ee6ddfe33a4337bde">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-173495" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_458c78887ab01bf21526db869cbc63b4" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_3cc2be7ef070da8a4c35f4e1bbbd4831" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">I-SMAD</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_d7b7576a6ce6c6961a2de2e8c0608786" />
+ <bp:entityReference rdf:resource="#ProteinReference_6ffcaaca5b3eb087aaf28a9b1f980aad" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6372</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 173495</bp:comment>
@@ -1239,7 +1211,6 @@
 </bp:RelationshipXref>
 
 <bp:Protein rdf:ID="Protein_a677b6a91173b0e7e314d0883f255c13">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201828" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_0fb838beeeedb3dc55e04233876f6c20" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_d4996defd8469be768be8c3732ef0607" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_47e36f4e4699accec2a19e60c8adf638" />
@@ -1247,6 +1218,7 @@
  <bp:memberPhysicalEntity rdf:resource="#Protein_3bae5614dad9983f91f20c00dcc90102" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ligand Trap</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_b761180db8a874567188c589b45cab17" />
+ <bp:entityReference rdf:resource="#ProteinReference_4795997f53ac30c0fcc81fc7e8ee59c4" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201828</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6349</bp:comment>
@@ -1362,16 +1334,14 @@
  <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_10841_secondary-ac" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H16N5O13P3</bp:chemicalFormula>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP</bp:displayName>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine triphosphate</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H4atp</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Nc1ncnc2n(cnc12)[C@@H]1O[C@H](COP(O)(=O)OP(O)(=O)OP(O)(O)=O)[C@@H](O)[C@H]1O</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H16N5O13P3</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine triphosphate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-triphosphate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADENOSINE-5&apos;-TRIPHOSPHATE</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">506.996</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">507.18100</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:15422</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H4atp</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">0</bp:name>
+ <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">507.181</bp:molecularWeight>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">is_conjugate_acid_of CHEBI:57299</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/hmdb/HMDB00538</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.inoh.org/biopax/IMR_0001351_ATP</bp:comment>
@@ -1428,12 +1398,6 @@
  <bp:dataSource rdf:resource="#reactome" />
  <bp:conversionDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:conversionDirection>
 </bp:BiochemicalReaction>
-
-<bp:SequenceSite rdf:ID="SequenceSite_9f3d6eab406bce649cd22ff7e2e743d2">
- <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
- <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite12264</bp:comment>
-</bp:SequenceSite>
 
 <bp:BiochemicalReaction rdf:about="http://identifiers.org/reactome/R-HSA-201472">
  <bp:xref rdf:resource="http://identifiers.org/pubmed/11509558" />
@@ -1548,9 +1512,9 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-57571N_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD5_HUMAN Reviewed; 465 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_4090</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_4090</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_genbank_indentifier_AAC50791_see-also</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_04381_identity</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A4090</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/XP_016864959</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Transcriptional modulator activated by BMP (bonemorphogenetic proteins) type 1 receptor kinase. SMAD5 is areceptor-regulated SMAD (R-SMAD).SUBUNIT: May form trimers with the co-SMAD SMAD4. Interacts withPEBP2-alpha subunit and SMURF1. Interacts with SUV39H1 andSUV39H2. Interacts (via MH2 domain) with LEMD3. Interacts withWWP1. Interacts with TMEM119 (By similarity). Interacts with ZNF8(PubMed:12370310). {ECO:0000250|UniProtKB:P97454,ECO:0000269|PubMed:12370310, ECO:0000269|PubMed:15107829,ECO:0000269|PubMed:15647271}.SUBCELLULAR LOCATION: Cytoplasm. Nucleus. Note=Cytoplasmic in theabsence of ligand. Migrates to the nucleus when complexed withSMAD4.TISSUE SPECIFICITY: Ubiquitous.PTM: Phosphorylated on serine by BMP (bone morphogenetic proteins)type 1 receptor kinase.PTM: Ubiquitin-mediated proteolysis by SMAD-specific E3 ubiquitinligase SMURF1.SIMILARITY: Belongs to the dwarfin/SMAD family. {ECO:0000305}.SIMILARITY: Contains 1 MH1 (MAD homology 1) domain.{ECO:0000255|PROSITE-ProRule:PRU00438}.SIMILARITY: Contains 1 MH2 (MAD homology 2) domain.{ECO:0000255|PROSITE-ProRule:PRU00439}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
 </bp:ProteinReference>
@@ -1598,6 +1562,8 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mothers against DPP homolog 4</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD 4</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD4</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_4089</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.gene-regulation.com/#proteinref_gene_4089</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD4_HUMAN Reviewed; 552 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.phosphosite.org/phosphosite.owl#po_1845</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED ProteinRef_SMAD4__10090</bp:comment>
@@ -1605,7 +1571,6 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: In muscle physiology, plays a central role in thebalance between atrophy and hypertrophy. When recruited by MSTN,promotes atrophy response via phosphorylated SMAD2/4. MSTNdecrease causes SMAD4 release and subsequent recruitment by theBMP pathway to promote hypertrophy via phosphorylated SMAD1/5/8.Acts synergistically with SMAD1 and YY1 in bone morphogeneticprotein (BMP)-mediated cardiac-specific gene expression. Binds toSMAD binding elements (SBEs) (5&apos;-GTCT/AGAC-3&apos;) within BMP responseelement (BMPRE) of cardiac activating regions (By similarity).Common SMAD (co-SMAD) is the coactivator and mediator of signaltransduction by TGF-beta (transforming growth factor). Componentof the heterotrimeric SMAD2/SMAD3-SMAD4 complex that forms in thenucleus and is required for the TGF-mediated signaling. Promotesbinding of the SMAD2/SMAD4/FAST-1 complex to DNA and provides anactivation function required for SMAD1 or SMAD2 to stimulatetranscription. Component of the multimeric SMAD3/SMAD4/JUN/FOScomplex which forms at the AP1 promoter site; required forsynergistic transcriptional activity in response to TGF-beta. Mayact as a tumor suppressor. Positively regulates PDPK1 kinaseactivity by stimulating its dissociation from the 14-3-3 proteinYWHAQ which acts as a negative regulator. {ECO:0000250,ECO:0000269|PubMed:17327236, ECO:0000269|PubMed:9389648}.SUBUNIT: Found in a complex with SMAD1 and YY1 (By similarity).Interacts with CITED2 (By similarity). Monomer; in the absence ofTGF-beta activation. Heterodimer; on TGF-beta activation. Composedof two molecules of a C-terminally phosphorylated R-SMAD molecule,SMAD2 or SMAD3, and one molecule of SMAD4 to form thetranscriptional active SMAD2/SMAD3-SMAD4 complex. Found in aternary complex composed of SMAD4, STK11/LKB1 and STK11IP.Interacts with ATF2, COPS5, DACH1, MSG1, SKI, STK11/LKB1, STK11IPand TRIM33. Interacts with ZNF423; the interaction takes place inresponse to BMP2 leading to activation of transcription of BMPtarget genes. Interacts with ZNF521; the interaction takes placein response to BMP2 leading to activation of transcription of BMPtarget genes. Interacts with USP9X. Interacts (via the MH1 and MH2domains) with RBPMS. Interacts with WWTR1 (via coiled-coildomain). Component of the multimeric complex SMAD3/SMAD4/JUN/FOSwhich forms at the AP1 promoter site; required for synergistictranscriptional activity in response to TGF-beta. Interacts withCITED1. Interacts with PDPK1 (via PH domain) (By similarity).Interacts with VPS39; this interaction affects heterodimerformation with SMAD3, but not with SMAD2, and leads to inhibitionof SMAD3-dependent transcription activation. Interactions withVPS39 and SMAD2 may be mutually exclusive. Interacts with ZC3H3(By similarity). Interacts (via MH2 domain) with ZNF451 (via N-terminal zinc-finger domains) (PubMed:24324267). Identified in acomplex that contains at least ZNF451, SMAD2, SMAD3 and SMAD4(PubMed:24324267). Interacts weakly with ZNF8 (PubMed:12370310).Interacts with NUP93 and IPO7; translocates SMAD4 to the nucleusthrough the NPC upon BMP7 stimulation resulting in activation ofSMAD4 signaling (PubMed:26878725). Interacts with CREB3L1, theinteraction takes place upon TGFB1 induction and SMAD4 acts asCREB3L1 coactivator to induce the expression of genes involved inthe assembly of collagen extracellular matrix (PubMed:25310401).{ECO:0000250|UniProtKB:O70437, ECO:0000250|UniProtKB:P97471,ECO:0000269|PubMed:10660046, ECO:0000269|PubMed:11224571,ECO:0000269|PubMed:11741830, ECO:0000269|PubMed:11818334,ECO:0000269|PubMed:12370310, ECO:0000269|PubMed:12941698,ECO:0000269|PubMed:14525983, ECO:0000269|PubMed:14630787,ECO:0000269|PubMed:15350224, ECO:0000269|PubMed:15799969,ECO:0000269|PubMed:15820681, ECO:0000269|PubMed:17099224,ECO:0000269|PubMed:17327236, ECO:0000269|PubMed:18568018,ECO:0000269|PubMed:19135894, ECO:0000269|PubMed:24324267,ECO:0000269|PubMed:25310401, ECO:0000269|PubMed:26878725,ECO:0000269|PubMed:9670020, ECO:0000269|PubMed:9707553}.SUBCELLULAR LOCATION: Cytoplasm {ECO:0000269|PubMed:15799969,ECO:0000269|PubMed:17327236}. Nucleus{ECO:0000269|PubMed:15799969}. Note=Cytoplasmic in the absence ofligand. Migrates to the nucleus when complexed with R-SMAD(PubMed:15799969). PDPK1 prevents its nuclear translocation inresponse to TGF-beta (PubMed:17327236).{ECO:0000269|PubMed:15799969, ECO:0000269|PubMed:17327236}.DOMAIN: The MH1 domain is required for DNA binding.DOMAIN: The MH2 domain is required for both homomeric andheteromeric interactions and for transcriptional regulation.Sufficient for nuclear import.PTM: Phosphorylated by PDPK1. {ECO:0000269|PubMed:17327236}.PTM: Monoubiquitinated on Lys-519 by E3 ubiquitin-protein ligaseTRIM33. Monoubiquitination hampers its ability to form a stablecomplex with activated SMAD2/3 resulting in inhibition of TGF-beta/BMP signaling cascade. Deubiqitination by USP9X restores itscompetence to mediate TGF-beta signaling.{ECO:0000269|PubMed:19135894}.DISEASE: Pancreatic cancer (PNCA) [MIM:260350]: A malignantneoplasm of the pancreas. Tumors can arise from both the exocrineand endocrine portions of the pancreas, but 95% of them developfrom the exocrine portion, including the ductal epithelium, acinarcells, connective tissue, and lymphatic tissue.{ECO:0000269|PubMed:8553070}. Note=The gene represented in thisentry may be involved in disease pathogenesis.DISEASE: Juvenile polyposis syndrome (JPS) [MIM:174900]: Autosomaldominant gastrointestinal hamartomatous polyposis syndrome inwhich patients are at risk for developing gastrointestinalcancers. The lesions are typified by a smooth histologicalappearance, predominant stroma, cystic spaces and lack of a smoothmuscle core. Multiple juvenile polyps usually occur in a number ofMendelian disorders. Sometimes, these polyps occur withoutassociated features as in JPS; here, polyps tend to occur in thelarge bowel and are associated with an increased risk of colon andother gastrointestinal cancers. {ECO:0000269|PubMed:12417513,ECO:0000269|PubMed:9811934}. Note=The disease is caused bymutations affecting the gene represented in this entry.DISEASE: Juvenile polyposis/hereditary hemorrhagic telangiectasiasyndrome (JP/HHT) [MIM:175050]: JP/HHT syndrome phenotype consistsof the coexistence of juvenile polyposis (JIP) and hereditaryhemorrhagic telangiectasia (HHT) [MIM:187300] in a singleindividual. JIP and HHT are autosomal dominant disorders withdistinct and non-overlapping clinical features. The former, aninherited gastrointestinal malignancy predisposition, is caused bymutations in SMAD4 or BMPR1A, and the latter is a vascularmalformation disorder caused by mutations in ENG or ACVRL1. Allfour genes encode proteins involved in the transforming-growth-factor-signaling pathway. Although there are reports of patientsand families with phenotypes of both disorders combined, thegenetic etiology of this association is unknown.{ECO:0000269|PubMed:15031030}. Note=The disease is caused bymutations affecting the gene represented in this entry.DISEASE: Colorectal cancer (CRC) [MIM:114500]: A complex diseasecharacterized by malignant lesions arising from the inner wall ofthe large intestine (the colon) and the rectum. Geneticalterations are often associated with progression frompremalignant lesion (adenoma) to invasive adenocarcinoma. Riskfactors for cancer of the colon and rectum include colon polyps,long-standing ulcerative colitis, and genetic family history.{ECO:0000269|PubMed:16959974}. Note=The disease may be caused bymutations affecting the gene represented in this entry.DISEASE: Note=SMAD4 variants may be associated with susceptibilityto pulmonary hypertension, a disorder characterized by plexiformlesions of proliferating endothelial cells in pulmonaryarterioles. The lesions lead to elevated pulmonary arterialpression, right ventricular failure, and death. The disease canoccur from infancy throughout life and it has a mean age at onsetof 36 years. Penetrance is reduced. Although familial pulmonaryhypertension is rare, cases secondary to known etiologies are morecommon and include those associated with the appetite-suppressantdrugs. {ECO:0000269|PubMed:21898662}.DISEASE: Myhre syndrome (MYHRS) [MIM:139210]: A syndromecharacterized by pre- and postnatal growth deficiency, mentalretardation, generalized muscle hypertrophy and striking muscularbuild, decreased joint mobility, cryptorchidism, and unusualfacies. Dysmorphic facial features include microcephaly, midfacehypoplasia, prognathism, and blepharophimosis. Typical skeletalanomalies are short stature, square body shape, broad ribs, iliachypoplasia, brachydactyly, flattened vertebrae, and thickenedcalvaria. Other features, such as congenital heart disease, mayalso occur. {ECO:0000269|PubMed:22158539,ECO:0000269|PubMed:22243968}. Note=The disease is caused bymutations affecting the gene represented in this entry.SIMILARITY: Belongs to the dwarfin/SMAD family. {ECO:0000305}.SIMILARITY: Contains 1 MH1 (MAD homology 1) domain.{ECO:0000255|PROSITE-ProRule:PRU00438}.SIMILARITY: Contains 1 MH2 (MAD homology 2) domain.{ECO:0000255|PROSITE-ProRule:PRU00439}.WEB RESOURCE: Name=Atlas of Genetics and Cytogenetics in Oncologyand Haematology;URL=&quot;http://atlasgeneticsoncology.org/Genes/SMAD4ID371.html&quot;;WEB RESOURCE: Name=Mendelian genes SMAD family member 4 (SMAD4);Note=Leiden Open Variation Database (LOVD);URL=&quot;http://www.lovd.nl/SMAD4&quot;; COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_NCBI_Gene_4089_gene_product</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_rcsb_pdb_1DD1_see-also</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A4089</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED ProteinRef_SMAD4__9606</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-31512N_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_4089</bp:comment>
@@ -1639,10 +1604,10 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMPR-2</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PPH1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMPR2</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_659</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-5943N_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_NCBI_Gene_659_gene_product</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMPR2_HUMAN Reviewed; 1038 AA.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A659</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_001195</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-5794N_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: On ligand binding, forms a receptor complex consistingof two type II and two type I transmembrane serine/threoninekinases. Type II receptors phosphorylate and activate type Ireceptors which autophosphorylate, then bind and activate SMADtranscriptional regulators. Binds to BMP7, BMP2 and, lessefficiently, BMP4. Binding is weak but enhanced by the presence oftype I receptors for BMPs. Mediates induction of adipogenesis byGDF6. {ECO:0000250|UniProtKB:O35607}.CATALYTIC ACTIVITY: ATP + [receptor-protein] = ADP + [receptor-protein] phosphate.COFACTOR:Name=Mg(2+); Xref=ChEBI:CHEBI:18420; Evidence={ECO:0000250};Name=Mn(2+); Xref=ChEBI:CHEBI:29035; Evidence={ECO:0000250};SUBUNIT: Interacts with GDF5. {ECO:0000269|PubMed:21976273}.SUBCELLULAR LOCATION: Cell membrane {ECO:0000269|PubMed:25187962};Single-pass type I membrane protein.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=1;IsoId=Q13873-1; Sequence=Displayed;Name=2;IsoId=Q13873-2; Sequence=VSP_054441, VSP_054442;TISSUE SPECIFICITY: Highly expressed in heart and liver.DISEASE: Pulmonary hypertension, primary, 1 (PPH1) [MIM:178600]: Arare disorder characterized by plexiform lesions of proliferatingendothelial cells in pulmonary arterioles. The lesions lead toelevated pulmonary arterial pression, right ventricular failure,and death. The disease can occur from infancy throughout life andit has a mean age at onset of 36 years. Penetrance is reduced.Although familial pulmonary hypertension is rare, cases secondaryto known etiologies are more common and include those associatedwith the appetite-suppressant drugs. {ECO:0000269|PubMed:10903931,ECO:0000269|PubMed:10973254, ECO:0000269|PubMed:11015450,ECO:0000269|PubMed:11115378, ECO:0000269|PubMed:12358323,ECO:0000269|PubMed:15965979, ECO:0000269|PubMed:25187962}.Note=The disease is caused by mutations affecting the generepresented in this entry.DISEASE: Pulmonary venoocclusive disease 1, autosomal dominant(PVOD1) [MIM:265450]: A disease characterized by widespreadfibrous obstruction and intimal thickening of septal veins andpreseptal venules, a low diffusing capacity for carbon monoxide,occult alveolar hemorrhage, and nodular ground-glass opacities,septal lines and lymph node enlargement showed by high-resolutioncomputed tomography of the chest. It is frequently associated withpulmonary capillary dilatation and proliferation, and is a rareand devastating cause of pulmonary hypertension.{ECO:0000269|PubMed:12446270, ECO:0000269|PubMed:16429395}.Note=The disease is caused by mutations affecting the generepresented in this entry.SIMILARITY: Belongs to the protein kinase superfamily. TKL Ser/Thrprotein kinase family. TGFB receptor subfamily. {ECO:0000305}.SIMILARITY: Contains 1 protein kinase domain.{ECO:0000255|PROSITE-ProRule:PRU00159}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
@@ -1724,9 +1689,9 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/uniprot.isoform/O15198-2</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_4093</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_005896</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_4093</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Transcriptional modulator activated by BMP (bonemorphogenetic proteins) type 1 receptor kinase. SMAD9 is areceptor-regulated SMAD (R-SMAD).SUBUNIT: Interaction with the co-SMAD SMAD4. Interacts with PEBP2-alpha subunit.SUBCELLULAR LOCATION: Cytoplasm {ECO:0000250}. Nucleus{ECO:0000250}. Note=In the cytoplasm in the absence of ligand.Migration to the nucleus when complexed with SMAD4 (Bysimilarity). {ECO:0000250}.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=A;IsoId=O15198-1; Sequence=Displayed;Name=B;IsoId=O15198-2; Sequence=VSP_006182;TISSUE SPECIFICITY: Expressed in heart, brain, placenta, lung,skeletal muscle, prostate, testis, ovary and small intestine. Alsoexpressed in fetal brain, lung and kidney.PTM: Phosphorylated on serine by BMP (bone morphogenetic proteins)type 1 receptor kinase.DISEASE: Pulmonary hypertension, primary, 2 (PPH2) [MIM:615342]: Arare disorder characterized by plexiform lesions of proliferatingendothelial cells in pulmonary arterioles. The lesions lead toelevated pulmonary arterial pression, right ventricular failure,and death. The disease can occur from infancy throughout life andit has a mean age at onset of 36 years. Penetrance is reduced.Although familial pulmonary hypertension is rare, cases secondaryto known etiologies are more common and include those associatedwith the appetite-suppressant drugs.{ECO:0000269|PubMed:21898662}. Note=The disease may be caused bymutations affecting the gene represented in this entry.SIMILARITY: Belongs to the dwarfin/SMAD family. {ECO:0000305}.SIMILARITY: Contains 1 MH1 (MAD homology 1) domain.{ECO:0000255|PROSITE-ProRule:PRU00438}.SIMILARITY: Contains 1 MH2 (MAD homology 2) domain.{ECO:0000255|PROSITE-ProRule:PRU00439}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_ddbj_embl_genbank_BAA21128_gene_product</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A4093</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD9_HUMAN Reviewed; 467 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.phosphosite.org/phosphosite.owl#po_3692</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_04484_identity</bp:comment>
@@ -1874,11 +1839,10 @@
  <bp:dataSource rdf:resource="#reactome" />
 </bp:Complex>
 
-<bp:SequenceSite rdf:ID="SequenceSite_9eff43c1ad181bf45e5970194f3f1825">
- <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">24</bp:sequencePosition>
- <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite12228</bp:comment>
-</bp:SequenceSite>
+<bp:RelationshipXref rdf:ID="RelationshipXref_8197f25908c411adf69a014f145d249c">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-173530</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:RelationshipXref>
 
 <bp:ModificationFeature rdf:ID="ModificationFeature_3bd79335f4d61e2c505a8751d2f561a3">
  <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
@@ -1887,22 +1851,17 @@
 </bp:ModificationFeature>
 
 <bp:Protein rdf:ID="Protein_d0ba752300c6b80a663f41fc4d04b996">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201826" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_44fa3e208a178b7b9d8b9c393ccf23bb" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_8450d461babe21846d0456bad2e135ab" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p-4S-BMPRI</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_756afcdbc4334f3a86d1a0d5fde2360d" />
+ <bp:entityReference rdf:resource="#ProteinReference_47a5cac95ce0df52d64e02d7865b28a3" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phospho-Type I receptor</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201826</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6363</bp:comment>
  <bp:dataSource rdf:resource="#reactome" />
 </bp:Protein>
-
-<bp:UnificationXref rdf:ID="UnificationXref_uniprot_knowledgebase_O43541">
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O43541</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot knowledgebase</bp:db>
-</bp:UnificationXref>
 
 <bp:PublicationXref rdf:about="http://identifiers.org/pubmed/10025408">
  <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1999</bp:year>
@@ -1922,15 +1881,6 @@
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201659</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
 </bp:UnificationXref>
-
-<bp:BindingFeature rdf:ID="BindingFeature_e304df372caf44b890699d9766f43195">
- <bp:featureLocationType rdf:resource="#SequenceRegionVocabulary_9ac8671ee97631a992efa2672b0be6b1" />
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AttributeSetNumber:1</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.inoh.org/biopax/id933799551_Smad2_bf1</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Site:proline-rich PPXY motif</bp:comment>
- <bp:bindsTo rdf:resource="#BindingFeature_095ab740351ba44336f2c6085ab83d08" />
- <bp:featureLocation rdf:resource="#SequenceLocation_3f2286cab4cbe4bc207f01616b9f163d" />
-</bp:BindingFeature>
 
 <bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-201657">
  <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
@@ -1999,16 +1949,21 @@
  <bp:dataSource rdf:resource="#reactome" />
 </bp:SmallMolecule>
 
-<bp:Complex rdf:ID="Complex_1cdbdfcc5d4ed6ae8bd95a768c678a82">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-178185" />
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">I-SMAD:SMURF</bp:displayName>
- <bp:componentStoichiometry rdf:resource="#Stoichiometry_c4dfc0208a02059852b18e9c172fe603" />
- <bp:componentStoichiometry rdf:resource="#Stoichiometry_a473b7c549661a705e8ca7becc4c21a8" />
- <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_d7b7576a6ce6c6961a2de2e8c0608786" />
- <bp:component rdf:resource="#Protein_ca0845258d5f992ee6ddfe33a4337bde" />
- <bp:component rdf:resource="#Protein_cf7ab0efbdaeac0394ee0efda15e1944" />
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 178185</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Complex2961</bp:comment>
+<bp:Complex rdf:ID="Complex_f73f4c50a504cfe3e5fc5a1f849c4730">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201647" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP:p-BMPR:Endofin</bp:displayName>
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_e071e4dc5da86f37bfbdaa5377805571" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_067c1a4f8449cb5c4152ffe06dc52c90" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_b9abb7d02b8e711b9ed4a2737dfba36d" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_8543802f13830da841d6c8f98eceb9a4" />
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_33bf74de74ffce22964984c3ebc45598" />
+ <bp:component rdf:resource="#Complex_0688ed6950aefe1bf52d095b427a7970" />
+ <bp:component rdf:resource="#Complex_77c606d82836fbe33ef4f4c5b6343493" />
+ <bp:component rdf:resource="#Protein_6a3ed4bc09ead0918dd19d7370bd8df5" />
+ <bp:component rdf:resource="#Complex_14aa57f119128f9888d3bea4ea00b299" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP2:BMP type II receptor:Phospho-BMP type I receptor:Endofin</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201647</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Complex2964</bp:comment>
  <bp:dataSource rdf:resource="#reactome" />
 </bp:Complex>
 
@@ -2248,36 +2203,27 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CDw293</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.7.11.30</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMPR1B</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP type-1B receptor</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMPR-1B</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP type-1B receptor</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_658</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_uniprotkb_O00238_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.phosphosite.org/phosphosite.owl#po_816</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/XP_016864049</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMR1B_HUMAN Reviewed; 502 AA.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A658</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_001194</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_658</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_04457_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: On ligand binding, forms a receptor complex consistingof two type II and two type I transmembrane serine/threoninekinases. Type II receptors phosphorylate and activate type Ireceptors which autophosphorylate, then bind and activate SMADtranscriptional regulators. Receptor for BMP7/OP-1 and GDF5.Positively regulates chondrocyte differentiation through GDF5interaction. {ECO:0000250|UniProtKB:P36898}.CATALYTIC ACTIVITY: ATP + [receptor-protein] = ADP + [receptor-protein] phosphate.COFACTOR:Name=Mg(2+); Xref=ChEBI:CHEBI:18420; Evidence={ECO:0000250};Name=Mn(2+); Xref=ChEBI:CHEBI:29035; Evidence={ECO:0000250};SUBUNIT: Interacts with high affinity with GDF5; positivelyregulates chondrocyte differentiation.{ECO:0000269|PubMed:24098149}.SUBCELLULAR LOCATION: Cell membrane{ECO:0000250|UniProtKB:P36898}. Membrane; Single-pass type Imembrane protein.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=1;IsoId=O00238-1; Sequence=Displayed;Name=2;IsoId=O00238-2; Sequence=VSP_045100;DISEASE: Acromesomelic dysplasia, Demirhan type (AMDD)[MIM:609441]: A form of chondrodysplasia. Acromesomelicchondrodysplasias are rare hereditary skeletal disorderscharacterized by short stature, very short limbs and hand/footmalformations. The severity of limb abnormalities increases fromproximal to distal with profoundly affected hands and feet showingbrachydactyly and/or rudimentary fingers (knob-like fingers).{ECO:0000269|PubMed:15805157, ECO:0000269|PubMed:24129431,ECO:0000269|PubMed:26105076}. Note=The disease is caused bymutations affecting the gene represented in this entry.DISEASE: Brachydactyly A2 (BDA2) [MIM:112600]: A form ofbrachydactyly. Brachydactyly defines a group of inheritedmalformations characterized by shortening of the digits due toabnormal development of the phalanges and/or the metacarpals. Inbrachydactyly type A2 shortening of the middle phalanges isconfined to the index finger and the second toe, all other digitsbeing more or less normal. Because of a rhomboid or triangularshape of the affected middle phalanx, the end of the second fingerusually deviates radially. {ECO:0000269|PubMed:14523231,ECO:0000269|PubMed:16957682}. Note=The disease is caused bymutations affecting the gene represented in this entry.DISEASE: Brachydactyly A1, D (BDA1D) [MIM:616849]: A form ofbrachydactyly type A1. Brachydactyly defines a group of inheritedmalformations characterized by shortening of the digits due toabnormal development of the phalanges and/or the metacarpals.Brachydactyly type A1 is characterized by middle phalanges of allthe digits rudimentary or fused with the terminal phalanges. Theproximal phalanges of the thumbs and big toes are short. BDA1Dinheritance is autosomal dominant. {ECO:0000269|PubMed:25758993}.Note=The disease is caused by mutations affecting the generepresented in this entry.SIMILARITY: Belongs to the protein kinase superfamily. TKL Ser/Thrprotein kinase family. TGFB receptor subfamily. {ECO:0000305}.SIMILARITY: Contains 1 GS domain. {ECO:0000255|PROSITE-ProRule:PRU00585}.SIMILARITY: Contains 1 protein kinase domain.{ECO:0000255|PROSITE-ProRule:PRU00159}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
 </bp:ProteinReference>
 
-<bp:Complex rdf:ID="Complex_f73f4c50a504cfe3e5fc5a1f849c4730">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201647" />
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP:p-BMPR:Endofin</bp:displayName>
- <bp:componentStoichiometry rdf:resource="#Stoichiometry_e071e4dc5da86f37bfbdaa5377805571" />
- <bp:componentStoichiometry rdf:resource="#Stoichiometry_067c1a4f8449cb5c4152ffe06dc52c90" />
- <bp:componentStoichiometry rdf:resource="#Stoichiometry_b9abb7d02b8e711b9ed4a2737dfba36d" />
- <bp:componentStoichiometry rdf:resource="#Stoichiometry_8543802f13830da841d6c8f98eceb9a4" />
- <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_33bf74de74ffce22964984c3ebc45598" />
- <bp:component rdf:resource="#Complex_0688ed6950aefe1bf52d095b427a7970" />
- <bp:component rdf:resource="#Complex_77c606d82836fbe33ef4f4c5b6343493" />
- <bp:component rdf:resource="#Protein_6a3ed4bc09ead0918dd19d7370bd8df5" />
- <bp:component rdf:resource="#Complex_14aa57f119128f9888d3bea4ea00b299" />
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP2:BMP type II receptor:Phospho-BMP type I receptor:Endofin</bp:name>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201647</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Complex2964</bp:comment>
- <bp:dataSource rdf:resource="#reactome" />
-</bp:Complex>
+<bp:ProteinReference rdf:ID="ProteinReference_1dbbe41a40e4a2eac7353b64ab6a18e5">
+ <bp:xref rdf:resource="#RelationshipXref_be2eb154fc4c025c941ca5b09310add6" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q99717" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q15797" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/O15198" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phospho-R-SMAD1/5/9</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">auto-generated generic entity reference</bp:comment>
+</bp:ProteinReference>
 
 <bp:SequenceSite rdf:ID="SequenceSite_c6a2aba0f478a95d46ab20e877688892">
  <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">70</bp:sequencePosition>
@@ -2341,6 +2287,12 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hgnc symbol</bp:db>
 </bp:RelationshipXref>
 
+<bp:ModificationFeature rdf:ID="ModificationFeature_a03a8530856c88faf89f65d65b119039">
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_ac5aeb4d5f08ef74331fc7aa49f56564" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#ModificationFeature1096</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceSite_19104c18eecaf2cc3bbbc2d5e2d415ea" />
+</bp:ModificationFeature>
+
 <bp:FragmentFeature rdf:ID="FragmentFeature_75e6a332874dcb09df2dee2c4ae36adf">
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5637</bp:comment>
  <bp:featureLocation rdf:resource="#SequenceInterval_87cd27f262ddc05bbc8b6f77d8b82b17" />
@@ -2394,11 +2346,11 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
 </bp:PublicationXref>
 
-<bp:ModificationFeature rdf:ID="ModificationFeature_74dd79ae8eccb3619d821409a1fd01d3">
- <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 200 200 Phosphoserine.</bp:comment>
- <bp:featureLocation rdf:resource="#SequenceSite_c3be8dae9f34ae68f4bbf0b1bdc1f5de" />
-</bp:ModificationFeature>
+<bp:SequenceSite rdf:ID="SequenceSite_9eff43c1ad181bf45e5970194f3f1825">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">24</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite12228</bp:comment>
+</bp:SequenceSite>
 
 <bp:SequenceSite rdf:ID="SequenceSite_dc8d9b587fb754d2fc38e0fec25aa893">
  <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">720</bp:sequencePosition>
@@ -2504,9 +2456,9 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NOG</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_9241</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_005441</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_9241</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_uniprotkb_Q13253_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NOGG_HUMAN Reviewed; 232 AA.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A9241</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Inhibitor of bone morphogenetic proteins (BMP) signalingwhich is required for growth and patterning of the neural tube andsomite. Essential for cartilage morphogenesis and joint formation.Inhibits chondrocyte differentiation through its interaction withGDF5 and, probably, GDF6 (PubMed:21976273, PubMed:26643732).{ECO:0000269|PubMed:12478285, ECO:0000269|PubMed:21976273,ECO:0000269|PubMed:26643732}.SUBUNIT: Homodimer. Interacts with GDF5; inhibits chondrocytedifferentiation. {ECO:0000269|PubMed:12478285,ECO:0000269|PubMed:21976273, ECO:0000269|PubMed:24098149}.SUBCELLULAR LOCATION: Secreted.DISEASE: Symphalangism, proximal 1A (SYM1A) [MIM:185800]: Adisease characterized by the hereditary absence of the proximalinterphalangeal joints. Distal interphalangeal joints are lessfrequently involved and metacarpophalangeal joints are rarelyaffected whereas carpal bone malformation and fusion are common.In the lower extremities, tarsal bone coalition is common.Conductive hearing loss is seen and is due to fusion of the stapesto the petrous part of the temporal bone.{ECO:0000269|PubMed:10080184, ECO:0000269|PubMed:11846737,ECO:0000269|PubMed:11857750, ECO:0000269|PubMed:15770128}.Note=The disease is caused by mutations affecting the generepresented in this entry.DISEASE: Multiple synostoses syndrome 1 (SYNS1) [MIM:186500]: Abone disease characterized by multiple progressive joint fusionsthat commonly involve proximal interphalangeal, tarsal-carpal,humeroradial and cervical spine joints. Additional features caninclude progressive conductive deafness and facial dysmorphism.{ECO:0000269|PubMed:10080184, ECO:0000269|PubMed:20503332}.Note=The disease is caused by mutations affecting the generepresented in this entry.DISEASE: Tarsal-carpal coalition syndrome (TCC) [MIM:186570]:Autosomal dominant disorder characterized by fusion of thecarpals, tarsals and phalanges, short first metacarpals causingbrachydactyly, and humeroradial fusion. TCC is allelic to SYM1,and different mutations in NOG can result in either TCC or SYM1 indifferent families. {ECO:0000269|PubMed:11545688}. Note=Thedisease is caused by mutations affecting the gene represented inthis entry.DISEASE: Stapes ankylosis with broad thumb and toes (SABTS)[MIM:184460]: Congenital autosomal dominant disorder that includeshyperopia, a hemicylindrical nose, broad thumbs, great toes, andother minor skeletal anomalies but lacked carpal and tarsal fusionand symphalangism. {ECO:0000269|PubMed:12089654}. Note=The diseaseis caused by mutations affecting the gene represented in thisentry.DISEASE: Brachydactyly B2 (BDB2) [MIM:611377]: A form ofbrachydactyly characterized by hypoplasia/aplasia of distalphalanges in combination with distal symphalangism, fusion ofcarpal/tarsal bones and partial cutaneous syndactyly.{ECO:0000269|PubMed:17668388}. Note=The disease is caused bymutations affecting the gene represented in this entry.SIMILARITY: Belongs to the noggin family. {ECO:0000305}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
 </bp:ProteinReference>
 
@@ -2598,6 +2550,15 @@
  <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
 </bp:SequenceSite>
 
+<bp:ProteinReference rdf:ID="ProteinReference_e56f63f95d725d9e5c54baa484cc7e05">
+ <bp:xref rdf:resource="#RelationshipXref_8197f25908c411adf69a014f145d249c" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/P51668" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/P61077" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Nuclear ubiquitin ligase</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ubiquitin conjugating enzyme</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">auto-generated generic entity reference</bp:comment>
+</bp:ProteinReference>
+
 <bp:FragmentFeature rdf:ID="FragmentFeature_eca95e7bec2db370277d6622cbb9cd99">
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5621</bp:comment>
  <bp:featureLocation rdf:resource="#SequenceInterval_679ba1e746dd754764eec01661e830c0" />
@@ -2670,6 +2631,12 @@
  <bp:modificationType rdf:resource="#SequenceModificationVocabulary_ac5aeb4d5f08ef74331fc7aa49f56564" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#ModificationFeature1094</bp:comment>
  <bp:featureLocation rdf:resource="#SequenceSite_feaed69b06b2921c058b6b830e58993b" />
+</bp:ModificationFeature>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_74dd79ae8eccb3619d821409a1fd01d3">
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 200 200 Phosphoserine.</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceSite_c3be8dae9f34ae68f4bbf0b1bdc1f5de" />
 </bp:ModificationFeature>
 
 <bp:FragmentFeature rdf:ID="FragmentFeature_0c3e088874501e646067f4f838155855">
@@ -2751,6 +2718,14 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
 </bp:UnificationXref>
 
+<bp:ProteinReference rdf:ID="ProteinReference_6ffcaaca5b3eb087aaf28a9b1f980aad">
+ <bp:xref rdf:resource="#RelationshipXref_e29fec3ed92cda909aa2e163baf937cb" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/O43541" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/O15105" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">I-SMAD</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">auto-generated generic entity reference</bp:comment>
+</bp:ProteinReference>
+
 <bp:ModificationFeature rdf:ID="ModificationFeature_02d43d6a80c041123b82f43bec8702b9">
  <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 586 586 Phosphoserine.</bp:comment>
@@ -2793,12 +2768,12 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Smad7</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_005895</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_4092</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_4092</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED ProteinRef_SMAD7__10090</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD7_HUMAN Reviewed; 426 AA.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED ProteinRef_SMAD7__9606</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A4092</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-42252N_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Antagonist of signaling by TGF-beta (transforming growthfactor) type 1 receptor superfamily members; has been shown toinhibit TGF-beta (Transforming growth factor) and activinsignaling by associating with their receptors thus preventingSMAD2 access. Functions as an adapter to recruit SMURF2 to theTGF-beta receptor complex. Also acts by recruiting the PPP1R15A-PP1 complex to TGFBR1, which promotes its dephosphorylation.Positively regulates PDPK1 kinase activity by stimulating itsdissociation from the 14-3-3 protein YWHAQ which acts as anegative regulator. {ECO:0000269|PubMed:11163210,ECO:0000269|PubMed:12023024, ECO:0000269|PubMed:14718519,ECO:0000269|PubMed:17327236, ECO:0000269|PubMed:9892009}.SUBUNIT: Interacts with WWP1 (By similarity). Interacts withCOPS5. Interacts with NEDD4L. Interacts with STAMBP. Interactswith RNF111, AXIN1 and AXIN2. Interacts with PPP1R15A. Interacts(via MH2 domain) with EP300. Interacts with ACVR1B, SMURF1, SMURF2and TGFBR1; SMAD7 recruits SMURF1 and SMURF2 to the TGF-betareceptor and regulates its degradation. Interacts with PDPK1 (viaPH domain). {ECO:0000250, ECO:0000269|PubMed:11163210,ECO:0000269|PubMed:11278251, ECO:0000269|PubMed:11483516,ECO:0000269|PubMed:12023024, ECO:0000269|PubMed:12408818,ECO:0000269|PubMed:14657019, ECO:0000269|PubMed:14718519,ECO:0000269|PubMed:14993265, ECO:0000269|PubMed:16061177,ECO:0000269|PubMed:16601693, ECO:0000269|PubMed:16641086,ECO:0000269|PubMed:17327236, ECO:0000269|PubMed:9892009}.SUBCELLULAR LOCATION: Nucleus {ECO:0000269|PubMed:14657019,ECO:0000269|PubMed:16601693, ECO:0000269|PubMed:17327236}.Cytoplasm {ECO:0000269|PubMed:14657019,ECO:0000269|PubMed:16601693, ECO:0000269|PubMed:17327236}.Note=Interaction with NEDD4L or RNF111 induces translocation fromthe nucleus to the cytoplasm (PubMed:16601693). TGF-betastimulates its translocation from the nucleus to the cytoplasm.PDPK1 inhibits its translocation from the nucleus to the cytoplasmin response to TGF-beta (PubMed:17327236).{ECO:0000269|PubMed:16601693, ECO:0000269|PubMed:17327236}.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=3;Name=1;IsoId=O15105-1; Sequence=Displayed;Name=2;IsoId=O15105-2; Sequence=VSP_045197;Note=No experimental confirmation available.;Name=3;IsoId=O15105-3; Sequence=VSP_047540;Note=No experimental confirmation available.;TISSUE SPECIFICITY: Ubiquitous with higher expression in the lungand vascular endothelium.INDUCTION: By TGFB1.PTM: Phosphorylation on Ser-249 does not affect its stability,nuclear localization or inhibitory function in TGFB signaling;however it affects its ability to regulate transcription (Bysimilarity). Phosphorylated by PDPK1.{ECO:0000250|UniProtKB:O35253, ECO:0000269|PubMed:17327236}.PTM: Ubiquitinated by WWP1 (By similarity). Polyubiquitinated byRNF111, which is enhanced by AXIN1 and promotes proteasomaldegradation (PubMed:14657019, PubMed:16601693). In response toTGF-beta, ubiquitinated by SMURF1; which promotes its degradation(PubMed:11278251). {ECO:0000250|UniProtKB:O35253,ECO:0000269|PubMed:11278251, ECO:0000269|PubMed:14657019,ECO:0000269|PubMed:16601693}.PTM: Acetylation prevents ubiquitination and degradation mediatedby SMURF1. {ECO:0000269|PubMed:12408818}.DISEASE: Colorectal cancer 3 (CRCS3) [MIM:612229]: A complexdisease characterized by malignant lesions arising from the innerwall of the large intestine (the colon) and the rectum. Geneticalterations are often associated with progression frompremalignant lesion (adenoma) to invasive adenocarcinoma. Riskfactors for cancer of the colon and rectum include colon polyps,long-standing ulcerative colitis, and genetic family history.{ECO:0000269|PubMed:17934461}. Note=Disease susceptibility isassociated with variations affecting the gene represented in thisentry.SIMILARITY: Belongs to the dwarfin/SMAD family. {ECO:0000305}.SIMILARITY: Contains 1 MH1 (MAD homology 1) domain.{ECO:0000255|PROSITE-ProRule:PRU00438}.SIMILARITY: Contains 1 MH2 (MAD homology 2) domain.{ECO:0000255|PROSITE-ProRule:PRU00439}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED ProteinRef_SMAD7__9606</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-42252N_identity</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD7_HUMAN Reviewed; 426 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.phosphosite.org/phosphosite.owl#po_12293</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED ProteinRef_SMAD7__40674</bp:comment>
 </bp:ProteinReference>
@@ -2890,7 +2865,7 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FSTL1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Follistatin-like protein 1</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_009016</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A11167</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_11167</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_11167</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FSTL1_HUMAN Reviewed; 308 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: May modulate the action of some growth factors on cellproliferation and differentiation. Binds heparin (By similarity).{ECO:0000250}.SUBUNIT: Interacts with SCN10A.SUBCELLULAR LOCATION: Secreted {ECO:0000305}.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=1;IsoId=Q12841-1; Sequence=Displayed;Name=2;IsoId=Q12841-2; Sequence=VSP_055075;Note=No experimental confirmation available.;TISSUE SPECIFICITY: Overexpressed in synovial tissues fromrheumatoid arthritis. {ECO:0000269|PubMed:15638044}.SIMILARITY: Contains 2 EF-hand domains. {ECO:0000255|PROSITE-ProRule:PRU00448}.SIMILARITY: Contains 1 follistatin-like domain. {ECO:0000305}.SIMILARITY: Contains 1 Kazal-like domain. {ECO:0000255|PROSITE-ProRule:PRU00798}.SIMILARITY: Contains 1 VWFC domain. {ECO:0000305}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
@@ -2906,20 +2881,6 @@
  <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-173537.1</bp:comment>
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-173537</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
-</bp:UnificationXref>
-
-<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-173533">
- <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-173533.1</bp:comment>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-173533</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
-</bp:UnificationXref>
-
-<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-173530">
- <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-173530.1</bp:comment>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-173530</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
 </bp:UnificationXref>
 
@@ -3016,7 +2977,6 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.7.11.30</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AVR2B_HUMAN Reviewed; 512 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Transmembrane serine/threonine kinase activin type-2receptor forming an activin receptor complex with activin type-1serine/threonine kinase receptors (ACVR1, ACVR1B or ACVR1c).Transduces the activin signal from the cell surface to thecytoplasm and is thus regulating many physiological andpathological processes including neuronal differentiation andneuronal survival, hair follicle development and cycling, FSHproduction by the pituitary gland, wound healing, extracellularmatrix production, immunosuppression and carcinogenesis. Activinis also thought to have a paracrine or autocrine role infollicular development in the ovary. Within the receptor complex,the type-2 receptors act as a primary activin receptors (bindsactivin-A/INHBA, activin-B/INHBB as well as inhibin-A/INHA-INHBA).The type-1 receptors like ACVR1B act as downstream transducers ofactivin signals. Activin binds to type-2 receptor at the plasmamembrane and activates its serine-threonine kinase. The activatedreceptor type-2 then phosphorylates and activates the type-1receptor. Once activated, the type-1 receptor binds andphosphorylates the SMAD proteins SMAD2 and SMAD3, on serineresidues of the C-terminal tail. Soon after their association withthe activin receptor and subsequent phosphorylation, SMAD2 andSMAD3 are released into the cytoplasm where they interact with thecommon partner SMAD4. This SMAD complex translocates into thenucleus where it mediates activin-induced transcription.Inhibitory SMAD7, which is recruited to ACVR1B through FKBP1A, canprevent the association of SMAD2 and SMAD3 with the activinreceptor complex, thereby blocking the activin signal. Activinsignal transduction is also antagonized by the binding to thereceptor of inhibin-B via the IGSF1 inhibin coreceptor.{ECO:0000269|PubMed:8622651}.CATALYTIC ACTIVITY: ATP + [receptor-protein] = ADP + [receptor-protein] phosphate.COFACTOR:Name=Mg(2+); Xref=ChEBI:CHEBI:18420; Evidence={ECO:0000250};Name=Mn(2+); Xref=ChEBI:CHEBI:29035; Evidence={ECO:0000250};SUBUNIT: Forms an activin receptor complex with activin type IIreceptors such as ACVR1B. Interacts with VPS39.{ECO:0000269|PubMed:12941698, ECO:0000269|PubMed:22718755,ECO:0000269|PubMed:8622651}.SUBCELLULAR LOCATION: Cell membrane {ECO:0000250}; Single-passtype I membrane protein {ECO:0000250}.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=ActR-IIB2;IsoId=Q13705-1; Sequence=Displayed;Name=ActR-IIB1;IsoId=Q13705-2; Sequence=Not described;Note=Produced from the insertion in the transcript of 82 basepairs, leading to frameshift and protein truncation. May be notfunctional.;PTM: Phosphorylated. Constitutive phosphorylation is in partcatalyzed by its own kinase activity.{ECO:0000269|PubMed:8622651}.DISEASE: Heterotaxy, visceral, 4, autosomal (HTX4) [MIM:613751]: Aform of visceral heterotaxy, a complex disorder due to disruptionof the normal left-right asymmetry of the thoracoabdominal organs.Visceral heterotaxy or situs ambiguus results in randomization ofthe placement of visceral organs, including the heart, lungs,liver, spleen, and stomach. The organs are oriented randomly withrespect to the left-right axis and with respect to one another. Itcan been associated with variety of congenital defects includingcardiac malformations. HTX4 clinical features includedextrocardia, right aortic arch and a right-sided spleen,anomalies of the inferior and the superior vena cava, atrialventricular canal defect with dextro-transposed great arteries,pulmonary stenosis, polysplenia and midline liver.{ECO:0000269|PubMed:9916847}. Note=The disease is caused bymutations affecting the gene represented in this entry.SIMILARITY: Belongs to the protein kinase superfamily. TKL Ser/Thrprotein kinase family. TGFB receptor subfamily. {ECO:0000305}.SIMILARITY: Contains 1 protein kinase domain.{ECO:0000255|PROSITE-ProRule:PRU00159}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A93</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_001097</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_93</bp:comment>
 </bp:ProteinReference>
@@ -3075,9 +3035,9 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.inoh.org/biopax/memberPR_UniProt_P12643</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Induces cartilage and bone formation (PubMed:3201241).Stimulates the differentiation of myoblasts into osteoblasts viathe EIF2AK3-EIF2A- ATF4 pathway. BMP2 activation of EIF2AK3stimulates phosphorylation of EIF2A which leads to increasedexpression of ATF4 which plays a central role in osteoblastdifferentiation. In addition stimulates TMEM119, which upregulatesthe expression of ATF4 (PubMed:24362451).{ECO:0000269|PubMed:24362451, ECO:0000269|PubMed:3201241}.SUBUNIT: Homodimer; disulfide-linked (PubMed:10074410). Interactswith SOSTDC1 (PubMed:15020244). Interacts with GREM2, RGMA, RGMBand RGMC. Interacts with ASPN (By similarity). Interacts withMAFP5 (By similarity). Interacts with FBN1 (via N-terminal domain)and FBN2 (PubMed:18339631). {ECO:0000250|UniProtKB:P21274,ECO:0000269|PubMed:10074410, ECO:0000269|PubMed:15020244,ECO:0000269|PubMed:18339631}.SUBCELLULAR LOCATION: Secreted.TISSUE SPECIFICITY: Particularly abundant in lung, spleen andcolon and in low but significant levels in heart, brain, placenta,liver, skeletal muscle, kidney, pancreas, prostate, ovary andsmall intestine.PHARMACEUTICAL: Available under the name Infuse (Medtronic SofamorDanek). Used for treating open tibial shaft fractures.SIMILARITY: Belongs to the TGF-beta family. {ECO:0000305}.WEB RESOURCE: Name=Wikipedia; Note=Bone morphogenetic protein 2entry;URL=&quot;https://en.wikipedia.org/wiki/Bone_morphogenetic_protein_2&quot;; COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_650</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_650</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP2_HUMAN Reviewed; 396 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_001191</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A650</bp:comment>
 </bp:ProteinReference>
 
 <bp:RelationshipXref rdf:ID="RelationshipXref_hgnc_symbol_FSTL1_identity">
@@ -3175,6 +3135,19 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite12216</bp:comment>
 </bp:SequenceSite>
 
+<bp:Complex rdf:ID="Complex_1cdbdfcc5d4ed6ae8bd95a768c678a82">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-178185" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">I-SMAD:SMURF</bp:displayName>
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_c4dfc0208a02059852b18e9c172fe603" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_a473b7c549661a705e8ca7becc4c21a8" />
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_d7b7576a6ce6c6961a2de2e8c0608786" />
+ <bp:component rdf:resource="#Protein_ca0845258d5f992ee6ddfe33a4337bde" />
+ <bp:component rdf:resource="#Protein_cf7ab0efbdaeac0394ee0efda15e1944" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 178185</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Complex2961</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Complex>
+
 <bp:FragmentFeature rdf:ID="FragmentFeature_e4471942e047875c92b19a645ce6cfb5">
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5636</bp:comment>
  <bp:featureLocation rdf:resource="#SequenceInterval_c134789a4810af1f9d1926f83087ff7f" />
@@ -3210,13 +3183,6 @@
  <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-201445.2</bp:comment>
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201445</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
-</bp:UnificationXref>
-
-<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-201444">
- <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-201444.1</bp:comment>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201444</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
 </bp:UnificationXref>
 
@@ -3310,9 +3276,24 @@
  <bp:featureLocation rdf:resource="#SequenceSite_4b2ea5634231fb9d0fc96fdc7e495eae" />
 </bp:ModificationFeature>
 
-<bp:SequenceLocation rdf:ID="SequenceLocation_3f2286cab4cbe4bc207f01616b9f163d">
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.inoh.org/biopax/id933799551_Smad2_sl1</bp:comment>
-</bp:SequenceLocation>
+<bp:Protein rdf:ID="Protein_8450d461babe21846d0456bad2e135ab">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201448" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMPR1A</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_756afcdbc4334f3a86d1a0d5fde2360d" />
+ <bp:feature rdf:resource="#ModificationFeature_ef51b638716a6d21119e9487fb5d1362" />
+ <bp:feature rdf:resource="#ModificationFeature_54c7c3ceb6b9bb29f7ddd5397c8faf07" />
+ <bp:feature rdf:resource="#ModificationFeature_25c4758b3ceede844a39fbc4ac2ae4bf" />
+ <bp:feature rdf:resource="#FragmentFeature_5b4bd174c60ccfba2fd2f18722f61075" />
+ <bp:feature rdf:resource="#ModificationFeature_3353dd72f0897952f83df52e16c7d64e" />
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/P36894" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p-S215,S216,S218,S220-BMPR1A</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMRA_HUMAN</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phospho-Bone morphogenetic protein receptor type IA</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p-4S-BMPR1A</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6364</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201448</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Protein>
 
 <bp:FragmentFeature rdf:ID="FragmentFeature_5b4bd174c60ccfba2fd2f18722f61075">
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5632</bp:comment>
@@ -3452,7 +3433,6 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACVR2</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-520N_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AVR2A_HUMAN Reviewed; 513 AA.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A92</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: On ligand binding, forms a receptor complex consistingof two type II and two type I transmembrane serine/threoninekinases. Type II receptors phosphorylate and activate type Ireceptors which autophosphorylate, then bind and activate SMADtranscriptional regulators. Receptor for activin A, activin B andinhibin A. Mediates induction of adipogenesis by GDF6 (Bysimilarity). {ECO:0000250|UniProtKB:P27038,ECO:0000269|PubMed:1314589}.CATALYTIC ACTIVITY: ATP + [receptor-protein] = ADP + [receptor-protein] phosphate.COFACTOR:Name=Mg(2+); Xref=ChEBI:CHEBI:18420; Evidence={ECO:0000250};Name=Mn(2+); Xref=ChEBI:CHEBI:29035; Evidence={ECO:0000250};SUBUNIT: Interacts with AIP1. Part of a complex consisting ofAIP1, ACVR2A, ACVR1B and SMAD3 (By similarity). {ECO:0000250}.SUBCELLULAR LOCATION: Membrane; Single-pass type I membraneprotein.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=1;IsoId=P27037-1; Sequence=Displayed;Name=2;IsoId=P27037-2; Sequence=VSP_054689;Note=No experimental confirmation available.;SIMILARITY: Belongs to the protein kinase superfamily. TKL Ser/Thrprotein kinase family. TGFB receptor subfamily. {ECO:0000305}.SIMILARITY: Contains 1 protein kinase domain.{ECO:0000255|PROSITE-ProRule:PRU00159}.WEB RESOURCE: Name=Atlas of Genetics and Cytogenetics in Oncologyand Haematology;URL=&quot;http://atlasgeneticsoncology.org/Genes/ACVR2ID567ch2q22.html&quot;; COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_00025_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_92</bp:comment>
@@ -3476,6 +3456,7 @@
  <bp:memberPhysicalEntity rdf:resource="#Protein_b8bb69c0db67d1d5dfb6f1d699e9d3c9" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Type I receptor</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_756afcdbc4334f3a86d1a0d5fde2360d" />
+ <bp:entityReference rdf:resource="#ProteinReference_47a5cac95ce0df52d64e02d7865b28a3" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201805</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6356</bp:comment>
@@ -3489,12 +3470,12 @@
 </bp:SequenceSite>
 
 <bp:Protein rdf:ID="Protein_ae756c0799a473296ae3d213c27ea5df">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201804" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_a1e32db368af6c2beca0cad7a77fa8b2" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_4edfb27e7a3e17d3639ca2f9741903c9" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_0474a9d2052e49f3ad75a326d94ca215" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Type II receptor</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_756afcdbc4334f3a86d1a0d5fde2360d" />
+ <bp:entityReference rdf:resource="#ProteinReference_10d01b236f8a16b80eb77849cb94f60b" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6359</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201804</bp:comment>
@@ -3519,6 +3500,14 @@
  <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">2.0</bp:stoichiometricCoefficient>
 </bp:Stoichiometry>
 
+<bp:ProteinReference rdf:ID="ProteinReference_35c4dc84fdcaee1c22637777cfa5af1c">
+ <bp:xref rdf:resource="#RelationshipXref_1cef8bf1699f7af5f58a328575ff9682" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q9HAU4" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q9HCE7" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMURF</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">auto-generated generic entity reference</bp:comment>
+</bp:ProteinReference>
+
 <bp:PublicationXref rdf:about="http://identifiers.org/pubmed/10880444">
  <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">2000</bp:year>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Nickel, J</bp:author>
@@ -3529,6 +3518,17 @@
  <bp:title rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP-2 antagonists emerge from alterations in the low-affinity binding epitope for receptor BMPR-II</bp:title>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
 </bp:PublicationXref>
+
+<bp:ProteinReference rdf:ID="ProteinReference_4795997f53ac30c0fcc81fc7e8ee59c4">
+ <bp:xref rdf:resource="#RelationshipXref_1815e7f0a1d8f02bdf17c88167c534f3" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q9BU40" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q13253" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/O95813" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q9H772" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q12841" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ligand Trap</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">auto-generated generic entity reference</bp:comment>
+</bp:ProteinReference>
 
 <bp:Catalysis rdf:ID="Catalysis_88c4e016d469a26410b92febf9e4b724">
  <bp:controller rdf:resource="#Complex_14838c0cda4284cc9717ead3e998356d" />
@@ -3557,7 +3557,6 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Site:tryptophan-rich WW domain</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AttributeSetNumber:1</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.inoh.org/biopax/id343457270_smurf2_bf1</bp:comment>
- <bp:bindsTo rdf:resource="#BindingFeature_e304df372caf44b890699d9766f43195" />
  <bp:featureLocation rdf:resource="#SequenceLocation_f7bfffa8bb2011c9489e1f4e24298aa1" />
 </bp:BindingFeature>
 
@@ -3656,6 +3655,7 @@
  <bp:memberPhysicalEntity rdf:resource="#Protein_3437f155578d96637d7033d7361d517b" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMAD1/5/8</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_d7b7576a6ce6c6961a2de2e8c0608786" />
+ <bp:entityReference rdf:resource="#ProteinReference_1dbbe41a40e4a2eac7353b64ab6a18e5" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-Smad1/5/8</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6366</bp:comment>
@@ -3681,6 +3681,18 @@
  <bp:stepProcess rdf:resource="#Catalysis_b790baec99f2377f991c891917b647f8" />
 </bp:PathwayStep>
 
+<bp:PublicationXref rdf:about="http://identifiers.org/pubmed/7791754">
+ <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1995</bp:year>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Liu, F</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ventura, F</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Massague, J</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Doody, J</bp:author>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">7791754</bp:id>
+ <bp:source rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mol Cell Biol 15:3479-86</bp:source>
+ <bp:title rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Human type II receptor for bone morphogenic proteins (BMPs): extension of the two-kinase receptor model to the BMPs</bp:title>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
+</bp:PublicationXref>
+
 <bp:UnificationXref rdf:ID="UnificationXref_molecular_interactions_ontology_MI_0361">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0361</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mi</bp:db>
@@ -3704,9 +3716,9 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Neuralin-1</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CRDL1_HUMAN Reviewed; 450 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_91851</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A91851</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_02285_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Antagonizes the function of BMP4 by binding to it andpreventing its interaction with receptors. Alters the fatecommitment of neural stem cells from gliogenesis to neurogenesis.Contributes to neuronal differentiation of neural stem cells inthe brain by preventing the adoption of a glial fate. May play acrucial role in dorsoventral axis formation. May play a role inembryonic bone formation (By similarity). May also play animportant role in regulating retinal angiogenesis throughmodulation of BMP4 actions in endothelial cells. Plays a roleduring anterior segment eye development. {ECO:0000250,ECO:0000269|PubMed:18587495, ECO:0000269|PubMed:22284829}.SUBCELLULAR LOCATION: Secreted {ECO:0000305}.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=6;Name=1;IsoId=Q9BU40-1; Sequence=Displayed;Name=2;IsoId=Q9BU40-2; Sequence=VSP_036469, VSP_036470;Name=3;IsoId=Q9BU40-3; Sequence=VSP_043260, VSP_043261, VSP_036470;Note=No experimental confirmation available.;Name=4;IsoId=Q9BU40-4; Sequence=VSP_043260, VSP_036469, VSP_036470;Name=5;IsoId=Q9BU40-5; Sequence=VSP_043260, VSP_036470;Note=No experimental confirmation available.;Name=6;IsoId=Q9BU40-6; Sequence=VSP_043260;TISSUE SPECIFICITY: Expressed in the developing cornea and in theeye anterior segment in addition to the retina. Differentiallyexpressed in the fetal brain. There is high expression incerebellum and neocortex. Expressed in retinal pericytes.{ECO:0000269|PubMed:18587495, ECO:0000269|PubMed:22284829}.INDUCTION: By hypoxia in retinal pericytes.{ECO:0000269|PubMed:18587495}.DISEASE: Megalocornea 1, X-linked (MGC1) [MIM:309300]: An eyedisorder in which the corneal diameter is bilaterally enlarged(greater than 13 mm) without an increase in intraocular pressure.It may also be referred to as anterior megalophthalmos, since theentire anterior segment is larger than normal. Features ofmegalocornea in addition to a deep anterior chamber includeastigmatic refractive errors, atrophy of the iris stroma, miosissecondary to decreased function of the dilator muscle,iridodonesis, and tremulousness, subluxation, or dislocation ofthe lens. Whereas most affected individuals exhibit normal ocularfunction, complications include cataract development and glaucomafollowing lenticular dislocation or subluxation.{ECO:0000269|PubMed:22284829}. Note=The disease is caused bymutations affecting the gene represented in this entry.SIMILARITY: Contains 3 VWFC domains. {ECO:0000255|PROSITE-ProRule:PRU00220}.SEQUENCE CAUTION:Sequence=AAH02909.2; Type=Erroneous initiation; Note=Translation N-terminally shortened.; Evidence={ECO:0000305};Sequence=AAU25841.1; Type=Erroneous initiation; Note=Translation N-terminally shortened.; Evidence={ECO:0000305};Sequence=BAF85795.1; Type=Erroneous initiation; Note=Translation N-terminally shortened.; Evidence={ECO:0000305}; COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_91851</bp:comment>
 </bp:ProteinReference>
 
 <bp:PublicationXref rdf:about="http://identifiers.org/pubmed/15671031">
@@ -3865,10 +3877,11 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
 </bp:PublicationXref>
 
-<bp:PathwayStep rdf:ID="PathwayStep_a8303fe3da3ed312533f2fc00bfc7794">
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#PathwayStep2507</bp:comment>
- <bp:stepProcess rdf:resource="http://identifiers.org/reactome/R-HSA-201423" />
-</bp:PathwayStep>
+<bp:ModificationFeature rdf:ID="ModificationFeature_0c1d07221edd83add331c0c1313b46e3">
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 939 939 Phosphoserine.</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceSite_022c1950e11f4e829c4a4d6f9cfbb32f" />
+</bp:ModificationFeature>
 
 <bp:UnificationXref rdf:ID="UnificationXref_taxonomy_9606">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">9606</bp:id>
@@ -3880,6 +3893,11 @@
  <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite12253</bp:comment>
 </bp:SequenceSite>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_1815e7f0a1d8f02bdf17c88167c534f3">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201828</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:RelationshipXref>
 
 <bp:FragmentFeature rdf:ID="FragmentFeature_310d2373822b0cd6a9c932d0eb7f24bc">
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5647</bp:comment>
@@ -3934,11 +3952,11 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UbcH5</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SFT</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UBC5A</bp:name>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A7321</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Accepts ubiquitin from the E1 complex and catalyzes itscovalent attachment to other proteins. In vitro catalyzes &apos;Lys-48&apos;-linked polyubiquitination. Mediates the selective degradationof short-lived and abnormal proteins. Functions in the E6/E6-AP-induced ubiquitination of p53/TP53. Mediates ubiquitination ofPEX5 and auto-ubiquitination of STUB1, TRAF6 and TRIM63/MURF1.Ubiquitinates STUB1-associated HSP90AB1 in vitro. Lacks inherentspecificity for any particular lysine residue of ubiquitin.Essential for viral activation of IRF3. Mediatespolyubiquitination of CYP3A4. {ECO:0000269|PubMed:18042044,ECO:0000269|PubMed:18359941, ECO:0000269|PubMed:19103148,ECO:0000269|PubMed:19854139, ECO:0000269|PubMed:20061386}.CATALYTIC ACTIVITY: S-ubiquitinyl-[E1 ubiquitin-activatingenzyme]-L-cysteine + [E2 ubiquitin-conjugating enzyme]-L-cysteine= [E1 ubiquitin-activating enzyme]-L-cysteine + S-ubiquitinyl-[E2ubiquitin-conjugating enzyme]-L-cysteine. {ECO:0000255|PROSITE-ProRule:PRU00388, ECO:0000255|PROSITE-ProRule:PRU10133,ECO:0000269|PubMed:18042044, ECO:0000269|PubMed:19854139,ECO:0000269|PubMed:20061386}.CATALYTIC ACTIVITY: S-ubiquitinyl-[E1 ubiquitin-activatingenzyme]-L-cysteine + [acceptor protein]-L-lysine = [E1 ubiquitin-activating enzyme]-L-cysteine + N(6)-monoubiquitinyl-[acceptorprotein]-L-lysine. {ECO:0000269|PubMed:17588522}.PATHWAY: Protein modification; protein ubiquitination.{ECO:0000255|PROSITE-ProRule:PRU00388}.SUBUNIT: Component of a E3 ubiquitin ligase complex containingUBE2D1, SIAH1, CACYBP/SIP, SKP1, APC and TBL1X. Interacts withRNF11. {ECO:0000269|PubMed:11389839, ECO:0000269|PubMed:14562029,ECO:0000269|PubMed:21685362}.SUBCELLULAR LOCATION: Cytoplasm {ECO:0000269|PubMed:18845142}.TISSUE SPECIFICITY: Ubiquitous. Up-regulated in livers of iron-overloaded patients with hereditary hemochromatosis.{ECO:0000269|PubMed:12480712, ECO:0000269|PubMed:9362508}.SIMILARITY: Belongs to the ubiquitin-conjugating enzyme family.{ECO:0000255|PROSITE-ProRule:PRU00388}.CAUTION: PubMed:9362508 cloned and sequenced SFT which consistedof UBE2D1 last coding exon along with intronic sequences on the5&apos;-end of this exon. A function in iron transport has beendescribed. {ECO:0000305}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_NCBI_Gene_7321_gene_product</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_7321</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Accepts ubiquitin from the E1 complex and catalyzes itscovalent attachment to other proteins. In vitro catalyzes &apos;Lys-48&apos;-linked polyubiquitination. Mediates the selective degradationof short-lived and abnormal proteins. Functions in the E6/E6-AP-induced ubiquitination of p53/TP53. Mediates ubiquitination ofPEX5 and auto-ubiquitination of STUB1, TRAF6 and TRIM63/MURF1.Ubiquitinates STUB1-associated HSP90AB1 in vitro. Lacks inherentspecificity for any particular lysine residue of ubiquitin.Essential for viral activation of IRF3. Mediatespolyubiquitination of CYP3A4. {ECO:0000269|PubMed:18042044,ECO:0000269|PubMed:18359941, ECO:0000269|PubMed:19103148,ECO:0000269|PubMed:19854139, ECO:0000269|PubMed:20061386}.CATALYTIC ACTIVITY: S-ubiquitinyl-[E1 ubiquitin-activatingenzyme]-L-cysteine + [E2 ubiquitin-conjugating enzyme]-L-cysteine= [E1 ubiquitin-activating enzyme]-L-cysteine + S-ubiquitinyl-[E2ubiquitin-conjugating enzyme]-L-cysteine. {ECO:0000255|PROSITE-ProRule:PRU00388, ECO:0000255|PROSITE-ProRule:PRU10133,ECO:0000269|PubMed:18042044, ECO:0000269|PubMed:19854139,ECO:0000269|PubMed:20061386}.CATALYTIC ACTIVITY: S-ubiquitinyl-[E1 ubiquitin-activatingenzyme]-L-cysteine + [acceptor protein]-L-lysine = [E1 ubiquitin-activating enzyme]-L-cysteine + N(6)-monoubiquitinyl-[acceptorprotein]-L-lysine. {ECO:0000269|PubMed:17588522}.PATHWAY: Protein modification; protein ubiquitination.{ECO:0000255|PROSITE-ProRule:PRU00388}.SUBUNIT: Component of a E3 ubiquitin ligase complex containingUBE2D1, SIAH1, CACYBP/SIP, SKP1, APC and TBL1X. Interacts withRNF11. {ECO:0000269|PubMed:11389839, ECO:0000269|PubMed:14562029,ECO:0000269|PubMed:21685362}.SUBCELLULAR LOCATION: Cytoplasm {ECO:0000269|PubMed:18845142}.TISSUE SPECIFICITY: Ubiquitous. Up-regulated in livers of iron-overloaded patients with hereditary hemochromatosis.{ECO:0000269|PubMed:12480712, ECO:0000269|PubMed:9362508}.SIMILARITY: Belongs to the ubiquitin-conjugating enzyme family.{ECO:0000255|PROSITE-ProRule:PRU00388}.CAUTION: PubMed:9362508 cloned and sequenced SFT which consistedof UBE2D1 last coding exon along with intronic sequences on the5&apos;-end of this exon. A function in iron transport has beendescribed. {ECO:0000305}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-44088N_identity</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_7321</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_7321</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_003329</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">UB2D1_HUMAN Reviewed; 147 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_04267_identity</bp:comment>
@@ -3951,11 +3969,12 @@
  <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
 </bp:Stoichiometry>
 
-<bp:ModificationFeature rdf:ID="ModificationFeature_0c1d07221edd83add331c0c1313b46e3">
- <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 939 939 Phosphoserine.</bp:comment>
- <bp:featureLocation rdf:resource="#SequenceSite_022c1950e11f4e829c4a4d6f9cfbb32f" />
-</bp:ModificationFeature>
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-202644">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-202644.1</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-202644</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
 
 <bp:Complex rdf:ID="Complex_14aa57f119128f9888d3bea4ea00b299">
  <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201463" />
@@ -4191,15 +4210,13 @@
  <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_37096_multiple_parent_reference" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H15N5O10P2</bp:chemicalFormula>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:displayName>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H3adp</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">427.20110</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">427.029</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADENOSINE-5&apos;-DIPHOSPHATE</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Nc1ncnc2n(cnc12)[C@@H]1O[C@H](COP(O)(=O)OP(O)(O)=O)[C@@H](O)[C@H]1O</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">5&apos;-adenylphosphoric acid</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-diphosphate</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADENOSINE-5&apos;-DIPHOSPHATE</bp:name>
- <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">0</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H3adp</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H15N5O10P2</bp:name>
+ <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">427.029</bp:molecularWeight>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pid.nci.nih.gov/biopax#pid_2133</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ra.cs.uni-tuebingen.de/software/KEGGtranslator/cpdC00008.eref</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A purine ribonucleoside 5&apos;-diphosphate having adenine as the nucleobase.</bp:comment>
@@ -4392,6 +4409,7 @@
  <bp:memberPhysicalEntity rdf:resource="#Protein_5d2ee9d18d239348cb135708e8482f3a" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">p-2S-SMAD1/5/8</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_d7b7576a6ce6c6961a2de2e8c0608786" />
+ <bp:entityReference rdf:resource="#ProteinReference_1dbbe41a40e4a2eac7353b64ab6a18e5" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phospho-R-SMAD1/5/8</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6375</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
@@ -4477,6 +4495,11 @@
  <bp:dataSource rdf:resource="#reactome" />
 </bp:Protein>
 
+<bp:RelationshipXref rdf:ID="RelationshipXref_e29fec3ed92cda909aa2e163baf937cb">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-173495</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:RelationshipXref>
+
 <bp:RelationshipXref rdf:ID="RelationshipXref_hgnc_symbol_CHRDL1_identity">
  <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0356" />
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHRDL1</bp:id>
@@ -4500,6 +4523,11 @@
  <bp:featureLocation rdf:resource="#SequenceInterval_53c440dffef643b9daaa3a78588571ad" />
 </bp:FragmentFeature>
 
+<bp:RelationshipXref rdf:ID="RelationshipXref_be2eb154fc4c025c941ca5b09310add6">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-201444</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:RelationshipXref>
+
 <bp:Protein rdf:ID="Protein_d4996defd8469be768be8c3732ef0607">
  <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-201809" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NOG</bp:displayName>
@@ -4520,11 +4548,11 @@
 </bp:ModificationFeature>
 
 <bp:Protein rdf:ID="Protein_cf7ab0efbdaeac0394ee0efda15e1944">
- <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-173533" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_901d4565b8c690a413703db740c94dd1" />
  <bp:memberPhysicalEntity rdf:resource="#Protein_51ff1c30bc215ea0d7e3d9cf8d21b732" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMURF</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_d7b7576a6ce6c6961a2de2e8c0608786" />
+ <bp:entityReference rdf:resource="#ProteinReference_35c4dc84fdcaee1c22637777cfa5af1c" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 173533</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6371</bp:comment>
@@ -4757,11 +4785,6 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
 </bp:PublicationXref>
 
-<bp:FragmentFeature rdf:ID="FragmentFeature_f8afae16cc0a4a20b66ed161b7d45d25">
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5649</bp:comment>
- <bp:featureLocation rdf:resource="#SequenceInterval_458025b891a38ab0ae4a177e4737d121" />
-</bp:FragmentFeature>
-
 <bp:CellularLocationVocabulary rdf:ID="CellularLocationVocabulary_756afcdbc4334f3a86d1a0d5fde2360d">
  <bp:xref rdf:resource="#UnificationXref_gene_ontology_GO_0005886" />
  <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">plasma membrane</bp:term>
@@ -4786,6 +4809,11 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceSite12263</bp:comment>
 </bp:SequenceSite>
 
+<bp:RelationshipXref rdf:ID="RelationshipXref_1cef8bf1699f7af5f58a328575ff9682">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-173533</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:RelationshipXref>
+
 <bp:SequenceSite rdf:ID="SequenceSite_294b6c3132286fa1d06dbdd3d269ba35">
  <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">450</bp:sequencePosition>
  <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
@@ -4797,6 +4825,15 @@
  <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_0a60bad8ea81c3ce5ed7d85e6c4780ba" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#SequenceInterval5642</bp:comment>
 </bp:SequenceInterval>
+
+<bp:ProteinReference rdf:ID="ProteinReference_10d01b236f8a16b80eb77849cb94f60b">
+ <bp:xref rdf:resource="#RelationshipXref_064b1991da601a9d74e058fa8f66414c" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q13705" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/Q13873" />
+ <bp:memberEntityReference rdf:resource="http://identifiers.org/uniprot/P27037" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Type II receptor</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">auto-generated generic entity reference</bp:comment>
+</bp:ProteinReference>
 
 <bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_13236_secondary-ac">
  <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0360" />
@@ -4825,9 +4862,9 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_dip_DIP-36709N_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_uniprotkb_Q9HCE7_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/uniprot.isoform/Q9HCE7-2</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_57154</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_851994</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMUF1_HUMAN Reviewed; 757 AA.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A57154</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_57154</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_06902_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_NCBI_Gene_57154_gene_product</bp:comment>
@@ -5117,12 +5154,10 @@
  <bp:stepProcess rdf:resource="#Catalysis_8f3ed95a424213068cb8f8187f73312c" />
 </bp:PathwayStep>
 
-<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-202644">
- <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-202644.1</bp:comment>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-202644</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
-</bp:UnificationXref>
+<bp:FragmentFeature rdf:ID="FragmentFeature_04610bd433f7645732cd9bf5d09f24ec">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5628</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceInterval_9e93152063632e5717bc54a8b877a7e5" />
+</bp:FragmentFeature>
 
 <bp:PublicationXref rdf:about="http://identifiers.org/pubmed/12857866">
  <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">2003</bp:year>
@@ -5304,10 +5339,6 @@
  <bp:featureLocation rdf:resource="#SequenceInterval_36016da28ffc458d7e5b348b58c96a7a" />
 </bp:FragmentFeature>
 
-<bp:SequenceRegionVocabulary rdf:ID="SequenceRegionVocabulary_9ac8671ee97631a992efa2672b0be6b1">
- <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">proline-rich PPXY motif</bp:term>
-</bp:SequenceRegionVocabulary>
-
 <bp:BiochemicalReaction rdf:about="http://identifiers.org/reactome/R-HSA-201821">
  <bp:xref rdf:resource="http://identifiers.org/pubmed/11278251" />
  <bp:xref rdf:resource="http://identifiers.org/pubmed/12151385" />
@@ -5387,7 +5418,6 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CER1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">DAN domain family member 4</bp:name>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Cytokine that may play a role in anterior neuralinduction and somite formation during embryogenesis in partthrough a BMP-inhibitory mechanism. Can regulate Nodal signalingduring gastrulation as well as the formation and patterning of theprimitive streak (By similarity). {ECO:0000250}.SUBUNIT: Forms monomers and predominantly dimers. {ECO:0000250}.SUBCELLULAR LOCATION: Secreted {ECO:0000305}.PTM: N-glycosylated. {ECO:0000250}.SIMILARITY: Belongs to the DAN family. {ECO:0000305}.SIMILARITY: Contains 1 CTCK (C-terminal cystine knot-like) domain.{ECO:0000255|PROSITE-ProRule:PRU00039}.SEQUENCE CAUTION:Sequence=AAH69503.1; Type=Erroneous termination; Positions=266; Note=Translated as Ser.; Evidence={ECO:0000305}; COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_PROTEIN_GENE_3A9350</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_04802_identity</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CER1_HUMAN Reviewed; 267 AA.</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_005445</bp:comment>
@@ -5462,12 +5492,10 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">gene ontology</bp:db>
 </bp:RelationshipXref>
 
-<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-173495">
- <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
- <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-173495.1</bp:comment>
- <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-173495</bp:id>
- <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
-</bp:UnificationXref>
+<bp:FragmentFeature rdf:ID="FragmentFeature_f8afae16cc0a4a20b66ed161b7d45d25">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#FragmentFeature5649</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceInterval_458025b891a38ab0ae4a177e4737d121" />
+</bp:FragmentFeature>
 
 <bp:BiochemicalReaction rdf:about="http://identifiers.org/reactome/R-HSA-201810">
  <bp:xref rdf:resource="http://identifiers.org/pubmed/17029022" />

@@ -25,13 +25,14 @@ import static org.sbgn.ArcClazz.*;
 
 /**
  * This class converts BioPAX L3 model into SBGN PD.
- * It optionally applies COSE layout.
+ * It optionally applies a special COSE layout.
  *
- * This version ignores several BioPAX L3 features during conversion:
+ * This version ignores several BioPAX L3 features and types during conversion:
  * <ul>
  * <li>Parent-child relationship between physical entities</li>
  * <li>Parent-child relationship between entity references</li>
  * <li>Binding features and covalent binding features of physical entities</li>
+ * <li>Pathway, PathwayStep, MolecularInteraction (PPIs), GeneticInteraction, Gene, Evidence, etc.</li>
  * </ul>
  *
  * Also note that:
@@ -40,7 +41,7 @@ import static org.sbgn.ArcClazz.*;
  * between compartments are not handled here.</li>
  * <li>Control structures in BioPAX and in SBGN PD are a little different. We use AND and NOT
  * glyphs to approximate controls in BioPAX. However, ANDing everything is not really proper because
- * BioPAX do not imply a logical operator between controllers.</li>
+ * BioPAX does not imply a logical operator between controllers.</li>
  * </ul>
  *
  * @author Ozgun Babur
@@ -48,11 +49,6 @@ import static org.sbgn.ArcClazz.*;
 public class L3ToSBGNPDConverter
 {
 	private static final Logger log = LoggerFactory.getLogger(L3ToSBGNPDConverter.class);
-
-	/**
-	 * Ubique label.
-	 */
-	public static final String IS_UBIQUE = "IS_UBIQUE";
 
 	/**
 	 * A matching between physical entities and SBGN classes.
@@ -81,6 +77,13 @@ public class L3ToSBGNPDConverter
 	 * Flag to run a layout before writing down the sbgn.
 	 */
 	protected boolean doLayout;
+
+	/**
+	 * If the number of nodes (biological processes and participants) in the model
+	 * is going to be greater than this maximum, then no layout (but a trivial one)
+	 * will be applied.
+	 */
+	protected int maxNodes;
 
 	/**
 	 * Mapping from SBGN IDs to the IDs of the related objects in BioPAX.
@@ -134,7 +137,7 @@ public class L3ToSBGNPDConverter
 	 */
 	public L3ToSBGNPDConverter()
 	{
-		this(null, null, true);
+		this(null, null, false);
 	}
 
 	/**
@@ -152,6 +155,11 @@ public class L3ToSBGNPDConverter
 		this.useTwoGlyphsForReversibleConversion = true;
 		this.sbgn2BPMap = new HashMap<String, Set<String>>();
 		this.flattenComplexContent = true;
+		this.maxNodes = 1000;
+	}
+
+	public void setDoLayout(boolean doLayout) {
+		this.doLayout = doLayout;
 	}
 
 	/**
@@ -224,7 +232,15 @@ public class L3ToSBGNPDConverter
 	}
 
 	/**
-	 * Creates an Sbgn object from the given model.
+	 * Creates an Sbgn object from the given BioPAX L3 model.
+	 *
+	 * Currently, it converts physical entities (interaction participants)
+	 * and Conversion, Control, including their sub-classes, and TemplateReaction
+	 * types. I does not convert other BioPAX processes and entities, such as:
+	 * Pathway, MolecularInteraction (PPI), GeneticInteraction,
+	 * Gene, Evidence, PathwayStep.
+	 *
+	 * TODO
 	 *
 	 * @param model model to convert to SBGN
 	 * @return SBGN representation of the model
@@ -238,21 +254,22 @@ public class L3ToSBGNPDConverter
 		arcMap = new HashMap<String, Arc>();
 		ubiqueSet = new HashSet<Glyph>();
 
+		int n = 0; //approximate number of SBGN nodes
+
 		// Create glyphs for Physical Entities
 		for (PhysicalEntity entity : model.getObjects(PhysicalEntity.class))
 		{
 			if (needsToBeCreatedInitially(entity))
 			{
 				createGlyph(entity);
+				++n;
 			}
 		}
 
 		// Create glyph for conversions and link with arcs
 		for (Conversion conv : model.getObjects(Conversion.class))
 		{
-			// For each conversion we check if we need to create a left-to-right and/or
-			// right-to-left process.
-
+			// For each conversion we check if we need to create a left-to-right and/or right-to-left process.
 			if (conv.getConversionDirection() == null ||
 				conv.getConversionDirection().equals(ConversionDirectionType.LEFT_TO_RIGHT) ||
 				(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
@@ -260,31 +277,33 @@ public class L3ToSBGNPDConverter
 			{
 				createProcessAndConnections(conv, ConversionDirectionType.LEFT_TO_RIGHT);
 			}
-
-			if (conv.getConversionDirection() != null &&
+			else if (conv.getConversionDirection() != null &&
 				(conv.getConversionDirection().equals(ConversionDirectionType.RIGHT_TO_LEFT) ||
 				(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE)) &&
 				useTwoGlyphsForReversibleConversion))
 			{
 				createProcessAndConnections(conv, ConversionDirectionType.RIGHT_TO_LEFT);
 			}
-
-			if (conv.getConversionDirection() != null &&
+			else if (conv.getConversionDirection() != null &&
 				conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
 				!useTwoGlyphsForReversibleConversion)
 			{
 				createProcessAndConnections(conv, ConversionDirectionType.REVERSIBLE);
 			}
+
+			++n;
 		}
 
 		// Create glyph for template reactions and link with arcs
 		for (TemplateReaction tr : model.getObjects(TemplateReaction.class)) {
 			createProcessAndConnections(tr);
+			++n;
 		}
 
 		// Register created objects into sbgn construct
 
 		final Sbgn sbgn = factory.createSbgn();
+		//TODO: how to annotate the SBGN model with BioPAX Model's URI and name?
 		org.sbgn.bindings.Map map = new org.sbgn.bindings.Map();
 		sbgn.setMap(map);
 		map.setLanguage(Language.PD.toString());
@@ -293,11 +312,9 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
-		if (doLayout && sbgn.getMap().getGlyph().size() < 1000) { //TODO: always skip layout for graphs >1000 glyphs?
-			(new SBGNLayoutManager()).createLayout(sbgn);
-		}
-		
-		return sbgn;
+		(new SBGNLayoutManager()).createLayout(sbgn, doLayout && n < this.maxNodes);
+
+		return sbgn; //modified sbgn (even when no layout is run)
 	}
 
 	//-- Section: Create molecules ----------------------------------------------------------------|
@@ -1339,6 +1356,7 @@ public class L3ToSBGNPDConverter
 			label.setText(new DecimalFormat("0.##").format(stoic.getStoichiometricCoefficient()));
 			card.setLabel(label);
 			arc.getGlyph().add(card);
+//			card.setId(convertID(stoic.getUri()+"_"+arc.getId()));
 		}
 
 		Arc.Start start = new Arc.Start();
@@ -1412,7 +1430,6 @@ public class L3ToSBGNPDConverter
 	static
 	{
 		factory = new ObjectFactory();
-
 		typeMatchMap = new HashMap<Class<? extends BioPAXElement>, String>();
 		typeMatchMap.put(Protein.class, MACROMOLECULE.getClazz());
 		typeMatchMap.put(SmallMolecule.class, SIMPLE_CHEMICAL.getClazz());

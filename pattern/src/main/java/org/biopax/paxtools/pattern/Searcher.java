@@ -389,7 +389,7 @@ public class Searcher
 
 		System.out.println("created pathways = " + inters.size());
 
-		Model clonedModel = excise(model, toExise);
+		Model clonedModel = excise(toExise);
 
 		int i = 0;
 		for (Set<Interaction> ints : inters)
@@ -441,19 +441,27 @@ public class Searcher
 
 	/**
 	 * Excises a model to the given elements.
-	 * @param model model to excise
+	 * @param model model to excise (bogus parameter, in fact, deprecated)
 	 * @param result elements to excise to
 	 * @return excised model
+	 * @deprecated use {@link #excise(Set)} instead (parameter:model was not actually used at all)
 	 */
 	private static Model excise(Model model, Set<BioPAXElement> result)
 	{
+		return excise(result);
+	}
+
+	/**
+	 * Excises a model to the given elements.
+	 * @param result elements to excise to
+	 * @return excised model
+	 */
+	private static Model excise(Set<BioPAXElement> result)
+	{
 		Completer c = new Completer(EM);
-
-		result = c.complete(result, model);
-
+		result = c.complete(result);
 		Cloner cln = new Cloner(EM, BioPAXLevel.L3.getDefaultFactory());
-
-		return cln.clone(model, result);
+		return cln.clone(result);
 	}
 
 	/**
