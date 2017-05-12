@@ -5,8 +5,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level2.deltaGprimeO;
-import org.biopax.paxtools.model.level2.kPrime;
 import org.biopax.paxtools.model.level2.physicalEntityParticipant;
 import org.biopax.paxtools.util.BioPaxIOException;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
@@ -169,8 +167,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		namespaces = this.readNameSpaces();
 
 		autodetectBiopaxLevel(); // this may update level, editorMap and factory!
-
-//		bp = level.getNameSpace();
 
 		Model model = factory.createModel();
 

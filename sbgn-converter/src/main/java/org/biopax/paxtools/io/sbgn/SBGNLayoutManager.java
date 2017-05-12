@@ -11,6 +11,8 @@ import org.sbgn.bindings.Port;
 import org.sbgn.bindings.Glyph;
 import org.sbgn.bindings.Sbgn;
 import org.sbgn.bindings.Bbox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Chilay COSE layout of an SBGN PD graph.
@@ -19,6 +21,8 @@ import org.sbgn.bindings.Bbox;
  */
 class SBGNLayoutManager
 {
+    private static final Logger log = LoggerFactory.getLogger(SBGNLayoutManager.class);
+
     // Layout and root objects
     private Layout layout;
     private VCompound root;

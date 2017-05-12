@@ -312,7 +312,13 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
-		(new SBGNLayoutManager()).createLayout(sbgn, doLayout && n < this.maxNodes);
+		try {
+			(new SBGNLayoutManager()).createLayout(sbgn, doLayout && n < this.maxNodes);
+		} catch (Exception e) {
+			throw new RuntimeException("SBGN Layout of " + model.getXmlBase()
+					+ ((model.getName()==null) ? "" : model.getName())
+					+ " failed.", e);
+		}
 
 		return sbgn; //modified sbgn (even when no layout is run)
 	}

@@ -299,6 +299,10 @@ public class SimpleIOHandlerTest
         // Read
 		Model model = getL3Model(io);
 
+		//(since 5.1.0; no assertions here, for these are in-memory only)
+		model.setName("A test Level3 model");
+		model.setUri("http://biopax.org/test/io/l3model");
+
         // Write
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         io.convertToOWL(model, outputStream);
