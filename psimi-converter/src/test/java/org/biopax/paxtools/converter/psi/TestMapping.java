@@ -31,11 +31,7 @@ package org.biopax.paxtools.converter.psi;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.DnaReference;
-import org.biopax.paxtools.model.level3.ExperimentalForm;
-import org.biopax.paxtools.model.level3.MolecularInteraction;
-import org.biopax.paxtools.model.level3.ProteinReference;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
+import org.biopax.paxtools.model.level3.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -53,6 +49,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -253,12 +250,24 @@ public class TestMapping  {
 			Entry entry = (Entry)entries.iterator().next();
 			EntryMapper mapper = new EntryMapper(bpModel, false);
 			mapper.run(entry);
+			save(bpModel,"target/" + INTACT_TEST_FILE + ".owl");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}			
 		assertNotNull(bpModel);
 		assertFalse(bpModel.getObjects().isEmpty());
+		Set<Evidence> evs = bpModel.getObjects(Evidence.class);
+		assertFalse(evs.isEmpty());
+		MolecularInteraction interaction = null;
+		for(MolecularInteraction mi : bpModel.getObjects(MolecularInteraction.class)) {
+			if(mi.getUri().contains("1580340")) {
+				interaction = mi;
+				break;
+			}
+		}
+		assertNotNull(interaction);
+		assertTrue(interaction.getComment().contains(EntryMapper.FIGURE_LEGEND_CODE+ ":1C"));
 	}
     
     private void save(Model model, String file) throws IOException {

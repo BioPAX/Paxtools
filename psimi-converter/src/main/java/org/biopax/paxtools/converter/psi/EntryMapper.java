@@ -1,12 +1,8 @@
 package org.biopax.paxtools.converter.psi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.BioSource;
@@ -94,9 +90,11 @@ class EntryMapper {
 	
 	// as of BioGRID v3.1.72 (at least), genetic interaction code can reside
 	// as an attribute of the Interaction via "BioGRID Evidence Code" key
-	private static final String BIOGRID_EVIDENCE_CODE = "BioGRID Evidence Code";
+	public static final String BIOGRID_EVIDENCE_CODE = "BioGRID Evidence Code";
+	public static final String EXPERIMENTAL_FORM_ENTITY_COMMENT = "experimental form entity";
 
-	private static final String EXPERIMENTAL_FORM_ENTITY_COMMENT = "experimental form entity";
+	// IntAct annotation keys
+	public static final String FIGURE_LEGEND_CODE = "figure legend";
 	
 	private final Model bpModel;
 	
@@ -199,7 +197,7 @@ class EntryMapper {
 		
 		String sourceUri = (name!=null) 
 			? xmlBase + "Provenance_" + encode(name)
-				: genUri(Provenance.class, bpModel);
+				: genUri(Provenance.class);
 		
 		//unless it's already there,
 		pro = (Provenance) bpModel.getByID(sourceUri);		
@@ -309,17 +307,21 @@ class EntryMapper {
 			}
 		}
 				
+		// Process interaction attributes.
+		final Set<String> comments = new HashSet<String>();
 		// Set GeneticInteraction flag.
 		// As of BioGRID v3.1.72 (at least), genetic interaction code can reside
 		// as an attribute of the Interaction via "BioGRID Evidence Code" key
 		if (interaction.hasAttributes()) {
 			for (Attribute attribute : interaction.getAttributes()) {
-				if (attribute.getName().equalsIgnoreCase(BIOGRID_EVIDENCE_CODE)) {
-					String value = (attribute.hasValue()) ? attribute.getValue().toLowerCase() : "";
-					if (GENETIC_INTERACTIONS.contains(value)) {
-						isGeneticInteraction = true;
-					}
+				String key = attribute.getName(); //may be reset below
+				String value = (attribute.hasValue()) ? attribute.getValue() : "";
+				if(key.equalsIgnoreCase(BIOGRID_EVIDENCE_CODE)
+						&& GENETIC_INTERACTIONS.contains(value))
+				{
+					isGeneticInteraction = true; // important!
 				}
+				comments.add(key + ":" + value);
 			}
 		}
 		// or, if all participants are 'gene' type, make a biopax GeneticInteraction
@@ -332,16 +334,24 @@ class EntryMapper {
 		}
 		
 		if ((isComplex || forceInteractionToComplex) && !isGeneticInteraction) {
-			bpInteraction = createComplex(bpParticipants);
+			bpInteraction = createComplex(bpParticipants, interaction.getImexId(), interaction.getId());
 		} else if(isGeneticInteraction) {
-			bpInteraction = createGeneticInteraction(bpParticipants, interactionVocabularies);
+			bpInteraction = createGeneticInteraction(bpParticipants, interactionVocabularies,
+					interaction.getImexId(), interaction.getId()
+			);
 		} else {
-			bpInteraction = createMolecularInteraction(bpParticipants, interactionVocabularies);
+			bpInteraction = createMolecularInteraction(bpParticipants, interactionVocabularies,
+					interaction.getImexId(), interaction.getId());
 		}
-			
+
+		for(String c : comments) {
+			bpInteraction.addComment(c);
+		}
+
 		//add evidences to the interaction/complex bpEntity
 		for (Evidence evidence : bpEvidences) {
 			bpInteraction.addEvidence(evidence);
+			//TODO: shall we add IntAct "figure legend" comment to the evidences as well?
 		}
 		
 		addAvailabilityAndProvenance(bpInteraction, avail, pro);
@@ -360,7 +370,7 @@ class EntryMapper {
 		if (interaction.hasXref()) {
 			bpXrefs.addAll(getXrefs(interaction.getXref()));
 		}
-		
+
 		for (Xref bpXref : bpXrefs) {
 			bpInteraction.addXref(bpXref);
 		}
@@ -374,8 +384,8 @@ class EntryMapper {
 		
 		for (ExperimentDescription experimentDescription : interaction.getExperiments()) {
 			// build and add evidence
-			String evUri = genUri(Evidence.class, bpModel) + 
-					"_i" + interaction.getId() + "_e" + experimentDescription.getId();
+			String evUri = genUri(Evidence.class,
+					interaction.getImexId(), interaction.getId(), experimentDescription.getId());
 			
 			Evidence evidence = bpModel.addNew(Evidence.class, evUri);
 
@@ -475,7 +485,7 @@ class EntryMapper {
 		
 		//create new Evidence for this participant
 		Evidence participantEvidence = bpModel.getLevel().getDefaultFactory()
-			.create(Evidence.class, genUri(Evidence.class, bpModel) + "_p" + participant.getId());
+			.create(Evidence.class, genUri(Evidence.class, "p",participant.getId()));
 		
 		if(participant.hasExperimentalRoles() 
 			|| participant.hasExperimentalInteractors() 
@@ -1325,7 +1335,7 @@ class EntryMapper {
 		if( efs.isEmpty() && efvs.isEmpty() && expEntity == null)
 			return; //skip creating empty useless ExperimentalForm		
 		
-		ExperimentalForm ef = bpModel.addNew(ExperimentalForm.class, genUri(ExperimentalForm.class, bpModel));	
+		ExperimentalForm ef = bpModel.addNew(ExperimentalForm.class, genUri(ExperimentalForm.class));
 		
 		//add all exp. features to the exp. form
 		if(!efs.isEmpty()) {
@@ -1405,8 +1415,7 @@ class EntryMapper {
         			rtv = bpModel.addNew(RelationshipTypeVocabulary.class, cvUri);
         			rtv.addTerm(refType);
         			if(refTypeAc != null && !refTypeAc.isEmpty()) {//null happens, e.g., for 'uniprot-removed-ac' terms...
-        				UnificationXref cvx = bpModel
-        					.addNew(UnificationXref.class, genUri(UnificationXref.class, bpModel));
+        				UnificationXref cvx = bpModel.addNew(UnificationXref.class, genUri(UnificationXref.class));
         				cvx.setDb("PSI-MI");
         				cvx.setId(refTypeAc);
         				rtv.addXref(cvx);
@@ -1426,7 +1435,7 @@ class EntryMapper {
 	private Score createScore(String value, 
 			Set<? extends Xref> bpXrefs, Set<String> comments)
 	{
-		Score bpScore = bpModel.addNew(Score.class, genUri(Score.class, bpModel));
+		Score bpScore = bpModel.addNew(Score.class, genUri(Score.class, value));
 		if (value != null)
 		{
 			bpScore.setValue(value);
@@ -1452,15 +1461,16 @@ class EntryMapper {
 	 */
 	private MolecularInteraction createMolecularInteraction(
 			Set<? extends Entity> participants,
-			Set<InteractionVocabulary> interactionVocabularies)
+			Set<InteractionVocabulary> interactionVocabularies,
+			Object... psimiIds)
 	{
 		MolecularInteraction toReturn =
-				bpModel.addNew(MolecularInteraction.class, genUri(MolecularInteraction.class, bpModel));
+				bpModel.addNew(MolecularInteraction.class, genUri(MolecularInteraction.class, psimiIds));
 
 		if (participants != null && !participants.isEmpty())
 		{
 			for (Entity participant : participants) {
-				toReturn.addParticipant((PhysicalEntity)participant);
+				toReturn.addParticipant(participant);
 			}
 		}
 			
@@ -1473,10 +1483,11 @@ class EntryMapper {
 	
 	private GeneticInteraction createGeneticInteraction(
 			Set<? extends Entity> participants,
-			Set<InteractionVocabulary> interactionVocabularies)
+			Set<InteractionVocabulary> interactionVocabularies,
+			Object... psimiIds)
 	{
 		GeneticInteraction toReturn =
-				bpModel.addNew(GeneticInteraction.class, genUri(GeneticInteraction.class, bpModel));
+				bpModel.addNew(GeneticInteraction.class, genUri(GeneticInteraction.class, psimiIds));
 
 		if (participants != null && !participants.isEmpty())
 		{
@@ -1493,9 +1504,9 @@ class EntryMapper {
 	}
 
 
-	private Complex createComplex(Set<? extends Entity> participants)
+	private Complex createComplex(Set<? extends Entity> participants, Object... psimiIds)
 	{
-		Complex toReturn = bpModel.addNew(Complex.class, genUri(Complex.class, bpModel));
+		Complex toReturn = bpModel.addNew(Complex.class, genUri(Complex.class, psimiIds));
 
 		if (participants != null && !participants.isEmpty())
 		{
@@ -1510,7 +1521,7 @@ class EntryMapper {
 
 	private <T extends EntityFeature> T getFeature(Class<T> featureClass, Feature psiFeature)
 	{					
-		String entityFeatureUri = genUri(featureClass, bpModel); 		
+		String entityFeatureUri = genUri(featureClass, psiFeature.getId());
 		T entityFeature = (T) bpModel.addNew(featureClass, entityFeatureUri);
 		
 		// feature location
@@ -1545,14 +1556,14 @@ class EntryMapper {
 	private SequenceInterval getSequenceLocation(long beginSequenceInterval,
 	                                            long endSequenceInterval)
 	{
-			SequenceInterval toReturn =
-					bpModel.addNew(SequenceInterval.class, genUri(SequenceInterval.class, bpModel));
-			SequenceSite bpSequenceSiteBegin =
-					bpModel.addNew(SequenceSite.class, genUri(SequenceSite.class, bpModel));
+			SequenceInterval toReturn = bpModel.addNew(SequenceInterval.class,
+							genUri(SequenceInterval.class, beginSequenceInterval,endSequenceInterval));
+			SequenceSite bpSequenceSiteBegin = bpModel.addNew(SequenceSite.class,
+					genUri(SequenceSite.class, beginSequenceInterval));
 			bpSequenceSiteBegin.setSequencePosition((int) beginSequenceInterval);
 			toReturn.setSequenceIntervalBegin(bpSequenceSiteBegin);
-			SequenceSite bpSequenceSiteEnd =
-					bpModel.addNew(SequenceSite.class, genUri(SequenceSite.class, bpModel));
+			SequenceSite bpSequenceSiteEnd = bpModel.addNew(SequenceSite.class,
+					genUri(SequenceSite.class, endSequenceInterval));
 			bpSequenceSiteEnd.setSequencePosition((int) endSequenceInterval);
 			toReturn.setSequenceIntervalEnd(bpSequenceSiteEnd);
 			
@@ -1585,15 +1596,16 @@ class EntryMapper {
 		return false;
 	}
 
-	
 	/*
-	 * Generates a URI of a BioPAX object using the xml base, model interface name 
-	 * and generated number (sequential).
+	 * Generates a URI of a BioPAX object using the xml base,
+	 * original xml ids (optional, for debugging),
+	 * BioPAX model interface name and some unique number.
 	 * The idea is virtually never ever return the same URI here (taking into account 
-	 * that there are multiple threads converting different PSIMI Entries, one per thread, 
+	 * that there are multiple threads converting different PSI-MI Entries, one per thread,
 	 * simultaneously)
 	 */
-	private String genUri(Class<? extends BioPAXElement> type, Model model) {
-		return xmlBase + type.getSimpleName() + "_" + (counter++);
-	}	
+	private String genUri(Class<? extends BioPAXElement> type, Object... psimiIds) {
+		return xmlBase + type.getSimpleName() + "_" + UUID.randomUUID() +
+				( psimiIds.length>0 ? "_" + encode(ArrayUtils.toString(psimiIds)) : "");
+	}
 }
