@@ -1,12 +1,8 @@
 package org.biopax.paxtools.converter.psi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import org.biopax.paxtools.impl.level3.PublicationXrefImpl;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.BioSource;
@@ -97,7 +93,9 @@ class EntryMapper {
 	private static final String BIOGRID_EVIDENCE_CODE = "BioGRID Evidence Code";
 
 	private static final String EXPERIMENTAL_FORM_ENTITY_COMMENT = "experimental form entity";
-	
+
+	private static final String FIGURE_LEGEND_CODE = "figure legend";
+
 	private final Model bpModel;
 	
 	private final String xmlBase;
@@ -240,7 +238,7 @@ class EntryMapper {
 	{	
 		Entity bpInteraction = null; //interaction or complex
 		boolean isGeneticInteraction = false;
-		
+
 		// get interaction name/short name
 		String name = null;
 		String shortName = null;
@@ -249,7 +247,7 @@ class EntryMapper {
 			name = (names.hasFullName()) ? names.getFullName() : "";
 			shortName = (names.hasShortLabel()) ? names.getShortLabel() : "";
 		}
-		
+
 		final Set<InteractionVocabulary> interactionVocabularies = new HashSet<InteractionVocabulary>();
 		if (interaction.hasInteractionTypes()) {
 			for(CvType interactionType : interaction.getInteractionTypes()) {
@@ -258,15 +256,15 @@ class EntryMapper {
 				if(cv != null)
 					interactionVocabularies.add(cv);
 			}
-		}		
-		
-		// using experiment descriptions, create Evidence objects 
+		}
+
+		// using experiment descriptions, create Evidence objects
 		// (yet, no experimental forms/roles/entities are created here)
 		Set<Evidence> bpEvidences = new HashSet<Evidence>();
-		if (interaction.hasExperiments()) {			
+		if (interaction.hasExperiments()) {
 			bpEvidences = createBiopaxEvidences(interaction);
 		}
-		
+
 		//A hack for e.g. IntAct or BIND "gene-protein" interactions (ChIp and EMSA experiments)
 		// where the interactor type should probably not be 'gene' (but 'dna' or 'rna')
 		Set<String> participantTypes = new HashSet<String>();
@@ -279,13 +277,13 @@ class EntryMapper {
 				participantTypes.add("complex"); //hierarchical complex build up
 			} // else? (impossible!)
 		}
-		// If there are both genes and physical entities present, let's 
+		// If there are both genes and physical entities present, let's
 		// replace 'gene' with 'dna' (esp. true for "ch-ip", "emsa" experiments);
 		// (this won't affect experimental form entities if experimentalInteractor element exists)
 		if(participantTypes.size() > 1 && participantTypes.contains("gene")) {
 			//TODO a better criteria to reliably detect whether 'gene' interactor type actually means Dna/DnaRegion or Rna/RnaRegion, or indeed Gene)
-			LOG.warn("Interaction: " + interaction.getId() + ", name(s): " + shortName + " " + name 
-					+ "; has both 'gene' and physical entity type participants: " + participantTypes 
+			LOG.warn("Interaction: " + interaction.getId() + ", name(s): " + shortName + " " + name
+					+ "; has both 'gene' and physical entity type participants: " + participantTypes
 					+ "; so we'll replace 'gene' with 'dna' (a quick fix)");
 			for(Participant p : interaction.getParticipants()) {
 				if(p.hasInteractor() && p.getInteractor().getInteractorType().hasNames()) {
@@ -294,21 +292,21 @@ class EntryMapper {
 						p.getInteractor().getInteractorType().getNames().setShortLabel("dna");
 					}
 				}
-			}	
-		}		
-		
+			}
+		}
+
 		// interate through the psi-mi participants, create corresp. biopax entities
 		final Set<Entity> bpParticipants = new HashSet<Entity>();
 		for (Participant participant : interaction.getParticipants()) {
 			// get paxtools physical entity participant and add to participant list
 			// (this also adds experimental evidence and forms)
-			Entity bpParticipant = createBiopaxEntity(participant, avail, pro); 
+			Entity bpParticipant = createBiopaxEntity(participant, avail, pro);
 			if (bpParticipant != null) {
 				if(!bpParticipants.contains(bpParticipant))
 					bpParticipants.add(bpParticipant);
 			}
 		}
-				
+
 		// Set GeneticInteraction flag.
 		// As of BioGRID v3.1.72 (at least), genetic interaction code can reside
 		// as an attribute of the Interaction via "BioGRID Evidence Code" key
@@ -325,12 +323,12 @@ class EntryMapper {
 		// or, if all participants are 'gene' type, make a biopax GeneticInteraction
 		if(participantTypes.size() == 1 && participantTypes.contains("gene")) {
 			isGeneticInteraction = true;
-		}		
+		}
 		//or, check another genetic interaction flag (criteria)
 		if(!isGeneticInteraction) {
 			isGeneticInteraction = isGeneticInteraction(bpEvidences);
 		}
-		
+
 		if ((isComplex || forceInteractionToComplex) && !isGeneticInteraction) {
 			bpInteraction = createComplex(bpParticipants);
 		} else if(isGeneticInteraction) {
@@ -338,14 +336,14 @@ class EntryMapper {
 		} else {
 			bpInteraction = createMolecularInteraction(bpParticipants, interactionVocabularies);
 		}
-			
+
 		//add evidences to the interaction/complex bpEntity
 		for (Evidence evidence : bpEvidences) {
 			bpInteraction.addEvidence(evidence);
 		}
-		
+
 		addAvailabilityAndProvenance(bpInteraction, avail, pro);
-		
+
 		if (name != null)
 			bpInteraction.addName(name);
 		if (shortName != null) {
@@ -354,24 +352,33 @@ class EntryMapper {
 			else
 				bpInteraction.addName(shortName);
 		}
-				
-		// add xrefs		
-		Set<Xref> bpXrefs = new HashSet<Xref>();		
+
+		// add xrefs
+		Set<Xref> bpXrefs = new HashSet<Xref>();
 		if (interaction.hasXref()) {
 			bpXrefs.addAll(getXrefs(interaction.getXref()));
 		}
-		
+
 		for (Xref bpXref : bpXrefs) {
 			bpInteraction.addXref(bpXref);
 		}
-		
+
 		return bpInteraction;
 	}
 
 	
 	private Set<Evidence> createBiopaxEvidences(Interaction interaction) {
 		Set<Evidence> evidences = new HashSet<Evidence>();
-		
+
+		String figureCode = null;
+		if (interaction.hasAttributes()) {
+			for (Attribute attribute : interaction.getAttributes()) {
+				if (attribute.getName().equalsIgnoreCase(FIGURE_LEGEND_CODE)) {
+					figureCode = (attribute.hasValue()) ? attribute.getValue().toLowerCase() : "";
+				}
+			}
+		}
+
 		for (ExperimentDescription experimentDescription : interaction.getExperiments()) {
 			// build and add evidence
 			String evUri = genUri(Evidence.class, bpModel) + 
@@ -400,6 +407,8 @@ class EntryMapper {
 					evidence.addComment(names.getFullName().trim());
 				if(names.hasShortLabel())
 					evidence.addComment(names.getShortLabel().trim());
+				if(figureCode != null)
+					evidence.addComment("Figure:" + figureCode);
 			}
 			
 			// from attributes
