@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.sbgn.GlyphClazz;
 import org.sbgn.SbgnUtil;
@@ -26,23 +27,31 @@ public class SBGNConverterTest
 {
 	static final BioPAXIOHandler handler =  new SimpleIOHandler();
 
+	private static UbiqueDetector blacklist;
+
+	@BeforeClass
+	public static void setUp() {
+		blacklist = new ListUbiqueDetector(new HashSet<String>(Arrays.asList(
+				"http://pid.nci.nih.gov/biopaxpid_685",
+				"http://pid.nci.nih.gov/biopaxpid_678",
+				"http://pid.nci.nih.gov/biopaxpid_3119",
+				"http://pid.nci.nih.gov/biopaxpid_3114",
+				"http://pathwaycommons.org/pc2/SmallMolecule_3037a14ebec3a95b8dab68e6ea5c946f",
+				"http://pathwaycommons.org/pc2/SmallMolecule_4ca9a2cfb6a8a6b14cee5d7ed5945364"
+		)));
+	}
+
 	@Test
 	public void testSBGNConversion() throws Exception
 	{
 		String input = "/AR-TP53";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-
-		Set<String> blacklist = new HashSet<String>(Arrays.asList(
-			"http://pid.nci.nih.gov/biopaxpid_685", "http://pid.nci.nih.gov/biopaxpid_678",
-			"http://pid.nci.nih.gov/biopaxpid_3119", "http://pid.nci.nih.gov/biopaxpid_3114"));
-
 		System.out.println("level3.getObjects().size() = " + level3.getObjects().size());
 
 		String out = "target/" + input + ".sbgn";
 
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(
-			new ListUbiqueDetector(blacklist), null, true);
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist, null, true);
 
 		conv.writeSBGN(level3, out);
 
@@ -182,14 +191,7 @@ public class SBGNConverterTest
 		Model level3 = handler.convertFromOWL(in);
 		String out = "target/" + input + ".sbgn";
 
-		//use Pathway Commons blacklist.txt
-		Scanner scanner = new Scanner(getClass().getResourceAsStream("/blacklist.txt"));
-		Set<String> bl = new HashSet<String>();
-		while(scanner.hasNextLine()) {
-			bl.add(scanner.nextLine().split("\\t")[0]);
-		}
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(
-				new ListUbiqueDetector(bl),null, false);
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, false);
 		conv.setDoLayout(true); //this is not the default anymore
 		conv.writeSBGN(level3, out);
 
@@ -221,6 +223,20 @@ public class SBGNConverterTest
 			assertFalse(set.isEmpty());
 		}
 
+	}
+
+	// this SMPDB model does not contain processes that can be converted to SBGN (layout used to throw
+	// ArrayIndexOutOfBoundsException; perhaps, converting it makes no sense...)
+	@Test
+	public void testConvertSmpdbPathway() throws Exception
+	{
+		String input = "/smpdb-beta-oxidation";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+		String out = "target/" + input + ".sbgn";
+
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+		conv.writeSBGN(level3, out);
 	}
 
 	@Test

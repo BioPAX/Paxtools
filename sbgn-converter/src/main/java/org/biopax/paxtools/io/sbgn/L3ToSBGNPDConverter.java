@@ -312,13 +312,20 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
+		final boolean layout = doLayout && n < this.maxNodes && !arcMap.isEmpty();
 		try {
-			(new SBGNLayoutManager()).createLayout(sbgn, doLayout && n < this.maxNodes);
+			//Must call this, although actual layout might never run;
+			//in some real data tests, skipping createLayout method
+			//led to malformed SBGN model, unfortunately...
+			(new SBGNLayoutManager()).createLayout(sbgn, layout);
 		} catch (Exception e) {
 			throw new RuntimeException("SBGN Layout of " + model.getXmlBase()
 					+ ((model.getName()==null) ? "" : model.getName())
 					+ " failed.", e);
 		}
+		if(!layout) log.warn(String.format("No layout, for either " +
+				"it's disabled: %s, or ~ no. nodes > %s: %s, or - no edges: %s",
+				!doLayout, maxNodes, n>maxNodes, arcMap.isEmpty()));
 
 		return sbgn; //modified sbgn (even when no layout is run)
 	}

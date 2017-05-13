@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+ xml:base="http://pathwaycommons.org/pc2/">
+<owl:Ontology rdf:about="">
+ <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+</owl:Ontology>
+
+<bp:UnificationXref rdf:ID="UnificationXref_cas_204120-61-6">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">204120-61-6</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cas</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_22192_secondary-ac">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0360" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:22192</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:Pathway rdf:ID="Pathway_834b855480240c5c2d3a75a7728776ce">
+ <bp:pathwayOrder rdf:resource="#PathwayStep_0958063bebc77cedf95d122750a1013f" />
+ <bp:pathwayComponent rdf:resource="#Interaction_f347ee4bbf416354082989e71e0af26f" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Beta Oxidation</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://smpdb.ca/pathways/#SubPathways/236</bp:comment>
+ <bp:dataSource rdf:resource="#smpdb" />
+</bp:Pathway>
+
+<bp:UnificationXref rdf:ID="UnificationXref_molecular_interactions_ontology_MI_0829">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0829</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">molecular interactions ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_78675_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:78675</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_77061_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:77061</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:SmallMoleculeReference rdf:about="http://identifiers.org/chebi/CHEBI:15351">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3&apos;-phosphoadenosine 5&apos;-(3-{(3R)-4-[(3-{[2-(acetylsulfanyl)ethyl]amino}-3-oxopropyl)amino]-3-hydroxy-2,2-dimethyl-4-oxobutyl} dihydrogen diphosphate)</bp:standardName>
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_2408_secondary-ac" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_40470_secondary-ac" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_35224_see-also" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_17984_multiple_parent_reference" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_78675_see-also" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_13712_secondary-ac" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_15366_see-also" />
+ <bp:xref rdf:resource="#UnificationXref_chebi_CHEBI_15351" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_23354_see-also" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_15346_see-also" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_22192_secondary-ac" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_62049_see-also" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_57288_see-also" />
+ <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C23H38N7O17P3S</bp:chemicalFormula>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">acetyl-CoA</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:15351</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CC(=O)SCCNC(=O)CCNC(=O)[C@H](O)C(C)(C)COP(O)(=O)OP(O)(=O)OC[C@H]1O[C@H]([C@H](O)[C@@H]1OP(O)(O)=O)n1cnc2c(N)ncnc12</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">S-acetyl-CoA</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AcCoA</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C23H38N7O17P3S</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Acetyl-CoA</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">S-acetyl-coenzyme A</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Acetyl coenzyme A</bp:name>
+ <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">809.5721</bp:molecularWeight>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">is_a CHEBI:17984</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.inoh.org/biopax/IMR_0200414_Acetyl_CoA</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">has_functional_parent CHEBI:15346</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">has_role CHEBI:23354</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ra.cs.uni-tuebingen.de/software/KEGGtranslator/cpdC00024.eref</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/SmallMoleculeReference_bind_533_identity</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">has_role CHEBI:78675</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">has_functional_parent CHEBI:15366</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/hmdb/HMDB01206</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">has_role CHEBI:62049</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">is_conjugate_acid_of CHEBI:57288</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">has_role CHEBI:35224</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/cas/72-89-9</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED CHEBI:15351</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">An acyl-CoA having acetyl as its S-acetyl component.</bp:comment>
+ <bp:structure rdf:resource="#ChemicalStructure_8883ff72898d46bfed247f25852eeb12" />
+</bp:SmallMoleculeReference>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_17984_multiple_parent_reference">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0829" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:17984</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:Provenance rdf:ID="smpdb">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Small Molecule Pathway Database</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMPDB</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Source http://smpdb.ca/downloads/smpdb_biopax.zip type: BIOPAX, Small Molecule Pathway Database 2.0, 05-Jun-2016</bp:comment>
+</bp:Provenance>
+
+<bp:Interaction rdf:ID="Interaction_f347ee4bbf416354082989e71e0af26f">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SubPathwayInteraction236</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SubPathway236Reaction</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SubPathwayReaction</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://smpdb.ca/pathways/#SubPathwayInteractions/236</bp:comment>
+ <bp:dataSource rdf:resource="#smpdb" />
+ <bp:participant rdf:resource="#SmallMolecule_9e58e07c154d8b3577b53b5dc96f0be8" />
+ <bp:participant rdf:resource="#SmallMolecule_987eccadc59f91487bf4ab1f1f443ff1" />
+</bp:Interaction>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_40470_secondary-ac">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0360" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:40470</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_gene_ontology_GO_0005739">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005739</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">gene ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_2408_secondary-ac">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0360" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:2408</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://identifiers.org/psimi/MI:0829">
+ <bp:xref rdf:resource="#UnificationXref_molecular_interactions_ontology_MI_0829" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">multiple parent reference</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">multiple parent</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:UnificationXref rdf:ID="UnificationXref_molecular_interactions_ontology_MI_0361">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0361</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mi</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_molecular_interactions_ontology_MI_0360">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0360</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">molecular interactions ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:ChemicalStructure rdf:ID="ChemicalStructure_7e20d25f9fe4024b6162ed654a88c61f">
+ <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMILES</bp:structureFormat>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://smpdb.ca/pathways/#ChemicalStructure/PW_C007198</bp:comment>
+ <bp:structureData rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CC(C)CCCC(C)CCC(=O)SCCNC(=O)CCNC(=O)C(O)C(C)(C)COP(O)(=O)OP(O)(=O)OC[C@H]1O[C@H]([C@H](O)[C@@H]1OP(O)(O)=O)N1C=NC2=C1N=CN=C2N</bp:structureData>
+</bp:ChemicalStructure>
+
+<bp:PathwayStep rdf:ID="PathwayStep_0958063bebc77cedf95d122750a1013f">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://smpdb.ca/pathways/#SubPathwayInteractionSteps/SubPathway236</bp:comment>
+ <bp:stepProcess rdf:resource="#Interaction_f347ee4bbf416354082989e71e0af26f" />
+</bp:PathwayStep>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_62049_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:62049</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:SmallMolecule rdf:ID="SmallMolecule_9e58e07c154d8b3577b53b5dc96f0be8">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">4,8-Dimethylnonanoyl-CoA</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_fa6abd7426b778f3b7e0b72ff4e93340" />
+ <bp:entityReference rdf:resource="http://identifiers.org/pubchem.compound/53481003" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SubPathwayInput</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://smpdb.ca/pathways/#Compound/PW_C007198_Mitochondrion</bp:comment>
+ <bp:dataSource rdf:resource="#smpdb" />
+</bp:SmallMolecule>
+
+<bp:UnificationXref rdf:ID="UnificationXref_chebi_CHEBI_15351">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:15351</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:UnificationXref>
+
+<bp:ChemicalStructure rdf:ID="ChemicalStructure_8883ff72898d46bfed247f25852eeb12">
+ <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:structureFormat>
+ <bp:structureData rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI=1S/C23H38N7O17P3S/c1-12(31)51-7-6-25-14(32)4-5-26-21(35)18(34)23(2,3)9-44-50(41,42)47-49(39,40)43-8-13-17(46-48(36,37)38)16(33)22(45-13)30-11-29-15-19(24)27-10-28-20(15)30/h10-11,13,16-18,22,33-34H,4-9H2,1-3H3,(H,25,32)(H,26,35)(H,39,40)(H,41,42)(H2,24,27,28)(H2,36,37,38)/t13-,16-,17-,18+,22-/m1/s1</bp:structureData>
+</bp:ChemicalStructure>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_63856_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:63856</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_35224_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:35224</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:SmallMoleculeReference rdf:about="http://identifiers.org/pubchem.compound/53481003">
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_77061_see-also" />
+ <bp:xref rdf:resource="#UnificationXref_cas_204120-61-6" />
+ <bp:xref rdf:resource="#UnificationXref_hmdb_HMDB11604" />
+ <bp:xref rdf:resource="#UnificationXref_pubchem-compound_53481003" />
+ <bp:xref rdf:resource="#RelationshipXref_chebi_CHEBI_63856_see-also" />
+ <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C32H56N7O17P3S</bp:chemicalFormula>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">4,8-Dimethylnonanoyl-CoA</bp:displayName>
+ <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">935.2666</bp:molecularWeight>
+ <bp:structure rdf:resource="#ChemicalStructure_7e20d25f9fe4024b6162ed654a88c61f" />
+</bp:SmallMoleculeReference>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://identifiers.org/psimi/MI:0361">
+ <bp:xref rdf:resource="#UnificationXref_molecular_interactions_ontology_MI_0361" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">see-also</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://identifiers.org/psimi/MI:0360">
+ <bp:xref rdf:resource="#UnificationXref_molecular_interactions_ontology_MI_0360" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">secondary-ac</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_23354_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:23354</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:CellularLocationVocabulary rdf:ID="CellularLocationVocabulary_fa6abd7426b778f3b7e0b72ff4e93340">
+ <bp:xref rdf:resource="#UnificationXref_gene_ontology_GO_0005739" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mitochondria</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mitochondrion</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mitochondrion</bp:term>
+</bp:CellularLocationVocabulary>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_57288_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:57288</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_15346_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:15346</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_13712_secondary-ac">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0360" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:13712</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_chebi_CHEBI_15366_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:15366</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_pubchem-compound_53481003">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">53481003</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubchem-compound</bp:db>
+</bp:UnificationXref>
+
+<bp:SmallMolecule rdf:ID="SmallMolecule_987eccadc59f91487bf4ab1f1f443ff1">
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Acetyl-CoA</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_fa6abd7426b778f3b7e0b72ff4e93340" />
+ <bp:entityReference rdf:resource="http://identifiers.org/chebi/CHEBI:15351" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SubPathwayInput</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SubPathwayOutput</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://smpdb.ca/pathways/#Compound/PW_C000940_Mitochondrion</bp:comment>
+ <bp:dataSource rdf:resource="#smpdb" />
+</bp:SmallMolecule>
+
+<bp:UnificationXref rdf:ID="UnificationXref_hmdb_HMDB11604">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HMDB11604</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hmdb</bp:db>
+</bp:UnificationXref>
+</rdf:RDF>
