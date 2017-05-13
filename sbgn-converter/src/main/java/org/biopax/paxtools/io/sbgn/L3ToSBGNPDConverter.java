@@ -5,6 +5,8 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.ClassFilterSet;
+import org.sbgn.ArcClazz;
 import org.sbgn.Language;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.*;
@@ -267,38 +269,36 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Create glyph for conversions and link with arcs
-		for (Conversion conv : model.getObjects(Conversion.class))
+		for (Interaction interaction : model.getObjects(Interaction.class))
 		{
 			// For each conversion we check if we need to create a left-to-right and/or right-to-left process.
-			if (conv.getConversionDirection() == null ||
-				conv.getConversionDirection().equals(ConversionDirectionType.LEFT_TO_RIGHT) ||
-				(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
-				useTwoGlyphsForReversibleConversion))
-			{
-				createProcessAndConnections(conv, ConversionDirectionType.LEFT_TO_RIGHT);
-			}
-			else if (conv.getConversionDirection() != null &&
-				(conv.getConversionDirection().equals(ConversionDirectionType.RIGHT_TO_LEFT) ||
-				(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE)) &&
-				useTwoGlyphsForReversibleConversion))
-			{
-				createProcessAndConnections(conv, ConversionDirectionType.RIGHT_TO_LEFT);
-			}
-			else if (conv.getConversionDirection() != null &&
-				conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
-				!useTwoGlyphsForReversibleConversion)
-			{
-				createProcessAndConnections(conv, ConversionDirectionType.REVERSIBLE);
+			if(interaction instanceof Conversion) {
+				Conversion conv = (Conversion) interaction;
+				if (conv.getConversionDirection() == null ||
+						conv.getConversionDirection().equals(ConversionDirectionType.LEFT_TO_RIGHT) ||
+						(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
+								useTwoGlyphsForReversibleConversion)) {
+					createProcessAndConnections(conv, ConversionDirectionType.LEFT_TO_RIGHT);
+				} else if (conv.getConversionDirection() != null &&
+						(conv.getConversionDirection().equals(ConversionDirectionType.RIGHT_TO_LEFT) ||
+								(conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE)) &&
+										useTwoGlyphsForReversibleConversion)) {
+					createProcessAndConnections(conv, ConversionDirectionType.RIGHT_TO_LEFT);
+				} else if (conv.getConversionDirection() != null &&
+						conv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE) &&
+						!useTwoGlyphsForReversibleConversion) {
+					createProcessAndConnections(conv, ConversionDirectionType.REVERSIBLE);
+				}
+			} else if(interaction instanceof TemplateReaction) {
+				// Create glyph for template reactions and link with arcs
+				createProcessAndConnections((TemplateReaction) interaction);
+			} else if(Interaction.class.equals(interaction.getModelInterface())) {
+				createBasicProcess(interaction);
 			}
 
 			++n;
 		}
 
-		// Create glyph for template reactions and link with arcs
-		for (TemplateReaction tr : model.getObjects(TemplateReaction.class)) {
-			createProcessAndConnections(tr);
-			++n;
-		}
 
 		// Register created objects into sbgn construct
 
@@ -912,8 +912,7 @@ public class L3ToSBGNPDConverter
 	 * @param cnv the conversion
 	 * @param direction direction of the conversion to create
 	 */
-	private void createProcessAndConnections(Conversion cnv,
-		ConversionDirectionType direction)
+	private void createProcessAndConnections(Conversion cnv, ConversionDirectionType direction)
 	{
 		assert cnv.getConversionDirection() == null ||
 			cnv.getConversionDirection().equals(direction) ||
@@ -927,7 +926,7 @@ public class L3ToSBGNPDConverter
 		glyphMap.put(process.getId(), process);
 
 		// Determine input and output sets
-		
+
 		Set<PhysicalEntity> input = direction.equals(ConversionDirectionType.RIGHT_TO_LEFT) ?
 			cnv.getRight() : cnv.getLeft();
 		Set<PhysicalEntity> output = direction.equals(ConversionDirectionType.RIGHT_TO_LEFT) ?
@@ -1019,16 +1018,19 @@ public class L3ToSBGNPDConverter
 		// Add input and output ports
 		addPorts(process);
 
-		// Create a source-and-sink as the input
-
-		Glyph sas = factory.createGlyph();
-		sas.setClazz(SOURCE_AND_SINK.getClazz());
-		sas.setId("SAS_For_" + process.getId());
-		glyphMap.put(sas.getId(), sas);
-		createArc(sas, process.getPort().get(0), CONSUMPTION.getClazz(), null);
+		PhysicalEntity template = tr.getTemplate();
+		if(template == null) {
+			// Create a source-and-sink as the input
+			Glyph sas = factory.createGlyph();
+			sas.setClazz(SOURCE_AND_SINK.getClazz());
+			sas.setId("SAS_For_" + process.getId());glyphMap.put(sas.getId(), sas);
+			createArc(sas, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
+		} else {
+			Glyph g = getGlyphToLink(template, process.getId());
+			createArc(process.getPort().get(0), g, ArcClazz.INTERACTION.getClazz(), null);
+		}
 
 		// Associate products
-
 		for (PhysicalEntity pe : tr.getProduct())
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
@@ -1047,6 +1049,37 @@ public class L3ToSBGNPDConverter
 
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
 		sbgn2BPMap.get(process.getId()).add(tr.getUri());
+	}
+
+	private void createBasicProcess(Interaction interaction)
+	{
+		if(!Interaction.class.equals(interaction.getModelInterface()))
+			throw new IllegalArgumentException("sub-class of Interaction is not allowed here.");
+
+		// create the process for the conversion in that direction
+		Glyph process = factory.createGlyph();
+		process.setClazz(OMITTED_PROCESS.getClazz());
+		process.setId(convertID(interaction.getUri()));
+		glyphMap.put(process.getId(), process);
+		addPorts(process);
+
+		// Associate participants
+		for (PhysicalEntity pe : new ClassFilterSet<Entity,PhysicalEntity>(interaction.getParticipant(), PhysicalEntity.class))
+		{
+			Glyph g = getGlyphToLink(pe, process.getId());
+			createArc(g, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
+		}
+
+		// Associate controllers
+		for (Control ctrl : interaction.getControlledOf())
+		{
+			Glyph g = createControlStructure(ctrl);
+			if (g != null) createArc(g, process, getControlType(ctrl), null);
+		}
+
+		// Record mapping
+		sbgn2BPMap.put(process.getId(), new HashSet<String>());
+		sbgn2BPMap.get(process.getId()).add(interaction.getUri());
 	}
 
 	/**

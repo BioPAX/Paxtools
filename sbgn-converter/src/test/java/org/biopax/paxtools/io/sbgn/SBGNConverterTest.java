@@ -225,10 +225,12 @@ public class SBGNConverterTest
 
 	}
 
-	// this SMPDB model does not contain processes that can be converted to SBGN (layout used to throw
-	// ArrayIndexOutOfBoundsException; perhaps, converting it makes no sense...)
+	// an SMPDB model does not contain processes that can be converted to SBGN (layout used to throw
+	// ArrayIndexOutOfBoundsException; perhaps, converting it makes no sense...);
+	// it's probably about an unknown/omitted sub-pathway with known in/out chemicals,
+	// but it's expressed in BioPAX badly (a Pathway with one Interaction and PathwayStep, and no comments...)
 	@Test
-	public void testConvertSmpdbPathway() throws Exception
+	public void testConvertOmittedSmpdbPathway() throws Exception
 	{
 		String input = "/smpdb-beta-oxidation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
