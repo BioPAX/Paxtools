@@ -1,5 +1,6 @@
 package org.biopax.paxtools.io.sbgn;
 
+import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 
 import java.util.Set;
@@ -27,12 +28,11 @@ public class ListUbiqueDetector implements UbiqueDetector
 
 	/**
 	 * Checks if the ID of the PhysicalEntity is in the set.
-	 * @param pe PhysicalEntity to check
+	 * @param e PhysicalEntity or Gene to check
 	 * @return true if ubique
 	 */
-	@Override
-	public boolean isUbique(PhysicalEntity pe)
+	public boolean isUbique(Entity e)
 	{
-		return ubiqueIDs.contains(pe.getUri());
+		return ubiqueIDs.contains(e.getUri());
 	}
 }

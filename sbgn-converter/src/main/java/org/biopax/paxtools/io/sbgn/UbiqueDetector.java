@@ -1,6 +1,6 @@
 package org.biopax.paxtools.io.sbgn;
 
-import org.biopax.paxtools.model.level3.PhysicalEntity;
+import org.biopax.paxtools.model.level3.Entity;
 
 /**
  * Interface for ubiquitous molecule detection.
@@ -11,8 +11,8 @@ public interface UbiqueDetector
 {
 	/**
 	 * Checks if the PhysicalEntity is a ubiquitous molecule.
-	 * @param pe PhysicalEntity to check
+	 * @param e PhysicalEntity or Gene to check
 	 * @return true if ubique
 	 */
-	boolean isUbique(PhysicalEntity pe);
+	boolean isUbique(Entity e);
 }

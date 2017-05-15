@@ -1,8 +1,7 @@
 package org.biopax.paxtools.impl.level3;
 
-import org.biopax.paxtools.model.level3.GeneticInteraction;
-import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
-import org.biopax.paxtools.model.level3.Score;
+import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 public class GeneticInteractionImpl extends InteractionImpl
         implements GeneticInteraction
@@ -37,5 +36,14 @@ public class GeneticInteractionImpl extends InteractionImpl
     public void setInteractionScore(Score interactionScore)
     {
         this.interactionScore = interactionScore;
+    }
+
+    @Override
+    public void addParticipant(Entity aParticipant) {
+        if (aParticipant instanceof Gene)
+            super.addParticipant(aParticipant);
+        else
+            throw new IllegalBioPAXArgumentException(
+                "GeneticInteraction can only have Gene participants (at least two).");
     }
 }

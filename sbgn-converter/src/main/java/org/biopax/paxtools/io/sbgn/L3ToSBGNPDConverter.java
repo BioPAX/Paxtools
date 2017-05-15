@@ -34,7 +34,7 @@ import static org.sbgn.ArcClazz.*;
  * <li>Parent-child relationship between physical entities</li>
  * <li>Parent-child relationship between entity references</li>
  * <li>Binding features and covalent binding features of physical entities</li>
- * <li>Pathway, PathwayStep, MolecularInteraction (PPIs), GeneticInteraction, Gene, Evidence, etc.</li>
+ * <li>Pathway, PathwayStep, Evidence, etc.</li>
  * </ul>
  *
  * Also note that:
@@ -234,15 +234,13 @@ public class L3ToSBGNPDConverter
 	}
 
 	/**
-	 * Creates an Sbgn object from the given BioPAX L3 model.
+	 * Creates an SBGN object from the given BioPAX L3 model.
 	 *
 	 * Currently, it converts physical entities (interaction participants)
-	 * and Conversion, Control, including their sub-classes, and TemplateReaction
-	 * types. I does not convert other BioPAX processes and entities, such as:
-	 * Pathway, MolecularInteraction (PPI), GeneticInteraction,
-	 * Gene, Evidence, PathwayStep.
-	 *
-	 * TODO
+	 * and Conversion, Control, including their sub-classes, TemplateReaction,
+	 * MolecularInteraction, GeneticInteraction, and base Interaction.class types.
+	 * I does not convert other BioPAX entities and utility classes, such as:
+	 * Pathway, Evidence, PathwayStep.
 	 *
 	 * @param model model to convert to SBGN
 	 * @return SBGN representation of the model
@@ -259,7 +257,7 @@ public class L3ToSBGNPDConverter
 		int n = 0; //approximate number of SBGN nodes
 
 		// Create glyphs for Physical Entities
-		for (PhysicalEntity entity : model.getObjects(PhysicalEntity.class))
+		for (Entity entity : model.getObjects(Entity.class))
 		{
 			if (needsToBeCreatedInitially(entity))
 			{
@@ -271,6 +269,9 @@ public class L3ToSBGNPDConverter
 		// Create glyph for conversions and link with arcs
 		for (Interaction interaction : model.getObjects(Interaction.class))
 		{
+			if(interaction.getParticipant().isEmpty())
+				continue;
+
 			// For each conversion we check if we need to create a left-to-right and/or right-to-left process.
 			if(interaction instanceof Conversion) {
 				Conversion conv = (Conversion) interaction;
@@ -292,7 +293,11 @@ public class L3ToSBGNPDConverter
 			} else if(interaction instanceof TemplateReaction) {
 				// Create glyph for template reactions and link with arcs
 				createProcessAndConnections((TemplateReaction) interaction);
-			} else if(Interaction.class.equals(interaction.getModelInterface())) {
+			} else if(interaction instanceof MolecularInteraction) {
+				createMiProcess((MolecularInteraction) interaction);
+			} else if(interaction instanceof GeneticInteraction) {
+				createGiProcess((GeneticInteraction) interaction);
+			} else if(!(interaction instanceof Control)) {
 				createBasicProcess(interaction);
 			}
 
@@ -333,40 +338,43 @@ public class L3ToSBGNPDConverter
 	//-- Section: Create molecules ----------------------------------------------------------------|
 
 	/**
-	 * We don't want to represent every PhysicalEntity in SBGN. For instance if a Complex is nested
-	 * under another Complex, and if it is not a participant of any interaction, we don't want to
-	 * draw it.
+	 * We don't want to represent every PhysicalEntity or Gene in SBGN.
+	 * For instance, if a Complex is nested under another Complex,
+	 * and if it is not a participant of any interaction, we don't want to draw it.
 	 *
-	 * @param entity physical entity to check
-	 * @return true if we will draw this entity in SBGN
+	 * @param ent physical entity or gene (it returns false for other entity types) to test
+	 * @return true if we want to draw this entity in SBGN; false - otherwise, or - to be auto-created later
 	 */
-	private boolean needsToBeCreatedInitially(PhysicalEntity entity)
+	private boolean needsToBeCreatedInitially(Entity ent)
 	{
 		boolean ret = true; //means - do create a node
 
-		if (entity instanceof Complex) {
-			Complex c = (Complex) entity;
-			if (c.getParticipantOf().isEmpty() && !c.getComponentOf().isEmpty()) {
-				// Inner complex will be created during creation of the top complex
+		if(ent instanceof PhysicalEntity) {
+			PhysicalEntity entity = (PhysicalEntity) ent;
+
+			if (entity instanceof Complex) {
+				Complex c = (Complex) entity;
+				if (c.getParticipantOf().isEmpty() && !c.getComponentOf().isEmpty()) {
+					// Inner complex will be created during creation of the top complex
+					ret = false;
+				}
+			} else if (entity.getParticipantOf().isEmpty() && !entity.getComponentOf().isEmpty()) {
+				// Complex members will be created during creation of parent complex
+				ret = false;
+			} else if (entity.getParticipantOf().isEmpty() && entity.getComponentOf().isEmpty()) {
+				// won't create a node for either a dangling, experimental form entity, or memberPhysicalEntity
+				if (!entity.getMemberPhysicalEntityOf().isEmpty())
+					log.debug("skip a memberPhysicalEntity (- also not a participant/component of another entity): "
+							+ entity.getUri());
+				else
+					log.debug("skip a dangling or experimental form phys. entity: " + entity.getUri());
+
+				ret = false;
+			} else if (ubiqueDet != null && ubiqueDet.isUbique(entity)) {
+				// Ubiques will be created when they are used
 				ret = false;
 			}
-		}
-		else if (entity.getParticipantOf().isEmpty() && !entity.getComponentOf().isEmpty()) {
-			// Complex members will be created during creation of parent complex
-			ret = false;
-		}
-		else if(entity.getParticipantOf().isEmpty() && entity.getComponentOf().isEmpty()) {
-			// won't create a node for either a dangling, experimental form entity, or memberPhysicalEntity
-			if(!entity.getMemberPhysicalEntityOf().isEmpty())
-				log.debug("skip a memberPhysicalEntity (- also not a participant/component of another entity): "
-						+ entity.getUri());
-			else
-				log.debug("skip a dangling or experimental form phys. entity: " + entity.getUri());
-
-			ret = false;
-		}
-		else if (ubiqueDet != null && ubiqueDet.isUbique(entity)) {
-			// Ubiques will be created when they are used
+		} else if(!(ent instanceof Gene)) {
 			ret = false;
 		}
 
@@ -376,27 +384,28 @@ public class L3ToSBGNPDConverter
 	/**
 	 * Creates a glyph representing the given PhysicalEntity.
 	 *
-	 * @param pe PhysicalEntity to represent
+	 * @param e PhysicalEntity or Gene to represent
 	 * @return the created glyph
 	 */
-	private Glyph createGlyph(PhysicalEntity pe)
+	private Glyph createGlyph(Entity e)
 	{
-		String id = convertID(pe.getUri());
+		String id = convertID(e.getUri());
 		if (glyphMap.containsKey(id)) return glyphMap.get(id);
 
 		// Create its glyph and register
 
-		Glyph g = createGlyphBasics(pe);
+		Glyph g = createGlyphBasics(e);
 		glyphMap.put(g.getId(), g);
+
 		if (g.getClone() != null) ubiqueSet.add(g);
-		
-		assignLocation(pe, g);
 
-		// Fill-in the complex members if this is a complex
-
-		if (pe instanceof Complex)
-		{
-			createComplexContent((Complex) pe);
+		if(e instanceof PhysicalEntity) {
+			PhysicalEntity pe = (PhysicalEntity) e;
+			assignLocation(pe, g);
+			// Fill-in the complex members if this is a complex
+			if (pe instanceof Complex) {
+				createComplexContent((Complex) pe);
+			}
 		}
 
 		return g;
@@ -421,78 +430,77 @@ public class L3ToSBGNPDConverter
 	 * This method creates a glyph for the given PhysicalEntity, sets its title and state variables
 	 * if applicable.
 	 *
-	 * @param pe PhysicalEntity to represent
+	 * @param e PhysicalEntity or Gene to represent
 	 * @return the glyph
 	 */
-	private Glyph createGlyphBasics(PhysicalEntity pe)
+	private Glyph createGlyphBasics(Entity e)
 	{
-		return createGlyphBasics(pe, true);
+		return createGlyphBasics(e, true);
 	}
 	/**
 	 * This method creates a glyph for the given PhysicalEntity, sets its title and state variables
 	 * if applicable.
 	 *
-	 * @param pe PhysicalEntity to represent
+	 * @param e PhysicalEntity or Gene to represent
 	 * @param idIsFinal if ID is final, then it is recorded for future reference
 	 * @return the glyph
 	 */
-	private Glyph createGlyphBasics(PhysicalEntity pe, boolean idIsFinal)
+	private Glyph createGlyphBasics(Entity e, boolean idIsFinal)
 	{
-		String s = typeMatchMap.get(pe.getModelInterface());
+		String s = typeMatchMap.get(e.getModelInterface());
 
 		Glyph g = factory.createGlyph();
-		g.setId(convertID(pe.getUri()));
+		g.setId(convertID(e.getUri()));
 		g.setClazz(s);
 
 		// Set the label
-
 		Label label = factory.createLabel();
-		label.setText(findALabelForMolecule(pe));
+		label.setText(findLabelFor(e));
 		g.setLabel(label);
 
 		// Detect if ubique
 
-		if (ubiqueDet != null && ubiqueDet.isUbique(pe))
+		if (ubiqueDet != null && ubiqueDet.isUbique(e))
 		{
 			g.setClone(factory.createGlyphClone());
 		}
 
 		// Put on state variables
-
-		List<Glyph> states = getInformation(pe);
+		List<Glyph> states = getInformation(e);
 		g.getGlyph().addAll(states);
 
 		// Record the mapping
 		if (idIsFinal)
 		{
 			sbgn2BPMap.put(g.getId(), new HashSet<String>());
-			sbgn2BPMap.get(g.getId()).add(pe.getUri());
+			sbgn2BPMap.get(g.getId()).add(e.getUri());
 		}
 		return g;
 	}
 
 	/**
 	 * Gets the representing glyph of the PhysicalEntity.
-	 * @param pe PhysicalEntity to get its glyph
+	 * @param e PhysicalEntity or Gene to get its glyph
 	 * @param linkID Edge id, used if the PhysicalEntity is ubique
 	 * @return Representing glyph
 	 */
-	private Glyph getGlyphToLink(PhysicalEntity pe, String linkID)
+	private Glyph getGlyphToLink(Entity e, String linkID)
 	{
-		if (ubiqueDet == null || !ubiqueDet.isUbique(pe))
+		if (ubiqueDet == null || !ubiqueDet.isUbique(e))
 		{
-			return glyphMap.get(convertID(pe.getUri()));
+			return glyphMap.get(convertID(e.getUri()));
 		}
-		else
-		{
+		else {
 			// Create a new glyph for each use of ubique
-			Glyph g = createGlyphBasics(pe, false);
-			g.setId(convertID(pe.getUri()) + linkID);
+			Glyph g = createGlyphBasics(e, false);
+			g.setId(convertID(e.getUri()) + linkID);
 
 			sbgn2BPMap.put(g.getId(), new HashSet<String>());
-			sbgn2BPMap.get(g.getId()).add(pe.getUri());
+			sbgn2BPMap.get(g.getId()).add(e.getUri());
 
-			assignLocation(pe, g);
+			if(e instanceof PhysicalEntity && ((PhysicalEntity)e).getCellularLocation() != null)
+				assignLocation((PhysicalEntity) e, g);
+
 			ubiqueSet.add(g);
 			return g;
 		}
@@ -632,13 +640,12 @@ public class L3ToSBGNPDConverter
 	 *
 	 * A good BioPAX file will use a short and specific name (like HGNC symbols) as displayName.
 	 *
-	 * @param pe PhysicalEntity to find a name
+	 * @param pe PhysicalEntity or Gene to find a name
 	 * @return a name for labeling
 	 */
-	private String findALabelForMolecule(PhysicalEntity pe)
+	private String findLabelFor(Entity pe)
 	{
 		// Use gene symbol of PE
-
 		for (Xref xref : pe.getXref())
 		{
 			String sym = extractGeneSymbol(xref);
@@ -646,7 +653,6 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Use gene symbol of ER
-
 		EntityReference er = null;
 
 		if (pe instanceof SimplePhysicalEntity)
@@ -724,6 +730,7 @@ public class L3ToSBGNPDConverter
 			// Don't leave it without a name
 			name = "noname";
 		}
+
 		return name;
 	}
 
@@ -788,32 +795,45 @@ public class L3ToSBGNPDConverter
 	 * Adds molecule type, and iterates over features of the entity and creates corresponding state
 	 * variables. Ignores binding features and covalent-binding features.
 	 * 
-	 * @param pe entity to collect features
+	 * @param e entity or gene to collect features
 	 * @return list of state variables
 	 */
-	private List<Glyph> getInformation(PhysicalEntity pe)
+	private List<Glyph> getInformation(Entity e)
 	{
 		List<Glyph> list = new ArrayList<Glyph>();
 
-		// Add the molecule type before states if this is a nucleic acid
-
-		if (pe instanceof NucleicAcid)
+		// Add the molecule type before states if this is a nucleic acid or gene
+		if (e instanceof NucleicAcid || e instanceof Gene)
 		{
 			Glyph g = factory.createGlyph();
 			g.setClazz(UNIT_OF_INFORMATION.getClazz());
 			Label label = factory.createLabel();
-			String s = "mt:";
-			s += ((pe instanceof Dna || pe instanceof DnaRegion) ? "DNA" :
-				(pe instanceof Rna || pe instanceof RnaRegion) ? "RNA" : "NuclAc");
+
+			String s;
+			if(e instanceof Dna)
+				s = "mt:DNA";
+			else if(e instanceof DnaRegion)
+				s = "ct:DNA";
+			else if(e instanceof Rna)
+				s = "mt:RNA";
+			else if(e instanceof RnaRegion)
+				s = "ct:RNA";
+			else if(e instanceof Gene)
+				s = "ct:gene";
+			else
+				s = "mt:NuclAc";
+
 			label.setText(s);
 			g.setLabel(label);
 			list.add(g);
 		}
 
 		// Extract state variables
-
-		extractFeatures(pe.getFeature(), true, list);
-		extractFeatures(pe.getNotFeature(), false, list);
+		if(e instanceof PhysicalEntity) {
+			PhysicalEntity pe = (PhysicalEntity) e;
+			extractFeatures(pe.getFeature(), true, list);
+			extractFeatures(pe.getNotFeature(), false, list);
+		}
 
 		return list;
 	}
@@ -938,7 +958,6 @@ public class L3ToSBGNPDConverter
 		Map<PhysicalEntity, Stoichiometry> stoic = getStoichiometry(cnv);
 
 		// Associate inputs to input port
-
 		for (PhysicalEntity pe : input)
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
@@ -947,7 +966,6 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Associate outputs to output port
-
 		for (PhysicalEntity pe : output)
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
@@ -955,7 +973,6 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Associate controllers
-
 		for (Control ctrl : cnv.getControlledOf())
 		{
 			// If there is a direction mismatch between the process and the control, just skip it
@@ -1038,7 +1055,6 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Associate controllers
-
 		for (Control ctrl : tr.getControlledOf())
 		{
 			Glyph g = createControlStructure(ctrl);
@@ -1054,7 +1070,7 @@ public class L3ToSBGNPDConverter
 	private void createBasicProcess(Interaction interaction)
 	{
 		if(!Interaction.class.equals(interaction.getModelInterface()))
-			throw new IllegalArgumentException("sub-class of Interaction is not allowed here.");
+			log.warn("createdBasicProcess, actual type: " + interaction.getModelInterface().getSimpleName());
 
 		// create the process for the conversion in that direction
 		Glyph process = factory.createGlyph();
@@ -1067,6 +1083,78 @@ public class L3ToSBGNPDConverter
 		for (PhysicalEntity pe : new ClassFilterSet<Entity,PhysicalEntity>(interaction.getParticipant(), PhysicalEntity.class))
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
+			createArc(g, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
+		}
+
+		// Associate controllers
+		for (Control ctrl : interaction.getControlledOf())
+		{
+			Glyph g = createControlStructure(ctrl);
+			if (g != null) createArc(g, process, getControlType(ctrl), null);
+		}
+
+		// Record mapping
+		sbgn2BPMap.put(process.getId(), new HashSet<String>());
+		sbgn2BPMap.get(process.getId()).add(interaction.getUri());
+	}
+
+	private void createMiProcess(MolecularInteraction interaction)
+	{
+		// create the process for the conversion in that direction
+		Glyph process = factory.createGlyph();
+		process.setClazz(ASSOCIATION.getClazz());
+		process.setId(convertID(interaction.getUri()));
+		glyphMap.put(process.getId(), process);
+		addPorts(process);
+
+		// Associate participants
+		for (PhysicalEntity pe : new ClassFilterSet<Entity,PhysicalEntity>(interaction.getParticipant(), PhysicalEntity.class))
+		{
+			Glyph g = getGlyphToLink(pe, process.getId());
+			createArc(g, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
+		}
+
+		// Associate controllers
+		for (Control ctrl : interaction.getControlledOf())
+		{
+			Glyph g = createControlStructure(ctrl);
+			if (g != null) createArc(g, process, getControlType(ctrl), null);
+		}
+
+		// Record mapping
+		sbgn2BPMap.put(process.getId(), new HashSet<String>());
+		sbgn2BPMap.get(process.getId()).add(interaction.getUri());
+	}
+
+	private void createGiProcess(GeneticInteraction interaction)
+	{
+		// create the process for the conversion in that direction
+		Glyph process = factory.createGlyph();
+		process.setClazz(OMITTED_PROCESS.getClazz());
+		process.setId(convertID(interaction.getUri()));
+		glyphMap.put(process.getId(), process);
+		addPorts(process);
+
+		//TODO: review phenotype glyph
+		PhenotypeVocabulary v = interaction.getPhenotype();
+		if(v != null && !v.getTerm().isEmpty())
+		{
+			Glyph g = factory.createGlyph();
+			String term = v.getTerm().iterator().next().toLowerCase();
+			g.setId(convertID(term));
+			g.setClazz(PHENOTYPE.getClazz());
+			Label label = factory.createLabel();
+			label.setText(term);
+			g.setLabel(label);
+			glyphMap.put(g.getId(),g);
+			createArc(process.getPort().get(1), g, ArcClazz.STIMULATION.getClazz(), null);
+		}
+
+		// Associate participants
+		for (Entity e : interaction.getParticipant())
+		{
+			Gene gene = (Gene)e; //safe as a GI can only contain Gene participants
+			Glyph g = getGlyphToLink(gene, process.getId());
 			createArc(g, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
 		}
 
@@ -1485,7 +1573,8 @@ public class L3ToSBGNPDConverter
 		typeMatchMap.put(RnaRegion.class, NUCLEIC_ACID_FEATURE.getClazz());
 		typeMatchMap.put(NucleicAcid.class, NUCLEIC_ACID_FEATURE.getClazz());
 		typeMatchMap.put(PhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());
-		typeMatchMap.put(SimplePhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());
+		typeMatchMap.put(SimplePhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());//TODO: abstract type (doesn't occur in BioPAX)
 		typeMatchMap.put(Complex.class, COMPLEX.getClazz());
+		typeMatchMap.put(Gene.class, NUCLEIC_ACID_FEATURE.getClazz());
 	}
 }

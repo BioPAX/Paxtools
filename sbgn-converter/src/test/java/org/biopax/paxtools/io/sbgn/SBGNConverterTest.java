@@ -3,9 +3,14 @@ package org.biopax.paxtools.io.sbgn;
 import static junit.framework.Assert.*;
 
 import org.apache.commons.lang3.StringUtils;
+import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
+import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
+import org.biopax.paxtools.model.level3.Gene;
+import org.biopax.paxtools.model.level3.GeneticInteraction;
+import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.sbgn.GlyphClazz;
@@ -242,6 +247,18 @@ public class SBGNConverterTest
 	}
 
 	@Test
+	public void testConvertBadWikiPathway() throws Exception
+	{
+		String input = "/WP561";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+		String out = "target/" + input + ".sbgn";
+
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+		conv.writeSBGN(level3, out);
+	}
+
+	@Test
 	public void testSbgnLayoutKegg51() throws Exception
 	{
 		File sbgnFile = new File(getClass().getResource("/hsa00051.sbgn").getFile());
@@ -266,4 +283,24 @@ public class SBGNConverterTest
 		marshaller.marshal(result, new FileOutputStream("target/hsa00051.out.sbgn"));
 	}
 
+
+	@Test
+	public void testConvertGIs() throws Exception
+	{
+		String out = "target/test_gi.sbgn";
+		MockFactory f = new MockFactory(BioPAXLevel.L3);
+		Model m = f.createModel();
+		Gene[] g = f.create(m, Gene.class, 2);
+		g[0].setDisplayName("g0");
+		g[1].setDisplayName("g1");
+		GeneticInteraction gi = m.addNew(GeneticInteraction.class,"gi_0");
+		f.bindInPairs("participant", gi,g[0],gi,g[1]);
+		PhenotypeVocabulary v = m.addNew(PhenotypeVocabulary.class,"lethal");
+		v.addTerm("lethal");
+		gi.setPhenotype(v);
+
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
+		conv.setDoLayout(true);
+		conv.writeSBGN(m, out);
+	}
 }

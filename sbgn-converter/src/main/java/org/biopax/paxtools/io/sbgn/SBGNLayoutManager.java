@@ -6,6 +6,7 @@ import org.ivis.layout.*;
 import org.ivis.layout.sbgn.SbgnPDLayout;
 import org.ivis.layout.sbgn.SbgnPDNode;
 import org.ivis.layout.sbgn.SbgnProcessNode;
+import org.sbgn.GlyphClazz;
 import org.sbgn.bindings.Arc;
 import org.sbgn.bindings.Port;
 import org.sbgn.bindings.Glyph;
@@ -223,10 +224,11 @@ class SBGNLayoutManager
         for(Glyph glyph: glyphList)
         {
             // Here logical operator nodes and process nodes are interested !
-            if(glyph.getClazz().equals("process") || glyph.getClazz().equals("omitted process")
-                    || glyph.getClazz().equals( "uncertain process") || glyph.getClazz().equals("phenotype")
-                    || glyph.getClazz().equals("association") || glyph.getClazz().equals("dissociation")
-                    || glyph.getClazz().equals("and") || glyph.getClazz().equals("or") || glyph.getClazz().equals("not"))
+            String type = glyph.getClazz();
+            if(type.equals(GlyphClazz.PROCESS) || type.equals(GlyphClazz.OMITTED_PROCESS)
+                    || type.equals(GlyphClazz.UNCERTAIN_PROCESS) || type.equals(GlyphClazz.PHENOTYPE)
+                    || type.equals(GlyphClazz.ASSOCIATION) || type.equals(GlyphClazz.DISSOCIATION)
+                    || type.equals(GlyphClazz.AND) || type.equals(GlyphClazz.OR) || type.equals(GlyphClazz.NOT))
             {
                 // Add a new value to hash map and also store the node as target node
                 String processGlyphID = glyph.getId();
