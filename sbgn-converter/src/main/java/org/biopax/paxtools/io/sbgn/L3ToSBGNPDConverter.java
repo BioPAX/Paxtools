@@ -1,5 +1,6 @@
 package org.biopax.paxtools.io.sbgn;
 
+import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.io.sbgn.idmapping.HGNC;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -390,14 +391,16 @@ public class L3ToSBGNPDConverter
 	private Glyph createGlyph(Entity e)
 	{
 		String id = convertID(e.getUri());
-		if (glyphMap.containsKey(id)) return glyphMap.get(id);
+		if (glyphMap.containsKey(id))
+			return glyphMap.get(id);
 
 		// Create its glyph and register
 
 		Glyph g = createGlyphBasics(e);
 		glyphMap.put(g.getId(), g);
 
-		if (g.getClone() != null) ubiqueSet.add(g);
+		if (g.getClone() != null)
+			ubiqueSet.add(g);
 
 		if(e instanceof PhysicalEntity) {
 			PhysicalEntity pe = (PhysicalEntity) e;
@@ -479,9 +482,9 @@ public class L3ToSBGNPDConverter
 	}
 
 	/**
-	 * Gets the representing glyph of the PhysicalEntity.
+	 * Gets the representing glyph of the PhysicalEntity or Gene.
 	 * @param e PhysicalEntity or Gene to get its glyph
-	 * @param linkID Edge id, used if the PhysicalEntity is ubique
+	 * @param linkID Edge id, used if the Entity is ubique
 	 * @return Representing glyph
 	 */
 	private Glyph getGlyphToLink(Entity e, String linkID)
@@ -493,7 +496,7 @@ public class L3ToSBGNPDConverter
 		else {
 			// Create a new glyph for each use of ubique
 			Glyph g = createGlyphBasics(e, false);
-			g.setId(convertID(e.getUri()) + linkID);
+			g.setId(convertID(e.getUri()) + "_" + linkID);
 
 			sbgn2BPMap.put(g.getId(), new HashSet<String>());
 			sbgn2BPMap.get(g.getId()).add(e.getUri());
@@ -939,10 +942,9 @@ public class L3ToSBGNPDConverter
 			cnv.getConversionDirection().equals(ConversionDirectionType.REVERSIBLE);
 
 		// create the process for the conversion in that direction
-
 		Glyph process = factory.createGlyph();
 		process.setClazz(PROCESS.getClazz());
-		process.setId(convertID(cnv.getUri()) + direction);
+		process.setId(convertID(cnv.getUri()) + "_" + direction);
 		glyphMap.put(process.getId(), process);
 
 		// Determine input and output sets
@@ -1040,7 +1042,8 @@ public class L3ToSBGNPDConverter
 			// Create a source-and-sink as the input
 			Glyph sas = factory.createGlyph();
 			sas.setClazz(SOURCE_AND_SINK.getClazz());
-			sas.setId("SAS_For_" + process.getId());glyphMap.put(sas.getId(), sas);
+			sas.setId("SAS_For_" + process.getId());
+			glyphMap.put(sas.getId(), sas);
 			createArc(sas, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
 		} else {
 			Glyph g = getGlyphToLink(template, process.getId());
@@ -1135,18 +1138,23 @@ public class L3ToSBGNPDConverter
 		glyphMap.put(process.getId(), process);
 		addPorts(process);
 
-		//TODO: review phenotype glyph
 		PhenotypeVocabulary v = interaction.getPhenotype();
 		if(v != null && !v.getTerm().isEmpty())
 		{
-			Glyph g = factory.createGlyph();
-			String term = v.getTerm().iterator().next().toLowerCase();
-			g.setId(convertID(term));
-			g.setClazz(PHENOTYPE.getClazz());
-			Label label = factory.createLabel();
-			label.setText(term);
-			g.setLabel(label);
-			glyphMap.put(g.getId(),g);
+			String term = v.getTerm().iterator().next().toLowerCase().trim();
+
+			String id = convertID(term);
+			Glyph g = glyphMap.get(id);
+			if(g == null) {
+				g = factory.createGlyph();
+				g.setId(id);
+				g.setClazz(PHENOTYPE.getClazz());
+				Label label = factory.createLabel();
+				label.setText(term);
+				g.setLabel(label);
+				glyphMap.put(g.getId(), g);
+			}
+
 			createArc(process.getPort().get(1), g, ArcClazz.STIMULATION.getClazz(), null);
 		}
 
@@ -1261,9 +1269,10 @@ public class L3ToSBGNPDConverter
 			List<Glyph> gs = getGlyphsOfPEs(pes, context);
 			return connectWithAND(gs);
 		}
-		else if (sz == 1 && glyphMap.containsKey(convertID(pes.iterator().next().getUri())))
-		{
-			return getGlyphToLink(pes.iterator().next(), context);
+		else if (sz == 1) {
+			PhysicalEntity pe = pes.iterator().next();
+			if(glyphMap.containsKey(convertID(pe.getUri())))
+				return getGlyphToLink(pe, context);
 		}
 		
 		//'pes' was empty
@@ -1298,35 +1307,26 @@ public class L3ToSBGNPDConverter
 	private Glyph connectWithAND(List<Glyph> gs)
 	{
 		// Compose an ID for the AND glyph
-
 		String id = "";
-
-		for (Glyph g : gs)
-		{
-			id = id + (id.length() > 0 ? "-AND-" : "") + g.getId();
+		for (Glyph g : gs) {
+			id += (id.isEmpty() ? "" : "-AND-") + g.getId();
 		}
+		id = ModelUtils.md5hex(id); //shorten a very long id
 
 		// Create the AND glyph if not exists
-
-		Glyph and;
-		if (!glyphMap.containsKey(id))
-		{
+		Glyph and = glyphMap.get(id);
+		if (and == null) {
 			and = factory.createGlyph();
 			and.setClazz(AND.getClazz());
 			and.setId(id);
 			glyphMap.put(and.getId(), and);
 		}
-		else
-		{
-			and = glyphMap.get(id);
-		}
 
 		// Connect upstream to the AND glyph
-
-		for (Glyph g : gs)
-		{
+		for (Glyph g : gs) {
 			createArc(g, and, LOGIC_ARC.getClazz(), null);
 		}
+
 		return and;
 	}
 
@@ -1339,22 +1339,15 @@ public class L3ToSBGNPDConverter
 	private Glyph addNOT(Glyph g)
 	{
 		// Assemble an ID for the NOT glyph
-
 		String id = "NOT-" + g.getId();
 
 		// Find or create the NOT glyph
-
-		Glyph not;
-		if (!glyphMap.containsKey(id))
-		{
+		Glyph not = glyphMap.get(id);
+		if (not == null) {
 			not = factory.createGlyph();
 			not.setId(id);
 			not.setClazz(NOT.getClazz());
 			glyphMap.put(not.getId(), not);
-		}
-		else
-		{
-			not = glyphMap.get(id);
 		}
 
 		// Connect the glyph and NOT
@@ -1552,7 +1545,11 @@ public class L3ToSBGNPDConverter
 
 	private String convertID(String id)
 	{
-		return id.replaceAll("[^-\\w]", "_");
+		//make a simple legal id (with a hack - to get shorter xml id in some cases)
+		return id.replaceFirst("http://pathwaycommons.org/pc2/","")
+				.replaceFirst("http://identifiers.org/","")
+				.replaceFirst("http://purl.org/","")
+				.replaceAll("[^-\\w]", "_");
 	}
 
 
