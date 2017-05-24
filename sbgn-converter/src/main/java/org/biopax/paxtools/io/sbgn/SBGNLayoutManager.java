@@ -63,12 +63,12 @@ class SBGNLayoutManager
         // also set compartment glyphs of members of complexes.
         for (Glyph g: sbgn.getMap().getGlyph())
         {
-            if(g.getClazz().equals("compartment")) {
+            if(glyphClazzOneOf(g, GlyphClazz.COMPARTMENT)) {
                 idToCompartmentGlyphs.put(g.getId(), g);
             }
             //Set compartmentRef to all children of a Complex node.
             Glyph compartment = (Glyph)g.getCompartmentRef();
-            if(compartment != null && g.getClazz().equals("complex")) {
+            if(compartment != null && glyphClazzOneOf(g, GlyphClazz.COMPLEX)) {
                 setCompartmentRefForComplexMembers(g, compartment, new HashSet<Glyph>());
             }
         }
@@ -224,11 +224,9 @@ class SBGNLayoutManager
         for(Glyph glyph: glyphList)
         {
             // Here logical operator nodes and process nodes are interested !
-            String type = glyph.getClazz();
-            if(type.equals(GlyphClazz.PROCESS) || type.equals(GlyphClazz.OMITTED_PROCESS)
-                    || type.equals(GlyphClazz.UNCERTAIN_PROCESS) || type.equals(GlyphClazz.PHENOTYPE)
-                    || type.equals(GlyphClazz.ASSOCIATION) || type.equals(GlyphClazz.DISSOCIATION)
-                    || type.equals(GlyphClazz.AND) || type.equals(GlyphClazz.OR) || type.equals(GlyphClazz.NOT))
+            if(glyphClazzOneOf(glyph, GlyphClazz.PROCESS, GlyphClazz.OMITTED_PROCESS,
+                    GlyphClazz.UNCERTAIN_PROCESS, GlyphClazz.PHENOTYPE, GlyphClazz.ASSOCIATION,
+                    GlyphClazz.DISSOCIATION, GlyphClazz.AND, GlyphClazz.OR, GlyphClazz.NOT))
             {
                 // Add a new value to hash map and also store the node as target node
                 String processGlyphID = glyph.getId();
@@ -353,9 +351,9 @@ class SBGNLayoutManager
         float minX = Float.MAX_VALUE; float minY = Float.MAX_VALUE;
         float maxX = Float.MIN_VALUE; float maxY = Float.MIN_VALUE;
 
-        for (Glyph tmpGlyph:childGlyphs)
+        for (Glyph tmpGlyph : childGlyphs)
         {
-            if(!tmpGlyph.getClazz().equals("unit of information") && !tmpGlyph.getClazz().equals("state variable") )
+            if(!glyphClazzOneOf(tmpGlyph, GlyphClazz.UNIT_OF_INFORMATION, GlyphClazz.STATE_VARIABLE))
             {
                 if(tmpGlyph.getGlyph().size() > 0)
                     updateCompoundBounds(tmpGlyph, tmpGlyph.getGlyph());
@@ -393,12 +391,12 @@ class SBGNLayoutManager
     {
         for(Glyph glyph: glyphs )
         {
-            if (!glyph.getClazz().equals("state variable") && !glyph.getClazz().equals("unit of information")  )
+            if (!glyphClazzOneOf(glyph, GlyphClazz.UNIT_OF_INFORMATION, GlyphClazz.STATE_VARIABLE))
             {
-                if(glyph.getClazz().equals("process"))
-                {
-                    VCompound v = new VCompound(glyph);
-                }
+//                if(glyph.getClazz().equals(GlyphClazz.PROCESS.getClazz()))
+//                {
+//                    VCompound v = new VCompound(glyph); //TODO: v is never used; wat's the idea?
+//                }
 
                 if(!isChildless(glyph))
                 {
@@ -408,7 +406,6 @@ class SBGNLayoutManager
                     parent.children.add(v);
                     createVNodes(v, glyph.getGlyph());
                 }
-
                 else
                 {
                     VNode v = new VNode(glyph);
@@ -567,12 +564,20 @@ class SBGNLayoutManager
         boolean checker = true;
         for(Glyph glyph: targetGlyph.getGlyph() )
         {
-            if ( !glyph.getClazz().equals("state variable") && !glyph.getClazz().equals("unit of information")  )
+            if ( !glyphClazzOneOf(glyph, GlyphClazz.STATE_VARIABLE, GlyphClazz.UNIT_OF_INFORMATION) )
             {
                 checker = false;
                 break;
             }
         }
         return checker;
+    }
+
+    private boolean glyphClazzOneOf(Glyph g, GlyphClazz... clazzes) {
+        for(GlyphClazz clazz : clazzes) {
+            if(clazz.getClazz().equals(g.getClazz()))
+                return true;
+        }
+        return false;
     }
 }

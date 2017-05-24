@@ -228,6 +228,12 @@ public class SBGNConverterTest
 			assertFalse(set.isEmpty());
 		}
 
+		for (Glyph g : result.getMap().getGlyph()) {
+			if (g.getClazz().equals("process")) {
+				assertNotNull(g.getCompartmentRef());
+			}
+		}
+
 	}
 
 	// an SMPDB model does not contain processes that can be converted to SBGN (layout used to throw

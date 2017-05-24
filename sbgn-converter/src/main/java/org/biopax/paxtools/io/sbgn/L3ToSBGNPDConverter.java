@@ -948,7 +948,6 @@ public class L3ToSBGNPDConverter
 		glyphMap.put(process.getId(), process);
 
 		// Determine input and output sets
-
 		Set<PhysicalEntity> input = direction.equals(ConversionDirectionType.RIGHT_TO_LEFT) ?
 			cnv.getRight() : cnv.getLeft();
 		Set<PhysicalEntity> output = direction.equals(ConversionDirectionType.RIGHT_TO_LEFT) ?
@@ -978,7 +977,6 @@ public class L3ToSBGNPDConverter
 		for (Control ctrl : cnv.getControlledOf())
 		{
 			// If there is a direction mismatch between the process and the control, just skip it
-
 			if (ctrl instanceof Catalysis)
 			{
 				CatalysisDirectionType catDir = ((Catalysis) ctrl).getCatalysisDirection();
@@ -1000,7 +998,6 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Record mapping
-
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
 		sbgn2BPMap.get(process.getId()).add(cnv.getUri());
 	}
