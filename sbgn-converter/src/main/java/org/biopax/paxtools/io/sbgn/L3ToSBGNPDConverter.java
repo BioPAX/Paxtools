@@ -336,7 +336,31 @@ public class L3ToSBGNPDConverter
 		return sbgn; //modified sbgn (even when no layout is run)
 	}
 
-	//-- Section: Create molecules ----------------------------------------------------------------|
+	// Associate controllers
+	private void processControllers(Set<Control> controls, Glyph process)
+	{
+		for (Control ctrl : controls) {
+//TODO unsure about whether to skip mapping a Control when there's direction mismatch (keep all for now)
+//			// If there is a direction mismatch between the process and the control, just skip it
+//			if (ctrl instanceof Catalysis) {
+//				CatalysisDirectionType catDir = ((Catalysis) ctrl).getCatalysisDirection();
+//				if (catDir != null) {
+//					if ((catDir.equals(CatalysisDirectionType.LEFT_TO_RIGHT) &&
+//							direction.equals(ConversionDirectionType.RIGHT_TO_LEFT)) ||
+//							(catDir.equals(CatalysisDirectionType.RIGHT_TO_LEFT) &&
+//									direction.equals(ConversionDirectionType.LEFT_TO_RIGHT))) {
+//						// Skip
+//						continue;
+//					}
+//				}
+//			}
+
+			//TODO: merge/avoid duplicate eges/nodes
+			Glyph g = createControlStructure(ctrl);
+			if (g != null) createArc(g, process, getControlType(ctrl), null);
+		}
+	}
+
 
 	/**
 	 * We don't want to represent every PhysicalEntity or Gene in SBGN.
@@ -973,29 +997,7 @@ public class L3ToSBGNPDConverter
 			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), stoic.get(pe));
 		}
 
-		// Associate controllers
-		for (Control ctrl : cnv.getControlledOf())
-		{
-			// If there is a direction mismatch between the process and the control, just skip it
-			if (ctrl instanceof Catalysis)
-			{
-				CatalysisDirectionType catDir = ((Catalysis) ctrl).getCatalysisDirection();
-				if (catDir != null)
-				{
-					if ((catDir.equals(CatalysisDirectionType.LEFT_TO_RIGHT) &&
-						direction.equals(ConversionDirectionType.RIGHT_TO_LEFT)) ||
-						(catDir.equals(CatalysisDirectionType.RIGHT_TO_LEFT) &&
-						direction.equals(ConversionDirectionType.LEFT_TO_RIGHT)))
-					{
-						// Skip
-						continue;
-					}
-				}
-			}
-
-			Glyph g = createControlStructure(ctrl);
-			if (g != null) createArc(g, process, getControlType(ctrl), null);
-		}
+		processControllers(cnv.getControlledOf(), process);
 
 		// Record mapping
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
@@ -1055,14 +1057,9 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Associate controllers
-		for (Control ctrl : tr.getControlledOf())
-		{
-			Glyph g = createControlStructure(ctrl);
-			if (g != null) createArc(g, process, getControlType(ctrl), null);
-		}
+		processControllers(tr.getControlledOf(), process);
 
 		// Record mapping
-
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
 		sbgn2BPMap.get(process.getId()).add(tr.getUri());
 	}
@@ -1087,11 +1084,7 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Associate controllers
-		for (Control ctrl : interaction.getControlledOf())
-		{
-			Glyph g = createControlStructure(ctrl);
-			if (g != null) createArc(g, process, getControlType(ctrl), null);
-		}
+		processControllers(interaction.getControlledOf(), process);
 
 		// Record mapping
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
@@ -1115,11 +1108,7 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Associate controllers
-		for (Control ctrl : interaction.getControlledOf())
-		{
-			Glyph g = createControlStructure(ctrl);
-			if (g != null) createArc(g, process, getControlType(ctrl), null);
-		}
+		processControllers(interaction.getControlledOf(), process);
 
 		// Record mapping
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
@@ -1164,11 +1153,7 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Associate controllers
-		for (Control ctrl : interaction.getControlledOf())
-		{
-			Glyph g = createControlStructure(ctrl);
-			if (g != null) createArc(g, process, getControlType(ctrl), null);
-		}
+		processControllers(interaction.getControlledOf(), process);
 
 		// Record mapping
 		sbgn2BPMap.put(process.getId(), new HashSet<String>());
@@ -1188,35 +1173,31 @@ public class L3ToSBGNPDConverter
 		Set<PhysicalEntity> controllers = getControllers(ctrl);
 
 		// If no representable controller found, skip this control
-		if (controllers.isEmpty()) cg = null;
-
-		// If there is only one controller with no modulator, put an arc for controller
-
-		else if (controllers.size() == 1 && getControllerSize(ctrl.getControlledOf()) == 0)
+		if (controllers.isEmpty())
 		{
+			cg = null;
+		}
+		else if (controllers.size() == 1 && getControllerSize(ctrl.getControlledOf()) == 0)
+		{ // If there is only one controller with no modulator, put an arc for controller
 			cg = getGlyphToLink(controllers.iterator().next(), convertID(ctrl.getUri()));
 		}
-
 		else
 		{
 			// This list will contain handles for each participant of the AND structure
 			List<Glyph> toConnect = new ArrayList<Glyph>();
 
 			// Bundle controllers if necessary
-
 			Glyph gg = handlePEGroup(controllers, convertID(ctrl.getUri()));
 			if(gg != null)
 				toConnect.add(gg);
 
 			// Create handles for each controller
-
 			for (Control ctrl2 : ctrl.getControlledOf())
 			{
 				Glyph g = createControlStructure(ctrl2);
 				if (g != null)
 				{
 					// If the control is negative, add a NOT in front of it
-
 					if (getControlType(ctrl2).equals(INHIBITION.getClazz()))
 					{
 						g = addNOT(g);
@@ -1227,7 +1208,6 @@ public class L3ToSBGNPDConverter
 			}
 
 			// Handle co-factors of catalysis
-
 			if (ctrl instanceof Catalysis)
 			{
 				Set<PhysicalEntity> cofs = ((Catalysis) ctrl).getCofactor();
@@ -1236,8 +1216,9 @@ public class L3ToSBGNPDConverter
 					toConnect.add(g);
 			}
 
-			if (toConnect.isEmpty()) 
+			if (toConnect.isEmpty()) {
 				return null;
+			}
 			else if (toConnect.size() == 1)
 			{
 				cg = toConnect.iterator().next();
@@ -1381,7 +1362,8 @@ public class L3ToSBGNPDConverter
 			case ACTIVATION:
 			case ACTIVATION_ALLOSTERIC:
 			case ACTIVATION_NONALLOSTERIC:
-			case ACTIVATION_UNKMECH: return STIMULATION.getClazz();
+			case ACTIVATION_UNKMECH:
+				return STIMULATION.getClazz();
 			case INHIBITION:
 			case INHIBITION_ALLOSTERIC:
 			case INHIBITION_OTHER:
@@ -1389,8 +1371,10 @@ public class L3ToSBGNPDConverter
 			case INHIBITION_COMPETITIVE:
 			case INHIBITION_IRREVERSIBLE:
 			case INHIBITION_UNCOMPETITIVE:
-			case INHIBITION_NONCOMPETITIVE: return INHIBITION.getClazz();
+			case INHIBITION_NONCOMPETITIVE:
+				return INHIBITION.getClazz();
 		}
+
 		throw new RuntimeException("Invalid control type: " + type);
 	}
 
@@ -1447,7 +1431,7 @@ public class L3ToSBGNPDConverter
 
 	//-- Section: Create arcs ---------------------------------------------------------------------|
 
-	/**
+	/*
 	 * Creates an arc from the source to the target, and sets its class to the specified clazz.
 	 * Puts the new arc in the sullied arcMap.
 	 *
@@ -1472,7 +1456,7 @@ public class L3ToSBGNPDConverter
 
 		arc.setId(sourceID + "--to--" + targetID);
 
-		if (stoic != null && stoic.getStoichiometricCoefficient() != 1F)
+		if (stoic != null && stoic.getStoichiometricCoefficient() > 1)
 		{
 			Glyph card = factory.createGlyph();
 			card.setClazz(CARDINALITY.getClazz());
