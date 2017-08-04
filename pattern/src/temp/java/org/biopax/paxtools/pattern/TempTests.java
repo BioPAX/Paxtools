@@ -508,7 +508,7 @@ public class TempTests
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
 		model = h.convertFromOWL(new FileInputStream("/home/ozgun/Downloads/Pathway Commons.7.NCI Pathway Interaction Database: Pathway.BIOPAX.owl"));
-		BlacklistGenerator3 bg = new BlacklistGenerator3("blacklist-names.txt");
+		BlacklistGenerator3 bg = new BlacklistGenerator3(new FileInputStream("blacklist-names.txt"));
 		Blacklist blacklist = bg.generateBlacklist(model);
 		blacklist.write("blacklist-temp.txt");
 	}

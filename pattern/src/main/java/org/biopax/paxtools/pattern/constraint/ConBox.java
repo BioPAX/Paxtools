@@ -435,6 +435,17 @@ public class ConBox
 	}
 
 	/**
+	 * Makes sure that the object is associated with a Provenance with the given name. This id is not an RDF ID, it is
+	 * the name of the resource, like TRANSFAC.
+	 * @param name name of the provenance
+	 * @return constraint
+	 */
+	public static Constraint hasProvenance(String name)
+	{
+		return new Field("Entity/dataSource/name", Field.Operation.INTERSECT, name);
+	}
+
+	/**
 	 * Makes sure that the second element (PhysicalEntity) is not a participant of the first element
 	 * (Interaction).
 	 * @return constraint to make sure that the PhysicalEntity in second index is not a participant

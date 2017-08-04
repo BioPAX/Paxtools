@@ -26,7 +26,7 @@ public class UbiqueStatHelper
 		SIFSearcher searcher = new SIFSearcher(new Fetcher(new ChemicalNameNormalizer(model)),
 			new ChemicalAffectsThroughControlMiner(), new UsedToProduceMiner());
 
-		searcher.searchSIF(model, new FileOutputStream(outFile), true);
+		searcher.searchSIF(model, new FileOutputStream(outFile));
 	}
 
 
@@ -146,9 +146,10 @@ public class UbiqueStatHelper
 		UbiqueStatHelper ush = new UbiqueStatHelper();
 
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new GZIPInputStream(new URL("http://pathwaycommons.baderlab.org/downloads/Pathway%20Commons.8.Detailed.BIOPAX.owl.gz").openStream()));
+//		Model model = h.convertFromOWL(new GZIPInputStream(new URL("http://pathwaycommons.baderlab.org/downloads/Pathway%20Commons.8.Detailed.BIOPAX.owl.gz").openStream()));
+		Model model = h.convertFromOWL(new FileInputStream("/media/babur/6TB1/REACH-cards/REACH.owl"));
 
-		String helper = "helper.sif";
+		String helper = "/media/babur/6TB1/REACH-cards/ubique-helper.sif";
 		ush.generateHelperSIF(model, helper);
 		ush.generateStats(helper, "ubique-stat.txt");
 	}

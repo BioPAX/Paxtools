@@ -35,10 +35,16 @@ public class PatternBox
 		p.add(controlToConv(), "Control", "Conversion");
 		p.add(new NOT(participantER()), "Conversion", "controller ER");
 		p.add(new Participant(RelType.INPUT, true), "Control", "Conversion", "input PE");
+
+		p.add(new NOT(new ConversionSide(ConversionSide.Type.OTHER_SIDE)), "input PE", "Conversion", "input PE");
+
 		p.add(linkToSpecific(), "input PE", "input simple PE");
 		p.add(new Type(SequenceEntity.class), "input simple PE");
 		p.add(peToER(), "input simple PE", "changed generic ER");
 		p.add(new ConversionSide(ConversionSide.Type.OTHER_SIDE), "input PE", "Conversion", "output PE");
+
+		p.add(new NOT(new ConversionSide(ConversionSide.Type.OTHER_SIDE)), "output PE", "Conversion", "output PE");
+
 		p.add(equal(false), "input PE", "output PE");
 		p.add(linkToSpecific(), "output PE", "output simple PE");
 		p.add(peToER(), "output simple PE", "changed generic ER");
