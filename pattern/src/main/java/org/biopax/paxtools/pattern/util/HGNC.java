@@ -11,6 +11,9 @@ import java.util.Set;
 /**
  * This class provides a mapping between HGNC IDs and Symbols.
  *
+ * To update the HGNC resource, use the below URL
+ * http://www.genenames.org/cgi-bin/download?col=gd_hgnc_id&col=gd_app_sym&col=gd_prev_sym&status=Approved&status_opt=2&where=&order_by=gd_app_sym_sort&format=text&limit=&hgnc_dbtag=on&submit=submit
+ *
  * @author Ozgun Babur
  */
 public class HGNC
