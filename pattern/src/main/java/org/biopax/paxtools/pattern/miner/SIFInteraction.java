@@ -216,8 +216,12 @@ public class SIFInteraction implements Comparable
 		return set;
 	}
 
-	private static final PathAccessor pathwayAcc1 = new PathAccessor("Interaction/pathwayComponentOf");
-	private static final PathAccessor pathwayAcc2 = new PathAccessor("Interaction/stepProcessOf/pathwayOrderOf");
+	private static final PathAccessor[] pathwayAcc = new PathAccessor[]{
+		new PathAccessor("Interaction/pathwayComponentOf"),
+		new PathAccessor("Complex/participantOf/pathwayComponentOf"),
+		new PathAccessor("Interaction/stepProcessOf/pathwayOrderOf"),
+		new PathAccessor("Complex/participantOf/stepProcessOf/pathwayOrderOf"),
+	};
 
 	/**
 	 * Collects Pathway objects that the Interactions among the mediators are members.
@@ -227,13 +231,12 @@ public class SIFInteraction implements Comparable
 	{
 		Set<Pathway> set = new HashSet<Pathway>();
 
-		for (Object o : pathwayAcc1.getValueFromBeans(mediators))
+		for (PathAccessor pAcc : pathwayAcc)
 		{
-			set.add((Pathway) o);
-		}
-		for (Object o : pathwayAcc2.getValueFromBeans(mediators))
-		{
-			set.add((Pathway) o);
+			for (Object o : pAcc.getValueFromBeans(mediators))
+			{
+				set.add((Pathway) o);
+			}
 		}
 
 		return set;
