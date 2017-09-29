@@ -219,8 +219,17 @@ public class SIFInteraction implements Comparable
 	private static final PathAccessor[] pathwayAcc = new PathAccessor[]{
 		new PathAccessor("Interaction/pathwayComponentOf"),
 		new PathAccessor("Complex/participantOf/pathwayComponentOf"),
+		new PathAccessor("Complex/componentOf*/participantOf/pathwayComponentOf"),
+		new PathAccessor("Complex/memberPhysicalEntityOf*/participantOf/pathwayComponentOf"),
 		new PathAccessor("Interaction/stepProcessOf/pathwayOrderOf"),
 		new PathAccessor("Complex/participantOf/stepProcessOf/pathwayOrderOf"),
+		new PathAccessor("Complex/componentOf*/participantOf/stepProcessOf/pathwayOrderOf"),
+		new PathAccessor("Complex/memberPhysicalEntityOf*/participantOf/stepProcessOf/pathwayOrderOf"),
+		// Note that these PathAccessors are not sufficient for accurate navigation from Complex to the Pathway
+		// that contains it. What we need is
+		// "Complex/(componentOf*/memberPhysicalEntityOf*)*/(participantOf/pathwayComponentOf|stepProcessOf/pathwayOrderOf)"
+		// where * means 0 or more, * can be applied to parenthesis, | means OR, and it can be applied to sub-paths
+		// inside parenthesis. Unfortunately, this notation is not supported.
 	};
 
 	/**
