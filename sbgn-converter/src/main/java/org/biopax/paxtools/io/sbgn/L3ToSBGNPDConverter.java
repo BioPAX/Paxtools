@@ -1036,24 +1036,42 @@ public class L3ToSBGNPDConverter
 		// Add input and output ports
 		addPorts(process);
 
+		final Set<PhysicalEntity> products = tr.getProduct();
+		final Set<PhysicalEntity> participants = new HashSet<PhysicalEntity>( //new modifiable set
+				new ClassFilterSet<Entity,PhysicalEntity>(tr.getParticipant(), PhysicalEntity.class));
+
+		// link products, if any
+		// ('participant' property is there defined sometimes instead of or in addition to 'product' or 'template')
+		for (PhysicalEntity pe : products)
+		{
+			Glyph g = getGlyphToLink(pe, process.getId());
+			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), null);
+			participants.remove(pe);
+		}
+
+		// link template, if present
 		PhysicalEntity template = tr.getTemplate();
-		if(template == null) {
+		if(template != null) {
+			Glyph g = getGlyphToLink(template, process.getId());
+			createArc(process.getPort().get(0), g, ArcClazz.INTERACTION.getClazz(), null);
+			participants.remove(template);
+		} else if(participants.isEmpty()) { //when no template is defined and cannot be inferred
 			// Create a source-and-sink as the input
 			Glyph sas = factory.createGlyph();
 			sas.setClazz(SOURCE_AND_SINK.getClazz());
 			sas.setId("SAS_For_" + process.getId());
 			glyphMap.put(sas.getId(), sas);
 			createArc(sas, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
-		} else {
-			Glyph g = getGlyphToLink(template, process.getId());
-			createArc(process.getPort().get(0), g, ArcClazz.INTERACTION.getClazz(), null);
 		}
 
-		// Associate products
-		for (PhysicalEntity pe : tr.getProduct())
+		//infer input or output type arc for other, if any, participants
+		for (PhysicalEntity pe : participants)
 		{
 			Glyph g = getGlyphToLink(pe, process.getId());
-			createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), null);
+			if(template==null)
+				createArc(g, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
+			else
+				createArc(process.getPort().get(1), g, PRODUCTION.getClazz(), null);
 		}
 
 		// Associate controllers

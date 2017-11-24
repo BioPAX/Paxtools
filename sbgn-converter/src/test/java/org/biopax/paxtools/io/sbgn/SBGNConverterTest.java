@@ -8,9 +8,7 @@ import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
-import org.biopax.paxtools.model.level3.Gene;
-import org.biopax.paxtools.model.level3.GeneticInteraction;
-import org.biopax.paxtools.model.level3.PhenotypeVocabulary;
+import org.biopax.paxtools.model.level3.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.sbgn.GlyphClazz;
@@ -304,6 +302,39 @@ public class SBGNConverterTest
 		PhenotypeVocabulary v = m.addNew(PhenotypeVocabulary.class,"lethal");
 		v.addTerm("lethal");
 		gi.setPhenotype(v);
+
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
+		conv.setDoLayout(true);
+		conv.writeSBGN(m, out);
+	}
+
+	@Test
+	public void testConvertTRs() throws Exception
+	{
+		String out = "target/test_tr.sbgn";
+		MockFactory f = new MockFactory(BioPAXLevel.L3);
+		Model m = f.createModel();
+		DnaRegion[] t = f.create(m, DnaRegion.class, 2);
+		RnaRegion[] p = f.create(m, RnaRegion.class, 4);
+
+		// test several TR cases where template, product, participant properties
+		// might be modelled in bad way
+
+		// good example
+		TemplateReaction tr0 = m.addNew(TemplateReaction.class,"tr_0");
+		f.bindInPairs("product", tr0,p[0],tr0,p[1]);
+		tr0.setTemplate(t[0]);
+
+		// no template (will infer)
+		TemplateReaction tr1 = m.addNew(TemplateReaction.class,"tr_1");
+		f.bindInPairs("product", tr1,p[2]);
+		f.bindInPairs("participant", tr1,t[1]);
+
+
+		// only product (will infer some unknown input process/entity)
+		TemplateReaction tr2 = m.addNew(TemplateReaction.class,"tr_2");
+		f.bindInPairs("product", tr2,p[3]);
+
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.setDoLayout(true);
