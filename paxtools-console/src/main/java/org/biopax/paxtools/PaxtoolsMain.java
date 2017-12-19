@@ -583,6 +583,8 @@ public class PaxtoolsMain {
 					summarizeUniprotIds(model, out);
 				} else if(argv[i].equals("--chebi-ids")) {
 					summarizeChebiIds(model, out);
+				} else if(argv[i].equals("--uri-ids")) {
+					mapUriToIds(model, out);
 				}
 			}
 		} else {
@@ -590,6 +592,39 @@ public class PaxtoolsMain {
 		}
 		out.close();
 	}
+
+
+	private static void mapUriToIds(Model model, PrintStream out) throws IOException {
+		//overwrite the JSON file
+		mapParticipantToIds(model, out);
+//		mapProcessToPublicationIds(model, out);
+//		mapEntityRefToIds(model, out);
+	}
+
+	/*
+	 * For each PE or Gene, collect HGNC Symbols, UniProt IDs (for genes/proteins)
+	 * and/or ChEBI IDs or std. names (for molecules and complexes), etc.
+	 */
+	private static void mapParticipantToIds(Model model, PrintStream out) throws IOException {
+		IDFetcher hgncSymFetcher = new ConfigurableIDFetcher();
+		//...
+		throw new UnsupportedOperationException("Not implemented"); //TODO implement
+	}
+
+	/*
+	 * For Pathways and Interactions, collect publication xref IDs, etc.
+	 */
+	private static void mapProcessToPublicationIds(Model model, PrintStream out) throws IOException {
+		throw new UnsupportedOperationException("Not implemented");  //TODO implement
+	}
+
+	/*
+	 * For entity references, collect and write corresponding IDs, etc.
+	 */
+	private static void mapEntityRefToIds(Model model, PrintStream out) throws IOException {
+		throw new UnsupportedOperationException("Not implemented");  //TODO implement
+	}
+
 
 	private static void summarizePathways(Model model, PrintStream out) throws IOException {
 		final PathAccessor directChildPathwaysAccessor = new PathAccessor("Pathway/pathwayComponent:Pathway");
