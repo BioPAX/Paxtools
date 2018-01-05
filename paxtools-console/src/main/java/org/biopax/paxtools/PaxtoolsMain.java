@@ -1,23 +1,27 @@
 package org.biopax.paxtools;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
+import org.biopax.paxtools.client.BiopaxValidatorClient;
+import org.biopax.paxtools.client.BiopaxValidatorClient.RetFormat;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
-import org.biopax.paxtools.io.*;
+import org.biopax.paxtools.io.BioPAXIOHandler;
+import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.io.gsea.GSEAConverter;
 import org.biopax.paxtools.io.sbgn.L3ToSBGNPDConverter;
 import org.biopax.paxtools.io.sbgn.ListUbiqueDetector;
 import org.biopax.paxtools.io.sbgn.UbiqueDetector;
-import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.BioPAXElement;
+import org.biopax.paxtools.model.BioPAXLevel;
+import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
-import org.biopax.paxtools.client.BiopaxValidatorClient;
-import org.biopax.paxtools.client.BiopaxValidatorClient.RetFormat;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.validator.jaxb.Behavior;
 import org.slf4j.Logger;
@@ -29,26 +33,21 @@ import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Paxtools console application
- * (very useful BioPAX utilities).
+ * Various console utility functions
  */
-public class PaxtoolsMain {
+final class PaxtoolsMain {
     final static Logger log = LoggerFactory.getLogger(PaxtoolsMain.class);
 
     private static SimpleIOHandler io;
 
-    public static void main(String[] argv) throws Exception
-	{
+    private PaxtoolsMain() {
+    	throw new UnsupportedOperationException("Non-instantiable utility class.");
+	}
+
+    static {
 		io = new SimpleIOHandler();
 		io.mergeDuplicates(true);
-
-        if (argv.length == 0) {
-            help();
-        } else {
-	        String command = argv[0];
-	        Command.valueOf(command).run(argv);
-        }
-    }
+	}
 
 	/*
 	 * using arguments:
@@ -225,7 +224,7 @@ public class PaxtoolsMain {
     }
     
     //read a few lines to detect it's a BioPAX vs. PSI-MI vs. PSI-MITAB data.
-	private static Type detect(String input) {		
+	static Type detect(String input) {
 		StringBuilder sb = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(input));
@@ -290,7 +289,7 @@ public class PaxtoolsMain {
      * 
      * See about <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
      */
-    public static void validate(String[] argv) throws IOException 
+    public static void validate(String[] argv) throws IOException
     {
         String input = argv[1];
         String output = argv[2];
@@ -547,15 +546,6 @@ public class PaxtoolsMain {
 		Blacklist blacklist = gen.generateBlacklist(model);
 		blacklist.write(new FileOutputStream(argv[2]));
     }
-   
-    public static void help() {
-
-        System.out.println("(Paxtools Console) Available Operations:\n");
-        for (Command cmd : Command.values()) {
-            System.out.println(cmd.name() + " " + cmd.description);
-        }
-        System.out.println("Commands can also use compressed input files (only '.gz').\n");
-    }
 
 	public static void pattern(String[] argv) {
 		Dialog.main(argv);
@@ -570,7 +560,7 @@ public class PaxtoolsMain {
 		log.debug("Importing the input model from " + argv[1] + "...");
 		final Model model = getModel(io, argv[1]);
 		final PrintStream out = new PrintStream(argv[2]);
-		//process options and execute corresp. summary analyses -
+		//run a specific or default analysis
 		if(argv.length>3) {
 			for(int i=3; i < argv.length; i++) {
 				if(argv[i].equals("--model")) {
@@ -594,7 +584,7 @@ public class PaxtoolsMain {
 	}
 
 
-	private static void mapUriToIds(Model model, PrintStream out) throws IOException {
+	static void mapUriToIds(Model model, PrintStream out) throws IOException {
 		//overwrite the JSON file
 		mapParticipantToIds(model, out);
 //		mapProcessToPublicationIds(model, out);
@@ -605,7 +595,7 @@ public class PaxtoolsMain {
 	 * For each PE or Gene, collect HGNC Symbols, UniProt IDs (for genes/proteins)
 	 * and/or ChEBI IDs or std. names (for molecules and complexes), etc.
 	 */
-	private static void mapParticipantToIds(Model model, PrintStream out) throws IOException {
+	static void mapParticipantToIds(Model model, PrintStream out) throws IOException {
 		IDFetcher hgncSymFetcher = new ConfigurableIDFetcher();
 		//...
 		throw new UnsupportedOperationException("Not implemented"); //TODO implement
@@ -614,14 +604,14 @@ public class PaxtoolsMain {
 	/*
 	 * For Pathways and Interactions, collect publication xref IDs, etc.
 	 */
-	private static void mapProcessToPublicationIds(Model model, PrintStream out) throws IOException {
+	static void mapProcessToPublicationIds(Model model, PrintStream out) throws IOException {
 		throw new UnsupportedOperationException("Not implemented");  //TODO implement
 	}
 
 	/*
 	 * For entity references, collect and write corresponding IDs, etc.
 	 */
-	private static void mapEntityRefToIds(Model model, PrintStream out) throws IOException {
+	static void mapEntityRefToIds(Model model, PrintStream out) throws IOException {
 		throw new UnsupportedOperationException("Not implemented");  //TODO implement
 	}
 
@@ -867,7 +857,7 @@ public class PaxtoolsMain {
 
 	/**
 	 * A summary of BioPAX class and property values in the model
-	 * (experimental; for troubleshooting and debugging).
+	 * (experimental, messy; for data troubleshooting).
 	 *
 	 * @param model input Model
 	 * @param out output file
@@ -1152,93 +1142,4 @@ public class PaxtoolsMain {
 		return (path.endsWith(".gz")) ? new GZIPInputStream(is) : is ;
 	}
 
-	//-- End of Section; Printing summary ---------------------------------------------------------|
-	
-    enum Command {
-        merge("<file1> <file2> <output>\n" +
-        		"\t- merges file2 into file1 and writes it into output")
-		        {public void run(String[] argv) throws IOException{merge(argv);} },
-        toSIF("<input> <output> [-extended] [-andSif] [\"include=SIFType,..\"] [\"exclude=SIFType,..\"]" +
-				" [\"seqDb=db,..\"] [\"chemDb=db,..\"] [-dontMergeInteractions] [-useNameIfNoId]" +
-				" [\"mediator\"] [\"pubmed\"] [\"pathway\"] [\"resource\"] [\"source_loc\"] [\"target_loc\"] [\"path/to/a/mediator/field\"]\n" +
-        		"\t- exports a BioPAX model to classic SIF (default, has 3 columns) or customizable SIF format;\n" +
-				"\t  will use blacklist.txt file in the current directory, if present;\n" +
-				"\t  one can list one or more relationship types to include or exclude to/from the analysis\n" +
-				"\t  using 'include=' and/or 'exclude=', respectively, e.g., exclude=NEIGHBOR_OF,INTERACTS_WITH\n" +
-				"\t  (mind using underscore instead of minus sign in the SIF type names; the default is to use all types);\n" +
-				"\t  using 'seqDb=' and 'chemDb=', you can specify standard sequence/gene/chemical ID type(s)\n" +
-				"\t  (can be just a unique prefix) to match actual xref.db values in the BioPAX model,\n" +
-				"\t  e.g., \"seqDb=uniprot,hgnc,refseq\", and in that order, means: if a UniProt entity ID is found,\n" +
-				"\t  other ID types ain't used; otherwise, if an 'hgnc' ID/Symbol is found... and so on;\n" +
-				"\t  when not specified, then 'hgnc' (in fact, 'HGNC Symbol') for bio-polymers - \n" +
-				"\t  and ChEBI IDs or name (if '-useNameIfNoId' is set) for chemicals - are selected;\n" +
-				"\t  if '-extended' is used then the output will be the Pathway Commons' EXTENDED_BINARY_SIF format:\n" +
-				"\t  one file - two sections separated with a single blank line - first come inferred SIF-like interactions -\n" +
-				"\t  3 classic SIF and 4 extra colums, followed by interactors/nodes description section; comment lines start with #)\n" +
-				"\t  if also '-andSif' flag is present (which only makes sense together with -extended), then the second\n" +
-				"\t  output file, classic SIF, is also created (with the same name as the output's, plus '.sif' extension)")
-		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
-        toSBGN("<biopax.owl> <output.sbgn> [-nolayout]\n" +
-        		"\t- converts model to the SBGN format and applies COSE layout unless optional -nolayout flag is set.")
-                {public void run(String[] argv) throws IOException { toSbgn(argv); } },
-        validate("<path> <out> [xml|html|biopax] [auto-fix] [only-errors] [maxerrors=n] [notstrict]\n" +
-        		"\t- validate BioPAX file/directory (up to ~25MB in total size, -\n" +
-        		"\totherwise download and run the stand-alone validator)\n" +
-        		"\tin the directory using the online validator service\n" +
-        		"\t(generates html or xml report, or gets the processed biopax\n" +
-        		"\t(cannot be perfect though) see http://www.biopax.org/validator)")
-		        {public void run(String[] argv) throws IOException{validate(argv);} },
-        integrate("<file1> <file2> <output>\n" +
-        		"\t- integrates file2 into file1 and writes it into output (experimental)")
-		        {public void run(String[] argv) throws IOException{integrate(argv);} },
-        toLevel3("<input> <output> [-psimiToComplexes]\n" +
-        		"\t- converts BioPAX level 1 or 2, PSI-MI 2.5 and PSI-MITAB to the level 3 file;\n" +
-        		"\t-psimiToComplexes forces PSI-MI Interactions become BioPAX Complexes instead MolecularInteractions.")
-		        {public void run(String[] argv) throws IOException{toLevel3(argv);} },
-        toGSEA("<input> <output> <db> [-crossSpecies] [-subPathways] [-notPathway] [organisms=9606,human,rat,..]\n" +
-        		"\t- converts BioPAX data to the GSEA software format (GMT); options/flags:\n"
-                + "\t<db> - gene/protein ID type; values: uniprot, hgnc, refseq, etc. (a name or prefix to match\n"
-				+ "\t  ProteinReference/xref/db property values in the input BioPAX model).\n"
-                + "\t-crossSpecies - allows printing on the same line gene/protein IDs from different species;\n"
-				+ "\t-subPathways - traverse into sub-pathways to collect all protein IDs for a pathway.\n"
-				+ "\t-notPathway - also list those protein/gene IDs that cannot be reached from pathways.\n"
-				+ "\torganisms - optional filter; a comma-separated list of taxonomy IDs and/or names\n")
-		        {public void run(String[] argv) throws IOException{toGSEA(argv);} },
-        fetch("<input> <output> [uris=URI1,..] [-absolute] \n" +
-        		"\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output; options:\n" +
-				"\turi=... - an optional list of existing in the model BioPAX elements' full URIs;\n" +
-				"\t-absolute - set this flag to write full/absolute URIs to the output (i.e., 'rdf:about' instead 'rdf:ID').")
-		        {public void run(String[] argv) throws IOException{fetch(argv);} },
-        getNeighbors("<input> <id1,id2,..> <output>\n" +
-        		"\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)")
-		        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },
-        summarize("<input> <output> [--model] [--pathways] [--hgnc-ids] [--uniprot-ids] [--chebi-ids]\n" +
-        		"\t- (experimental/troubleshooting) command to summarize the input BioPAX model;\n " +
-				"\truns one or several selected analyses and writes to the output text file;\n " +
-				"\t'--model' - the default mode, is about BioPAX classes, properties and values;\n " +
-				"\t'--pathways' - pathways and their sub-pathways summary;\n " +
-				"\t'--hgnc-ids' - about HGNC IDs/Symbols in the sequence entity references;\n " +
-				"\t'--uniprot-ids' - about UniProt IDs in the protein references;\n " +
-				"\t'--chebi-ids' - about ChEBI IDs in the small molecule references;\n " +
-				"\tthe options' order defines the results output order.")
-		        {public void run(String[] argv) throws IOException{summarize(argv);} },
-		blacklist("<input> <output>\n" +
-		        "\t- creates a blacklist of ubiquitous small molecules, like ATP, \n"
-		        + "\tfrom the BioPAX model and writes it to the output file. The blacklist can be used with\n "
-		        + "\tpaxtools graph queries or when converting from the SAME BioPAX data to the SIF formats.")
-				{public void run(String[] argv) throws IOException{blacklist(argv);} },
-		pattern("\n\t- BioPAX pattern search tool (opens a new dialog window)")
-				{public void run(String[] argv) throws IOException{pattern(argv);} },
-        help("\n\t- prints this screen and exits\n")
-		        {public void run(String[] argv) throws IOException{help();} };
-
-        String description;
-        int params;
-
-        Command(String description) {
-            this.description = description;
-        }
-
-        public abstract void run(String[] argv) throws IOException;
-    }
 }
