@@ -10,7 +10,7 @@ import static org.biopax.paxtools.PaxtoolsMain.*;
  * PaxtoolsMain console application
  * (very useful BioPAX utilities).
  */
-public class Main {
+public final class Main {
     final static Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] argv) throws Exception

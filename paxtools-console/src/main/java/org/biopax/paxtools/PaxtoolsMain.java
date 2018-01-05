@@ -35,7 +35,7 @@ import java.util.zip.GZIPInputStream;
 /**
  * Various console utility functions
  */
-final class PaxtoolsMain {
+public final class PaxtoolsMain {
     final static Logger log = LoggerFactory.getLogger(PaxtoolsMain.class);
 
     private static SimpleIOHandler io;
@@ -52,6 +52,8 @@ final class PaxtoolsMain {
 	/*
 	 * using arguments:
 	 * <input> <output> <db> [-crossSpecies] [-subPathways] [-notPathway] [organisms=9606,mouse,10090,rat,human,..]
+	 *
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
 	 */
     public static void toGSEA(String[] argv) throws IOException {
 		//argv[0] is the command name ('toGsea')
@@ -89,7 +91,14 @@ final class PaxtoolsMain {
 		gseaConverter.writeToGSEA(io.convertFromOWL(getInputStream(argv[1])), new FileOutputStream(argv[2]));
     }
 
-    public static void getNeighbors(String[] argv) throws IOException
+	/*
+	 *
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 *
+	 * @param argv
+	 * @throws IOException
+	 */
+	public static void getNeighbors(String[] argv) throws IOException
     {
         // set strings vars
         String in = argv[1];
@@ -130,7 +139,12 @@ final class PaxtoolsMain {
         }
     }
 
-    public static void fetch(String[] argv) throws IOException {
+	/*
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 * @param argv
+	 * @throws IOException
+	 */
+	public static void fetch(String[] argv) throws IOException {
         // set strings vars
         String in = argv[1];
         String out = argv[2];
@@ -168,6 +182,8 @@ final class PaxtoolsMain {
     /*
      * Detects and converts a BioPAX Level 1, 2,
      * or PSI-MI/MITAB model to BioPAX Level3..
+	 *
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
      */
     public static void toLevel3(String[] argv) throws IOException {
     	final String input = argv[1];
@@ -224,7 +240,7 @@ final class PaxtoolsMain {
     }
     
     //read a few lines to detect it's a BioPAX vs. PSI-MI vs. PSI-MITAB data.
-	static Type detect(String input) {
+	private static Type detect(String input) {
 		StringBuilder sb = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(input));
@@ -250,6 +266,8 @@ final class PaxtoolsMain {
 
     /*
      *  Converts a BioPAX file to SBGN and saves it in a file.
+     *
+     *  TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
      */
     public static void toSbgn(String[] argv) throws IOException
     {
@@ -288,6 +306,8 @@ final class PaxtoolsMain {
      * Checks files by the online BioPAX validator using the built-in BioPAX validator client.
      * 
      * See about <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
+     *
+     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
      */
     public static void validate(String[] argv) throws IOException
     {
@@ -381,9 +401,13 @@ final class PaxtoolsMain {
         }
     }
 
-	// Exports a biopax model to SIF or/and customizable ExtendedSIF format
-	// (default classic SIF has only 3 data columns; ExtendedSIF and customized
-	// can have more colums plus nodes description at the bottom, after a blank line).
+	/*
+	 * Exports a biopax model to SIF or/and customizable ExtendedSIF format
+	 * (default classic SIF has only 3 data columns; ExtendedSIF and customized
+	 * can have more colums plus nodes description at the bottom, after a blank line).
+	 *
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
     public static void toSifnx(String[] argv) throws IOException
 	{
 		boolean extended = false; //if it stays 'false', then andSif==true will be in effect automatically
@@ -493,6 +517,9 @@ final class PaxtoolsMain {
 		log.info("toSIF: done.");
     }
 
+    /*
+     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+     */
 	public static void sifnxToSif(String inputFile, String outputFile) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(getInputStream(inputFile)));
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(outputFile));
@@ -510,6 +537,9 @@ final class PaxtoolsMain {
 		writer.close();
 	}
 
+	/*
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
     public static void integrate(String[] argv) throws IOException {
 
         Model model1 = getModel(io, argv[1]);
@@ -522,6 +552,9 @@ final class PaxtoolsMain {
         io.convertToOWL(model1, new FileOutputStream(argv[3]));
     }
 
+    /*
+     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+     */
     public static void merge(String[] argv) throws IOException {
 
         Model model1 = getModel(io, argv[1]);
@@ -539,6 +572,8 @@ final class PaxtoolsMain {
      * (to optionally use it to exclude ubiquitous small molecules, 
      * like ATP, when performing graph queries and exporting to
      * SIF formats).
+     *
+     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
      */
     public static void blacklist(String[] argv) throws IOException {
     	Model model = getModel(io, argv[1]);
@@ -547,6 +582,9 @@ final class PaxtoolsMain {
 		blacklist.write(new FileOutputStream(argv[2]));
     }
 
+    /*
+     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+     */
 	public static void pattern(String[] argv) {
 		Dialog.main(argv);
 	}
@@ -556,6 +594,9 @@ final class PaxtoolsMain {
     }
 
 
+    /*
+     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+     */
 	public static void summarize(String[] argv) throws IOException {
 		log.debug("Importing the input model from " + argv[1] + "...");
 		final Model model = getModel(io, argv[1]);
@@ -584,7 +625,7 @@ final class PaxtoolsMain {
 	}
 
 
-	static void mapUriToIds(Model model, PrintStream out) throws IOException {
+	private static void mapUriToIds(Model model, PrintStream out) throws IOException {
 		//overwrite the JSON file
 		mapParticipantToIds(model, out);
 //		mapProcessToPublicationIds(model, out);
@@ -595,7 +636,7 @@ final class PaxtoolsMain {
 	 * For each PE or Gene, collect HGNC Symbols, UniProt IDs (for genes/proteins)
 	 * and/or ChEBI IDs or std. names (for molecules and complexes), etc.
 	 */
-	static void mapParticipantToIds(Model model, PrintStream out) throws IOException {
+	private static void mapParticipantToIds(Model model, PrintStream out) throws IOException {
 		IDFetcher hgncSymFetcher = new ConfigurableIDFetcher();
 		//...
 		throw new UnsupportedOperationException("Not implemented"); //TODO implement
@@ -604,14 +645,14 @@ final class PaxtoolsMain {
 	/*
 	 * For Pathways and Interactions, collect publication xref IDs, etc.
 	 */
-	static void mapProcessToPublicationIds(Model model, PrintStream out) throws IOException {
+	private static void mapProcessToPublicationIds(Model model, PrintStream out) throws IOException {
 		throw new UnsupportedOperationException("Not implemented");  //TODO implement
 	}
 
 	/*
 	 * For entity references, collect and write corresponding IDs, etc.
 	 */
-	static void mapEntityRefToIds(Model model, PrintStream out) throws IOException {
+	private static void mapEntityRefToIds(Model model, PrintStream out) throws IOException {
 		throw new UnsupportedOperationException("Not implemented");  //TODO implement
 	}
 
