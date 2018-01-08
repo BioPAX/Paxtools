@@ -624,12 +624,18 @@ public final class PaxtoolsMain {
 		out.close();
 	}
 
-
+	/*
+	 * Given BioPAX model,
+	 * for each physical entity or gene participant,
+	 * collect gene names and UniProt accession numbers or ChEBI IDs;
+	 * output using JSON format.
+	 *
+	 * TODO: implement
+	 */
 	private static void mapUriToIds(Model model, PrintStream out) throws IOException {
-		//overwrite the JSON file
 		mapParticipantToIds(model, out);
-//		mapProcessToPublicationIds(model, out);
-//		mapEntityRefToIds(model, out);
+//		mapProcessToPublicationIds(model, out); //TODO later
+//		mapEntityRefToIds(model, out); //TODO later
 	}
 
 	/*
@@ -640,20 +646,6 @@ public final class PaxtoolsMain {
 		IDFetcher hgncSymFetcher = new ConfigurableIDFetcher();
 		//...
 		throw new UnsupportedOperationException("Not implemented"); //TODO implement
-	}
-
-	/*
-	 * For Pathways and Interactions, collect publication xref IDs, etc.
-	 */
-	private static void mapProcessToPublicationIds(Model model, PrintStream out) throws IOException {
-		throw new UnsupportedOperationException("Not implemented");  //TODO implement
-	}
-
-	/*
-	 * For entity references, collect and write corresponding IDs, etc.
-	 */
-	private static void mapEntityRefToIds(Model model, PrintStream out) throws IOException {
-		throw new UnsupportedOperationException("Not implemented");  //TODO implement
 	}
 
 
