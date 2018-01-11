@@ -624,6 +624,7 @@ public final class PaxtoolsMain {
 		out.close();
 	}
 
+
 	/*
 	 * Given BioPAX model,
 	 * for each physical entity or gene participant,
@@ -633,19 +634,36 @@ public final class PaxtoolsMain {
 	 * TODO: implement
 	 */
 	private static void mapUriToIds(Model model, PrintStream out) throws IOException {
-		mapParticipantToIds(model, out);
-//		mapProcessToPublicationIds(model, out); //TODO later
-//		mapEntityRefToIds(model, out); //TODO later
+		//TODO: implement; add UniProt and ChEBI ids.
+
+		throw new UnsupportedOperationException("Not implemented");
 	}
 
+
 	/*
-	 * For each PE or Gene, collect HGNC Symbols, UniProt IDs (for genes/proteins)
-	 * and/or ChEBI IDs or std. names (for molecules and complexes), etc.
+	 * Recursively collect xrefs (that contain biochem. identifiers)
+	 * associated with a process or participant
+	 * (think of a, e.g., generic or complex bio or chemical entity).
 	 */
-	private static void mapParticipantToIds(Model model, PrintStream out) throws IOException {
-		IDFetcher hgncSymFetcher = new ConfigurableIDFetcher();
-		//...
-		throw new UnsupportedOperationException("Not implemented"); //TODO implement
+	private static Set<Xref> xrefsOfParticipant(Entity entity)
+	{
+		final Set<Xref> xrefs = new HashSet<Xref>();
+		//TODO: optionally, also incl. xrefs from under evidence property values...
+		final Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
+		fetcher.setSkipSubPathways(true);
+		Set<XReferrable> children = fetcher.fetch(entity, XReferrable.class);
+		children.add(entity); //include itself
+		for(XReferrable child : children) {
+			//skip for unwanted types
+			if (child instanceof PhysicalEntity || child instanceof EntityReference || child instanceof Gene) {
+				for (Xref x : child.getXref()) {
+					if ( x.getId() != null && x.getDb() != null) {
+						xrefs.add(x);
+					}
+				}
+			}
+		}
+		return xrefs;
 	}
 
 
