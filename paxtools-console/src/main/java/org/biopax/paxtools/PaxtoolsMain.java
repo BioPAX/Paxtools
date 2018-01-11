@@ -24,6 +24,8 @@ import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.validator.jaxb.Behavior;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -626,44 +628,85 @@ public final class PaxtoolsMain {
 
 
 	/*
-	 * Given BioPAX model,
-	 * for each physical entity or gene participant,
-	 * collect gene names and UniProt accession numbers or ChEBI IDs;
-	 * output using JSON format.
-	 *
-	 * TODO: implement
+	 * For each physical entity participant in the BioPAX model,
+	 * output uri, type, names, standard identifiers (in JSON format).
 	 */
 	private static void mapUriToIds(Model model, PrintStream out) throws IOException {
-		//TODO: implement; add UniProt and ChEBI ids.
+		out.println("[");
+		//write one by one to insert EOLs and make potentially a very large file human-readable -
+		for(PhysicalEntity pe : model.getObjects(PhysicalEntity.class))
+		{
+			JSONObject jo = new JSONObject();
+			jo.put("uri", pe.getUri());
+			jo.put("type", pe.getModelInterface().getSimpleName());
+			jo.put("generic", ModelUtils.isGeneric(pe));
+			jo.put("label", pe.getDisplayName());
 
-		throw new UnsupportedOperationException("Not implemented");
+			JSONArray ja = new JSONArray();
+			ja.addAll(pe.getName());
+			jo.put("name", ja);
+
+			if(!(pe instanceof SmallMolecule)) {
+				ja = new JSONArray();
+				ja.addAll(identifiers(pe, "hgnc symbol", false, false));
+				jo.put("HGNC Symbol", ja);
+
+				ja = new JSONArray();
+				ja.addAll(identifiers(pe, "uniprot", true, false));
+				jo.put("UniProt", ja);
+			}
+
+			if(pe instanceof SmallMolecule || PhysicalEntity.class.equals(pe.getModelInterface())) {
+				ja = new JSONArray();
+				ja.addAll(identifiers(pe, "chebi", false, false));
+				jo.put("ChEBI", ja);
+			}
+
+			ja = new JSONArray();
+			for(BioSource bs : ModelUtils.getOrganisms(pe)) ja.add(bs.getDisplayName());
+			jo.put("organism", ja);
+
+			ja = new JSONArray();
+			for(Provenance ds : pe.getDataSource()) ja.add(ds.getDisplayName());
+			jo.put("datasource", ja);
+
+			out.println(jo.toJSONString() + ",");
+		}
+		out.println("]");
 	}
 
 
-	/*
-	 * Recursively collect xrefs (that contain biochem. identifiers)
-	 * associated with a process or participant
-	 * (think of a, e.g., generic or complex bio or chemical entity).
+	/**
+	 * Recursively collects bio identifiers of given type (xref.db name)
+	 * associated with the physical entity or generic, complex entity.
+	 *
+	 * TODO (options): process Gene and Interaction; traverse into 'evidence' property.
+	 * @param entity a process participant (simple or generic)
+	 * @param xrefdb identifier type, such as 'HGNC Symbol' or 'ChEBI' (matches Xref.db values in the BioPAX model)
+	 * @param isPrefix whether the xrefdb value is a prefix rather than complete name.
+	 * @param includeEvidence whether to traverse into property:evidence to collect ids.
 	 */
-	private static Set<Xref> xrefsOfParticipant(Entity entity)
+	private static Set<String> identifiers(final PhysicalEntity entity, final String xrefdb,
+										   boolean isPrefix, boolean includeEvidence)
 	{
-		final Set<Xref> xrefs = new HashSet<Xref>();
-		//TODO: optionally, also incl. xrefs from under evidence property values...
-		final Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
-		fetcher.setSkipSubPathways(true);
+		final Set<String> ids = new HashSet<String>();
+		final Fetcher fetcher = (includeEvidence)
+			? new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
+				: new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
+		fetcher.setSkipSubPathways(true); //makes no difference now  but good to have/know...
 		Set<XReferrable> children = fetcher.fetch(entity, XReferrable.class);
 		children.add(entity); //include itself
-		for(XReferrable child : children) {
-			//skip for unwanted types
-			if (child instanceof PhysicalEntity || child instanceof EntityReference || child instanceof Gene) {
-				for (Xref x : child.getXref()) {
-					if ( x.getId() != null && x.getDb() != null) {
-						xrefs.add(x);
+		for(XReferrable child : children) {//ignore some classes, such as controlled vocabularies, interactions, etc.
+			if (child instanceof PhysicalEntity || child instanceof EntityReference || child instanceof Gene)
+				for (Xref x : child.getXref())
+					if ((x.getId()!=null && x.getDb()!=null) && (isPrefix)
+							? x.getDb().toLowerCase().startsWith(xrefdb.toLowerCase())
+								: xrefdb.equalsIgnoreCase(x.getDb()))
+					{
+						ids.add(x.getId());
 					}
-				}
-			}
 		}
-		return xrefs;
+		return ids;
 	}
 
 

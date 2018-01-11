@@ -89,6 +89,7 @@ public final class Main {
 				"\t'--hgnc-ids' - HGNC IDs/Symbols that occur in sequence entity references;\n " +
 				"\t'--uniprot-ids' - UniProt IDs in protein references;\n " +
 				"\t'--chebi-ids' - ChEBI IDs in small molecule references;\n " +
+				"\t'--uri-ids' - URI,type,name(s) and standard identifiers (in JSON format) for each physical entity;\n " +
 				"\tthe options' order defines the results output order.")
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
 		blacklist("<input> <output>\n" +

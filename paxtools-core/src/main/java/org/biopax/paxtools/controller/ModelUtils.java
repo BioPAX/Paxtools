@@ -1364,7 +1364,20 @@ public final class ModelUtils
 			if(proc instanceof Pathway)
 				breakPathwayComponentCycle(visited, rootPathway, (Pathway) proc);
 	}
+
+	/**
+	 * Checks whether the BioPAX element is generic physical entity or entity reference.
+	 *
+	 * @param e biopax object
+	 * @return true when the object is generic physical entity or entity reference
+	 */
+	public static boolean isGeneric(BioPAXElement e) {
+		return (
+			(e instanceof EntityReference && !((EntityReference)e).getMemberEntityReference().isEmpty())
+			|| (e instanceof PhysicalEntity && !((PhysicalEntity)e).getMemberPhysicalEntity().isEmpty())
+			|| (e instanceof SimplePhysicalEntity && isGeneric(((SimplePhysicalEntity) e).getEntityReference()))
+		);
+		//false when e==null
+	}
 }
-
-
 
