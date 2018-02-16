@@ -130,8 +130,8 @@
 
 	<licenses>
 		<license>
-			<name>LGPL 2.0 license</name>
-			<url>http://www.gnu.org/licenses/lgpl-2.0.html</url>
+			<name>MIT license</name>
+			<url>https://raw.githubusercontent.com/BioPAX/Paxtools/master/LICENSE</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
