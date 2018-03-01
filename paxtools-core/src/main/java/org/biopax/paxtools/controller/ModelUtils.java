@@ -627,26 +627,44 @@ public final class ModelUtils
 
 	}
 
+	/**
+	 * In Paxtools v6, controlled property won't accept multiple values
+	 * (due to the OWL functional property restriction, which we so far forgot of);
+	 * so, let's make sure every Control has at most one controlled process.
+	 * @param model
+	 */
+	public static void fixControlled(Model model) {
+		//TODO: implement
+	}
+
+	/**
+	 * In all interactions and complexes, replace generic complexes
+	 * with their corresponding member complexes; copy a parent object,
+	 * if needed, for each member complex.
+	 *
+	 * @param model biopax model to fix
+	 */
+	public static void normalizeGenericComplexes(Model model) {
+		//TODO: implement
+	}
 
 	/**
 	 * Converts generic simple physical entities, 
-	 * i.e., physical entities except Complexes 
+	 * i.e., physical entities except Complexes,
 	 * that have not empty memberPhysicalEntity property,
 	 * into equivalent physical entities
 	 * with generic entity references (which have members);
 	 * this is a better and less error prone way to model
 	 * generic molecules in BioPAX L3. 
-	 * 
-	 * Notes:
-	 * Generic Complexes could be normalized in a similar way,
-	 * but they do not have entityReference property and might
-	 * contain generic (incl. not yet normalized) components, which
-	 * makes it complicated.
+	 *
+	 * Complexes cannot be normalized in the same way,
+	 * for they do not have entityReference property and might also
+	 * contain generic components.
 	 * 
 	 * So, please avoid using 'memberPhysicalEntity' in your BioPAX L3 models
 	 * unless absolutely required, for there is a better alternative way
-	 * (using PhysicalEntity/entityReference/memberEntityReference).
-	 * 
+	 * (using PhysicalEntity/entityReference/memberEntityReference)!
+	 *
 	 * @param model biopax model to fix
 	 */
 	public static void normalizeGenerics(Model model)
@@ -667,6 +685,7 @@ public final class ModelUtils
 				LOG.error("createGenericEntityRef failed at " + pe.getUri(), e);
 			}
 		}
+		//TODO: unlink and remove all pe.memberPhysicalEntity for each pe in simplePEsToDo?
 	}
 	
 	private static void createGenericEntityRef(Model model, SimplePhysicalEntity spe,
@@ -686,7 +705,8 @@ public final class ModelUtils
 						break; //got one!
 				}
 			} else {
-				return;
+				return; //spe already has a ER
+				//TODO: shall we add members (spe.getGenericEntityReferences()) to firstEntityReference?
 			}
 
 			if (firstEntityReference != null)
@@ -712,6 +732,9 @@ public final class ModelUtils
 				}
 				
 				memberMap.put(members, er);
+			} else {
+				LOG.warn(String.format("Cannot generate a generic ER for generic SPE %s, " +
+								"for none of member PEs has got an ER.", spe.getUri()));
 			}
 		}
 

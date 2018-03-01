@@ -28,27 +28,35 @@ import java.util.Set;
 public interface Control extends Interaction
 {
 
-
 	/**
 	 * The entity that is controlled, e.g., in a biochemical reaction, the reaction is controlled by an enzyme.
 	 * Controlled is a sub-property of participants.
+	 *
+	 * @deprecated should return one Process or null; see also deprecated {@link #addControlled(Process)}
+	 *
 	 * @return The entity that is controlled
 	 */
-	public Set<Process> getControlled();
+	Set<Process> getControlled();
 
 	/**
 	 * The entity that is controlled, e.g., in a biochemical reaction, the reaction is controlled by an enzyme.
 	 * Controlled is a sub-property of participants.
+	 *
+	 * @deprecated violates OWL functional property restriction; should be: setControlled(process)
+	 *
 	 * @param controlled The entity that is controlled
 	 */
-	public void addControlled(Process controlled);
+	void addControlled(Process controlled);
 
 	/**
 	 * The entity that is controlled, e.g., in a biochemical reaction, the reaction is controlled by an enzyme.
 	 * Controlled is a sub-property of participants.
+	 *
+	 * @deprecated was a mistake; see also deprecated {@link #addControlled(Process)}
+	 *
 	 * @param controlled The entity that is controlled
 	 */
-	public void removeControlled(Process controlled);
+	void removeControlled(Process controlled);
 
 
 	/**
@@ -56,21 +64,21 @@ public interface Control extends Interaction
 	 * Controller is a sub-property of participants.
 	 * @return The controlling entity
 	 */
-	public Set<Controller> getController();
+	Set<Controller> getController();
 
 	/**
 	 * The controlling entity, e.g., in a biochemical reaction, an enzyme is the controlling entity of the reaction.
 	 * Controller is a sub-property of participants.
 	 * @param controller The controlling entity
 	 */
-	public void addController(Controller controller);
+	void addController(Controller controller);
 
 	/**
 	 * The controlling entity, e.g., in a biochemical reaction, an enzyme is the controlling entity of the reaction.
 	 * Controller is a sub-property of participants.
 	 * @param controller The controlling entity
 	 */
-	public void removeController(Controller controller);
+	void removeController(Controller controller);
 
 
 	/**
@@ -78,13 +86,13 @@ public interface Control extends Interaction
 	 *
 	 * @return control type
 	 */
-	public ControlType getControlType();
+	ControlType getControlType();
 
 	/**
 	 * Sets the controlType BioPAX property value, which
 	 * fefines the nature of the control relationship between the CONTROLLER and the CONTROLLED entities.
 	 * @param controlType new control type value
 	 */
-	public void setControlType(ControlType controlType);
+	void setControlType(ControlType controlType);
 
 }

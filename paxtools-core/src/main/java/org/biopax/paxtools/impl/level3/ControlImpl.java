@@ -59,12 +59,9 @@ public class  ControlImpl extends InteractionImpl
 	{
 		if (controlled != null) {
 			if (!checkControlled(controlled)) {
-				throw new IllegalBioPAXArgumentException(
-						"Illegal argument. Attempting to set "
-								+ controlled.getUri() + " to "
-								+ this.getUri());
-
-			} else {
+				throw new IllegalBioPAXArgumentException("Illegal argument. Attempting to set "
+								+ controlled.getUri() + " to " + this.getUri());
+			} else { //TODO: in paxtools v6, disallow multiple values (OWL functional property)...
 				this.controlled.add(controlled);
 				controlled.getControlledOf().add(this);
 				super.addParticipant(controlled);

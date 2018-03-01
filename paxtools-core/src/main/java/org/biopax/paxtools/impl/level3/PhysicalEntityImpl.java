@@ -95,14 +95,22 @@ public class PhysicalEntityImpl extends EntityImpl implements PhysicalEntity
 
 	public Set<PhysicalEntity> getMemberPhysicalEntity()
 	{
-		return this.memberPhysicalEntity;    //TODO (what?)
+		return this.memberPhysicalEntity;
 	}
 
-	public void addMemberPhysicalEntity(PhysicalEntity newMember)
+	public void addMemberPhysicalEntity(PhysicalEntity mpe)
 	{
-		if (newMember != null) {
-			this.memberPhysicalEntity.add(newMember);
-			newMember.getMemberPhysicalEntityOf().add(this);
+		if (mpe != null) {
+			//Ensure OWL class/property restrictions
+			if(this.getModelInterface().isInstance(mpe)) {
+				this.memberPhysicalEntity.add(mpe);
+				mpe.getMemberPhysicalEntityOf().add(this);
+			} else {
+				String c = this.getModelInterface().getSimpleName();
+				throw new IllegalBioPAXArgumentException(String.format(
+					"Value:%s violates class and property restriction: %s.memberPhysycalEntity only %s",
+						mpe.getUri(), c, c));
+			}
 		}
 	}
 

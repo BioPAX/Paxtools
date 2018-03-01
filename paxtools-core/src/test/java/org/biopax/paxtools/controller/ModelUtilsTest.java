@@ -16,7 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -197,9 +196,7 @@ public class ModelUtilsTest {
 
 		mock.bindArrays("entityReference", Arrays.copyOfRange(p, 0, 2), pr);
 
-		mock.bindInPairs("memberPhysicalEntity",
-		                 p[2],p[0],
-		                 p[2],p[1]);
+		mock.bindInPairs("memberPhysicalEntity", p[2],p[0], p[2],p[1]);
 
 		ModelUtils.normalizeGenerics(model);
 
