@@ -27,12 +27,12 @@ import static org.sbgn.GlyphClazz.*;
 import static org.sbgn.ArcClazz.*;
 
 /**
- * This class converts BioPAX L3 model into SBGN PD.
+ * This class converts BioPAX L3 model into SBGN PD (SBGN-ML XML).
  * It optionally applies a special COSE layout.
  *
- * This version ignores several BioPAX L3 features and types during conversion:
+ * Currently, this converter ignores several BioPAX types/properties:
  * <ul>
- * <li>Parent-child relationship between physical entities</li>
+ * <li>Parent-child relationship between physical entities (TODO: could use 'OR' glyph)</li>
  * <li>Parent-child relationship between entity references</li>
  * <li>Binding features and covalent binding features of physical entities</li>
  * <li>Pathway, PathwayStep, Evidence, etc.</li>
@@ -43,8 +43,8 @@ import static org.sbgn.ArcClazz.*;
  * <li>Compartment is just a controlled vocabulary in BioPAX, so nesting and neighborhood relations
  * between compartments are not handled here.</li>
  * <li>Control structures in BioPAX and in SBGN PD are a little different. We use AND and NOT
- * glyphs to approximate controls in BioPAX. However, ANDing everything is not really proper because
- * BioPAX does not imply a logical operator between controllers.</li>
+ * glyphs to approximate controls in BioPAX. However, AND-ing everything is not really proper,
+ * because BioPAX does not imply a logical operator between controllers.</li>
  * </ul>
  *
  * @author Ozgun Babur
@@ -77,7 +77,7 @@ public class L3ToSBGNPDConverter
 	protected FeatureDecorator featStrGen;
 
 	/**
-	 * Flag to run a layout before writing down the sbgn.
+	 * Flag to run a layout before writing down the sbgn.(memberPhysicalEntity)
 	 */
 	protected boolean doLayout;
 
@@ -136,7 +136,7 @@ public class L3ToSBGNPDConverter
 	//-- Section: Public methods ------------------------------------------------------------------|
 
 	/**
-	 * Empty constructor.
+	 * Constructor.
 	 */
 	public L3ToSBGNPDConverter()
 	{
@@ -152,7 +152,7 @@ public class L3ToSBGNPDConverter
 	public L3ToSBGNPDConverter(UbiqueDetector ubiqueDet, FeatureDecorator featStrGen,
 		boolean doLayout)
 	{
-		this.ubiqueDet = ubiqueDet;		
+		this.ubiqueDet = ubiqueDet;
 		this.featStrGen = (featStrGen != null) ? featStrGen : new CommonFeatureStringGenerator();
 		this.doLayout = doLayout;
 		this.useTwoGlyphsForReversibleConversion = true;
@@ -363,47 +363,29 @@ public class L3ToSBGNPDConverter
 
 
 	/**
-	 * We don't want to represent every PhysicalEntity or Gene in SBGN.
-	 * For instance, if a Complex is nested under another Complex,
-	 * and if it is not a participant of any interaction, we don't want to draw it.
+	 * Initially, we don't want to represent every PhysicalEntity or Gene node.
+	 * For example, if a Complex is nested under another Complex,
+	 * and if it is not a participant of any interaction,
+	 * then we don't want to draw it separately; also skip for dangling entities.
 	 *
 	 * @param ent physical entity or gene (it returns false for other entity types) to test
 	 * @return true if we want to draw this entity in SBGN; false - otherwise, or - to be auto-created later
 	 */
 	private boolean needsToBeCreatedInitially(Entity ent)
 	{
-		boolean ret = true; //means - do create a node
+		boolean create = true; //do create a node
 
-		if(ent instanceof PhysicalEntity) {
-			PhysicalEntity entity = (PhysicalEntity) ent;
-
-			if (entity instanceof Complex) {
-				Complex c = (Complex) entity;
-				if (c.getParticipantOf().isEmpty() && !c.getComponentOf().isEmpty()) {
-					// Inner complex will be created during creation of the top complex
-					ret = false;
-				}
-			} else if (entity.getParticipantOf().isEmpty() && !entity.getComponentOf().isEmpty()) {
-				// Complex members will be created during creation of parent complex
-				ret = false;
-			} else if (entity.getParticipantOf().isEmpty() && entity.getComponentOf().isEmpty()) {
-				// won't create a node for either a dangling, experimental form entity, or memberPhysicalEntity
-				if (!entity.getMemberPhysicalEntityOf().isEmpty())
-					log.debug("skip a memberPhysicalEntity (- also not a participant/component of another entity): "
-							+ entity.getUri());
-				else
-					log.debug("skip a dangling or experimental form phys. entity: " + entity.getUri());
-
-				ret = false;
-			} else if (ubiqueDet != null && ubiqueDet.isUbique(entity)) {
-				// Ubiques will be created when they are used
-				ret = false;
+		if(ent instanceof PhysicalEntity || ent instanceof Gene) {
+			if (ent.getParticipantOf().isEmpty() || (ubiqueDet != null && ubiqueDet.isUbique(ent))) {
+				// Complex components, incl. inner complexes, are created during creation of a parent complex;
+				// also, skip for dangling, experimental form and some member physical entities;
+				// ubiques and members/components will be created later on, when they are actually used.
+				create = false;
 			}
-		} else if(!(ent instanceof Gene)) {
-			ret = false;
-		}
+		} else
+			create = false;
 
-		return ret;
+		return create;
 	}
 
 	/**
@@ -486,7 +468,6 @@ public class L3ToSBGNPDConverter
 		g.setLabel(label);
 
 		// Detect if ubique
-
 		if (ubiqueDet != null && ubiqueDet.isUbique(e))
 		{
 			g.setClone(factory.createGlyphClone());

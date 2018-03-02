@@ -631,39 +631,33 @@ public final class ModelUtils
 	 * In Paxtools v6, controlled property won't accept multiple values
 	 * (due to the OWL functional property restriction, which we so far forgot of);
 	 * so, let's make sure every Control has at most one controlled process.
-	 * @param model
+	 * @param model biopax model
+	 * @param control to be cloned to set one controlled per control
 	 */
-	public static void fixControlled(Model model) {
+	public static void fixControlled(Model model, Control control) {
 		//TODO: implement
 	}
 
 	/**
-	 * In all interactions and complexes, replace generic complexes
-	 * with their corresponding member complexes; copy a parent object,
-	 * if needed, for each member complex.
+	 * In all interactions and complexes, replace generic physical entities (having members)
+	 * with their corresponding members; clone the parent object, if needed, for each member.
 	 *
-	 * @param model biopax model to fix
+	 * @param model biopax model
+	 * @param generic physical entity (PE) that has member PEs
 	 */
-	public static void normalizeGenericComplexes(Model model) {
-		//TODO: implement
+	public static void normalizeGeneric(Model model, PhysicalEntity generic) {
+		//TODO: implement?
 	}
 
 	/**
-	 * Converts generic simple physical entities, 
-	 * i.e., physical entities except Complexes,
-	 * that have not empty memberPhysicalEntity property,
-	 * into equivalent physical entities
-	 * with generic entity references (which have members);
-	 * this is a better and less error prone way to model
-	 * generic molecules in BioPAX L3. 
+	 * Converts each generic simple (except a Complex) physical entity having memberPhysicalEntity property set
+	 * into equivalent physical entity with a generic entity reference (have memberEntityReference values).
 	 *
-	 * Complexes cannot be normalized in the same way,
-	 * for they do not have entityReference property and might also
+	 * Complexes cannot be normalized in the same way, for they do not have entityReference property and might also
 	 * contain generic components.
 	 * 
-	 * So, please avoid using 'memberPhysicalEntity' in your BioPAX L3 models
-	 * unless absolutely required, for there is a better alternative way
-	 * (using PhysicalEntity/entityReference/memberEntityReference)!
+	 * In general, avoid using 'memberPhysicalEntity' (made exclusively for Reactome) in BioPAX models,
+	 * for there is a better alternative  - using entityReference/memberEntityReference.
 	 *
 	 * @param model biopax model to fix
 	 */

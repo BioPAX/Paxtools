@@ -1,7 +1,6 @@
 package org.biopax.paxtools.io.sbgn;
 
 import org.biopax.paxtools.model.level3.Entity;
-import org.biopax.paxtools.model.level3.PhysicalEntity;
 
 import java.util.Set;
 
@@ -12,18 +11,16 @@ import java.util.Set;
  */
 public class ListUbiqueDetector implements UbiqueDetector
 {
-	/**
-	 * IDs of ubiques.
-	 */
-	Set<String> ubiqueIDs;
+	Set<String> uris;
 
 	/**
-	 * Contructor with the Ubique IDs.
-	 * @param ubiqueIDs IDs of ubiques
+	 * Contructor.
+	 *
+	 * @param uris URIs of ubiques
 	 */
-	public ListUbiqueDetector(Set<String> ubiqueIDs)
+	public ListUbiqueDetector(Set<String> uris)
 	{
-		this.ubiqueIDs = ubiqueIDs;
+		this.uris = uris;
 	}
 
 	/**
@@ -33,6 +30,6 @@ public class ListUbiqueDetector implements UbiqueDetector
 	 */
 	public boolean isUbique(Entity e)
 	{
-		return ubiqueIDs.contains(e.getUri());
+		return uris.contains(e.getUri());
 	}
 }

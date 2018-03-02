@@ -55,16 +55,16 @@ public class  ControlImpl extends InteractionImpl
 		return this.controlled;
 	}
 
-	public void addControlled(Process controlled)
+	public void addControlled(Process process)
 	{
-		if (controlled != null) {
-			if (!checkControlled(controlled)) {
+		if (process != null) {
+			if (!checkControlled(process)) {
 				throw new IllegalBioPAXArgumentException("Illegal argument. Attempting to set "
-								+ controlled.getUri() + " to " + this.getUri());
+						+ process.getUri() + " to " + this.getUri());
 			} else { //TODO: in paxtools v6, disallow multiple values (OWL functional property)...
-				this.controlled.add(controlled);
-				controlled.getControlledOf().add(this);
-				super.addParticipant(controlled);
+				controlled.add(process);
+				process.getControlledOf().add(this);
+				super.addParticipant(process);
 			}
 		}
 	}
