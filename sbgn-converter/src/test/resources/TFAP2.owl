@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+ xml:base="http://pathwaycommons.org/pc2/">
+<owl:Ontology rdf:about="">
+ <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+</owl:Ontology>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_a90ba591bb2f12615a62ad76c77ac307">
+ <bp:physicalEntity rdf:resource="#Complex_47bae1c0715fb52b5e869b50ea6ac793" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Stoichiometry20964</bp:comment>
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_hgnc_symbol_CITED2_identity">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0356" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CITED2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hgnc symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_a64aca4e7a154cf646c05ee6ad00f1b7">
+ <bp:physicalEntity rdf:resource="#Protein_0719b9aeabb017ade10baab9c9c04734" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Stoichiometry20965</bp:comment>
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:SequenceModificationVocabulary rdf:ID="SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phosphoserine</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES Phosphoserine</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:Complex rdf:ID="Complex_97f5833306ec38bcd81297f148c9a7d4">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864382" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2A homodimer</bp:displayName>
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_9d4e5e2573407d37ce51c0b0535c030d" />
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:component rdf:resource="#Protein_2165adfc87fd50d9133848db0a30fad3" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP-2 alpha homodimer</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 8864382</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Complex8081</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Complex>
+
+<bp:SequenceModificationVocabulary rdf:ID="SequenceModificationVocabulary_51783aaefc798a70971be2e9fcea2d6e">
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES Phosphothreonine</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phosphothreonine</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:Protein rdf:ID="Protein_ad2f89acf596d2c391851648e63afd1c">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864726" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RGS</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:feature rdf:resource="#FragmentFeature_c4f4256a6a0584229abd7c6fce0eb8dc" />
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q99697" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ALL1-responsive protein ARP1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RIEG bicoid-related homeobox transcription factor</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pituitary homeobox 2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RIEG</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Solurshin</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARP1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RIEG1</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Protein16326</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 8864726</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Protein>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_5d4f40464bcb75e16366b5378c9dce79">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#FragmentFeature14529</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceInterval_8f49206473b627e26728a384e538abbd" />
+</bp:FragmentFeature>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_f124bb01b0fd229e6c6d773b34b71b74">
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_51783aaefc798a70971be2e9fcea2d6e" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 90 90 Phosphothreonine; by PKB/AKT2.</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceSite_42e3826b6700cd40131803adc349ed8e" />
+</bp:ModificationFeature>
+
+<bp:Pathway rdf:about="http://identifiers.org/reactome/R-HSA-8866906">
+ <bp:pathwayOrder rdf:resource="#PathwayStep_931047d905cc1955a630b4db14726101" />
+ <bp:pathwayOrder rdf:resource="#PathwayStep_8f2e97b57d0b4e614c4285b1f9e6c4e7" />
+ <bp:pathwayComponent rdf:resource="http://identifiers.org/reactome/R-HSA-8864718" />
+ <bp:pathwayComponent rdf:resource="http://identifiers.org/reactome/R-HSA-8864729" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/22735262" />
+ <bp:xref rdf:resource="#RelationshipXref_reactomehttp___www_reactome_org_biopax_61_48887_RelationshipXref725" />
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8866906" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/15475956" />
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2 (AP-2) family regulates transcription of other transcription factors</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Weigel, Ronald J, 2016-05-17</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Zarelli, Valeria E, 2016-05-04</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Dawid, Igor B, 2016-05-04</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Edited: Orlic-Milacic, Marija, 2016-03-14</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Bogachek, Maria V, 2016-05-17</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Authored: Orlic-Milacic, Marija, 2016-03-14</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homodimers and possibly heterodimers of TFAP2A and TFAP2C, in complex with CITED2, stimulate transcription of the PITX2 gene, involved in left-right patterning and heart development (Bamforth et al. 2004, Li et al. 2012).</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Pathway>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_f98eb92ded89b2de5bea9d399e5dae55">
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 252 252 Phosphoserine; by PKA.</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceSite_4b266edf41599c8aa0a849f850bcfde7" />
+</bp:ModificationFeature>
+
+<bp:UnificationXref rdf:ID="UnificationXref_uniprot_knowledgebase_Q99967">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q99967</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot knowledgebase</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_6869808d54e59c23d1f53f1a5693eaee">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">450</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceSite31195</bp:comment>
+</bp:SequenceSite>
+
+<bp:UnificationXref rdf:ID="UnificationXref_uniprot_knowledgebase_Q92754">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q92754</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot knowledgebase</bp:db>
+</bp:UnificationXref>
+
+<bp:Complex rdf:ID="Complex_d180f4c9e87fe0f91092007aebf630b2">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864705" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2A,TFAP2C homodimers:CITED2:PITX2 Gene</bp:displayName>
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_249aa123a65d2bc963c0ff62daa766ee" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_9983ad7b7eb86ca751d33dfa74b4bb77" />
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:component rdf:resource="#Complex_b37a88e06d330552ab34c0f0213910b2" />
+ <bp:component rdf:resource="#Dna_fc3fcca9369c79fb4cefc2a0c76dc95a" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 8864705</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Complex8097</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Complex>
+
+<bp:BiochemicalReaction rdf:about="http://identifiers.org/reactome/R-HSA-8864729">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864729" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/22735262" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/15475956" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2 gene expression is stimulated by TFAP2A,TFAP2C homodimers:CITED2</bp:displayName>
+ <bp:right rdf:resource="#Protein_ad2f89acf596d2c391851648e63afd1c" />
+ <bp:left rdf:resource="#Dna_fc3fcca9369c79fb4cefc2a0c76dc95a" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Weigel, Ronald J, 2016-05-17</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Zarelli, Valeria E, 2016-05-04</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Dawid, Igor B, 2016-05-04</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Edited: Orlic-Milacic, Marija, 2016-03-14</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Bogachek, Maria V, 2016-05-17</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">The PITX2 gene encodes a homeobox transcription factor involved in left-right patterning and heart development. The PITX2 gene expression is stimulated by binding of the complex of CITED2 and TFAP2A or TFAP2C homodimers to the AP-2 response elements in the PITX2 promoter (Bamforth et al. 2004, Li et al. 2012).</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Authored: Orlic-Milacic, Marija, 2016-03-14</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+ <bp:conversionDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:conversionDirection>
+</bp:BiochemicalReaction>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_7ce97ecd91328a71f7e68e8b7e82309f">
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 434 434 Phosphoserine.</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceSite_f97a915110d2a92da519043993a84e05" />
+</bp:ModificationFeature>
+
+<bp:SequenceSite rdf:ID="SequenceSite_dbf30506dacf184b02af27581085028f">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceSite31214</bp:comment>
+</bp:SequenceSite>
+
+<bp:SequenceSite rdf:ID="SequenceSite_065e51bc3ffdab1f4ee03ca97873e245">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">437</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceSite31197</bp:comment>
+</bp:SequenceSite>
+
+<bp:Protein rdf:ID="Protein_583a8ab2f83a60fc314eec68f29693ca">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-3234058" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2C</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:feature rdf:resource="#FragmentFeature_8eb7352acd5e4b89292f649900049e67" />
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q92754" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2C_HUMAN</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Transcription factor AP-2 gamma</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 3234058</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Protein16313</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Protein>
+
+<bp:BioSource rdf:about="http://identifiers.org/taxonomy/9606">
+ <bp:xref rdf:resource="#UnificationXref_taxonomy_9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens (human)</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Human</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BiologicalState14</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens, Cell Membrane</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">human</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens, Extracellular Space</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BiologicalState15</bp:name>
+</bp:BioSource>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-3234058">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-3234058.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-3234058</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_869ff625301a8114a3c4c024bd4a0f9f">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceSite31194</bp:comment>
+</bp:SequenceSite>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_5dedfd7087cb5ce55719e15d40768901">
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_6869808d54e59c23d1f53f1a5693eaee" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_869ff625301a8114a3c4c024bd4a0f9f" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceInterval14528</bp:comment>
+</bp:SequenceInterval>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_f024de8b3e0c9fbbd5979182708f133e">
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_9daed91b3f835e48bb84683ec066bd30" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_fe0548a3a97c7a3eb6a28a984cbb0dd9" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceInterval6096</bp:comment>
+</bp:SequenceInterval>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/Q99697">
+ <bp:entityFeature rdf:resource="#ModificationFeature_f124bb01b0fd229e6c6d773b34b71b74" />
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pituitary homeobox 2</bp:standardName>
+ <bp:xref rdf:resource="#UnificationXref_uniprot_knowledgebase_Q99697" />
+ <bp:xref rdf:resource="#RelationshipXref_hgnc_symbol_PITX2_identity" />
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2_HUMAN</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARP1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RIEG1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ALL1-responsive protein ARP1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RIEG bicoid-related homeobox transcription factor</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RIEG</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Solurshin</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RGS</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homeobox protein PITX2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Paired-like homeodomain transcription factor 2</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Controls cell proliferation in a tissue-specific mannerand is involved in morphogenesis. During embryonic development,exerts a role in the expansion of muscle progenitors. May play arole in the proper localization of asymmetric organs such as theheart and stomach. Isoform PTX2C is involved in left-rightasymmetry the developing embryo (By similarity). {ECO:0000250}.SUBCELLULAR LOCATION: Nucleus.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=3;Name=PTX2B; Synonyms=ARP1B;IsoId=Q99697-1; Sequence=Displayed;Name=PTX2C; Synonyms=ARP1C;IsoId=Q99697-2; Sequence=VSP_002260;Name=PTX2A; Synonyms=ARP1A;IsoId=Q99697-3; Sequence=VSP_002261;Note=Variant in position: 58:F-&gt;L (in ASGD4).{ECO:0000269|PubMed:20881294};PTM: Phosphorylation at Thr-90 impairs its association with theCCND1 mRNA-stabilizing complex thus shortening the half-life ofCCND1. {ECO:0000250}.DISEASE: Axenfeld-Rieger syndrome 1 (RIEG1) [MIM:180500]: Anautosomal dominant disorder of morphogenesis that results inabnormal development of the anterior segment of the eye, andresults in blindness from glaucoma in approximately 50% ofaffected individuals. Additional features include aniridia,maxillary hypoplasia, hypodontia, anal stenosis, redundantperiumbilical skin. {ECO:0000269|PubMed:10937553,ECO:0000269|PubMed:11487566, ECO:0000269|PubMed:12381896,ECO:0000269|PubMed:16936096, ECO:0000269|PubMed:8944018}. Note=Thedisease is caused by mutations affecting the gene represented inthis entry.DISEASE: Anterior segment dysgenesis 4 (ASGD4) [MIM:137600]: Aform of anterior segment dysgenesis, a group of defects affectinganterior structures of the eye including cornea, iris, lens,trabecular meshwork, and Schlemm canal. Anterior segmentdysgeneses result from abnormal migration or differentiation ofthe neural crest derived mesenchymal cells that give rise tocomponents of the anterior chamber during eye development.Different anterior segment anomalies may exist alone or incombination, including iris hypoplasia, enlarged or reducedcorneal diameter, corneal vascularization and opacity, posteriorembryotoxon, corectopia, polycoria, abnormal iridocorneal angle,ectopia lentis, and anterior synechiae between the iris andposterior corneal surface. Clinical conditions falling within thephenotypic spectrum of anterior segment dysgeneses includeaniridia, Axenfeld anomaly, Reiger anomaly/syndrome, Petersanomaly, and iridogoniodysgenesis. ASGD4 is an autosomal dominantdisease. {ECO:0000269|PubMed:10051017,ECO:0000269|PubMed:20881294, ECO:0000269|PubMed:9437321,ECO:0000269|PubMed:9618168}. Note=The disease is caused bymutations affecting the gene represented in this entry.DISEASE: Ring dermoid of cornea (RDC) [MIM:180550]: An oculardisorder characterized by bilateral annular limbal dermoids(growths with a skin-like structure) with corneal and conjunctivalextension. {ECO:0000269|PubMed:15591271,ECO:0000269|PubMed:22224469}. Note=The disease is caused bymutations affecting the gene represented in this entry.SIMILARITY: Belongs to the paired homeobox family. Bicoidsubfamily. {ECO:0000305}. COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/uniprot.isoform/Q99697-2</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2_HUMAN Reviewed; 317 AA.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.gene-regulation.com/#proteinref_gene_5308</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_5308</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/uniprot.isoform/Q99697-3</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_5308</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_03328_identity</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/XP_006714298</bp:comment>
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864728">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864728.1</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864728</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_8f49206473b627e26728a384e538abbd">
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_065e51bc3ffdab1f4ee03ca97873e245" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_5ca24afdc7883b558e411f9d78248840" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceInterval14529</bp:comment>
+</bp:SequenceInterval>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864726">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864726.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864726</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864723">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864723.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864723</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_9983ad7b7eb86ca751d33dfa74b4bb77">
+ <bp:physicalEntity rdf:resource="#Complex_b37a88e06d330552ab34c0f0213910b2" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Stoichiometry20966</bp:comment>
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_ensembl_ENSG00000164093">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSG00000164093</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ensembl</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_uniprot_knowledgebase_Q99697_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q99697</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:RelationshipXref>
+
+<bp:BiochemicalReaction rdf:about="http://identifiers.org/reactome/R-HSA-8864718">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864718" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/22735262" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/15475956" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2A,TFAP2C homodimers:CITED2 binds PITX2 gene promoter</bp:displayName>
+ <bp:right rdf:resource="#Complex_d180f4c9e87fe0f91092007aebf630b2" />
+ <bp:left rdf:resource="#Complex_b37a88e06d330552ab34c0f0213910b2" />
+ <bp:left rdf:resource="#Dna_fc3fcca9369c79fb4cefc2a0c76dc95a" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homodimers of AP-2 transcription factor family members TFAP2A (AP-2 alpha) and TFAP2C (AP-2 gamma), in complex with CITED2, bind to the evolutionarily conserved AP-2 response elements in the promoter of the PITX2 gene (Bamforth et al. 2004, Li et al. 2012).</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Weigel, Ronald J, 2016-05-17</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Zarelli, Valeria E, 2016-05-04</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Dawid, Igor B, 2016-05-04</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Edited: Orlic-Milacic, Marija, 2016-03-14</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reviewed: Bogachek, Maria V, 2016-05-17</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Authored: Orlic-Milacic, Marija, 2016-03-14</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+ <bp:conversionDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:conversionDirection>
+</bp:BiochemicalReaction>
+
+<bp:SequenceSite rdf:ID="SequenceSite_5ca24afdc7883b558e411f9d78248840">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceSite31196</bp:comment>
+</bp:SequenceSite>
+
+<bp:SequenceSite rdf:ID="SequenceSite_4b266edf41599c8aa0a849f850bcfde7">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">252</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+</bp:SequenceSite>
+
+<bp:Complex rdf:ID="Complex_99ff359da791cd7d774cf29fd36ba312">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864386" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2C homodimer</bp:displayName>
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_a6483a2273caf5087ada4573f881b3ae" />
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:component rdf:resource="#Protein_583a8ab2f83a60fc314eec68f29693ca" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP-2 gamma homodimer</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 8864386</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Complex8082</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Complex>
+
+<bp:Complex rdf:ID="Complex_b37a88e06d330552ab34c0f0213910b2">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864723" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2A,TFAP2C homodimers:CITED2</bp:displayName>
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_a64aca4e7a154cf646c05ee6ad00f1b7" />
+ <bp:componentStoichiometry rdf:resource="#Stoichiometry_a90ba591bb2f12615a62ad76c77ac307" />
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:component rdf:resource="#Protein_0719b9aeabb017ade10baab9c9c04734" />
+ <bp:component rdf:resource="#Complex_47bae1c0715fb52b5e869b50ea6ac793" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Complex8096</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 8864723</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Complex>
+
+<bp:Complex rdf:ID="Complex_47bae1c0715fb52b5e869b50ea6ac793">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864379" />
+ <bp:memberPhysicalEntity rdf:resource="#Complex_99ff359da791cd7d774cf29fd36ba312" />
+ <bp:memberPhysicalEntity rdf:resource="#Complex_97f5833306ec38bcd81297f148c9a7d4" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP-2 alpha, gamma</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2A,TFAP2C homodimers</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 8864379</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Complex8080</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Complex>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8866906">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8866906.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8866906</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864379">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864379.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864379</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_42e3826b6700cd40131803adc349ed8e">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">90</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+</bp:SequenceSite>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864718">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864718.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864718</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:CellularLocationVocabulary rdf:ID="CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267">
+ <bp:xref rdf:resource="#UnificationXref_gene_ontology_GO_0005654" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Nucleoplasm</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">nucleoplasm</bp:term>
+</bp:CellularLocationVocabulary>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/P05549">
+ <bp:entityFeature rdf:resource="#ModificationFeature_32175df678b43b3365e1d9d194bfe6be" />
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Transcription factor AP-2-alpha</bp:standardName>
+ <bp:xref rdf:resource="#RelationshipXref_hgnc_symbol_TFAP2A_identity" />
+ <bp:xref rdf:resource="#UnificationXref_uniprot_knowledgebase_P05549" />
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2A_HUMAN</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2TF</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2-alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Activator protein 2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP-2 transcription factor</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP-2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Activating enhancer-binding protein 2-alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2A</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/XP_011513135</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_003211</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.gene-regulation.com/#proteinref_gene_7020</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/uniprot.isoform/P05549-5</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_00128_identity</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/uniprot.isoform/P05549-1</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Sequence-specific DNA-binding protein that interactswith inducible viral and cellular enhancer elements to regulatetranscription of selected genes. AP-2 factors bind to theconsensus sequence 5&apos;-GCCNNNGGC-3&apos; and activate genes involved ina large spectrum of important biological functions includingproper eye, face, body wall, limb and neural tube development.They also suppress a number of genes including MCAM/MUC18, C/EBPalpha and MYC. AP-2-alpha is the only AP-2 protein required forearly morphogenesis of the lens vesicle. Together with the CITED2coactivator, stimulates the PITX2 P1 promoter transcriptionactivation. Associates with chromatin to the PITX2 P1 promoterregion. {ECO:0000269|PubMed:11694877,ECO:0000269|PubMed:12586840}.SUBUNIT: Binds DNA as a dimer. Can form homodimers or heterodimerswith other AP-2 family members. Interacts with WWOX. Interactswith CITED4. Interacts with UBE2I. Interacts with RALBP1 in acomplex also containing EPN1 and NUMB during interphase andmitosis. Interacts with KCTD1; this interaction repressestranscription activation. Interacts (via C-terminus) with CITED2(via C-terminus); the interaction stimulates TFAP2A-transcriptional activation. Interacts (via N-terminus) with EP300(via N-terminus); the interaction requires CITED2. Interacts withKCTD15; this interaction inhibits TFAP2A transcriptionalactivation. {ECO:0000269|PubMed:11694877,ECO:0000269|PubMed:11744733, ECO:0000269|PubMed:12072434,ECO:0000269|PubMed:12586840, ECO:0000269|PubMed:12775724,ECO:0000269|PubMed:15548692, ECO:0000269|PubMed:19115315,ECO:0000269|PubMed:1998122, ECO:0000269|PubMed:23382213}.SUBCELLULAR LOCATION: Nucleus {ECO:0000269|PubMed:12586840}.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=4;Comment=Experimental confirmation may be lacking for someisoforms.;Name=1; Synonyms=AP-2A;IsoId=P05549-1; Sequence=Displayed;Name=2;IsoId=P05549-5; Sequence=VSP_043268;Note=No experimental confirmation available.;Name=4; Synonyms=AP-2B;IsoId=P05549-2; Sequence=VSP_006401;Note=May be an aberrantly processed form with no significantdistribution in vivo.;Name=5;IsoId=P05549-6; Sequence=VSP_047050;Note=Gene prediction based on EST data.;DOMAIN: The WW-binding motif mediates interaction with WWOX.{ECO:0000250}.PTM: Sumoylated on Lys-10; which inhibits transcriptionalactivity. {ECO:0000305|PubMed:12072434}.DISEASE: Branchiooculofacial syndrome (BOFS) [MIM:113620]: Asyndrome characterized by growth retardation, bilateral branchialsinus defects with hemangiomatous, scarred skin, cleft lip with orwithout cleft palate, pseudocleft of the upper lip, nasolacrimalduct obstruction, low set ears with posterior rotation, amalformed, asymmetrical nose with a broad bridge and flattenedtip, conductive or sensorineural deafness, ocular and renalanomalies. {ECO:0000269|PubMed:18423521}. Note=The disease iscaused by mutations affecting the gene represented in this entry.SIMILARITY: Belongs to the AP-2 family. {ECO:0000305}.WEB RESOURCE: Name=Wikipedia; Note=Activating protein 2 entry;URL=&quot;https://en.wikipedia.org/wiki/Activating_protein_2&quot;;WEB RESOURCE: Name=Atlas of Genetics and Cytogenetics in Oncologyand Haematology;URL=&quot;http://atlasgeneticsoncology.org/Genes/TFAP2AID42526ch6p24.html&quot;; COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.phosphosite.org/phosphosite.owl#po_9116</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_7020</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2A_HUMAN Reviewed; 437 AA.</bp:comment>
+</bp:ProteinReference>
+
+<bp:Protein rdf:ID="Protein_0719b9aeabb017ade10baab9c9c04734">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-6804489" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CITED2</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:feature rdf:resource="#FragmentFeature_898e01cd1e8f249b1f1211fa5e784b63" />
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/Q99967" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cbp/p300-interacting transactivator 2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CITE2_HUMAN</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 6804489</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Protein6912</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Protein>
+
+<bp:Protein rdf:ID="Protein_2165adfc87fd50d9133848db0a30fad3">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864280" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP-2</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:feature rdf:resource="#FragmentFeature_5d4f40464bcb75e16366b5378c9dce79" />
+ <bp:entityReference rdf:resource="http://identifiers.org/uniprot/P05549" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2TF</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2-alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Transcription factor AP-2-alpha</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Activator protein 2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2A</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 8864280</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Protein16315</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Protein>
+
+<bp:DnaReference rdf:ID="DnaReference_9899820b4394de951371aecd4db3214c">
+ <bp:xref rdf:resource="#RelationshipXref_uniprot_knowledgebase_Q99697_see-also" />
+ <bp:xref rdf:resource="#UnificationXref_ensembl_ENSG00000164093" />
+ <bp:xref rdf:resource="#RelationshipXref_hgnc_symbol_PITX2_see-also" />
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RGS</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ENSEMBL:ENSG00000164093 PITX2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RIEG</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARP1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">RIEG1</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#DnaReference485</bp:comment>
+</bp:DnaReference>
+
+<bp:UnificationXref rdf:ID="UnificationXref_gene_ontology_GO_0005654">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005654</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">gene ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_hgnc_symbol_PITX2_identity">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0356" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hgnc symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_uniprot_knowledgebase_P05549">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P05549</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot knowledgebase</bp:db>
+</bp:UnificationXref>
+
+<bp:PublicationXref rdf:about="http://identifiers.org/pubmed/15475956">
+ <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">2004</bp:year>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Anderson, Robert H</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Neubauer, Stefan</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Clarke, Kieran</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Bamforth, Simon D</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Michell, Anna C</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Brown, Nigel A</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Norris, Dominic</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Bragança, José</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Schneider, Jürgen E</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Farthing, Cassandra R</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Bhattacharya, Shoumo</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Broadbent, Carol</bp:author>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">15475956</bp:id>
+ <bp:source rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Nat. Genet. 36:1189-96</bp:source>
+ <bp:title rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cited2 controls left-right patterning and heart development through a Nodal-Pitx2c pathway</bp:title>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
+</bp:PublicationXref>
+
+<bp:ModificationFeature rdf:ID="ModificationFeature_32175df678b43b3365e1d9d194bfe6be">
+ <bp:modificationType rdf:resource="#SequenceModificationVocabulary_3b5b5d8d96e1109b827ff8c2d1a14cf9" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD_RES 239 239 Phosphoserine; by PKA.</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceSite_16fa54acef612eb99d0ae43d35c41663" />
+</bp:ModificationFeature>
+
+<bp:Control rdf:about="http://identifiers.org/reactome/R-HSA-8864728">
+ <bp:controlled rdf:resource="http://identifiers.org/reactome/R-HSA-8864729" />
+ <bp:controller rdf:resource="#Complex_d180f4c9e87fe0f91092007aebf630b2" />
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864728" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/22735262" />
+ <bp:xref rdf:resource="http://identifiers.org/pubmed/15475956" />
+ <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">&apos;TFAP2A,TFAP2C homodimers:CITED2:PITX2 Gene [nucleoplasm]&apos; positively regulates &apos;PITX2 gene expression is stimulated by TFAP2A,TFAP2C homodimers:CITED2&apos;</bp:displayName>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Control>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864708">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864708.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864708</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864729">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864729.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864729</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864705">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864705.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864705</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_16fa54acef612eb99d0ae43d35c41663">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">239</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+</bp:SequenceSite>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_c4f4256a6a0584229abd7c6fce0eb8dc">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#FragmentFeature14538</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceInterval_43c1ba0bc719292fc621ad1163b83d8f" />
+</bp:FragmentFeature>
+
+<bp:PublicationXref rdf:about="http://identifiers.org/pubmed/22735262">
+ <bp:year rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">2012</bp:year>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ma, Xu</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Li, Qian</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pan, Hong</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Su, Dongmei</bp:author>
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Guan, Lina</bp:author>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">22735262</bp:id>
+ <bp:source rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Biochem. Biophys. Res. Commun. 423:895-9</bp:source>
+ <bp:title rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CITED2 mutation links congenital heart defects to dysregulation of the cardiac gene VEGF and PITX2C expression</bp:title>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
+</bp:PublicationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_9daed91b3f835e48bb84683ec066bd30">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">270</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceSite13485</bp:comment>
+</bp:SequenceSite>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://identifiers.org/psimi/MI:0361">
+ <bp:xref rdf:resource="#UnificationXref_molecular_interactions_ontology_MI_0361" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">see-also</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_898e01cd1e8f249b1f1211fa5e784b63">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#FragmentFeature6096</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceInterval_f024de8b3e0c9fbbd5979182708f133e" />
+</bp:FragmentFeature>
+
+<bp:PathwayStep rdf:ID="PathwayStep_8f2e97b57d0b4e614c4285b1f9e6c4e7">
+ <bp:nextStep rdf:resource="#PathwayStep_931047d905cc1955a630b4db14726101" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#PathwayStep9059</bp:comment>
+ <bp:stepProcess rdf:resource="http://identifiers.org/reactome/R-HSA-8864718" />
+</bp:PathwayStep>
+
+<bp:UnificationXref rdf:ID="UnificationXref_molecular_interactions_ontology_MI_0361">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0361</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mi</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_hgnc_symbol_TFAP2C_identity">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0356" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2C</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hgnc symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_fe0548a3a97c7a3eb6a28a984cbb0dd9">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">1</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceSite13484</bp:comment>
+</bp:SequenceSite>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_9d4e5e2573407d37ce51c0b0535c030d">
+ <bp:physicalEntity rdf:resource="#Protein_2165adfc87fd50d9133848db0a30fad3" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Stoichiometry20939</bp:comment>
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">2.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:Provenance rdf:ID="reactome">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:displayName>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Source http://www.reactome.org/download/current/biopax.zip type: BIOPAX, Reactome v61 (only &apos;Homo_sapiens.owl&apos;) 23-Jun-2017</bp:comment>
+</bp:Provenance>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864280">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864280.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864280</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_reactomehttp___www_reactome_org_biopax_61_48887_RelationshipXref725">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0359" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#RelationshipXref725</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0045944</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">gene ontology</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_aa7ad6172b84fa2f6534e1695b15532b">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">317</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceSite31215</bp:comment>
+</bp:SequenceSite>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/Q99967">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cbp/p300-interacting transactivator 2</bp:standardName>
+ <bp:xref rdf:resource="#RelationshipXref_hgnc_symbol_CITED2_identity" />
+ <bp:xref rdf:resource="#UnificationXref_uniprot_knowledgebase_Q99967" />
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CITE2_HUMAN</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P35srj</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CITED2</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MSG-related protein 1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MRG-1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MRG1</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CITE2_HUMAN Reviewed; 270 AA.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/uniprot.isoform/Q99967-2</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_10370</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_10370_identity</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Transcriptional coactivator of the p300/CBP-mediatedtranscription complex. Acts as a bridge, linking TFAP2transcription factors and the p300/CBP transcriptional coactivatorcomplex in order to stimulate TFAP2-mediated transcriptionalactivation. Positively regulates TGF-beta signaling through itsassociation with the SMAD/p300/CBP-mediated transcriptionalcoactivator complex. Stimulates the peroxisome proliferator-activated receptors PPARA transcriptional activity. Enhancesestrogen-dependent transactivation mediated by estrogen receptors.Acts also as a transcriptional corepressor; interferes with thebinding of the transcription factors HIF1A or STAT2 and thep300/CBP transcriptional coactivator complex. Participates in sexdetermination and early gonad development by stimulatingtranscription activation of SRY. Plays a role in controlling left-right patterning during embryogenesis; potentiates transcriptionalactivation of NODAL-mediated gene transcription in the leftlateral plate mesoderm (LPM). Plays an essential role indifferentiation of the adrenal cortex from the adrenogonadalprimordium (AGP); stimulates WT1-mediated transcription activationthereby up-regulating the nuclear hormone receptor NR5A1 promoteractivity. Associates with chromatin to the PITX2 P1 promoterregion. {ECO:0000269|PubMed:11581164, ECO:0000269|PubMed:12586840,ECO:0000269|PubMed:15051727}.SUBUNIT: Interacts (via C-terminus) with SMAD2. Interacts (via C-terminus) with SMAD3 (via MH2 domain). Interacts with LHX2 (viaLIM domains). Interacts with WT1 (By similarity). Interacts (viaC-terminus) with EP300 (via CH1 domain); the interaction isstimulated in response to hypoxia. Interacts with PPARA. Interacts(via C-terminus) with TFAP2A, TFAP2B and TFAP2C. {ECO:0000250,ECO:0000269|PubMed:11694877, ECO:0000269|PubMed:12586840,ECO:0000269|PubMed:12778114, ECO:0000269|PubMed:14594809,ECO:0000269|PubMed:15051727, ECO:0000269|PubMed:9887100}.SUBCELLULAR LOCATION: Nucleus {ECO:0000269|PubMed:12586840,ECO:0000269|PubMed:8901575, ECO:0000269|PubMed:9887100}.Note=Colocalizes with EP300 in dot-like structures.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=1;IsoId=Q99967-1; Sequence=Displayed;Name=2;IsoId=Q99967-2; Sequence=VSP_001089;INDUCTION: By hypoxia and deferoxamine.{ECO:0000269|PubMed:9887100}.DISEASE: Ventricular septal defect 2 (VSD2) [MIM:614431]: A commonform of congenital cardiovascular anomaly that may occur alone orin combination with other cardiac malformations. It can affect anyportion of the ventricular septum, resulting in abnormalcommunications between the two lower chambers of the heart.Classification is based on location of the communication, such asperimembranous, inlet, outlet (infundibular), central muscular,marginal muscular, or apical muscular defect. Large defects thatgo unrepaired may give rise to cardiac enlargement, congestiveheart failure, pulmonary hypertension, Eisenmenger&apos;s syndrome,delayed fetal brain development, arrhythmias, and even suddencardiac death. {ECO:0000269|PubMed:16287139}. Note=The disease iscaused by mutations affecting the gene represented in this entry.DISEASE: Atrial septal defect 8 (ASD8) [MIM:614433]: A congenitalheart malformation characterized by incomplete closure of the wallbetween the atria resulting in blood flow from the left to theright atria. {ECO:0000269|PubMed:16287139}. Note=The disease iscaused by mutations affecting the gene represented in this entry.SIMILARITY: Belongs to the CITED family. {ECO:0000305}.WEB RESOURCE: Name=Atlas of Genetics and Cytogenetics in Oncologyand Haematology;URL=&quot;http://atlasgeneticsoncology.org/Genes/CITED2ID40087ch6q24.html&quot;; COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_rcsb_pdb_1R8U_see-also</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_10370</bp:comment>
+</bp:ProteinReference>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://identifiers.org/psimi/MI:0359">
+ <bp:xref rdf:resource="#UnificationXref_molecular_interactions_ontology_MI_0359" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">process</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">gene ontology term for cellular process</bp:term>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">biological process</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:UnificationXref rdf:ID="UnificationXref_uniprot_knowledgebase_Q99697">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q99697</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot knowledgebase</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://identifiers.org/psimi/MI:0356">
+ <bp:xref rdf:resource="#UnificationXref_molecular_interactions_ontology_MI_0356" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">identity</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:ProteinReference rdf:about="http://identifiers.org/uniprot/Q92754">
+ <bp:entityFeature rdf:resource="#ModificationFeature_7ce97ecd91328a71f7e68e8b7e82309f" />
+ <bp:entityFeature rdf:resource="#ModificationFeature_f98eb92ded89b2de5bea9d399e5dae55" />
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Transcription factor AP-2 gamma</bp:standardName>
+ <bp:xref rdf:resource="#RelationshipXref_hgnc_symbol_TFAP2C_identity" />
+ <bp:xref rdf:resource="#UnificationXref_uniprot_knowledgebase_Q92754" />
+ <bp:organism rdf:resource="http://identifiers.org/taxonomy/9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2C_HUMAN</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Transcription factor ERF-1</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Activating enhancer-binding protein 2 gamma</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2C</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2-gamma</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.ctdbase.org/#ref_protein_gene_7022</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://identifiers.org/refseq/NP_003213</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AP2C_HUMAN Reviewed; 450 AA.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.gene-regulation.com/#proteinref_gene_7022</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Sequence-specific DNA-binding protein that interactswith inducible viral and cellular enhancer elements to regulatetranscription of selected genes. AP-2 factors bind to theconsensus sequence 5&apos;-GCCNNNGGC-3&apos; and activate genes involved ina large spectrum of important biological functions includingproper eye, face, body wall, limb and neural tube development.They also suppress a number of genes including MCAM/MUC18, C/EBPalpha and MYC. Involved in the MTA1-mediated epigenetic regulationof ESR1 expression in breast cancer. {ECO:0000269|PubMed:11694877,ECO:0000269|PubMed:24413532}.SUBUNIT: Binds DNA as a dimer. Can form homodimers or heterodimerswith other AP-2 family members (By similarity). Interacts withWWOX. Interacts with CITED4. Interacts with UBE2I. Interacts withKCTD1; this interaction represses transcription activation.Interacts with CITED2 (via C-terminus); the interaction stimulatesTFAP2B-transcriptional activity. Interacts with MTA1.{ECO:0000250, ECO:0000269|PubMed:11694877,ECO:0000269|PubMed:11744733, ECO:0000269|PubMed:12072434,ECO:0000269|PubMed:12586840, ECO:0000269|PubMed:15548692,ECO:0000269|PubMed:19115315, ECO:0000269|PubMed:24413532}.SUBCELLULAR LOCATION: Nucleus {ECO:0000269|PubMed:24413532}.ALTERNATIVE PRODUCTS:Event=Alternative splicing; Named isoforms=2;Name=1;IsoId=Q92754-1; Sequence=Displayed;Name=2;IsoId=Q92754-2; Sequence=VSP_056501;Note=No experimental confirmation available.;INDUCTION: During retinoic acid-mediated differentiation.DOMAIN: The WW-binding motif mediates interaction with WWOX.{ECO:0000269|PubMed:15548692}.PTM: Sumoylated on Lys-10; which inhibits transcriptionalactivity. {ECO:0000269|PubMed:12072434}.SIMILARITY: Belongs to the AP-2 family. {ECO:0000305}.WEB RESOURCE: Name=Wikipedia; Note=Activating protein 2 entry;URL=&quot;https://en.wikipedia.org/wiki/Activating_protein_2&quot;; COPYRIGHT: UniProt Consortium (www.uniprot.org). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://pathwaycommons.org/pc2/ProteinReference_HPRD_03361_identity</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://mirtarbase.mbc.nctu.edu.tw/#ref_7022</bp:comment>
+</bp:ProteinReference>
+
+<bp:UnificationXref rdf:ID="UnificationXref_molecular_interactions_ontology_MI_0359">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0359</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">molecular interactions ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:Dna rdf:ID="Dna_fc3fcca9369c79fb4cefc2a0c76dc95a">
+ <bp:xref rdf:resource="#UnificationXref_reactome_R-HSA-8864708" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2 Gene</bp:displayName>
+ <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_cf205674aefd94fbce6abca5009c0267" />
+ <bp:entityReference rdf:resource="#DnaReference_9899820b4394de951371aecd4db3214c" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 8864708</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Dna525</bp:comment>
+ <bp:dataSource rdf:resource="#reactome" />
+</bp:Dna>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_hgnc_symbol_PITX2_see-also">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PITX2</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hgnc symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_a6483a2273caf5087ada4573f881b3ae">
+ <bp:physicalEntity rdf:resource="#Protein_583a8ab2f83a60fc314eec68f29693ca" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Stoichiometry20940</bp:comment>
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">2.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864386">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864386.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864386</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:Stoichiometry rdf:ID="Stoichiometry_249aa123a65d2bc963c0ff62daa766ee">
+ <bp:physicalEntity rdf:resource="#Dna_fc3fcca9369c79fb4cefc2a0c76dc95a" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#Stoichiometry20967</bp:comment>
+ <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">1.0</bp:stoichiometricCoefficient>
+</bp:Stoichiometry>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-8864382">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-8864382.2</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-8864382</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_molecular_interactions_ontology_MI_0356">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0356</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mi</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:ID="UnificationXref_taxonomy_9606">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">9606</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">taxonomy</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RelationshipXref_hgnc_symbol_TFAP2A_identity">
+ <bp:relationshipType rdf:resource="http://identifiers.org/psimi/MI:0356" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">TFAP2A</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hgnc symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:SequenceInterval rdf:ID="SequenceInterval_43c1ba0bc719292fc621ad1163b83d8f">
+ <bp:sequenceIntervalEnd rdf:resource="#SequenceSite_aa7ad6172b84fa2f6534e1695b15532b" />
+ <bp:sequenceIntervalBegin rdf:resource="#SequenceSite_dbf30506dacf184b02af27581085028f" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#SequenceInterval14538</bp:comment>
+</bp:SequenceInterval>
+
+<bp:PathwayStep rdf:ID="PathwayStep_931047d905cc1955a630b4db14726101">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#PathwayStep9060</bp:comment>
+ <bp:stepProcess rdf:resource="http://identifiers.org/reactome/R-HSA-8864729" />
+ <bp:stepProcess rdf:resource="http://identifiers.org/reactome/R-HSA-8864728" />
+</bp:PathwayStep>
+
+<bp:UnificationXref rdf:ID="UnificationXref_reactome_R-HSA-6804489">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome stable identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser_st_id?ST_ID=R-HSA-6804489.1</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R-HSA-6804489</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceSite rdf:ID="SequenceSite_f97a915110d2a92da519043993a84e05">
+ <bp:sequencePosition rdf:datatype = "http://www.w3.org/2001/XMLSchema#int">434</bp:sequencePosition>
+ <bp:positionStatus rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">EQUAL</bp:positionStatus>
+</bp:SequenceSite>
+
+<bp:FragmentFeature rdf:ID="FragmentFeature_8eb7352acd5e4b89292f649900049e67">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/61/48887#FragmentFeature14528</bp:comment>
+ <bp:featureLocation rdf:resource="#SequenceInterval_5dedfd7087cb5ce55719e15d40768901" />
+</bp:FragmentFeature>
+</rdf:RDF>

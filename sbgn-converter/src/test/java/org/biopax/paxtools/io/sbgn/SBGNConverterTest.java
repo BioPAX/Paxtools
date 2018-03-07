@@ -239,7 +239,7 @@ public class SBGNConverterTest
 	// it's probably about an unknown/omitted sub-pathway with known in/out chemicals,
 	// but it's expressed in BioPAX badly (a Pathway with one Interaction and PathwayStep, and no comments...)
 	@Test
-	public void testConvertOmittedSmpdbPathway() throws Exception
+	public void testConvertOmittedSmpdbPathway()
 	{
 		String input = "/smpdb-beta-oxidation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -251,7 +251,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertBadWikiPathway() throws Exception
+	public void testConvertBadWikiPathway()
 	{
 		String input = "/WP561";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -289,7 +289,7 @@ public class SBGNConverterTest
 
 
 	@Test
-	public void testConvertGIs() throws Exception
+	public void testConvertGIs()
 	{
 		String out = "target/test_gi.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
@@ -309,7 +309,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertTRs() throws Exception
+	public void testConvertTRs()
 	{
 		String out = "target/test_tr.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
@@ -339,5 +339,34 @@ public class SBGNConverterTest
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.setDoLayout(true);
 		conv.writeSBGN(m, out);
+	}
+
+	@Test
+	public void testConvertTfap2Pathway() throws Exception
+	{
+		String input = "/TFAP2";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+		String out = "target/" + input + ".sbgn";
+
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, false);
+		conv.setDoLayout(true); //this is not the default anymore
+		conv.writeSBGN(level3, out);
+
+		File outFile = new File(out);
+		boolean isValid = SbgnUtil.isValid(outFile);
+		if (isValid)
+			System.out.println ("success: " + out + " is valid SBGN");
+		else
+			System.out.println ("warning: " + out + " is invalid SBGN");
+
+		// Now read the SBGN model back
+		Sbgn result = (Sbgn) JAXBContext.newInstance("org.sbgn.bindings").createUnmarshaller().unmarshal (outFile);
+
+		// Assert that the sbgn result contains glyphs
+		assertTrue(!result.getMap().getGlyph().isEmpty());
+
+		//TODO: test complexes are complete, no dangling, member complex contains a homodimer...
+		// it looks ok in SBGNViz editor/viewer though...
 	}
 }

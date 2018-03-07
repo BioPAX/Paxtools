@@ -32,7 +32,6 @@ import static org.sbgn.ArcClazz.*;
  *
  * Currently, this converter ignores several BioPAX types/properties:
  * <ul>
- * <li>Parent-child relationship between physical entities (TODO: could use 'OR' glyph)</li>
  * <li>Parent-child relationship between entity references</li>
  * <li>Binding features and covalent binding features of physical entities</li>
  * <li>Pathway, PathwayStep, Evidence, etc.</li>
@@ -372,26 +371,16 @@ public class L3ToSBGNPDConverter
 	 */
 	private boolean needsToBeCreatedInitially(Entity ent)
 	{
-		boolean create;
+		boolean create = false;
 
 		if(ent instanceof PhysicalEntity || ent instanceof Gene) {
 			if(ubiqueDet != null && ubiqueDet.isUbique(ent))
 				create = false; // ubiques will be created where they are actually used.
 			else if (!ent.getParticipantOf().isEmpty())
 				create = true;
-			else if(ent instanceof Complex && ((Complex) ent).getComponentOf().isEmpty())
-				create = true; //do make a root/top complex despite it's dangling one
-			else if(ent instanceof SimplePhysicalEntity && !((PhysicalEntity)ent).getMemberPhysicalEntityOf().isEmpty())
-				create = true;
-			else if(ent instanceof SimplePhysicalEntity && !((PhysicalEntity)ent).getMemberPhysicalEntity().isEmpty())
-				create = true;
-			else
-				create = false;
-		} else {
-			// So, complex components (incl. inner complexes) are created
-			// during making their parent complex;
-			// we also skip dangling and experimental form entities;
-			create = false;
+			else if(ent instanceof Complex && ((Complex) ent).getComponentOf().isEmpty()
+					&& ((Complex) ent).getMemberPhysicalEntityOf().isEmpty())
+				create = true; //do make a root/top complex despite it's dangling
 		}
 
 		return create;
@@ -419,16 +408,10 @@ public class L3ToSBGNPDConverter
 		if(e instanceof PhysicalEntity) {
 			PhysicalEntity pe = (PhysicalEntity) e;
 			assignLocation(pe, g);
-
 			if("or".equalsIgnoreCase(g.getClazz())) {
-				for(PhysicalEntity m : pe.getMemberPhysicalEntity()) {
-					//TODO: create and link members to the generic PE (glyph:'or')
-					addGenericMember(m, g);
-				}
-			} else {
-				if (pe instanceof Complex) {
-					createComplexContent((Complex) pe);
-				}
+				buildGeneric(pe, g, null);
+			} else if (pe instanceof Complex) {
+				createComplexContent((Complex) pe, g);
 			}
 		}
 
@@ -530,11 +513,10 @@ public class L3ToSBGNPDConverter
 	 * Fills in the content of a complex.
 	 *
 	 * @param cx Complex to be filled
+	 * @param cg its glyph
 	 */
-	private void createComplexContent(Complex cx)
+	private void createComplexContent(Complex cx, Glyph cg)
 	{
-		Glyph cg = glyphMap.get(convertID(cx.getUri()));
-
 		if (flattenComplexContent)
 		{
 			for (PhysicalEntity mem : getFlattenedMembers(cx))
@@ -557,11 +539,28 @@ public class L3ToSBGNPDConverter
 		}
 	}
 
-	private void addGenericMember(PhysicalEntity member, Glyph generic) {
-		assert "or".equalsIgnoreCase(generic.getClazz()) : "must be 'or' glyph class";
-		//TODO: handle generics
+	private void buildGeneric(PhysicalEntity generic, Glyph or, Glyph container)
+	{
+		assert "or".equalsIgnoreCase(or.getClazz()) : "must be 'or' glyph class";
 
+		for (PhysicalEntity m : generic.getMemberPhysicalEntity())
+		{
+			Glyph g = createGlyphBasics(m,false);
+			if(container!=null)
+				container.getGlyph().add(g);
+			String gid = g.getId() + "_member_of_" + or.getId();
+			g.setId(gid);
+			glyphMap.put(gid, g);
+			Set<String> uris =  new HashSet<String>();
+			uris.add(m.getUri());
+			sbgn2BPMap.put(gid, uris);
+			assignLocation(m, g);
+			createArc(g, or, LOGIC_ARC.getClazz(), null);
+			if(m instanceof Complex)
+				createComplexContent((Complex) m, g);
+		}
 	}
+
 
 	/**
 	 * Recursive method for creating the content of a complex. A complex may contain other complexes
@@ -656,6 +655,10 @@ public class L3ToSBGNPDConverter
 		Set<String> uris =  new HashSet<String>();
 		uris.add(pe.getUri());
 		sbgn2BPMap.put(g.getId(), uris);
+
+		if("or".equalsIgnoreCase(g.getClazz())) {
+			buildGeneric(pe, g, container);
+		}
 
 		return g;
 	}
@@ -1000,8 +1003,9 @@ public class L3ToSBGNPDConverter
 		processControllers(cnv.getControlledOf(), process);
 
 		// Record mapping
-		sbgn2BPMap.put(process.getId(), new HashSet<String>());
-		sbgn2BPMap.get(process.getId()).add(cnv.getUri());
+		Set<String> uris = new HashSet<String>();
+		uris.add(cnv.getUri());
+		sbgn2BPMap.put(process.getId(), uris);
 	}
 
 	/**
@@ -1078,8 +1082,7 @@ public class L3ToSBGNPDConverter
 		processControllers(tr.getControlledOf(), process);
 
 		// Record mapping
-		sbgn2BPMap.put(process.getId(), new HashSet<String>());
-		sbgn2BPMap.get(process.getId()).add(tr.getUri());
+		sbgn2BPMap.put(process.getId(), new HashSet<String>(Collections.singleton(tr.getUri())));
 	}
 
 	private void createBasicProcess(Interaction interaction)
@@ -1105,8 +1108,7 @@ public class L3ToSBGNPDConverter
 		processControllers(interaction.getControlledOf(), process);
 
 		// Record mapping
-		sbgn2BPMap.put(process.getId(), new HashSet<String>());
-		sbgn2BPMap.get(process.getId()).add(interaction.getUri());
+		sbgn2BPMap.put(process.getId(), new HashSet<String>(Collections.singleton(interaction.getUri())));
 	}
 
 	private void createMiProcess(MolecularInteraction interaction)
@@ -1129,8 +1131,7 @@ public class L3ToSBGNPDConverter
 		processControllers(interaction.getControlledOf(), process);
 
 		// Record mapping
-		sbgn2BPMap.put(process.getId(), new HashSet<String>());
-		sbgn2BPMap.get(process.getId()).add(interaction.getUri());
+		sbgn2BPMap.put(process.getId(), new HashSet<String>(Collections.singleton(interaction.getUri())));
 	}
 
 	private void createGiProcess(GeneticInteraction interaction)
@@ -1174,8 +1175,7 @@ public class L3ToSBGNPDConverter
 		processControllers(interaction.getControlledOf(), process);
 
 		// Record mapping
-		sbgn2BPMap.put(process.getId(), new HashSet<String>());
-		sbgn2BPMap.get(process.getId()).add(interaction.getUri());
+		sbgn2BPMap.put(process.getId(), new HashSet<String>(Collections.singleton(interaction.getUri())));
 	}
 
 	/**
@@ -1303,11 +1303,14 @@ public class L3ToSBGNPDConverter
 	private Glyph connectWithAND(List<Glyph> gs)
 	{
 		// Compose an ID for the AND glyph
-		String id = "";
-		for (Glyph g : gs) {
-			id += (id.isEmpty() ? "" : "-AND-") + g.getId();
+		StringBuilder sb = new StringBuilder();
+		Iterator<Glyph> iterator = gs.iterator();
+		if(iterator.hasNext())
+		    sb.append(iterator.next());
+		while (iterator.hasNext()) {
+			sb.append("-AND-").append(iterator.next().getId());
 		}
-		id = ModelUtils.md5hex(id); //shorten a very long id
+		String id = ModelUtils.md5hex(sb.toString()); //shorten a very long id
 
 		// Create the AND glyph if not exists
 		Glyph and = glyphMap.get(id);
@@ -1532,8 +1535,9 @@ public class L3ToSBGNPDConverter
 	}
 
 	/**
-	 * Gets the mapping from SBGN IDs to BioPAX IDs. This mapping is currently one-to-many, but has
-	 * potential to become many-to-many in the future.
+	 * Gets the mapping from SBGN IDs to BioPAX IDs.
+	 * This mapping is currently many-to-one, but can
+	 * potentially become many-to-many in the future.
 	 * @return sbgn-to-biopax mapping
 	 */
 	public Map<String, Set<String>> getSbgn2BPMap()
@@ -1553,10 +1557,6 @@ public class L3ToSBGNPDConverter
 
 
 	//-- Section: Static initialization -----------------------------------------------------------|
-
-	/**
-	 * Initializes resources.
-	 */
 	static
 	{
 		factory = new ObjectFactory();

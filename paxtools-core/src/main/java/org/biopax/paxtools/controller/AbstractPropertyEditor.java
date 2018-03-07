@@ -99,7 +99,6 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 	{
 		String def = String.format("%s %s %s", domain.getSimpleName(), property, range.getSimpleName());
 
-		//TODO cardinalities are not being read!
 		for (Class aClass : maxCardinalities.keySet())
 		{
 			Integer cardinality = maxCardinalities.get(aClass);
@@ -353,8 +352,7 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 				{
 					this.setValueToBean(this.getUnknown(),bean);
 				}
-				else { 
-					//TODO throw an exception if range is violated rather than always log the following message
+				else {
 					log.error("Given value :" + value + 
 						" is not equal to the existing value. " +
 					         "remove value is ignored");
@@ -412,7 +410,6 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 				+ domain.getSimpleName() + " (" + bean.getClass().getSimpleName() + ", " + bean + ")" 
 				+ " with range: " + range.getSimpleName() + " (" + valInfo + ")";
 			throw new IllegalBioPAXArgumentException(message, e);
-			//TODO actual exceptions thrown by the biopax setter/method are lost, unfortunately...
 		}
 	}
 
