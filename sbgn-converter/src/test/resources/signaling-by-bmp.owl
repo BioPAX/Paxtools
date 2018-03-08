@@ -1218,7 +1218,8 @@
  <bp:memberPhysicalEntity rdf:resource="#Protein_3bae5614dad9983f91f20c00dcc90102" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ligand Trap</bp:displayName>
  <bp:cellularLocation rdf:resource="#CellularLocationVocabulary_b761180db8a874567188c589b45cab17" />
- <bp:entityReference rdf:resource="#ProteinReference_4795997f53ac30c0fcc81fc7e8ee59c4" />
+ <!-- Removed the generic entityReference value in order to test generic entity set (members) conversion to SBGN -->
+ <!--<bp:entityReference rdf:resource="#ProteinReference_4795997f53ac30c0fcc81fc7e8ee59c4" />-->
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 201828</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REPLACED http://www.reactome.org/biopax/59/48887#Protein6349</bp:comment>
