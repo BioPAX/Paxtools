@@ -98,12 +98,11 @@ public final class Main {
 		        + "\tpaxtools graph queries or when converting from the SAME BioPAX data to the SIF formats.")
 				{public void run(String[] argv) throws IOException{blacklist(argv);} },
 		pattern("\n\t- BioPAX pattern search tool (opens a new dialog window)")
-				{public void run(String[] argv) throws IOException{pattern(argv);} },
+				{public void run(String[] argv){pattern(argv);} },
         help("\n\t- prints this screen and exits\n")
-		        {public void run(String[] argv) throws IOException{help();} };
+				{public void run(String[] argv){ help();} };
 
         String description;
-        int params;
 
         Command(String description) {
             this.description = description;

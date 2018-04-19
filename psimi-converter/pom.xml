@@ -26,8 +26,13 @@
         </dependency>
         <dependency>
             <groupId>psidev.psi.mi</groupId>
-            <artifactId>psi25-xml</artifactId>
+            <artifactId>psimitab</artifactId>
             <version>1.8.5</version>
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>psidev.psi.mi</groupId>-->
+            <!--<artifactId>psi25-xml</artifactId>-->
+            <!--<version>1.8.5</version>-->
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
@@ -42,11 +47,6 @@
                     <artifactId>jaxb-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>psidev.psi.mi</groupId>
-            <artifactId>psimitab</artifactId>
-            <version>1.8.5</version>
         </dependency>
     </dependencies>
 
