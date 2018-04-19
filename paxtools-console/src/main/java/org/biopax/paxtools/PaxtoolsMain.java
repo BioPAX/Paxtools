@@ -190,8 +190,6 @@ public final class PaxtoolsMain {
     public static void toLevel3(String[] argv) throws IOException {
     	final String input = argv[1];
     	final String output = argv[2];
-    	InputStream is = getInputStream(input);
-    	FileOutputStream os = new FileOutputStream(output);
     	
     	boolean forcePsiInteractionToComplex = false;
 		if(argv.length > 3) {
@@ -204,6 +202,9 @@ public final class PaxtoolsMain {
 		}
 
 		Type type = detect(input);
+
+		InputStream is = getInputStream(input);
+		FileOutputStream os = new FileOutputStream(output);
 
     	try {
     		switch (type) {
@@ -245,7 +246,7 @@ public final class PaxtoolsMain {
 	private static Type detect(String input) {
 		StringBuilder sb = new StringBuilder();
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(input));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(getInputStream(input)));
 			int linesToCheck = 20;
 			while (linesToCheck-- > 0) {
 				sb.append(reader.readLine()).append('\n');
@@ -259,7 +260,7 @@ public final class PaxtoolsMain {
 		if (buf.contains("<rdf:RDF") && buf.contains("http://www.biopax.org/release/biopax")) {
 			return Type.BIOPAX;
 		}
-		else if (buf.contains("<entrySet") && buf.contains("http://psidev.sourceforge.net/mi/rel25/")) {
+		else if (buf.contains("<entrySet") && buf.contains("/psidev")) {
 			return Type.PSIMI;
 		}
 		else
