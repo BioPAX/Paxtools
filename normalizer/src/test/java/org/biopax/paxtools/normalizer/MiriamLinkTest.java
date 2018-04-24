@@ -48,12 +48,14 @@ public class MiriamLinkTest {
 
 	@Test
 	public final void testGetResourceLocation() {
-		assertEquals("UK", MiriamLink.getResourceLocation(MIRESID));
+		assertEquals("UK",
+				MiriamLink.getResourceLocation(MIRESID));
 	}
 
 	@Test
 	public final void testGetResourceInstitution() {
-		assertEquals("European Bioinformatics Institute", MiriamLink.getResourceInstitution(MIRESID));
+		assertEquals("European Bioinformatics Institute, Hinxton, Cambridge",
+				MiriamLink.getResourceInstitution(MIRESID));
 	}
 
 	@Test
@@ -78,14 +80,14 @@ public class MiriamLinkTest {
 	public final void testGetLocations() {
 		String[] locs = MiriamLink.getLocations(MI, "MI:0000");
 		assertTrue(locs.length>0);
-		assertTrue(Arrays.asList(locs).contains("http://www.ebi.ac.uk/ontology-lookup/?termId=MI%3A0000"));
+		assertTrue(Arrays.asList(locs).contains("https://www.ebi.ac.uk/ols/ontologies/mi/terms?obo_id=MI%3A0000"));
 	}
 
 	@Test
 	public final void testGetDataResources() {
 		String[] drs = MiriamLink.getDataResources(MI);
 		assertEquals(2, drs.length);
-		assertTrue(Arrays.asList(drs).contains("http://www.ebi.ac.uk/ontology-lookup/browse.do?ontName=MI"));
+		assertTrue(Arrays.asList(drs).contains("https://www.ebi.ac.uk/ols/ontologies/mi"));
 	}
 
 	@Test
