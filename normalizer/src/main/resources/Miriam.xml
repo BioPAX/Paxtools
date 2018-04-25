@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Export of Identifiers.org's Registry (full) -->
-<!-- Generated: Tue, 24 Apr 2018 14:41:47 GMT     -->
+<!-- Generated: Tue, 24 Apr 2018 14:23:08 GMT     -->
 <!-- http://identifiers.org/registry/            -->
+
+ <!--Igor R. manually fixed date, data-version format (for JAXB unmarshaling to work)-->
+ <!--and also removed ambiguous "KEGG" synonym from KEGG Compound, et al. collections!-->
 
 <miriam xmlns="http://www.biomodels.net/MIRIAM/" date="2018-04-24T14:41:47+00:00" data-version="2018-04-20T13:10:26+00:00">
 	<datatype id="MIR:00000001" pattern="^\d+$" restricted="true" obsolete="true" replacement="MIR:00000010">
@@ -674,9 +677,9 @@
 
 	<datatype id="MIR:00000012" pattern="^\w{2,4}\d{5}$">
 		<name>KEGG Pathway</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>KEGG PATHWAY is a collection of manually drawn pathway maps representing our knowledge on the molecular interaction and reaction networks.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.pathway</uri>
@@ -714,9 +717,9 @@
 
 	<datatype id="MIR:00000013" pattern="^C\d+$">
 		<name>KEGG Compound</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>KEGG compound contains our knowledge on the universe of chemical substances that are relevant to life.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.compound</uri>
@@ -754,9 +757,9 @@
 
 	<datatype id="MIR:00000014" pattern="^R\d+$">
 		<name>KEGG Reaction</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>KEGG reaction contains our knowledge on the universe of reactions that are relevant to life.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.reaction</uri>
@@ -1432,9 +1435,9 @@
 
 	<datatype id="MIR:00000025" pattern="^D\d+$">
 		<name>KEGG Drug</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>KEGG DRUG contains chemical structures of drugs and additional information such as therapeutic categories and target molecules.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.drug</uri>
@@ -1470,9 +1473,9 @@
 
 	<datatype id="MIR:00000026" pattern="^G\d+$">
 		<name>KEGG Glycan</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>KEGG GLYCAN, a part of the KEGG LIGAND database, is a collection of experimentally determined glycan structures. It contains all unique structures taken from CarbBank, structures entered from recent publications, and structures present in KEGG pathways.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.glycan</uri>
@@ -3345,9 +3348,9 @@
 
 	<datatype id="MIR:00000070" pattern="^\w+:[\w\d\.-]*$">
 		<name>KEGG Genes</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>KEGG GENES is a collection of gene catalogs for all complete genomes and some partial genomes, generated from publicly available resources.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.genes</uri>
@@ -5117,9 +5120,9 @@ PharmGKB Pathways are drug centric, gene based, interactive pathways which focus
 
 	<datatype id="MIR:00000116" pattern="^K\d+$">
 		<name>KEGG Orthology</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>KEGG Orthology (KO) consists of manually defined, generalised ortholog groups that correspond to KEGG pathway nodes and BRITE hierarchy nodes in all organisms.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.orthology</uri>
@@ -9709,7 +9712,7 @@ Note: Currently, direct access to RNA products is restricted. This is expected t
 		<name>KEGG Genome</name>
 		<synonyms>
 			<synonym>KEGG Organism</synonym>
-			<synonym>KEGG</synonym>
+			<!--<synonym>KEGG</synonym>-->
 		</synonyms>
 		<definition>KEGG Genome is a collection of organisms whose genomes have been completely sequenced.</definition>
 		<uris>
@@ -9744,9 +9747,9 @@ Note: Currently, direct access to RNA products is restricted. This is expected t
 
 	<datatype id="MIR:00000239" pattern="^T3\d+$">
 		<name>KEGG Metagenome</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>The KEGG Metagenome Database collection information on environmental samples (ecosystems) of genome sequences for multiple species.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.metagenome</uri>
@@ -18630,9 +18633,9 @@ SubtiList provides a complete dataset of DNA and protein sequences derived from 
 
 	<datatype id="MIR:00000474" pattern="^([a-z]{3,5}_)?M\d{5}$">
 		<name>KEGG Module</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>KEGG Modules are manually defined functional units used in the annotation and biological interpretation of sequenced genomes. Each module corresponds to a set of &apos;KEGG Orthology&apos; (MIR:00000116) entries. KEGG Modules can represent pathway, structural, functional or signature modules.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.module</uri>
@@ -18666,9 +18669,9 @@ SubtiList provides a complete dataset of DNA and protein sequences derived from 
 
 	<datatype id="MIR:00000475" pattern="^H\d+$">
 		<name>KEGG Disease</name>
-		<synonyms>
-			<synonym>KEGG</synonym>
-		</synonyms>
+		<!--<synonyms>-->
+			<!--<synonym>KEGG</synonym>-->
+		<!--</synonyms>-->
 		<definition>The KEGG DISEASE database is a collection of disease entries capturing knowledge on genetic and environmental perturbations. Each disease entry contains a list of known genetic factors (disease genes), environmental factors, diagnostic markers, and therapeutic drugs. Diseases are viewed as perturbed states of the molecular system, and drugs as perturbants to the molecular system.</definition>
 		<uris>
 			<uri type="URN">urn:miriam:kegg.disease</uri>
