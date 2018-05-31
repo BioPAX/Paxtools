@@ -470,7 +470,10 @@ public class L3ToSBGNPDConverter
 		}
 
 		// Put on state variables
-		g.getGlyph().addAll(getInformation(e));
+		if (!g.getClazz().equals(OR.getClazz()))
+		{
+			g.getGlyph().addAll(getInformation(e));
+		}
 
 		// Record the mapping
 		if (idIsFinal)
