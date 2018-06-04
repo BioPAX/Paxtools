@@ -270,6 +270,21 @@ public class SIFInteraction implements Comparable
 		return names;
 	}
 
+	/**
+	 * Collects the related pathway URIs.
+	 * @return URIs
+	 */
+	public List<String> getPathwayUris()
+	{
+		List<String> uris = new ArrayList<String>();
+		for (Pathway p : getPathways()) {
+			String uri = p.getUri();
+			if (!uris.contains(uri)) uris.add(uri);
+		}
+		Collections.sort(uris);
+		return uris;
+	}
+
 	private static final PathAccessor dataSourceAcc = new PathAccessor("Entity/dataSource/displayName");
 
 	/**

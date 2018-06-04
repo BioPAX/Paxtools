@@ -72,6 +72,7 @@ public class OutputColumn
 		{
 			case MEDIATOR: return concat(inter.getMediatorIDs());
 			case PATHWAY: return concat(inter.getPathwayNames());
+			case PATHWAY_URI: return concat(inter.getPathwayUris());
 			case PUBMED: return concat(inter.getPublicationIDs(true));
 			case PMC: return concat(inter.getPublicationIDs(false));
 			case RESOURCE: return concat(inter.getDataSources());
@@ -127,6 +128,7 @@ public class OutputColumn
 		PMC,
 		COMMENTS,
 		PATHWAY,
+		PATHWAY_URI,
 		RESOURCE,
 		SOURCE_LOC,
 		TARGET_LOC,
