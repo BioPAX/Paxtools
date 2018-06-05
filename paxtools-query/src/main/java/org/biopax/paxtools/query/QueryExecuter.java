@@ -65,6 +65,48 @@ public class QueryExecuter
 	}
 
 	/**
+	 * Gets neighborhood of the source set.
+	 *
+	 * @param sourceSets seed to the query
+	 * @param model BioPAX model
+	 * @param limit neigborhood distance to get
+	 * @param direction UPSTREAM, DOWNSTREAM or BOTHSTREAM
+	 * @param filters for filtering graph elements
+	 * @return BioPAX elements in the result set
+	 */
+	public static Set<BioPAXElement> runNeighborhoodMultiSet(
+		Set<Set<BioPAXElement>> sourceSets,
+		Model model,
+		int limit,
+		Direction direction,
+		Filter... filters)
+	{
+		Graph graph;
+
+		if (model.getLevel() == BioPAXLevel.L3)
+		{
+			if (direction == Direction.UNDIRECTED)
+			{
+				graph = new GraphL3Undirected(model, filters);
+				direction = Direction.BOTHSTREAM;
+			}
+			else
+			{
+				graph = new GraphL3(model, filters);
+			}
+		}
+		else return Collections.emptySet();
+
+		Set<Node> source = prepareSingleNodeSetFromSets(sourceSets, graph);
+
+		if (sourceSets.isEmpty()) return Collections.emptySet();
+
+		NeighborhoodQuery query = new NeighborhoodQuery(source, direction, limit);
+		Set<GraphObject> resultWrappers = query.run();
+		return convertQueryResult(resultWrappers, graph, true);
+	}
+
+	/**
 	 * Gets the graph constructed by the paths between the given seed nodes. Does not get paths
 	 * between physical entities that belong the same entity reference.
 	 * @param sourceSet Seed to the query
@@ -86,7 +128,36 @@ public class QueryExecuter
 
 		Collection<Set<Node>> sourceWrappers = prepareNodeSets(sourceSet, graph);
 
-		if (sourceSet.size() < 2) return Collections.emptySet();
+		if (sourceWrappers.size() < 2) return Collections.emptySet();
+
+		PathsBetweenQuery query = new PathsBetweenQuery(sourceWrappers, limit);
+		Set<GraphObject> resultWrappers = query.run();
+		return convertQueryResult(resultWrappers, graph, true);
+	}
+
+	/**
+	 * Gets the graph constructed by the paths between the given seed nodes. Does not get paths
+	 * between physical entities that belong the same entity reference.
+	 * @param sourceSets Seed to the query
+	 * @param model BioPAX model
+	 * @param limit Length limit for the paths to be found
+	 * @param filters optional filters - for filtering graph elements
+	 * @return BioPAX elements in the result
+	 */
+	public static Set<BioPAXElement> runPathsBetweenMultiSet(Set<Set<BioPAXElement>> sourceSets, Model model,
+		int limit, Filter... filters)
+	{
+		Graph graph;
+
+		if (model.getLevel() == BioPAXLevel.L3)
+		{
+			graph = new GraphL3(model, filters);
+		}
+		else return Collections.emptySet();
+
+		Collection<Set<Node>> sourceWrappers = prepareNodeSetsFromSets(sourceSets, graph);
+
+		if (sourceWrappers.size() < 2) return Collections.emptySet();
 
 		PathsBetweenQuery query = new PathsBetweenQuery(sourceWrappers, limit);
 		Set<GraphObject> resultWrappers = query.run();
@@ -146,6 +217,40 @@ public class QueryExecuter
 	}
 
 	/**
+	 * Gets paths the graph composed of the paths from a source node, and ends at a target node.
+	 * @param sourceSets Seeds for start points of paths
+	 * @param targetSets Seeds for end points of paths
+	 * @param model BioPAX model
+	 * @param limitType either NORMAL or SHORTEST_PLUS_K
+	 * @param limit Length limit fothe paths to be found
+	 * @param filters for filtering graph elements
+	 * @return BioPAX elements in the result
+	 */
+	public static Set<BioPAXElement> runPathsFromToMultiSet(
+		Set<Set<BioPAXElement>> sourceSets,
+		Set<Set<BioPAXElement>> targetSets,
+		Model model,
+		LimitType limitType,
+		int limit,
+		Filter... filters)
+	{
+		Graph graph;
+
+		if (model.getLevel() == BioPAXLevel.L3)
+		{
+			graph = new GraphL3(model, filters);
+		}
+		else return Collections.emptySet();
+
+		Set<Node> source = prepareSingleNodeSetFromSets(sourceSets, graph);
+		Set<Node> target = prepareSingleNodeSetFromSets(targetSets, graph);
+
+		PathsFromToQuery query = new PathsFromToQuery(source, target, limitType, limit, true);
+		Set<GraphObject> resultWrappers = query.run();
+		return convertQueryResult(resultWrappers, graph, true);
+	}
+
+	/**
 	 * Gets the elements in the common upstream or downstream of the seed
 	 * @param sourceSet Seed to the query
 	 * @param model BioPAX model
@@ -172,6 +277,40 @@ public class QueryExecuter
 		Collection<Set<Node>> source = prepareNodeSets(sourceSet, graph);
 
 		if (sourceSet.size() < 2) return Collections.emptySet();
+
+		CommonStreamQuery query = new CommonStreamQuery(source, direction, limit);
+
+		Set<GraphObject> resultWrappers = query.run();
+		return convertQueryResult(resultWrappers, graph, false);
+	}
+
+	/**
+	 * Gets the elements in the common upstream or downstream of the seed
+	 * @param sourceSets Seed to the query
+	 * @param model BioPAX model
+	 * @param direction UPSTREAM or DOWNSTREAM
+	 * @param limit Length limit for the search
+	 * @param filters for filtering graph elements
+	 * @return BioPAX elements in the result
+	 */
+	public static Set<BioPAXElement> runCommonStreamMultiSet(
+		Set<Set<BioPAXElement>> sourceSets,
+		Model model,
+		Direction direction,
+		int limit,
+		Filter... filters)
+	{
+		Graph graph;
+
+		if (model.getLevel() == BioPAXLevel.L3)
+		{
+			graph = new GraphL3(model, filters);
+		}
+		else return Collections.emptySet();
+
+		Collection<Set<Node>> source = prepareNodeSetsFromSets(sourceSets, graph);
+
+		if (source.size() < 2) return Collections.emptySet();
 
 		CommonStreamQuery query = new CommonStreamQuery(source, direction, limit);
 
@@ -208,6 +347,44 @@ public class QueryExecuter
 
 		if (sourceSet.size() < 2) return Collections.emptySet();
 
+		return runCommonStreamWithPOIContinued(sourceSets, direction, limit, graph);
+	}
+
+	/**
+	 * First finds the common stream, then completes it with the paths between seed and common
+	 * stream.
+	 * @param sourceSets Seed to the query
+	 * @param model BioPAX model
+	 * @param direction UPSTREAM or DOWNSTREAM
+	 * @param limit Length limit for the search
+	 * @param filters for filtering graph elements
+	 * @return BioPAX elements in the result
+	 */
+	public static Set<BioPAXElement> runCommonStreamWithPOIMultiSet(
+		Set<Set<BioPAXElement>> sourceSets,
+		Model model,
+		Direction direction,
+		int limit,
+		Filter... filters)
+	{
+		Graph graph;
+
+		if (model.getLevel() == BioPAXLevel.L3)
+		{
+			graph = new GraphL3(model, filters);
+		}
+		else return Collections.emptySet();
+
+		Collection<Set<Node>> nodes = prepareNodeSetsFromSets(sourceSets, graph);
+
+		if (nodes.size() < 2) return Collections.emptySet();
+
+		return runCommonStreamWithPOIContinued(nodes, direction, limit, graph);
+	}
+
+	private static Set<BioPAXElement> runCommonStreamWithPOIContinued(Collection<Set<Node>> sourceSets,
+		Direction direction, int limit, Graph graph)
+	{
 		// Run a common stream query
 
 		CommonStreamQuery commStream = new CommonStreamQuery(sourceSets, direction, limit);
@@ -340,6 +517,22 @@ public class QueryExecuter
 	}
 
 	/**
+	 * Gets the related wrappers of the given elements in the sets.
+	 * @param sets Sets of elements to get the related wrappers
+	 * @param graph Owner graph
+	 * @return Related wrappers in a set
+	 */
+	public static Set<Node> prepareSingleNodeSetFromSets(Set<Set<BioPAXElement>> sets, Graph graph)
+	{
+		Set<BioPAXElement> elements = new HashSet<BioPAXElement>();
+		for (Set<BioPAXElement> set : sets)
+		{
+			elements.addAll(set);
+		}
+		return prepareSingleNodeSet(elements, graph);
+	}
+
+	/**
 	 * Gets the related wrappers of the given elements in individual sets. An object can be related
 	 * to more than one wrapper and they will appear in the same set. This method created a set for
 	 * each parameter element that has a related wrapper.
@@ -369,6 +562,27 @@ public class QueryExecuter
 		}
 
 		return sets;
+	}
+
+	/**
+	 * Gets the related wrappers of the given elements in individual sets. An object can be related
+	 * to more than one wrapper and they will appear in the same set. This method created a set for
+	 * each parameter element that has a related wrapper.
+	 * @param sets Sets of elements to get the related wrappers
+	 * @param graph Owner graph
+	 * @return Related wrappers in individual sets
+	 */
+	private static Collection<Set<Node>> prepareNodeSetsFromSets(Set<Set<BioPAXElement>> sets, Graph graph)
+	{
+		Collection<Set<Node>> result = new HashSet<Set<Node>>();
+
+		for (Set<BioPAXElement> set : sets)
+		{
+			Set<Node> nodes = prepareSingleNodeSet(set, graph);
+			if (!nodes.isEmpty()) result.add(nodes);
+		}
+
+		return result;
 	}
 
 	/**
