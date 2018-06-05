@@ -225,11 +225,9 @@ public class SIFInteraction implements Comparable
 		new PathAccessor("Complex/participantOf/stepProcessOf/pathwayOrderOf"),
 		new PathAccessor("Complex/componentOf*/participantOf/stepProcessOf/pathwayOrderOf"),
 		new PathAccessor("Complex/memberPhysicalEntityOf*/participantOf/stepProcessOf/pathwayOrderOf"),
-		// Note that these PathAccessors are not sufficient for accurate navigation from Complex to the Pathway
-		// that contains it. What we need is
-		// "Complex/(componentOf*/memberPhysicalEntityOf*)*/(participantOf/pathwayComponentOf|stepProcessOf/pathwayOrderOf)"
-		// where * means 0 or more, * can be applied to parenthesis, | means OR, and it can be applied to sub-paths
-		// inside parenthesis. Unfortunately, this notation is not supported.
+		// Note that these PathAccessors are probably not sufficient for accurate navigation from a Complex
+		// to the nearest Pathways that contain it. '*' means - to apply the property recursively (e.g.,
+		// if a component of a complex is complex, get its components as well, and so on.)
 	};
 
 	/**

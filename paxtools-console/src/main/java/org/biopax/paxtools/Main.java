@@ -25,27 +25,40 @@ public final class Main {
 	
     enum Command {
         merge("<file1> <file2> <output>\n" +
-        		"\t- merges file2 into file1 and writes it into output")
+					"\t- merges file2 into file1 and writes it into output")
 		        {public void run(String[] argv) throws IOException{merge(argv);} },
         toSIF("<input> <output> [-extended] [-andSif] [\"include=SIFType,..\"] [\"exclude=SIFType,..\"]" +
-				" [\"seqDb=db,..\"] [\"chemDb=db,..\"] [-dontMergeInteractions] [-useNameIfNoId]" +
-				" [\"mediator\"] [\"pubmed\"] [\"pathway\"] [\"resource\"] [\"source_loc\"] [\"target_loc\"] [\"path/to/a/mediator/field\"]\n" +
-        		"\t- exports a BioPAX model to classic SIF (default, has 3 columns) or customizable SIF format;\n" +
-				"\t  will use blacklist.txt file in the current directory, if present;\n" +
-				"\t  one can list one or more relationship types to include or exclude to/from the analysis\n" +
-				"\t  using 'include=' and/or 'exclude=', respectively, e.g., exclude=NEIGHBOR_OF,INTERACTS_WITH\n" +
-				"\t  (mind using underscore instead of minus sign in the SIF type names; the default is to use all types);\n" +
-				"\t  using 'seqDb=' and 'chemDb=', you can specify standard sequence/gene/chemical ID type(s)\n" +
-				"\t  (can be just a unique prefix) to match actual xref.db values in the BioPAX model,\n" +
-				"\t  e.g., \"seqDb=uniprot,hgnc,refseq\", and in that order, means: if a UniProt entity ID is found,\n" +
-				"\t  other ID types ain't used; otherwise, if an 'hgnc' ID/Symbol is found... and so on;\n" +
-				"\t  when not specified, then 'hgnc' (in fact, 'HGNC Symbol') for bio-polymers - \n" +
-				"\t  and ChEBI IDs or name (if '-useNameIfNoId' is set) for chemicals - are selected;\n" +
-				"\t  if '-extended' is used then the output will be the Pathway Commons' EXTENDED_BINARY_SIF format:\n" +
-				"\t  one file - two sections separated with a single blank line - first come inferred SIF-like interactions -\n" +
-				"\t  3 classic SIF and 4 extra colums, followed by interactors/nodes description section; comment lines start with #)\n" +
-				"\t  if also '-andSif' flag is present (which only makes sense together with -extended), then the second\n" +
-				"\t  output file, classic SIF, is also created (with the same name as the output's, plus '.sif' extension)")
+					" [\"seqDb=db,..\"] [\"chemDb=db,..\"] [-dontMergeInteractions] [-useNameIfNoId] [<property_accessor> ...]\n" +
+					"\t- converts a BioPAX model to SIF (default) or custom SIF-like text format;\n" +
+					"\t  will use blacklist.txt (recommended) file in the current directory, if present.\n" +
+					"\t- Include or exclude to/from the analysis one or more relationship types by \n" +
+					"\t  using 'include=' and/or 'exclude=', respectively, e.g., exclude=NEIGHBOR_OF,INTERACTS_WITH\n" +
+					"\t  (mind using underscore instead of minus sign in the SIF type names; the default is to use all types).\n" +
+					"\t- With 'seqDb=' and 'chemDb=', you can specify standard sequence/gene/chemical ID type(s)\n" +
+					"\t  (can be just a unique prefix) to match actual xref.db values in the BioPAX model,\n" +
+					"\t  e.g., \"seqDb=uniprot,hgnc,refseq\", and in that order, means: if a UniProt entity ID is found,\n" +
+					"\t  other ID types ain't used; otherwise, if an 'hgnc' ID/Symbol is found... and so on;\n" +
+					"\t  when not specified, then 'hgnc' (in fact, 'HGNC Symbol') for bio-polymers - \n" +
+					"\t  and ChEBI IDs or name (if '-useNameIfNoId' is set) for chemicals - are selected.\n" +
+					"\t- With '-extended' flag, the output will be the Pathway Commons TXT (Extended SIF) format:\n" +
+					"\t  two sections separated with one blank line - first come inferred SIF interactions -\n" +
+					"\t  'A\trelationship-type\tB' plus RESOURCE, PUBMED, PATHWAY, MEDIATOR extra columns, \n" +
+					"\t  followed by interaction participants description section).\n" +
+					"\t- If '-andSif' flag is present (only makes sense together with '-extended'), then the \n" +
+					"\t  classic SIF output file is also created (will have '.sif' extension).\n" +
+					"\t- Finally, <property_accessor>... list is to specify 4th, 5th etc. custom output columns;\n" +
+					"\t  use pre-defined column names (accessors): \n" +
+						"\t\tMEDIATOR,\n" +
+						"\t\tPUBMED,\n" +
+						"\t\tPMC,\n" +
+						"\t\tCOMMENTS,\n" +
+						"\t\tPATHWAY,\n" +
+						"\t\tPATHWAY_URI,\n" +
+						"\t\tRESOURCE,\n" +
+						"\t\tSOURCE_LOC,\n" +
+						"\t\tTARGET_LOC\n" +
+					"\t  or custom biopax property path accessors (XPath-like expressions to apply to each mediator entity; \n" +
+					"\t  see https://github.com/BioPAX/Paxtools/wiki/PatternBinaryInteractionFramework)")
 		        {public void run(String[] argv) throws IOException{toSifnx(argv);} },
         toSBGN("<biopax.owl> <output.sbgn> [-nolayout]\n" +
         		"\t- converts model to the SBGN format and applies COSE layout unless optional -nolayout flag is set.")
