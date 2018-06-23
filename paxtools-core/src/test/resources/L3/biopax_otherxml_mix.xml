@@ -19,8 +19,9 @@
 	<sbx3:sbSubEntity rdf:resource="http://sabio.h-its.org/biopax#kineticLaw24490"/> 
 	<bp3:controlled rdf:resource="reaction1"/>
 	<sabio:foo rdf:resource="bar"/> 
-	<boo /> 
-	<bp3:displayName>Catalysis 1</bp3:displayName>
+	<boo />
+	<!--the spaces were intentionally inserted around the displayName value (parser mush trim)-->
+	<bp3:displayName> Catalysis 1 </bp3:displayName>
 </bp3:Catalysis>
 
 <bp3:Conversion rdf:about="reaction1">

@@ -210,14 +210,17 @@ public final class Normalizer {
 	 * @throws IllegalArgumentException if either type is null or both 'dbName' and 'idPart' are all nulls.
 	 */
 	public static String uri(final String xmlBase, 
-		String dbName, final String idPart, Class<? extends BioPAXElement> type)
+		String dbName, String idPart, Class<? extends BioPAXElement> type)
 	{
 		if(type == null || (dbName == null && idPart == null))
 			throw new IllegalArgumentException("'Either type' is null, or both dbName and idPart are nulls.");
-			
-		// try to find a standard URI, if exists, for a publication xref, 
-		// or at least a standard name:
-		if (dbName != null) {
+
+		if (idPart != null) idPart = idPart.trim();
+		if (dbName != null) dbName = dbName.trim();
+
+		// try to find a standard URI, if exists, for a publication xref, or at least a standard name:
+		if (dbName != null)
+		{
 			try {
 				// try to get the preferred/standard name
 				// for any type, for consistency
@@ -227,7 +230,8 @@ public final class Normalizer {
 					|| type.equals(RelationshipTypeVocabulary.class)
 					|| ProteinReference.class.isAssignableFrom(type)
 					|| SmallMoleculeReference.class.isAssignableFrom(type)
-					|| (type.equals(BioSource.class) && "taxonomy".equalsIgnoreCase(dbName) && idPart.matches("^\\d+$"))
+					|| (type.equals(BioSource.class) && "taxonomy".equalsIgnoreCase(dbName)
+						&& idPart!=null && idPart.matches("^\\d+$"))
 				)
 				{	//get the standard URI and quit (success), or fail and continue making a new URI below...
 					return MiriamLink.getIdentifiersOrgURI(dbName, idPart);

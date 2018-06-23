@@ -315,7 +315,8 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			log.debug("Binding: " + bpe + '(' + bpe.getModelInterface() + " has  " + editor + ' ' + valueString);
 		}
-		Object value = valueString;
+
+		Object value = (valueString==null)?null:valueString.trim();
 
 		if (editor instanceof ObjectPropertyEditor)
 		{
@@ -331,7 +332,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		if (editor == null)
 		{
 			log.error("Editor is null. This probably means an invalid BioPAX property. Failed to set " + valueString);
-		} else
+		} else //is either EnumeratedPropertyEditor or DataPropertyEditor
 		{
 			editor.setValueToBean(value, bpe);
 		}

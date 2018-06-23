@@ -151,26 +151,6 @@ public class SimpleIOHandlerTest
 					"by the SimpleIOHandler (should be only in stepConversion)!");
 		}
 	}
-	
-
-	@Test
-	public final void testhibernateFile() throws IOException
-	{
-		System.out.println("export");
-		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
-		Model m = factory.createModel();
-		Protein p = m.addNew(Protein.class, "myProtein");
-		MolecularInteraction mi = m.addNew(MolecularInteraction.class, "myInteraction");
-		mi.addParticipant(p);
-		FileOutputStream out =
-				new FileOutputStream( // to the target test dir
-						getClass().getClassLoader()
-						.getResource("").getPath() 
-						+ File.separator + "hibtest.owl"
-				);
-		outputModel(m, out);
-	}
-
 
 	@Test
 	public final void testBioPAXDocument()
