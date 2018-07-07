@@ -632,8 +632,9 @@ public final class PaxtoolsMain {
 	 * For each physical entity participant in the BioPAX model,
 	 * output uri, type, names, standard identifiers (in JSON format).
 	 */
-	private static void mapUriToIds(Model model, PrintStream out) throws IOException {
-		out.println("[");
+	private static void mapUriToIds(Model model, PrintStream out) {
+		Set<String> elements = new TreeSet<String>();
+
 		//write one by one to insert EOLs and make potentially a very large file human-readable -
 		for(PhysicalEntity pe : model.getObjects(PhysicalEntity.class))
 		{
@@ -671,9 +672,11 @@ public final class PaxtoolsMain {
 			for(Provenance ds : pe.getDataSource()) ja.add(ds.getDisplayName());
 			jo.put("datasource", ja);
 
-			out.println(jo.toJSONString() + ",");
+			elements.add(jo.toJSONString());
 		}
-		out.println("]");
+
+		// Write as JSON array to the output
+		out.print("[\n" + StringUtils.join(elements,"\n,") + "\n]");
 	}
 
 

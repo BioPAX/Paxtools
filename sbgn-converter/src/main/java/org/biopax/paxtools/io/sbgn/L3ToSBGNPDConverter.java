@@ -1551,11 +1551,8 @@ public class L3ToSBGNPDConverter
 
 	private String convertID(String id)
 	{
-		//make a simple legal id (with a hack - to get shorter xml id in some cases)
-		return id.replaceFirst("http://pathwaycommons.org/pc2/","")
-				.replaceFirst("http://identifiers.org/","")
-				.replaceFirst("http://purl.org/","")
-				.replaceAll("[^-\\w]", "_");
+		//make valid XML ID - a hack; see #39; ideally would be using an equivalent to javascript encodeURI()
+		return id.replaceAll("[^-\\w]", "_");
 	}
 
 
