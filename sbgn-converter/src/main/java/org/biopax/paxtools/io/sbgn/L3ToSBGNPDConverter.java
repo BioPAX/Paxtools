@@ -500,7 +500,7 @@ public class L3ToSBGNPDConverter
 		else {
 			// Create a new glyph for each use of ubique
 			Glyph g = createGlyphBasics(e, false);
-			g.setId(convertID(e.getUri()) + "_" + linkID);
+			g.setId(convertID(e.getUri()) + "_" + ModelUtils.md5hex(linkID));
 			Set<String> uris = new HashSet<String>();
 			uris.add(e.getUri());
 			sbgn2BPMap.put(g.getId(), uris);
@@ -551,7 +551,7 @@ public class L3ToSBGNPDConverter
 			Glyph g = createGlyphBasics(m,false);
 			if(container!=null)
 				container.getGlyph().add(g);
-			String gid = g.getId() + "_member_of_" + or.getId();
+			String gid = g.getId() + "_" + ModelUtils.md5hex("memberof_" + or.getId());
 			g.setId(gid);
 			glyphMap.put(gid, g);
 			Set<String> uris =  new HashSet<String>();
@@ -652,7 +652,7 @@ public class L3ToSBGNPDConverter
 		container.getGlyph().add(g);
 
 		// A PhysicalEntity may appear in many complexes -- we identify the member using its complex
-		g.setId(g.getId() + "_" + container.getId());
+		g.setId(g.getId() + "_" + ModelUtils.md5hex(container.getId()));
 		glyphMap.put(g.getId(), g);
 
 		Set<String> uris =  new HashSet<String>();
@@ -974,7 +974,7 @@ public class L3ToSBGNPDConverter
 		// create the process for the conversion in that direction
 		Glyph process = factory.createGlyph();
 		process.setClazz(PROCESS.getClazz());
-		process.setId(convertID(cnv.getUri()) + "_" + direction);
+		process.setId(convertID(cnv.getUri()) + "_" + direction.name().replaceAll("_",""));
 		glyphMap.put(process.getId(), process);
 
 		// Determine input and output sets
@@ -1066,7 +1066,7 @@ public class L3ToSBGNPDConverter
 			// Create a source-and-sink as the input
 			Glyph sas = factory.createGlyph();
 			sas.setClazz(SOURCE_AND_SINK.getClazz());
-			sas.setId("SAS_For_" + process.getId());
+			sas.setId("unknown-template_" + ModelUtils.md5hex(process.getId()));
 			glyphMap.put(sas.getId(), sas);
 			createArc(sas, process.getPort().get(0), ArcClazz.INTERACTION.getClazz(), null);
 		}
@@ -1447,8 +1447,8 @@ public class L3ToSBGNPDConverter
 	{
 		Port inputPort = factory.createPort();
 		Port outputPort = factory.createPort();
-		inputPort.setId(g.getId() + "-input");
-		outputPort.setId(g.getId() + "-output");
+		inputPort.setId("INP_" + g.getId());
+		outputPort.setId("OUT_" + g.getId());
 		g.getPort().add(inputPort);
 		g.getPort().add(outputPort);
 	}
@@ -1478,7 +1478,7 @@ public class L3ToSBGNPDConverter
 		String targetID = target instanceof Glyph ?
 			((Glyph) target).getId() : ((Port) target).getId();
 
-		arc.setId(sourceID + "--to--" + targetID);
+		arc.setId(sourceID + "--TO--" + targetID);
 
 		if (stoic != null && stoic.getStoichiometricCoefficient() > 1)
 		{
