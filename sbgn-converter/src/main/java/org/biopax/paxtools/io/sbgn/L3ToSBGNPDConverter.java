@@ -13,10 +13,15 @@ import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
@@ -131,6 +136,42 @@ public class L3ToSBGNPDConverter
 	 * Set of ubiquitous molecules.
 	 */
 	Set<Glyph> ubiqueSet;
+
+	/**
+	 * For adding BioPAX metadata (XML elements) using the SBGN-ML Extensions feature.
+	 */
+	private static Document biopaxMetaDoc;
+	private static final String BIOPAX_NS = "http://www.biopax.org/release/biopax-level3.owl#";
+
+	//-- Section: Static initialization -----------------------------------------------------------|
+	static
+	{
+		factory = new ObjectFactory();
+		typeMatchMap = new HashMap<Class<? extends BioPAXElement>, String>();
+		typeMatchMap.put(Protein.class, MACROMOLECULE.getClazz());
+		typeMatchMap.put(SmallMolecule.class, SIMPLE_CHEMICAL.getClazz());
+		typeMatchMap.put(Dna.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(Rna.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(DnaRegion.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(RnaRegion.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(NucleicAcid.class, NUCLEIC_ACID_FEATURE.getClazz());
+		typeMatchMap.put(PhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());
+		//TODO: SimplePhysicalEntity is a non-instantiable abstract type in Paxtools; remove the mapping below?
+		typeMatchMap.put(SimplePhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());
+		typeMatchMap.put(Complex.class, COMPLEX.getClazz());
+		typeMatchMap.put(Gene.class, NUCLEIC_ACID_FEATURE.getClazz());
+
+		// init the DOM document here for adding biopax elements as extensions to SBGN-ML PD glyphs, etc.
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			db.reset();
+			biopaxMetaDoc = db.newDocument();
+		} catch (ParserConfigurationException e) {
+			throw new RuntimeException("Cannot initialize BioPAX extensions DOM.", e);
+		}
+
+	}
 
 	//-- Section: Public methods ------------------------------------------------------------------|
 
@@ -317,6 +358,14 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
+		biopaxMetaDoc.setDocumentURI(model.getUri()); //can be null
+		Element elt = biopaxMetaDoc.createElementNS(BIOPAX_NS, "Model");
+		elt.setPrefix("bp");
+		elt.setAttribute("name", model.getName()); //can be null/empty too
+		SBGNBase.Notes modelNotes = new SBGNBase.Notes();
+		sbgn.setNotes(modelNotes);
+		modelNotes.getAny().add(elt);
+
 		final boolean layout = doLayout && n < this.maxNodes && !arcMap.isEmpty();
 		try {
 			//Must call this, although actual layout might never run;
@@ -401,6 +450,13 @@ public class L3ToSBGNPDConverter
 		// Create its glyph and register
 		Glyph g = createGlyphBasics(e, true);
 		glyphMap.put(g.getId(), g);
+
+		SBGNBase.Extension ext = new SBGNBase.Extension();
+		g.setExtension(ext);
+		Element el = biopaxMetaDoc.createElementNS(BIOPAX_NS, e.getModelInterface().getSimpleName());
+		el.setPrefix("bp");
+		el.setAttribute("uri", e.getUri());
+		ext.getAny().add(el);
 
 		if (g.getClone() != null)
 			ubiqueSet.add(g);
@@ -1552,25 +1608,8 @@ public class L3ToSBGNPDConverter
 	private String convertID(String id)
 	{
 		//make valid XML ID - a hack; see #39; ideally would be using an equivalent to javascript encodeURI()
-		return id.replaceAll("[^-\\w]", "_");
+//		return id.replaceAll("[^-\\w]", "_");
+		return id;
 	}
 
-
-	//-- Section: Static initialization -----------------------------------------------------------|
-	static
-	{
-		factory = new ObjectFactory();
-		typeMatchMap = new HashMap<Class<? extends BioPAXElement>, String>();
-		typeMatchMap.put(Protein.class, MACROMOLECULE.getClazz());
-		typeMatchMap.put(SmallMolecule.class, SIMPLE_CHEMICAL.getClazz());
-		typeMatchMap.put(Dna.class, NUCLEIC_ACID_FEATURE.getClazz());
-		typeMatchMap.put(Rna.class, NUCLEIC_ACID_FEATURE.getClazz());
-		typeMatchMap.put(DnaRegion.class, NUCLEIC_ACID_FEATURE.getClazz());
-		typeMatchMap.put(RnaRegion.class, NUCLEIC_ACID_FEATURE.getClazz());
-		typeMatchMap.put(NucleicAcid.class, NUCLEIC_ACID_FEATURE.getClazz());
-		typeMatchMap.put(PhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());
-		typeMatchMap.put(SimplePhysicalEntity.class, UNSPECIFIED_ENTITY.getClazz());//TODO: abstract type (doesn't occur in BioPAX)
-		typeMatchMap.put(Complex.class, COMPLEX.getClazz());
-		typeMatchMap.put(Gene.class, NUCLEIC_ACID_FEATURE.getClazz());
-	}
 }
