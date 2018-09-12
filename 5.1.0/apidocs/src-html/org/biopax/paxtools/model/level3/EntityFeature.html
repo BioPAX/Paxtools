@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.biopax.paxtools.model.level3;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span><a name="line.3"></a>
+<span class="sourceLineNo">004</span>import java.util.Set;<a name="line.4"></a>
+<span class="sourceLineNo">005</span><a name="line.5"></a>
+<span class="sourceLineNo">006</span>/**<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * Description: A characteristic of a physical entity that can change while the entity still retains its biological<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * identity.<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * <a name="line.9"></a>
+<span class="sourceLineNo">010</span> * Rationale: Two phosphorylated forms of a protein are strictly speaking different chemical  molecules. It is,<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * however, standard in biology to treat them as different states of the same entity,<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * where the entity is loosely defined based on sequence. Entity Feature class and its subclassses captures these<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * variable characteristics. A Physical Entity in BioPAX represents a pool of  molecules rather than an individual<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * molecule. This is a notion imported from chemistry (See {@link PhysicalEntity}). Pools are defined by a set of<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * Entity Features in the sense that a single molecule must have all of the features in the set in order to be<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * considered a member of the pool. Since it is impossible to list and experimentally test all potential features for<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * an  entity, features that are not listed in the selection criteria is neglected Pools can also be defined by the<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * converse by specifying features  that are known to NOT exist in a specific context. As DNA,<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * RNA and Proteins can be hierarchically organized into families based on sequence homology so can entity features.<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * The memberFeature property allows capturing such hierarchical classifications among entity features.<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * <a name="line.21"></a>
+<span class="sourceLineNo">022</span> * Usage: Subclasses of entity feature describe most common biological instances and should be preferred whenever<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * possible. One common use case for instantiating  entity feature is, for describing active/inactive states of<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * proteins where more specific feature information is not available.<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * <a name="line.25"></a>
+<span class="sourceLineNo">026</span> * Examples: Open/close conformational state of channel proteins, "active"/"inactive" states,<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * excited states of photoreactive groups.<a name="line.27"></a>
+<span class="sourceLineNo">028</span> */<a name="line.28"></a>
+<span class="sourceLineNo">029</span>public interface EntityFeature extends UtilityClass, Observable<a name="line.29"></a>
+<span class="sourceLineNo">030</span>{<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>        /**<a name="line.32"></a>
+<span class="sourceLineNo">033</span>         * Inverse of {@link EntityReference#getEntityFeature()}<a name="line.33"></a>
+<span class="sourceLineNo">034</span>         * @return the EntityReference that this EntityFeature belongs to.<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>        EntityReference getEntityFeatureOf();<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>        /**<a name="line.39"></a>
+<span class="sourceLineNo">040</span>         * Inverse of {@link PhysicalEntity#getFeature()}<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         * Contents of this set is generated automatically and should not be modified.<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         * @return The list of PhysicalEntities that were observed to have this feature.<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         */<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        Set&lt;PhysicalEntity&gt; getFeatureOf();<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>        /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>         * Inverse of {@link PhysicalEntity#getNotFeature()}<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         * Contents of this set is generated automatically and should not be modified.<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * @return The list of PhysicalEntities that were observed to NOT have this feature.<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         */<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        Set&lt;PhysicalEntity&gt; getNotFeatureOf();<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span><a name="line.53"></a>
+<span class="sourceLineNo">054</span>        /**<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * Location of the feature on the sequence of the interactor.<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * <a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * For modification features this is the modified base or residue. For binding features this is the<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * binding site and for fragment features this is the location of the fragment on the "base" sequence.<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * <a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * One feature may have more than one location, used e.g. for features which involve sequence positions close in<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * the folded, three-dimensional state of a protein, but non-continuous along the sequence.<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * <a name="line.62"></a>
+<span class="sourceLineNo">063</span>         * Small Molecules can have binding features but currently it is not possible to define the binding site on the<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * small molecules. In those cases this property should not be specified.<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * @return Location of the feature on the sequence of the interactor.<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         */<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        SequenceLocation getFeatureLocation();<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>        /**<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * Location of the feature on the sequence of the interactor.<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * <a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * For modification features this is the modified base or residue. For binding features this is the<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * binding site and for fragment features this is the location of the fragment on the "base" sequence.<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         * <a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * One feature may have more than one location, used e.g. for features which involve sequence positions close in<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         * the folded, three-dimensional state of a protein, but non-continuous along the sequence.<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         * <a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * Small Molecules can have binding features but currently it is not possible to define the binding site on the<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * small molecules. In those cases this property should not be specified.<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * @param sequenceLocation of the feature<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         */<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        void setFeatureLocation(SequenceLocation sequenceLocation);<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>        /**<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * A controlled vocabulary term describing the type of the sequence location such as C-Terminal or SH2 Domain.<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         * Using Sequence Ontology (&lt;a href ="http://www.sequenceontology.org"&gt;http://www.sequenceontology.org&lt;/a&gt;) is<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         * recommended.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * @return A CV term describing the location of the feature<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         */<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        SequenceRegionVocabulary getFeatureLocationType();<a name="line.90"></a>
+<span class="sourceLineNo">091</span><a name="line.91"></a>
+<span class="sourceLineNo">092</span>        /**<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         * A controlled vocabulary term describing the type of the sequence location such as C-Terminal or SH2 Domain.<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         * Using Sequence Ontology (&lt;a href ="http://www.sequenceontology.org"&gt;http://www.sequenceontology.org&lt;/a&gt;) is<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         * recommended.<a name="line.95"></a>
+<span class="sourceLineNo">096</span>         * @param regionVocabulary A CV term describing the location of the feature<a name="line.96"></a>
+<span class="sourceLineNo">097</span>         */<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        void setFeatureLocationType(SequenceRegionVocabulary regionVocabulary);<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>        /**<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         * An entity feature  that belongs to this homology grouping.<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         * <a name="line.103"></a>
+<span class="sourceLineNo">104</span>         * Members of this set should be of the same class of this EntityFeature.<a name="line.104"></a>
+<span class="sourceLineNo">105</span>         * <a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * Members of this set should be an EntityFeature of an EntityReference which is a memberEntityReference of the<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * EntityReference of this feature.<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * <a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * If this set is not empty than the sequenceLocation of this feature should be null.<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * <a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * Example: a homologous phosphorylation site across a protein family.<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * @return An entity feature  that belongs to this homology grouping.<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         */<a name="line.113"></a>
+<span class="sourceLineNo">114</span>        Set&lt;EntityFeature&gt; getMemberFeature();   //todo generify?<a name="line.114"></a>
+<span class="sourceLineNo">115</span><a name="line.115"></a>
+<span class="sourceLineNo">116</span>        /**<a name="line.116"></a>
+<span class="sourceLineNo">117</span>         * An entity feature  that belongs to this homology grouping.<a name="line.117"></a>
+<span class="sourceLineNo">118</span>         * <a name="line.118"></a>
+<span class="sourceLineNo">119</span>         * Members of this set should be of the same class of this EntityFeature.<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         * <a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * Members of this set should be an EntityFeature of an EntityReference which is a memberEntityReference of the<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * EntityReference of this feature.<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         * <a name="line.123"></a>
+<span class="sourceLineNo">124</span>         * If this set is not empty than the sequenceLocation of this feature should be null.<a name="line.124"></a>
+<span class="sourceLineNo">125</span>         * <a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * Example: a homologous phosphorylation site across a protein family.<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         * @param entityFeature An entity feature  that belongs to this homology grouping.<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         */<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        void addMemberFeature(EntityFeature entityFeature);<a name="line.129"></a>
+<span class="sourceLineNo">130</span><a name="line.130"></a>
+<span class="sourceLineNo">131</span>        /**<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * An entity feature  that belongs to this homology grouping.<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         * <a name="line.133"></a>
+<span class="sourceLineNo">134</span>         * Members of this set should be of the same class of this EntityFeature.<a name="line.134"></a>
+<span class="sourceLineNo">135</span>         * <a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * Members of this set should be an EntityFeature of an EntityReference which is a memberEntityReference of the<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * EntityReference of this feature.<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         * <a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * If this set is not empty than the sequenceLocation of this feature should be null.<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         * <a name="line.140"></a>
+<span class="sourceLineNo">141</span>         * Example: a homologous phosphorylation site across a protein family.<a name="line.141"></a>
+<span class="sourceLineNo">142</span>         * @param entityFeature An entity feature that belongs to this homology grouping.<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         */<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        void removeMemberFeature(EntityFeature entityFeature);<a name="line.144"></a>
+<span class="sourceLineNo">145</span><a name="line.145"></a>
+<span class="sourceLineNo">146</span>        /**<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * @param that EntityFeature to be compared<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         * @return returns true iff the given feature is at the equivalent sequence location with this feature<a name="line.148"></a>
+<span class="sourceLineNo">149</span>         */<a name="line.149"></a>
+<span class="sourceLineNo">150</span>        boolean atEquivalentLocation(EntityFeature that);<a name="line.150"></a>
+<span class="sourceLineNo">151</span><a name="line.151"></a>
+<span class="sourceLineNo">152</span>        /**<a name="line.152"></a>
+<span class="sourceLineNo">153</span>         * Reverse of {@link #getMemberFeature()}<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         * @return the generic feature(s) that this feature belong to<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         */<a name="line.155"></a>
+<span class="sourceLineNo">156</span>        Set&lt;EntityFeature&gt; getMemberFeatureOf();<a name="line.156"></a>
+<span class="sourceLineNo">157</span>}<a name="line.157"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

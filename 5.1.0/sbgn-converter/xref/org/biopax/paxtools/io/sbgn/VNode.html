@@ -1,0 +1,518 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>VNode xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../apidocs/org/biopax/paxtools/io/sbgn/VNode.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> org.biopax.paxtools.io.sbgn;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> java.util.ArrayList;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.ivis.layout.LGraphObject;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.ivis.layout.LNode;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.ivis.layout.Updatable;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> org.sbgn.bindings.Glyph;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> org.sbgn.bindings.Bbox;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> org.ivis.layout.cose.CoSEGraph;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> * VNode Class</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * @author: Istemi Bahceci</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * */</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">class</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">VNode</a> <strong class="jxr_keyword">implements</strong> Updatable
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>      <em class="jxr_comment">//Glyph attribute of this VNode</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>      <strong class="jxr_keyword">public</strong> Glyph glyph;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>      ArrayList &lt;Glyph&gt; stateGlyphs;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>      ArrayList &lt;Glyph&gt; infoGlyphs;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <em class="jxr_comment">/*Glyph class types*/</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String  MACROMOLECULE = <span class="jxr_string">"macromolecule"</span>;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String UNIT_OF_INFORMATION = <span class="jxr_string">"unit of information"</span>;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String STATE_VARIABLE = <span class="jxr_string">"state variable"</span>;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String SOURCE_AND_SINK = <span class="jxr_string">"source and sink"</span>;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String ASSOCIATION = <span class="jxr_string">"association"</span>;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String DISSOCIATION = <span class="jxr_string">"dissociation"</span>;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String OMITTED_PROCESS = <span class="jxr_string">"omitted process"</span>;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String UNCERTAIN_PROCESS = <span class="jxr_string">"uncertain process"</span>;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String SIMPLE_CHEMICAL = <span class="jxr_string">"simple chemical"</span>;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String PROCESS = <span class="jxr_string">"process"</span>;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String COMPLEX = <span class="jxr_string">"complex"</span>;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String AND = <span class="jxr_string">"and"</span>;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String OR = <span class="jxr_string">"or"</span>;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String NOT = <span class="jxr_string">"not"</span>;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String PHENOTYPE = <span class="jxr_string">"phenotype"</span>;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String PERTURBING_AGENT = <span class="jxr_string">"perturbing agent"</span>;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String TAG = <span class="jxr_string">"tag"</span>;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String NUCLEIC_ACID_FEATURE = <span class="jxr_string">"nucleic acid feature"</span>;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String UNSPECIFIED_ENTITY = <span class="jxr_string">"unspecified entity"</span>;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  String NONE = <span class="jxr_string">"NA"</span>;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <em class="jxr_comment">// Constats used for determining "state of information" and "unit of information" glyph widths according to</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <em class="jxr_comment">// their labels</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  <strong class="jxr_keyword">int</strong> LOWERCASE_LETTER_PIXEL_WIDTH = 6;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  <strong class="jxr_keyword">int</strong> UPPERCASE_LETTER_PIXEL_WIDTH = 9;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  <strong class="jxr_keyword">int</strong> MAX_STATE_AND_INFO_WIDTH = 35;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  <strong class="jxr_keyword">int</strong> MAX_STATE_AND_INFO_HEIGHT = 10;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  <strong class="jxr_keyword">int</strong> OFFSET_BTW_INFO_GLYPHS = 5;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  <strong class="jxr_keyword">int</strong> MAX_INFO_BOX_NUMBER = 4;
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  <strong class="jxr_keyword">int</strong> MAX_MACROMOLECULE_HEIGHT_WITH_INFO_BOXES = 25;
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong>  <strong class="jxr_keyword">int</strong> NON_SUPPORTED_GLYPH_OFFSET = 2;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <em class="jxr_comment">/*Glyph Size Constants for layout*/</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  SOURCE_AND_SINK_BOUND;
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  LOGICAL_OPERATOR_BOUND;
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  PROCESS_NODES_BOUND;
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  MACROMOLECULE_BOUND;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  NUCLEIC_ACID_FEATURE_BOUND;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  SIMPLE_CHEMICAL_BOUND;
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  UNSPECIFIED_ENTITY_BOUND;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  PHENOTYPE_BOUND;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  PERTURBING_AGENT_BOUND;
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  TAG_BOUND;
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  INFO_BOUND;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  STATE_BOUND;
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>  COMPLEX_BOUND;
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">     * Default Constructor, sets the geometry of the bounds which are attributes of this class</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">     * @param g glyph</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     * */</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">VNode</a>(Glyph g)
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          SOURCE_AND_SINK_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(15,15);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          LOGICAL_OPERATOR_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(15,15);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          PROCESS_NODES_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(15,15);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          MACROMOLECULE_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(48,25);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          NUCLEIC_ACID_FEATURE_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(50,25);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          SIMPLE_CHEMICAL_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(48,20);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          UNSPECIFIED_ENTITY_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(40,40);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          PHENOTYPE_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(50,20);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          TAG_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(50,20);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          PERTURBING_AGENT_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(50,20);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          COMPLEX_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(48,20);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          INFO_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(MAX_STATE_AND_INFO_WIDTH,MAX_STATE_AND_INFO_HEIGHT);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          STATE_BOUND = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(MAX_STATE_AND_INFO_WIDTH,MAX_STATE_AND_INFO_HEIGHT);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         stateGlyphs = <strong class="jxr_keyword">new</strong> ArrayList&lt;Glyph&gt;();
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         infoGlyphs = <strong class="jxr_keyword">new</strong>  ArrayList&lt;Glyph&gt;();
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>         <strong class="jxr_keyword">this</strong>.glyph = g;
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_comment">		 * need to add bbox objects</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_comment">		 */</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         Bbox b = <strong class="jxr_keyword">new</strong> Bbox();
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         <strong class="jxr_keyword">this</strong>.glyph.setBbox(b);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.glyph.getClazz() == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>             <strong class="jxr_keyword">this</strong>.glyph.setClazz(NONE);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> 
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         <strong class="jxr_keyword">this</strong>.setSizeAccordingToClass();
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     }
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * Function that will take place when VNode objects will update in layout process of ChiLay</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     * @param lGraphObj LGraphObject for whom the update will take place.</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(LGraphObject lGraphObj)
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     {
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>         <strong class="jxr_keyword">if</strong> (lGraphObj instanceof CoSEGraph)
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>         {
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>             <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         }
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         LNode lNode = (LNode)lGraphObj;
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">this</strong>.glyph.getBbox().setX((<strong class="jxr_keyword">float</strong>) lNode.getLeft());
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <strong class="jxr_keyword">this</strong>.glyph.getBbox().setY((<strong class="jxr_keyword">float</strong>) lNode.getTop());
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         <strong class="jxr_keyword">this</strong>.placeStateAndInfoGlyphs();
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     }
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * Sets the bound of this VNode by given width and height</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     * @param w new width</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     * @param h new height</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setBounds(<strong class="jxr_keyword">float</strong> w, <strong class="jxr_keyword">float</strong> h)
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>     {
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <strong class="jxr_keyword">this</strong>.glyph.getBbox().setW(w);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">this</strong>.glyph.getBbox().setH(h);
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">     * Chooses a proper bound for this VNode according to its class.</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setSizeAccordingToClass()
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>     {
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         String glyphClass = <strong class="jxr_keyword">this</strong>.glyph.getClazz();
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>         <em class="jxr_comment">//If glyph class is not specified return here</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>         <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(NONE))
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>             <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> 
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(SOURCE_AND_SINK))
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>         {
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>             setBounds(SOURCE_AND_SINK_BOUND.getWidth(), SOURCE_AND_SINK_BOUND.getHeight());
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>         }
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(AND) || glyphClass.equalsIgnoreCase(OR) || glyphClass.equalsIgnoreCase(NOT))
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>         {
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>             setBounds(LOGICAL_OPERATOR_BOUND.getWidth(), LOGICAL_OPERATOR_BOUND.getHeight());
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         }
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(ASSOCIATION) || glyphClass.equalsIgnoreCase(DISSOCIATION) || glyphClass.equalsIgnoreCase(OMITTED_PROCESS) ||
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>                 glyphClass.equalsIgnoreCase(UNCERTAIN_PROCESS) || glyphClass.equalsIgnoreCase(PROCESS))
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>         {
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>             setBounds(PROCESS_NODES_BOUND.getWidth(), PROCESS_NODES_BOUND.getHeight());
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         }
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(SIMPLE_CHEMICAL))
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>         {
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>             setBounds(SIMPLE_CHEMICAL_BOUND.getWidth(), SIMPLE_CHEMICAL_BOUND.getHeight());
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>         }
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> 
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(UNSPECIFIED_ENTITY))
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>         {
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>             setBounds(UNSPECIFIED_ENTITY_BOUND.getWidth(), UNSPECIFIED_ENTITY_BOUND.getHeight());
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         }
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(MACROMOLECULE))
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>         {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>             setBounds(MACROMOLECULE_BOUND.getWidth(), MACROMOLECULE_BOUND.getHeight());
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         }
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> 
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(NUCLEIC_ACID_FEATURE))
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>         {
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>             setBounds(NUCLEIC_ACID_FEATURE_BOUND.getWidth(), NUCLEIC_ACID_FEATURE_BOUND.getHeight());
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         }
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> 
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(STATE_VARIABLE))
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>         {
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>             setBounds(STATE_BOUND.getWidth(), STATE_BOUND.getHeight());
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>         }
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(UNIT_OF_INFORMATION))
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>         {
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>             setBounds(INFO_BOUND.getWidth(), INFO_BOUND.getHeight());
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>         }
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> 
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(PHENOTYPE))
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>         {
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>             setBounds(PHENOTYPE_BOUND.getWidth(), PHENOTYPE_BOUND.getHeight());
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         }
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> 
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(PERTURBING_AGENT))
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>             setBounds(PERTURBING_AGENT_BOUND.getWidth(), PERTURBING_AGENT_BOUND.getHeight());
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>         }
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> 
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(TAG))
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         {
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>             setBounds(TAG_BOUND.getWidth(), TAG_BOUND.getHeight());
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>         }
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> 
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(COMPLEX))
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         {
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>             setBounds(COMPLEX_BOUND.getWidth(), COMPLEX_BOUND.getHeight());
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>         }
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> 
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>         <strong class="jxr_keyword">if</strong>( <strong class="jxr_keyword">this</strong>.glyph.getClone() != <strong class="jxr_keyword">null</strong> )
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>         {
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>             Bbox glyphBbox = <strong class="jxr_keyword">this</strong>.glyph.getBbox();
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>             setBounds(3*glyphBbox.getW()/4, 3*glyphBbox.getH()/4);
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         }
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         <strong class="jxr_keyword">if</strong> (glyphClass.equalsIgnoreCase(MACROMOLECULE) || glyphClass.equalsIgnoreCase(NUCLEIC_ACID_FEATURE) || glyphClass.equalsIgnoreCase(SIMPLE_CHEMICAL) || glyphClass.equalsIgnoreCase(COMPLEX))
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>         {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>             updateSizeForStateAndInfo();
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>         }
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> 
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>     }
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_javadoccomment">     * Calculates required width according to the given list state and info glyphs of this VNode.</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">     * This method also previously computes the width and height of state and info glyphs</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">     * according to their label.</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     * @param  stateORinfoList list that keeps state or info glyphs of this VNode</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     * @return new width that is adjusted so that all glyphs in stateORinfoList are included.</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">     * */</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> calcReqWidthByStateAndInfos(List&lt;Glyph&gt; stateORinfoList)
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <strong class="jxr_keyword">int</strong> wholeSize = 0;
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         <strong class="jxr_keyword">int</strong> count = 0;
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> 
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>         <strong class="jxr_keyword">for</strong> (Glyph tmpGlyph: stateORinfoList)
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         {
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>             String text;
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> 
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>             <strong class="jxr_keyword">if</strong> (tmpGlyph.getState() != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>             {
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>                 text = tmpGlyph.getState().getValue();
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> 
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>                 <strong class="jxr_keyword">if</strong> (tmpGlyph.getState().getVariable() != <strong class="jxr_keyword">null</strong> &amp;&amp;
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>                         tmpGlyph.getState().getVariable().length() &gt; 0)
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>                 {
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>                     <strong class="jxr_keyword">if</strong>(tmpGlyph.getState().getVariable() != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>                         text += <span class="jxr_string">"@"</span> + tmpGlyph.getState().getVariable();
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>                 }
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>             }
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (tmpGlyph.getLabel() != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>             {
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>                 text = tmpGlyph.getLabel().getText();
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>             }
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>             <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>             {
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(<span class="jxr_string">"Encountered an information glyph with no state "</span> +
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>                         <span class="jxr_string">"variable (as modification boxes should have) and no label (as molecule type "</span> +
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>                         <span class="jxr_string">"boxed should have). glyph = "</span> + tmpGlyph);
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>             }
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> 
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>             <strong class="jxr_keyword">int</strong> numOfUpper = 0;
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             <strong class="jxr_keyword">int</strong> numOfLower = 0;
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> 
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; text.length(); i++)
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>             {
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>                 <strong class="jxr_keyword">if</strong> (Character.isLowerCase(text.charAt(i)))
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>                 {
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>                     numOfLower++;
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> 
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>                 } <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>                     numOfUpper++;
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>             }
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> 
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>             Bbox b = <strong class="jxr_keyword">new</strong> Bbox();
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>             tmpGlyph.setBbox(b);
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> 
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>             <em class="jxr_comment">//Set width</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>             <strong class="jxr_keyword">float</strong> requiredSize = numOfLower * LOWERCASE_LETTER_PIXEL_WIDTH + numOfUpper * UPPERCASE_LETTER_PIXEL_WIDTH;
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>             <strong class="jxr_keyword">if</strong> (requiredSize &lt; MAX_STATE_AND_INFO_WIDTH)
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>                 tmpGlyph.getBbox().setW(requiredSize);
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>             <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>                 tmpGlyph.getBbox().setW(STATE_BOUND.width);
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> 
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>             <em class="jxr_comment">//Set height</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>             tmpGlyph.getBbox().setH(MAX_STATE_AND_INFO_HEIGHT);
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> 
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>             <strong class="jxr_keyword">if</strong> (count &lt; MAX_INFO_BOX_NUMBER / 2)
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>                 wholeSize += tmpGlyph.getBbox().getW();
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> 
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>             count++;
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> 
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>         }
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> 
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         <strong class="jxr_keyword">return</strong> wholeSize;
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>     }
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">     * 	If glyph attribute of this VNode object includes any "state of information" or "unit of information" glyphs, this method updates the</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">     *  size of VNode accordingly.</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">     * */</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> updateSizeForStateAndInfo()
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>     {
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         <em class="jxr_comment">// Find all state and info glyphs</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>         <strong class="jxr_keyword">for</strong> (Glyph glyph : <strong class="jxr_keyword">this</strong>.glyph.getGlyph())
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>         {
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>             <strong class="jxr_keyword">if</strong> (glyph.getClazz() == STATE_VARIABLE)
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>             {
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>                 stateGlyphs.add(glyph);
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>             }
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (glyph.getClazz() == UNIT_OF_INFORMATION)
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>             {
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>                 infoGlyphs.add(glyph);
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>             }
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>         }
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> 
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>         <em class="jxr_comment">//Calculate "state of information" glyphs' sizes</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>         <strong class="jxr_keyword">int</strong> wholeWidthOfStates = calcReqWidthByStateAndInfos(stateGlyphs);
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>         <strong class="jxr_keyword">int</strong> wholeWidthOfInfos  = calcReqWidthByStateAndInfos(infoGlyphs);
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> 
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>         <em class="jxr_comment">// Calculate  positions</em>
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>         <strong class="jxr_keyword">int</strong> numOfStates = stateGlyphs.size();
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>         <strong class="jxr_keyword">int</strong> numOfInfos = infoGlyphs.size();
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> 
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> 
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> 
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>         <em class="jxr_comment">//set a maximum width to glyph according to state and info boxes</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>         <strong class="jxr_keyword">int</strong> totNumStateInfo = numOfInfos + numOfStates;
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         <strong class="jxr_keyword">int</strong> multiplier = totNumStateInfo &lt;= 2 ? 2 : 3;
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>         <strong class="jxr_keyword">float</strong> requiredWidth = multiplier * OFFSET_BTW_INFO_GLYPHS + (multiplier-1) * MAX_STATE_AND_INFO_WIDTH;
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> 
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>         <em class="jxr_comment">//Adjust heights so that info box offsets are taken into account in layout.</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>         <strong class="jxr_keyword">if</strong>(totNumStateInfo &gt; 0 )
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>             <strong class="jxr_keyword">this</strong>.glyph.getBbox().setH(<strong class="jxr_keyword">this</strong>.glyph.getBbox().getH()+MAX_STATE_AND_INFO_HEIGHT/2);
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> 
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.glyph.getBbox().getW() &lt; requiredWidth  )
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         {
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>             <strong class="jxr_keyword">this</strong>.glyph.getBbox().setW(requiredWidth);
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>         }
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>     }
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> <em class="jxr_javadoccomment">     * Places state and info glyphs of this node</em>
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> <em class="jxr_javadoccomment">     * */</em>
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> placeStateAndInfoGlyphs() {
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>         <strong class="jxr_keyword">int</strong> numOfStates = stateGlyphs.size();
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>         <strong class="jxr_keyword">int</strong> numOfInfos = infoGlyphs.size();
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> 
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> 
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>         <em class="jxr_comment">//Adjust heights so that info box offsets are taken into account in layout.</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>         <strong class="jxr_keyword">if</strong>(numOfStates &gt; 0 || numOfInfos &gt; 0)
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>             <strong class="jxr_keyword">this</strong>.glyph.getBbox().setH(<strong class="jxr_keyword">this</strong>.glyph.getBbox().getH()-MAX_STATE_AND_INFO_HEIGHT/2);
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> 
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>         <strong class="jxr_keyword">float</strong> parent_y_up = <strong class="jxr_keyword">this</strong>.glyph.getBbox().getY()-INFO_BOUND.height/2;
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>         <strong class="jxr_keyword">float</strong> parent_y_bot = <strong class="jxr_keyword">this</strong>.glyph.getBbox().getY()+<strong class="jxr_keyword">this</strong>.glyph.getBbox().getH()-INFO_BOUND.height/2;;
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>         <strong class="jxr_keyword">float</strong> parent_x_up = <strong class="jxr_keyword">this</strong>.glyph.getBbox().getX();
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>         <strong class="jxr_keyword">float</strong> parentWidth = <strong class="jxr_keyword">this</strong>.glyph.getBbox().getW();
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>         String parentID = <strong class="jxr_keyword">this</strong>.glyph.getId();
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> 
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>         <strong class="jxr_keyword">int</strong> maxNumberOfStates =   stateGlyphs.size();
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>         <strong class="jxr_keyword">int</strong> maxNumberOfInfos =  infoGlyphs.size();
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>         <strong class="jxr_keyword">if</strong> (maxNumberOfInfos + maxNumberOfStates &gt; 4)
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>         {
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>             <strong class="jxr_keyword">if</strong>(maxNumberOfInfos &lt; 2 || maxNumberOfStates &lt; 2)
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>             {
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>                 <strong class="jxr_keyword">int</strong> minimum = Math.min(maxNumberOfInfos,maxNumberOfStates);
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> 
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>                 <strong class="jxr_keyword">if</strong> (maxNumberOfInfos - minimum == 0)
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>                 {
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>                     maxNumberOfInfos = minimum;
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>                     maxNumberOfStates = maxNumberOfStates - maxNumberOfInfos;
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>                 }
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>                 {
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>                     maxNumberOfStates = minimum;
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>                     maxNumberOfInfos = maxNumberOfInfos - maxNumberOfStates;
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>                 }
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>             }
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>         }
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>         <em class="jxr_comment">//else normal placement </em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>         
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>         <em class="jxr_comment">//Some variables for placement of state and info boxes</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>         <strong class="jxr_keyword">int</strong> totalNumberOfStateAndInfos = maxNumberOfInfos+maxNumberOfStates;
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         Glyph tmpglyph = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>         <strong class="jxr_keyword">int</strong> infoIndex = 0;
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         <strong class="jxr_keyword">int</strong> stateIndex = 0;
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>         <strong class="jxr_keyword">int</strong> topUsedWidth = 0;
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>         <strong class="jxr_keyword">int</strong> bottomUsedWidth = 0;
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>         <strong class="jxr_keyword">int</strong> additionalStateInfoOffset = 0;
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>         <strong class="jxr_keyword">boolean</strong> placeTopFlag = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> 
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>         <em class="jxr_comment">//Place state and info glyphs</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; totalNumberOfStateAndInfos; i++)
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>         {
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>             <em class="jxr_comment">//Adjust offsets between state and info boxes</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>             <strong class="jxr_keyword">int</strong> offsetMultiplier = i % 4 &lt;= 1 ? 1 : 2;
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> 
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>             <strong class="jxr_keyword">if</strong> (maxNumberOfInfos - i &gt; 0 &amp;&amp; infoGlyphs.size() &gt; 0)
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>                 tmpglyph =  infoGlyphs.get(infoIndex++);
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (stateGlyphs.size() &gt; 0)
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>                 tmpglyph = stateGlyphs.get(stateIndex++);
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> 
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>             <em class="jxr_comment">//Top placement</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>             <strong class="jxr_keyword">if</strong> (placeTopFlag)
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>             {
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>                 <strong class="jxr_keyword">if</strong>( totalNumberOfStateAndInfos &lt;= 2 )
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>                 {
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>                     tmpglyph.getBbox().setX(parent_x_up+parentWidth/2-tmpglyph.getBbox().getW()/2);
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>                     tmpglyph.getBbox().setY(parent_y_up - additionalStateInfoOffset);
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>                     <em class="jxr_comment">//set dummy id</em>
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>                     tmpglyph.setId(parentID + <span class="jxr_string">".info."</span> + (i+1) );
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>                 }
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>                 {
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>                     <em class="jxr_comment">//set dummy id</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>                     tmpglyph.setId(parentID + <span class="jxr_string">".info."</span> + (i+1) );
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> 
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>                     tmpglyph.getBbox().setX(parent_x_up + offsetMultiplier * OFFSET_BTW_INFO_GLYPHS + topUsedWidth);
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>                     tmpglyph.getBbox().setY(parent_y_up - additionalStateInfoOffset);
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>                 }
+<a class="jxr_linenumber" name="L436" href="#L436">436</a> 
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>                 topUsedWidth += tmpglyph.getBbox().getW();
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>             }
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>             <em class="jxr_comment">//bottom placement</em>
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>             <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>             {
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>                 <strong class="jxr_keyword">if</strong>(( i % 2 == 1 ) &amp;&amp; ( totalNumberOfStateAndInfos == 2 || totalNumberOfStateAndInfos == 3 ))
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>                 {
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>                     tmpglyph.getBbox().setX(parent_x_up+parentWidth/2-tmpglyph.getBbox().getW()/2);
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>                     tmpglyph.getBbox().setY(parent_y_bot + additionalStateInfoOffset);
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>                     <em class="jxr_comment">//set dummy id</em>
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>                     tmpglyph.setId(parentID + <span class="jxr_string">".state."</span> + (i+1) );
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>                 }
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>                 {
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>                     <em class="jxr_comment">//set dummy id</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>                     tmpglyph.setId(parentID + <span class="jxr_string">".state."</span> + (i+1) );
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>                     tmpglyph.getBbox().setX(parent_x_up+ offsetMultiplier *OFFSET_BTW_INFO_GLYPHS + bottomUsedWidth);
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>                     tmpglyph.getBbox().setY(parent_y_bot + additionalStateInfoOffset);
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>                 }
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> 
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>                 bottomUsedWidth += tmpglyph.getBbox().getW();
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>             }
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> 
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>             <em class="jxr_comment">// Alternate between placing top and bottom</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>             placeTopFlag = !placeTopFlag;
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> 
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>             <em class="jxr_comment">//More than 4 state and info glyps are placed with an offset on top of previously placed state and info boxes</em>
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>             <em class="jxr_comment">//This can be easily filtered out on the application side where the resultant graphs of this layout is used.</em>
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>             <strong class="jxr_keyword">if</strong> ( ( i + 1 ) % 4 == 0 )
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>                 additionalStateInfoOffset += NON_SUPPORTED_GLYPH_OFFSET;
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         }
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> 
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>     }
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> 
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L472" href="#L472">472</a> <em class="jxr_javadoccomment">     * Inner Class for glyph bounds</em>
+<a class="jxr_linenumber" name="L473" href="#L473">473</a> <em class="jxr_javadoccomment">     * */</em>
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>     {
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> width;
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> height;
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> 
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/biopax/paxtools/io/sbgn/VNode.html">Bound</a>(<strong class="jxr_keyword">float</strong> width, <strong class="jxr_keyword">float</strong> height)
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>         {
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>             <strong class="jxr_keyword">this</strong>.width = width;
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>             <strong class="jxr_keyword">this</strong>.height = height;
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>         }
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> 
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getWidth()
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>         {
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>             <strong class="jxr_keyword">return</strong> width;
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>         }
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> 
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setWidth(<strong class="jxr_keyword">float</strong> width)
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>         {
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>             <strong class="jxr_keyword">this</strong>.width = width;
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>         }
+<a class="jxr_linenumber" name="L494" href="#L494">494</a> 
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getHeight()
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>         {
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>             <strong class="jxr_keyword">return</strong> height;
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>         }
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> 
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setHeight(<strong class="jxr_keyword">float</strong> height)
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>         {
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>             <strong class="jxr_keyword">this</strong>.height = height;
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>         }
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>     }
+<a class="jxr_linenumber" name="L505" href="#L505">505</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2018 <a href="http://www.biopax.org">BioPAX</a>. All rights reserved.</div>
+</body>
+</html>

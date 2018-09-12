@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.biopax.paxtools.model.level2;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import java.util.Set;<a name="line.3"></a>
+<span class="sourceLineNo">004</span><a name="line.4"></a>
+<span class="sourceLineNo">005</span>/**<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * A control interaction in which a physical entity (a catalyst) increases the<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * rate of a conversion interaction by lowering its activation energy. Instances<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * of this class describe a pairing between a catalyzing entity and a catalyzed<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * conversion.<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * &lt;b&gt;Comment:&lt;/b&gt;  A separate catalysis instance should be created for each<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * different conversion that a physicalEntity may catalyze and for each<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * different physicalEntity that may catalyze a conversion. For example, a<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * bifunctional enzyme that catalyzes two different biochemical reactions would<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * be linked to each of those biochemical reactions by two separate instances of<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * the catalysis class. Also, catalysis reactions from multiple different<a name="line.16"></a>
+<span class="sourceLineNo">017</span> * organisms could be linked to the same generic biochemical reaction (a<a name="line.17"></a>
+<span class="sourceLineNo">018</span> * biochemical reaction is generic if it only includes small molecules).<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * Generally, the enzyme catalyzing a conversion is known and the use of this<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * class is obvious. In the cases where a catalyzed reaction is known to occur<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * but the enzyme is not known, a catalysis instance should be created without a<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * controller specified (i.e. the CONTROLLER property should remain empty).<a name="line.22"></a>
+<span class="sourceLineNo">023</span> *<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * &lt;b&gt;Synonyms:&lt;/b&gt; facilitation, acceleration.<a name="line.24"></a>
+<span class="sourceLineNo">025</span> *<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * &lt;b&gt;Examples:&lt;/b&gt; The catalysis of a biochemical reaction by an enzyme, the<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * enabling of a transport interaction by a membrane pore complex, and the<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * facilitation of a complex assembly by a scaffold protein.<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * Hexokinase -&amp;gt; (The "Glucose + ATP -&amp;gt; Glucose-6-phosphate +ADP" reaction).<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * A plasma membrane Na+/K+ ATPase is an active transporter (antiport pump)<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * using the energy of ATP to pump Na+ out of the cell and K+ in. Na+ from<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * cytoplasm to extracellular space would be described in a transport instance.<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * K+ from extracellular space to cytoplasm would be described in a transport<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * instance. The ATPase pump would be stored in a catalysis instance<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * controlling each of the above transport instances. A biochemical reaction<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * that does not occur by itself under physiological conditions, but has been<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * observed to occur in the presence of cell extract, likely via one or more<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * unknown enzymes present in the extract, would be stored in the CONTROLLED<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * property, with the CONTROLLER property empty.<a name="line.39"></a>
+<span class="sourceLineNo">040</span> */<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>public interface catalysis extends control<a name="line.42"></a>
+<span class="sourceLineNo">043</span>{<a name="line.43"></a>
+<span class="sourceLineNo">044</span><a name="line.44"></a>
+<span class="sourceLineNo">045</span>    void addCOFACTOR(physicalEntityParticipant COFACTOR);<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>    void removeCOFACTOR(physicalEntityParticipant COFACTOR);<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>    void setCOFACTOR(Set&lt;physicalEntityParticipant&gt; COFACTOR);<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>    Set&lt;physicalEntityParticipant&gt; getCOFACTOR();<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span><a name="line.53"></a>
+<span class="sourceLineNo">054</span>    Direction getDIRECTION();<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>    void setDIRECTION(Direction DIRECTION);<a name="line.56"></a>
+<span class="sourceLineNo">057</span>}<a name="line.57"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package org.biopax.paxtools;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import org.slf4j.Logger;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import org.slf4j.LoggerFactory;<a name="line.3"></a>
+<span class="sourceLineNo">004</span><a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.io.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>import static org.biopax.paxtools.PaxtoolsMain.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span><a name="line.8"></a>
+<span class="sourceLineNo">009</span>/**<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * PaxtoolsMain console application<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * (very useful BioPAX utilities).<a name="line.11"></a>
+<span class="sourceLineNo">012</span> */<a name="line.12"></a>
+<span class="sourceLineNo">013</span>public final class Main {<a name="line.13"></a>
+<span class="sourceLineNo">014</span>    final static Logger log = LoggerFactory.getLogger(Main.class);<a name="line.14"></a>
+<span class="sourceLineNo">015</span><a name="line.15"></a>
+<span class="sourceLineNo">016</span>    public static void main(String[] argv) throws Exception<a name="line.16"></a>
+<span class="sourceLineNo">017</span>        {<a name="line.17"></a>
+<span class="sourceLineNo">018</span>        if (argv.length == 0) {<a name="line.18"></a>
+<span class="sourceLineNo">019</span>            help();<a name="line.19"></a>
+<span class="sourceLineNo">020</span>        } else {<a name="line.20"></a>
+<span class="sourceLineNo">021</span>                String command = argv[0];<a name="line.21"></a>
+<span class="sourceLineNo">022</span>                Command.valueOf(command).run(argv);<a name="line.22"></a>
+<span class="sourceLineNo">023</span>        }<a name="line.23"></a>
+<span class="sourceLineNo">024</span>    }<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        <a name="line.25"></a>
+<span class="sourceLineNo">026</span>    enum Command {<a name="line.26"></a>
+<span class="sourceLineNo">027</span>        merge("&lt;file1&gt; &lt;file2&gt; &lt;output&gt;\n" +<a name="line.27"></a>
+<span class="sourceLineNo">028</span>                                        "\t- merges file2 into file1 and writes it into output")<a name="line.28"></a>
+<span class="sourceLineNo">029</span>                        {public void run(String[] argv) throws IOException{merge(argv);} },<a name="line.29"></a>
+<span class="sourceLineNo">030</span>        toSIF("&lt;input&gt; &lt;output&gt; [-extended] [-andSif] [\"include=SIFType,..\"] [\"exclude=SIFType,..\"]" +<a name="line.30"></a>
+<span class="sourceLineNo">031</span>                                        " [\"seqDb=db,..\"] [\"chemDb=db,..\"] [-dontMergeInteractions] [-useNameIfNoId] [&lt;property_accessor&gt; ...]\n" +<a name="line.31"></a>
+<span class="sourceLineNo">032</span>                                        "\t- converts a BioPAX model to SIF (default) or custom SIF-like text format;\n" +<a name="line.32"></a>
+<span class="sourceLineNo">033</span>                                        "\t  will use blacklist.txt (recommended) file in the current directory, if present.\n" +<a name="line.33"></a>
+<span class="sourceLineNo">034</span>                                        "\t- Include or exclude to/from the analysis one or more relationship types by \n" +<a name="line.34"></a>
+<span class="sourceLineNo">035</span>                                        "\t  using 'include=' and/or 'exclude=', respectively, e.g., exclude=NEIGHBOR_OF,INTERACTS_WITH\n" +<a name="line.35"></a>
+<span class="sourceLineNo">036</span>                                        "\t  (mind using underscore instead of minus sign in the SIF type names; the default is to use all types).\n" +<a name="line.36"></a>
+<span class="sourceLineNo">037</span>                                        "\t- With 'seqDb=' and 'chemDb=', you can specify standard sequence/gene/chemical ID type(s)\n" +<a name="line.37"></a>
+<span class="sourceLineNo">038</span>                                        "\t  (can be just a unique prefix) to match actual xref.db values in the BioPAX model,\n" +<a name="line.38"></a>
+<span class="sourceLineNo">039</span>                                        "\t  e.g., \"seqDb=uniprot,hgnc,refseq\", and in that order, means: if a UniProt entity ID is found,\n" +<a name="line.39"></a>
+<span class="sourceLineNo">040</span>                                        "\t  other ID types ain't used; otherwise, if an 'hgnc' ID/Symbol is found... and so on;\n" +<a name="line.40"></a>
+<span class="sourceLineNo">041</span>                                        "\t  when not specified, then 'hgnc' (in fact, 'HGNC Symbol') for bio-polymers - \n" +<a name="line.41"></a>
+<span class="sourceLineNo">042</span>                                        "\t  and ChEBI IDs or name (if '-useNameIfNoId' is set) for chemicals - are selected.\n" +<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                                        "\t- With '-extended' flag, the output will be the Pathway Commons TXT (Extended SIF) format:\n" +<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                                        "\t  two sections separated with one blank line - first come inferred SIF interactions -\n" +<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                                        "\t  'A\trelationship-type\tB' plus RESOURCE, PUBMED, PATHWAY, MEDIATOR extra columns, \n" +<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                                        "\t  followed by interaction participants description section).\n" +<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                                        "\t- If '-andSif' flag is present (only makes sense together with '-extended'), then the \n" +<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                                        "\t  classic SIF output file is also created (will have '.sif' extension).\n" +<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                                        "\t- Finally, &lt;property_accessor&gt;... list is to specify 4th, 5th etc. custom output columns;\n" +<a name="line.49"></a>
+<span class="sourceLineNo">050</span>                                        "\t  use pre-defined column names (accessors): \n" +<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                                                "\t\tMEDIATOR,\n" +<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                                                "\t\tPUBMED,\n" +<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                                                "\t\tPMC,\n" +<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                                                "\t\tCOMMENTS,\n" +<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                                                "\t\tPATHWAY,\n" +<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                                                "\t\tPATHWAY_URI,\n" +<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                                                "\t\tRESOURCE,\n" +<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                                                "\t\tSOURCE_LOC,\n" +<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                                                "\t\tTARGET_LOC\n" +<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                                        "\t  or custom biopax property path accessors (XPath-like expressions to apply to each mediator entity; \n" +<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                                        "\t  see https://github.com/BioPAX/Paxtools/wiki/PatternBinaryInteractionFramework)")<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                        {public void run(String[] argv) throws IOException{toSifnx(argv);} },<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        toSBGN("&lt;biopax.owl&gt; &lt;output.sbgn&gt; [-nolayout]\n" +<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                        "\t- converts model to the SBGN format and applies COSE layout unless optional -nolayout flag is set.")<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                {public void run(String[] argv) throws IOException { toSbgn(argv); } },<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        validate("&lt;path&gt; &lt;out&gt; [xml|html|biopax] [auto-fix] [only-errors] [maxerrors=n] [notstrict]\n" +<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                        "\t- validate BioPAX file/directory (up to ~25MB in total size, -\n" +<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                        "\totherwise download and run the stand-alone validator)\n" +<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                        "\tin the directory using the online validator service\n" +<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                        "\t(generates html or xml report, or gets the processed biopax\n" +<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                        "\t(cannot be perfect though) see http://www.biopax.org/validator)")<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                        {public void run(String[] argv) throws IOException{validate(argv);} },<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        integrate("&lt;file1&gt; &lt;file2&gt; &lt;output&gt;\n" +<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                        "\t- integrates file2 into file1 and writes it into output (experimental)")<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                        {public void run(String[] argv) throws IOException{integrate(argv);} },<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        toLevel3("&lt;input&gt; &lt;output&gt; [-psimiToComplexes]\n" +<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                        "\t- converts BioPAX level 1 or 2, PSI-MI 2.5 and PSI-MITAB to the level 3 file;\n" +<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                        "\t-psimiToComplexes forces PSI-MI Interactions become BioPAX Complexes instead MolecularInteractions.")<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                        {public void run(String[] argv) throws IOException{toLevel3(argv);} },<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        toGSEA("&lt;input&gt; &lt;output&gt; &lt;db&gt; [-crossSpecies] [-subPathways] [-notPathway] [organisms=9606,human,rat,..]\n" +<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        "\t- converts BioPAX data to the GSEA software format (GMT); options/flags:\n"<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                + "\t&lt;db&gt; - gene/protein ID type; values: uniprot, hgnc, refseq, etc. (a name or prefix to match\n"<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                                + "\t  ProteinReference/xref/db property values in the input BioPAX model).\n"<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                + "\t-crossSpecies - allows printing on the same line gene/protein IDs from different species;\n"<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                                + "\t-subPathways - traverse into sub-pathways to collect all protein IDs for a pathway.\n"<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                                + "\t-notPathway - also list those protein/gene IDs that cannot be reached from pathways.\n"<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                                + "\torganisms - optional filter; a comma-separated list of taxonomy IDs and/or names\n")<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                        {public void run(String[] argv) throws IOException{toGSEA(argv);} },<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        fetch("&lt;input&gt; &lt;output&gt; [uris=URI1,..] [-absolute] \n" +<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                        "\t- extracts a self-integral BioPAX sub-model from file1 and writes to the output; options:\n" +<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                                "\turi=... - an optional list of existing in the model BioPAX elements' full URIs;\n" +<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                                "\t-absolute - set this flag to write full/absolute URIs to the output (i.e., 'rdf:about' instead 'rdf:ID').")<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                        {public void run(String[] argv) throws IOException{fetch(argv);} },<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        getNeighbors("&lt;input&gt; &lt;id1,id2,..&gt; &lt;output&gt;\n" +<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                        "\t- nearest neighborhood graph query (id1,id2 - of Entity sub-class only)")<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                        {public void run(String[] argv) throws IOException{getNeighbors(argv);} },<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        summarize("&lt;input&gt; &lt;output&gt; [--model] [--pathways] [--hgnc-ids] [--uniprot-ids] [--chebi-ids]\n" +<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                        "\t- (experimental) summary of the input BioPAX model;\n " +<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                                "\truns one or several analyses and writes to the output file;\n " +<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                                "\t'--model' - (default) BioPAX classes, properties and values summary;\n " +<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                                "\t'--pathways' - pathways and sub-pathways hierarchy;\n " +<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                                "\t'--hgnc-ids' - HGNC IDs/Symbols that occur in sequence entity references;\n " +<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                                "\t'--uniprot-ids' - UniProt IDs in protein references;\n " +<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                                "\t'--chebi-ids' - ChEBI IDs in small molecule references;\n " +<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                                "\t'--uri-ids' - URI,type,name(s) and standard identifiers (in JSON format) for each physical entity;\n " +<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                                "\tthe options' order defines the results output order.")<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                        {public void run(String[] argv) throws IOException{summarize(argv);} },<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                blacklist("&lt;input&gt; &lt;output&gt;\n" +<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                        "\t- creates a blacklist of ubiquitous small molecules, like ATP, \n"<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                        + "\tfrom the BioPAX model and writes it to the output file. The blacklist can be used with\n "<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                        + "\tpaxtools graph queries or when converting from the SAME BioPAX data to the SIF formats.")<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                                {public void run(String[] argv) throws IOException{blacklist(argv);} },<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                pattern("\n\t- BioPAX pattern search tool (opens a new dialog window)")<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                                {public void run(String[] argv){pattern(argv);} },<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        help("\n\t- prints this screen and exits\n")<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                                {public void run(String[] argv){ help();} };<a name="line.116"></a>
+<span class="sourceLineNo">117</span><a name="line.117"></a>
+<span class="sourceLineNo">118</span>        String description;<a name="line.118"></a>
+<span class="sourceLineNo">119</span><a name="line.119"></a>
+<span class="sourceLineNo">120</span>        Command(String description) {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>            this.description = description;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>        }<a name="line.122"></a>
+<span class="sourceLineNo">123</span><a name="line.123"></a>
+<span class="sourceLineNo">124</span>        public abstract void run(String[] argv) throws IOException;<a name="line.124"></a>
+<span class="sourceLineNo">125</span>    }<a name="line.125"></a>
+<span class="sourceLineNo">126</span><a name="line.126"></a>
+<span class="sourceLineNo">127</span>        private static void help() {<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                System.out.println("(PaxtoolsMain Console) Available Operations:\n");<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                for (Command cmd : Command.values()) {<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                        System.out.println(cmd.name() + " " + cmd.description);<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                }<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                System.out.println("Commands can also use compressed input files (only '.gz').\n");<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        }<a name="line.133"></a>
+<span class="sourceLineNo">134</span>}<a name="line.134"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
