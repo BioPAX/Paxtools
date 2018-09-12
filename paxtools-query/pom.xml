@@ -2,7 +2,7 @@
     <parent>
         <artifactId>paxtools</artifactId>
         <groupId>org.biopax.paxtools</groupId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
