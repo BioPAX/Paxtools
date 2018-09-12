@@ -10,9 +10,9 @@ import java.util.Set;
 
 /**
  * This class provides a mapping between HGNC IDs and Symbols.
- *
- * To update the HGNC resource, use the below URL
- * http://www.genenames.org/cgi-bin/download?col=gd_hgnc_id&col=gd_app_sym&col=gd_prev_sym&status=Approved&status_opt=2&where=&order_by=gd_app_sym_sort&format=text&limit=&hgnc_dbtag=on&submit=submit
+ * We periodically, manually download
+ * <a href="http://www.genenames.org/cgi-bin/download?col=gd_hgnc_id&col=gd_app_sym&col=gd_prev_sym&status=Approved&status_opt=2&where=&order_by=gd_app_sym_sort&format=text&limit=&hgnc_dbtag=on&submit=submit">
+ * the ID mapping file from genenames.org</a>
  *
  * @author Ozgun Babur
  */
@@ -46,8 +46,8 @@ public class HGNC
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
 			{
 				String[] token = line.split("\t");
-				String sym = token[1];
-				String id = token[0];
+				String sym = token[1].trim();
+				String id = token[0].trim();
 				sym2id.put(sym, id);
 				id2sym.put(id, sym);
 
