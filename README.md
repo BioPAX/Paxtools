@@ -37,7 +37,7 @@ Paxtools provides, beyond the core and converters API, a console application tha
 
 `java -jar paxtools.jar` (add -Xmx option when processing large data files).
 
-If you have [homebrew](http://brew.sh/) installed on your system (Mac OS X), you can install the latest release of Paxtools via the following brew command:
+If you have [homebrew](http://brew.sh/) installed on your system (Mac OS X), you can install the latest release of Paxtools via the following brew command (there might be old version):
 
 ```bash
 $ brew install homebrew/science/paxtools
