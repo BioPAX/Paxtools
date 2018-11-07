@@ -1,8 +1,10 @@
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk11
 sudo: false
 addons:
   apt:
     packages:
       - oracle-java8-installer
+notifications:
+    slack: pathwaycommons:EDRQfFuGFr8Xn93M5xNMPVRB
