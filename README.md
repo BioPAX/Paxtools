@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/BioPAX/Paxtools.svg?branch=master)](https://travis-ci.org/BioPAX/Paxtools)
 
-[![codebeat badge](https://codebeat.co/badges/42fe4ae5-bf26-4268-9bb1-c6e07a0a2b92)](https://codebeat.co/projects/github-com-biopax-paxtools-master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4895a41be084788b09a0553ae829ac7)](https://www.codacy.com/app/IgorRodchenkov/Paxtools?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BioPAX/Paxtools&amp;utm_campaign=Badge_Grade)
 
 The [BioPAX](http://www.biopax.org) Object Model, API and utilities implemented in Java.
 Paxtools is developed at [Computational Biology Centre at MSKCC](http://cbio.mskcc.org/) and [Bader Lab, Donnelly Centre, University of Toronto](http://baderlab.org/).
