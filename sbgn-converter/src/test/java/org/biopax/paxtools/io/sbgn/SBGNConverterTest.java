@@ -18,22 +18,21 @@ import org.sbgn.bindings.Glyph;
 import org.sbgn.bindings.Sbgn;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
 
-/**
- * @author Ozgun Babur
- */
 public class SBGNConverterTest
 {
-	static final BioPAXIOHandler handler =  new SimpleIOHandler();
-
+	private static final BioPAXIOHandler handler =  new SimpleIOHandler();
 	private static UbiqueDetector blacklist;
+	private static Unmarshaller unmarshaller;
+	private static Marshaller marshaller;
 
 	@BeforeClass
-	public static void setUp() {
+	public static void setUp() throws JAXBException {
 		blacklist = new ListUbiqueDetector(new HashSet<String>(Arrays.asList(
 				"http://pid.nci.nih.gov/biopaxpid_685",
 				"http://pid.nci.nih.gov/biopaxpid_678",
@@ -42,6 +41,11 @@ public class SBGNConverterTest
 				"http://pathwaycommons.org/pc2/SmallMolecule_3037a14ebec3a95b8dab68e6ea5c946f",
 				"http://pathwaycommons.org/pc2/SmallMolecule_4ca9a2cfb6a8a6b14cee5d7ed5945364"
 		)));
+
+		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
+		unmarshaller = context.createUnmarshaller();
+		marshaller = context.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 	}
 
 	@Test
@@ -65,9 +69,6 @@ public class SBGNConverterTest
 			System.out.println ("Validation succeeded");
 		else
 			System.out.println ("Validation failed");
-
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
 
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
@@ -109,7 +110,6 @@ public class SBGNConverterTest
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, true);
 		conv.setFlattenComplexContent(false);
-
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
@@ -120,9 +120,6 @@ public class SBGNConverterTest
 			System.out.println ("Validation succeeded");
 		else
 			System.out.println ("Validation failed");
-
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
 
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
@@ -168,9 +165,6 @@ public class SBGNConverterTest
 		else
 			System.out.println ("warning: " + out + " is invalid SBGN");
 
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
 
@@ -206,8 +200,7 @@ public class SBGNConverterTest
 			System.out.println ("warning: " + out + " is invalid SBGN");
 
 		// Now read the SBGN model back
-		Sbgn result = (Sbgn) JAXBContext.newInstance("org.sbgn.bindings")
-				.createUnmarshaller().unmarshal (outFile);
+		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
 
 		// Assert that the sbgn result contains glyphs
 		assertTrue(!result.getMap().getGlyph().isEmpty());
@@ -270,9 +263,6 @@ public class SBGNConverterTest
 		if (!SbgnUtil.isValid(sbgnFile))
 			System.out.println ("invalid input SBGN");
 
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (sbgnFile);
 		// Assert that the sbgn result contains glyphs
@@ -281,9 +271,6 @@ public class SBGNConverterTest
 		// infinite loop in LGraph.updateConnected when SbgnPDLayout is used
 		(new SBGNLayoutManager()).createLayout(result, true);
 		//TODO: run, add assertions
-
-		Marshaller marshaller = context.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		marshaller.marshal(result, new FileOutputStream("target/hsa00051.out.sbgn"));
 	}
 
@@ -361,12 +348,34 @@ public class SBGNConverterTest
 			System.out.println ("warning: " + out + " is invalid SBGN");
 
 		// Now read the SBGN model back
-		Sbgn result = (Sbgn) JAXBContext.newInstance("org.sbgn.bindings").createUnmarshaller().unmarshal (outFile);
+		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
 
 		// Assert that the sbgn result contains glyphs
 		assertTrue(!result.getMap().getGlyph().isEmpty());
 
 		//TODO: test complexes are complete, no dangling, member complex contains a homodimer...
 		// it looks ok in SBGNViz editor/viewer though...
+	}
+
+	@Test
+	public void testConvertActivation()
+	{
+		String input = "/activation";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+		String out = "target/" + input + ".sbgn";
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+		conv.writeSBGN(level3, out);
+	}
+
+	@Test
+	public void testConvertModulation()
+	{
+		String input = "/modulation";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+		String out = "target/" + input + ".sbgn";
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+		conv.writeSBGN(level3, out);
 	}
 }
