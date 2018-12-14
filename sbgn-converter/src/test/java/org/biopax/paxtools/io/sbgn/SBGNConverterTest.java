@@ -238,9 +238,9 @@ public class SBGNConverterTest
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
 		String out = "target/" + input + ".sbgn";
-
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, false);
 		conv.writeSBGN(level3, out);
+    //TODO: add assertions
 	}
 
 	@Test
@@ -253,6 +253,7 @@ public class SBGNConverterTest
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
 		conv.writeSBGN(level3, out);
+		//TODO: add assertions
 	}
 
 	@Test
@@ -276,8 +277,7 @@ public class SBGNConverterTest
 
 
 	@Test
-	public void testConvertGIs()
-	{
+	public void testConvertGIs() {
 		String out = "target/test_gi.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
 		Model m = f.createModel();
@@ -317,11 +317,9 @@ public class SBGNConverterTest
 		f.bindInPairs("product", tr1,p[2]);
 		f.bindInPairs("participant", tr1,t[1]);
 
-
 		// only product (will infer some unknown input process/entity)
 		TemplateReaction tr2 = m.addNew(TemplateReaction.class,"tr_2");
 		f.bindInPairs("product", tr2,p[3]);
-
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.setDoLayout(true);
@@ -351,31 +349,72 @@ public class SBGNConverterTest
 		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
 
 		// Assert that the sbgn result contains glyphs
-		assertTrue(!result.getMap().getGlyph().isEmpty());
-
-		//TODO: test complexes are complete, no dangling, member complex contains a homodimer...
-		// it looks ok in SBGNViz editor/viewer though...
+    List<Glyph> glyphList = result.getMap().getGlyph();
+		assertTrue(!glyphList.isEmpty());
 	}
 
 	@Test
-	public void testConvertActivation()
-	{
+	public void testConvertActivation() throws JAXBException {
 		String input = "/activation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
-		Model level3 = handler.convertFromOWL(in);
+		Model m = handler.convertFromOWL(in);
+		m.setName("activation");
 		String out = "target/" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
-		conv.writeSBGN(level3, out);
+		conv.writeSBGN(m, out);
+
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+
+    assertFalse(result.getMap().getGlyph().isEmpty());
+    Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
+    assertFalse(filtered.isEmpty());
 	}
 
 	@Test
-	public void testConvertModulation()
-	{
+	public void testConvertModulation() throws JAXBException {
 		String input = "/modulation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
 		String out = "target/" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
 		conv.writeSBGN(level3, out);
+
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+    assertFalse(result.getMap().getGlyph().isEmpty());
+    Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
+    assertFalse(filtered.isEmpty());
 	}
+
+  @Test
+  public void testConvertControlsChain() throws JAXBException {
+    String input = "/controlchain";
+    InputStream in = getClass().getResourceAsStream(input + ".owl");
+    Model level3 = handler.convertFromOWL(in);
+    String out = "target/" + input + ".sbgn";
+    L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+    conv.writeSBGN(level3, out);
+
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+    assertFalse(result.getMap().getGlyph().isEmpty());
+    Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
+    assertFalse(filtered.isEmpty());
+  }
+
+	private Collection<Glyph> filterGlyphsByClazz(Collection<Glyph> collection, String clazz) {
+    Set<Glyph> filtered = new HashSet<Glyph>();
+    for(Glyph g : collection)
+      if(g.getClazz().equals(clazz))
+        filtered.add(g);
+
+    return filtered;
+  }
+
+  private Collection<Arc> filterArcsByClazz(Collection<Arc> collection, String clazz) {
+    Set<Arc> filtered = new HashSet<Arc>();
+    for(Arc g : collection)
+      if(g.getClazz().equals(clazz))
+        filtered.add(g);
+
+    return filtered;
+  }
 }
