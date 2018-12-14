@@ -14,15 +14,16 @@ import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+//import org.w3c.dom.Document;
+//import org.w3c.dom.Element;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+//import javax.xml.parsers.DocumentBuilder;
+//import javax.xml.parsers.DocumentBuilderFactory;
+//import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.File;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
@@ -51,8 +52,7 @@ import java.util.Map;
  *
  * @author Ozgun Babur
  */
-public class L3ToSBGNPDConverter
-{
+public class L3ToSBGNPDConverter {
 	private static final Logger log = LoggerFactory.getLogger(L3ToSBGNPDConverter.class);
 
 	/**
@@ -135,13 +135,10 @@ public class L3ToSBGNPDConverter
 	 */
 	Set<Glyph> ubiqueSet;
 
-
-// this is to store BioPAX metadata in the SBGN-ML Extensions or Notes.
-	private static Document biopaxMetaDoc;
+//	private static Document biopaxMetaDoc; //see issue #40
 
 	//-- Section: Static initialization -----------------------------------------------------------|
-	static
-	{
+	static {
 		factory = new ObjectFactory();
 		typeMatchMap = new HashMap<Class<? extends BioPAXElement>, String>();
 		typeMatchMap.put(Protein.class, GlyphClazz.MACROMOLECULE.getClazz());
@@ -152,21 +149,20 @@ public class L3ToSBGNPDConverter
 		typeMatchMap.put(RnaRegion.class, GlyphClazz.NUCLEIC_ACID_FEATURE.getClazz());
 		typeMatchMap.put(NucleicAcid.class, GlyphClazz.NUCLEIC_ACID_FEATURE.getClazz());
 		typeMatchMap.put(PhysicalEntity.class, GlyphClazz.UNSPECIFIED_ENTITY.getClazz());
-		//TODO: SimplePhysicalEntity is a non-instantiable abstract type in Paxtools; remove the mapping below?
+		//TODO: remove SimplePhysicalEntity.class key (- abstract type)?
 		typeMatchMap.put(SimplePhysicalEntity.class, GlyphClazz.UNSPECIFIED_ENTITY.getClazz());
 		typeMatchMap.put(Complex.class, GlyphClazz.COMPLEX.getClazz());
 		typeMatchMap.put(Gene.class, GlyphClazz.NUCLEIC_ACID_FEATURE.getClazz());
 
-		//a document for adding metadata elements to insert into SBGN-ML PD glyphs (inside Extensions/Notes element).
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			db.reset();
-			biopaxMetaDoc = db.newDocument();
-		} catch (ParserConfigurationException e) {
-			throw new RuntimeException("Cannot initialize BioPAX extensions DOM.", e);
-		}
-
+//		//a document for adding metadata elements to insert into SBGN-ML PD glyphs (inside Extensions/Notes element).
+//		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+//		try {
+//			DocumentBuilder db = dbf.newDocumentBuilder();
+//			db.reset();
+//			biopaxMetaDoc = db.newDocument();
+//		} catch (ParserConfigurationException e) {
+//			throw new RuntimeException("Cannot initialize BioPAX extensions DOM.", e);
+//		}
 	}
 
 	//-- Section: Public methods ------------------------------------------------------------------|
@@ -357,14 +353,14 @@ public class L3ToSBGNPDConverter
 		map.getGlyph().addAll(compartmentMap.values());
 		map.getArc().addAll(arcMap.values());
 
-    //Store some metadata within the standard SBGN-ML extension element: Notes
-		biopaxMetaDoc.setDocumentURI(model.getUri()); //can be null
-		SBGNBase.Notes modelNotes = new SBGNBase.Notes();
-		sbgn.setNotes(modelNotes);
-		Element elt = biopaxMetaDoc.createElementNS("","metadata");
-		elt.setTextContent(String.format("{name:\"%s\",uri:\"%s\"}", model.getName(), model.getUri())
-			.replaceAll("null",""));
-		modelNotes.getAny().add(elt);
+//    //Store some metadata within the standard SBGN-ML extension element: Notes
+//		biopaxMetaDoc.setDocumentURI(model.getUri()); //can be null
+//		SBGNBase.Notes modelNotes = new SBGNBase.Notes();
+//		sbgn.setNotes(modelNotes);
+//		Element elt = biopaxMetaDoc.createElementNS("","metadata");
+//		elt.setTextContent(String.format("{name:\"%s\",uri:\"%s\"}", model.getName(), model.getUri())
+//			.replaceAll("null",""));
+//		modelNotes.getAny().add(elt);
 
 		final boolean layout = doLayout && n < this.maxNodes && !arcMap.isEmpty();
 		try {

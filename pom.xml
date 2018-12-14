@@ -7,7 +7,7 @@
 
   <groupId>org.biopax.paxtools</groupId>
   <artifactId>paxtools</artifactId>
-  <version>5.2.0-SNAPSHOT</version>
+  <version>5.2.1-SNAPSHOT</version>
 
   <name>Paxtools</name>
 
@@ -62,7 +62,7 @@
     <maven-site-plugin.version>3.4</maven-site-plugin.version>
     <maven-javadoc-plugin.version>2.10.2</maven-javadoc-plugin.version>
     <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
-    <maven-project-info-reports-plugin.version>2.8</maven-project-info-reports-plugin.version>
+    <maven-project-info-reports-plugin.version>2.9</maven-project-info-reports-plugin.version>
     <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.5</nexus-staging-maven-plugin.version>
@@ -579,6 +579,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>${maven-project-info-reports-plugin.version}</version>
         <configuration>
           <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
           <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
