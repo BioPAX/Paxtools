@@ -232,20 +232,21 @@ public class SBGNConverterTest
 	// it's probably about an unknown/omitted sub-pathway with known in/out chemicals,
 	// but it's expressed in BioPAX badly (a Pathway with one Interaction and PathwayStep, and no comments...)
 	@Test
-	public void testConvertOmittedSmpdbPathway()
-	{
+	public void testConvertOmittedSmpdbPathway() throws JAXBException {
 		String input = "/smpdb-beta-oxidation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
 		String out = "target/" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, false);
 		conv.writeSBGN(level3, out);
+
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		assertFalse(result.getMap().getGlyph().isEmpty());
     //TODO: add assertions
 	}
 
 	@Test
-	public void testConvertBadWikiPathway()
-	{
+	public void testConvertBadWikiPathway() throws JAXBException {
 		String input = "/WP561";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
@@ -253,6 +254,10 @@ public class SBGNConverterTest
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
 		conv.writeSBGN(level3, out);
+
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		assertFalse(result.getMap().getGlyph().isEmpty());
+
 		//TODO: add assertions
 	}
 
@@ -267,7 +272,7 @@ public class SBGNConverterTest
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (sbgnFile);
 		// Assert that the sbgn result contains glyphs
-		assertTrue(!result.getMap().getGlyph().isEmpty());
+		assertFalse(result.getMap().getGlyph().isEmpty());
 
 		// infinite loop in LGraph.updateConnected when SbgnPDLayout is used
 		(new SBGNLayoutManager()).createLayout(result, true);
@@ -275,9 +280,8 @@ public class SBGNConverterTest
 		marshaller.marshal(result, new FileOutputStream("target/hsa00051.out.sbgn"));
 	}
 
-
 	@Test
-	public void testConvertGIs() {
+	public void testConvertGIs() throws JAXBException {
 		String out = "target/test_gi.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
 		Model m = f.createModel();
@@ -293,11 +297,13 @@ public class SBGNConverterTest
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.setDoLayout(true);
 		conv.writeSBGN(m, out);
+
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		assertFalse(result.getMap().getGlyph().isEmpty());
 	}
 
 	@Test
-	public void testConvertTRs()
-	{
+	public void testConvertTRs() throws JAXBException {
 		String out = "target/test_tr.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
 		Model m = f.createModel();
@@ -324,6 +330,9 @@ public class SBGNConverterTest
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.setDoLayout(true);
 		conv.writeSBGN(m, out);
+
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		assertFalse(result.getMap().getGlyph().isEmpty());
 	}
 
 	@Test
@@ -347,10 +356,9 @@ public class SBGNConverterTest
 
 		// Now read the SBGN model back
 		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
-
 		// Assert that the sbgn result contains glyphs
     List<Glyph> glyphList = result.getMap().getGlyph();
-		assertTrue(!glyphList.isEmpty());
+		assertFalse(glyphList.isEmpty());
 	}
 
 	@Test
@@ -362,9 +370,7 @@ public class SBGNConverterTest
 		String out = "target/" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
 		conv.writeSBGN(m, out);
-
     Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
-
     assertFalse(result.getMap().getGlyph().isEmpty());
     Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
     assertFalse(filtered.isEmpty());
@@ -400,14 +406,14 @@ public class SBGNConverterTest
     assertFalse(filtered.isEmpty());
   }
 
-	private Collection<Glyph> filterGlyphsByClazz(Collection<Glyph> collection, String clazz) {
-    Set<Glyph> filtered = new HashSet<Glyph>();
-    for(Glyph g : collection)
-      if(g.getClazz().equals(clazz))
-        filtered.add(g);
-
-    return filtered;
-  }
+//	private Collection<Glyph> filterGlyphsByClazz(Collection<Glyph> collection, String clazz) {
+//    Set<Glyph> filtered = new HashSet<Glyph>();
+//    for(Glyph g : collection)
+//      if(g.getClazz().equals(clazz))
+//        filtered.add(g);
+//
+//    return filtered;
+//  }
 
   private Collection<Arc> filterArcsByClazz(Collection<Arc> collection, String clazz) {
     Set<Arc> filtered = new HashSet<Arc>();
