@@ -82,7 +82,7 @@ public class QueryTest
 		target = findElements(model, "HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1624_1_9606"); //MEK1
 
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 3);
-		assertTrue(result.size() == 7);
+		assertTrue(result.size() == 10);
 
 		// check if bothstream and undirected neighborhood works properly
 
