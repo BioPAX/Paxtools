@@ -38,15 +38,15 @@ import java.util.zip.GZIPInputStream;
  * Various console utility functions
  */
 public final class PaxtoolsMain {
-    final static Logger log = LoggerFactory.getLogger(PaxtoolsMain.class);
+	final static Logger log = LoggerFactory.getLogger(PaxtoolsMain.class);
 
-    private static SimpleIOHandler io;
+	private static SimpleIOHandler io;
 
-    private PaxtoolsMain() {
-    	throw new UnsupportedOperationException("Non-instantiable utility class.");
+	private PaxtoolsMain() {
+		throw new UnsupportedOperationException("Non-instantiable utility class.");
 	}
 
-    static {
+	static {
 		io = new SimpleIOHandler();
 		io.mergeDuplicates(true);
 	}
@@ -57,7 +57,7 @@ public final class PaxtoolsMain {
 	 *
 	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
 	 */
-    public static void toGSEA(String[] argv) throws IOException {
+	public static void toGSEA(String[] argv) throws IOException {
 		//argv[0] is the command name ('toGsea')
 		boolean crossSpecies = false; //cross-check is enabled (i.e., no mixing different species IDs in one row)
 		boolean subPathways = false; //no sub-pathways (i.e., going into sub-pathways is not enabled)
@@ -91,7 +91,7 @@ public final class PaxtoolsMain {
 		gseaConverter.setSkipOutsidePathways(!notPathways);
 		gseaConverter.setAllowedOrganisms(organisms);//if organisms is empty then all species are allowed (no filtering)
 		gseaConverter.writeToGSEA(io.convertFromOWL(getInputStream(argv[1])), new FileOutputStream(argv[2]));
-    }
+	}
 
 	/*
 	 *
@@ -101,45 +101,45 @@ public final class PaxtoolsMain {
 	 * @throws IOException
 	 */
 	public static void getNeighbors(String[] argv) throws IOException
-    {
-        // set strings vars
-        String in = argv[1];
-        String[] ids = argv[2].split(",");
-        String out = argv[3];
+	{
+		// set strings vars
+		String in = argv[1];
+		String[] ids = argv[2].split(",");
+		String out = argv[3];
 
-        // read BioPAX from the file
-        Model model = io.convertFromOWL(getInputStream(in));
+		// read BioPAX from the file
+		Model model = io.convertFromOWL(getInputStream(in));
 
-        // get elements (entities)
-        Set<BioPAXElement> elements = new HashSet<BioPAXElement>();
-        for (Object id : ids) {
-            BioPAXElement e = model.getByID(id.toString());
-            if (e != null && (e instanceof Entity || e instanceof entity)) {
-                elements.add(e);
-            } else {
-                log.warn("Source element not found: " + id);
-            }
-        }
+		// get elements (entities)
+		Set<BioPAXElement> elements = new HashSet<BioPAXElement>();
+		for (Object id : ids) {
+			BioPAXElement e = model.getByID(id.toString());
+			if (e != null && (e instanceof Entity || e instanceof entity)) {
+				elements.add(e);
+			} else {
+				log.warn("Source element not found: " + id);
+			}
+		}
 
-        // execute the 'nearest neighborhood' query
-        Set<BioPAXElement> result = QueryExecuter
-        		.runNeighborhood(elements, model, 1, Direction.BOTHSTREAM);
+		// execute the 'nearest neighborhood' query
+		Set<BioPAXElement> result = QueryExecuter
+			.runNeighborhood(elements, model, 1, Direction.BOTHSTREAM);
 
-        // auto-complete/clone the results in a new model
-        // (this also cuts some less important edges, right?..)
-        Completer c = new Completer(io.getEditorMap());
-        result = c.complete(result, model);
-        Cloner cln = new Cloner(io.getEditorMap(), io.getFactory());
-        model = cln.clone(model, result); // new sub-model
+		// auto-complete/clone the results in a new model
+		// (this also cuts some less important edges, right?..)
+		Completer c = new Completer(io.getEditorMap());
+		result = c.complete(result, model);
+		Cloner cln = new Cloner(io.getEditorMap(), io.getFactory());
+		model = cln.clone(model, result); // new sub-model
 
-        if (model != null) {
-            log.info("Elements in the result model: " + model.getObjects().size());
-            // export to OWL
-            io.convertToOWL(model, new FileOutputStream(out));
-        } else {
-            log.error("NULL model returned.");
-        }
-    }
+		if (model != null) {
+			log.info("Elements in the result model: " + model.getObjects().size());
+			// export to OWL
+			io.convertToOWL(model, new FileOutputStream(out));
+		} else {
+			log.error("NULL model returned.");
+		}
+	}
 
 	/*
 	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
@@ -147,9 +147,9 @@ public final class PaxtoolsMain {
 	 * @throws IOException
 	 */
 	public static void fetch(String[] argv) throws IOException {
-        // set strings vars
-        String in = argv[1];
-        String out = argv[2];
+		// set strings vars
+		String in = argv[1];
+		String out = argv[2];
 		String[] uris = new String[0]; //empty means - all
 		boolean absoluteUris = false;
 		if(argv.length > 3) {
@@ -166,7 +166,7 @@ public final class PaxtoolsMain {
 
 		// import the model
 		log.info("Loading the BioPAX model from " + in);
-        Model model = io.convertFromOWL(getInputStream(in));
+		Model model = io.convertFromOWL(getInputStream(in));
 		log.info("Successfully loaded the BioPAX model. Writing to the output: " + out);
 
 		// extract and save the (sub-)model
@@ -178,20 +178,20 @@ public final class PaxtoolsMain {
 			biopaxWriter.convertToOWL(model, new FileOutputStream(out));
 
 		log.info("Done.");
-    }
+	}
 
-    
-    /*
-     * Detects and converts a BioPAX Level 1, 2,
-     * or PSI-MI/MITAB model to BioPAX Level3..
+
+	/*
+	 * Detects and converts a BioPAX Level 1, 2,
+	 * or PSI-MI/MITAB model to BioPAX Level3..
 	 *
 	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-     */
-    public static void toLevel3(String[] argv) throws IOException {
-    	final String input = argv[1];
-    	final String output = argv[2];
-    	
-    	boolean forcePsiInteractionToComplex = false;
+	 */
+	public static void toLevel3(String[] argv) throws IOException {
+		final String input = argv[1];
+		final String output = argv[2];
+
+		boolean forcePsiInteractionToComplex = false;
 		if(argv.length > 3) {
 			for(int i=3; i<argv.length; i++) {
 				String param = argv[i];
@@ -206,8 +206,8 @@ public final class PaxtoolsMain {
 		InputStream is = getInputStream(input);
 		FileOutputStream os = new FileOutputStream(output);
 
-    	try {
-    		switch (type) {
+		try {
+			switch (type) {
 				case BIOPAX:
 					Model model = io.convertFromOWL(is);
 					model = (new LevelUpgrader()).filter(model);
@@ -228,21 +228,21 @@ public final class PaxtoolsMain {
 					psimiConverter.convertTab(is, os, forcePsiInteractionToComplex);
 					os.close();
 					break;
-    		}
+			}
 
-    	} catch (Exception e) {
-    		throw new RuntimeException("Failed to convert " +
-    				input + "to BioPAX L3", e);
-    	}
-    }
-    
-    private enum Type {
-    	BIOPAX,
-    	PSIMI,
-    	PSIMITAB
-    }
-    
-    //read a few lines to detect it's a BioPAX vs. PSI-MI vs. PSI-MITAB data.
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to convert " +
+				input + "to BioPAX L3", e);
+		}
+	}
+
+	private enum Type {
+		BIOPAX,
+		PSIMI,
+		PSIMITAB
+	}
+
+	//read a few lines to detect it's a BioPAX vs. PSI-MI vs. PSI-MITAB data.
 	private static Type detect(String input) {
 		StringBuilder sb = new StringBuilder();
 		try {
@@ -255,7 +255,7 @@ public final class PaxtoolsMain {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		String buf = sb.toString();
 		if (buf.contains("<rdf:RDF") && buf.contains("http://www.biopax.org/release/biopax")) {
 			return Type.BIOPAX;
@@ -267,17 +267,15 @@ public final class PaxtoolsMain {
 			return Type.PSIMITAB; //default/guess
 	}
 
-    /*
-     *  Converts a BioPAX file to SBGN and saves it in a file.
-     *
-     *  TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-     */
-    public static void toSbgn(String[] argv) throws IOException
-    {
-        String input = argv[1];
+	/*
+	 *  Converts a BioPAX file to SBGN and saves it in a file.
+	 *
+	 *  TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
+	public static void toSbgn(String[] argv) throws IOException {
+		String input = argv[1];
 		String output = argv[2];
 		Model model = io.convertFromOWL(getInputStream(input));
-
 		boolean doLayout = true;
 		if(argv.length > 3) {
 			for(int i=3; i<argv.length; i++) {
@@ -298,32 +296,32 @@ public final class PaxtoolsMain {
 		} else {
 			log.info("toSBGN: not blacklisting any ubiquitous molecules (no blacklist.txt found)");
 		}
+
 		final UbiqueDetector ubd = (blackList != null) ? new ListUbiqueDetector(blackList.getListed()) : null;
-
-        L3ToSBGNPDConverter l3ToSBGNPDConverter = new L3ToSBGNPDConverter(ubd, null, doLayout);
+		L3ToSBGNPDConverter l3ToSBGNPDConverter = new L3ToSBGNPDConverter(ubd, null, doLayout);
 		l3ToSBGNPDConverter.writeSBGN(model, output);
-    }
+	}
 
-    
-    /*
-     * Checks files by the online BioPAX validator using the built-in BioPAX validator client.
-     * 
-     * See about <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
-     *
-     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-     */
-    public static void validate(String[] argv) throws IOException
-    {
-        String input = argv[1];
-        String output = argv[2];
-        // default options
-        RetFormat outf = RetFormat.HTML;
-        boolean fix = false;
-        Integer maxErrs = null;
-        Behavior level = null; //will report both errors and warnings
-        String profile = null;
-        
-        // match optional args
+
+	/*
+	 * Checks files by the online BioPAX validator using the built-in BioPAX validator client.
+	 *
+	 * See about <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
+	 *
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
+	public static void validate(String[] argv) throws IOException
+	{
+		String input = argv[1];
+		String output = argv[2];
+		// default options
+		RetFormat outf = RetFormat.HTML;
+		boolean fix = false;
+		Integer maxErrs = null;
+		Behavior level = null; //will report both errors and warnings
+		String profile = null;
+
+		// match optional args
 		for (int i = 3; i < argv.length; i++) {
 			if ("html".equalsIgnoreCase(argv[i])) {
 				outf = RetFormat.HTML;
@@ -343,66 +341,66 @@ public final class PaxtoolsMain {
 			}
 		}
 
-        Collection<File> files = new HashSet<File>();
-        File fileOrDir = new File(input);
-        if (!fileOrDir.canRead()) {
-            System.out.println("Cannot read " + input);
-        }
+		Collection<File> files = new HashSet<File>();
+		File fileOrDir = new File(input);
+		if (!fileOrDir.canRead()) {
+			System.out.println("Cannot read " + input);
+		}
 
-        // collect files
-        if (fileOrDir.isDirectory()) {
-            // validate all the OWL files in the folder
-            FilenameFilter filter = new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return (name.endsWith(".owl"));
-                }
-            };
-            for (String s : fileOrDir.list(filter)) {
-                files.add(new File(fileOrDir.getCanonicalPath()
-                        + File.separator + s));
-            }
-        } else {
-            files.add(fileOrDir);
-        }
+		// collect files
+		if (fileOrDir.isDirectory()) {
+			// validate all the OWL files in the folder
+			FilenameFilter filter = new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return (name.endsWith(".owl"));
+				}
+			};
+			for (String s : fileOrDir.list(filter)) {
+				files.add(new File(fileOrDir.getCanonicalPath()
+					+ File.separator + s));
+			}
+		} else {
+			files.add(fileOrDir);
+		}
 
-        // upload and validate using the default URL:
-        // http://www.biopax.org/biopax-validator/check.html
-        OutputStream os = new FileOutputStream(output);
-        try {
-            if (!files.isEmpty()) {
-                BiopaxValidatorClient val = new BiopaxValidatorClient();
-                val.validate(fix, profile, outf, level, maxErrs, null, files.toArray(new File[]{}), os);
-            }
-        } catch (Exception ex) {
-            // fall-back: not using the remote validator; trying to read files
-            String msg = "Unable to check with the biopax-validator web service: \n " +
-            		ex.toString() + 
-            		"\n Fall-back: trying to parse the file(s) with paxtools " +
-            		"(up to the first syntax error in each file)...\n";
-            log.error(msg, ex);
-            os.write(msg.getBytes());
+		// upload and validate using the default URL:
+		// http://www.biopax.org/biopax-validator/check.html
+		OutputStream os = new FileOutputStream(output);
+		try {
+			if (!files.isEmpty()) {
+				BiopaxValidatorClient val = new BiopaxValidatorClient();
+				val.validate(fix, profile, outf, level, maxErrs, null, files.toArray(new File[]{}), os);
+			}
+		} catch (Exception ex) {
+			// fall-back: not using the remote validator; trying to read files
+			String msg = "Unable to check with the biopax-validator web service: \n " +
+				ex.toString() +
+				"\n Fall-back: trying to parse the file(s) with paxtools " +
+				"(up to the first syntax error in each file)...\n";
+			log.error(msg, ex);
+			os.write(msg.getBytes());
 
-            for (File f : files) {
-                try {
-                    Model m = io.convertFromOWL(getInputStream(f.getPath()));
-                    msg = "Model that contains "
-                            + m.getObjects().size()
-                            + " elements is successfully created from " 
-                            + f.getPath() 
-                            + " (check the console output for warnings).\n";
-                    os.write(msg.getBytes());
-                } catch (Exception e) {
-                    msg = "Error: " + e + 
-                    		" in building a BioPAX Model from: " +
-                    		f.getPath() + "\n";
-                    os.write(msg.getBytes());
-                    e.printStackTrace();
-                    log.error(msg);
-                }
-                os.flush();
-            }
-        }
-    }
+			for (File f : files) {
+				try {
+					Model m = io.convertFromOWL(getInputStream(f.getPath()));
+					msg = "Model that contains "
+						+ m.getObjects().size()
+						+ " elements is successfully created from "
+						+ f.getPath()
+						+ " (check the console output for warnings).\n";
+					os.write(msg.getBytes());
+				} catch (Exception e) {
+					msg = "Error: " + e +
+						" in building a BioPAX Model from: " +
+						f.getPath() + "\n";
+					os.write(msg.getBytes());
+					e.printStackTrace();
+					log.error(msg);
+				}
+				os.flush();
+			}
+		}
+	}
 
 	/*
 	 * Exports a biopax model to SIF or/and customizable ExtendedSIF format
@@ -411,18 +409,15 @@ public final class PaxtoolsMain {
 	 *
 	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
 	 */
-    public static void toSifnx(String[] argv) throws IOException
-	{
+	public static void toSifnx(String[] argv) throws IOException {
 		boolean extended = false; //if it stays 'false', then andSif==true will be in effect automatically
 		boolean andSif = false; //if extended==false, SIF will be generated as it would be andSif==true
 		boolean mergeInteractions = true;
 		boolean useNameIfNoId = false;
 		final Collection<SIFEnum> include = new HashSet<SIFEnum>();
 		final Collection<SIFEnum> exclude = new HashSet<SIFEnum>();
-
 		final ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher();
 		final List<String> customFieldList = new ArrayList<String>(); //there may be custom field names (SIF mediators)
-
 		//process arguments
 		if(argv.length > 3) {
 			for(int i=3; i<argv.length; i++) {
@@ -475,11 +470,10 @@ public final class PaxtoolsMain {
 		if(mergeInteractions)
 			ModelUtils.mergeEquivalentInteractions(model);
 
-
 		//Create a new SIF searcher:
 		//set SIF miners to use (default is to use all types, given no include/exclude args provided)
 		final Collection<SIFEnum> sifTypes = (include.isEmpty())
-				? new HashSet<SIFEnum>(Arrays.asList(SIFEnum.values())) : include;
+			? new HashSet<SIFEnum>(Arrays.asList(SIFEnum.values())) : include;
 		for(SIFType t : exclude) {
 			sifTypes.remove(t); //remove if exists, otherwise - ignore
 		}
@@ -501,12 +495,10 @@ public final class PaxtoolsMain {
 			//using built-in PC EXTENDED_BINARY_SIF format (customFieldList parameter is ignored)
 			Set<SIFInteraction> binaryInts = searcher.searchSIF(model);
 			ExtendedSIFWriter.write(binaryInts, outputStream);
-		}
-		else if (customFieldList.isEmpty()) {
+		} else if (customFieldList.isEmpty()) {
 			searcher.searchSIF(model, outputStream); //classic SIF
-		}
-		else {
-		// not really SIF format (this is useful but extra columns sometimes cannot be parsed correctly, by e.g. Cytoscape)
+		} else {
+			// not really SIF format (this is useful but extra columns sometimes cannot be parsed correctly, by e.g. Cytoscape)
 			log.info("toSIF: using custom fields (extra columns): " + customFieldList);
 			searcher.searchSIF(model, outputStream, new CustomFormat(customFieldList.toArray(new String[]{})));
 		}
@@ -518,11 +510,11 @@ public final class PaxtoolsMain {
 		}
 
 		log.info("toSIF: done.");
-    }
+	}
 
-    /*
-     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-     */
+	/*
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
 	public static void sifnxToSif(String inputFile, String outputFile) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(getInputStream(inputFile)));
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(outputFile));
@@ -543,63 +535,63 @@ public final class PaxtoolsMain {
 	/*
 	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
 	 */
-    public static void integrate(String[] argv) throws IOException {
+	public static void integrate(String[] argv) throws IOException {
 
-        Model model1 = getModel(io, argv[1]);
-        Model model2 = getModel(io, argv[2]);
+		Model model1 = getModel(io, argv[1]);
+		Model model2 = getModel(io, argv[2]);
 
-        Integrator integrator = new Integrator(SimpleEditorMap.get(model1.getLevel()), model1, model2);
-        integrator.integrate();
+		Integrator integrator = new Integrator(SimpleEditorMap.get(model1.getLevel()), model1, model2);
+		integrator.integrate();
 
-        io.setFactory(model1.getLevel().getDefaultFactory());
-        io.convertToOWL(model1, new FileOutputStream(argv[3]));
-    }
-
-    /*
-     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-     */
-    public static void merge(String[] argv) throws IOException {
-
-        Model model1 = getModel(io, argv[1]);
-        Model model2 = getModel(io, argv[2]);
-
-        Merger merger = new Merger(SimpleEditorMap.get(model1.getLevel()));
-        merger.merge(model1, model2);
-
-        io.setFactory(model1.getLevel().getDefaultFactory());
-        io.convertToOWL(model1, new FileOutputStream(argv[3]));
-    }
+		io.setFactory(model1.getLevel().getDefaultFactory());
+		io.convertToOWL(model1, new FileOutputStream(argv[3]));
+	}
 
 	/*
-     * Generates a blacklist file
-     * (to optionally use it to exclude ubiquitous small molecules, 
-     * like ATP, when performing graph queries and exporting to
-     * SIF formats).
-     *
-     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-     */
-    public static void blacklist(String[] argv) throws IOException {
-    	Model model = getModel(io, argv[1]);
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
+	public static void merge(String[] argv) throws IOException {
+
+		Model model1 = getModel(io, argv[1]);
+		Model model2 = getModel(io, argv[2]);
+
+		Merger merger = new Merger(SimpleEditorMap.get(model1.getLevel()));
+		merger.merge(model1, model2);
+
+		io.setFactory(model1.getLevel().getDefaultFactory());
+		io.convertToOWL(model1, new FileOutputStream(argv[3]));
+	}
+
+	/*
+	 * Generates a blacklist file
+	 * (to optionally use it to exclude ubiquitous small molecules,
+	 * like ATP, when performing graph queries and exporting to
+	 * SIF formats).
+	 *
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
+	public static void blacklist(String[] argv) throws IOException {
+		Model model = getModel(io, argv[1]);
 		BlacklistGenerator3 gen = new BlacklistGenerator3();
 		Blacklist blacklist = gen.generateBlacklist(model);
 		blacklist.write(new FileOutputStream(argv[2]));
-    }
+	}
 
-    /*
-     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-     */
+	/*
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
 	public static void pattern(String[] argv) {
 		Dialog.main(argv);
 	}
 
-    private static Model getModel(BioPAXIOHandler io, String fName) throws IOException {
-        return io.convertFromOWL(getInputStream(fName));
-    }
+	private static Model getModel(BioPAXIOHandler io, String fName) throws IOException {
+		return io.convertFromOWL(getInputStream(fName));
+	}
 
 
-    /*
-     * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-     */
+	/*
+	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
+	 */
 	public static void summarize(String[] argv) throws IOException {
 		log.debug("Importing the input model from " + argv[1] + "...");
 		final Model model = getModel(io, argv[1]);
@@ -691,12 +683,12 @@ public final class PaxtoolsMain {
 	 * @param includeEvidence whether to traverse into property:evidence to collect ids.
 	 */
 	private static Set<String> identifiers(final PhysicalEntity entity, final String xrefdb,
-										   boolean isPrefix, boolean includeEvidence)
+																				 boolean isPrefix, boolean includeEvidence)
 	{
 		final Set<String> ids = new HashSet<String>();
 		final Fetcher fetcher = (includeEvidence)
 			? new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
-				: new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
+			: new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
 		fetcher.setSkipSubPathways(true); //makes no difference now  but good to have/know...
 		Set<XReferrable> children = fetcher.fetch(entity, XReferrable.class);
 		children.add(entity); //include itself
@@ -704,8 +696,8 @@ public final class PaxtoolsMain {
 			if (child instanceof PhysicalEntity || child instanceof EntityReference || child instanceof Gene)
 				for (Xref x : child.getXref())
 					if ((x.getId()!=null && x.getDb()!=null) && (isPrefix)
-							? x.getDb().toLowerCase().startsWith(xrefdb.toLowerCase())
-								: xrefdb.equalsIgnoreCase(x.getDb()))
+						? x.getDb().toLowerCase().startsWith(xrefdb.toLowerCase())
+						: xrefdb.equalsIgnoreCase(x.getDb()))
 					{
 						ids.add(x.getId());
 					}
@@ -741,10 +733,10 @@ public final class PaxtoolsMain {
 		}
 		// print pathway names, etc. after a blank line and title line
 		out.println("\nPATHWAY_URI\tDATASOURCE\tDISPLAY_NAME\tALL_NAMES" +
-				"\tNUM_DIRECT_COMPONENT_OR_STEP_PROCESSES");
+			"\tNUM_DIRECT_COMPONENT_OR_STEP_PROCESSES");
 		for(Pathway pathway : pathways) {
 			final int size = pathwayComponentAccessor.getValueFromBean(pathway).size()
-					+ pathwayOrderStepProcessAccessor.getValueFromBean(pathway).size();
+				+ pathwayOrderStepProcessAccessor.getValueFromBean(pathway).size();
 			//pathways in PC2 normally has only one dataSource (Provenance)
 			String datasource = pathway.getDataSource().iterator().next().getDisplayName();
 			StringBuilder sb = new StringBuilder();
@@ -806,7 +798,7 @@ public final class PaxtoolsMain {
 				if (hgncSymbols.isEmpty() && hgncIds.isEmpty()) {
 					if (verbose) {
 						problemErs.add(String.format("%s\t%s\t%s",
-								((Provenance) provenance).getDisplayName(), ser.getDisplayName(), ser.getUri()));
+							((Provenance) provenance).getDisplayName(), ser.getDisplayName(), ser.getUri()));
 					}
 
 					MutableInt n = numProblematicErs.get(provenance);
@@ -857,11 +849,11 @@ public final class PaxtoolsMain {
 
 			for(Object provenance : pa.getValueFromBean(pr)) {
 				if(!pr.getUri().startsWith("http://identifiers.org/uniprot")
-						&& !pr.getXref().toString().toLowerCase().contains("uniprot")) {
+					&& !pr.getXref().toString().toLowerCase().contains("uniprot")) {
 
 					if (verbose) {
 						problemErs.add(String.format("%s\t%s\t%s",
-								((Provenance) provenance).getDisplayName(), pr.getDisplayName(), pr.getUri()));
+							((Provenance) provenance).getDisplayName(), pr.getDisplayName(), pr.getUri()));
 					}
 
 					MutableInt n = numProblematicErs.get(provenance);
@@ -912,11 +904,11 @@ public final class PaxtoolsMain {
 
 			for(Object provenance : pa.getValueFromBean(smr)) {
 				if(!smr.getUri().startsWith("http://identifiers.org/chebi/CHEBI:")
-						&& !smr.getXref().toString().contains("CHEBI:")) {
+					&& !smr.getXref().toString().contains("CHEBI:")) {
 
 					if (verbose) {
 						problemErs.add(String.format("%s\t%s\t%s",
-								((Provenance) provenance).getDisplayName(), smr.getDisplayName(), smr.getUri()));
+							((Provenance) provenance).getDisplayName(), smr.getDisplayName(), smr.getUri()));
 					}
 
 					MutableInt n = numProblematicErs.get(provenance);
@@ -960,9 +952,9 @@ public final class PaxtoolsMain {
 	 * @param model input Model
 	 * @param out output file
 	 * @throws IOException when an I/O exception occurs
-     */
+	 */
 	public static void summarize(Model model, PrintStream out) throws IOException {
-        HashMap<String, Integer> hm = new HashMap<String, Integer>();
+		HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
 		final SimpleEditorMap em = SimpleEditorMap.get(model.getLevel());
 
@@ -972,7 +964,7 @@ public final class PaxtoolsMain {
 			int initialSize = set.size();
 			set = filterToExactClass(set, clazz);
 			String s = clazz.getSimpleName() + " = " + set.size();
-			if (initialSize != set.size()) 
+			if (initialSize != set.size())
 				s += " (and " + (initialSize - set.size()) + " children)";
 			out.println(s);
 
@@ -1019,7 +1011,7 @@ public final class PaxtoolsMain {
 
 				if (!cnt.isEmpty())
 				{
-					String name = "-" 
+					String name = "-"
 						+ (returnType.equals(Set.class) ? editor.getRange().getSimpleName() : returnType.getSimpleName());
 
 					out.print("\t" + name + ":");
@@ -1041,13 +1033,13 @@ public final class PaxtoolsMain {
 			Map<Object, Integer> cnt = new HashMap<Object, Integer>();
 			List<String> valList = new ArrayList<String>();
 			PathAccessor acc = new PathAccessor(prop, model.getLevel());
-			
+
 			boolean isString = false;
-			
+
 			for (Object o : acc.getValueFromModel(model))
 			{
 				if (o instanceof String) isString = true;
-				
+
 				String s = o.toString();
 				valList.add(s);
 				if (!cnt.containsKey(s)) cnt.put(s, 1);
@@ -1055,7 +1047,7 @@ public final class PaxtoolsMain {
 			}
 
 			out.println(prop + "\t(" + cnt.size() + " distinct values):");
-            hm.put(prop, cnt.size());
+			hm.put(prop, cnt.size());
 
 			// If the object is String, then all counts are 1, no need to print counts.
 			if (isString)
@@ -1154,15 +1146,15 @@ public final class PaxtoolsMain {
 		out.println(
 			String.format(
 				"\n%d Genes, %d Pathways, %d SequenceEntityReferences " +
-				"(%d in NucleicAcidRef. and %d in PRs) have NULL 'organism'.\n",
+					"(%d in NucleicAcidRef. and %d in PRs) have NULL 'organism'.\n",
 				genesLackingOrganism, pwLackingOrganism, serLackingOrganism,
 				narLackingOrganism, serLackingOrganism-narLackingOrganism
 			)
 		);
 	}
 
-	private static List<Class<? extends BioPAXElement>> sortToName(Set<? extends Class<? extends BioPAXElement>>
-			classes)
+	private static List<Class<? extends BioPAXElement>> sortToName(
+		Set<? extends Class<? extends BioPAXElement>> classes)
 	{
 		List<Class<? extends BioPAXElement>> list = new ArrayList<Class<? extends BioPAXElement>>(classes);
 		Collections.sort(list, new Comparator<Class<? extends  BioPAXElement>>() {
@@ -1172,11 +1164,11 @@ public final class PaxtoolsMain {
 					clazz2.getName().substring(clazz2.getName().lastIndexOf(".")+1));
 			}
 		});
+
 		return list;
 	}
 
-	private static List<Object> getOrdering(final Map<Object, Integer> map)
-	{
+	private static List<Object> getOrdering(final Map<Object, Integer> map) {
 		List<Object> list = new ArrayList<Object>(map.keySet());
 		Collections.sort(list, new Comparator<Object>()
 		{
@@ -1189,16 +1181,17 @@ public final class PaxtoolsMain {
 				else return cnt2 - cnt1;
 			}
 		});
+
 		return list;
 	}
-	
+
 	private static Set<BioPAXElement> filterToExactClass(Set<? extends BioPAXElement> classSet, Class<?> clazz)
 	{
 		Set<BioPAXElement> exact = new HashSet<BioPAXElement>();
-		for (BioPAXElement ele : classSet)
-		{
+		for (BioPAXElement ele : classSet) {
 			if (ele.getModelInterface().equals(clazz)) exact.add(ele);
 		}
+
 		return exact;
 	}
 
@@ -1218,22 +1211,21 @@ public final class PaxtoolsMain {
 		}
 	};
 
-	private static boolean implementsInterface(Class clazz, Class inter)
-	{
-		for (Class anInter : clazz.getInterfaces())
-		{
-			if (anInter.equals(inter)) return true;
+	private static boolean implementsInterface(Class clazz, Class inter) {
+		for (Class anInter : clazz.getInterfaces()) {
+			if (anInter.equals(inter))
+				return true;
 		}
+
 		return false;
 	}
 
-	private static void increaseCnt(Map<Object, Integer> cnt, Object key)
-	{
-		if (!cnt.containsKey(key)) cnt.put(key, 0);
+	private static void increaseCnt(Map<Object, Integer> cnt, Object key) {
+		if (!cnt.containsKey(key))
+			cnt.put(key, 0);
 		cnt.put(key, cnt.get(key) + 1);
 	}
-	
-	
+
 	// gets new IS - either FIS or GzipIS if .gz extension present
 	private static InputStream getInputStream(String path) throws IOException {
 		InputStream is = new FileInputStream(path);

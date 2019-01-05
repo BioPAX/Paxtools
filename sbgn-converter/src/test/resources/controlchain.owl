@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+  xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+  </owl:Ontology>
+  <bp:SmallMolecule rdf:about="28ee35e1-de08-4cec-91c9-cfbadae683ef">
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Estradiol</bp:displayName>
+    <bp:entityReference rdf:resource="e9d5ce7b-71d9-442d-970e-b768dc7c7418" />
+  </bp:SmallMolecule>
+  <bp:SmallMoleculeReference rdf:about="e9d5ce7b-71d9-442d-970e-b768dc7c7418">
+    <bp:xref rdf:resource="150e9163-9811-4ab8-9442-54dbb16a39d5" />
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Estradiol</bp:displayName>
+  </bp:SmallMoleculeReference>
+  <bp:RelationshipXref rdf:about="150e9163-9811-4ab8-9442-54dbb16a39d5">
+    <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">5757</bp:id>
+    <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubchem</bp:db>
+  </bp:RelationshipXref>
+  <bp:Protein rdf:about="1a6dedda-6fa6-436e-836a-1c1c58be526a">
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEP</bp:displayName>
+    <bp:entityReference rdf:resource="10e75ab2-b79d-4359-af37-e90e3a7473e7" />
+  </bp:Protein>
+  <bp:ProteinReference rdf:about="10e75ab2-b79d-4359-af37-e90e3a7473e7">
+    <bp:xref rdf:resource="88f99df9-6771-44aa-8514-95071e84476b" />
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEP</bp:displayName>
+  </bp:ProteinReference>
+  <bp:RelationshipXref rdf:about="88f99df9-6771-44aa-8514-95071e84476b">
+    <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P41159</bp:id>
+    <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+  </bp:RelationshipXref>
+  <bp:Modulation rdf:about="f0ae2f3a-f88c-40ad-8d25-c653ae636aba">
+    <bp:comment>Estradiol activates LEP</bp:comment>
+    <bp:controlled rdf:resource="fb03be15-e844-4e5b-92d3-1d527efbabbe" />
+    <bp:controller rdf:resource="28ee35e1-de08-4cec-91c9-cfbadae683ef" />
+    <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+  </bp:Modulation>
+  <bp:Catalysis rdf:about="fb03be15-e844-4e5b-92d3-1d527efbabbe">
+    <bp:controller rdf:resource="1a6dedda-6fa6-436e-836a-1c1c58be526a" />
+    <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+  </bp:Catalysis>
+  <bp:Protein rdf:about="f1ba976f-d460-4c70-a3de-29c5ca28b393">
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP2</bp:displayName>
+    <bp:entityReference rdf:resource="c06b19ab-b556-467e-8432-eea7464ecf8c" />
+  </bp:Protein>
+  <bp:ProteinReference rdf:about="c06b19ab-b556-467e-8432-eea7464ecf8c">
+    <bp:xref rdf:resource="5b471826-6728-48c1-8a35-6c5ccd89e07a" />
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">BMP2</bp:displayName>
+  </bp:ProteinReference>
+  <bp:RelationshipXref rdf:about="5b471826-6728-48c1-8a35-6c5ccd89e07a">
+    <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P12643</bp:id>
+    <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+  </bp:RelationshipXref>
+  <bp:Control rdf:about="bmp2-controls-activation-of-lep-by-estradiol">
+    <bp:controlled rdf:resource="f0ae2f3a-f88c-40ad-8d25-c653ae636aba" />
+    <bp:controller rdf:resource="f1ba976f-d460-4c70-a3de-29c5ca28b393" />
+    <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+  </bp:Control>
+</rdf:RDF>

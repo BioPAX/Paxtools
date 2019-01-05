@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
-		<version>5.2.0-SNAPSHOT</version>
+		<version>5.2.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>paxtools-search</artifactId>
@@ -45,10 +45,6 @@
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-queryparser</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>	
 	</dependencies>
 
 	<dependencyManagement>

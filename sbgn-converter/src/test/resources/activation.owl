@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+  xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+  </owl:Ontology>
+  <bp:Protein rdf:about="f98f403f-ab47-4d50-a9c1-dd0c62ddb929">
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FSHB</bp:displayName>
+    <bp:entityReference rdf:resource="61a166af-cabc-4f37-82dc-205cd763a354" />
+  </bp:Protein>
+  <bp:ProteinReference rdf:about="61a166af-cabc-4f37-82dc-205cd763a354">
+    <bp:xref rdf:resource="6b54a312-f1ce-46c1-aa65-23a475d8a448" />
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FSHB</bp:displayName>
+  </bp:ProteinReference>
+  <bp:RelationshipXref rdf:about="6b54a312-f1ce-46c1-aa65-23a475d8a448">
+    <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P01225</bp:id>
+    <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+  </bp:RelationshipXref>
+  <bp:Protein rdf:about="2e8917ce-7b7c-42dd-ba0a-fee2b139dd3e">
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IGF1</bp:displayName>
+    <bp:entityReference rdf:resource="7a1b2976-619c-439e-a3e8-d9064519d60b" />
+  </bp:Protein>
+  <bp:ProteinReference rdf:about="7a1b2976-619c-439e-a3e8-d9064519d60b">
+    <bp:xref rdf:resource="4090cd2e-f146-4c85-9478-5af0818f19cf" />
+    <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IGF1</bp:displayName>
+  </bp:ProteinReference>
+  <bp:RelationshipXref rdf:about="4090cd2e-f146-4c85-9478-5af0818f19cf">
+    <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P05019</bp:id>
+    <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+  </bp:RelationshipXref>
+  <bp:Control rdf:about="9d9700c6-a390-4ebe-91a9-82c4a89ea5ee">
+    <bp:comment>FSHB activates IGF1</bp:comment>
+    <bp:controlled rdf:resource="93d7ff4e-2943-45bf-aca9-16ff4241a7c0" />
+    <bp:controller rdf:resource="f98f403f-ab47-4d50-a9c1-dd0c62ddb929" />
+    <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+  </bp:Control>
+  <bp:Control rdf:about="93d7ff4e-2943-45bf-aca9-16ff4241a7c0">
+    <bp:controller rdf:resource="2e8917ce-7b7c-42dd-ba0a-fee2b139dd3e" />
+    <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+  </bp:Control>
+</rdf:RDF>

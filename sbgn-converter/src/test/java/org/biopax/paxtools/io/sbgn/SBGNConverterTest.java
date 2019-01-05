@@ -18,22 +18,21 @@ import org.sbgn.bindings.Glyph;
 import org.sbgn.bindings.Sbgn;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
 
-/**
- * @author Ozgun Babur
- */
 public class SBGNConverterTest
 {
-	static final BioPAXIOHandler handler =  new SimpleIOHandler();
-
+	private static final BioPAXIOHandler handler =  new SimpleIOHandler();
 	private static UbiqueDetector blacklist;
+	private static Unmarshaller unmarshaller;
+	private static Marshaller marshaller;
 
 	@BeforeClass
-	public static void setUp() {
+	public static void setUp() throws JAXBException {
 		blacklist = new ListUbiqueDetector(new HashSet<String>(Arrays.asList(
 				"http://pid.nci.nih.gov/biopaxpid_685",
 				"http://pid.nci.nih.gov/biopaxpid_678",
@@ -42,6 +41,11 @@ public class SBGNConverterTest
 				"http://pathwaycommons.org/pc2/SmallMolecule_3037a14ebec3a95b8dab68e6ea5c946f",
 				"http://pathwaycommons.org/pc2/SmallMolecule_4ca9a2cfb6a8a6b14cee5d7ed5945364"
 		)));
+
+		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
+		unmarshaller = context.createUnmarshaller();
+		marshaller = context.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 	}
 
 	@Test
@@ -65,9 +69,6 @@ public class SBGNConverterTest
 			System.out.println ("Validation succeeded");
 		else
 			System.out.println ("Validation failed");
-
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
 
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
@@ -109,7 +110,6 @@ public class SBGNConverterTest
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, true);
 		conv.setFlattenComplexContent(false);
-
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
@@ -120,9 +120,6 @@ public class SBGNConverterTest
 			System.out.println ("Validation succeeded");
 		else
 			System.out.println ("Validation failed");
-
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
 
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
@@ -168,9 +165,6 @@ public class SBGNConverterTest
 		else
 			System.out.println ("warning: " + out + " is invalid SBGN");
 
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
 
@@ -206,8 +200,7 @@ public class SBGNConverterTest
 			System.out.println ("warning: " + out + " is invalid SBGN");
 
 		// Now read the SBGN model back
-		Sbgn result = (Sbgn) JAXBContext.newInstance("org.sbgn.bindings")
-				.createUnmarshaller().unmarshal (outFile);
+		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
 
 		// Assert that the sbgn result contains glyphs
 		assertTrue(!result.getMap().getGlyph().isEmpty());
@@ -239,20 +232,21 @@ public class SBGNConverterTest
 	// it's probably about an unknown/omitted sub-pathway with known in/out chemicals,
 	// but it's expressed in BioPAX badly (a Pathway with one Interaction and PathwayStep, and no comments...)
 	@Test
-	public void testConvertOmittedSmpdbPathway()
-	{
+	public void testConvertOmittedSmpdbPathway() throws JAXBException {
 		String input = "/smpdb-beta-oxidation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
 		String out = "target/" + input + ".sbgn";
-
-		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, false);
 		conv.writeSBGN(level3, out);
+
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		assertFalse(result.getMap().getGlyph().isEmpty());
+    //TODO: add assertions
 	}
 
 	@Test
-	public void testConvertBadWikiPathway()
-	{
+	public void testConvertBadWikiPathway() throws JAXBException {
 		String input = "/WP561";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
@@ -260,6 +254,11 @@ public class SBGNConverterTest
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
 		conv.writeSBGN(level3, out);
+
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		assertFalse(result.getMap().getGlyph().isEmpty());
+
+		//TODO: add assertions
 	}
 
 	@Test
@@ -270,27 +269,19 @@ public class SBGNConverterTest
 		if (!SbgnUtil.isValid(sbgnFile))
 			System.out.println ("invalid input SBGN");
 
-		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (sbgnFile);
 		// Assert that the sbgn result contains glyphs
-		assertTrue(!result.getMap().getGlyph().isEmpty());
+		assertFalse(result.getMap().getGlyph().isEmpty());
 
 		// infinite loop in LGraph.updateConnected when SbgnPDLayout is used
 		(new SBGNLayoutManager()).createLayout(result, true);
 		//TODO: run, add assertions
-
-		Marshaller marshaller = context.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		marshaller.marshal(result, new FileOutputStream("target/hsa00051.out.sbgn"));
 	}
 
-
 	@Test
-	public void testConvertGIs()
-	{
+	public void testConvertGIs() throws JAXBException {
 		String out = "target/test_gi.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
 		Model m = f.createModel();
@@ -306,11 +297,13 @@ public class SBGNConverterTest
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.setDoLayout(true);
 		conv.writeSBGN(m, out);
+
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		assertFalse(result.getMap().getGlyph().isEmpty());
 	}
 
 	@Test
-	public void testConvertTRs()
-	{
+	public void testConvertTRs() throws JAXBException {
 		String out = "target/test_tr.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
 		Model m = f.createModel();
@@ -330,15 +323,16 @@ public class SBGNConverterTest
 		f.bindInPairs("product", tr1,p[2]);
 		f.bindInPairs("participant", tr1,t[1]);
 
-
 		// only product (will infer some unknown input process/entity)
 		TemplateReaction tr2 = m.addNew(TemplateReaction.class,"tr_2");
 		f.bindInPairs("product", tr2,p[3]);
 
-
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.setDoLayout(true);
 		conv.writeSBGN(m, out);
+
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		assertFalse(result.getMap().getGlyph().isEmpty());
 	}
 
 	@Test
@@ -361,12 +355,72 @@ public class SBGNConverterTest
 			System.out.println ("warning: " + out + " is invalid SBGN");
 
 		// Now read the SBGN model back
-		Sbgn result = (Sbgn) JAXBContext.newInstance("org.sbgn.bindings").createUnmarshaller().unmarshal (outFile);
-
+		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
 		// Assert that the sbgn result contains glyphs
-		assertTrue(!result.getMap().getGlyph().isEmpty());
-
-		//TODO: test complexes are complete, no dangling, member complex contains a homodimer...
-		// it looks ok in SBGNViz editor/viewer though...
+    List<Glyph> glyphList = result.getMap().getGlyph();
+		assertFalse(glyphList.isEmpty());
 	}
+
+	@Test
+	public void testConvertActivation() throws JAXBException {
+		String input = "/activation";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model m = handler.convertFromOWL(in);
+		m.setName("activation");
+		String out = "target/" + input + ".sbgn";
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+		conv.writeSBGN(m, out);
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+    assertFalse(result.getMap().getGlyph().isEmpty());
+    Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
+    assertFalse(filtered.isEmpty());
+	}
+
+	@Test
+	public void testConvertModulation() throws JAXBException {
+		String input = "/modulation";
+		InputStream in = getClass().getResourceAsStream(input + ".owl");
+		Model level3 = handler.convertFromOWL(in);
+		String out = "target/" + input + ".sbgn";
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+		conv.writeSBGN(level3, out);
+
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+    assertFalse(result.getMap().getGlyph().isEmpty());
+    Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
+    assertFalse(filtered.isEmpty());
+	}
+
+  @Test
+  public void testConvertControlsChain() throws JAXBException {
+    String input = "/controlchain";
+    InputStream in = getClass().getResourceAsStream(input + ".owl");
+    Model level3 = handler.convertFromOWL(in);
+    String out = "target/" + input + ".sbgn";
+    L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
+    conv.writeSBGN(level3, out);
+
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+    assertFalse(result.getMap().getGlyph().isEmpty());
+    Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
+    assertFalse(filtered.isEmpty());
+  }
+
+//	private Collection<Glyph> filterGlyphsByClazz(Collection<Glyph> collection, String clazz) {
+//    Set<Glyph> filtered = new HashSet<Glyph>();
+//    for(Glyph g : collection)
+//      if(g.getClazz().equals(clazz))
+//        filtered.add(g);
+//
+//    return filtered;
+//  }
+
+  private Collection<Arc> filterArcsByClazz(Collection<Arc> collection, String clazz) {
+    Set<Arc> filtered = new HashSet<Arc>();
+    for(Arc g : collection)
+      if(g.getClazz().equals(clazz))
+        filtered.add(g);
+
+    return filtered;
+  }
 }
