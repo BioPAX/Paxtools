@@ -653,26 +653,7 @@ public class QueryExecuter
 	{
 		if (pes == null) pes = new HashSet<PhysicalEntity>();
 
-		if (element instanceof Complex)
-		{
-			Complex cpx = (Complex) element;
-
-			if (!pes.contains(cpx))
-			{
-				pes.add(cpx);
-				for (Complex parent : cpx.getComponentOf())
-				{
-					getRelatedPhysicalEntities(parent, pes);
-				}
-
-				// This is a hack for BioPAX graph. Equivalence relations do not link members and
-				// complexes because members cannot be addressed. Below call makes sure that if the
-				// source node has a generic parents or children and they appear in a complex, we
-				// include the complex in the sources.
-				addEquivalentsComplexes(cpx, pes);
-			}
-		}
-		else if (element instanceof PhysicalEntity)
+		if (element instanceof PhysicalEntity)
 		{
 			PhysicalEntity pe = (PhysicalEntity) element;
 			if (!pes.contains(pe))
@@ -724,7 +705,10 @@ public class QueryExecuter
 	private static void addEquivalentsComplexes(PhysicalEntity pe, Set<PhysicalEntity> pes)
 	{
 		addEquivalentsComplexes(pe, true, pes);
-		addEquivalentsComplexes(pe, false, pes);
+
+		// Do not traverse to more specific. This was causing a bug so I commented out. Did not delete it just in case
+		// later we realize that this is needed for another use case.
+//		addEquivalentsComplexes(pe, false, pes);
 	}
 
 	/**
