@@ -4,7 +4,9 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.PatternBoxTest;
+import org.biopax.paxtools.pattern.constraint.IDConstraint;
 import org.biopax.paxtools.pattern.util.AdjacencyMatrix;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.Assert;
@@ -109,9 +111,9 @@ public class SIFSearcherTest extends PatternBoxTest
 //		BPCollections.I.setProvider(new TProvider());
 
 //		String dir = "/home/ozgun/Projects/biopax-pattern/";
-		String dir = "/home/ozgun/Downloads/PC-resources/";
+		String dir = "/home/ozgun/Data/PC/v10/";
 		SimpleIOHandler h = new SimpleIOHandler();
-		String name = "Pathway Commons.7.Reactome.BIOPAX";
+		String name = "PathwayCommons10.reactome.BIOPAX";
 //		String name = "temp";
 		Model model = h.convertFromOWL(new FileInputStream(dir + name + ".owl"));
 
@@ -122,7 +124,8 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		CommonIDFetcher idFetcher = new CommonIDFetcher();
 		idFetcher.setUseUniprotIDs(false);
-		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.values());
+		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.CONTROLS_STATE_CHANGE_OF);
+//		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.values());
 //		SIFMiner[] miners = {new ControlsStateChangeOfMiner(), new CSCOButIsParticipantMiner(),
 //			new CSCOThroughDegradationMiner(), new CSCOThroughControllingSmallMoleculeMiner(),
 //			new ControlsExpressionMiner(), new ControlsExpressionWithConvMiner()};
@@ -149,21 +152,33 @@ public class SIFSearcherTest extends PatternBoxTest
 
 //		BPCollections.I.setProvider(new TProvider());
 
-//		String dir = "/home/ozgun/Projects/biopax-pattern/";
-		String dir = "/home/ozgun/Desktop/";
+		String dir = "/home/ozgun/Data/PC/v10/";
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream(dir + "temp.owl"));
+		Model model = h.convertFromOWL(new FileInputStream(dir + "PathwayCommons10.reactome.BIOPAX.owl"));
 
 		CommonIDFetcher idFetcher = new CommonIDFetcher();
-		idFetcher.setUseUniprotIDs(true);
-		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.IN_COMPLEX_WITH);
+		idFetcher.setUseUniprotIDs(false);
 
-		BlacklistGenerator gen = new BlacklistGenerator();
-		Blacklist blacklist = gen.generateBlacklist(model);
+		SIFMiner miner = new CSCOThroughBindingSmallMoleculeMiner()
+		{
+			@Override
+			public Pattern constructPattern()
+			{
+				Pattern pattern = super.constructPattern();
+				pattern.add(new IDConstraint(Collections.singleton("http://identifiers.org/uniprot/Q9NVZ3")), "upper controller ER");
+				return pattern;
+			}
+		};
+
+		SIFSearcher s = new SIFSearcher(idFetcher, miner);
+
+//		BlacklistGenerator gen = new BlacklistGenerator();
+//		Blacklist blacklist = gen.generateBlacklist(model);
+		Blacklist blacklist = new Blacklist(dir + "blacklist.txt");
 		s.setBlacklist(blacklist);
 //		s.setBlacklist(new Blacklist("blacklist.txt"));
 		s.searchSIF(model, new FileOutputStream(dir + "temp.sif"),
-				new CustomFormat(OutputColumn.Type.MEDIATOR.name()));
+				new CustomFormat(OutputColumn.Type.PATHWAY.name()));
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));

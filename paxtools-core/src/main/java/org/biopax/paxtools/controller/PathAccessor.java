@@ -92,7 +92,18 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		this.accessors = new ArrayList<PropertyAccessor<? extends BioPAXElement, ?>>();
 		if (st.nextToken().equals("/"))
 		{
-			accessors.add(getStepAccessor(level, st, domain));
+			PropertyAccessor stepAccessor = getStepAccessor(level, st, domain);
+
+			// If the domain is more specific than the domain of the property accessor, then we need to filter it.
+			if (!domain.equals(stepAccessor.getDomain()))
+			{
+				assert stepAccessor.getDomain().isAssignableFrom(domain) :
+					"There must be a serous bug in the design of property editor map!";
+
+				stepAccessor = FilteredByDomainPropertyAccessor.create(stepAccessor, domain);
+			}
+
+			accessors.add(stepAccessor);
 			domainOrder.add(domain);
 		} else throw new IllegalArgumentException();
 		return iterateTheRemainingPath(depth, st);
@@ -203,7 +214,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			{
 				if (log.isTraceEnabled()) log.trace("\t" + bpe);
 				Set valueFromBean = accessor.getValueFromBean(bpe);
-				if (valueFromBean != null || valueFromBean.isEmpty())
+				if (!valueFromBean.isEmpty())
 				{
 					if (log.isTraceEnabled()) log.trace("\t\tv:" + valueFromBean);
 					nextBpes.addAll(valueFromBean);
@@ -222,9 +233,9 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 			log.trace("\t" + bpe);
 			Set valueFromBean = lastStep.getValueFromBean(bpe);
-			if (valueFromBean != null || valueFromBean.isEmpty())
+			if (!valueFromBean.isEmpty())
 			{
-				values.addAll(lastStep.getValueFromBean(bpe));
+				values.addAll(valueFromBean);
 				log.trace("\t" + values);
 			}
 		}

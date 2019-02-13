@@ -12,9 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -31,12 +29,12 @@ public class PathAccessorTest
 		Protein[] member = mock.create(model, Protein.class, 1,"member");
 		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
 		PublicationXref[] px = mock.create(model, PublicationXref.class, 2);
-		Complex[] c = mock.create(model, Complex.class, 3);
-		SmallMoleculeReference smr[] = mock.create(model, SmallMoleculeReference.class,1);
-		SmallMolecule sm[] = mock.create(model, SmallMolecule.class,1);
+		Complex[] c = mock.create(model, Complex.class, 4);
+		SmallMoleculeReference smr[] = mock.create(model, SmallMoleculeReference.class,2);
+		SmallMolecule sm[] = mock.create(model, SmallMolecule.class,2);
 
-		BiochemicalReaction[] rx = mock.create(model, BiochemicalReaction.class,1);
-		Pathway[] pw = mock.create(model,Pathway.class,1);
+		BiochemicalReaction[] rx = mock.create(model, BiochemicalReaction.class,2);
+		Pathway[] pw = mock.create(model,Pathway.class,2);
 		BiochemicalPathwayStep[] pws = mock.create(model,BiochemicalPathwayStep.class,1);
 
 		pws[0].setStepConversion(rx[0]);
@@ -50,6 +48,9 @@ public class PathAccessorTest
 		                 c[1],c[2],
 		                 c[2],member[0]);
 
+		c[3].addComponent(sm[1]);
+		rx[1].addLeft(c[3]);
+		pw[1].addPathwayComponent(rx[1]);
 
 		PathAccessor accessor = new PathAccessor("Protein/entityReference/xref:PublicationXref", BioPAXLevel.L3);
 		Set values = accessor.getValueFromBean(p[0]);
@@ -94,9 +95,21 @@ public class PathAccessorTest
 		assertEquals(1, values.size());
 		assertTrue(values.contains(pr[0]));
 
-        	accessor = new PathAccessor("SmallMolecule/entityReference", BioPAXLevel.L3);
-	        values = accessor.getValueFromBeans(beans);
-	        assertEquals(1, values.size());
-	        assertTrue(values.contains(smr[0]));
+		accessor = new PathAccessor("SmallMolecule/entityReference", BioPAXLevel.L3);
+		values = accessor.getValueFromBeans(beans);
+		assertEquals(1, values.size());
+		assertTrue(values.contains(smr[0]));
+
+		accessor = new PathAccessor("Complex/componentOf*/participantOf/pathwayComponentOf");
+		values = accessor.getValueFromBean(sm[1]);
+		assertTrue(values.isEmpty());
+
+		accessor = new PathAccessor("SmallMolecule/componentOf*/participantOf/pathwayComponentOf");
+		values = accessor.getValueFromBean(sm[1]);
+		assertSame(values.iterator().next(), (pw[1]));
+
+		accessor = new PathAccessor("PhysicalEntity/componentOf*/participantOf/pathwayComponentOf");
+		values = accessor.getValueFromBean(sm[1]);
+		assertSame(values.iterator().next(), (pw[1]));
 	}
 }
