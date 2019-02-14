@@ -1,7 +1,6 @@
 package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.biopax.paxtools.util.ClassFilterSet;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.util.Collections;
