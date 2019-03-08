@@ -870,20 +870,23 @@ public class L3ToSBGNPDConverter {
 	}
 
 	private Glyph getCompartment(String name) {
-		if (name == null)
+		if (name == null || name.isEmpty())
 			return null;
 
-		name = name.toLowerCase();
-		if (compartmentMap.containsKey(name))
-			return compartmentMap.get(name);
+		name = name.toLowerCase().trim();
+		final String id = name.replaceAll("\\s+","_");
+		Glyph comp = compartmentMap.get(id);
 
-		Glyph comp = factory.createGlyph();
-		comp.setId(convertID(name));
-		Label label = factory.createLabel();
-		label.setText(name);
-		comp.setLabel(label);
-		comp.setClazz(GlyphClazz.COMPARTMENT.getClazz());
-		compartmentMap.put(name, comp);
+		if (comp == null) {
+			//create a new compartment glyph and store in the map
+			comp = factory.createGlyph();
+			comp.setId(id);
+			comp.setClazz(GlyphClazz.COMPARTMENT.getClazz());
+			Label label = factory.createLabel();
+			comp.setLabel(label);
+			label.setText(name);
+			compartmentMap.put(id, comp);
+		}
 
 		return comp;
 	}

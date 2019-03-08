@@ -30,6 +30,7 @@ public class SBGNConverterTest
 	private static UbiqueDetector blacklist;
 	private static Unmarshaller unmarshaller;
 	private static Marshaller marshaller;
+	private final String NOSPACE = "\\S+";
 
 	@BeforeClass
 	public static void setUp() throws JAXBException {
@@ -54,21 +55,11 @@ public class SBGNConverterTest
 		String input = "/AR-TP53";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-		System.out.println("level3.getObjects().size() = " + level3.getObjects().size());
-
-		String out = "target/" + input + ".sbgn";
-
+		String out = "target" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist, null, true);
-
 		conv.writeSBGN(level3, out);
-
 		File outFile = new File(out);
-		boolean isValid = SbgnUtil.isValid(outFile);
-
-		if (isValid)
-			System.out.println ("Validation succeeded");
-		else
-			System.out.println ("Validation failed");
+		SbgnUtil.isValid(outFile); //ignore CName warning
 
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
@@ -85,6 +76,7 @@ public class SBGNConverterTest
 				String label = g.getLabel().getText();
 				assertFalse(label.matches("go:"));
 				assertTrue(StringUtils.isAllLowerCase(label.substring(0,1)));
+				assertTrue(g.getId().matches(NOSPACE)); //refs issue #44
 			}
 		}
 
@@ -104,22 +96,12 @@ public class SBGNConverterTest
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
 
-		System.out.println("level3.getObjects().size() = " + level3.getObjects().size());
-
-		String out = "target/" + input + ".sbgn";
-
+		String out = "target" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(null, null, true);
 		conv.setFlattenComplexContent(false);
 		conv.writeSBGN(level3, out);
-
 		File outFile = new File(out);
-		System.out.println("outFile.getPath() = " + outFile.getAbsolutePath());
-		boolean isValid = SbgnUtil.isValid(outFile);
-
-		if (isValid)
-			System.out.println ("Validation succeeded");
-		else
-			System.out.println ("Validation failed");
+		SbgnUtil.isValid(outFile); //ignore CName warning
 
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
@@ -151,20 +133,14 @@ public class SBGNConverterTest
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
 
-		String out = "target/" + input + ".sbgn";
+		String out = "target" + input + ".sbgn";
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter();
 		conv.setDoLayout(true);
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
-		boolean isValid = SbgnUtil.isValid(outFile);
-
-		if (isValid)
-			System.out.println ("success: " + out + " is valid SBGN");
-		else
-			System.out.println ("warning: " + out + " is invalid SBGN");
-
+		SbgnUtil.isValid(outFile); //ignore CName warning
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (outFile);
 
@@ -186,19 +162,14 @@ public class SBGNConverterTest
 		String input = "/signaling-by-bmp";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-		String out = "target/" + input + ".sbgn";
+		String out = "target" + input + ".sbgn";
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, false);
 		conv.setDoLayout(true); //this is not the default anymore
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
-		boolean isValid = SbgnUtil.isValid(outFile);
-		if (isValid)
-			System.out.println ("success: " + out + " is valid SBGN");
-		else
-			System.out.println ("warning: " + out + " is invalid SBGN");
-
+		SbgnUtil.isValid(outFile); //ignore CName warning
 		// Now read the SBGN model back
 		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
 
@@ -209,6 +180,7 @@ public class SBGNConverterTest
 		for (Glyph g : result.getMap().getGlyph()) {
 			if (g.getClazz().equals("compartment")) {
 				assertTrue(g.getGlyph().isEmpty());
+				assertTrue(g.getId().matches(NOSPACE));
 			}
 		}
 
@@ -232,30 +204,31 @@ public class SBGNConverterTest
 	// it's probably about an unknown/omitted sub-pathway with known in/out chemicals,
 	// but it's expressed in BioPAX badly (a Pathway with one Interaction and PathwayStep, and no comments...)
 	@Test
-	public void testConvertOmittedSmpdbPathway() throws JAXBException {
+	public void testConvertOmittedSmpdbPathway() throws Exception {
 		String input = "/smpdb-beta-oxidation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-		String out = "target/" + input + ".sbgn";
+		String out = "target" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, false);
 		conv.writeSBGN(level3, out);
-
+		SbgnUtil.isValid(new File(out)); //ignore CName warning
 		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
 		assertFalse(result.getMap().getGlyph().isEmpty());
     //TODO: add assertions
 	}
 
 	@Test
-	public void testConvertBadWikiPathway() throws JAXBException {
+	public void testConvertBadWikiPathway() throws Exception {
 		String input = "/WP561";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-		String out = "target/" + input + ".sbgn";
+		String out = "target" + input + ".sbgn";
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
 		conv.writeSBGN(level3, out);
-
-		Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		File outFile = new File(out);
+		SbgnUtil.isValid(outFile); //ignore validation errors for now...
+		Sbgn result = (Sbgn) unmarshaller.unmarshal(outFile);
 		assertFalse(result.getMap().getGlyph().isEmpty());
 
 		//TODO: add assertions
@@ -265,9 +238,6 @@ public class SBGNConverterTest
 	public void testSbgnLayoutKegg51() throws Exception
 	{
 		File sbgnFile = new File(getClass().getResource("/hsa00051.sbgn").getFile());
-
-		if (!SbgnUtil.isValid(sbgnFile))
-			System.out.println ("invalid input SBGN");
 
 		// Now read from "f" and put the result in "sbgn"
 		Sbgn result = (Sbgn)unmarshaller.unmarshal (sbgnFile);
@@ -341,18 +311,14 @@ public class SBGNConverterTest
 		String input = "/TFAP2";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-		String out = "target/" + input + ".sbgn";
+		String out = "target" + input + ".sbgn";
 
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, false);
 		conv.setDoLayout(true); //this is not the default anymore
 		conv.writeSBGN(level3, out);
 
 		File outFile = new File(out);
-		boolean isValid = SbgnUtil.isValid(outFile);
-		if (isValid)
-			System.out.println ("success: " + out + " is valid SBGN");
-		else
-			System.out.println ("warning: " + out + " is invalid SBGN");
+		SbgnUtil.isValid(outFile); //ignore CName warning
 
 		// Now read the SBGN model back
 		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
@@ -362,45 +328,49 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertActivation() throws JAXBException {
+	public void testConvertActivation() throws Exception {
 		String input = "/activation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model m = handler.convertFromOWL(in);
 		m.setName("activation");
-		String out = "target/" + input + ".sbgn";
+		String out = "target" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
 		conv.writeSBGN(m, out);
-    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		File outFile = new File(out);
+		SbgnUtil.isValid(outFile); //ignore CName warning
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(outFile);
     assertFalse(result.getMap().getGlyph().isEmpty());
     Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
     assertFalse(filtered.isEmpty());
 	}
 
 	@Test
-	public void testConvertModulation() throws JAXBException {
+	public void testConvertModulation() throws Exception {
 		String input = "/modulation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
-		String out = "target/" + input + ".sbgn";
+		String out = "target" + input + ".sbgn";
 		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
 		conv.writeSBGN(level3, out);
-
-    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		File outFile = new File(out);
+		SbgnUtil.isValid(outFile); //ignore CName warning
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(outFile);
     assertFalse(result.getMap().getGlyph().isEmpty());
     Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
     assertFalse(filtered.isEmpty());
 	}
 
   @Test
-  public void testConvertControlsChain() throws JAXBException {
+  public void testConvertControlsChain() throws Exception {
     String input = "/controlchain";
     InputStream in = getClass().getResourceAsStream(input + ".owl");
     Model level3 = handler.convertFromOWL(in);
-    String out = "target/" + input + ".sbgn";
+    String out = "target" + input + ".sbgn";
     L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(blacklist,null, true);
     conv.writeSBGN(level3, out);
-
-    Sbgn result = (Sbgn) unmarshaller.unmarshal(new File(out));
+		File outFile = new File(out);
+		SbgnUtil.isValid(outFile); //ignore CName warning
+    Sbgn result = (Sbgn) unmarshaller.unmarshal(outFile);
     assertFalse(result.getMap().getGlyph().isEmpty());
     Collection<Arc> filtered = filterArcsByClazz(result.getMap().getArc(), "stimulation");
     assertFalse(filtered.isEmpty());
