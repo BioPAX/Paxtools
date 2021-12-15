@@ -26,12 +26,6 @@
 			<artifactId>paxtools-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>paxtools-trove</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-   	 </dependencies>
+  </dependencies>
 
 </project>
