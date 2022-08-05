@@ -9,7 +9,7 @@
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
-		<version>5.2.1-SNAPSHOT</version>
+		<version>5.3.0-SNAPSHOT</version>
 	</parent>
 
 	<url>https://biopax.github.io/Paxtools</url>
@@ -33,8 +33,14 @@
 					<packageName>net.biomodels.miriam</packageName>
 					<failOnNoSchemas>true</failOnNoSchemas>
 					<schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
-					<!--<arguments>-enableIntrospection</arguments>-->
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.sun.activation</groupId>
+						<artifactId>javax.activation</artifactId>
+						<version>1.2.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

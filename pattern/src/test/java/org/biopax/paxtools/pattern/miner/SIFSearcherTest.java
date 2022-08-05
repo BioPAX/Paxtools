@@ -108,8 +108,6 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Ignore
 	public void generateLargeSIFGraph() throws IOException
 	{
-//		BPCollections.I.setProvider(new TProvider());
-
 //		String dir = "/home/ozgun/Projects/biopax-pattern/";
 		String dir = "/home/ozgun/Data/PC/v10/";
 		SimpleIOHandler h = new SimpleIOHandler();
@@ -149,8 +147,6 @@ public class SIFSearcherTest extends PatternBoxTest
 	public void generateSomeSIFGraph() throws IOException
 	{
 		long start = System.currentTimeMillis();
-
-//		BPCollections.I.setProvider(new TProvider());
 
 		String dir = "/home/ozgun/Data/PC/v10/";
 		SimpleIOHandler h = new SimpleIOHandler();
