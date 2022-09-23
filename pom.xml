@@ -526,9 +526,11 @@
       <id>ebi-repo</id>
       <name>The EBI internal repository</name>
       <url>http://www.ebi.ac.uk/~maven/m2repo</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
+    </repository>
+    <repository>
+      <id>intact.nexus</id>
+      <name>IntAct Nexus</name>
+      <url>https://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/</url>
     </repository>
   </repositories>
 
