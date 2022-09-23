@@ -28,11 +28,6 @@
             <groupId>psidev.psi.mi</groupId>
             <artifactId>psimitab</artifactId>
             <version>1.8.5</version>
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>psidev.psi.mi</groupId>-->
-            <!--<artifactId>psi25-xml</artifactId>-->
-            <!--<version>1.8.5</version>-->
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
@@ -45,6 +40,22 @@
                 <exclusion>
                     <groupId>javax.xml.bind</groupId>
                     <artifactId>jaxb-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>com.springsource.javax.activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.stream</groupId>
+                    <artifactId>com.springsource.javax.xml.stream</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>com.springsource.org.apache.commons.collections</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>com.springsource.org.apache.commons.lang</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
