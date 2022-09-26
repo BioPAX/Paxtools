@@ -18,7 +18,7 @@ public enum BPCollections
 
 	private final Logger log = LoggerFactory.getLogger(BPCollections.class);
 
-	private BPCollections()
+	BPCollections()
 	{
 		String prop = System.getProperty("paxtools.CollectionProvider");
 		log.info("System property: paxtools.CollectionProvider=" + prop);		
@@ -28,7 +28,7 @@ public enum BPCollections
 			{
 				Class<? extends CollectionProvider> cProviderClass =
 						(Class<? extends CollectionProvider>) Class.forName(prop);
-				cProvider = cProviderClass.newInstance();
+				cProvider = cProviderClass.getDeclaredConstructor().newInstance();
 				log.info("CollectionProvider " + prop + " was successfully activated.");
 			}
 			catch (Exception e) // catch (IllegalAccessException | ClassNotFoundException | InstantiationException e)
@@ -64,9 +64,9 @@ public enum BPCollections
 	 */
 	public interface CollectionProvider
 	{
-		public <R> Set<R> createSet();
+		<R> Set<R> createSet();
 
-		public <D, R> Map<D, R> createMap();
+		<D, R> Map<D, R> createMap();
 	}
 
 	/**
