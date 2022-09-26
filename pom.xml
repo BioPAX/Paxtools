@@ -39,13 +39,10 @@
   </modules>
 
   <properties>
-    <java.version>17</java.version>
     <github.global.server>github</github.global.server>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.version.range>[3.0,4)</maven.version.range>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
   </properties>
 
   <developers>
@@ -214,11 +211,11 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
           <configuration>
-            <source>${java.version}</source>
-            <target>${java.version}</target>
+            <release>17</release>
           </configuration>
         </plugin>
         <plugin>
@@ -342,7 +339,7 @@
                   <version>${maven.version.range}</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>${java.version}</version>
+                  <version>17</version>
                 </requireJavaVersion>
               </rules>
               <fail>true</fail>
