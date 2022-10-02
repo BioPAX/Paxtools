@@ -33,8 +33,14 @@
 					<packageName>net.biomodels.miriam</packageName>
 					<failOnNoSchemas>true</failOnNoSchemas>
 					<schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
-					<!--<arguments>-enableIntrospection</arguments>-->
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.sun.activation</groupId>
+						<artifactId>javax.activation</artifactId>
+						<version>1.2.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,9 +1,5 @@
 # Paxtools
 
-[![Build Status](https://travis-ci.org/BioPAX/Paxtools.svg?branch=master)](https://travis-ci.org/BioPAX/Paxtools)
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4895a41be084788b09a0553ae829ac7)](https://www.codacy.com/app/IgorRodchenkov/Paxtools?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BioPAX/Paxtools&amp;utm_campaign=Badge_Grade)
-
 The [BioPAX](http://www.biopax.org) Object Model, API and utilities implemented in Java.
 Paxtools is developed at [Computational Biology Centre at MSKCC](http://cbio.mskcc.org/) and [Bader Lab, Donnelly Centre, University of Toronto](http://baderlab.org/).
 
@@ -53,3 +49,16 @@ $ paxtools help
 More information about Paxtools can be found in [the publication](http://dx.plos.org/10.1371/journal.pcbi.1003194),  [wiki archive](http://www.biopax.org/mediawiki/index.php/Paxtools), and [BioPAX forum](https://groups.google.com/d/msg/biopax-discuss/zwtwDG23T1E/Vu1OK7iXBQAJ).
 
 (_TODO_: move the Paxtools description here and deprecate that wiki soon.)
+
+## Build
+
+To build or use with a modern JDK (>11), e.g., OpenJDK-19, additional java options are required:
+```bash
+export _JAVA_OPTIONS="--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
+```
+(can also add to the java command args)
+
+To compile, run unit tests, and build JARs:
+```bash
+mvn clean package
+```
