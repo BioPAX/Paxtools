@@ -38,8 +38,20 @@
                     <artifactId>saxon-xom</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>com.springsource.javax.activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.stream</groupId>
+                    <artifactId>com.springsource.javax.xml.stream</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>com.springsource.org.apache.commons.collections</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>com.springsource.org.apache.commons.lang</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>javax.activation</groupId>
@@ -56,6 +68,18 @@
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>com.springsource.org.apache.commons.lang</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>com.springsource.org.apache.commons.io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>com.springsource.antlr</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.log4j</groupId>
+                    <artifactId>com.springsource.org.apache.log4j</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

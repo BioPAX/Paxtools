@@ -45,8 +45,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <slf4j.version>1.7.25</slf4j.version>
     <java.options>-Dfile.encoding=UTF-8</java.options>
-    <!-- if using JDK-19, set _JAVA_OPTIONS or here include (prefix with double-dash):
-    add-opens=java.base/java.lang=ALL-UNNAMED and add-opens=java.base/java.lang.reflect=ALL-UNNAMED" -->
   </properties>
 
   <developers>
@@ -141,7 +139,6 @@
             <configuration>
               <serverId>ossrh</serverId>
               <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <!--                             <autoReleaseAfterClose>true</autoReleaseAfterClose> -->
             </configuration>
           </plugin>
           <plugin>
@@ -156,6 +153,7 @@
             </executions>
           </plugin>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <executions>
               <execution>
@@ -214,6 +212,7 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
           <configuration>
@@ -254,9 +253,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.2</version>
-          <configuration>
-            <argLine>${java.options} -ea</argLine>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -333,6 +329,8 @@
         <configuration>
           <testFailureIgnore>false</testFailureIgnore>
           <argLine>${java.options} -ea</argLine>
+          <!-- if using JDK >11 use the args below (can set _JAVA_OPTIONS instead) -->
+<!--          <argLine>-ea &#45;&#45;add-opens=java.base/java.lang=ALL-UNNAMED &#45;&#45;add-opens=java.base/java.lang.reflect=ALL-UNNAMED</argLine>-->
         </configuration>
       </plugin>
       <plugin>
@@ -479,13 +477,9 @@
       <name>OSSRH Repository</name>
       <url>https://oss.sonatype.org/content/groups/public/</url>
     </repository>
-    <repository><!-- currently, it's only to get org.sbgn:libsbgn:0.2 -->
-      <id>biopax.releases</id>
-      <name>BioPAX.org Repository</name>
-      <url>http://www.biopax.org/m2repo/releases/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
     </repository>
     <repository>
       <id>ebi-repo</id>
