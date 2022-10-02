@@ -1,6 +1,0 @@
-language: java
-jdk:
-  - openjdk18
-sudo: false
-notifications:
-    slack: pathwaycommons:EDRQfFuGFr8Xn93M5xNMPVRB

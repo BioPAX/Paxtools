@@ -42,7 +42,8 @@
     <github.global.server>github</github.global.server>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.version.range>[3.0,4)</maven.version.range>
+    <slf4j.version>1.7.25</slf4j.version>
+    <java.options>-Dfile.encoding=UTF-8</java.options>
   </properties>
 
   <developers>
@@ -215,7 +216,7 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
           <configuration>
-            <release>17</release>
+            <release>8</release>
           </configuration>
         </plugin>
         <plugin>
@@ -308,45 +309,8 @@
         <version>1.11.1</version>
       </extension>
     </extensions>
+
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
-        <executions>
-          <execution>
-            <id>enforce-banned-dependencies</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <bannedDependencies>
-                  <searchTransitive>true</searchTransitive>
-                  <excludes>
-                    <exclude>javassist:javassist</exclude><!-- org.javassist is the new one -->
-                    <exclude>commons-logging</exclude>
-                    <exclude>aspectj:aspectj*</exclude> <!-- org.aspectj is the new one -->
-                    <exclude>hsqldb:hsqldb</exclude> <!-- org.hsqldb is the new one -->
-                    <exclude>org.springframework</exclude>
-                    <exclude>net.sf.saxon</exclude>
-                    <exclude>c3p0:c3p0</exclude> <!-- com.mchange:c3p0 is the new one -->
-                    <exclude>org.apache.commons:com.springsource.org.apache.commons.logging</exclude>
-                    <exclude>log4j:log4j</exclude>
-                  </excludes>
-                </bannedDependencies>
-                <requireMavenVersion>
-                  <version>${maven.version.range}</version>
-                </requireMavenVersion>
-                <requireJavaVersion>
-                  <version>17</version>
-                </requireJavaVersion>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -364,7 +328,9 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <testFailureIgnore>false</testFailureIgnore>
-          <argLine>-ea --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED</argLine>
+          <argLine>-ea</argLine>
+          <!-- if using JDK >11 use the args below (can set _JAVA_OPTIONS instead) -->
+<!--          <argLine>-ea &#45;&#45;add-opens=java.base/java.lang=ALL-UNNAMED &#45;&#45;add-opens=java.base/java.lang.reflect=ALL-UNNAMED</argLine>-->
         </configuration>
       </plugin>
       <plugin>
@@ -405,7 +371,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.7</version>
+        <version>3.8.1</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.jackson</groupId>
@@ -420,24 +386,24 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.25</version>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <version>1.7.25</version>
+        <version>${slf4j.version}</version>
         <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jul-to-slf4j</artifactId>
-        <version>1.7.25</version>
+        <version>${slf4j.version}</version>
         <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>log4j-over-slf4j</artifactId>
-        <version>1.7.25</version>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
@@ -580,7 +546,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.4.1</version>
         <configuration>
           <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
         </configuration>
