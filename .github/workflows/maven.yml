@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 11
-          distribution: 'adopt'
+          distribution: 'adoptium'
           cache: maven
       - name: Build with Maven and JDK-11
         run: mvn -B package
@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 19
-          distribution: 'adopt'
+          distribution: 'adoptium'
           cache: maven
       - name: Build with Maven and JDK-19
         run: mvn -B package
