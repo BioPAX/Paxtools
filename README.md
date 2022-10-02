@@ -1,5 +1,7 @@
 # Paxtools
 
+[![Java CI with Maven](https://github.com/BioPAX/Paxtools/actions/workflows/maven.yml/badge.svg)](https://github.com/BioPAX/Paxtools/actions/workflows/maven.yml)
+
 The [BioPAX](http://www.biopax.org) Object Model, API and utilities implemented in Java.
 Paxtools is developed at [Computational Biology Centre at MSKCC](http://cbio.mskcc.org/) and [Bader Lab, Donnelly Centre, University of Toronto](http://baderlab.org/).
 
