@@ -73,6 +73,10 @@
                     <groupId>org.apache.commons</groupId>
                     <artifactId>com.springsource.org.apache.commons.io</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>com.springsource.antlr</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>

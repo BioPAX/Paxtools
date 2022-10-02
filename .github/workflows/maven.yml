@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven and JDK-11
-        run: mvn -B package
+        run: mvn --batch-mode --update-snapshots package
   build2:
     runs-on: ubuntu-latest
     env:
@@ -35,4 +35,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven and JDK-17
-        run: mvn -B package
+        run: mvn --batch-mode --update-snapshots package
