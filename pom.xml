@@ -482,14 +482,8 @@
       <url>https://jitpack.io</url>
     </repository>
     <repository>
-      <id>ebi-repo</id>
-      <name>The EBI internal repository</name>
-      <url>https://www.ebi.ac.uk/~maven/m2repo</url>
-    </repository>
-    <repository>
-      <id>intact.nexus</id>
-      <name>IntAct Nexus</name>
-      <url>https://www.ebi.ac.uk/intact/maven/nexus/content/groups/public/</url>
+      <id>nexus-ebi-release-repo</id>
+      <url>http://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
     </repository>
   </repositories>
 
