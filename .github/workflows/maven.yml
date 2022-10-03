@@ -4,9 +4,12 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master, paxtools-5-2-1 ]
+    branches: 
+      - master
+      - paxtools-5-2-1
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
   workflow_call:
 
 jobs:
@@ -14,8 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: 11
           distribution: 'temurin'
@@ -28,8 +30,7 @@ jobs:
       _JAVA_OPTIONS: "--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: 'temurin'
