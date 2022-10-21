@@ -51,7 +51,7 @@ public class XOR extends OR
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
-		Collection<BioPAXElement> gen = new HashSet<BioPAXElement> (
+		Collection<BioPAXElement> gen = new HashSet<> (
 			con[0].generate(match, ind));
 
 		for (int i = 1; i < con.length; i++)
@@ -59,7 +59,7 @@ public class XOR extends OR
 			if (gen.isEmpty()) break;
 
 			Collection<BioPAXElement> subset = con[i].generate(match, ind);
-			Set<BioPAXElement> copy = new HashSet<BioPAXElement>(subset);
+			Set<BioPAXElement> copy = new HashSet<>(subset);
 
 			copy.removeAll(gen);
 			gen.removeAll(subset);

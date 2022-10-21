@@ -67,8 +67,8 @@ public abstract class AbstractNode implements Node
 	protected AbstractNode(Graph graph)
 	{
 		this.graph = graph;
-		this.upstream = new HashSet<Edge>();
-		this.downstream = new HashSet<Edge>();
+		this.upstream = new HashSet<>();
+		this.downstream = new HashSet<>();
 		this.upstreamInited = false;
 		this.downstreamInited = false;
 	}
@@ -96,7 +96,7 @@ public abstract class AbstractNode implements Node
 	 */
 	public void initBanned()
 	{
-		if (banned == null) banned = new HashSet<Node>();
+		if (banned == null) banned = new HashSet<>();
 	}
 
 	/**

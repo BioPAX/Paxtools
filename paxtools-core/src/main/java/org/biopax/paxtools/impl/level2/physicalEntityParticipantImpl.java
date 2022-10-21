@@ -17,7 +17,7 @@ class physicalEntityParticipantImpl extends BioPAXLevel2ElementImpl
 	private openControlledVocabulary CELLULAR_LOCATION;
 	private double STOICHIOMETRIC_COEFFICIENT = BioPAXElement.UNKNOWN_DOUBLE;
 	private physicalEntity PHYSICAL_ENTITY;
-	private Set<interaction> PARTICIPANTSof = new HashSet<interaction>();
+	private Set<interaction> PARTICIPANTSof = new HashSet<>();
 	private complex COMPONENTSof;
 
 

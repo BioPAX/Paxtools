@@ -143,7 +143,7 @@ public class MiriamLink
      */
     public static String[] getDataTypeURIs(String datatypeKey)
     {
-       	Set<String> alluris = new HashSet<String>();
+       	Set<String> alluris = new HashSet<>();
     	Datatype datatype = getDatatype(datatypeKey);
     	for(Uris uris : datatype.getUris()) {
     		for(Uri uri : uris.getUri()) {
@@ -232,7 +232,7 @@ public class MiriamLink
      */
     public static String[] getLocations(String datatypeKey, String entityId)
     {
-       	Set<String> locations = new HashSet<String>();
+       	Set<String> locations = new HashSet<>();
 		Datatype datatype = getDatatype(datatypeKey);
 		for (Resource resource : getResources(datatype)) {
 			String link = resource.getDataEntry();
@@ -257,7 +257,7 @@ public class MiriamLink
 	 */
     public static String[] getDataResources(String datatypeKey)
     {
-       	Set<String> locations = new HashSet<String>();
+       	Set<String> locations = new HashSet<>();
     	Datatype datatype = getDatatype(datatypeKey);
 		for (Resource resource : getResources(datatype)) {
 			String link = resource.getDataResource();
@@ -319,7 +319,7 @@ public class MiriamLink
 	 */
     public static String[] getNames(String datatypeKey)
     {
-    	Set<String> names = new HashSet<String>();
+    	Set<String> names = new HashSet<>();
     	Datatype datatype = getDatatype(datatypeKey);
     	names.add(datatype.getName());
     	Synonyms synonyms = datatype.getSynonyms();
@@ -338,7 +338,7 @@ public class MiriamLink
      */
     public static String[] getDataTypesName()
     {
-        Set<String> dataTypeNames = new HashSet<String>();
+        Set<String> dataTypeNames = new HashSet<>();
         for(Datatype datatype : miriam.getDatatype()) {
         	dataTypeNames.add(datatype.getName());
         }
@@ -354,7 +354,7 @@ public class MiriamLink
      */
     public static String[] getDataTypesId()
     {
-        Set<String> dataTypeIds = new HashSet<String>();
+        Set<String> dataTypeIds = new HashSet<>();
         for(Datatype datatype : miriam.getDatatype()) {
         	dataTypeIds.add(datatype.getId());
         }
@@ -460,7 +460,7 @@ public class MiriamLink
      */
     public static String[] getResourcesId()
     {
-        Set<String> ids = new HashSet<String>();
+        Set<String> ids = new HashSet<>();
         for(Datatype datatype : miriam.getDatatype()) {
 			for (Resource resource : getResources(datatype)) {
 				ids.add(resource.getId());
@@ -522,7 +522,7 @@ public class MiriamLink
      * @return the list of MIRIAM Resources in that datatype
      */
     private static List<Resource> getResources(Datatype datatype) {
-    	List<Resource> toReturn = new ArrayList<Resource>();
+    	List<Resource> toReturn = new ArrayList<>();
     	
     	Resources resources = datatype.getResources();
 		if (resources != null) {

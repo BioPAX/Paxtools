@@ -257,7 +257,7 @@ public class TestMapping  {
 		}			
 		assertNotNull(bpModel);
 		assertFalse(bpModel.getObjects().isEmpty());
-		Set<Evidence> evs = bpModel.getObjects(Evidence.class);
+		Collection<Evidence> evs = bpModel.getObjects(Evidence.class);
 		assertFalse(evs.isEmpty());
 		MolecularInteraction interaction = null;
 		for(MolecularInteraction mi : bpModel.getObjects(MolecularInteraction.class)) {

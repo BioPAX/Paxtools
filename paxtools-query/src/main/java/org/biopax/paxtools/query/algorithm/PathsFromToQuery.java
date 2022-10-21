@@ -4,10 +4,10 @@ package org.biopax.paxtools.query.algorithm;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Finds the paths from a specified source set of states or entities to a
@@ -25,12 +25,12 @@ public class PathsFromToQuery
 	/**
 	 * The set of nodes from which the paths of interests should start.
 	 */
-	private Set<Node> sourceSet;
+	private Collection<Node> sourceSet;
 
 	/**
 	 * The set of nodes to which the paths of interests should arrive.
 	 */
-	private Set<Node> targetSet;
+	private Collection<Node> targetSet;
 
 	/**
 	 * True if length limit is used, false if shortes+k is used.
@@ -66,11 +66,11 @@ public class PathsFromToQuery
 	 * @param stopDistance search limit
 	 * @param strict whether we want to extend and result path towards other source and targets
 	 */
-	public PathsFromToQuery(Set<Node> sourceSet,
-							Set<Node> targetSet,
-							LimitType limitType,
-							int stopDistance,
-							boolean strict)
+	public PathsFromToQuery(Collection<Node> sourceSet,
+													Collection<Node> targetSet,
+													LimitType limitType,
+													int stopDistance,
+													boolean strict)
 	{
 		assert limitType != null : "limitType should be specified";
 
@@ -85,7 +85,7 @@ public class PathsFromToQuery
 	 * Executes the algorithm.
 	 * @return paths from sources to targets
 	 */
-	public Set<GraphObject> run()
+	public Collection<GraphObject> run()
 	{
 		/**
 		 * Candidate contains all the graph objects that are the results of BFS.
@@ -93,7 +93,7 @@ public class PathsFromToQuery
 		 * yield result.
 		 */
 		Map<GraphObject, Integer> candidate = new HashMap<GraphObject, Integer>();
-		Set<GraphObject> result = new HashSet<GraphObject>();
+		Collection<GraphObject> result = new HashSet<>();
 
 		BFS bfsFwd = null;
 		BFS bfsRev = null;
@@ -176,7 +176,7 @@ public class PathsFromToQuery
 			}
 		}
 
-		Set<Node> ST = new HashSet<Node>(sourceSet);
+		Collection<Node> ST = new HashSet<>(sourceSet);
 		ST.addAll(targetSet);
 
 		CycleBreaker breaker = new CycleBreaker(result, ST, limit);

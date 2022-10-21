@@ -143,7 +143,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	 */
 	protected Set<Conversion> getUpstreamConversions(Collection<Interaction> inters)
 	{
-		Set<Conversion> set = new HashSet<Conversion>();
+		Set<Conversion> set = new HashSet<>();
 
 		for (Interaction inter : inters)
 		{
@@ -173,7 +173,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	 */
 	protected Set<Interaction> getDownstreamInteractions(Collection<Interaction> inters)
 	{
-		Set<Interaction> set = new HashSet<Interaction>();
+		Set<Interaction> set = new HashSet<>();
 
 		for (Interaction inter : inters)
 		{
@@ -207,7 +207,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	 */
 	private Set<Conversion> getRelatedConversions(Collection<Interaction> inters)
 	{
-		Set<Conversion> set = new HashSet<Conversion>();
+		Set<Conversion> set = new HashSet<>();
 
 		for (Interaction inter : inters)
 		{
@@ -278,7 +278,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	 */
 	protected void initUpperEquivalent()
 	{
-		this.upperEquivalent = new HashSet<Node>();
+		this.upperEquivalent = new HashSet<>();
 
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntityOf())
 		{
@@ -294,7 +294,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	 */
 	protected void initLowerEquivalent()
 	{
-		this.lowerEquivalent = new HashSet<Node>();
+		this.lowerEquivalent = new HashSet<>();
 
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntity())
 		{

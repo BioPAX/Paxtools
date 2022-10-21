@@ -111,7 +111,7 @@ public final class Normalizer {
 		final String xmlBase = getXmlBase(model); //current base, the default or model's one, if set.
 		
 		// use a copy of the xrefs set (to avoid concurrent modif. exception)
-		Set<? extends Xref> xrefs = new HashSet<Xref>(model.getObjects(Xref.class));
+		Set<? extends Xref> xrefs = new HashSet<>(model.getObjects(Xref.class));
 		for(Xref ref : xrefs)
 		{
 			//skip not well-defined ones (incl. PublicationXrefs w/o db/id - won't normalize)
@@ -334,7 +334,7 @@ public final class Normalizer {
 
 	private Collection<UnificationXref> getUnificationXrefsSorted(XReferrable r) {
 
-		List<UnificationXref> urefs = new ArrayList<UnificationXref>();
+		List<UnificationXref> urefs = new ArrayList<>();
 		for(UnificationXref ux : new ClassFilterSet<Xref,UnificationXref>(r.getXref(), UnificationXref.class))
 		{
 			if(ux.getDb() != null && ux.getId() != null) {
@@ -460,7 +460,7 @@ public final class Normalizer {
 		normalizeBioSources(model);
 
 		// auto-generate missing entity references:
-		for(SimplePhysicalEntity spe : new HashSet<SimplePhysicalEntity>(model.getObjects(SimplePhysicalEntity.class))) {
+		for(SimplePhysicalEntity spe : new HashSet<>(model.getObjects(SimplePhysicalEntity.class))) {
 			//it skips if spe has entityReference or memberPE already
 			ModelUtils.addMissingEntityReference(model, spe);
 		}
@@ -733,8 +733,8 @@ public final class Normalizer {
 		final ShallowCopy copier;
 				
 		NormalizerMap(Model model) {
-			subs = BPCollections.I.createMap();
-			uriToSub = BPCollections.I.createMap();
+			subs = BPCollections.I.createMap(100);
+			uriToSub = BPCollections.I.createMap(100);
 			this.model = model;
 			copier = new ShallowCopy();
 		}
@@ -774,13 +774,14 @@ public final class Normalizer {
 			try {
 				ModelUtils.replace(model, subs);
 			} catch (Exception e) {
-				log.error("Failed to replace BioPAX elements.", e);
+				log.error("Failed to replace BioPAX elements", e);
 				return;
 			}
 			
 			for(BioPAXElement e : subs.values()) {
-				if(!model.contains(e))
+				if(!model.containsID(e.getUri())) {
 					model.add(e);
+				}
 			}
 		
 			for(BioPAXElement e : model.getObjects()) {

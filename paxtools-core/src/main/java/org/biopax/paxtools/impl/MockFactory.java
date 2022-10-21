@@ -161,7 +161,7 @@ public class MockFactory extends BioPAXFactory
 	{
 		if (multiple)
 		{
-			ArrayList<String> list = new ArrayList<String>(4);
+			ArrayList<String> list = new ArrayList<>(4);
 			for (String str : strings)
 			{
 				list.add(bpe.getUri() + str);
@@ -172,7 +172,7 @@ public class MockFactory extends BioPAXFactory
 
 	private HashSet<BioPAXElement> createRestrictedMock(ObjectPropertyEditor propertyEditor, BioPAXElement bpe, int k)
 	{
-		HashSet<BioPAXElement> hashSet = new HashSet<BioPAXElement>();
+		HashSet<BioPAXElement> hashSet = new HashSet<>();
 
 
 		Set<Class<? extends BioPAXElement>> rRanges = propertyEditor.getRestrictedRangesFor(bpe.getModelInterface());

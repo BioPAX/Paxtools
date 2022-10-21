@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * A basic example that shows how to list all unification xrefs.
@@ -59,8 +59,7 @@ public class UnificationIDtoRDFIDLister
 			new FileInputStream(new File(arg));
 		Model level2 = handler.convertFromOWL(in);
 
-		Set<unificationXref> unis =
-			level2.getObjects(unificationXref.class);
+		Collection<unificationXref> unis = level2.getObjects(unificationXref.class);
 		for (unificationXref uni : unis)
 		{
 			ClassFilterSet referrables = new ClassFilterSet(uni.isXREFof(),

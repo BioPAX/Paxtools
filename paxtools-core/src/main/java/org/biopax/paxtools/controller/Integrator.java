@@ -66,7 +66,7 @@ public class Integrator {
                 {"Chemical Entities of Biological Interest", "ChEBI"}
                };
 
-    private Set<Set<String>> relatedTerms = new HashSet<Set<String>>();
+    private Set<Set<String>> relatedTerms = new HashSet<>();
     private String[][] termLists =
             {
                     {"active", "active1", "active2", "phosphorylation", "phosphate group", "phosphorylation site"},
@@ -290,7 +290,7 @@ public class Integrator {
         }
 
         if(this.similarConversions == null)
-                this.similarConversions = new ArrayList<ConversionScore>();
+                this.similarConversions = new ArrayList<>();
 
         /* Original score matrixes won't be modified for a later use
          * Instead, we are going to copy them, and modify their copies.
@@ -309,7 +309,7 @@ public class Integrator {
         log.info("PEP scores copied.");
 
         similarConversions = (alternativeScores == null)
-                                ? new ArrayList<ConversionScore>(this.similarConversions)
+                                ? new ArrayList<>(this.similarConversions)
                                 : alternativeScores;
 
         log.info("Conversion scores copied.");
@@ -342,8 +342,8 @@ public class Integrator {
     }
 
     private void equalizeEntities(List<ConversionScore> similarConversions) {
-        Set<conversion> doNotModifySet = new HashSet<conversion>();
-        Set<ConversionScore> containsSelfRemoved = new HashSet<ConversionScore>();
+        Set<conversion> doNotModifySet = new HashSet<>();
+        Set<ConversionScore> containsSelfRemoved = new HashSet<>();
 
         for(ConversionScore convScore: similarConversions) {
             // Since we sorted the list, we are safe to break
@@ -442,7 +442,7 @@ public class Integrator {
 
     private void equalizePEP(physicalEntityParticipant controller1, physicalEntityParticipant controller2) {
         // There is a special case for PEPs: we also need to update equivalent PEPs' fields
-        Set<physicalEntityParticipant> tempEqvPeps = new HashSet<physicalEntityParticipant>();
+        Set<physicalEntityParticipant> tempEqvPeps = new HashSet<>();
         tempEqvPeps.addAll(getEquivalentsOfPEP(controller1));
         tempEqvPeps.addAll(getEquivalentsOfPEP(controller2));
         for(physicalEntityParticipant eqPep : tempEqvPeps)
@@ -455,7 +455,7 @@ public class Integrator {
     }
 
     private Set<physicalEntityParticipant> getEquivalentsOfPEP(physicalEntityParticipant onePep) {
-        Set<physicalEntityParticipant> eqGrp = new HashSet<physicalEntityParticipant>();
+        Set<physicalEntityParticipant> eqGrp = new HashSet<>();
         for(physicalEntityParticipant aPep : onePep.getPHYSICAL_ENTITY().isPHYSICAL_ENTITYof() ) {
             if(aPep.isInEquivalentState(onePep))
                 eqGrp.add(aPep);
@@ -499,7 +499,7 @@ public class Integrator {
                                 Map<physicalEntityParticipant,
                                         Map<physicalEntityParticipant, Double>> pepScoreMatrix) {
         // To get rid of Concurrent modification :|
-        Set<ConversionScore> toBeUpdated = new HashSet<ConversionScore>();
+        Set<ConversionScore> toBeUpdated = new HashSet<>();
 
         for(ConversionScore convScore : similarConversions) {
             // Check if the score is equal to or higher than the threshold
@@ -531,10 +531,12 @@ public class Integrator {
 
     }
 
-    private List<ConversionScore> createConversionScoreMap(Map<physicalEntityParticipant,
-                                                Map<physicalEntityParticipant, Double>> pepScoreMatrix,
-                                                           Set<conversion> convSet1, Set<conversion> convSet2) {
-        List<ConversionScore> similarConversions = new ArrayList<ConversionScore>();
+    private List<ConversionScore> createConversionScoreMap(
+      Map<physicalEntityParticipant,
+      Map<physicalEntityParticipant, Double>> pepScoreMatrix,
+      Collection<conversion> convSet1, Collection<conversion> convSet2)
+    {
+        List<ConversionScore> similarConversions = new ArrayList<>();
 
         double totalSize = convSet1.size() * convSet2.size();
         double convCnt = 0;
@@ -675,7 +677,7 @@ public class Integrator {
                                             physicalEntityParticipant sPep) {
         if( relatedTerms.isEmpty() ) {
             for( String[] termL : termLists )  {
-                Set<String> termSet = new HashSet<String>();
+                Set<String> termSet = new HashSet<>();
                 termSet.addAll(Arrays.asList(termL));
                 relatedTerms.add(termSet);
             }
@@ -935,7 +937,7 @@ public class Integrator {
         if( mostlyUsed == null )
             return;
 
-        ArrayList <physicalEntityParticipant> pepList = new ArrayList<physicalEntityParticipant>();
+        ArrayList <physicalEntityParticipant> pepList = new ArrayList<>();
         pepList.addAll( model.getObjects(physicalEntityParticipant.class) );
 
         for(BioPAXElement pep : pepList) {

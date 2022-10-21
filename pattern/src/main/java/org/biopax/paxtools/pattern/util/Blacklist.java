@@ -151,7 +151,7 @@ public class Blacklist
 	 */
 	public void write(OutputStream os)
 	{
-		List<String> ids = new ArrayList<String>(score.keySet());
+		List<String> ids = new ArrayList<>(score.keySet());
 		final Map<String, Integer> score = this.score;
 		Collections.sort(ids, new Comparator<String>()
 		{
@@ -221,7 +221,7 @@ public class Blacklist
 	 */
 	private Set<String> getLeastUbique(Collection<String> ids)
 	{
-		Set<String> select = new HashSet<String>();
+		Set<String> select = new HashSet<>();
 
 		int s = getLeastScore(ids);
 
@@ -426,7 +426,7 @@ public class Blacklist
 		Collection<SmallMolecule> ubiques = getUbiques(entities, ctx);
 		if (ubiques.isEmpty()) return entities;
 
-		Set<PhysicalEntity> result = new HashSet<PhysicalEntity>(entities);
+		Set<PhysicalEntity> result = new HashSet<>(entities);
 		result.removeAll(ubiques);
 		return result;
 	}

@@ -48,9 +48,9 @@ public class GSEAConverter
 	
 	private final String idType;
 	private final boolean crossSpeciesCheckEnabled;
-	private Set<String> allowedOrganisms;
+	private Collection<String> allowedOrganisms;
 	private final boolean skipSubPathways;
-	private final Set<Provenance> skipSubPathwaysOf;
+	private final Collection<Provenance> skipSubPathwaysOf;
 	private boolean skipOutsidePathways = false;
 	private int minNumOfGenesPerEntry = 1;
 
@@ -115,13 +115,11 @@ public class GSEAConverter
 	 * @param skipSubPathwaysOf - do not look inside sub-pathways of pathways of given data sources to collect entity references
 	 *                       (useful when a model, such as converted to BioPAX KEGG data, has lots of sub-pathways, loops.)
 	 */
-	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled, Set<Provenance> skipSubPathwaysOf)
+	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled, Collection<Provenance> skipSubPathwaysOf)
 	{
 		this.idType = idType;
 		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
-		if(skipSubPathwaysOf == null)
-			skipSubPathwaysOf = Collections.emptySet();
-		this.skipSubPathwaysOf = skipSubPathwaysOf;
+		this.skipSubPathwaysOf = (skipSubPathwaysOf == null) ? Collections.emptySet() : skipSubPathwaysOf;
 		this.skipSubPathways = false;
 	}
 
@@ -138,7 +136,7 @@ public class GSEAConverter
 		this.skipOutsidePathways = skipOutsidePathways;
 	}
 
-	public Set<String> getAllowedOrganisms() {
+	public Collection<String> getAllowedOrganisms() {
 		return allowedOrganisms;
 	}
 
@@ -178,7 +176,7 @@ public class GSEAConverter
 				if ((minNumOfGenesPerEntry <= 1 && !entry.identifiers().isEmpty())
 						|| entry.identifiers().size() >= minNumOfGenesPerEntry)
 				{
-					writer.write(entry.toString() + "\n");
+					writer.write(entry + "\n");
 				}
 			}
 			writer.flush();
@@ -192,12 +190,7 @@ public class GSEAConverter
 	 */
 	public Collection<GMTEntry> convert(final Model model)
 	{
-		final Collection<GMTEntry> toReturn = new TreeSet<GMTEntry>(new Comparator<GMTEntry>() {
-			@Override
-			public int compare(GMTEntry o1, GMTEntry o2) {
-				return o1.toString().compareTo(o2.toString());
-			}
-		});
+		final Collection<GMTEntry> toReturn = new TreeSet<>(Comparator.comparing(GMTEntry::toString));
 
 		Model l3Model;
 		// convert to level 3 in necessary
@@ -208,10 +201,10 @@ public class GSEAConverter
 		
 		//a modifiable copy of the set of all PRs in the model - 
 		//after all, it has all the PRs that do not belong to any pathway
-		final Set<SequenceEntityReference> sequenceEntityReferences =
-				new HashSet<SequenceEntityReference>(l3Model.getObjects(SequenceEntityReference.class));
+		final Collection<SequenceEntityReference> sequenceEntityReferences =
+				new ArrayList<>(l3Model.getObjects(SequenceEntityReference.class));
 
-		final Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
+		final Collection<Pathway> pathways = l3Model.getObjects(Pathway.class);
 		for (Pathway pathway : pathways) 
 		{
 			String name = (pathway.getDisplayName() == null) ? pathway.getStandardName() : pathway.getDisplayName();
@@ -236,14 +229,14 @@ public class GSEAConverter
 			if(!pathwaySers.isEmpty()) {
 				LOG.debug("For pathway: " + currentPathwayName + " (" + currentPathway.getUri()
 						+ "), got " + pathwaySers.size() + " sERs; now - grouping by organism...");
-				Map<String,Set<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(pathwaySers);
+				Map<String, Collection<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(pathwaySers);
 				// create GSEA/GMT entries - one entry per organism (null organism also makes one)
 				String dataSource = getDataSource(currentPathway.getDataSource());
 				Collection<GMTEntry> entries = createGseaEntries(currentPathway.getUri(),
 						currentPathwayName, dataSource, orgToPrsMap);
 				if(!entries.isEmpty())
 					toReturn.addAll(entries);
-				sequenceEntityReferences.removeAll(pathwaySers);//keep not processed PRs (a PR can be processed multiple times)
+				sequenceEntityReferences.removeAll(pathwaySers);//keep not processed PRs (can be processed multiple times)
 				LOG.debug("- collected " + entries.size() + "entries.");
 			}
 		}
@@ -252,7 +245,8 @@ public class GSEAConverter
 		//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
 		if(!sequenceEntityReferences.isEmpty() && !skipOutsidePathways) {
 			LOG.info("Creating entries for the rest of PRs (outside any pathway)...");
-			Map<String,Set<SequenceEntityReference>> orgToPrsMap = organismToProteinRefsMap(sequenceEntityReferences);
+			Map<String, Collection<SequenceEntityReference>> orgToPrsMap =
+				organismToProteinRefsMap(sequenceEntityReferences);
 			if(!orgToPrsMap.isEmpty()) {
 				// create GSEA/GMT entries - one entry per organism (null organism also makes one)
 				if(model.getUri()==null) {
@@ -268,11 +262,12 @@ public class GSEAConverter
 		return toReturn;
 	}
 
-	private Collection<GMTEntry> createGseaEntries(String uri, final String name, final String dataSource,
-												   final Map<String, Set<SequenceEntityReference>> orgToPrsMap)
+	private Collection<GMTEntry> createGseaEntries(
+		String uri, String name, String dataSource,
+		Map<String, Collection<SequenceEntityReference>> orgToPrsMap)
 	{
 		// generate GSEA entries for each species
-		final Collection<GMTEntry> toReturn = new ArrayList<GMTEntry>();
+		final Collection<GMTEntry> toReturn = new ArrayList<>();
 		for (final String org : orgToPrsMap.keySet()) {
 			if(orgToPrsMap.get(org).size() > 0) {
 				GMTEntry GMTEntry = new GMTEntry(uri, org, idType,
@@ -286,9 +281,10 @@ public class GSEAConverter
 
 	
 	//warn: there can be many equivalent BioSource objects (same taxonomy id, different URIs)
-	private Map<String, Set<SequenceEntityReference>> organismToProteinRefsMap(Set<SequenceEntityReference> seqErs)
+	private Map<String, Collection<SequenceEntityReference>> organismToProteinRefsMap(
+		Collection<SequenceEntityReference> seqErs)
 	{
-		Map<String,Set<SequenceEntityReference>> map = new HashMap<String, Set<SequenceEntityReference>>();
+		Map<String, Collection<SequenceEntityReference>> map = new HashMap<>();
 
 		if(seqErs.isEmpty())
 			throw new IllegalArgumentException("Empty set");
@@ -297,21 +293,23 @@ public class GSEAConverter
 			for (SequenceEntityReference r : seqErs) {
 				String key = getOrganismKey(r.getOrganism()); // null org. is ok (key == "")
 				//collect PRs only from allowed organisms
-				if(allowedOrganisms==null || allowedOrganisms.isEmpty() || allowedOrganisms.contains(key)) {
-					Set<SequenceEntityReference> sers = map.get(key);
+				if(allowedOrganisms==null || allowedOrganisms.isEmpty() || allowedOrganisms.contains(key))
+				{
+					Collection<SequenceEntityReference> sers = map.get(key);
 					if (sers == null) {
-						sers = new HashSet<SequenceEntityReference>();
+						sers = new HashSet<>();
 						map.put(key, sers);
 					}
 					sers.add(r);
 				}
 			}
 		} else {
-			final Set<SequenceEntityReference> sers = new HashSet<SequenceEntityReference>();
+			final Set<SequenceEntityReference> sers = new HashSet<>();
 			for (SequenceEntityReference r : seqErs) {
 				String key = getOrganismKey(r.getOrganism());
 				//collect PRs only from allowed organisms
-				if(allowedOrganisms==null || allowedOrganisms.isEmpty() || allowedOrganisms.contains(key)) {
+				if(allowedOrganisms==null || allowedOrganisms.isEmpty() || allowedOrganisms.contains(key))
+				{
 					sers.add(r);
 				}
 			}
@@ -322,7 +320,7 @@ public class GSEAConverter
 	}
 
 
-	void processEntityReferences(Set<SequenceEntityReference> sers, GMTEntry targetEntry)
+	void processEntityReferences(Collection<SequenceEntityReference> sers, GMTEntry targetEntry)
 	{
 		prs_loop: for (SequenceEntityReference ser : sers)
 		{
@@ -379,11 +377,11 @@ public class GSEAConverter
 	/*
 	 * Gets datasource names, if any, in a consistent way/order, excl. duplicates
 	 */
-	private String getDataSource(Set<Provenance> provenances)
+	private String getDataSource(Collection<Provenance> provenances)
 	{
 		if(provenances.isEmpty()) return "N/A";
 		
-		Set<String> dsNames = new TreeSet<String>();
+		Set<String> dsNames = new TreeSet<>();
 		for (Provenance provenance : provenances)
 		{
 			String name = provenance.getDisplayName();
@@ -433,7 +431,7 @@ public class GSEAConverter
 		return key;
 	}
 
-	private boolean shareSomeObjects(Set<?> setA, Set<?> setB) {
+	private boolean shareSomeObjects(Collection<?> setA, Collection<?> setB) {
 		return (!setA.isEmpty() && !setB.isEmpty())	? !CollectionUtils.intersection(setA, setB).isEmpty() : false;
 	}
 }

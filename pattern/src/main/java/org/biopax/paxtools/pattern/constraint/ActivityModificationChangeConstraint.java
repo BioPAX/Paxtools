@@ -191,7 +191,7 @@ public class ActivityModificationChangeConstraint extends ConstraintAdapter
 	 */
 	protected Set<String> extractModifNames(Set mfSet)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		for (Object o : mfSet)
 		{

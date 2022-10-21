@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,13 +42,13 @@ public class QueryTest
 		Model model = handler.convertFromOWL(QueryTest.class.getResourceAsStream(
 			"raf_map_kinase_cascade_reactome.owl"));
 
-		Set<BioPAXElement> source = findElements(model,
+		Collection<BioPAXElement> source = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN2360_1_9606"); //MEK2
 
-		Set<BioPAXElement> target = findElements(model,
+		Collection<BioPAXElement> target = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1631_1_9606"); //ERK1
 
-		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(
+		Collection<BioPAXElement> result = QueryExecuter.runNeighborhood(
 			source, model, 1, Direction.BOTHSTREAM);
 
 		assertTrue(result.size() > 0);
@@ -93,27 +94,22 @@ public class QueryTest
 		assertFalse(result.contains(check));
 		result = QueryExecuter.runNeighborhood(source, model, 3, Direction.UNDIRECTED);
 		assertTrue(result.contains(check));
-
-
-//		Model clonedModel = excise(model, result);
-//		handler.convertToOWL(clonedModel, new FileOutputStream(
-//			getClass().getResource("").getFile() + File.separator + "temp.owl"));
 	}
 
-	private Model excise(Model model, Set<BioPAXElement> result)
+	private Model excise(Collection<BioPAXElement> result)
 	{
 		Completer c = new Completer(SimpleEditorMap.L3);
 
-		result = c.complete(result, model);
+		result = c.complete(result);
 
 		Cloner cln = new Cloner(SimpleEditorMap.L3, BioPAXLevel.L3.getDefaultFactory());
 
-		return cln.clone(model, result);
+		return cln.clone(result);
 	}
 
-	protected static Set<BioPAXElement> findElements(Model model, String... ids)
+	protected static Collection<BioPAXElement> findElements(Model model, String... ids)
 	{
-		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
+		Collection<BioPAXElement> set = new HashSet<>();
 
 		for (String id : ids)
 		{
@@ -144,12 +140,11 @@ public class QueryTest
 		BioPAXElement s1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6022_1_9606");
 		BioPAXElement t1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6020_1_9606");
 
-		Set<BioPAXElement> source = new HashSet<BioPAXElement>();
-//		Set<BioPAXElement> target = new HashSet<BioPAXElement>();
+		Collection<BioPAXElement> source = new HashSet<>();
 		source.add(s1);
 		source.add(t1);
 
-		Set<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(
+		Collection<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(
 			source, model, Direction.DOWNSTREAM, 3, null);
 
 		secs = (System.currentTimeMillis() - time);
@@ -157,7 +152,7 @@ public class QueryTest
 		System.out.println("result.size() = " + result.size());
 		System.out.println("milisecs = " + secs);
 
-		Model ex = excise(model, result);
+		Model ex = excise(result);
 		handler.convertToOWL(ex, new FileOutputStream("QueryResult.owl"));		
 	}
 
@@ -167,15 +162,15 @@ public class QueryTest
 		Model model = handler.convertFromOWL(this.getClass().getResourceAsStream(
 			"raf_map_kinase_cascade_reactome.owl"));
 
-		Set<BioPAXElement> source = findElements(model,
+		Collection<BioPAXElement> source = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN2360_1_9606"); //MEK2
-		Set<BioPAXElement> target = findElements(model,
+		Collection<BioPAXElement> target = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1631_1_9606"); //ERK1
 
 		// test organism filter
 
 		Filter f = new OrganismFilter(new String[]{"Homo sapiens"});
-		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
+		Collection<BioPAXElement> result = QueryExecuter.runPathsFromTo(
 			source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(!result.isEmpty());
 
@@ -213,14 +208,14 @@ public class QueryTest
 		target = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#SMALLMOLECULE6_1_9606"); //ADP
 
-		Set<String> ubiqueIDs = new HashSet<String>(Arrays.asList("Some ID", "Another ID"));
+		Set<String> ubiqueIDs = Set.of("Some ID", "Another ID");
 
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 1,
 			new UbiqueFilter(ubiqueIDs));
 
 		assertTrue(!result.isEmpty());
 
-		ubiqueIDs = new HashSet<String>(Arrays.asList(
+		ubiqueIDs = new HashSet<>(Arrays.asList(
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#SMALLMOLECULE5_1_9606"));
 
 		result = QueryExecuter.runPathsFromTo(source, target, model, LimitType.NORMAL, 1,

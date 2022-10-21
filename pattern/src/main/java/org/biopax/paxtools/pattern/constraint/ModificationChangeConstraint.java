@@ -76,7 +76,7 @@ public class ModificationChangeConstraint extends ConstraintAdapter
 
 	private Set<String> collectTerms(Set<ModificationFeature>... mods)
 	{
-		Set<String> terms = new HashSet<String>();
+		Set<String> terms = new HashSet<>();
 		collectTerms(mods[0], terms);
 		if (mods.length > 1) collectTerms(mods[1], terms);
 		return terms;

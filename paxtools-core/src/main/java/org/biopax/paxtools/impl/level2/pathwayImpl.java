@@ -21,7 +21,7 @@ class pathwayImpl extends processImpl implements pathway
 
 	public pathwayImpl()
 	{
-		this.PATHWAY_COMPONENTS = new HashSet<pathwayComponent>();
+		this.PATHWAY_COMPONENTS = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -57,7 +57,7 @@ class pathwayImpl extends processImpl implements pathway
 			}
 		}
 		this.PATHWAY_COMPONENTS = PATHWAY_COMPONENTS != null ?
-			PATHWAY_COMPONENTS : new HashSet<pathwayComponent>();
+			PATHWAY_COMPONENTS : new HashSet<>();
 		for (pathwayComponent pathwayComponent : this.PATHWAY_COMPONENTS)
 		{
 			pathwayComponent.isPATHWAY_COMPONENTSof().add(this);

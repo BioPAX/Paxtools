@@ -6,8 +6,8 @@ import org.biopax.paxtools.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Specifically "Clones" the BioPAX elements set
@@ -33,23 +33,6 @@ public class Cloner implements Visitor
 
 	/**
 	 * For each element from the 'toBeCloned' list,
-	 * it creates a copy in the new model, setting all
-	 * the data properties; however, object property values
-	 * that refer to BioPAX elements not in 'toBeCloned' list
-	 * are ignored.
-	 *
-	 * @deprecated use {@link #clone(Set)} instead ('source' model was not used in previous versions)
-	 *
-	 * @param source - actually, is never used... can be null all the same
-	 * @param toBeCloned elements to clone
-	 * @return a new model containing the cloned biopax objects
-	 */
-	public Model clone(Model source, Set<BioPAXElement> toBeCloned) {
-		return clone(toBeCloned);
-	}
-
-	/**
-	 * For each element from the 'toBeCloned' list,
 	 * it creates a copy in the new model, setting all 
 	 * the data properties; however, object property values
 	 * that refer to BioPAX elements not in 'toBeCloned' list
@@ -59,11 +42,11 @@ public class Cloner implements Visitor
 	 * @param toBeCloned elements to clone
 	 * @return a new model containing the cloned biopax objects
 	 */
-	public Model clone(Set<BioPAXElement> toBeCloned)
+	public Model clone(Collection<BioPAXElement> toBeCloned)
 	{
 		final Model targetModel = factory.createModel();
 
-		for (BioPAXElement bpe : new HashSet<BioPAXElement>(toBeCloned))
+		for (BioPAXElement bpe : new HashSet<>(toBeCloned))
 		{
 			// create a new empty object using the URI (all the biopax properties are empty;
 			// addNew fails when there are several objects having the same URI)

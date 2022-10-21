@@ -16,8 +16,8 @@ class InteractionHelper
 		// I will use two array lists instead
 
 
-		ArrayList<openControlledVocabulary> ocvs = new ArrayList<openControlledVocabulary>(5);
-		ArrayList<Integer> counts = new ArrayList<Integer>(5);
+		ArrayList<openControlledVocabulary> ocvs = new ArrayList<>(5);
+		ArrayList<Integer> counts = new ArrayList<>(5);
 
 		Set<InteractionParticipant> ips =
 			interaction.getPARTICIPANTS();

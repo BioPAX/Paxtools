@@ -35,7 +35,7 @@ public class TestParent
 
 	protected Set<BioPAXElement> collect(List<Match> list, int index)
 	{
-		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> set = new HashSet<>();
 
 		for (Match match : list)
 		{

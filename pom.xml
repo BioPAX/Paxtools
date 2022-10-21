@@ -6,7 +6,7 @@
 
   <groupId>org.biopax.paxtools</groupId>
   <artifactId>paxtools</artifactId>
-  <version>5.3.1-SNAPSHOT</version>
+  <version>6.0.0-SNAPSHOT</version>
 
   <name>Paxtools</name>
 
@@ -43,6 +43,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <slf4j.version>1.7.25</slf4j.version>
     <java.options>-Dfile.encoding=UTF-8</java.options>
+    <maven.compiler.release>17</maven.compiler.release>
   </properties>
 
   <developers>
@@ -215,7 +216,7 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.11.0</version>
           <configuration>
-            <release>8</release>
+            <release>11</release>
           </configuration>
         </plugin>
         <plugin>
@@ -360,7 +361,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.12</version>
+        <version>4.13.2</version>
         <scope>test</scope>
       </dependency>
       <dependency>

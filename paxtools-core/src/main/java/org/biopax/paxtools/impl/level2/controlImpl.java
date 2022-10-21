@@ -25,8 +25,8 @@ class controlImpl extends physicalInteractionAdapter
 
 	public controlImpl()
 	{
-		this.CONTROLLER = new HashSet<physicalEntityParticipant>();
-		this.CONTROLLED = new HashSet<process>();
+		this.CONTROLLER = new HashSet<>();
+		this.CONTROLLED = new HashSet<>();
 		updatePARTICIPANTS(null, CONTROLLER);
 		updatePARTICIPANTS(null, CONTROLLED);
 	}
@@ -63,7 +63,7 @@ class controlImpl extends physicalInteractionAdapter
 
 		if (CONTROLLED == null)
 		{
-			CONTROLLED = new HashSet<process>();
+			CONTROLLED = new HashSet<>();
 		}
 		for (process aProcess : CONTROLLED)
 		{
@@ -108,7 +108,7 @@ class controlImpl extends physicalInteractionAdapter
 	{
 		if (CONTROLLER == null)
 		{
-			CONTROLLER = new HashSet<physicalEntityParticipant>();
+			CONTROLLER = new HashSet<>();
 		}
 		updatePARTICIPANTS(this.CONTROLLER, this.CONTROLLER = CONTROLLER);
 	}

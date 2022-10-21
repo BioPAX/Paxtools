@@ -20,7 +20,7 @@ class physicalInteractionImpl extends physicalInteractionAdapter
 
 	public physicalInteractionImpl()
 	{
-		this.PARTICIPANTS = new HashSet<InteractionParticipant>();
+		this.PARTICIPANTS = new HashSet<>();
 		this.updatePARTICIPANTS(null, PARTICIPANTS);
 	}
 
@@ -48,7 +48,7 @@ class physicalInteractionImpl extends physicalInteractionAdapter
 	{
 		if (PARTICIPANTS == null)
 		{
-			PARTICIPANTS = new HashSet<InteractionParticipant>();
+			PARTICIPANTS = new HashSet<>();
 		}
 		updatePARTICIPANTS(this.PARTICIPANTS, this.PARTICIPANTS = PARTICIPANTS);
 	}

@@ -46,7 +46,7 @@ public class ExtendedSIFWriter
 
 		if (!inters.isEmpty())
 		{
-			List<SIFInteraction> interList = new ArrayList<SIFInteraction>(inters);
+			List<SIFInteraction> interList = new ArrayList<>(inters);
 			Collections.sort(interList);
 			try {
 				OutputStreamWriter writer = new OutputStreamWriter(out);
@@ -86,7 +86,7 @@ public class ExtendedSIFWriter
 
 		if (!inters.isEmpty())
 		{
-			List<SIFInteraction> interList = new ArrayList<SIFInteraction>(inters);
+			List<SIFInteraction> interList = new ArrayList<>(inters);
 			Collections.sort(interList);
 			try
 			{
@@ -163,9 +163,9 @@ public class ExtendedSIFWriter
 		for (SIFInteraction inter : inters)
 		{
 			if (!map.containsKey(inter.sourceID))
-				map.put(inter.sourceID, new HashSet<BioPAXElement>());
+				map.put(inter.sourceID, new HashSet<>());
 			if (!map.containsKey(inter.targetID))
-				map.put(inter.targetID, new HashSet<BioPAXElement>());
+				map.put(inter.targetID, new HashSet<>());
 
 			map.get(inter.sourceID).addAll(inter.sourceERs);
 			map.get(inter.targetID).addAll(inter.targetERs);
@@ -175,20 +175,20 @@ public class ExtendedSIFWriter
 
 	private static String getParticipantTypes(Set<BioPAXElement> elements)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (BioPAXElement ele : elements)
 		{
 			String name = ele.getModelInterface().getName();
 			set.add(name.substring(name.lastIndexOf(".") + 1));
 		}
-		List<String> list = new ArrayList<String>(set);
+		List<String> list = new ArrayList<>(set);
 		Collections.sort(list);
 		return concat(list);
 	}
 
 	private static String getValue(Set<BioPAXElement> elements, PathAccessor pa)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (Object o : pa.getValueFromBeans(elements))
 		{
 			if(o instanceof RelationshipXref)
@@ -203,7 +203,7 @@ public class ExtendedSIFWriter
 				set.add(o.toString());
 			}
 		}
-		List<String> list = new ArrayList<String>(set);
+		List<String> list = new ArrayList<>(set);
 		Collections.sort(list);
 		return concat(list);
 	}

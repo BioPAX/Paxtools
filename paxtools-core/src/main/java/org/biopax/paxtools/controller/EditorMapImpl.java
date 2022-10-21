@@ -125,7 +125,7 @@ public  class EditorMapImpl implements EditorMap {
         if (editor != null) {
             Set<PropertyEditor> beanEditorsForProperty = this.propertyToEditorMap.get(pName);
             if (beanEditorsForProperty == null) {
-                beanEditorsForProperty = new HashSet<PropertyEditor>();
+                beanEditorsForProperty = new HashSet<>();
                 propertyToEditorMap.put(pName, beanEditorsForProperty);
             }
             beanEditorsForProperty.add(editor);
@@ -206,7 +206,7 @@ public  class EditorMapImpl implements EditorMap {
 
             HashMap<String, PropertyEditor> peMap = new HashMap<String, PropertyEditor>();
             classToEditorMap.put(domain, peMap);
-            classToInverseEditorMap.put(domain, new HashSet<ObjectPropertyEditor>());
+            classToInverseEditorMap.put(domain, new HashSet<>());
             classToEditorSet.put(domain, new ValueSet(peMap.values()));
         } catch (IllegalBioPAXArgumentException e) {
             if (log.isDebugEnabled()) {

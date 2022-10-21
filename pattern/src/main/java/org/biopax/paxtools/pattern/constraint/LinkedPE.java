@@ -102,7 +102,7 @@ public class LinkedPE extends ConstraintAdapter
 
 	public Set<BioPAXElement> getLinkedElements(PhysicalEntity pe)
 	{
-		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> set = new HashSet<>();
 		set.add(pe);
 		enrichWithGenerics(set, set);
 		return set;

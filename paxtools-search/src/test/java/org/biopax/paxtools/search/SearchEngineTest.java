@@ -1,12 +1,10 @@
-/**
- * 
- */
 package org.biopax.paxtools.search;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import org.biopax.paxtools.io.SimpleIOHandler;
@@ -28,7 +26,7 @@ public class SearchEngineTest {
 	final static Logger log = LoggerFactory.getLogger(SearchEngineTest.class);
 
 	@Test
-	public final void testSearch() throws IOException {
+	public final void testSearch() {
 		SimpleIOHandler reader = new SimpleIOHandler();
 		Model model = reader.convertFromOWL(getClass().getResourceAsStream("/pathwaydata1.owl"));
 		SearchEngine searchEngine = new SearchEngine(model, indexLocation + "index1");
@@ -130,15 +128,15 @@ public class SearchEngineTest {
 		assertFalse(response.getHits().isEmpty());		
 		int i=0;
 		for(BioPAXElement bpe : response.getHits()) {
+			Map<String,Object> ann = bpe.getAnnotations();
 			log.debug(String.format("Hit %d: %s; participants: %s; processes: %s; excerpt: %s",
-					++i, bpe.getUri(), bpe.getAnnotations().get(HitAnnotation.HIT_PARTICIPANTS.name()),
-					bpe.getAnnotations().get(HitAnnotation.HIT_PROCESSES.name()),
-					bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
+					++i, bpe.getUri(), ann.get(HitAnnotation.HIT_PARTICIPANTS.name()),
+				ann.get(HitAnnotation.HIT_PROCESSES.name()),
+				ann.get(HitAnnotation.HIT_EXCERPT.name())));
 		}
 		assertEquals(3, response.getHits().size());
 		assertEquals(3, response.getTotalHits());
-		assertEquals("http://purl.org/pc2/7/Pathway_3f75176b9a6272a62f9257f0540dc63b", response.getHits().get(0).getUri());
-		//the order of hits is alright, though we'd love to see REACT_12034.3 on top...
+		assertEquals("http://identifiers.org/reactome/REACT_12034.3", response.getHits().get(0).getUri());
 		
 		// more accurate search in all the default fields using quotation marks around -
 		response = searchEngine.search("\"signaling by bmp\"", 0, Pathway.class, null, null);
@@ -153,8 +151,8 @@ public class SearchEngineTest {
 		assertFalse(response.getHits().isEmpty());
 //		for(BioPAXElement bpe : response.getHits()) {
 //			log.debug(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
-//					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
-//					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
+//					bpe.getAnnotation(HitAnnotation.HIT_SIZE.name())
+//					, bpe.getAnnotation(HitAnnotation.HIT_EXCERPT.name())));
 //		}
 		//there are three BMP pathways (one is an empty pathway), and a sub-pathway (should not match) -
 		assertEquals(1, response.getHits().size());
@@ -168,8 +166,8 @@ public class SearchEngineTest {
 		assertFalse(response.getHits().isEmpty());		
 //		for(BioPAXElement bpe : response.getHits()) {
 //			log.debug(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
-//					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
-//					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
+//					bpe.getAnnotation(HitAnnotation.HIT_SIZE.name())
+//					, bpe.getAnnotation(HitAnnotation.HIT_EXCERPT.name())));
 //		}		
 		//there is one pathway, and no sub-pathways of it
 		assertEquals(1, response.getHits().size());
@@ -181,8 +179,8 @@ public class SearchEngineTest {
 		assertFalse(response.getHits().isEmpty());		
 //		for(BioPAXElement bpe : response.getHits()) {
 //			log.debug(String.format("Hit: %s; size: %s; excerpt: %s", bpe.getUri(),
-//					bpe.getAnnotations().get(HitAnnotation.HIT_SIZE.name())
-//					, bpe.getAnnotations().get(HitAnnotation.HIT_EXCERPT.name())));
+//					bpe.getAnnotation(HitAnnotation.HIT_SIZE.name())
+//					, bpe.getAnnotation(HitAnnotation.HIT_EXCERPT.name())));
 //		}	
 		assertEquals(2, response.getTotalHits());
 		// - the second pathway is a trivial one, member of Pathway_3f75176b9a6272a62f9257f0540dc63b and of many other parent pathways.

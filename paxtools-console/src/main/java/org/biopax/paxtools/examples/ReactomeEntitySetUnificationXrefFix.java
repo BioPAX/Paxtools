@@ -40,7 +40,7 @@ public class ReactomeEntitySetUnificationXrefFix
 	{
 		BioPAXIOHandler io = new SimpleIOHandler();
 		Model level2 = io.convertFromOWL(in);
-		Set<physicalEntity> physicalEntitySet = new HashSet<physicalEntity>();
+		Set<physicalEntity> physicalEntitySet = new HashSet<>();
 		physicalEntitySet.addAll(level2.getObjects(physicalEntity.class));
 		for (physicalEntity pe : physicalEntitySet)
 		{
@@ -57,7 +57,7 @@ public class ReactomeEntitySetUnificationXrefFix
 			}
 			if (entitySet)
 			{
-				Set<unificationXref> unis = new HashSet<unificationXref>();
+				Set<unificationXref> unis = new HashSet<>();
 				unis.addAll(new ClassFilterSet<xref,unificationXref>(pe.getXREF(), unificationXref.class));
 				
 				for (unificationXref uni : unis)

@@ -98,7 +98,7 @@ class VNode implements Updatable
         INFO_BOUND = new Bound(MAX_STATE_AND_INFO_WIDTH,MAX_STATE_AND_INFO_HEIGHT);
         STATE_BOUND = new Bound(MAX_STATE_AND_INFO_WIDTH,MAX_STATE_AND_INFO_HEIGHT);
 
-        stateGlyphs = new ArrayList<Glyph>();
+        stateGlyphs = new ArrayList<>();
         infoGlyphs = new  ArrayList<Glyph>();
 
         this.glyph = g;

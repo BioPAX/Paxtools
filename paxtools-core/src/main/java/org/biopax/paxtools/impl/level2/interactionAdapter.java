@@ -38,24 +38,9 @@ abstract class interactionAdapter extends processImpl implements interaction
 
 // -------------------------- OTHER METHODS --------------------------
 
-	//TODO
-    boolean compareParticipantSets(
-		Set<InteractionParticipant> set1,
-		Set<InteractionParticipant> set2)
-	{
-		if (set1.size() == set2.size())
-		{
-			for (InteractionParticipant ip : set1)
-			{
-//TODO
-			}
-		}
-		return false;
-	}
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		final interaction that = (interaction) element;
-		return compareParticipantSets(this.PARTICIPANTS, that.getPARTICIPANTS());
+		return false;
 	}
 
 	public int equivalenceCode()

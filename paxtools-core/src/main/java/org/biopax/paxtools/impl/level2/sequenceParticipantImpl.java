@@ -22,7 +22,7 @@ class sequenceParticipantImpl extends physicalEntityParticipantImpl
 
 	public sequenceParticipantImpl()
 	{
-		this.SEQUENCE_FEATURE_LIST = new HashSet<sequenceFeature>();
+		this.SEQUENCE_FEATURE_LIST = new HashSet<>();
 	}
 
 	public Class<? extends BioPAXElement> getModelInterface()

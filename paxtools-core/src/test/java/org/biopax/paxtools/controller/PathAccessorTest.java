@@ -88,7 +88,7 @@ public class PathAccessorTest
 		assertTrue(mwAccessor.isUnknown(values));
 		
 		accessor = new PathAccessor("Protein/entityReference", BioPAXLevel.L3);
-		Collection<BioPAXElement> beans = new ArrayList<BioPAXElement>();
+		Collection<BioPAXElement> beans = new ArrayList<>();
 		beans.add(p[0]);
 		beans.add(sm[0]);
 		values = accessor.getValueFromBeans(beans);

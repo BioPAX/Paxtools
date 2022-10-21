@@ -137,7 +137,7 @@ public class L3ToSBGNPDConverter {
 
 	static {
 		factory = new ObjectFactory();
-		typeMatchMap = new HashMap<Class<? extends BioPAXElement>, String>();
+		typeMatchMap = new HashMap<>();
 		typeMatchMap.put(Protein.class, GlyphClazz.MACROMOLECULE.getClazz());
 		typeMatchMap.put(SmallMolecule.class, GlyphClazz.SIMPLE_CHEMICAL.getClazz());
 		typeMatchMap.put(Dna.class, GlyphClazz.NUCLEIC_ACID_FEATURE.getClazz());
@@ -146,8 +146,6 @@ public class L3ToSBGNPDConverter {
 		typeMatchMap.put(RnaRegion.class, GlyphClazz.NUCLEIC_ACID_FEATURE.getClazz());
 		typeMatchMap.put(NucleicAcid.class, GlyphClazz.NUCLEIC_ACID_FEATURE.getClazz());
 		typeMatchMap.put(PhysicalEntity.class, GlyphClazz.UNSPECIFIED_ENTITY.getClazz());
-		//TODO: remove SimplePhysicalEntity.class key (- abstract type)?
-		typeMatchMap.put(SimplePhysicalEntity.class, GlyphClazz.UNSPECIFIED_ENTITY.getClazz());
 		typeMatchMap.put(Complex.class, GlyphClazz.COMPLEX.getClazz());
 		typeMatchMap.put(Gene.class, GlyphClazz.NUCLEIC_ACID_FEATURE.getClazz());
 
@@ -181,7 +179,7 @@ public class L3ToSBGNPDConverter {
 		this.featStrGen = (featStrGen != null) ? featStrGen : new CommonFeatureStringGenerator();
 		this.doLayout = doLayout;
 		this.useTwoGlyphsForReversibleConversion = true;
-		this.sbgn2BPMap = new HashMap<String, Set<String>>();
+		this.sbgn2BPMap = new HashMap<>();
 		this.flattenComplexContent = true;
 		this.maxNodes = 1000;
 	}
@@ -222,15 +220,11 @@ public class L3ToSBGNPDConverter {
 	 * @param file file to write
 	 */
 	public void writeSBGN(Model model, String file) {
-		// Create the model
-		Sbgn sbgn = createSBGN(model);
-
-		// Write in file
 		try {
+			Sbgn sbgn = createSBGN(model);
 			SbgnUtil.writeToFile(sbgn, new File(file));
-		}
-		catch (JAXBException e) {
-			throw new RuntimeException("writeSBGN, SbgnUtil.writeToFile failed", e);
+		} catch (Exception e) {
+			throw new RuntimeException("writeSBGN failed", e);
 		}
 	}
 
@@ -267,10 +261,10 @@ public class L3ToSBGNPDConverter {
 	public Sbgn createSBGN(Model model) {
 		assert model.getLevel().equals(BioPAXLevel.L3) : "This method only supports L3 graphs";
 
-		glyphMap = new HashMap<String, Glyph>();
-		compartmentMap = new HashMap<String, Glyph>();
-		arcMap = new HashMap<String, Arc>();
-		ubiqueSet = new HashSet<Glyph>();
+		glyphMap = new HashMap<>();
+		compartmentMap = new HashMap<>();
+		arcMap = new HashMap<>();
+		ubiqueSet = new HashSet<>();
 
 		int n = 0; //approximate number of SBGN nodes
 
@@ -314,10 +308,10 @@ public class L3ToSBGNPDConverter {
 				createGiProcess((GeneticInteraction) interaction);
 			} else if(!(interaction instanceof Control)) {
 				createBasicProcess(interaction);
-			} else { //a Control special case, because these are normally added inside the methods in cases above
+			} else { //a Control, special case
 				Control control = (Control) interaction;
-				//Control without any controlled process but with controller and controlledOf
-				if(control.getControlled()==null || control.getControlled().isEmpty()) {
+				//a Control without controlled process but with controller and is controlledOf
+				if(control.getControlled().isEmpty()) {
 					Glyph g = createControlStructure(control);
 					processControllers(control.getControlledOf(), g);
 				}//else - do nothing - as it's converted anyway when the controlled interactions are processed
@@ -493,7 +487,7 @@ public class L3ToSBGNPDConverter {
 
 		// Record the mapping
 		if (idIsFinal) {
-			Set<String> uris = new HashSet<String>();
+			Set<String> uris = new HashSet<>();
 			uris.add(e.getUri());
 			sbgn2BPMap.put(g.getId(), uris);
 		}
@@ -517,7 +511,7 @@ public class L3ToSBGNPDConverter {
 			// Create a new glyph for each use of ubique
 			Glyph g = createGlyphBasics(e, false);
 			g.setId(convertID(e.getUri()) + "_" + ModelUtils.md5hex(linkID));
-			Set<String> uris = new HashSet<String>();
+			Set<String> uris = new HashSet<>();
 			uris.add(e.getUri());
 			sbgn2BPMap.put(g.getId(), uris);
 			if(e instanceof PhysicalEntity && ((PhysicalEntity)e).getCellularLocation() != null) {
@@ -569,7 +563,7 @@ public class L3ToSBGNPDConverter {
 			String gid = g.getId() + "_" + ModelUtils.md5hex("memberof_" + or.getId());
 			g.setId(gid);
 			glyphMap.put(gid, g);
-			Set<String> uris =  new HashSet<String>();
+			Set<String> uris =  new HashSet<>();
 			uris.add(m.getUri());
 			sbgn2BPMap.put(gid, uris);
 			assignLocation(m, g);
@@ -613,7 +607,7 @@ public class L3ToSBGNPDConverter {
 	 * @return members to display
 	 */
 	private Set<PhysicalEntity> getFlattenedMembers(Complex cx) {
-		Set<PhysicalEntity> set = new HashSet<PhysicalEntity>();
+		Set<PhysicalEntity> set = new HashSet<>();
 		for (PhysicalEntity mem : cx.getComponent()) {
 			if (mem instanceof Complex) {
 				if (!hasNonComplexMember((Complex) mem)) {
@@ -655,7 +649,7 @@ public class L3ToSBGNPDConverter {
 		g.setId(g.getId() + "_" + ModelUtils.md5hex(container.getId()));
 		glyphMap.put(g.getId(), g);
 
-		Set<String> uris =  new HashSet<String>();
+		Set<String> uris =  new HashSet<>();
 		uris.add(pe.getUri());
 		sbgn2BPMap.put(g.getId(), uris);
 
@@ -805,7 +799,7 @@ public class L3ToSBGNPDConverter {
 	 * @return list of state variables
 	 */
 	private List<Glyph> getInformation(Entity e) {
-		List<Glyph> list = new ArrayList<Glyph>();
+		List<Glyph> list = new ArrayList<>();
 
 		// Add the molecule type before states if this is a nucleic acid or gene
 		if (e instanceof NucleicAcid || e instanceof Gene) {
@@ -959,7 +953,7 @@ public class L3ToSBGNPDConverter {
 		processControllers(cnv.getControlledOf(), process);
 
 		// Record mapping
-		Set<String> uris = new HashSet<String>();
+		Set<String> uris = new HashSet<>();
 		uris.add(cnv.getUri());
 		sbgn2BPMap.put(process.getId(), uris);
 	}
@@ -991,11 +985,16 @@ public class L3ToSBGNPDConverter {
 		glyphMap.put(process.getId(), process);
 
 		final Set<PhysicalEntity> products = tr.getProduct();
-		final Set<PhysicalEntity> participants = new HashSet<PhysicalEntity>( //new modifiable set
-				new ClassFilterSet<Entity,PhysicalEntity>(tr.getParticipant(), PhysicalEntity.class));
+
+		// parent property 'participant' is sometimes defined directly
+		// for a TemplateReaction object despite 'product', 'template'
+		// must be used instead (this is bad biopax data modeling practice; e.g. in Reactome);
+		// we can try to infer template/product and link what's left
+		// after first processing actual 'product' and 'template' prop values.
+		final Set<PhysicalEntity> participants = //a new modifiable set to
+			new HashSet<>(new ClassFilterSet<>(tr.getParticipant(), PhysicalEntity.class));
 
 		// link products, if any
-		// ('participant' property is there defined sometimes instead of or in addition to 'product' or 'template')
 		for (PhysicalEntity pe : products) {
 			Glyph g = getGlyphToLink(pe, process.getId());
 			createArc(process, g, ArcClazz.PRODUCTION.getClazz(), null);
@@ -1017,7 +1016,7 @@ public class L3ToSBGNPDConverter {
 			createArc(sas, process, ArcClazz.CONSUMPTION.getClazz(), null);
 		}
 
-		//infer input or output type arc for the rest of participants
+		//infer input or output type arc for the rest of participants that left there, if any
 		for (PhysicalEntity pe : participants) {
 			Glyph g = getGlyphToLink(pe, process.getId());
 			if(template==null)
@@ -1028,7 +1027,7 @@ public class L3ToSBGNPDConverter {
 		// Associate controllers
 		processControllers(tr.getControlledOf(), process);
 		// Record mapping
-		sbgn2BPMap.put(process.getId(), new HashSet<String>(Collections.singleton(tr.getUri())));
+		sbgn2BPMap.put(process.getId(), new HashSet<>(Collections.singleton(tr.getUri())));
 	}
 
 	private void createBasicProcess(Interaction interaction) {
@@ -1038,12 +1037,12 @@ public class L3ToSBGNPDConverter {
 		process.setId(convertID(interaction.getUri()));
 		glyphMap.put(process.getId(), process);
 		// Associate participants
-		for (PhysicalEntity pe : new ClassFilterSet<Entity,PhysicalEntity>(interaction.getParticipant(), PhysicalEntity.class)) {
+		for (PhysicalEntity pe : new ClassFilterSet<>(interaction.getParticipant(), PhysicalEntity.class)) {
 			Glyph g = getGlyphToLink(pe, process.getId());
 			createArc(g, process, ArcClazz.CONSUMPTION.getClazz(), null);
 		}
 		// Record mapping
-		sbgn2BPMap.put(process.getId(), new HashSet<String>(Collections.singleton(interaction.getUri())));
+		sbgn2BPMap.put(process.getId(), new HashSet<>(Collections.singleton(interaction.getUri())));
 		// Associate controllers
 		processControllers(interaction.getControlledOf(), process);
 	}
@@ -1077,7 +1076,7 @@ public class L3ToSBGNPDConverter {
 			createArc(g, process, ArcClazz.LOGIC_ARC.getClazz(), null);
 		}
 		// Record mapping
-		sbgn2BPMap.put(process.getId(), new HashSet<String>(Collections.singleton(interaction.getUri())));
+		sbgn2BPMap.put(process.getId(), new HashSet<>(Collections.singleton(interaction.getUri())));
 		// Associate controllers
 		processControllers(interaction.getControlledOf(), process);
 	}
@@ -1099,7 +1098,7 @@ public class L3ToSBGNPDConverter {
 			cg = getGlyphToLink(controllers.iterator().next(), convertID(ctrl.getUri()));
 		} else {
 			// This list will contain handles for each participant of the AND structure
-			List<Glyph> toConnect = new ArrayList<Glyph>();
+			List<Glyph> toConnect = new ArrayList<>();
 
 			// Bundle controllers if necessary
 			Glyph gg = handlePEGroup(controllers, convertID(ctrl.getUri()));
@@ -1155,7 +1154,7 @@ public class L3ToSBGNPDConverter {
 	 * @return glyphs of entities
 	 */
 	private List<Glyph> getGlyphsOfPEs(Set<PhysicalEntity> pes, String context) {
-		List<Glyph> gs = new ArrayList<Glyph>();
+		List<Glyph> gs = new ArrayList<>();
 
 		for (PhysicalEntity pe : pes)
 			if (glyphMap.containsKey(convertID(pe.getUri())))
@@ -1259,7 +1258,7 @@ public class L3ToSBGNPDConverter {
 	 * @return size of representable controllers
 	 */
 	private Set<PhysicalEntity> getControllers(Control ctrl) {
-		Set<PhysicalEntity> controllers = new HashSet<PhysicalEntity>();
+		Set<PhysicalEntity> controllers = new HashSet<>();
 		for (Controller clr : ctrl.getController()) {
 			if (clr instanceof PhysicalEntity && glyphMap.containsKey(convertID(clr.getUri()))) {
 				controllers.add((PhysicalEntity) clr);
@@ -1338,8 +1337,8 @@ public class L3ToSBGNPDConverter {
 	 * @return set of roots
 	 */
 	private Set<Glyph> getRootGlyphs(Collection<Glyph> glyphCol) {
-		Set<Glyph> root = new HashSet<Glyph>(glyphCol);
-		Set<Glyph> children = new HashSet<Glyph>();
+		Set<Glyph> root = new HashSet<>(glyphCol);
+		Set<Glyph> children = new HashSet<>();
 
 		for (Glyph glyph : glyphCol) {
 			addChildren(glyph, children);

@@ -37,22 +37,21 @@ public class PathsBetweenQuery
 		this.limit = limit;
 	}
 
-	public Set<GraphObject> run()
+	public Collection<GraphObject> run()
 	{
 		/**
 		 * Distance labels of graph objects. Note that each source set may have a distinct label for
 		 * the object.
 		 */
-		Map<GraphObject, Map<Set<Node>, Integer>> fwdObj = new HashMap<GraphObject, Map<Set<Node>, Integer>>();
-		Map<GraphObject, Map<Set<Node>, Integer>> revObj = new HashMap<GraphObject, Map<Set<Node>, Integer>>();
+		Map<GraphObject, Map<Set<Node>, Integer>> fwdObj = new HashMap<>();
+		Map<GraphObject, Map<Set<Node>, Integer>> revObj = new HashMap<>();
 
-		Set<GraphObject> result = new HashSet<GraphObject>();
+		Collection<GraphObject> result = new HashSet<>();
 
 		for (Set<Node> set : sourceSet)
 		{
 			BFS bfsFwd = new BFS(set, null, Direction.DOWNSTREAM, limit);
 			BFS bfsRev = new BFS(set, null, Direction.UPSTREAM, limit);
-
 			recordLabels(fwdObj, set, bfsFwd.run());
 			recordLabels(revObj, set, bfsRev.run());
 		}
@@ -72,7 +71,7 @@ public class PathsBetweenQuery
 			}
 		}
 
-		Set<Node> sources = new HashSet<Node>();
+		Set<Node> sources = new HashSet<>();
 		for (Set<Node> set : sourceSet)
 		{
 			sources.addAll(set);
@@ -92,8 +91,9 @@ public class PathsBetweenQuery
 	{
 		for (GraphObject go : bfsResult.keySet())
 		{
-			if (!labels.containsKey(go)) labels.put(go, new HashMap<Set<Node>, Integer>());
-
+			if (!labels.containsKey(go)) {
+				labels.put(go, new HashMap<>());
+			}
 			labels.get(go).put(set, bfsResult.get(go));
 		}
 	}

@@ -128,7 +128,7 @@ public class PhysicalEntityChain
 	 */
 	public Set<String> getCellularLocations()
 	{
-		Set<String> locs = new HashSet<String>();
+		Set<String> locs = new HashSet<>();
 		for (PhysicalEntity pe : pes)
 		{
 			CellularLocationVocabulary voc = pe.getCellularLocation();
@@ -229,7 +229,7 @@ public class PhysicalEntityChain
 	 */
 	public Set<ModificationFeature> getModifications()
 	{
-		Set<ModificationFeature> set = new HashSet<ModificationFeature>();
+		Set<ModificationFeature> set = new HashSet<>();
 
 		for (PhysicalEntity pe : pes)
 		{

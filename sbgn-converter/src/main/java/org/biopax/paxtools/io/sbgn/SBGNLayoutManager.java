@@ -69,7 +69,7 @@ class SBGNLayoutManager
             //Set compartmentRef to all children of a Complex node.
             Glyph compartment = (Glyph)g.getCompartmentRef();
             if(compartment != null && glyphClazzOneOf(g, GlyphClazz.COMPLEX)) {
-                setCompartmentRefForComplexMembers(g, compartment, new HashSet<Glyph>());
+                setCompartmentRefForComplexMembers(g, compartment, new HashSet<>());
             }
         }
 
@@ -77,7 +77,7 @@ class SBGNLayoutManager
         // This list holds the glyphs that will be deleted after corresponding glyph
         // is added to child glyph of another glyph.
         if(!idToCompartmentGlyphs.isEmpty()) {
-            List<Glyph> deletedList = new ArrayList<Glyph>();
+            List<Glyph> deletedList = new ArrayList<>();
             for (Glyph g : sbgn.getMap().getGlyph()) {
                 Glyph containerCompartment = (Glyph) g.getCompartmentRef();
                 if (containerCompartment != null) {
@@ -218,7 +218,7 @@ class SBGNLayoutManager
         List<Arc>   arcList   = sbgn.getMap().getArc();
 
         // Keeps track of process and logical operator nodes that will be assigned to a compartment.
-        ArrayList<Glyph> targetNodes = new ArrayList<Glyph>();
+        ArrayList<Glyph> targetNodes = new ArrayList<>();
 
         //Iterate over glyphs of sbgn map
         for(Glyph glyph: glyphList)

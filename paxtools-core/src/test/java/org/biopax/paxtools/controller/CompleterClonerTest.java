@@ -9,6 +9,7 @@ import org.biopax.paxtools.util.ClassFilterSet;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -44,17 +45,17 @@ public class CompleterClonerTest
 
 
 	@Test
-	public void testCompleteAndClone() throws Exception
+	public void testCompleteAndClone()
 	{
 		Completer completer = new Completer(SimpleEditorMap.L3);
-		Set<BioPAXElement> completed = completer.complete(Collections.singleton(model.getByID(pwUri)));
+		Collection<BioPAXElement> completed = completer.complete(Collections.singleton(model.getByID(pwUri)));
 		assertTrue(completed.size()>1);
 
 		//PathwayStep1 should not be there if @AutoComplete(forward=false) has any effect on getNextStep()
-		Set<PathwayStep> steps = new ClassFilterSet<BioPAXElement,PathwayStep>(completed,PathwayStep.class);
+		Set<PathwayStep> steps = new ClassFilterSet<>(completed,PathwayStep.class);
 		assertEquals(1, steps.size());
 		//There should be only one BiochemicalReaction that belongs to PathwayStep0
-		Set<Conversion> rxs = new ClassFilterSet<BioPAXElement,Conversion>(completed,Conversion.class);
+		Set<Conversion> rxs = new ClassFilterSet<>(completed,Conversion.class);
 		assertEquals(1, rxs.size());
 	}
 }

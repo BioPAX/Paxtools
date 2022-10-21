@@ -1,9 +1,8 @@
 package org.biopax.paxtools.model;
 
-
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A model acts as a container for BioPAX elements.
@@ -74,28 +73,27 @@ public interface Model extends Serializable
      * @see #containsID(String)
      *
      * @param aBioPAXElement to be checked
-     * @return true if the parameter is in the object set
+     * @return true if the parameter is in the model (objects)
      */
     boolean contains(BioPAXElement aBioPAXElement);
 
     /**
-     * This method returns the biopax element with the given id,
+     * This method returns the biopax element with the given URI,
      * returns null if the object with the given id does not exist
      * in this model.
-     * @param id of the object to be retrieved.
-     * @return biopax element with the given id.
+     * @param id URI of the object to be retrieved.
+     * @return biopax element with the given URI.
      */
     BioPAXElement getByID(String id);
 
     /**
-     * This method checks for the biopax element with the given id,
+     * This method checks for the biopax element with the given URI,
      * returns true if the object with the given id exists.
      * in this model.
-     * @param id of the object to be retrieved.
-     * @return biopax element with the given id.
+     * @param id URI of the object to be retrieved.
+     * @return biopax element with the given URI.
      */
     boolean containsID(String id);
-
 
     /**
      * This method returns a map of name space prefixes.
@@ -104,24 +102,24 @@ public interface Model extends Serializable
      */
     Map<String, String> getNameSpacePrefixMap();
 
-// --------------------- ACCESORS and MUTATORS---------------------
+// --------------------- ACCESSORS and MUTATORS---------------------
 
     /**
-     * This method returns a set of objects in the model.
-     * Contents of this set can not be modified.
-     * @return an unmodifiable set of objects.
+     * This method returns the objects in the model
+     * (This collection should not be modified.)
+     * @return objects (the collection should not be modified).
      */
-    Set<BioPAXElement> getObjects();
+    Collection<BioPAXElement> getObjects();
 
     /**
-     * This method returns a set of objects in the model of the given class.
-     * Contents of this set should not be modified.
+     * This method returns the objects of the given class in the model
+     * (The collection should not be modified.)
      *
      * @param <T> a BioPAX type
      * @param filterBy class to be used as a filter.
-     * @return an unmodifiable set of objects of the given class.
+     * @return objects of the given class.
      */
-    <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy);
+    <T extends BioPAXElement> Collection<T> getObjects(Class<T> filterBy);
 
     /**
      * This method removes the given BioPAX Element from the model.
@@ -223,4 +221,6 @@ public interface Model extends Serializable
       * @return xml:base value
       */
      String getXmlBase();
+
+     int size();
 }

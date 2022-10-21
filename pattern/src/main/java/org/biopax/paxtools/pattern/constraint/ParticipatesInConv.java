@@ -67,7 +67,7 @@ public class ParticipatesInConv extends ConstraintAdapter
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
-		Collection<BioPAXElement> result = new HashSet<BioPAXElement>();
+		Collection<BioPAXElement> result = new HashSet<>();
 
 		PhysicalEntity pe = (PhysicalEntity) match.get(ind[0]);
 

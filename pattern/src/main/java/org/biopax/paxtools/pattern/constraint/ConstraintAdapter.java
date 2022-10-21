@@ -149,7 +149,7 @@ public abstract class ConstraintAdapter implements Constraint
 			if (dir != null) return dir;
 		}
 
-		Set<StepDirection> dirs = new HashSet<StepDirection>();
+		Set<StepDirection> dirs = new HashSet<>();
 
 		Set<PathwayStep> convSteps = conv.getStepProcessOf();
 
@@ -179,7 +179,7 @@ public abstract class ConstraintAdapter implements Constraint
 	 */
 	protected ConversionDirectionType getDirection(Conversion conv, Pathway pathway)
 	{
-		Set<StepDirection> dirs = new HashSet<StepDirection>();
+		Set<StepDirection> dirs = new HashSet<>();
 
 		// find the direction in the pathway step
 		for (PathwayStep step : conv.getStepProcessOf())
@@ -279,7 +279,7 @@ public abstract class ConstraintAdapter implements Constraint
 
 		if (dir == ConversionDirectionType.REVERSIBLE)
 		{
-			HashSet<PhysicalEntity> set = new HashSet<PhysicalEntity>(conv.getLeft());
+			HashSet<PhysicalEntity> set = new HashSet<>(conv.getLeft());
 			set.addAll(conv.getRight());
 			return set;
 		}
@@ -298,7 +298,7 @@ public abstract class ConstraintAdapter implements Constraint
 	 */
 	protected ConversionDirectionType findDirectionInPathways(Conversion conv)
 	{
-		Set<StepDirection> dirs = new HashSet<StepDirection>();
+		Set<StepDirection> dirs = new HashSet<>();
 		for (PathwayStep step : conv.getStepProcessOf())
 		{
 			if (step instanceof BiochemicalPathwayStep)
@@ -330,7 +330,7 @@ public abstract class ConstraintAdapter implements Constraint
 	 */
 	protected ConversionDirectionType findDirectionInCatalysis(Conversion conv)
 	{
-		Set<ConversionDirectionType> dirs = new HashSet<ConversionDirectionType>();
+		Set<ConversionDirectionType> dirs = new HashSet<>();
 		for (Control control : conv.getControlledOf())
 		{
 			ConversionDirectionType dir = getCatalysisDirection(control);

@@ -1,8 +1,6 @@
 package org.biopax.paxtools.util;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -17,10 +15,8 @@ import java.util.*;
  */
 public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 {
-	private final static Logger LOG = LoggerFactory.getLogger(BiopaxSafeSet.class);
-	
 	//initial map is to be reset to a modifiable instance on first write
-	private final static Map empty = Collections.unmodifiableMap(Collections.emptyMap());
+	private final static Map empty = Collections.emptyMap();
 
 	private Map<String,E> map;
 	
@@ -41,11 +37,22 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 			return map.size();
 		}
 	}
-	
+
+
+	/**
+	 * Adds a new element to the collection unless it is null, or URI is null,
+	 * or already contains an element with the same URI.
+	 * @param bpe
+	 * @return
+	 */
 	@Override
 	public boolean add(E bpe)
 	{
-		synchronized (map) {	
+		if(bpe == null || bpe.getUri() == null) {
+			return false;
+		}
+
+		synchronized (map) {
 			if(map.isEmpty())
 			{	//new real map instead of initial fake (empty) one
 				this.map = BPCollections.I.createMap();
@@ -53,47 +60,26 @@ public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
 		}
 			
 		String uri = bpe.getUri();
-		
 		synchronized (map) { //sync on the new map instance		
-			if (!map.containsKey(uri)) {
+			if (!map.containsKey(uri)) { //prevent replacing existing objects with the same URI
 				map.put(uri, bpe);
 				return true;
 			} else {
-				// do not throw an ex., because duplicate attempts occur naturally
-				// (e.g., same PE on both left and right sides of a reaction
-				// causes same participant/participantOf is touched twice)
-				LOG.debug("ignored duplicate:" + uri);
+				// do not throw an ex., because duplicate attempts may occur naturally
 				return false;
 			}
 		}
 	}
-	
+
 	
 	@Override
 	public boolean contains(Object o) {
-		if(map==empty)
+		if(map == empty || !(o instanceof BioPAXElement) || ((E)o).getUri() == null) {
 			return false;
-		
-		synchronized (map) {//to sync due to two operations
-			return super.contains(o) 
-				&& ( get(((E)o).getUri()) == o );
 		}
-	}
-	
-	
-	/**
-	 * Gets a BioPAX element by URI.
-	 * 
-	 * @param uri absolute URI of a BioPAX individual
-	 * @return BioPAX object or null
-	 */
-	public E get(String uri) {
-		
-		if(map==empty)
-			return null;
 		
 		synchronized (map) {
-			return map.get(uri);
+			return map.get(((E)o).getUri()) == o;
 		}
 	}
 }

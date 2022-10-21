@@ -30,8 +30,8 @@ public class SIFInteraction implements Comparable
 	{
 		this.sourceID = sourceID;
 		this.targetID = targetID;
-		this.sourceERs = new HashSet<BioPAXElement>();
-		this.targetERs = new HashSet<BioPAXElement>();
+		this.sourceERs = new HashSet<>();
+		this.targetERs = new HashSet<>();
 
 		this.sourceERs.add(sourceER);
 		this.targetERs.add(targetER);
@@ -114,7 +114,7 @@ public class SIFInteraction implements Comparable
 	 */
 	public List<String> getMediatorIDs()
 	{
-		List<String> ids = new ArrayList<String>(mediators.size());
+		List<String> ids = new ArrayList<>(mediators.size());
 
 		for (BioPAXElement ele : mediators)
 		{
@@ -149,7 +149,7 @@ public class SIFInteraction implements Comparable
 		Set<PublicationXref> xrefs = harvestPublicationXrefs(mediators.toArray(new BioPAXElement[mediators.size()]));
 		Set<String> set = pubmed ? harvestPMIDs(xrefs) : harvestPMCIDs(xrefs);
 
-		List<String> list = new ArrayList<String>(set);
+		List<String> list = new ArrayList<>(set);
 		Collections.sort(list);
 
 		return list;
@@ -165,7 +165,7 @@ public class SIFInteraction implements Comparable
 	 */
 	private Set<PublicationXref> harvestPublicationXrefs(BioPAXElement... ele)
 	{
-		Set<PublicationXref> set = new HashSet<PublicationXref>();
+		Set<PublicationXref> set = new HashSet<>();
 
 		for (Object o : xrefAcc.getValueFromBeans(Arrays.asList(ele)))
 		{
@@ -205,7 +205,7 @@ public class SIFInteraction implements Comparable
 	 */
 	private Set<String> harvestXrefs(Set<PublicationXref> xrefs, String dbID)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		for (PublicationXref xref : xrefs)
 		{
@@ -236,7 +236,7 @@ public class SIFInteraction implements Comparable
 	 */
 	public Set<Pathway> getPathways()
 	{
-		Set<Pathway> set = new HashSet<Pathway>();
+		Set<Pathway> set = new HashSet<>();
 
 		for (PathAccessor pAcc : pathwayAcc)
 		{
@@ -256,7 +256,7 @@ public class SIFInteraction implements Comparable
 	public List<String> getPathwayNames()
 	{
 		Set<Pathway> set = getPathways();
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 
 		for (Pathway p : set)
 		{
@@ -274,7 +274,7 @@ public class SIFInteraction implements Comparable
 	 */
 	public List<String> getPathwayUris()
 	{
-		List<String> uris = new ArrayList<String>();
+		List<String> uris = new ArrayList<>();
 		for (Pathway p : getPathways()) {
 			String uri = p.getUri();
 			if (!uris.contains(uri)) uris.add(uri);
@@ -291,7 +291,7 @@ public class SIFInteraction implements Comparable
 	 */
 	public Set<String> getDataSources()
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		for (Object o : dataSourceAcc.getValueFromBeans(mediators))
 		{
@@ -327,7 +327,7 @@ public class SIFInteraction implements Comparable
 	 */
 	private Set<String> getCellularLocations(Set<BioPAXElement> eles)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		for (Object o : locAcc.getValueFromBeans(eles))
 		{
@@ -343,7 +343,7 @@ public class SIFInteraction implements Comparable
 	 */
 	public Set<String> getMediatorComments()
 	{
-		Set<String> comments = new HashSet<String>();
+		Set<String> comments = new HashSet<>();
 		for (BioPAXElement med : mediators)
 		{
 			if (med instanceof Level3Element) comments.addAll(((Level3Element) med).getComment());
@@ -362,8 +362,8 @@ public class SIFInteraction implements Comparable
 	public static List<String> getSortedGeneNames(Collection<SIFInteraction> sifInts,
 		SIFType... type)
 	{
-		Set<String> genes = new HashSet<String>();
-		Set<SIFType> types = new HashSet<SIFType>(Arrays.asList(type));
+		Set<String> genes = new HashSet<>();
+		Set<SIFType> types = new HashSet<>(Arrays.asList(type));
 
 		// collect gene names
 
@@ -377,7 +377,7 @@ public class SIFInteraction implements Comparable
 
 		// sort all gene names
 
-		List<String> names = new ArrayList<String>(genes);
+		List<String> names = new ArrayList<>(genes);
 		Collections.sort(names);
 
 		return names;
@@ -392,7 +392,7 @@ public class SIFInteraction implements Comparable
 	public static boolean[][] convertToAdjacencyMatrix(Collection<SIFInteraction> sifInts,
 		SIFType... type)
 	{
-		Set<SIFType> types = new HashSet<SIFType>(Arrays.asList(type));
+		Set<SIFType> types = new HashSet<>(Arrays.asList(type));
 
 		// collect gene names
 		List<String> names = getSortedGeneNames(sifInts, type);

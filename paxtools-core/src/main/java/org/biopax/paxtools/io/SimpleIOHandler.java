@@ -610,7 +610,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	{
 		writeHeader(out);
 
-		Set<BioPAXElement> bioPAXElements = model.getObjects();
+		Collection<BioPAXElement> bioPAXElements = model.getObjects();
 		for (BioPAXElement bean : bioPAXElements)
 		{
 			writeObject(out, bean);
@@ -714,9 +714,10 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	private void initializeExporter(Model model)
 	{
 		base = model.getXmlBase();
-		namespaces = new HashMap<String, String>(model.getNameSpacePrefixMap());
+		namespaces = new HashMap<>(model.getNameSpacePrefixMap());
 
 		normalizeNameSpaces(); // - for this reader/exporter tool
+
 		// also save the changes to the model?
 		if (normalizeNameSpaces)
 		{

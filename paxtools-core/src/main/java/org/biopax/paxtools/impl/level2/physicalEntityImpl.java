@@ -19,7 +19,7 @@ class physicalEntityImpl extends entityImpl implements physicalEntity
 
 	public physicalEntityImpl()
 	{
-		this.PHYSICAL_ENTITYof = new HashSet<physicalEntityParticipant>();
+		this.PHYSICAL_ENTITYof = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -41,7 +41,7 @@ class physicalEntityImpl extends entityImpl implements physicalEntity
 
 	public Set<interaction> getAllInteractions()
 	{
-		HashSet<interaction> allInteractions = new HashSet<interaction>(
+		HashSet<interaction> allInteractions = new HashSet<>(
 			this.isPARTICIPANTSof());
 		Set<physicalEntityParticipant> peps =
 			this.isPHYSICAL_ENTITYof();

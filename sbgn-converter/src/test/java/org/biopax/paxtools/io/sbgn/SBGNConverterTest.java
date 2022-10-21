@@ -1,7 +1,5 @@
 package org.biopax.paxtools.io.sbgn;
 
-import static junit.framework.Assert.*;
-
 import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.BioPAXIOHandler;
@@ -23,6 +21,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 public class SBGNConverterTest
 {
@@ -34,7 +35,7 @@ public class SBGNConverterTest
 
 	@BeforeClass
 	public static void setUp() throws JAXBException {
-		blacklist = new ListUbiqueDetector(new HashSet<String>(Arrays.asList(
+		blacklist = new ListUbiqueDetector(new HashSet<>(Arrays.asList(
 				"http://pid.nci.nih.gov/biopaxpid_685",
 				"http://pid.nci.nih.gov/biopaxpid_678",
 				"http://pid.nci.nih.gov/biopaxpid_3119",
@@ -42,7 +43,6 @@ public class SBGNConverterTest
 				"http://pathwaycommons.org/pc2/SmallMolecule_3037a14ebec3a95b8dab68e6ea5c946f",
 				"http://pathwaycommons.org/pc2/SmallMolecule_4ca9a2cfb6a8a6b14cee5d7ed5945364"
 		)));
-
 		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
 		unmarshaller = context.createUnmarshaller();
 		marshaller = context.createMarshaller();
@@ -230,7 +230,6 @@ public class SBGNConverterTest
 		SbgnUtil.isValid(outFile); //ignore validation errors for now...
 		Sbgn result = (Sbgn) unmarshaller.unmarshal(outFile);
 		assertFalse(result.getMap().getGlyph().isEmpty());
-
 		//TODO: add assertions
 	}
 
@@ -288,10 +287,11 @@ public class SBGNConverterTest
 		f.bindInPairs("product", tr0,p[0],tr0,p[1]);
 		tr0.setTemplate(t[0]);
 
-		// no template (will infer)
+		// no template - will infer it from the other participant
+		// (this is a bad practice though - 'template' prop must be used instead)
 		TemplateReaction tr1 = m.addNew(TemplateReaction.class,"tr_1");
 		f.bindInPairs("product", tr1,p[2]);
-		f.bindInPairs("participant", tr1,t[1]);
+		f.bindInPairs("participant", tr1,t[1]); //this call might be ignored or throw an ex. in the future
 
 		// only product (will infer some unknown input process/entity)
 		TemplateReaction tr2 = m.addNew(TemplateReaction.class,"tr_2");
@@ -376,21 +376,11 @@ public class SBGNConverterTest
     assertFalse(filtered.isEmpty());
   }
 
-//	private Collection<Glyph> filterGlyphsByClazz(Collection<Glyph> collection, String clazz) {
-//    Set<Glyph> filtered = new HashSet<Glyph>();
-//    for(Glyph g : collection)
-//      if(g.getClazz().equals(clazz))
-//        filtered.add(g);
-//
-//    return filtered;
-//  }
+	private Collection<Glyph> filterGlyphsByClazz(Collection<Glyph> collection, String clazz) {
+    return collection.stream().filter(g -> g.getClazz().equals(clazz)).collect(Collectors.toUnmodifiableSet());
+  }
 
   private Collection<Arc> filterArcsByClazz(Collection<Arc> collection, String clazz) {
-    Set<Arc> filtered = new HashSet<Arc>();
-    for(Arc g : collection)
-      if(g.getClazz().equals(clazz))
-        filtered.add(g);
-
-    return filtered;
+		return collection.stream().filter(g -> g.getClazz().equals(clazz)).collect(Collectors.toUnmodifiableSet());
   }
 }

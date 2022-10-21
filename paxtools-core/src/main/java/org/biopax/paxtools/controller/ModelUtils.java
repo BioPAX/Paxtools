@@ -50,7 +50,7 @@ public final class ModelUtils
 
 	private final static BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 	private final static EditorMap em = SimpleEditorMap.L3;
-	private final static BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
+	private final static SimpleIOHandler io = new SimpleIOHandler(BioPAXLevel.L3);
 
 
 	/**
@@ -62,9 +62,8 @@ public final class ModelUtils
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("Cannot instantiate MD5 MessageDigest!", e);
 		}
-
-		((SimpleIOHandler) io).mergeDuplicates(true);
-		((SimpleIOHandler) io).normalizeNameSpaces(false);
+		io.mergeDuplicates(true);
+		io.normalizeNameSpaces(false);
 	}
 
 
@@ -93,47 +92,39 @@ public final class ModelUtils
 	public static void replace(Model model, final Map<? extends BioPAXElement, ? extends BioPAXElement> subs)
 	{
 		// update properties
-		Visitor visitor = new Visitor()
-		{
-			@Override
-			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
+		Visitor visitor = (domain, range, bpModel, propertyEditor) -> {
+			if (propertyEditor instanceof ObjectPropertyEditor && range != null && subs.containsKey(range))
 			{
-				if (editor instanceof ObjectPropertyEditor && range != null && subs.containsKey(range))
-				{
-					BioPAXElement value = (BioPAXElement) range;
-					// 'value' is to be replaced with the 'replacement'
-					BioPAXElement replacement = subs.get(range); //can get null (ok)
-					
-					// normal biopax property -
-					if (replacement != null && !editor.getRange().isInstance(replacement))
-					{
-						throw new IllegalBioPAXArgumentException(
-							"Incompatible type! Attempted to replace " 
-							+ value.getUri() + " (" + value.getModelInterface().getSimpleName()
-							+ ") with " + replacement.getUri() + " ("
-							+ replacement.getModelInterface().getSimpleName() + "); "
-							+ "property: " + editor.getProperty() 
-							+ " of bean: " + domain.getUri() + " ("
-							+ domain.getModelInterface().getSimpleName() + ")");
-					}
+				ObjectPropertyEditor editor = (ObjectPropertyEditor) propertyEditor;
+				BioPAXElement value = (BioPAXElement) range;
+				// 'value' is to be replaced with the 'replacement'
+				BioPAXElement replacement = subs.get(range); //can get null (ok)
 
-					if (replacement != value) 
-					{
-						editor.removeValueFromBean(value, domain);
-						editor.setValueToBean(replacement, domain);
-					} else {
-						LOG.debug("replace: skipped the identical: " + replacement.getUri());
-					}
+				// normal biopax property -
+				if (replacement != null && !editor.getRange().isInstance(replacement))
+				{
+					throw new IllegalBioPAXArgumentException(
+						"Incompatible type! Attempted to replace "
+						+ value.getUri() + " (" + value.getModelInterface().getSimpleName()
+						+ ") with " + replacement.getUri() + " ("
+						+ replacement.getModelInterface().getSimpleName() + "); "
+						+ "property: " + editor.getProperty()
+						+ " of bean: " + domain.getUri() + " ("
+						+ domain.getModelInterface().getSimpleName() + ")");
+				}
+
+				if (replacement != value)
+				{
+					editor.removeValueFromBean(value, domain);
+					editor.setValueToBean(replacement, domain);
+				} else {
+					LOG.debug("replace: skipped the identical: " + replacement.getUri());
 				}
 			}
 		};
 
 		Traverser traverser = new Traverser(em, visitor);
-		for (BioPAXElement bpe : new HashSet<BioPAXElement>(model.getObjects()))
-		{
-			// update object properties and clear inverse properties using 'subs' map	
-			traverser.traverse(bpe, null); //model is not needed
-		}
+		model.getObjects().parallelStream().forEach(bpe -> traverser.traverse(bpe, null));//model is not used by traveser
 	}
 
 
@@ -151,29 +142,18 @@ public final class ModelUtils
 	public static <T extends BioPAXElement> Set<T> getRootElements(final Model model, final Class<T> filterClass)
 	{
 		// copy all such elements (initially, we think all are roots...)
-		final Set<T> result = new HashSet<T>(model.getObjects(filterClass));
+		final Set<T> result = new HashSet<>(model.getObjects(filterClass));
 
-		//"shallow" traverser (direct object properties only - Visitor.visit does not call traverse again) 
-		@SuppressWarnings("unchecked")
-		Traverser traverser = new Traverser(em, 
-			new Visitor() {
-				@Override
-				public void visit(BioPAXElement parent, Object value, Model model,
-					PropertyEditor<?, ?> editor)
-				{
-					if (filterClass.isInstance(value)) result.remove(value);
-				}
-			}, 
-			new Filter<PropertyEditor>() {
-				@Override
-				public boolean filter(PropertyEditor pe) {
-					return (pe instanceof ObjectPropertyEditor);
-				}
-		});
-		
-		// but we run from every element (all types)
-		for(BioPAXElement e : model.getObjects())
-			traverser.traverse(e, null);
+		//define a "shallow" (non-recursive) object property traverser
+		Traverser traverser = new Traverser(
+			em, // editor map
+			(bpe, value, m, e) -> { // visitor.visit
+				if (filterClass.isInstance(value)) result.remove(value);
+			},
+			pe -> (pe instanceof ObjectPropertyEditor) // filter
+		);
+
+		model.getObjects().parallelStream().forEach(e -> traverser.traverse(e, null));
 
 		return result;
 	}
@@ -200,7 +180,7 @@ public final class ModelUtils
 	 */
 	public static <T extends BioPAXElement> Set<BioPAXElement> removeObjectsIfDangling(Model model, Class<T> clazz)
 	{
-		final Set<BioPAXElement> removed = new HashSet<BioPAXElement>();
+		final Set<BioPAXElement> removed = new HashSet<>();
 		
 		// 'equals' below is used intentionally (isAssignableFrom() would be incorrect)
 		if(Entity.class.equals(clazz)) {
@@ -273,13 +253,9 @@ public final class ModelUtils
 	{
 		Model m = factory.createModel();
 
-		Traverser traverser = new Traverser(em, new Visitor() {
-			@Override
-			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?,?> editor)
-			{
-				if (range instanceof BioPAXElement && !model.containsID(((BioPAXElement) range).getUri()))
-					model.add((BioPAXElement) range);
-			}
+		Traverser traverser = new Traverser(em, (domain, range, model, editor) -> {
+			if (range instanceof BioPAXElement && !model.containsID(((BioPAXElement) range).getUri()))
+				model.add((BioPAXElement) range);
 		});
 
 		traverser.traverse(bpe, m);
@@ -320,14 +296,12 @@ public final class ModelUtils
 	 */
 	public static Set<BioPAXElement> getDirectChildrenAsSet(BioPAXElement bpe)
 	{
-		final Set<BioPAXElement> toReturn = new HashSet<BioPAXElement>();
+		final Set<BioPAXElement> toReturn = new HashSet<>();
 
-		Traverser traverser = new Traverser(em, new Visitor() {
-				@Override
-				public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor<?, ?> editor) {
-					if (range instanceof BioPAXElement) {
-						toReturn.add((BioPAXElement) range);
-					}
+		Traverser traverser = new Traverser(em,
+			(domain, range, model, editor) -> { // Visitor impl.
+				if (range instanceof BioPAXElement) {
+					toReturn.add((BioPAXElement) range);
 				}
 			}
 		);
@@ -346,7 +320,7 @@ public final class ModelUtils
 	 */
 	public static Map<Class<? extends BioPAXElement>, Integer> generateClassMetrics(Model model)
 	{
-		Map<Class<? extends BioPAXElement>, Integer> metrics = new HashMap<Class<? extends BioPAXElement>, Integer>();
+		Map<Class<? extends BioPAXElement>, Integer> metrics = new HashMap<>();
 		for (BioPAXElement bpe : model.getObjects())
 		{
 			Integer count = metrics.get(bpe.getModelInterface());
@@ -393,7 +367,6 @@ public final class ModelUtils
 	 * used for many purposes, such as generating 
 	 * new unique URIs, database primary keys, etc.
 	 * 
-	 * 
 	 * @param id some identifier, e.g., URI
 	 * @return the 32-byte digest string
 	 */
@@ -403,7 +376,7 @@ public final class ModelUtils
 		StringBuffer sb = new StringBuffer();
 		for (byte b : digest)
 		{
-			sb.append(Integer.toHexString((int) (b & 0xff) | 0x100).substring(1, 3));
+			sb.append(Integer.toHexString((b & 0xff) | 0x100), 1, 3);
 		}
 		String hex = sb.toString();
 		return hex;
@@ -419,20 +392,14 @@ public final class ModelUtils
 	 */
 	public static void fixDanglingObjectProperties(BioPAXElement bpe, Model model)
 	{
-		final Visitor visitor = new Visitor()
-		{
-			@Override
-			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
+		Visitor visitor = (domain, range, m, editor) -> {
+			if (editor instanceof ObjectPropertyEditor)
 			{
-				if (editor instanceof ObjectPropertyEditor)
-				{
-					BioPAXElement value = (BioPAXElement) range;
-					if (value != null && !model.containsID(value.getUri()))
-						editor.removeValueFromBean(value, domain);
-				}
+				BioPAXElement value = (BioPAXElement) range;
+				if (value != null && !m.containsID(value.getUri()))
+					((ObjectPropertyEditor)editor).removeValueFromBean(value, domain);
 			}
 		};
-
 		Traverser traverser = new Traverser(em, visitor);
 		traverser.traverse(bpe, model);
 	}
@@ -446,26 +413,21 @@ public final class ModelUtils
 	 */
 	public static void fixDanglingInverseProperties(BioPAXElement bpe, Model model)
 	{
-		final Visitor visitor = new Visitor()
-		{
-			@Override
-			public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
-			{
-				BioPAXElement value = (BioPAXElement) range;
-				if (value != null && !model.containsID(value.getUri()))
-					editor.removeValueFromBean(domain, value); //right order!
-			}
+		final Visitor visitor = (domain, range, m, editor) -> {
+			BioPAXElement value = (BioPAXElement) range;
+			if (value != null && !m.containsID(value.getUri()))
+				((ObjectPropertyEditor)editor).removeValueFromBean(domain, value); //in this order!
 		};
 
 		TraverserBilinked traverser = new TraverserBilinked(em, visitor);
-		traverser.setInverseOnly(true);
+		traverser.setInverseOnly(true); //do only inverse properties (e.g. "entityReferenceOf", object property editors)
 		traverser.traverse(bpe, model);
 	}
 
 
 	// Moved from FeatureUtils; provides operations for comparing features of physical entities.
 
-	static enum FeatureType
+	enum FeatureType
 	{
 		FEATURE,
 		NOT_FEATURE,
@@ -485,7 +447,7 @@ public final class ModelUtils
 	public static Set<EntityFeature> getFeatureSetByType(PhysicalEntity pe, FeatureType type)
 	{
 
-		Set<EntityFeature> modifiableSet = new HashSet<EntityFeature>();
+		Set<EntityFeature> modifiableSet = new HashSet<>();
 
 		switch (type)
 		{
@@ -639,14 +601,14 @@ public final class ModelUtils
 	}
 
 	/**
-	 * In all interactions and complexes, replace generic physical entities (having members)
+	 * In all interactions and complexes, replace generic physical entities (have members)
 	 * with their corresponding members; clone the parent object, if needed, for each member.
 	 *
 	 * @param model biopax model
 	 * @param generic physical entity (PE) that has member PEs
 	 */
 	public static void normalizeGeneric(Model model, PhysicalEntity generic) {
-		//TODO: implement?
+		//TODO: implement?..
 	}
 
 	/**
@@ -663,13 +625,13 @@ public final class ModelUtils
 	 */
 	public static void normalizeGenerics(Model model)
 	{
-		final Set<SimplePhysicalEntity> simplePEsToDo = new HashSet<SimplePhysicalEntity>();
+		final Set<SimplePhysicalEntity> simplePEsToDo = new HashSet<>();
 
 		for (SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class))
 			if (spe.getEntityReference() == null && !spe.getMemberPhysicalEntity().isEmpty())
 				simplePEsToDo.add(spe);
 
-		final Map<Set<EntityReference>,EntityReference> memberMap = new HashMap<Set<EntityReference>,EntityReference>();
+		final Map<Set<EntityReference>,EntityReference> memberMap = new HashMap<>();
 		for (SimplePhysicalEntity pe : simplePEsToDo)
 		{
 			try {
@@ -679,7 +641,7 @@ public final class ModelUtils
 				LOG.error("createGenericEntityRef failed at " + pe.getUri(), e);
 			}
 		}
-		//TODO: unlink and remove all pe.memberPhysicalEntity for each pe in simplePEsToDo?
+		//TODO: unlink and remove all pe.memberPhysicalEntity for each pe in simplePEs?
 	}
 	
 	private static void createGenericEntityRef(Model model, SimplePhysicalEntity spe,
@@ -715,8 +677,7 @@ public final class ModelUtils
 				copySimplePointers(model, spe, er);
 
 				//remove unification xrefs from the pe
-				for(UnificationXref ux : new HashSet<UnificationXref>(
-						new ClassFilterSet<Xref, UnificationXref>(spe.getXref(), UnificationXref.class)))
+				for(UnificationXref ux : new HashSet<>(new ClassFilterSet<>(spe.getXref(), UnificationXref.class)))
 				{
 					spe.removeXref(ux);
 				}
@@ -770,13 +731,13 @@ public final class ModelUtils
 		//generate a new URI in the same namespace (xml:base)
 		String syntheticId = model.getXmlBase() + type.getSimpleName() + "_"+ md5hex(pe.getUri());
 		//create a new ER object using the auto-detected above type:
-		EntityReference er = (EntityReference) model.addNew(type, syntheticId);
+		EntityReference er = model.addNew(type, syntheticId);
 
-		// copy names and xrefs (making orig. UnificationXrefs become RelatioshipXrefs)
+		// copy names and xrefs (making orig. UnificationXrefs become RelationshipXrefs)
 		copySimplePointers(model, pe, er);
 
 		//remove unification xrefs from the original pe
-		for(UnificationXref ux : new HashSet<UnificationXref>(new ClassFilterSet<Xref, UnificationXref>(pe.getXref(),UnificationXref.class)))
+		for(UnificationXref ux : new HashSet<>(new ClassFilterSet<>(pe.getXref(),UnificationXref.class)))
 			pe.removeXref(ux);
 
 		er.addComment("auto-generated by Paxtools");
@@ -864,7 +825,7 @@ public final class ModelUtils
 
 		EquivalenceGrouper<EntityFeature> equivalents = new EquivalenceGrouper<EntityFeature>();
 		HashMap<EntityFeature, EntityFeature> mapped = new HashMap<EntityFeature, EntityFeature>();
-		HashSet<EntityFeature> scheduled = new HashSet<EntityFeature>();
+		HashSet<EntityFeature> scheduled = new HashSet<>();
 
 		for (EntityFeature ef : model.getObjects(EntityFeature.class))
 		{
@@ -891,7 +852,7 @@ public final class ModelUtils
 		}
 		for (PhysicalEntity physicalEntity : model.getObjects(PhysicalEntity.class))
 		{
-			Set<EntityFeature> features = new HashSet<EntityFeature>(physicalEntity.getFeature());
+			Set<EntityFeature> features = new HashSet<>(physicalEntity.getFeature());
 			for (EntityFeature feature : features)
 			{
 				EntityFeature that = mapped.get(feature);
@@ -957,12 +918,12 @@ public final class ModelUtils
 		LOG.debug("getKeywords called: " + biopaxElement.getUri());
 		
 		EditorMap em = SimpleEditorMap.L3;
-		Set<String> ss = new HashSet<String>();
+		Set<String> ss = new HashSet<>();
 
 		//if depth>0, fetch child biopax objects (ignoring PathwayStep.nextStep property)
 		Set<BioPAXElement> elms = (depth > 0)
 			? new Fetcher(em, Fetcher.nextStepFilter).fetch(biopaxElement, depth)
-				: new HashSet<BioPAXElement>();
+				: new HashSet<>();
 
 		//add this one
 		elms.add(biopaxElement);
@@ -1019,7 +980,7 @@ public final class ModelUtils
 	 * @return organism names
 	 */
 	public static Set<BioSource> getOrganisms(BioPAXElement biopaxElement) {		
-		final Set<BioSource> biosources = new HashSet<BioSource>();
+		final Set<BioSource> biosources = new HashSet<>();
 		//shortcut
 		if(biopaxElement == null)
 			return biosources;
@@ -1078,7 +1039,7 @@ public final class ModelUtils
 	 */
 	public static Set<Provenance> getDatasources(BioPAXElement biopaxElement) {
 		
-		final Set<Provenance> datasources = new HashSet<Provenance>();
+		final Set<Provenance> datasources = new HashSet<>();
 		
 		//shortcut
 		if(biopaxElement == null)
@@ -1116,7 +1077,7 @@ public final class ModelUtils
 	 * @return inferred parent pathways
 	 */
 	public static Set<Pathway> getParentPathways(BioPAXElement biopaxElement) {
-		final Set<BioPAXElement> visited = new HashSet<BioPAXElement>();
+		final Set<BioPAXElement> visited = new HashSet<>();
 		return getParentPathwaysRecursively(biopaxElement, visited);
 	}
 
@@ -1124,7 +1085,7 @@ public final class ModelUtils
 	private static Set<Pathway> getParentPathwaysRecursively(
 			final BioPAXElement biopaxElement, final Set<BioPAXElement> visited) {
 
-		final Set<Pathway> pathways = new HashSet<Pathway>();
+		final Set<Pathway> pathways = new HashSet<>();
 		
 		//shortcut, when bpe is null or already processed
 		if(biopaxElement == null || !visited.add(biopaxElement)) {
@@ -1187,7 +1148,6 @@ public final class ModelUtils
 			if (group.size() > 1)
 			{
 				HashMap<Conversion,Conversion> subs = new HashMap<Conversion, Conversion>();//to replace in the model
-//				HashSet<Conversion> tobeRemoved = new HashSet<Conversion>();
 				Conversion primus = null;
 				for (Conversion conversion : group)
 				{
@@ -1198,26 +1158,6 @@ public final class ModelUtils
 					{
 						copySimplePointers(model, conversion, primus);
 						subs.put(conversion, primus);
-
-//						Set<Control> controlledOf = conversion.getControlledOf();
-//						for (Control control : controlledOf)
-//						{
-//							if (!control.getControlled().contains(primus))
-//							{
-//								control.addControlled(primus);
-//							}
-//						}
-//						Set<Pathway> owners = conversion.getPathwayComponentOf();
-//						for (Pathway pathway : owners)
-//						{
-//							if(!pathway.getPathwayComponent().contains(primus))
-//							{
-//								pathway.addPathwayComponent(primus);
-//							}
-//
-//						}
-//
-//						tobeRemoved.add(conversion);
 					}
 				}
 
@@ -1225,7 +1165,6 @@ public final class ModelUtils
 
 				for (Conversion conversion : subs.keySet())
 				{
-//					cleanAllInverse(conversion);
 					model.remove(conversion);
 				}
 			}
@@ -1362,7 +1301,7 @@ public final class ModelUtils
 	 */
 	public static void breakPathwayComponentCycle(final Model model) {
 		for(Pathway pathway : model.getObjects(Pathway.class))
-			breakPathwayComponentCycle(new HashSet<Pathway>(), pathway, pathway);
+			breakPathwayComponentCycle(new HashSet<>(), pathway, pathway);
 	}
 
 	//Recursively, though, avoiding infinite loops (KEGG pathways can cause it),

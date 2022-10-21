@@ -25,7 +25,7 @@ public class CommonIDFetcher implements IDFetcher
 
 	public Set<String> fetchID(BioPAXElement ele)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		if (ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 		{

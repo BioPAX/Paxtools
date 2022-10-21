@@ -23,8 +23,8 @@ public class ConfigurableIDFetcher implements IDFetcher
 	 * Constructor.
 	 */
 	public ConfigurableIDFetcher() {
-		seqDbStartsWithOrEquals = new ArrayList<String>();
-		chemDbStartsWithOrEquals = new ArrayList<String>();
+		seqDbStartsWithOrEquals = new ArrayList<>();
+		chemDbStartsWithOrEquals = new ArrayList<>();
 		useNameWhenNoDbMatch = false;
 	}
 
@@ -83,7 +83,7 @@ public class ConfigurableIDFetcher implements IDFetcher
 
 	public Set<String> fetchID(BioPAXElement ele)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.

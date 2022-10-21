@@ -106,7 +106,7 @@ public class ConversionSide extends ConstraintAdapter
 		else throw new IllegalArgumentException(
 				"The PhysicalEntity has to be a participant of the Conversion.");
 
-		if (blacklist == null) return new HashSet<BioPAXElement>(parts);
+		if (blacklist == null) return new HashSet<>(parts);
 		else
 		{
 			ConversionDirectionType dir = getDirection(conv);
@@ -115,7 +115,7 @@ public class ConversionSide extends ConstraintAdapter
 				(dir == ConversionDirectionType.RIGHT_TO_LEFT && ((relType == RelType.INPUT && parts != conv.getRight()) || (relType == RelType.OUTPUT && parts != conv.getLeft()))))
 				return Collections.emptySet();
 
-			return new HashSet<BioPAXElement>(blacklist.getNonUbiques(parts, relType));
+			return new HashSet<>(blacklist.getNonUbiques(parts, relType));
 		}
 	}
 

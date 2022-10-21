@@ -272,7 +272,7 @@ public abstract class MinerAdapter implements Miner
 	 */
 	public Set<String> toStringSet(Set<ModificationFeature> set)
 	{
-		List<ModificationFeature> list = new ArrayList<ModificationFeature>(set);
+		List<ModificationFeature> list = new ArrayList<>(set);
 
 		Collections.sort(list, new Comparator<ModificationFeature>()
 		{
@@ -303,7 +303,7 @@ public abstract class MinerAdapter implements Miner
 	 */
 	private Set<String> getInString(List<ModificationFeature> list)
 	{
-		Set<String> text = new HashSet<String>(list.size());
+		Set<String> text = new HashSet<>(list.size());
 
 		for (ModificationFeature mf : list)
 		{
@@ -402,7 +402,7 @@ public abstract class MinerAdapter implements Miner
 	protected Set<String> getModifications(Match m, String label)
 	{
 		PhysicalEntity pe = (PhysicalEntity) m.get(label, getPattern());
-		return toStringSet(new HashSet<ModificationFeature>(FEAT_ACC.getValueFromBean(pe)));
+		return toStringSet(new HashSet<>(FEAT_ACC.getValueFromBean(pe)));
 	}
 
 	/**
@@ -494,7 +494,7 @@ public abstract class MinerAdapter implements Miner
 
 	protected void removeCommon(Set<String> set1, Set<String> set2)
 	{
-		Set<String> common = new HashSet<String>(set1);
+		Set<String> common = new HashSet<>(set1);
 		common.retainAll(set2);
 		set1.removeAll(common);
 		set2.removeAll(common);
@@ -586,7 +586,7 @@ public abstract class MinerAdapter implements Miner
 		}
 
 		// Memory for already written pairs.
-		Set<String> mem = new HashSet<String>();
+		Set<String> mem = new HashSet<>();
 
 		String mid = getRelationType() == null ? "\t" : "\trelation\t";
 
@@ -722,7 +722,7 @@ public abstract class MinerAdapter implements Miner
 		}
 
 		// memory for already written lines
-		Set<String> mem = new HashSet<String>();
+		Set<String> mem = new HashSet<>();
 
 		// write values
 
@@ -791,7 +791,7 @@ public abstract class MinerAdapter implements Miner
 
 		SIFType sifType = ((SIFMiner) this).getSIFType();
 
-		Set<SIFInteraction> set = new HashSet<SIFInteraction>();
+		Set<SIFInteraction> set = new HashSet<>();
 
 		for (String source : sources)
 		{
@@ -801,16 +801,16 @@ public abstract class MinerAdapter implements Miner
 				else if (sifType.isDirected() || source.compareTo(target) < 0)
 				{
 					set.add(new SIFInteraction(source, target, sourceBpe, targetBpe, sifType,
-						new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())),
-						new HashSet<BioPAXElement>(m.get(getSourcePELabels(), getPattern())),
-						new HashSet<BioPAXElement>(m.get(getTargetPELabels(), getPattern()))));
+						new HashSet<>(m.get(getMediatorLabels(), getPattern())),
+						new HashSet<>(m.get(getSourcePELabels(), getPattern())),
+						new HashSet<>(m.get(getTargetPELabels(), getPattern()))));
 				}
 				else
 				{
 					set.add(new SIFInteraction(target, source, targetBpe, sourceBpe, sifType,
-						new HashSet<BioPAXElement>(m.get(getMediatorLabels(), getPattern())),
-						new HashSet<BioPAXElement>(m.get(getTargetPELabels(), getPattern())),
-						new HashSet<BioPAXElement>(m.get(getSourcePELabels(), getPattern()))));
+						new HashSet<>(m.get(getMediatorLabels(), getPattern())),
+						new HashSet<>(m.get(getTargetPELabels(), getPattern())),
+						new HashSet<>(m.get(getSourcePELabels(), getPattern()))));
 				}
 			}
 		}
@@ -869,7 +869,7 @@ public abstract class MinerAdapter implements Miner
 
 		if (idFetcher != null) return idFetcher.fetchID(el);
 
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		if (el instanceof ProteinReference)
 		{
 			set.add(getGeneSymbol((ProteinReference) el));

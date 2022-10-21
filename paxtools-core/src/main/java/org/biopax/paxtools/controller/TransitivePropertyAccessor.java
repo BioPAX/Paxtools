@@ -28,7 +28,7 @@ public class TransitivePropertyAccessor<R extends BioPAXElement, D extends R> ex
 
 	@Override public Set<? extends R> getValueFromBean(D bean) throws IllegalBioPAXArgumentException
 	{
-		Set<R> values = new HashSet<R>();
+		Set<R> values = new HashSet<>();
 
 		transitiveGet(bean, values);
 		return values;

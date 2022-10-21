@@ -32,8 +32,8 @@ public class QueryExecuter
 	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result set
 	 */
-	public static Set<BioPAXElement> runNeighborhood(
-		Set<BioPAXElement> sourceSet,
+	public static Collection<BioPAXElement> runNeighborhood(
+		Collection<BioPAXElement> sourceSet,
 		Model model,
 		int limit,
 		Direction direction,
@@ -55,12 +55,13 @@ public class QueryExecuter
 		}
 		else return Collections.emptySet();
 
-		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
+		Collection<Node> source = prepareSingleNodeSet(sourceSet, graph);
 
 		if (sourceSet.isEmpty()) return Collections.emptySet();
 
 		NeighborhoodQuery query = new NeighborhoodQuery(source, direction, limit);
-		Set<GraphObject> resultWrappers = query.run();
+		Collection<GraphObject> resultWrappers = query.run();
+
 		return convertQueryResult(resultWrappers, graph, true);
 	}
 
@@ -74,8 +75,8 @@ public class QueryExecuter
 	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result set
 	 */
-	public static Set<BioPAXElement> runNeighborhoodMultiSet(
-		Set<Set<BioPAXElement>> sourceSets,
+	public static Collection<BioPAXElement> runNeighborhoodMultiSet(
+		Collection<Collection<BioPAXElement>> sourceSets,
 		Model model,
 		int limit,
 		Direction direction,
@@ -97,12 +98,12 @@ public class QueryExecuter
 		}
 		else return Collections.emptySet();
 
-		Set<Node> source = prepareSingleNodeSetFromSets(sourceSets, graph);
+		Collection<Node> source = prepareSingleNodeSetFromSets(sourceSets, graph);
 
 		if (sourceSets.isEmpty()) return Collections.emptySet();
 
 		NeighborhoodQuery query = new NeighborhoodQuery(source, direction, limit);
-		Set<GraphObject> resultWrappers = query.run();
+		Collection<GraphObject> resultWrappers = query.run();
 		return convertQueryResult(resultWrappers, graph, true);
 	}
 
@@ -115,7 +116,7 @@ public class QueryExecuter
 	 * @param filters optional filters - for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runPathsBetween(Set<BioPAXElement> sourceSet, Model model,
+	public static Collection<BioPAXElement> runPathsBetween(Collection<BioPAXElement> sourceSet, Model model,
 		int limit, Filter... filters)
 	{
 		Graph graph;
@@ -131,7 +132,8 @@ public class QueryExecuter
 		if (sourceWrappers.size() < 2) return Collections.emptySet();
 
 		PathsBetweenQuery query = new PathsBetweenQuery(sourceWrappers, limit);
-		Set<GraphObject> resultWrappers = query.run();
+		Collection<GraphObject> resultWrappers = query.run();
+
 		return convertQueryResult(resultWrappers, graph, true);
 	}
 
@@ -144,7 +146,8 @@ public class QueryExecuter
 	 * @param filters optional filters - for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runPathsBetweenMultiSet(Set<Set<BioPAXElement>> sourceSets, Model model,
+	public static Collection<BioPAXElement> runPathsBetweenMultiSet(
+		Collection<Collection<BioPAXElement>> sourceSets, Model model,
 		int limit, Filter... filters)
 	{
 		Graph graph;
@@ -160,7 +163,7 @@ public class QueryExecuter
 		if (sourceWrappers.size() < 2) return Collections.emptySet();
 
 		PathsBetweenQuery query = new PathsBetweenQuery(sourceWrappers, limit);
-		Set<GraphObject> resultWrappers = query.run();
+		Collection<GraphObject> resultWrappers = query.run();
 		return convertQueryResult(resultWrappers, graph, true);
 	}
 
@@ -173,8 +176,8 @@ public class QueryExecuter
 	 * @return BioPAX elements in the result
 	 * @deprecated Use runPathsBetween instead
 	 */
-	public static Set<BioPAXElement> runGOI(
-		Set<BioPAXElement> sourceSet,
+	public static Collection<BioPAXElement> runGOI(
+		Collection<BioPAXElement> sourceSet,
 		Model model,
 		int limit,
 		Filter... filters)
@@ -192,9 +195,9 @@ public class QueryExecuter
 	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runPathsFromTo(
-		Set<BioPAXElement> sourceSet,
-		Set<BioPAXElement> targetSet,
+	public static Collection<BioPAXElement> runPathsFromTo(
+		Collection<BioPAXElement> sourceSet,
+		Collection<BioPAXElement> targetSet,
 		Model model,
 		LimitType limitType,
 		int limit,
@@ -208,11 +211,12 @@ public class QueryExecuter
 		}
 		else return Collections.emptySet();
 
-		Set<Node> source = prepareSingleNodeSet(sourceSet, graph);
-		Set<Node> target = prepareSingleNodeSet(targetSet, graph);
+		Collection<Node> source = prepareSingleNodeSet(sourceSet, graph);
+		Collection<Node> target = prepareSingleNodeSet(targetSet, graph);
 
 		PathsFromToQuery query = new PathsFromToQuery(source, target, limitType, limit, true);
-		Set<GraphObject> resultWrappers = query.run();
+		Collection<GraphObject> resultWrappers = query.run();
+
 		return convertQueryResult(resultWrappers, graph, true);
 	}
 
@@ -226,9 +230,9 @@ public class QueryExecuter
 	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runPathsFromToMultiSet(
-		Set<Set<BioPAXElement>> sourceSets,
-		Set<Set<BioPAXElement>> targetSets,
+	public static Collection<BioPAXElement> runPathsFromToMultiSet(
+		Collection<Collection<BioPAXElement>> sourceSets,
+		Collection<Collection<BioPAXElement>> targetSets,
 		Model model,
 		LimitType limitType,
 		int limit,
@@ -242,11 +246,12 @@ public class QueryExecuter
 		}
 		else return Collections.emptySet();
 
-		Set<Node> source = prepareSingleNodeSetFromSets(sourceSets, graph);
-		Set<Node> target = prepareSingleNodeSetFromSets(targetSets, graph);
+		Collection<Node> source = prepareSingleNodeSetFromSets(sourceSets, graph);
+		Collection<Node> target = prepareSingleNodeSetFromSets(targetSets, graph);
 
 		PathsFromToQuery query = new PathsFromToQuery(source, target, limitType, limit, true);
-		Set<GraphObject> resultWrappers = query.run();
+		Collection<GraphObject> resultWrappers = query.run();
+
 		return convertQueryResult(resultWrappers, graph, true);
 	}
 
@@ -259,8 +264,8 @@ public class QueryExecuter
 	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runCommonStream(
-		Set<BioPAXElement> sourceSet,
+	public static Collection<BioPAXElement> runCommonStream(
+		Collection<BioPAXElement> sourceSet,
 		Model model,
 		Direction direction,
 		int limit,
@@ -280,7 +285,8 @@ public class QueryExecuter
 
 		CommonStreamQuery query = new CommonStreamQuery(source, direction, limit);
 
-		Set<GraphObject> resultWrappers = query.run();
+		Collection<GraphObject> resultWrappers = query.run();
+
 		return convertQueryResult(resultWrappers, graph, false);
 	}
 
@@ -293,8 +299,8 @@ public class QueryExecuter
 	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runCommonStreamMultiSet(
-		Set<Set<BioPAXElement>> sourceSets,
+	public static Collection<BioPAXElement> runCommonStreamMultiSet(
+		Collection<Collection<BioPAXElement>> sourceSets,
 		Model model,
 		Direction direction,
 		int limit,
@@ -314,7 +320,8 @@ public class QueryExecuter
 
 		CommonStreamQuery query = new CommonStreamQuery(source, direction, limit);
 
-		Set<GraphObject> resultWrappers = query.run();
+		Collection<GraphObject> resultWrappers = query.run();
+
 		return convertQueryResult(resultWrappers, graph, false);
 	}
 
@@ -328,8 +335,8 @@ public class QueryExecuter
 	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runCommonStreamWithPOI(
-		Set<BioPAXElement> sourceSet,
+	public static Collection<BioPAXElement> runCommonStreamWithPOI(
+		Collection<BioPAXElement> sourceSet,
 		Model model,
 		Direction direction,
 		int limit,
@@ -360,8 +367,8 @@ public class QueryExecuter
 	 * @param filters for filtering graph elements
 	 * @return BioPAX elements in the result
 	 */
-	public static Set<BioPAXElement> runCommonStreamWithPOIMultiSet(
-		Set<Set<BioPAXElement>> sourceSets,
+	public static Collection<BioPAXElement> runCommonStreamWithPOIMultiSet(
+		Collection<Collection<BioPAXElement>> sourceSets,
 		Model model,
 		Direction direction,
 		int limit,
@@ -382,21 +389,21 @@ public class QueryExecuter
 		return runCommonStreamWithPOIContinued(nodes, direction, limit, graph);
 	}
 
-	private static Set<BioPAXElement> runCommonStreamWithPOIContinued(Collection<Set<Node>> sourceSets,
+	private static Collection<BioPAXElement> runCommonStreamWithPOIContinued(Collection<Set<Node>> sourceSets,
 		Direction direction, int limit, Graph graph)
 	{
 		// Run a common stream query
 
 		CommonStreamQuery commStream = new CommonStreamQuery(sourceSets, direction, limit);
 
-		Set<GraphObject> resultWrappers = commStream.run();
+		Collection<GraphObject> resultWrappers = commStream.run();
 
 		// Stop if they have no common stream.
 		if (resultWrappers.isEmpty()) return Collections.emptySet();
 
 		// Extract nodes from the result
 
-		Set<Node> target = new HashSet<Node>();
+		Collection<Node> target = new HashSet<>();
 
 		for (GraphObject go : resultWrappers)
 		{
@@ -405,8 +412,8 @@ public class QueryExecuter
 
 		// Take union of the sources
 
-		Set<Node> source = new HashSet<Node>();
-		for (Set<Node> set : sourceSets)
+		Collection<Node> source = new HashSet<>();
+		for (Collection<Node> set : sourceSets)
 		{
 			source.addAll(set);
 		}
@@ -425,6 +432,7 @@ public class QueryExecuter
 		}
 
 		resultWrappers = poi.run();
+
 		return convertQueryResult(resultWrappers, graph, true);
 	}
 
@@ -435,12 +443,12 @@ public class QueryExecuter
 	 * @param removeDisconnected whether to remove disconnected non-complex type physical entities
 	 * @return Set of elements in the result
 	 */
-	private static Set<BioPAXElement> convertQueryResult(
-		Set<GraphObject> resultWrappers, Graph graph, boolean removeDisconnected)
+	private static Collection<BioPAXElement> convertQueryResult(
+		Collection<GraphObject> resultWrappers, Graph graph, boolean removeDisconnected)
 	{
-		Set<Object> result = graph.getWrappedSet(resultWrappers);
+		Collection<Object> result = graph.getWrappedSet(resultWrappers);
 
-		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
+		Collection<BioPAXElement> set = new HashSet<>();
 		for (Object o : result)
 		{
 			set.add((BioPAXElement) o);
@@ -449,7 +457,7 @@ public class QueryExecuter
 		// remove disconnected simple physical entities
 		if (removeDisconnected)
 		{
-			Set<BioPAXElement> remove = new HashSet<BioPAXElement>();
+			Collection<BioPAXElement> remove = new HashSet<>();
 
 			for (BioPAXElement ele : set)
 			{
@@ -465,7 +473,7 @@ public class QueryExecuter
 		return set;
 	}
 
-	private static boolean isDisconnected(SimplePhysicalEntity spe, Set<BioPAXElement> resultSet)
+	private static boolean isDisconnected(SimplePhysicalEntity spe, Collection<BioPAXElement> resultSet)
 	{
 		for (Interaction inter : spe.getParticipantOf())
 		{
@@ -496,12 +504,12 @@ public class QueryExecuter
 	 * @param graph Owner graph
 	 * @return Related wrappers in a set
 	 */
-	public static Set<Node> prepareSingleNodeSet(Set<BioPAXElement> elements, Graph graph)
+	public static Set<Node> prepareSingleNodeSet(Collection<BioPAXElement> elements, Graph graph)
 	{
-		Map<BioPAXElement, Set<PhysicalEntity>> map = getRelatedPhysicalEntityMap(elements);
+		Map<BioPAXElement, Collection<PhysicalEntity>> map = getRelatedPhysicalEntityMap(elements);
 
-		Set<PhysicalEntity> pes = new HashSet<PhysicalEntity>();
-		for (Set<PhysicalEntity> valueSet : map.values())
+		Collection<PhysicalEntity> pes = new HashSet<>();
+		for (Collection<PhysicalEntity> valueSet : map.values())
 		{
 			pes.addAll(valueSet);
 		}
@@ -522,10 +530,10 @@ public class QueryExecuter
 	 * @param graph Owner graph
 	 * @return Related wrappers in a set
 	 */
-	public static Set<Node> prepareSingleNodeSetFromSets(Set<Set<BioPAXElement>> sets, Graph graph)
+	public static Collection<Node> prepareSingleNodeSetFromSets(Collection<Collection<BioPAXElement>> sets, Graph graph)
 	{
-		Set<BioPAXElement> elements = new HashSet<BioPAXElement>();
-		for (Set<BioPAXElement> set : sets)
+		Collection<BioPAXElement> elements = new HashSet<>();
+		for (Collection<BioPAXElement> set : sets)
 		{
 			elements.addAll(set);
 		}
@@ -540,22 +548,21 @@ public class QueryExecuter
 	 * @param graph Owner graph
 	 * @return Related wrappers in individual sets
 	 */
-	private static Collection<Set<Node>> prepareNodeSets(Set<BioPAXElement> elements, Graph graph)
+	private static Collection<Set<Node>> prepareNodeSets(Collection<BioPAXElement> elements, Graph graph)
 	{
-		Collection<Set<Node>> sets = new HashSet<Set<Node>>();
+		Collection<Set<Node>> sets = new HashSet<>();
 
-		Map<BioPAXElement, Set<PhysicalEntity>> map = getRelatedPhysicalEntityMap(elements);
+		Map<BioPAXElement, Collection<PhysicalEntity>> map = getRelatedPhysicalEntityMap(elements);
 
-		for (Set<PhysicalEntity> pes : map.values())
+		for (Collection<PhysicalEntity> pes : map.values())
 		{
 			Set<Node> set = graph.getWrapperSet(pes);
-
 			if (!set.isEmpty()) sets.add(set);
 		}
 		
 		// Add interactions in the seed as single node set
 
-		Set<Node> inters = getSeedInteractions(elements, graph);
+		Collection<Node> inters = getSeedInteractions(elements, graph);
 		for (Node node : inters)
 		{
 			sets.add(Collections.singleton(node));
@@ -572,11 +579,11 @@ public class QueryExecuter
 	 * @param graph Owner graph
 	 * @return Related wrappers in individual sets
 	 */
-	private static Collection<Set<Node>> prepareNodeSetsFromSets(Set<Set<BioPAXElement>> sets, Graph graph)
+	private static Collection<Set<Node>> prepareNodeSetsFromSets(Collection<Collection<BioPAXElement>> sets, Graph graph)
 	{
-		Collection<Set<Node>> result = new HashSet<Set<Node>>();
+		Collection<Set<Node>> result = new HashSet<>();
 
-		for (Set<BioPAXElement> set : sets)
+		for (Collection<BioPAXElement> set : sets)
 		{
 			Set<Node> nodes = prepareSingleNodeSet(set, graph);
 			if (!nodes.isEmpty()) result.add(nodes);
@@ -591,16 +598,15 @@ public class QueryExecuter
 	 * @param elements Elements to map
 	 * @return The mapping
 	 */
-	public static Map<BioPAXElement, Set<PhysicalEntity>> getRelatedPhysicalEntityMap(
+	public static Map<BioPAXElement, Collection<PhysicalEntity>> getRelatedPhysicalEntityMap(
 		Collection<BioPAXElement> elements)
 	{
 		replaceXrefsWithRelatedER(elements);
-		Map<BioPAXElement, Set<PhysicalEntity>> map = new HashMap<BioPAXElement, Set<PhysicalEntity>>();
+		Map<BioPAXElement, Collection<PhysicalEntity>> map = new HashMap<>();
 
 		for (BioPAXElement ele : elements)
 		{
-			Set<PhysicalEntity> ents = getRelatedPhysicalEntities(ele, null);
-
+			Collection<PhysicalEntity> ents = getRelatedPhysicalEntities(ele, null);
 			if (!ents.isEmpty())
 			{
 				map.put(ele, ents);
@@ -617,8 +623,8 @@ public class QueryExecuter
 	protected static void replaceXrefsWithRelatedER(
 		Collection<BioPAXElement> elements)
 	{
-		Set<EntityReference> ers = new HashSet<EntityReference>();
-		Set<Xref> xrefs = new HashSet<Xref>();
+		Collection<EntityReference> ers = new HashSet<>();
+		Collection<Xref> xrefs = new HashSet<>();
 		for (BioPAXElement element : elements)
 		{
 			if (element instanceof Xref)
@@ -648,10 +654,10 @@ public class QueryExecuter
 	 * @param pes Result set. If not supplied, a new set will be initialized.
 	 * @return Related PhysicalEntity objects
 	 */
-	public static Set<PhysicalEntity> getRelatedPhysicalEntities(BioPAXElement element,
-		Set<PhysicalEntity> pes)
+	public static Collection<PhysicalEntity> getRelatedPhysicalEntities(BioPAXElement element,
+		Collection<PhysicalEntity> pes)
 	{
-		if (pes == null) pes = new HashSet<PhysicalEntity>();
+		if (pes == null) pes = new HashSet<>();
 
 		if (element instanceof PhysicalEntity)
 		{
@@ -702,7 +708,7 @@ public class QueryExecuter
 	 * @param pe The PhysicalEntity to add its equivalents and complexes
 	 * @param pes Set to collect equivalents and complexes
 	 */
-	private static void addEquivalentsComplexes(PhysicalEntity pe, Set<PhysicalEntity> pes)
+	private static void addEquivalentsComplexes(PhysicalEntity pe, Collection<PhysicalEntity> pes)
 	{
 		addEquivalentsComplexes(pe, true, pes);
 
@@ -720,9 +726,9 @@ public class QueryExecuter
 	 * @param pes Set to collect equivalents and complexes
 	 */
 	private static void addEquivalentsComplexes(PhysicalEntity pe, boolean outer,
-		Set<PhysicalEntity> pes)
+		Collection<PhysicalEntity> pes)
 	{
-		Set<PhysicalEntity> set = outer ? 
+		Collection<PhysicalEntity> set = outer ?
 			pe.getMemberPhysicalEntityOf() : pe.getMemberPhysicalEntity();
 
 		for (PhysicalEntity related : set)
@@ -745,7 +751,7 @@ public class QueryExecuter
 	 */
 	public static Set<Node> getSeedInteractions(Collection<BioPAXElement> elements, Graph graph)
 	{
-		Set<Node> nodes = new HashSet<Node>();
+		Set<Node> nodes = new HashSet<>();
 
 		for (BioPAXElement ele : elements)
 		{

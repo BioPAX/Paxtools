@@ -19,7 +19,7 @@ abstract class BioPAXLevel2ElementImpl extends BioPAXElementImpl
 
     BioPAXLevel2ElementImpl()
     {
-        this.COMMENT = new HashSet<String>();
+        this.COMMENT = new HashSet<>();
     }
 
     public Set<String> getCOMMENT()

@@ -108,7 +108,7 @@ public class InterToPartER extends ConstraintAdapter
 	{
 		Interaction inter = (Interaction) match.get(ind[0]);
 
-		Set<Entity> taboo = new HashSet<Entity>();
+		Set<Entity> taboo = new HashSet<>();
 
 		for (int i = 1; i < getVariableSize() - 1; i++)
 		{
@@ -127,7 +127,7 @@ public class InterToPartER extends ConstraintAdapter
 	 */
 	protected Collection<BioPAXElement> generate(Interaction inter, Set<Entity> taboo)
 	{
-		Set<BioPAXElement> simples = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> simples = new HashSet<>();
 
 		for (Entity part : inter.getParticipant())
 		{
@@ -154,7 +154,7 @@ public class InterToPartER extends ConstraintAdapter
 
 		if (!(direction == Direction.BOTHSIDERS || direction == Direction.ONESIDERS))
 		{
-			Set<BioPAXElement> simples = new HashSet<BioPAXElement>();
+			Set<BioPAXElement> simples = new HashSet<>();
 
 			for (Entity part : direction == Direction.ANY ? conv.getParticipant() :
 				direction == Direction.LEFT ? conv.getLeft() : conv.getRight())
@@ -169,8 +169,8 @@ public class InterToPartER extends ConstraintAdapter
 		}
 		else
 		{
-			Set<BioPAXElement> leftSimples = new HashSet<BioPAXElement>();
-			Set<BioPAXElement> rightSimples = new HashSet<BioPAXElement>();
+			Set<BioPAXElement> leftSimples = new HashSet<>();
+			Set<BioPAXElement> rightSimples = new HashSet<>();
 
 			for (PhysicalEntity pe : conv.getLeft())
 			{

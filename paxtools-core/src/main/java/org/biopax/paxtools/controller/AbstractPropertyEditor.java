@@ -422,14 +422,14 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 	{
 		if (this.getPrimarySetMethod() != null)
 		{
-			if (log.isTraceEnabled()) log.trace(
-					this.getPrimarySetMethod().getName() + " bean:" + bean + " val:" + value);
-		} else
-		{
+			if (log.isTraceEnabled()) {
+				log.trace(this.getPrimarySetMethod().getName() + " bean:" + bean + " val:" + value);
+			}
+		} else {
 			log.error("setMethod is null; " + " bean:" + bean + " (" + bean.getUri() + ") val:" + value);
 		}
 
-		// 'null' definitely means 'unknown'for single cardinality props
+		// 'null' definitely means 'unknown' for single cardinality props
 		if (value == null && !isMultipleCardinality())
 			value = getUnknown(); // not null for primitive property editors
 
@@ -456,17 +456,18 @@ public abstract class AbstractPropertyEditor<D extends BioPAXElement, R>
 
 	@Override public void setValueToBean(Set<R> values, D bean)
 	{
-		if (values == null) setValueToBean(((R) null), bean);
-
+		if (values == null) {
+			setValueToBean(((R) null), bean);
+		}
 		else if (this.isMultipleCardinality() || values.size() < 2)
 		{
-			for (R r : values)
-			{
+			for (R r : values) {
 				this.setValueToBean(r, bean);
 			}
-		} else throw new IllegalBioPAXArgumentException(
-					this.getProperty() + " is single cardinality. Can not set" + "it with a set of size larger than" +
-					" 1");
+		} else {
+			throw new IllegalBioPAXArgumentException(this.getProperty() +
+				" is single cardinality; cannot set it with a set of size larger than 1");
+		}
 	}
 
 

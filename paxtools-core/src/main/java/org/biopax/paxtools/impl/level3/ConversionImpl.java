@@ -51,16 +51,18 @@ public class ConversionImpl extends InteractionImpl
 	public void addRight(PhysicalEntity right)
 	{
 		if(right != null) {
-			this.right.add(right);
-			super.addParticipant(right);
+			if(this.right.add(right)) {
+				super.addParticipant(right);
+			}
 		}
 	}
 
 	public void removeRight(PhysicalEntity right)
 	{
 		if(right != null) {
-			super.removeParticipant(right);
-			this.right.remove(right);
+			if(this.right.remove(right)) {
+				super.removeParticipant(right);
+			}
 		}
 	}
 
@@ -72,19 +74,20 @@ public class ConversionImpl extends InteractionImpl
 	public void addLeft(PhysicalEntity left)
 	{
 		if(left != null) {
-			this.left.add(left);
-			super.addParticipant(left);
+			if(this.left.add(left)) {
+				super.addParticipant(left);
+			}
 		}
 	}
 
 	public void removeLeft(PhysicalEntity left)
 	{
 		if(left != null) {
-			super.removeParticipant(left);
-			this.left.remove(left);
+			if(this.left.remove(left)) {
+				super.removeParticipant(left);
+			}
 		}
 	}
-
 	
 	public Boolean getSpontaneous()
 	{
@@ -150,7 +153,6 @@ public class ConversionImpl extends InteractionImpl
 	public int equivalenceCode()
 	{
 		return getEqCodeForSet(this.getLeft())*getEqCodeForSet(this.getRight());
-
 	}
 
 	private int getEqCodeForSet(Set<PhysicalEntity> peSet)

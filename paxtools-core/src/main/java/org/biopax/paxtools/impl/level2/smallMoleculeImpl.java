@@ -24,7 +24,7 @@ class smallMoleculeImpl extends physicalEntityImpl
 
 	public smallMoleculeImpl()
 	{
-		this.STRUCTURE = new HashSet<chemicalStructure>();
+		this.STRUCTURE = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

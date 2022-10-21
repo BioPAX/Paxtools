@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,60 +29,59 @@ import java.util.Set;
 public class GOUnificationXREFtoRelationshipXREFConverter
 {
 	private static Logger log = LoggerFactory.getLogger(GOUnificationXREFtoRelationshipXREFConverter.class);
-   
+
 	static BioPAXIOHandler reader = new SimpleIOHandler();
 
-    //args - a space seperated list of owl files to be processed
-    public static void main(String[] args)
+	//args - a space seperated list of owl files to be processed
+	public static void main(String[] args)
 		throws IllegalAccessException, InvocationTargetException
 	{
-        // Process all the args
-        for (String arg : args)
-        {
-            log.info(arg);
-            if (arg.toLowerCase().endsWith("owl"))
-            {
-                try
-                {
-                    processXrefs(arg);
-                }
-                catch (FileNotFoundException e)
-                {
-                    e.printStackTrace();
-                }
-            }
+		// Process all the args
+		for (String arg : args)
+		{
+			log.info(arg);
+			if (arg.toLowerCase().endsWith("owl"))
+			{
+				try
+				{
+					processXrefs(arg);
+				}
+				catch (FileNotFoundException e)
+				{
+					e.printStackTrace();
+				}
+			}
 
-        }
+		}
 	}
 
-    /**
-     * Main conversion method. Demonstrates how to read and write a BioPAX
-     * model and accessing its objects.
-     * @param arg file name to be processed
-     */
-    private static void processXrefs(String arg) throws
+	/**
+	 * Main conversion method. Demonstrates how to read and write a BioPAX
+	 * model and accessing its objects.
+	 * @param arg file name to be processed
+	 */
+	private static void processXrefs(String arg) throws
 		FileNotFoundException,
 		IllegalAccessException,
 		InvocationTargetException
 	{
 		//Read in the model
-        FileInputStream in =
+		FileInputStream in =
 			new FileInputStream(new File(arg));
 		Model level2 =
 			reader.convertFromOWL(in);
 
-        //Get all unification xrefs.
-        Set<unificationXref> unis =
-			level2.getObjects(unificationXref.class);
+		//Get all unification xrefs.
+		Collection<unificationXref> unis = level2.getObjects(unificationXref.class);
 		//Create another set for avoiding concurrent modifications
-        Set<unificationXref> gos = new HashSet<unificationXref>();
+		Set<unificationXref> gos = new HashSet<>();
 
-        //Process all uni. refs
-        for (unificationXref uni : unis)
+		//Process all uni. refs
+		for (unificationXref uni : unis)
 		{
 			log.trace(uni.getDB());
 			//Assuming DB is represented as "GO"
-            if (uni.getDB().equalsIgnoreCase("GO"))
+			if (uni.getDB().equalsIgnoreCase("GO"))
 			{
 				//this it to avoid concurrent modification.
 				log.info("scheduling " + uni.getUri());
@@ -89,36 +89,36 @@ public class GOUnificationXREFtoRelationshipXREFConverter
 
 			}
 		}
-        //Now we have a list of xrefs to be converted. Let's do it.
-        for (unificationXref go : gos)
+		//Now we have a list of xrefs to be converted. Let's do it.
+		for (unificationXref go : gos)
 		{
 			convert(go, level2);
 		}
 		//And finally write out the file. We are done !
-        reader.convertToOWL(level2, new FileOutputStream(
+		reader.convertToOWL(level2, new FileOutputStream(
 			arg.substring(0, arg.lastIndexOf('.')) +
 				"-converted.owl"));
 	}
 
-    /**
-     * This method converts the given unification xref to a relationship xref
-     * @param uni xref to be converted
-     * @param level2 model containing the xref
-     */
-    private static void convert(unificationXref uni, Model level2)
+	/**
+	 * This method converts the given unification xref to a relationship xref
+	 * @param uni xref to be converted
+	 * @param level2 model containing the xref
+	 */
+	private static void convert(unificationXref uni, Model level2)
 	{
 		//We can not simply convert a class, so we need to remove the
-        //uni and insert a new relationship xref
+		//uni and insert a new relationship xref
 
-        //First get all the objects that refers to this uni
-        Set<XReferrable> referrables =
-			new HashSet<XReferrable>(uni.isXREFof());
+		//First get all the objects that refers to this uni
+		Set<XReferrable> referrables =
+			new HashSet<>(uni.isXREFof());
 
-        //Create the new relationship xref in the model.
-        relationshipXref relationshipXref =
-        	level2.addNew(relationshipXref.class, uni.getUri());
+		//Create the new relationship xref in the model.
+		relationshipXref relationshipXref =
+			level2.addNew(relationshipXref.class, uni.getUri());
 
-        //Copy the fields from uni
+		//Copy the fields from uni
 		relationshipXref.setCOMMENT(uni.getCOMMENT());
 		relationshipXref.setDB(uni.getDB());
 		relationshipXref.setDB_VERSION(uni.getDB_VERSION());
@@ -127,21 +127,20 @@ public class GOUnificationXREFtoRelationshipXREFConverter
 		relationshipXref.setRELATIONSHIP_TYPE(
 			"http://www.biopax.org/paxtools/convertedGOUnificationXREF");
 
-        //Create a link to the new xref from all the owners.
-        for (XReferrable referrable : referrables)
+		//Create a link to the new xref from all the owners.
+		for (XReferrable referrable : referrables)
 		{
 			referrable.addXREF(relationshipXref);
 		}
 
-        //Remove the references to the old uni
-        for (XReferrable referrable : referrables)
-        {
-            referrable.removeXREF(uni);
-        }
-        //Now remove it from the model.
-        level2.remove(uni);
+		//Remove the references to the old uni
+		for (XReferrable referrable : referrables)
+		{
+			referrable.removeXREF(uni);
+		}
+		//Now remove it from the model.
+		level2.remove(uni);
 
-        //We are done!
-    }
+		//We are done!
+	}
 }
-

@@ -79,7 +79,7 @@ public class SetEquivalenceChecker {
 			Set<? extends T> set2)
 	{
 
-		Set<T> value = new HashSet<T>();
+		Set<T> value = new HashSet<>();
 
 		if (set1 != null && !set1.isEmpty() && set2 != null && !set2.isEmpty())
 		{

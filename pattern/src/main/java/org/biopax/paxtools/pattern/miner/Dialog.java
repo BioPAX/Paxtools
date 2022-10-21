@@ -429,7 +429,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 	 */
 	private Object[] getAvailablePatterns()
 	{
-		List<Miner> minerList = new ArrayList<Miner>();
+		List<Miner> minerList = new ArrayList<>();
 		if (miners != null && miners.length > 0)
 		{
 			minerList.addAll(Arrays.asList(miners));

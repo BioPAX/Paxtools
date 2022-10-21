@@ -1,6 +1,6 @@
 package org.biopax.paxtools.util;
 
-import java.util.Set;
+import java.util.Collection;
 
 
 /**
@@ -16,11 +16,10 @@ protected Class<F> filterClass;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public ClassFilterSet(Set<? extends E> baseSet,Class<F> filterClass)
+	public ClassFilterSet(Collection<? extends E> baseSet, Class<F> filterClass)
 	{
 		super(baseSet);
 		this.filterClass = filterClass;
-
 	}
 
 	/**

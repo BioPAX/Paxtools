@@ -22,11 +22,11 @@ public class SPIKEParser
 	{
 		Map<String, Gene> id2gene = new HashMap<String, Gene>();
 		Map<String, Group> id2group = new HashMap<String, Group>();
-		Set<Regulation> regs = new HashSet<Regulation>();
+		Set<Regulation> regs = new HashSet<>();
 
 		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
 
-		Set<String> blocks = new HashSet<String>();
+		Set<String> blocks = new HashSet<>();
 
 		String build = null;
 		int indent = 10;
@@ -123,7 +123,7 @@ public class SPIKEParser
 
 		Group g = id2group.get(id);
 
-		List<Gene> list = new ArrayList<Gene>();
+		List<Gene> list = new ArrayList<>();
 
 		for (String memID : g.members)
 		{
@@ -174,7 +174,7 @@ public class SPIKEParser
 
 		Group(String block)
 		{
-			members = new ArrayList<String>();
+			members = new ArrayList<>();
 
 			for (String line : block.split("\n"))
 			{

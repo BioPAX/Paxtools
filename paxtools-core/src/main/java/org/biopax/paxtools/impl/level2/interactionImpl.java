@@ -20,7 +20,7 @@ class interactionImpl extends interactionAdapter
 
 	public interactionImpl()
 	{
-		this.PARTICIPANTS = new HashSet<InteractionParticipant>();
+		this.PARTICIPANTS = new HashSet<>();
 		updatePARTICIPANTS(null, PARTICIPANTS);
 	}
 
@@ -50,7 +50,7 @@ class interactionImpl extends interactionAdapter
 	{
 		if (PARTICIPANTS == null)
 		{
-			PARTICIPANTS = new HashSet<InteractionParticipant>();
+			PARTICIPANTS = new HashSet<>();
 		}
 		updatePARTICIPANTS(this.PARTICIPANTS, this.PARTICIPANTS = PARTICIPANTS);
 	}

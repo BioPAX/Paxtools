@@ -29,7 +29,7 @@ public class UnionPropertyAccessor<D extends BioPAXElement,R> extends PropertyAc
 
 	@Override public Set getValueFromBean(D bean) throws IllegalBioPAXArgumentException
 	{
-		CompositeSet valueFromBean =new CompositeSet();
+		CompositeSet valueFromBean = new CompositeSet();
 
 		for (PropertyAccessor atomicAccessor : union)
 		{

@@ -39,7 +39,7 @@ public class Pattern
 	{
 		this.startingClass = startingClass;
 		this.labelMap = new HashMap<String, Integer>();
-		this.constraints = new ArrayList<MappedConst>();
+		this.constraints = new ArrayList<>();
 		this.lastIndex = 0;
 	}
 
@@ -134,7 +134,7 @@ public class Pattern
 
 		for (MappedConst con1 : constraints)
 		{
-			preMap.put(con1, new HashSet<MappedConst>());
+			preMap.put(con1, new HashSet<>());
 
 			int m1 = con1.getMaxInd();
 			for (MappedConst con2 : constraints)
@@ -152,11 +152,11 @@ public class Pattern
 
 		// determine ordered levels
 
-		List<Set<MappedConst>> levels = new ArrayList<Set<MappedConst>>();
+		List<Set<MappedConst>> levels = new ArrayList<>();
 
 		do
 		{
-			Set<MappedConst> level = new HashSet<MappedConst>();
+			Set<MappedConst> level = new HashSet<>();
 
 			for (MappedConst con : preMap.keySet())
 			{
@@ -179,11 +179,11 @@ public class Pattern
 
 		// build new constraints list
 
-		List<MappedConst> newList = new ArrayList<MappedConst>(constraints.size());
+		List<MappedConst> newList = new ArrayList<>(constraints.size());
 
 		for (Set<MappedConst> level : levels)
 		{
-			List<MappedConst> temp = new ArrayList<MappedConst>(constraints);
+			List<MappedConst> temp = new ArrayList<>(constraints);
 			temp.retainAll(level);
 			newList.addAll(temp);
 		}

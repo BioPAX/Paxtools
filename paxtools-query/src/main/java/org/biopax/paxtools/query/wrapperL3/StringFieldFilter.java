@@ -43,7 +43,7 @@ public abstract class StringFieldFilter extends Filter
 		if(valid == null || valid.length == 0) {
 			validValues = Collections.EMPTY_SET;
 		} else {
-			validValues = new HashSet<String>();
+			validValues = new HashSet<>();
 			//copy all the filter values, making them lower-case (will then match ignoring case)
 			for(String val : valid)
 				if(val != null && !val.isEmpty())

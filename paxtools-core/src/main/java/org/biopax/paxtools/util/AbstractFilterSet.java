@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.AbstractSet;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 /**
  * Base class for implementing various filter sets.
@@ -20,13 +20,12 @@ public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements 
 
 	int size = -1;
 
-	protected final Set<? extends F> baseSet;
+	protected final Collection<? extends F> baseSet;
 
 
-	public AbstractFilterSet(Set<? extends F> baseSet)
+	public AbstractFilterSet(Collection<? extends F> baseSet)
 	{
 		this.baseSet = baseSet;
-
 	}
 
 	/**
@@ -51,7 +50,6 @@ public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements 
 
 	@Override public boolean contains(Object o)
 	{
-
 		return baseSet.contains(o) && filter(((F) o));
 	}
 

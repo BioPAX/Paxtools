@@ -23,7 +23,7 @@ public class CommandManagerTest
 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 		Model model = factory.createModel();
 		CommandManager manager = new CommandManager(model);
-		Set<BioPAXElement> objects = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> objects = new HashSet<>();
 
 		Protein protein = factory.create(Protein.class, "1");
 		objects.add(protein);

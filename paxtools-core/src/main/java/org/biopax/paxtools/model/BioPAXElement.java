@@ -14,21 +14,21 @@ public interface BioPAXElement extends Serializable, Cloneable
      * Constant for representing unknown doubles. This is required
      * as by default java would assign 0.
      */
-    public static final Double UNKNOWN_DOUBLE = Double.MIN_VALUE;
+    Double UNKNOWN_DOUBLE = Double.MIN_VALUE;
 
     /**
      * Constant for representing unknown floats. This is required
      * as by default java would assign 0.
      */
-	public static final Float UNKNOWN_FLOAT = Float.MIN_VALUE;
+    Float UNKNOWN_FLOAT = Float.MIN_VALUE;
 
     /**
      * Constant for representing unknown integers. This is required
      * as by default java would assign 0.
      */
-	public static final Integer UNKNOWN_INT = Integer.MIN_VALUE;
-	
-	
+    Integer UNKNOWN_INT = Integer.MIN_VALUE;
+
+
     /**
      * This method returns the actual model interface that a class implements.
      * @return an interface from {@link org.biopax.paxtools.model} package
@@ -41,7 +41,7 @@ public interface BioPAXElement extends Serializable, Cloneable
      * BioPAX data providers are responsible 
      * for generating globally unique and standard URIs
      * for their BioPAX elements.
-     * 
+     *
      * @return unique URI for this object.
      */
     String getUri();
@@ -76,9 +76,8 @@ public interface BioPAXElement extends Serializable, Cloneable
      * store additional application-specific information 
      * about the BioPAX element, such as statistics,
      * inferred fields, etc.
-     * 
+     *
      * @return additional (not BioPAX standard) annotations
      */
-    public Map<String, Object> getAnnotations();
-    	
+    Map<String, Object> getAnnotations();
 }

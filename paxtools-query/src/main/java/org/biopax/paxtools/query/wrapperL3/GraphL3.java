@@ -128,9 +128,9 @@ public class GraphL3 extends AbstractGraph
 	 * @param objects Wrapped objects
 	 * @return wrappers
 	 */
-	public Set<Node> getWrapperSet(Set<?> objects)
+	public Set<Node> getWrapperSet(Collection<?> objects)
 	{
-		Set<Node> wrapped = new HashSet<Node>();
+		Set<Node> wrapped = new HashSet<>();
 
 		for (Object object : objects)
 		{
@@ -148,7 +148,7 @@ public class GraphL3 extends AbstractGraph
 	 * @param objects Wrapped objects
 	 * @return object-to-wrapper map
 	 */
-	public Map<Object, Node> getWrapperMap(Set<?> objects)
+	public Map<Object, Node> getWrapperMap(Collection<?> objects)
 	{
 		Map<Object, Node> map = new HashMap<Object, Node>();
 
@@ -168,9 +168,9 @@ public class GraphL3 extends AbstractGraph
 	 * @param wrappers Wrappers
 	 * @return Wrapped objects
 	 */
-	public Set<Object> getWrappedSet(Set<? extends GraphObject> wrappers)
+	public Set<Object> getWrappedSet(Collection<? extends GraphObject> wrappers)
 	{
-		Set<Object> objects = new HashSet<Object>();
+		Set<Object> objects = new HashSet<>();
 
 		for (GraphObject wrapper : wrappers)
 		{

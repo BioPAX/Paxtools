@@ -67,22 +67,22 @@ public class UbiqueStatHelper
 
 			if (token[1].equals(SIFEnum.USED_TO_PRODUCE.getTag()))
 			{
-				if (!dwMap.containsKey(token[0])) dwMap.put(token[0], new HashSet<String>());
-				if (!upMap.containsKey(token[2])) upMap.put(token[2], new HashSet<String>());
+				if (!dwMap.containsKey(token[0])) dwMap.put(token[0], new HashSet<>());
+				if (!upMap.containsKey(token[2])) upMap.put(token[2], new HashSet<>());
 				dwMap.get(token[0]).add(token[2]);
 				upMap.get(token[2]).add(token[0]);
 			}
 			else if (token[1].equals(SIFEnum.CHEMICAL_AFFECTS.getTag()))
 			{
-				if (!affectMap.containsKey(token[0])) affectMap.put(token[0], new HashSet<String>());
+				if (!affectMap.containsKey(token[0])) affectMap.put(token[0], new HashSet<>());
 				affectMap.get(token[0]).add(token[2]);
 			}
 		}
 
-		Set<String> degreeSet = new HashSet<String>(dwMap.keySet());
+		Set<String> degreeSet = new HashSet<>(dwMap.keySet());
 		degreeSet.addAll(upMap.keySet());
-		List<String> degreeList = new ArrayList<String>(degreeSet);
-		List<String> ctrlList = new ArrayList<String>(affectMap.keySet());
+		List<String> degreeList = new ArrayList<>(degreeSet);
+		List<String> ctrlList = new ArrayList<>(affectMap.keySet());
 
 		Collections.sort(degreeList, new Comparator<String>()
 		{
@@ -128,7 +128,7 @@ public class UbiqueStatHelper
 	private int getUpOnly(String name, Map<String, Set<String>> upMap, Map<String, Set<String>> dwMap)
 	{
 		if (!upMap.containsKey(name)) return 0;
-		Set<String> up = new HashSet<String>(upMap.get(name));
+		Set<String> up = new HashSet<>(upMap.get(name));
 		if (dwMap.containsKey(name)) up.removeAll(dwMap.get(name));
 		return up.size();
 	}
@@ -136,7 +136,7 @@ public class UbiqueStatHelper
 	private int getDwOnly(String name, Map<String, Set<String>> upMap, Map<String, Set<String>> dwMap)
 	{
 		if (!dwMap.containsKey(name)) return 0;
-		Set<String> dw = new HashSet<String>(dwMap.get(name));
+		Set<String> dw = new HashSet<>(dwMap.get(name));
 		if (upMap.containsKey(name)) dw.removeAll(upMap.get(name));
 		return dw.size();
 	}

@@ -345,7 +345,7 @@ public class ConBox
 	public static Constraint nameEquals(String... name)
 	{
 		return new Field("Named/name", Field.Operation.INTERSECT,
-			new HashSet<String>(Arrays.asList(name)));
+			new HashSet<>(Arrays.asList(name)));
 	}
 
 //	/**

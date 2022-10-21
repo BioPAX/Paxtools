@@ -22,7 +22,7 @@ class catalysisImpl extends controlImpl implements catalysis
 
 	public catalysisImpl()
 	{
-		this.COFACTOR = new HashSet<physicalEntityParticipant>();
+		this.COFACTOR = new HashSet<>();
 		updatePARTICIPANTS(null, COFACTOR);
 	}
 
@@ -61,7 +61,7 @@ class catalysisImpl extends controlImpl implements catalysis
 	{
 		if (COFACTOR == null)
 		{
-			COFACTOR = new HashSet<physicalEntityParticipant>();
+			COFACTOR = new HashSet<>();
 		}
 		updatePARTICIPANTS(this.COFACTOR, this.COFACTOR = COFACTOR);
 	}

@@ -23,10 +23,10 @@ class pathwayStepImpl extends BioPAXLevel2ElementImpl implements pathwayStep
 
 	public pathwayStepImpl()
 	{
-		this.NEXT_STEP = new HashSet<pathwayStep>();
-		this.NEXT_STEPof = new HashSet<pathwayStep>();
-		this.PATHWAY_COMPONENTSof = new HashSet<pathway>();
-		this.STEP_INTERACTIONS = new HashSet<process>();
+		this.NEXT_STEP = new HashSet<>();
+		this.NEXT_STEPof = new HashSet<>();
+		this.PATHWAY_COMPONENTSof = new HashSet<>();
+		this.STEP_INTERACTIONS = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

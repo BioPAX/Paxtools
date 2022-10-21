@@ -20,7 +20,7 @@ class dataSourceImpl extends BioPAXLevel2ElementImpl implements dataSource
 
 	public dataSourceImpl()
 	{
-		this.NAME = new HashSet<String>();
+		this.NAME = new HashSet<>();
 		this.referenceHelper = new ReferenceHelper(this);
 	}
 

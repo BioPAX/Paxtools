@@ -54,15 +54,13 @@ public final class PaxtoolsMain {
 	/*
 	 * using arguments:
 	 * <input> <output> <db> [-crossSpecies] [-subPathways] [-notPathway] [organisms=9606,mouse,10090,rat,human,..]
-	 *
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
 	 */
 	public static void toGSEA(String[] argv) throws IOException {
 		//argv[0] is the command name ('toGsea')
 		boolean crossSpecies = false; //cross-check is enabled (i.e., no mixing different species IDs in one row)
 		boolean subPathways = false; //no sub-pathways (i.e., going into sub-pathways is not enabled)
 		boolean notPathways = false;
-		Set<String> organisms = new HashSet<String>();
+		Set<String> organisms = new HashSet<>();
 
 		if (argv.length < 4)
 			throw new IllegalArgumentException("Not enough arguments: " + argv);
@@ -111,7 +109,7 @@ public final class PaxtoolsMain {
 		Model model = io.convertFromOWL(getInputStream(in));
 
 		// get elements (entities)
-		Set<BioPAXElement> elements = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> elements = new HashSet<>();
 		for (Object id : ids) {
 			BioPAXElement e = model.getByID(id.toString());
 			if (e != null && (e instanceof Entity || e instanceof entity)) {
@@ -122,15 +120,14 @@ public final class PaxtoolsMain {
 		}
 
 		// execute the 'nearest neighborhood' query
-		Set<BioPAXElement> result = QueryExecuter
+		Collection<BioPAXElement> result = QueryExecuter
 			.runNeighborhood(elements, model, 1, Direction.BOTHSTREAM);
 
 		// auto-complete/clone the results in a new model
 		// (this also cuts some less important edges, right?..)
 		Completer c = new Completer(io.getEditorMap());
-		result = c.complete(result, model);
 		Cloner cln = new Cloner(io.getEditorMap(), io.getFactory());
-		model = cln.clone(model, result); // new sub-model
+		model = cln.clone(c.complete(result)); //a new sub-model
 
 		if (model != null) {
 			log.info("Elements in the result model: " + model.getObjects().size());
@@ -341,7 +338,7 @@ public final class PaxtoolsMain {
 			}
 		}
 
-		Collection<File> files = new HashSet<File>();
+		Collection<File> files = new HashSet<>();
 		File fileOrDir = new File(input);
 		if (!fileOrDir.canRead()) {
 			System.out.println("Cannot read " + input);
@@ -414,10 +411,10 @@ public final class PaxtoolsMain {
 		boolean andSif = false; //if extended==false, SIF will be generated as it would be andSif==true
 		boolean mergeInteractions = true;
 		boolean useNameIfNoId = false;
-		final Collection<SIFEnum> include = new HashSet<SIFEnum>();
-		final Collection<SIFEnum> exclude = new HashSet<SIFEnum>();
+		final Collection<SIFEnum> include = new HashSet<>();
+		final Collection<SIFEnum> exclude = new HashSet<>();
 		final ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher();
-		final List<String> customFieldList = new ArrayList<String>(); //there may be custom field names (SIF mediators)
+		final List<String> customFieldList = new ArrayList<>(); //there may be custom field names (SIF mediators)
 		//process arguments
 		if(argv.length > 3) {
 			for(int i=3; i<argv.length; i++) {
@@ -473,7 +470,7 @@ public final class PaxtoolsMain {
 		//Create a new SIF searcher:
 		//set SIF miners to use (default is to use all types, given no include/exclude args provided)
 		final Collection<SIFEnum> sifTypes = (include.isEmpty())
-			? new HashSet<SIFEnum>(Arrays.asList(SIFEnum.values())) : include;
+			? new HashSet<>(Arrays.asList(SIFEnum.values())) : include;
 		for(SIFType t : exclude) {
 			sifTypes.remove(t); //remove if exists, otherwise - ignore
 		}
@@ -685,7 +682,7 @@ public final class PaxtoolsMain {
 	private static Set<String> identifiers(final PhysicalEntity entity, final String xrefdb,
 																				 boolean isPrefix, boolean includeEvidence)
 	{
-		final Set<String> ids = new HashSet<String>();
+		final Set<String> ids = new HashSet<>();
 		final Fetcher fetcher = (includeEvidence)
 			? new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
 			: new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
@@ -711,7 +708,7 @@ public final class PaxtoolsMain {
 		final PathAccessor pathwayComponentAccessor = new PathAccessor("Pathway/pathwayComponent");
 		final PathAccessor pathwayOrderStepProcessAccessor = new PathAccessor("Pathway/pathwayOrder/stepProcess");
 
-		Set<Pathway> pathways = model.getObjects(Pathway.class);
+		Collection<Pathway> pathways = model.getObjects(Pathway.class);
 		//print column titles
 		out.println("PATHWAY_URI\tDISPLAY_NAME\tDIRECT_SUB_PATHWAY_URIS\tALL_SUB_PATHWAY_URIS");
 		for(Pathway pathway : pathways) {
@@ -757,9 +754,9 @@ public final class PaxtoolsMain {
 
 		//Analyse SERs (Protein-, Dna* and Rna* references) - HGNC usage, coverage,..
 		//Calc. the no. non-generic ERs having >1 different HGNC symbols and IDs, or none, etc.
-		Set<SequenceEntityReference> haveMultipleHgnc = new HashSet<SequenceEntityReference>();
-		Map<Provenance,MutableInt> numErs = new HashMap<Provenance,MutableInt>();
-		Map<Provenance,MutableInt> numProblematicErs = new HashMap<Provenance,MutableInt>();
+		Set<SequenceEntityReference> haveMultipleHgnc = new HashSet<>();
+		Map<Provenance,MutableInt> numErs = new HashMap<>();
+		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
 		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf/dataSource", model.getLevel());
 		Set<String> problemErs = new TreeSet<String>();
 		for(EntityReference ser : model.getObjects(EntityReference.class)) {
@@ -767,8 +764,8 @@ public final class PaxtoolsMain {
 			if(ser instanceof SmallMoleculeReference || !ser.getMemberEntityReference().isEmpty())
 				continue;
 
-			Set<String> hgncSymbols = new HashSet<String>();
-			Set<String> hgncIds = new HashSet<String>();
+			Set<String> hgncSymbols = new HashSet<>();
+			Set<String> hgncIds = new HashSet<>();
 
 			if(ser.getUri().startsWith("http://identifiers.org/hgnc")) {
 				String s = ser.getUri().substring(ser.getUri().lastIndexOf("/")+1);
@@ -838,8 +835,8 @@ public final class PaxtoolsMain {
 		boolean verbose = true; //TODO use another parameter here
 
 		//Analyse PRs - UniProt ID coverage,..
-		Map<Provenance,MutableInt> numErs = new HashMap<Provenance,MutableInt>();
-		Map<Provenance,MutableInt> numProblematicErs = new HashMap<Provenance,MutableInt>();
+		Map<Provenance,MutableInt> numErs = new HashMap<>();
+		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
 		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf:Protein/dataSource", model.getLevel());
 		Set<String> problemErs = new TreeSet<String>();
 		for(ProteinReference pr : model.getObjects(ProteinReference.class)) {
@@ -893,8 +890,8 @@ public final class PaxtoolsMain {
 	private static void summarizeChebiIds(Model model, PrintStream out) {
 		boolean verbose = true; //TODO use another parameter here
 		//Analyse SMRs - ChEBI usage, coverage,..
-		Map<Provenance,MutableInt> numErs = new HashMap<Provenance,MutableInt>();
-		Map<Provenance,MutableInt> numProblematicErs = new HashMap<Provenance,MutableInt>();
+		Map<Provenance,MutableInt> numErs = new HashMap<>();
+		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
 		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf:SmallMolecule/dataSource", model.getLevel());
 		Set<String> problemErs = new TreeSet<String>();
 		for(SmallMoleculeReference smr : model.getObjects(SmallMoleculeReference.class)) {
@@ -960,7 +957,7 @@ public final class PaxtoolsMain {
 
 		for (Class<? extends BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
 		{
-			Set<? extends BioPAXElement> set = model.getObjects(clazz);
+			Collection<? extends BioPAXElement> set = model.getObjects(clazz);
 			int initialSize = set.size();
 			set = filterToExactClass(set, clazz);
 			String s = clazz.getSimpleName() + " = " + set.size();
@@ -1031,7 +1028,7 @@ public final class PaxtoolsMain {
 		for (String prop : props)
 		{
 			Map<Object, Integer> cnt = new HashMap<Object, Integer>();
-			List<String> valList = new ArrayList<String>();
+			List<String> valList = new ArrayList<>();
 			PathAccessor acc = new PathAccessor(prop, model.getLevel());
 
 			boolean isString = false;
@@ -1169,25 +1166,22 @@ public final class PaxtoolsMain {
 	}
 
 	private static List<Object> getOrdering(final Map<Object, Integer> map) {
-		List<Object> list = new ArrayList<Object>(map.keySet());
-		Collections.sort(list, new Comparator<Object>()
-		{
-			public int compare(Object key1, Object key2)
-			{
-				int cnt1 = map.get(key1);
-				int cnt2 = map.get(key2);
-
-				if (cnt1 == cnt2) return key1.toString().compareTo(key2.toString());
-				else return cnt2 - cnt1;
-			}
+		List<Object> list = new ArrayList<>(map.keySet());
+		Collections.sort(list, (key1, key2) -> {
+			int cnt1 = map.get(key1);
+			int cnt2 = map.get(key2);
+			if (cnt1 == cnt2)
+				return key1.toString().compareTo(key2.toString());
+			else
+				return cnt2 - cnt1;
 		});
 
 		return list;
 	}
 
-	private static Set<BioPAXElement> filterToExactClass(Set<? extends BioPAXElement> classSet, Class<?> clazz)
+	private static Collection<BioPAXElement> filterToExactClass(Collection<? extends BioPAXElement> classSet, Class<?> clazz)
 	{
-		Set<BioPAXElement> exact = new HashSet<BioPAXElement>();
+		Collection<BioPAXElement> exact = new HashSet<>();
 		for (BioPAXElement ele : classSet) {
 			if (ele.getModelInterface().equals(clazz)) exact.add(ele);
 		}

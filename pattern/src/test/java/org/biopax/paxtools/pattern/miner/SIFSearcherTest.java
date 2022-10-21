@@ -30,7 +30,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	{
 		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
 		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
-		Set<Pathway> pathways = new HashSet<Pathway>();
+		Set<Pathway> pathways = new HashSet<>();
 		for (SIFInteraction inter : inters)
 		{
 			pathways.addAll(inter.getPathways());
@@ -38,7 +38,7 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		Assert.assertFalse(pathways.isEmpty());
 
-		Set<String> dataSources = new HashSet<String>();
+		Set<String> dataSources = new HashSet<>();
 		for (SIFInteraction inter : inters)
 		{
 			dataSources.addAll(inter.getDataSources());
@@ -52,7 +52,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	{
 		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
 		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
-		Set<String> dataSources = new HashSet<String>();
+		Set<String> dataSources = new HashSet<>();
 		for (SIFInteraction inter : inters)
 		{
 			dataSources.addAll(inter.getDataSources());
@@ -79,7 +79,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		Set<SIFInteraction> sif = s.searchSIF(model_P53);
 		Assert.assertFalse(sif.isEmpty());
 
-		Set<String> pubmedIDs = new HashSet<String>();
+		Set<String> pubmedIDs = new HashSet<>();
 		for (SIFInteraction si : sif)
 		{
 			pubmedIDs.addAll(si.getPublicationIDs(true));
@@ -346,7 +346,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		SimpleIOHandler h = new SimpleIOHandler();
 		Model model = h.convertFromOWL(new FileInputStream(inputModelFile));
 
-		List<SIFInteraction> sifs = new ArrayList<SIFInteraction>(generate(model,
+		List<SIFInteraction> sifs = new ArrayList<>(generate(model,
 			new Blacklist(ubiqueIDFile)));
 
 		Collections.sort(sifs);

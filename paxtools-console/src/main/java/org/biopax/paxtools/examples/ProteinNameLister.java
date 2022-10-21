@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -101,7 +102,7 @@ public class ProteinNameLister
 
 	public static void listProteinUnificationXrefsPerPathway(Model model)
 	{
-		Set<pathway> pathways = model.getObjects(pathway.class);
+		Collection<pathway> pathways = model.getObjects(pathway.class);
 		for (pathway aPathway : pathways)
 		{
 			//printout aPathway's name
@@ -111,7 +112,7 @@ public class ProteinNameLister
 			Model onePathwayModel = BioPAXLevel.L2.getDefaultFactory().createModel();
 			fetcher.fetch(aPathway, onePathwayModel);
 			//get all proteins in the new level2
-			Set<protein> proteins = onePathwayModel.getObjects(protein.class);
+			Collection<protein> proteins = onePathwayModel.getObjects(protein.class);
 
 			//iterate and print names
 			for (protein aProtein : proteins)
@@ -157,7 +158,7 @@ public class ProteinNameLister
 
 		Traverser traverser = new Traverser(SimpleEditorMap.L2, visitor);
 
-		Set<pathway> pathways = model.getObjects(pathway.class);
+		Collection<pathway> pathways = model.getObjects(pathway.class);
 		for (pathway pathway : pathways)
 		{
 			traverser.traverse(pathway, model);
