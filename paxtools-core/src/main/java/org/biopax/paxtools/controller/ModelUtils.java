@@ -124,7 +124,7 @@ public final class ModelUtils
 		};
 
 		Traverser traverser = new Traverser(em, visitor);
-		model.getObjects().parallelStream().forEach(bpe -> traverser.traverse(bpe, null));//model is not used by traveser
+		model.getObjects().parallelStream().forEach(bpe -> traverser.traverse(bpe, null));//model is not used
 	}
 
 
@@ -160,21 +160,21 @@ public final class ModelUtils
 
 	
 	/**
-	 * Iteratively removes "dangling" elements of given type and its sub-types,
+	 * Iteratively removes "dangling" elements of given type and its subtypes,
 	 * e.g. Xref.class objects, from the BioPAX model. 
 	 * 
 	 * If the "model" does not contain any root Entity class objects,
 	 * and the second parameter is basic UtilityClass.class (i.e., not its sub-class), 
 	 * then it simply logs a warning and quits shortly (otherwise, it would 
 	 * remove everything from the model). Do not use basic Entity.class either
-	 * (but a sub-class is OK) for the same reason (it would delete everything).
+	 * (but a subclass is OK) for the same reason (it would delete everything).
 	 * 
 	 * This, however, does not change relationships
 	 * among objects, particularly, some inverse properties,
 	 * such as entityReferenceOf or xrefOf, may still
 	 * refer to a removed object.
 	 * @param model to modify
-	 * @param clazz filter-class (filter by this type and sub-classes)
+	 * @param clazz filter-class (filter by this type and subclasses)
 	 * @param <T> biopax type
 	 * @return removed objects
 	 */
@@ -515,7 +515,7 @@ public final class ModelUtils
 			if (fix)
 			{
 				er.addEntityFeature(ef);
-				//TODO resolve inverse functional prop. constraint violation (e.g., copy/replace the e.f. before adding if it has entityFeatureOf not null)?
+				//TODO: fix inverse functional constraint violation: copy the "ef" if entityFeatureOf is not null!
 			}
 		}
 		return check;
@@ -582,7 +582,7 @@ public final class ModelUtils
 			return true;
 		} else
 		{
-			LOG.warn("These two physicalEntities do not share an EntityReference. They can not be compared! " +
+			LOG.warn("These two PhysicalEntities do not share an EntityReference. They can not be compared! " +
 					"Skipping");
 			return false;
 		}
@@ -590,25 +590,15 @@ public final class ModelUtils
 	}
 
 	/**
-	 * In Paxtools v6, controlled property won't accept multiple values
-	 * (due to the OWL functional property restriction, which we so far forgot of);
-	 * so, let's make sure every Control has at most one controlled process.
+	 * Property "controlled" (OWL Functional prop!) should not accept multiple values, but it unfortunately does.
+	 *
+	 * Let's fix/copy Controls to make sure every one has at most one controlled process, not many.
+	 *
 	 * @param model biopax model
 	 * @param control to be cloned to set one controlled per control
 	 */
 	public static void fixControlled(Model model, Control control) {
 		//TODO: implement
-	}
-
-	/**
-	 * In all interactions and complexes, replace generic physical entities (have members)
-	 * with their corresponding members; clone the parent object, if needed, for each member.
-	 *
-	 * @param model biopax model
-	 * @param generic physical entity (PE) that has member PEs
-	 */
-	public static void normalizeGeneric(Model model, PhysicalEntity generic) {
-		//TODO: implement?..
 	}
 
 	/**
@@ -627,11 +617,14 @@ public final class ModelUtils
 	{
 		final Set<SimplePhysicalEntity> simplePEsToDo = new HashSet<>();
 
-		for (SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class))
-			if (spe.getEntityReference() == null && !spe.getMemberPhysicalEntity().isEmpty())
+		for (SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class)) {
+			if (spe.getEntityReference() == null && !spe.getMemberPhysicalEntity().isEmpty()) {
 				simplePEsToDo.add(spe);
+			}
+		}
 
 		final Map<Set<EntityReference>,EntityReference> memberMap = new HashMap<>();
+
 		for (SimplePhysicalEntity pe : simplePEsToDo)
 		{
 			try {
@@ -669,7 +662,7 @@ public final class ModelUtils
 			{
 				//generate a new URI in the same namespace (xml:base) and create and add a new EntityReference
 				String syntheticId = model.getXmlBase() +
-						firstEntityReference.getModelInterface().getSimpleName() + "_"+ md5hex(spe.getUri());
+						firstEntityReference.getModelInterface().getSimpleName() + "_" + md5hex(spe.getUri());
 				er = (EntityReference) model.addNew(firstEntityReference.getModelInterface(), syntheticId);
 				er.addComment("auto-generated generic entity reference");
 
@@ -712,7 +705,7 @@ public final class ModelUtils
 			return; //nothing to do.
 		//continue for a simple PE
 
-		// use a specific EntityReference sub-class depending on the PE class:
+		// use a specific EntityReference subclass depending on the PE class:
 		Class<? extends EntityReference> type = null;
 		if(pe instanceof Protein)
 			type = ProteinReference.class;
@@ -726,7 +719,7 @@ public final class ModelUtils
 			type = RnaReference.class;
 		else if (pe instanceof RnaRegion)
 			type = RnaRegionReference.class;
-		else {} //impossible SimplePhysicalEntity subtype}
+		else {} //impossible SimplePhysicalEntity subtype
 
 		//generate a new URI in the same namespace (xml:base)
 		String syntheticId = model.getXmlBase() + type.getSimpleName() + "_"+ md5hex(pe.getUri());
@@ -739,8 +732,6 @@ public final class ModelUtils
 		//remove unification xrefs from the original pe
 		for(UnificationXref ux : new HashSet<>(new ClassFilterSet<>(pe.getXref(),UnificationXref.class)))
 			pe.removeXref(ux);
-
-		er.addComment("auto-generated by Paxtools");
 
 		pe.setEntityReference(er);
 	}
@@ -790,7 +781,7 @@ public final class ModelUtils
 			target.addXref(xref);
 		}
 
-		//copy evidence and dataSource if (Named) source and target are same sub-type - either Entity or ER only:
+		//copy evidence and dataSource if (Named) source and target are same subtype - either Entity or ER only:
 		if(source instanceof Entity && target instanceof Entity) {
 			Entity src = (Entity) source;
 			for (Evidence ev : src.getEvidence()) {
@@ -823,8 +814,8 @@ public final class ModelUtils
 	public static void replaceEquivalentFeatures(Model model)
 	{
 
-		EquivalenceGrouper<EntityFeature> equivalents = new EquivalenceGrouper<EntityFeature>();
-		HashMap<EntityFeature, EntityFeature> mapped = new HashMap<EntityFeature, EntityFeature>();
+		EquivalenceGrouper<EntityFeature> equivalents = new EquivalenceGrouper<>();
+		HashMap<EntityFeature, EntityFeature> mapped = new HashMap<>();
 		HashSet<EntityFeature> scheduled = new HashSet<>();
 
 		for (EntityFeature ef : model.getObjects(EntityFeature.class))

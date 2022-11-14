@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Export of Identifiers.org's Registry (full) -->
-<!-- Generated: Tue, 24 Apr 2018 14:23:08 GMT     -->
+<!-- Generated: Tue, 24 Apr 2018 14:23:08 GMT    -->
 <!-- http://identifiers.org/registry/            -->
 
- <!--Igor R. manually fixed date, data-version format (for JAXB unmarshaling to work)-->
- <!--and also removed ambiguous "KEGG" synonym from KEGG Compound, et al. collections!-->
+<!--Igor R. manually fixed date, data-version format (for JAXB unmarshaling to work)-->
+<!--and also removed ambiguous "KEGG" synonym from KEGG Compound, et al. collections!-->
 
 <miriam xmlns="http://www.biomodels.net/MIRIAM/" date="2018-04-24T14:41:47+00:00" data-version="2018-04-20T13:10:26+00:00">
 	<datatype id="MIR:00000001" pattern="^\d+$" restricted="true" obsolete="true" replacement="MIR:00000010">

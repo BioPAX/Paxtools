@@ -1,7 +1,5 @@
 package org.biopax.paxtools.normalizer;
 
-
-//import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
@@ -21,7 +19,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Singleton local MIRIAM data resolver with all methods static.
- * 
+ *
+ * todo: refactor to load/use the JSON data instead of XML,XSD (see: identifiers.org, https://registry.api.identifiers.org/resolutionApi/getResolverDataset)
+ * todo: use Compressed URIs, e.g. uniprot:P12345 instead of URLs like http://identifiers.org/uniprot:P12345
+ *
  * @author rodche
  */
 public class MiriamLink
@@ -29,9 +30,8 @@ public class MiriamLink
 	private static final Logger log = LoggerFactory.getLogger(MiriamLink.class);
 	private static final String[] ARRAY_OF_STRINGS = {}; // a template to convert a Collection<T> to String[]
 
-	/** default web service URL to get the Miriam.xml db content; see also: http://www.ebi.ac.uk/miriam/main/export/.
-	 * Sometimes (e.g., 2016/01/07) the connection becomes EXTREMELY slow (1MB takes dozens minutes to download or stuck).
-	 * */
+	//default web service URL to get the Miriam.xml db content (todo: obsolete)
+	//see also: http://www.ebi.ac.uk/miriam/main/export/
 	//XML: "https://www.ebi.ac.uk/miriam/main/export/xml/";
 	//Schema: "http://www.ebi.ac.uk/miriam/static/main/xml/MiriamXML.xsd";
 	/** package name for jaxb to use */

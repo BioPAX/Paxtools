@@ -98,10 +98,9 @@ public final class Normalizer {
 	
 
 	/**
-	 * Normalizes all xrefs (not unification xrefs only) to help normalizing/merging other objects, 
-	 * and also because some of the original xref URIs ("normalized")
-	 * are in fact to be used for other biopax types (e.g., CV or ProteinReference); therefore
-	 * this method will replace URI also for "bad" xrefs, i.e., those with empty/illegal 'db' or 'id' values.
+	 * Normalizes xrefs to ease normalizing or merging other BioPAX objects later on,
+	 * and also because some original xref URIs should in fact be used for different BioPAX types
+	 * (for CV or ProteinReference instead); so, this will also replace URIs of xrefs having bad 'db' or 'id'.
 	 * 
 	 * @param model biopax model to update
 	 */
@@ -110,7 +109,7 @@ public final class Normalizer {
 		final NormalizerMap map = new NormalizerMap(model);
 		final String xmlBase = getXmlBase(model); //current base, the default or model's one, if set.
 		
-		// use a copy of the xrefs set (to avoid concurrent modif. exception)
+		// use a copy of the xrefs set (to avoid concurrent exceptions)
 		Set<? extends Xref> xrefs = new HashSet<>(model.getObjects(Xref.class));
 		for(Xref ref : xrefs)
 		{
@@ -142,7 +141,7 @@ public final class Normalizer {
 					ref.setDb(MiriamLink.getName(ref.getDb()).toLowerCase());
 				} catch (IllegalArgumentException e) {
 					// - unknown/unmatched db name (normalize using defaults)
-					if(ref.getIdVersion()!=null) {
+					if(ref.getIdVersion() != null) {
 						idPart += "_" + ref.getIdVersion();
 					}
 					map.put(ref, Normalizer.uri(xmlBase, ref.getDb(), idPart, ref.getModelInterface()));
@@ -187,7 +186,7 @@ public final class Normalizer {
 	}
 
 	/*
-	 * @param db must be valid MIRIAM db name or sinonym
+	 * @param db must be valid MIRIAM db name or synonym
 	 * @trows IllegalArgumentException when db is unknown name.
 	 */
 	private boolean isValidDbId(String db, String id) {
@@ -198,9 +197,10 @@ public final class Normalizer {
 	 * Consistently generates a new BioPAX element URI 
 	 * using given URI namespace (xml:base), BioPAX class, 
 	 * and two different identifiers (at least one is required).
+	 *
 	 * Miriam registry is used to get the standard db name and 
-	 * identifiers.org URI, if possible, only for relationship type vocabulary, 
-	 * publication xref, and entity reference types.
+	 * identifiers.org URI, if possible, for relationship type vocabulary,
+	 * publication xref, entity reference, and biosource types.
 	 * 
 	 * @param xmlBase xml:base (common URI prefix for a BioPAX model), case-sensitive
 	 * @param dbName a bio data collection name or synonym, case-insensitive
@@ -218,7 +218,7 @@ public final class Normalizer {
 		if (idPart != null) idPart = idPart.trim();
 		if (dbName != null) dbName = dbName.trim();
 
-		// try to find a standard URI, if exists, for a publication xref, or at least a standard name:
+		// for some types, try to find a standard URI or at least a standard name:
 		if (dbName != null)
 		{
 			try {
@@ -243,8 +243,7 @@ public final class Normalizer {
 		}
 
 		// If not returned above this point - no standard URI (Identifiers.org) was found -
-		// then let's consistently build a new URI from args, anyway, the other way around:
-		
+		// then let's consistently build a new hash-based URI from args.
 		StringBuilder sb = new StringBuilder();		
 		if (dbName != null) //lowercase for consistency
 			sb.append(dbName.toLowerCase()); 	
@@ -264,7 +263,7 @@ public final class Normalizer {
 		}
 		else
 		{
-			//replace the local part with its md5 sum string (32-byte)
+			//replace the local part with its md5 hash string (32-byte)
 			localPart = ModelUtils.md5hex(localPart);
 		}
 		
