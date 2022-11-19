@@ -6,6 +6,7 @@ import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -111,7 +112,7 @@ public class BiochemicalPathwayStepImpl extends PathwayStepImpl implements Bioch
 	}
 
 
-	private class StepProcessSet extends AbstractSet<Process>
+	private class StepProcessSet extends AbstractSet<Process> implements Serializable
 	{
 		@Override public Iterator<Process> iterator()
 		{

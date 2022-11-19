@@ -13,8 +13,7 @@ import org.biopax.paxtools.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -124,7 +123,7 @@ public final class ModelUtils
 		};
 
 		Traverser traverser = new Traverser(em, visitor);
-		model.getObjects().parallelStream().forEach(bpe -> traverser.traverse(bpe, null));//model is not used
+		model.getObjects().stream().forEach(bpe -> traverser.traverse(bpe, null));//model is not used
 	}
 
 
@@ -153,7 +152,7 @@ public final class ModelUtils
 			pe -> (pe instanceof ObjectPropertyEditor) // filter
 		);
 
-		model.getObjects().parallelStream().forEach(e -> traverser.traverse(e, null));
+		model.getObjects().stream().forEach(e -> traverser.traverse(e, null));
 
 		return result;
 	}
@@ -1326,5 +1325,53 @@ public final class ModelUtils
 		);
 		//false when e==null
 	}
-}
 
+	/**
+	 * Serialize a not too large object (mainly for testing).
+	 * @param o
+	 * @return
+	 * @throws IOException
+	 */
+	public static byte[] serialize(Object o) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		serialize(o, baos);
+		return baos.toByteArray();
+	}
+
+	/**
+	 * Deserialize a not too large object (mainly for testing).
+	 * @param bytes
+	 * @return object
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+		return deserialize(new ByteArrayInputStream(bytes));
+	}
+
+	/**
+	 * Serialize.
+	 * @param o
+	 * @param os
+	 * @throws IOException
+	 */
+	public static void serialize(Object o, OutputStream os) throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		oos.writeObject(o);
+		oos.close();
+	}
+
+	/**
+	 * Deserialize.
+	 * @param is
+	 * @return object
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public static Object deserialize(InputStream is) throws IOException, ClassNotFoundException {
+		ObjectInputStream ois = new ObjectInputStream(is);
+		Object o  = ois.readObject();
+		ois.close();
+		return o;
+	}
+}

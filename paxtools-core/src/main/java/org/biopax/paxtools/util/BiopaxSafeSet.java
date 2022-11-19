@@ -2,6 +2,7 @@ package org.biopax.paxtools.util;
 
 import org.biopax.paxtools.model.BioPAXElement;
 
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -13,7 +14,7 @@ import java.util.*;
  *
  * @author rodche
  */
-public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E>
+public class BiopaxSafeSet<E extends BioPAXElement> extends AbstractSet<E> implements Serializable
 {
 	//initial map is to be reset to a modifiable instance on first write
 	private final static Map empty = Collections.emptyMap();

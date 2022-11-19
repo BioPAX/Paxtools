@@ -34,15 +34,16 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
-/**
- * Various console utility functions
+/*
+ * BioPAX data tools.
+ * This is only called from Main class.
  */
-public final class PaxtoolsMain {
-	final static Logger log = LoggerFactory.getLogger(PaxtoolsMain.class);
+final class Commands {
+	final static Logger log = LoggerFactory.getLogger(Commands.class);
 
 	private static SimpleIOHandler io;
 
-	private PaxtoolsMain() {
+	private Commands() {
 		throw new UnsupportedOperationException("Non-instantiable utility class.");
 	}
 
@@ -52,10 +53,10 @@ public final class PaxtoolsMain {
 	}
 
 	/*
-	 * using arguments:
+	 * arguments:
 	 * <input> <output> <db> [-crossSpecies] [-subPathways] [-notPathway] [organisms=9606,mouse,10090,rat,human,..]
 	 */
-	public static void toGSEA(String[] argv) throws IOException {
+	static void toGSEA(String[] argv) throws IOException {
 		//argv[0] is the command name ('toGsea')
 		boolean crossSpecies = false; //cross-check is enabled (i.e., no mixing different species IDs in one row)
 		boolean subPathways = false; //no sub-pathways (i.e., going into sub-pathways is not enabled)
@@ -91,14 +92,7 @@ public final class PaxtoolsMain {
 		gseaConverter.writeToGSEA(io.convertFromOWL(getInputStream(argv[1])), new FileOutputStream(argv[2]));
 	}
 
-	/*
-	 *
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 *
-	 * @param argv
-	 * @throws IOException
-	 */
-	public static void getNeighbors(String[] argv) throws IOException
+	static void getNeighbors(String[] argv) throws IOException
 	{
 		// set strings vars
 		String in = argv[1];
@@ -138,16 +132,11 @@ public final class PaxtoolsMain {
 		}
 	}
 
-	/*
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 * @param argv
-	 * @throws IOException
-	 */
-	public static void fetch(String[] argv) throws IOException {
+	static void fetch(String[] argv) throws IOException {
 		// set strings vars
 		String in = argv[1];
 		String out = argv[2];
-		String[] uris = new String[0]; //empty means - all
+		String[] uris = new String[]{}; //empty
 		boolean absoluteUris = false;
 		if(argv.length > 3) {
 			for(int i=3; i<argv.length; i++) {
@@ -169,22 +158,11 @@ public final class PaxtoolsMain {
 		// extract and save the (sub-)model
 		SimpleIOHandler biopaxWriter = new SimpleIOHandler(model.getLevel());
 		biopaxWriter.absoluteUris(absoluteUris);
-		if(uris.length > 0)
-			biopaxWriter.convertToOWL(model, new FileOutputStream(out), uris);
-		else
-			biopaxWriter.convertToOWL(model, new FileOutputStream(out));
-
+		biopaxWriter.convertToOWL(model, new FileOutputStream(out), uris);
 		log.info("Done.");
 	}
 
-
-	/*
-	 * Detects and converts a BioPAX Level 1, 2,
-	 * or PSI-MI/MITAB model to BioPAX Level3..
-	 *
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void toLevel3(String[] argv) throws IOException {
+	static void toLevel3(String[] argv) throws IOException {
 		final String input = argv[1];
 		final String output = argv[2];
 
@@ -264,12 +242,7 @@ public final class PaxtoolsMain {
 			return Type.PSIMITAB; //default/guess
 	}
 
-	/*
-	 *  Converts a BioPAX file to SBGN and saves it in a file.
-	 *
-	 *  TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void toSbgn(String[] argv) throws IOException {
+	static void toSbgn(String[] argv) throws IOException {
 		String input = argv[1];
 		String output = argv[2];
 		Model model = io.convertFromOWL(getInputStream(input));
@@ -299,15 +272,7 @@ public final class PaxtoolsMain {
 		l3ToSBGNPDConverter.writeSBGN(model, output);
 	}
 
-
-	/*
-	 * Checks files by the online BioPAX validator using the built-in BioPAX validator client.
-	 *
-	 * See about <a href="http://www.biopax.org/validator">BioPAX Validator Webservice</a>
-	 *
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void validate(String[] argv) throws IOException
+	static void validate(String[] argv) throws IOException
 	{
 		String input = argv[1];
 		String output = argv[2];
@@ -399,14 +364,7 @@ public final class PaxtoolsMain {
 		}
 	}
 
-	/*
-	 * Exports a biopax model to SIF or/and customizable ExtendedSIF format
-	 * (default classic SIF has only 3 data columns; ExtendedSIF and customized
-	 * can have more colums plus nodes description at the bottom, after a blank line).
-	 *
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void toSifnx(String[] argv) throws IOException {
+	static void toSifnx(String[] argv) throws IOException {
 		boolean extended = false; //if it stays 'false', then andSif==true will be in effect automatically
 		boolean andSif = false; //if extended==false, SIF will be generated as it would be andSif==true
 		boolean mergeInteractions = true;
@@ -509,10 +467,7 @@ public final class PaxtoolsMain {
 		log.info("toSIF: done.");
 	}
 
-	/*
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void sifnxToSif(String inputFile, String outputFile) throws IOException {
+	static void sifnxToSif(String inputFile, String outputFile) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(getInputStream(inputFile)));
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(outputFile));
 		//skip the first line (headers)
@@ -529,11 +484,7 @@ public final class PaxtoolsMain {
 		writer.close();
 	}
 
-	/*
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void integrate(String[] argv) throws IOException {
-
+	static void integrate(String[] argv) throws IOException {
 		Model model1 = getModel(io, argv[1]);
 		Model model2 = getModel(io, argv[2]);
 
@@ -544,11 +495,7 @@ public final class PaxtoolsMain {
 		io.convertToOWL(model1, new FileOutputStream(argv[3]));
 	}
 
-	/*
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void merge(String[] argv) throws IOException {
-
+	static void merge(String[] argv) throws IOException {
 		Model model1 = getModel(io, argv[1]);
 		Model model2 = getModel(io, argv[2]);
 
@@ -559,25 +506,14 @@ public final class PaxtoolsMain {
 		io.convertToOWL(model1, new FileOutputStream(argv[3]));
 	}
 
-	/*
-	 * Generates a blacklist file
-	 * (to optionally use it to exclude ubiquitous small molecules,
-	 * like ATP, when performing graph queries and exporting to
-	 * SIF formats).
-	 *
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void blacklist(String[] argv) throws IOException {
+	static void blacklist(String[] argv) throws IOException {
 		Model model = getModel(io, argv[1]);
 		BlacklistGenerator3 gen = new BlacklistGenerator3();
 		Blacklist blacklist = gen.generateBlacklist(model);
 		blacklist.write(new FileOutputStream(argv[2]));
 	}
 
-	/*
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void pattern(String[] argv) {
+	static void pattern(String[] argv) {
 		Dialog.main(argv);
 	}
 
@@ -585,11 +521,7 @@ public final class PaxtoolsMain {
 		return io.convertFromOWL(getInputStream(fName));
 	}
 
-
-	/*
-	 * TODO: should not be public API, but is already used from ext. apps, such as PaxtoolsR...
-	 */
-	public static void summarize(String[] argv) throws IOException {
+	static void summarize(String[] argv) throws IOException {
 		log.debug("Importing the input model from " + argv[1] + "...");
 		final Model model = getModel(io, argv[1]);
 		final PrintStream out = new PrintStream(argv[2]);
@@ -942,15 +874,7 @@ public final class PaxtoolsMain {
 		out.println(String.format("Total\t\t%d\t(%3.1f%%)", numSmrsNoChebi, ((float)numSmrsNoChebi)/totalSmrs*100));
 	}
 
-	/**
-	 * A summary of BioPAX class and property values in the model
-	 * (experimental, messy; for data troubleshooting).
-	 *
-	 * @param model input Model
-	 * @param out output file
-	 * @throws IOException when an I/O exception occurs
-	 */
-	public static void summarize(Model model, PrintStream out) throws IOException {
+	static void summarize(Model model, PrintStream out) throws IOException {
 		HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
 		final SimpleEditorMap em = SimpleEditorMap.get(model.getLevel());
@@ -1148,6 +1072,16 @@ public final class PaxtoolsMain {
 				narLackingOrganism, serLackingOrganism-narLackingOrganism
 			)
 		);
+	}
+
+	static void toSer(String[] argv) throws IOException {
+		String in = argv[1];
+		String out = argv[2];
+		log.info("Loading BioPAX data from " + in);
+		Model model = io.convertFromOWL(getInputStream(in));
+		log.info("Writing Paxtools Model to (binary file) " + out);
+		ModelUtils.serialize(model, new FileOutputStream(out));
+		log.info("Done.");
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(

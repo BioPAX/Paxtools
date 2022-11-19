@@ -185,8 +185,8 @@ public class EvidenceImpl extends XReferrableImpl implements Evidence
 		
 		//consider publication xrefs!
 		boolean hasCommonPublicationXref = hasEquivalentIntersection(
-				new ClassFilterSet<Xref, PublicationXref>(getXref(), PublicationXref.class),
-				new ClassFilterSet<Xref, PublicationXref>(that.getXref(), PublicationXref.class));
+				new ClassFilterSet<>(getXref(), PublicationXref.class),
+				new ClassFilterSet<>(that.getXref(), PublicationXref.class));
 		
 		return super.semanticallyEquivalent(element) && hasAllEquivEvidenceCodes && hasCommonPublicationXref;
 	}

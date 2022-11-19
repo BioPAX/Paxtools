@@ -60,9 +60,8 @@ public class ConversionImpl extends InteractionImpl
 	public void removeRight(PhysicalEntity right)
 	{
 		if(right != null) {
-			if(this.right.remove(right)) {
-				super.removeParticipant(right);
-			}
+			this.right.remove(right);
+			super.removeParticipant(right);
 		}
 	}
 
@@ -83,9 +82,8 @@ public class ConversionImpl extends InteractionImpl
 	public void removeLeft(PhysicalEntity left)
 	{
 		if(left != null) {
-			if(this.left.remove(left)) {
-				super.removeParticipant(left);
-			}
+			this.left.remove(left);
+			super.removeParticipant(left);
 		}
 	}
 	
@@ -130,20 +128,17 @@ public class ConversionImpl extends InteractionImpl
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		if(element.getModelInterface()== this.getModelInterface())
+		if(element.getModelInterface() == this.getModelInterface())
 		{
 			Conversion that = (Conversion) element;
 			if(that.getSpontaneous()==this.getSpontaneous() &&
-		       that.getConversionDirection() == this.getConversionDirection())
+		       that.getConversionDirection() == this.getConversionDirection())//TODO: what if one is REVERSIBLE or opposite?
 			{
-				if(SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getLeft()))
-				{
-					return SetEquivalenceChecker.isEquivalent(this.getRight(), that.getRight());
-				}
-				else if(SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getRight()))
-				{
-					return(SetEquivalenceChecker.isEquivalent(this.getRight(), that.getLeft()));
-				}
+				return SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getLeft())
+						&& SetEquivalenceChecker.isEquivalent(this.getRight(), that.getRight())
+					|| SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getRight())
+						&& SetEquivalenceChecker.isEquivalent(this.getRight(), that.getLeft());
+				//TODO: Why don't we call super.semanticallyEquivalent here (to check xrefs, evidence)?
 			}
 		}
 		return false;

@@ -1,21 +1,19 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.BPCollections;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 
 import java.util.Set;
 
 public class PathwayImpl extends ProcessImpl implements Pathway
 {
-// ------------------------------ FIELDS ------------------------------
-
 	private Set<Process> pathwayComponent;
 	private Set<PathwayStep> pathwayOrder;
 	private BioSource organism;
 	private Set<Control> controllerOf;
-
-// --------------------------- CONSTRUCTORS ---------------------------
 
 	public PathwayImpl()
 	{
@@ -24,19 +22,10 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 		this.controllerOf = BPCollections.I.createSafeSet();
 	}
 
-// ------------------------ INTERFACE METHODS ------------------------
-
-
-// --------------------- Interface BioPAXElement ---------------------
-
 	public Class<? extends Pathway> getModelInterface()
 	{
 		return Pathway.class;
 	}
-
-// --------------------- Interface Pathway ---------------------
-
-// --------------------- ACCESORS and MUTATORS---------------------
 
 	public Set<Process> getPathwayComponent()
 	{
@@ -93,6 +82,22 @@ public class PathwayImpl extends ProcessImpl implements Pathway
 	public Set<Control> getControllerOf()
 	{
 		return controllerOf;
+	}
+
+	@Override
+	protected boolean semanticallyEquivalent(BioPAXElement element) {
+		boolean equivalence = false;
+		if (element instanceof Pathway) { //super method is not called intentionally (similar to ConversionImpl)
+			Pathway other = (Pathway) element;
+			equivalence =
+					(
+					  (organism == null && other.getOrganism() == null)
+						  || (organism != null && organism.isEquivalent(other.getOrganism()))
+					)
+					&& SetEquivalenceChecker.isEquivalent(this.getPathwayComponent(), other.getPathwayComponent())
+					&& SetEquivalenceChecker.isEquivalent(this.getPathwayOrder(), other.getPathwayOrder());
+		}
+		return equivalence;
 	}
 
 }

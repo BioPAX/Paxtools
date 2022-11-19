@@ -69,9 +69,9 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		if(!(element instanceof SimplePhysicalEntity))
+		if(!(element instanceof SimplePhysicalEntity)) {
 			return false;
-		
+		}
 		SimplePhysicalEntity that = (SimplePhysicalEntity) element;
 		return ( (that.getEntityReference()!=null)
 					? that.getEntityReference().isEquivalent(getEntityReference())

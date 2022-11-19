@@ -1,9 +1,7 @@
 package org.biopax.paxtools.model;
 
-import org.biopax.paxtools.model.level3.EntityReference;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.model.level3.SequenceSite;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -26,5 +24,6 @@ public class BioPAXFactoryTest {
         assertFalse(factory.canInstantiate(Process.class));
         assertFalse(factory.canInstantiate(EntityReference.class));
         assertFalse(factory.canInstantiate(SimplePhysicalEntity.class));
+        assertTrue(factory.canInstantiate(Interaction.class));
     }
 }

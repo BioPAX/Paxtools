@@ -4,11 +4,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
-import static org.biopax.paxtools.PaxtoolsMain.*;
+import static org.biopax.paxtools.Commands.*;
 
 /**
- * PaxtoolsMain console application
- * (very useful BioPAX utilities).
+ * Paxtools console application (useful BioPAX tools).
  */
 public final class Main {
     final static Logger log = LoggerFactory.getLogger(Main.class);
@@ -112,6 +111,9 @@ public final class Main {
 				{public void run(String[] argv) throws IOException{blacklist(argv);} },
 		pattern("\n\t- BioPAX pattern search tool (opens a new dialog window)")
 				{public void run(String[] argv){pattern(argv);} },
+		toSer("<input_owl> <output_ser>\n" +
+				"\t- converts BioPAX data to serialized Model.java (bytes)")
+				{public void run(String[] argv) throws IOException { toSer(argv); } },
         help("\n\t- prints this screen and exits\n")
 				{public void run(String[] argv){ help();} };
 
@@ -125,10 +127,10 @@ public final class Main {
     }
 
 	private static void help() {
-		System.out.println("(PaxtoolsMain Console) Available Operations:\n");
+		System.out.println("Available commands:");
 		for (Command cmd : Command.values()) {
 			System.out.println(cmd.name() + " " + cmd.description);
 		}
-		System.out.println("Commands can also use compressed input files (only '.gz').\n");
+		System.out.println("Commands can also use compressed input files (only '.gz').");
 	}
 }

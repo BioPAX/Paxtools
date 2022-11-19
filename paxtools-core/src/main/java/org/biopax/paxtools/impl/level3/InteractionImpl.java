@@ -78,9 +78,8 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 	public void removeParticipant(Entity aParticipant)
 	{
 		if (aParticipant != null) {
-			if(this.participant.remove(aParticipant)) {
-				aParticipant.getParticipantOf().remove(this);
-			}
+			participant.remove(aParticipant);
+			aParticipant.getParticipantOf().remove(this);
 		}
 	}
 }

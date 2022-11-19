@@ -46,9 +46,8 @@ public class TemplateReactionImpl extends InteractionImpl implements TemplateRea
   public void removeProduct(PhysicalEntity product)
   {
     if(product != null) {
-      if (this.product.remove(product)) {
-        super.removeParticipant(product);
-      }
+      this.product.remove(product);
+      super.removeParticipant(product);
     }
   }
 

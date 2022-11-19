@@ -17,7 +17,7 @@ import java.util.Set;
  * are equivalent. This logic is implemented in isEquivalent() and equivalenceCode()
  * methods.
  *
- * For most Java collections that uses hashCode and equals there is no easy way to plug-in a
+ * For most Java collections that uses hashCode and equals there is no easy way to plug in a
  * comparator to switch to different comparison behavior. This is a simple Set implementation that uses
  * equivalence codes when possible. It uses HashMap as the underlying implementation and will use a special bucket in
  * the case of clashes.
@@ -58,12 +58,12 @@ public class EquivalenceGrouper<T extends BioPAXElement>
 			}
 		}
 		return value;
-
 	}
 
 	private EquivalanceBucket<T> access(final T element, final boolean parity)
 	{
 		final Object[] trap = new Object[]{null};
+		//noinspection SuspiciousMethodCalls
 		if (this.buckets.contains(new Object()
 		{
 			public int hashCode()
@@ -95,11 +95,10 @@ public class EquivalenceGrouper<T extends BioPAXElement>
 
 	public void add(T bpe)
 	{
-
 		// If this is the case then we will simply return false when
 		// we have something that matches the evcode
 		// AND if that something is a bucket contains something that is  equivalent to bpe
-		// AND if that something is not a bucket and it is equivalent to bpe
+		// AND if that something is not a bucket, and it is equivalent to bpe
 		EquivalanceBucket<T> bucket = access(bpe);
 		if (bucket == null)
 		{
