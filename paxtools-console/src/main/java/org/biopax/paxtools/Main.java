@@ -112,7 +112,7 @@ public final class Main {
 		pattern("\n\t- BioPAX pattern search tool (opens a new dialog window)")
 				{public void run(String[] argv){pattern(argv);} },
 		toSer("<input_owl> <output_ser>\n" +
-				"\t- converts BioPAX data to serialized Model.java (bytes)")
+				"\t- converts BioPAX data to serialized Model (bytes); for very large models requires more stack size, JVM option: -Xss256g or more")
 				{public void run(String[] argv) throws IOException { toSer(argv); } },
         help("\n\t- prints this screen and exits\n")
 				{public void run(String[] argv){ help();} };
