@@ -135,6 +135,7 @@ final class Commands {
 
 	static void fetch(String[] argv) throws IOException {
 		// set strings vars
+		long start = System.currentTimeMillis();
 		String in = argv[1];
 		String out = argv[2];
 		String[] uris = new String[]{}; //empty
@@ -160,7 +161,8 @@ final class Commands {
 		SimpleIOHandler biopaxWriter = new SimpleIOHandler(model.getLevel());
 		biopaxWriter.absoluteUris(absoluteUris);
 		biopaxWriter.convertToOWL(model, new FileOutputStream(out), uris);
-		log.info("Done.");
+		long stop = System.currentTimeMillis();
+		log.info(String.format("Done (in %d sec)", TimeUnit.MILLISECONDS.toSeconds(stop-start)));
 	}
 
 	static void toLevel3(String[] argv) throws IOException {
@@ -863,7 +865,7 @@ final class Commands {
 	}
 
 	static void summarize(Model model, PrintStream out) throws IOException {
-		HashMap<String, Integer> hm = new HashMap<String, Integer>();
+		HashMap<String, Integer> hm = new HashMap<>();
 		final SimpleEditorMap em = SimpleEditorMap.get(model.getLevel());
 
 		for (Class<? extends BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
@@ -983,7 +985,7 @@ final class Commands {
 		int molLackingErAndId = 0;
 		int naLackingErAndId = 0; //rem: na - nucleic acid
 		//a map that contains the no. SPEs that have null entityReference by data source
-		Map<String,Integer> numSpeLackErByProvider = new TreeMap<String, Integer>();
+		Map<String,Integer> numSpeLackErByProvider = new TreeMap<>();
 		for(SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class)) {
 			if(spe.getEntityReference()==null) {
 				speLackingEr++;
@@ -996,7 +998,7 @@ final class Commands {
 				numSpeLackErByProvider.put(providers, n);
 
 				if(spe.getXref().isEmpty() ||
-					new ClassFilterSet<Xref,PublicationXref>(spe.getXref(), PublicationXref.class)
+					new ClassFilterSet<>(spe.getXref(), PublicationXref.class)
 						.size() == spe.getXref().size())
 				{
 					speLackingErAndId++;
