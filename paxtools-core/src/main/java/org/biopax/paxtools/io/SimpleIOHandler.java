@@ -150,28 +150,21 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	@Override protected void init(InputStream in)
 	{
-		try
-		{
+		try {
 			XMLInputFactory xmlf = XMLInputFactory.newInstance();
 			//this is to return string with encoded chars as one event (not splitting)
 			xmlf.setProperty("javax.xml.stream.isCoalescing", true);
 			r = xmlf.createXMLStreamReader(in);
-			
-			triples = new LinkedList<Triple>();
-
-		}
-		catch (XMLStreamException e)
-		{
+			triples = new LinkedList<>();
+		} catch (XMLStreamException e) {
 			//e.printStackTrace();
 			throw new BioPaxIOException(e.getClass().getSimpleName() + " " + e.getMessage() + "; " + e.getLocation());
 		}
-
 	}
 
 	@Override protected void reset(InputStream in)
 	{
-
-		this.triples=null;
+		this.triples = null;
 		try
 		{
 			r.close();
@@ -180,13 +173,13 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			throw new RuntimeException("Can't close the stream");
 		}
-		r=null;
+		r = null;
 		super.reset(in);
 	}
 
 	@Override protected Map<String, String> readNameSpaces()
 	{
-		Map<String, String> ns = new HashMap<String, String>();
+		Map<String, String> ns = new HashMap<>();
 		try
 		{
 			if (r.getEventType() == START_DOCUMENT)
@@ -308,8 +301,10 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			throw new BioPaxIOException(e.getClass().getSimpleName() + " " + e.getMessage() + "; " + e.getLocation());
 		}
 
-		for (Triple triple : triples)
+		Iterator<Triple> it = triples.iterator();
+		while (it.hasNext())
 		{
+			Triple triple = it.next();
 			try
 			{
 				bindValue(triple, model);
@@ -318,8 +313,8 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			{
 				log.warn("Binding " + e);
 			}
+			it.remove(); //save some RAM; O(1)
 		}
-
 	}
 
 	/**
@@ -858,34 +853,6 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	public boolean isMergeDuplicates()
 	{
 		return this.mergeDuplicates;
-	}
-
-
-	/**
-	 * Serializes a (not too large) BioPAX model to the RDF/XML (OWL) formatted string.
-	 *
-	 * @param model a BioPAX object model to convert to the RDF/XML format
-	 * @return the BioPAX data in the RDF/XML format
-	 * @throws IllegalArgumentException if model is null
-	 * @throws OutOfMemoryError when it cannot be stored in a byte array (max 2Gb).
-	 */
-	public static String convertToOwl(Model model)
-	{
-		if (model == null) throw new IllegalArgumentException();
-
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-		(new SimpleIOHandler(model.getLevel())).convertToOWL(model, outputStream);
-
-		try
-		{
-			return outputStream.toString("UTF-8");
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			log.error("convertToOwl, outputStream.toString failed", e);
-			return outputStream.toString();
-		}
 	}
 
 }

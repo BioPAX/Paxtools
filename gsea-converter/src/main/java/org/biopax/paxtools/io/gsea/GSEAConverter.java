@@ -221,7 +221,6 @@ public class GSEAConverter
 			LOG.debug("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getUri());
 
 			// collect sequence entity references from current pathway
-			//TODO: add Fetcher.evidenceFilter?
 			Fetcher fetcher = new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter);
 			fetcher.setSkipSubPathways(ignoreSubPathways);
 			Set<SequenceEntityReference> pathwaySers = fetcher.fetch(currentPathway, SequenceEntityReference.class);
@@ -237,7 +236,7 @@ public class GSEAConverter
 				if(!entries.isEmpty())
 					toReturn.addAll(entries);
 				sequenceEntityReferences.removeAll(pathwaySers);//keep not processed PRs (can be processed multiple times)
-				LOG.debug("- collected " + entries.size() + "entries.");
+				LOG.debug("- collected " + entries.size() + " entries.");
 			}
 		}
 		

@@ -3,7 +3,6 @@ package org.biopax.paxtools.io.gsea;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.*;
@@ -17,18 +16,10 @@ import static org.junit.Assert.*;
 public class GSEAConverterTest {
 
 	static BioPAXIOHandler handler =  new SimpleIOHandler();
-	static PrintStream out;
-
-	@BeforeClass
-	public static void setUp() throws IOException {
-		out = new PrintStream(new FileOutputStream(
-			GSEAConverterTest.class.getResource("/").getFile() + File.separator + "GSEAConverterTest.out.txt", false));
-	}
 
 	@Test
 	public void testWriteL2GSEA() throws Exception {
 		// write the output
-		out.println("testWriteL2GSEA:");
 		InputStream in = getClass().getResourceAsStream("/L2/biopax_id_557861_mTor_signaling.owl");
 		Model level2 = handler.convertFromOWL(in);
 		GSEAConverter gseaConverter = new GSEAConverter("GENE_SYMBOL", true);
@@ -45,7 +36,7 @@ public class GSEAConverterTest {
 		assertEquals("GENE_SYMBOL", entry.idType());
 		assertEquals(27, entry.identifiers().size());
 		// dump the output
-		(new GSEAConverter("GENE_SYMBOL", true)).writeToGSEA(level2, out);
+		(new GSEAConverter("GENE_SYMBOL", true)).writeToGSEA(level2, System.out);
 
 		// NO more hacks that enabled using xref.id prefixes, like 'NP', 'GO', instead of true 'DB' names...
 		gseaConverter = new GSEAConverter("NP", true);
@@ -67,18 +58,15 @@ public class GSEAConverterTest {
 		assertEquals("9606", entry.taxID());
 		assertEquals("ref_seq", entry.idType());
 		assertEquals(33, entry.identifiers().size());
-		(new GSEAConverter("NP", true)).writeToGSEA(level2, out);
+		(new GSEAConverter("NP", true)).writeToGSEA(level2, System.out);
 	}
     
 	@Test
 	public void testWriteL3GSEA() throws Exception {
-		// write the output
-		out.println("testWriteL3GSEA:");
 		InputStream in = getClass().getResourceAsStream("/L3/biopax3-short-metabolic-pathway.owl");
 		Model level3 = handler.convertFromOWL(in);
 		GSEAConverter gseaConverter = new GSEAConverter("uniprot", true);
 		Collection<? extends GMTEntry> entries = gseaConverter.convert(level3);
-		//TODO check anything?
-		(new GSEAConverter("uniprot", true)).writeToGSEA(level3, out);
+		(new GSEAConverter("uniprot", true)).writeToGSEA(level3, System.out);
 	}
 }

@@ -8,8 +8,6 @@ import java.util.Set;
 
 /**
  * Encapsulation of scores of conversions, and related information
- *
- * @author rodche //TODO Annotate
  */
 public class ConversionScore implements Comparable
 {

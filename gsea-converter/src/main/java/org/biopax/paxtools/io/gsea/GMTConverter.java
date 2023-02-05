@@ -17,29 +17,23 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * An advanced BioPAX to GMT format converter, which can output IDs of
- * both (or either) genetic elements and chemicals
- * (the output file may be run with the GSEA software if gene/protein IDs are there used).
+ * An advanced BioPAX to GMT format converter, which can output IDs of genetic elements or chemicals
+ * (the output file can be loaded with the GSEA software if gene/protein IDs are used).
  * 
- *     Each output entry (row) consists of three columns (tab separated):
+ * Each output entry (row) consists of three columns (tab separated):
  * name (URI), description, and the list of identifiers (of the same type).
  * For all ERs not associated with any pathway, "other" is used for name and uri.
  *
- *     The "idtype" is what specified by Constructor parameter 'idType'.
- *
- *     The list may have one or more IDs of the same type per PR,
+ * The list may have one or more IDs of the same type per Protein Reference (PR),
  * e.g., UniProt IDs or HGNC Symbols; PRs not having an xref of 
  * given db/id type are ignored. If there are less than three protein 
- * references per entry, it will not be printed.
+ * references per entry in total, it will not be printed.
  *
  * Note, this code assumes that the model has successfully been validated
  * and perhaps normalized (using the BioPAX Validator, Paxtools Normalizer).
  * A BioPAX L1 or L2 model is first converted to the L3.
- *
- * TODO: work in progress; add ER sub-class parameter/filter; consider using PE's xrefs as well... make public.
  */
-final class GMTConverter
-{
+final class GMTConverter {
 	private final static Logger LOG = LoggerFactory.getLogger(GMTConverter.class);
 
 	private final IdFetcher idFetcher;
@@ -187,11 +181,11 @@ final class GMTConverter
 				if(!entries.isEmpty())
 					toReturn.addAll(entries);
 				entityReferences.removeAll(ers);//keep not processed PRs (a PR can be processed multiple times)
-				LOG.debug("- collected " + entries.size() + "entries.");
+				LOG.debug("- collected " + entries.size() + " entries.");
 			}
 		}
 
-		//when there're no pathways, only empty pathays, pathways w/o PRs, then use all/rest of PRs -
+		//when there are no pathways, only empty, or pathways without any PRs, then use the rest of PRs -
 		//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
 		if(!entityReferences.isEmpty() && !skipOutsidePathways) {
 			LOG.info("Creating entries for the rest of PRs (outside any pathway)...");

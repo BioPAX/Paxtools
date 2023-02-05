@@ -38,7 +38,6 @@ public class SimpleEditorMapTest
 	 * Currently (before 10-Apr-2011), it seems impossible
 	 * to clear a single-cardinality property by
 	 * using the corresponding property editor
-	 * TODO Is this what we really want? (i.e., cannot set to 'unknown'/null)
 	 */
     @Test
     public void testClearSingularProperty() {    	
@@ -49,21 +48,15 @@ public class SimpleEditorMapTest
     	ProteinReference pr = fac.create(ProteinReference.class, "PR");
     	BioSource bs = fac.create(BioSource.class, "BS");
     	PropertyEditor editor = em.getEditorForProperty("organism", ProteinReference.class);
+
     	pr.setOrganism(bs);
-    	
-    	pr.setOrganism(null);
-    	assertNull(pr.getOrganism());
-    	
-    	pr.setOrganism(bs);
-    	
     	editor.removeValueFromBean(bs, pr);
     	assertNull(pr.getOrganism());
-    	
+
+		pr.setOrganism(bs);
     	editor.setValueToBean(null, pr);
-    	/*
-    	assertNotNull(pr.getOrganism()); // no effect! Is this the behavior we want?
-    	*/
-    	// after re-factoring (AbstractPropertyEditor)
+
+    	// ok, after fixing/re-factoring (AbstractPropertyEditor)
     	assertNull(pr.getOrganism());
     	assertTrue(editor.isUnknown(pr.getOrganism()));
     	
@@ -78,8 +71,7 @@ public class SimpleEditorMapTest
     	assertFalse(editor.isUnknown(dg.getPh()));
     	
     	editor.setValueToBean(null, dg);
-    	//assertFalse(editor.isUnknown(dg.getPh())); // no effect: cannot go back to 'unknown' by using null!
-    	assertTrue(editor.isUnknown(dg.getPh())); // after re-factoring
+    	assertTrue(editor.isUnknown(dg.getPh())); // fixed after re-factoring
     	
     	editor.setValueToBean(BioPAXElement.UNKNOWN_FLOAT, dg);
     	assertTrue(editor.isUnknown(dg.getPh()));

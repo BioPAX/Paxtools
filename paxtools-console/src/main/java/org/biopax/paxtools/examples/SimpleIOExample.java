@@ -30,11 +30,6 @@ public final class SimpleIOExample {
 		Model model = biopaxIO.convertFromOWL(new FileInputStream(args[0]));
 		// write (as BioPAX OWL)
 		output(model);
-		// TODO play with model...
-		/*
-		 * if(model == null || model.getLevel() != BioPAXLevel.L3) { throw new
-		 * IllegalArgumentException(" is not supported!"); }
-		 */
 
 		// Well, let's do something with a (new) BioPAX model
 		

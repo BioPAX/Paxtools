@@ -149,7 +149,7 @@ public class BiopaxValidatorClient {
     	
     	if(autofix)
     		meb.addTextBody("autofix", "true");
-//TODO add extra options (normalizer.fixDisplayName, normalizer.inferPropertyOrganism, normalizer.inferPropertyDataSource, normalizer.xmlBase)?
+//TODO: add options (normalizer.fixDisplayName, normalizer.inferPropertyOrganism, normalizer.inferPropertyDataSource, normalizer.xmlBase)
     	if(profile != null && !profile.isEmpty())
     		meb.addTextBody("profile", profile);
     	if(retFormat != null)
@@ -170,7 +170,6 @@ public class BiopaxValidatorClient {
     	
     	//execute the query and get results as string
     	HttpEntity httpEntity = meb.build();
-//    	httpEntity.writeTo(System.err);
     	String content = Executor.newInstance()//Executor.newInstance(httpClient)
     			.execute(Request.Post(url).body(httpEntity))
     				.returnContent().asString();  	
@@ -223,7 +222,6 @@ public class BiopaxValidatorClient {
 						public String handleResponse(HttpResponse httpResponse)
 								throws ClientProtocolException, IOException {
 							Header header = httpResponse.getLastHeader("Location");
-//							System.out.println("header=" + header);
 							return (header != null) ? header.getValue().trim() : null;
 						}
 			});
