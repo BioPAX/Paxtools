@@ -66,11 +66,10 @@ public class GSEAConverter
 	 * Constructor.
 	 *
 	 * See class declaration for more information.
-	 * @param idType - identifier type, name of the resource, either the string value
+	 * @param idType - identifier type, name, prefix of the resource, either the string value
 	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
-	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
-	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs 
-	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt;
+	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt",
+	 *                   or the namespace prefix part in normalized EntityReference URIs, such as in identifiers.org/chebi:ID
 	 *                   (it depends on the actual data; so double-check before using in this constructor).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 */
@@ -85,9 +84,8 @@ public class GSEAConverter
 	 * See class declaration for more information.
 	 * @param idType - identifier type, name of the resource, either the string value
 	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
-	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
-	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs
-	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt;
+	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt",
+	 *                   or the namespace/prefix part in normalized EntityReference URIs
 	 *                   (it depends on the actual data; so double-check before using in this constructor).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 * @param skipSubPathways - if true, do not traverse into any sub-pathways to collect entity references
@@ -107,9 +105,8 @@ public class GSEAConverter
 	 * See class declaration for more information.
 	 * @param idType - identifier type, name of the resource, either the string value
 	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
-	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt" or "UniProt knowledgebase",
-	 *                   or the &lt;namespace&gt; part in normalized EntityReference URIs
-	 *                   http://identifiers.org/&lt;namespace&gt;/&lt;ID&gt;, such as 'hgnc.symbol', 'uniprot'
+	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt",
+	 *                   or the namespace/prefix part in normalized EntityReference URIs, e.g., 'hgnc.symbol', 'uniprot'
 	 *                   (it depends on the actual data; so double-check before using in this constructor).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 * @param skipSubPathwaysOf - do not look inside sub-pathways of pathways of given data sources to collect entity references
@@ -333,7 +330,7 @@ public class GSEAConverter
 				// a shortcut if we are converting validated normalized BioPAX model:
 				// get the primary ID from the URI of the ProteinReference
 				final String uri = ser.getUri();
-				if (uri.startsWith("http://identifiers.org/") && uri.contains(db))
+				if (uri.contains("identifiers.org/") && uri.contains(db))
 				{
 					String accession = ser.getUri();
 					accession = accession.substring(accession.lastIndexOf("/") + 1);

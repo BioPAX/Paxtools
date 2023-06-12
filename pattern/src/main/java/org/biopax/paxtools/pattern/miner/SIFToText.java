@@ -12,5 +12,5 @@ public interface SIFToText
 	 * @param inter the interaction
 	 * @return text data
 	 */
-	public String convert(SIFInteraction inter);
+	String convert(SIFInteraction inter);
 }

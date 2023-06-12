@@ -1,5 +1,6 @@
 package org.biopax.paxtools.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -47,13 +48,14 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	 * what you're doing (and can use Java Reflection).
 	 *
 	 * @param uri new absolute URI
+	 * @throws IllegalArgumentException when uri is null/blank
 	 */
 	@SuppressWarnings("unused")
 	private void setUri(String uri)
 	{
-		if(uri == null)
-			throw new IllegalArgumentException();
-
+		if(StringUtils.isBlank(uri)) {
+			throw new IllegalArgumentException("Blank or null URI is not allowed");
+		}
 		this.uri = uri;
 	}
 
@@ -67,7 +69,7 @@ public abstract class BioPAXElementImpl implements BioPAXElement
 	public Map<String, Object> getAnnotations() {
 		synchronized (annotations) {
 			if(annotations.isEmpty()) {
-				annotations = new HashMap<>();
+				annotations = new HashMap<>(2);
 			}
 			return annotations;
 		}

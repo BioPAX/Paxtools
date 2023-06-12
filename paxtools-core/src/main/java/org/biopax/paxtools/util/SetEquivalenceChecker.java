@@ -4,7 +4,6 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +12,6 @@ import java.util.Set;
  * This class performs set operations based on equivalence.
  */
 public class SetEquivalenceChecker {
-
 	private static final Logger LOG = LoggerFactory.getLogger(SetEquivalenceChecker.class);
 
 	/**
@@ -22,7 +20,7 @@ public class SetEquivalenceChecker {
 	 * @param <T> Both sets should be of type that extends from T.
 	 * @return true iff both sets are of equal size and all objects in set1 has an equivalent object in set2.
 	 */
-	public static <T extends BioPAXElement> boolean isEquivalent(Collection<? extends T> set1, Collection<? extends T> set2)
+	public static <T extends BioPAXElement> boolean isEquivalent(Set<? extends T> set1, Set<? extends T> set2)
 	{
 		if (set1 != null && !set1.isEmpty() && set2 != null && !set2.isEmpty())
 		{
@@ -46,7 +44,6 @@ public class SetEquivalenceChecker {
 		{ 
 			return true;
 		}
-		
 		return false;	
 	}
 
@@ -55,7 +52,7 @@ public class SetEquivalenceChecker {
 	 * @param query BPE to look for equivalents in set
 	 * @return true iff there is an element of set that is equivalent to query.
 	 */
-	public static boolean containsEquivalent(Collection<? extends BioPAXElement> set, BioPAXElement query)
+	public static boolean containsEquivalent(Set<? extends BioPAXElement> set, BioPAXElement query)
 	{
 		if (set != null && query != null)
 		{
@@ -76,12 +73,9 @@ public class SetEquivalenceChecker {
 	 * @param <T> Both sets should be of type that extends from T.
 	 * @return elements of set1 that has an equivalent element in set2
 	 */
-	public static <T extends BioPAXElement> Set<T> findEquivalentIntersection(Collection<? extends T> set1,
-			Collection<? extends T> set2)
-	{
-
+	public static <T extends BioPAXElement> Set<T> findEquivalentIntersection(Set<? extends T> set1,
+			Set<? extends T> set2) {
 		Set<T> value = new HashSet<>();
-
 		if (set1 != null && !set1.isEmpty() && set2 != null && !set2.isEmpty())
 		{
 			EquivalenceGrouper<T> grouper = new EquivalenceGrouper<T>();
@@ -114,8 +108,8 @@ public class SetEquivalenceChecker {
 	 * @param <T> Both sets should be of type that extends from T.
 	 * @return true iff there are at least one equivalent element between set1 and set2, or both sets are empty.
 	 */
-	public static <T extends BioPAXElement> boolean hasEquivalentIntersection(Collection<? extends T> set1,
-			Collection<? extends T> set2)
+	public static <T extends BioPAXElement> boolean hasEquivalentIntersection(Set<? extends T> set1,
+			Set<? extends T> set2)
 	{
 		if (!set1.isEmpty() && !set2.isEmpty()) {
 			EquivalenceGrouper<T> grouper1 = new EquivalenceGrouper<>(set1);
@@ -138,5 +132,4 @@ public class SetEquivalenceChecker {
 			return true;
 		}
 	}
-
 }

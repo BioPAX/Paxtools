@@ -1,8 +1,9 @@
 package org.biopax.paxtools.model;
 
+
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A model acts as a container for BioPAX elements.
@@ -73,7 +74,7 @@ public interface Model extends Serializable
      * @see #containsID(String)
      *
      * @param aBioPAXElement to be checked
-     * @return true if the parameter is in the model (objects)
+     * @return true if the parameter is in the model
      */
     boolean contains(BioPAXElement aBioPAXElement);
 
@@ -105,21 +106,20 @@ public interface Model extends Serializable
 // --------------------- ACCESSORS and MUTATORS---------------------
 
     /**
-     * This method returns the objects in the model
-     * (This collection should not be modified.)
-     * @return objects (the collection should not be modified).
+     * This method returns all the objects in the model.
+     *
+     * @return objects (unmodifiable set).
      */
-    Collection<BioPAXElement> getObjects();
+    Set<BioPAXElement> getObjects();
 
     /**
-     * This method returns the objects of the given class in the model
-     * (The collection should not be modified.)
+     * This method returns the objects of the given class in the model.
      *
-     * @param <T> a BioPAX type
+     * @param <T>      a BioPAX type
      * @param filterBy class to be used as a filter.
-     * @return objects of the given class.
+     * @return objects of the given class (unmodifiable set).
      */
-    <T extends BioPAXElement> Collection<T> getObjects(Class<T> filterBy);
+    <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy);
 
     /**
      * This method removes the given BioPAX Element from the model.
@@ -213,7 +213,7 @@ public interface Model extends Serializable
       * Note: it's not required that all the BioPAX objects
       * in the model have the same URI prefix/namespace;
       * e.g., there are can be (and perfectly legal) objects
-      * that use other URI bases, such as http://identifiers.org/,
+      * that use other URI bases, such as identifiers.org/, bioregistry.io/,
       * http://purl.org/, etc. (- usually these are well-known
       * standard xml bases, or these result from merging several BioPAX
       * models of different data providers into one model.)

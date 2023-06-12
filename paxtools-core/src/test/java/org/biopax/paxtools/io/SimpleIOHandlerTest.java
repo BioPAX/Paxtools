@@ -12,19 +12,18 @@ import java.io.*;
 
 import static org.junit.Assert.*;
 
-public class SimpleIOHandlerTest
-{
-	
+public class SimpleIOHandlerTest {
+
 	private void outputModel(Model m, OutputStream out) {
 		(new SimpleIOHandler()).convertToOWL(m, out);
 	}
-	
+
 	@Test
 	public final void testExportL2() throws FileNotFoundException	{
 		Model model = BioPAXLevel.L2.getDefaultFactory().createModel();
 		FileOutputStream out = new FileOutputStream(
 				getClass().getResource("").getFile()
-				+ File.separator + "simple.owl"
+						+ File.separator + "simple.owl"
 		);
 		outputModel(model, out);
 	}
@@ -39,20 +38,17 @@ public class SimpleIOHandlerTest
 		assertFalse(model.getObjects().isEmpty());
 		System.out.println("Model has " + model.getObjects().size() + " objects)");
 		FileOutputStream out =
-			new FileOutputStream(
-				getClass().getResource("").getFile()
-				+ File.separator + "simpleReadWrite.owl"
-			);
+				new FileOutputStream(
+						getClass().getResource("").getFile()
+								+ File.separator + "simpleReadWrite.owl"
+				);
 		io.convertToOWL(model, out);
 	}
 
 	public static Model getL2Model(BioPAXIOHandler io)
 	{
-		String s = "L2" + File.separator
-		           + "biopax_id_557861_mTor_signaling.owl";
-
+		String s = "L2" + File.separator + "biopax_id_557861_mTor_signaling.owl";
 		System.out.println("file = " + s);
-
 		System.out.println("starting " + s);
 		InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
 		assertNotNull(in);
@@ -66,9 +62,7 @@ public class SimpleIOHandlerTest
 		Model model = getL3Model(io);
 		assertNotNull(model);
 		assertFalse(model.getObjects().isEmpty());
-		System.out.println("Model has " + model.getObjects().size()
-				+ " objects)");
-		
+		System.out.println("Model has " + model.getObjects().size() + " objects)");
 		FileOutputStream out = new FileOutputStream(getClass().getResource("")
 				.getFile() + File.separator + "simpleReadWrite.owl");
 		io.convertToOWL(model, out);
@@ -78,7 +72,6 @@ public class SimpleIOHandlerTest
 	{
 		String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
 		InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
-		
 		return io.convertFromOWL(in);
 	}
 
@@ -96,15 +89,15 @@ public class SimpleIOHandlerTest
 		FileOutputStream out =
 				new FileOutputStream( // to the target test dir
 						getClass().getResource("").getFile()
-						+ File.separator + "testDuplicateNamesByExporter.xml"
+								+ File.separator + "testDuplicateNamesByExporter.xml"
 				);
-		
+
 		outputModel(m, out);
 
 		// read
 		BufferedReader in = new BufferedReader(
 				new FileReader(getClass().getResource("").getFile()
-				               + File.separator + "testDuplicateNamesByExporter.xml"));
+						+ File.separator + "testDuplicateNamesByExporter.xml"));
 		char[] buf = new char[1000];
 		in.read(buf);
 		String xml = new String(buf);
@@ -114,8 +107,8 @@ public class SimpleIOHandlerTest
 		}
 
 	}
-	
-	
+
+
 	@Test
 	public final void testDuplicateConversionInBiochemicalPathwayStepByExporter() throws IOException
 	{
@@ -127,25 +120,25 @@ public class SimpleIOHandlerTest
 		Model m = factory.createModel();
 		m.add(bps);
 		m.add(reaction);
-		
+
 		FileOutputStream out =
 				new FileOutputStream( // to the target test dir
 						getClass().getResource("").getFile()
-						+ File.separator + "testDuplicateConversionInBiochemicalPathwayStepByExporter.xml"
+								+ File.separator + "testDuplicateConversionInBiochemicalPathwayStepByExporter.xml"
 				);
-		
+
 		outputModel(m, out);
 
 		// read back
 		BufferedReader in = new BufferedReader(
-			new FileReader(getClass().getResource("").getFile()
-				+ File.separator + "testDuplicateConversionInBiochemicalPathwayStepByExporter.xml"));
+				new FileReader(getClass().getResource("").getFile()
+						+ File.separator + "testDuplicateConversionInBiochemicalPathwayStepByExporter.xml"));
 		char[] buf = new char[3000];
 		in.read(buf);
 		String xml = new String(buf);
-		
+
 		assertTrue(xml.contains("<bp:stepConversion"));
-		
+
 		if (xml.contains("<bp:stepProcess")){
 			fail("Conversion was output to the stepProcess property " +
 					"by the SimpleIOHandler (should be only in stepConversion)!");
@@ -233,7 +226,7 @@ public class SimpleIOHandlerTest
 		}
 
 	}
-	
+
 	@Test
 	public final void testIoNoBpNamespacePrefix() throws IOException
 	{
@@ -251,57 +244,57 @@ public class SimpleIOHandlerTest
 		io.convertToOWL(model, out);
 	}
 
-    @Test
-    public final void testReadWriteReadL3() throws IOException
-    {
-        SimpleIOHandler io = new SimpleIOHandler();
+	@Test
+	public final void testReadWriteReadL3() throws IOException
+	{
+		SimpleIOHandler io = new SimpleIOHandler();
 
-        // No flags, just check
-        readWriteReadCheckModel(io);
+		// No flags, just check
+		readWriteReadCheckModel(io);
 
-        // Let's use different flags and do the same
-        io.mergeDuplicates(!io.isMergeDuplicates());
-        readWriteReadCheckModel(io);
+		// Let's use different flags and do the same
+		io.mergeDuplicates(!io.isMergeDuplicates());
+		readWriteReadCheckModel(io);
 
-        // One more?
-        io.mergeDuplicates(!io.isMergeDuplicates());
-        io.normalizeNameSpaces(!io.isNormalizeNameSpaces());
-        readWriteReadCheckModel(io);
+		// One more?
+		io.mergeDuplicates(!io.isMergeDuplicates());
+		io.normalizeNameSpaces(!io.isNormalizeNameSpaces());
+		readWriteReadCheckModel(io);
 
-        // And one more
-        io.normalizeNameSpaces(!io.isNormalizeNameSpaces());
-        io.fixReusedPEPs(!io.isFixReusedPEPs());
-        readWriteReadCheckModel(io);
-    }
+		// And one more
+		io.normalizeNameSpaces(!io.isNormalizeNameSpaces());
+		io.fixReusedPEPs(!io.isFixReusedPEPs());
+		readWriteReadCheckModel(io);
+	}
 
-    public void readWriteReadCheckModel(SimpleIOHandler io) throws IOException
-    {
-        // Read
+	public void readWriteReadCheckModel(SimpleIOHandler io) throws IOException
+	{
+		// Read
 		Model model = getL3Model(io);
 
 		//(since 5.1.0; no assertions here, for these are in-memory only)
 		model.setName("A test Level3 model");
 		model.setUri("http://biopax.org/test/io/l3model");
 
-        // Write
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        io.convertToOWL(model, outputStream);
-        outputStream.flush();
+		// Write
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		io.convertToOWL(model, outputStream);
+		outputStream.flush();
 
-        // Read
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-        outputStream.close();
-        Model newModel = io.convertFromOWL(inputStream);
-        assertTrue(newModel != null);
-        inputStream.close();
+		// Read
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+		outputStream.close();
+		Model newModel = io.convertFromOWL(inputStream);
+		assertTrue(newModel != null);
+		inputStream.close();
 
-        // Let's do a simple check to see if whether new model is OK
-        for(BioPAXElement bpe: model.getObjects())
-        {
-            assertTrue(newModel.containsID(bpe.getUri()));
-        }
-    }
-    
+		// Let's do a simple check to see if whether new model is OK
+		for(BioPAXElement bpe: model.getObjects())
+		{
+			assertTrue(newModel.containsID(bpe.getUri()));
+		}
+	}
+
 	@Test
 	public final void testBiopaxAndNotBiopaxMixXml() throws IOException
 	{
@@ -316,31 +309,29 @@ public class SimpleIOHandlerTest
 		assertEquals("Catalysis 1", cat.getDisplayName());
 	}
 
-    @Test
-    public final void testXMLEscapes() throws IOException {
-        BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
+	@Test
+	public final void testXMLEscapes() throws IOException {
+		BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
+		MockFactory mock = new MockFactory(BioPAXLevel.L3);
+		final Model model = mock.createModel();
+		Protein[] pr = mock.create(model, Protein.class, 1);
 
+		String s = "\" \' < > & % : + && #";
+		System.out.println(s);
+		pr[0].getName().clear();
+		pr[0].addName(s);
 
-        MockFactory mock = new MockFactory(BioPAXLevel.L3);
-        final Model model = mock.createModel();
-        Protein[] pr = mock.create(model, Protein.class, 1);
+		// Write
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		io.convertToOWL(model, outputStream);
+		outputStream.flush();
 
-        String s = "\" \' < > & % : + && #";
-        System.out.println(s);
-        pr[0].getName().clear();
-        pr[0].addName(s);
+		// Read
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+		outputStream.close();
+		Model newModel = io.convertFromOWL(inputStream);
 
-        // Write
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        io.convertToOWL(model, outputStream);
-        outputStream.flush();
-
-        // Read
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-        outputStream.close();
-        Model newModel = io.convertFromOWL(inputStream);
-
-        Protein prot = (Protein) newModel.getObjects().iterator().next();
-        assertTrue(prot.getName().iterator().next().equals(s));
-    }
+		Protein prot = (Protein) newModel.getObjects().iterator().next();
+		assertTrue(prot.getName().iterator().next().equals(s));
+	}
 }

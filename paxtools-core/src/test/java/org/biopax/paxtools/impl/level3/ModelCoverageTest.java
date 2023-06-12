@@ -7,20 +7,14 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- */
 public class ModelCoverageTest
 {
     @Test 
-    public void testCreationMethods() throws InvocationTargetException, IllegalAccessException
-    {
+    public void testCreationMethods() {
         MockFactory factory = new MockFactory(BioPAXLevel.L3);
-
         //test reflectively create
         EditorMap map = SimpleEditorMap.L3;
         int i = 0;

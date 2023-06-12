@@ -60,9 +60,8 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 
 
 	@Override
-	public int equivalenceCode()
-	{
-        return this.entityReference==null? hashCode():31 * super.locationAndFeatureCode() +
+	public int equivalenceCode() {
+        return this.entityReference==null ? hashCode() : 31 * super.locationAndFeatureCode() +
 		       entityReference.equivalenceCode();
 	}
 

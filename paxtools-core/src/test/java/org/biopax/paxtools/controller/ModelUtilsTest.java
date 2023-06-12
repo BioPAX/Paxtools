@@ -9,7 +9,6 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.biopax.paxtools.util.SetEquivalenceChecker;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +17,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class ModelUtilsTest {
@@ -186,22 +184,20 @@ public class ModelUtilsTest {
 	}
 	
 	@Test
-	public void testGenericNormalization()
-	{
+	public void testGenericNormalization() {
 		MockFactory mock = new MockFactory(BioPAXLevel.L3);
 		Model model = mock.createModel();
 		Protein[] p = mock.create(model, Protein.class, 3);
 		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
 
 		mock.bindArrays("entityReference", Arrays.copyOfRange(p, 0, 2), pr);
-
 		mock.bindInPairs("memberPhysicalEntity", p[2],p[0], p[2],p[1]);
 
 		ModelUtils.normalizeGenerics(model);
 
-		assertThat(true, is(p[2].getEntityReference()!=null));
-		assertThat(true, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[0])));
-		assertThat(true, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[1])));
+		assertTrue(p[2].getEntityReference()!=null);
+		assertTrue(p[2].getEntityReference().getMemberEntityReference().contains(pr[0]));
+		assertTrue(p[2].getEntityReference().getMemberEntityReference().contains(pr[1]));
 	}
 
     @Test
@@ -309,20 +305,5 @@ public class ModelUtilsTest {
 		Assert.assertEquals("k9viXaDIiOW", shortStr);
 		String shortUri = ModelUtils.shortenUri("http://www.ctdbase.org/", longUri);
 		Assert.assertEquals("http://www.ctdbase.org/k9viXaDIiOW", shortUri);
-	}
-
-	@Test
-	public final void testSerializeDeserializeModel() throws Exception {
-		SimpleIOHandler io = new SimpleIOHandler();
-		Model m1 = io.convertFromOWL(SimpleIOHandlerTest.class.getClassLoader()
-				.getResourceAsStream("L3" + File.separator + "biopax3-short-metabolic-pathway.owl"));
-		byte[] s1 = ModelUtils.serialize(m1);
-		Model m2 = (Model) ModelUtils.deserialize(s1);
-
-		assertEquals(m1.size(), m2.size());
-		assertTrue(SetEquivalenceChecker.isEquivalent(m1.getObjects(), m2.getObjects()));
-
-		//REM: if we'd write/read m1,m2 to/from string/bytes and then compare,
-		//it would not match as the elements processing order is not guaranteed ;)
 	}
 }

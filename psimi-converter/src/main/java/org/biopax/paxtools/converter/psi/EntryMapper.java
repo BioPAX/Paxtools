@@ -236,7 +236,7 @@ class EntryMapper {
 	private Entity processInteraction(Interaction interaction, Set<String> avail, 
 			Provenance pro, boolean isComplex) 
 	{	
-		Entity bpInteraction = null; //interaction or complex
+		Entity bpInteraction; //interaction or complex
 		boolean isGeneticInteraction = false;
 		
 		// get interaction name/short name
@@ -587,7 +587,7 @@ class EntryMapper {
 	/*
 	 * Converts a PSIMI participant to BioPAX physical entity or gene. 
 	 * It can be then used either as a participant of an interaction 
-	 * or exp. form entity of a exp. form of a participant's evidence,
+	 * or exp. form entity of an exp. form of a participant's evidence,
 	 * depending on the caller method and the map provided.
 	 * The result entity is not added to the model yet (but its entity reference, 
 	 * if applicable, Xrefs, CVs are added to the model).
@@ -677,19 +677,16 @@ class EntryMapper {
 				entityReferenceClass = null;
 			} else if ("interaction".equals(entityType))
 			{
-//				entityClass = null;
-//				entityReferenceClass = null;
 				LOG.warn("EntryMapper.createParticipant(): skip for interactor: " + interactor.getId()
 						+ " that has type: " + entityType 
 						+ ", participant:" + participant.getId() + ").");
 				return null;
 			}
-						
 			//else - peptide, biopolymer, molecule set, unknown, etc. - consider this is a Protein.
 		}
 		
 		//make consistent biopax URI (for the entity ref., if applies, or phys. entity)
-		String entityUri = "";
+		String entityUri;
 		String baseUri = "";
 		
 		final RelationshipXref x = getInteractorPrimaryRef(interactor.getXref());
@@ -939,8 +936,8 @@ class EntryMapper {
 			}
 		}
 		
-		String uri = xmlBase + "BioSource_" + 
-			"taxonomy_" + ncbiId; //tissue and cell type terms can be added below		
+		String uri = xmlBase + "BIO_" +
+			"ncbitaxon_" + ncbiId; //tissue and cell type terms can be added below
 		if(tissue!=null && !tissue.getTerm().isEmpty()) 
 			uri += "_" + encode(tissue.getTerm().iterator().next());
 		if(cellType!=null && !cellType.getTerm().isEmpty()) 
@@ -953,22 +950,22 @@ class EntryMapper {
 		
 		toReturn = bpModel.addNew(BioSource.class, uri);
 		
-		String taxonXrefUri = xmlBase + "UnificationXref_taxonomy_" + ncbiId;
+		String taxonXrefUri = xmlBase + "UX_ncbitaxon_" + ncbiId;
 		UnificationXref taxonXref = (UnificationXref) bpModel.getByID(taxonXrefUri);
 		if(taxonXref == null) {
 			taxonXref = bpModel.addNew(UnificationXref.class, taxonXrefUri);
 			taxonXref.setDb("Taxonomy");
 			taxonXref.setId(ncbiId);
 		}
-		toReturn.addXref((Xref)taxonXref);
+		toReturn.addXref(taxonXref);
 		
 		if (cellType != null)
 		{
-			toReturn.setCellType((CellVocabulary) cellType);
+			toReturn.setCellType(cellType);
 		}
 		if (tissue != null)
 		{
-			toReturn.setTissue((TissueVocabulary) tissue);
+			toReturn.setTissue(tissue);
 		}
 		if (name != null) {
 			toReturn.setStandardName(name);
@@ -1067,24 +1064,24 @@ class EntryMapper {
 		// process ref type
 		String refType = (psiref.hasRefType()) ? psiref.getRefType() : null;
 		String refTypeAc = (psiref.hasRefTypeAc()) ? psiref.getRefTypeAc() : null;
-        String psiDBRefId = psiref.getId();
-        String psiDBRefDb = psiref.getDb();
-        // If multiple ids given with comma separated values, then split them.
-        for (String dbRefId : psiDBRefId.split(",")) {	
-        	Xref bpXref = null;
+		String psiDBRefId = psiref.getId();
+		String psiDBRefDb = psiref.getDb();
+		// If multiple ids given with comma separated values, then split them.
+		for (String dbRefId : psiDBRefId.split(",")) {
+			Xref bpXref;
 			// Let's not make UnificationXrefs. RelationshipXref is more safe.
 			// Often, a gene or omim ID (can be another species') is a protein's xref id with 'identity' type...
-            if(!"pubmed".equalsIgnoreCase(psiDBRefDb)) {
+			if(!"pubmed".equalsIgnoreCase(psiDBRefDb)) {
 				bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
-            }
-            else {
-            	//TODO shall we skip PublicationXref here (IntAct puts the same PSIMI paper pmid everywhere...)?
+			}
+			else {
+				//TODO shall we skip PublicationXref here (IntAct puts the same PSIMI paper pmid everywhere...)?
 				bpXref = publicationXref(psiDBRefDb, dbRefId);
-            }
+			}
 
-            if (bpXref != null) 
-            	bpXrefs.add(bpXref);
-        }
+			if (bpXref != null)
+				bpXrefs.add(bpXref);
+		}
 	}
 
 
@@ -1097,7 +1094,7 @@ class EntryMapper {
         		|| "geneid".equalsIgnoreCase(db)
         		|| "gene id".equalsIgnoreCase(db)
         		|| "ncbigene".equalsIgnoreCase(db))
-        	db = "NCBI Gene";
+        	db = "Entrez Gene";
         
 		return db;
 	}
@@ -1152,7 +1149,7 @@ class EntryMapper {
 		}
 		
 		id = id.trim();
-		String xuri = xmlBase + "UnificationXref_" + encode(db.toLowerCase() + "_" + id);
+		String xuri = xmlBase + "UX_" + encode(db.toLowerCase() + "_" + id);
 		UnificationXref x = (UnificationXref) bpModel.getByID(xuri);
 		if(x==null) {
 			x= bpModel.addNew(UnificationXref.class, xuri);
@@ -1183,7 +1180,7 @@ class EntryMapper {
 			return  null;
 		}
 		
-		String xuri = xmlBase + "PublicationXref_" + encode(db.toLowerCase() + "_" + id);
+		String xuri = xmlBase + "PX_" + encode(db.toLowerCase() + "_" + id);
 		PublicationXref x = (PublicationXref) bpModel.getByID(xuri);
 		if(x==null) {
 			x= bpModel.addNew(PublicationXref.class, xuri);
@@ -1380,53 +1377,52 @@ class EntryMapper {
 
 
 	private RelationshipXref relationshipXref(String db, String id, String refType, String refTypeAc)
-	{	
+	{
 		if(db == null || db.trim().isEmpty()) {
 			LOG.warn("relationshipXref(), db is null, id=" + id);
 			return null;
 		}
-		
+
 		db = dbQuickFix(db);
-		
+
 		if(id == null || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
 			LOG.warn("relationshipXref(), illegal id=" + id);
 			return  null;
 		}
-		
+
 		id = id.trim();
-		
+
 		//generate URI
-		String uri = xmlBase + "RelationshipXref_";
+		String uri = xmlBase + "RX_";
 		if(refType!=null && !refType.isEmpty())
 			uri += encode(db.toLowerCase()+"_"+id+"_"+refType);
 		else
-			uri += encode(db.toLowerCase()+"_"+id);	
-		
-        RelationshipXref x = (RelationshipXref) bpModel.getByID(uri);                 
-        
-        if (x == null) { //create/add a new RX
-        	x = bpModel.addNew(RelationshipXref.class, uri);
-        	x.setDb(db);
-        	x.setId(id);
-        	if (refType != null) //use the standard CV term and accession
-        	{
-        		String cvUri = (refTypeAc!=null) ? "http://identifiers.org/psimi/" + refTypeAc
-        			: xmlBase + "RTV_" + encode(refType);//the latter should not happen often (ever, in a valid PSI-MI XML)			
-        		RelationshipTypeVocabulary rtv = (RelationshipTypeVocabulary) bpModel.getByID(cvUri);
-        		if(rtv == null) {
-        			rtv = bpModel.addNew(RelationshipTypeVocabulary.class, cvUri);
-        			rtv.addTerm(refType);
-        			if(refTypeAc != null && !refTypeAc.isEmpty()) {//null happens, e.g., for 'uniprot-removed-ac' terms...
-        				UnificationXref cvx = bpModel.addNew(UnificationXref.class, genUri(UnificationXref.class));
-        				cvx.setDb("PSI-MI");
-        				cvx.setId(refTypeAc);
-        				rtv.addXref(cvx);
-        			}
-        		}			
-        		x.setRelationshipType(rtv);
-        	}		
-        }
-        
+			uri += encode(db.toLowerCase()+"_"+id);
+
+		RelationshipXref x = (RelationshipXref) bpModel.getByID(uri);
+		if (x == null) { //create/add a new RX
+			x = bpModel.addNew(RelationshipXref.class, uri);
+			x.setDb(db);
+			x.setId(id);
+			if (refType != null) //use the standard CV term and accession
+			{
+				String cvUri = (refTypeAc!=null) ? "mi/" + refTypeAc
+						: xmlBase + "RTV_" + encode(refType);//the latter should not happen often (ever, in a valid PSI-MI XML)
+				RelationshipTypeVocabulary rtv = (RelationshipTypeVocabulary) bpModel.getByID(cvUri);
+				if(rtv == null) {
+					rtv = bpModel.addNew(RelationshipTypeVocabulary.class, cvUri);
+					rtv.addTerm(refType);
+					if(refTypeAc != null && !refTypeAc.isEmpty()) {//null happens, e.g., for 'uniprot-removed-ac' terms...
+						UnificationXref cvx = bpModel.addNew(UnificationXref.class, genUri(UnificationXref.class));
+						cvx.setDb("MI");
+						cvx.setId(refTypeAc);
+						rtv.addXref(cvx);
+					}
+				}
+				x.setRelationshipType(rtv);
+			}
+		}
+
 		return x;
 	}
 
@@ -1580,7 +1576,7 @@ class EntryMapper {
 	private boolean isGeneticInteraction(Set<Evidence> bpEvidence)
 	{
 			if (bpEvidence != null && !bpEvidence.isEmpty()) {
-				for (Evidence e : (Set<Evidence>) bpEvidence) {
+				for (Evidence e : bpEvidence) {
 					Set<EvidenceCodeVocabulary> evidenceCodes = e.getEvidenceCode();
 					if (evidenceCodes != null) {
 						for (EvidenceCodeVocabulary cv : evidenceCodes) {
@@ -1603,7 +1599,7 @@ class EntryMapper {
 	 * original xml ids (optional, for debugging),
 	 * BioPAX model interface name and some unique number.
 	 * The idea is virtually never ever return the same URI here (taking into account 
-	 * that there are multiple threads converting different PSI-MI Entries, one per thread,
+	 * that there are multiple threads converting different MI Entries, one per thread,
 	 * simultaneously)
 	 */
 	private String genUri(Class<? extends BioPAXElement> type, Object... psimiIds) {

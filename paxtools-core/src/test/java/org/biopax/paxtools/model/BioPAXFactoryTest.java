@@ -16,14 +16,20 @@ public class BioPAXFactoryTest {
     @Test
     public void create() throws Exception {
         SequenceSite ss = factory.create(SequenceSite.class,"ss");
+        assertNotNull(ss);
     }
 
     @Test
-    public void canInstantiate() throws Exception {
+    public void canInstantiate() {
         assertTrue(factory.canInstantiate(SequenceSite.class));
         assertFalse(factory.canInstantiate(Process.class));
         assertFalse(factory.canInstantiate(EntityReference.class));
         assertFalse(factory.canInstantiate(SimplePhysicalEntity.class));
         assertTrue(factory.canInstantiate(Interaction.class));
+        assertTrue(factory.canInstantiate(Control.class));
+        assertFalse(factory.canInstantiate(XReferrable.class));
+        assertFalse(factory.canInstantiate(Observable.class));
+        assertFalse(factory.canInstantiate(Xref.class));
+        assertFalse(factory.canInstantiate(Controller.class));
     }
 }

@@ -4,10 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.biopax.paxtools.model.*;
+import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.RelationshipXref;
 import org.biopax.paxtools.model.level3.UnificationXref;
 
 import org.biopax.paxtools.model.level3.Xref;
+import org.biopax.paxtools.util.BiopaxElements;
 import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.junit.Test;
 
@@ -15,10 +17,10 @@ import static org.junit.Assert.*;
 
 public class EqualsEtcTest {
 
-	@Test
-	public final void testEquals() {
-		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+	static final BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 
+	@Test
+	public final void equals() {
 		// a BioPAX object (e.g., xref)
 		UnificationXref x1 = factory.create(UnificationXref.class, "x1");
 		x1.setDb("MI");
@@ -58,13 +60,8 @@ public class EqualsEtcTest {
 		assertTrue(x1.isEquivalent(x5)); // x5 has different rdfId but same db/id
 	}
 
-
-	// we override 'equals' and 'hashCode' methods in BioPAXElementImpl (base class); 
-	// the must PASS
 	@Test
-	public final void testCollectionOfBiopaxElementsCustom() {
-		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
-
+	public final void hashSetOfBpe() {
 		UnificationXref x1 = factory.create(UnificationXref.class, "x1");
 		x1.setDb("foo");
 		x1.setId("foo");
@@ -76,7 +73,7 @@ public class EqualsEtcTest {
 		col.add(x1);
 		assertTrue(col.contains(x1));
 		assertTrue(col.contains(x2)); // different xref, same URI and type!
-		col.add(x2); //silently ignored
+		col.add(x2); // - silently ignored (due to x1.equals(x2) returns true)!
 		assertTrue(col.size() == 1);
 
 		col.remove(x2); //actually removes x1 (equal object)
@@ -96,9 +93,7 @@ public class EqualsEtcTest {
 
 
 	@Test
-	public final void testBiopaxSafeSet() {
-		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
-
+	public final void biopaxSafeSet() {
 		UnificationXref x1 = factory.create(UnificationXref.class, "x1");
 		x1.setDb("foo");
 		x1.setId("foo");
@@ -112,10 +107,10 @@ public class EqualsEtcTest {
 
 		col.add(x1);
 		assertTrue(col.contains(x1));
-		assertFalse(col.contains(x2));
+		assertFalse(col.contains(x2)); //not the same thing despite same uri and type
 
 		col.add(x2); //duplicate URI object is ignored
-		assertFalse(col.contains(x2));
+		assertTrue(col.size() == 1); //did not add the second one
 
 		x2 = factory.create(UnificationXref.class, "x2");
 		x2.setDb("bar");
@@ -123,7 +118,7 @@ public class EqualsEtcTest {
 		col.add(x2);
 		assertTrue(col.size() == 2);
 
-		Set<Xref> col1 = new BiopaxSafeSet<Xref>();
+		Set<Xref> col1 = new BiopaxSafeSet<>();
 		col1.addAll(col);
 		assertTrue(col1.size() == 2);
 		assertTrue(col1.contains(x1));
@@ -133,5 +128,32 @@ public class EqualsEtcTest {
 		assertTrue(col1.size() == 1);
 		assertTrue(col1.contains(x1));
 		assertFalse(col1.contains(x2));
+
+  	assertFalse(col.contains("foo"));
+		assertFalse(col.remove("foo"));
+		assertFalse(col.contains(null));
+		assertFalse(col.remove(null));
+	}
+
+	@Test
+	public final void biopaxElements() {
+		Set<Xref> xrefs = new BiopaxElements<>();
+		UnificationXref ux1 = factory.create(UnificationXref.class, "ux1");
+		RelationshipXref rx1 = factory.create(RelationshipXref.class, "rx1");
+		Provenance pro = factory.create(Provenance.class, "pro");
+		xrefs.add(ux1);
+		xrefs.add(rx1);
+		assertEquals(2, xrefs.size());
+		assertFalse(xrefs.remove(pro));
+		Xref x2 = factory.create(RelationshipXref.class, "rx1"); //already used uri
+		assertFalse(xrefs.contains(x2));
+		assertTrue(xrefs.contains(rx1));
+		assertFalse(xrefs.add(x2)); //ignored
+		assertTrue(xrefs.remove(rx1));
+		assertEquals(1, xrefs.size());
+		assertFalse(xrefs.contains("foo"));
+		assertFalse(xrefs.contains(null));
+		assertFalse(xrefs.remove("foo"));
+		assertFalse(xrefs.remove(null));
 	}
 }

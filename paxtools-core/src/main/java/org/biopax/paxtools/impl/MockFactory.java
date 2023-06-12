@@ -73,8 +73,7 @@ public class MockFactory extends BioPAXFactory
 			if (propertyEditor instanceof StringPropertyEditor)
 			{
 				value = getStrings(bpe, multiple);
-			} else
-			{
+			} else {
 				Class range = propertyEditor.getRange();
 				if (propertyEditor instanceof PrimitivePropertyEditor)
 				{

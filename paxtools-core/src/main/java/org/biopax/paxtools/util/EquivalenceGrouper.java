@@ -100,14 +100,11 @@ public class EquivalenceGrouper<T extends BioPAXElement>
 		// AND if that something is a bucket contains something that is  equivalent to bpe
 		// AND if that something is not a bucket, and it is equivalent to bpe
 		EquivalanceBucket<T> bucket = access(bpe);
-		if (bucket == null)
-		{
+		if (bucket == null) {
 			bucket = new EquivalanceBucket(bpe);
 			this.buckets.add(bucket);
-		} else
-		{
-			for (T t : bucket)
-			{
+		} else {
+			for (T t : bucket) {
 				if(t==bpe) return;
 			}
 			bucket.add(bpe);

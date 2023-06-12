@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>normalizer</artifactId>
-	<name>BioPAX Normalizer and MiriamLink</name>
-	<description>A BioPAX Normalizer and modified off-line MiriamLink (MIRIAM, EBI, OLS)</description>
+	<name>BioPAX Normalizer and Resolver</name>
+	<description>A BioPAX Normalizer and Bio ID Resolver</description>
 	<inceptionYear>2009-2015</inceptionYear>
 	<parent>
 		<artifactId>paxtools</artifactId>
@@ -14,42 +14,19 @@
 
 	<url>https://biopax.github.io/Paxtools</url>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jaxb2-maven-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>xjc</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<clearOutputDir>false</clearOutputDir>
-					<packageName>net.biomodels.miriam</packageName>
-					<failOnNoSchemas>true</failOnNoSchemas>
-					<schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>com.sun.activation</groupId>
-						<artifactId>javax.activation</artifactId>
-						<version>1.2.0</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-		</plugins>
-	</build>
-
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>paxtools-core</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 		</dependency>
 	</dependencies>
 

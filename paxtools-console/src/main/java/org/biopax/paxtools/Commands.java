@@ -691,15 +691,16 @@ final class Commands {
 		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf/dataSource", model.getLevel());
 		Set<String> problemErs = new TreeSet<>();
 		for(EntityReference ser : model.getObjects(EntityReference.class)) {
-			//skip if it's a SMR or generic
+			//skip if it's SMR or generic
 			if(ser instanceof SmallMoleculeReference || !ser.getMemberEntityReference().isEmpty())
 				continue;
 
 			Set<String> hgncSymbols = new HashSet<>();
 			Set<String> hgncIds = new HashSet<>();
+			final String uri = ser.getUri();
 
-			if(ser.getUri().startsWith("http://identifiers.org/hgnc")) {
-				String s = ser.getUri().substring(ser.getUri().lastIndexOf("/")+1);
+			if(uri.startsWith("identifiers.org/hgnc") || uri.startsWith("bioregistry.io/hgnc")) {
+				String s = uri.substring(uri.lastIndexOf("/")+1);
 				if(s.startsWith("HGNC:")) {
 					hgncIds.add(s);
 				} else {
@@ -708,14 +709,15 @@ final class Commands {
 			}
 
 			for(Xref x : ser.getXref()) {
-				if(x instanceof PublicationXref || x.getDb()==null || x.getId()==null) {
-					continue; //skip
+				if(x instanceof PublicationXref || StringUtils.isBlank(x.getDb()) || StringUtils.isBlank(x.getId())) {
+					continue; //skip PX, or when db or id is undefined/blank
 				}
-				if(x.getDb().toLowerCase().startsWith("hgnc") && !x.getId().toLowerCase().startsWith("hgnc:")) {
-					hgncSymbols.add(x.getId().toLowerCase());
-				}
-				else if(x.getDb().toLowerCase().startsWith("hgnc") && x.getId().toLowerCase().startsWith("hgnc:")) {
-					hgncIds.add(x.getId().toLowerCase());
+				if(x.getDb().toLowerCase().startsWith("hgnc")) {
+					String id = x.getId().toLowerCase();
+					if(StringUtils.startsWithIgnoreCase(id,"hgnc:") || StringUtils.isNumeric(id))
+						hgncIds.add(id);
+					else
+						hgncSymbols.add(id);
 				}
 			}
 
@@ -727,7 +729,7 @@ final class Commands {
 			for(Object provenance : pa.getValueFromBean(ser)) {
 				if (hgncSymbols.isEmpty() && hgncIds.isEmpty()) {
 					problemErs.add(String.format("%s\t%s\t%s",
-						((Provenance)provenance).getDisplayName(), ser.getDisplayName(), ser.getUri()));
+						((Provenance)provenance).getDisplayName(), ser.getDisplayName(), uri));
 					MutableInt n = numProblematicErs.get(provenance);
 					if (n == null) {
 						numProblematicErs.put((Provenance) provenance, new MutableInt(1));
@@ -768,7 +770,7 @@ final class Commands {
 		Map<Provenance,MutableInt> numErs = new HashMap<>();
 		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
 		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf:Protein/dataSource", model.getLevel());
-		Set<String> problemErs = new TreeSet<String>();
+		Set<String> problemErs = new TreeSet<>();
 		for(ProteinReference pr : model.getObjects(ProteinReference.class)) {
 			//skip a generic one
 			if(!pr.getMemberEntityReference().isEmpty()) {
@@ -776,10 +778,14 @@ final class Commands {
 			}
 
 			for(Object provenance : pa.getValueFromBean(pr)) {
-				if(!pr.getUri().startsWith("http://identifiers.org/uniprot")
-					&& !pr.getXref().toString().toLowerCase().contains("uniprot")) {
+				String uri = pr.getUri();
+				//when the protein reference does not have any uniprot AC/ID -
+				if(!uri.startsWith("identifiers.org/uniprot")
+					  && !uri.startsWith("bioregistry.io/uniprot")
+					  && !pr.getXref().toString().toLowerCase().contains("uniprot"))
+				{
 					problemErs.add(String.format("%s\t%s\t%s",
-						((Provenance) provenance).getDisplayName(), pr.getDisplayName(), pr.getUri()));
+						((Provenance) provenance).getDisplayName(), pr.getDisplayName(), uri));
 					MutableInt n = numProblematicErs.get(provenance);
 					if (n == null) {
 						numProblematicErs.put((Provenance) provenance, new MutableInt(1));
@@ -827,8 +833,9 @@ final class Commands {
 				continue;
 			}
 			for(Object provenance : pa.getValueFromBean(smr)) {
-				if(!smr.getUri().startsWith("http://identifiers.org/chebi/CHEBI:")
-					&& !smr.getXref().toString().contains("CHEBI:")) {
+				if(!StringUtils.startsWithIgnoreCase(smr.getUri(), "identifiers.org/chebi")
+					&& !StringUtils.startsWithIgnoreCase(smr.getUri(),"bioregistry.io/chebi")
+					&& !StringUtils.containsIgnoreCase(smr.getXref().toString(),"chebi:")) {
 					problemErs.add(String.format("%s\t%s\t%s",
 						((Provenance) provenance).getDisplayName(), smr.getDisplayName(), smr.getUri()));
 					MutableInt n = numProblematicErs.get(provenance);
@@ -1060,18 +1067,6 @@ final class Commands {
 				narLackingOrganism, serLackingOrganism-narLackingOrganism
 			)
 		);
-	}
-
-	static void toSer(String[] argv) throws IOException {
-		String in = argv[1];
-		String out = argv[2];
-		log.info("Loading BioPAX data from " + in);
-		long start = System.currentTimeMillis();
-		Model model = io.convertFromOWL(getInputStream(in));
-		log.info("Writing Paxtools Model to (binary file) " + out);
-		ModelUtils.serialize(model, new FileOutputStream(out));
-		long stop = System.currentTimeMillis();
-		log.info(String.format("Done (in %d sec)", TimeUnit.MILLISECONDS.toSeconds(stop-start)));
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(

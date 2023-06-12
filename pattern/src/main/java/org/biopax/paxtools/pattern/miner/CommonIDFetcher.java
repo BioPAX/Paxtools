@@ -3,9 +3,7 @@ package org.biopax.paxtools.pattern.miner;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
-import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -36,7 +34,7 @@ public class CommonIDFetcher implements IDFetcher
 			else if (e.getStandardName() != null && !e.getStandardName().contains("..."))
 				set.add(e.getStandardName());
 			else if (!e.getName().isEmpty()) {
-				Set<String> names = new TreeSet<String>();
+				Set<String> names = new TreeSet<>();
 				for(String name : e.getName()) {
 					if(!name.contains("..."))
 						names.add(name);
@@ -44,7 +42,8 @@ public class CommonIDFetcher implements IDFetcher
 				set.add(names.toString());
 			}
 		}
-		else if (useUniprotIDs && ele.getUri().startsWith("http://identifiers.org/uniprot/"))
+		else if (useUniprotIDs &&
+				(ele.getUri().contains("identifiers.org/uniprot") || ele.getUri().contains("bioregistry.io/uniprot")))
 		{
 			set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
 		}
@@ -60,7 +59,7 @@ public class CommonIDFetcher implements IDFetcher
 				if (db != null && id != null && !id.isEmpty())
 				{
 					db = db.toLowerCase();
-					if (!useUniprotIDs && db.startsWith("hgnc"))
+					if (!useUniprotIDs && db.startsWith("hgnc")) //"hgnc.symbol" or "hgnc gene symbol"
 					{
 						//valid id is either a HGNC:1234 ID or Symbol (gene name)
 						String symbol = HGNC.getSymbol(id);

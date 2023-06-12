@@ -157,8 +157,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			r = xmlf.createXMLStreamReader(in);
 			triples = new LinkedList<>();
 		} catch (XMLStreamException e) {
-			//e.printStackTrace();
-			throw new BioPaxIOException(e.getClass().getSimpleName() + " " + e.getMessage() + "; " + e.getLocation());
+			throw new BioPaxIOException(e.getClass().getSimpleName() + " " + e.getMessage() + "; " + e.getLocation(), e);
 		}
 	}
 
@@ -853,6 +852,34 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	public boolean isMergeDuplicates()
 	{
 		return this.mergeDuplicates;
+	}
+
+	/**
+	 * Serializes a (not too large) BioPAX model to the RDF/XML (OWL) formatted string.
+	 * (This is used in e.g. BioPAX Validator web app.)
+	 *
+	 * @param model a BioPAX object model to convert to the RDF/XML format
+	 * @return the BioPAX data in the RDF/XML format
+	 * @throws IllegalArgumentException if model is null
+	 * @throws OutOfMemoryError when it cannot be stored in a byte array (max 2Gb).
+	 */
+	public static String convertToOwl(Model model)
+	{
+		if (model == null) throw new IllegalArgumentException();
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		(new SimpleIOHandler(model.getLevel())).convertToOWL(model, outputStream);
+
+		try
+		{
+			return outputStream.toString("UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			log.error("convertToOwl, outputStream.toString failed", e);
+			return outputStream.toString();
+		}
 	}
 
 }

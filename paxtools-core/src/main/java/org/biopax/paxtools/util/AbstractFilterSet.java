@@ -58,7 +58,6 @@ public abstract class AbstractFilterSet<F, E> extends AbstractSet<E> implements 
 		return new FilterIterator(baseSet.iterator());
 	}
 
-
 	private class FilterIterator implements Iterator<E>
 	{
 		E next = null;

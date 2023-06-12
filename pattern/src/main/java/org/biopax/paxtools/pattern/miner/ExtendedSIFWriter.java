@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * This class is used for writing the binary interactions to a text output stream in the
- * so called Pathway Commons EXTENDED_BINARY_SIF format.
+ * so-called Pathway Commons EXTENDED_BINARY_SIF format.
  *
  * @author Ozgun Babur
  */

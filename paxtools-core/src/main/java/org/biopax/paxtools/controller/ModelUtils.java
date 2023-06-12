@@ -90,6 +90,10 @@ public final class ModelUtils
 	 */
 	public static void replace(Model model, final Map<? extends BioPAXElement, ? extends BioPAXElement> subs)
 	{
+		if(subs == null || subs.isEmpty()) {
+			return;
+		}
+
 		// update properties
 		Visitor visitor = (domain, range, bpModel, propertyEditor) -> {
 			if (propertyEditor instanceof ObjectPropertyEditor && range != null && subs.containsKey(range))
@@ -1176,10 +1180,8 @@ public final class ModelUtils
 	 *
 	 * @param model to edit/update
 	 */
-	public static void mergeEquivalentPhysicalEntities(Model model)
-	{
-		HashMap<BioPAXElement,BioPAXElement> subs = new HashMap<BioPAXElement, BioPAXElement>();
-
+	public static void mergeEquivalentPhysicalEntities(Model model) {
+		HashMap<BioPAXElement,BioPAXElement> subs = new HashMap<>();
 		EquivalenceGrouper<PhysicalEntity> groups = new EquivalenceGrouper(model.getObjects(PhysicalEntity.class));
 		for (List<PhysicalEntity> group : groups.getBuckets()) {
 			if (group.size() > 1) {
@@ -1324,54 +1326,5 @@ public final class ModelUtils
 			|| (e instanceof SimplePhysicalEntity && isGeneric(((SimplePhysicalEntity) e).getEntityReference()))
 		);
 		//false when e==null
-	}
-
-	/**
-	 * Serialize a not too large object (mainly for testing).
-	 * @param o
-	 * @return
-	 * @throws IOException
-	 */
-	public static byte[] serialize(Object o) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		serialize(o, baos);
-		return baos.toByteArray();
-	}
-
-	/**
-	 * Deserialize a not too large object (mainly for testing).
-	 * @param bytes
-	 * @return object
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
-		return deserialize(new ByteArrayInputStream(bytes));
-	}
-
-	/**
-	 * Serialize.
-	 * @param o
-	 * @param os
-	 * @throws IOException
-	 */
-	public static void serialize(Object o, OutputStream os) throws IOException {
-		ObjectOutputStream oos = new ObjectOutputStream(os);
-		oos.writeObject(o);
-		oos.close();
-	}
-
-	/**
-	 * Deserialize.
-	 * @param is
-	 * @return object
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	public static Object deserialize(InputStream is) throws IOException, ClassNotFoundException {
-		ObjectInputStream ois = new ObjectInputStream(is);
-		Object o  = ois.readObject();
-		ois.close();
-		return o;
 	}
 }

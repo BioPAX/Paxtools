@@ -194,7 +194,7 @@ public class TempTests
 		Pattern p = PatternBox.controlsExpressionWithTemplateReac();
 
 		Match m = new Match(p.size());
-		ProteinReference er = (ProteinReference) model.getByID("http://identifiers.org/uniprot/P42229");
+		ProteinReference er = (ProteinReference) model.getByID("identifiers.org/uniprot/P42229");
 		PhysicalEntity pe = (PhysicalEntity) model.getByID("http://pid.nci.nih.gov/biopaxpid_10369");
 		m.set(er, 0);
 		m.set(pe, 1);

@@ -1,14 +1,13 @@
 package org.biopax.paxtools.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-
-public enum BPCollections
-{
+public enum BPCollections {
 	I; // singleton
 
 	/**
@@ -16,71 +15,54 @@ public enum BPCollections
 	 * and initialize and load factor for all sets and maps
 	 * used in all model objects for performance purposes.
 	 */
-	public interface CollectionProvider
-	{
+	public interface CollectionProvider {
 		<R> Set<R> createSet();
 
 		<D, R> Map<D, R> createMap();
 
-		<D, R> Map<D, R> createMap(int initSz);
-
-		<R> Collection<R> createCollection();
-
 		<R> Collection<R> createCollection(int initSz);
 	}
 
-	private CollectionProvider cProvider;
+	//Default CollectionProvider implementation (HashMap, HashSet, ArrayList)
+	public static class DefaultCollectionProvider implements CollectionProvider {
+		public <R> Set<R> createSet() {
+			return new HashSet<>();
+		}
 
+		public <D, R> Map<D, R> createMap() {
+			return new HashMap<>();
+		}
+
+		public <R> Collection<R> createCollection(int initSz) {
+			return new ArrayList<>(initSz);
+		}
+	}
+
+	private CollectionProvider cProvider;
+	private String safeSetOpt_;
 	private final Logger log = LoggerFactory.getLogger(BPCollections.class);
 
-
-	BPCollections()
-	{
+	BPCollections() {
+		//if a custom collection provider was specified, try to use that
 		String prop = System.getProperty("paxtools.CollectionProvider");
-		log.info("System property: paxtools.CollectionProvider=" + prop);		
-		if (prop != null)
-		{
-			try
-			{
-				Class<? extends CollectionProvider> cProviderClass =
-						(Class<? extends CollectionProvider>) Class.forName(prop);
+		log.info("System property: paxtools.CollectionProvider=" + prop);
+		if (StringUtils.isNotBlank(prop)) {
+			try {
+				Class<? extends CollectionProvider> cProviderClass = (Class<? extends CollectionProvider>) Class.forName(prop);
 				cProvider = cProviderClass.getDeclaredConstructor().newInstance();
-				log.info("CollectionProvider " + prop + " was successfully activated.");
-			}
-			catch (Exception e)
-			{
-				log.warn("Could not initialize the specified collector provider:" + prop +
-				         " . Falling back to default " +
-				         "Hash based implementation. Underlying exception is " + e);
-
+				log.info("Custom CollectionProvider " + prop + " was successfully activated.");
+			} catch (Exception e) {
+				log.warn("Could not initialize the specified collection provider: " + prop +
+				         "; will use the default implementation; error: " + e);
 			}
 		}
-
-		if (cProvider == null) {
-			//Use the default CollectionProvider implementation (HashMap, HashSet, ArrayList)
-			cProvider = new CollectionProvider() {
-				public <R> Set<R> createSet() {
-					return new HashSet<>();
-				}
-
-				public <D, R> Map<D, R> createMap() {
-					return new HashMap<>();
-				}
-
-				public <D, R> Map<D, R> createMap(int initSz) {
-					return new HashMap<>(initSz);
-				}
-
-				public <R> Collection<R> createCollection(int initSz) {
-					return new ArrayList<>(initSz);
-				}
-
-				public <R> Collection<R> createCollection() {
-					return new ArrayList<>();
-				}
-			};
+		if(cProvider == null) {
+			cProvider = new DefaultCollectionProvider();
 			log.info("Using the default CollectionProvider.");
 		}
+
+		safeSetOpt_ = System.getProperty("paxtools.model.safeset","map");
+		log.info("System property: paxtools.model.safeset=" + safeSetOpt_);
 	}
 
 
@@ -106,9 +88,14 @@ public enum BPCollections
 		return cProvider.createSet();
 	}
 
-	public <R extends BioPAXElement> Set<R> createSafeSet()
-	{
-		return new BiopaxSafeSet<R>();
+	public <R extends BioPAXElement> Set<R> createSafeSet() {
+		switch (safeSetOpt_) {
+			case "list":
+				return new BiopaxElements<>();//Set based on Map (faster, more memory, for building/merging Models)
+			case "map":
+			default:
+				return new BiopaxSafeSet<>();//Set based on List (slower, less memory, for read-only analyses, queries)
+		}
 	}
 
 	public <D, R> Map<D, R> createMap()
@@ -116,29 +103,8 @@ public enum BPCollections
 		return cProvider.createMap();
 	}
 
-	public <D, R> Map<D, R> createMap(int initSize)
-	{
-		return cProvider.createMap(initSize);
-	}
-
-	public <R> Collection<R> createCollection()
-	{
-		return cProvider.createCollection();
-	}
-
 	public <R> Collection<R> createCollection(int initSize)
 	{
 		return cProvider.createCollection(initSize);
 	}
-
-	public <R extends BioPAXElement> Collection<R> createSafeCollection()
-	{
-		return new BiopaxSafeCollection<>();
-	}
-
-	public <R extends BioPAXElement> Collection<R> createSafeCollection(int initSz)
-	{
-		return new BiopaxSafeCollection<>(initSz);
-	}
-
 }

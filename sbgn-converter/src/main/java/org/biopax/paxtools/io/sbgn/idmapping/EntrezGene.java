@@ -52,7 +52,7 @@ public class EntrezGene
 	{
 		try
 		{
-			sym2id = new HashMap<String, String>();
+			sym2id = new HashMap<>();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 				HGNC.class.getResourceAsStream("EntrezGene.txt")));
 			for (String line = reader.readLine(); line != null; line = reader.readLine())
@@ -67,7 +67,7 @@ public class EntrezGene
 			}
 			reader.close();
 
-			id2sym = new HashMap<String, String>();
+			id2sym = new HashMap<>();
 			for (String key : sym2id.keySet())
 			{
 				id2sym.put(sym2id.get(key), key);

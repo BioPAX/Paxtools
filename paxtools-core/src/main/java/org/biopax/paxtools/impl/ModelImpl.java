@@ -18,28 +18,22 @@ import java.util.*;
  */
 public class ModelImpl implements Model
 {
-// ------------------------------ FIELDS ------------------------------
-
 	private static final long serialVersionUID = -2087521863213381434L;
 	protected final Map<String, BioPAXElement> idMap;
 	private final Map<String, String> nameSpacePrefixMap;
 	private BioPAXLevel level;
 	private transient BioPAXFactory factory;
+	private final transient Set<BioPAXElement> exposedObjectSet;
 	private boolean addDependencies = false;
 	private String xmlBase;
 	private String uri;
 	private String name;
 
-// --------------------------- CONSTRUCTORS ---------------------------
 
 	protected ModelImpl() {
-		idMap = BPCollections.I.createMap(100);
+		idMap = BPCollections.I.createMap();
 		nameSpacePrefixMap = new HashMap<>(5);
-	}
-
-	protected ModelImpl(int initialCapacity) {
-		idMap = BPCollections.I.createMap(initialCapacity);
-		nameSpacePrefixMap = new HashMap<>(5);
+		exposedObjectSet = new UnmodifiableImplicitSet(idMap.values()); //a wrapper, no copying to save memory
 	}
 
 	protected ModelImpl(BioPAXLevel level)
@@ -53,13 +47,6 @@ public class ModelImpl implements Model
 		this.level = factory.getLevel();
 	}
 
-	public ModelImpl(BioPAXFactory factory, int initialCapacity) {
-		this(initialCapacity);
-		this.factory = factory;
-		this.level = factory.getLevel();
-	}
-
-// --------------------- GETTER / SETTER METHODS ---------------------
 
 	public synchronized boolean containsID(String id) {
 		return this.idMap.containsKey(id);
@@ -96,23 +83,18 @@ public class ModelImpl implements Model
 		this.level = factory.getLevel();
 	}
 
-// ------------------------ INTERFACE METHODS ------------------------
 
-// --------------------- Interface Model ---------------------
-
-// --------------------- ACCESSORS and MUTATORS---------------------
-
-	public synchronized Collection<BioPAXElement> getObjects()
+	public synchronized Set<BioPAXElement> getObjects()
 	{
-		return new UnmodifiableImplicitSet(idMap.values());
+		return exposedObjectSet;
 	}
 
-	public synchronized <T extends BioPAXElement> Collection<T> getObjects(Class<T> filterBy)
+	public synchronized <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy)
 	{
-		return new ClassFilterSet<>(getObjects(), filterBy);
+		return new ClassFilterSet<>(exposedObjectSet, filterBy);
 	}
 
-	//a setter for persistence, serialize or tests
+	//a setter for persistence, serialize, tests
 	synchronized void setObjects(Collection<BioPAXElement> objects) {
 		idMap.clear();
 		for(BioPAXElement bpe : objects) {
@@ -121,7 +103,9 @@ public class ModelImpl implements Model
 	}
 
 	public synchronized void remove(BioPAXElement aBioPAXElement) {
-		idMap.remove(aBioPAXElement.getUri());
+		if(contains(aBioPAXElement)) {
+			idMap.remove(aBioPAXElement.getUri());
+		}
 	}
 
 	public synchronized <T extends BioPAXElement> T addNew(Class<T> c, String id)
@@ -148,7 +132,6 @@ public class ModelImpl implements Model
 		return idMap.get(aBioPAXElement.getUri()) == aBioPAXElement;
 	}
 
-// -------------------------- OTHER METHODS --------------------------
 
 	public String getUri() {
 		return uri;
@@ -168,21 +151,17 @@ public class ModelImpl implements Model
 
 	public synchronized void add(BioPAXElement aBioPAXElement)
 	{
+		if(!level.hasElement(aBioPAXElement)) {
+			throw new IllegalBioPAXArgumentException("Given object is of wrong level");
+		}
 		String uri = aBioPAXElement.getUri();
 		if (uri == null) {
-			throw new IllegalBioPAXArgumentException(
-				"BioPAX object URI is null: " + aBioPAXElement);
-		}
-		else if(!level.hasElement(aBioPAXElement)) {
-			throw new IllegalBioPAXArgumentException(
-				"Given object is of wrong level");
-		}
-		else if (idMap.containsKey(uri)) {
-			throw new IllegalBioPAXArgumentException(
-				"I already have an object with the same ID: " + uri +
-					". Try removing it first");
-		}
-		else {
+			throw new IllegalBioPAXArgumentException("URI is null, element: " + aBioPAXElement);
+		} else if (contains(aBioPAXElement)) {
+			throw new IllegalBioPAXArgumentException("Duplicate element: " + aBioPAXElement);
+		} else if (idMap.containsKey(uri)) {
+			throw new IllegalBioPAXArgumentException("URI already exists: " + uri);
+		} else {
 			idMap.put(uri, aBioPAXElement);
 		}
 	}
@@ -207,14 +186,13 @@ public class ModelImpl implements Model
 		return addDependencies;
 	}
 
-	private class UnmodifiableImplicitSet implements Set<BioPAXElement> {
-
+    private class UnmodifiableImplicitSet implements Set<BioPAXElement>
+	{
 		private final Collection<BioPAXElement> elements;
 
 		public UnmodifiableImplicitSet(
 			Collection<BioPAXElement> elements)
 		{
-
 			this.elements = elements;
 		}
 
@@ -245,7 +223,7 @@ public class ModelImpl implements Model
 
 		public <T> T[] toArray(T[] a)
 		{
-			return elements.toArray(a);
+            return elements.toArray(a);
 		}
 
 		public boolean add(BioPAXElement bioPAXElement)
@@ -296,8 +274,9 @@ public class ModelImpl implements Model
 	{
 		ModelUtils.replace(this, Collections.singletonMap(existing, replacement));
 		remove(existing);
-		if(replacement != null)
+		if(replacement != null) {
 			add(replacement);
+		}
 	}
 
 
