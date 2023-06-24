@@ -265,8 +265,8 @@ public final class Normalizer {
 				if (type.equals(RelationshipTypeVocabulary.class)
 						|| ProteinReference.class.isAssignableFrom(type)
 						|| SmallMoleculeReference.class.isAssignableFrom(type)
-						|| (type.equals(BioSource.class) && "ncbitaxon".equalsIgnoreCase(prefix)
-						&& idPart != null && idPart.matches("^\\d+$"))) {
+						|| (type.equals(BioSource.class) && "ncbitaxon".equalsIgnoreCase(prefix) && idPart != null && idPart.matches("^\\d+$"))
+				) {
 					// makes URL
 					uri = Resolver.getURI(prefix, idPart); //can be null when there's id-pattern mismatch
 				} else if (type.equals(UnificationXref.class) && !"pubmed".equalsIgnoreCase(prefix) ||
@@ -294,7 +294,11 @@ public final class Normalizer {
 		}
 		String localPart = sb.toString();
 		String strategy = System.getProperty(PROPERTY_NORMALIZER_URI_STRATEGY, VALUE_NORMALIZER_URI_STRATEGY_MD5);
-		if(VALUE_NORMALIZER_URI_STRATEGY_SIMPLE.equals(strategy) || Xref.class.isAssignableFrom(type)) {
+		if(VALUE_NORMALIZER_URI_STRATEGY_SIMPLE.equals(strategy)
+				|| Xref.class.isAssignableFrom(type)
+				|| ControlledVocabulary.class.isAssignableFrom(type)
+				|| BioSource.class.isAssignableFrom(type))
+		{
 			//for xrefs, always use the simple URI strategy (human-readable)
 			//replace unsafe symbols with underscore
 			localPart = localPart.replaceAll("[^-\\w]", "_");
@@ -535,12 +539,14 @@ public final class Normalizer {
 	
 	
 	private void normalizeBioSources(Model model) {
+		//it's called after all the xrefs and CVs were normalized
 		NormalizerMap map = new NormalizerMap(model);
 		for(BioSource bs : model.getObjects(BioSource.class)) {
 			UnificationXref uref = findPreferredUnificationXref(bs);
 			//normally, the xref db is 'Taxonomy' (or a valid synonym)
 			if (uref != null
-				&& (uref.getDb().toLowerCase().contains("taxonomy")
+				&& ( uref.getDb().equalsIgnoreCase("ncbitaxon") //should be (the preferred prefix in bioregistry.io)
+					|| uref.getDb().toLowerCase().contains("taxonomy") //just in case..
 					|| uref.getDb().equalsIgnoreCase("newt"))) {
 				String 	idPart = uref.getId();
 
@@ -550,9 +556,7 @@ public final class Normalizer {
 				if(bs.getCellType()!=null && !bs.getCellType().getTerm().isEmpty()) 
 					idPart += "_" + bs.getCellType().getTerm().iterator().next();
 				
-				String uri = (idPart.equals(uref.getId()) //- no tissue or celltype were attached
-						&& idPart.matches("^\\d+$")) //- is positive integer id
-					? uri(xmlBase, uref.getDb(), idPart, BioSource.class) : "bioregistry.io/ncbitaxon:" + idPart;
+				String uri = uri(xmlBase, uref.getDb(), idPart, BioSource.class); //for standard db, id it makes bioregistry.io/ncbitaxon:id URI
 				map.put(bs, uri);
 			} else {
 				log.debug("Won't normalize BioSource"

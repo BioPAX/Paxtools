@@ -1,21 +1,21 @@
 package org.biopax.paxtools.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.level3.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ShallowCopyTest {
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 	}
 
 	@Test
-	public final void testCopyTString() {
+	public final void copyTString() {
 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 		Protein p1 = factory.create(Protein.class, "p1");
 		ProteinReference pr1 = factory.create(ProteinReference.class, "pr1");

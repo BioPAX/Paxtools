@@ -5,15 +5,14 @@ import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ModelCoverageTest
 {
-    @Test 
-    public void testCreationMethods() {
+    @Test
+    public void creationMethods() {
         MockFactory factory = new MockFactory(BioPAXLevel.L3);
         //test reflectively create
         EditorMap map = SimpleEditorMap.L3;

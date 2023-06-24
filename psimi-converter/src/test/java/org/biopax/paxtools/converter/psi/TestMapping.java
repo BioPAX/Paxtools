@@ -32,9 +32,10 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import psidev.psi.mi.tab.PsimiTabReader;
 import psidev.psi.mi.tab.converter.tab2xml.Tab2Xml;
 import psidev.psi.mi.tab.model.BinaryInteraction;
@@ -82,7 +83,6 @@ public class TestMapping  {
 
 	@Test
 	public void testApi() throws Exception {
-
 		// unmarshall the data, close the stream
 		PsimiXmlReader reader = new PsimiXmlReader();
 		InputStream is = new GZIPInputStream(getClass().getClassLoader().getResourceAsStream(PSI_MI_TEST_FILE));
@@ -92,7 +92,7 @@ public class TestMapping  {
 		// we should only have 1 entry
 		assertEquals(1, entries.size());
 		// get entry
-		Entry entry = (Entry)entries.iterator().next();
+		Entry entry = entries.iterator().next();
 
 		assertTrue(entry.hasExperiments());
 		assertEquals(4, entry.getExperiments().size());
@@ -126,7 +126,6 @@ public class TestMapping  {
 		assertFalse(participant.hasInteractionRef());
 		assertFalse(participant.hasInteraction());
 
-
 		//TODO assert experimentalRole.hasExperiments()==true always (if there're experiments); experimentalRole.hasExperimentRefs()==false
 	}
 
@@ -135,7 +134,7 @@ public class TestMapping  {
 	 * Tests that a PSI document (level 2.5) is correctly mapped into a biopax model.
 	 */
 	@Test
-	public void testMapping() {
+	public void mapping() {
 
 		Model bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();
 
@@ -171,7 +170,7 @@ public class TestMapping  {
 
 
 	@Test
-	public void testMitabToMi() throws Exception {
+	public void mitabToMi() throws Exception {
 		PsimiTabReader reader = new PsimiTabReader();
 		InputStream is = getClass().getClassLoader().getResourceAsStream(PSI_MITAB_TEST_FILE);
 		Collection<BinaryInteraction> its = reader.read(is);
@@ -189,7 +188,7 @@ public class TestMapping  {
 	}
 
 	@Test
-	public void testParticipantsAreNotDuplicated() throws IOException {
+	public void participantsAreNotDuplicated() throws IOException {
 
 		Model bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();
 		// open file
@@ -235,7 +234,7 @@ public class TestMapping  {
 	}
 
 	@Test
-	public void testMappingIntAct() {
+	public void mappingIntAct() {
 		Model bpModel = BioPAXLevel.L3.getDefaultFactory().createModel();
 		try {
 			PsimiXmlReader reader = new PsimiXmlReader();

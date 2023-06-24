@@ -4,8 +4,8 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -22,7 +22,7 @@ import java.util.*;
 public class DBParsers
 {
 	@Test
-	@Ignore
+	@Disabled
 	public void extractSignalink() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(
@@ -121,7 +121,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void extractSignalink2() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(
@@ -166,7 +166,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printVenn() throws IOException
 	{
 		Set<String> s1 = read("/home/ozgun/Projects/biopax-pattern/directed-relations.txt", true);
@@ -260,7 +260,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printNeighborsInSpike() throws IOException
 	{
 		String s = "DUSP1";
@@ -414,7 +414,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printLines() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(
@@ -435,7 +435,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printLinesContaining() throws IOException
 	{
 		String query = "1509498";
@@ -454,7 +454,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void searchFirstOcc() throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(
@@ -474,7 +474,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readXML() throws ParserConfigurationException, IOException, SAXException
 	{
 		File f = new File("/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml");

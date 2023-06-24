@@ -13,16 +13,16 @@ import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SimpleEditorMapTest
 {
     @Test
-    public void testSimpleEditorMap() throws Exception
+    public void simpleEditorMap() throws Exception
     {
         for (BioPAXLevel level : BioPAXLevel.values())
         {
@@ -40,7 +40,7 @@ public class SimpleEditorMapTest
 	 * using the corresponding property editor
 	 */
     @Test
-    public void testClearSingularProperty() {    	
+    public void clearSingularProperty() {
     	BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
     	EditorMap em = SimpleEditorMap.L3;
     	
@@ -78,7 +78,7 @@ public class SimpleEditorMapTest
     }
     
 	@Test
-	public final void testComments() {
+	public final void comments() {
     	BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
     	EditorMap em = SimpleEditorMap.L3;
 		ProteinReference pr1 = fac.create(ProteinReference.class, "pr1"); 
@@ -103,7 +103,7 @@ public class SimpleEditorMapTest
 	 * with confidence.
 	 */
 	@Test
-	public void testClearInverseProperty() {    	
+	public void clearInverseProperty() {
 		BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
 	    EditorMap em = SimpleEditorMap.L3;
 	    

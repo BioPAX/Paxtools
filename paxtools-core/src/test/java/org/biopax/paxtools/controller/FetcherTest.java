@@ -4,21 +4,20 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FetcherTest {
 
-	private static Model model;
+	static Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
 
-	@BeforeClass
-	public static void setupTest() {
+	@BeforeAll
+	public static void init() {
 		model = BioPAXLevel.L3.getDefaultFactory().createModel();
-
 		//create/add 8 objects
 		Pathway pw1 = model.addNew(Pathway.class, "pathway1");
 		Pathway pw2 = model.addNew(Pathway.class, "pathway2");
@@ -48,7 +47,7 @@ public class FetcherTest {
 	}
 
 	@Test
-	public final void testForEndlessLoopOrOutOfMemory() {
+	public void endlessLoopOrOutOfMemory() {
 
 		Pathway pw1 = (Pathway) model.getByID("pathway1");
 		Fetcher fetcher = new Fetcher(SimpleEditorMap.L3);
@@ -69,7 +68,7 @@ public class FetcherTest {
 	}
 
 	@Test
-	public final void testFetchDepth() {
+	public final void fetchDepth() {
 
 		Pathway pw1 = (Pathway) model.getByID("pathway1");
 		Set<BioPAXElement> elements;

@@ -9,14 +9,14 @@ import org.biopax.paxtools.model.level3.BindingFeature;
 import org.biopax.paxtools.model.level3.Evidence;
 import org.biopax.paxtools.model.level3.EvidenceCodeVocabulary;
 import org.biopax.paxtools.model.level3.UnificationXref;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EquivalenceImplTest {
 
 	@Test
-	public final void testSemanticallyEquivalent() {
+	public final void semanticallyEquivalent() {
 		Model m = BioPAXLevel.L3.getDefaultFactory().createModel();
 
 		UnificationXref x = m.addNew(UnificationXref.class, "ExpType_MI_0492");
@@ -41,7 +41,7 @@ public class EquivalenceImplTest {
 	
 	
 	@Test
-	public final void testBindingFeatureEquivalentNPE() {
+	public final void bindingFeatureEquivalentNPE() {
 		BioPAXIOHandler io = new SimpleIOHandler();
 		Model m = io.convertFromOWL(getClass().getResourceAsStream("test_bf_isequivalent-npe.owl"));
 		BindingFeature a = (BindingFeature) m.getByID(m.getXmlBase() + "id377153490_STAT3_p_bf3");

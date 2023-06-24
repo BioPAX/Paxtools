@@ -2,10 +2,10 @@ package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.*;
 import org.biopax.paxtools.model.level3.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author rodche
@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class SimpleMergerTest {
 
   @Test
-  public final void testMergeModel() {
+  public final void mergeModel() {
     BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
     Model model = factory.createModel();
     Xref ref = model.addNew(UnificationXref.class, "Xref1");
@@ -69,7 +69,7 @@ public class SimpleMergerTest {
   }
 
   @Test
-  public final void testMergeObject() {
+  public final void mergeObject() {
     SimpleMerger merger = new SimpleMerger(SimpleEditorMap.L3);
     BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
     Model model = factory.createModel();
@@ -93,7 +93,7 @@ public class SimpleMergerTest {
   }
 
   @Test
-  public final void testMergeToInconsistentModel() {
+  public final void mergeToInconsistentModel() {
     // Let's merge an object having one xref into a model that
     // implicitly "contains" a different xref with the same URI;
     // merged model will explicitly contain only the xref
@@ -190,7 +190,7 @@ public class SimpleMergerTest {
   }
 
   @Test
-  public final void testMergeWithoutFilter() {
+  public final void mergeWithoutFilter() {
     BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
     Model model = factory.createModel();
     //create a PR, BS, etc., in the (target) model
@@ -238,7 +238,7 @@ public class SimpleMergerTest {
 
 
   @Test
-  public final void testMergeWithFilter() {
+  public final void mergeWithFilter() {
     BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
     Model model = factory.createModel();
     //create a PR, BS, etc., in the (target) model

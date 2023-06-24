@@ -6,19 +6,18 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Complex;
 import org.biopax.paxtools.model.level3.PhysicalEntity;
 import org.biopax.paxtools.model.level3.Protein;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  */
 public class TransitiveAccessorTest
 {
 	@Test
-	public void testTransitiveGet()
+	public void transitiveGet()
 	{
 		Model model = new MockFactory(BioPAXLevel.L3).createModel();
 		Complex outer = model.addNew(Complex.class, "outer");
@@ -35,10 +34,10 @@ public class TransitiveAccessorTest
 						"component", Complex.class);
 		TransitivePropertyAccessor<PhysicalEntity, Complex> ta = TransitivePropertyAccessor.create(pe);
 		Set components = ta.getValueFromBean(outer);
-		assertThat(true, is(components.size() == 3));
-		assertThat(true, is(components.contains(base)));
-		assertThat(true, is(components.contains(inner)));
-		assertThat(true, is(components.contains(innermost)));
+		assertEquals(3,components.size());
+		assertTrue(components.contains(base));
+		assertTrue(components.contains(inner));
+		assertTrue(components.contains(innermost));
 		
 		
 		//create a loop (bad idea, but it does happen in real data, not only with 'component' prop.)
@@ -47,10 +46,10 @@ public class TransitiveAccessorTest
 		inner.addComponent(outer);
 		ta = TransitivePropertyAccessor.create(pe);
 		components = ta.getValueFromBean(outer); //should not fail or loop infinitely
-		assertThat(true, is(components.size() == 4));
-		assertThat(true, is(components.contains(base)));
-		assertThat(true, is(components.contains(inner)));
-		assertThat(true, is(components.contains(innermost)));
-		assertThat(true, is(components.contains(outer)));
+		assertTrue(components.size() == 4);
+		assertTrue(components.contains(base));
+		assertTrue(components.contains(inner));
+		assertTrue(components.contains(innermost));
+		assertTrue(components.contains(outer));
 	}
 }

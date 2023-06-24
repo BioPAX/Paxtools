@@ -62,22 +62,10 @@ public class ProteinNameLister
 				 * (do not worry - those pathway steps that are part of
 				 * the pathway must be in the PATHWAY-COMPONENTS set)
 				 */
-		Filter<PropertyEditor> nextStepPropertyFilter = new Filter<PropertyEditor>()
-		{
-			public boolean filter(PropertyEditor editor)
-			{
-				return !editor.getProperty().equals("NEXT-STEP");
-			}
-		};
+		Filter<PropertyEditor> nextStepPropertyFilter = editor -> !editor.getProperty().equals("NEXT-STEP");
 		fetcher = new Fetcher(SimpleEditorMap.L2, nextStepPropertyFilter);
 
-		FilenameFilter filter = new FilenameFilter()
-		{
-			public boolean accept(File dir, String name)
-			{
-				return (name.endsWith("owl"));
-			}
-		};
+		FilenameFilter filter = (dir, name) -> (name.endsWith("owl"));
 
 		for (String s : testDir.list(filter))
 		{

@@ -9,14 +9,12 @@ import org.biopax.paxtools.pattern.PatternBoxTest;
 import org.biopax.paxtools.pattern.constraint.IDConstraint;
 import org.biopax.paxtools.pattern.util.AdjacencyMatrix;
 import org.biopax.paxtools.pattern.util.Blacklist;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.*;
-
-import static org.junit.Assert.*;
 
 /**
  * TODO replace the ignored "tests" (hard-coded local input paths) with normal test resources and assertions.
@@ -26,7 +24,7 @@ import static org.junit.Assert.*;
 public class SIFSearcherTest extends PatternBoxTest
 {
 	@Test
-	public void testGetPathways()
+	public void getPathways()
 	{
 		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
 		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
@@ -36,7 +34,7 @@ public class SIFSearcherTest extends PatternBoxTest
 			pathways.addAll(inter.getPathways());
 		}
 
-		Assert.assertFalse(pathways.isEmpty());
+		Assertions.assertFalse(pathways.isEmpty());
 
 		Set<String> dataSources = new HashSet<>();
 		for (SIFInteraction inter : inters)
@@ -44,11 +42,11 @@ public class SIFSearcherTest extends PatternBoxTest
 			dataSources.addAll(inter.getDataSources());
 		}
 
-		Assert.assertFalse(dataSources.isEmpty());
+		Assertions.assertFalse(dataSources.isEmpty());
 	}
 
 	@Test
-	public void testGetDataSources()
+	public void getDataSources()
 	{
 		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
 		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
@@ -58,26 +56,26 @@ public class SIFSearcherTest extends PatternBoxTest
 			dataSources.addAll(inter.getDataSources());
 		}
 
-		Assert.assertFalse(dataSources.isEmpty());
+		Assertions.assertFalse(dataSources.isEmpty());
 	}
 
 	@Test
-	public void testAdjacencyMatrix()
+	public void adjacencyMatrix()
 	{
 		SIFSearcher searcher = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF,
 			SIFEnum.CHEMICAL_AFFECTS);
 		AdjacencyMatrix matrix = searcher.searchSIFGetMatrix(model_P53);
 		System.out.println(matrix);
-		Assert.assertTrue(matrix.names.length > 0);
+		Assertions.assertTrue(matrix.names.length > 0);
 	}
 
 	@Test
-	@Ignore
-	public void testSIFMiner()
+	@Disabled
+	public void withSIFMiner()
 	{
 		SIFSearcher s = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF, SIFEnum.IN_COMPLEX_WITH);
 		Set<SIFInteraction> sif = s.searchSIF(model_P53);
-		Assert.assertFalse(sif.isEmpty());
+		Assertions.assertFalse(sif.isEmpty());
 
 		Set<String> pubmedIDs = new HashSet<>();
 		for (SIFInteraction si : sif)
@@ -85,16 +83,16 @@ public class SIFSearcherTest extends PatternBoxTest
 			pubmedIDs.addAll(si.getPublicationIDs(true));
 		}
 
-		Assert.assertFalse(pubmedIDs.isEmpty());
+		Assertions.assertFalse(pubmedIDs.isEmpty());
 
 		s = new SIFSearcher(SIFEnum.CATALYSIS_PRECEDES);
 		sif = s.searchSIF(model_P53);
-		Assert.assertTrue(sif.isEmpty());
+		Assertions.assertTrue(sif.isEmpty());
 	}
 
 	@Test
-	@Ignore
-	public void testOldFormatWriter() throws FileNotFoundException
+	@Disabled
+	public void oldFormatWriter() throws FileNotFoundException
 	{
 		SIFSearcher s = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF, SIFEnum.IN_COMPLEX_WITH);
 		SimpleIOHandler handler = new SimpleIOHandler();
@@ -105,7 +103,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateLargeSIFGraph() throws IOException
 	{
 //		String dir = "/home/ozgun/Projects/biopax-pattern/";
@@ -139,11 +137,11 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
-		Assert.assertTrue(2 + 2 == 4);
+		Assertions.assertTrue(2 + 2 == 4);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateSomeSIFGraph() throws IOException
 	{
 		long start = System.currentTimeMillis();
@@ -178,11 +176,11 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Completed in: " + getPrintable(time));
-		Assert.assertTrue(2 + 2 == 4);
+		Assertions.assertTrue(2 + 2 == 4);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void countRelations() throws FileNotFoundException
 	{
 		String file = "/home/ozgun/Downloads/PC-resources/Pathway Commons.7.Comparative Toxicogenomics Database.BIOPAX.sif";
@@ -202,7 +200,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		{
 			System.out.println(count.get(type.getTag()) + "\t" + type);
 		}
-		Assert.assertTrue(2 + 2 == 4);
+		Assertions.assertTrue(2 + 2 == 4);
 	}
 
 	private static String getPrintable(long time)
@@ -239,7 +237,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	}
 
 	@Test
-	public void testSIFSearcher() throws IOException
+	public void sifSearcher() throws IOException
 	{
 		// Test CommonIdFetcher vs. ConfigurableIDFetcher SIF seatch output results.
 		final SIFType[] sifTypes = new SIFType[]{SIFEnum.IN_COMPLEX_WITH};
@@ -265,9 +263,9 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		// Test searcher.searchSIF(model) - check no. interactions, not empty, etc...
 		Set<SIFInteraction> sifInteractions = customSifSearcher.searchSIF(model);
-		assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
+		Assertions.assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
 		sifInteractions = commonSifSearcher.searchSIF(model);
-		assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
+		Assertions.assertTrue(sifInteractions.isEmpty()); //no xrefs, no entity references
 
 		//adding xrefs to PEs only does not help inferring the SIF interaction
 		Xref prx = model.addNew(RelationshipXref.class,"prx");
@@ -280,9 +278,9 @@ public class SIFSearcherTest extends PatternBoxTest
 		//note: if xref.id were unknown/misspelled, tests would pass anyway (ER's name will be used instead) ;)
 		pp.addXref(pprx);
 		sifInteractions = commonSifSearcher.searchSIF(model);
-		assertTrue(sifInteractions.isEmpty()); //still no result (due to - no ERs?)
+		Assertions.assertTrue(sifInteractions.isEmpty()); //still no result (due to - no ERs?)
 		sifInteractions = customSifSearcher.searchSIF(model);
-		assertTrue(sifInteractions.isEmpty());
+		Assertions.assertTrue(sifInteractions.isEmpty());
 
 		//let's add entity references without any xrefs yet -
 		ProteinReference ppr = model.addNew(ProteinReference.class,"pik3_ref");
@@ -292,26 +290,26 @@ public class SIFSearcherTest extends PatternBoxTest
 		pr.setDisplayName("RAS family");
 		p.setEntityReference(pr);
 
-		assertEquals(7, model.getObjects().size());
+		Assertions.assertEquals(7, model.getObjects().size());
 
 		sifInteractions = customSifSearcher.searchSIF(model);
-		assertFalse(sifInteractions.isEmpty());
-		assertEquals(1, sifInteractions.size());
+		Assertions.assertFalse(sifInteractions.isEmpty());
+		Assertions.assertEquals(1, sifInteractions.size());
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		customSifSearcher.searchSIF(model, bos);
 		System.out.println(bos.toString());//prints (using names): "PIK3 family	in-complex-with	RAS family"
 		//commonSifSearcher now also gets the same result after having recently being modified to use names when no xrefs found
 		sifInteractions = commonSifSearcher.searchSIF(model);
-		assertFalse(sifInteractions.isEmpty()); //OK
-		assertEquals(1, sifInteractions.size());
+		Assertions.assertFalse(sifInteractions.isEmpty()); //OK
+		Assertions.assertEquals(1, sifInteractions.size());
 		bos = new ByteArrayOutputStream();
 		commonSifSearcher.searchSIF(model, bos);
 		System.out.println(bos.toString());
 
 		//using SimpleIDFetcher gets the result
 		sifInteractions = simpleSifSearcher.searchSIF(model);
-		assertFalse(sifInteractions.isEmpty()); //OK
-		assertEquals(1, sifInteractions.size());
+		Assertions.assertFalse(sifInteractions.isEmpty()); //OK
+		Assertions.assertEquals(1, sifInteractions.size());
 		bos = new ByteArrayOutputStream();
 		simpleSifSearcher.searchSIF(model, bos);
 		System.out.println(bos.toString());
@@ -324,15 +322,15 @@ public class SIFSearcherTest extends PatternBoxTest
 //		System.out.println(bos.toString());
 
 		sifInteractions = customSifSearcher.searchSIF(model);
-		assertFalse(sifInteractions.isEmpty());
-		assertEquals(1, sifInteractions.size()); //OK
+		Assertions.assertFalse(sifInteractions.isEmpty());
+		Assertions.assertEquals(1, sifInteractions.size()); //OK
 		bos = new ByteArrayOutputStream();
 		customSifSearcher.searchSIF(model, bos);
 		System.out.println(bos.toString());
 
 		sifInteractions = commonSifSearcher.searchSIF(model);
-		assertFalse(sifInteractions.isEmpty());
-		assertEquals(1, sifInteractions.size()); //OK
+		Assertions.assertFalse(sifInteractions.isEmpty());
+		Assertions.assertEquals(1, sifInteractions.size()); //OK
 		bos = new ByteArrayOutputStream();
 		commonSifSearcher.searchSIF(model, bos);
 		System.out.println(bos.toString());

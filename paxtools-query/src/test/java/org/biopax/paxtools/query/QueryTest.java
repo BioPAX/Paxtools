@@ -15,8 +15,8 @@ import org.biopax.paxtools.query.wrapperL3.DataSourceFilter;
 import org.biopax.paxtools.query.wrapperL3.Filter;
 import org.biopax.paxtools.query.wrapperL3.OrganismFilter;
 import org.biopax.paxtools.query.wrapperL3.UbiqueFilter;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,18 +26,17 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Ozgun Babur
  */
 public class QueryTest
 {
-	static BioPAXIOHandler handler =  new SimpleIOHandler();
+	static final BioPAXIOHandler handler =  new SimpleIOHandler();
 
 	@Test
-	public void testQueries() throws Throwable
+	public void queries()
 	{
 		Model model = handler.convertFromOWL(QueryTest.class.getResourceAsStream(
 			"raf_map_kinase_cascade_reactome.owl"));
@@ -124,8 +123,8 @@ public class QueryTest
 	}
 	
 	@Test
-	@Ignore
-	public void testQueryPerformance() throws IOException
+	@Disabled
+	public void queryPerformance() throws IOException
 	{
 		long time = System.currentTimeMillis();
 
@@ -157,7 +156,7 @@ public class QueryTest
 	}
 
 	@Test
-	public void testFilters()
+	public void filters()
 	{
 		Model model = handler.convertFromOWL(this.getClass().getResourceAsStream(
 			"raf_map_kinase_cascade_reactome.owl"));

@@ -71,8 +71,7 @@ public class Resolver {
       if(is != null) {
         try {
           is.close();
-        } catch (IOException e) {
-        }
+        } catch (IOException ignored) {}
       }
     }
   }
@@ -141,8 +140,9 @@ public class Resolver {
     //also try synonyms
     if(ns == null) {
       prefix = synonymap.get(key); //uppercase search
-      if(prefix != null)
+      if(prefix != null) {
         ns = namespaces.get(prefix.toLowerCase());
+      }
     }
 
     if(ns == null && allowVariants) {
@@ -174,7 +174,7 @@ public class Resolver {
    * from the collection name/synonym and bio id.
    * @param name bio namespace/db/collection name
    * @param id bio identifier
-   * @return
+   * @return CURIE
    */
   public static String getCURIE(String name, String id) {
     Namespace ns = getNamespace(name, true);
@@ -194,17 +194,17 @@ public class Resolver {
 
   /**
    * Gets the unmodifiable map of the bio identifier types registry records.
-   * @return
+   * @return prefix to Namespace object map
    */
   public static Map<String, Namespace> getNamespaces() {
     return Collections.unmodifiableMap(namespaces);
   }
 
   /**
-   * Gets the unmodifiable map - mapping an identifier type name/variant/synonym
-   * (non-alphanumeric chars are removed) to the corresponding record/namespace "prefix".
+   * Gets the unmodifiable map - mapping a sanitized id-type name/variant/synonym
+   * (non-alphanumeric chars are removed) to the corresponding namespace prefix.
    * All the key/values are upper case.
-   * @return
+   * @return "sanitized" variant to prefix map
    */
   public static Map<String, String> getSpellmap() {
     return Collections.unmodifiableMap(spellmap);
@@ -212,25 +212,37 @@ public class Resolver {
 
   /**
    * Customize the mapping from a bio identifier type name/variant/synonym
-   * (non-alphanumeric chars should be removed) to the corresponding record/namespace "prefix".
+   * (non-alphanumeric chars should be removed) to the corresponding record/namespace prefix.
    * All the key/values should be stored in upper case.
-   * @return
    */
   public static void setSpellmap(Map<String, String> map) {
     spellmap = map;
   }
 
   /**
+   * Gets the unmodifiable map - mapping an identifier type synonym to the corresponding namespace prefix.
+   * All the key/values are upper case.
+   * @return synonym to prefix map
+   */
+  public static Map<String, String> getSynonymap() {
+    return Collections.unmodifiableMap(synonymap);
+  }
+
+  /**
+   * Customize the mapping from a bio identifier type synonym to the corresponding namespace prefix.
+   * All the key/values should be stored in upper case.
+   */
+  public static void setSynonymap(Map<String, String> map) {
+    synonymap = map;
+  }
+
+  /**
    *
-   * @param name
-   * @return
+   * @param name bio identifiers type/collection name
+   * @return true when a namespace can be found by this name or after all non-alphanumeric chars get removed
    */
   public static boolean isKnownNameOrVariant(String name) {
-    return name != null && (
-            namespaces.containsKey(name.toLowerCase())
-            || synonymap.containsKey(name.toUpperCase())
-            || spellmap.containsKey(name.toUpperCase().replaceAll("[^a-zA-Z0-9]",""))
-    );
+    return getNamespace(name,true) != null;
   }
 
 }

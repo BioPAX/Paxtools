@@ -5,10 +5,9 @@ import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.Searcher;
 import org.biopax.paxtools.pattern.util.Blacklist;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,172 +16,172 @@ import java.util.List;
 public class ConBoxTest extends TestParent
 {
 	@Test
-	public void testErToPE() throws Exception
+	public void erToPE() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("urn:miriam:uniprot:P04637"), //TP53
 			new Pattern(EntityReference.class, ConBox.erToPE(), "ER", "PE"));
 
-		Assert.assertTrue(list.size() == 5);
+		Assertions.assertTrue(list.size() == 5);
 	}
 
 	@Test
-	public void testPeToER() throws Exception
+	public void peToER() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_17220"), //p53
 			new Pattern(PhysicalEntity.class, ConBox.peToER(), "PE", "ER"));
 
-		Assert.assertTrue(list.size() == 1);
+		Assertions.assertTrue(list.size() == 1);
 	}
 
 	@Test
-	public void testDownControl() throws Exception
+	public void downControl() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35449"), //T-DHT/AR complex
 			new Pattern(PhysicalEntity.class, ConBox.peToControl(), "PE", "Control"));
 
-		Assert.assertTrue(list.size() == 1);
+		Assertions.assertTrue(list.size() == 1);
 	}
 
 	@Test
-	public void testControlled() throws Exception
+	public void controlled() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35543"),
 			new Pattern(Control.class, ConBox.controlled(), "Control", "Inter"));
 
-		Assert.assertTrue(list.size() == 1);
-		Assert.assertTrue(list.get(0).get(1) == model.getByID("http://pid.nci.nih.gov/biopaxpid_35537"));
+		Assertions.assertTrue(list.size() == 1);
+		Assertions.assertTrue(list.get(0).get(1) == model.getByID("http://pid.nci.nih.gov/biopaxpid_35537"));
 	}
 
 	@Test
-	public void testControlToConv() throws Exception
+	public void controlToConv() throws Exception
 	{
 		// todo Test for nested controls
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35543"),
 			new Pattern(Control.class, ConBox.controlToConv(), "Control", "Conversion"));
 
-		Assert.assertTrue(list.size() == 1);
-		Assert.assertTrue(list.get(0).get(1) == model.getByID("http://pid.nci.nih.gov/biopaxpid_35537"));
+		Assertions.assertTrue(list.size() == 1);
+		Assertions.assertTrue(list.get(0).get(1) == model.getByID("http://pid.nci.nih.gov/biopaxpid_35537"));
 	}
 
 	@Test
-	public void testControlsConv() throws Exception
+	public void controlsConv() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35449"),
 			new Pattern(PhysicalEntity.class, ConBox.controlsConv(), "PE", "Conv"));
 
-		Assert.assertTrue(list.size() == 1);
-		Assert.assertTrue(list.get(0).get(1) == model.getByID("http://pid.nci.nih.gov/biopaxpid_35537"));
+		Assertions.assertTrue(list.size() == 1);
+		Assertions.assertTrue(list.get(0).get(1) == model.getByID("http://pid.nci.nih.gov/biopaxpid_35537"));
 	}
 
 	@Test
-	public void testGenericEquiv() throws Exception
+	public void genericEquiv() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_637"), // GNAO1
 			new Pattern(PhysicalEntity.class, ConBox.genericEquiv(), "PE", "EQ"));
 
-		Assert.assertTrue(list.size() == 2);
-		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_623")));
+		Assertions.assertTrue(list.size() == 2);
+		Assertions.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_623")));
 
 		list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_623"), // Gi Family
 			new Pattern(PhysicalEntity.class, ConBox.genericEquiv(), "PE", "EQ"));
 
-		Assert.assertTrue(list.size() == 7);
+		Assertions.assertTrue(list.size() == 7);
 	}
 
 	@Test
-	public void testComplexMembers() throws Exception
+	public void complexMembers() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			new Pattern(Complex.class, ConBox.complexMembers(), "Complex", "member"));
 
-		Assert.assertTrue(list.size() == 4);
+		Assertions.assertTrue(list.size() == 4);
 	}
 
 	@Test
-	public void testSimpleMembers() throws Exception
+	public void simpleMembers() throws Exception
 	{
 		// todo Test for a nested complex
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			new Pattern(Complex.class, ConBox.simpleMembers(), "Complex", "SPE"));
 
-		Assert.assertTrue(list.size() == 4);
+		Assertions.assertTrue(list.size() == 4);
 	}
 
 	@Test
-	public void testWithComplexMembers() throws Exception
+	public void withComplexMembers() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			new Pattern(PhysicalEntity.class, ConBox.withComplexMembers(), "PE", "member"));
 
-		Assert.assertTrue(list.size() == 5);
+		Assertions.assertTrue(list.size() == 5);
 	}
 
 	@Test
-	public void testWithSimpleMembers() throws Exception
+	public void withSimpleMembers() throws Exception
 	{
 		// todo Test for a nested complex
 
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			new Pattern(PhysicalEntity.class, ConBox.withSimpleMembers(), "PE", "SPE"));
 
-		Assert.assertTrue(list.size() == 5);
+		Assertions.assertTrue(list.size() == 5);
 	}
 
 	@Test
-	public void testComplexes() throws Exception
+	public void complexes() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_5511"), // GNB1
 			new Pattern(PhysicalEntity.class, ConBox.complexes(), "PE", "Complex"));
 
-		Assert.assertTrue(list.size() == 2);
+		Assertions.assertTrue(list.size() == 2);
 	}
 
 	@Test
-	public void testWithComplexes() throws Exception
+	public void withComplexes() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_5511"), // GNB1
 			new Pattern(PhysicalEntity.class, ConBox.withComplexes(), "PE", "Complex"));
 
-		Assert.assertTrue(list.size() == 3);
+		Assertions.assertTrue(list.size() == 3);
 	}
 
 	@Test
-	public void testLeft() throws Exception
+	public void left() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35537"),
 			new Pattern(Conversion.class, ConBox.left(), "Conversion", "left"));
 
-		Assert.assertTrue(list.size() == 2);
-		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_685")));
-		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409")));
+		Assertions.assertTrue(list.size() == 2);
+		Assertions.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_685")));
+		Assertions.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409")));
 	}
 
 	@Test
-	public void testRight() throws Exception
+	public void right() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35537"),
 			new Pattern(Conversion.class, ConBox.right(), "Conversion", "right"));
 
-		Assert.assertTrue(list.size() == 3);
-		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678")));
-		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_21741")));
-		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_31826")));
+		Assertions.assertTrue(list.size() == 3);
+		Assertions.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678")));
+		Assertions.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_21741")));
+		Assertions.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_31826")));
 	}
 
 	@Test
-	public void testParticipatesInConv() throws Exception
+	public void participatesInConv() throws Exception
 	{
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_31826"), // Gi family/GTP
 			new Pattern(PhysicalEntity.class, ConBox.participatesInConv(), "PE", "Conversion"));
 
-		Assert.assertTrue(list.size() == 1);
-		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_35537")));
+		Assertions.assertTrue(list.size() == 1);
+		Assertions.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_35537")));
 	}
 
 	@Test
-	public void testNameEquals() throws Exception
+	public void nameEquals() throws Exception
 	{
 		Pattern p = new Pattern(Complex.class, "Complex");
 		p.add(ConBox.complexMembers(), "Complex", "member");
@@ -191,12 +190,12 @@ public class ConBoxTest extends TestParent
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			p);
 
-		Assert.assertTrue(list.size() == 1);
-		Assert.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678")));
+		Assertions.assertTrue(list.size() == 1);
+		Assertions.assertTrue(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678")));
 	}
 
 	@Test
-	public void testNotUbique() throws Exception
+	public void notUbique() throws Exception
 	{
 		Pattern p = new Pattern(Complex.class, "Complex");
 		p.add(ConBox.complexMembers(), "Complex", "member");
@@ -207,7 +206,7 @@ public class ConBoxTest extends TestParent
 		List<Match> list = Searcher.search(model.getByID("http://pid.nci.nih.gov/biopaxpid_35409"), // Gi family/GNB1/GNG2/GDP
 			p);
 
-		Assert.assertTrue(list.size() == 3);
-		Assert.assertFalse(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678"))); //GDP PE ID
+		Assertions.assertTrue(list.size() == 3);
+		Assertions.assertFalse(collect(list, 1).contains(model.getByID("http://pid.nci.nih.gov/biopaxpid_678"))); //GDP PE ID
 	}
 }
