@@ -2,8 +2,6 @@ package org.biopax.paxtools;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.biopax.paxtools.client.BiopaxValidatorClient;
-import org.biopax.paxtools.client.BiopaxValidatorClient.RetFormat;
 import org.biopax.paxtools.controller.*;
 import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.converter.psi.PsiToBiopax3Converter;
@@ -23,7 +21,6 @@ import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.biopax.validator.jaxb.Behavior;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -275,93 +272,6 @@ final class Commands {
 		l3ToSBGNPDConverter.writeSBGN(model, output);
 	}
 
-	static void validate(String[] argv) throws IOException
-	{
-		String input = argv[1];
-		String output = argv[2];
-		// default options
-		RetFormat outf = RetFormat.HTML;
-		boolean fix = false;
-		Integer maxErrs = null;
-		Behavior level = null; //will report both errors and warnings
-		String profile = null;
-
-		// match optional args
-		for (int i = 3; i < argv.length; i++) {
-			if ("html".equalsIgnoreCase(argv[i])) {
-				outf = RetFormat.HTML;
-			} else if ("xml".equalsIgnoreCase(argv[i])) {
-				outf = RetFormat.XML;
-			} else if ("biopax".equalsIgnoreCase(argv[i])) {
-				outf = RetFormat.OWL;
-			} else if ("auto-fix".equalsIgnoreCase(argv[i])) {
-				fix = true;
-			} else if ("only-errors".equalsIgnoreCase(argv[i])) {
-				level = Behavior.ERROR;
-			} else if ((argv[i]).toLowerCase().startsWith("maxerrors=")) {
-				String num = argv[i].substring(10);
-				maxErrs = Integer.valueOf(num);
-			} else if ("notstrict".equalsIgnoreCase(argv[i])) {
-				profile = "notstrict";
-			}
-		}
-
-		Collection<File> files = new HashSet<>();
-		File fileOrDir = new File(input);
-		if (!fileOrDir.canRead()) {
-			System.out.println("Cannot read " + input);
-		}
-
-		// collect files
-		if (fileOrDir.isDirectory()) {
-			// validate all the OWL files in the folder
-			for (String s : fileOrDir.list((dir, name) -> (name.endsWith(".owl")))) {
-				files.add(new File(fileOrDir.getCanonicalPath()
-					+ File.separator + s));
-			}
-		} else {
-			files.add(fileOrDir);
-		}
-
-		// upload and validate using the default URL:
-		// http://www.biopax.org/biopax-validator/check.html
-		OutputStream os = new FileOutputStream(output);
-		try {
-			if (!files.isEmpty()) {
-				BiopaxValidatorClient val = new BiopaxValidatorClient();
-				val.validate(fix, profile, outf, level, maxErrs, null, files.toArray(new File[]{}), os);
-			}
-		} catch (Exception ex) {
-			// fall-back: not using the remote validator; trying to read files
-			String msg = "Unable to check with the biopax-validator web service: \n " +
-				ex +
-				"\n Fall-back: trying to parse the file(s) with paxtools " +
-				"(up to the first syntax error in each file)...\n";
-			log.error(msg, ex);
-			os.write(msg.getBytes());
-
-			for (File f : files) {
-				try {
-					Model m = io.convertFromOWL(getInputStream(f.getPath()));
-					msg = "Model that contains "
-						+ m.getObjects().size()
-						+ " elements is successfully created from "
-						+ f.getPath()
-						+ " (check the console output for warnings).\n";
-					os.write(msg.getBytes());
-				} catch (Exception e) {
-					msg = "Error: " + e +
-						" in building a BioPAX Model from: " +
-						f.getPath() + "\n";
-					os.write(msg.getBytes());
-					e.printStackTrace();
-					log.error(msg);
-				}
-				os.flush();
-			}
-		}
-	}
-
 	static void toSifnx(String[] argv) throws IOException {
 		boolean extended = false; //if it stays 'false', then andSif==true will be in effect automatically
 		boolean andSif = false; //if extended==false, SIF will be generated as it would be andSif==true
@@ -376,7 +286,7 @@ final class Commands {
 			for(int i=3; i<argv.length; i++) {
 				String param = argv[i];
 				if (param.startsWith("seqDb=")) {
-					//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is gonna be fine too)
+					//remove the 'seqDb=' and split comma-sep. values (a single val. no comma is fine too)
 					for (String db : param.substring(6).split(","))
 						idFetcher.seqDbStartsWithOrEquals(db);
 				} else if (param.startsWith("chemDb=")) {

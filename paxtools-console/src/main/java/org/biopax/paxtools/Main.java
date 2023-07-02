@@ -57,13 +57,6 @@ public final class Main {
 		toSBGN("<biopax.owl> <output.sbgn> [-nolayout]\n" +
 				"\t- converts model to the SBGN format and applies COSE layout unless optional -nolayout flag is set.")
 				{public void run(String[] argv) throws IOException { toSbgn(argv); } },
-		validate("<path> <out> [xml|html|biopax] [auto-fix] [only-errors] [maxerrors=n] [notstrict]\n" +
-				"\t- validate BioPAX file/directory (up to ~25MB in total size, -\n" +
-				"\totherwise download and run the stand-alone validator)\n" +
-				"\tin the directory using the online validator service\n" +
-				"\t(generates html or xml report, or gets the processed biopax\n" +
-				"\t(cannot be perfect though) see http://www.biopax.org/validator)")
-				{public void run(String[] argv) throws IOException{validate(argv);} },
 		integrate("<file1> <file2> <output>\n" +
 				"\t- integrates file2 into file1 and writes it into output (experimental)")
 				{public void run(String[] argv) throws IOException{integrate(argv);} },
@@ -127,6 +120,7 @@ public final class Main {
 		for (Command cmd : Command.values()) {
 			System.out.println(cmd.name() + " " + cmd.getDescription());
 		}
-		System.out.println("Commands can also use compressed input files (only '.gz').");
+		System.out.println("Commands can also use compressed inCput files (only '.gz').");
+		System.out.println("Command: 'validate' was removed; use online biopax.org/validator or stand-alone biopax-validator.jar instead");
 	}
 }

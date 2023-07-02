@@ -84,7 +84,6 @@ public class Resolver {
    * @param identifier internal identifier used by the data type
    * @param datatype   name, synonym or URI of a data type
    * @return "true" if the identifier follows the regular expression, "false" otherwise
-   * @throws IllegalArgumentException when datatype not found
    */
   public static boolean checkRegExp(String identifier, String datatype) {
     Namespace dt = getNamespace(datatype);

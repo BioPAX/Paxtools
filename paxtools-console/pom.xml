@@ -48,37 +48,6 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jaxb2-maven-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>xjc</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<clearOutputDir>false</clearOutputDir>
-					<packageName>org.biopax.validator.jaxb</packageName>
-					<failOnNoSchemas>true</failOnNoSchemas>
-					<schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>xerces</groupId>
-						<artifactId>xercesImpl</artifactId>
-						<version>2.8.1</version>
-					</dependency>
-					<dependency>
-						<groupId>com.sun.activation</groupId>
-						<artifactId>javax.activation</artifactId>
-						<version>1.2.0</version>
-					</dependency>
-				</dependencies>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -121,7 +90,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>
-			<version>4.3.1</version>
+			<version>4.5.14</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -132,7 +101,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
-			<version>4.3.1</version>
+			<version>4.5.14</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
