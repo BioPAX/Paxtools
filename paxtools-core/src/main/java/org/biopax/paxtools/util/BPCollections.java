@@ -45,12 +45,11 @@ public enum BPCollections {
 	BPCollections() {
 		//if a custom collection provider was specified, try to use that
 		String prop = System.getProperty("paxtools.CollectionProvider");
-		log.info("System property: paxtools.CollectionProvider=" + prop);
 		if (StringUtils.isNotBlank(prop)) {
 			try {
 				Class<? extends CollectionProvider> cProviderClass = (Class<? extends CollectionProvider>) Class.forName(prop);
 				cProvider = cProviderClass.getDeclaredConstructor().newInstance();
-				log.info("Custom CollectionProvider " + prop + " was successfully activated.");
+				log.info("Using custom paxtools.CollectionProvider=" + cProvider.getClass().getCanonicalName());
 			} catch (Exception e) {
 				log.warn("Could not initialize the specified collection provider: " + prop +
 				         "; will use the default implementation; error: " + e);
@@ -58,11 +57,11 @@ public enum BPCollections {
 		}
 		if(cProvider == null) {
 			cProvider = new DefaultCollectionProvider();
-			log.info("Using the default CollectionProvider.");
+			log.info("Using default paxtools.CollectionProvider=" + cProvider.getClass().getCanonicalName());
 		}
 
 		safeSetOpt_ = System.getProperty("paxtools.model.safeset","map");
-		log.info("System property: paxtools.model.safeset=" + safeSetOpt_);
+		log.info("Using paxtools.model.safeset=" + safeSetOpt_);
 	}
 
 
@@ -91,10 +90,10 @@ public enum BPCollections {
 	public <R extends BioPAXElement> Set<R> createSafeSet() {
 		switch (safeSetOpt_) {
 			case "list":
-				return new BiopaxElements<>();//Set based on Map (faster, more memory, for building/merging Models)
+				return new BiopaxElements<>(); //Set based on List (slower, less memory, for read-only analyses, queries)
 			case "map":
 			default:
-				return new BiopaxSafeSet<>();//Set based on List (slower, less memory, for read-only analyses, queries)
+				return new BiopaxSafeSet<>(); //Set based on Map (faster, more memory, for building/merging Models)
 		}
 	}
 
