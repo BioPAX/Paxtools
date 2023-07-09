@@ -27,7 +27,6 @@ import java.util.Set;
 public class Tutorial
 {
 
-
  public static void myFirstModel()
  {
   BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
@@ -212,7 +211,7 @@ public class Tutorial
  public void graphQuery(Model model, PhysicalEntity entity3,
                         PhysicalEntity entity2, PhysicalEntity entity1)
  {
-  Collection<BioPAXElement> sourceSet = new HashSet<>();
+  Set<BioPAXElement> sourceSet = new HashSet<>();
 
   // Add the related source PhysicalEntity (or children) objects to the
   // source set
@@ -223,7 +222,7 @@ public class Tutorial
   // Direction can be upstream, downstream, or bothstream.
   Direction direction = Direction.BOTHSTREAM;
 
-  Collection<BioPAXElement> result = QueryExecuter.runNeighborhood(sourceSet, model,
+  Set<BioPAXElement> result = QueryExecuter.runNeighborhood(sourceSet, model,
     limit, direction, null);
 
   Completer c = new Completer(SimpleEditorMap.get(BioPAXLevel.L3));

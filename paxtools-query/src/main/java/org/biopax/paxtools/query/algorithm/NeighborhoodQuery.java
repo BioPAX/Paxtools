@@ -3,7 +3,6 @@ package org.biopax.paxtools.query.algorithm;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -18,7 +17,7 @@ public class NeighborhoodQuery
 	/**
 	 * Set of source nodes.
 	 */
-	private Collection<Node> sourceNodes;
+	private Set<Node> sourceNodes;
 	
 	/**
 	 * Booleans to determine the directin of search.
@@ -36,7 +35,7 @@ public class NeighborhoodQuery
 	 * @param direction Direction of the search
 	 * @param limit Distance limit
 	 */
-	public NeighborhoodQuery(Collection<Node> sourceNodes, Direction direction, int limit)
+	public NeighborhoodQuery(Set<Node> sourceNodes, Direction direction, int limit)
 	{
 		if (direction == Direction.UNDIRECTED)
 			throw new IllegalArgumentException("Direction cannot be undirected, " +
@@ -51,10 +50,10 @@ public class NeighborhoodQuery
 	 * Executes the query.
 	 * @return Neighborhood
 	 */
-	public Collection<GraphObject> run()
+	public Set<GraphObject> run()
 	{
 		// result set of neighborhood query
-		Collection<GraphObject> queryResult = new HashSet<>();
+		Set<GraphObject> queryResult = new HashSet<>();
 
 		// if upstream is selected
 		if (direction == Direction.UPSTREAM || direction == Direction.BOTHSTREAM)

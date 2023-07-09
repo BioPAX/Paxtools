@@ -274,23 +274,18 @@ public abstract class MinerAdapter implements Miner
 	{
 		List<ModificationFeature> list = new ArrayList<>(set);
 
-		Collections.sort(list, new Comparator<ModificationFeature>()
-		{
-			@Override
-			public int compare(ModificationFeature o1, ModificationFeature o2)
-			{
-				String t1 = getModificationTerm(o1);
-				String t2 = getModificationTerm(o2);
+		Collections.sort(list, (o1, o2) -> {
+			String t1 = getModificationTerm(o1);
+			String t2 = getModificationTerm(o2);
 
-				Integer l1 = getPositionStart(o1);
-				Integer l2 = getPositionStart(o2);
+			Integer l1 = getPositionStart(o1);
+			Integer l2 = getPositionStart(o2);
 
-				if (t1 == null && t2 == null) return l1.compareTo(l2);
-				if (t1 == null) return 1;
-				if (t2 == null) return -1;
-				if (t1.equals(t2)) return l1.compareTo(l2);
-				return t1.compareTo(t2);
-			}
+			if (t1 == null && t2 == null) return l1.compareTo(l2);
+			if (t1 == null) return 1;
+			if (t2 == null) return -1;
+			if (t1.equals(t2)) return l1.compareTo(l2);
+			return t1.compareTo(t2);
 		});
 
 		return getInString(list);

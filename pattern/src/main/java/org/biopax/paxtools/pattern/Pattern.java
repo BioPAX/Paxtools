@@ -38,7 +38,7 @@ public class Pattern
 	private Pattern(Class<? extends BioPAXElement> startingClass)
 	{
 		this.startingClass = startingClass;
-		this.labelMap = new HashMap<String, Integer>();
+		this.labelMap = new HashMap<>();
 		this.constraints = new ArrayList<>();
 		this.lastIndex = 0;
 	}

@@ -1,6 +1,5 @@
 package org.biopax.paxtools.query.model;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,21 +22,21 @@ public interface Graph
 	 * @param objects Wrapped objects
 	 * @return Related wrappers
 	 */
-	Set<Node> getWrapperSet(Collection<?> objects);
+	Set<Node> getWrapperSet(Set<?> objects);
 
 	/**
 	 * Gets a map from objects to their wrappers.
 	 * @param objects Wrapped objects
 	 * @return Object-to-wrapper map
 	 */
-	Map<Object, Node> getWrapperMap(Collection<?> objects);
+	Map<Object, Node> getWrapperMap(Set<?> objects);
 
 	/**
 	 * Gets the wrapped objects of the given wrapper set.
 	 * @param wrappers Wrappers
 	 * @return Wrapped objects
 	 */
-	Collection<Object> getWrappedSet(Collection<? extends GraphObject> wrappers);
+	Set<Object> getWrappedSet(Set<? extends GraphObject> wrappers);
 
 	/**
 	 * Should clear any analysis specific labeling on the graph.

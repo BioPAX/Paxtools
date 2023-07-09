@@ -171,7 +171,7 @@ public class Searcher
 		final Map<BioPAXElement, List<Match>> map = new ConcurrentHashMap<>();
 		final ExecutorService exec = Executors.newFixedThreadPool(20);
 
-		Collection<? extends BioPAXElement> eles = model.getObjects(pattern.getStartingClass());
+		Set<? extends BioPAXElement> eles = model.getObjects(pattern.getStartingClass());
 		if (prg != null) prg.setTotalTicks(eles.size());
 
 		for (final BioPAXElement ele : eles)
@@ -243,7 +243,7 @@ public class Searcher
 	 * @param c type of the element to collect
 	 * @return set of the elements at the specified index of the matching results
 	 */
-	public static <T extends BioPAXElement> Collection<T> searchAndCollect(
+	public static <T extends BioPAXElement> Set<T> searchAndCollect(
 		Model model, Pattern pattern, int index, Class<T> c)
 	{
 		return searchAndCollect(model.getObjects(pattern.getStartingClass()), pattern, index, c);
@@ -260,7 +260,7 @@ public class Searcher
 	 * @param c type of the element to collect
 	 * @return set of the elements at the specified index of the matching results
 	 */
-	public static <T extends BioPAXElement> Collection<T> searchAndCollect(
+	public static <T extends BioPAXElement> Set<T> searchAndCollect(
 		Collection<? extends BioPAXElement> eles, Pattern pattern, int index, Class<T> c)
 	{
 		Set<T> set = new HashSet<>();
@@ -436,22 +436,10 @@ public class Searcher
 
 	/**
 	 * Excises a model to the given elements.
-	 * @param model model to excise (bogus parameter, in fact, deprecated)
-	 * @param result elements to excise to
-	 * @return excised model
-	 * @deprecated use {@link #excise(Collection)} instead (parameter:model was not actually used at all)
-	 */
-	private static Model excise(Model model, Set<BioPAXElement> result)
-	{
-		return excise(result);
-	}
-
-	/**
-	 * Excises a model to the given elements.
 	 * @param result elements to excise to
 	 * @return excised model
 	 */
-	private static Model excise(Collection<BioPAXElement> result)
+	private static Model excise(Set<BioPAXElement> result)
 	{
 		Completer c = new Completer(EM);
 		result = c.complete(result);

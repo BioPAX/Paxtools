@@ -22,7 +22,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,13 +40,13 @@ public class QueryTest
 		Model model = handler.convertFromOWL(QueryTest.class.getResourceAsStream(
 			"raf_map_kinase_cascade_reactome.owl"));
 
-		Collection<BioPAXElement> source = findElements(model,
+		Set<BioPAXElement> source = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN2360_1_9606"); //MEK2
 
-		Collection<BioPAXElement> target = findElements(model,
+		Set<BioPAXElement> target = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1631_1_9606"); //ERK1
 
-		Collection<BioPAXElement> result = QueryExecuter.runNeighborhood(
+		Set<BioPAXElement> result = QueryExecuter.runNeighborhood(
 			source, model, 1, Direction.BOTHSTREAM);
 
 		assertTrue(result.size() > 0);
@@ -95,7 +94,7 @@ public class QueryTest
 		assertTrue(result.contains(check));
 	}
 
-	private Model excise(Collection<BioPAXElement> result)
+	private Model excise(Set<BioPAXElement> result)
 	{
 		Completer c = new Completer(SimpleEditorMap.L3);
 
@@ -106,9 +105,9 @@ public class QueryTest
 		return cln.clone(result);
 	}
 
-	protected static Collection<BioPAXElement> findElements(Model model, String... ids)
+	protected static Set<BioPAXElement> findElements(Model model, String... ids)
 	{
-		Collection<BioPAXElement> set = new HashSet<>();
+		Set<BioPAXElement> set = new HashSet<>();
 
 		for (String id : ids)
 		{
@@ -139,11 +138,11 @@ public class QueryTest
 		BioPAXElement s1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6022_1_9606");
 		BioPAXElement t1 = model.getByID("HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN6020_1_9606");
 
-		Collection<BioPAXElement> source = new HashSet<>();
+		Set<BioPAXElement> source = new HashSet<>();
 		source.add(s1);
 		source.add(t1);
 
-		Collection<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(
+		Set<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(
 			source, model, Direction.DOWNSTREAM, 3, null);
 
 		secs = (System.currentTimeMillis() - time);
@@ -161,15 +160,15 @@ public class QueryTest
 		Model model = handler.convertFromOWL(this.getClass().getResourceAsStream(
 			"raf_map_kinase_cascade_reactome.owl"));
 
-		Collection<BioPAXElement> source = findElements(model,
+		Set<BioPAXElement> source = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN2360_1_9606"); //MEK2
-		Collection<BioPAXElement> target = findElements(model,
+		Set<BioPAXElement> target = findElements(model,
 			"HTTP://WWW.REACTOME.ORG/BIOPAX/48887#PROTEIN1631_1_9606"); //ERK1
 
 		// test organism filter
 
 		Filter f = new OrganismFilter(new String[]{"Homo sapiens"});
-		Collection<BioPAXElement> result = QueryExecuter.runPathsFromTo(
+		Set<BioPAXElement> result = QueryExecuter.runPathsFromTo(
 			source, target, model, LimitType.NORMAL, 2, f);
 		assertTrue(!result.isEmpty());
 

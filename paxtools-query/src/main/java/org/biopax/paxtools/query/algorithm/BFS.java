@@ -6,10 +6,10 @@ import org.biopax.paxtools.query.model.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Implements breadth-first search. Takes a set of source nodes, distance limit and labels nodes
@@ -35,12 +35,12 @@ public class BFS
 	/**
 	 * BFS starts from source nodes. They get the label 0.
 	 */
-	protected Collection<Node> sourceSet;
+	protected Set<Node> sourceSet;
 
 	/**
 	 * BFS will not further traverse neighbors of any node in the stopSet.
 	 */
-	protected Collection<Node> stopSet;
+	protected Set<Node> stopSet;
 
 	/**
 	 * Whether the direction is FORWARD, it is REVERSE otherwise.
@@ -64,7 +64,7 @@ public class BFS
 	 * @param direction Direction of the traversal
 	 * @param limit Distance limit
 	 */
-	public BFS(Collection<Node> sourceSet, Collection<Node> stopSet, Direction direction, int limit)
+	public BFS(Set<Node> sourceSet, Set<Node> stopSet, Direction direction, int limit)
 	{
 		if (direction != Direction.UPSTREAM && direction != Direction.DOWNSTREAM)
 			throw new IllegalArgumentException("Direction has to be either upstream or downstream");
@@ -78,7 +78,9 @@ public class BFS
 	/**
 	 * Empty constructor for other possible uses.
 	 */
-	public BFS() {}
+	public BFS()
+	{
+	}
 
 	/**
 	 * Executes the algorithm.
@@ -259,7 +261,7 @@ public class BFS
 	 * @param set Node set
 	 * @return true if an equivalent is in the set
 	 */
-	protected boolean isEquivalentInTheSet(Node node, Collection<Node> set)
+	protected boolean isEquivalentInTheSet(Node node, Set<Node> set)
 	{
 		return set.contains(node) ||
 			isEquivalentInTheSet(node, UPWARD, set) || isEquivalentInTheSet(node, DOWNWARD, set); 
@@ -272,7 +274,7 @@ public class BFS
 	 * @param set Node set
 	 * @return true if an equivalent is in the set
 	 */
-	protected boolean isEquivalentInTheSet(Node node, boolean direction, Collection<Node> set)
+	protected boolean isEquivalentInTheSet(Node node, boolean direction, Set<Node> set)
 	{
 		for (Node eq : direction == UPWARD ? node.getUpperEquivalent() : node.getLowerEquivalent())
 		{

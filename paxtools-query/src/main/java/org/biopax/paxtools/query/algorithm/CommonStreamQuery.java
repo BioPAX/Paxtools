@@ -87,7 +87,7 @@ public class CommonStreamQuery
 	 * Method to run the query.
 	 * @return Common stream
 	 */
-	public Collection<GraphObject> run()
+	public Set<GraphObject> run()
 	{
 		/**
 		 * Candidate contains all the graph objects that are the results of BFS.
@@ -98,7 +98,7 @@ public class CommonStreamQuery
 		Set<GraphObject> result = new HashSet<>();
 		
    		//for each set of states of entity, run BFS separately
-		for (Collection<Node> source : sourceSet)
+		for (Set<Node> source : sourceSet)
 		{
 			//run BFS for set of states of each entity
 		  BFS bfs = new BFS (source, null, direction, limit);

@@ -152,7 +152,7 @@ public class ChemicalNameNormalizer
 	private Map<SmallMoleculeReference, Set<String>> collectNames(boolean peLevel,
 		Set<SmallMoleculeReference>... sets)
 	{
-		Map<SmallMoleculeReference, Set<String>> map =	new HashMap<>();
+		Map<SmallMoleculeReference, Set<String>> map = new HashMap<>();
 
 		for (Set<SmallMoleculeReference> set : sets)
 		{

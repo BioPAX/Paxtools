@@ -6,6 +6,7 @@ import org.biopax.paxtools.query.model.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * When an algorithm searches for a paths between multiple source nodes, or from a source to a
@@ -20,12 +21,12 @@ public class CycleBreaker extends BFS
 	/**
 	 * The result set to search for cycles.
 	 */
-	Collection<GraphObject> result;
+	Set<GraphObject> result;
 
 	/**
 	 * Source and (if exists) target nodes.
 	 */
-	Collection<Node> ST;
+	Set<Node> ST;
 
 	/**
 	 * Constructor with the objects in the result, source and target nodes, and search limit.
@@ -33,7 +34,7 @@ public class CycleBreaker extends BFS
 	 * @param ST Source and target nodes
 	 * @param limit Search limit
 	 */
-	public CycleBreaker(Collection<GraphObject> result, Collection<Node> ST, int limit)
+	public CycleBreaker(Set<GraphObject> result, Set<Node> ST, int limit)
 	{
 		this.result = result;
 		this.ST = ST;

@@ -4,8 +4,8 @@ import org.biopax.paxtools.query.model.Edge;
 import org.biopax.paxtools.query.model.GraphObject;
 import org.biopax.paxtools.query.model.Node;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This algorithm is used internally by PathsBetween and PathsFromTo algorithms. It detects objects
@@ -16,12 +16,12 @@ import java.util.HashSet;
  */
 public class Prune
 {
-	private Collection<GraphObject> result;
+	private Set<GraphObject> result;
 
 	/**
 	 * Source and targets merged.
 	 */
-	private Collection<Node> ST;
+	private Set<Node> ST;
 
 
 	/**
@@ -30,7 +30,7 @@ public class Prune
 	 * @param result The result set
 	 * @param ST Source and target nodes
 	 */
-	public Prune(Collection<GraphObject> result, Collection<Node> ST)
+	public Prune(Set<GraphObject> result, Set<Node> ST)
 	{
 		this.result = result;
 		this.ST = ST;
@@ -40,7 +40,7 @@ public class Prune
 	 * Executes the algorithm.
 	 * @return the pruned graph
 	 */
-	public Collection<GraphObject> run()
+	public Set<GraphObject> run()
 	{
 		for (GraphObject go : new HashSet<>(result))
 		{

@@ -37,7 +37,7 @@ public class PathsBetweenQuery
 		this.limit = limit;
 	}
 
-	public Collection<GraphObject> run()
+	public Set<GraphObject> run()
 	{
 		/**
 		 * Distance labels of graph objects. Note that each source set may have a distinct label for
@@ -46,7 +46,7 @@ public class PathsBetweenQuery
 		Map<GraphObject, Map<Set<Node>, Integer>> fwdObj = new HashMap<>();
 		Map<GraphObject, Map<Set<Node>, Integer>> revObj = new HashMap<>();
 
-		Collection<GraphObject> result = new HashSet<>();
+		Set<GraphObject> result = new HashSet<>();
 
 		for (Set<Node> set : sourceSet)
 		{

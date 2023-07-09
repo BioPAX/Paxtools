@@ -113,7 +113,7 @@ public class DeltaFeatureExtractor
 							{
 								// record mediator ids to map these interactions to detailed data
 
-								if (!mediators.containsKey(s1s)) mediators.put(s1s, new HashMap<String, Set<String>>());
+								if (!mediators.containsKey(s1s)) mediators.put(s1s, new HashMap<>());
 								if (!mediators.get(s1s).containsKey(s2s)) mediators.get(s1s).put(s2s, new HashSet<>());
 
 								List<BioPAXElement> meds = m.get(getMediatorLabels(), getPattern());
@@ -141,7 +141,7 @@ public class DeltaFeatureExtractor
 		private void collect(String s1, String s2, Set<String> modificationFeatures,
 			Map<String, Map<String, Set<String>>> map)
 		{
-			if (!map.containsKey(s1)) map.put(s1, new HashMap<String, Set<String>>());
+			if (!map.containsKey(s1)) map.put(s1, new HashMap<>());
 			if (!map.get(s1).containsKey(s2)) map.get(s1).put(s2, new HashSet<>());
 			map.get(s1).get(s2).addAll(modificationFeatures);
 		}

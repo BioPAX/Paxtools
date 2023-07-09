@@ -47,7 +47,7 @@ public class Completer implements Visitor
 	}
 
 
-	public Collection<BioPAXElement> complete(Collection<BioPAXElement> elements)
+	public Set<BioPAXElement> complete(Collection<BioPAXElement> elements)
 	{
 		completed.clear();
 

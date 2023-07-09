@@ -120,7 +120,7 @@ public class BlacklistGenerator2
 			Set<String> upstr = upstrMap.get(name);
 			Set<String> dwstr = dwstrMap.get(name);
 
-			Set<String> temp = new HashSet<>(upstr);
+			Set<String> temp = new HashSet<String>(upstr);
 			upstr.removeAll(dwstr);
 			dwstr.removeAll(temp);
 		}
@@ -164,7 +164,7 @@ public class BlacklistGenerator2
 		// Sort to degree
 
 		List<String> names = new ArrayList<>(neighMap.keySet());
-		Collections.sort(names, (o1, o2) -> new Integer(neighMap.get(o2).size()).compareTo(neighMap.get(o1).size()));
+		Collections.sort(names, (o1, o2) -> Integer.valueOf(neighMap.get(o2).size()).compareTo(neighMap.get(o1).size()));
 
 		SIFSearcher searcher2 = new SIFSearcher(new Fetcher(nameMapping), new ChemicalAffectsThroughControlMiner());
 
@@ -220,7 +220,7 @@ public class BlacklistGenerator2
 		// Sort to degree
 
 		List<String> names = new ArrayList<>(neighMap.keySet());
-		Collections.sort(names, (o1, o2) -> new Integer(neighMap.get(o2).size()).compareTo(neighMap.get(o1).size()));
+		Collections.sort(names, (o1, o2) -> Integer.valueOf(neighMap.get(o2).size()).compareTo(neighMap.get(o1).size()));
 
 		Set<Set<String>> bag = collectNameSets(model);
 		Map<String, Set<Set<String>>> nameToSets = getNameToSetsMap(bag);
@@ -242,12 +242,12 @@ public class BlacklistGenerator2
 			name = name.toLowerCase();
 			remaining.remove(name);
 
-			Map<String, Collection<String>[]> mappings = getMappingsAndBasis(
+			Map<String, Set<String>[]> mappings = getMappingsAndBasis(
 				name, remaining, nameToSets, intersectionMap);
 
 			for (String mapped : mappings.keySet())
 			{
-				Collection[] s = mappings.get(mapped);
+				Set<String>[] s = mappings.get(mapped);
 				writer.write(name + "\t" + mapped + "\t" + s[0] + "\t" + s[1] + "\t" + s[2] + "\n");
 			}
 		}
@@ -325,9 +325,9 @@ public class BlacklistGenerator2
 		return map;
 	}
 
-	private Collection<String> getCommon(Collection<String> set1, Collection<String> set2)
+	private Set<String> getCommon(Set<String> set1, Set<String> set2)
 	{
-		Collection<String> comm = new HashSet<>(set1);
+		Set<String> comm = new HashSet<>(set1);
 		comm.retainAll(set2);
 		return comm;
 	}
@@ -362,10 +362,10 @@ public class BlacklistGenerator2
 		return map;
 	}
 
-	private Map<String, Collection<String>[]> getMappingsAndBasis(String name, List<String> consider,
+	private Map<String, Set<String>[]> getMappingsAndBasis(String name, List<String> consider,
 		Map<String, Set<Set<String>>> nameToSets, Map<Set<String>, Set<Set<String>>> intersectionMap)
 	{
-		Map<String, Collection<String>[]> map = new HashMap<>();
+		Map<String, Set<String>[]> map = new HashMap<>();
 
 		for (Set<String> set : nameToSets.get(name))
 		{
@@ -377,7 +377,7 @@ public class BlacklistGenerator2
 
 					for (String target : common)
 					{
-						map.put(target, new Collection[]{getCommon(set, other), set, other});
+						map.put(target, new Set[]{getCommon(set, other), set, other});
 					}
 				}
 			}
@@ -389,7 +389,7 @@ public class BlacklistGenerator2
 	{
 		if (!new File(MAPPING_FILE).exists()) return null;
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 
 		Scanner sc = new Scanner(new File(MAPPING_FILE));
 		while (sc.hasNextLine())

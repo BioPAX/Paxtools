@@ -20,8 +20,8 @@ public class SPIKEParser
 	}
 	public void parse(String inputFile, String outputFile) throws IOException
 	{
-		Map<String, Gene> id2gene = new HashMap<String, Gene>();
-		Map<String, Group> id2group = new HashMap<String, Group>();
+		Map<String, Gene> id2gene = new HashMap<>();
+		Map<String, Group> id2group = new HashMap<>();
 		Set<Regulation> regs = new HashSet<>();
 
 		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
