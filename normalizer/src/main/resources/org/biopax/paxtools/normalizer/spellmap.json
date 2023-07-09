@@ -25,6 +25,7 @@
   "UNIPROTSWISSPROT": "uniprot",
   "UNIPROTKBSWISSPROT": "uniprot",
   "PROTEINKNOWLEDGEBASE": "uniprot",
+  "UNIPROTKNOWLEDGEBASE": "uniprot",
   "PIR": "uniprot",
   "PIRSSD": "uniprot",
   "UMBBD": "umbbd.compound",
