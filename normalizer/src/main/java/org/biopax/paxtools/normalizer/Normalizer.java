@@ -121,11 +121,12 @@ public final class Normalizer {
 	 * (for CV or ProteinReference instead); so, this will also replace URIs of xrefs having bad 'db' or 'id'.
 	 * 
 	 * @param model biopax model to update
+	 * @param usePrefixAsDbName if possible, use CURIE prefix as xref.db instead of preferred name
 	 */
-	private void normalizeXrefs(Model model) {
+	public void normalizeXrefs(Model model, boolean usePrefixAsDbName) {
 		final NormalizerMap map = new NormalizerMap(model);
 		final String xmlBase = getXmlBase(model); //current base, the default or model's one, if set.
-		
+
 		// use a copy of the xrefs set (to avoid concurrent exceptions)
 		Set<? extends Xref> xrefs = new HashSet<>(model.getObjects(Xref.class));
 		for(Xref ref : xrefs) {
@@ -134,10 +135,16 @@ public final class Normalizer {
 				continue;
 			}
 
-			String quickFixDb = StringUtils
-					.replaceIgnoreCase(ref.getDb(),"uniprotkb", "uniprot")
-					.toLowerCase();
-			ref.setDb(quickFixDb);
+			//normalize name first
+			Namespace ns = Resolver.getNamespace(ref.getDb()); //resolve a prefix, name, synonym or known spelling variants
+			if(ns != null) {
+				if (usePrefixAsDbName) {
+					ref.setDb(ns.getPrefix()); //use bioregistry collection prefix (already lowercase)
+				} else {
+					ref.setDb(ns.getName().toLowerCase()); //use the standard name
+				}
+			}
+			final String isoformName = (usePrefixAsDbName) ? "uniprot.isoform" : "uniprot isoform";
 
 			String idPart = ref.getId();
 
@@ -154,14 +161,14 @@ public final class Normalizer {
 				// fix 'uniprot' instead 'uniprot isoform' and vice versa mistakes
 				if (ref.getDb().startsWith("uniprot")) {
 					//auto-fix (guess) for possibly incorrect db/id (can be 'uniprot isoform' with/no idVersion, etc..)
-					if (isValidDbId("uniprot isoform", ref.getId())
+					if (isValidDbId("uniprot.isoform", ref.getId())
 							&& ref.getId().contains("-")) //the second condition is important
 					{	//then it's certainly an isoform id; so - fix the db name
-						ref.setDb("uniprot isoform"); //fix the db
+						ref.setDb(isoformName); //fix the db
 					} else {
 						//id does not end with "-\\d+", i.e., not a isoform id
-						//(idVersion is a different thing, but id db was "uniprot isoform" they probably misused idVersion)
-						if(ref.getDb().equals("uniprot isoform")) {
+						//(idVersion is a different thing, but if db was "uniprot isoform" they probably misused idVersion)
+						if(ref.getDb().equalsIgnoreCase(isoformName)) {
 							if(ref.getIdVersion() != null && ref.getIdVersion().matches("^\\d+$")) {
 								idPart = ref.getId() + "-" + ref.getIdVersion(); //guess idVersion is isoform number
 							}
@@ -176,15 +183,10 @@ public final class Normalizer {
 							idPart = ref.getId();
 						}
 					}
-				} else { //not an uniprot kind UX
-					//try to tell if it's a standard id type name
-					Namespace ns = Resolver.getNamespace(ref.getDb());
-					if(ns != null) {
-						ref.setDb(ns.getName().toLowerCase()); //update to the standard name
-					} else {
-						if(ref.getIdVersion() != null) {
+				} else {//not any uniprot...
+					//if not standard and has idVersion, add that
+					if(ns == null && ref.getIdVersion() != null) {
 							idPart += "_" + ref.getIdVersion();
-						}
 					}
 				}
 			}
@@ -423,8 +425,9 @@ public final class Normalizer {
 		} else if(bpe instanceof NucleicAcidReference) {
 			//that includes NucleicAcidRegionReference, etc. sub-classes;
 			toReturn = findSingleUnificationXref(orderedUrefs, "entrez");
+			//when xrefs were normalized to use either 'entrez gene' (the preferred name) or 'ncbigene' (the prefix)
 			if(toReturn==null)
-				toReturn = findSingleUnificationXref(orderedUrefs, "ncbi gene"); //todo: impossible when xrefs already normalized?..
+				toReturn = findSingleUnificationXref(orderedUrefs, "ncbigene");
 		} else {
 			//for other XReferrable types (BioSource or ControlledVocabulary)
 			//use if there's only one xref (return null if many)
@@ -459,16 +462,29 @@ public final class Normalizer {
 		return ret;
 	}
 
+	/**
+	 * BioPAX normalization
+	 * (modifies the original Model)
+	 *
+	 * @param model BioPAX model to normalize
+	 * @throws NullPointerException if model is null
+	 * @throws IllegalArgumentException if model is not Level3 BioPAX
+	 */
+	public void normalize(Model model) {
+		normalize(model, false);
+	}
+
 	
 	/**
 	 * BioPAX normalization 
 	 * (modifies the original Model)
 	 * 
 	 * @param model BioPAX model to normalize
+	 * @param usePrefixAsDbName if possible, use CURIE prefix as xref.db instead of preferred name
 	 * @throws NullPointerException if model is null
 	 * @throws IllegalArgumentException if model is not Level3 BioPAX
 	 */
-	public void normalize(Model model) {
+	public void normalize(Model model, boolean usePrefixAsDbName) {
 		
 		if(model.getLevel() != BioPAXLevel.L3)
 			throw new IllegalArgumentException("Not Level3 model. " +
@@ -478,11 +494,10 @@ public final class Normalizer {
 		if(xmlBase != null && !xmlBase.isEmpty())
 			model.setXmlBase(xmlBase);
 
-		// Normalize/merge xrefs, first, and then CVs
-		// (also because original xrefs might have "normalized" URIs
-		// that, in fact, must be used for other biopax types, such as CV or ProteinReference)
+		// Normalize/merge xrefs first and then - CVs
+		// (xrefs could have URIs that should be instead used for CV, PR, SMR or BS biopax types)
 		log.info("Normalizing xrefs..." + description);
-		normalizeXrefs(model);
+		normalizeXrefs(model, usePrefixAsDbName);
 		
 		// fix displayName where possible
 		if(fixDisplayName) {
