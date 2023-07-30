@@ -43,12 +43,6 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	private boolean mergeDuplicates;
 
-	private static final String owlNS = "http://www.w3.org/2002/07/owl#";
-
-	private static final String xsdNS = "http://www.w3.org/2001/XMLSchema#";
-
-	private static final String rdfNS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-
 	private static final String RDF_ID = "rdf:ID=\"";
 
 	private static final String RDF_about = "rdf:about=\"";
@@ -94,9 +88,9 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	}
 
 	/**
-	 * If set to true, the reader will merge duplicate individuals, i.e. individuals that has the same ID. Otherwise
-	 * it will throw an exception. By default it is set to false.
-	 * @param mergeDuplicates true/false
+	 * If set to true, the reader will try to merge duplicate (same URI) individuals
+	 * rather than throw an exception.
+	 * @param mergeDuplicates true/false (default is false)
 	 */
 	public void mergeDuplicates(boolean mergeDuplicates)
 	{
@@ -550,7 +544,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * will find corresponding object properties set to NULL later,
 	 * after converting such data back to Model.
 	 * 
-	 * Note: if the model is very very large, and the output stream is a byte array stream,
+	 * Note: if the model is too large, and the output stream is a byte array stream,
 	 * then you can eventually get OutOfMemoryError "Requested array size exceeds VM limit"
 	 * (max. array size is 2Gb)
 	 * 
@@ -666,7 +660,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			String type = findLiteralType(editor);
 			String valString = StringEscapeUtils.escapeXml(value.toString());
-			out.write(" rdf:datatype = \"" + xsd + type + "\">" + valString +
+			out.write(" rdf:datatype = \"xsd:"  + type + "\">" + valString +
 			          "</" + prop + ">");
 		}
 	}
@@ -735,6 +729,11 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	}
 
 
+	/*
+	 Detect and normalize some of the xml namespaces.
+	 Required due to input BioPAX OWL (RDF+XML) data files may declare e.g.
+	 xmlns:xs instead xmlns:xsd for the schema; xmlns:biopax instead of usual xmlns:bp for biopax, etc.
+	 */
 	private void normalizeNameSpaces()
 	{
 		String owlPre = null;
@@ -744,13 +743,13 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		for (String pre : namespaces.keySet())
 		{
 			String ns = namespaces.get(pre);
-			if (rdfNS.equalsIgnoreCase(ns))
+			if (rdf.equalsIgnoreCase(ns))
 			{
 				rdfPre = pre;
-			} else if (owlNS.equalsIgnoreCase(ns))
+			} else if (owl.equalsIgnoreCase(ns))
 			{
 				owlPre = pre;
-			} else if (xsdNS.equalsIgnoreCase(ns))
+			} else if (xsd.equalsIgnoreCase(ns))
 			{
 				xsdPre = pre;
 			}
@@ -771,9 +770,9 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			namespaces.remove(xsdPre);
 		}
 
-		namespaces.put("rdf", rdfNS);
-		namespaces.put("owl", owlNS);
-		namespaces.put("xsd", xsdNS);
+		namespaces.put("rdf", rdf);
+		namespaces.put("owl", owl);
+		namespaces.put("xsd", xsd);
 	}
 
 
@@ -810,7 +809,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * Sets the flag used when exporting a BioPAX model to RDF/XML:
 	 * true - to always write full URI in rdf:resource and use 
 	 * rdf:about instead rdf:ID (does not matter xml:base is set or not).
-	 * This is good for the data loading a RDF/SPARQL servers, such as Virtuoso,
+	 * This is good for the data loading to RDF/SPARQL servers, such as Virtuoso,
 	 * so they generate correct and resolvable links from BioPAX URIs
 	 * (use of rdf:ID="localId" and rdf:resource="#localID" is known to make
 	 * them insert extra '#' between xml:base and localId).
