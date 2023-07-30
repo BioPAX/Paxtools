@@ -139,15 +139,21 @@ public final class Normalizer {
 			Namespace ns = Resolver.getNamespace(ref.getDb()); //resolve a prefix, name, synonym or known spelling variants
 			if(ns != null) {
 				if (usePrefixAsDbName) {
-					ref.setDb(ns.getPrefix()); //use bioregistry collection prefix (already lowercase)
+					ref.setDb(ns.getPrefix()); //use bioregistry collection prefix (already lowercase), e.g. 'uniprot'
 				} else {
-					ref.setDb(ns.getName().toLowerCase()); //use the standard name
+					ref.setDb(ns.getName().toLowerCase()); //use the standard name, e.g. 'uniprot protein'
+				}
+
+				//add banana and peel prefix to the ID if possible (improves index/search/id-mapping)
+				String banana = ns.getBanana();
+				if(StringUtils.isNotBlank(banana) && !StringUtils.startsWith(ref.getId(), banana)) {
+					ref.setId(banana + ns.getBanana_peel() + ref.getId());
 				}
 			}
+
 			final String isoformName = (usePrefixAsDbName) ? "uniprot.isoform" : "uniprot isoform";
 
 			String idPart = ref.getId();
-
 			if(ref instanceof RelationshipXref) {
 				//RXs might have the same db, id but different rel. type.
 				RelationshipTypeVocabulary cv = ((RelationshipXref) ref).getRelationshipType();
