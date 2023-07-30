@@ -594,14 +594,7 @@ public final class Normalizer {
 		
 		// process the rest of utility classes (selectively though)
 		for (EntityReference bpe : model.getObjects(EntityReference.class)) {
-			
-			//skip those with already normalized URIs
-			if(bpe.getUri().contains("identifiers.org/")) {
-				log.info("Skip already normalized: " + bpe.getUri());
-				continue;
-			}
-			
-			UnificationXref uref = findPreferredUnificationXref(bpe);
+				UnificationXref uref = findPreferredUnificationXref(bpe);
 			if (uref != null) {
 				// Create (with a new URI made from a unif. xref) 
 				// and save the replacement object, if possible, 
