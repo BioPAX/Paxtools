@@ -12,6 +12,8 @@
   "GI": "ncbigi",
   "PUBCHEM": "pubchem.compound",
   "NCBI PUBCHEM": "pubchem.compound",
+  "CID": "pubchem.compound",
+  "SID": "pubchem.substance",
   "PMID": "pubmed",
   "MEDLINE": "pubmed",
   "SWISS-PROT": "uniprot",
