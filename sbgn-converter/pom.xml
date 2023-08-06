@@ -14,7 +14,8 @@
 
     <url>https://biopax.github.io/Paxtools</url>
 
-    <scm><url>https://github.com/BioPAX/Paxtools</url>
+    <scm>
+        <url>https://github.com/BioPAX/Paxtools</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -32,7 +33,7 @@
         <dependency>
         	<groupId>pathwaycommons</groupId>
         	<artifactId>chilay-sbgn</artifactId>
-        	<version>3.1.0-SNAPSHOT</version>
+        	<version>3.1.0</version>
         </dependency>
     </dependencies>
 
