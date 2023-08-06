@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>TestParent xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../testapidocs/org/biopax/paxtools/pattern/constraint/TestParent.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> org.biopax.paxtools.pattern.constraint;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.io.SimpleIOHandler;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.BioPAXElement;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.Model;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.pattern.Match;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.junit.Before;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.util.HashSet;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> * @author Ozgun Babur</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="TestParent" href="../../../../../org/biopax/paxtools/pattern/constraint/TestParent.html#TestParent">TestParent</a>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  {
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  	Model model;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  	@Before
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUp() <strong class="jxr_keyword">throws</strong> Exception
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  	{
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  		SimpleIOHandler h = <strong class="jxr_keyword">new</strong> SimpleIOHandler();
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  		model = h.convertFromOWL(getClass().getResourceAsStream(<span class="jxr_string">"../AR-TP53.owl"</span>));
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  	}
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  	@Test
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> dummyMethod()
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  	{
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  		<em class="jxr_comment">// I needed to add this dummy method because maven was complaining that this class has no</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  		<em class="jxr_comment">// test methods.</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  	}
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  	<strong class="jxr_keyword">protected</strong> Set&lt;BioPAXElement&gt; collect(List&lt;Match&gt; list, <strong class="jxr_keyword">int</strong> index)
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  	{
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  		Set&lt;BioPAXElement&gt; set = <strong class="jxr_keyword">new</strong> HashSet&lt;BioPAXElement&gt;();
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  		<strong class="jxr_keyword">for</strong> (Match match : list)
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  		{
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  			set.add(match.get(index));
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  		}
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  		<strong class="jxr_keyword">return</strong> set;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  	}
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2023 <a href="http://www.biopax.org">BioPAX</a>. All rights reserved.</div>
+</body>
+</html>

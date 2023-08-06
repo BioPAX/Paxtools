@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.biopax.paxtools.normalizer","l":"MiriamLink"},{"p":"org.biopax.paxtools.normalizer","l":"Normalizer"}];updateSearchResults();
