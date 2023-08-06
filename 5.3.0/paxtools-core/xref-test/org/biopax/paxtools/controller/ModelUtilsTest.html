@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>ModelUtilsTest xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../testapidocs/org/biopax/paxtools/controller/ModelUtilsTest.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> org.biopax.paxtools.controller;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.impl.MockFactory;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.io.SimpleIOHandler;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.io.SimpleIOHandlerTest;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.BioPAXElement;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.BioPAXFactory;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.BioPAXLevel;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.Model;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> org.biopax.paxtools.model.level3.*;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> org.junit.Assert;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> java.io.ByteArrayOutputStream;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> java.io.File;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.hamcrest.core.Is.is;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.*;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ModelUtilsTest" href="../../../../org/biopax/paxtools/controller/ModelUtilsTest.html#ModelUtilsTest">ModelUtilsTest</a> {
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  	@Test
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> testMergeAndReplace() {
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  		Model m = factory.createModel();
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  		
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  		Complex c = factory.create(Complex.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"c1"</span>);
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  		Protein p1 = factory.create(Protein.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"p1"</span>);
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  		Protein p2 = factory.create(Protein.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"p2"</span>);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  		
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  		ProteinReference pr1 = factory.create(ProteinReference.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"pr1"</span>);
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  		UnificationXref x1 = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"x1"</span>);		
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  		c.addComponent(p1);
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  		c.addComponent(p2);
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  		c.setDisplayName(<span class="jxr_string">"complex"</span>);
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  		p1.setEntityReference(pr1);
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  		p1.setDisplayName(<span class="jxr_string">"p1"</span>);
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  		pr1.addXref(x1);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  		pr1.setDisplayName(<span class="jxr_string">"pr1"</span>);
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  		x1.setId(<span class="jxr_string">"1"</span>);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  		x1.setDb(<span class="jxr_string">"geneid"</span>);
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  		
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  		ProteinReference pr2 = factory.create(ProteinReference.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"pr2"</span>);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  		UnificationXref x2 = factory.create(UnificationXref.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"x2"</span>);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  		p2.setEntityReference(pr2);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  		p2.setDisplayName(<span class="jxr_string">"p2"</span>);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  		pr2.addXref(x2);
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  		pr2.setDisplayName(<span class="jxr_string">"pr2"</span>);
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  		x2.setId(<span class="jxr_string">"2"</span>);
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  		x2.setDb(<span class="jxr_string">"geneid"</span>);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  		
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  		m.add(c);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  		m.add(p1);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  		m.add(p2);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  		assertEquals(3, m.getObjects().size());
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  		assertEquals(2, c.getComponent().size());
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  		
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  		<em class="jxr_comment">// only 3 elements were added explicitly, but they have dependents -</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  		m.repair();
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  		
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  		assertEquals(7, m.getObjects().size());
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  		assertTrue(m.contains(x1));
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  		assertTrue(m.contains(x2));
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  		
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  		<em class="jxr_comment">// create a new protein (the replacement)</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  		Protein p3 = factory.create(Protein.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"p3"</span>);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  		ProteinReference pr3 = factory.create(ProteinReference.<strong class="jxr_keyword">class</strong>, <span class="jxr_string">"pr3"</span>);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  		pr3.addXref(x2); <em class="jxr_comment">// intentionally use same xref!</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  		pr3.setDisplayName(<span class="jxr_string">"pr3"</span>);
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  		p3.setEntityReference(pr3);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  		
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  		<em class="jxr_comment">// do replace (replaces one element); </em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  		m.replace(p2, p3);	
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  		assertTrue(m.contains(p3)); <em class="jxr_comment">// added!</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  		assertFalse(m.contains(p2)); <em class="jxr_comment">// removed!		</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  		assertEquals(7, m.getObjects().size()); <em class="jxr_comment">// unchanged!</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  		assertEquals(2, c.getComponent().size());
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  		
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  		assertTrue(c.getComponent().contains(p1)); <em class="jxr_comment">// untouched!</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  		assertTrue(c.getComponent().contains(p3)); <em class="jxr_comment">// new!</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  		assertFalse(c.getComponent().contains(p2)); 
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  		
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  		<em class="jxr_comment">//old children are still there</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  		assertTrue(m.contains(pr1));
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  		assertTrue(m.contains(pr2));
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  		assertTrue(m.contains(x1));
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  		assertTrue(m.contains(x2));
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  		
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  		<em class="jxr_comment">// new children - not yet</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  		<em class="jxr_comment">// (replace is 'shallow', does not affect children of replaced objects)</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  		assertFalse(m.contains(pr3));
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  		
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  		<em class="jxr_comment">// now - repair will find all new children</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  		m.repair();
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 		
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 		assertEquals(8, m.getObjects().size()); <em class="jxr_comment">// + pr3</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 		assertTrue(m.contains(pr3)); <em class="jxr_comment">// added!</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 		
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 		assertTrue(m.contains(pr2)); <em class="jxr_comment">// not deleted (may be dangling now)!</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 		assertTrue(m.contains(x2)); <em class="jxr_comment">// not deleted (may be dangling now)!</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 		assertTrue(m.contains(pr1)); <em class="jxr_comment">// not deleted (may be dangling now)!</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 		assertTrue(m.contains(x1)); <em class="jxr_comment">// not deleted (may be dangling now)!</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 		
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 		<em class="jxr_comment">// delete dangling</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 		ModelUtils.removeObjectsIfDangling(m, ProteinReference.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 		
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 		<em class="jxr_comment">// pr2 - removed</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 		assertEquals(7, m.getObjects().size());
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> 		assertFalse(m.contains(pr2)); <em class="jxr_comment">// deleted!</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 		<em class="jxr_comment">// ok to replace with null</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 		m.replace(p3, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 		assertEquals(1, c.getComponent().size());
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 		ModelUtils.removeObjectsIfDangling(m, UtilityClass.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 		assertFalse(m.contains(pr3)); <em class="jxr_comment">// deleted!</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> 		assertFalse(m.contains(x2)); <em class="jxr_comment">// deleted!</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 		
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 		<strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 			m.replace(pr1, x1); <em class="jxr_comment">// fails, no effect on the model</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> 			fail(<span class="jxr_string">"Must fail!"</span>);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 		} <strong class="jxr_keyword">catch</strong> (IllegalBioPAXArgumentException e) {
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 			<em class="jxr_comment">// fine!</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 		}
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 		<em class="jxr_comment">// m is unchanged</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 		assertTrue(m.contains(pr1));
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 		assertEquals(pr1, p1.getEntityReference());
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 	}
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> printModel(Model model) {
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 		ByteArrayOutputStream bytes = <strong class="jxr_keyword">new</strong> ByteArrayOutputStream();
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 		<strong class="jxr_keyword">new</strong> SimpleIOHandler().convertToOWL(model, bytes);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> 		System.out.println(bytes.toString());
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 	}
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> 
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> testMetrics()
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 	{
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 		Model model = SimpleIOHandlerTest.getL3Model(<strong class="jxr_keyword">new</strong> SimpleIOHandler());
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 		Map&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> BioPAXElement&gt;,Integer&gt; metrics =
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 				ModelUtils.generateClassMetrics(model);
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 		System.out.println(<span class="jxr_string">"metrics = "</span> + metrics);
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 	}
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> 	
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 	
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 	@Test
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> testRemoveObjectsIfDangling() {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 		Model model = (<strong class="jxr_keyword">new</strong> SimpleIOHandler()).convertFromOWL(
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 			getClass().getClassLoader().getResourceAsStream(<span class="jxr_string">"L3"</span> + File.separator + <span class="jxr_string">"hcyc.owl"</span>));
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> 		assertEquals(6, model.getObjects().size());
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> 		
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> 		<em class="jxr_comment">//there is no dangling util. class objects at the beginning</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> 		ModelUtils.removeObjectsIfDangling(model, UtilityClass.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> 		assertEquals(6, model.getObjects().size());
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 		
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 		SmallMolecule sm1 = (SmallMolecule) model.getByID(<span class="jxr_string">"SM1"</span>);
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 		SmallMoleculeReference smr1 = (SmallMoleculeReference) model.getByID(<span class="jxr_string">"SMR1"</span>);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> 		SmallMoleculeReference a = (SmallMoleculeReference) model.getByID(<span class="jxr_string">"A"</span>);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> 		
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> 		assertNotNull(smr1);
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 		assertTrue(smr1.getMemberEntityReference().contains(a));
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 		
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 		<em class="jxr_comment">// removing just SMR1 from SM1 and model makes both it and A dangling (though A is still member of SMR1)!</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> 		sm1.setEntityReference(<strong class="jxr_keyword">null</strong>); <em class="jxr_comment">//unklinks SMR1</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 		model.remove(smr1);
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> 		assertTrue(smr1.getEntityReferenceOf().isEmpty());
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> 		
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> 		<em class="jxr_comment">// call to remove dangling things (but not B, which also belongs from SMR2, SM2)</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 		ModelUtils.removeObjectsIfDangling(model, UtilityClass.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 		
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> 		assertNull(model.getByID(<span class="jxr_string">"SMR1"</span>));		
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> 		assertNull(model.getByID(<span class="jxr_string">"A"</span>));	
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> 		SmallMoleculeReference b = (SmallMoleculeReference) model.getByID(<span class="jxr_string">"B"</span>);
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> 		assertNotNull(b);
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 		assertEquals(4, model.getObjects().size());
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> 		
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> 		<em class="jxr_comment">// IMPORTANT to understand is that removed SMR1 and A still have B:</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 		assertEquals(3, b.getMemberEntityReferenceOf().size());
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> 		assertTrue(a.getMemberEntityReference().contains(b));
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> 		assertTrue(smr1.getMemberEntityReference().contains(b));
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> 	}
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> 	
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> 	@Test
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGenericNormalization()
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> 	{
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> 		MockFactory mock = <strong class="jxr_keyword">new</strong> MockFactory(BioPAXLevel.L3);
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> 		Model model = mock.createModel();
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> 		Protein[] p = mock.create(model, Protein.<strong class="jxr_keyword">class</strong>, 3);
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> 		ProteinReference[] pr = mock.create(model, ProteinReference.<strong class="jxr_keyword">class</strong>, 2);
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> 
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> 		mock.bindArrays(<span class="jxr_string">"entityReference"</span>, Arrays.copyOfRange(p, 0, 2), pr);
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> 
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 		mock.bindInPairs(<span class="jxr_string">"memberPhysicalEntity"</span>, p[2],p[0], p[2],p[1]);
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> 
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> 		ModelUtils.normalizeGenerics(model);
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> 
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> 		assertThat(<strong class="jxr_keyword">true</strong>, is(p[2].getEntityReference()!=<strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> 		assertThat(<strong class="jxr_keyword">true</strong>, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[0])));
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> 		assertThat(<strong class="jxr_keyword">true</strong>, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[1])));
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> 	}
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> 
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>     @Test
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testFixEquivalentFeatures()
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>     {
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         MockFactory mock = <strong class="jxr_keyword">new</strong> MockFactory(BioPAXLevel.L3);
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>         Model model = mock.createModel();
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> 	    SequenceSite[] ss= mock.create(model, SequenceSite.<strong class="jxr_keyword">class</strong>,1);
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> 	    ss[0].setSequencePosition(0);
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> 	    ss[0].setPositionStatus(PositionStatusType.EQUAL);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> 
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> 	    ModificationFeature[] mf = mock.create(model, ModificationFeature.<strong class="jxr_keyword">class</strong>, 2);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> 	    mf[0].setFeatureLocation(ss[0]);
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> 	    mf[1].setFeatureLocation(ss[0]);
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> 
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> 	    mf[0].setFeatureLocation(ss[0]);
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> 	    mf[1].setFeatureLocation(ss[0]);
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> 
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> 	    ProteinReference[] pr = mock.create(model, ProteinReference.<strong class="jxr_keyword">class</strong>, 1);
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> 	    pr[0].addEntityFeature(mf[0]);
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> 	    pr[0].addEntityFeature(mf[1]);
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> 
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> 	    ModelUtils.replaceEquivalentFeatures(model);
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> 	    assertTrue(model.getObjects(ModificationFeature.<strong class="jxr_keyword">class</strong>).size()==1);
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     }
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>     
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 	@Test
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMergeEquivalentConversions()
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> 	{
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> 		MockFactory mock = <strong class="jxr_keyword">new</strong> MockFactory(BioPAXLevel.L3);
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> 		Model model = mock.createModel();
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> 		ProteinReference[] pr = mock.create(model, ProteinReference.<strong class="jxr_keyword">class</strong>, 2);
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> 
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> 		Protein[] proteins = mock.create(model, Protein.<strong class="jxr_keyword">class</strong>, 4);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> 
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> 		mock.bindInPairs(<span class="jxr_string">"entityReference"</span>, proteins[0], pr[0], proteins[1], pr[0], proteins[2], pr[1], proteins[3], pr[1]);
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> 
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 		BiochemicalReaction[] rxn = mock.create(model, BiochemicalReaction.<strong class="jxr_keyword">class</strong>, 2);
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> 
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> 		mock.bindInPairs(<span class="jxr_string">"left"</span>, rxn[0], proteins[2], rxn[1], proteins[2]);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> 		mock.bindInPairs(<span class="jxr_string">"right"</span>, rxn[0], proteins[3], rxn[1], proteins[3]);
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> 
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> 		Catalysis[] ctl = mock.create(model, Catalysis.<strong class="jxr_keyword">class</strong>,2);
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> 		mock.bindArrays(<span class="jxr_string">"controlled"</span>, ctl, rxn);
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 		mock.bindInPairs(<span class="jxr_string">"controller"</span>, ctl[0], proteins[0], ctl[1], proteins[1]);
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 		ModelUtils.mergeEquivalentInteractions(model);
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> 
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> 	}
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> 
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> 	@Test
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMergeEquivalentPhysicalEntities()
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> 	{
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> 		MockFactory mock = <strong class="jxr_keyword">new</strong> MockFactory(BioPAXLevel.L3);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> 		Model model = mock.createModel();
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> 
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 		ProteinReference[] pr = mock.create(model, ProteinReference.<strong class="jxr_keyword">class</strong>, 2);
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> 		Protein[] proteins = mock.create(model, Protein.<strong class="jxr_keyword">class</strong>, 4);
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> 		mock.bindInPairs(<span class="jxr_string">"entityReference"</span>, proteins[0], pr[0], proteins[1], pr[0], proteins[2], pr[1], proteins[3], pr[1]);
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> 		<em class="jxr_comment">//generate two semantically equivalent reactions</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> 		BiochemicalReaction[] rxn = mock.create(model, BiochemicalReaction.<strong class="jxr_keyword">class</strong>, 2);
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> 		mock.bindInPairs(<span class="jxr_string">"left"</span>, rxn[0], proteins[2], rxn[1], proteins[2]);
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> 		mock.bindInPairs(<span class="jxr_string">"right"</span>, rxn[0], proteins[3], rxn[1], proteins[3]);
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> 
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> 		Catalysis[] ctl = mock.create(model, Catalysis.<strong class="jxr_keyword">class</strong>,2);
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> 		mock.bindArrays(<span class="jxr_string">"controlled"</span>, ctl, rxn);
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> 		mock.bindInPairs(<span class="jxr_string">"controller"</span>, ctl[0], proteins[0], ctl[1], proteins[1]);
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> 
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> 		ModelUtils.mergeEquivalentPhysicalEntities(model);
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> 
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> 		<em class="jxr_comment">//either 0 or 1 kept by chance (and the other gets replaced)</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> 		assertTrue(model.contains(proteins[0])^model.contains(proteins[1]));
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 		assertTrue(model.contains(proteins[2])^model.contains(proteins[3]));
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> 		assertTrue(ctl[1].getController().contains(proteins[0])^ctl[1].getController().contains(proteins[1]));
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> 		assertTrue(ctl[1].getController().contains(proteins[0])^ctl[1].getController().contains(proteins[1]));
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> 		assertEquals(1, rxn[0].getRight().size());
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> 		assertEquals(1, rxn[1].getRight().size());
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 		assertEquals(1, rxn[0].getLeft().size());
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> 		assertEquals(1, rxn[1].getLeft().size());
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> 		<strong class="jxr_keyword">if</strong>(model.contains(proteins[2])) {
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> 			assertTrue(rxn[0].getRight().contains(proteins[2]));
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> 			assertTrue(rxn[1].getRight().contains(proteins[2]));
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> 			assertTrue(rxn[0].getLeft().contains(proteins[2]));
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> 			assertTrue(rxn[1].getLeft().contains(proteins[2]));
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> 		} <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong>(model.contains(proteins[3])) {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> 			assertTrue(rxn[0].getRight().contains(proteins[3]));
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> 			assertTrue(rxn[1].getRight().contains(proteins[3]));
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> 			assertTrue(rxn[0].getLeft().contains(proteins[3]));
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> 			assertTrue(rxn[1].getLeft().contains(proteins[3]));
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> 		}
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> 
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> 		<em class="jxr_comment">//merge interactions and test it</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> 		ModelUtils.mergeEquivalentInteractions(model);
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> 		assertTrue(model.contains(rxn[0])^model.contains(rxn[1]));
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 	}
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> 	@Test
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testBase62() {
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> 		<strong class="jxr_keyword">final</strong> String longUri = <span class="jxr_string">"http://www.ctdbase.org/#process_RXN_%5BCFTR+protein+inhibits+the+reaction+%5B%5B"</span> +
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> 				<span class="jxr_string">"Colforsin+co-treated+with+Genistein%5D+results+in+increased+transport+of+Iodides%5D%5D"</span>;
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> 		String shortStr = ModelUtils.encodeBase62(longUri);
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> 		Assert.assertEquals(<span class="jxr_string">"k9viXaDIiOW"</span>, shortStr);
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> 		String shortUri = ModelUtils.shortenUri(<span class="jxr_string">"http://www.ctdbase.org/"</span>, longUri);
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 		Assert.assertEquals(<span class="jxr_string">"http://www.ctdbase.org/k9viXaDIiOW"</span>, shortUri);
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> 	}
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2023 <a href="http://www.biopax.org">BioPAX</a>. All rights reserved.</div>
+</body>
+</html>
