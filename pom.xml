@@ -214,7 +214,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.11.0</version>
           <configuration>
             <release>8</release>
           </configuration>
@@ -271,12 +271,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.4.5</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.12.1</version>
           <!--<configuration>-->
           <!--<skipDeploy>true</skipDeploy>-->
           <!--</configuration>-->
@@ -494,7 +494,6 @@
     </repository>
   </repositories>
 
-  <!-- the following is used both by Maven 3.x and 2.x -->
   <reporting>
     <plugins>
       <plugin>
@@ -555,12 +554,11 @@
               <report>modules</report>
               <report>dependencies</report>
               <report>dependency-info</report>
-              <report>dependency-management</report>
               <report>distribution-management</report>
-              <report>issue-tracking</report>
-              <report>license</report>
-              <report>project-team</report>
-              <report>mailing-list</report>
+              <report>issue-management</report>
+              <report>licenses</report>
+              <report>team</report>
+              <report>mailing-lists</report>
               <report>scm</report>
             </reports>
           </reportSet>
