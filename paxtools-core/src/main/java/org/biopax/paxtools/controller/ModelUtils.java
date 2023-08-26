@@ -437,21 +437,32 @@ public final class ModelUtils
 		UNKNOWN_FEATURE;
 	}
 
-	// TODO annotate
-	public static Set<EntityFeature> getFeatureIntersection(PhysicalEntity first, FeatureType firstClass,
-			PhysicalEntity second, FeatureType secondClass)
+	/**
+	 * Gets the entity features that both entities have in common, taking the feature type into account.
+	 * @param physicalEntity1 first entity
+	 * @param featureType1 first feature type (feature/not-feature/unknown)
+	 * @param physicalEntity2 second entity
+	 * @param featureType2 second feature type
+	 * @return the set of entity features
+	 */
+	public static Set<EntityFeature> getFeatureIntersection(PhysicalEntity physicalEntity1, FeatureType featureType1,
+			PhysicalEntity physicalEntity2, FeatureType featureType2)
 	{
-		Set<EntityFeature> intersection = getFeatureSetByType(first, firstClass);
-		intersection.removeAll(getFeatureSetByType(second, secondClass));
+		Set<EntityFeature> intersection = getFeatureSetByType(physicalEntity1, featureType1);
+		intersection.removeAll(getFeatureSetByType(physicalEntity2, featureType2));
 		return intersection;
 	}
 
-	// TODO annotate
+	/**
+	 * Get entity's features by type.
+	 *
+	 * @param pe
+	 * @param type
+	 * @return
+	 */
 	public static Set<EntityFeature> getFeatureSetByType(PhysicalEntity pe, FeatureType type)
 	{
-
 		Set<EntityFeature> modifiableSet = new HashSet<>();
-
 		switch (type)
 		{
 			case FEATURE:
@@ -462,12 +473,15 @@ public final class ModelUtils
 				break;
 			case UNKNOWN_FEATURE:
 			{
-				if (pe instanceof SimplePhysicalEntity)
-				{
-					modifiableSet.addAll(((SimplePhysicalEntity) pe).getEntityReference().getEntityFeature());
-					modifiableSet.removeAll(pe.getFeature());
-					modifiableSet.removeAll(pe.getNotFeature());
+				if (pe instanceof SimplePhysicalEntity) {
+					EntityReference er = ((SimplePhysicalEntity) pe).getEntityReference();
+					if(er != null) {
+						modifiableSet.addAll(er.getEntityFeature());
+						modifiableSet.removeAll(pe.getFeature());
+						modifiableSet.removeAll(pe.getNotFeature());
+					}
 				}
+				break;
 			}
 		}
 		return modifiableSet;
@@ -657,7 +671,7 @@ public final class ModelUtils
 						break; //got one!
 				}
 			} else {
-				return; //spe already has a ER
+				return; //spe already has ER
 				//TODO: shall we add members (spe.getGenericEntityReferences()) to firstEntityReference?
 			}
 
@@ -1126,7 +1140,6 @@ public final class ModelUtils
 
 	/**
 	 * Merges equivalent interactions (currently - Conversions only).
-	 * TODO: shall we rename to mergeEquivalentConversions instead (this is what it does)?
 	 *
 	 * Warning: experimental; - check if the result is desirable;
 	 * 			the result very much depends on actual pathway data quality...

@@ -616,10 +616,11 @@ public final class Normalizer {
 				if(uri != null) {
 					map.put(bpe, uri);
 				}	
-			} else
+			} else {
 				log.info("Cannot normalize EntityReference: "
-					+ "no unification xrefs found in " + bpe.getUri()
-					+ ". " + description);
+						+ "no unification xrefs found in " + bpe.getUri()
+						+ ". " + description);
+			}
 		}
 		
 		// replace/update elements in the model

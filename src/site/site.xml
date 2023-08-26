@@ -1,48 +1,48 @@
 <project name="Paxtools">
 
+    <bannerLeft>
+        <name>PathwayCommons</name>
+        <src>http://pathwaycommons.github.io/cpath2/logos/pc2logo.png</src>
+        <href>http://www.pathwaycommons.org</href>
+    </bannerLeft>
 
-<bannerLeft>
-    <name>PathwayCommons</name>
-    <src>http://pathwaycommons.github.io/cpath2/logos/pc2logo.png</src>
-    <href>http://www.pathwaycommons.org</href>
-</bannerLeft>
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.11.2</version>
+    </skin>
 
-<skin>
-	<groupId>org.apache.maven.skins</groupId>
-	<artifactId>maven-fluido-skin</artifactId>
-	<version>1.11.2</version>
-</skin>
-
-<custom>
-	<fluidoSkin>
-		<sideBarEnabled>true</sideBarEnabled>
-		<topBarEnabled>true</topBarEnabled>
-		<profile>production</profile>
-		<googleSearch>
-       		<sitesearch/>
-		</googleSearch>
-		<facebookLike />
-		<googlePlusOne />
-	</fluidoSkin>
-</custom>
+    <custom>
+        <fluidoSkin>
+            <sideBarEnabled>true</sideBarEnabled>
+            <topBarEnabled>true</topBarEnabled>
+            <profile>production</profile>
+            <googleSearch>
+                <sitesearch/>
+            </googleSearch>
+            <facebookLike/>
+            <googlePlusOne/>
+        </fluidoSkin>
+    </custom>
 
 
-<body>
+    <body>
 
-<breadcrumbs>
-	<item name="Paxtools" href="../"/>
-	<item name="${project.version}" href="./" />
-</breadcrumbs>
+        <breadcrumbs>
+            <item name="Paxtools" href="../"/>
+            <item name="${project.version}" href="./"/>
+        </breadcrumbs>
 
-<links>
-<item name="Javadoc" href="apidocs/index.html"/>
-<item name="BioPAX" href="http://www.biopax.org/" />
-<item name="Wiki" href="http://www.biopax.org/paxtools" />
-</links>
+        <links>
+            <item name="Javadoc" href="apidocs/index.html"/>
+            <item name="BioPAX" href="https://www.biopax.org"/>
+            <item name="Docs" href="https://www.biopax.org/paxtools"/>
+            <item name="Project" href="https://github.com/BioPAX/Paxtools"/>
+        </links>
 
-<menu ref="modules" />
-<menu ref="reports" inherit="top" />
+        <menu ref="modules"/>
+        <menu ref="reports" inherit="top"/>
 
-</body>
+    </body>
 
 </project>

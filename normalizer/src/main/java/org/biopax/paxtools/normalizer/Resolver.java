@@ -2,6 +2,7 @@ package org.biopax.paxtools.normalizer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.regex.Pattern;
@@ -19,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Resolver {
   private static final Logger LOG = LoggerFactory.getLogger(Resolver.class);
-  private static final Map<String, Namespace> namespaces;
+  private static Map<String, Namespace> namespaces;
   private static Map<String,String> spellmap; // compressed name -> prefix (combines custom spellmap.json and registry)
   private static Map<String,String> synonymap;// synonym -> prefix (build from custom synonymap.json and registry)
 
@@ -40,9 +41,26 @@ public class Resolver {
       // load a custom map of synonyms
       is = Resolver.class.getResourceAsStream("synonymap.json");
       synonymap = new ConcurrentSkipListMap<>(om.readValue(is, new TypeReference<Map<String,String>>(){}));
-      // load registry.json
-      is = Resolver.class.getResourceAsStream("registry.json");
-      namespaces = new ConcurrentSkipListMap<>(om.readValue(is, new TypeReference<Map<String,Namespace>>(){}));
+
+      //load registry.json from URL if the system prop. is true
+      boolean useLatestBioregistry = Boolean.getBoolean("paxtools.normalizer.use-latest-registry");
+      if(useLatestBioregistry) {
+        LOG.info("Getting registry.json from bioregistry.io (property: paxtools.normalizer.use-latest-registry=true)");
+        try {
+          is = new URL("https://raw.githubusercontent.com/biopragmatics/bioregistry/main/exports/registry/registry.json")
+              .openStream();
+          namespaces = new ConcurrentSkipListMap<>(om.readValue(is, new TypeReference<Map<String, Namespace>>() {
+          }));
+        } catch (Exception e) {
+          LOG.warn("Failed loading registry.json from URL (fallback to the built-in, v2023-08-26)", e);
+        }
+      }
+      if(namespaces == null || namespaces.isEmpty()) {
+        is = Resolver.class.getResourceAsStream("registry.json");
+        namespaces = new ConcurrentSkipListMap<>(om.readValue(is, new TypeReference<Map<String, Namespace>>() {
+        }));
+      }
+
       LOG.info("read registry.json to the namespaces map; size: " + namespaces.size());
 
       //Post-process registry entries to add synonyms and spellings
