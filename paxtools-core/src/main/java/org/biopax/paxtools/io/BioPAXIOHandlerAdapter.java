@@ -34,7 +34,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected static final String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 
-	protected String bp; //current BioPAX Level namespace prefix value
+	protected String bp; //current Level BioPAX namespace prefix
 
 	protected static final String xsd = "http://www.w3.org/2001/XMLSchema#";
 
