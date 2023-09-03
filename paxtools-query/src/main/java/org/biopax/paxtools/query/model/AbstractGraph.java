@@ -20,7 +20,7 @@ public abstract class AbstractGraph implements Graph
 	 */
 	protected AbstractGraph()
 	{
-		this.objectMap = new HashMap<String, GraphObject>();
+		this.objectMap = new HashMap<>();
 	}
 
 	/**

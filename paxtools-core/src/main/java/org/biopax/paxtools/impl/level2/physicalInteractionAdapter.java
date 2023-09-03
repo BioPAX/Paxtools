@@ -20,7 +20,7 @@ abstract class physicalInteractionAdapter extends interactionAdapter
 
 	physicalInteractionAdapter()
 	{
-		this.INTERACTION_TYPE = new HashSet<openControlledVocabulary>();
+		this.INTERACTION_TYPE = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

@@ -58,12 +58,12 @@ public class ControlToControllerER extends ConstraintAdapter
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
 		Control ctrl = (Control) match.get(ind[0]);
-		return new HashSet<BioPAXElement>(getRelatedERs(ctrl));
+		return new HashSet<>(getRelatedERs(ctrl));
 	}
 
 	public Set<EntityReference> getRelatedERs(Control ctrl)
 	{
-		Set<EntityReference> ers = new HashSet<EntityReference>();
+		Set<EntityReference> ers = new HashSet<>();
 
 		for (Object o : TO_CONTROLLER.getValueFromBean(ctrl))
 		{
@@ -75,7 +75,7 @@ public class ControlToControllerER extends ConstraintAdapter
 
 	public Set<EntityReference> getRelatedERs(PhysicalEntity pe)
 	{
-		Set<EntityReference> ers = new HashSet<EntityReference>();
+		Set<EntityReference> ers = new HashSet<>();
 
 		if (pe instanceof Complex)
 		{

@@ -20,10 +20,10 @@ abstract class processImpl extends entityImpl implements process
 
 	processImpl()
 	{
-		this.EVIDENCE = new HashSet<evidence>();
-		this.CONTROLLEDof = new HashSet<control>();
-		this.STEP_INTERACTIONSOf = new HashSet<pathwayStep>();
-		this.PATHWAY_COMPONENTSof = new HashSet<pathway>();
+		this.EVIDENCE = new HashSet<>();
+		this.CONTROLLEDof = new HashSet<>();
+		this.STEP_INTERACTIONSOf = new HashSet<>();
+		this.PATHWAY_COMPONENTSof = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

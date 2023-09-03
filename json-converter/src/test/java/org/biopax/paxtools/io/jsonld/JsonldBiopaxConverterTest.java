@@ -1,6 +1,6 @@
 package org.biopax.paxtools.io.jsonld;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.junit.Test;
 
 public class JsonldBiopaxConverterTest {
 
@@ -21,7 +19,8 @@ public class JsonldBiopaxConverterTest {
 		JsonldConverter intf = new JsonldBiopaxConverter();
 
 		// convert owl test file in resource directory to jsonld format
-		InputStream in = getClass().getResourceAsStream("/PC2v5test-Signaling-By-BMP-Pathway-REACT_12034.2.owl");
+		InputStream in = getClass().getResourceAsStream(
+				"/PC2v5test-Signaling-By-BMP-Pathway-REACT_12034.2.owl");
 		intf.convertToJsonld(in, new FileOutputStream(jsonldTestFileName));
 
 		// convert jsonld test file back to rdf format

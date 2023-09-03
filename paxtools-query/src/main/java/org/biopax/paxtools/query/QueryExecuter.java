@@ -396,7 +396,7 @@ public class QueryExecuter
 
 		// Extract nodes from the result
 
-		Set<Node> target = new HashSet<Node>();
+		Set<Node> target = new HashSet<>();
 
 		for (GraphObject go : resultWrappers)
 		{
@@ -405,7 +405,7 @@ public class QueryExecuter
 
 		// Take union of the sources
 
-		Set<Node> source = new HashSet<Node>();
+		Set<Node> source = new HashSet<>();
 		for (Set<Node> set : sourceSets)
 		{
 			source.addAll(set);
@@ -425,6 +425,7 @@ public class QueryExecuter
 		}
 
 		resultWrappers = poi.run();
+
 		return convertQueryResult(resultWrappers, graph, true);
 	}
 
@@ -440,7 +441,7 @@ public class QueryExecuter
 	{
 		Set<Object> result = graph.getWrappedSet(resultWrappers);
 
-		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> set = new HashSet<>();
 		for (Object o : result)
 		{
 			set.add((BioPAXElement) o);
@@ -449,7 +450,7 @@ public class QueryExecuter
 		// remove disconnected simple physical entities
 		if (removeDisconnected)
 		{
-			Set<BioPAXElement> remove = new HashSet<BioPAXElement>();
+			Set<BioPAXElement> remove = new HashSet<>();
 
 			for (BioPAXElement ele : set)
 			{
@@ -500,7 +501,7 @@ public class QueryExecuter
 	{
 		Map<BioPAXElement, Set<PhysicalEntity>> map = getRelatedPhysicalEntityMap(elements);
 
-		Set<PhysicalEntity> pes = new HashSet<PhysicalEntity>();
+		Set<PhysicalEntity> pes = new HashSet<>();
 		for (Set<PhysicalEntity> valueSet : map.values())
 		{
 			pes.addAll(valueSet);
@@ -524,7 +525,7 @@ public class QueryExecuter
 	 */
 	public static Set<Node> prepareSingleNodeSetFromSets(Set<Set<BioPAXElement>> sets, Graph graph)
 	{
-		Set<BioPAXElement> elements = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> elements = new HashSet<>();
 		for (Set<BioPAXElement> set : sets)
 		{
 			elements.addAll(set);
@@ -542,14 +543,13 @@ public class QueryExecuter
 	 */
 	private static Collection<Set<Node>> prepareNodeSets(Set<BioPAXElement> elements, Graph graph)
 	{
-		Collection<Set<Node>> sets = new HashSet<Set<Node>>();
+		Set<Set<Node>> sets = new HashSet<>();
 
 		Map<BioPAXElement, Set<PhysicalEntity>> map = getRelatedPhysicalEntityMap(elements);
 
 		for (Set<PhysicalEntity> pes : map.values())
 		{
 			Set<Node> set = graph.getWrapperSet(pes);
-
 			if (!set.isEmpty()) sets.add(set);
 		}
 		
@@ -574,7 +574,7 @@ public class QueryExecuter
 	 */
 	private static Collection<Set<Node>> prepareNodeSetsFromSets(Set<Set<BioPAXElement>> sets, Graph graph)
 	{
-		Collection<Set<Node>> result = new HashSet<Set<Node>>();
+		Set<Set<Node>> result = new HashSet<>();
 
 		for (Set<BioPAXElement> set : sets)
 		{
@@ -595,12 +595,11 @@ public class QueryExecuter
 		Collection<BioPAXElement> elements)
 	{
 		replaceXrefsWithRelatedER(elements);
-		Map<BioPAXElement, Set<PhysicalEntity>> map = new HashMap<BioPAXElement, Set<PhysicalEntity>>();
+		Map<BioPAXElement, Set<PhysicalEntity>> map = new HashMap<>();
 
 		for (BioPAXElement ele : elements)
 		{
 			Set<PhysicalEntity> ents = getRelatedPhysicalEntities(ele, null);
-
 			if (!ents.isEmpty())
 			{
 				map.put(ele, ents);
@@ -617,8 +616,8 @@ public class QueryExecuter
 	protected static void replaceXrefsWithRelatedER(
 		Collection<BioPAXElement> elements)
 	{
-		Set<EntityReference> ers = new HashSet<EntityReference>();
-		Set<Xref> xrefs = new HashSet<Xref>();
+		Set<EntityReference> ers = new HashSet<>();
+		Set<Xref> xrefs = new HashSet<>();
 		for (BioPAXElement element : elements)
 		{
 			if (element instanceof Xref)
@@ -651,7 +650,7 @@ public class QueryExecuter
 	public static Set<PhysicalEntity> getRelatedPhysicalEntities(BioPAXElement element,
 		Set<PhysicalEntity> pes)
 	{
-		if (pes == null) pes = new HashSet<PhysicalEntity>();
+		if (pes == null) pes = new HashSet<>();
 
 		if (element instanceof PhysicalEntity)
 		{
@@ -722,7 +721,7 @@ public class QueryExecuter
 	private static void addEquivalentsComplexes(PhysicalEntity pe, boolean outer,
 		Set<PhysicalEntity> pes)
 	{
-		Set<PhysicalEntity> set = outer ? 
+		Set<PhysicalEntity> set = outer ?
 			pe.getMemberPhysicalEntityOf() : pe.getMemberPhysicalEntity();
 
 		for (PhysicalEntity related : set)
@@ -745,7 +744,7 @@ public class QueryExecuter
 	 */
 	public static Set<Node> getSeedInteractions(Collection<BioPAXElement> elements, Graph graph)
 	{
-		Set<Node> nodes = new HashSet<Node>();
+		Set<Node> nodes = new HashSet<>();
 
 		for (BioPAXElement ele : elements)
 		{

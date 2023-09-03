@@ -113,8 +113,8 @@ public class DeltaFeatureExtractor
 							{
 								// record mediator ids to map these interactions to detailed data
 
-								if (!mediators.containsKey(s1s)) mediators.put(s1s, new HashMap<String, Set<String>>());
-								if (!mediators.get(s1s).containsKey(s2s)) mediators.get(s1s).put(s2s, new HashSet<String>());
+								if (!mediators.containsKey(s1s)) mediators.put(s1s, new HashMap<>());
+								if (!mediators.get(s1s).containsKey(s2s)) mediators.get(s1s).put(s2s, new HashSet<>());
 
 								List<BioPAXElement> meds = m.get(getMediatorLabels(), getPattern());
 								for (BioPAXElement med : meds)
@@ -141,8 +141,8 @@ public class DeltaFeatureExtractor
 		private void collect(String s1, String s2, Set<String> modificationFeatures,
 			Map<String, Map<String, Set<String>>> map)
 		{
-			if (!map.containsKey(s1)) map.put(s1, new HashMap<String, Set<String>>());
-			if (!map.get(s1).containsKey(s2)) map.get(s1).put(s2, new HashSet<String>());
+			if (!map.containsKey(s1)) map.put(s1, new HashMap<>());
+			if (!map.get(s1).containsKey(s2)) map.get(s1).put(s2, new HashSet<>());
 			map.get(s1).get(s2).addAll(modificationFeatures);
 		}
 
@@ -325,12 +325,12 @@ public class DeltaFeatureExtractor
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 		writer.write("Source\tType\tTarget\tSource-modifs\tSource-locs\tGained-modifs\tLost-modifs\tGained-locs\tLost-locs\tMediators");
 
-		Set<String> s1s = new HashSet<String>(gainMods.keySet());
+		Set<String> s1s = new HashSet<>(gainMods.keySet());
 		s1s.addAll(lossMods.keySet());
 
 		for (String s1 : s1s)
 		{
-			Set<String> s2s = new HashSet<String>();
+			Set<String> s2s = new HashSet<>();
 			if (gainMods.containsKey(s1)) s2s.addAll(gainMods.get(s1).keySet());
 			if (lossMods.containsKey(s1)) s2s.addAll(lossMods.get(s1).keySet());
 

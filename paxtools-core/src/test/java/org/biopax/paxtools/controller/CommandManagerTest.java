@@ -7,12 +7,12 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.MolecularInteraction;
 import org.biopax.paxtools.model.level3.Protein;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandManagerTest
 {
@@ -23,7 +23,7 @@ public class CommandManagerTest
 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 		Model model = factory.createModel();
 		CommandManager manager = new CommandManager(model);
-		Set<BioPAXElement> objects = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> objects = new HashSet<>();
 
 		Protein protein = factory.create(Protein.class, "1");
 		objects.add(protein);

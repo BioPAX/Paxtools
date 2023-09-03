@@ -81,7 +81,7 @@ public class OutputColumn
 			case COMMENTS: return concat(inter.getMediatorComments());
 			case CUSTOM:
 			{
-				Set<String> set = new HashSet<String>();
+				Set<String> set = new HashSet<>();
 				for (PathAccessor acc : accessors)
 				{
 					for (Object o : acc.getValueFromBeans(inter.mediators))
@@ -89,7 +89,7 @@ public class OutputColumn
 						set.add(o.toString());
 					}
 				}
-				List<String> list = new ArrayList<String>(set);
+				List<String> list = new ArrayList<>(set);
 				Collections.sort(list);
 				return concat(list);
 			}

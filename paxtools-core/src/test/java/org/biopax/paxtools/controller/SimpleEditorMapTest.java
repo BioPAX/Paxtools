@@ -13,16 +13,16 @@ import org.biopax.paxtools.model.level3.BioSource;
 import org.biopax.paxtools.model.level3.DeltaG;
 import org.biopax.paxtools.model.level3.Protein;
 import org.biopax.paxtools.model.level3.ProteinReference;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SimpleEditorMapTest
 {
     @Test
-    public void testSimpleEditorMap() throws Exception
+    public void simpleEditorMap() throws Exception
     {
         for (BioPAXLevel level : BioPAXLevel.values())
         {
@@ -38,10 +38,9 @@ public class SimpleEditorMapTest
 	 * Currently (before 10-Apr-2011), it seems impossible
 	 * to clear a single-cardinality property by
 	 * using the corresponding property editor
-	 * TODO Is this what we really want? (i.e., cannot set to 'unknown'/null)
 	 */
     @Test
-    public void testClearSingularProperty() {    	
+    public void clearSingularProperty() {
     	BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
     	EditorMap em = SimpleEditorMap.L3;
     	
@@ -49,21 +48,15 @@ public class SimpleEditorMapTest
     	ProteinReference pr = fac.create(ProteinReference.class, "PR");
     	BioSource bs = fac.create(BioSource.class, "BS");
     	PropertyEditor editor = em.getEditorForProperty("organism", ProteinReference.class);
+
     	pr.setOrganism(bs);
-    	
-    	pr.setOrganism(null);
-    	assertNull(pr.getOrganism());
-    	
-    	pr.setOrganism(bs);
-    	
     	editor.removeValueFromBean(bs, pr);
     	assertNull(pr.getOrganism());
-    	
+
+		pr.setOrganism(bs);
     	editor.setValueToBean(null, pr);
-    	/*
-    	assertNotNull(pr.getOrganism()); // no effect! Is this the behavior we want?
-    	*/
-    	// after re-factoring (AbstractPropertyEditor)
+
+    	// ok, after fixing/re-factoring (AbstractPropertyEditor)
     	assertNull(pr.getOrganism());
     	assertTrue(editor.isUnknown(pr.getOrganism()));
     	
@@ -78,15 +71,14 @@ public class SimpleEditorMapTest
     	assertFalse(editor.isUnknown(dg.getPh()));
     	
     	editor.setValueToBean(null, dg);
-    	//assertFalse(editor.isUnknown(dg.getPh())); // no effect: cannot go back to 'unknown' by using null!
-    	assertTrue(editor.isUnknown(dg.getPh())); // after re-factoring
+    	assertTrue(editor.isUnknown(dg.getPh())); // fixed after re-factoring
     	
     	editor.setValueToBean(BioPAXElement.UNKNOWN_FLOAT, dg);
     	assertTrue(editor.isUnknown(dg.getPh()));
     }
     
 	@Test
-	public final void testComments() {
+	public final void comments() {
     	BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
     	EditorMap em = SimpleEditorMap.L3;
 		ProteinReference pr1 = fac.create(ProteinReference.class, "pr1"); 
@@ -111,7 +103,7 @@ public class SimpleEditorMapTest
 	 * with confidence.
 	 */
 	@Test
-	public void testClearInverseProperty() {    	
+	public void clearInverseProperty() {
 		BioPAXFactory fac = BioPAXLevel.L3.getDefaultFactory();
 	    EditorMap em = SimpleEditorMap.L3;
 	    

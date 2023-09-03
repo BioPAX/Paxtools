@@ -2,14 +2,12 @@ package org.biopax.paxtools.normalizer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.controller.ModelUtils;
-import org.biopax.paxtools.controller.ShallowCopy;
 import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.ClassFilterSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -35,10 +32,77 @@ public final class Normalizer {
 	private String xmlBase;
 	
 	// Normalizer will generate URIs using a strategy specified by the system property
-	// (the default is biopax.normalizer.uri.strategy=md5, to generate 32-byte digest hex string for xrefs's uris)
+	// (the default is biopax.normalizer.uri.strategy=md5 to generate 32-byte digest hex string)
 	public static final String PROPERTY_NORMALIZER_URI_STRATEGY = "biopax.normalizer.uri.strategy";
 	public static final String VALUE_NORMALIZER_URI_STRATEGY_SIMPLE = "simple";
 	public static final String VALUE_NORMALIZER_URI_STRATEGY_MD5 = "md5"; //default strategy
+
+	//short "codes" to use e.g. in a generated URI for some of instantiable BioPAX types:
+	public static final Map<String,String> typeCodes = Map.ofEntries(
+			//Entity class (lower-case values):
+			Map.entry("BiochemicalReaction","br"),
+			Map.entry("TransportWithBiochemicalReaction","tbr"),
+			Map.entry("TemplateReaction","tr"),
+			Map.entry("TemplateReactionRegulation","trr"),
+			Map.entry("DnaRegion","dg"),
+			Map.entry("RnaRegion","rg"),
+			Map.entry("Pathway","pw"),
+			Map.entry("PhysicalEntity","pe"),
+			Map.entry("SmallMolecule","sm"),
+			Map.entry("Protein","p"),
+			Map.entry("Gene","g"),
+			Map.entry("Complex","c"),
+			Map.entry("Catalysis","cat"),
+			Map.entry("ChemicalStructure","cs"),
+			Map.entry("ComplexAssembly","ca"),
+			Map.entry("Control","ct"),
+			Map.entry("Conversion","r"),
+			Map.entry("Transport","t"),
+			Map.entry("GeneticInteraction","gi"),
+			Map.entry("Interaction","i"),
+			Map.entry("Modulation","m"),
+			Map.entry("MolecularInteraction","mi"),
+			Map.entry("Degradation","deg"),
+			//UtilityClass (upper-case values):
+			Map.entry("BioSource","BIO"),
+			Map.entry("Provenance","PRO"),
+			Map.entry("RelationshipXref","RX"),
+			Map.entry("PublicationXref","PX"),
+			Map.entry("UnificationXref","UX"),
+			Map.entry("CellularLocationVocabulary","LV"),
+			Map.entry("ControlledVocabulary","V"),
+			Map.entry("CellVocabulary","CV"),
+			Map.entry("TissueVocabulary","TV"),
+			Map.entry("PhenotypeVocabulary","PV"),
+			Map.entry("EvidenceCodeVocabulary","EV"),
+			Map.entry("EntityReferenceTypeVocabulary","ERV"),
+			Map.entry("ExperimentalFormVocabulary","XFV"),
+			Map.entry("InteractionVocabulary","IV"),
+			Map.entry("RelationshipTypeVocabulary","RTV"),
+			Map.entry("SequenceModificationVocabulary","SMV"),
+			Map.entry("SequenceRegionVocabulary","SRV"),
+			Map.entry("SmallMoleculeReference","SMR"),
+			Map.entry("BiochemicalPathwayStep","BPS"),
+			Map.entry("PathwayStep","PS"),
+			Map.entry("DeltaG","DG"),
+			Map.entry("KPrime","KP"),
+			Map.entry("DnaReference","DR"),
+			Map.entry("DnaRegionReference","DGR"),
+			Map.entry("RnaReference","RR"),
+			Map.entry("RnaRegionReference","RGR"),
+			Map.entry("EntityFeature","EF"),
+			Map.entry("BindingFeature","BF"),
+			Map.entry("CovalentBindingFeature","CF"),
+			Map.entry("FragmentFeature","FF"),
+			Map.entry("ModificationFeature","MF"),
+			Map.entry("ExperimentalForm","XF"),
+			Map.entry("Evidence","E"),
+			Map.entry("ProteinReference","PR"),
+			Map.entry("SequenceInterval","SI"),
+			Map.entry("SequenceLocation","SL"),
+			Map.entry("SequenceSite","SS"),
+			Map.entry("Stoichiometry","S")
+	);
 	
 	/**
 	 * Constructor
@@ -49,137 +113,93 @@ public final class Normalizer {
 		fixDisplayName = true;
 		xmlBase = "";
 	}
-	
-	
-	/**
-	 * Normalizes BioPAX OWL data and returns
-	 * the result as BioPAX OWL (string).
-	 * 
-	 * This public method is actually intended to use 
-	 * outside the BioPAX Validator framework, with not too large models.
-	 * 
-	 * @param biopaxOwlData RDF/XML BioPAX content string
-	 * @return normalized BioPAX RDF/XML
-	 * @deprecated this method will fail if the data exceeds ~1Gb (max UTF8 java String length)
-	 */
-	public String normalize(String biopaxOwlData) {
-		
-		if(biopaxOwlData == null || biopaxOwlData.length() == 0) 
-			throw new IllegalArgumentException("no data. " + description);
-		
-		// quick-fix for older BioPAX L3 version (v0.9x) property 'taxonXref' (range: BioSource)
-		biopaxOwlData = biopaxOwlData.replaceAll("taxonXref","xref");
-		
-		// build the model
-		Model model = null;
-		try {
-			model = biopaxReader.convertFromOWL(
-				new ByteArrayInputStream(biopaxOwlData.getBytes("UTF-8")));
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalArgumentException("Failed! " + description, e);
-		}
-		
-		if(model == null) {
-			throw new IllegalArgumentException("Failed to create Model! " 
-					+ description);
-		}
-		
-		// auto-convert to Level3 model
-		if (model.getLevel() != BioPAXLevel.L3) {
-			log.info("Converting model to BioPAX Level3...");
-			model = (new LevelUpgrader()).filter(model);
-		}
-		
-		normalize(model); // L3 only!
-		
-		// return as BioPAX OWL
-		return convertToOWL(model);
-	}
-	
+
 
 	/**
-	 * Normalizes all xrefs (not unification xrefs only) to help normalizing/merging other objects, 
-	 * and also because some of the original xref URIs ("normalized")
-	 * are in fact to be used for other biopax types (e.g., CV or ProteinReference); therefore
-	 * this method will replace URI also for "bad" xrefs, i.e., those with empty/illegal 'db' or 'id' values.
+	 * Normalizes xrefs to ease normalizing or merging other BioPAX objects later on,
+	 * and also because some original xref URIs should in fact be used for different BioPAX types
+	 * (for CV or ProteinReference instead); so, this will also replace URIs of xrefs having bad 'db' or 'id'.
 	 * 
 	 * @param model biopax model to update
+	 * @param usePrefixAsDbName if possible, use CURIE prefix as xref.db instead of preferred name
 	 */
-	private void normalizeXrefs(Model model) {
-		
+	public void normalizeXrefs(Model model, boolean usePrefixAsDbName) {
 		final NormalizerMap map = new NormalizerMap(model);
 		final String xmlBase = getXmlBase(model); //current base, the default or model's one, if set.
-		
-		// use a copy of the xrefs set (to avoid concurrent modif. exception)
-		Set<? extends Xref> xrefs = new HashSet<Xref>(model.getObjects(Xref.class));
-		for(Xref ref : xrefs)
-		{
-			//skip not well-defined ones (incl. PublicationXrefs w/o db/id - won't normalize)
-			if(ref.getDb() == null || ref.getId() == null)
+
+		// use a copy of the xrefs set (to avoid concurrent exceptions)
+		Set<? extends Xref> xrefs = new HashSet<>(model.getObjects(Xref.class));
+		for(Xref ref : xrefs) {
+			//won't normalize xrefs missing db or id property value (e.g., some of PublicationXrefs)
+			if(ref.getDb() == null || ref.getId() == null) {
 				continue;
+			}
 
-			ref.setDb(ref.getDb().toLowerCase()); //set lowercase
+			//normalize name first
+			Namespace ns = Resolver.getNamespace(ref.getDb()); //resolve a prefix, name, synonym or known spelling variants
+			if(ns != null) {
+				if (usePrefixAsDbName) {
+					ref.setDb(ns.getPrefix()); //use bioregistry collection prefix (already lowercase), e.g. 'uniprot'
+				} else {
+					ref.setDb(ns.getName().toLowerCase()); //use the standard name, e.g. 'uniprot protein'
+				}
+
+				//add banana and peel prefix to the ID if possible (improves index/search/id-mapping)
+				String banana = ns.getBanana();
+				if(StringUtils.isNotBlank(banana) && !StringUtils.startsWith(ref.getId(), banana)) {
+					ref.setId(banana + ns.getBanana_peel() + ref.getId());
+				}
+			}
+
+			final String isoformName = (usePrefixAsDbName) ? "uniprot.isoform" : "uniprot isoform";
+
 			String idPart = ref.getId();
-
 			if(ref instanceof RelationshipXref) {
-				// only normalize (replace URI of) RXs that could potentially clash with other RX, CVs, ERs;
-				// skip, won't bother, for all other RXs...
-				if(!ref.getUri().startsWith("http://identifiers.org/"))
-					continue;
-
 				//RXs might have the same db, id but different rel. type.
 				RelationshipTypeVocabulary cv = ((RelationshipXref) ref).getRelationshipType();
-				if(ref.getIdVersion()!=null) {
+				if(ref.getIdVersion() != null) {
 					idPart += "_" + ref.getIdVersion();
 				}
 				if(cv != null && !cv.getTerm().isEmpty()) {
 					idPart += "_" + StringUtils.join(cv.getTerm(), '_').toLowerCase();
 				}
-			}
-			else if(ref instanceof UnificationXref) {
-				// first, try to normalize the db name (using MIRIAM EBI registry)
-				try {
-					ref.setDb(MiriamLink.getName(ref.getDb()).toLowerCase());
-				} catch (IllegalArgumentException e) {
-					// - unknown/unmatched db name (normalize using defaults)
-					if(ref.getIdVersion()!=null) {
-						idPart += "_" + ref.getIdVersion();
-					}
-					map.put(ref, Normalizer.uri(xmlBase, ref.getDb(), idPart, ref.getModelInterface()));
-					continue; //shortcut (non-standard db name)
-				}
-			
-				// a hack for uniprot/isoform xrefs
+			} else if(ref instanceof UnificationXref) {
+				// fix 'uniprot' instead 'uniprot isoform' and vice versa mistakes
 				if (ref.getDb().startsWith("uniprot")) {
 					//auto-fix (guess) for possibly incorrect db/id (can be 'uniprot isoform' with/no idVersion, etc..)
-					if (isValidDbId("uniprot isoform", ref.getId())
+					if (isValidDbId("uniprot.isoform", ref.getId())
 							&& ref.getId().contains("-")) //the second condition is important
 					{	//then it's certainly an isoform id; so - fix the db name
-						ref.setDb("uniprot isoform"); //fix the db
-					}
-					else {
+						ref.setDb(isoformName); //fix the db
+					} else {
 						//id does not end with "-\\d+", i.e., not a isoform id
-						//(idVersion is a different thing, but id db was "uniprot isoform" they probably misused idVersion)
-						if(ref.getDb().equals("uniprot isoform"))
-						{
-							if(ref.getIdVersion() != null && ref.getIdVersion().matches("^\\d+$"))
-								idPart = ref.getId()+"-"+ref.getIdVersion(); //guess, by idVersion, they actually meant isoform
+						//(idVersion is a different thing, but if db was "uniprot isoform" they probably misused idVersion)
+						if(ref.getDb().equalsIgnoreCase(isoformName)) {
+							if(ref.getIdVersion() != null && ref.getIdVersion().matches("^\\d+$")) {
+								idPart = ref.getId() + "-" + ref.getIdVersion(); //guess idVersion is isoform number
+							}
 							if(isValidDbId(ref.getDb(), idPart)) {
 								ref.setId(idPart); //moved the isoform # to the ID
 								ref.setIdVersion(null);
 							}
 							else if(!isValidDbId(ref.getDb(), ref.getId())) {
-								//certainly not isoform (might not even uniprot, but try...)
-								ref.setDb("uniprot knowledgebase"); //guess, fix
+								//certainly not isoform
+								ref.setDb("uniprot"); //guess, fix
 							}
 							idPart = ref.getId();
 						}
 					}
+				} else {//not any uniprot...
+					//if not standard and has idVersion, add that
+					if(ns == null && ref.getIdVersion() != null) {
+							idPart += "_" + ref.getIdVersion();
+					}
 				}
 			}
 
-			// shelve it for URI replace
-			map.put(ref, Normalizer.uri(xmlBase, ref.getDb(), idPart, ref.getModelInterface()));
+			// make a new URI and save in the URI replacement map
+			String newUri = Normalizer.uri(xmlBase, ref.getDb(), idPart, ref.getModelInterface());
+			map.put(ref, newUri);
 		}
 		
 		// execute replace xrefs
@@ -187,20 +207,21 @@ public final class Normalizer {
 	}
 
 	/*
-	 * @param db must be valid MIRIAM db name or sinonym
+	 * @param db must be valid MIRIAM db name or synonym
 	 * @trows IllegalArgumentException when db is unknown name.
 	 */
 	private boolean isValidDbId(String db, String id) {
-		return MiriamLink.checkRegExp(id, db);
+		return Resolver.checkRegExp(id, db);
 	}
 
 	/**
-	 * Consistently generates a new BioPAX element URI 
+	 * Generates a new BioPAX element URI
 	 * using given URI namespace (xml:base), BioPAX class, 
 	 * and two different identifiers (at least one is required).
-	 * Miriam registry is used to get the standard db name and 
-	 * identifiers.org URI, if possible, only for relationship type vocabulary, 
-	 * publication xref, and entity reference types.
+	 *
+	 * ID registry data is used to get the standard db name and
+	 * URI, if possible, for relationship type vocabulary,
+	 * publication xref, entity reference, and bio source types.
 	 * 
 	 * @param xmlBase xml:base (common URI prefix for a BioPAX model), case-sensitive
 	 * @param dbName a bio data collection name or synonym, case-insensitive
@@ -209,67 +230,98 @@ public final class Normalizer {
 	 * @return URI
 	 * @throws IllegalArgumentException if either type is null or both 'dbName' and 'idPart' are all nulls.
 	 */
-	public static String uri(final String xmlBase, 
-		String dbName, String idPart, Class<? extends BioPAXElement> type)
-	{
-		if(type == null || (dbName == null && idPart == null))
-			throw new IllegalArgumentException("'Either type' is null, or both dbName and idPart are nulls.");
+	public static String uri(final String xmlBase, String dbName, String idPart, Class<? extends BioPAXElement> type) {
+		return uri(xmlBase, dbName, idPart, type, true);
+	}
 
-		if (idPart != null) idPart = idPart.trim();
-		if (dbName != null) dbName = dbName.trim();
+	/**
+	 * Generates a new BioPAX element URI
+	 * using given URI namespace (xml:base), BioPAX class,
+	 * and two different identifiers (at least one is required).
+	 *
+	 * Registry is optionally used to get the standard db name and URI, if possible.
+	 *
+	 * @param xmlBase xml:base (common URI prefix for a BioPAX model), case-sensitive
+	 * @param dbName a bio data collection name or synonym, case-insensitive
+	 * @param idPart optional (can be null), e.g., xref.id, case-sensitive
+	 * @param type BioPAX class
+	 * @param useRegistry use or not the ID types registry data
+	 * @return URI
+	 * @throws IllegalArgumentException if either type is null or both 'dbName' and 'idPart' are all nulls.
+	 */
+	public static String uri(final String xmlBase, String dbName, String idPart,
+							 Class<? extends BioPAXElement> type, boolean useRegistry) {
 
-		// try to find a standard URI, if exists, for a publication xref, or at least a standard name:
-		if (dbName != null)
-		{
-			try {
-				// try to get the preferred/standard name
-				// for any type, for consistency
-				dbName = MiriamLink.getName(dbName);
-				// a shortcut: a standard and resolvable URI exists for some BioPAX types
-				if ((type.equals(PublicationXref.class) && "pubmed".equalsIgnoreCase(dbName))
-					|| type.equals(RelationshipTypeVocabulary.class)
-					|| ProteinReference.class.isAssignableFrom(type)
-					|| SmallMoleculeReference.class.isAssignableFrom(type)
-					|| (type.equals(BioSource.class) && "taxonomy".equalsIgnoreCase(dbName)
-						&& idPart!=null && idPart.matches("^\\d+$"))
-				)
-				{	//get the standard URI and quit (success), or fail and continue making a new URI below...
-					return MiriamLink.getIdentifiersOrgURI(dbName, idPart);
+		if(type == null || (dbName == null && idPart == null)) {
+			throw new IllegalArgumentException("Type is null or both dbName and idPart are null");
+		}
+
+		String uri = null;
+		if (idPart != null) {
+			idPart = idPart.trim();
+		}
+		if (dbName != null) {
+			dbName = dbName.trim().toLowerCase();
+		}
+
+		// for some types, try to find a standard URI or at least a standard name:
+		if (dbName != null && useRegistry) {
+			Namespace ns = Resolver.getNamespace(dbName); //a synonym or (mis)spelling can match as well
+			if (ns != null) {
+				String prefix = ns.getPrefix();
+				// make a bioregistry.io URI or CURIE for some of the BioPAX types
+				if (type.equals(RelationshipTypeVocabulary.class)
+						|| ProteinReference.class.isAssignableFrom(type)
+						|| SmallMoleculeReference.class.isAssignableFrom(type)
+						|| (type.equals(BioSource.class) && "ncbitaxon".equalsIgnoreCase(prefix) && idPart != null && idPart.matches("^\\d+$"))
+				) {
+					// makes URL
+					uri = Resolver.getURI(prefix, idPart); //can be null when there's id-pattern mismatch
+				} else if (type.equals(UnificationXref.class) && !"pubmed".equalsIgnoreCase(prefix) ||
+						(type.equals(PublicationXref.class) && "pubmed".equalsIgnoreCase(prefix))) {
+					//use CURIE for these xref types
+					uri = Resolver.getCURIE(prefix, idPart);
 				}
-			} catch (IllegalArgumentException e) {
-				log.info(String.format("uri(for a %s): db:%s, id:%s are not standard; %s)",
-						type.getSimpleName(), dbName, idPart, e.getMessage()));
 			}
 		}
 
-		// If not returned above this point - no standard URI (Identifiers.org) was found -
-		// then let's consistently build a new URI from args, anyway, the other way around:
-		
-		StringBuilder sb = new StringBuilder();		
-		if (dbName != null) //lowercase for consistency
-			sb.append(dbName.toLowerCase()); 	
-		
+		if(StringUtils.isNotEmpty(uri)) {
+			return uri; //done
+		}
+
+		// No standard URI was found; let's consistently build a hash-based URI:
+		StringBuilder sb = new StringBuilder();
+		if (dbName != null) {
+			sb.append(dbName);
+		}
 		if (idPart != null) {
-			if (dbName != null) sb.append("_");
+			if (dbName != null) {
+				sb.append("_");
+			}
 			sb.append(idPart);
 		}
-		
 		String localPart = sb.toString();
 		String strategy = System.getProperty(PROPERTY_NORMALIZER_URI_STRATEGY, VALUE_NORMALIZER_URI_STRATEGY_MD5);
-		if(VALUE_NORMALIZER_URI_STRATEGY_SIMPLE.equals(strategy) || Xref.class.isAssignableFrom(type))
-		//i.e., for xrefs, always use the simple URI strategy (makes them human-readable)
+		if(VALUE_NORMALIZER_URI_STRATEGY_SIMPLE.equals(strategy)
+				|| Xref.class.isAssignableFrom(type)
+				|| ControlledVocabulary.class.isAssignableFrom(type)
+				|| BioSource.class.isAssignableFrom(type))
 		{
-			//simply replace "unsafe" symbols with underscore (some uri clashes might be possible but rare...)
+			//for xrefs, always use the simple URI strategy (human-readable)
+			//replace unsafe symbols with underscore
 			localPart = localPart.replaceAll("[^-\\w]", "_");
-		}
-		else
-		{
-			//replace the local part with its md5 sum string (32-byte)
+		} else {
+			//replace the local part with its md5 hash string (32-byte)
 			localPart = ModelUtils.md5hex(localPart);
 		}
-		
+
 		// create URI using the xml:base and digest of other values:
-		return ((xmlBase != null) ? xmlBase : "") + type.getSimpleName() + "_" + localPart;
+		String prefix = typeCodes.get(type.getSimpleName());
+		if(prefix == null) {
+			prefix = type.getSimpleName();
+		}
+		uri = ((xmlBase != null) ? xmlBase : "") + prefix + "_" + localPart;
+		return uri;
 	}
 
 	
@@ -333,23 +385,18 @@ public final class Normalizer {
 
 
 	private Collection<UnificationXref> getUnificationXrefsSorted(XReferrable r) {
-
-		List<UnificationXref> urefs = new ArrayList<UnificationXref>();
-		for(UnificationXref ux : new ClassFilterSet<Xref,UnificationXref>(r.getXref(), UnificationXref.class))
+		List<UnificationXref> urefs = new ArrayList<>();
+		for(UnificationXref ux : new ClassFilterSet<>(r.getXref(), UnificationXref.class))
 		{
 			if(ux.getDb() != null && ux.getId() != null) {
 				urefs.add(ux);
 			} 
 		}
-
-		Collections.sort(urefs, new Comparator<UnificationXref>() {
-			public int compare(UnificationXref o1, UnificationXref o2) {
-				String s1 = o1.getDb() + o1.getId();
-				String s2 = o2.getDb() + o2.getId();
-				return s1.compareTo(s2);
-			}
+		Collections.sort(urefs, (o1, o2) -> {
+			String s1 = o1.getDb() + o1.getId();
+			String s2 = o2.getDb() + o2.getId();
+			return s1.compareTo(s2);
 		});
-
 		return urefs;
 	}
 
@@ -357,7 +404,7 @@ public final class Normalizer {
 	/**
 	 * Finds one preferred unification xref, if possible.
 	 * Preferred db values are:
-	 * "ncbi gene" - for NucleicAcidReference and the sub-classes;
+	 * "entrez gene" - for NucleicAcidReference and the subclasses;
 	 * "uniprot" or "refseq" for ProteinReference;
 	 * "chebi" - for SmallMoleculeReference;
 	 * 
@@ -367,7 +414,6 @@ public final class Normalizer {
 	private UnificationXref findPreferredUnificationXref(XReferrable bpe)
 	{
 		UnificationXref toReturn = null;
-
 		Collection<UnificationXref> orderedUrefs = getUnificationXrefsSorted(bpe);
 
 		//use preferred db prefix for different type of ER
@@ -384,9 +430,10 @@ public final class Normalizer {
 				toReturn = findSingleUnificationXref(orderedUrefs, "pubchem");
 		} else if(bpe instanceof NucleicAcidReference) {
 			//that includes NucleicAcidRegionReference, etc. sub-classes;
-			toReturn = findSingleUnificationXref(orderedUrefs, "ncbi gene");
+			toReturn = findSingleUnificationXref(orderedUrefs, "entrez");
+			//when xrefs were normalized to use either 'entrez gene' (the preferred name) or 'ncbigene' (the prefix)
 			if(toReturn==null)
-				toReturn = findSingleUnificationXref(orderedUrefs, "entrez");
+				toReturn = findSingleUnificationXref(orderedUrefs, "ncbigene");
 		} else {
 			//for other XReferrable types (BioSource or ControlledVocabulary)
 			//use if there's only one xref (return null if many)
@@ -421,16 +468,29 @@ public final class Normalizer {
 		return ret;
 	}
 
+	/**
+	 * BioPAX normalization
+	 * (modifies the original Model)
+	 *
+	 * @param model BioPAX model to normalize
+	 * @throws NullPointerException if model is null
+	 * @throws IllegalArgumentException if model is not Level3 BioPAX
+	 */
+	public void normalize(Model model) {
+		normalize(model, false);
+	}
+
 	
 	/**
 	 * BioPAX normalization 
 	 * (modifies the original Model)
 	 * 
 	 * @param model BioPAX model to normalize
+	 * @param usePrefixAsDbName if possible, use CURIE prefix as xref.db instead of preferred name
 	 * @throws NullPointerException if model is null
 	 * @throws IllegalArgumentException if model is not Level3 BioPAX
 	 */
-	public void normalize(Model model) {
+	public void normalize(Model model, boolean usePrefixAsDbName) {
 		
 		if(model.getLevel() != BioPAXLevel.L3)
 			throw new IllegalArgumentException("Not Level3 model. " +
@@ -440,11 +500,10 @@ public final class Normalizer {
 		if(xmlBase != null && !xmlBase.isEmpty())
 			model.setXmlBase(xmlBase);
 
-		// Normalize/merge xrefs, first, and then CVs
-		// (also because some of original xrefs might have "normalized" URIs 
-		// that, in fact, must be used for other biopax types, such as CV or ProteinReference)
+		// Normalize/merge xrefs first and then - CVs
+		// (xrefs could have URIs that should be instead used for CV, PR, SMR or BS biopax types)
 		log.info("Normalizing xrefs..." + description);
-		normalizeXrefs(model);
+		normalizeXrefs(model, usePrefixAsDbName);
 		
 		// fix displayName where possible
 		if(fixDisplayName) {
@@ -455,12 +514,12 @@ public final class Normalizer {
 		log.info("Normalizing CVs..." + description);
 		normalizeCVs(model);
 		
-		//normalize BioSource objects (better, as it is here, go after Xrefs and CVs)
+		//normalize BioSource objects (after Xrefs and CVs!)
 		log.info("Normalizing organisms..." + description);
 		normalizeBioSources(model);
 
 		// auto-generate missing entity references:
-		for(SimplePhysicalEntity spe : new HashSet<SimplePhysicalEntity>(model.getObjects(SimplePhysicalEntity.class))) {
+		for(SimplePhysicalEntity spe : new HashSet<>(model.getObjects(SimplePhysicalEntity.class))) {
 			//it skips if spe has entityReference or memberPE already
 			ModelUtils.addMissingEntityReference(model, spe);
 		}
@@ -483,7 +542,7 @@ public final class Normalizer {
 		// process ControlledVocabulary objects (all sub-classes)
 		for(ControlledVocabulary cv : model.getObjects(ControlledVocabulary.class))
 		{
-			//it does not check/fix the CV terms though (but a validation rule can do if run before the normalizer)...
+			//it does not check/fix the CV terms (but Validator can do if run before the Normalizer)
 			UnificationXref uref = findPreferredUnificationXref(cv); //usually, there's only one such xref
 			if (uref != null) {
 				// so let's generate a consistent URI
@@ -501,16 +560,15 @@ public final class Normalizer {
 	
 	
 	private void normalizeBioSources(Model model) {
-		
+		//it's called after all the xrefs and CVs were normalized
 		NormalizerMap map = new NormalizerMap(model);
-		
-		for(BioSource bs : model.getObjects(BioSource.class))
-		{
+		for(BioSource bs : model.getObjects(BioSource.class)) {
 			UnificationXref uref = findPreferredUnificationXref(bs);
 			//normally, the xref db is 'Taxonomy' (or a valid synonym)
 			if (uref != null
-				&& (uref.getDb().toLowerCase().contains("taxonomy") || uref.getDb().equalsIgnoreCase("newt")))
-			{	
+				&& ( uref.getDb().equalsIgnoreCase("ncbitaxon") //should be (the preferred prefix in bioregistry.io)
+					|| uref.getDb().toLowerCase().contains("taxonomy") //just in case..
+					|| uref.getDb().equalsIgnoreCase("newt"))) {
 				String 	idPart = uref.getId();
 
 				//tissue/cellType terms can be added below:
@@ -519,19 +577,14 @@ public final class Normalizer {
 				if(bs.getCellType()!=null && !bs.getCellType().getTerm().isEmpty()) 
 					idPart += "_" + bs.getCellType().getTerm().iterator().next();
 				
-				String uri = (idPart.equals(uref.getId()) //- no tissue or celltype were attached
-						&& idPart.matches("^\\d+$")) //- is positive integer id
-					? uri(xmlBase, uref.getDb(), idPart, BioSource.class)
-						: "http://identifiers.org/taxonomy/" + idPart;
-					// the latter is intentionally invalid identifiers.org/taxonomy URI - good (and important) for merging
+				String uri = uri(xmlBase, uref.getDb(), idPart, BioSource.class); //for standard db, id it makes bioregistry.io/ncbitaxon:id URI
 				map.put(bs, uri);
-
-			} else 
-				log.debug("Won't normalize BioSource" 
-					+ " : no taxonomy unification xref found in " + bs.getUri()
-					+ ". " + description);
-		} 
-		
+			} else {
+				log.debug("Won't normalize BioSource"
+						+ " : no taxonomy unification xref found in " + bs.getUri()
+						+ ". " + description);
+			}
+		}
 		map.doSubs();
 	}
 
@@ -541,14 +594,7 @@ public final class Normalizer {
 		
 		// process the rest of utility classes (selectively though)
 		for (EntityReference bpe : model.getObjects(EntityReference.class)) {
-			
-			//skip those with already normalized URIs
-			if(bpe.getUri().startsWith("http://identifiers.org/")) {
-				log.info("Skip already normalized: " + bpe.getUri());
-				continue;
-			}			
-			
-			UnificationXref uref = findPreferredUnificationXref(bpe);
+				UnificationXref uref = findPreferredUnificationXref(bpe);
 			if (uref != null) {
 				// Create (with a new URI made from a unif. xref) 
 				// and save the replacement object, if possible, 
@@ -556,9 +602,9 @@ public final class Normalizer {
 				final String db = uref.getDb();
 				final String id = uref.getId();
 				// get the standard ID
-				String uri = null;
+				String uri;
 				try { // make a new ID for the element
-					uri = MiriamLink.getIdentifiersOrgURI(db, id);
+					uri = Resolver.getURI(db, id);
 				} catch (Exception e) {
 					log.error("Cannot get a Miriam standard ID for " + bpe 
 							+ " (" + bpe.getModelInterface().getSimpleName()
@@ -570,10 +616,11 @@ public final class Normalizer {
 				if(uri != null) {
 					map.put(bpe, uri);
 				}	
-			} else
+			} else {
 				log.info("Cannot normalize EntityReference: "
-					+ "no unification xrefs found in " + bpe.getUri()
-					+ ". " + description);
+						+ "no unification xrefs found in " + bpe.getUri()
+						+ ". " + description);
+			}
 		}
 		
 		// replace/update elements in the model
@@ -583,62 +630,47 @@ public final class Normalizer {
 	
 	/**
 	 * Auto-generates standard and other names for the datasource
-	 * from either its ID (if URN) or one of its existing names (preferably - standard name)
+	 * from either its URI or one of the names (preferably - standard name)
 	 * 
 	 * @param pro data source (BioPAX Provenance)
 	 */
 	public static void autoName(Provenance pro) {
-		if(!(pro.getUri().startsWith("urn:miriam:") || pro.getUri().startsWith("http://identifiers.org/"))
-				&& pro.getName().isEmpty()) {
-			log.info("Skipping: cannot normalize Provenance: " + pro.getUri());
+		String uri = pro.getUri();
+		String key;
+		if(StringUtils.startsWithIgnoreCase(uri, "urn:miriam:")
+				|| StringUtils.containsIgnoreCase(uri,"identifiers.org/")
+				|| StringUtils.containsIgnoreCase(uri, "bioregistry.io/")) {
+			key = StringUtils.removeEnd(uri,"/"); //removes ending '/' if present
+		} else if (pro.getStandardName() != null) {
+			key = pro.getStandardName();
+		} else {
+			key = pro.getDisplayName();
 		}
-		else { // i.e., 'name' is not empty or ID is the URN
-			final SortedSet<String> names = new TreeSet<String>();
-			
-			String key = null;
-			if(pro.getUri().startsWith("urn:miriam:") || pro.getUri().startsWith("http://identifiers.org/")) {
-				key = pro.getUri();
-			} else if (pro.getStandardName() != null) {
-				key = pro.getStandardName();
-			} else {
-				key = pro.getDisplayName(); // can be null
+
+		if (key != null) {
+			Namespace ns = Resolver.getNamespace(key);
+			if(ns != null) {
+				pro.setStandardName(ns.getName());
+				pro.addName(ns.getPrefix());
 			}
-			
-			if (key != null) {
-				try {
-					names.addAll(Arrays.asList(MiriamLink.getNames(key)));
-					pro.setStandardName(MiriamLink.getName(key));
-					// get the datasource description
-					String description = MiriamLink.getDataTypeDef(pro.getStandardName());
-					pro.addComment(description);
-				} catch (IllegalArgumentException e) {
-					// ignore (then, names is still empty...)
+		}
+
+		if(StringUtils.isBlank(pro.getStandardName())) {
+			// find a standard name in names
+			for (String name : pro.getName()) {
+				Namespace ns = Resolver.getNamespace(name);
+				if(ns != null) {
+					String stdName = ns.getName();
+					pro.setStandardName(stdName);
+					pro.addName(ns.getPrefix());
+					break;
 				}
-			} 
-			
-			// when the above failed (no match in Miriam), or key was null -
-			if(names.isEmpty()) {
-				// finally, trying to find all valid names for each existing one
-					for (String name : pro.getName()) {
-						try {
-							names.addAll(Arrays.asList(MiriamLink.getNames(name)));
-						} catch (IllegalArgumentException e) {
-							// ignore
-						}
-					}
-					// pick up the first name, get the standard name
-					if(!names.isEmpty())
-						pro.setStandardName(MiriamLink
-							.getName(names.iterator().next()));
 			}
-			
-			// and add all the synonyms if any
-			for(String name : names)
-				pro.addName(name);
-			
-			//set display name if not set (standard name is set already)
-			if(pro.getDisplayName() == null)
-				pro.setDisplayName(pro.getStandardName());			
+		}
+
+		//set display name if not set (standard name is set already)
+		if(pro.getDisplayName() == null) {
+			pro.setDisplayName(pro.getStandardName());
 		}
 	}
 	
@@ -710,88 +742,4 @@ public final class Normalizer {
 		this.xmlBase = xmlBase;
 	}
 
-	
-	/**
-	 * Helper class, to associate original 
-	 * and new (either copy or existing) objects 
-	 * within some biopax model and then execute 
-	 * batch replace.
-	 * 
-	 * @author rodche
-	 */
-	private static class NormalizerMap {
-
-		//a model to modify by replacing biopax objects
-		final Model model;
-		
-		// this is the biopax elements substitution map (old->new)
-		final Map<BioPAXElement,BioPAXElement> subs;
-		
-		//the next map is to make sure the subs.values()  all have different URIs
-		final Map<String,BioPAXElement> uriToSub;
-		
-		final ShallowCopy copier;
-				
-		NormalizerMap(Model model) {
-			subs = BPCollections.I.createMap();
-			uriToSub = BPCollections.I.createMap();
-			this.model = model;
-			copier = new ShallowCopy();
-		}
-
-
-		/**
-		 * Creates (by URI) and saves the replacement object,
-		 * but does not replace yet (call doSubs to replace).
-		 * 
-		 * @param bpe
-		 * @param newUri
-		 */
-		void put(BioPAXElement bpe, String newUri)
-		{
-			if(model.containsID(newUri)) {
-				// will use existing original (model) object that has the new Uri
-				map(bpe, model.getByID(newUri));
-			} else if(uriToSub.containsKey(newUri)) {
-				// re-use the new object that's already added to replace another original
-				map(bpe, uriToSub.get(newUri));
-			} else {
-				// will use the object's shallow copy that gets new Uri
-				BioPAXElement copy = copier.copy(bpe, newUri);
-				map(bpe, copy);
-			}
-		}		
-		
-		/**
-		 * Executes the batch replace - migrating  
-		 * to the normalized equivalent objects.
-		 */
-		void doSubs() {
-			for(BioPAXElement e : subs.keySet()) {
-				model.remove(e);
-			}
-			
-			try {
-				ModelUtils.replace(model, subs);
-			} catch (Exception e) {
-				log.error("Failed to replace BioPAX elements.", e);
-				return;
-			}
-			
-			for(BioPAXElement e : subs.values()) {
-				if(!model.contains(e))
-					model.add(e);
-			}
-		
-			for(BioPAXElement e : model.getObjects()) {
-				ModelUtils.fixDanglingInverseProperties(e, model);
-			}
-		}
-
-		private void map(BioPAXElement bpe, BioPAXElement newBpe) {
-			subs.put(bpe, newBpe);
-			uriToSub.put(newBpe.getUri(), newBpe);
-		}
-	}
-	
 }

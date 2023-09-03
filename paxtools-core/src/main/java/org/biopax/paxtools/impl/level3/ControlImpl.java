@@ -10,8 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class  ControlImpl extends InteractionImpl
-		implements Control
+public class  ControlImpl extends InteractionImpl implements Control
 {
 // ------------------------------ FIELDS ------------------------------
 
@@ -59,9 +58,9 @@ public class  ControlImpl extends InteractionImpl
 	{
 		if (process != null) {
 			if (!checkControlled(process)) {
-				throw new IllegalBioPAXArgumentException("Illegal argument. Attempting to set "
-						+ process.getUri() + " to " + this.getUri());
-			} else { //TODO: in paxtools v6, disallow multiple values (OWL functional property)...
+				throw new IllegalBioPAXArgumentException("addControlled: cannot add Process "
+						+ process.getUri() + " to Control " + this.getUri());
+			} else { //TODO: in Paxtools v6, disallow multiple values (it's a OWL functional property)?
 				controlled.add(process);
 				process.getControlledOf().add(this);
 				super.addParticipant(process);
@@ -80,7 +79,7 @@ public class  ControlImpl extends InteractionImpl
 
 	public Set<Controller> getController()
 	{
-		Set<Controller> controller = new HashSet<Controller>(this.getPeController());
+		Set<Controller> controller = new HashSet<>(this.getPeController());
 		controller.addAll(getPathwayController());
 		return Collections.unmodifiableSet(controller);
 	}
@@ -107,9 +106,9 @@ public class  ControlImpl extends InteractionImpl
 				pathwayController.remove(controller);
 			} else if(controller instanceof PhysicalEntity) {
 				peController.remove(controller);
-			} else { //hardly ever possible, anyway -
-				throw new IllegalBioPAXArgumentException("removeController: argument " + controller.getUri()
-					+ " is neither Pathway nor PE - " + controller.getModelInterface().getSimpleName());
+			} else { //hardly ever possible
+				throw new IllegalBioPAXArgumentException("removeController: argument " +
+					controller.getUri() + " is neither Pathway nor PE");
 			}
 		}
 	}

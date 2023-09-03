@@ -38,9 +38,9 @@ public class PathwayGenesExtractor implements Visitor {
 	public PathwayGenesExtractor(pathway pw) {
 		traverser = new Traverser(SimpleEditorMap.get(BioPAXLevel.L2), this);
 		geneset = new HashMap<String, Set<String>>();
-		subpathways = new HashSet<pathway>();
-		interactions = new HashSet<interaction>();
-		visited = new HashSet<BioPAXElement>();
+		subpathways = new HashSet<>();
+		interactions = new HashSet<>();
+		visited = new HashSet<>();
 		this.pw = pw;
 	}
 	
@@ -66,7 +66,7 @@ public class PathwayGenesExtractor implements Visitor {
 		
 		PrintWriter out = new PrintWriter(OUT);
 		out.println("rdf:IDs of proteins in the pathway : " + pw.getNAME() + " and its sub-pathways.");
-		Set<String> glist = new HashSet<String>(); // to keep all IDs
+		Set<String> glist = new HashSet<>(); // to keep all IDs
 			
 		for(String key : extractor.geneset.keySet()) {
 			glist.addAll(extractor.geneset.get(key));
@@ -125,7 +125,7 @@ public class PathwayGenesExtractor implements Visitor {
 				protein p = (protein) bpe;
 				String id = getLocalId(p);
 				
-				Set<String> refs = new HashSet<String>();
+				Set<String> refs = new HashSet<>();
 				for (xref x : p.getXREF()) {
 					if (x instanceof unificationXref || x instanceof relationshipXref) {
 						refs.add(x.getID());

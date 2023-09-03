@@ -47,7 +47,7 @@ public class TempTests
 
 	private Set<String> load(String file) throws FileNotFoundException
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		Scanner sc = new Scanner(new File(file));
 		while (sc.hasNextLine())
 		{
@@ -116,7 +116,7 @@ public class TempTests
 		p.add(new Empty(new PathConstraint("Catalysis/catalysisDirection")), "Cat");
 		p.add(new Empty(new PathConstraint("Pathway/pathwayComponent:Pathway")), "Pathway");
 
-		List<Pathway> pats = new ArrayList<Pathway>(
+		List<Pathway> pats = new ArrayList<>(
 			Searcher.searchAndCollect(model, p, 0, Pathway.class));
 
 		Collections.sort(pats, new Comparator<Pathway>()
@@ -147,7 +147,7 @@ public class TempTests
 	{
 		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/signalink-raw.txt"));
 
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
 		{
 			String[] token = line.split(";");
@@ -194,7 +194,7 @@ public class TempTests
 		Pattern p = PatternBox.controlsExpressionWithTemplateReac();
 
 		Match m = new Match(p.size());
-		ProteinReference er = (ProteinReference) model.getByID("http://identifiers.org/uniprot/P42229");
+		ProteinReference er = (ProteinReference) model.getByID("identifiers.org/uniprot/P42229");
 		PhysicalEntity pe = (PhysicalEntity) model.getByID("http://pid.nci.nih.gov/biopaxpid_10369");
 		m.set(er, 0);
 		m.set(pe, 1);
@@ -269,8 +269,8 @@ public class TempTests
 
 		for (int i = 1; i < Math.pow(2, file.length); i++)
 		{
-			Set<Set<String>> intersectSets = new HashSet<Set<String>>();
-			Set<Set<String>> subtractSets = new HashSet<Set<String>>();
+			Set<Set<String>> intersectSets = new HashSet<>();
+			Set<Set<String>> subtractSets = new HashSet<>();
 			String name = "";
 
 			for (int j = 0; j < file.length; j++)
@@ -287,7 +287,7 @@ public class TempTests
 			}
 
 			boolean first = true;
-			Set<String> set = new HashSet<String>();
+			Set<String> set = new HashSet<>();
 			for (Set<String> inset : intersectSets)
 			{
 				if (first)
@@ -305,7 +305,7 @@ public class TempTests
 			System.out.println(name + "\t" + set.size());
 		}
 
-		Set<String> all = new HashSet<String>();
+		Set<String> all = new HashSet<>();
 		for (Set<String> set : sets)
 		{
 			all.addAll(set);
@@ -318,7 +318,7 @@ public class TempTests
 //		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/Projects/chibe/portal-cache/PC.sif");
 		Map<SIFType, Set<String>> map = readSIFFile("/home/ozgun/PC.sif");
 
-		List<SIFType> types = new ArrayList<SIFType>(Arrays.asList(SIFEnum.values()));
+		List<SIFType> types = new ArrayList<>(Arrays.asList(SIFEnum.values()));
 		types.retainAll(map.keySet());
 
 		printOverlaps(map, types.subList(0, 8), false);
@@ -339,13 +339,13 @@ public class TempTests
 
 			for (SIFType type2 : types)
 			{
-				Set<String> set = new HashSet<String>(map.get(type));
+				Set<String> set = new HashSet<>(map.get(type));
 				set.retainAll(map.get(type2));
 				int size = set.size();
 
 				if (tryReversing)
 				{
-					set = new HashSet<String>(map.get(type));
+					set = new HashSet<>(map.get(type));
 					set.retainAll(negatePairs(map.get(type2)));
 					if (set.size() > size) size = set.size();
 				}
@@ -359,7 +359,7 @@ public class TempTests
 
 	private Set<String> negatePairs(Set<String> set)
 	{
-		Set<String> neg = new HashSet<String>();
+		Set<String> neg = new HashSet<>();
 		for (String pair : set)
 		{
 			String[] tok = pair.split("\t");
@@ -372,7 +372,7 @@ public class TempTests
 	private Set<String> readPairsFromSIFFile(String file, boolean directed) throws FileNotFoundException
 	{
 		Scanner sc = new Scanner(new File(file));
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		while(sc.hasNextLine())
 		{
@@ -403,7 +403,7 @@ public class TempTests
 				SIFType type = SIFEnum.typeOf(token[1]);
 				if (type == null) continue;
 
-				if (!map.containsKey(type)) map.put(type, new HashSet<String>());
+				if (!map.containsKey(type)) map.put(type, new HashSet<>());
 
 				map.get(type).add(token[0] + "\t" + token[2]);
 				if (!type.isDirected()) map.get(type).add(token[2] + "\t" + token[0]);
@@ -427,7 +427,7 @@ public class TempTests
 				SIFType type = SIFEnum.typeOf(token[1]);
 				if (type == null) continue;
 
-				if (!map.containsKey(type)) map.put(type, new HashSet<String>());
+				if (!map.containsKey(type)) map.put(type, new HashSet<>());
 
 				map.get(type).add(token[0] + "\t" + type.getTag() +  "\t" + token[2]);
 			}
@@ -481,7 +481,7 @@ public class TempTests
 
 	private static void compareSIFs() throws FileNotFoundException
 	{
-		Set<String> set1 = new HashSet<String>();
+		Set<String> set1 = new HashSet<>();
 		Scanner sc = new Scanner(new File("/home/ozgun/Projects/causality/PC/controls-expression-of.txt"));
 		while (sc.hasNextLine())
 		{
@@ -489,7 +489,7 @@ public class TempTests
 			set1.add(tok[0] + " " + tok[1]);
 		}
 
-		Set<String> set2 = new HashSet<String>();
+		Set<String> set2 = new HashSet<>();
 		sc = new Scanner(new File("/home/ozgun/Projects/chibe/PC/controls-expression-of.txt"));
 		while (sc.hasNextLine())
 		{

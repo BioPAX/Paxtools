@@ -21,42 +21,27 @@ public class ProvenanceImpl extends NamedImpl implements Provenance
 		return Provenance.class;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.biopax.paxtools.impl.BioPAXElementImpl#toString()
-	 * 
-	 * TODO this probably makes inconsistent strings (on different systems); fix, if it matters....
-	 * 
-	 */
-	@Override public String toString()
-	{
+	@Override public String toString() {
 		try {
 			StringBuilder s = new StringBuilder();
 
-			for (String name : new TreeSet<String>(this.getName())) 
+			for (String name : new TreeSet<>(this.getName())) {
 				s.append(name).append(";");
+			}
 			
-			if (!getXref().isEmpty()) 
-			{
-				TreeSet<Xref> xrefs = new TreeSet<Xref>(new Comparator<Xref>() {
-					@Override
-					public int compare(Xref o1, Xref o2) {
-						return o1.toString().compareTo(o2.toString());
-					}					
-				});
-				xrefs.addAll(getXref()); //this also removes duplicate equivalent xrefs (having same id/db)
-				
+			if (!getXref().isEmpty()) {
+				TreeSet<Xref> xrefs = new TreeSet<>(Comparator.comparing(Xref::toString));
+				xrefs.addAll(getXref()); //removes duplicate equivalent xrefs (same id and db)
 				s.append(" (");
-				for (Xref anXref : xrefs)
+				for (Xref anXref : xrefs) {
 					s.append(anXref).append(";");
+				}
 				s.append(")");
 			}
 			
 			return s.toString();
-
 		} catch (Exception e) {
-			// possible issues - when in a persistent context (e.g., lazy
-			// collections init...)
+			// possible in a persistent context (e.g., lazy collections init)
 			log.warn("toString: ", e);
 			return getUri();
 		}

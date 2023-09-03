@@ -26,7 +26,7 @@ abstract class xrefImpl extends BioPAXLevel2ElementImpl implements xref
 
 	public xrefImpl()
 	{
-		this.XREFof = new HashSet<XReferrable>();
+		this.XREFof = new HashSet<>();
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------

@@ -1,8 +1,10 @@
 package org.biopax.paxtools.impl.level3;
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.BPCollections;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 
 import java.util.Set;
 
@@ -104,5 +106,17 @@ public class PathwayStepImpl extends L3ElementImpl implements PathwayStep
 	protected void setPathwayOrderOf(Pathway pathwayOrderOf)
 	{
 		this.pathwayOrderOf = pathwayOrderOf;
+	}
+
+	@Override
+	protected boolean semanticallyEquivalent(BioPAXElement element) {
+		boolean equivalence = false;
+		if (element instanceof PathwayStep) {
+			PathwayStep other = (PathwayStep) element;
+			equivalence = SetEquivalenceChecker.hasEquivalentIntersection(evidence, other.getEvidence())
+							&& SetEquivalenceChecker.isEquivalent(this.getStepProcess(), other.getStepProcess())
+							&& SetEquivalenceChecker.isEquivalent(this.getNextStep(), other.getNextStep());
+		}
+		return equivalence;
 	}
 }

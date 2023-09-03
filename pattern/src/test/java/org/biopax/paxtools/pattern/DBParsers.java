@@ -4,8 +4,8 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.pattern.util.HGNC;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -19,18 +19,16 @@ import java.util.*;
 /**
  * @author Ozgun Babur
  */
-//@Ignore
 public class DBParsers
 {
 	@Test
-	@Ignore
+	@Disabled
 	public void extractSignalink() throws IOException
 	{
-		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/signalink-raw.txt"));
+		BufferedReader reader = new BufferedReader(new FileReader(
+			"/home/ozgun/Desktop/signal-db/signalink-raw.txt"));
 
-//		Map<String, Integer> refCnt = new HashMap<String, Integer>();
-
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
 		{
 			String[] token = line.split(";");
@@ -52,7 +50,7 @@ public class DBParsers
 			if (type.contains("undirected")) continue;
 			if (!type.contains("directed")) continue;
 
-			Set<String> refs = new HashSet<String>();
+			Set<String> refs = new HashSet<>();
 			if (pubs != null)
 			{
 				for (String s : pubs.split("\\|"))
@@ -82,9 +80,8 @@ public class DBParsers
 
 		reader.close();
 
-//		printOrdered(refCnt, 3);
-
-		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/ozgun/Desktop/signal-db/signalink-extracted-from-raw-nopred.txt"));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(
+			"/home/ozgun/Desktop/signal-db/signalink-extracted-from-raw-nopred.txt"));
 
 		for (String s : set)
 		{
@@ -96,7 +93,7 @@ public class DBParsers
 		System.out.println("set.size() = " + set.size());
 	}
 
-	private static final Set<String> PRED_REF = new HashSet<String>(Arrays.asList(("22110040\t" +
+	private static final Set<String> PRED_REF = new HashSet<>(Arrays.asList(("22110040\t" +
 		"14681366\t" +
 		"15652477\t" +
 		"22900683\t" +
@@ -112,15 +109,8 @@ public class DBParsers
 
 	private void printOrdered(final Map<String, Integer> map, int min)
 	{
-		List<String> list = new ArrayList<String>(map.keySet());
-		Collections.sort(list, new Comparator<String>()
-		{
-			@Override
-			public int compare(String o1, String o2)
-			{
-				return new Integer(map.get(o2)).compareTo(map.get(o1));
-			}
-		});
+		List<String> list = new ArrayList<>(map.keySet());
+		Collections.sort(list, (o1, o2) -> new Integer(map.get(o2)).compareTo(map.get(o1)));
 
 		for (String s : list)
 		{
@@ -131,12 +121,13 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void extractSignalink2() throws IOException
 	{
-		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/signalink-sql-produced.txt"));
+		BufferedReader reader = new BufferedReader(new FileReader(
+			"/home/ozgun/Desktop/signal-db/signalink-sql-produced.txt"));
 
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
 		{
 			String[] token = line.split("\t");
@@ -161,7 +152,8 @@ public class DBParsers
 
 		reader.close();
 
-		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/ozgun/Desktop/signal-db/signalink2.txt"));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(
+			"/home/ozgun/Desktop/signal-db/signalink2.txt"));
 
 		for (String s : set)
 		{
@@ -174,7 +166,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printVenn() throws IOException
 	{
 		Set<String> s1 = read("/home/ozgun/Projects/biopax-pattern/directed-relations.txt", true);
@@ -225,7 +217,7 @@ public class DBParsers
 
 	private Set<String> negate(Set<String> normal)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (String s : normal)
 		{
 			String[] tok = s.split("\t");
@@ -236,7 +228,7 @@ public class DBParsers
 
 	private int intersect(Set<String>... set)
 	{
-		Set<String> s = new HashSet<String>(set[0]);
+		Set<String> s = new HashSet<>(set[0]);
 		for (Set<String> ss : set)
 		{
 			s.retainAll(ss);
@@ -268,7 +260,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printNeighborsInSpike() throws IOException
 	{
 		String s = "DUSP1";
@@ -283,7 +275,7 @@ public class DBParsers
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		if (skipFirstLine) reader.readLine();
 
@@ -301,7 +293,7 @@ public class DBParsers
 
 	private Set<String> readSpike() throws IOException
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/SPIKE-ParsedFromXML.txt"));
 
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
@@ -321,7 +313,7 @@ public class DBParsers
 		Model model = handler.convertFromOWL(new FileInputStream(
 			"/home/ozgun/Desktop/signal-db/Spike2_LatestSpikeDB.owl"));
 
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		for (Control ctrl : model.getObjects(Control.class))
 		{
@@ -367,7 +359,7 @@ public class DBParsers
 
 	private Set<String> collectSymbols(String s)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		s = s.replaceAll("\\.", " ");
 		s = s.replaceAll(",", " ");
@@ -382,8 +374,9 @@ public class DBParsers
 
 	private Map<String, String> readSpikeID2Symbol() throws IOException
 	{
-		Map<String, String> id2sym = new HashMap<String, String>();
-		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml"));
+		Map<String, String> id2sym = new HashMap<>();
+		BufferedReader reader = new BufferedReader(new FileReader(
+			"/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml"));
 
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
 		{
@@ -405,7 +398,7 @@ public class DBParsers
 
 	public Map<String, String> getEG2HGNC() throws IOException
 	{
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/hgnc2eg.txt"));
 
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
@@ -421,10 +414,11 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printLines() throws IOException
 	{
-		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml"));
+		BufferedReader reader = new BufferedReader(new FileReader(
+			"/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml"));
 
 		int from = 233571;
 		int to = from + 50;
@@ -441,12 +435,13 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printLinesContaining() throws IOException
 	{
 		String query = "1509498";
 
-		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml"));
+		BufferedReader reader = new BufferedReader(new FileReader(
+			"/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml"));
 
 		int i = 0;
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
@@ -459,10 +454,11 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void searchFirstOcc() throws IOException
 	{
-		BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml"));
+		BufferedReader reader = new BufferedReader(new FileReader(
+			"/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml"));
 
 		int i = 0;
 		for (String line = reader.readLine(); line != null; line = reader.readLine())
@@ -478,7 +474,7 @@ public class DBParsers
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readXML() throws ParserConfigurationException, IOException, SAXException
 	{
 		File f = new File("/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml");

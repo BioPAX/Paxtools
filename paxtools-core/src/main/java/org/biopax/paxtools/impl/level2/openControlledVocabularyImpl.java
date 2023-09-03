@@ -21,7 +21,7 @@ class openControlledVocabularyImpl extends BioPAXLevel2ElementImpl
 
 	public openControlledVocabularyImpl()
 	{
-		this.TERM = new HashSet<String>();
+		this.TERM = new HashSet<>();
 		this.referenceHelper = new ReferenceHelper(this);
 	}
 

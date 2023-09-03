@@ -70,7 +70,7 @@ public class SIFSearcher
 	public SIFSearcher(IDFetcher idFetcher, SIFType... types)
 	{
 		this.idFetcher = idFetcher;
-		this.types = new HashSet<SIFType>(Arrays.asList(types));
+		this.types = new HashSet<>(Arrays.asList(types));
 
 		if (idFetcher == null) this.idFetcher = new SimpleIDFetcher();//gets URIs
 	}
@@ -93,7 +93,7 @@ public class SIFSearcher
 	{
 		try
 		{
-			this.miners = new ArrayList<SIFMiner>();
+			this.miners = new ArrayList<>();
 
 			for (SIFType type : types)
 			{
@@ -177,7 +177,7 @@ public class SIFSearcher
 			}
 		}
 
-		return new HashSet<SIFInteraction>(map.values());
+		return new HashSet<>(map.values());
 	}
 
 	/**
@@ -216,7 +216,7 @@ public class SIFSearcher
 
 		if (!inters.isEmpty())
 		{
-			List<SIFInteraction> interList = new ArrayList<SIFInteraction>(inters);
+			List<SIFInteraction> interList = new ArrayList<>(inters);
 			Collections.sort(interList);
 			try
 			{

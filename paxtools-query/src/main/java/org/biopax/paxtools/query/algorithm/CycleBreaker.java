@@ -46,7 +46,7 @@ public class CycleBreaker extends BFS
 	 */
 	public void breakCycles()
 	{
-		for (GraphObject go : new ArrayList<GraphObject>(result))
+		for (GraphObject go : new ArrayList<>(result))
 		{
 			if (go instanceof Node)
 			{

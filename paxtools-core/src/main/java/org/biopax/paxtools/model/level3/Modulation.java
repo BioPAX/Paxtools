@@ -21,7 +21,7 @@ package org.biopax.paxtools.model.level3;
  * one Control instance can control another Control instance. The semantics of the use of these properties are as
  * follows:
  *
- * Multiple separate controls controlling a conversion means that they control in parallel (e.g. different enzymes
+ * Multiple separate Controls for a Conversion means they control it in parallel (e.g. different enzymes
  * catalyzing the same reaction). Generally, their effect on the rate of the reaction is cumulative.
  *
  * A control with multiple controllers indicates a dependency between these controllers,

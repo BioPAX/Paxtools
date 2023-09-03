@@ -21,9 +21,9 @@ class evidenceImpl extends BioPAXLevel2ElementImpl implements evidence
 
 	public evidenceImpl()
 	{
-		this.CONFIDENCE = new HashSet<confidence>();
-		this.EVIDENCE_CODE = new HashSet<openControlledVocabulary>();
-		this.EXPERIMENTAL_FORM = new HashSet<experimentalForm>();
+		this.CONFIDENCE = new HashSet<>();
+		this.EVIDENCE_CODE = new HashSet<>();
+		this.EXPERIMENTAL_FORM = new HashSet<>();
 		this.referenceHelper = new ReferenceHelper(this);
 	}
 

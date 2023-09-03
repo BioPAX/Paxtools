@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,18 +27,17 @@ import java.util.Set;
 public class Tutorial
 {
 
-
  public static void myFirstModel()
  {
   BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
   Model model = factory.createModel();
   Protein protein1 = model.addNew(Protein.class,
-                                  "http://biopax.org/tutorial/test1");
+    "http://biopax.org/tutorial/test1");
   protein1.addName("Tutorial Example Small molecule Transporter 1");
   protein1.setDisplayName("TEST1");
 
   BiochemicalReaction rxn1 = model.addNew(BiochemicalReaction.class,
-                                          "http://biopax.org/tutorial/rxn1");
+    "http://biopax.org/tutorial/rxn1");
   rxn1.addLeft(protein1);
 
  }
@@ -116,7 +116,7 @@ public class Tutorial
    {
     BioPAXElement bpe = (BioPAXElement) range;
 
-    if (!targetModel.contains(bpe))
+    if (!targetModel.containsID(bpe.getUri())) //avoid IllegalBioPAXArgumentException
     {
      targetModel.add(bpe);
      traverser.traverse(bpe, model);
@@ -155,7 +155,7 @@ public class Tutorial
 
  public Set access1(Complex complex)
  {
-  Set<UnificationXref> xrefs = new HashSet<UnificationXref>();
+  Set<UnificationXref> xrefs = new HashSet<>();
   recursivelyObtainMembers(complex, xrefs);
   return xrefs;
  }
@@ -211,7 +211,7 @@ public class Tutorial
  public void graphQuery(Model model, PhysicalEntity entity3,
                         PhysicalEntity entity2, PhysicalEntity entity1)
  {
-  Set<BioPAXElement> sourceSet = new HashSet<BioPAXElement>();
+  Set<BioPAXElement> sourceSet = new HashSet<>();
 
   // Add the related source PhysicalEntity (or children) objects to the
   // source set
@@ -222,12 +222,11 @@ public class Tutorial
   // Direction can be upstream, downstream, or bothstream.
   Direction direction = Direction.BOTHSTREAM;
 
-
   Set<BioPAXElement> result = QueryExecuter.runNeighborhood(sourceSet, model,
-                                                            limit, direction, null);
+    limit, direction, null);
 
   Completer c = new Completer(SimpleEditorMap.get(BioPAXLevel.L3));
-  result = c.complete(result, model);
+  result = c.complete(result);
  }
 
 
@@ -239,7 +238,7 @@ public class Tutorial
   Model model = handler.convertFromOWL(fin);
 
   // Iterate through all BioPAX Elements and Display RDF ID and Class Name
-  Set<BioPAXElement> elementSet = model.getObjects();
+  Collection<BioPAXElement> elementSet = model.getObjects();
   for (BioPAXElement currentElement : elementSet)
   {
    String rdfId = currentElement.getUri();
@@ -247,11 +246,11 @@ public class Tutorial
    System.out.println("Element:  " + rdfId + ": " + className);
   }
   //  Get Proteins Only
-  Set<Protein> proteinSet = model.getObjects(Protein.class);
+  Collection<Protein> proteinSet = model.getObjects(Protein.class);
   for (Protein currentProtein : proteinSet)
   {
    System.out.println("Protein:  " + currentProtein.getName() + ": " +
-                      currentProtein.getDisplayName());
+     currentProtein.getDisplayName());
   }
 
   //  Iterate through all proteins in the model
@@ -284,6 +283,5 @@ public class Tutorial
   access1(null);
   graphQuery(null, null, null, null);
  }
-
 
 }

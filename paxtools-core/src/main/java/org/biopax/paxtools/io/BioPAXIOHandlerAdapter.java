@@ -34,7 +34,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected static final String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 
-	protected String bp; //current BioPAX Level namespace prefix value
+	protected String bp; //current Level BioPAX namespace prefix
 
 	protected static final String xsd = "http://www.w3.org/2001/XMLSchema#";
 
@@ -371,16 +371,12 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 */
 	public void convertToOWL(Model model, OutputStream outputStream, String... ids)
 	{
-		if (ids.length == 0)
-		{
+		if (ids.length == 0) {
 			convertToOWL(model, outputStream);
-		} else
-		{
+		} else {
 			Model m = model.getLevel().getDefaultFactory().createModel();
 			m.setXmlBase(model.getXmlBase());
-
 			Fetcher fetcher = new Fetcher(SimpleEditorMap.get(model.getLevel())); //no Filters anymore
-
 			for (String uri : ids)
 			{
 				BioPAXElement bpe = model.getByID(uri);
@@ -389,7 +385,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 					fetcher.fetch(bpe, m);
 				}
 			}
-
 			convertToOWL(m, outputStream);
 		}
 	}

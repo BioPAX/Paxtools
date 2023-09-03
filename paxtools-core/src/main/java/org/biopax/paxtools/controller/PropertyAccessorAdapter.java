@@ -66,7 +66,7 @@ public abstract class PropertyAccessorAdapter<D extends BioPAXElement, R> implem
 	@Override public Set<? extends R> getValueFromBeans(Collection<? extends D> beans) throws
 	                                                                               IllegalBioPAXArgumentException
 	{
-	    Set<R> aggregate = new HashSet<R>();
+	    Set<R> aggregate = new HashSet<>();
 		for (D bean : beans)
 		{
 			aggregate.addAll(this.getValueFromBean(bean));

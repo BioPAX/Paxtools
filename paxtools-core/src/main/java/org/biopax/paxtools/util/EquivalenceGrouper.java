@@ -1,9 +1,8 @@
 package org.biopax.paxtools.util;
 
 import org.biopax.paxtools.model.BioPAXElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.Set;
  * are equivalent. This logic is implemented in isEquivalent() and equivalenceCode()
  * methods.
  *
- * For most Java collections that uses hashCode and equals there is no easy way to plug-in a
+ * For most Java collections that uses hashCode and equals there is no easy way to plug in a
  * comparator to switch to different comparison behavior. This is a simple Set implementation that uses
  * equivalence codes when possible. It uses HashMap as the underlying implementation and will use a special bucket in
  * the case of clashes.
@@ -26,22 +25,20 @@ import java.util.Set;
  */
 public class EquivalenceGrouper<T extends BioPAXElement>
 {
-	HashSet<EquivalanceBucket<T>> buckets;
+	Set<EquivalanceBucket<T>> buckets;
 
-	private static final Logger log = LoggerFactory.getLogger(EquivalenceGrouper.class);
-
-	public EquivalenceGrouper(Set<? extends T> bpes)
+	public EquivalenceGrouper(Collection<? extends T> bpes)
 	{
 		this();
 		addAll(bpes);
 	}
 
-	public HashSet<? extends List<T>> getBuckets()
+	public Set<? extends List<T>> getBuckets()
 	{
 		return buckets;
 	}
 
-	void addAll(Set<? extends T> bpes)
+	void addAll(Collection<? extends T> bpes)
 	{
 		for (T bpe : bpes)
 		{
@@ -61,12 +58,12 @@ public class EquivalenceGrouper<T extends BioPAXElement>
 			}
 		}
 		return value;
-
 	}
 
 	private EquivalanceBucket<T> access(final T element, final boolean parity)
 	{
 		final Object[] trap = new Object[]{null};
+		//noinspection SuspiciousMethodCalls
 		if (this.buckets.contains(new Object()
 		{
 			public int hashCode()
@@ -93,25 +90,21 @@ public class EquivalenceGrouper<T extends BioPAXElement>
 
 	public EquivalenceGrouper()
 	{
-		this.buckets = new HashSet<EquivalanceBucket<T>>();
+		this.buckets = new HashSet<>();
 	}
 
 	public void add(T bpe)
 	{
-
 		// If this is the case then we will simply return false when
 		// we have something that matches the evcode
 		// AND if that something is a bucket contains something that is  equivalent to bpe
-		// AND if that something is not a bucket and it is equivalent to bpe
+		// AND if that something is not a bucket, and it is equivalent to bpe
 		EquivalanceBucket<T> bucket = access(bpe);
-		if (bucket == null)
-		{
+		if (bucket == null) {
 			bucket = new EquivalanceBucket(bpe);
 			this.buckets.add(bucket);
-		} else
-		{
-			for (T t : bucket)
-			{
+		} else {
+			for (T t : bucket) {
 				if(t==bpe) return;
 			}
 			bucket.add(bpe);

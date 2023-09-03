@@ -71,7 +71,7 @@ public class Match implements Cloneable
 	{
 		if (label == null) return Collections.emptyList();
 
-		List<BioPAXElement> list = new ArrayList<BioPAXElement>(label.length);
+		List<BioPAXElement> list = new ArrayList<>(label.length);
 		for (String lab : label)
 		{
 			list.add(variables[p.indexOf(lab)]);

@@ -574,7 +574,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 
 	private List<Set<physicalEntityParticipant>> getPepsGrouped(physicalEntity pe)
 	{
-		List<Set<physicalEntityParticipant>> list = new ArrayList<Set<physicalEntityParticipant>>();
+		List<Set<physicalEntityParticipant>> list = new ArrayList<>();
 
 		for (physicalEntityParticipant pep : pe.isPHYSICAL_ENTITYof())
 		{
@@ -594,7 +594,7 @@ public final class LevelUpgrader extends AbstractTraverser implements ModelFilte
 
 			if (!added)
 			{
-				Set<physicalEntityParticipant> group = new HashSet<physicalEntityParticipant>();
+				Set<physicalEntityParticipant> group = new HashSet<>();
 				group.add(pep);
 				list.add(group);
 			}

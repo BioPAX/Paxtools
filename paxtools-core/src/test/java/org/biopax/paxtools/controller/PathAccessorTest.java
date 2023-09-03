@@ -5,22 +5,19 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- */
 public class PathAccessorTest
 {
 	@Test
-	public void testPaths()
+	public void paths()
 	{
 		MockFactory mock= new MockFactory(BioPAXLevel.L3);
 		final Model model = mock.createModel();
@@ -88,7 +85,7 @@ public class PathAccessorTest
 		assertTrue(mwAccessor.isUnknown(values));
 		
 		accessor = new PathAccessor("Protein/entityReference", BioPAXLevel.L3);
-		Collection<BioPAXElement> beans = new ArrayList<BioPAXElement>();
+		Collection<BioPAXElement> beans = new ArrayList<>();
 		beans.add(p[0]);
 		beans.add(sm[0]);
 		values = accessor.getValueFromBeans(beans);

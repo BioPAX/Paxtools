@@ -150,28 +150,20 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	@Override protected void init(InputStream in)
 	{
-		try
-		{
+		try {
 			XMLInputFactory xmlf = XMLInputFactory.newInstance();
 			//this is to return string with encoded chars as one event (not splitting)
 			xmlf.setProperty("javax.xml.stream.isCoalescing", true);
 			r = xmlf.createXMLStreamReader(in);
-			
-			triples = new LinkedList<Triple>();
-
+			triples = new LinkedList<>();
+		} catch (XMLStreamException e) {
+			throw new BioPaxIOException(e.getClass().getSimpleName() + " " + e.getMessage() + "; " + e.getLocation(), e);
 		}
-		catch (XMLStreamException e)
-		{
-			//e.printStackTrace();
-			throw new BioPaxIOException(e.getClass().getSimpleName() + " " + e.getMessage() + "; " + e.getLocation());
-		}
-
 	}
 
 	@Override protected void reset(InputStream in)
 	{
-
-		this.triples=null;
+		this.triples = null;
 		try
 		{
 			r.close();
@@ -180,13 +172,13 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			throw new RuntimeException("Can't close the stream");
 		}
-		r=null;
+		r = null;
 		super.reset(in);
 	}
 
 	@Override protected Map<String, String> readNameSpaces()
 	{
-		Map<String, String> ns = new HashMap<String, String>();
+		Map<String, String> ns = new HashMap<>();
 		try
 		{
 			if (r.getEventType() == START_DOCUMENT)
@@ -308,8 +300,10 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			throw new BioPaxIOException(e.getClass().getSimpleName() + " " + e.getMessage() + "; " + e.getLocation());
 		}
 
-		for (Triple triple : triples)
+		Iterator<Triple> it = triples.iterator();
+		while (it.hasNext())
 		{
+			Triple triple = it.next();
 			try
 			{
 				bindValue(triple, model);
@@ -318,8 +312,8 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			{
 				log.warn("Binding " + e);
 			}
+			it.remove(); //save some RAM; O(1)
 		}
-
 	}
 
 	/**
@@ -610,7 +604,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	{
 		writeHeader(out);
 
-		Set<BioPAXElement> bioPAXElements = model.getObjects();
+		Collection<BioPAXElement> bioPAXElements = model.getObjects();
 		for (BioPAXElement bean : bioPAXElements)
 		{
 			writeObject(out, bean);
@@ -714,9 +708,10 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	private void initializeExporter(Model model)
 	{
 		base = model.getXmlBase();
-		namespaces = new HashMap<String, String>(model.getNameSpacePrefixMap());
+		namespaces = new HashMap<>(model.getNameSpacePrefixMap());
 
 		normalizeNameSpaces(); // - for this reader/exporter tool
+
 		// also save the changes to the model?
 		if (normalizeNameSpaces)
 		{
@@ -859,9 +854,9 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		return this.mergeDuplicates;
 	}
 
-
 	/**
 	 * Serializes a (not too large) BioPAX model to the RDF/XML (OWL) formatted string.
+	 * (This is used in e.g. BioPAX Validator web app.)
 	 *
 	 * @param model a BioPAX object model to convert to the RDF/XML format
 	 * @return the BioPAX data in the RDF/XML format

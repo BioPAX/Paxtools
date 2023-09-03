@@ -25,8 +25,8 @@ class conversionImpl extends physicalInteractionAdapter
 
 	public conversionImpl()
 	{
-		this.LEFT = new HashSet<physicalEntityParticipant>();
-		this.RIGHT = new HashSet<physicalEntityParticipant>();
+		this.LEFT = new HashSet<>();
+		this.RIGHT = new HashSet<>();
 		updatePARTICIPANTS(null, LEFT);
 		updatePARTICIPANTS(null, RIGHT);
 	}
@@ -65,7 +65,7 @@ class conversionImpl extends physicalInteractionAdapter
 	{
 		if (RIGHT == null)
 		{
-			RIGHT = new HashSet<physicalEntityParticipant>();
+			RIGHT = new HashSet<>();
 		}
 		updatePARTICIPANTS(this.RIGHT, this.RIGHT = RIGHT);
 	}
@@ -92,7 +92,7 @@ class conversionImpl extends physicalInteractionAdapter
 	{
 		if (LEFT == null)
 		{
-			LEFT = new HashSet<physicalEntityParticipant>();
+			LEFT = new HashSet<>();
 		}
 
 		updatePARTICIPANTS(this.LEFT, this.LEFT = LEFT);

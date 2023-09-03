@@ -6,13 +6,15 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Named;
 import org.biopax.paxtools.pattern.constraint.NonUbique;
 import org.biopax.paxtools.pattern.util.Blacklist;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ozgun Babur
@@ -23,9 +25,8 @@ public class PatternBoxTest
 	protected Model model_urea;
 	protected Model model_tca;
 
-	@Before
-	public void setUp() throws Exception
-	{
+	@BeforeEach
+	public void init() {
 		SimpleIOHandler h = new SimpleIOHandler();
 		model_P53 = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("AR-TP53.owl"));
 		model_urea = h.convertFromOWL(PatternBoxTest.class.getResourceAsStream("UreaCycle.owl"));
@@ -33,12 +34,12 @@ public class PatternBoxTest
 	}
 
 	@Test
-	public void testInSameComplex() throws Exception
+	public void inSameComplex() throws Exception
 	{
 		List<Match> list = Searcher.search(model_P53.getByID("http://pid.nci.nih.gov/biopaxpid_33442"),
 			PatternBox.inSameComplex());
 		
-		Assert.assertTrue(list.size() == 1);
+		Assertions.assertTrue(list.size() == 1);
 
 //		Map<BioPAXElement,List<Match>> map = Searcher.search(model_P53, PatternBox.inSameComplex());
 //
@@ -49,23 +50,23 @@ public class PatternBoxTest
 	}
 
 	@Test
-	public void testControlsStateChange() throws Exception
+	public void controlsStateChange() throws Exception
 	{
 		Map<BioPAXElement,List<Match>> map = Searcher.search(
 			model_P53, PatternBox.controlsStateChange());
 
-		Assert.assertTrue(map.size() > 0);
+		Assertions.assertTrue(map.size() > 0);
 	}
 
 	@Test
-	public void testConsecutiveCatalysis() throws Exception
+	public void consecutiveCatalysis() throws Exception
 	{
 		Pattern p = PatternBox.catalysisPrecedes(null);
 
 		List<Match> list = Searcher.searchPlain(model_urea, p);
 
 		int size = list.size();
-		Assert.assertTrue(size > 0);
+		Assertions.assertTrue(size > 0);
 
 //		printMatches(list, 0, 5, 10);
 
@@ -76,21 +77,21 @@ public class PatternBoxTest
 
 		list = Searcher.searchPlain(model_urea, p);
 
-		Assert.assertTrue(!list.isEmpty() && list.size() < size);
+		Assertions.assertTrue(!list.isEmpty() && list.size() < size);
 
 		b = new Blacklist(PatternBoxTest.class.getResourceAsStream("blacklist.txt"));
 		p = PatternBox.catalysisPrecedes(b);
 		list = Searcher.searchPlain(model_tca, p);
 
-		Assert.assertTrue(list.size() > 15);
+		Assertions.assertTrue(list.size() > 15);
 
 //		printMatches(list, 0, 5, 10);
 
 	}
 
 	@Test
-	@Ignore
-	public void testConsecutiveCatalysis2() throws Exception
+	@Disabled
+	public void consecutiveCatalysis2() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
 		model_P53 = h.convertFromOWL(new FileInputStream("/home/ozgun/Desktop/NMNAT1-QPRT.owl"));

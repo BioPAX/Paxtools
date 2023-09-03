@@ -42,7 +42,7 @@ public class Prune
 	 */
 	public Set<GraphObject> run()
 	{
-		for (GraphObject go : new HashSet<GraphObject>(result))
+		for (GraphObject go : new HashSet<>(result))
 		{
 			if (go instanceof Node)
 			{

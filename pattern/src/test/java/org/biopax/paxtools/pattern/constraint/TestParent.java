@@ -4,8 +4,8 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.pattern.Match;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +18,7 @@ public class TestParent
 {
 	Model model;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception
 	{
 		SimpleIOHandler h = new SimpleIOHandler();
@@ -35,7 +35,7 @@ public class TestParent
 
 	protected Set<BioPAXElement> collect(List<Match> list, int index)
 	{
-		Set<BioPAXElement> set = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> set = new HashSet<>();
 
 		for (Match match : list)
 		{

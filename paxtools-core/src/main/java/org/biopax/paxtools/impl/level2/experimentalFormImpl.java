@@ -23,7 +23,7 @@ class experimentalFormImpl extends BioPAXLevel2ElementImpl
 
 	public experimentalFormImpl()
 	{
-		this.EXPERIMENTAL_FORM_TYPE = new HashSet<openControlledVocabulary>();
+		this.EXPERIMENTAL_FORM_TYPE = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

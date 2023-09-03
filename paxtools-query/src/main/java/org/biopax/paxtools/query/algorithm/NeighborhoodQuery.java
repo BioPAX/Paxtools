@@ -53,7 +53,7 @@ public class NeighborhoodQuery
 	public Set<GraphObject> run()
 	{
 		// result set of neighborhood query
-		Set<GraphObject> queryResult = new HashSet<GraphObject>();
+		Set<GraphObject> queryResult = new HashSet<>();
 
 		// if upstream is selected
 		if (direction == Direction.UPSTREAM || direction == Direction.BOTHSTREAM)

@@ -385,7 +385,7 @@ public class PatternBox
 
 				if (blacklist != null)
 				{
-					Set<PhysicalEntity> set = new HashSet<PhysicalEntity>(input1);
+					Set<PhysicalEntity> set = new HashSet<>(input1);
 					set = blacklist.getNonUbiques(set, RelType.INPUT);
 					set.removeAll(output2);
 					if (set.isEmpty())

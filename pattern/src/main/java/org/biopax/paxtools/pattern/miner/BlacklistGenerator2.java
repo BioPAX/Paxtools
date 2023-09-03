@@ -5,7 +5,6 @@ import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 import org.biopax.paxtools.pattern.util.Blacklist;
-import org.biopax.paxtools.pattern.util.ChemicalNameNormalizer;
 import org.biopax.paxtools.pattern.util.RelType;
 
 import java.io.*;
@@ -90,21 +89,21 @@ public class BlacklistGenerator2
 
 		// read interactions into maps
 
-		Map<String, Set<String>> upstrMap = new HashMap<String, Set<String>>();
-		Map<String, Set<String>> dwstrMap = new HashMap<String, Set<String>>();
-		final Map<String, Set<String>> neighMap = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> upstrMap = new HashMap<>();
+		Map<String, Set<String>> dwstrMap = new HashMap<>();
+		final Map<String, Set<String>> neighMap = new HashMap<>();
 
 		for (SIFInteraction sif : sifs)
 		{
 			String source = sif.sourceID;
 			String target = sif.targetID;
 
-			if (!neighMap.containsKey(source)) neighMap.put(source, new HashSet<String>());
-			if (!neighMap.containsKey(target)) neighMap.put(target, new HashSet<String>());
-			if (!dwstrMap.containsKey(source)) dwstrMap.put(source, new HashSet<String>());
-			if (!dwstrMap.containsKey(target)) dwstrMap.put(target, new HashSet<String>());
-			if (!upstrMap.containsKey(source)) upstrMap.put(source, new HashSet<String>());
-			if (!upstrMap.containsKey(target)) upstrMap.put(target, new HashSet<String>());
+			if (!neighMap.containsKey(source)) neighMap.put(source, new HashSet<>());
+			if (!neighMap.containsKey(target)) neighMap.put(target, new HashSet<>());
+			if (!dwstrMap.containsKey(source)) dwstrMap.put(source, new HashSet<>());
+			if (!dwstrMap.containsKey(target)) dwstrMap.put(target, new HashSet<>());
+			if (!upstrMap.containsKey(source)) upstrMap.put(source, new HashSet<>());
+			if (!upstrMap.containsKey(target)) upstrMap.put(target, new HashSet<>());
 
 			neighMap.get(source).add(target);
 			neighMap.get(target).add(source);
@@ -125,9 +124,6 @@ public class BlacklistGenerator2
 			upstr.removeAll(dwstr);
 			dwstr.removeAll(temp);
 		}
-
-//		writeTheGuideRankingToTuneTheDecider(model, nameMapping, upstrMap, dwstrMap, neighMap);
-//		if (true) return null;
 
 		Set<String> white = readWhitelist();
 
@@ -159,19 +155,16 @@ public class BlacklistGenerator2
 		return blacklist;
 	}
 
-	private void writeTheGuideRankingToTuneTheDecider(Model model, Map<String, String> nameMapping, Map<String, Set<String>> upstrMap, Map<String, Set<String>> dwstrMap, final Map<String, Set<String>> neighMap) throws IOException
+	private void writeTheGuideRankingToTuneTheDecider(
+		Model model, Map<String, String> nameMapping,
+		Map<String, Set<String>> upstrMap, Map<String,
+		Set<String>> dwstrMap, final Map<String,
+		Set<String>> neighMap) throws IOException
 	{
 		// Sort to degree
 
-		List<String> names = new ArrayList<String>(neighMap.keySet());
-		Collections.sort(names, new Comparator<String>()
-		{
-			@Override
-			public int compare(String o1, String o2)
-			{
-				return new Integer(neighMap.get(o2).size()).compareTo(neighMap.get(o1).size());
-			}
-		});
+		List<String> names = new ArrayList<>(neighMap.keySet());
+		Collections.sort(names, (o1, o2) -> Integer.valueOf(neighMap.get(o2).size()).compareTo(neighMap.get(o1).size()));
 
 		SIFSearcher searcher2 = new SIFSearcher(new Fetcher(nameMapping), new ChemicalAffectsThroughControlMiner());
 
@@ -179,14 +172,14 @@ public class BlacklistGenerator2
 
 		// read interactions into maps
 
-		final Map<String, Set<String>> affectMap = new HashMap<String, Set<String>>();
+		final Map<String, Set<String>> affectMap = new HashMap<>();
 
 		for (SIFInteraction sif : sifs2)
 		{
 			String source = sif.sourceID;
 			String target = sif.targetID;
 
-			if (!affectMap.containsKey(source)) affectMap.put(source, new HashSet<String>());
+			if (!affectMap.containsKey(source)) affectMap.put(source, new HashSet<>());
 			affectMap.get(source).add(target);
 		}
 
@@ -210,15 +203,15 @@ public class BlacklistGenerator2
 
 		// read interactions into maps
 
-		final Map<String, Set<String>> neighMap = new HashMap<String, Set<String>>();
+		final Map<String, Set<String>> neighMap = new HashMap<>();
 
 		for (SIFInteraction sif : sifs)
 		{
 			String source = sif.sourceID;
 			String target = sif.targetID;
 
-			if (!neighMap.containsKey(source)) neighMap.put(source, new HashSet<String>());
-			if (!neighMap.containsKey(target)) neighMap.put(target, new HashSet<String>());
+			if (!neighMap.containsKey(source)) neighMap.put(source, new HashSet<>());
+			if (!neighMap.containsKey(target)) neighMap.put(target, new HashSet<>());
 
 			neighMap.get(source).add(target);
 			neighMap.get(target).add(source);
@@ -226,15 +219,8 @@ public class BlacklistGenerator2
 
 		// Sort to degree
 
-		List<String> names = new ArrayList<String>(neighMap.keySet());
-		Collections.sort(names, new Comparator<String>()
-		{
-			@Override
-			public int compare(String o1, String o2)
-			{
-				return new Integer(neighMap.get(o2).size()).compareTo(neighMap.get(o1).size());
-			}
-		});
+		List<String> names = new ArrayList<>(neighMap.keySet());
+		Collections.sort(names, (o1, o2) -> Integer.valueOf(neighMap.get(o2).size()).compareTo(neighMap.get(o1).size()));
 
 		Set<Set<String>> bag = collectNameSets(model);
 		Map<String, Set<Set<String>>> nameToSets = getNameToSetsMap(bag);
@@ -243,10 +229,9 @@ public class BlacklistGenerator2
 		// Find and record name mapping
 
 		String dir = System.getProperty("java.io.tmpdir") + File.separator;
-
 		BufferedWriter writer = new BufferedWriter(new FileWriter(dir + MAPPING_FILE));
 
-		List<String> remaining = new ArrayList<String>();
+		List<String> remaining = new ArrayList<>();
 		for (String name : names)
 		{
 			remaining.add(name.toLowerCase());
@@ -275,10 +260,10 @@ public class BlacklistGenerator2
 
 	private Set<Set<String>> collectNameSets(Model model)
 	{
-		Set<Set<String>> bag = new HashSet<Set<String>>();
+		Set<Set<String>> bag = new HashSet<>();
 		for (SmallMoleculeReference smr : model.getObjects(SmallMoleculeReference.class))
 		{
-			Set<String> set = new HashSet<String>();
+			Set<String> set = new HashSet<>();
 
 			for (String name : smr.getName())
 			{
@@ -302,7 +287,7 @@ public class BlacklistGenerator2
 
 	private void doSomeCleaning(Set<String> set)
 	{
-		Set<String> rem = new HashSet<String>();
+		Set<String> rem = new HashSet<>();
 		for (String s : set)
 		{
 			if (s.contains("pathway") || s.contains("participant")) rem.add(s);
@@ -312,7 +297,7 @@ public class BlacklistGenerator2
 
 	private void enrichWithModifications(Set<String> set)
 	{
-		for (String s : new HashSet<String>(set))
+		for (String s : new HashSet<>(set))
 		{
 			if (s.endsWith("-)") || s.endsWith("+)"))
 			{
@@ -327,13 +312,13 @@ public class BlacklistGenerator2
 
 	private Map<String, Set<Set<String>>> getNameToSetsMap(Set<Set<String>> bag)
 	{
-		Map<String, Set<Set<String>>> map = new HashMap<String, Set<Set<String>>>();
+		Map<String, Set<Set<String>>> map = new HashMap<>();
 
 		for (Set<String> set : bag)
 		{
 			for (String name : set)
 			{
-				if (!map.containsKey(name)) map.put(name, new HashSet<Set<String>>());
+				if (!map.containsKey(name)) map.put(name, new HashSet<>());
 				map.get(name).add(set);
 			}
 		}
@@ -342,14 +327,14 @@ public class BlacklistGenerator2
 
 	private Set<String> getCommon(Set<String> set1, Set<String> set2)
 	{
-		Set<String> comm = new HashSet<String>(set1);
+		Set<String> comm = new HashSet<>(set1);
 		comm.retainAll(set2);
 		return comm;
 	}
 
 	private List<String> getCommon(List<String> list1, Set<String> set2)
 	{
-		List<String> comm = new ArrayList<String>();
+		List<String> comm = new ArrayList<>();
 		for (String s : list1)
 		{
 			if (set2.contains(s)) comm.add(s);
@@ -359,7 +344,7 @@ public class BlacklistGenerator2
 
 	private Map<Set<String>, Set<Set<String>>> getIntersectionMap(Set<Set<String>> bag)
 	{
-		Map<Set<String>, Set<Set<String>>> map = new HashMap<Set<String>, Set<Set<String>>>();
+		Map<Set<String>, Set<Set<String>>> map = new HashMap<>();
 
 		for (Set<String> set : bag)
 		{
@@ -369,7 +354,7 @@ public class BlacklistGenerator2
 
 				if (!getCommon(set, oth).isEmpty())
 				{
-					if (!map.containsKey(set)) map.put(set, new HashSet<Set<String>>());
+					if (!map.containsKey(set)) map.put(set, new HashSet<>());
 					map.get(set).add(oth);
 				}
 			}
@@ -380,7 +365,7 @@ public class BlacklistGenerator2
 	private Map<String, Set<String>[]> getMappingsAndBasis(String name, List<String> consider,
 		Map<String, Set<Set<String>>> nameToSets, Map<Set<String>, Set<Set<String>>> intersectionMap)
 	{
-		Map<String, Set<String>[]> map = new HashMap<String, Set<String>[]>();
+		Map<String, Set<String>[]> map = new HashMap<>();
 
 		for (Set<String> set : nameToSets.get(name))
 		{
@@ -404,7 +389,7 @@ public class BlacklistGenerator2
 	{
 		if (!new File(MAPPING_FILE).exists()) return null;
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 
 		Scanner sc = new Scanner(new File(MAPPING_FILE));
 		while (sc.hasNextLine())
@@ -424,7 +409,7 @@ public class BlacklistGenerator2
 				"Not whitelisting anything.");
 			return null;
 		}
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		Scanner sc = new Scanner(new File(WHITELIST_FILE));
 		while (sc.hasNextLine())
 		{
@@ -473,7 +458,7 @@ public class BlacklistGenerator2
 	/**
 	 * The class to decide if a molecule is ubique, its score and its context of ubiquity.
 	 */
-	static interface Decider
+	interface Decider
 	{
 		/**
 		 * Tells if the molecule is ubique in at least one context.
@@ -481,7 +466,7 @@ public class BlacklistGenerator2
 		 * @param upstrOnly number of upstream neighbors in the used-to-produce network, that are not also at downstream
 		 * @param dwstrOnly number of downstream neighbors in the used-to-produce network, that are not also at upstream
 		 */
-		public boolean isUbique(int neighborSize, int upstrOnly, int dwstrOnly);
+		boolean isUbique(int neighborSize, int upstrOnly, int dwstrOnly);
 
 		/**
 		 * Gets the ubiquity score of the ubique molecule. This score is used for comparing ubiques
@@ -490,7 +475,7 @@ public class BlacklistGenerator2
 		 * @param upstrOnly number of upstream neighbors in the used-to-produce network, that are not also at downstream
 		 * @param dwstrOnly number of downstream neighbors in the used-to-produce network, that are not also at upstream
 		 */
-		public int getScore(int neighborSize, int upstrOnly, int dwstrOnly);
+		int getScore(int neighborSize, int upstrOnly, int dwstrOnly);
 
 		/**
 		 * Gets the context of ubiquity. A molecule can be ubiquitously consumed, or can be
@@ -499,9 +484,7 @@ public class BlacklistGenerator2
 		 * @param upstrOnly number of upstream neighbors in the used-to-produce network, that are not also at downstream
 		 * @param dwstrOnly number of downstream neighbors in the used-to-produce network, that are not also at upstream
 		 */
-		public RelType getContext(int neighborSize, int upstrOnly, int dwstrOnly);
+		RelType getContext(int neighborSize, int upstrOnly, int dwstrOnly);
 	}
-
-
 
 }

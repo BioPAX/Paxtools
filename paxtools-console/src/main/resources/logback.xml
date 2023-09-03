@@ -16,12 +16,7 @@
     </encoder>
   </appender>
 
-    <logger name="org.biopax.paxtools.examples" level="info" />
-    <logger name="org.biopax.paxtools.client" level="info" />
-    <logger name="org.biopax.paxtools.Main" level="info" />
-    <!--<logger name="org.biopax.paxtools.io.gsea" level="info" />-->
-
-  <root level="warn">
+  <root level="info">
     <appender-ref ref="console" />
   </root>
 

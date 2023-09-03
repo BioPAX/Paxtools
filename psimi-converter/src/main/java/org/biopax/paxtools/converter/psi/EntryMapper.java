@@ -74,7 +74,7 @@ class EntryMapper {
 	private static final ArrayList<String> GENETIC_INTERACTIONS;
 	
 	static {
-		GENETIC_INTERACTIONS = new ArrayList<String>();
+		GENETIC_INTERACTIONS = new ArrayList<>();
 		GENETIC_INTERACTIONS.add("dosage growth defect");
 		GENETIC_INTERACTIONS.add("dosage lethality");
 		GENETIC_INTERACTIONS.add("dosage rescue");
@@ -128,7 +128,7 @@ class EntryMapper {
 	public void run(Entry entry) {	
 		
 		// get availabilities
-		final Set<String> avail = new HashSet<String>();
+		final Set<String> avail = new HashSet<>();
 		if(entry.hasAvailabilities()) {
 			for (Availability a : entry.getAvailabilities())
 				if (a.hasValue()) 
@@ -140,7 +140,7 @@ class EntryMapper {
 		
 		//build a skip-set of "interactions" linked by participant.interactionRef element;
 		//we'll then create Complex type participants from these in-participant interactions.
-		Set<Interaction> participantInteractions = new HashSet<Interaction>();
+		Set<Interaction> participantInteractions = new HashSet<>();
 		for(Interaction interaction : entry.getInteractions()) {
 			for(Participant participant : interaction.getParticipants()) {
 				//checking for hasInteraction()==true only is sufficient; 
@@ -236,7 +236,7 @@ class EntryMapper {
 	private Entity processInteraction(Interaction interaction, Set<String> avail, 
 			Provenance pro, boolean isComplex) 
 	{	
-		Entity bpInteraction = null; //interaction or complex
+		Entity bpInteraction; //interaction or complex
 		boolean isGeneticInteraction = false;
 		
 		// get interaction name/short name
@@ -248,7 +248,7 @@ class EntryMapper {
 			shortName = (names.hasShortLabel()) ? names.getShortLabel() : "";
 		}
 		
-		final Set<InteractionVocabulary> interactionVocabularies = new HashSet<InteractionVocabulary>();
+		final Set<InteractionVocabulary> interactionVocabularies = new HashSet<>();
 		if (interaction.hasInteractionTypes()) {
 			for(CvType interactionType : interaction.getInteractionTypes()) {
 				//generate InteractionVocabulary and set interactionType
@@ -260,14 +260,14 @@ class EntryMapper {
 		
 		// using experiment descriptions, create Evidence objects 
 		// (yet, no experimental forms/roles/entities are created here)
-		Set<Evidence> bpEvidences = new HashSet<Evidence>();
+		Set<Evidence> bpEvidences = new HashSet<>();
 		if (interaction.hasExperiments()) {			
 			bpEvidences = createBiopaxEvidences(interaction);
 		}
 		
 		//A hack for e.g. IntAct or BIND "gene-protein" interactions (ChIp and EMSA experiments)
 		// where the interactor type should probably not be 'gene' (but 'dna' or 'rna')
-		Set<String> participantTypes = new HashSet<String>();
+		Set<String> participantTypes = new HashSet<>();
 		for(Participant p : interaction.getParticipants()) {
 			if(p.hasInteractor()) {
 				String type = getName(p.getInteractor().getInteractorType().getNames());
@@ -296,7 +296,7 @@ class EntryMapper {
 		}		
 		
 		// interate through the psi-mi participants, create corresp. biopax entities
-		final Set<Entity> bpParticipants = new HashSet<Entity>();
+		final Set<Entity> bpParticipants = new HashSet<>();
 		for (Participant participant : interaction.getParticipants()) {
 			// get paxtools physical entity participant and add to participant list
 			// (this also adds experimental evidence and forms)
@@ -308,7 +308,7 @@ class EntryMapper {
 		}
 				
 		// Process interaction attributes.
-		final Set<String> comments = new HashSet<String>();
+		final Set<String> comments = new HashSet<>();
 		// Set GeneticInteraction flag.
 		// As of BioGRID v3.1.72 (at least), genetic interaction code can reside
 		// as an attribute of the Interaction via "BioGRID Evidence Code" key
@@ -366,7 +366,7 @@ class EntryMapper {
 		}
 				
 		// add xrefs		
-		Set<Xref> bpXrefs = new HashSet<Xref>();		
+		Set<Xref> bpXrefs = new HashSet<>();		
 		if (interaction.hasXref()) {
 			bpXrefs.addAll(getXrefs(interaction.getXref()));
 		}
@@ -380,7 +380,7 @@ class EntryMapper {
 
 	
 	private Set<Evidence> createBiopaxEvidences(Interaction interaction) {
-		Set<Evidence> evidences = new HashSet<Evidence>();
+		Set<Evidence> evidences = new HashSet<>();
 		
 		for (ExperimentDescription experimentDescription : interaction.getExperiments()) {
 			// build and add evidence
@@ -502,8 +502,9 @@ class EntryMapper {
 					
 					//try to reuse existing experimental form entity
 					expEntity = findEquivalentEntity(expEntity);
-					if(!bpModel.contains(expEntity))
+					if(!bpModel.containsID(expEntity.getUri())) {
 						bpModel.add(expEntity);
+					}
 					
 					//workaround a PSI-MI parser issue (no exp. or exp.refs means to apply to all interaction's experiments):
 					if(experimentalInteractor.hasExperiments()) {
@@ -537,8 +538,9 @@ class EntryMapper {
 		}
 	
 		//finally, add, if new, entity to the model and return
-		if(!bpModel.contains(entity))
+		if(!bpModel.containsID(entity.getUri())) {
 			bpModel.add(entity);
+		}
 		
 		return entity;
 	}
@@ -585,7 +587,7 @@ class EntryMapper {
 	/*
 	 * Converts a PSIMI participant to BioPAX physical entity or gene. 
 	 * It can be then used either as a participant of an interaction 
-	 * or exp. form entity of a exp. form of a participant's evidence,
+	 * or exp. form entity of an exp. form of a participant's evidence,
 	 * depending on the caller method and the map provided.
 	 * The result entity is not added to the model yet (but its entity reference, 
 	 * if applicable, Xrefs, CVs are added to the model).
@@ -615,7 +617,7 @@ class EntryMapper {
 		// get names/synonyms from the psimi interactor (participant does not have them)
 		String name = null;
 		String shortName = null;
-		Set<String> synonyms = new HashSet<String>();
+		Set<String> synonyms = new HashSet<>();
 		Names psiNames = interactor.getNames();
 		if (psiNames != null) {
 			name = (psiNames.hasFullName()) ? psiNames.getFullName() : null;
@@ -675,19 +677,16 @@ class EntryMapper {
 				entityReferenceClass = null;
 			} else if ("interaction".equals(entityType))
 			{
-//				entityClass = null;
-//				entityReferenceClass = null;
 				LOG.warn("EntryMapper.createParticipant(): skip for interactor: " + interactor.getId()
 						+ " that has type: " + entityType 
 						+ ", participant:" + participant.getId() + ").");
 				return null;
 			}
-						
 			//else - peptide, biopolymer, molecule set, unknown, etc. - consider this is a Protein.
 		}
 		
 		//make consistent biopax URI (for the entity ref., if applies, or phys. entity)
-		String entityUri = "";
+		String entityUri;
 		String baseUri = "";
 		
 		final RelationshipXref x = getInteractorPrimaryRef(interactor.getXref());
@@ -874,7 +873,7 @@ class EntryMapper {
 	 * of SequenceInterval (sequence locations). 
 	 */
 	private Set<SequenceInterval> getSequenceLocation(Collection<Range> rangeList) {
-		Set<SequenceInterval> toReturn = new HashSet<SequenceInterval>();
+		Set<SequenceInterval> toReturn = new HashSet<>();
 
 		// if we have a locationType, lets process
 		for (Range range : rangeList) {
@@ -937,8 +936,8 @@ class EntryMapper {
 			}
 		}
 		
-		String uri = xmlBase + "BioSource_" + 
-			"taxonomy_" + ncbiId; //tissue and cell type terms can be added below		
+		String uri = xmlBase + "BIO_" +
+			"ncbitaxon_" + ncbiId; //tissue and cell type terms can be added below
 		if(tissue!=null && !tissue.getTerm().isEmpty()) 
 			uri += "_" + encode(tissue.getTerm().iterator().next());
 		if(cellType!=null && !cellType.getTerm().isEmpty()) 
@@ -951,22 +950,22 @@ class EntryMapper {
 		
 		toReturn = bpModel.addNew(BioSource.class, uri);
 		
-		String taxonXrefUri = xmlBase + "UnificationXref_taxonomy_" + ncbiId;
+		String taxonXrefUri = xmlBase + "UX_ncbitaxon_" + ncbiId;
 		UnificationXref taxonXref = (UnificationXref) bpModel.getByID(taxonXrefUri);
 		if(taxonXref == null) {
 			taxonXref = bpModel.addNew(UnificationXref.class, taxonXrefUri);
 			taxonXref.setDb("Taxonomy");
 			taxonXref.setId(ncbiId);
 		}
-		toReturn.addXref((Xref)taxonXref);
+		toReturn.addXref(taxonXref);
 		
 		if (cellType != null)
 		{
-			toReturn.setCellType((CellVocabulary) cellType);
+			toReturn.setCellType(cellType);
 		}
 		if (tissue != null)
 		{
-			toReturn.setTissue((TissueVocabulary) tissue);
+			toReturn.setTissue(tissue);
 		}
 		if (name != null) {
 			toReturn.setStandardName(name);
@@ -1029,13 +1028,13 @@ class EntryMapper {
 	private Set<Xref> getXrefs(psidev.psi.mi.xml.model.Xref psiXREF) {
 
 		// set to return
-		Set<Xref> toReturn = new HashSet<Xref>();
+		Set<Xref> toReturn = new HashSet<>();
 
 		// check args
 		if (psiXREF == null) return toReturn;
 		
 		// create the list of all other psimi xrefs
-		List<DbReference> psiDBRefList = new ArrayList<DbReference>();
+		List<DbReference> psiDBRefList = new ArrayList<>();
 
 		DbReference primaryRef = psiXREF.getPrimaryRef();
 		if(primaryRef != null) { //looks, it should never be null in a valid PSI-MI model
@@ -1065,24 +1064,24 @@ class EntryMapper {
 		// process ref type
 		String refType = (psiref.hasRefType()) ? psiref.getRefType() : null;
 		String refTypeAc = (psiref.hasRefTypeAc()) ? psiref.getRefTypeAc() : null;
-        String psiDBRefId = psiref.getId();
-        String psiDBRefDb = psiref.getDb();
-        // If multiple ids given with comma separated values, then split them.
-        for (String dbRefId : psiDBRefId.split(",")) {	
-        	Xref bpXref = null;
+		String psiDBRefId = psiref.getId();
+		String psiDBRefDb = psiref.getDb();
+		// If multiple ids given with comma separated values, then split them.
+		for (String dbRefId : psiDBRefId.split(",")) {
+			Xref bpXref;
 			// Let's not make UnificationXrefs. RelationshipXref is more safe.
 			// Often, a gene or omim ID (can be another species') is a protein's xref id with 'identity' type...
-            if(!"pubmed".equalsIgnoreCase(psiDBRefDb)) {
+			if(!"pubmed".equalsIgnoreCase(psiDBRefDb)) {
 				bpXref = relationshipXref(psiDBRefDb, dbRefId, refType, refTypeAc);
-            }
-            else {
-            	//TODO shall we skip PublicationXref here (IntAct puts the same PSIMI paper pmid everywhere...)?
+			}
+			else {
+				//TODO shall we skip PublicationXref here (IntAct puts the same PSIMI paper pmid everywhere...)?
 				bpXref = publicationXref(psiDBRefDb, dbRefId);
-            }
+			}
 
-            if (bpXref != null) 
-            	bpXrefs.add(bpXref);
-        }
+			if (bpXref != null)
+				bpXrefs.add(bpXref);
+		}
 	}
 
 
@@ -1095,7 +1094,7 @@ class EntryMapper {
         		|| "geneid".equalsIgnoreCase(db)
         		|| "gene id".equalsIgnoreCase(db)
         		|| "ncbigene".equalsIgnoreCase(db))
-        	db = "NCBI Gene";
+        	db = "Entrez Gene";
         
 		return db;
 	}
@@ -1150,7 +1149,7 @@ class EntryMapper {
 		}
 		
 		id = id.trim();
-		String xuri = xmlBase + "UnificationXref_" + encode(db.toLowerCase() + "_" + id);
+		String xuri = xmlBase + "UX_" + encode(db.toLowerCase() + "_" + id);
 		UnificationXref x = (UnificationXref) bpModel.getByID(xuri);
 		if(x==null) {
 			x= bpModel.addNew(UnificationXref.class, xuri);
@@ -1181,7 +1180,7 @@ class EntryMapper {
 			return  null;
 		}
 		
-		String xuri = xmlBase + "PublicationXref_" + encode(db.toLowerCase() + "_" + id);
+		String xuri = xmlBase + "PX_" + encode(db.toLowerCase() + "_" + id);
 		PublicationXref x = (PublicationXref) bpModel.getByID(xuri);
 		if(x==null) {
 			x= bpModel.addNew(PublicationXref.class, xuri);
@@ -1202,10 +1201,10 @@ class EntryMapper {
 	 * controlled vocabulary objects which represent evidence code(s).
 	 */
 	private Set<EvidenceCodeVocabulary> getEvidenceCodes(ExperimentDescription experimentDescription) {
-		Set<EvidenceCodeVocabulary> toReturn = new HashSet<EvidenceCodeVocabulary>();
+		Set<EvidenceCodeVocabulary> toReturn = new HashSet<>();
 
 		// get experiment methods
-		Set<CvType> cvTypeSet = new HashSet<CvType>(3);
+		Set<CvType> cvTypeSet = new HashSet<>(3);
 		//skip if "unspecified method" (MI:0686) is the interaction detection method
 		if(experimentDescription.getInteractionDetectionMethod() != null 
 				&& !"MI:0686".equalsIgnoreCase(experimentDescription.getInteractionDetectionMethod().getXref().getPrimaryRef().getId()))
@@ -1243,13 +1242,13 @@ class EntryMapper {
 		OpenCvType ocv = psiConfidence.getUnit(); 
 
 		// psiConfidence.unit.xref maps to confidence.xref
-		Set<Xref> bpXrefs = new HashSet<Xref>();
+		Set<Xref> bpXrefs = new HashSet<>();
 		if (ocv != null && ocv.getXref() != null) {
 			bpXrefs.addAll(getXrefs(ocv.getXref()));
 		}
 
 		// used to store names and attributes
-		Set<String> comments = new HashSet<String>();
+		Set<String> comments = new HashSet<>();
 
 		// psiConfidence.unit.names maps to confidence comment
 		if (ocv != null && ocv.getNames() != null) {
@@ -1274,7 +1273,7 @@ class EntryMapper {
 	private Set<String> getAttributes(Collection<Attribute> attributes) {
 
 		// set to return
-		Set<String> toReturn = new HashSet<String>();
+		Set<String> toReturn = new HashSet<>();
 
 		// iterate over the attributes
 		for (Attribute attribute : attributes) {
@@ -1305,7 +1304,7 @@ class EntryMapper {
 	private void createAddExperimentalForm(Participant participant, 
 			Evidence pEvidence, Entity expEntity, ExperimentDescription exp) 
 	{	 		
-		Set<EntityFeature> efs = new HashSet<EntityFeature>();
+		Set<EntityFeature> efs = new HashSet<>();
 		for(Feature f : participant.getFeatures()) {
 			if(exp==null || f.getExperiments().contains(exp) || f.getExperiments().isEmpty()) {
 				EntityFeature feature = getFeature(ModificationFeature.class, f);			
@@ -1315,7 +1314,7 @@ class EntryMapper {
 			}
 		}
 
-		Set<ExperimentalFormVocabulary> efvs = new HashSet<ExperimentalFormVocabulary>();
+		Set<ExperimentalFormVocabulary> efvs = new HashSet<>();
 		if (participant.hasExperimentalRoles()) {
 			for (ExperimentalRole role : participant.getExperimentalRoles()) {
 				if(exp==null || role.getExperiments().contains(exp) || role.getExperiments().isEmpty()) {
@@ -1378,53 +1377,52 @@ class EntryMapper {
 
 
 	private RelationshipXref relationshipXref(String db, String id, String refType, String refTypeAc)
-	{	
+	{
 		if(db == null || db.trim().isEmpty()) {
 			LOG.warn("relationshipXref(), db is null, id=" + id);
 			return null;
 		}
-		
+
 		db = dbQuickFix(db);
-		
+
 		if(id == null || id.trim().isEmpty() || BAD_ID_VALS.contains(id.trim().toUpperCase())) {
 			LOG.warn("relationshipXref(), illegal id=" + id);
 			return  null;
 		}
-		
+
 		id = id.trim();
-		
+
 		//generate URI
-		String uri = xmlBase + "RelationshipXref_";
+		String uri = xmlBase + "RX_";
 		if(refType!=null && !refType.isEmpty())
 			uri += encode(db.toLowerCase()+"_"+id+"_"+refType);
 		else
-			uri += encode(db.toLowerCase()+"_"+id);	
-		
-        RelationshipXref x = (RelationshipXref) bpModel.getByID(uri);                 
-        
-        if (x == null) { //create/add a new RX
-        	x = bpModel.addNew(RelationshipXref.class, uri);
-        	x.setDb(db);
-        	x.setId(id);
-        	if (refType != null) //use the standard CV term and accession
-        	{
-        		String cvUri = (refTypeAc!=null) ? "http://identifiers.org/psimi/" + refTypeAc
-        			: xmlBase + "RTV_" + encode(refType);//the latter should not happen often (ever, in a valid PSI-MI XML)			
-        		RelationshipTypeVocabulary rtv = (RelationshipTypeVocabulary) bpModel.getByID(cvUri);
-        		if(rtv == null) {
-        			rtv = bpModel.addNew(RelationshipTypeVocabulary.class, cvUri);
-        			rtv.addTerm(refType);
-        			if(refTypeAc != null && !refTypeAc.isEmpty()) {//null happens, e.g., for 'uniprot-removed-ac' terms...
-        				UnificationXref cvx = bpModel.addNew(UnificationXref.class, genUri(UnificationXref.class));
-        				cvx.setDb("PSI-MI");
-        				cvx.setId(refTypeAc);
-        				rtv.addXref(cvx);
-        			}
-        		}			
-        		x.setRelationshipType(rtv);
-        	}		
-        }
-        
+			uri += encode(db.toLowerCase()+"_"+id);
+
+		RelationshipXref x = (RelationshipXref) bpModel.getByID(uri);
+		if (x == null) { //create/add a new RX
+			x = bpModel.addNew(RelationshipXref.class, uri);
+			x.setDb(db);
+			x.setId(id);
+			if (refType != null) //use the standard CV term and accession
+			{
+				String cvUri = (refTypeAc!=null) ? "mi/" + refTypeAc
+						: xmlBase + "RTV_" + encode(refType);//the latter should not happen often (ever, in a valid PSI-MI XML)
+				RelationshipTypeVocabulary rtv = (RelationshipTypeVocabulary) bpModel.getByID(cvUri);
+				if(rtv == null) {
+					rtv = bpModel.addNew(RelationshipTypeVocabulary.class, cvUri);
+					rtv.addTerm(refType);
+					if(refTypeAc != null && !refTypeAc.isEmpty()) {//null happens, e.g., for 'uniprot-removed-ac' terms...
+						UnificationXref cvx = bpModel.addNew(UnificationXref.class, genUri(UnificationXref.class));
+						cvx.setDb("MI");
+						cvx.setId(refTypeAc);
+						rtv.addXref(cvx);
+					}
+				}
+				x.setRelationshipType(rtv);
+			}
+		}
+
 		return x;
 	}
 
@@ -1578,7 +1576,7 @@ class EntryMapper {
 	private boolean isGeneticInteraction(Set<Evidence> bpEvidence)
 	{
 			if (bpEvidence != null && !bpEvidence.isEmpty()) {
-				for (Evidence e : (Set<Evidence>) bpEvidence) {
+				for (Evidence e : bpEvidence) {
 					Set<EvidenceCodeVocabulary> evidenceCodes = e.getEvidenceCode();
 					if (evidenceCodes != null) {
 						for (EvidenceCodeVocabulary cv : evidenceCodes) {
@@ -1601,7 +1599,7 @@ class EntryMapper {
 	 * original xml ids (optional, for debugging),
 	 * BioPAX model interface name and some unique number.
 	 * The idea is virtually never ever return the same URI here (taking into account 
-	 * that there are multiple threads converting different PSI-MI Entries, one per thread,
+	 * that there are multiple threads converting different MI Entries, one per thread,
 	 * simultaneously)
 	 */
 	private String genUri(Class<? extends BioPAXElement> type, Object... psimiIds) {

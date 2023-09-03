@@ -5,22 +5,15 @@ import org.biopax.paxtools.controller.SimpleEditorMap;
 import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-/**
- */
 public class ModelCoverageTest
 {
-    @Test 
-    public void testCreationMethods() throws InvocationTargetException, IllegalAccessException
-    {
+    @Test
+    public void creationMethods() {
         MockFactory factory = new MockFactory(BioPAXLevel.L3);
-
         //test reflectively create
         EditorMap map = SimpleEditorMap.L3;
         int i = 0;

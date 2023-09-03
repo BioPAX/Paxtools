@@ -23,8 +23,8 @@ public class ConfigurableIDFetcher implements IDFetcher
 	 * Constructor.
 	 */
 	public ConfigurableIDFetcher() {
-		seqDbStartsWithOrEquals = new ArrayList<String>();
-		chemDbStartsWithOrEquals = new ArrayList<String>();
+		seqDbStartsWithOrEquals = new ArrayList<>();
+		chemDbStartsWithOrEquals = new ArrayList<>();
 		useNameWhenNoDbMatch = false;
 	}
 
@@ -71,7 +71,7 @@ public class ConfigurableIDFetcher implements IDFetcher
 	/**
 	 * Set the flag to use the entity reference's names
 	 * when no desired ID type can be found (none of xref.db
-	 * matched before, or there're no xrefs at all).
+	 * matched before, or there were no xrefs at all).
 	 *
 	 * @param useNameWhenNoDbMatch true/false (default is 'true' - when this method's never been called)
 	 * @return this id-fetcher instance
@@ -83,7 +83,7 @@ public class ConfigurableIDFetcher implements IDFetcher
 
 	public Set<String> fetchID(BioPAXElement ele)
 	{
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
@@ -92,20 +92,18 @@ public class ConfigurableIDFetcher implements IDFetcher
 							? chemDbStartsWithOrEquals : seqDbStartsWithOrEquals;
 
 			for (String dbStartsWith : dbStartsWithOrEquals) {
-				//a shortcut for URI like "http://identifiers.org/uniprot/", "http://identifiers.org/chebi/";
 				//this prevents collecting lots of secondary IDs of the same type
-				if(ele.getUri().startsWith("http://identifiers.org/"+dbStartsWith)) {
+				if(ele.getUri().contains("identifiers.org/"+dbStartsWith)
+						|| ele.getUri().contains("bioregistry.io/"+dbStartsWith) ) {
 					set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
-				}
-				else
-				{
-					for (UnificationXref x : new ClassFilterSet<Xref, UnificationXref>(((XReferrable) ele).getXref(),
+				} else {
+					for (UnificationXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
 							UnificationXref.class)) {
 						collectXrefIdIfDbLike(x, dbStartsWith, set);
 					}
 					//if none was found in unif. xrefs, try rel, xrefs
 					if (set.isEmpty()) {
-						for (RelationshipXref x : new ClassFilterSet<Xref, RelationshipXref>(((XReferrable) ele).getXref(),
+						for (RelationshipXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
 								RelationshipXref.class)) {
 							collectXrefIdIfDbLike(x, dbStartsWith, set);
 						}
@@ -127,7 +125,7 @@ public class ConfigurableIDFetcher implements IDFetcher
 			else if (e.getStandardName() != null && !e.getStandardName().contains("..."))
 				set.add(e.getStandardName());
 			else if (!e.getName().isEmpty()) {
-				Set<String> names = new TreeSet<String>();
+				Set<String> names = new TreeSet<>();
 				for(String name : e.getName()) {
 					if(!name.contains("..."))
 						names.add(name);

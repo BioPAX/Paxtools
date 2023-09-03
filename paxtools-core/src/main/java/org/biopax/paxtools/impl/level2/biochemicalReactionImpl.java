@@ -29,11 +29,11 @@ class biochemicalReactionImpl extends conversionImpl
 
 	public biochemicalReactionImpl()
 	{
-		this.DELTA_G = new HashSet<deltaGprimeO>();
-		this.DELTA_H = new HashSet<Double>();
-		this.DELTA_S = new HashSet<Double>();
-		this.EC_NUMBER = new HashSet<String>();
-		this.KEQ = new HashSet<kPrime>();
+		this.DELTA_G = new HashSet<>();
+		this.DELTA_H = new HashSet<>();
+		this.DELTA_S = new HashSet<>();
+		this.EC_NUMBER = new HashSet<>();
+		this.KEQ = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -107,7 +107,7 @@ class biochemicalReactionImpl extends conversionImpl
 
 	public void removeDELTA_S(double DELTA_S)
 	{
-		this.DELTA_S.remove(new Double(DELTA_S));
+		this.DELTA_S.remove(Double.valueOf(DELTA_S));
 	}
 
 	public void addEC_NUMBER(String EC_NUMBER)

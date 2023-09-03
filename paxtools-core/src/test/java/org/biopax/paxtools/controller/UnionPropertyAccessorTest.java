@@ -4,19 +4,19 @@ import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Set;
 
-import static org.junit.Assert.assertTrue;
 
 /**
  */
 public class UnionPropertyAccessorTest
 {
 	@Test
-	public void testUnion()
+	public void union()
 	{
 		MockFactory factory = new MockFactory(BioPAXLevel.L3);
 
@@ -45,9 +45,7 @@ public class UnionPropertyAccessorTest
 
 		PathAccessor pa = new PathAccessor("Complex/component/entityReference/organism", BioPAXLevel.L3);
 		Set valueFromBean = pa.getValueFromBean(complex);
-		assertTrue(valueFromBean.containsAll(Arrays.asList(human,alien)));
-		assertTrue(valueFromBean.size()==2);
-
-
+		Assertions.assertTrue(valueFromBean.containsAll(Arrays.asList(human,alien)));
+		Assertions.assertTrue(valueFromBean.size()==2);
 	}
 }

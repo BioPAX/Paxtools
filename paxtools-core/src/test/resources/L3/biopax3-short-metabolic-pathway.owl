@@ -261,15 +261,8 @@
         >0.4</bp:deltaGPrime0>
       </bp:DeltaG>
     </bp:deltaG>
-    <bp:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >beta-D-Glucose 6-phosphate ketol-isomerase</bp:name>
-    <bp:participantStoichiometry>
-      <bp:Stoichiometry rdf:ID="Stoichiometry_58">
-        <bp:physicalEntity rdf:resource="#alpha-D-glucose_6-phosphate"/>
-        <bp:stoichiometricCoefficient rdf:datatype="http://www.w3.org/2001/XMLSchema#float"
-        >1.0</bp:stoichiometricCoefficient>
-      </bp:Stoichiometry>
-    </bp:participantStoichiometry>
+    <bp:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">beta-D-Glucose 6-phosphate ketol-isomerase</bp:name>
+    <bp:participantStoichiometry rdf:ID="Stoichiometry_52"/>
   </bp:BiochemicalReaction>
   <bp:SmallMoleculeReference rdf:ID="SmallMoleculeReference_10">
     <bp:structure>

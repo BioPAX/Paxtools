@@ -27,10 +27,10 @@ public class Merger implements Visitor
 
 	// Keep track of merged elements
 	private final HashSet<BioPAXElement> mergedElements =
-			new HashSet<BioPAXElement>();
+			new HashSet<>();
 
 	// Keep track of new elements
-	private final HashSet<BioPAXElement> addedElements = new HashSet<BioPAXElement>();
+	private final HashSet<BioPAXElement> addedElements = new HashSet<>();
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
@@ -119,7 +119,7 @@ public class Merger implements Visitor
 		addedElements.clear();
 
 		// Fill equivalence map with objects from  target model
-		Set<BioPAXElement> targetElements = target.getObjects();
+		Collection<BioPAXElement> targetElements = target.getObjects();
 		for (BioPAXElement t_bpe : targetElements)
 		{
 			this.addIntoEquivalanceMap(t_bpe);
@@ -128,7 +128,7 @@ public class Merger implements Visitor
 		// Try to insert every biopax element in every source one by one
 		for (Model source : sources)
 		{
-			Set<BioPAXElement> sourceElements = source.getObjects();
+			Collection<BioPAXElement> sourceElements = source.getObjects();
 			for (BioPAXElement bpe : sourceElements)
 			{
 				insert(target, bpe);
@@ -137,8 +137,10 @@ public class Merger implements Visitor
 	}
 
 	/**
-	 * Inserts a BioPAX element into the <em>target</em> model if it does not contain an equivalent;
-	 * but if does, than it updates the equivalent using this element's values.
+	 * Insert the BioPAX element into the <em>target</em> model unless it's there already.
+	 * But if target model has an "equal" object (same URI, type),
+	 * update that object with this element's values not replacing the existing object
+	 * (this can copy new property values, such as xrefs, comments, etc.)
 	 *
 	 * @param target model into which bpe will be inserted
 	 * @param bpe    BioPAX element to be inserted into target
@@ -146,23 +148,16 @@ public class Merger implements Visitor
 	private void insert(Model target, BioPAXElement bpe)
 	{
 		// do nothing if you already inserted this
-		if (!target.contains(bpe))
+		if (!target.contains(bpe)) //get by URI and also compare objects using '=='
 		{
-			//if there is an identical (in fact, "equal") object
+			//but if there is another object with same URI
 			BioPAXElement ibpe = target.getByID(bpe.getUri());
-			if (ibpe != null && ibpe.equals(bpe))
-			/* - ibpe.equals(bpe) can be 'false' here, because, 
-			 * even though the above !target.contains(bpe) is true,
-			 * it probably compared objects using '==' operator
-			 * (see the ModelImpl for details)
-			 */
-			{
+			if (bpe.equals(ibpe)) {
 				updateObjectFields(bpe, ibpe, target);
 				// We have a merged element, add it into the tracker
 				mergedElements.add(ibpe);
 			}
-			else
-			{
+			else {
 				target.add(bpe);
 				this.addIntoEquivalanceMap(bpe);
 				traverser.traverse(bpe, target);
@@ -206,21 +201,10 @@ public class Merger implements Visitor
 	private void updateObjectFields(BioPAXElement update,
 	                                BioPAXElement existing, Model target)
 	{
-		Set<PropertyEditor> editors =
-				map.getEditorsOf(update);
-		for (PropertyEditor editor : editors)
-		{
+		Set<PropertyEditor> editors = map.getEditorsOf(update);
+		for (PropertyEditor editor : editors) {
 			updateObjectFieldsForEditor(editor, update, existing, target);
 		}
-
-//		if (!update.getUri().equals(existing.getUri()))
-//		{
-//TODO addNew a unification xref
-//			if(existing instanceof XReferrable)
-//			{
-//				((XReferrable) existing).addXref(fa);
-//			}
-//		}
 	}
 
 	/**
@@ -305,7 +289,7 @@ public class Merger implements Visitor
 		List<BioPAXElement> list = equivalenceMap.get(key);
 		if (list == null)
 		{
-			list = new ArrayList<BioPAXElement>();
+			list = new ArrayList<>();
 			equivalenceMap.put(key, list);
 		}
 		list.add(bpe);

@@ -1,7 +1,5 @@
 package org.biopax.paxtools.io.sbgn;
 
-import static junit.framework.Assert.*;
-
 import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.impl.MockFactory;
 import org.biopax.paxtools.io.BioPAXIOHandler;
@@ -9,8 +7,8 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.sbgn.GlyphClazz;
 import org.sbgn.SbgnUtil;
 import org.sbgn.bindings.Arc;
@@ -23,6 +21,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SBGNConverterTest
 {
@@ -32,9 +33,9 @@ public class SBGNConverterTest
 	private static Marshaller marshaller;
 	private final String NOSPACE = "\\S+";
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws JAXBException {
-		blacklist = new ListUbiqueDetector(new HashSet<String>(Arrays.asList(
+		blacklist = new ListUbiqueDetector(new HashSet<>(Arrays.asList(
 				"http://pid.nci.nih.gov/biopaxpid_685",
 				"http://pid.nci.nih.gov/biopaxpid_678",
 				"http://pid.nci.nih.gov/biopaxpid_3119",
@@ -42,7 +43,6 @@ public class SBGNConverterTest
 				"http://pathwaycommons.org/pc2/SmallMolecule_3037a14ebec3a95b8dab68e6ea5c946f",
 				"http://pathwaycommons.org/pc2/SmallMolecule_4ca9a2cfb6a8a6b14cee5d7ed5945364"
 		)));
-
 		JAXBContext context = JAXBContext.newInstance("org.sbgn.bindings");
 		unmarshaller = context.createUnmarshaller();
 		marshaller = context.createMarshaller();
@@ -50,7 +50,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testSBGNConversion() throws Exception
+	public void toSBGNConversion() throws Exception
 	{
 		String input = "/AR-TP53";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -90,7 +90,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testNestedComplexes() throws Exception
+	public void nestedComplexes() throws Exception
 	{
 		String input = "/translation-initiation-complex-formation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -127,7 +127,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testStoichiometry() throws Exception
+	public void stoichiometry() throws Exception
 	{
 		String input = "/Stoic";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -157,7 +157,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertBmpPathway() throws Exception
+	public void convertBmpPathway() throws Exception
 	{
 		String input = "/signaling-by-bmp";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -204,7 +204,7 @@ public class SBGNConverterTest
 	// it's probably about an unknown/omitted sub-pathway with known in/out chemicals,
 	// but it's expressed in BioPAX badly (a Pathway with one Interaction and PathwayStep, and no comments...)
 	@Test
-	public void testConvertOmittedSmpdbPathway() throws Exception {
+	public void convertOmittedSmpdbPathway() throws Exception {
 		String input = "/smpdb-beta-oxidation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
@@ -218,7 +218,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertBadWikiPathway() throws Exception {
+	public void convertBadWikiPathway() throws Exception {
 		String input = "/WP561";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
@@ -230,12 +230,11 @@ public class SBGNConverterTest
 		SbgnUtil.isValid(outFile); //ignore validation errors for now...
 		Sbgn result = (Sbgn) unmarshaller.unmarshal(outFile);
 		assertFalse(result.getMap().getGlyph().isEmpty());
-
 		//TODO: add assertions
 	}
 
 	@Test
-	public void testSbgnLayoutKegg51() throws Exception
+	public void sbgnLayoutKegg51() throws Exception
 	{
 		File sbgnFile = new File(getClass().getResource("/hsa00051.sbgn").getFile());
 
@@ -251,7 +250,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertGIs() throws JAXBException {
+	public void convertGIs() throws JAXBException {
 		String out = "target/test_gi.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
 		Model m = f.createModel();
@@ -273,7 +272,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertTRs() throws JAXBException {
+	public void convertTRs() throws JAXBException {
 		String out = "target/test_tr.sbgn";
 		MockFactory f = new MockFactory(BioPAXLevel.L3);
 		Model m = f.createModel();
@@ -288,10 +287,11 @@ public class SBGNConverterTest
 		f.bindInPairs("product", tr0,p[0],tr0,p[1]);
 		tr0.setTemplate(t[0]);
 
-		// no template (will infer)
+		// no template - will infer it from the other participant
+		// (this is a bad practice though - 'template' prop must be used instead)
 		TemplateReaction tr1 = m.addNew(TemplateReaction.class,"tr_1");
 		f.bindInPairs("product", tr1,p[2]);
-		f.bindInPairs("participant", tr1,t[1]);
+		f.bindInPairs("participant", tr1,t[1]); //this call might be ignored or throw an ex. in the future
 
 		// only product (will infer some unknown input process/entity)
 		TemplateReaction tr2 = m.addNew(TemplateReaction.class,"tr_2");
@@ -306,7 +306,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertTfap2Pathway() throws Exception
+	public void convertTfap2Pathway() throws Exception
 	{
 		String input = "/TFAP2";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
@@ -328,7 +328,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertActivation() throws Exception {
+	public void convertActivation() throws Exception {
 		String input = "/activation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model m = handler.convertFromOWL(in);
@@ -345,7 +345,7 @@ public class SBGNConverterTest
 	}
 
 	@Test
-	public void testConvertModulation() throws Exception {
+	public void convertModulation() throws Exception {
 		String input = "/modulation";
 		InputStream in = getClass().getResourceAsStream(input + ".owl");
 		Model level3 = handler.convertFromOWL(in);
@@ -361,7 +361,7 @@ public class SBGNConverterTest
 	}
 
   @Test
-  public void testConvertControlsChain() throws Exception {
+  public void convertControlsChain() throws Exception {
     String input = "/controlchain";
     InputStream in = getClass().getResourceAsStream(input + ".owl");
     Model level3 = handler.convertFromOWL(in);
@@ -376,21 +376,11 @@ public class SBGNConverterTest
     assertFalse(filtered.isEmpty());
   }
 
-//	private Collection<Glyph> filterGlyphsByClazz(Collection<Glyph> collection, String clazz) {
-//    Set<Glyph> filtered = new HashSet<Glyph>();
-//    for(Glyph g : collection)
-//      if(g.getClazz().equals(clazz))
-//        filtered.add(g);
-//
-//    return filtered;
-//  }
+	private Collection<Glyph> filterGlyphsByClazz(Collection<Glyph> collection, String clazz) {
+    return collection.stream().filter(g -> g.getClazz().equals(clazz)).collect(Collectors.toUnmodifiableSet());
+  }
 
   private Collection<Arc> filterArcsByClazz(Collection<Arc> collection, String clazz) {
-    Set<Arc> filtered = new HashSet<Arc>();
-    for(Arc g : collection)
-      if(g.getClazz().equals(clazz))
-        filtered.add(g);
-
-    return filtered;
+		return collection.stream().filter(g -> g.getClazz().equals(clazz)).collect(Collectors.toUnmodifiableSet());
   }
 }

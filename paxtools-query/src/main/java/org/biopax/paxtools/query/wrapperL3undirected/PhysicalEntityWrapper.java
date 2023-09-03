@@ -134,7 +134,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	 */
 	protected void initUpperEquivalent()
 	{
-		this.upperEquivalent = new HashSet<Node>();
+		this.upperEquivalent = new HashSet<>();
 
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntityOf())
 		{
@@ -150,7 +150,7 @@ public class PhysicalEntityWrapper extends AbstractNode
 	 */
 	protected void initLowerEquivalent()
 	{
-		this.lowerEquivalent = new HashSet<Node>();
+		this.lowerEquivalent = new HashSet<>();
 
 		for (PhysicalEntity eq : pe.getMemberPhysicalEntity())
 		{

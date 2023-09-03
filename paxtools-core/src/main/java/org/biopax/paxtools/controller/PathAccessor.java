@@ -196,7 +196,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 
 	public Set getValueFromBean(BioPAXElement bean) throws IllegalBioPAXArgumentException
 	{
-		Set<BioPAXElement> bpes = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> bpes = new HashSet<>();
 		bpes.add(bean);
 		return getValueFromBeans(bpes);
 	}
@@ -209,7 +209,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 		{
 			PropertyAccessor accessor = accessors.get(i);
 			if (log.isTraceEnabled()) log.trace(String.valueOf(accessor));
-			HashSet<BioPAXElement> nextBpes = new HashSet<BioPAXElement>();
+			HashSet<BioPAXElement> nextBpes = new HashSet<>();
 			for (BioPAXElement bpe : bpes)
 			{
 				if (log.isTraceEnabled()) log.trace("\t" + bpe);
@@ -251,7 +251,7 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 	 */
 	public Set getValueFromModel(Model model)
 	{
-		Set<? extends BioPAXElement> domains = new HashSet<BioPAXElement>(model.getObjects(this.getDomain()));
+		Set<? extends BioPAXElement> domains = new HashSet<>(model.getObjects(this.getDomain()));
 		return getValueFromBeans(domains);
 	}
 
@@ -272,9 +272,10 @@ public class PathAccessor extends PropertyAccessorAdapter<BioPAXElement, Object>
 			{
 				if (ope.property.equals(forwardName))
 				{
-					if (simple == null) simple = ope.getInverseAccessor();//TODO why not simply break, after assignment, instead using 'if'?
+					if (simple == null) {
+						simple = ope.getInverseAccessor();
+					}
 				}
-
 			}
 		} else
 		{

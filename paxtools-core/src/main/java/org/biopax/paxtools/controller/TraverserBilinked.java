@@ -45,11 +45,11 @@ public class TraverserBilinked extends Traverser
 	@Override
 	public void traverse(BioPAXElement element, Model model)
 	{
-		if(!isInverseOnly)
+		if(!isInverseOnly) {
 			super.traverse(element, model);
+		}
 
 		// Now traverse the inverse links
-
 		Set<ObjectPropertyEditor> editors = editorMap.getInverseEditorsOf(element);
 
 		if(editors == null)
@@ -61,12 +61,13 @@ public class TraverserBilinked extends Traverser
 		{
 			if (filterInverse(editor))
 			{
-					Set<BioPAXElement> valueSet = new HashSet(editor.getInverseAccessor().getValueFromBean(element));
-					if (!valueSet.isEmpty()) for (BioPAXElement value : valueSet)
-					{
-						if(value != null) {
-							//TODO how visitor knows whether it's called from inverse or normal property (e.g., to modify a value)?
-							visitor.visit(element, value, model, editor); 
+					Set<BioPAXElement> valueSet = new HashSet<>(editor.getInverseAccessor().getValueFromBean(element));
+					if (!valueSet.isEmpty()) {
+						for (BioPAXElement value : valueSet) {
+							if (value != null) {
+								//TODO how visitor knows whether it's called from inverse or normal property (e.g., to modify a value)?
+								visitor.visit(element, value, model, editor);
+							}
 						}
 					}
 			}

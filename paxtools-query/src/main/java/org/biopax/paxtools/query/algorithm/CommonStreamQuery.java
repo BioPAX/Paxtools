@@ -40,7 +40,7 @@ public class CommonStreamQuery
 	 * represents whether the particular graph object is in the boundaries
 	 * of BFS.
 	 */
-	Map<GraphObject, Integer> reachedCount = new HashMap<GraphObject, Integer>();
+	Map<GraphObject, Integer> reachedCount = new HashMap<>();
 
 	/**
 	 * Constructor for Common Stream with Selected Nodes.
@@ -53,12 +53,12 @@ public class CommonStreamQuery
 		if (direction != Direction.UPSTREAM && direction != Direction.DOWNSTREAM)
 			throw new IllegalArgumentException("Direction has to be either upstream or downstream");
 
-		this.sourceSet = new LinkedHashSet<Set<Node>>();
+		this.sourceSet = new LinkedHashSet<>();
 		
 		//Each set contains only one selected Node
 		for (Node node : sourceNodeSet)
 		{
-			Set<Node> sourceNode = new HashSet<Node>();
+			Set<Node> sourceNode = new HashSet<>();
 			sourceNode.add(node);
 			sourceSet.add(sourceNode);
 		}
@@ -94,15 +94,15 @@ public class CommonStreamQuery
 		 * Eliminating nodes from candidate according to the reached counts
 		 * will yield result.
 		 */
-		Map<GraphObject, Integer> candidate = new HashMap<GraphObject, Integer>();
-		Set<GraphObject> result = new HashSet<GraphObject>();
+		Map<GraphObject, Integer> candidate = new HashMap<>();
+		Set<GraphObject> result = new HashSet<>();
 		
    		//for each set of states of entity, run BFS separately
 		for (Set<Node> source : sourceSet)
 		{
 			//run BFS for set of states of each entity
-		  	BFS bfs = new BFS (source, null, direction, limit);
-			Map<GraphObject, Integer> BFSResult = new HashMap<GraphObject, Integer>();
+		  BFS bfs = new BFS (source, null, direction, limit);
+			Map<GraphObject, Integer> BFSResult = new HashMap<>();
 			BFSResult.putAll(bfs.run());
 
 			/**

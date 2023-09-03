@@ -1,10 +1,12 @@
 package org.biopax.paxtools.impl.level3;
 
 
+import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
 import org.biopax.paxtools.util.BPCollections;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
+import org.biopax.paxtools.util.SetEquivalenceChecker;
 
 import java.util.Set;
 
@@ -82,4 +84,19 @@ public class CatalysisImpl extends ControlImpl implements Catalysis
 	{
 		return controlled instanceof Conversion;
 	}
+
+	@Override
+	protected boolean semanticallyEquivalent(BioPAXElement element) {
+		boolean equivalence = false;
+		if (element instanceof Catalysis && super.semanticallyEquivalent(element)) {
+			Catalysis other = (Catalysis) element;
+			equivalence = (this.getControlType() == other.getControlType())
+					&& (this.getCatalysisDirection() == other.getCatalysisDirection())
+					&& SetEquivalenceChecker.isEquivalent(this.getCofactor(), other.getCofactor())
+					&& SetEquivalenceChecker.isEquivalent(this.getController(), other.getController())
+					&& SetEquivalenceChecker.isEquivalent(this.getControlled(), other.getControlled());
+		}
+		return  equivalence;
+	}
+
 }

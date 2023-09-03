@@ -75,7 +75,7 @@ public class PathConstraint extends ConstraintAdapter
 			throw new RuntimeException("Constraint cannot generate based on null value");
 
 		Set vals = pa.getValueFromBean(ele0);
-		List<BioPAXElement> list = new ArrayList<BioPAXElement>(vals.size());
+		List<BioPAXElement> list = new ArrayList<>(vals.size());
 
 		for (Object o : vals)
 		{

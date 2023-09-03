@@ -12,7 +12,6 @@ import java.util.Set;
  * This class performs set operations based on equivalence.
  */
 public class SetEquivalenceChecker {
-
 	private static final Logger LOG = LoggerFactory.getLogger(SetEquivalenceChecker.class);
 
 	/**
@@ -28,7 +27,7 @@ public class SetEquivalenceChecker {
 			int size = set1.size();
 			if (size == set2.size())
 			{
-				EquivalenceGrouper<T> grouper = new EquivalenceGrouper<T>();
+				EquivalenceGrouper<T> grouper = new EquivalenceGrouper<>();
 				grouper.addAll(set1);
 				if (grouper.getBuckets().size() == size)
 				{
@@ -45,7 +44,6 @@ public class SetEquivalenceChecker {
 		{ 
 			return true;
 		}
-		
 		return false;	
 	}
 
@@ -76,11 +74,8 @@ public class SetEquivalenceChecker {
 	 * @return elements of set1 that has an equivalent element in set2
 	 */
 	public static <T extends BioPAXElement> Set<T> findEquivalentIntersection(Set<? extends T> set1,
-			Set<? extends T> set2)
-	{
-
-		Set<T> value = new HashSet<T>();
-
+			Set<? extends T> set2) {
+		Set<T> value = new HashSet<>();
 		if (set1 != null && !set1.isEmpty() && set2 != null && !set2.isEmpty())
 		{
 			EquivalenceGrouper<T> grouper = new EquivalenceGrouper<T>();
@@ -111,31 +106,30 @@ public class SetEquivalenceChecker {
 	 * @param set1 First set to be checked.
 	 * @param set2 Second set to be checked
 	 * @param <T> Both sets should be of type that extends from T.
-	 * @return true iff there are at least one equivalent element between set1 and set2, or both sets are empty..
+	 * @return true iff there are at least one equivalent element between set1 and set2, or both sets are empty.
 	 */
 	public static <T extends BioPAXElement> boolean hasEquivalentIntersection(Set<? extends T> set1,
 			Set<? extends T> set2)
 	{
-		if (!set1.isEmpty() && !set2.isEmpty())
-		{
-			EquivalenceGrouper<T> grouper1 = new EquivalenceGrouper<T>(set1);
+		if (!set1.isEmpty() && !set2.isEmpty()) {
+			EquivalenceGrouper<T> grouper1 = new EquivalenceGrouper<>(set1);
 			int size1 = grouper1.getBuckets().size();
 			if(set1.size() > size1)
 				LOG.warn("hasEquivalentIntersection: the first set already contains equivalent objects");
-			EquivalenceGrouper<T> grouper2 = new EquivalenceGrouper<T>(set2);
+			EquivalenceGrouper<T> grouper2 = new EquivalenceGrouper<>(set2);
 			int size2 = grouper2.getBuckets().size();
 			if(set2.size() > size2)
 				LOG.warn("hasEquivalentIntersection: the second set already contains equivalent objects");
 			//now add both sets into one grouper -
-			EquivalenceGrouper<T> grouper = new EquivalenceGrouper<T>();
+			EquivalenceGrouper<T> grouper = new EquivalenceGrouper<>();
 			grouper.addAll(set1);
 			grouper.addAll(set2);
 			return (grouper.getBuckets().size() < size1 + size2);
 		} else if(set1.isEmpty() ^ set2.isEmpty()) {
 			//only one of sets is empty
 			return false;
-		} else //both empty
+		} else { //both empty
 			return true;
+		}
 	}
-
 }

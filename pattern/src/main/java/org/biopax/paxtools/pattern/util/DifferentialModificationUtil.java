@@ -26,13 +26,13 @@ public class DifferentialModificationUtil
 		Set<Modification> set1 = collectFeatures(before);
 		Set<Modification> set2 = collectFeatures(after);
 
-		Set<Modification> temp = new HashSet<Modification>(set1);
+		Set<Modification> temp = new HashSet<>(set1);
 		set1.removeAll(set2);
 		set2.removeAll(temp);
 
 		// Remove common features that can be deemed semantically equivalent
 
-		Set<Modification> furtherRemove = new HashSet<Modification>();
+		Set<Modification> furtherRemove = new HashSet<>();
 
 		for (Modification m1 : set1)
 		{
@@ -59,7 +59,7 @@ public class DifferentialModificationUtil
 		PhysicalEntity after, boolean gained)
 	{
 		Set<ModificationFeature> set = getChangedModifications(before, after)[gained ? 0 : 1];
-		Set<String> sites = new HashSet<String>();
+		Set<String> sites = new HashSet<>();
 		for (ModificationFeature mf : set)
 		{
 			String lett = getPhosphoSiteLetter(mf);
@@ -77,7 +77,7 @@ public class DifferentialModificationUtil
 
 	private static Set<Modification> collectFeatures(PhysicalEntity pe)
 	{
-		Set<Modification> set = new HashSet<Modification>();
+		Set<Modification> set = new HashSet<>();
 
 		for (EntityFeature f : pe.getFeature())
 		{
@@ -91,7 +91,7 @@ public class DifferentialModificationUtil
 	{
 		if (wrappers.isEmpty()) return Collections.emptySet();
 
-		Set<ModificationFeature> set = new HashSet<ModificationFeature>();
+		Set<ModificationFeature> set = new HashSet<>();
 
 		for (Modification wrapper : wrappers)
 		{

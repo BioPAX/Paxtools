@@ -84,12 +84,12 @@ public class BlacklistGenerator
 			String source = sif.sourceID;
 			String target = sif.targetID;
 
-			if (!neighMap.containsKey(source)) neighMap.put(source, new HashSet<String>());
-			if (!neighMap.containsKey(target)) neighMap.put(target, new HashSet<String>());
-			if (!dwstrMap.containsKey(source)) dwstrMap.put(source, new HashSet<String>());
-			if (!dwstrMap.containsKey(target)) dwstrMap.put(target, new HashSet<String>());
-			if (!upstrMap.containsKey(source)) upstrMap.put(source, new HashSet<String>());
-			if (!upstrMap.containsKey(target)) upstrMap.put(target, new HashSet<String>());
+			if (!neighMap.containsKey(source)) neighMap.put(source, new HashSet<>());
+			if (!neighMap.containsKey(target)) neighMap.put(target, new HashSet<>());
+			if (!dwstrMap.containsKey(source)) dwstrMap.put(source, new HashSet<>());
+			if (!dwstrMap.containsKey(target)) dwstrMap.put(target, new HashSet<>());
+			if (!upstrMap.containsKey(source)) upstrMap.put(source, new HashSet<>());
+			if (!upstrMap.containsKey(target)) upstrMap.put(target, new HashSet<>());
 
 			neighMap.get(source).add(target);
 			neighMap.get(target).add(source);
@@ -106,7 +106,7 @@ public class BlacklistGenerator
 			Set<String> upstr = upstrMap.get(name);
 			Set<String> dwstr = dwstrMap.get(name);
 
-			Set<String> temp = new HashSet<String>(upstr);
+			Set<String> temp = new HashSet<>(upstr);
 			upstr.removeAll(dwstr);
 			dwstr.removeAll(temp);
 		}

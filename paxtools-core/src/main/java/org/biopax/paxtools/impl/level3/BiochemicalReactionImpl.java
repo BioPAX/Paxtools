@@ -93,7 +93,7 @@ public class BiochemicalReactionImpl extends ConversionImpl
 
 	public void removeDeltaS(float deltaS)
 	{
-		this.deltaS.remove(new Float(deltaS));
+		this.deltaS.remove(Float.valueOf(deltaS));
 	}
 
 	public Set<String> getECNumber()

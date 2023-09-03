@@ -4,8 +4,6 @@ import org.biopax.paxtools.model.level3.Entity;
 import org.biopax.paxtools.model.level3.Interaction;
 import org.biopax.paxtools.model.level3.InteractionVocabulary;
 import org.biopax.paxtools.util.BPCollections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -15,7 +13,6 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	private Set<Entity> participant;
 	private Set<InteractionVocabulary> interactionType;
-    private final Logger log = LoggerFactory.getLogger(InteractionImpl.class);
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -41,21 +38,21 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 
 	public Set<InteractionVocabulary> getInteractionType()
 	{
-	   return interactionType;
+		return interactionType;
 	}
 
-	public void addInteractionType(
-		InteractionVocabulary newinteractionType)
+	public void addInteractionType(InteractionVocabulary newinteractionType)
 	{
-	   if(newinteractionType != null)
+		if(newinteractionType != null) {
 			this.interactionType.add(newinteractionType);
+		}
 	}
 
-	public void removeInteractionType(
-		InteractionVocabulary oldinteractionType)
+	public void removeInteractionType(InteractionVocabulary oldinteractionType)
 	{
-		if(oldinteractionType != null)
+		if(oldinteractionType != null) {
 			this.interactionType.remove(oldinteractionType);
+		}
 	}
 
 	public Set<Entity> getParticipant()
@@ -63,23 +60,25 @@ public class InteractionImpl extends ProcessImpl implements Interaction
 		return participant;
 	}
 
+	//this was originally added mainly for JPA
 	protected void setParticipant(Set<Entity> participant)
 	{
-        this.participant = participant;
-    }
+		this.participant = participant;
+	}
 
 	public void addParticipant(Entity aParticipant)
 	{
 		if (aParticipant != null) {
-			this.participant.add(aParticipant);
-			aParticipant.getParticipantOf().add(this);
+			if(this.participant.add(aParticipant)) {
+				aParticipant.getParticipantOf().add(this);
+			}
 		}
-    }
+	}
 
 	public void removeParticipant(Entity aParticipant)
 	{
 		if (aParticipant != null) {
-			this.participant.remove(aParticipant);
+			participant.remove(aParticipant);
 			aParticipant.getParticipantOf().remove(this);
 		}
 	}

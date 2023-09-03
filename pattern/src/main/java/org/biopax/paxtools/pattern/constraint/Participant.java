@@ -167,7 +167,7 @@ public class Participant extends ConstraintAdapter
 		}
 		else dir = getDirection(cnv);
 
-		Set<Set<PhysicalEntity>> sides = new HashSet<Set<PhysicalEntity>>();
+		Set<Set<PhysicalEntity>> sides = new HashSet<>();
 
 		if (dir == ConversionDirectionType.REVERSIBLE)
 		{
@@ -185,7 +185,7 @@ public class Participant extends ConstraintAdapter
 			sides.add(type == RelType.OUTPUT ? cnv.getRight() : cnv.getLeft());
 		}
 
-		Collection<BioPAXElement> result = new HashSet<BioPAXElement>();
+		Collection<BioPAXElement> result = new HashSet<>();
 
 		if (blacklist == null)
 		{

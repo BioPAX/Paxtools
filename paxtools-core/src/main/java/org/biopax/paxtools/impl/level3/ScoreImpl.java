@@ -4,50 +4,41 @@ import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.Score;
 
 
-public class ScoreImpl extends XReferrableImpl implements Score
-{
+public class ScoreImpl extends XReferrableImpl implements Score {
 
-	private String value;
-    private Provenance scoreSource;
+  private String value;
+  private Provenance scoreSource;
 
-    public ScoreImpl() {
-	}
-    
-    //
-	// BioPAXElement interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
+  public ScoreImpl() {
+  }
 
-    public Class<? extends Score> getModelInterface()
-	{
-		return Score.class;
-	}
+  //
+  // BioPAXElement interface implementation
+  //
+
+  public Class<? extends Score> getModelInterface() {
+    return Score.class;
+  }
 
 
+  //
+  // confidence interface implementation
+  //
 
-	//
-	// confidence interface implementation
-	//
-	////////////////////////////////////////////////////////////////////////////
+  public String getValue() {
+    return value;
+  }
 
-    public String getValue()
-	{
-		return value;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-	public void setValue(String value)
-	{
-		this.value = value;
-	}
+  public Provenance getScoreSource() {
+    return scoreSource;
+  }
 
-    public Provenance getScoreSource()
-    {
-        return scoreSource;
-    }
-
-    public void setScoreSource(Provenance scoreSource)
-    {
-        this.scoreSource = scoreSource;
-    }
+  public void setScoreSource(Provenance scoreSource) {
+    this.scoreSource = scoreSource;
+  }
 
 }

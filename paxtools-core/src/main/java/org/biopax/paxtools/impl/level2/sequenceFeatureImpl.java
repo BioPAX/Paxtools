@@ -25,8 +25,8 @@ class sequenceFeatureImpl extends BioPAXLevel2ElementImpl
 
 	public sequenceFeatureImpl()
 	{
-		this.FEATURE_LOCATION = new HashSet<sequenceLocation>();
-		this.SYNONYMS = new HashSet<String>();
+		this.FEATURE_LOCATION = new HashSet<>();
+		this.SYNONYMS = new HashSet<>();
 		this.referenceHelper = new ReferenceHelper(this);
 	}
 

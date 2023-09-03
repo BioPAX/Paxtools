@@ -1,12 +1,10 @@
 package org.biopax.paxtools.model;
 
-import org.biopax.paxtools.model.level3.EntityReference;
+import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.model.level3.Process;
-import org.biopax.paxtools.model.level3.SequenceSite;
-import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by igor on 06/04/17.
@@ -18,13 +16,20 @@ public class BioPAXFactoryTest {
     @Test
     public void create() throws Exception {
         SequenceSite ss = factory.create(SequenceSite.class,"ss");
+        assertNotNull(ss);
     }
 
     @Test
-    public void canInstantiate() throws Exception {
+    public void canInstantiate() {
         assertTrue(factory.canInstantiate(SequenceSite.class));
         assertFalse(factory.canInstantiate(Process.class));
         assertFalse(factory.canInstantiate(EntityReference.class));
         assertFalse(factory.canInstantiate(SimplePhysicalEntity.class));
+        assertTrue(factory.canInstantiate(Interaction.class));
+        assertTrue(factory.canInstantiate(Control.class));
+        assertFalse(factory.canInstantiate(XReferrable.class));
+        assertFalse(factory.canInstantiate(Observable.class));
+        assertFalse(factory.canInstantiate(Xref.class));
+        assertFalse(factory.canInstantiate(Controller.class));
     }
 }

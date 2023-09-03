@@ -130,9 +130,9 @@ public class BFS
 	{
 		// Initialize label, maps and queue
 
-		dist = new HashMap<GraphObject, Integer>();
-		colors = new HashMap<GraphObject, Integer>();
-		queue = new LinkedList<Node>();
+		dist = new HashMap<>();
+		colors = new HashMap<>();
+		queue = new LinkedList<>();
 	}
 
 	/**
@@ -148,8 +148,6 @@ public class BFS
 			setColor(current, BLACK);
 			return;
 		}
-
-//		System.out.println("processing = " + current);
 
 		// Process edges towards the direction
 
@@ -212,7 +210,6 @@ public class BFS
 					setColor(neigh, BLACK);
 				}
 			}
-
 
 			labelEquivRecursive(neigh, UPWARD, getLabel(neigh), further, !neigh.isBreadthNode());
 			labelEquivRecursive(neigh, DOWNWARD, getLabel(neigh), further, !neigh.isBreadthNode());
@@ -341,7 +338,6 @@ public class BFS
 	 */
 	protected void setLabel(GraphObject go, int label)
 	{
-//		System.out.println("Labeling(" + label + "): " + go);
 		dist.put(go, label);
 	}
 

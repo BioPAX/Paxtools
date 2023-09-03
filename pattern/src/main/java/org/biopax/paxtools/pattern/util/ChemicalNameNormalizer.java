@@ -1,13 +1,10 @@
 package org.biopax.paxtools.pattern.util;
 
 import org.biopax.paxtools.controller.PathAccessor;
-import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.SimplePhysicalEntity;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -20,18 +17,9 @@ import java.util.*;
 public class ChemicalNameNormalizer
 {
 	/**
-	 * Mapping from the a small molecule to the one that contains the standard name.
+	 * Mapping from a small molecule to the one that contains the standard name.
 	 */
 	Map<SmallMoleculeReference, SmallMoleculeReference> map;
-
-	public static void main(String[] args) throws FileNotFoundException
-	{
-		SimpleIOHandler reader = new SimpleIOHandler();
-		Model model = reader.convertFromOWL(new FileInputStream(
-			"/home/ozgun/Projects/biopax-pattern/All-Data.owl"));
-
-		new ChemicalNameNormalizer(model);
-	}
 
 	/**
 	 * Gets the standard name of the small molecule.
@@ -50,10 +38,9 @@ public class ChemicalNameNormalizer
 	 */
 	public ChemicalNameNormalizer(Model model)
 	{
-		map = new HashMap<SmallMoleculeReference, SmallMoleculeReference>();
-
-		Set<SmallMoleculeReference> standard = new HashSet<SmallMoleculeReference>();
-		Set<SmallMoleculeReference> other = new HashSet<SmallMoleculeReference>();
+		map = new HashMap<>();
+		Set<SmallMoleculeReference> standard = new HashSet<>();
+		Set<SmallMoleculeReference> other = new HashSet<>();
 
 		for (SmallMoleculeReference smr : model.getObjects(SmallMoleculeReference.class))
 		{
@@ -66,7 +53,6 @@ public class ChemicalNameNormalizer
 
 		Map<SmallMoleculeReference, Set<String>> smrNames = collectNames(false, standard, other);
 		Map<SmallMoleculeReference, Set<String>> smNames = collectNames(true, standard, other);
-
 
 		// Unify names of standards
 
@@ -103,9 +89,8 @@ public class ChemicalNameNormalizer
 		enrichNamesWithMatchings(selfMatch, smrNames);
 		enrichNamesWithMatchings(selfMatch, smNames);
 
-		Set<SmallMoleculeReference> missed = new HashSet<SmallMoleculeReference>();
-		Map<SmallMoleculeReference, Set<SmallMoleculeReference>> multiMap =
-			new HashMap<SmallMoleculeReference, Set<SmallMoleculeReference>>();
+		Set<SmallMoleculeReference> missed = new HashSet<>();
+		Map<SmallMoleculeReference, Set<SmallMoleculeReference>> multiMap = new HashMap<>();
 
 		for (SmallMoleculeReference smr : other)
 		{
@@ -131,7 +116,6 @@ public class ChemicalNameNormalizer
 
 			Set<SmallMoleculeReference> matches = multiMap.get(smr);
 			SmallMoleculeReference rep = selectRepresentative(matches, map);
-
 			map.put(smr, rep);
 
 			for (SmallMoleculeReference match : matches)
@@ -139,14 +123,14 @@ public class ChemicalNameNormalizer
 				if (match == rep) continue;
 				if (map.containsKey(match))
 				{
-					if (map.get(match) == rep) continue;
-
-					System.out.println("Already matched " + match.getDisplayName() + " to " +
-						map.get(match).getDisplayName() + ". This one is " + rep.getDisplayName());
+					if (map.get(match) == rep)
+						continue;
+//					System.out.println("Already matched " + match.getDisplayName() + " to " +
+//						map.get(match).getDisplayName() + ". This one is " + rep.getDisplayName());
 				}
 				else if (map.values().contains(match))
 				{
-					System.out.println(match.getDisplayName() + " was mapped from another chem");
+//					System.out.println(match.getDisplayName() + " was mapped from another chem");
 				}
 				else map.put(match, rep);
 			}
@@ -163,22 +147,18 @@ public class ChemicalNameNormalizer
 		System.out.println("multiCnt = " + multiMap.size());
 		System.out.println("missCnt = " + missed.size());
 		System.out.println();
-
-//		printTopPart("Multi match", multiMap, 50);
-//		printTopPart("Miss-match", missed, 50);
 	}
 
 	private Map<SmallMoleculeReference, Set<String>> collectNames(boolean peLevel,
 		Set<SmallMoleculeReference>... sets)
 	{
-		Map<SmallMoleculeReference, Set<String>> map =
-			new HashMap<SmallMoleculeReference, Set<String>>();
+		Map<SmallMoleculeReference, Set<String>> map = new HashMap<>();
 
 		for (Set<SmallMoleculeReference> set : sets)
 		{
 			for (SmallMoleculeReference smr : set)
 			{
-				map.put(smr, new HashSet<String>());
+				map.put(smr, new HashSet<>());
 
 				if (!peLevel)
 				{
@@ -218,7 +198,7 @@ public class ChemicalNameNormalizer
 
 		if (name == null) return Collections.emptySet();
 
-		Set<SmallMoleculeReference> matching = new HashSet<SmallMoleculeReference>();
+		Set<SmallMoleculeReference> matching = new HashSet<>();
 
 		for (SmallMoleculeReference ref : smrs)
 		{
@@ -232,12 +212,12 @@ public class ChemicalNameNormalizer
 		Set<SmallMoleculeReference> standard, Map<SmallMoleculeReference, Set<String>> smrNames,
 		Map<SmallMoleculeReference, Set<String>> smNames)
 	{
-		Set<SmallMoleculeReference> matching = new HashSet<SmallMoleculeReference>();
+		Set<SmallMoleculeReference> matching = new HashSet<>();
 
 		for (SmallMoleculeReference std : standard)
 		{
 			if (std.getDisplayName() != null && smr.getDisplayName() != null &&
-				std.getDisplayName().toLowerCase().equals(smr.getDisplayName().toLowerCase()))
+				std.getDisplayName().equalsIgnoreCase(smr.getDisplayName()))
 				matching.add(std);
 		}
 
@@ -288,8 +268,7 @@ public class ChemicalNameNormalizer
 		Set<SmallMoleculeReference> smrs, Map<SmallMoleculeReference, Set<String>> smrNames,
 		Map<SmallMoleculeReference, Set<String>> smNames, boolean normalizeName)
 	{
-		Map<SmallMoleculeReference, Set<SmallMoleculeReference>> map =
-			new HashMap<SmallMoleculeReference, Set<SmallMoleculeReference>>();
+		Map<SmallMoleculeReference, Set<SmallMoleculeReference>> map = new HashMap<>();
 
 		for (SmallMoleculeReference smr : smrs)
 		{
@@ -313,7 +292,7 @@ public class ChemicalNameNormalizer
 	private Map<SmallMoleculeReference, Integer> getInteractionCounts(
 		Set<SmallMoleculeReference>... smrSets)
 	{
-		Map<SmallMoleculeReference, Integer> cnt = new HashMap<SmallMoleculeReference, Integer>();
+		Map<SmallMoleculeReference, Integer> cnt = new HashMap<>();
 
 		for (Set<SmallMoleculeReference> smrSet : smrSets)
 		{
@@ -325,63 +304,6 @@ public class ChemicalNameNormalizer
 			}
 		}
 		return cnt;
-	}
-
-	private List<SmallMoleculeReference> getSortedList(Collection<SmallMoleculeReference> smrs,
-		final Map<SmallMoleculeReference, Integer> cnt)
-	{
-		List<SmallMoleculeReference> list = new ArrayList<SmallMoleculeReference>(smrs);
-		Collections.sort(list, new Comparator<SmallMoleculeReference>()
-		{
-			@Override
-			public int compare(SmallMoleculeReference o1, SmallMoleculeReference o2)
-			{
-				return cnt.get(o2).compareTo(cnt.get(o1));
-			}
-		});
-
-		return list;
-	}
-
-	private void printTopPart(String listName, Set<SmallMoleculeReference> smrs, int upTo)
-	{
-		Map<SmallMoleculeReference, Integer> cnt = getInteractionCounts(smrs);
-		List<SmallMoleculeReference> list = getSortedList(smrs, cnt);
-
-		int i = 0;
-
-		System.out.println(listName + "\n--------------");
-		for (SmallMoleculeReference smr : list)
-		{
-			System.out.println(cnt.get(smr) + "\t" + smr.getDisplayName());
-
-			if (++i == upTo) break;
-		}
-		System.out.println();
-	}
-
-	private void printTopPart(String listName,
-		Map<SmallMoleculeReference, Set<SmallMoleculeReference>> smrMap, int upTo)
-	{
-		Map<SmallMoleculeReference, Integer> cnt = getInteractionCounts(smrMap.keySet());
-		List<SmallMoleculeReference> list = getSortedList(smrMap.keySet(), cnt);
-
-		int i = 0;
-
-		System.out.println(listName + "\n--------------");
-		for (SmallMoleculeReference smr : list)
-		{
-			System.out.print(cnt.get(smr) + "\t" + smr.getDisplayName() + "\t");
-
-			for (SmallMoleculeReference match : smrMap.get(smr))
-			{
-				System.out.print("\t" + match.getDisplayName());
-			}
-			System.out.println();
-
-			if (++i == upTo) break;
-		}
-		System.out.println();
 	}
 
 	private void enrichNamesWithMatchings(
@@ -412,33 +334,28 @@ public class ChemicalNameNormalizer
 	private SmallMoleculeReference selectRepresentative(Set<SmallMoleculeReference> smrs,
 		final Map<SmallMoleculeReference, SmallMoleculeReference> map)
 	{
-		List<SmallMoleculeReference> list = new ArrayList<SmallMoleculeReference>(smrs);
+		List<SmallMoleculeReference> list = new ArrayList<>(smrs);
 		final Map<SmallMoleculeReference, Integer> cnt = getInteractionCounts(smrs);
 
-		Collections.sort(list, new Comparator<SmallMoleculeReference>()
-		{
-			@Override
-			public int compare(SmallMoleculeReference o1, SmallMoleculeReference o2)
+		Collections.sort(list, (o1, o2) -> {
+			if (map.containsValue(o1))
 			{
-				if (map.containsValue(o1))
-				{
-					if (!map.containsValue(o2)) return -1;
-				}
-				else
-				{
-					if (map.containsValue(o2)) return 1;
-				}
-
-				if (!cnt.get(o1).equals(cnt.get(o2))) return cnt.get(o2).compareTo(cnt.get(o1));
-
-				if (o1.getDisplayName().endsWith(")"))
-				{
-					if (!o2.getDisplayName().endsWith(")")) return -1;
-				}
-				else if (o2.getDisplayName().endsWith(")")) return 1;
-
-				return o1.getDisplayName().compareTo(o2.getDisplayName());
+				if (!map.containsValue(o2)) return -1;
 			}
+			else
+			{
+				if (map.containsValue(o2)) return 1;
+			}
+
+			if (!cnt.get(o1).equals(cnt.get(o2))) return cnt.get(o2).compareTo(cnt.get(o1));
+
+			if (o1.getDisplayName().endsWith(")"))
+			{
+				if (!o2.getDisplayName().endsWith(")")) return -1;
+			}
+			else if (o2.getDisplayName().endsWith(")")) return 1;
+
+			return o1.getDisplayName().compareTo(o2.getDisplayName());
 		});
 
 		return list.get(0);

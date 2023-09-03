@@ -51,16 +51,17 @@ public class ConversionImpl extends InteractionImpl
 	public void addRight(PhysicalEntity right)
 	{
 		if(right != null) {
-			this.right.add(right);
-			super.addParticipant(right);
+			if(this.right.add(right)) {
+				super.addParticipant(right);
+			}
 		}
 	}
 
 	public void removeRight(PhysicalEntity right)
 	{
 		if(right != null) {
-			super.removeParticipant(right);
 			this.right.remove(right);
+			super.removeParticipant(right);
 		}
 	}
 
@@ -72,19 +73,19 @@ public class ConversionImpl extends InteractionImpl
 	public void addLeft(PhysicalEntity left)
 	{
 		if(left != null) {
-			this.left.add(left);
-			super.addParticipant(left);
+			if(this.left.add(left)) {
+				super.addParticipant(left);
+			}
 		}
 	}
 
 	public void removeLeft(PhysicalEntity left)
 	{
 		if(left != null) {
-			super.removeParticipant(left);
 			this.left.remove(left);
+			super.removeParticipant(left);
 		}
 	}
-
 	
 	public Boolean getSpontaneous()
 	{
@@ -127,20 +128,17 @@ public class ConversionImpl extends InteractionImpl
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		if(element.getModelInterface()== this.getModelInterface())
+		if(element.getModelInterface() == this.getModelInterface())
 		{
 			Conversion that = (Conversion) element;
 			if(that.getSpontaneous()==this.getSpontaneous() &&
-		       that.getConversionDirection() == this.getConversionDirection())
+		       that.getConversionDirection() == this.getConversionDirection())//TODO: what if one is REVERSIBLE or opposite?
 			{
-				if(SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getLeft()))
-				{
-					return SetEquivalenceChecker.isEquivalent(this.getRight(), that.getRight());
-				}
-				else if(SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getRight()))
-				{
-					return(SetEquivalenceChecker.isEquivalent(this.getRight(), that.getLeft()));
-				}
+				return SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getLeft())
+						&& SetEquivalenceChecker.isEquivalent(this.getRight(), that.getRight())
+					|| SetEquivalenceChecker.isEquivalent(this.getLeft(), that.getRight())
+						&& SetEquivalenceChecker.isEquivalent(this.getRight(), that.getLeft());
+				//TODO: Why don't we call super.semanticallyEquivalent here (to check xrefs, evidence)?
 			}
 		}
 		return false;
@@ -150,7 +148,6 @@ public class ConversionImpl extends InteractionImpl
 	public int equivalenceCode()
 	{
 		return getEqCodeForSet(this.getLeft())*getEqCodeForSet(this.getRight());
-
 	}
 
 	private int getEqCodeForSet(Set<PhysicalEntity> peSet)

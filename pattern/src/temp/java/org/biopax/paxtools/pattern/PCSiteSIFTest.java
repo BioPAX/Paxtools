@@ -26,7 +26,7 @@ public class PCSiteSIFTest
 		Map<String, String> names1 = parseFileNames(site1);
 		Map<String, String> names2 = parseFileNames(site2);
 
-		Set<String> dbs = new HashSet<String>(names1.keySet());
+		Set<String> dbs = new HashSet<>(names1.keySet());
 		dbs.retainAll(names2.keySet());
 
 		for (String db : dbs)
@@ -71,20 +71,20 @@ public class PCSiteSIFTest
 		Map<String, Set<String>> map1 = parseSIFFIle(file1);
 		Map<String, Set<String>> map2 = parseSIFFIle(file2);
 
-		Set<String> types = new HashSet<String>(map1.keySet());
+		Set<String> types = new HashSet<>(map1.keySet());
 		types.retainAll(map2.keySet());
 
 		for (String type : types)
 		{
 			System.out.print(type);
-			Set<String> set1 = new HashSet<String>(map1.get(type));
-			Set<String> set2 = new HashSet<String>(set1);
+			Set<String> set1 = new HashSet<>(map1.get(type));
+			Set<String> set2 = new HashSet<>(set1);
 			set1.removeAll(map2.get(type));
 			set2.retainAll(map2.get(type));
 
 			System.out.print("\t" + set1.size() + "\t" + set2.size());
 
-			Set<String> set3 = new HashSet<String>(map2.get(type));
+			Set<String> set3 = new HashSet<>(map2.get(type));
 			set3.removeAll(set2);
 
 			System.out.println("\t" + set3.size());
@@ -118,7 +118,7 @@ public class PCSiteSIFTest
 			if (type == null) System.out.println(token[1]);
 			boolean directed = type.isDirected();
 
-			if (!map.containsKey(token[1])) map.put(token[1], new HashSet<String>());
+			if (!map.containsKey(token[1])) map.put(token[1], new HashSet<>());
 
 			String s = directed || token[0].compareTo(token[2]) < 0 ?
 				token[0] + " " + token[2] :

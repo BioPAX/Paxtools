@@ -23,9 +23,9 @@ class publicationXrefImpl extends xrefImpl implements publicationXref
 	public publicationXrefImpl()
 	{
 		super();
-		this.AUTHORS = new HashSet<String>();
-		this.SOURCE = new HashSet<String>();
-		this.URL = new HashSet<String>();
+		this.AUTHORS = new HashSet<>();
+		this.SOURCE = new HashSet<>();
+		this.URL = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

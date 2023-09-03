@@ -88,7 +88,7 @@ public class RelatedControl extends ConstraintAdapter
 		
 		assert rightContains || leftContains : "PE is not a participant.";
 
-		Set<BioPAXElement> result = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> result = new HashSet<>();
 
 		ConversionDirectionType avoidDir = (leftContains && rightContains) ? null : peType == RelType.OUTPUT ?
 			(leftContains ? ConversionDirectionType.LEFT_TO_RIGHT : ConversionDirectionType.RIGHT_TO_LEFT) :

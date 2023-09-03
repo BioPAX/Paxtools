@@ -22,7 +22,7 @@ class complexImpl extends physicalEntityImpl implements complex
 
 	public complexImpl()
 	{
-		this.COMPONENTS = new HashSet<physicalEntityParticipant>();
+		this.COMPONENTS = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

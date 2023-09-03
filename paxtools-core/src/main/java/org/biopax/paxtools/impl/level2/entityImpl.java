@@ -46,11 +46,11 @@ abstract class entityImpl extends BioPAXLevel2ElementImpl implements entity
 
 	public entityImpl()
 	{
-		this.AVAILABILITY = new HashSet<String>();
-		this.DATA_SOURCE = new HashSet<dataSource>();
-		this.SYNONYMS = new HashSet<String>();
+		this.AVAILABILITY = new HashSet<>();
+		this.DATA_SOURCE = new HashSet<>();
+		this.SYNONYMS = new HashSet<>();
 		this.referenceHelper = new ReferenceHelper(this);
-		this.PARTICIPANTof = new HashSet<interaction>();
+		this.PARTICIPANTof = new HashSet<>();
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------

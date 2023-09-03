@@ -9,21 +9,19 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ModelUtilsTest {
 
 	@Test
-	public final void testMergeAndReplace() {
+	public final void mergeAndReplace() {
 		BioPAXFactory factory = BioPAXLevel.L3.getDefaultFactory();
 		Model m = factory.createModel();
 		
@@ -138,19 +136,17 @@ public class ModelUtilsTest {
 		System.out.println(bytes.toString());
 	}
 
-
-	public final void testMetrics()
+	public final void printMetrics()
 	{
 		Model model = SimpleIOHandlerTest.getL3Model(new SimpleIOHandler());
 		Map<Class<? extends BioPAXElement>,Integer> metrics =
 				ModelUtils.generateClassMetrics(model);
 		System.out.println("metrics = " + metrics);
-
 	}
 	
-	
+
 	@Test
-	public final void testRemoveObjectsIfDangling() {
+	public final void removeObjectsIfDangling() {
 		Model model = (new SimpleIOHandler()).convertFromOWL(
 			getClass().getClassLoader().getResourceAsStream("L3" + File.separator + "hcyc.owl"));
 		assertEquals(6, model.getObjects().size());
@@ -187,26 +183,24 @@ public class ModelUtilsTest {
 	}
 	
 	@Test
-	public void testGenericNormalization()
-	{
+	public void genericNormalization() {
 		MockFactory mock = new MockFactory(BioPAXLevel.L3);
 		Model model = mock.createModel();
 		Protein[] p = mock.create(model, Protein.class, 3);
 		ProteinReference[] pr = mock.create(model, ProteinReference.class, 2);
 
 		mock.bindArrays("entityReference", Arrays.copyOfRange(p, 0, 2), pr);
-
 		mock.bindInPairs("memberPhysicalEntity", p[2],p[0], p[2],p[1]);
 
 		ModelUtils.normalizeGenerics(model);
 
-		assertThat(true, is(p[2].getEntityReference()!=null));
-		assertThat(true, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[0])));
-		assertThat(true, is(p[2].getEntityReference().getMemberEntityReference().contains(pr[1])));
+		assertTrue(p[2].getEntityReference()!=null);
+		assertTrue(p[2].getEntityReference().getMemberEntityReference().contains(pr[0]));
+		assertTrue(p[2].getEntityReference().getMemberEntityReference().contains(pr[1]));
 	}
 
     @Test
-    public void testFixEquivalentFeatures()
+    public void fixEquivalentFeatures()
     {
         MockFactory mock = new MockFactory(BioPAXLevel.L3);
         Model model = mock.createModel();
@@ -230,7 +224,7 @@ public class ModelUtilsTest {
     }
     
 	@Test
-	public void testMergeEquivalentConversions()
+	public void mergeEquivalentConversions()
 	{
 		MockFactory mock = new MockFactory(BioPAXLevel.L3);
 		Model model = mock.createModel();
@@ -256,7 +250,7 @@ public class ModelUtilsTest {
 	}
 
 	@Test
-	public void testMergeEquivalentPhysicalEntities()
+	public void mergeEquivalentPhysicalEntities()
 	{
 		MockFactory mock = new MockFactory(BioPAXLevel.L3);
 		Model model = mock.createModel();
@@ -303,12 +297,12 @@ public class ModelUtilsTest {
 	}
 
 	@Test
-	public void testBase62() {
+	public void base62() {
 		final String longUri = "http://www.ctdbase.org/#process_RXN_%5BCFTR+protein+inhibits+the+reaction+%5B%5B" +
 				"Colforsin+co-treated+with+Genistein%5D+results+in+increased+transport+of+Iodides%5D%5D";
 		String shortStr = ModelUtils.encodeBase62(longUri);
-		Assert.assertEquals("k9viXaDIiOW", shortStr);
+		assertEquals("k9viXaDIiOW", shortStr);
 		String shortUri = ModelUtils.shortenUri("http://www.ctdbase.org/", longUri);
-		Assert.assertEquals("http://www.ctdbase.org/k9viXaDIiOW", shortUri);
+		assertEquals("http://www.ctdbase.org/k9viXaDIiOW", shortUri);
 	}
 }

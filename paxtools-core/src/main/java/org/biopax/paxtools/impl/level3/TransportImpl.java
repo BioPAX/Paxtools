@@ -10,7 +10,7 @@ public class TransportImpl extends ConversionImpl implements Transport
 	
 	// --------------------- Interface BioPAXElement ---------------------
 
-    public Class<? extends Transport> getModelInterface()
+  public Class<? extends Transport> getModelInterface()
 	{
 		return Transport.class;
 	}

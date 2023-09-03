@@ -113,7 +113,7 @@ public class SimpleMerger
 		
 		// Auto-complete source 'elements' by discovering all the implicit elements there
 		// copy all elements, as the collection can be immutable or unsafe to add elements to
-		final Set<BioPAXElement> sources = new HashSet<BioPAXElement>(elements);
+		final Set<BioPAXElement> sources = new HashSet<>(elements);
 		for(BioPAXElement se : elements) {
 			sources.addAll(fetcher.fetch(se));
 		}
@@ -145,7 +145,7 @@ public class SimpleMerger
 			else if(bpe.getModelInterface() != target.getByID(uri).getModelInterface()) {
 				// source object/model(s) have to be fixed (URI conflicts resolved) before merging by URI
 				throw new RuntimeException(String.format(
-					"URI:%s of %s (to merge) is also URI of %s in target model (different class)",
+					"URI:%s of %s (to merge) is also the URI of %s in the target model but different biopax type",
 						uri, bpe.getModelInterface().getSimpleName(),
 							target.getByID(uri).getModelInterface().getSimpleName()));
 			}
@@ -197,7 +197,7 @@ public class SimpleMerger
 			if (editor instanceof ObjectPropertyEditor)
 			{
 				//copy prop. values (to avoid concurrent modification exception)
-				Set<BioPAXElement> values = new HashSet<BioPAXElement>((Set<BioPAXElement>) editor.getValueFromBean(source));
+				Collection<BioPAXElement> values = new HashSet<>(editor.getValueFromBean(source));
 				if(keep == source) //i.e., it has been just added to the target, - simply update properties
 				{
 					for (BioPAXElement value : values) {
@@ -217,7 +217,7 @@ public class SimpleMerger
 			else // - primitive, enum, or string property editor (e.g., comment, name), and -
 				if (mergePropOf != null && mergePropOf.filter(source) && editor.isMultipleCardinality())
 			{
-				Set<Object> values = new HashSet<Object>((Set<Object>) editor.getValueFromBean(source));
+				Set<Object> values = new HashSet<>(editor.getValueFromBean(source));
 				for (Object value : values) {
 					mergeToTarget(keep, target, editor, value);
 				}

@@ -56,7 +56,7 @@ public class RelatedGenesOfInteractionsMiner extends MinerAdapter
 
 		for (BioPAXElement ele : matches.keySet())
 		{
-			Set<String> syms = new HashSet<String>();
+			Set<String> syms = new HashSet<>();
 
 			for (Match m : matches.get(ele))
 			{

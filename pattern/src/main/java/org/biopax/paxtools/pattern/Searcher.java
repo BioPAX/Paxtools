@@ -66,7 +66,7 @@ public class Searcher
 	 */
 	public static List<Match> searchRecursive(Match match, List<MappedConst> mc, int index) 
 	{
-		List<Match> result = new ArrayList<Match>();
+		List<Match> result = new ArrayList<>();
 
 		Constraint con = mc.get(index).getConstr();
 		int[] ind = mc.get(index).getInds();
@@ -118,7 +118,7 @@ public class Searcher
 	 */
 	public static List<Match> searchPlain(Model model, Pattern pattern)
 	{
-		List<Match> list = new LinkedList<Match>();
+		List<Match> list = new LinkedList<>();
 
 		Map<BioPAXElement, List<Match>> map = search(model, pattern);
 		for (List<Match> matches : map.values())
@@ -137,7 +137,7 @@ public class Searcher
 	 */
 	public static List<Match> searchPlain(Collection<? extends BioPAXElement> eles, Pattern pattern)
 	{
-		List<Match> list = new LinkedList<Match>();
+		List<Match> list = new LinkedList<>();
 
 		Map<BioPAXElement, List<Match>> map = search(eles, pattern);
 		for (List<Match> matches : map.values())
@@ -151,7 +151,7 @@ public class Searcher
 	 * Searches the given pattern in the given model.
 	 * @param model model to search in
 	 * @param pattern pattern to search for
-	 * @return map from starting elements to the list matching results
+	 * @return map from starting elements to the list of results
 	 */
 	public static Map<BioPAXElement, List<Match>> search(Model model, Pattern pattern)
 	{
@@ -163,12 +163,12 @@ public class Searcher
 	 * @param model model to search in
 	 * @param pattern pattern to search for
 	 * @param prg progress watcher to keep track of the progress
-	 * @return map from starting elements to the list matching results
+	 * @return map from starting elements to the ordered list of results
 	 */
 	public static Map<BioPAXElement, List<Match>> search(final Model model, final Pattern pattern,
 														 final ProgressWatcher prg)
 	{
-		final Map<BioPAXElement, List<Match>> map = new ConcurrentHashMap<BioPAXElement, List<Match>>();
+		final Map<BioPAXElement, List<Match>> map = new ConcurrentHashMap<>();
 		final ExecutorService exec = Executors.newFixedThreadPool(20);
 
 		Set<? extends BioPAXElement> eles = model.getObjects(pattern.getStartingClass());
@@ -176,20 +176,18 @@ public class Searcher
 
 		for (final BioPAXElement ele : eles)
 		{
-			exec.execute(new Runnable() {
-				@Override
-				public void run() {
-					List<Match> matches = search(ele, pattern);
-					if (!matches.isEmpty())
-					{
-						map.put(ele, matches);
-					}
-					if (prg != null) prg.tick(1);
+			exec.execute(() -> {
+				List<Match> matches = search(ele, pattern);
+				if (!matches.isEmpty())
+				{
+					map.put(ele, matches);
 				}
+				if (prg != null) prg.tick(1);
 			});
 		}
 
 		exec.shutdown();
+
 		try {
 			exec.awaitTermination(10, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
@@ -205,35 +203,33 @@ public class Searcher
 	 * @param pattern pattern to search for
 	 * @return map from starting element to the matching results
 	 */
-	public static Map<BioPAXElement, List<Match>> search(final Collection<? extends BioPAXElement> eles,
-														 final Pattern pattern)
+	public static Map<BioPAXElement, List<Match>> search(
+		Collection<? extends BioPAXElement> eles, Pattern pattern)
 	{
-		final Map<BioPAXElement, List<Match>> map = new ConcurrentHashMap<BioPAXElement, List<Match>>();
+		final Map<BioPAXElement, List<Match>> map = new ConcurrentHashMap<>();
 		final ExecutorService exec = Executors.newFixedThreadPool(10);
 
 		for (final BioPAXElement ele : eles)
 		{
 			if (!pattern.getStartingClass().isAssignableFrom(ele.getModelInterface())) continue;
 			
-			exec.execute(new Runnable() {
-				@Override
-				public void run() {
-					List<Match> matches = search(ele, pattern);
-					if (!matches.isEmpty()) {
-						map.put(ele, matches);
-					}
+			exec.execute(() -> {
+				List<Match> matches = search(ele, pattern);
+				if (!matches.isEmpty()) {
+					map.put(ele, matches);
 				}
 			});
 		}
 
 		exec.shutdown();
+
 		try {
 			exec.awaitTermination(10, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
 			throw new RuntimeException("search, failed due to exec timed out.", e);
 		}
 
-		return Collections.unmodifiableMap(new HashMap<BioPAXElement, List<Match>>(map));
+		return Collections.unmodifiableMap(new HashMap<>(map));
 	}
 
 	/**
@@ -267,7 +263,7 @@ public class Searcher
 	public static <T extends BioPAXElement> Set<T> searchAndCollect(
 		Collection<? extends BioPAXElement> eles, Pattern pattern, int index, Class<T> c)
 	{
-		Set<T> set = new HashSet<T>();
+		Set<T> set = new HashSet<>();
 
 		for (Match match : searchPlain(eles, pattern))
 		{
@@ -290,7 +286,7 @@ public class Searcher
 	public static <T extends BioPAXElement> Set<T> searchAndCollect(
 		BioPAXElement ele, Pattern pattern, int index, Class<T> c)
 	{
-		Set<T> set = new HashSet<T>();
+		Set<T> set = new HashSet<>();
 
 		for (Match match : search(ele, pattern))
 		{
@@ -349,12 +345,11 @@ public class Searcher
 
 		Map<BioPAXElement,List<Match>> matchMap = Searcher.search(model, p);
 
-		System.out.println("matching groups size = " + matchMap.size());
+//		System.out.println("matching groups size = " + matchMap.size());
 
-		List<Set<Interaction>> inters = new LinkedList<Set<Interaction>>();
-		Set<Integer> encountered = new HashSet<Integer>();
-
-		Set<BioPAXElement> toExise = new HashSet<BioPAXElement>();
+		List<Set<Interaction>> inters = new LinkedList<>();
+		Set<Integer> encountered = new HashSet<>();
+		Set<BioPAXElement> toExise = new HashSet<>();
 
 		int seedCounter = 0;
 		for (BioPAXElement ele : matchMap.keySet())
@@ -441,18 +436,6 @@ public class Searcher
 
 	/**
 	 * Excises a model to the given elements.
-	 * @param model model to excise (bogus parameter, in fact, deprecated)
-	 * @param result elements to excise to
-	 * @return excised model
-	 * @deprecated use {@link #excise(Set)} instead (parameter:model was not actually used at all)
-	 */
-	private static Model excise(Model model, Set<BioPAXElement> result)
-	{
-		return excise(result);
-	}
-
-	/**
-	 * Excises a model to the given elements.
 	 * @param result elements to excise to
 	 * @return excised model
 	 */
@@ -471,7 +454,7 @@ public class Searcher
 	 */
 	private static Set<Interaction> getInter(Match match)
 	{
-		Set<Interaction> set = new HashSet<Interaction>();
+		Set<Interaction> set = new HashSet<>();
 		for (BioPAXElement ele : match.getVariables())
 		{
 			if (ele instanceof Interaction) 

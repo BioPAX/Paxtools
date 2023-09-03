@@ -10,71 +10,72 @@ import java.util.Set;
 
 
 public class TemplateReactionImpl extends InteractionImpl implements TemplateReaction {
-    private Set<PhysicalEntity> product;
-    private NucleicAcid template;
-	private TemplateDirectionType templateDirection;
+  private Set<PhysicalEntity> product;
+  private NucleicAcid template;
+  private TemplateDirectionType templateDirection;
 
-	public TemplateReactionImpl()
-	{
-        this.product = BPCollections.I.createSafeSet();
+  public TemplateReactionImpl()
+  {
+    this.product = BPCollections.I.createSafeSet();
+  }
+
+  public Class<? extends TemplateReaction> getModelInterface()
+  {
+    return TemplateReaction.class;
+  }
+
+  public Set<PhysicalEntity> getProduct()
+  {
+    return product;
+  }
+
+  protected void setProduct(Set<PhysicalEntity> product)
+  {
+    this.product = product;
+  }
+
+  public void addProduct(PhysicalEntity product)
+  {
+    if(product != null) {
+      if(this.product.add(product)) {
+        super.addParticipant(product);
+      }
     }
-	
-    public Class<? extends TemplateReaction> getModelInterface()
-	{
-		return TemplateReaction.class;
-	}
+  }
 
-    public Set<PhysicalEntity> getProduct()
-    {
-        return product;
+  public void removeProduct(PhysicalEntity product)
+  {
+    if(product != null) {
+      this.product.remove(product);
+      super.removeParticipant(product);
     }
+  }
 
-    protected void setProduct(Set<PhysicalEntity> product)
-    {
-        this.product = product;
+  public NucleicAcid getTemplate()
+  {
+    return this.template;
+  }
+
+  public void setTemplate(NucleicAcid template)
+  {
+    if(this.template != null) {
+      super.removeParticipant(this.template);
     }
-
-    public void addProduct(PhysicalEntity product)
-    {
-    	if(product != null) {
-    		this.product.add(product);
-    		super.addParticipant(product);
-    	}
+    if(template != null) {
+      super.addParticipant(template);
     }
+    this.template = template; //can be null
+  }
 
-    public void removeProduct(PhysicalEntity product)
-    {
-    	if(product != null) {
-    		super.removeParticipant(product);
-        	this.product.remove(product);
-    	}
-    }
+  public TemplateDirectionType getTemplateDirection()
+  {
+    return templateDirection;
+  }
 
-	public NucleicAcid getTemplate()
-     {
-         return this.template;
-     }
+  public void setTemplateDirection(TemplateDirectionType templateDirection)
+  {
+    this.templateDirection = templateDirection;
+  }
 
-    public void setTemplate(NucleicAcid template)
-    {
-         if(this.template!= null)
-         {
-            super.removeParticipant(this.template);
-         }
-         if(template != null) {
-        	 this.template=template;
-        	 super.addParticipant(template);
-         }
-    }
-
-	public TemplateDirectionType getTemplateDirection()
-	{
-		return templateDirection;
-	}
-
-	public void setTemplateDirection(TemplateDirectionType templateDirection)
-	{
-		this.templateDirection = templateDirection;
-	}
-
+//TODO: override add/remove participant to block direct use (allow only via add/remove "template", "product")?
 }

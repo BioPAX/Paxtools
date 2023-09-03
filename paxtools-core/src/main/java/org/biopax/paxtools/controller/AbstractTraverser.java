@@ -34,7 +34,7 @@ public abstract class AbstractTraverser extends Traverser implements Visitor
 	{
 		super(editorMap, null, filters);
 		setVisitor(this);
-		visited = new HashSet<BioPAXElement>();
+		visited = new HashSet<>();
 	}
 
 	/**

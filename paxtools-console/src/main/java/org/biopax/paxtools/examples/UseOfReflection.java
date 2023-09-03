@@ -33,7 +33,7 @@ public final class UseOfReflection {
 	 * @return the BioPAX object property values or empty set
 	 */
 	public static Set<? extends BioPAXElement> getObjectBiopaxPropertyValues(BioPAXElement bpe, String property) {
-		Set<BioPAXElement> values = new HashSet<BioPAXElement>();
+		Set<BioPAXElement> values = new HashSet<>();
 
 		// get the BioPAX L3 property editors map
 		EditorMap em = SimpleEditorMap.L3;

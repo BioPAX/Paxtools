@@ -34,7 +34,7 @@ class ReferenceHelper implements Serializable
 	ReferenceHelper(XReferrable owner)
 	{
 		this.owner = owner;
-		this.XREF = new HashSet<xref>();
+		this.XREF = new HashSet<>();
 	}
 
 // -------------------------- OTHER METHODS --------------------------
@@ -64,7 +64,7 @@ class ReferenceHelper implements Serializable
 			xref.isXREFof().remove(this.owner);
 		}
 
-		this.XREF = XREF == null ? new HashSet<xref>() : XREF;
+		this.XREF = XREF == null ? new HashSet<>() : XREF;
 		for (xref xref : this.XREF)
 		{
 			xref.isXREFof().add(owner);

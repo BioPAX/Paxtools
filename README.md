@@ -35,7 +35,15 @@ Paxtools provides, beyond the core and converters API, a console application tha
 
 `java -jar paxtools.jar` (add -Xmx option when processing large data files).
 
-If you have [homebrew](http://brew.sh/) installed on your system (Mac OS X), you can install the latest release of Paxtools via the following brew command (there might be old version):
+### JVM options
+
+Paxtools can be build and run with JDK-17 or newer, e.g. Temurin-20. Add these JVM options or set
+`JDK_JAVA_OPTIONS="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED"`
+
+ - `-Dpaxtools.model.safeset=list` for read-only BioPAX models/apps, which should consume less RAM.
+ - `-Dpaxtools.normalizer.use-latest-registry=true` (if using Normalizer/Resolver) to use the latest registry.json from bioregistry.io
+
+If you have [homebrew](http://brew.sh/) installed on your system (Mac OS X), you can install the latest release of Paxtools via the following brew command (could be old version):
 
 ```bash
 $ brew install homebrew/science/paxtools
@@ -43,12 +51,14 @@ $ paxtools help
 ```
 
 ## Availability
-* The latest stable Paxtools modules are available in Maven Central
-* [OSSRH public repository](https://oss.sonatype.org/content/groups/public/) (snapshots, since 4.3.1-SNAPSHOT, and releases)
-* Older BioPAX [snapshots](http://www.biopax.org/m2repo/snapshots/) and [releases](http://www.biopax.org/m2repo/releases/) Maven2 repository
-* [Downloads](http://www.biopax.org/downloads/paxtools/)
+* Maven Central repository (only releases)
+* [OSSRH public repository](https://oss.sonatype.org/content/groups/public/) (snapshots since 4.3.1, releases)
+* [old BioPAX snapshots](http://www.biopax.org/m2repo/snapshots/) and [old BioPAX releases](http://www.biopax.org/m2repo/releases/) repositories
+* [BioPAX Downloads](http://www.biopax.org/downloads/paxtools/)
 
-More information about Paxtools can be found in [the publication](http://dx.plos.org/10.1371/journal.pcbi.1003194),  [wiki archive](http://www.biopax.org/mediawiki/index.php/Paxtools), and [BioPAX forum](https://groups.google.com/d/msg/biopax-discuss/zwtwDG23T1E/Vu1OK7iXBQAJ).
+More information about Paxtools can be found in [the publication](http://dx.plos.org/10.1371/journal.pcbi.1003194), 
+[wiki archive](http://www.biopax.org/mediawiki/index.php/Paxtools), 
+and [BioPAX forum](https://groups.google.com/d/msg/biopax-discuss/zwtwDG23T1E/Vu1OK7iXBQAJ).
 
-UPDATE: can be now build and run with a JDK-18 (you might also need to add these command-line JVM options 
-or set _JAVA_OPTIONS env: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED ) 
+
+

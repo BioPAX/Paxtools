@@ -48,7 +48,7 @@ public class AND extends OR
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
-		Collection<BioPAXElement> gen = new HashSet<BioPAXElement> (
+		Collection<BioPAXElement> gen = new HashSet<> (
 			con[0].generate(match, ind));
 
 		for (int i = 1; i < con.length; i++)

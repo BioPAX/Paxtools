@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
 
   <groupId>org.biopax.paxtools</groupId>
   <artifactId>paxtools</artifactId>
-  <version>5.3.1-SNAPSHOT</version>
+  <version>6.0.0-SNAPSHOT</version>
 
   <name>Paxtools</name>
 
@@ -30,9 +31,7 @@
     <module>sbgn-converter</module>
     <module>paxtools-console</module>
     <module>paxtools-query</module>
-    <module>paxtools-archetype</module>
     <module>json-converter</module>
-    <module>paxtools-search</module>
     <module>pattern</module>
     <module>normalizer</module>
   </modules>
@@ -41,8 +40,6 @@
     <github.global.server>github</github.global.server>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <slf4j.version>1.7.25</slf4j.version>
-    <java.options>-Dfile.encoding=UTF-8</java.options>
   </properties>
 
   <developers>
@@ -118,8 +115,8 @@
   </issueManagement>
 
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/BioPAX/Paxtools</url>
+    <system>GitHub</system>
+    <url>https://github.com/BioPAX/Paxtools/actions/workflows/maven.yml</url>
   </ciManagement>
 
   <profiles>
@@ -141,6 +138,7 @@
             </configuration>
           </plugin>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
             <executions>
               <execution>
@@ -190,6 +188,9 @@
 
   <distributionManagement>
     <site>
+      <!-- do:
+        mvn site site:stage -DstagingDirectory=/tmp/path
+         - then manually copy the site and push to the gh-pages branch -->
       <id>github</id>
       <name>BioPAX/Paxtools Maven site</name>
       <url>https://biopax.github.io/Paxtools/${project.version}</url>
@@ -215,7 +216,7 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.11.0</version>
           <configuration>
-            <release>8</release>
+            <release>17</release>
           </configuration>
         </plugin>
         <plugin>
@@ -283,7 +284,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.8</version>
+          <version>1.6.13</version>
         </plugin>
         <plugin>
           <artifactId>maven-gpg-plugin</artifactId>
@@ -301,7 +302,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-scm</artifactId>
-        <version>2.8</version>
+        <version>2.10</version>
       </extension>
       <extension>
         <groupId>org.apache.maven.doxia</groupId>
@@ -328,9 +329,9 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <testFailureIgnore>false</testFailureIgnore>
-          <argLine>-ea</argLine>
-          <!-- if using JDK >11 use the args below (can set _JAVA_OPTIONS instead) -->
-<!--          <argLine>-ea &#45;&#45;add-opens=java.base/java.lang=ALL-UNNAMED &#45;&#45;add-opens=java.base/java.lang.reflect=ALL-UNNAMED</argLine>-->
+          <!-- if using JDK >15 use the args below (can set JDK_JAVA_OPTIONS instead) -->
+          <argLine>-ea --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED</argLine>
+          <!-- -Dpaxtools.normalizer.use-latest-registry=true -Dpaxtools.model.safeset=list -->
         </configuration>
       </plugin>
       <plugin>
@@ -358,9 +359,15 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.9.3</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>5.9.3</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -374,11 +381,6 @@
         <version>3.8.1</version>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.jackson</groupId>
-        <artifactId>jackson-mapper-asl</artifactId>
-        <version>1.9.12</version>
-      </dependency>
-      <dependency>
         <groupId>com.hp.hpl.jena</groupId>
         <artifactId>jena</artifactId>
         <version>2.6.4</version>
@@ -386,47 +388,45 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
+        <version>2.0.7</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <version>${slf4j.version}</version>
+        <version>2.0.7</version>
         <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jul-to-slf4j</artifactId>
-        <version>${slf4j.version}</version>
+        <version>2.0.7</version>
         <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>log4j-over-slf4j</artifactId>
-        <version>${slf4j.version}</version>
+        <version>2.0.7</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.1.11</version>
+        <version>1.4.8</version>
         <optional>true</optional>
       </dependency>
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>2.3.1</version>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>2.15.2</version>
       </dependency>
       <dependency>
-        <groupId>com.sun.xml.bind</groupId>
-        <artifactId>jaxb-core</artifactId>
-        <version>2.3.0</version>
-        <scope>runtime</scope>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.15.2</version>
       </dependency>
       <dependency>
-        <groupId>com.sun.xml.bind</groupId>
-        <artifactId>jaxb-impl</artifactId>
-        <version>2.3.0</version>
-        <scope>runtime</scope>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.24</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -452,21 +452,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -502,7 +495,7 @@
           <linksource>true</linksource>
           <notimestamp>true</notimestamp>
           <links combine.children="append">
-            <link>http://download.oracle.com/javase/7/docs/api/</link>
+            <link>http://download.oracle.com/javase/17/docs/api/</link>
           </links>
           <level>public</level>
           <excludePackageNames>org.biopax.validator.*:net.biomodels.*</excludePackageNames>

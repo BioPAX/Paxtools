@@ -100,7 +100,7 @@ public class OR extends ConstraintAdapter
 	@Override
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
-		Collection<BioPAXElement> gen = new HashSet<BioPAXElement>();
+		Collection<BioPAXElement> gen = new HashSet<>();
 
 		for (MappedConst mc : con)
 		{

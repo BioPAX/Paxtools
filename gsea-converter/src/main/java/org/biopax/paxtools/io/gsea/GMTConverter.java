@@ -17,29 +17,23 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * An advanced BioPAX to GMT format converter, which can output IDs of
- * both (or either) genetic elements and chemicals
- * (the output file may be run with the GSEA software if gene/protein IDs are there used).
+ * An advanced BioPAX to GMT format converter, which can output IDs of genetic elements or chemicals
+ * (the output file can be loaded with the GSEA software if gene/protein IDs are used).
  * 
- *     Each output entry (row) consists of three columns (tab separated):
+ * Each output entry (row) consists of three columns (tab separated):
  * name (URI), description, and the list of identifiers (of the same type).
  * For all ERs not associated with any pathway, "other" is used for name and uri.
  *
- *     The "idtype" is what specified by Constructor parameter 'idType'.
- *
- *     The list may have one or more IDs of the same type per PR,
+ * The list may have one or more IDs of the same type per Protein Reference (PR),
  * e.g., UniProt IDs or HGNC Symbols; PRs not having an xref of 
  * given db/id type are ignored. If there are less than three protein 
- * references per entry, it will not be printed.
+ * references per entry in total, it will not be printed.
  *
  * Note, this code assumes that the model has successfully been validated
  * and perhaps normalized (using the BioPAX Validator, Paxtools Normalizer).
  * A BioPAX L1 or L2 model is first converted to the L3.
- *
- * TODO: work in progress; add ER sub-class parameter/filter; consider using PE's xrefs as well... make public.
  */
-final class GMTConverter
-{
+final class GMTConverter {
 	private final static Logger LOG = LoggerFactory.getLogger(GMTConverter.class);
 
 	private final IdFetcher idFetcher;
@@ -112,7 +106,7 @@ final class GMTConverter
 				if ((minNumIdsPerEntry <= 1 && !entry.identifiers().isEmpty())
 						|| entry.identifiers().size() >= minNumIdsPerEntry)
 				{
-					writer.write(entry.toString() + "\n");
+					writer.write(entry + "\n");
 				}
 			}
 			writer.flush();
@@ -126,12 +120,9 @@ final class GMTConverter
 	 */
 	public Collection<GMTEntry> convert(final Model model)
 	{
-		final Collection<GMTEntry> toReturn = new TreeSet<GMTEntry>(new Comparator<GMTEntry>() {
-			@Override
-			public int compare(GMTEntry o1, GMTEntry o2) {
-				return o1.toString().compareTo(o2.toString());
-			}
-		});
+		final Collection<GMTEntry> toReturn = new TreeSet<>(
+			Comparator.comparing(GMTEntry::toString)
+		);
 
 		Model l3Model;
 		// convert to level 3 in necessary
@@ -143,9 +134,9 @@ final class GMTConverter
 		//a modifiable copy of the set of all PRs in the model -
 		//after all, it has all the ERs that do not belong to any pathway
 		final Set<EntityReference> entityReferences =
-				new HashSet<EntityReference>(l3Model.getObjects(EntityReference.class));
+				new HashSet<>(l3Model.getObjects(EntityReference.class));
 
-		final Set<Pathway> pathways = l3Model.getObjects(Pathway.class);
+		final Collection<Pathway> pathways = l3Model.getObjects(Pathway.class);
 		for (Pathway pathway : pathways)
 		{
 			String name = (pathway.getDisplayName() == null) ? pathway.getStandardName() : pathway.getDisplayName();
@@ -156,7 +147,7 @@ final class GMTConverter
 			final String currentPathwayName = name;
 
 			LOG.debug("Begin converting " + currentPathwayName + " pathway, uri=" + currentPathway.getUri());
-			final Set<EntityReference> ers = new HashSet<EntityReference>();
+			final Set<EntityReference> ers = new HashSet<>();
 			final Traverser traverser = new AbstractTraverser(SimpleEditorMap.L3,
 					Fetcher.nextStepFilter, Fetcher.objectPropertiesOnlyFilter) {
 				@Override
@@ -190,27 +181,31 @@ final class GMTConverter
 				if(!entries.isEmpty())
 					toReturn.addAll(entries);
 				entityReferences.removeAll(ers);//keep not processed PRs (a PR can be processed multiple times)
-				LOG.debug("- collected " + entries.size() + "entries.");
+				LOG.debug("- collected " + entries.size() + " entries.");
 			}
 		}
 
-		//when there're no pathways, only empty pathays, pathways w/o PRs, then use all/rest of PRs -
+		//when there are no pathways, only empty, or pathways without any PRs, then use the rest of PRs -
 		//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
 		if(!entityReferences.isEmpty() && !skipOutsidePathways) {
 			LOG.info("Creating entries for the rest of PRs (outside any pathway)...");
-			toReturn.addAll(createGseaEntries("other","other", getDataSource(l3Model.getObjects(Provenance.class)),entityReferences));
+			toReturn.addAll(createGseaEntries("other","other",
+				getDataSource(l3Model.getObjects(Provenance.class)), entityReferences));
 		}
 
 		return toReturn;
 	}
 
-	private Collection<GMTEntry> createGseaEntries(String uri, final String name, final String dataSource,
-												   final Set<EntityReference> ers)
+	private Collection<GMTEntry> createGseaEntries(String uri, String name,
+																								 String dataSource,
+																								 Collection<EntityReference> ers)
 	{
-		final Collection<GMTEntry> toReturn = new ArrayList<GMTEntry>();
-		GMTEntry entry = new GMTEntry(uri, "", "", String.format("name: %s; datasource: %s",name, dataSource));
-		for (EntityReference er : ers)
+		Collection<GMTEntry> toReturn = new ArrayList<>();
+		GMTEntry entry = new GMTEntry(uri, "", "",
+			String.format("name: %s; datasource: %s", name, dataSource));
+		for (EntityReference er : ers) {
 			entry.identifiers().addAll(idFetcher.fetchID(er));
+		}
 		toReturn.add(entry);
 		return toReturn;
 	}
@@ -218,11 +213,11 @@ final class GMTConverter
 	/*
 	 * Gets datasource names, if any, in a consistent way/order, excl. duplicates
 	 */
-	private String getDataSource(Set<Provenance> provenances)
+	private String getDataSource(Collection<Provenance> provenances)
 	{
 		if(provenances.isEmpty()) return "N/A";
 		
-		Set<String> dsNames = new TreeSet<String>();
+		Set<String> dsNames = new TreeSet<>();
 		for (Provenance provenance : provenances)
 		{
 			String name = provenance.getDisplayName();

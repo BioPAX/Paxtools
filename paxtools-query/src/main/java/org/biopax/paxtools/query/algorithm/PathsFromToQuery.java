@@ -92,8 +92,8 @@ public class PathsFromToQuery
 		 * Eliminating nodes from candidate according to their labels will
 		 * yield result.
 		 */
-		Map<GraphObject, Integer> candidate = new HashMap<GraphObject, Integer>();
-		Set<GraphObject> result = new HashSet<GraphObject>();
+		Map<GraphObject, Integer> candidate = new HashMap<>();
+		Set<GraphObject> result = new HashSet<>();
 
 		BFS bfsFwd = null;
 		BFS bfsRev = null;
@@ -176,7 +176,7 @@ public class PathsFromToQuery
 			}
 		}
 
-		Set<Node> ST = new HashSet<Node>(sourceSet);
+		Set<Node> ST = new HashSet<>(sourceSet);
 		ST.addAll(targetSet);
 
 		CycleBreaker breaker = new CycleBreaker(result, ST, limit);

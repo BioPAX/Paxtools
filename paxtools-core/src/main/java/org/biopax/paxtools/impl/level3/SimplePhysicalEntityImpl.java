@@ -60,18 +60,17 @@ public abstract class SimplePhysicalEntityImpl extends PhysicalEntityImpl
 
 
 	@Override
-	public int equivalenceCode()
-	{
-        return this.entityReference==null? hashCode():31 * super.locationAndFeatureCode() +
+	public int equivalenceCode() {
+        return this.entityReference==null ? hashCode() : 31 * super.locationAndFeatureCode() +
 		       entityReference.equivalenceCode();
 	}
 
 	@Override
 	protected boolean semanticallyEquivalent(BioPAXElement element)
 	{
-		if(!(element instanceof SimplePhysicalEntity))
+		if(!(element instanceof SimplePhysicalEntity)) {
 			return false;
-		
+		}
 		SimplePhysicalEntity that = (SimplePhysicalEntity) element;
 		return ( (that.getEntityReference()!=null)
 					? that.getEntityReference().isEquivalent(getEntityReference())

@@ -74,28 +74,27 @@ public interface Model extends Serializable
      * @see #containsID(String)
      *
      * @param aBioPAXElement to be checked
-     * @return true if the parameter is in the object set
+     * @return true if the parameter is in the model
      */
     boolean contains(BioPAXElement aBioPAXElement);
 
     /**
-     * This method returns the biopax element with the given id,
+     * This method returns the biopax element with the given URI,
      * returns null if the object with the given id does not exist
      * in this model.
-     * @param id of the object to be retrieved.
-     * @return biopax element with the given id.
+     * @param id URI of the object to be retrieved.
+     * @return biopax element with the given URI.
      */
     BioPAXElement getByID(String id);
 
     /**
-     * This method checks for the biopax element with the given id,
+     * This method checks for the biopax element with the given URI,
      * returns true if the object with the given id exists.
      * in this model.
-     * @param id of the object to be retrieved.
-     * @return biopax element with the given id.
+     * @param id URI of the object to be retrieved.
+     * @return biopax element with the given URI.
      */
     boolean containsID(String id);
-
 
     /**
      * This method returns a map of name space prefixes.
@@ -104,22 +103,21 @@ public interface Model extends Serializable
      */
     Map<String, String> getNameSpacePrefixMap();
 
-// --------------------- ACCESORS and MUTATORS---------------------
+// --------------------- ACCESSORS and MUTATORS---------------------
 
     /**
-     * This method returns a set of objects in the model.
-     * Contents of this set can not be modified.
-     * @return an unmodifiable set of objects.
+     * This method returns all the objects in the model.
+     *
+     * @return objects (unmodifiable set).
      */
     Set<BioPAXElement> getObjects();
 
     /**
-     * This method returns a set of objects in the model of the given class.
-     * Contents of this set should not be modified.
+     * This method returns the objects of the given class in the model.
      *
-     * @param <T> a BioPAX type
+     * @param <T>      a BioPAX type
      * @param filterBy class to be used as a filter.
-     * @return an unmodifiable set of objects of the given class.
+     * @return objects of the given class (unmodifiable set).
      */
     <T extends BioPAXElement> Set<T> getObjects(Class<T> filterBy);
 
@@ -215,7 +213,7 @@ public interface Model extends Serializable
       * Note: it's not required that all the BioPAX objects
       * in the model have the same URI prefix/namespace;
       * e.g., there are can be (and perfectly legal) objects
-      * that use other URI bases, such as http://identifiers.org/,
+      * that use other URI bases, such as identifiers.org/, bioregistry.io/,
       * http://purl.org/, etc. (- usually these are well-known
       * standard xml bases, or these result from merging several BioPAX
       * models of different data providers into one model.)
@@ -223,4 +221,6 @@ public interface Model extends Serializable
       * @return xml:base value
       */
      String getXmlBase();
+
+     int size();
 }

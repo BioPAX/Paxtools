@@ -56,11 +56,11 @@ public class ConstraintChain extends ConstraintAdapter
 	public Collection<BioPAXElement> generate(Match match, int... ind)
 	{
 
-		Collection<BioPAXElement> gen = new HashSet<BioPAXElement> (
+		Collection<BioPAXElement> gen = new HashSet<> (
 			con[0].generate(match, ind));
 
-		Set<BioPAXElement> input = new HashSet<BioPAXElement>();
-		Set<BioPAXElement> output = new HashSet<BioPAXElement>(gen);
+		Set<BioPAXElement> input = new HashSet<>();
+		Set<BioPAXElement> output = new HashSet<>(gen);
 		int[] tempInd = {0, 1};
 
 		for (int i = 1; i < con.length; i++)

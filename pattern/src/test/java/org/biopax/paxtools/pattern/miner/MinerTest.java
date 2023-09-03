@@ -6,7 +6,7 @@ import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.constraint.ConBox;
 import org.biopax.paxtools.pattern.constraint.Type;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.*;
 import java.util.*;
@@ -19,7 +19,7 @@ import java.util.*;
  *
  * @author Ozgun Babur
  */
-@Ignore
+@Disabled
 public class MinerTest
 {
 	public static void main(String[] args)

@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -61,22 +62,10 @@ public class ProteinNameLister
 				 * (do not worry - those pathway steps that are part of
 				 * the pathway must be in the PATHWAY-COMPONENTS set)
 				 */
-		Filter<PropertyEditor> nextStepPropertyFilter = new Filter<PropertyEditor>()
-		{
-			public boolean filter(PropertyEditor editor)
-			{
-				return !editor.getProperty().equals("NEXT-STEP");
-			}
-		};
+		Filter<PropertyEditor> nextStepPropertyFilter = editor -> !editor.getProperty().equals("NEXT-STEP");
 		fetcher = new Fetcher(SimpleEditorMap.L2, nextStepPropertyFilter);
 
-		FilenameFilter filter = new FilenameFilter()
-		{
-			public boolean accept(File dir, String name)
-			{
-				return (name.endsWith("owl"));
-			}
-		};
+		FilenameFilter filter = (dir, name) -> (name.endsWith("owl"));
 
 		for (String s : testDir.list(filter))
 		{
@@ -101,7 +90,7 @@ public class ProteinNameLister
 
 	public static void listProteinUnificationXrefsPerPathway(Model model)
 	{
-		Set<pathway> pathways = model.getObjects(pathway.class);
+		Collection<pathway> pathways = model.getObjects(pathway.class);
 		for (pathway aPathway : pathways)
 		{
 			//printout aPathway's name
@@ -111,7 +100,7 @@ public class ProteinNameLister
 			Model onePathwayModel = BioPAXLevel.L2.getDefaultFactory().createModel();
 			fetcher.fetch(aPathway, onePathwayModel);
 			//get all proteins in the new level2
-			Set<protein> proteins = onePathwayModel.getObjects(protein.class);
+			Collection<protein> proteins = onePathwayModel.getObjects(protein.class);
 
 			//iterate and print names
 			for (protein aProtein : proteins)
@@ -157,7 +146,7 @@ public class ProteinNameLister
 
 		Traverser traverser = new Traverser(SimpleEditorMap.L2, visitor);
 
-		Set<pathway> pathways = model.getObjects(pathway.class);
+		Collection<pathway> pathways = model.getObjects(pathway.class);
 		for (pathway pathway : pathways)
 		{
 			traverser.traverse(pathway, model);
