@@ -1,5 +1,7 @@
 package org.biopax.paxtools.query.algorithm;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Direction is used for specifying upstream, downstream or both. Neighborhood and CommonStream
  * queries use this enum as parameter.
@@ -28,7 +30,7 @@ public enum Direction
 	 * Constructor with description.
 	 * @param description Description
 	 */
-	private Direction(String description)
+	Direction(String description)
 	{
 		this.description = description;
 	}
@@ -40,5 +42,19 @@ public enum Direction
 	public String getDescription()
 	{
 		return description;
+	}
+
+	public static Direction typeOf(String tag)
+	{
+		if(StringUtils.isBlank(tag))
+			return null;
+
+		Direction type = null;
+		try {
+			type = valueOf(tag.toUpperCase());
+		}
+		catch (IllegalArgumentException e){}
+
+		return type;
 	}
 }

@@ -1,5 +1,7 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -107,10 +109,12 @@ public enum SIFEnum implements SIFType
 
 	public static SIFEnum typeOf(String tag)
 	{
-		tag = tag.toUpperCase().replaceAll("-", "_");
+		if(StringUtils.isBlank(tag))
+			return null;
+
 		SIFEnum type = null;
-		try
-		{
+		try {
+			tag = tag.toUpperCase().replaceAll("-", "_");
 			type = valueOf(tag);
 		}
 		catch (IllegalArgumentException e){}
