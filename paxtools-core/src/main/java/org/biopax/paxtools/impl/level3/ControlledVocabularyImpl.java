@@ -83,8 +83,8 @@ public class ControlledVocabularyImpl extends XReferrableImpl implements
 		return getModelInterface().equals(that.getModelInterface()) 
 				&& (term.isEmpty() && that.getTerm().isEmpty() || !terms.isEmpty() )
 				&& SetEquivalenceChecker.hasEquivalentIntersection(
-					new ClassFilterSet<Xref, UnificationXref>(getXref(), UnificationXref.class),
-					new ClassFilterSet<Xref, UnificationXref>(that.getXref(), UnificationXref.class)
+					new ClassFilterSet<>(getXref(), UnificationXref.class),
+					new ClassFilterSet<>(that.getXref(), UnificationXref.class)
 				);
 	}
 	

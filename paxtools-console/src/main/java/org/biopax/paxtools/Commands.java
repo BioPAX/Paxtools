@@ -68,14 +68,11 @@ final class Commands {
 			for (int i = 4; i < argv.length; i++) {
 				if("-crossSpecies".equalsIgnoreCase(argv[i])) {
 					crossSpecies = true;
-				}
-				else if("-subPathways".equalsIgnoreCase(argv[i])) {
+				} else if("-subPathways".equalsIgnoreCase(argv[i])) {
 					subPathways = true;
-				}
-				else if("-notPathway".equalsIgnoreCase(argv[i])) {
+				} else if("-notPathway".equalsIgnoreCase(argv[i])) {
 					notPathways = true;
-				}
-				else if(argv[i].startsWith("organisms=")) {
+				} else if(argv[i].startsWith("organisms=")) {
 					for(String o : argv[i].substring(10).split(",")) {
 						organisms.add(o.trim().toLowerCase());
 					}
@@ -90,8 +87,7 @@ final class Commands {
 		gseaConverter.writeToGSEA(io.convertFromOWL(getInputStream(argv[1])), new FileOutputStream(argv[2]));
 	}
 
-	static void getNeighbors(String[] argv) throws IOException
-	{
+	static void getNeighbors(String[] argv) throws IOException {
 		// set strings vars
 		String in = argv[1];
 		String[] ids = argv[2].split(",");
@@ -113,7 +109,7 @@ final class Commands {
 
 		// execute the 'nearest neighborhood' query
 		Collection<BioPAXElement> result = QueryExecuter
-			.runNeighborhood(elements, model, 1, Direction.BOTHSTREAM);
+				.runNeighborhood(elements, model, 1, Direction.BOTHSTREAM);
 
 		// auto-complete/clone the results in a new model
 		// (this also cuts some less important edges, right?..)
@@ -142,8 +138,7 @@ final class Commands {
 				String param = argv[i];
 				if (param.startsWith("uris=")) {
 					uris = param.substring(5).split(",");
-				}
-				else if(param.startsWith("-absolute")) {
+				} else if(param.startsWith("-absolute")) {
 					absoluteUris = true;
 				}
 			}
@@ -207,7 +202,7 @@ final class Commands {
 
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to convert " +
-				input + "to BioPAX L3", e);
+					input + "to BioPAX L3", e);
 		}
 	}
 
@@ -234,11 +229,9 @@ final class Commands {
 		String buf = sb.toString();
 		if (buf.contains("<rdf:RDF") && buf.contains("http://www.biopax.org/release/biopax")) {
 			return Type.BIOPAX;
-		}
-		else if (buf.contains("<entrySet") && buf.contains("/psidev")) {
+		} else if (buf.contains("<entrySet") && buf.contains("/psidev")) {
 			return Type.PSIMI;
-		}
-		else
+		} else
 			return Type.PSIMITAB; //default/guess
 	}
 
@@ -308,8 +301,7 @@ final class Commands {
 						exclude.add(SIFEnum.valueOf(t.toUpperCase())); //e.g. NEIGHBOR_OF
 				} else {
 					OutputColumn.Type type = OutputColumn.Type.getType(param.toUpperCase());
-					if ((type != null && type != OutputColumn.Type.CUSTOM) || param.contains("/"))
-					{
+					if ((type != null && type != OutputColumn.Type.CUSTOM) || param.contains("/")) {
 						if(!param.contains("/"))
 							customFieldList.add(param.toUpperCase());
 						else
@@ -336,7 +328,7 @@ final class Commands {
 		//Create a new SIF searcher:
 		//set SIF miners to use (default is to use all types, given no include/exclude args provided)
 		final Collection<SIFEnum> sifTypes = (include.isEmpty())
-			? new HashSet<>(Arrays.asList(SIFEnum.values())) : include;
+				? new HashSet<>(Arrays.asList(SIFEnum.values())) : include;
 		for(SIFType t : exclude) {
 			sifTypes.remove(t); //remove if exists, otherwise - ignore
 		}
@@ -467,8 +459,7 @@ final class Commands {
 		Set<String> elements = new TreeSet<>();
 
 		//write one by one to insert EOLs and make potentially a very large file human-readable -
-		for(PhysicalEntity pe : model.getObjects(PhysicalEntity.class))
-		{
+		for(PhysicalEntity pe : model.getObjects(PhysicalEntity.class)) {
 			JSONObject jo = new JSONObject();
 			jo.put("uri", pe.getUri());
 			jo.put("type", pe.getModelInterface().getSimpleName());
@@ -512,22 +503,20 @@ final class Commands {
 
 
 	/**
-	 * Recursively collects bio identifiers of given type (xref.db name)
+	 * Recursively collects bio identifiers of given type (an xref.db value, bio id collection name)
 	 * associated with the physical entity or generic, complex entity.
 	 *
-	 * TODO (options): process Gene and Interaction; traverse into 'evidence' property.
 	 * @param entity a process participant (simple or generic)
-	 * @param xrefdb identifier type, such as 'HGNC Symbol' or 'ChEBI' (matches Xref.db values in the BioPAX model)
+	 * @param xrefdb identifier type, such as 'HGNC Symbol' or 'ChEBI' (match Xref.db values in the source BioPAX model)
 	 * @param isPrefix whether the xrefdb value is a prefix rather than complete name.
 	 * @param includeEvidence whether to traverse into property:evidence to collect ids.
 	 */
 	private static Set<String> identifiers(final PhysicalEntity entity, final String xrefdb,
-																				 boolean isPrefix, boolean includeEvidence)
-	{
+																				 boolean isPrefix, boolean includeEvidence) {
 		final Set<String> ids = new HashSet<>();
 		final Fetcher fetcher = (includeEvidence)
-			? new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
-			: new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
+				? new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
+				: new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
 		fetcher.setSkipSubPathways(true); //makes no difference now  but good to have/know...
 		Set<XReferrable> children = fetcher.fetch(entity, XReferrable.class);
 		children.add(entity); //include itself
@@ -535,9 +524,8 @@ final class Commands {
 			if (child instanceof PhysicalEntity || child instanceof EntityReference || child instanceof Gene)
 				for (Xref x : child.getXref())
 					if ((x.getId()!=null && x.getDb()!=null) && (isPrefix)
-						? x.getDb().toLowerCase().startsWith(xrefdb.toLowerCase())
-						: xrefdb.equalsIgnoreCase(x.getDb()))
-					{
+							? x.getDb().toLowerCase().startsWith(xrefdb.toLowerCase())
+							: xrefdb.equalsIgnoreCase(x.getDb())) {
 						ids.add(x.getId());
 					}
 		}
@@ -572,16 +560,16 @@ final class Commands {
 		}
 		// print pathway names, etc. after a blank line and title line
 		out.println("\nPATHWAY_URI\tDATASOURCE\tDISPLAY_NAME\tALL_NAMES" +
-			"\tNUM_DIRECT_COMPONENT_OR_STEP_PROCESSES");
+				"\tNUM_DIRECT_COMPONENT_OR_STEP_PROCESSES");
 		for(Pathway pathway : pathways) {
 			final int size = pathwayComponentAccessor.getValueFromBean(pathway).size()
-				+ pathwayOrderStepProcessAccessor.getValueFromBean(pathway).size();
+					+ pathwayOrderStepProcessAccessor.getValueFromBean(pathway).size();
 			//pathways in PC2 normally has only one dataSource (Provenance)
 			String datasource = pathway.getDataSource().iterator().next().getDisplayName();
 			StringBuilder sb = new StringBuilder();
 			sb.append(pathway.getUri()).append('\t')
-				.append(datasource).append('\t')
-				.append(pathway.getDisplayName()).append('\t');
+					.append(datasource).append('\t')
+					.append(pathway.getDisplayName()).append('\t');
 			//all names
 			for(String name : pathway.getName()) {
 				sb.append('"').append(name).append('"').append(";");
@@ -593,36 +581,30 @@ final class Commands {
 	}
 
 	private static void summarizeHgncIds(Model model, PrintStream out) {
-		//Analyse SERs (Protein-, Dna* and Rna* references) - HGNC usage, coverage,..
-		//Calc. the no. non-generic ERs having >1 different HGNC symbols and IDs, or none, etc.
-		Set<SequenceEntityReference> haveMultipleHgnc = new HashSet<>();
+		//Analyse each Protein, Dna*, Rna*, entity reference (except generic and SMR).
+		//Get the number of non-generic ERs having >1 different HGNC symbols and IDs.
+		//Note that the input biopax data/model may be not perfect, not normalized ("hgnc" can mean either symbol or id, etc.)
+		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf/dataSource", model.getLevel());
 		Map<Provenance,MutableInt> numErs = new HashMap<>();
 		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
-		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf/dataSource", model.getLevel());
+		Set<SequenceEntityReference> haveMultipleHgnc = new HashSet<>();
 		Set<String> problemErs = new TreeSet<>();
-		for(EntityReference ser : model.getObjects(EntityReference.class)) {
-			//skip if it's SMR or generic
-			if(ser instanceof SmallMoleculeReference || !ser.getMemberEntityReference().isEmpty())
+
+		for(SequenceEntityReference ser : model.getObjects(SequenceEntityReference.class)) {
+			//skip a generic
+			if(!ser.getMemberEntityReference().isEmpty()) {
 				continue;
-
-			Set<String> hgncSymbols = new HashSet<>();
-			Set<String> hgncIds = new HashSet<>();
-			final String uri = ser.getUri();
-
-			if(uri.startsWith("identifiers.org/hgnc") || uri.startsWith("bioregistry.io/hgnc")) {
-				String s = uri.substring(uri.lastIndexOf("/")+1);
-				if(s.startsWith("HGNC:")) {
-					hgncIds.add(s);
-				} else {
-					hgncSymbols.add(s);
-				}
 			}
 
+			//count hgnc ids, symbols if any
+			Set<String> hgncSymbols = new HashSet<>();
+			Set<String> hgncIds = new HashSet<>();
+			//there are two kinds of HGNC id: hgnc (number, can be prefixed with 'HGNC:' banana) and hgnc.symbol (gene name)
 			for(Xref x : ser.getXref()) {
 				if(x instanceof PublicationXref || StringUtils.isBlank(x.getDb()) || StringUtils.isBlank(x.getId())) {
 					continue; //skip PX, or when db or id is undefined/blank
 				}
-				if(x.getDb().toLowerCase().startsWith("hgnc")) {
+				if(StringUtils.startsWithIgnoreCase(x.getDb(),"hgnc")) {
 					String id = x.getId().toLowerCase();
 					if(StringUtils.startsWithIgnoreCase(id,"hgnc:") || StringUtils.isNumeric(id))
 						hgncIds.add(id);
@@ -630,16 +612,20 @@ final class Commands {
 						hgncSymbols.add(id);
 				}
 			}
-
+			//save SER in the map if there are multiple ids or symbols (not unique)
 			if(hgncIds.size()>1 || hgncSymbols.size()>1) {
-				haveMultipleHgnc.add((SequenceEntityReference) ser);
+				haveMultipleHgnc.add(ser);
 			}
 
-			//increment "no hgnc" and "total" counts by data source
+			//increment the counts by data source
+			final String uri = ser.getUri();
 			for(Object provenance : pa.getValueFromBean(ser)) {
-				if (hgncSymbols.isEmpty() && hgncIds.isEmpty()) {
+				if (!StringUtils.startsWithIgnoreCase(uri, "identifiers.org/hgnc")
+						&& !StringUtils.startsWithIgnoreCase(uri, "bioregistry.io/hgnc")
+						&& !StringUtils.containsIgnoreCase(ser.getXref().toString(), "hgnc")
+				) {
 					problemErs.add(String.format("%s\t%s\t%s",
-						((Provenance)provenance).getDisplayName(), ser.getDisplayName(), uri));
+							((Provenance)provenance).getDisplayName(), ser.getDisplayName(), uri));
 					MutableInt n = numProblematicErs.get(provenance);
 					if (n == null) {
 						numProblematicErs.put((Provenance) provenance, new MutableInt(1));
@@ -655,14 +641,16 @@ final class Commands {
 				}
 			}
 		}
-
-		//print results
-		out.println("SequenceEntityReferences (not generics) without any HGNC Symbol:");
+		//print the summary
+		out.println("\nNumber of SequenceEntityReferences (non-generic) without any HGNC Symbol: " + problemErs.size());
 		for(String line : problemErs) {
 			out.println(line);
 		}
-		out.println("The number of SERs (not generic) having more than one HGNC Symbols: " + haveMultipleHgnc.size());
-		out.println("\nNumber of SequenceEntityReferences (not generics) without any HGNC ID, by data source:");
+		out.println("Number of SequenceEntityReferences (non-generic) having multiple HGNC Symbols: " + haveMultipleHgnc.size());
+		for(SequenceEntityReference r : haveMultipleHgnc) {
+			out.println(r.getUri());
+		}
+		out.println("Number of SequenceEntityReferences (non-generic) without any HGNC ID/Symbol, by data source:" );
 		int totalPrs = 0;
 		int numPrsNoHgnc = 0;
 		for(Provenance ds : numProblematicErs.keySet()) {
@@ -676,7 +664,7 @@ final class Commands {
 	}
 
 	private static void summarizeUniprotIds(Model model, PrintStream out) {
-		//Analyse PRs - UniProt ID coverage,..
+		//Analyse PRs...
 		Map<Provenance,MutableInt> numErs = new HashMap<>();
 		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
 		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf:Protein/dataSource", model.getLevel());
@@ -686,16 +674,14 @@ final class Commands {
 			if(!pr.getMemberEntityReference().isEmpty()) {
 				continue;
 			}
-
+			final String uri = pr.getUri();
 			for(Object provenance : pa.getValueFromBean(pr)) {
-				String uri = pr.getUri();
 				//when the protein reference does not have any uniprot AC/ID -
-				if(!uri.startsWith("identifiers.org/uniprot")
-					  && !uri.startsWith("bioregistry.io/uniprot")
-					  && !pr.getXref().toString().toLowerCase().contains("uniprot"))
-				{
+				if(!StringUtils.startsWithIgnoreCase(uri, "identifiers.org/uniprot")
+						&& !StringUtils.startsWithIgnoreCase(uri, "bioregistry.io/uniprot")
+						&& !StringUtils.containsIgnoreCase(pr.getXref().toString(), "uniprot")) {
 					problemErs.add(String.format("%s\t%s\t%s",
-						((Provenance) provenance).getDisplayName(), pr.getDisplayName(), uri));
+							((Provenance) provenance).getDisplayName(), pr.getDisplayName(), uri));
 					MutableInt n = numProblematicErs.get(provenance);
 					if (n == null) {
 						numProblematicErs.put((Provenance) provenance, new MutableInt(1));
@@ -703,7 +689,6 @@ final class Commands {
 						n.increment();
 					}
 				}
-
 				//increment total PRs per datasource
 				MutableInt tot = numErs.get(provenance);
 				if(tot == null)
@@ -712,13 +697,12 @@ final class Commands {
 					tot.increment();
 			}
 		}
-
 		//print results
-		out.println("\nProteinReferences (not generics) without any UniProt AC:");
+		out.println("\nNumber of ProteinReferences (non-generic) without any Uniprot AC:" + problemErs.size());
 		for(String line : problemErs) {
 			out.println(line);
 		}
-		out.println("\nNumber of ProteinReferences (not generics) without any UniProt AC, by data source:");
+		out.println("Number of ProteinReferences (non-generic) without any Uniprot AC, by data source:");
 		int totalErs = 0;
 		int problematicErs = 0;
 		for(Provenance ds : numProblematicErs.keySet()) {
@@ -732,22 +716,23 @@ final class Commands {
 	}
 
 	private static void summarizeChebiIds(Model model, PrintStream out) {
-		//Analyse SMRs - ChEBI usage, coverage,..
+		//Analyse SMRs...
 		Map<Provenance,MutableInt> numErs = new HashMap<>();
 		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
 		PathAccessor pa = new PathAccessor("EntityReference/entityReferenceOf:SmallMolecule/dataSource", model.getLevel());
-		Set<String> problemErs = new TreeSet<String>();
+		Set<String> problemErs = new TreeSet<>();
 		for(SmallMoleculeReference smr : model.getObjects(SmallMoleculeReference.class)) {
 			//skip a generic SMR
 			if(!smr.getMemberEntityReference().isEmpty()) {
 				continue;
 			}
+			final String uri = smr.getUri();
 			for(Object provenance : pa.getValueFromBean(smr)) {
-				if(!StringUtils.startsWithIgnoreCase(smr.getUri(), "identifiers.org/chebi")
-					&& !StringUtils.startsWithIgnoreCase(smr.getUri(),"bioregistry.io/chebi")
-					&& !StringUtils.containsIgnoreCase(smr.getXref().toString(),"chebi:")) {
+				if(!StringUtils.startsWithIgnoreCase(uri, "identifiers.org/chebi")
+						&& !StringUtils.startsWithIgnoreCase(uri,"bioregistry.io/chebi")
+						&& !StringUtils.containsIgnoreCase(smr.getXref().toString(),"chebi")) {
 					problemErs.add(String.format("%s\t%s\t%s",
-						((Provenance) provenance).getDisplayName(), smr.getDisplayName(), smr.getUri()));
+							((Provenance) provenance).getDisplayName(), smr.getDisplayName(), uri));
 					MutableInt n = numProblematicErs.get(provenance);
 					if (n == null) {
 						numProblematicErs.put((Provenance) provenance, new MutableInt(1));
@@ -764,11 +749,12 @@ final class Commands {
 				}
 			}
 		}
-
 		//print results
-		out.println("\nSmallMoleculeReferences (not generics) without any ChEBI ID:");
-		for(String line : problemErs) out.println(line);
-		out.println("\nNumber of SmallMoleculeReferences (not generics) without any ChEBI ID, by data source:");
+		out.println("\nNumber of SmallMoleculeReferences (non-generic) without any ChEBI ID:" + problemErs.size());
+		for(String line : problemErs) {
+			out.println(line);
+		}
+		out.println("Number of SmallMoleculeReferences (non-generic) without any ChEBI ID, by data source:");
 		int totalSmrs = 0;
 		int numSmrsNoChebi = 0;
 		for(Provenance ds : numProblematicErs.keySet()) {
@@ -781,120 +767,93 @@ final class Commands {
 		out.println(String.format("Total\t\t%d\t(%3.1f%%)", numSmrsNoChebi, ((float)numSmrsNoChebi)/totalSmrs*100));
 	}
 
+	/**
+	 * Prints a summary of a BioPAX model.
+	 * @param model
+	 * @param out
+	 */
 	static void summarize(Model model, PrintStream out) throws IOException {
-		HashMap<String, Integer> hm = new HashMap<>();
-		final SimpleEditorMap em = SimpleEditorMap.get(model.getLevel());
+		BioPAXLevel level = model.getLevel();
+		JSONObject summary = new JSONObject();
+		summary.put("xml:base", model.getXmlBase());
+		summary.put("level", level.name());
+		JSONArray types = new JSONArray();
+		summary.put("types", types);
 
-		for (Class<? extends BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class)))
-		{
-			Collection<? extends BioPAXElement> set = model.getObjects(clazz);
-			int initialSize = set.size();
-			set = filterToExactClass(set, clazz);
-			String s = clazz.getSimpleName() + " = " + set.size();
-			if (initialSize != set.size())
-				s += " (and " + (initialSize - set.size()) + " children)";
-			out.println(s);
-
-			Set<PropertyEditor> editors = em.getEditorsOf(clazz);
-			for (PropertyEditor editor : editors)
-			{
-				Method getMethod = editor.getGetMethod();
-				Class<?> returnType = getMethod.getReturnType();
-
-				Map<Object, Integer> cnt = new HashMap<Object, Integer>();
-
-				if (returnType.isEnum() ||
-					implementsInterface(returnType, ControlledVocabulary.class))
-				{
-					for (BioPAXElement ele : set)
-					{
-						Set<?> values = editor.getValueFromBean(ele);
-						if (values.isEmpty())
-						{
-							increaseCnt(cnt, NULL);
-						}
-						else
-						{
-							increaseCnt(cnt, values.iterator().next());
-						}
-					}
-				}
-				else if (returnType.equals(Set.class) &&
-					implementsInterface(editor.getRange(), ControlledVocabulary.class))
-				{
-					for (BioPAXElement ele : set)
-					{
-						Set<?> values = editor.getValueFromBean(ele);
-						if (values.isEmpty())
-						{
-							increaseCnt(cnt, EMPTY);
-						}
-						for (Object val : values)
-						{
-							increaseCnt(cnt, val);
+		final SimpleEditorMap em = SimpleEditorMap.get(level);
+		for (Class<? extends BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class))) {
+			if(!level.getDefaultFactory().canInstantiate(clazz)) {
+				continue;
+			}
+			Collection<? extends BioPAXElement> allInstancesOfClass = model.getObjects(clazz);
+			final int numInstances = allInstancesOfClass.size();
+			if(numInstances > 0) {
+				JSONObject type = new JSONObject();
+				type.put("type", clazz.getSimpleName());
+				types.add(type);
+				Collection<? extends BioPAXElement> directInstances = filterToExactClass(allInstancesOfClass, clazz);
+				int numDirectInstances = directInstances.size();
+				type.put("instances", numInstances);
+				type.put("direct_instances", numDirectInstances);
+				JSONArray props = new JSONArray();
+				//summarize some properties (enum, CVs)
+				for (PropertyEditor editor : em.getEditorsOf(clazz)) {
+					Method getMethod = editor.getGetMethod();
+					Class<?> returnType = getMethod.getReturnType();
+					Map<Object, Integer> cnt = new HashMap<>();
+					if (returnType.isEnum() || implementsInterface(returnType, ControlledVocabulary.class)
+							|| implementsInterface(editor.getRange(), ControlledVocabulary.class)) {
+						for (BioPAXElement ele : directInstances) {
+							Set<?> values = editor.getValueFromBean(ele);
+							if (!values.isEmpty()) {
+								for (Object val : values) {
+									increaseCnt(cnt, val);
+								}
+							}
 						}
 					}
-				}
-				if (!cnt.isEmpty())
-				{
-					String name = "-"
-						+ (returnType.equals(Set.class) ? editor.getRange().getSimpleName() : returnType.getSimpleName());
-
-					out.print("\t" + name + ":");
-					for (Object key : getOrdering(cnt))
-					{
-						out.print("\t" + key + " = " + cnt.get(key));
+					if (!cnt.isEmpty()) {
+						JSONObject p = new JSONObject();
+						props.add(p);
+						p.put("prop", editor.getProperty());
+						JSONObject vals = new JSONObject();
+						p.put("values_to_string", vals);
+						String name = (returnType.equals(Set.class) ? editor.getRange().getSimpleName() : returnType.getSimpleName());
+						p.put("range", name);
+						for (Object key : cnt.keySet()) {
+							vals.put(key.toString(), cnt.get(key));
+						}
+						type.put("properties", props);
 					}
-					out.println();
 				}
 			}
 		}
 
-		out.println("\nOther property counts\n");
-		String[] props = (model.getLevel() == BioPAXLevel.L3)
-			? new String[]{"UnificationXref/db","RelationshipXref/db"}
-			: new String[]{"unificationXref/DB","relationshipXref/DB"};
-		for (String prop : props)
-		{
-			Map<Object, Integer> cnt = new HashMap<Object, Integer>();
-			List<String> valList = new ArrayList<>();
-			PathAccessor acc = new PathAccessor(prop, model.getLevel());
-
-			boolean isString = false;
-
-			for (Object o : acc.getValueFromModel(model))
-			{
-				if (o instanceof String) isString = true;
-
-				String s = o.toString();
-				valList.add(s);
-				if (!cnt.containsKey(s)) cnt.put(s, 1);
-				else cnt.put(s, cnt.get(s) + 1);
+		//Other property counts
+		JSONArray properties = new JSONArray();
+		summary.put("properties", properties);
+		String[] propPaths = (model.getLevel() == BioPAXLevel.L3)
+				? new String[]{"UnificationXref/db","RelationshipXref/db"}
+				: new String[]{"unificationXref/DB","relationshipXref/DB"};
+		for (String pPath : propPaths) {
+			Set<String> cnt = new TreeSet<>();
+			PathAccessor acc = new PathAccessor(pPath, model.getLevel());
+			for (Object o : acc.getValueFromModel(model)) {
+				cnt.add(o.toString());
 			}
-
-			out.println(prop + "\t(" + cnt.size() + " distinct values):");
-			hm.put(prop, cnt.size());
-
-			// If the object is String, then all counts are 1, no need to print counts.
-			if (isString)
-			{
-				Collections.sort(valList);
-				for (String s : valList)
-				{
-					out.print("\t" + s);
-				}
+			//distinct values
+			JSONObject p = new JSONObject();
+			properties.add(p);
+			p.put("path", pPath);
+			p.put("unique_values", cnt.size());
+			JSONArray v = new JSONArray();
+			p.put("values", v);
+			for (Object key : cnt) {
+				v.add(key);
 			}
-			else
-			{
-				for (Object key : getOrdering(cnt))
-				{
-					out.print("\t" + key + " = " + cnt.get(key));
-				}
-			}
-			out.println();
 		}
 
-		//Count simple PEs that have null entityReference
+		//Count simple PEs that do not have any entityReference
 		int speLackingEr = 0;
 		int genericSpeLackingEr = 0;
 		int speLackingErAndId = 0;
@@ -906,8 +865,9 @@ final class Commands {
 		for(SimplePhysicalEntity spe : model.getObjects(SimplePhysicalEntity.class)) {
 			if(spe.getEntityReference()==null) {
 				speLackingEr++;
-				if(!spe.getMemberPhysicalEntity().isEmpty())
+				if(!spe.getMemberPhysicalEntity().isEmpty()) {
 					genericSpeLackingEr++;
+				}
 
 				String providers = spe.getDataSource().toString();
 				Integer n = numSpeLackErByProvider.get(providers);
@@ -915,9 +875,8 @@ final class Commands {
 				numSpeLackErByProvider.put(providers, n);
 
 				if(spe.getXref().isEmpty() ||
-					new ClassFilterSet<>(spe.getXref(), PublicationXref.class)
-						.size() == spe.getXref().size())
-				{
+						new ClassFilterSet<>(spe.getXref(), PublicationXref.class)
+								.size() == spe.getXref().size()) {
 					speLackingErAndId++;
 					if(spe instanceof Protein)
 						protLackingErAndId++;
@@ -928,32 +887,41 @@ final class Commands {
 				}
 			}
 		}
-
-		out.println("\n" + speLackingEr + " simple physical entities have NULL 'entityReference';\n");
-		out.println("\n\t-" + genericSpeLackingEr + " of which have member physical entities (are generic).\n");
-		out.println("\n\t- by data source:\n");
+		JSONObject speSummary = new JSONObject();
+		summary.put("spe_without_er", speSummary);
+		speSummary.put("description", "SimplePEs (not complexes) that do not have any entityReference");
+		// speLackingEr simple physical entities have NULL 'entityReference'
+		speSummary.put("total", speLackingEr);
+		// genericSpeLackingEr of which have member physical entities (are generic)
+		speSummary.put("generic", genericSpeLackingEr);
+		//by data source
+		JSONObject speByDs = new JSONObject();
+		speSummary.put("by_source", speByDs);
 		for(String key : numSpeLackErByProvider.keySet()) {
-			out.println(String.format("%n\t\t-- %s -> %d%n", key, numSpeLackErByProvider.get(key)));
+			speByDs.put(key, numSpeLackErByProvider.get(key));
 		}
-		out.println("\n\t- " + speLackingErAndId + " neither have 'entityReference' nor xref/id (except publications):\n");
+		//speLackingErAndId neither have 'entityReference' nor xref/id (except publications)
 		if(speLackingErAndId > 0) {
-			out.println("\n\t\t-- proteins: " + protLackingErAndId + "\n");
-			out.println("\n\t\t-- small molecules: " + molLackingErAndId + "\n");
-			out.println("\n\t\t-- nucl. acids: " + naLackingErAndId + "\n");
+			JSONObject speNoErNoId = new JSONObject();
+			speSummary.put("also_without_id", speNoErNoId);
+			speNoErNoId.put("total", speLackingErAndId);
+			speNoErNoId.put("proteins", protLackingErAndId);
+			speNoErNoId.put("small_molecules", molLackingErAndId);
+			speNoErNoId.put("nucl_acids", naLackingErAndId);
 		}
 
-		int erLackingId = 0;
+		int erLackingXref = 0;
 		for(EntityReference er : model.getObjects(EntityReference.class)) {
 			if(er.getMemberEntityReference().isEmpty() &&
-				(er.getXref().isEmpty() || new ClassFilterSet<>(er.getXref(), PublicationXref.class)
-					.size() == er.getXref().size()))
-			{
-				erLackingId++;
+					(er.getXref().isEmpty() || new ClassFilterSet<>(er.getXref(), PublicationXref.class)
+							.size() == er.getXref().size())) {
+				erLackingXref++;
 			}
 		}
-		out.println("\n" + erLackingId + " non-generic entity references have no xref/id.\n");
+		//erLackingId non-generic entity references have no xref/id
+		summary.put("nongeneric_er_without_xref", erLackingXref);
 
-		//The number of sequence ERs (not generic), Genes, Pathways, where 'organism' property is empty -
+		//The number of SequenceERs (non-generic), Genes, Pathways, where 'organism' property is empty
 		int genesLackingOrganism = 0;
 		int pwLackingOrganism = 0;
 		int serLackingOrganism = 0;
@@ -969,60 +937,42 @@ final class Commands {
 					++narLackingOrganism;
 			}
 		}
-		out.println(
-			String.format(
-				"%n%d Genes, %d Pathways, %d SequenceEntityReferences " +
-					"(%d in NucleicAcidRef. and %d in PRs) have NULL 'organism'.%n",
-				genesLackingOrganism, pwLackingOrganism, serLackingOrganism,
-				narLackingOrganism, serLackingOrganism-narLackingOrganism
-			)
-		);
+		JSONObject noOrg = new JSONObject();
+		summary.put("without_organism", noOrg);
+		noOrg.put("genes", genesLackingOrganism);
+		noOrg.put("pathways", pwLackingOrganism);
+		noOrg.put("seq_er", serLackingOrganism);
+		noOrg.put("nucleic_acid_refs", narLackingOrganism);
+		noOrg.put("protein_refs", serLackingOrganism-narLackingOrganism);
+
+		int badUXrefs = 0;
+		for(Xref x : model.getObjects(Xref.class)) {
+			if(x instanceof PublicationXref)
+				continue;
+			if(StringUtils.isBlank(x.getId()) || StringUtils.isBlank(x.getDb())) {
+				badUXrefs++;
+			}
+		}
+		summary.put("uxrx_without_dbid", badUXrefs);
+
+		out.println(summary.toJSONString());
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(
-		Set<? extends Class<? extends BioPAXElement>> classes) {
+			Set<? extends Class<? extends BioPAXElement>> classes) {
 		List<Class<? extends BioPAXElement>> list = new ArrayList<>(classes);
 		Collections.sort(list, Comparator.comparing(
-			clazz -> clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1)));
+				clazz -> clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1)));
 		return list;
 	}
 
-	private static List<Object> getOrdering(final Map<Object, Integer> map) {
-		List<Object> list = new ArrayList<>(map.keySet());
-		Collections.sort(list, (key1, key2) -> {
-			int cnt1 = map.get(key1);
-			int cnt2 = map.get(key2);
-			if (cnt1 == cnt2)
-				return key1.toString().compareTo(key2.toString());
-			else
-				return cnt2 - cnt1;
-		});
-		return list;
-	}
-
-	private static Collection<BioPAXElement> filterToExactClass(Collection<? extends BioPAXElement> classSet, Class<?> clazz)
-	{
+	private static Collection<BioPAXElement> filterToExactClass(Collection<? extends BioPAXElement> classSet, Class<?> clazz) {
 		Collection<BioPAXElement> exact = new HashSet<>();
 		for (BioPAXElement ele : classSet) {
 			if (ele.getModelInterface().equals(clazz)) exact.add(ele);
 		}
 		return exact;
 	}
-
-	private static final Object NULL = new Object(){
-		@Override
-		public String toString() {
-			return "NULL";
-		}
-	};
-
-	private static final Object EMPTY = new Object(){
-		@Override
-		public String toString()
-		{
-			return "EMPTY";
-		}
-	};
 
 	private static boolean implementsInterface(Class clazz, Class inter) {
 		for (Class anInter : clazz.getInterfaces()) {
