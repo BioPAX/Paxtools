@@ -149,9 +149,9 @@ public class ModelUtilsTest {
 	public final void removeObjectsIfDangling() {
 		Model model = (new SimpleIOHandler()).convertFromOWL(
 			getClass().getClassLoader().getResourceAsStream("L3" + File.separator + "hcyc.owl"));
-		assertEquals(6, model.getObjects().size());
+		assertEquals(9, model.getObjects().size());
 		
-		//there is no dangling util. class objects at the beginning
+		//there are 3 dangling util. class objects at the beginning
 		ModelUtils.removeObjectsIfDangling(model, UtilityClass.class);
 		assertEquals(6, model.getObjects().size());
 		

@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
- xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xml:base="http://biocyc.org/biopax/biopax-level3#"
+ xmlns="http://biocyc.org/biopax/biopax-level3#"
  xmlns:owl="http://www.w3.org/2002/07/owl#"
  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
- xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#">
-<owl:Ontology rdf:about="">
-<!-- Modified/simplified HumanCyc data test case (same xrefs attached both to Protein and its PR) -->
- <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
-</owl:Ontology>
+ xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+ xmlns:xs="http://www.w3.org/2001/XMLSchema#"
+ xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+>
+ <owl:Ontology rdf:about="">
+     <!-- Modified/simplified HumanCyc test data (e.g., same xrefs attached both to Protein and its PR) -->
+    <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl"/>
+ </owl:Ontology>
 
-<!-- To test:
-if SMR1 is removed or replaced, then
+ <!-- This piece is from HumanCyc v24.5 with the errors manually fixed:
+   - replaced that nonsense bp:Entity inside CV's bp:term with text:Gene;
+   - replaced that link/ref inside bp:id with text:Gene;
+ -->
+  <bp:RelationshipXref rdf:ID="RelationshipXref99623">
+    <bp:relationshipType>
+      <bp:RelationshipTypeVocabulary rdf:ID="RelationshipTypeVocabulary92195">
+	<bp:term>gene</bp:term>
+        <bp:xref>
+          <bp:UnificationXref rdf:ID="UnificationXref92196">
+            <bp:id rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gene</bp:id>
+            <bp:db rdf:datatype="http://www.w3.org/2001/XMLSchema#string">BioCyc</bp:db>
+          </bp:UnificationXref>
+        </bp:xref>
+      </bp:RelationshipTypeVocabulary>
+    </bp:relationshipType>
+    <bp:id rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NM_021194</bp:id>
+    <bp:db rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UCSC human genome DB</bp:db>
+  </bp:RelationshipXref>
+
+<!-- This is to test:
+ if SMR1 is removed or replaced, then
  A - must become dangling and must be removed by ModelUtils.removeObjectsIfDangling(UtilityClass.class) method,
  and A.memberEntityReference() must NOT contain B (must be empty set);
  B - will stay (it's still used by SM2), but must NOT have A in its memberEntityReferenceOf() list!

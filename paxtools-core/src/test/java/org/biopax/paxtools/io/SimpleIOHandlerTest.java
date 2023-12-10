@@ -6,6 +6,8 @@ import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.util.BioPaxIOException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -281,16 +283,41 @@ public class SimpleIOHandlerTest {
   }
 
   @Test
-  public void biopaxAndNotBiopaxMixXml() {
+  public void shouldIgnoreOtherXmlInsideBiopax() {
     BioPAXIOHandler io = new SimpleIOHandler(); //auto-detects level
     String s = "L3" + File.separator + "biopax_otherxml_mix.xml";
     InputStream in = SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s);
     Model model = io.convertFromOWL(in);
     assertNotNull(model);
+
     Catalysis cat = (Catalysis) model.getByID("catalysis1");
     assertNotNull(cat);
     assertEquals(1, cat.getControlled().size());
     assertEquals("Catalysis 1", cat.getDisplayName());
+
+    Conversion conv = (Conversion) model.getByID("reaction1");
+    assertNotNull(conv);
+    assertTrue(conv.getXref().isEmpty()); //bp:xref inside a non-biopax el. was ignored
+  }
+
+  @Test
+  public void shouldIgnoreabstractBiopaxTypeNested() {
+    BioPAXIOHandler io = new SimpleIOHandler();
+    String s = "L3" + File.separator + "hcyc-error.owl";
+    Model m = io.convertFromOWL(SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s));
+    assertEquals(3, m.size());
+    assertFalse(m.containsID("comment1"));
+    assertFalse(m.containsID("Gene"));
+  }
+
+  @Test
+  @Disabled("shouldThrowAtAbstractBiopaxTypeNested test is disabled, shouldIgnoreabstractBiopaxTypeNested should pass")
+  public void shouldThrowAtAbstractBiopaxTypeNested() {
+    BioPAXIOHandler io = new SimpleIOHandler();
+    String s = "L3" + File.separator + "hcyc-error.owl";
+    assertThrows(BioPaxIOException.class,
+        () -> io.convertFromOWL(SimpleIOHandlerTest.class.getClassLoader().getResourceAsStream(s)),
+        "should throw: Abstract BioPAX L3 type: Entity at line 25 column 46");
   }
 
   @Test

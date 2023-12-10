@@ -16,8 +16,8 @@
     </encoder>
   </appender>
 
-  <!--<logger name="org.biopax.paxtools" level="debug" />-->
- 
+<!--  <logger name="org.biopax.paxtools.io" level="trace" />-->
+
   <root level="info">
     <appender-ref ref="console" />
   </root>

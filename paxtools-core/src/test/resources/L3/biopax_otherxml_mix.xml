@@ -1,35 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-	xmlns:bp3="http://www.biopax.org/release/biopax-level3.owl#"
-	xmlns:owl="http://www.w3.org/2002/07/owl#"
-	xmlns:sbx3="http://vcell.org/sbpax3#"
-	xmlns:uome-core="http://www.sbpax.org/uome/core.owl#"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:sabio="http://sabio.h-its.org/biopax#"
-	xmlns:uome-list="http://www.sbpax.org/uome/list.owl#">
-<owl:Ontology rdf:about="http://sabio.h-its.org/biopax">
-	<owl:imports rdf:resource="http://vcell.org/sbpax3"/>
-	<owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl"/>
-	<owl:imports rdf:resource="http://www.sbpax.org/uome/core.owl"/>
-	<owl:imports rdf:resource="http://www.sbpax.org/uome/list.owl"/>
-</owl:Ontology>
-<bp3:Catalysis rdf:about="catalysis1">
-	<sbx3:sbSubEntity rdf:resource="http://sabio.h-its.org/biopax#kineticLaw24490"/> 
-	<bp3:controlled rdf:resource="reaction1"/>
-	<sabio:foo rdf:resource="bar"/> 
-	<boo />
-	<!--the spaces were intentionally inserted around the displayName value (parser mush trim)-->
-	<bp3:displayName> Catalysis 1 </bp3:displayName>
-</bp3:Catalysis>
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:bp3="http://www.biopax.org/release/biopax-level3.owl#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:sbx3="http://vcell.org/sbpax3#"
+        xmlns:uome-core="http://www.sbpax.org/uome/core.owl#"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:sabio="http://sabio.h-its.org/biopax#"
+        xmlns:uome-list="http://www.sbpax.org/uome/list.owl#">
 
-<bp3:Conversion rdf:about="reaction1">
-</bp3:Conversion>
+    <owl:Ontology rdf:about="http://sabio.h-its.org/biopax">
+        <owl:imports rdf:resource="http://vcell.org/sbpax3"/>
+        <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl"/>
+        <owl:imports rdf:resource="http://www.sbpax.org/uome/core.owl"/>
+        <owl:imports rdf:resource="http://www.sbpax.org/uome/list.owl"/>
+    </owl:Ontology>
 
-<!-- BUG! will fail if uncommented -->
-<!-- <sbx3:SBVocabulary rdf:about="http://sabio.h-its.org/biopax#sabiotermHill coefficient"> -->
-<!-- 	<bp3:xref rdf:resource="http://sabio.h-its.org/biopax#xrefsabio_Hill coefficient"/> -->
-<!-- </sbx3:SBVocabulary> -->
+    <bp3:Catalysis rdf:about="catalysis1">
+        <sbx3:sbSubEntity rdf:resource="http://sabio.h-its.org/biopax#kineticLaw24490"/>
+        <bp3:controlled rdf:resource="reaction1"/>
+        <sabio:foo rdf:resource="bar"/>
+        <boo />
+        <!--the spaces were intentionally inserted around the displayName value (parser mush trim)-->
+        <bp3:displayName> Catalysis 1 </bp3:displayName>
+    </bp3:Catalysis>
+
+    <bp3:Conversion rdf:about="reaction1">
+        <!-- a non-biopax element inside a valid BioPAX object is deep-ignored (that xref as well!) -->
+        <sbx3:SBVocabulary rdf:about="http://sabio.h-its.org/biopax#sabiotermHill coefficient">
+          <!-- fixme: should this xrefs be assigned to the parent or throw exception instead? -->
+          <bp3:xref rdf:resource="http://sabio.h-its.org/biopax#xrefsabio_Hill coefficient"/>
+        </sbx3:SBVocabulary>
+    </bp3:Conversion>
+
+    <!-- a dangling non-BioPAX XML element will be ignored entirely -->
+    <sbx3:SBVocabulary rdf:about="http://sabio.h-its.org/biopax#sabiotermHill coefficient">
+        <!-- such xref will be ignored (no exception - bug was fixed) -->
+        <bp3:xref rdf:resource="http://sabio.h-its.org/biopax#xrefsabio_Hill coefficient"/>
+    </sbx3:SBVocabulary>
+
+    <!-- non-instantiable BioPAX type will be ignored (no exception; error logged) -->
+    <!-- fixme: should this throw exception instead? -->
+    <bp3:Entity rdfID="abstract_type_error1">
+        <bp3:name>wrong1</bp3:name>
+    </bp3:Entity>
+
+    <!-- enable TRACE logging, e.g. in paxtools-core/src/test/resources/logback-test.xml or with JVM args
+     to see more details when loading this or any other file with SimpleIOHandler.java -->
 
 </rdf:RDF>

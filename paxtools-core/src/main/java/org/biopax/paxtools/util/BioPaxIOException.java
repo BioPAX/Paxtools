@@ -5,8 +5,6 @@ package org.biopax.paxtools.util;
  */
 public class BioPaxIOException extends RuntimeException
 {
-// --------------------------- CONSTRUCTORS ---------------------------
-
 	public BioPaxIOException(Throwable cause)
 	{
 		super(cause);

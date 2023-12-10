@@ -128,6 +128,10 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 */
 	public String getXmlStreamInfo()
 	{
+		if(r == null) {
+			return "";
+		}
+
 		StringBuilder sb = new StringBuilder();
 
 		int event = r.getEventType();
@@ -138,7 +142,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		if (r.getLocation() != null)
 		{
-			sb.append(" line ");
+			sb.append(" at line ");
 			sb.append(r.getLocation().getLineNumber());
 			sb.append(" column ");
 			sb.append(r.getLocation().getColumnNumber());
@@ -246,9 +250,14 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 				switch (type)
 				{
 					case START_ELEMENT:
-						if (BioPAXLevel.isInBioPAXNameSpace(r.getName().getNamespaceURI()))
-						{
-							String lname = r.getLocalName();
+						final String lname = r.getLocalName();
+						final String nsUriPref = r.getName().getNamespaceURI();
+						final String nsUri = r.getNamespaceURI();
+						if(owl.equalsIgnoreCase(nsUri)) {
+								log.debug(String.format("Ignoring owl:%s", lname));
+						} else if(rdf.equalsIgnoreCase(nsUri)) {
+								log.debug(String.format("Ignoring rdf:%s", lname));
+						} else if (BioPAXLevel.isInBioPAXNameSpace(nsUriPref)) {
 							BioPAXLevel level = getLevel();
 							Class<? extends BioPAXElement> clazz;
 							try
@@ -257,41 +266,48 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 							}
 							catch (IllegalBioPAXArgumentException e)
 							{
-								log.error("Unknown BioPAX element location " + lname + " at " + r.getLocation());
-								throw e; // for backward compatibility
+								// re-throw (with a more specific message)
+								// for backward compatibility (BioPAX Validator uses an AOP/rule which depends on exception here)
+								throw new BioPaxIOException(String.format("Unknown/misplaced BioPAX %s element: %s",
+										level, getXmlStreamInfo()), e);
 							}
-							if (this.getFactory().canInstantiate(clazz))
+							if (factory.canInstantiate(clazz))
 							{
 								processIndividual(model);
 							} else
 							{
-								if (log.isTraceEnabled())
-									log.trace("Ignoring element: " + lname);
-								skip();
+								log.error(String.format("Ignoring abstract type: %s", getXmlStreamInfo()));
+								skip(); //fixme: throw an exception? (FYI, BioPAX Validator aspectj rule and unit tests depend on skip() here...)
+								//throw new BioPaxIOException(String.format("Abstract BioPAX %s element: %s", level, getXmlStreamInfo()));
 							}
-
+						} else {
+								log.warn(String.format("Ignoring non-biopax %s%s", nsUri, getXmlStreamInfo()));
+								skip();
 						}
 						break;
 					case CHARACTERS:
 						if (log.isTraceEnabled())
 						{
-							StringBuilder sb = new StringBuilder("Ignoring text ");
+							StringBuilder sb = new StringBuilder("Ignoring text (escaped): ");
 							if (r.hasName()) sb.append(r.getLocalName());
 							if (r.hasText()) sb.append(r.getText());
 							if (log.isTraceEnabled())
-								log.trace(sb.toString());
+								log.trace(StringEscapeUtils.escapeJava(sb.toString()));
 						}
 						break;
 					case END_ELEMENT:
 						if (log.isTraceEnabled())
-							log.trace(String.valueOf(r));
+							log.trace("End of: " + getXmlStreamInfo());
+						break;
+					case COMMENT:
+						if (log.isTraceEnabled())
+							log.trace("XML comment: " + getXmlStreamInfo());
 						break;
 					default:
 						if (log.isTraceEnabled())
-							log.trace("Test this!:" + type);
+							log.trace("Other event: " + type); //todo: test, add about this as needed
 				}
 				r.next();
-
 			}
 		r.close();
 		}
@@ -320,36 +336,41 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	 * Binds property.
 	 *
 	 * This method also throws exceptions related to binding.
-	 * @param triple A java object that represents an RDF Triple - domain-property-range.
+	 * @param triple object that represents an RDF Triple: domain-property-range (subject-predicate-object).
 	 * @param model that is being populated.
 	 */
 	private void bindValue(Triple triple, Model model)
 	{
-		if (log.isDebugEnabled())
-			log.debug(String.valueOf(triple));
-
 		BioPAXElement domain = model.getByID(triple.domain);
-
-		PropertyEditor editor = this.getEditorMap().getEditorForProperty(triple.property, domain.getModelInterface());
-
-		bindValue(triple.range, editor, domain, model);
+		if(domain != null) {
+			if (log.isTraceEnabled())
+				log.trace("Binding " + triple);
+			PropertyEditor editor = this.getEditorMap().getEditorForProperty(triple.property, domain.getModelInterface());
+			bindValue(triple.range, editor, domain, model);
+		} else {
+			log.warn("No Binding (no element) " + triple);
+		}
 	}
 
 
 	private String processIndividual(Model model) throws XMLStreamException
 	{
 		String s = r.getLocalName();
-		String id;
-		try
-		{
-			id = getId();
-		}
-		catch (NullPointerException e)
-		{
-			throw new BioPaxIOException("Error processing individual " + s + ". rdf:ID or rdf:about not found!", e);
+		String id = getId(); //does not throw NPE anymore
+		if(id == null) {
+			throw new BioPaxIOException(
+					String.format("Error processing individual %s; rdf:ID or rdf:about not found", getXmlStreamInfo()));
 		}
 
-		if (factory.canInstantiate((level.getInterfaceForName(s))))
+		Class<? extends BioPAXElement> type;
+		try {
+			type = level.getInterfaceForName(s);
+		} catch (IllegalBioPAXArgumentException e) {
+			throw new BioPaxIOException(String.format("BioPAX %s error processing individual %s; %s",
+					level, getXmlStreamInfo(), e));
+		}
+
+		if (type != null && factory.canInstantiate(type))
 		{
 			BioPAXElement bpe = model.getByID(id);
 			if (!mergeDuplicates || bpe == null)
@@ -363,16 +384,15 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 						"of %s, URI:%s, because previously added object (same URI) was of different type: %s",
 						s, id, bpe.getModelInterface().getSimpleName()));
 			}
-		} else {
-			if (r.hasText())
-			{
-				log.warn("Unknown class :" + r.getText());
-			} else
-			{
-				log.warn("Unknown class :" + r);
-			}
-			skip();
+		} else
+		{
+			//abstract BioPAX types, e.g. Entity, UtilityClass, cannot be used directly in RDF+XML model/file!
+			log.error(String.format("Ignoring abstract: %s, id: %s", (r.hasText()?r.getText():getXmlStreamInfo()), id));
+			//skip(); //it did not work as expected here, causing another exception...
+			//fixme: shall we throw ex. instead, when data has e.g: <bp:term><bp:Entity rdf:ID="Gene"></bp:Entity></bp:term>? - from humancyc v24.5);
+			//throw new BioPaxIOException(String.format("Abstract BioPAX %s type:%s", level, getXmlStreamInfo()));
 		}
+
 		propertyContext = true;
 		r.next();
 		while (r.getEventType() != END_ELEMENT)
@@ -381,7 +401,6 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			{
 				processProperty(model, id);
 				propertyContext = true;
-
 			}
 			r.next();
 		}
@@ -415,13 +434,13 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	public String getId()
 	{
 		String id = r.getAttributeValue(rdf, "ID");
+
 		if (id == null)
 		{
 			id = r.getAttributeValue(rdf, "about");
-			if (id.startsWith("#"))
+			if (id != null && id.startsWith("#"))
 			{
 				id = base + id.substring(1, id.length());
-
 			}
 		} else if (base != null)
 		{
@@ -485,17 +504,16 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 				}
 				resource = (!found && resource != null) ? resource.replaceAll("[\n\r\t ]+", " ") : resource;
 			}
-
-			log.trace("setting = " + resource);
-			triples.add(new Triple(ownerID, resource, property));
+			Triple triple = new Triple(ownerID, resource, property);
+			if(log.isTraceEnabled())
+				log.trace("Triple " + triple);
+			triples.add(triple);
 			propertyContext = false;
 		} else
 		{
-			log.trace("ignoring unknown element " +
-			          r.getNamespaceURI() + r.getLocalName());
+			log.debug("ignoring unknown " + r.getNamespaceURI() + r.getLocalName());
 			gotoEndElement();
 		}
-
 	}
 
 	private void gotoEndElement() throws XMLStreamException
@@ -522,9 +540,8 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		@Override
 		public String toString()
 		{
-			return String.format("domain: %s, property: %s, range: %s", domain, property, range);
+			return String.format("('%s'->%s->'%s')", domain, property, range);
 		}
-
 	}
 
 
@@ -689,7 +706,6 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	private void writeIDLine(Writer out, BioPAXElement bpe, String name) throws IOException
 	{
-
 		out.write(newline + newline + "<" + name + " ");
 		String s = bpe.getUri();
 		if (!absoluteUris &&  base != null && s.startsWith(base))
@@ -700,8 +716,6 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			out.write(RDF_about + s + close);
 		}
-
-
 	}
 
 

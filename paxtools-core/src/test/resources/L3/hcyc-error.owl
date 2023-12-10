@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+        xml:base="http://biocyc.org/biopax/biopax-level3#"
+        xmlns="http://biocyc.org/biopax/biopax-level3#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema#"
+        xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+>
+    <owl:Ontology rdf:about="">
+        <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl"/>
+        <rdfs:comment>Test HumanCyc v24.5 (excerpt)</rdfs:comment>
+    </owl:Ontology>
+
+    <!-- How do we parse such file with errors?..
+      - nonsense/error bp:Entity inside CV bp:term - we could skip perhaps but currently throw a BioPAX IO exception (Validator might depend on this);
+      - a link/ref inside bp:id property instead of simple string value like it's in the bp:db;
+    -->
+    <bp:RelationshipXref rdf:ID="RelationshipXref99623">
+        <bp:relationshipType>
+            <bp:RelationshipTypeVocabulary rdf:ID="RelationshipTypeVocabulary92195">
+                <bp:term>
+                    <!-- Entity is non-instantiable; also it must be a string value for the term property... -->
+                    <bp:Entity rdf:ID="Gene">
+                        <bp:comment>comment1</bp:comment>
+                    </bp:Entity>
+                </bp:term>
+                <bp:comment>comment2</bp:comment>
+                <bp:xref>
+                    <bp:UnificationXref rdf:ID="UnificationXref92196">
+                        <!-- bad (must be a string value, like in bp:db, not a ref);
+                         this makes xref id="http://biocyc.org/biopax/biopax-level3#Gene" -->
+                        <bp:id rdf:resource="#Gene"/>
+                        <bp:db rdf:datatype="xs:string">BioCyc</bp:db>
+                    </bp:UnificationXref>
+                </bp:xref>
+            </bp:RelationshipTypeVocabulary>
+        </bp:relationshipType>
+        <bp:id rdf:datatype="xs:string">NM_021194</bp:id>
+        <bp:db rdf:datatype="xs:string">UCSC human genome DB</bp:db>
+    </bp:RelationshipXref>
+
+</rdf:RDF>

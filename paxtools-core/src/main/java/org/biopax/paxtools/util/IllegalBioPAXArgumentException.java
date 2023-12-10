@@ -6,7 +6,6 @@ package org.biopax.paxtools.util;
  */
 public class IllegalBioPAXArgumentException extends IllegalArgumentException
 {
-// --------------------------- CONSTRUCTORS ---------------------------
 
 	public IllegalBioPAXArgumentException()
 	{

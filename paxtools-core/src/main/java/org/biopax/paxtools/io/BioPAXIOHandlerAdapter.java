@@ -86,7 +86,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	protected abstract void resetEditorMap();
 
 	/**
-	 * According the BioPAX documentation, it is illegal to reuse a Physical Entity Participant (PEP).
+	 * According to the BioPAX documentation, it is illegal to reuse a Physical Entity Participant (PEP).
 	 * If this value is set to <em>true</em> (default value), a reused PEP will be duplicated while
 	 * converting the OWL file into a model.
 	 * @see org.biopax.paxtools.controller.ReusedPEPHelper
@@ -222,11 +222,12 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 		if (filelevel == null)
 		{
-			log.error("Cannot detect biopax level.");
-			throw new BioPaxIOException("Cannot detect biopax level.");
+			log.error("Cannot detect BioPAX Level.");
+			throw new BioPaxIOException("Cannot detect BioPAX Level.");
 		} else if (level != filelevel)
 		{
-			if (log.isDebugEnabled()) log.debug("Reset to the default factory for the detected BioPAX level.");
+			if (log.isDebugEnabled())
+				log.debug("Reset to the default factory for the detected BioPAX level.");
 			resetLevel(filelevel, filelevel.getDefaultFactory());
 		}
 	}
@@ -311,31 +312,26 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 	 */
 	protected void bindValue(String valueString, PropertyEditor editor, BioPAXElement bpe, Model model)
 	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("Binding: " + bpe + '(' + bpe.getModelInterface() + " has  " + editor + ' ' + valueString);
+		if (editor == null) {
+			log.error("BioPAX property editor is null (usually means invalid prop.); failed to set: " + valueString);
+			return;
 		}
 
-		Object value = (valueString==null)?null:valueString.trim();
+		Object value = (valueString == null) ? null : valueString.trim();
 
 		if (editor instanceof ObjectPropertyEditor)
 		{
-			value = model.getByID(valueString);
-			value = resourceFixes(bpe, value);
+			value = model.getByID((String)value); //null->null
+			value = resourceFixes(bpe, value); //this is for L2 PEP only; other values return unchanged; null->null
 			if (value == null)
 			{
 				throw new IllegalBioPAXArgumentException(
-					"Illegal or Dangling Value/Reference: " + valueString + " (element: " + bpe.getUri() +
-					" property: " + editor.getProperty() + ")");
+					"Illegal/Dangling ref: " + valueString + " (el: " + bpe.getUri() + " prop: " + editor.getProperty() + ")");
 			}
 		}
-		if (editor == null)
-		{
-			log.error("Editor is null. This probably means an invalid BioPAX property. Failed to set " + valueString);
-		} else //is either EnumeratedPropertyEditor or DataPropertyEditor
-		{
-			editor.setValueToBean(value, bpe);
-		}
+
+		//set the biopax bean property value using the biopax property editor
+		editor.setValueToBean(value, bpe);
 	}
 
 	/**
