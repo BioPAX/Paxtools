@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- the default xml namespace (xmlns) here is biopax (no need to define bp: prefix);
+test data inspired by several humancyc v24 data issues -->
+<rdf:RDF
+        xml:base="http://biopax.org/tmp#"
+        xmlns="http://www.biopax.org/release/biopax-level3.owl#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:sab="http://sabio.h-its.org/biopax#"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema#"
+>
+    <owl:Ontology rdf:about="">
+        <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl"/>
+        <rdfs:comment>rdfs comment1</rdfs:comment>
+    </owl:Ontology>
+    <rdfs:comment>rdfs comment2</rdfs:comment>
+
+    <!-- How do we parse such file with errors?..
+      - nonsense/error Entity inside CV term - we could skip perhaps but currently throw a BioPAX IO exception (Validator might depend on this);
+      - a link/ref inside id property instead of simple string value like it's in the db;
+    -->
+    <RelationshipXref rdf:ID="rx1">
+        <relationshipType>
+            <RelationshipTypeVocabulary rdf:ID="rtv1">
+                <term>
+                    <!-- Entity is non-instantiable; also term property value must be a string value,
+                    preferably from MI ontology, e.g. "gene product" MI:0251 or "see-also", etc.
+                    Right now (after latest code fix to prevent exception here), Entity is not entirely ignored, -
+                    FIXME: its URI "http://biopax.org/tmp#Gene" becomes the value the term property value;
+                    i.e. this is equivalent to <term>http://biopax.org/tmp#Gene</term> ... -->
+                    <Entity rdf:ID="Gene">
+                        <comment>comment1</comment>
+                    </Entity>
+                </term>
+                <comment>comment2</comment>
+                <rdfs:comment>rdfs comment3</rdfs:comment>
+                <xref>
+                    <UnificationXref rdf:ID="ux1">
+                        <!-- normally, xref db/id is a text not resource ref, i.e. <id rdf:datatype="xs:string">123</id>;
+                         however, this surprisingly works too and makes xref.id="http://biopax.org/tmp#Gene" -->
+                        <id rdf:resource="#Gene"/>
+                        <db rdf:datatype="xs:string">BioCyc</db>
+                    </UnificationXref>
+                </xref>
+            </RelationshipTypeVocabulary>
+        </relationshipType>
+        <id rdf:datatype="xs:string">NM_021194</id>
+        <db rdf:datatype="xs:string">UCSC human genome DB</db>
+    </RelationshipXref>
+
+    <!-- non-instantiable BioPAX type will be ignored (no exception; error logged) -->
+    <!-- fixme: should this throw exception instead? -->
+    <Entity rdfID="ent1">
+        <name>entity1</name>
+    </Entity>
+
+<!-- this will be ignored (not error) becaue it's not in the biopax ns -->
+    <sab:foo rdf:resource="bar" />
+<!-- next would cause an exception as the default namespace (xmlns) here is biopax and boo is not a biopax type -->
+<!--    <boo />-->
+
+</rdf:RDF>

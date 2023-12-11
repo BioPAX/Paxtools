@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- xmlns= undefined; so e.g. <foo/> element is not from bp3, owl, rdf namespace/model or anything -->
 <rdf:RDF
         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
         xmlns:bp3="http://www.biopax.org/release/biopax-level3.owl#"
         xmlns:owl="http://www.w3.org/2002/07/owl#"
         xmlns:sbx3="http://vcell.org/sbpax3#"
-        xmlns:uome-core="http://www.sbpax.org/uome/core.owl#"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-        xmlns:sabio="http://sabio.h-its.org/biopax#"
-        xmlns:uome-list="http://www.sbpax.org/uome/list.owl#">
+        xmlns:xs="http://www.w3.org/2001/XMLSchema#"
+        xmlns:sabio="http://sabio.h-its.org/biopax#">
 
     <owl:Ontology rdf:about="http://sabio.h-its.org/biopax">
         <owl:imports rdf:resource="http://vcell.org/sbpax3"/>
@@ -20,11 +20,15 @@
     <bp3:Catalysis rdf:about="catalysis1">
         <sbx3:sbSubEntity rdf:resource="http://sabio.h-its.org/biopax#kineticLaw24490"/>
         <bp3:controlled rdf:resource="reaction1"/>
-        <sabio:foo rdf:resource="bar"/>
+        <sabio:foo rdf:resource="foo1"/>
         <boo />
         <!--the spaces were intentionally inserted around the displayName value (parser mush trim)-->
         <bp3:displayName> Catalysis 1 </bp3:displayName>
     </bp3:Catalysis>
+
+    <!-- some confusion garbage, to make it more tricky... -->
+    <foo name="foo" rdf:about="foo1"/>
+    <bar>bar</bar>
 
     <bp3:Conversion rdf:about="reaction1">
         <!-- a non-biopax element inside a valid BioPAX object is deep-ignored (that xref as well!) -->
@@ -40,11 +44,40 @@
         <bp3:xref rdf:resource="http://sabio.h-its.org/biopax#xrefsabio_Hill coefficient"/>
     </sbx3:SBVocabulary>
 
-    <!-- non-instantiable BioPAX type will be ignored (no exception; error logged) -->
+    <!-- abstract/non-instantiable BioPAX type will be ignored (no exception; error logged) -->
     <!-- fixme: should this throw exception instead? -->
-    <bp3:Entity rdfID="abstract_type_error1">
-        <bp3:name>wrong1</bp3:name>
+    <bp3:Entity rdfID="ent1">
+        <bp3:name>entity1</bp3:name>
     </bp3:Entity>
+
+    <!-- How do we parse such file with errors?..
+      - nonsense/error bp3:Entity inside CV bp3:term - we could skip perhaps but currently throw a BioPAX IO exception (Validator might depend on this);
+      - a link/ref inside bp3:id property instead of simple string value like it's in the bp3:db;
+    -->
+    <bp3:RelationshipXref rdf:ID="rx">
+        <bp3:relationshipType>
+            <bp3:RelationshipTypeVocabulary rdf:ID="rx_rtv">
+                <bp3:term>
+                    <!-- Entity is non-instantiable; also it must be a string value for the term property... -->
+                    <bp3:Entity rdf:ID="Gene">
+                        <bp3:comment>comment1</bp3:comment>
+                    </bp3:Entity>
+                </bp3:term>
+                <bp3:comment>comment2</bp3:comment>
+                <rdfs:comment>comment3</rdfs:comment>
+                <bp3:xref>
+                    <bp3:UnificationXref rdf:ID="rx_rtv_ux">
+                        <!-- bad (must be a string value, like in bp3:db, not a ref);
+                         this makes xref id="http://biocyc.org/biopax/biopax-level3#Gene" -->
+                        <bp3:id rdf:resource="#Gene"/>
+                        <bp3:db rdf:datatype="xs:string">BioCyc</bp3:db>
+                    </bp3:UnificationXref>
+                </bp3:xref>
+            </bp3:RelationshipTypeVocabulary>
+        </bp3:relationshipType>
+        <bp3:id rdf:datatype="xs:string">NM_021194</bp3:id>
+        <bp3:db rdf:datatype="xs:string">UCSC human genome DB</bp3:db>
+    </bp3:RelationshipXref>
 
     <!-- enable TRACE logging, e.g. in paxtools-core/src/test/resources/logback-test.xml or with JVM args
      to see more details when loading this or any other file with SimpleIOHandler.java -->

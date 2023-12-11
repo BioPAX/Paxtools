@@ -13,26 +13,6 @@
     <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl"/>
  </owl:Ontology>
 
- <!-- This piece is from HumanCyc v24.5 with the errors manually fixed:
-   - replaced that nonsense bp:Entity inside CV's bp:term with text:Gene;
-   - replaced that link/ref inside bp:id with text:Gene;
- -->
-  <bp:RelationshipXref rdf:ID="RelationshipXref99623">
-    <bp:relationshipType>
-      <bp:RelationshipTypeVocabulary rdf:ID="RelationshipTypeVocabulary92195">
-	<bp:term>gene</bp:term>
-        <bp:xref>
-          <bp:UnificationXref rdf:ID="UnificationXref92196">
-            <bp:id rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gene</bp:id>
-            <bp:db rdf:datatype="http://www.w3.org/2001/XMLSchema#string">BioCyc</bp:db>
-          </bp:UnificationXref>
-        </bp:xref>
-      </bp:RelationshipTypeVocabulary>
-    </bp:relationshipType>
-    <bp:id rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NM_021194</bp:id>
-    <bp:db rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UCSC human genome DB</bp:db>
-  </bp:RelationshipXref>
-
 <!-- This is to test:
  if SMR1 is removed or replaced, then
  A - must become dangling and must be removed by ModelUtils.removeObjectsIfDangling(UtilityClass.class) method,
@@ -42,31 +22,31 @@
 
 <bp:SmallMolecule rdf:about="SM1">
  <bp:entityReference rdf:resource="SMR1" />
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SM1</bp:displayName>
+ <bp:displayName rdf:datatype = "xs:string">SM1</bp:displayName>
 </bp:SmallMolecule>
 
 <bp:SmallMoleculeReference rdf:about="SMR1"> 
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMR1</bp:displayName>
+ <bp:displayName rdf:datatype = "xs:string">SMR1</bp:displayName>
  <bp:memberEntityReference rdf:resource="B" />
  <bp:memberEntityReference rdf:resource="A" />
 </bp:SmallMoleculeReference>
 
 <bp:SmallMoleculeReference rdf:about="A">
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A</bp:displayName>
+ <bp:displayName rdf:datatype = "xs:string">A</bp:displayName>
  <bp:memberEntityReference rdf:resource="B" />
 </bp:SmallMoleculeReference>
 
 <bp:SmallMoleculeReference rdf:about="B">
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">B</bp:displayName>
+ <bp:displayName rdf:datatype = "xs:string">B</bp:displayName>
 </bp:SmallMoleculeReference>
 
 <bp:SmallMolecule rdf:about="SM2">
  <bp:entityReference rdf:resource="SMR2" />
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SM2</bp:displayName>
+ <bp:displayName rdf:datatype = "xs:string">SM2</bp:displayName>
 </bp:SmallMolecule>
 
 <bp:SmallMoleculeReference rdf:about="SMR2">
- <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMR2</bp:displayName>
+ <bp:displayName rdf:datatype = "xs:string">SMR2</bp:displayName>
  <bp:memberEntityReference rdf:resource="B" />
 </bp:SmallMoleculeReference>
 

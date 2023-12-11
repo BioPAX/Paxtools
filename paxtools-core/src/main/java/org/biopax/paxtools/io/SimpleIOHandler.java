@@ -1,9 +1,10 @@
 package org.biopax.paxtools.io;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.controller.AbstractPropertyEditor;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
+import org.biopax.paxtools.controller.StringPropertyEditor;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXFactory;
 import org.biopax.paxtools.model.BioPAXLevel;
@@ -19,9 +20,11 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static javax.xml.stream.XMLStreamConstants.*;
+import static org.apache.commons.lang3.StringEscapeUtils.*;
 
 /**
  * Simple BioPAX reader/writer.
@@ -36,8 +39,6 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	private static final Logger log = LoggerFactory.getLogger(SimpleIOHandler.class);
 
 	private XMLStreamReader r;
-
-	boolean propertyContext = false;
 
 	private List<Triple> triples;
 
@@ -133,10 +134,11 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		}
 
 		StringBuilder sb = new StringBuilder();
-
+//		String nsUri = StringUtils.defaultString(r.getNamespaceURI());
 		int event = r.getEventType();
 		if (event == START_ELEMENT || event == END_ELEMENT || event == ENTITY_REFERENCE)
 		{
+//			sb.append(nsUri);
 			sb.append(r.getLocalName());
 		}
 
@@ -251,13 +253,12 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 				{
 					case START_ELEMENT:
 						final String lname = r.getLocalName();
-						final String nsUriPref = r.getName().getNamespaceURI();
-						final String nsUri = r.getNamespaceURI();
+						final String nsUri = StringUtils.defaultString(r.getNamespaceURI());//null->"", unless at a start/end element
 						if(owl.equalsIgnoreCase(nsUri)) {
 								log.debug(String.format("Ignoring owl:%s", lname));
 						} else if(rdf.equalsIgnoreCase(nsUri)) {
 								log.debug(String.format("Ignoring rdf:%s", lname));
-						} else if (BioPAXLevel.isInBioPAXNameSpace(nsUriPref)) {
+						} else if (BioPAXLevel.isInBioPAXNameSpace(nsUri)) {
 							BioPAXLevel level = getLevel();
 							Class<? extends BioPAXElement> clazz;
 							try
@@ -277,11 +278,12 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 							} else
 							{
 								log.error(String.format("Ignoring abstract type: %s", getXmlStreamInfo()));
-								skip(); //fixme: throw an exception? (FYI, BioPAX Validator aspectj rule and unit tests depend on skip() here...)
+								skip();
+								//todo: an exception instead (update tests)? But BioPAX Validator aspectj rule and tests depend on skip() calls
 								//throw new BioPaxIOException(String.format("Abstract BioPAX %s element: %s", level, getXmlStreamInfo()));
 							}
 						} else {
-								log.warn(String.format("Ignoring non-biopax %s%s", nsUri, getXmlStreamInfo()));
+								log.warn(String.format("Ignoring non-biopax type %s%s", nsUri, getXmlStreamInfo()));
 								skip();
 						}
 						break;
@@ -292,7 +294,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 							if (r.hasName()) sb.append(r.getLocalName());
 							if (r.hasText()) sb.append(r.getText());
 							if (log.isTraceEnabled())
-								log.trace(StringEscapeUtils.escapeJava(sb.toString()));
+								log.trace(escapeJava(sb.toString()));
 						}
 						break;
 					case END_ELEMENT:
@@ -301,11 +303,11 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 						break;
 					case COMMENT:
 						if (log.isTraceEnabled())
-							log.trace("XML comment: " + getXmlStreamInfo());
+							log.trace("Ignoring XML comment" + getXmlStreamInfo());
 						break;
 					default:
 						if (log.isTraceEnabled())
-							log.trace("Other event: " + type); //todo: test, add about this as needed
+							log.trace("Other event: " + type); //test and handle if needed...
 				}
 				r.next();
 			}
@@ -348,62 +350,60 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			PropertyEditor editor = this.getEditorMap().getEditorForProperty(triple.property, domain.getModelInterface());
 			bindValue(triple.range, editor, domain, model);
 		} else {
-			log.warn("No Binding (no element) " + triple);
+			log.warn("Binding ignored " + triple);
 		}
 	}
 
 
 	private String processIndividual(Model model) throws XMLStreamException
 	{
-		String s = r.getLocalName();
+		String lname = r.getLocalName();
 		String id = getId(); //does not throw NPE anymore
 		if(id == null) {
 			throw new BioPaxIOException(
-					String.format("Error processing individual %s; rdf:ID or rdf:about not found", getXmlStreamInfo()));
+					String.format("Error processing %s%s (rdf:ID/rdf:about not found)", r.getNamespaceURI(), getXmlStreamInfo()));
 		}
 
 		Class<? extends BioPAXElement> type;
 		try {
-			type = level.getInterfaceForName(s);
+			type = level.getInterfaceForName(lname);
 		} catch (IllegalBioPAXArgumentException e) {
 			throw new BioPaxIOException(String.format("BioPAX %s error processing individual %s; %s",
 					level, getXmlStreamInfo(), e));
 		}
 
-		if (type != null && factory.canInstantiate(type))
+		if (factory.canInstantiate(type)) //type!=null always true (also canInstantiate does not throw anything)
 		{
 			BioPAXElement bpe = model.getByID(id);
 			if (!mergeDuplicates || bpe == null)
 			{
-				createBpe(s, id, model); //throws an exception when (mergeDuplicates==false && bpe!=null)
-			} else if(!s.equals(bpe.getModelInterface().getSimpleName())) {
-				//i.e., type mismatch,
-				//whereas (mergeDuplicates==true && bpe != null) is true already -
-				throw new BioPaxIOException(String.format("processIndividual: " +
-						"despite mergeDuplicates is True, failed/skipped creating an instance " +
-						"of %s, URI:%s, because previously added object (same URI) was of different type: %s",
-						s, id, bpe.getModelInterface().getSimpleName()));
+				createBpe(lname, id, model); //throws an exception when (mergeDuplicates==false && bpe!=null)
+			} else if(!lname.equals(bpe.getModelInterface().getSimpleName())) {
+				//i.e., type mismatch, whereas (mergeDuplicates==true && bpe != null) is true already -
+				throw new BioPaxIOException(String.format("Failed creating an instance " +
+						"of %s, URI:%s, as we have another object with the same URI but different type: %s",
+						lname, id, bpe.getModelInterface().getSimpleName()));
 			}
 		} else
 		{
 			//abstract BioPAX types, e.g. Entity, UtilityClass, cannot be used directly in RDF+XML model/file!
-			log.error(String.format("Ignoring abstract: %s, id: %s", (r.hasText()?r.getText():getXmlStreamInfo()), id));
-			//skip(); //it did not work as expected here, causing another exception...
-			//fixme: shall we throw ex. instead, when data has e.g: <bp:term><bp:Entity rdf:ID="Gene"></bp:Entity></bp:term>? - from humancyc v24.5);
+			log.error(String.format("Ignoring abstract %s, id: %s", (r.hasText()?r.getText():getXmlStreamInfo()), id));
+			//id = null; //todo: uncomment/test (currently, ignored object's uri can become parent's property value, e.g. CV term)
+			//skip(); //was a bug - throws a misleading exception at the next element in some cases
+			//todo: shall we instead throw an exception when e.g. <term><Entity rdf:ID="Gene"></Entity></term>?
 			//throw new BioPaxIOException(String.format("Abstract BioPAX %s type:%s", level, getXmlStreamInfo()));
 		}
 
-		propertyContext = true;
 		r.next();
 		while (r.getEventType() != END_ELEMENT)
 		{
 			if (r.getEventType() == START_ELEMENT)
 			{
 				processProperty(model, id);
-				propertyContext = true;
 			}
 			r.next();
 		}
+
 		return id;
 	}
 
@@ -455,18 +455,15 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		if (rdfs.equals(r.getNamespaceURI()) && "comment".equals(r.getLocalName()))
 		{
 			BioPAXElement paxElement = model.getByID(ownerID);
-			AbstractPropertyEditor commentor = getRDFCommentEditor(paxElement);
+			StringPropertyEditor commentor = getRDFCommentEditor(paxElement);
 			r.next();
 			assert r.getEventType() == CHARACTERS;
 			String text = r.getText();
-			if(text!=null) text = text.trim();
+			if(text != null) text = text.trim();
 			commentor.setValueToBean(text, paxElement);
-			log.warn("rdfs:comment is converted into the bp:comment; " +
-			         "however, this can be overridden " +
-			         "if there exists another bp:comment (element: " +
-			         paxElement.getUri() + " text: " + text + ")");
+			log.warn(String.format("rdfs:comment '%s' was converted to the biopax one for element: %s", escapeJava(text), ownerID));
 			gotoEndElement();
-		} else if (bp != null && bp.equals(r.getNamespaceURI()))
+		} else if (level.getNameSpace().equals(r.getNamespaceURI())) //can be if(level == BioPAXLevel.getLevelFromNameSpace(r.getNamespaceURI()))
 		{
 			String property = r.getLocalName();
 			String resource = r.getAttributeValue(rdf, "resource");
@@ -493,25 +490,23 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 							r.next();
 						}
 						resource = buff.toString();
-
 					} else if (r.getEventType() == START_ELEMENT)
 					{
-						propertyContext = false;
 						resource = processIndividual(model);
 						found = true;
 						r.next();
 					} else r.next();
 				}
-				resource = (!found && resource != null) ? resource.replaceAll("[\n\r\t ]+", " ") : resource;
+				resource = (!found && resource != null) ? resource.replaceAll("\\s+", " ").trim() : resource;
 			}
 			Triple triple = new Triple(ownerID, resource, property);
 			if(log.isTraceEnabled())
 				log.trace("Triple " + triple);
 			triples.add(triple);
-			propertyContext = false;
 		} else
-		{
-			log.debug("ignoring unknown " + r.getNamespaceURI() + r.getLocalName());
+		{ //skip a thing that's not from the bp or rdfs namespace
+			String ruri = r.getNamespaceURI() != null ? r.getNamespaceURI() + r.getLocalName() : r.getLocalName();
+			log.warn(String.format("Ignoring unknown prop of %s: %s", ownerID, ruri));
 			gotoEndElement();
 		}
 	}
@@ -569,7 +564,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		try
 		{
-			Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+			Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
 			writeObjects(out, model);
 			out.close();
 		}
@@ -670,7 +665,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		} else
 		{
 			String type = findLiteralType(editor);
-			String valString = StringEscapeUtils.escapeXml(value.toString());
+			String valString = escapeXml(value.toString());
 			out.write(" rdf:datatype = \"xsd:"  + type + "\">" + valString +
 			          "</" + prop + ">");
 		}
@@ -885,15 +880,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 		(new SimpleIOHandler(model.getLevel())).convertToOWL(model, outputStream);
 
-		try
-		{
-			return outputStream.toString("UTF-8");
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			log.error("convertToOwl, outputStream.toString failed", e);
-			return outputStream.toString();
-		}
+		return outputStream.toString(StandardCharsets.UTF_8);
 	}
 
 }

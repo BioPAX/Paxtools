@@ -99,7 +99,7 @@ public abstract class BioPAXFactory
 	 * types, abstract classes).
 	 *
 	 * @param aClass BioPAX interface class
-	 * @return whether this factory can create an instance of the type
+	 * @return whether this factory can create an instance of the type or not
 	 */
 	public boolean canInstantiate(Class<? extends BioPAXElement> aClass)
 	{
@@ -110,7 +110,7 @@ public abstract class BioPAXFactory
 		{
 			return false;
 		} catch (Exception ex) {
-			log.error("Error in canInstantiate(" + aClass + ")", ex);
+			log.error("canInstantiate(" + aClass + "): ", ex);
 			return false;
 		}
 	}

@@ -3,6 +3,7 @@ package org.biopax.paxtools.model;
 import org.biopax.paxtools.util.IllegalBioPAXArgumentException;
 
 import java.io.InputStream;
+import java.util.stream.Stream;
 
 /**
  * Enumeration type for BioPAX levels.
@@ -21,39 +22,47 @@ public enum BioPAXLevel
 	private BioPAXFactory factory;
 
 	private final String packageName;
-	
+
 	// default L2 factory implementation
 	private static class Level2FactoryImpl extends BioPAXFactory {
 	    @Override
 	    public BioPAXLevel getLevel() {
 	    	return BioPAXLevel.L2;
 	    }
-	    
-	    public String mapClassName(Class<? extends BioPAXElement> aClass) 
+
+	    public String mapClassName(Class<? extends BioPAXElement> aClass)
 	    {
 	        String name = "org.biopax.paxtools.impl.level2."
 	                + aClass.getSimpleName()
 	                + "Impl";
 	        return name;
-	    }  
+	    }
 	}
-	
+
 	// default L3 factory implementation
 	private static class Level3FactoryImpl extends BioPAXFactory {
 	    @Override
 	    public BioPAXLevel getLevel() {
 	    	return BioPAXLevel.L3;
 	    }
-	    
-	    public String mapClassName(Class<? extends BioPAXElement> aClass) 
+
+		/**
+		 * Maps a BioPAX L3 interface/type to the concrete java implementation class.
+		 * Example: org.biopax.paxtools.model.level3.Protein -> org.biopax.paxtools.impl.level3.ProteinImpl
+		 *
+		 * @param aClass BioPAX type (model interface)
+		 * @return the full name of the implementation class
+		 * @throws NullPointerException when aClass is null
+		 */
+		public String mapClassName(Class<? extends BioPAXElement> aClass)
 	    {
 	        String name = "org.biopax.paxtools.impl.level3."
 	                + aClass.getSimpleName()
 	                + "Impl";
 	        return name;
-	    }  
+	    }
 	}
-	
+
 
 	/**
 	 * This is the prefix used for all biopax releases.
@@ -88,7 +97,7 @@ public enum BioPAXLevel
 
 	/**
 	 * This method returns the default factory for this level
-	 * @return he default factory for this level
+	 * @return the default factory for this level
 	 */
 	public BioPAXFactory getDefaultFactory()
 	{
@@ -131,19 +140,20 @@ public enum BioPAXLevel
 
 	public static BioPAXLevel getLevelFromNameSpace(String namespace)
 	{
-		if (isInBioPAXNameSpace(namespace))
-		{
-			{
-				for (BioPAXLevel level : BioPAXLevel.values())
-				{
-					if (namespace.equalsIgnoreCase(level.getNameSpace()))
-					{
-						return level;
-					}
-				}
-			}
-		}
-		return null;
+//		if (isInBioPAXNameSpace(namespace))
+//		{
+//			{
+//				for (BioPAXLevel level : BioPAXLevel.values())
+//				{
+//					if (namespace.equalsIgnoreCase(level.getNameSpace()))
+//					{
+//						return level;
+//					}
+//				}
+//			}
+//		}
+//		return null;
+		return stream().filter(level -> level.getNameSpace().equalsIgnoreCase(namespace)).findAny().orElse(null);
 	}
 
 	public String getPackageName()
@@ -158,30 +168,35 @@ public enum BioPAXLevel
 
 
 	/**
-	 * Gets the BioPAX type (java interface) by name.
+	 * Gets the BioPAX type (java interface) by its short name e.g. "Protein".
 	 * @param localName a BioPAX type name
 	 * @return the BioPAX interface class
-	 * @throws IllegalBioPAXArgumentException when there is no such type / class not found.
+	 * @throws IllegalBioPAXArgumentException when class is null, not found, or is not a BioPAX type
 	 */
-	public Class<? extends BioPAXElement> getInterfaceForName(String localName)
-	{
-        try
-        {
-            Class modelInterface = Class.forName(this.packageName + "." + localName);
-
-            if (BioPAXElement.class.isAssignableFrom(modelInterface))
-            {
-                return modelInterface;
-            } else
-            {
-                throw new IllegalBioPAXArgumentException(
-                        "BioPAXElement is not assignable from class:" + modelInterface.getSimpleName());
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new IllegalBioPAXArgumentException("Could not locate interface for:" + localName);
-        }
+  public Class<? extends BioPAXElement> getInterfaceForName(String localName)
+  {
+		if(localName == null) {
+			throw new IllegalBioPAXArgumentException("Class name was null");
+		}
+    try
+    {
+      Class modelInterface = Class.forName(this.packageName + "." + localName);
+      if (BioPAXElement.class.isAssignableFrom(modelInterface))
+      {
+        return modelInterface;
+      } else
+      { //not a BioPAX spec class from the classpath, e.g. String, Object, etc.
+        throw new IllegalBioPAXArgumentException("BioPAXElement is not assignable from class:"
+            + modelInterface.getSimpleName());
+      }
     }
+    catch (ClassNotFoundException e)
+    {
+      throw new IllegalBioPAXArgumentException("Could not locate interface for:" + localName);
+    }
+  }
 
+	public static Stream<BioPAXLevel> stream() {
+		return Stream.of(BioPAXLevel.values());
+	}
 }

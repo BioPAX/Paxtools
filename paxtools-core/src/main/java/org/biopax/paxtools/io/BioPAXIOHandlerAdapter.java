@@ -34,7 +34,7 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 
 	protected static final String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 
-	protected String bp; //current Level BioPAX namespace prefix
+	protected String bp;
 
 	protected static final String xsd = "http://www.w3.org/2001/XMLSchema#";
 
@@ -73,8 +73,6 @@ public abstract class BioPAXIOHandlerAdapter implements BioPAXIOHandler
 		{
 			this.fixReusedPEPs = true;
 		}
-
-		bp = this.level.getNameSpace();
 
 		resetEditorMap(); //implemented by concrete subclasses
 	}

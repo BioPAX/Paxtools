@@ -21,15 +21,23 @@ public class BioPAXFactoryTest {
 
     @Test
     public void canInstantiate() {
-        assertTrue(factory.canInstantiate(SequenceSite.class));
-        assertFalse(factory.canInstantiate(Process.class));
-        assertFalse(factory.canInstantiate(EntityReference.class));
-        assertFalse(factory.canInstantiate(SimplePhysicalEntity.class));
-        assertTrue(factory.canInstantiate(Interaction.class));
-        assertTrue(factory.canInstantiate(Control.class));
-        assertFalse(factory.canInstantiate(XReferrable.class));
-        assertFalse(factory.canInstantiate(Observable.class));
-        assertFalse(factory.canInstantiate(Xref.class));
-        assertFalse(factory.canInstantiate(Controller.class));
+        assertAll(
+            () -> assertTrue(factory.canInstantiate(SequenceSite.class)),
+            () -> assertFalse(factory.canInstantiate(Process.class)),
+            () -> assertFalse(factory.canInstantiate(EntityReference.class)),
+            () -> assertFalse(factory.canInstantiate(SimplePhysicalEntity.class)),
+            () -> assertTrue(factory.canInstantiate(Interaction.class)),
+            () -> assertTrue(factory.canInstantiate(Control.class)),
+            () -> assertFalse(factory.canInstantiate(XReferrable.class)),
+            () -> assertFalse(factory.canInstantiate(Observable.class)),
+            () -> assertFalse(factory.canInstantiate(Xref.class)),
+            () -> assertFalse(factory.canInstantiate(Controller.class)),
+            () -> assertFalse(factory.canInstantiate(null))
+        );
+    }
+
+    @Test
+    public void levelStaticUtils() {
+        assertEquals(factory.getLevel(), BioPAXLevel.getLevelFromNameSpace("http://www.biopax.org/release/biopax-level3.owl#"));
     }
 }
