@@ -5,12 +5,11 @@
     <resetJUL>true</resetJUL>
   </contextListener>
  
-  <!-- To enable JMX Management -->
-  <jmxConfigurator/>
+  <!-- To enable JMX Management (also prints additional logback initializing info)-->
+<!--  <jmxConfigurator/>-->
  
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-<!--       <pattern>%d|%-5level|[%thread]|%-40.40logger{0}|%msg%n</pattern> -->
       <pattern>%d %-5level [%thread] %logger{25} - %msg%n</pattern>
       <outputPatternAsHeader>true</outputPatternAsHeader>
     </encoder>

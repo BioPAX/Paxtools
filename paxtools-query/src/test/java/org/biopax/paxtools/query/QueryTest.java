@@ -142,8 +142,7 @@ public class QueryTest
 		source.add(s1);
 		source.add(t1);
 
-		Set<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(
-			source, model, Direction.DOWNSTREAM, 3, null);
+		Set<BioPAXElement> result = QueryExecuter.runCommonStreamWithPOI(source, model, Direction.DOWNSTREAM, 3);
 
 		secs = (System.currentTimeMillis() - time);
 
