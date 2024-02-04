@@ -361,13 +361,13 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>5.9.3</version>
+        <version>5.10.2</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-params</artifactId>
-        <version>5.9.3</version>
+        <version>5.10.2</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -388,40 +388,40 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>2.0.7</version>
+        <version>2.0.11</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <version>2.0.7</version>
+        <version>2.0.11</version>
         <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jul-to-slf4j</artifactId>
-        <version>2.0.7</version>
+        <version>2.0.11</version>
         <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>log4j-over-slf4j</artifactId>
-        <version>2.0.7</version>
+        <version>2.0.11</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.4.8</version>
+        <version>1.4.12</version>
         <optional>true</optional>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>2.15.2</version>
+        <version>2.16.1</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.15.2</version>
+        <version>2.16.1</version>
       </dependency>
       <dependency>
         <groupId>org.projectlombok</groupId>
