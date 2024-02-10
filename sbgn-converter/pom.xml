@@ -1,23 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>paxtools</artifactId>
         <groupId>org.biopax.paxtools</groupId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-
     <artifactId>sbgn-converter</artifactId>
-
     <packaging>jar</packaging>
 
-    <name>BioPAX to SBGN-ML Converter</name>
+    <name>BioPAX to SBGN-ML</name>
+    <description>Converts a BioPAX Model to SBGN-ML (SBGN PD)</description>
 
     <url>https://biopax.github.io/Paxtools</url>
-
-    <scm>
-        <url>https://github.com/BioPAX/Paxtools</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <dependencies>
         <dependency>
@@ -36,6 +31,4 @@
         	<version>3.1.0</version>
         </dependency>
     </dependencies>
-
-    <description>To convert a BioPAX L3 model to SBGN-ML (SBGN PD), and optionally align.</description>
 </project>

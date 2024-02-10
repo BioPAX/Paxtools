@@ -1,22 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.biopax.paxtools</groupId>
         <artifactId>paxtools</artifactId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
-
-    <modelVersion>4.0.0</modelVersion>
     <artifactId>psimi-converter</artifactId>
-    <name>PSI-MI/MITAB to BioPAX Converter</name>
-    <description>To Convert PSI-MI or MITAB v2.5 files to BioPAX.</description>
+
+    <name>PSIMI/MITAB to BioPAX</name>
+    <description>Converts PSI-MI or PCI-MITAB v2.5 files to BioPAX</description>
 
     <url>https://biopax.github.io/Paxtools</url>
-
-    <scm>
-        <url>https://github.com/BioPAX/Paxtools</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <dependencies>
         <dependency>

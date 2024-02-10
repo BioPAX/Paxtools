@@ -9,16 +9,12 @@
     <artifactId>paxtools-query</artifactId>
     <packaging>jar</packaging>
 
-    <name>Graph-Theoretic Querying</name>
+    <name>BioPAX Query</name>
     <description>BioPAX graph-theoretic querying - for finding paths between molecules,
     or identifying molecules that are reachable through specific paths, using the BioPAX pathway data model.
     </description>
 
     <url>https://biopax.github.io/Paxtools</url>
-
-    <scm><url>https://github.com/BioPAX/Paxtools</url>
-        <tag>HEAD</tag>
-    </scm>
 
   <dependencies>
         <dependency>

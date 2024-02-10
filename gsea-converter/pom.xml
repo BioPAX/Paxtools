@@ -7,14 +7,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>gsea-converter</artifactId>
-  <name>BioPAX to GSEA (.gmt) Converter</name>
-  <description>Converts data to the GESA (.gmt) format.</description>
+  <name>BioPAX to GSEA/GMT</name>
+  <description>Converts BioPAX model/data to the GESA/GMT (.gmt) format</description>
 
   <url>https://biopax.github.io/Paxtools</url>
-
-  <scm><url>https://github.com/BioPAX/Paxtools</url>
-      <tag>HEAD</tag>
-  </scm>
 
   <dependencies>
    	<dependency>

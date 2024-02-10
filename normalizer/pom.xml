@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>normalizer</artifactId>
-	<name>BioPAX Normalizer and Resolver</name>
-	<description>A BioPAX Normalizer and Bio ID Resolver</description>
-	<inceptionYear>2009-2015</inceptionYear>
+	<name>BioPAX Normalizer</name>
+	<description>BioPAX Model/URIs Normalizer and BIO Identifiers Resolver</description>
+	<inceptionYear>2009</inceptionYear>
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>

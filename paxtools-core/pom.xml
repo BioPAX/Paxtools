@@ -9,17 +9,13 @@
 
 	<artifactId>paxtools-core</artifactId>
 	<packaging>jar</packaging>
-	<name>Paxtools Core (BioPAX object model, I/O API, implementation and extras)</name>
+	<name>Paxtools Core</name>
 	<description>Paxtools core library includes the BioPAX object model and interfaces, the default implementation
 		and extras: reflection-based class factories and property editors/accessors, some inverse properties
-		(e.g., xrefOf, componentOf), traversal and file (I/O) utilities.
+		(e.g., xrefOf, componentOf), traversal, and file (I/O) utilities.
 	</description>
 
 	<url>https://biopax.github.io/Paxtools</url>
-
-	<scm><url>https://github.com/BioPAX/Paxtools</url>
-		<tag>HEAD</tag>
-	</scm>
 
 	<dependencies>
 		<dependency>

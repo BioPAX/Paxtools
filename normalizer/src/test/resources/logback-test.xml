@@ -4,7 +4,7 @@
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
     <resetJUL>true</resetJUL>
   </contextListener>
- 
+
   <!-- To enable JMX Management (also prints additional logback initializing info)-->
 <!--  <jmxConfigurator/>-->
  
