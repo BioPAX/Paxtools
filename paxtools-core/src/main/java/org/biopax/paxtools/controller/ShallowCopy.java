@@ -17,15 +17,16 @@ public class ShallowCopy implements Visitor
 {
 	Traverser traverser;
 
-    private BioPAXElement copy;
-    private BioPAXLevel level;
+	private BioPAXElement copy;
+	private BioPAXLevel level;
 
 	/**
 	 * Editor map based constructor.
 	 * @param map that determines the BioPAX Level
 	 * @deprecated use Level based constructor instead.
 	 */
-    public ShallowCopy(EditorMap map)
+	@Deprecated
+	public ShallowCopy(EditorMap map)
 	{
 		traverser = new Traverser(map, this);
 		this.level = map.getLevel();
@@ -35,49 +36,49 @@ public class ShallowCopy implements Visitor
 	 * BioPAXLevel based constructor
 	 * @param level used for the cloning operation.
 	 */
-    public ShallowCopy(BioPAXLevel level)
-    {
-    	this.level = level;
-    	traverser = new Traverser(SimpleEditorMap.get(level), this);
-    }
+	public ShallowCopy(BioPAXLevel level)
+	{
+		this.level = level;
+		traverser = new Traverser(SimpleEditorMap.get(level), this);
+	}
 
 	/**
 	 * Empty constructos that defaults to BioPAX L3.
 	 */
-    public ShallowCopy()
-    {
-        this(BioPAXLevel.L3);
-    }
+	public ShallowCopy()
+	{
+		this(BioPAXLevel.L3);
+	}
 
-    
-    /**
+
+	/**
 	 * Creates a copy of the BioPAX object with all its properties
 	 * are the same, and also adds it to a model.
 	 *
 	 * @param <T> BioPAX type/class of the source and copy elements
 	 * @param model target biopax model
-     * @param source a biopax object to copy
+	 * @param source a biopax object to copy
 	 * @param newID new (copy) biopax object's URI
-     * @return copy of the source biopax element
+	 * @return copy of the source biopax element
 	 */
 	public <T extends BioPAXElement> T copy(Model model, T source, String newID)
 	{
 		T copy = copy(source, newID);
 		model.add(copy);
 		return copy;
-    }
+	}
 
 
 	/**
 	 * Returns a copy of the BioPAX element 
 	 * (with all the property values are same)
-	 * 
+	 *
 	 * @param <T> biopax type
 	 * @param source biopax element to copy
 	 * @param newID copy biopax element's absolute URI
 	 * @return a copy of the source biopax element
 	 */
-	public <T extends BioPAXElement> T copy(T source, String newID) 
+	public <T extends BioPAXElement> T copy(T source, String newID)
 	{
 		T copy = (T) level.getDefaultFactory().create(
 				(Class<T>) source.getModelInterface(), newID);
@@ -90,7 +91,7 @@ public class ShallowCopy implements Visitor
 		return copy;
 	}
 
-	
+
 // --------------------- Interface Visitor ---------------------
 
 	/**
@@ -98,9 +99,6 @@ public class ShallowCopy implements Visitor
 	 */
 	public void visit(BioPAXElement domain, Object range, Model model, PropertyEditor editor)
 	{
-        editor.setValueToBean(range, copy);
+		editor.setValueToBean(range, copy);
 	}
 }
-
-
-

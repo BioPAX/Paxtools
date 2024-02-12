@@ -421,8 +421,9 @@ public class Integrator {
     }
 
     /**
-     * @deprecated setRDFId (or setUri) is not available anymore!
+     * @deprecated setRDFId/setUri is not available anymore
      */
+    @Deprecated
     private void equalize(BioPAXElement e1, BioPAXElement e2) {
         // Operation below is enough for the time being
     	// TODO re-factoring: setRDFId/setUri is not available anymore! (changing URIs directly is dangerous)

@@ -24,10 +24,12 @@ public enum ControlType
 	/**
 	 * @deprecated LEVEL 1 workaround
 	 */
+	@Deprecated
 	ACTIVATION_UNKMECH,
 	/**
 	 * @deprecated LEVEL 1 workaround
 	 */
+	@Deprecated
 	INHIBITION_UNKMECH,
 	/**
 	 * Allosteric inhibitors decrease the specified enzyme activity by binding reversibly to the enzyme and

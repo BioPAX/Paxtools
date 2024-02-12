@@ -274,8 +274,10 @@ public final class ModelUtils
 	 * @param bpe biopax object
 	 * @param filters property filters (e.g., for Fetcher to skip some properties). Default is to skip 'nextStep'.
 	 * @return new biopax Model that contain all the child objects
+	 *
 	 * @deprecated use {@link Fetcher#fetch(BioPAXElement, Model)} instead (with Fetcher.nextStepFilter or without)
 	 */
+	@Deprecated
 	public static Model getAllChildren(BioPAXElement bpe, 
 		@SuppressWarnings("rawtypes") Filter<PropertyEditor>... filters)
 	{

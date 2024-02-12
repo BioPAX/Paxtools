@@ -106,6 +106,7 @@ public class Resolver {
   public static boolean checkRegExp(String identifier, String datatype) {
     Namespace dt = getNamespace(datatype);
     if(dt == null) {
+      LOG.warn(String.format("Cannot check id: %s for unknown collection: %s (returned false)", identifier, datatype));
       return false;
     }
 
@@ -115,7 +116,14 @@ public class Resolver {
       identifier = identifier.replaceFirst(banana+dt.getBanana_peel(), "");
     }
 
-    return Pattern.compile(dt.getPattern()).matcher(identifier).find();
+    String dtPattern = dt.getPattern();
+    if(StringUtils.isNotBlank(dtPattern)) {
+      return Pattern.compile(dtPattern).matcher(identifier).find();
+    } else {
+      LOG.warn(String.format("Cannot check id: %s as regexp is undefined for: %s (returned false)",
+          identifier, dt.getPrefix()));
+      return false;
+    }
   }
 
 

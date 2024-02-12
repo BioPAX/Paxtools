@@ -36,6 +36,7 @@ public interface Control extends Interaction
 	 *
 	 * @return The entity that is controlled
 	 */
+	@Deprecated
 	Set<Process> getControlled();
 
 	/**
@@ -46,6 +47,7 @@ public interface Control extends Interaction
 	 *
 	 * @param controlled The entity that is controlled
 	 */
+	@Deprecated
 	void addControlled(Process controlled);
 
 	/**
@@ -56,6 +58,7 @@ public interface Control extends Interaction
 	 *
 	 * @param controlled The entity that is controlled
 	 */
+	@Deprecated
 	void removeControlled(Process controlled);
 
 
