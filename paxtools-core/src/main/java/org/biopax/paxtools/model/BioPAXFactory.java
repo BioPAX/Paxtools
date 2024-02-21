@@ -106,11 +106,10 @@ public abstract class BioPAXFactory
 		try {
 			String cname = mapClassName(aClass);
 			return !Modifier.isAbstract(Class.forName(cname).getModifiers());
-		} catch (ClassNotFoundException e)
-		{
+		} catch (ClassNotFoundException e) {
 			return false;
 		} catch (Exception ex) {
-			log.error("canInstantiate(" + aClass + "): ", ex);
+			log.error("canInstantiate({}), {}", aClass, ex.toString());
 			return false;
 		}
 	}
@@ -145,7 +144,7 @@ public abstract class BioPAXFactory
 			try {
 				implClass = (Class<T>) Class.forName(name);
 			} catch (ClassNotFoundException e) {
-				log.debug(String.format("getImplClass(%s), %s" , aModelInterfaceClass, e));
+				log.debug("getImplClass({}), {}" , aModelInterfaceClass, e.toString());
 			}
 		}
 

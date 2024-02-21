@@ -6,7 +6,7 @@
   </contextListener>
 
   <!-- To enable JMX Management (also prints additional logback initializing info)-->
-  <jmxConfigurator/>
+<!--  <jmxConfigurator/>-->
 
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -15,7 +15,7 @@
     </encoder>
   </appender>
 
-  <logger name="org.biopax.paxtools.io" level="trace" />
+  <logger name="org.biopax.paxtools.io" level="debug" />
 
   <root level="info">
     <appender-ref ref="console" />

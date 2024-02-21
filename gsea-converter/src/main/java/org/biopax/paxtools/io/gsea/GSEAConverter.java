@@ -7,6 +7,7 @@ import org.biopax.paxtools.converter.LevelUpgrader;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.normalizer.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public class GSEAConverter
 	private final boolean crossSpeciesCheckEnabled;
 	private Collection<String> allowedOrganisms;
 	private final boolean skipSubPathways;
-	private final Collection<Provenance> skipSubPathwaysOf;
+	private Collection<Provenance> skipSubPathwaysOf;
 	private boolean skipOutsidePathways = false;
 	private int minNumOfGenesPerEntry = 1;
 
@@ -66,11 +67,12 @@ public class GSEAConverter
 	 * Constructor.
 	 *
 	 * See class declaration for more information.
-	 * @param idType - identifier type, name, prefix of the resource, either the string value
-	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
-	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt",
-	 *                   or the namespace prefix part in normalized EntityReference URIs, such as in identifiers.org/chebi:ID
-	 *                   (it depends on the actual data; so double-check before using in this constructor).
+	 * @param idType - identifier collection/type name, prefix - either the string value
+	 *                   of the most of EntityReference's xref.db property values in the BioPAX data,
+	 *                   e.g., "hgnc.symbol", or "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt", -
+	 *                   or the namespace/prefix part of the normalized EntityReference URIs,
+	 *                   such as 'chebi' in identifiers.org/chebi:ID or bioregistry.io/chebi:ID
+	 *                   (it depends on actual data; so check/verify before using here).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 */
 	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled)
@@ -82,18 +84,23 @@ public class GSEAConverter
 	 * Constructor.
 	 *
 	 * See class declaration for more information.
-	 * @param idType - identifier type, name of the resource, either the string value
-	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
-	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt",
-	 *                   or the namespace/prefix part in normalized EntityReference URIs
-	 *                   (it depends on the actual data; so double-check before using in this constructor).
+	 * @param idType - identifier collection/type name, prefix - either the string value
+	 *                  of the most of EntityReference's xref.db property values in the BioPAX data,
+	 *                  e.g., "hgnc.symbol", or "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt", -
+	 *                  or the namespace/prefix part of the normalized EntityReference URIs,
+	 *                  such as 'chebi' in identifiers.org/chebi:ID or bioregistry.io/chebi:ID
+	 *                  (it depends on actual data; so check/verify before using here).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 * @param skipSubPathways - if true, do not traverse into any sub-pathways to collect entity references
 	 *                       (useful when a model, such as converted to BioPAX KEGG data, has lots of sub-pathways, loops.)
 	 */
 	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled, boolean skipSubPathways)
 	{
-		this.idType = idType;
+		if(Resolver.isKnownNameOrVariant(idType)) {
+			this.idType = Resolver.getNamespace(idType).getPrefix().toLowerCase(); //(it must be already lowecase though)
+		} else {
+			this.idType = (StringUtils.isNotBlank(idType)) ? idType.toLowerCase() : idType;
+		}
 		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
 		this.skipSubPathways = skipSubPathways;
 		this.skipSubPathwaysOf = Collections.emptySet();
@@ -103,21 +110,20 @@ public class GSEAConverter
 	 * Constructor.
 	 *
 	 * See class declaration for more information.
-	 * @param idType - identifier type, name of the resource, either the string value
-	 *                   of the most of EntityReference's xref.db properties in the BioPAX data,
-	 *                   e.g., "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt",
-	 *                   or the namespace/prefix part in normalized EntityReference URIs, e.g., 'hgnc.symbol', 'uniprot'
-	 *                   (it depends on the actual data; so double-check before using in this constructor).
+	 * @param idType identifier collection/type name, prefix - either the string value
+	 *                of the most of EntityReference's xref.db property values in the BioPAX data,
+	 *                e.g., "hgnc.symbol", or "HGNC Symbol", "NCBI Gene", "RefSeq", "UniProt", -
+	 *                or the namespace/prefix part of the normalized EntityReference URIs,
+	 *                such as 'chebi' in identifiers.org/chebi:ID or bioregistry.io/chebi:ID
+	 *                (it depends on actual data; so check/verify before using here).
 	 * @param crossSpeciesCheckEnabled - if true, enforces no cross species participants in output
 	 * @param skipSubPathwaysOf - do not look inside sub-pathways of pathways of given data sources to collect entity references
 	 *                       (useful when a model, such as converted to BioPAX KEGG data, has lots of sub-pathways, loops.)
 	 */
 	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled, Collection<Provenance> skipSubPathwaysOf)
 	{
-		this.idType = idType;
-		this.crossSpeciesCheckEnabled = crossSpeciesCheckEnabled;
+		this(idType, crossSpeciesCheckEnabled, false);
 		this.skipSubPathwaysOf = (skipSubPathwaysOf == null) ? Collections.emptySet() : skipSubPathwaysOf;
-		this.skipSubPathways = false;
 	}
 
 	/**
@@ -237,7 +243,7 @@ public class GSEAConverter
 			}
 		}
 		
-		//when there're no pathways, only empty pathays, pathways w/o PRs, then use all/rest of PRs -
+		//when there are no pathways, only empty pathays, pathways w/o PRs, then use all/rest of PRs -
 		//organize PRs by species (GSEA s/w can handle only same species identifiers in a data row)
 		if(!sequenceEntityReferences.isEmpty() && !skipOutsidePathways) {
 			LOG.info("Creating entries for the rest of PRs (outside any pathway)...");
@@ -249,8 +255,8 @@ public class GSEAConverter
 					toReturn.addAll(createGseaEntries(
 						"other", "other", getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
 				} else {
-					toReturn.addAll(createGseaEntries(model.getUri()
-						, model.getName(), getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
+					toReturn.addAll(createGseaEntries(model.getUri(), model.getName(),
+							getDataSource(l3Model.getObjects(Provenance.class)), orgToPrsMap));
 				}
 			}
 		}
@@ -318,50 +324,43 @@ public class GSEAConverter
 
 	void processEntityReferences(Collection<SequenceEntityReference> sers, GMTEntry targetEntry)
 	{
-		prs_loop: for (SequenceEntityReference ser : sers)
+		for (SequenceEntityReference ser : sers)
 		{
 			// process PRs that belong to the same species (as targetEntry's) if crossSpeciesCheckEnabled==true
-			if (crossSpeciesCheckEnabled && !targetEntry.taxID().equals(getOrganismKey(ser.getOrganism())))
+			if (crossSpeciesCheckEnabled && !targetEntry.taxID().equals(getOrganismKey(ser.getOrganism()))) {
 				continue;
-				
-			if (idType != null && !idType.isEmpty())
+			}
+
+			if (StringUtils.isNotBlank(idType))
 			{
-				final String db = idType.toLowerCase();
-				// a shortcut if we are converting validated normalized BioPAX model:
-				// get the primary ID from the URI of the ProteinReference
-				final String uri = ser.getUri();
-				if (uri.contains("identifiers.org/") && uri.contains(db))
+				int added = 0;
+				for (Xref aXref : ser.getXref())
 				{
-					String accession = ser.getUri();
-					accession = accession.substring(accession.lastIndexOf("/") + 1);
-					targetEntry.identifiers().add(accession);
-				}
-				else {
-					int added = 0;
-					for (Xref aXref : ser.getXref())
+					if(aXref instanceof UnificationXref
+							&& aXref.getId() != null && aXref.getDb() != null
+							&& Resolver.isKnownNameOrVariant(aXref.getDb())
+							&& StringUtils.equalsIgnoreCase(idType, Resolver.getNamespace(aXref.getDb(), true).getPrefix()))
 					{
-						if(aXref instanceof UnificationXref
-								&& aXref.getId() != null && aXref.getDb() != null
-								&& aXref.getDb().toLowerCase().startsWith(db))
-						{
-							targetEntry.identifiers().add(aXref.getId());
-							++added;
-						}
+						targetEntry.identifiers().add(aXref.getId());
+						++added;
 					}
-					if(added == 0) for (Xref aXref : ser.getXref())
+				}
+				if(added == 0) {
+					for (Xref aXref : ser.getXref())
 					{
 						if(aXref instanceof RelationshipXref
 								&& aXref.getId() != null && aXref.getDb() != null
-								&& aXref.getDb().toLowerCase().startsWith(db))
+								&& Resolver.isKnownNameOrVariant(aXref.getDb())
+								&& StringUtils.equalsIgnoreCase(idType, Resolver.getNamespace(aXref.getDb(), true).getPrefix()))
 						{
 							targetEntry.identifiers().add(aXref.getId());
 							++added;
 						}
 					}
-
-					if(added > 12)
-						LOG.info("In GSEA entry: " + targetEntry.taxID() + " " + targetEntry.name() +
-								", sER " + ser.getUri() + " got " + added + " '" + db + "' identifiers...");
+				}
+				if(added > 12) {
+					LOG.info("In GSEA entry: " + targetEntry.taxID() + " " + targetEntry.name() +
+							", sER " + ser.getUri() + " got " + added + " '" + idType + "' identifiers...");
 				}
 			} else {
 				// fallback - use URI (not really useful for the GSEA software)

@@ -490,7 +490,7 @@ public class Dialog extends JFrame implements ActionListener, KeyListener
 		if (miner instanceof MinerAdapter)
 			((MinerAdapter) miner).setIDFetcher(new CommonIDFetcher());
 
-		// Constructing the pattern before loading any model for a debug friendly code. Otherwise if
+		// Constructing the pattern before loading any model for a debug friendly code. Otherwise, if
 		// loading model takes time and an exception occurs in pattern construction, it is just too
 		// much wait for nothing.
 				((Miner) patternCombo.getSelectedItem()).getPattern();

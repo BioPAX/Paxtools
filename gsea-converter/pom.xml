@@ -16,8 +16,12 @@
    	<dependency>
     	<groupId>org.biopax.paxtools</groupId>
     	<artifactId>paxtools-core</artifactId>
-    	<version>${project.version}</version>
-    </dependency> 
- </dependencies>
+    </dependency>
+      <dependency>
+          <groupId>org.biopax.paxtools</groupId>
+          <artifactId>normalizer</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+  </dependencies>
 
 </project>

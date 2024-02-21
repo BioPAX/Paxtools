@@ -20,7 +20,10 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>paxtools-core</artifactId>
-			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>normalizer</artifactId>
 		</dependency>
 	</dependencies>
 

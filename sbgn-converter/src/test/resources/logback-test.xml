@@ -6,7 +6,7 @@
   </contextListener>
 
   <!-- To enable JMX Management (also prints additional logback initializing info)-->
-  <jmxConfigurator/>
+<!--  <jmxConfigurator/>-->
 
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>

@@ -42,5 +42,6 @@
   "AFFYMETRIX": "affy.probeset",
   "REACTOME STABLE ID": "reactome",
   "CELL TYPE ONTOLOGY": "cl",
-  "EC NUMBER": "eccode"
+  "EC NUMBER": "eccode",
+  "MIRBASE SEQUENCE": "mirbase"
 }

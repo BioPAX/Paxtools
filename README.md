@@ -6,10 +6,10 @@ The [BioPAX](http://www.biopax.org) Object Model, API and utilities implemented 
 Paxtools is developed at [Computational Biology Centre at MSKCC](http://cbio.mskcc.org/) and [Bader Lab, Donnelly Centre, University of Toronto](http://baderlab.org/).
 
 ## Features
-###A complete and consistent implementation of BioPAX specification 
+### A complete and consistent implementation of BioPAX specification 
 BioPAX elements in Paxtools are plain Java beans which provide methods to access the properties described in BioPAX, and a model, acting as a container for all BioPAX elements, provides querying facilities for them. Users can either read a BioPAX model from a file or create an empty one from the scratch. Methods to add new elements to a model and to remove elements from a model are also provided.
 
-###Support for OWL properties and additional inverse links
+### Support for OWL properties and additional inverse links
 Owl properties can be symmetric, transient or subtyped into other properties. These semantics can not be represented directly in an object oriented programming language. Paxtools implements these additional semantics and automatically update the fields of objects. For example, since property _standardName_ is a subproperty of_name_, updating the _standardName_ of a protein will also update its list of names. Similarly since _component_ is a transient property, a query for the components of a complex will not only list its immediate components but also the components of the subcomplexes inside this complex. In the BioPAX specification, properties are unidirectional for brevity. For example, _participant_ property links interactions to physical entities. Paxtools provides additional "inverse" links that allows efficient navigation from a physical entity to the all interactions that it participates (e.g., xrefOf, entityReferenceOf).
 
 ### Syntactic validation
@@ -41,7 +41,8 @@ Paxtools can be build and run with JDK-17 or newer, e.g. Temurin-20. Add these J
 `JDK_JAVA_OPTIONS="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED"`
 
  - `-Dpaxtools.model.safeset=list` for read-only BioPAX models/apps, which should consume less RAM.
- - `-Dpaxtools.normalizer.use-latest-registry=true` (if using Normalizer/Resolver) to use the latest registry.json from bioregistry.io
+ - `-Dpaxtools.normalizer.use-latest-registry=true` (if using Normalizer/Resolver) to use the latest registry.json from bioregistry.io.
+ - `-Dpaxtools.core.use-latest-genenames=true` for the HGNC utility class use id mapping data from genenames.org instead of built-in older file.
 
 If you have [homebrew](http://brew.sh/) installed on your system (Mac OS X), you can install the latest release of Paxtools via the following brew command (could be old version):
 

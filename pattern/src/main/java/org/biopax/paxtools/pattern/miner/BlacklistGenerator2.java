@@ -115,22 +115,20 @@ public class BlacklistGenerator2
 
 		for (String name : neighMap.keySet())
 		{
-			if (!upstrMap.containsKey(name) || !dwstrMap.containsKey(name)) continue;
+			if (!upstrMap.containsKey(name) || !dwstrMap.containsKey(name))
+				continue;
 
 			Set<String> upstr = upstrMap.get(name);
 			Set<String> dwstr = dwstrMap.get(name);
-
-			Set<String> temp = new HashSet<String>(upstr);
+			Set<String> temp = new HashSet<>(upstr);
 			upstr.removeAll(dwstr);
 			dwstr.removeAll(temp);
 		}
 
 		Set<String> white = readWhitelist();
-
 		Blacklist blacklist = new Blacklist();
 
 		// populate the blacklist
-
 		Fetcher nameFetcher = new Fetcher(nameMapping);
 		for (SmallMoleculeReference smr : model.getObjects(SmallMoleculeReference.class))
 		{

@@ -136,11 +136,11 @@ public class NormalizerTest {
 		BioSource bioSource = model.addNew(BioSource.class, "BioSource_Mouse_Tissue");
 		bioSource.addXref(ref);
 
-		// Provenance (must set ID and standard names from a name)
+		// Provenance
 		Provenance pro1 = model.addNew(Provenance.class, "pid");
 		pro1.addName("nci_nature"); // must be case-insensitive (recognized)
 		pro1.setStandardName("foo"); // must be replaced
-		// Provenance (must create names from urn)
+		// Provenance (it won't create names from the urn unless we call: Normalizer.autoName(pro2);)
 		Provenance pro2 = model.addNew(Provenance.class, "bioregistry.io/signaling-gateway/");
 
 		// add some entities with props
@@ -210,7 +210,7 @@ public class NormalizerTest {
 
 		// go normalize!
 		Normalizer normalizer = new Normalizer();
-		normalizer.normalize(model);
+		normalizer.normalize(model, true);
 
 		// test for a bug that causes db='uniprot' become 'uniprot isoform' (the id matches both patterns)
 		assertTrue(model.containsID("uniprot:W0C7J9"));
@@ -262,9 +262,16 @@ public class NormalizerTest {
 		Provenance pro = model.addNew(Provenance.class, "bioregistry.io/pid.pathway/");
 		pro.setStandardName("foo");
 		Normalizer.autoName(pro);
-		assertNotNull(pro.getStandardName());
-		assertTrue(pro.getName().contains("pid.pathway"));
-		assertFalse(pro.getStandardName().equals("foo"));
+		Provenance pro2 = model.addNew(Provenance.class, "bioregistry.io/signaling-gateway"); // ending / doesn't matter
+		Normalizer.autoName(pro2);
+		assertAll(
+				() -> assertTrue(pro.getName().contains("pid.pathway")),
+				() -> assertEquals("NCI Pathway Interaction Database: Pathway",pro.getDisplayName()),
+				() -> assertEquals("NCI Pathway Interaction Database: Pathway", pro.getStandardName()),
+				() -> assertEquals("Signaling Gateway",pro2.getStandardName()),
+				() -> assertEquals("Signaling Gateway",pro2.getDisplayName()),
+				() -> assertTrue(pro2.getName().contains("signaling-gateway"))
+		);
 	}
 
 

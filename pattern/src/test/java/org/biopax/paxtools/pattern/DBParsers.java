@@ -3,7 +3,7 @@ package org.biopax.paxtools.pattern;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.util.HGNC;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -65,8 +65,8 @@ public class DBParsers
 				(refs.size() == 1 && PRED_REF.contains(refs.iterator().next())))
 				continue;
 
-			if (!source.isEmpty()) source = HGNC.getSymbol(source);
-			if (!target.isEmpty()) target = HGNC.getSymbol(target);
+			if (!source.isEmpty()) source = HGNC.getSymbolByHgncIdOrSym(source);
+			if (!target.isEmpty()) target = HGNC.getSymbolByHgncIdOrSym(target);
 
 			if (source != null && !source.isEmpty() && target != null && !target.isEmpty())
 			{
@@ -137,8 +137,8 @@ public class DBParsers
 			String source = token[0];
 			String target = token[1];
 
-			if (!source.isEmpty()) source = HGNC.getSymbol(source);
-			if (!target.isEmpty()) target = HGNC.getSymbol(target);
+			if (!source.isEmpty()) source = HGNC.getSymbolByHgncIdOrSym(source);
+			if (!target.isEmpty()) target = HGNC.getSymbolByHgncIdOrSym(target);
 
 			if (source != null && !source.isEmpty() && target != null && !target.isEmpty())
 			{
@@ -366,7 +366,7 @@ public class DBParsers
 
 		for (String x : s.split(" "))
 		{
-			x = HGNC.getSymbol(x);
+			x = HGNC.getSymbolByHgncIdOrSym(x);
 			if (x != null) set.add(x);
 		}
 		return set;

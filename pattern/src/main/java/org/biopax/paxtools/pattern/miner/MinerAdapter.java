@@ -8,7 +8,7 @@ import org.biopax.paxtools.pattern.Pattern;
 import org.biopax.paxtools.pattern.constraint.HasAnID;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.pattern.util.PhysicalEntityChain;
-import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.util.HGNC;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -172,7 +172,7 @@ public abstract class MinerAdapter implements Miner
 					String id = xr.getId();
 					if (id != null)
 					{
-						String symbol = HGNC.getSymbol(id);
+						String symbol = HGNC.getSymbolByHgncIdOrSym(id);
 						if (symbol != null && !symbol.isEmpty())
 						{
 							return symbol;
@@ -629,7 +629,7 @@ public abstract class MinerAdapter implements Miner
 	protected void writeSIFsUsingSIFFramework(Map<BioPAXElement, List<Match>> matches,
 		OutputStream out) throws IOException
 	{
-		Map<SIFInteraction, SIFInteraction> sifMap = new HashMap<SIFInteraction, SIFInteraction>();
+		Map<SIFInteraction, SIFInteraction> sifMap = new HashMap<>();
 
 		for (List<Match> matchList : matches.values())
 		{

@@ -1,6 +1,6 @@
 package org.biopax.paxtools.pattern;
 
-import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.util.HGNC;
 
 import java.io.*;
 import java.util.*;
@@ -12,12 +12,6 @@ public class SPIKEParser
 {
 	static final boolean SKIP_TRANSCRIPTION = false;
 
-	public static void main(String[] args) throws IOException
-	{
-		SPIKEParser parser = new SPIKEParser();
-		parser.parse("/home/ozgun/Desktop/signal-db/LatestSpikeDB.xml",
-			"/home/ozgun/Desktop/signal-db/SPIKE-ParsedFromXML.txt");
-	}
 	public void parse(String inputFile, String outputFile) throws IOException
 	{
 		Map<String, Gene> id2gene = new HashMap<>();
@@ -102,8 +96,8 @@ public class SPIKEParser
 			{
 				for (Gene target : targets)
 				{
-					String s = HGNC.getSymbol(source.name);
-					String t = HGNC.getSymbol(target.name);
+					String s = HGNC.getSymbolByHgncIdOrSym(source.name);
+					String t = HGNC.getSymbolByHgncIdOrSym(target.name);
 					if (s != null && t != null)
 						writer.write("\n" + s + "\t" + t + "\t" + (reg.transcription ? "T" : ""));
 				}
@@ -160,9 +154,9 @@ public class SPIKEParser
 			assert egID != null : "EG ID null. ID = " + id;
 			assert name != null : "Name null. ID = " + id;
 
-			if (eg2symbol.containsKey(egID))
+			if (HGNC.containsGeneId(egID))
 			{
-				name = eg2symbol.get(egID);
+				name = HGNC.getSymbolByGeneId(egID);
 			}
 		}
 	}
@@ -227,31 +221,6 @@ public class SPIKEParser
 			assert target != null;
 		}
 
-	}
-
-	static Map<String, String> eg2symbol = getEG2HGNC();
-	public static Map<String, String> getEG2HGNC()
-	{
-		Map<String, String> map = new HashMap<String, String>();
-		try
-		{
-			BufferedReader reader = new BufferedReader(new FileReader("/home/ozgun/Desktop/hgnc2eg.txt"));
-
-			for (String line = reader.readLine(); line != null; line = reader.readLine())
-			{
-				String[] token = line.split("\t");
-
-				if (token.length < 2) continue;
-
-				map.put(token[1], token[0]);
-			}
-			reader.close();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return map;
 	}
 
 }

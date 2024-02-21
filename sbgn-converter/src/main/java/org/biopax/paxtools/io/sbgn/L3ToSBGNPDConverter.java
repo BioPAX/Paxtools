@@ -1,7 +1,8 @@
 package org.biopax.paxtools.io.sbgn;
 
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.controller.ModelUtils;
-import org.biopax.paxtools.io.sbgn.idmapping.HGNC;
+import org.biopax.paxtools.util.HGNC;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
@@ -768,26 +769,18 @@ public class L3ToSBGNPDConverter {
 	 */
 	private String extractGeneSymbol(Xref xref)
 	{
-		if (xref.getDb() != null && (
-			xref.getDb().equalsIgnoreCase("HGNC Symbol") ||
-			xref.getDb().equalsIgnoreCase("Gene Symbol") ||
-			xref.getDb().equalsIgnoreCase("HGNC")))
-		{
+		String xrefDb = xref.getDb();
+		if (xrefDb != null && (
+			StringUtils.startsWithIgnoreCase(xrefDb, "hgnc") ||	StringUtils.equalsIgnoreCase(xrefDb, "Gene Symbol"))
+		) {
 			String ref = xref.getId();
-
 			if (ref != null) {
 				ref = ref.trim();
-				if (ref.contains(":")) ref = ref.substring(ref.indexOf(":") + 1);
-				if (ref.contains("_")) ref = ref.substring(ref.indexOf("_") + 1);
-				// if the reference is an HGNC ID, then convert it to a symbol
-				if (!HGNC.containsSymbol(ref) && Character.isDigit(ref.charAt(0))) {
-					ref = HGNC.getSymbol(ref);
-				}
+				if (ref.contains("_")) ref = ref.substring(ref.indexOf("_") + 1); //"dirty" auto-fix for e.g. HGNC_1234
+				ref = HGNC.getSymbolByHgncIdOrSym(ref);
 			}
-
 			return ref;
 		}
-
 		return null;
 	}
 	

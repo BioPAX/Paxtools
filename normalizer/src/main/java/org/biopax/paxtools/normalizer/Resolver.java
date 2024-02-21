@@ -25,6 +25,8 @@ public class Resolver {
   private static Map<String,String> synonymap;// synonym -> prefix (build from custom synonymap.json and registry)
 
   public static final String BIOREGISTRY_IO = "bioregistry.io/";
+  public static final String BIOREGISTRY_JSON_URL =
+      "https://raw.githubusercontent.com/biopragmatics/bioregistry/main/exports/registry/registry.json";
 
   protected Resolver() {
   }
@@ -47,8 +49,7 @@ public class Resolver {
       if(useLatestBioregistry) {
         LOG.info("Getting registry.json from bioregistry.io (property: paxtools.normalizer.use-latest-registry=true)");
         try {
-          is = new URL("https://raw.githubusercontent.com/biopragmatics/bioregistry/main/exports/registry/registry.json")
-              .openStream();
+          is = new URL(BIOREGISTRY_JSON_URL).openStream();
           namespaces = new ConcurrentSkipListMap<>(om.readValue(is, new TypeReference<Map<String, Namespace>>() {
           }));
         } catch (Exception e) {

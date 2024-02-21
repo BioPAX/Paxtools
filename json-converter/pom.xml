@@ -21,7 +21,6 @@
 		<dependency>
 			<groupId>org.biopax.paxtools</groupId>
 			<artifactId>paxtools-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

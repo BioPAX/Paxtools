@@ -1,8 +1,11 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.normalizer.Namespace;
+import org.biopax.paxtools.normalizer.Resolver;
+import org.biopax.paxtools.util.HGNC;
 import org.biopax.paxtools.util.ClassFilterSet;
 
 import java.util.*;
@@ -87,21 +90,27 @@ public class ConfigurableIDFetcher implements IDFetcher
 
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
-			List<String> dbStartsWithOrEquals =
-					(ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
+			List<String> dbStartsWithOrEquals =	(ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 							? chemDbStartsWithOrEquals : seqDbStartsWithOrEquals;
 
 			for (String dbStartsWith : dbStartsWithOrEquals) {
 				//this prevents collecting lots of secondary IDs of the same type
 				if(ele.getUri().contains("identifiers.org/"+dbStartsWith)
-						|| ele.getUri().contains("bioregistry.io/"+dbStartsWith) ) {
-					set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
-				} else {
+						|| ele.getUri().contains("bioregistry.io/"+dbStartsWith) )
+				{
+					String ac = StringUtils.substringAfterLast(ele.getUri(), "/");//e.g. can be P12345 or uniprot:P12345; can be chebi:CHEBI:1234 (older uris..)
+					if(StringUtils.contains(ac, ":")) {
+						ac = StringUtils.substringAfter(ac, ":"); //after the first one
+					}
+					set.add(ac);
+				}
+				else
+				{
 					for (UnificationXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
 							UnificationXref.class)) {
 						collectXrefIdIfDbLike(x, dbStartsWith, set);
 					}
-					//if none was found in unif. xrefs, try rel, xrefs
+					//if none were found in the unification xrefs, then try the relationship xrefs
 					if (set.isEmpty()) {
 						for (RelationshipXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
 								RelationshipXref.class)) {
@@ -140,15 +149,24 @@ public class ConfigurableIDFetcher implements IDFetcher
 	private void collectXrefIdIfDbLike(final Xref x, final String dbStartsWith, final Set<String> set) {
 		String db = x.getDb();
 		String id = x.getId();
-		if (db != null && id != null && !id.isEmpty()) {
-			db = db.toLowerCase();
-			if (db.startsWith(dbStartsWith)) {
-				//for a (PR/NAR) HGNC case, call HGNC.getSymbol(id) mapping
-				if (db.startsWith("hgnc"))
-					id = HGNC.getSymbol(id);
-
-				if (id != null)
-					set.add(id);
+		if (StringUtils.isNotBlank(db) && StringUtils.isNotBlank(id)) {
+			//find bioregistry.io prefix/name for the id type if possible
+			String dbName = db;
+			String dbPrefix = "";
+			if(Resolver.isKnownNameOrVariant(db)) {
+				Namespace ns = Resolver.getNamespace(db, true);
+			 	dbPrefix = ns.getPrefix();
+			 	dbName = ns.getName();
+			}
+			if (StringUtils.startsWithIgnoreCase(dbName, dbStartsWith)
+					|| StringUtils.startsWithIgnoreCase(dbPrefix, dbStartsWith)) {
+				//for a (PR/NAR) HGNC case, call HGNC mapping to the primary/current symbol
+				if (StringUtils.startsWithIgnoreCase(db,"hgnc")) {
+					id = HGNC.getSymbolByHgncIdOrSym(id);
+				}
+				if (id != null) {
+					set.add(id); //match found
+				}
 			}
 		}
 	}

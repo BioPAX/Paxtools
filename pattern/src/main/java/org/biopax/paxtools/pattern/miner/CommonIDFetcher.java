@@ -1,8 +1,10 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.pattern.util.HGNC;
+import org.biopax.paxtools.normalizer.Resolver;
+import org.biopax.paxtools.util.HGNC;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -43,9 +45,16 @@ public class CommonIDFetcher implements IDFetcher
 			}
 		}
 		else if (useUniprotIDs &&
-				(ele.getUri().contains("identifiers.org/uniprot") || ele.getUri().contains("bioregistry.io/uniprot")))
+				(StringUtils.containsIgnoreCase(ele.getUri(),"identifiers.org/uniprot")
+						|| StringUtils.containsIgnoreCase(ele.getUri(),"bioregistry.io/uniprot")))
+		//can be like ...identifiers.org/uniprot:AC or identifiers.org/uniprot/AC
+		// or bioregistry.io/uniprot:AC or bioregistry.io/uniprot.isoform:...
 		{
-			set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
+			String ac = StringUtils.substringAfterLast(ele.getUri(), "/");//can be AC or uniprot:AC, uniprot.isoform:...
+			if(StringUtils.contains(ac, ":")) {
+				ac = StringUtils.substringAfter(ac, ":");
+			}
+			set.add(ac);
 		}
 		else if (ele instanceof XReferrable)
 		{
@@ -56,20 +65,22 @@ public class CommonIDFetcher implements IDFetcher
 
 				String db = xr.getDb();
 				String id = xr.getId();
-				if (db != null && id != null && !id.isEmpty())
+				if (StringUtils.isNotBlank(db) && StringUtils.isNotBlank(id))
 				{
 					db = db.toLowerCase();
-					if (!useUniprotIDs && db.startsWith("hgnc")) //"hgnc.symbol" or "hgnc gene symbol"
+					//find the official collection/db name and prefix
+					if(Resolver.isKnownNameOrVariant(db)) {
+						db = Resolver.getNamespace(db, true).getPrefix();
+					}
+					if (!useUniprotIDs && db.startsWith("hgnc")) //"hgnc.symbol", "hgnc" or "hgnc symbol", etc.
 					{
-						//valid id is either a HGNC:1234 ID or Symbol (gene name)
-						String symbol = HGNC.getSymbol(id);
-						if (symbol != null && !symbol.isEmpty())
-						{
+						//valid id is either HGNC:1234 ID or 1234 or Symbol (gene name, former name)
+						String symbol = HGNC.getSymbolByHgncIdOrSym(id);
+						if (StringUtils.isNotEmpty(symbol)) {
 							set.add(symbol);
 						}
 					}
-					else if (useUniprotIDs && db.startsWith("uniprot"))
-					{
+					else if (useUniprotIDs && db.startsWith("uniprot")) {
 						set.add(id);
 					}
 				}
@@ -77,17 +88,22 @@ public class CommonIDFetcher implements IDFetcher
 		}
 
 		if (set.isEmpty()) {
-			// a second try - getting mirtarbase ids for a nucleic acid...
+			// a second try - getting mirbase ids for a nucleic acid...
 			if (ele instanceof NucleicAcidReference || ele instanceof NucleicAcid)
 			{
 				for (Xref xr : ((XReferrable) ele).getXref()) {
-					if(xr instanceof PublicationXref) continue;
+					if(xr instanceof PublicationXref)
+						continue;
 
 					String db = xr.getDb();
 					String id = xr.getId();
-					if (db != null && id != null && !id.isEmpty()) {
+					if (StringUtils.isNotBlank(db) && StringUtils.isNotBlank(id)) {
 						db = db.toLowerCase();
-						if (db.equals("mirbase sequence")) {
+						//find the official collection/db name and prefix
+						if(Resolver.isKnownNameOrVariant(db)) {
+							db = Resolver.getNamespace(db, true).getPrefix();
+						}
+						if (db.equals("mirbase") || db.equals("mirbase sequence")) {
 							set.add(id);
 						}
 					}
