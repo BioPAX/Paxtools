@@ -34,6 +34,7 @@
   "EMBL-BANK": "insdc",
   "EMBL": "insdc",
   "PROTEIN GENBANK IDENTIFIER": "genpept",
+  "ENTREZ PROTEIN SEQUENCE": "genpept",
   "COMPOUND": "kegg.compound",
   "LIGAND": "kegg.compound",
   "KEGG GENOMES": "kegg.genome",
