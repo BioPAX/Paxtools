@@ -16,7 +16,9 @@ public class ResolverTest {
 				() ->	Assertions.assertNull(Resolver.getNamespace("MolecularInteractions Ontology", false)),//null when spelling variants not allowed
 				() ->	Assertions.assertNotNull(Resolver.getNamespace("http://bioregistry.io/chebi")),
 				() ->	Assertions.assertNotNull(Resolver.getNamespace("bioregistry.io/uniprot")),
-				() ->	Assertions.assertNotNull(Resolver.getNamespace("https://identifiers.org/psi-mi")) //matches "mi" registry prefix/namespace
+				() ->	Assertions.assertNotNull(Resolver.getNamespace("https://identifiers.org/psi-mi")), //matches "mi" registry prefix/namespace
+				() ->	Assertions.assertEquals("genpept", Resolver.getNamespace("Entrez Protein Sequence").getPrefix()),
+				() ->	Assertions.assertEquals("ncbitaxon", Resolver.getNamespace("NCBI Taxonomy").getPrefix())
 		);
 	}
 
