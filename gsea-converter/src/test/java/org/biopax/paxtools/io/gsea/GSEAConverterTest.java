@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.Collection;
+import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 /**
  * GSEA (GMT) conversion test.
@@ -60,7 +62,6 @@ public class GSEAConverterTest {
 		Assertions.assertEquals("9606", entry.taxID());
 		Assertions.assertEquals("refseq", entry.idType());
 		Assertions.assertEquals(33, entry.identifiers().size());
-//		(new GSEAConverter("NP", true)).writeToGSEA(level2, System.out);
 	}
     
 	@Test
@@ -69,7 +70,18 @@ public class GSEAConverterTest {
 		Model level3 = handler.convertFromOWL(in);
 		GSEAConverter gseaConverter = new GSEAConverter("uniprot", true);
 		Collection<? extends GMTEntry> entries = gseaConverter.convert(level3);
-		//TODO: add assertions
-		(new GSEAConverter("uniprot", true)).writeToGSEA(level3, System.out);
+		Assertions.assertFalse(entries.isEmpty());
+	}
+
+	@Test
+	public final void writePc14TestToGSEA() throws Exception {
+		InputStream in = new GZIPInputStream(getClass().getResourceAsStream("/pc14test.owl.gz"));
+		Model m = handler.convertFromOWL(in);
+		GSEAConverter gseaConverter = new GSEAConverter("gene symbol", true);
+		gseaConverter.setAllowedOrganisms(Set.of("9606"));
+		Collection<? extends GMTEntry> entries = gseaConverter.convert(m);
+		Assertions.assertEquals("hgnc.symbol", gseaConverter.getIdType()); //"gene symbol" is resolved to hgnc.symbol
+		Assertions.assertFalse(entries.isEmpty());
+//		gseaConverter.writeToGSEA(m, System.out);
 	}
 }

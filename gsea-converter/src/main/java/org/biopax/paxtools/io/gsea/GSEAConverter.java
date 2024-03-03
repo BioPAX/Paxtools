@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.normalizer.Resolver;
+import org.biopax.paxtools.util.ClassFilterSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +47,8 @@ import java.util.*;
 public class GSEAConverter
 {
 	private final static Logger LOG = LoggerFactory.getLogger(GSEAConverter.class);
-	
-	private final String idType;
+
+	private String idType;
 	private final boolean crossSpeciesCheckEnabled;
 	private Collection<String> allowedOrganisms;
 	private final boolean skipSubPathways;
@@ -124,6 +125,14 @@ public class GSEAConverter
 	{
 		this(idType, crossSpeciesCheckEnabled, false);
 		this.skipSubPathwaysOf = (skipSubPathwaysOf == null) ? Collections.emptySet() : skipSubPathwaysOf;
+	}
+
+	public String getIdType() {
+		return idType;
+	}
+
+	public void setIdType(String idType) {
+		this.idType = idType;
 	}
 
 	/**
@@ -211,8 +220,9 @@ public class GSEAConverter
 		for (Pathway pathway : pathways) 
 		{
 			String name = (pathway.getDisplayName() == null) ? pathway.getStandardName() : pathway.getDisplayName();
-			if(name == null || name.isEmpty()) 
+			if(name == null || name.isEmpty()) {
 				name = pathway.getUri();
+			}
 
 			final Pathway currentPathway = pathway;
 			final String currentPathwayName = name;
@@ -393,37 +403,28 @@ public class GSEAConverter
 
 	
 	private String getOrganismKey(BioSource org) {
-		String key = ""; //default value: unspecified/all species
-
-		if (org != null) {
-			Set<Xref> xrefs = org.getXref();
-
-			if(!xrefs.isEmpty()) {
-				for (Xref xref : xrefs) {
-					if (xref instanceof UnificationXref
-						&& xref.getDb().equalsIgnoreCase("taxonomy")) {
-							if(key.isEmpty())
-								key = xref.getId();
-							else
-								LOG.warn("BioSource " + org + " has multiple taxonomy unification xrefs; " +
-										"I will use " + key);
-					}
-				}
-			}
-
-			//when there're no Taxonomy xrefs - use a name
-			if(key.isEmpty()) {
-				if (org.getStandardName()!=null) {
-					key = org.getStandardName().toLowerCase();
-				} else if(org.getDisplayName()!=null) {
-					key = org.getDisplayName().toLowerCase();
-				} else if(!org.getName().isEmpty()) {
-					key = org.getName().iterator().next().toLowerCase();
-				}
-			}
+		if (org == null) {
+			return "";//default: unspecified/all species
 		}
 
-		return key;
+		//find a first taxonomy ux (just ignore other/bad data as we cannot do much here then...):
+		String key = (new ClassFilterSet<>(org.getXref(), UnificationXref.class))
+				.stream()
+				.filter(x -> Resolver.isKnownNameOrVariant(x.getDb()) && "ncbitaxon".equals(Resolver.getNamespace(x.getDb()).getPrefix()))
+				.map(Xref::getId)
+				.findFirst().orElse("");
+
+		//when there are no Taxonomy xrefs - use a name
+		if(key.isEmpty()) {
+			if (org.getStandardName()!=null) {
+				key = org.getStandardName();
+			} else if(org.getDisplayName()!=null) {
+				key = org.getDisplayName();
+			} else if(!org.getName().isEmpty()) {
+				key = org.getName().iterator().next();
+			}
+		}
+		return key.toLowerCase();
 	}
 
 	private boolean shareSomeObjects(Collection<?> setA, Collection<?> setB) {
