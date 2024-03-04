@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,11 +55,9 @@ public class SIFSearcherTest extends PatternBoxTest
 		SIFSearcher searcher = new SIFSearcher(SIFEnum.values());
 		Set<SIFInteraction> inters = searcher.searchSIF(model_urea);
 		Set<String> dataSources = new HashSet<>();
-		for (SIFInteraction inter : inters)
-		{
+		for (SIFInteraction inter : inters) {
 			dataSources.addAll(inter.getDataSources());
 		}
-
 		assertFalse(dataSources.isEmpty());
 	}
 
@@ -73,7 +72,6 @@ public class SIFSearcherTest extends PatternBoxTest
 	}
 
 	@Test
-	@Disabled
 	public void withSIFMiner()
 	{
 		SIFSearcher s = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF, SIFEnum.IN_COMPLEX_WITH);
@@ -81,8 +79,7 @@ public class SIFSearcherTest extends PatternBoxTest
 		assertFalse(sif.isEmpty());
 
 		Set<String> pubmedIDs = new HashSet<>();
-		for (SIFInteraction si : sif)
-		{
+		for (SIFInteraction si : sif) {
 			pubmedIDs.addAll(si.getPublicationIDs(true));
 		}
 
@@ -111,7 +108,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	{
 		String dir = "/home/ozgun/Downloads/";
 		SimpleIOHandler h = new SimpleIOHandler();
-		String name = "PC14.reactome.BIOPAX";
+		String name = "testdata";
 		Model model = h.convertFromOWL(new FileInputStream(dir + name + ".owl.gz"));
 
 //		BlacklistGenerator gen = new BlacklistGenerator();
@@ -138,38 +135,39 @@ public class SIFSearcherTest extends PatternBoxTest
 
 	@Test
 	@Disabled
-	public void generateSomeSIFGraph() throws IOException
+	public void generateSomeSIF() throws IOException
 	{
 		long start = System.currentTimeMillis();
-
-		String dir = "/home/ozgun/Downloads/";
+		
+		String dir = "/home/igor/Downloads/";
 		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream(dir + "PC14.reactome.BIOPAX.owl.gz"));
+		Model model = h.convertFromOWL(new GZIPInputStream(new FileInputStream(dir + "pc14test.owl.gz")));
 
-		CommonIDFetcher idFetcher = new CommonIDFetcher();
-		idFetcher.setUseUniprotIDs(false);
+//		CommonIDFetcher idFetcher = new CommonIDFetcher();
+//		idFetcher.setUseUniprotIDs(false);
+//		SIFMiner miner = new CSCOThroughBindingSmallMoleculeMiner() {
+//			@Override
+//			public Pattern constructPattern()
+//			{
+//				Pattern pattern = super.constructPattern();
+//				pattern.add(new IDConstraint(Collections.singleton("bioregistry.io/uniprot:Q9NVZ3")), "upper controller ER");
+//				return pattern;
+//			}
+//		};
+//		SIFSearcher s = new SIFSearcher(idFetcher, miner);
+//		//BlacklistGenerator gen = new BlacklistGenerator();
+//		//Blacklist blacklist = gen.generateBlacklist(model);
+//		Blacklist blacklist = new Blacklist(dir + "blacklist.txt");
+//		s.setBlacklist(blacklist);
+//		//s.setBlacklist(new Blacklist("blacklist.txt"));
 
-		SIFMiner miner = new CSCOThroughBindingSmallMoleculeMiner()
-		{
-			@Override
-			public Pattern constructPattern()
-			{
-				Pattern pattern = super.constructPattern();
-				pattern.add(new IDConstraint(Collections.singleton("bioregistry.io/uniprot:Q9NVZ3")), "upper controller ER");
-				return pattern;
-			}
-		};
+		ConfigurableIDFetcher idFetcher = new ConfigurableIDFetcher()
+				.chemDbStartsWithOrEquals("chebi").seqDbStartsWithOrEquals("hgnc");
+		SIFSearcher s = new SIFSearcher(idFetcher, SIFEnum.values());
 
-		SIFSearcher s = new SIFSearcher(idFetcher, miner);
-
-//		BlacklistGenerator gen = new BlacklistGenerator();
-//		Blacklist blacklist = gen.generateBlacklist(model);
-		Blacklist blacklist = new Blacklist(dir + "blacklist.txt");
-		s.setBlacklist(blacklist);
-//		s.setBlacklist(new Blacklist("blacklist.txt"));
-		s.searchSIF(model, new FileOutputStream(dir + "temp.sif"),
-				new CustomFormat(OutputColumn.Type.PATHWAY.name()));
-
+		s.searchSIF(model, new FileOutputStream(dir + "temp.sif"), new CustomFormat(OutputColumn.Type.PATHWAY.name()));
+		//the result file must have this (after the fix, CHEBI: banana+peel is used :))
+		//CHEBI:28	used-to-produce	CHEBI:422	Glycolysis Pathway
 		long time = System.currentTimeMillis() - start;
 		log.info("Completed in: " + getPrintable(time));
 	}
@@ -178,7 +176,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	@Disabled
 	public void countRelations() throws FileNotFoundException
 	{
-		String file = "/home/ozgun/Downloads/PC14.ctd.sif";
+		String file = "/home/ozgun/Downloads/ctd_test.sif";
 		Map<String, Integer> count = new HashMap<>();
 		for (SIFEnum type : SIFEnum.values())
 		{
@@ -230,7 +228,7 @@ public class SIFSearcherTest extends PatternBoxTest
 	}
 
 	@Test
-	public void sifSearcher() throws IOException
+	public void sifSearcher()
 	{
 		// Test CommonIDFetcher vs. ConfigurableIDFetcher vs. SimpleIDFetcher SIF seatch output results.
 		final SIFType[] sifTypes = new SIFType[]{SIFEnum.IN_COMPLEX_WITH};
@@ -310,9 +308,6 @@ public class SIFSearcherTest extends PatternBoxTest
 		//add xrefs to Ers and repeat the SIF export
 		ppr.addXref(pprx);
 		pr.addXref(prx);
-//		bos = new ByteArrayOutputStream();
-//		new SimpleIOHandler().convertToOWL(model,bos);
-//		log.info(bos.toString());
 
 		sifInteractions = customSifSearcher.searchSIF(model);
 		assertFalse(sifInteractions.isEmpty());
@@ -332,35 +327,6 @@ public class SIFSearcherTest extends PatternBoxTest
 
 		//TODO add tests using .seqDbStartsWithOrEquals with:
 		// "hgnc","uniprot","ncbi","mirbase", and .chemDbStartsWithOrEquals("chebi")
-	}
-
-	public static void generate(String inputModelFile, String ubiqueIDFile, String outputFile)
-		throws IOException
-	{
-		SimpleIOHandler h = new SimpleIOHandler();
-		Model model = h.convertFromOWL(new FileInputStream(inputModelFile));
-
-		List<SIFInteraction> sifs = new ArrayList<>(generate(model,
-			new Blacklist(ubiqueIDFile)));
-
-		Collections.sort(sifs);
-
-		BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-
-		for (SIFInteraction sif : sifs)
-		{
-			writer.write(sif + "\n");
-		}
-
-		writer.close();
-	}
-
-	public static Set<SIFInteraction> generate(Model model, Blacklist blacklist)
-	{
-		SIFSearcher searcher = new SIFSearcher(SIFEnum.CONTROLS_STATE_CHANGE_OF);
-//			SIFType.CONTROLS_EXPRESSION, SIFType.CONTROLS_DEGRADATION);
-		searcher.setBlacklist(blacklist);
-		return searcher.searchSIF(model);
 	}
 
 }

@@ -158,7 +158,7 @@ public class ExtendedSIFWriter
 	 */
 	private static Map<String, Set<BioPAXElement>> collectEntityRefs(Collection<SIFInteraction> inters)
 	{
-		Map<String, Set<BioPAXElement>> map = new HashMap<String, Set<BioPAXElement>>();
+		Map<String, Set<BioPAXElement>> map = new HashMap<>();
 
 		for (SIFInteraction inter : inters)
 		{

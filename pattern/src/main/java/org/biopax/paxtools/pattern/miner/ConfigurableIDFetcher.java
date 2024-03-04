@@ -87,38 +87,22 @@ public class ConfigurableIDFetcher implements IDFetcher
 	public Set<String> fetchID(BioPAXElement ele)
 	{
 		Set<String> set = new HashSet<>();
-
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
 			List<String> dbStartsWithOrEquals =	(ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 							? chemDbStartsWithOrEquals : seqDbStartsWithOrEquals;
-
 			for (String dbStartsWith : dbStartsWithOrEquals) {
-				//this prevents collecting lots of secondary IDs of the same type
-				if(ele.getUri().contains("identifiers.org/"+dbStartsWith)
-						|| ele.getUri().contains("bioregistry.io/"+dbStartsWith) )
-				{
-					String ac = StringUtils.substringAfterLast(ele.getUri(), "/");//e.g. can be P12345 or uniprot:P12345; can be chebi:CHEBI:1234 (older uris..)
-					if(StringUtils.contains(ac, ":")) {
-						ac = StringUtils.substringAfter(ac, ":"); //after the first one
-					}
-					set.add(ac);
+				for (UnificationXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
+						UnificationXref.class)) {
+					collectXrefIdIfDbLike(x, dbStartsWith, set);
 				}
-				else
-				{
-					for (UnificationXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
-							UnificationXref.class)) {
+				//if none were found in the unification xrefs, then try the relationship xrefs
+				if (set.isEmpty()) {
+					for (RelationshipXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
+							RelationshipXref.class)) {
 						collectXrefIdIfDbLike(x, dbStartsWith, set);
 					}
-					//if none were found in the unification xrefs, then try the relationship xrefs
-					if (set.isEmpty()) {
-						for (RelationshipXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
-								RelationshipXref.class)) {
-							collectXrefIdIfDbLike(x, dbStartsWith, set);
-						}
-					}
 				}
-
 				//once we've found some ID, no need to try another id type
 				if (!set.isEmpty())
 					break;
@@ -150,21 +134,30 @@ public class ConfigurableIDFetcher implements IDFetcher
 		String db = x.getDb();
 		String id = x.getId();
 		if (StringUtils.isNotBlank(db) && StringUtils.isNotBlank(id)) {
-			//find bioregistry.io prefix/name for the id type if possible
-			String dbName = db;
+			//also find the bioregistry.io prefix and name if possible
+			String dbName = "";
 			String dbPrefix = "";
+			String banana = "";
+			String peel = "";
 			if(Resolver.isKnownNameOrVariant(db)) {
-				Namespace ns = Resolver.getNamespace(db, true);
+				Namespace ns = Resolver.getNamespace(db);
 			 	dbPrefix = ns.getPrefix();
 			 	dbName = ns.getName();
+				banana = ns.getBanana();
+				peel = ns.getBanana_peel();
 			}
-			if (StringUtils.startsWithIgnoreCase(dbName, dbStartsWith)
+			if (StringUtils.startsWithIgnoreCase(db, dbStartsWith)
+					|| StringUtils.startsWithIgnoreCase(dbName, dbStartsWith)
 					|| StringUtils.startsWithIgnoreCase(dbPrefix, dbStartsWith)) {
 				//for a (PR/NAR) HGNC case, call HGNC mapping to the primary/current symbol
 				if (StringUtils.startsWithIgnoreCase(db,"hgnc")) {
 					id = HGNC.getSymbolByHgncIdOrSym(id);
 				}
 				if (id != null) {
+					//e.g. for chebi IDs to have CHEBI: prefix
+					if(StringUtils.isNotBlank(banana) && !id.startsWith(banana)) {
+						id = banana+peel+id;
+					}
 					set.add(id); //match found
 				}
 			}

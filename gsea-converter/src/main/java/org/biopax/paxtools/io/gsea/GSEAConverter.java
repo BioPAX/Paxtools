@@ -98,7 +98,7 @@ public class GSEAConverter
 	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled, boolean skipSubPathways)
 	{
 		if(Resolver.isKnownNameOrVariant(idType)) {
-			this.idType = Resolver.getNamespace(idType).getPrefix().toLowerCase(); //(it must be already lowecase though)
+			this.idType = Resolver.getNamespace(idType, true).getPrefix().toLowerCase(); //(it must be already lowecase though)
 		} else {
 			this.idType = (StringUtils.isNotBlank(idType)) ? idType.toLowerCase() : idType;
 		}
@@ -220,7 +220,7 @@ public class GSEAConverter
 		for (Pathway pathway : pathways) 
 		{
 			String name = (pathway.getDisplayName() == null) ? pathway.getStandardName() : pathway.getDisplayName();
-			if(name == null || name.isEmpty()) {
+			if(StringUtils.isBlank(name)) {
 				name = pathway.getUri();
 			}
 
@@ -349,7 +349,7 @@ public class GSEAConverter
 					if(aXref instanceof UnificationXref
 							&& aXref.getId() != null && aXref.getDb() != null
 							&& Resolver.isKnownNameOrVariant(aXref.getDb())
-							&& StringUtils.equalsIgnoreCase(idType, Resolver.getNamespace(aXref.getDb(), true).getPrefix()))
+							&& StringUtils.equalsIgnoreCase(idType, Resolver.getNamespace(aXref.getDb()).getPrefix()))
 					{
 						targetEntry.identifiers().add(aXref.getId());
 						++added;
@@ -361,7 +361,7 @@ public class GSEAConverter
 						if(aXref instanceof RelationshipXref
 								&& aXref.getId() != null && aXref.getDb() != null
 								&& Resolver.isKnownNameOrVariant(aXref.getDb())
-								&& StringUtils.equalsIgnoreCase(idType, Resolver.getNamespace(aXref.getDb(), true).getPrefix()))
+								&& StringUtils.equalsIgnoreCase(idType, Resolver.getNamespace(aXref.getDb()).getPrefix()))
 						{
 							targetEntry.identifiers().add(aXref.getId());
 							++added;

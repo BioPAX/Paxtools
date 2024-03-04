@@ -50,7 +50,7 @@ public class CommonIDFetcher implements IDFetcher
 		//can be like ...identifiers.org/uniprot:AC or identifiers.org/uniprot/AC
 		// or bioregistry.io/uniprot:AC or bioregistry.io/uniprot.isoform:...
 		{
-			String ac = StringUtils.substringAfterLast(ele.getUri(), "/");//can be AC or uniprot:AC, uniprot.isoform:...
+			String ac = StringUtils.substringAfterLast(ele.getUri(), "/");
 			if(StringUtils.contains(ac, ":")) {
 				ac = StringUtils.substringAfter(ac, ":");
 			}
@@ -70,7 +70,7 @@ public class CommonIDFetcher implements IDFetcher
 					db = db.toLowerCase();
 					//find the official collection/db name and prefix
 					if(Resolver.isKnownNameOrVariant(db)) {
-						db = Resolver.getNamespace(db, true).getPrefix();
+						db = Resolver.getNamespace(db).getPrefix();
 					}
 					if (!useUniprotIDs && db.startsWith("hgnc")) //"hgnc.symbol", "hgnc" or "hgnc symbol", etc.
 					{
@@ -98,12 +98,11 @@ public class CommonIDFetcher implements IDFetcher
 					String db = xr.getDb();
 					String id = xr.getId();
 					if (StringUtils.isNotBlank(db) && StringUtils.isNotBlank(id)) {
-						db = db.toLowerCase();
 						//find the official collection/db name and prefix
 						if(Resolver.isKnownNameOrVariant(db)) {
-							db = Resolver.getNamespace(db, true).getPrefix();
+							db = Resolver.getNamespace(db).getPrefix();
 						}
-						if (db.equals("mirbase") || db.equals("mirbase sequence")) {
+						if (StringUtils.equalsAnyIgnoreCase(db, "mirbase", "mirbase sequence")) {
 							set.add(id);
 						}
 					}

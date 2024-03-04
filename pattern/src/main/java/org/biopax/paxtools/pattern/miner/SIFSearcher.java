@@ -12,9 +12,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Searches a model and generates SIF network using the pattern matches.
@@ -148,12 +145,12 @@ public class SIFSearcher
 	{
 		if (miners == null) initMiners();
 
-		final Map<SIFInteraction, SIFInteraction> map = new ConcurrentHashMap<SIFInteraction, SIFInteraction>();
+		final Map<SIFInteraction, SIFInteraction> map = new ConcurrentHashMap<>();
 
 		for (final SIFMiner miner : miners)
 		{
 			if (miner instanceof MinerAdapter)
-				((MinerAdapter) miner).setIdMap(new HashMap<BioPAXElement, Set<String>>());
+				((MinerAdapter) miner).setIdMap(new HashMap<>());
 
 			Map<BioPAXElement,List<Match>> matches = Searcher.search(model, miner.getPattern());
 			for (final List<Match> matchList : matches.values())
@@ -193,13 +190,7 @@ public class SIFSearcher
 	 */
 	public boolean searchSIF(Model model, OutputStream out)
 	{
-		return searchSIF(model, out, new SIFToText() {
-			@Override
-			public String convert(SIFInteraction inter)
-			{
-				return inter.toString();
-			}
-		});
+		return searchSIF(model, out, inter -> inter.toString());
 	}
 
 	/**
