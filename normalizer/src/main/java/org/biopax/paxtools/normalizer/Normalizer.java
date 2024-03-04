@@ -477,7 +477,7 @@ public final class Normalizer {
 	 * @throws IllegalArgumentException if model is not Level3 BioPAX
 	 */
 	public void normalize(Model model) {
-		normalize(model, false);
+		normalize(model, true);
 	}
 
 	

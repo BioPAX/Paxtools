@@ -246,8 +246,9 @@ public class GSEAConverter
 				String dataSource = getDataSource(currentPathway.getDataSource());
 				Collection<GMTEntry> entries = createGseaEntries(currentPathway.getUri(),
 						currentPathwayName, dataSource, orgToPrsMap);
-				if(!entries.isEmpty())
+				if(!entries.isEmpty()) {
 					toReturn.addAll(entries);
+				}
 				sequenceEntityReferences.removeAll(pathwaySers);//keep not processed PRs (can be processed multiple times)
 				LOG.debug("- collected " + entries.size() + " entries.");
 			}

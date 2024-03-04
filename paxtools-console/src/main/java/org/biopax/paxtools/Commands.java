@@ -16,6 +16,8 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.normalizer.Namespace;
+import org.biopax.paxtools.normalizer.Resolver;
 import org.biopax.paxtools.pattern.miner.*;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.query.QueryExecuter;
@@ -503,7 +505,7 @@ final class Commands {
 
 
 	/**
-	 * Recursively collects bio identifiers of given type (an xref.db value, bio id collection name)
+	 * Recursively collects bio identifiers of given type (xref.db value, bio id collection name)
 	 * associated with the physical entity or generic, complex entity.
 	 *
 	 * @param entity a process participant (simple or generic)
@@ -511,24 +513,51 @@ final class Commands {
 	 * @param isPrefix whether the xrefdb value is a prefix rather than complete name.
 	 * @param includeEvidence whether to traverse into property:evidence to collect ids.
 	 */
-	private static Set<String> identifiers(final PhysicalEntity entity, final String xrefdb,
-																				 boolean isPrefix, boolean includeEvidence) {
+	static Set<String> identifiers(final PhysicalEntity entity, final String xrefdb,
+																				 boolean isPrefix, boolean includeEvidence)
+	{
 		final Set<String> ids = new HashSet<>();
 		final Fetcher fetcher = (includeEvidence)
 				? new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter)
-				: new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
+					: new Fetcher(SimpleEditorMap.L3, Fetcher.nextStepFilter, Fetcher.evidenceFilter);
 		fetcher.setSkipSubPathways(true); //makes no difference now  but good to have/know...
 		Set<XReferrable> children = fetcher.fetch(entity, XReferrable.class);
 		children.add(entity); //include itself
+
 		for(XReferrable child : children) {//ignore some classes, such as controlled vocabularies, interactions, etc.
 			if (child instanceof PhysicalEntity || child instanceof EntityReference || child instanceof Gene)
-				for (Xref x : child.getXref())
-					if ((x.getId()!=null && x.getDb()!=null) && (isPrefix)
-							? x.getDb().toLowerCase().startsWith(xrefdb.toLowerCase())
-							: xrefdb.equalsIgnoreCase(x.getDb())) {
-						ids.add(x.getId());
+				for (Xref x : child.getXref()) {
+					if (x.getId() != null && x.getDb() != null) {
+						String name = x.getDb();
+						String prefix = "";
+						String banana = "";
+						String peel = "";
+						if(Resolver.isKnownNameOrVariant(name)) {
+							Namespace ns = Resolver.getNamespace(name);
+							prefix = ns.getPrefix();
+							banana = ns.getBanana();
+							peel = ns.getBanana_peel();
+							name = ns.getName();
+						}
+						boolean matches = (isPrefix)
+								? (StringUtils.startsWithIgnoreCase(name, xrefdb)
+									|| StringUtils.startsWithIgnoreCase(prefix, xrefdb)
+									|| StringUtils.startsWithIgnoreCase(x.getDb(), xrefdb))
+								: (StringUtils.equalsIgnoreCase(name, xrefdb)
+									|| StringUtils.equalsIgnoreCase(prefix, xrefdb)
+									|| StringUtils.equalsIgnoreCase(x.getDb(), xrefdb));
+
+						if (matches) {
+							String id = x.getId();
+							if(StringUtils.isNotEmpty(banana)) {
+								id = (StringUtils.startsWith(id, banana + peel)) ? id : banana + peel + id;
+							}
+							ids.add(id);
+						}
 					}
+				}
 		}
+
 		return ids;
 	}
 
@@ -772,7 +801,7 @@ final class Commands {
 	 * @param model
 	 * @param out
 	 */
-	static void summarize(Model model, PrintStream out) throws IOException {
+	static void summarize(Model model, PrintStream out) {
 		BioPAXLevel level = model.getLevel();
 		JSONObject summary = new JSONObject();
 		summary.put("xml:base", model.getXmlBase());

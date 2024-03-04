@@ -210,13 +210,15 @@ public class NormalizerTest {
 
 		// go normalize!
 		Normalizer normalizer = new Normalizer();
-		normalizer.normalize(model, true);
+		normalizer.normalize(model);
 
 		// test for a bug that causes db='uniprot' become 'uniprot isoform' (the id matches both patterns)
 		assertTrue(model.containsID("uniprot:W0C7J9"));
 		assertFalse(model.containsID("uniprot.isoform:W0C7J9")); //it's auto fixed/replaced with uniprot:W0C7J9
 		assertTrue(model.containsID("uniprot.isoform:W0C7J9-1"));
 		assertTrue(model.containsID("uniprot.isoform:P68250-3"));
+		assertTrue(model.containsID("ncbitaxon:10090"));
+		assertTrue(model.containsID("bioregistry.io/ncbitaxon:10090")); //was "taxonomy"
 
 		// check Xref
 		String normUri = Normalizer.uri(model.getXmlBase(), "uniprot", "P68250", UnificationXref.class);
@@ -230,9 +232,10 @@ public class NormalizerTest {
 
 		//test BioSource
 		assertFalse(model.containsID("BioSource_Mouse_Tissue"));
-		bpe = model.getByID(Normalizer.uri(model.getXmlBase(), "taxonomy", "10090", BioSource.class)); //"taxonomy" - capitalization can be any
+		bpe = model.getByID(Normalizer.uri(model.getXmlBase(), "taxonomy", "10090", BioSource.class));
 		assertTrue(bpe instanceof BioSource);
 		normUri = Normalizer.uri(model.getXmlBase(), "taxonomy", "10090", UnificationXref.class);
+		assertEquals("ncbitaxon:10090", normUri);
 		bpe = model.getByID(normUri);
 		assertTrue(bpe instanceof UnificationXref);
 
