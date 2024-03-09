@@ -692,21 +692,21 @@ class EntryMapper {
 		final RelationshipXref x = getInteractorPrimaryRef(interactor.getXref());
 		if(x != null) {
 			baseUri += encode(x.getDb() + "_" + x.getId());
-			if(x.getRelationshipType()!=null)
+			if(x.getRelationshipType()!=null) {
 				baseUri += "_" + encode(x.getRelationshipType().getTerm().iterator().next());
-			entityUri = baseUri + "_" + String.valueOf(counter++);
+			}
+			entityUri = baseUri + "_" + (counter++);
 		} else { //when no xrefs present, use a number ending (always increment);
 			baseUri = String.valueOf(counter++); //new unique part (seldom happens, when no primary xref...)
 			entityUri = baseUri;
 		}
 		
-		if(cellularLocation != null)
+		if(cellularLocation != null) {
 			entityUri += "_" + encode(cellularLocation.getTerm().iterator().next());
+		}
 		
 		//makes URI look like xmlBase+type+unique_suffix...
-		entityUri = xmlBase + entityClass.getSimpleName() + "_" + entityUri;	
-		if(entityReferenceClass != null)
-			baseUri = xmlBase + entityReferenceClass.getSimpleName() + "_" + baseUri;	
+		entityUri = xmlBase + entityClass.getSimpleName() + "_" + entityUri;
 		
 		// create a new PE or Gene (don't add to the model yet, for there may exist an equivalent one)
 		Entity entity = bpModel.getLevel().getDefaultFactory().create(entityClass, entityUri);
@@ -721,7 +721,7 @@ class EntryMapper {
 				entity.addName(name);
 		}
 		if (shortName != null) {
-            entity.setDisplayName(shortName);
+        entity.setDisplayName(shortName);
 		}				
 		// set cellular location if possible
 		if(cellularLocation != null && entity instanceof PhysicalEntity)
@@ -730,7 +730,7 @@ class EntryMapper {
 		final Set<Xref> bpXrefsOfInteractor = getXrefs(interactor.getXref());
 		final BioSource bioSource = getBioSource(interactor);
 		
-		// when not a Gene, we are to find/generate corresponding EntityRererence;
+		// when not a Gene, we are to find/generate corresponding EntityReference;
 		// but we do not want to gererate apparently duplicate objects...
 		if(entityReferenceClass != null) {
 			EntityReference entityReference = null;
@@ -745,16 +745,15 @@ class EntryMapper {
 			 * with an existing one using Paxtools (as of paxtools-core 4.x and older, 
 			 * two ERs are NOT equivalent unless they either have the same URI, or - same organism and sequence).
 			 */
-			EntityReference er = (EntityReference) bpModel.getByID(baseUri);			
-			if( er != null 
-				&& er.getModelInterface()==entityReferenceClass 
-				&& (!(er instanceof SequenceEntityReference) 
+			baseUri = xmlBase + entityReferenceClass.getSimpleName() + "_" + baseUri;
+			EntityReference er = (EntityReference) bpModel.getByID(baseUri);
+			if( er != null && er.getModelInterface() == entityReferenceClass
+				&& (
+					!(er instanceof SequenceEntityReference)
 					|| sameNameOrUndefined(((SequenceEntityReference)er).getOrganism(),bioSource)
-					)
+				)
 			) {
-				
 				entityReference = er; // ok to reuse
-				
 			} else if(er != null) {
 				String newUri = baseUri + "_" + (counter++);
 				LOG.warn("A different " + er.getModelInterface().getSimpleName()
@@ -764,7 +763,8 @@ class EntryMapper {
 			}
 			
 			//if not found above, create a new ER
-			if(entityReference == null) { 
+			if(entityReference == null)
+			{
 				entityReference = bpModel.addNew(entityReferenceClass, baseUri);	
 				
 				if (shortName != null) {
@@ -809,8 +809,9 @@ class EntryMapper {
 						entityReference.addName(synonym);
 				}
 				if (bpXrefsOfInteractor != null) {
-					for (Xref xref : bpXrefsOfInteractor)
-						entityReference.addXref((Xref) xref);
+					for (Xref xref : bpXrefsOfInteractor) {
+						entityReference.addXref(xref);
+					}
 				}
 			}
 			
@@ -825,8 +826,9 @@ class EntryMapper {
 				}
 			}		
 			if (bpXrefsOfInteractor != null) {
-				for (Xref xref : bpXrefsOfInteractor)
-					entity.addXref((Xref) xref);
+				for (Xref xref : bpXrefsOfInteractor) {
+					entity.addXref(xref);
+				}
 			}
 			if(entity instanceof Gene) //can be Complex here as well
 				((Gene)entity).setOrganism(bioSource);
@@ -936,8 +938,7 @@ class EntryMapper {
 			}
 		}
 		
-		String uri = xmlBase + "BIO_" +
-			"ncbitaxon_" + ncbiId; //tissue and cell type terms can be added below
+		String uri = xmlBase + "BIO_" + "ncbitaxon_" + ncbiId; //tissue and cell type terms can be added below
 		if(tissue!=null && !tissue.getTerm().isEmpty()) 
 			uri += "_" + encode(tissue.getTerm().iterator().next());
 		if(cellType!=null && !cellType.getTerm().isEmpty()) 

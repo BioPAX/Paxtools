@@ -57,7 +57,6 @@ import java.util.zip.GZIPInputStream;
  * This test depends upon a particular random number generator
  * with a particular seed.
  *
- * TODO more tests
  *
  * @author rodche (Igor Rodchenkov)
  */

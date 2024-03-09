@@ -1,5 +1,10 @@
 package org.biopax.paxtools;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.biopax.paxtools.controller.*;
@@ -23,8 +28,6 @@ import org.biopax.paxtools.pattern.util.Blacklist;
 import org.biopax.paxtools.query.QueryExecuter;
 import org.biopax.paxtools.query.algorithm.Direction;
 import org.biopax.paxtools.util.ClassFilterSet;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +49,12 @@ final class Commands {
 	private Commands() {
 		throw new UnsupportedOperationException("Non-instantiable utility class.");
 	}
+
+	static final ObjectMapper jacksonMaper = new ObjectMapper()
+			.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+			.configure(SerializationFeature.FLUSH_AFTER_WRITE_VALUE, true)
+			.configure(SerializationFeature.INDENT_OUTPUT, true)
+			.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
 
 	static {
 		io = new SimpleIOHandler();
@@ -457,50 +466,42 @@ final class Commands {
 	 * For each physical entity participant in the BioPAX model,
 	 * output uri, type, names, standard identifiers (in JSON format).
 	 */
-	private static void mapUriToIds(Model model, PrintStream out) {
-		Set<String> elements = new TreeSet<>();
-
+	static void mapUriToIds(Model model, PrintStream out) throws IOException {
 		//write one by one to insert EOLs and make potentially a very large file human-readable -
+		ArrayNode elements = jacksonMaper.createArrayNode();
 		for(PhysicalEntity pe : model.getObjects(PhysicalEntity.class)) {
-			JSONObject jo = new JSONObject();
+			ObjectNode jo = jacksonMaper.createObjectNode();
 			jo.put("uri", pe.getUri());
 			jo.put("type", pe.getModelInterface().getSimpleName());
 			jo.put("generic", ModelUtils.isGeneric(pe));
 			jo.put("label", pe.getDisplayName());
-
-			JSONArray ja = new JSONArray();
-			ja.addAll(pe.getName());
-			jo.put("name", ja);
+			ArrayNode ja = jo.putArray("name");
+			pe.getName().forEach(ja::add);
 
 			if(!(pe instanceof SmallMolecule)) {
-				ja = new JSONArray();
-				ja.addAll(identifiers(pe, "hgnc symbol", false, false));
-				jo.put("HGNC Symbol", ja);
+				ja = jo.putArray("hgnc.symbol");
+				identifiers(pe, "hgnc.symbol", false, false).forEach(ja::add);
 
-				ja = new JSONArray();
-				ja.addAll(identifiers(pe, "uniprot", true, false));
-				jo.put("UniProt", ja);
+				ja = jo.putArray("uniprot");
+				identifiers(pe, "uniprot", true, false).forEach(ja::add);//include uniprot.isoform as well
 			}
 
 			if(pe instanceof SmallMolecule || PhysicalEntity.class.equals(pe.getModelInterface())) {
-				ja = new JSONArray();
-				ja.addAll(identifiers(pe, "chebi", false, false));
-				jo.put("ChEBI", ja);
+				ja = jo.putArray("chebi");
+				identifiers(pe, "chebi", false, false).forEach(ja::add);
 			}
 
-			ja = new JSONArray();
+			ja = jacksonMaper.createArrayNode();
 			for(BioSource bs : ModelUtils.getOrganisms(pe)) ja.add(bs.getDisplayName());
 			jo.put("organism", ja);
 
-			ja = new JSONArray();
+			ja = jacksonMaper.createArrayNode();
 			for(Provenance ds : pe.getDataSource()) ja.add(ds.getDisplayName());
 			jo.put("datasource", ja);
 
-			elements.add(jo.toJSONString());
+			elements.add(jo);
 		}
-
-		// Write as JSON array to the output
-		out.print("[\n" + StringUtils.join(elements,"\n,") + "\n]");
+		jacksonMaper.writeValue(out, elements);
 	}
 
 
@@ -523,6 +524,8 @@ final class Commands {
 		fetcher.setSkipSubPathways(true); //makes no difference now  but good to have/know...
 		Set<XReferrable> children = fetcher.fetch(entity, XReferrable.class);
 		children.add(entity); //include itself
+
+
 
 		for(XReferrable child : children) {//ignore some classes, such as controlled vocabularies, interactions, etc.
 			if (child instanceof PhysicalEntity || child instanceof EntityReference || child instanceof Gene)
@@ -562,7 +565,7 @@ final class Commands {
 	}
 
 
-	private static void summarizePathways(Model model, PrintStream out) {
+	static void summarizePathways(Model model, PrintStream out) {
 		final PathAccessor directChildPathwaysAccessor = new PathAccessor("Pathway/pathwayComponent:Pathway");
 		final PathAccessor pathwayComponentAccessor = new PathAccessor("Pathway/pathwayComponent");
 		final PathAccessor pathwayOrderStepProcessAccessor = new PathAccessor("Pathway/pathwayOrder/stepProcess");
@@ -609,7 +612,7 @@ final class Commands {
 		}
 	}
 
-	private static void summarizeHgncIds(Model model, PrintStream out) {
+	static void summarizeHgncIds(Model model, PrintStream out) {
 		//Analyse each Protein, Dna*, Rna*, entity reference (except generic and SMR).
 		//Get the number of non-generic ERs having >1 different HGNC symbols and IDs.
 		//Note that the input biopax data/model may be not perfect, not normalized ("hgnc" can mean either symbol or id, etc.)
@@ -692,7 +695,7 @@ final class Commands {
 		out.println(String.format("Total\t\t%d\t(%3.1f%%)", numPrsNoHgnc, ((float)numPrsNoHgnc)/totalPrs*100));
 	}
 
-	private static void summarizeUniprotIds(Model model, PrintStream out) {
+	static void summarizeUniprotIds(Model model, PrintStream out) {
 		//Analyse PRs...
 		Map<Provenance,MutableInt> numErs = new HashMap<>();
 		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
@@ -744,7 +747,7 @@ final class Commands {
 		out.println(String.format("Total\t\t%d\t(%3.1f%%)", problematicErs, ((float)problematicErs)/totalErs*100));
 	}
 
-	private static void summarizeChebiIds(Model model, PrintStream out) {
+	static void summarizeChebiIds(Model model, PrintStream out) {
 		//Analyse SMRs...
 		Map<Provenance,MutableInt> numErs = new HashMap<>();
 		Map<Provenance,MutableInt> numProblematicErs = new HashMap<>();
@@ -801,14 +804,12 @@ final class Commands {
 	 * @param model
 	 * @param out
 	 */
-	static void summarize(Model model, PrintStream out) {
+	static void summarize(Model model, PrintStream out) throws IOException {
 		BioPAXLevel level = model.getLevel();
-		JSONObject summary = new JSONObject();
+		ObjectNode summary = jacksonMaper.createObjectNode();
 		summary.put("xml:base", model.getXmlBase());
 		summary.put("level", level.name());
-		JSONArray types = new JSONArray();
-		summary.put("types", types);
-
+		ArrayNode types = summary.putArray("types");
 		final SimpleEditorMap em = SimpleEditorMap.get(level);
 		for (Class<? extends BioPAXElement> clazz : sortToName(em.getKnownSubClassesOf(BioPAXElement.class))) {
 			if(!level.getDefaultFactory().canInstantiate(clazz)) {
@@ -817,14 +818,12 @@ final class Commands {
 			Collection<? extends BioPAXElement> allInstancesOfClass = model.getObjects(clazz);
 			final int numInstances = allInstancesOfClass.size();
 			if(numInstances > 0) {
-				JSONObject type = new JSONObject();
+				ObjectNode type = types.addObject();
 				type.put("type", clazz.getSimpleName());
-				types.add(type);
 				Collection<? extends BioPAXElement> directInstances = filterToExactClass(allInstancesOfClass, clazz);
 				int numDirectInstances = directInstances.size();
 				type.put("instances", numInstances);
 				type.put("direct_instances", numDirectInstances);
-				JSONArray props = new JSONArray();
 				//summarize some properties (enum, CVs)
 				for (PropertyEditor editor : em.getEditorsOf(clazz)) {
 					Method getMethod = editor.getGetMethod();
@@ -842,44 +841,39 @@ final class Commands {
 						}
 					}
 					if (!cnt.isEmpty()) {
-						JSONObject p = new JSONObject();
-						props.add(p);
+						ArrayNode props = type.putArray("cv_enum_props");
+						ObjectNode p = props.addObject();
 						p.put("prop", editor.getProperty());
-						JSONObject vals = new JSONObject();
-						p.put("values_to_string", vals);
+						ObjectNode vals = p.putObject("values_to_str");
 						String name = (returnType.equals(Set.class) ? editor.getRange().getSimpleName() : returnType.getSimpleName());
 						p.put("range", name);
 						for (Object key : cnt.keySet()) {
 							vals.put(key.toString(), cnt.get(key));
 						}
-						type.put("properties", props);
 					}
 				}
 			}
 		}
 
-		//Other property counts
-		JSONArray properties = new JSONArray();
-		summary.put("properties", properties);
+		//Some selected property summary, counts
+		ArrayNode properties = summary.putArray("properties");
+		//summarize xref.db values
 		String[] propPaths = (model.getLevel() == BioPAXLevel.L3)
 				? new String[]{"UnificationXref/db","RelationshipXref/db"}
 				: new String[]{"unificationXref/DB","relationshipXref/DB"};
+		Set<String> cnt = new TreeSet<>();
 		for (String pPath : propPaths) {
-			Set<String> cnt = new TreeSet<>();
 			PathAccessor acc = new PathAccessor(pPath, model.getLevel());
 			for (Object o : acc.getValueFromModel(model)) {
 				cnt.add(o.toString());
 			}
-			//distinct values
-			JSONObject p = new JSONObject();
-			properties.add(p);
-			p.put("path", pPath);
+		}
+		if(!cnt.isEmpty()) {
+			ObjectNode p = properties.addObject();
+			p.put("name", "xref.db");
+			ArrayNode v = p.putArray("values");
+			cnt.forEach(v::add);
 			p.put("unique_values", cnt.size());
-			JSONArray v = new JSONArray();
-			p.put("values", v);
-			for (Object key : cnt) {
-				v.add(key);
-			}
 		}
 
 		//Count simple PEs that do not have any entityReference
@@ -916,23 +910,20 @@ final class Commands {
 				}
 			}
 		}
-		JSONObject speSummary = new JSONObject();
-		summary.put("spe_without_er", speSummary);
+		ObjectNode speSummary = summary.putObject("spe_without_er");
 		speSummary.put("description", "SimplePEs (not complexes) that do not have any entityReference");
 		// speLackingEr simple physical entities have NULL 'entityReference'
 		speSummary.put("total", speLackingEr);
 		// genericSpeLackingEr of which have member physical entities (are generic)
 		speSummary.put("generic", genericSpeLackingEr);
 		//by data source
-		JSONObject speByDs = new JSONObject();
-		speSummary.put("by_source", speByDs);
+		ObjectNode speByDs = speSummary.putObject("by_source");
 		for(String key : numSpeLackErByProvider.keySet()) {
 			speByDs.put(key, numSpeLackErByProvider.get(key));
 		}
 		//speLackingErAndId neither have 'entityReference' nor xref/id (except publications)
 		if(speLackingErAndId > 0) {
-			JSONObject speNoErNoId = new JSONObject();
-			speSummary.put("also_without_id", speNoErNoId);
+			ObjectNode speNoErNoId = speSummary.putObject("also_without_id");
 			speNoErNoId.put("total", speLackingErAndId);
 			speNoErNoId.put("proteins", protLackingErAndId);
 			speNoErNoId.put("small_molecules", molLackingErAndId);
@@ -966,8 +957,7 @@ final class Commands {
 					++narLackingOrganism;
 			}
 		}
-		JSONObject noOrg = new JSONObject();
-		summary.put("without_organism", noOrg);
+		ObjectNode noOrg = summary.putObject("without_organism");
 		noOrg.put("genes", genesLackingOrganism);
 		noOrg.put("pathways", pwLackingOrganism);
 		noOrg.put("seq_er", serLackingOrganism);
@@ -984,7 +974,7 @@ final class Commands {
 		}
 		summary.put("uxrx_without_dbid", badUXrefs);
 
-		out.println(summary.toJSONString());
+		jacksonMaper.writeValue(out, summary);
 	}
 
 	private static List<Class<? extends BioPAXElement>> sortToName(

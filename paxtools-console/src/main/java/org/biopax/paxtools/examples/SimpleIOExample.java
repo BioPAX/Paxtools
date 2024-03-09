@@ -34,20 +34,17 @@ public final class SimpleIOExample {
 		// Well, let's do something with a (new) BioPAX model
 		
 		BioPAXFactory bioPAXFactory = BioPAXLevel.L3.getDefaultFactory();
-		
 		Model model2 = bioPAXFactory.createModel();
 		
 		// set default name space prefix (base);
-		model2.setXmlBase("http://baderlab.org#");
+		model2.setXmlBase("baderlab:");
 		// create and add a new element to the model;
 		// still, rdfid must be set in full (not just "#xref_P62158")
-		UnificationXref uxref = model2.addNew(UnificationXref.class,
-				"http://baderlab.org#xref_P62158");
-		uxref.setDb("uniprotkb");
+		UnificationXref uxref = model2.addNew(UnificationXref.class, "baderlab:xref_P62158");
+		uxref.setDb("uniprot");
 		uxref.setId("P62158");
 		// using absolute (ext.) URI as id
-		ProteinReference prf = model2.addNew(ProteinReference.class,
-				"urn:miriam:uniprot:P62158");
+		ProteinReference prf = model2.addNew(ProteinReference.class, "bioregistry.io/uniprot:P62158");
 		prf.setDisplayName("CALM_HUMAN");
 		prf.addXref(uxref);
 		// (do not need to explicitly add objects to the model)
@@ -57,7 +54,7 @@ public final class SimpleIOExample {
 	}
 
 	
-	public  static void output(Model model) throws IOException {
+	public static void output(Model model) {
 		BioPAXIOHandler simpleExporter = new SimpleIOHandler();
 		OutputStream out = new ByteArrayOutputStream();
 		simpleExporter.convertToOWL(model, out);
