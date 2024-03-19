@@ -4,12 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.biopax.paxtools.model.*;
-import org.biopax.paxtools.model.level3.Provenance;
 import org.biopax.paxtools.model.level3.RelationshipXref;
 import org.biopax.paxtools.model.level3.UnificationXref;
 
 import org.biopax.paxtools.model.level3.Xref;
-import org.biopax.paxtools.util.BiopaxElements;
 import org.biopax.paxtools.util.BiopaxSafeSet;
 import org.junit.jupiter.api.Test;
 
@@ -135,25 +133,4 @@ public class EqualsEtcTest {
 		assertFalse(col.remove(null));
 	}
 
-	@Test
-	public final void biopaxElements() {
-		Set<Xref> xrefs = new BiopaxElements<>();
-		UnificationXref ux1 = factory.create(UnificationXref.class, "ux1");
-		RelationshipXref rx1 = factory.create(RelationshipXref.class, "rx1");
-		Provenance pro = factory.create(Provenance.class, "pro");
-		xrefs.add(ux1);
-		xrefs.add(rx1);
-		assertEquals(2, xrefs.size());
-		assertFalse(xrefs.remove(pro));
-		Xref x2 = factory.create(RelationshipXref.class, "rx1"); //already used uri
-		assertFalse(xrefs.contains(x2));
-		assertTrue(xrefs.contains(rx1));
-		assertFalse(xrefs.add(x2)); //ignored
-		assertTrue(xrefs.remove(rx1));
-		assertEquals(1, xrefs.size());
-		assertFalse(xrefs.contains("foo"));
-		assertFalse(xrefs.contains(null));
-		assertFalse(xrefs.remove("foo"));
-		assertFalse(xrefs.remove(null));
-	}
 }

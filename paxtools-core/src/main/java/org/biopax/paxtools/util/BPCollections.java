@@ -19,8 +19,6 @@ public enum BPCollections {
 		<R> Set<R> createSet();
 
 		<D, R> Map<D, R> createMap();
-
-		<R> Collection<R> createCollection(int initSz);
 	}
 
 	//Default CollectionProvider implementation (HashMap, HashSet, ArrayList)
@@ -33,13 +31,9 @@ public enum BPCollections {
 			return new HashMap<>();
 		}
 
-		public <R> Collection<R> createCollection(int initSz) {
-			return new ArrayList<>(initSz);
-		}
 	}
 
 	private CollectionProvider cProvider;
-	private String safeSetOpt_;
 	private final Logger log = LoggerFactory.getLogger(BPCollections.class);
 
 	BPCollections() {
@@ -59,9 +53,6 @@ public enum BPCollections {
 			cProvider = new DefaultCollectionProvider();
 			log.info("Using default paxtools.CollectionProvider=" + cProvider.getClass().getCanonicalName());
 		}
-
-		safeSetOpt_ = System.getProperty("paxtools.model.safeset","map");
-		log.info("Using paxtools.model.safeset=" + safeSetOpt_);
 	}
 
 
@@ -88,22 +79,11 @@ public enum BPCollections {
 	}
 
 	public <R extends BioPAXElement> Set<R> createSafeSet() {
-		switch (safeSetOpt_) {
-			case "list":
-				return new BiopaxElements<>(); //Set based on List (slower, less memory, for read-only analyses, queries)
-			case "map":
-			default:
-				return new BiopaxSafeSet<>(); //Set based on Map (faster, more memory, for building/merging Models)
-		}
+		return new BiopaxSafeSet<>(); //Set based on Map (faster, more memory, for building/merging Models)
 	}
 
 	public <D, R> Map<D, R> createMap()
 	{
 		return cProvider.createMap();
-	}
-
-	public <R> Collection<R> createCollection(int initSize)
-	{
-		return cProvider.createCollection(initSize);
 	}
 }

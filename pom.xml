@@ -331,7 +331,7 @@
           <testFailureIgnore>false</testFailureIgnore>
           <!-- if using JDK >15 use the args below (can set JDK_JAVA_OPTIONS instead) -->
           <argLine>-ea --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED</argLine>
-          <!-- -Dpaxtools.normalizer.use-latest-registry=true -Dpaxtools.model.safeset=list -->
+          <!-- -Dpaxtools.normalizer.use-latest-registry=true -->
         </configuration>
       </plugin>
       <plugin>
