@@ -37,5 +37,7 @@
   "REACTOME STABLE ID": "reactome",
   "CELL TYPE ONTOLOGY": "cl",
   "EC NUMBER": "eccode",
-  "MIRBASE SEQUENCE": "mirbase"
+  "MIRBASE SEQUENCE": "mirbase",
+  "GENBANK GENE DATABASE": "genbank",
+  "GENBANK PROTEIN DATABASE": "genbank"
 }
