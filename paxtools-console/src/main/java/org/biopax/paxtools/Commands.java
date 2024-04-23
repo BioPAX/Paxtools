@@ -652,8 +652,8 @@ final class Commands {
 			//increment the counts by data source
 			final String uri = ser.getUri();
 			for(Object provenance : pa.getValueFromBean(ser)) {
-				if (!StringUtils.startsWithIgnoreCase(uri, "identifiers.org/hgnc")
-						&& !StringUtils.startsWithIgnoreCase(uri, "bioregistry.io/hgnc")
+				if (!StringUtils.containsIgnoreCase(uri, "identifiers.org/hgnc")
+						&& !StringUtils.containsIgnoreCase(uri, "bioregistry.io/hgnc")
 						&& !StringUtils.containsIgnoreCase(ser.getXref().toString(), "hgnc")
 				) {
 					problemErs.add(String.format("%s\t%s\t%s",
@@ -709,8 +709,8 @@ final class Commands {
 			final String uri = pr.getUri();
 			for(Object provenance : pa.getValueFromBean(pr)) {
 				//when the protein reference does not have any uniprot AC/ID -
-				if(!StringUtils.startsWithIgnoreCase(uri, "identifiers.org/uniprot")
-						&& !StringUtils.startsWithIgnoreCase(uri, "bioregistry.io/uniprot")
+				if(!StringUtils.containsIgnoreCase(uri, "identifiers.org/uniprot")
+						&& !StringUtils.containsIgnoreCase(uri, "bioregistry.io/uniprot")
 						&& !StringUtils.containsIgnoreCase(pr.getXref().toString(), "uniprot")) {
 					problemErs.add(String.format("%s\t%s\t%s",
 							((Provenance) provenance).getDisplayName(), pr.getDisplayName(), uri));
@@ -760,8 +760,8 @@ final class Commands {
 			}
 			final String uri = smr.getUri();
 			for(Object provenance : pa.getValueFromBean(smr)) {
-				if(!StringUtils.startsWithIgnoreCase(uri, "identifiers.org/chebi")
-						&& !StringUtils.startsWithIgnoreCase(uri,"bioregistry.io/chebi")
+				if(!StringUtils.containsIgnoreCase(uri, "identifiers.org/chebi")
+						&& !StringUtils.containsIgnoreCase(uri,"bioregistry.io/chebi")
 						&& !StringUtils.containsIgnoreCase(smr.getXref().toString(),"chebi")) {
 					problemErs.add(String.format("%s\t%s\t%s",
 							((Provenance) provenance).getDisplayName(), smr.getDisplayName(), uri));

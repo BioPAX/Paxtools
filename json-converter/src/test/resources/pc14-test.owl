@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+        xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+        xml:base="pc14:">
+    <owl:Ontology rdf:about="">
+        <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+    </owl:Ontology>
+    <bp:UnificationXref rdf:about="mi:0360">
+        <bp:id rdf:datatype = "xsd:string">MI:0360</bp:id>
+        <bp:db rdf:datatype = "xsd:string">mi</bp:db>
+    </bp:UnificationXref>
+    <bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_14791_secondary-ac">
+        <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0360" />
+        <bp:id rdf:datatype = "xsd:string">CHEBI:14791</bp:id>
+        <bp:db rdf:datatype = "xsd:string">chebi</bp:db>
+    </bp:RelationshipXref>
+    <bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_45024_secondary-ac">
+        <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0360" />
+        <bp:id rdf:datatype = "xsd:string">CHEBI:45024</bp:id>
+        <bp:db rdf:datatype = "xsd:string">chebi</bp:db>
+    </bp:RelationshipXref>
+    <bp:CellularLocationVocabulary rdf:ID="LV_go_GO_0005634">
+        <bp:xref rdf:resource="go:0005634" />
+        <bp:term rdf:datatype = "xsd:string">Nucleus</bp:term>
+        <bp:term rdf:datatype = "xsd:string">NUCLEUS</bp:term>
+        <bp:term rdf:datatype = "xsd:string">nucleus</bp:term>
+    </bp:CellularLocationVocabulary>
+    <bp:RelationshipTypeVocabulary rdf:about="http://bioregistry.io/mi:0829">
+        <bp:xref rdf:resource="mi:0829" />
+        <bp:term rdf:datatype = "xsd:string">multiple parent reference</bp:term>
+        <bp:term rdf:datatype = "xsd:string">multiple parent</bp:term>
+    </bp:RelationshipTypeVocabulary>
+    <bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_43474_see-also">
+        <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0361" />
+        <bp:id rdf:datatype = "xsd:string">CHEBI:43474</bp:id>
+        <bp:db rdf:datatype = "xsd:string">chebi</bp:db>
+    </bp:RelationshipXref>
+    <bp:UnificationXref rdf:about="mi:0361">
+        <bp:id rdf:datatype = "xsd:string">0361</bp:id>
+        <bp:db rdf:datatype = "xsd:string">mi</bp:db>
+    </bp:UnificationXref>
+    <bp:BindingFeature rdf:about="pathbank:Compound/PW_C001104/ProteinModification/48">
+        <bp:intraMolecular rdf:datatype = "xsd:boolean">true</bp:intraMolecular>
+    </bp:BindingFeature>
+    <bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_7793_secondary-ac">
+        <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0360" />
+        <bp:id rdf:datatype = "xsd:string">CHEBI:7793</bp:id>
+        <bp:db rdf:datatype = "xsd:string">chebi</bp:db>
+    </bp:RelationshipXref>
+    <bp:UnificationXref rdf:about="go:0005634">
+        <bp:id rdf:datatype = "xsd:string">GO:0005634</bp:id>
+        <bp:db rdf:datatype = "xsd:string">go</bp:db>
+    </bp:UnificationXref>
+    <bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_79387_multiple_parent_reference">
+        <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0829" />
+        <bp:id rdf:datatype = "xsd:string">CHEBI:79387</bp:id>
+        <bp:db rdf:datatype = "xsd:string">chebi</bp:db>
+    </bp:RelationshipXref>
+    <bp:RelationshipTypeVocabulary rdf:about="http://bioregistry.io/mi:0360">
+        <bp:xref rdf:resource="mi:0360" />
+        <bp:term rdf:datatype = "xsd:string">secondary-ac</bp:term>
+    </bp:RelationshipTypeVocabulary>
+    <bp:UnificationXref rdf:about="mi:0829">
+        <bp:id rdf:datatype = "xsd:string">MI:0829</bp:id>
+        <bp:db rdf:datatype = "xsd:string">mi</bp:db>
+    </bp:UnificationXref>
+    <bp:UnificationXref rdf:about="chebi:18367">
+        <bp:id rdf:datatype = "xsd:string">CHEBI:18367</bp:id>
+        <bp:db rdf:datatype = "xsd:string">chebi</bp:db>
+    </bp:UnificationXref>
+    <bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:18367">
+        <bp:standardName rdf:datatype = "xsd:string">phosphate</bp:standardName>
+        <bp:xref rdf:resource="#RX_chebi_CHEBI_14791_secondary-ac" />
+        <bp:xref rdf:resource="#RX_chebi_CHEBI_45024_secondary-ac" />
+        <bp:xref rdf:resource="chebi:18367" />
+        <bp:xref rdf:resource="#RX_chebi_CHEBI_43474_see-also" />
+        <bp:xref rdf:resource="#RX_chebi_CHEBI_7793_secondary-ac" />
+        <bp:xref rdf:resource="#RX_chebi_CHEBI_35780_multiple_parent_reference" />
+        <bp:xref rdf:resource="#RX_chebi_CHEBI_79387_multiple_parent_reference" />
+        <bp:displayName rdf:datatype = "xsd:string">phosphate(3-)</bp:displayName>
+        <bp:name rdf:datatype = "xsd:string">[PO4](3-)</bp:name>
+        <bp:name rdf:datatype = "xsd:string">tetraoxophosphate(3-)</bp:name>
+        <bp:name rdf:datatype = "xsd:string">tetraoxophosphate(V)</bp:name>
+        <bp:name rdf:datatype = "xsd:string">Phosphate</bp:name>
+        <bp:name rdf:datatype = "xsd:string">Orthophosphate</bp:name>
+        <bp:name rdf:datatype = "xsd:string">PHOSPHATE ION</bp:name>
+        <bp:name rdf:datatype = "xsd:string">tetraoxidophosphate(3-)</bp:name>
+        <bp:name rdf:datatype = "xsd:string">PO4(3-)</bp:name>
+        <bp:comment rdf:datatype = "xsd:string">A phosphate ion that is the conjugate base of hydrogenphosphate.</bp:comment>
+        <bp:comment rdf:datatype = "xsd:string">is_conjugate_base_of 43474</bp:comment>
+    </bp:SmallMoleculeReference>
+    <bp:Provenance rdf:ID="pathbank">
+        <bp:standardName rdf:datatype = "xsd:string">Pathbank</bp:standardName>
+        <bp:displayName rdf:datatype = "xsd:string">Pathbank</bp:displayName>
+        <bp:comment rdf:datatype = "xsd:string">Source http://pathbank.org/downloads/pathbank_primary_biopax.zip type: BIOPAX, Pathbank 2.0 BioPAX data (primary pathways, human data only), 16-Aug-2019</bp:comment>
+    </bp:Provenance>
+    <bp:RelationshipTypeVocabulary rdf:about="http://bioregistry.io/mi:0361">
+        <bp:xref rdf:resource="mi:0361" />
+        <bp:term rdf:datatype = "xsd:string">see-also</bp:term>
+        <bp:term rdf:datatype = "xsd:string">additional information</bp:term>
+    </bp:RelationshipTypeVocabulary>
+    <bp:SmallMolecule rdf:about="pathbank:Compound/PW_C001104_Nucleus">
+        <bp:displayName rdf:datatype = "xsd:string">Phosphate</bp:displayName>
+        <bp:cellularLocation rdf:resource="#LV_go_GO_0005634" />
+        <bp:feature rdf:resource="pathbank:Compound/PW_C001104/ProteinModification/48" />
+        <bp:entityReference rdf:resource="http://bioregistry.io/chebi:18367" />
+        <bp:dataSource rdf:resource="#pathbank" />
+    </bp:SmallMolecule>
+    <bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_35780_multiple_parent_reference">
+        <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0829" />
+        <bp:id rdf:datatype = "xsd:string">CHEBI:35780</bp:id>
+        <bp:db rdf:datatype = "xsd:string">chebi</bp:db>
+    </bp:RelationshipXref>
+</rdf:RDF>

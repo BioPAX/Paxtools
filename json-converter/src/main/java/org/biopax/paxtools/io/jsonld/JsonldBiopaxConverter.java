@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -24,103 +22,65 @@ public class JsonldBiopaxConverter implements JsonldConverter {
 	private final static Logger LOG = LoggerFactory.getLogger(JsonldBiopaxConverter.class);
 
 	/*
-	 * Convert inputstream in owl/rdf format to outputsream in jsonld format
+	 * Convert biopax owl (rdf/xml) to jsonld format.
 	 */
-	public void convertToJsonld(InputStream in, OutputStream os)
-			throws IOException {
-		
-		File inputProcessedFile = preProcessFile(in);
-		LOG.info("OWl File processed successfully ");
-		
-		// print current time
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		LOG.info("Conversion RDF to JSONLD started "
-				+ sdf.format(Calendar.getInstance().getTime()));
-
-		// create an empty model
+	public void convertToJsonld(InputStream in, OutputStream os) throws IOException {
+		File tmpFile = preProcessFile(in); //in gets there closed
 		Model modelJena = ModelFactory.createDefaultModel();
-		InputStream internalInputStream = new FileInputStream(inputProcessedFile);
-		// read the RDF/XML file
-		RDFDataMgr.read(modelJena, internalInputStream, Lang.RDFXML);
-		LOG.info("Read into Model finished " + sdf.format(Calendar.getInstance().getTime()));
-
-		try { //close quietly and delete the temp. input file
-			internalInputStream.close();
-			inputProcessedFile.delete();
-		} catch(Exception e) {}
-
+		in = new FileInputStream(tmpFile);
+		RDFDataMgr.read(modelJena, in, Lang.RDFXML);
 		RDFDataMgr.write(os, modelJena, Lang.JSONLD);
-		LOG.info("Conversion RDF to JSONLD finished " + sdf.format(Calendar.getInstance().getTime()));
-		LOG.info(" JSONLD file " + " is written successfully.");
-
+		LOG.info("BioPAX RDFXML to JSONLD finished");
 		try { //close, flush quietly
+			in.close();
 			os.close();
+			tmpFile.delete();
 		} catch(Exception e) {}
 	}
 
 	
 	/*
-	 * Convert inputstream in jsonld format to outputsream if owl/rdf format
+	 * Convert jsonld back to rdf/xml
+	 * if that jsonld was converted from rdf/xml (e.g. biopax) originally
 	 */
 	public void convertFromJsonld(InputStream in, OutputStream out) {
-
-		Model modelJena = ModelFactory.createDefaultModel();
-
 		if (in == null) {
 			throw new IllegalArgumentException("Input File: " + " not found");
 		}
 		if (out == null) {
 			throw new IllegalArgumentException("Output File: " + " not found");
 		}
-
-		// read the JSONLD file
+		Model modelJena = ModelFactory.createDefaultModel();
 		modelJena.read(in, null, "JSONLD");
-
 		RDFDataMgr.write(out, modelJena, Lang.RDFXML);
-		LOG.info(" RDF file " + " is written successfully.");
-
+		LOG.info("JSONLD to RDFXML finished");
 	}
 
 	/**
 	 * Converts the BioPAX data (stream) to an equivalent temporary
 	 * BioPAX RDF/XML file that contains absolute instead of (possibly)
 	 * relative URIs for all the BioPAX elements out there; and returns that file.
+	 * This is required due to a bug in Jena lib that results in inserting '#' inside the URIs...
 	 *
 	 * @param in biopax input stream
 	 * @return a temporary file
 	 * @throws IOException
      */
 	public File preProcessFile(InputStream in) throws IOException {
-
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		LOG.info("BIOPAX Conversion started "
-				+ sdf.format(Calendar.getInstance().getTime()));
-
 		if (in == null) {
 			throw new IllegalArgumentException("Input File: " + " is not found");
 		}
-
 		SimpleIOHandler simpleIO = new SimpleIOHandler(BioPAXLevel.L3);
-
-		// create a Paxtools Model from the BioPAX L3 RDF/XML input file (stream)
-		org.biopax.paxtools.model.Model model = simpleIO.convertFromOWL(in);
-		// - and the input stream 'in' gets closed inside the above method call
-
-		// set for the IO to output full URIs:
-
-		simpleIO.absoluteUris(true);
-
-		File fullUriBiopaxInput = File.createTempFile("paxtools", ".owl");
-
-		fullUriBiopaxInput.deleteOnExit(); // delete on JVM exits
-		FileOutputStream outputStream = new FileOutputStream(fullUriBiopaxInput);
-
+		// create a Paxtools Model from the BioPAX RDF/XML input stream
+		org.biopax.paxtools.model.Model model = simpleIO.convertFromOWL(in);//also closes the input stream
+//		model.setXmlBase("");
+		simpleIO.absoluteUris(true); //forces absolute URIs in the output!
+		File tmpf = File.createTempFile("paxtools", ".owl");
+		tmpf.deleteOnExit(); // delete on JVM exits
+		FileOutputStream outputStream = new FileOutputStream(tmpf);
 		// write to an output stream (back to RDF/XML)
-
-		simpleIO.convertToOWL((org.biopax.paxtools.model.Model) model,	outputStream); // it closes the stream internally
-
-		LOG.info("BIOPAX Conversion finished " + sdf.format(Calendar.getInstance().getTime()));
-		return fullUriBiopaxInput;
+		simpleIO.convertToOWL(model,	outputStream); //also closes the output stream
+		return tmpf;
 	}
 
 }

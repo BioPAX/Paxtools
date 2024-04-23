@@ -150,7 +150,7 @@ public class SIFSearcherTest extends PatternBoxTest
 //			public Pattern constructPattern()
 //			{
 //				Pattern pattern = super.constructPattern();
-//				pattern.add(new IDConstraint(Collections.singleton("bioregistry.io/uniprot:Q9NVZ3")), "upper controller ER");
+//				pattern.add(new IDConstraint(Collections.singleton("http://bioregistry.io/uniprot:Q9NVZ3")), "upper controller ER");
 //				return pattern;
 //			}
 //		};

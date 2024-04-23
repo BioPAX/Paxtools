@@ -56,21 +56,21 @@ public class NormalizerTest {
 				arguments("pubmed:12345", "", "pubmed", "12345", PublicationXref.class),
 				arguments("pubmed:12345", "test/", "MEDLINE", "12345", PublicationXref.class),
 				arguments("RX_pubmed_12345", null, "PubMED", "12345", RelationshipXref.class), //not PublicationXref
-				arguments("bioregistry.io/chebi:12345", "", "chebi", "CHEBI:12345", SmallMoleculeReference.class),
-				arguments("bioregistry.io/pubchem.substance:12345", "", "pubchem-substance", "12345", SmallMoleculeReference.class),
+				arguments("http://bioregistry.io/chebi:12345", "", "chebi", "CHEBI:12345", SmallMoleculeReference.class),
+				arguments("http://bioregistry.io/pubchem.substance:12345", "", "pubchem-substance", "12345", SmallMoleculeReference.class),
 				//invalid chebi id (its "banana", if present, is case-sensitive; i.e., CHEBI:12345 or 12345 would match the pattern)
 				arguments("SMR_bd1c4fd7641bf774e58bda352272c720", "", "chebi", "chebi:12345", SmallMoleculeReference.class),
-				arguments("bioregistry.io/chebi:12345", "test/", "chebi", "12345", SmallMoleculeReference.class),
-				arguments("bioregistry.io/chebi:12345", "test/", "chebi", "CHEBI:12345", SmallMoleculeReference.class),
-				arguments("bioregistry.io/pubchem.compound:12345", "", "pubchem", "12345", SmallMoleculeReference.class),
-				arguments("bioregistry.io/pubchem.substance:12345", "", "pubchem-substance", "12345", SmallMoleculeReference.class),
+				arguments("http://bioregistry.io/chebi:12345", "test/", "chebi", "12345", SmallMoleculeReference.class),
+				arguments("http://bioregistry.io/chebi:12345", "test/", "chebi", "CHEBI:12345", SmallMoleculeReference.class),
+				arguments("http://bioregistry.io/pubchem.compound:12345", "", "pubchem", "12345", SmallMoleculeReference.class),
+				arguments("http://bioregistry.io/pubchem.substance:12345", "", "pubchem-substance", "12345", SmallMoleculeReference.class),
 				//special symbols or spaces in the 'id' part get replaced with underscore in the URI
 				arguments("UX_Foo_Bar", null, null, "Foo Bar", UnificationXref.class),
 				arguments("UX_Foo_Bar", null, null, "Foo&Bar", UnificationXref.class), //todo: no good - makes the same URI, can mess things up...
 				arguments("uniprot:W0C7J9", "", "UniProt", "W0C7J9", UnificationXref.class),
-				arguments("bioregistry.io/ncbitaxon:9606", null, "taxonomy", "9606", BioSource.class),
-				arguments("bioregistry.io/ncbitaxon:9606", null, "NCBI Taxonomy", "9606", BioSource.class),
-				arguments("bioregistry.io/ncbitaxon:9606", null, "NEWT", "9606", BioSource.class),
+				arguments("http://bioregistry.io/ncbitaxon:9606", null, "taxonomy", "9606", BioSource.class),
+				arguments("http://bioregistry.io/ncbitaxon:9606", null, "NCBI Taxonomy", "9606", BioSource.class),
+				arguments("http://bioregistry.io/ncbitaxon:9606", null, "NEWT", "9606", BioSource.class),
 				//when organism's id is not taxID (e.g., if the BioSource has tissue, cellType CVs...)
 				arguments("BIO_taxonomy_9606_blah_blah", null, "taxonomy", "9606_blah_blah", BioSource.class)
 		);
@@ -141,7 +141,7 @@ public class NormalizerTest {
 		pro1.addName("nci_nature"); // must be case-insensitive (recognized)
 		pro1.setStandardName("foo"); // must be replaced
 		// Provenance (it won't create names from the urn unless we call: Normalizer.autoName(pro2);)
-		Provenance pro2 = model.addNew(Provenance.class, "bioregistry.io/signaling-gateway/");
+		Provenance pro2 = model.addNew(Provenance.class, "http://bioregistry.io/signaling-gateway/");
 
 		// add some entities with props
 		Pathway pw1 = model.addNew(Pathway.class, "pathway");
@@ -218,7 +218,7 @@ public class NormalizerTest {
 		assertTrue(model.containsID("uniprot.isoform:W0C7J9-1"));
 		assertTrue(model.containsID("uniprot.isoform:P68250-3"));
 		assertTrue(model.containsID("ncbitaxon:10090"));
-		assertTrue(model.containsID("bioregistry.io/ncbitaxon:10090")); //was "taxonomy"
+		assertTrue(model.containsID("http://bioregistry.io/ncbitaxon:10090")); //was "taxonomy"
 
 		// check Xref
 		String normUri = Normalizer.uri(model.getXmlBase(), "uniprot", "P68250", UnificationXref.class);
@@ -226,7 +226,7 @@ public class NormalizerTest {
 		assertTrue(bpe instanceof UnificationXref);
 
 		// check PR
-		bpe = model.getByID("bioregistry.io/uniprot:Q0VCL1");
+		bpe = model.getByID("http://bioregistry.io/uniprot:Q0VCL1");
 		assertTrue(bpe instanceof ProteinReference);
 		assertFalse(model.containsID("Xref7")); //RXs are now all normalized as well
 
@@ -262,10 +262,10 @@ public class NormalizerTest {
 	@Test
 	void autoName() {
 		Model model = BioPAXLevel.L3.getDefaultFactory().createModel();
-		Provenance pro = model.addNew(Provenance.class, "bioregistry.io/pid.pathway/");
+		Provenance pro = model.addNew(Provenance.class, "http://bioregistry.io/pid.pathway/");
 		pro.setStandardName("foo");
 		Normalizer.autoName(pro);
-		Provenance pro2 = model.addNew(Provenance.class, "bioregistry.io/signaling-gateway"); // ending / doesn't matter
+		Provenance pro2 = model.addNew(Provenance.class, "http://bioregistry.io/signaling-gateway"); // ending / doesn't matter
 		Normalizer.autoName(pro2);
 		assertAll(
 				() -> assertTrue(pro.getName().contains("pid.pathway")),
@@ -305,7 +305,7 @@ public class NormalizerTest {
 		Normalizer normalizer = new Normalizer();
 		normalizer.normalize(model);
 
-		ProteinReference e = (ProteinReference) model.getByID("bioregistry.io/uniprot:Q0VCL1");
+		ProteinReference e = (ProteinReference) model.getByID("http://bioregistry.io/uniprot:Q0VCL1");
 		assertNotNull(e);
 		assertEquals(4, e.getXref().size());
 	}
@@ -331,7 +331,7 @@ public class NormalizerTest {
 		assertEquals(0, pr.getXref().size()); // old PR has xref removed!
 		assertEquals(0, ref.getXrefOf().size()); // because the old xref was replaced in all parent elements!
 
-		ProteinReference e = (ProteinReference) model.getByID("bioregistry.io/uniprot:Q0VCL1");
+		ProteinReference e = (ProteinReference) model.getByID("http://bioregistry.io/uniprot:Q0VCL1");
 		assertNotNull(e);
 		assertEquals(1, e.getXref().size());
 

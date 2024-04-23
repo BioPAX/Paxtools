@@ -48,7 +48,7 @@ public class CommonIDFetcher implements IDFetcher
 				(StringUtils.containsIgnoreCase(ele.getUri(),"identifiers.org/uniprot")
 						|| StringUtils.containsIgnoreCase(ele.getUri(),"bioregistry.io/uniprot")))
 		//can be like ...identifiers.org/uniprot:AC or identifiers.org/uniprot/AC
-		// or bioregistry.io/uniprot:AC or bioregistry.io/uniprot.isoform:...
+		// or http://bioregistry.io/uniprot:AC or bioregistry.io/uniprot.isoform:...
 		{
 			String ac = StringUtils.substringAfterLast(ele.getUri(), "/");
 			if(StringUtils.contains(ac, ":")) {

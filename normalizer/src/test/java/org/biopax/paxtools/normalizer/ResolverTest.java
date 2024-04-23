@@ -42,13 +42,15 @@ public class ResolverTest {
 	public final void getURI() {
 		Assertions.assertAll(
 				//standard prefix and id with "banana" prefix
-				() -> Assertions.assertEquals("bioregistry.io/chebi:36927", Resolver.getURI("chebi", "CHEBI:36927")),
+				() -> Assertions.assertEquals("http://bioregistry.io/chebi:36927", Resolver.getURI("chebi", "CHEBI:36927")),
 				//old ns prefix (should auto-fix as "chebi") and id without "CHEBI:" banana...
-				() -> Assertions.assertEquals("bioregistry.io/chebi:36927", Resolver.getURI("identifiers.org/chebi/", "36927")),
+				() -> Assertions.assertEquals("http://bioregistry.io/chebi:36927", Resolver.getURI("identifiers.org/chebi/", "36927")),
 				//similar, but using bioregistry.io/ base, with ending slash, and with banana...
-				() -> Assertions.assertEquals("bioregistry.io/chebi:36927", Resolver.getURI("bioregistry.io/chebi", "CHEBI:36927")),
-				() -> Assertions.assertEquals("bioregistry.io/pubchem.compound:1", Resolver.getURI("CID", "1")),
-				() -> Assertions.assertEquals("bioregistry.io/pubchem.substance:1", Resolver.getURI("SID", "1")),
+				() -> Assertions.assertEquals("http://bioregistry.io/chebi:36927", Resolver.getURI("bioregistry.io/chebi", "CHEBI:36927")),
+				() -> Assertions.assertEquals("http://bioregistry.io/chebi:36927", Resolver.getURI("http://bioregistry.io/chebi", "CHEBI:36927")),
+				() -> Assertions.assertEquals("http://bioregistry.io/chebi:36927", Resolver.getURI("https://bioregistry.io/chebi", "CHEBI:36927")),
+				() -> Assertions.assertEquals("http://bioregistry.io/pubchem.compound:1", Resolver.getURI("CID", "1")),
+				() -> Assertions.assertEquals("http://bioregistry.io/pubchem.substance:1", Resolver.getURI("SID", "1")),
 				() -> Assertions.assertNull(Resolver.getURI("compound", "1")) //id pattern mismatch (kegg.compound)
 		);
 	}

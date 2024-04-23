@@ -44,7 +44,7 @@ public final class SimpleIOExample {
 		uxref.setDb("uniprot");
 		uxref.setId("P62158");
 		// using absolute (ext.) URI as id
-		ProteinReference prf = model2.addNew(ProteinReference.class, "bioregistry.io/uniprot:P62158");
+		ProteinReference prf = model2.addNew(ProteinReference.class, "http://bioregistry.io/uniprot:P62158");
 		prf.setDisplayName("CALM_HUMAN");
 		prf.addXref(uxref);
 		// (do not need to explicitly add objects to the model)

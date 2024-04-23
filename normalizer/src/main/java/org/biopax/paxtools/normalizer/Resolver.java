@@ -24,7 +24,7 @@ public class Resolver {
   private static Map<String,String> spellmap; // compressed name -> prefix (combines custom spellmap.json and registry)
   private static Map<String,String> synonymap;// synonym -> prefix (build from custom synonymap.json and registry)
 
-  public static final String BIOREGISTRY_IO = "bioregistry.io/";
+  public static final String BIOREGISTRY_IO = "http://bioregistry.io/";
   public static final String BIOREGISTRY_JSON_URL =
       "https://raw.githubusercontent.com/biopragmatics/bioregistry/main/exports/registry/registry.json";
 
@@ -183,7 +183,7 @@ public class Resolver {
   }
 
   /**
-   * Builds a URI of the bioentity (e.g., "bioregistry.io/go:0045202")
+   * Builds a URI of the bioentity (e.g., "http://bioregistry.io/go:0045202")
    * from the collection name/synonym and bio id.
    *
    * @param name - name, URI, or ID of a data collection (examples: "ChEBI", "go")
