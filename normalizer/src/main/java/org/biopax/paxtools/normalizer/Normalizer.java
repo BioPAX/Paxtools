@@ -167,7 +167,7 @@ public final class Normalizer {
 				// fix 'uniprot' instead 'uniprot isoform' and vice versa mistakes
 				if (ref.getDb().startsWith("uniprot")) {
 					//auto-fix (guess) for possibly incorrect db/id (can be 'uniprot isoform' with/no idVersion, etc..)
-					if (isValidDbId("uniprot.isoform", ref.getId())
+					if (Resolver.checkRegExp(ref.getId(), "uniprot.isoform")
 							&& ref.getId().contains("-")) //the second condition is important
 					{	//then it's certainly an isoform id; so - fix the db name
 						ref.setDb(isoformName); //fix the db
@@ -178,11 +178,11 @@ public final class Normalizer {
 							if(ref.getIdVersion() != null && ref.getIdVersion().matches("^\\d+$")) {
 								idPart = ref.getId() + "-" + ref.getIdVersion(); //guess idVersion is isoform number
 							}
-							if(isValidDbId(ref.getDb(), idPart)) {
+							if(Resolver.checkRegExp(idPart, isoformName)) {
 								ref.setId(idPart); //moved the isoform # to the ID
 								ref.setIdVersion(null);
 							}
-							else if(!isValidDbId(ref.getDb(), ref.getId())) {
+							else if(!Resolver.checkRegExp(ref.getId(), isoformName)) {
 								//certainly not isoform
 								ref.setDb("uniprot"); //guess, fix
 							}
@@ -204,14 +204,6 @@ public final class Normalizer {
 		
 		// execute replace xrefs
 		map.doSubs();
-	}
-
-	/*
-	 * @param db must be valid MIRIAM db name or synonym
-	 * @trows IllegalArgumentException when db is unknown name.
-	 */
-	private boolean isValidDbId(String db, String id) {
-		return Resolver.checkRegExp(id, db);
 	}
 
 	/**
@@ -562,34 +554,40 @@ public final class Normalizer {
 	private void normalizeBioSources(Model model) {
 		//it's called after all the xrefs and CVs were normalized
 		NormalizerMap map = new NormalizerMap(model);
-		for(BioSource bs : model.getObjects(BioSource.class)) {
-			UnificationXref uref = findPreferredUnificationXref(bs);
-			//normally, the xref db is 'Taxonomy' (or a valid synonym)
-			if (uref != null
-				&& ( uref.getDb().equalsIgnoreCase("ncbitaxon") //should be (the preferred prefix in bioregistry.io)
-					|| uref.getDb().toLowerCase().contains("taxonomy") //just in case..
-					|| uref.getDb().equalsIgnoreCase("newt"))) {
-				String 	idPart = uref.getId();
 
-				//tissue/cellType terms can be added below:
-				if(bs.getTissue()!=null && !bs.getTissue().getTerm().isEmpty()) 
-					idPart += "_" + bs.getTissue().getTerm().iterator().next();
-				if(bs.getCellType()!=null && !bs.getCellType().getTerm().isEmpty()) 
-					idPart += "_" + bs.getCellType().getTerm().iterator().next();
-				
-				String uri = uri(xmlBase, uref.getDb(), idPart, BioSource.class); //for standard db, id it makes bioregistry.io/ncbitaxon:id URI
-				map.put(bs, uri);
-			} else {
-				log.debug("Won't normalize BioSource"
-						+ " : no taxonomy unification xref found in " + bs.getUri()
-						+ ". " + description);
+		for(BioSource bs : model.getObjects(BioSource.class))
+		{
+			UnificationXref uref = findPreferredUnificationXref(bs); //normally, uref.db is 'Taxonomy' or valid synonym
+
+			if(uref == null) {
+				log.debug("BioSource: {} - no unif. xrefs; {}", bs.getUri(), description);
+				continue;
 			}
+			//btw, normalizeBioSources is called after all the xrefs in the model got normalized!
+			Namespace ns = Resolver.getNamespace(uref.getDb());
+			if (ns == null || !"ncbitaxon".equalsIgnoreCase(ns.getPrefix())) {
+				log.debug("BioSource: {} - no taxonomy unif. xrefs; {}", bs.getUri(), description);
+				continue;
+			}
+
+			//normalize uri
+			String idPart = uref.getId();
+			//tissue/cellType terms can be added below:
+			if(bs.getTissue()!=null && !bs.getTissue().getTerm().isEmpty()) {
+				idPart += "_" + bs.getTissue().getTerm().iterator().next();
+			}
+			if(bs.getCellType()!=null && !bs.getCellType().getTerm().isEmpty()) {
+				idPart += "_" + bs.getCellType().getTerm().iterator().next();
+			}
+			String uri = uri(xmlBase, uref.getDb(), idPart, BioSource.class); //makes bioregistry.io/ncbitaxon:id
+			map.put(bs, uri);
 		}
+
 		map.doSubs();
 	}
 
 	private void normalizeERs(Model model) {
-		
+
 		NormalizerMap map = new NormalizerMap(model);
 		
 		// process the rest of utility classes (selectively though)

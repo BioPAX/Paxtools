@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Singleton bio identifier resolver utility.
  */
@@ -62,7 +61,7 @@ public class Resolver {
         }));
       }
 
-      LOG.info("read registry.json to the namespaces map; size: " + namespaces.size());
+      LOG.info("read registry.json to the namespaces map; size: {}", namespaces.size());
 
       //Post-process registry entries to add synonyms and spellings
       namespaces.forEach((prefix, ns) -> {
@@ -107,7 +106,7 @@ public class Resolver {
   public static boolean checkRegExp(String identifier, String datatype) {
     Namespace dt = getNamespace(datatype);
     if(dt == null) {
-      LOG.warn(String.format("Cannot check id: %s for unknown collection: %s (returned false)", identifier, datatype));
+      LOG.debug("Cannot check id: {} for unknown collection: {}; return: false", identifier, datatype);
       return false;
     }
 
@@ -121,8 +120,7 @@ public class Resolver {
     if(StringUtils.isNotBlank(dtPattern)) {
       return Pattern.compile(dtPattern).matcher(identifier).find();
     } else {
-      LOG.warn(String.format("Cannot check id: %s as regexp is undefined for: %s (returned false)",
-          identifier, dt.getPrefix()));
+      LOG.debug("Cannot check id: {} as regexp is undefined for: {}; return: false", identifier, dt.getPrefix());
       return false;
     }
   }
