@@ -34,7 +34,8 @@ public class ResolverTest {
 				() -> Assertions.assertTrue(Resolver.checkRegExp("MI:0000", MI)), //auto-ignores "MI:"
 				() -> Assertions.assertTrue(Resolver.checkRegExp("0000", MI)),
 				() -> Assertions.assertFalse(Resolver.checkRegExp("0000", "foo")), //no such collection
-				() -> Assertions.assertFalse(Resolver.checkRegExp("0000", "aaindex"))//aaindex no pattern
+				() -> Assertions.assertTrue(Resolver.checkRegExp("0000", "aaindex")),//aaindex no pattern
+				() -> Assertions.assertTrue(Resolver.checkRegExp("98346", "bind"))//no pattern
 		);
 	}
 

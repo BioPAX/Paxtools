@@ -101,7 +101,7 @@ public class Resolver {
    *
    * @param identifier internal identifier used by the data type
    * @param datatype   name, synonym or URI of a data type
-   * @return "true" if the identifier follows the regular expression, "false" otherwise
+   * @return "true" when datatype is recognized, and identifier either matches the pattern or there's no pattern
    */
   public static boolean checkRegExp(String identifier, String datatype) {
     Namespace dt = getNamespace(datatype);
@@ -116,13 +116,8 @@ public class Resolver {
       identifier = identifier.replaceFirst(banana+dt.getBanana_peel(), "");
     }
 
-    String dtPattern = dt.getPattern();
-    if(StringUtils.isNotBlank(dtPattern)) {
-      return Pattern.compile(dtPattern).matcher(identifier).find();
-    } else {
-      LOG.debug("Cannot check id: {} as regexp is undefined for: {}; return: false", identifier, dt.getPrefix());
-      return false;
-    }
+    //return true when there is no regex pattern defined or the identifier matches
+    return (StringUtils.isNotBlank(dt.getPattern())) ? Pattern.compile(dt.getPattern()).matcher(identifier).find() : true;
   }
 
 
@@ -202,7 +197,7 @@ public class Resolver {
    */
   public static String getCURIE(String name, String id) {
     Namespace ns = getNamespace(name, true);
-    if (ns != null) {
+    if (ns != null && StringUtils.isNotBlank(ns.getPattern())) {
       if (checkRegExp(id, name)) {
         String prefix = ns.getPrefix();
         //remove "banana" and "peel" prefix from the identifier if any defined and present
