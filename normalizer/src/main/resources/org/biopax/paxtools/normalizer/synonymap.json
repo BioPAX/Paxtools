@@ -39,5 +39,6 @@
   "EC NUMBER": "eccode",
   "MIRBASE SEQUENCE": "mirbase",
   "GENBANK GENE DATABASE": "genbank",
-  "GENBANK PROTEIN DATABASE": "genbank"
+  "GENBANK PROTEIN DATABASE": "genbank",
+  "GENBANK IDENTIFIER": "genbank"
 }

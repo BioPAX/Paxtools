@@ -64,5 +64,7 @@
   "DIGITALOBJECTIDENTIFIER": "doi",
   "RCSBPDB": "pdb",
   "MOLECULARINTERACTIONSONTOLOGY": "mi",
-  "ENSEMBLHUMAN": "ensembl"
+  "ENSEMBLHUMAN": "ensembl",
+  "GENBANKIDENTIFIER": "genbank",
+  "GENBANKINDENTIFIER": "genbank"
 }
