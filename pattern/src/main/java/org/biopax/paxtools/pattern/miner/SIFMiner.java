@@ -1,5 +1,6 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.controller.IDFetcher;
 import org.biopax.paxtools.pattern.Match;
 import org.biopax.paxtools.pattern.util.Blacklist;
 

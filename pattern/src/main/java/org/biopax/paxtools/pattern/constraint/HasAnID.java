@@ -1,8 +1,8 @@
 package org.biopax.paxtools.pattern.constraint;
 
+import org.biopax.paxtools.controller.IDFetcher;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.pattern.Match;
-import org.biopax.paxtools.pattern.miner.IDFetcher;
 
 import java.util.Map;
 import java.util.Set;

@@ -1,12 +1,12 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.controller.IDFetcher;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
-import org.biopax.paxtools.pattern.Pattern;
+import org.biopax.paxtools.normalizer.ConfigurableIDFetcher;
 import org.biopax.paxtools.pattern.PatternBoxTest;
-import org.biopax.paxtools.pattern.constraint.IDConstraint;
 import org.biopax.paxtools.pattern.util.AdjacencyMatrix;
 import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.jupiter.api.Disabled;

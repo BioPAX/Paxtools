@@ -7,6 +7,7 @@ import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.normalizer.ConfigurableIDFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,36 +18,25 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * An advanced BioPAX to GMT format converter, which can output IDs of genetic elements or chemicals
- * (the output file can be loaded with the GSEA software if gene/protein IDs are used).
- * 
- * Each output entry (row) consists of three columns (tab separated):
- * name (URI), description, and the list of identifiers (of the same type).
- * For all ERs not associated with any pathway, "other" is used for name and uri.
+ * An experimental/advanced BioPAX to GMT converter
+ * that can output the desired type IDs for both genetic elements and chemicals
+ * (the output file can be then loaded with GSEA software if gene/protein IDs were used).
  *
- * The list may have one or more IDs of the same type per Protein Reference (PR),
- * e.g., UniProt IDs or HGNC Symbols; PRs not having an xref of 
- * given db/id type are ignored. If there are less than three protein 
- * references per entry in total, it will not be printed.
+ * @see GSEAConverter
  *
- * Note, this code assumes that the model has successfully been validated
- * and perhaps normalized (using the BioPAX Validator, Paxtools Normalizer).
- * A BioPAX L1 or L2 model is first converted to the L3.
+ * TODO: finish, test, make it public...
  */
 final class GMTConverter {
 	private final static Logger LOG = LoggerFactory.getLogger(GMTConverter.class);
 
-	private final IdFetcher idFetcher;
+	private final IDFetcher idFetcher;
 	private boolean skipSubPathways;
 	private boolean skipOutsidePathways;
 	private int minNumIdsPerEntry;
 
-	/**
-	 * Constructor.
-	 */
 	public GMTConverter()
 	{
-		idFetcher = new IdFetcher().chemDbStartsWithOrEquals("chebi")
+		idFetcher = new ConfigurableIDFetcher().chemDbStartsWithOrEquals("chebi")
 			.seqDbStartsWithOrEquals("hgnc.symbol") //the order in the list does matter
 			.seqDbStartsWithOrEquals("hgnc symbol")
 			.seqDbStartsWithOrEquals("hgnc");

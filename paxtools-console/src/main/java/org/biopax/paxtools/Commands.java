@@ -21,6 +21,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level2.entity;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.normalizer.ConfigurableIDFetcher;
 import org.biopax.paxtools.normalizer.Namespace;
 import org.biopax.paxtools.normalizer.Resolver;
 import org.biopax.paxtools.pattern.miner.*;
@@ -91,7 +92,6 @@ final class Commands {
 			}
 		}
 
-		// The Constructor args: GSEAConverter(idTypeNameOrPrefix, crossSpeciesCheckEnabled?, skipSubPathways?)
 		GSEAConverter gseaConverter = new GSEAConverter(argv[3], !crossSpecies, !subPathways);
 		gseaConverter.setSkipOutsidePathways(!notPathways);
 		gseaConverter.setAllowedOrganisms(organisms);//if organisms is empty then all species are allowed (no filtering)
@@ -333,8 +333,9 @@ final class Commands {
 
 		Model model = getModel(io, argv[1]);
 
-		if(mergeInteractions)
+		if(mergeInteractions) {
 			ModelUtils.mergeEquivalentInteractions(model);
+		}
 
 		//Create a new SIF searcher:
 		//set SIF miners to use (default is to use all types, given no include/exclude args provided)

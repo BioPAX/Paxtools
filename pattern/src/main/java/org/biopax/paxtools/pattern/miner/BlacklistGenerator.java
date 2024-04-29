@@ -1,5 +1,6 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.controller.IDFetcher;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.SmallMoleculeReference;

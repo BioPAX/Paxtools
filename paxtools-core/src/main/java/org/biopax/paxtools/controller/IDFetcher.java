@@ -1,4 +1,4 @@
-package org.biopax.paxtools.pattern.miner;
+package org.biopax.paxtools.controller;
 
 import org.biopax.paxtools.model.BioPAXElement;
 
@@ -11,8 +11,8 @@ public interface IDFetcher
 {
 	/**
 	 * Finds a String ID for the given element.
-	 * @param ele element to fecth the ID from
-	 * @return ID
+	 * @param ele element to fetch the ID from
+	 * @return some identifiers
 	 */
-	public Set<String> fetchID(BioPAXElement ele);
+	Set<String> fetchID(BioPAXElement ele);
 }

@@ -19,9 +19,9 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * Converts a BioPAX model to the GMT format (used by GSEA software).
+ *   Converts a BioPAX model to the GMT format (used by GSEA software).
  * 
- * It creates GSEA entries from sequence entity reference xrefs
+ *   It creates GSEA entries from sequence entity reference xrefs
  * in the BioPAX model as follows:
  *
  *   Each entry (row) consists of three columns (tab separated):
@@ -35,14 +35,10 @@ import java.util.*;
  * given db/id type are ignored. Optionally, if there are less than three protein
  * references per entry, it will not be printed.
  * 
- * Note, to effectively enforce cross-species violation, 
- * 'organism' property and pathways must be set
- * to a BioSource object that has a valid unification xref: 
- * db="Taxonomy" and id= some valid taxonomy id.
- *
- * Note, this code assumes that the model has successfully been validated
- * and perhaps normalized (using the BioPAX Validator, Paxtools Normalizer).
- * A BioPAX L1 or L2 model is first converted to the L3.
+ * Notes:
+ *  - to effectively enforce the cross-species checks, 'organism' property of pathways and participants must be set
+ * to a BioSource element with valid ncbitaxon (taxonomy) unification xref;
+ *  - this assumes that the BioPAX Level3 model was validated  and normalized (with BioPAX Validator and Normalizer);
  */
 public class GSEAConverter
 {
@@ -98,7 +94,7 @@ public class GSEAConverter
 	public GSEAConverter(String idType, boolean crossSpeciesCheckEnabled, boolean skipSubPathways)
 	{
 		if(Resolver.isKnownNameOrVariant(idType)) {
-			this.idType = Resolver.getNamespace(idType, true).getPrefix().toLowerCase(); //(it must be already lowecase though)
+			this.idType = Resolver.getNamespace(idType).getPrefix().toLowerCase(); //(it must be already lowecase though)
 		} else {
 			this.idType = (StringUtils.isNotBlank(idType)) ? idType.toLowerCase() : idType;
 		}

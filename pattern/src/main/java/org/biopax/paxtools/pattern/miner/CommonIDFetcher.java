@@ -1,6 +1,7 @@
 package org.biopax.paxtools.pattern.miner;
 
 import org.apache.commons.lang3.StringUtils;
+import org.biopax.paxtools.controller.IDFetcher;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.normalizer.Resolver;
@@ -12,10 +13,9 @@ import java.util.TreeSet;
 
 /**
  * Tries to get Gene Symbols or UniProt IDs for genes
- * and - display names for small molecules;
- *
- * This id-fetcher is mainly to use with the BioPAX pathway data
- * from Pathway Commons (PC2) db (normalized and enriched with xrefs).
+ * and - get display names for small molecules.
+ * This is mainly to use with the BioPAX pathway data
+ * from Pathway Commons db (normalized and enriched with xrefs).
  *
  * @author Ozgun Babur et al.
  */

@@ -12,7 +12,7 @@ public class ResolverTest {
 				() ->	Assertions.assertNotNull(Resolver.getNamespace("obo.mi")),//auto-detected as "mi"
 				() ->	Assertions.assertEquals(MI, Resolver.getNamespace("urn:miriam:mi").getName()),
 				() ->	Assertions.assertNotNull(Resolver.getNamespace("psi-mi")),//becomes "mi"
-				() ->	Assertions.assertNotNull(Resolver.getNamespace("MolecularInteractions Ontology", true)),//misspelling variant (allowed by default)
+				() ->	Assertions.assertNotNull(Resolver.getNamespace("MolecularInteractions Ontology", true)),//misspelling variant (allowed by default too)
 				() ->	Assertions.assertNull(Resolver.getNamespace("MolecularInteractions Ontology", false)),//null when spelling variants not allowed
 				() ->	Assertions.assertNotNull(Resolver.getNamespace("http://bioregistry.io/chebi")),
 				() ->	Assertions.assertNotNull(Resolver.getNamespace("bioregistry.io/uniprot")),

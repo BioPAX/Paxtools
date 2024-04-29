@@ -1,5 +1,6 @@
 package org.biopax.paxtools.pattern.miner;
 
+import org.biopax.paxtools.controller.IDFetcher;
 import org.biopax.paxtools.model.BioPAXElement;
 
 import java.util.Collections;
@@ -15,5 +16,4 @@ public class SimpleIDFetcher implements IDFetcher
 	{
 		return Collections.singleton(ele.getUri());
 	}
-
 }

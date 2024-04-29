@@ -1,18 +1,21 @@
-package org.biopax.paxtools.controller;
+package org.biopax.paxtools.normalizer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.biopax.paxtools.controller.IDFetcher;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
+import org.biopax.paxtools.util.HGNC;
 
 import java.util.*;
 
 /**
  * Tries to get preferred type IDs of an entity reference.
  *
- * Could be used, e.g., as part of a BioPAX to plain text (or SIF, GMT) converter.
+ * This id-fetcher can be optionally used
+ * when converting (reducing) BioPAX to the binary SIF format.
  */
-public class IdFetcher
+public class ConfigurableIDFetcher implements IDFetcher
 {
 	private final List<String> seqDbStartsWithOrEquals;
 	private final List<String> chemDbStartsWithOrEquals;
@@ -21,7 +24,7 @@ public class IdFetcher
 	/**
 	 * Constructor.
 	 */
-	public IdFetcher() {
+	public ConfigurableIDFetcher() {
 		seqDbStartsWithOrEquals = new ArrayList<>();
 		chemDbStartsWithOrEquals = new ArrayList<>();
 		useNameWhenNoDbMatch = false;
@@ -38,7 +41,7 @@ public class IdFetcher
 	 * @param dbStartsWithOrEquals the Xref.db value or prefix (case-insensitive)
 	 * @return this id-fetcher instance
 	 */
-	public IdFetcher seqDbStartsWithOrEquals(String dbStartsWithOrEquals) {
+	public ConfigurableIDFetcher seqDbStartsWithOrEquals(String dbStartsWithOrEquals) {
 		this.seqDbStartsWithOrEquals.add(dbStartsWithOrEquals.toLowerCase());
 		return this;
 	}
@@ -58,7 +61,7 @@ public class IdFetcher
 	 * @param dbStartsWithOrEquals the Xref.db value or prefix (case-insensitive)
 	 * @return this id-fetcher instance
 	 */
-	public IdFetcher chemDbStartsWithOrEquals(String dbStartsWithOrEquals) {
+	public ConfigurableIDFetcher chemDbStartsWithOrEquals(String dbStartsWithOrEquals) {
 		this.chemDbStartsWithOrEquals.add(dbStartsWithOrEquals.toLowerCase());
 		return this;
 	}
@@ -70,12 +73,12 @@ public class IdFetcher
 	/**
 	 * Set the flag to use the entity reference's names
 	 * when no desired ID type can be found (none of xref.db
-	 * matched before, or there are no xrefs at all).
+	 * matched before, or there were no xrefs at all).
 	 *
 	 * @param useNameWhenNoDbMatch true/false (default is 'true' - when this method's never been called)
 	 * @return this id-fetcher instance
 	 */
-	public IdFetcher useNameWhenNoDbMatch(boolean useNameWhenNoDbMatch) {
+	public ConfigurableIDFetcher useNameWhenNoDbMatch(boolean useNameWhenNoDbMatch) {
 		this.useNameWhenNoDbMatch = useNameWhenNoDbMatch;
 		return this;
 	}
@@ -83,31 +86,33 @@ public class IdFetcher
 	public Set<String> fetchID(BioPAXElement ele)
 	{
 		Set<String> set = new HashSet<>();
+		if(ele instanceof EntityReference) {
+			System.out.println("fetchID(ER): " + ele.getUri());
+		}
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
 			List<String> dbStartsWithOrEquals =
 					(ele instanceof SmallMoleculeReference || ele instanceof SmallMolecule)
 							? chemDbStartsWithOrEquals : seqDbStartsWithOrEquals;
-
 			for (String dbStartsWith : dbStartsWithOrEquals) {
 				//a shortcut for normalized URIs; prevents collecting lots of secondary IDs of the same type
 				if(StringUtils.containsIgnoreCase(ele.getUri(),"identifiers.org/"+dbStartsWith)
 						|| StringUtils.containsIgnoreCase(ele.getUri(),"bioregistry.io/"+dbStartsWith)) {
-					set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
+					//can be http://identifiers.org/hgnc.symbol:PCNA or http://bioregistry.io/chebi:20, etc.
+					set.add(StringUtils.substringAfterLast(ele.getUri(), "/"));
 				}
 				else {
 					for (UnificationXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(), UnificationXref.class)) {
 						collectXrefIdIfDbLike(x, dbStartsWith, set);
 					}
-					//if none was found in unif. xrefs, try rel, xrefs
+					//if none found, try relationship xrefs
 					if (set.isEmpty()) {
-						for (RelationshipXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
-								RelationshipXref.class)) {
+						for (RelationshipXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(), RelationshipXref.class)) {
 							collectXrefIdIfDbLike(x, dbStartsWith, set);
 						}
 					}
 				}
-				//once we've found some ID, no need to try another id type
+				//once we've found some ID, no need to try next (lower priority) id type in the list
 				if (!set.isEmpty()) {
 					break;
 				}
@@ -138,11 +143,33 @@ public class IdFetcher
 	private void collectXrefIdIfDbLike(final Xref x, final String dbStartsWith, final Set<String> set) {
 		String db = x.getDb();
 		String id = x.getId();
-		if (db != null && id != null && !id.isEmpty()) {
-			db = db.toLowerCase();
-			if (db.startsWith(dbStartsWith)) {
-				if (id != null)
-					set.add(id);
+		if (StringUtils.isNotBlank(db) && StringUtils.isNotBlank(id)) {
+			//also find the bioregistry.io prefix and name if possible
+			String dbName = "";
+			String dbPrefix = "";
+			String banana = "";
+			String peel = "";
+			if(Resolver.isKnownNameOrVariant(db)) {
+				Namespace ns = Resolver.getNamespace(db);
+			 	dbPrefix = ns.getPrefix();
+			 	dbName = ns.getName();
+				banana = ns.getBanana();
+				peel = ns.getBanana_peel();
+			}
+			if (StringUtils.startsWithIgnoreCase(db, dbStartsWith)
+					|| StringUtils.startsWithIgnoreCase(dbName, dbStartsWith)
+					|| StringUtils.startsWithIgnoreCase(dbPrefix, dbStartsWith)) {
+				//for a (PR/NAR) HGNC case, call HGNC mapping to the primary/current symbol
+				if (StringUtils.startsWithIgnoreCase(db,"hgnc")) {
+					id = HGNC.getSymbolByHgncIdOrSym(id);
+				}
+				if (id != null) {
+					//e.g. for chebi IDs to have CHEBI: prefix
+					if(StringUtils.isNotBlank(banana) && !id.startsWith(banana)) {
+						id = banana+peel+id;
+					}
+					set.add(id); //match found
+				}
 			}
 		}
 	}
