@@ -47,7 +47,9 @@ final class GMTConverter {
 	public GMTConverter()
 	{
 		idFetcher = new IdFetcher().chemDbStartsWithOrEquals("chebi")
-			.seqDbStartsWithOrEquals("hgnc symbol").seqDbStartsWithOrEquals("hgnc");
+			.seqDbStartsWithOrEquals("hgnc.symbol") //the order in the list does matter
+			.seqDbStartsWithOrEquals("hgnc symbol")
+			.seqDbStartsWithOrEquals("hgnc");
 		skipSubPathways = true;
 		minNumIdsPerEntry = 1;
 		skipOutsidePathways = false;
