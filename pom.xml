@@ -462,6 +462,11 @@
       </dependency>
       <dependency>
         <groupId>org.biopax.paxtools</groupId>
+        <artifactId>paxtools-trove</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.biopax.paxtools</groupId>
         <artifactId>normalizer</artifactId>
         <version>${project.version}</version>
       </dependency>
