@@ -34,6 +34,7 @@
     <module>json-converter</module>
     <module>pattern</module>
     <module>normalizer</module>
+    <module>paxtools-trove</module>
   </modules>
 
   <properties>

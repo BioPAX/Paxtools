@@ -24,7 +24,7 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=29926</bp:comment>
 </bp:UnificationXref>
 
-<bp:ProteinReference rdf:about="urn:miriam:uniprot:P22768">
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P22768">
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARG1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Citrulline--aspartate ligase</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">6.3.4.5</bp:name>
@@ -35,7 +35,7 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ASSY_YEAST</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Argininosuccinate synthase</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Catalyzes the eighth step in arginine biosynthesis. Also has a catabolic function as the first enzyme of citrulline utilization as nitrogen source via arginine and the reactions involved in the arginase pathway. CATALYTIC ACTIVITY: ATP + L-citrulline + L-aspartate = AMP + diphosphate + N(omega)-(L-arginino)succinate. BIOPHYSICOCHEMICAL PROPERTIES: Kinetic parameters: KM=0.1 mM for L-citrulline; KM=0.03 mM for L-aspartate; KM=0.3 mM for ATP; pH dependence: Optimum pH is 7.5-8.0 for the forward reaction and 6.0-6.5 for the reverse reaction; PATHWAY: Amino-acid biosynthesis; L-arginine biosynthesis; L- arginine from L-ornithine and carbamoyl phosphate: step 2/3. SUBUNIT: Homotetramer. SUBCELLULAR LOCATION: Cytoplasm. MISCELLANEOUS: Present with 1870 molecules/cell in log phase SD medium. SIMILARITY: Belongs to the argininosuccinate synthase family. Type 1 subfamily. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:559292" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:559292" />
 </bp:ProteinReference>
 
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:IS_CONJUGATE_ACID_OF_CHEBI%3A29806">
@@ -69,7 +69,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:RelationshipXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:9256435">
+<bp:PublicationXref rdf:about="pubmed:9256435">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">9256435</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Simpson, A</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Howell, PL</bp:author>
@@ -86,21 +86,21 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:BioSource rdf:about="urn:miriam:taxonomy:4932">
+<bp:BioSource rdf:about="http://bioregistry.io/ncbitaxon:4932">
  <bp:xref rdf:resource="urn:biopax:UnificationXref:TAXONOMY_4932" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Saccharomyces cerevisiae</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Saccharomyces cerevisiae</bp:standardName>
 </bp:BioSource>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule19">
- <bp:entityReference rdf:resource="urn:miriam:chebi:29888" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:29888" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">diphosphate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pyrophosphoric acid</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pyrophosphate</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_111294" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_5692_2" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 111294</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule19http://www.reactome.org/biopax/68322BiochemicalReaction556@Layout@http://www.reactome.org/biopax/68322Pathway387@20@109</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PPi</bp:standardName>
@@ -108,12 +108,12 @@
 </bp:SmallMolecule>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule18">
- <bp:entityReference rdf:resource="urn:miriam:chebi:15377" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:15377" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Water</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_3683_1" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29356" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule18http://www.reactome.org/biopax/68322BiochemicalReaction558@Layout@http://www.reactome.org/biopax/68322Pathway387@115@154</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29356</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2O</bp:standardName>
@@ -203,7 +203,7 @@
  <bp:componentStoichiometry rdf:resource="http://www.reactome.org/biopax/68322Stoichiometry1377" />
  <bp:component rdf:resource="http://www.reactome.org/biopax/68322Protein1104" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256100" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ASL tetramer (name copied from entity in Homo sapiens)</bp:displayName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256100</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ASL tetramer (name copied from entity in Homo sapiens)</bp:standardName>
@@ -214,7 +214,7 @@
  <bp:componentStoichiometry rdf:resource="http://www.reactome.org/biopax/68322Stoichiometry1376" />
  <bp:component rdf:resource="http://www.reactome.org/biopax/68322Protein1103" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256107" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ASS1 tetramer (name copied from entity in Homo sapiens)</bp:displayName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256107</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ASS1 tetramer (name copied from entity in Homo sapiens)</bp:standardName>
@@ -268,7 +268,7 @@
  <bp:componentStoichiometry rdf:resource="http://www.reactome.org/biopax/68322Stoichiometry1375" />
  <bp:component rdf:resource="http://www.reactome.org/biopax/68322Protein1102" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256086" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">OTC trimer (name copied from entity in Homo sapiens)</bp:displayName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256086</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">OTC trimer (name copied from entity in Homo sapiens)</bp:standardName>
@@ -279,7 +279,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:18367">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:18367">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_18367" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O4P</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">tetraoxidophosphate(3-)</bp:name>
@@ -376,10 +376,10 @@
 </bp:RelationshipXref>
 
 <bp:Protein rdf:about="http://www.reactome.org/biopax/68322Protein1101">
- <bp:entityReference rdf:resource="urn:miriam:uniprot:P07258" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P07258" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256077" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256077</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322Protein1101@Layout@http://www.reactome.org/biopax/68322Pathway387@512@357</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P07258</bp:standardName>
@@ -387,10 +387,10 @@
 </bp:Protein>
 
 <bp:Protein rdf:about="http://www.reactome.org/biopax/68322Protein1100">
- <bp:entityReference rdf:resource="urn:miriam:uniprot:P40360" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P40360" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256069" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322Protein1100@Layout@http://www.reactome.org/biopax/68322Pathway387@410@193</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256069</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P40360</bp:standardName>
@@ -398,10 +398,10 @@
 </bp:Protein>
 
 <bp:Protein rdf:about="http://www.reactome.org/biopax/68322Protein1103">
- <bp:entityReference rdf:resource="urn:miriam:uniprot:P22768" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P22768" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256106" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256106</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322Protein1103http://www.reactome.org/biopax/68322Complex458@Layout@http://www.reactome.org/biopax/68322Pathway387@158@214</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P22768</bp:standardName>
@@ -409,10 +409,10 @@
 </bp:Protein>
 
 <bp:Protein rdf:about="http://www.reactome.org/biopax/68322Protein1102">
- <bp:entityReference rdf:resource="urn:miriam:uniprot:P05150" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P05150" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256085" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256085</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322Protein1102http://www.reactome.org/biopax/68322Complex457@Layout@http://www.reactome.org/biopax/68322Pathway387@558@181</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P05150</bp:standardName>
@@ -425,10 +425,10 @@
 </bp:ChemicalStructure>
 
 <bp:Protein rdf:about="http://www.reactome.org/biopax/68322Protein1105">
- <bp:entityReference rdf:resource="urn:miriam:uniprot:P00812" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P00812" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256092" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322Protein1105http://www.reactome.org/biopax/68322Complex460@Layout@http://www.reactome.org/biopax/68322Pathway387@32@221</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256092</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P00812</bp:standardName>
@@ -436,10 +436,10 @@
 </bp:Protein>
 
 <bp:Protein rdf:about="http://www.reactome.org/biopax/68322Protein1104">
- <bp:entityReference rdf:resource="urn:miriam:uniprot:P04076" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P04076" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256099" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322Protein1104http://www.reactome.org/biopax/68322Complex459@Layout@http://www.reactome.org/biopax/68322Pathway387@323@63</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256099</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P04076</bp:standardName>
@@ -495,7 +495,7 @@
  <bp:stoichiometricCoefficient rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">6.0</bp:stoichiometricCoefficient>
 </bp:Stoichiometry>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:41981">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:41981">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_41981" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">D2O</bp:chemicalFormula>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:CHEBI_CHEBI%3A29373" />
@@ -518,7 +518,7 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=113585</bp:comment>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:29888">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:29888">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_29888" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H4O7P2</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">acide diphosphorique</bp:name>
@@ -536,12 +536,12 @@
 </bp:SmallMoleculeReference>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule57">
- <bp:entityReference rdf:resource="urn:miriam:chebi:15422" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:15422" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-triphosphate</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113593" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_3422_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113593</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule57http://www.reactome.org/biopax/68322BiochemicalReaction554@Layout@http://www.reactome.org/biopax/68322Pathway387@521@411</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP</bp:standardName>
@@ -554,7 +554,7 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=113581</bp:comment>
 </bp:UnificationXref>
 
-<bp:ProteinReference rdf:about="urn:miriam:uniprot:P05150">
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P05150">
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.1.3.3</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARG3</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">OTCase</bp:name>
@@ -566,17 +566,17 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">OTC_YEAST</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Ornithine carbamoyltransferase</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CATALYTIC ACTIVITY: Carbamoyl phosphate + L-ornithine = phosphate + L-citrulline. ENZYME REGULATION: Forms a stable complex with CAR1 in the presence of ornithine and arginine. In this complex CAR1 retains activity, but ARG3 activity is inhibited. PATHWAY: Amino-acid biosynthesis; L-arginine biosynthesis; L- arginine from L-ornithine and carbamoyl phosphate: step 1/3. SUBUNIT: Interacts with CAR1. SUBCELLULAR LOCATION: Cytoplasm. MISCELLANEOUS: Present with 1140 molecules/cell in log phase SD medium. SIMILARITY: Belongs to the ATCase/OTCase family. SEQUENCE CAUTION: Sequence=CAA58480.1; Type=Erroneous initiation; Sequence=CAA89381.1; Type=Erroneous initiation; COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:559292" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:559292" />
 </bp:ProteinReference>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule56">
- <bp:entityReference rdf:resource="urn:miriam:chebi:18420" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:18420" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mg++</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Magnesium</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2525_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29926" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29926</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mg2+</bp:standardName>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mg2+</bp:displayName>
@@ -619,7 +619,7 @@
 </bp:RelationshipXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule28">
- <bp:entityReference rdf:resource="urn:miriam:chebi:16027" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:16027" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">5&apos;-Adenylic acid</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenylate</bp:name>
@@ -630,7 +630,7 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenylic acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2677_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_76577" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 76577</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule28http://www.reactome.org/biopax/68322BiochemicalReaction556@Layout@http://www.reactome.org/biopax/68322Pathway387@32@64</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">AMP</bp:standardName>
@@ -657,7 +657,7 @@
 <bp:RelationshipTypeVocabulary rdf:about="urn:biopax:RelationshipTypeVocabulary:IS_CONJUGATE_ACID_OF">
 </bp:RelationshipTypeVocabulary>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:16467">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:16467">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_16467" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C6H14N4O2</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(2S)-2-amino-5-guanidinopentanoic acid</bp:name>
@@ -795,7 +795,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:db>
 </bp:RelationshipXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:16015">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:16015">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_16015" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C5H9NO4</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(2S)-2-aminopentanedioic acid</bp:name>
@@ -822,7 +822,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:17533">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:17533">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_17533" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C7H11NO5</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-N-acetylglutamic acid</bp:name>
@@ -859,7 +859,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:6022858">
+<bp:PublicationXref rdf:about="pubmed:6022858">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">6022858</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Younathan, ES</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pynes, GD</bp:author>
@@ -901,7 +901,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:17544">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:17544">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_17544" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHO3</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hydrogentrioxocarbonate(1-)</bp:name>
@@ -932,11 +932,11 @@
 </bp:RelationshipXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule422">
- <bp:entityReference rdf:resource="urn:miriam:chebi:37154" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:37154" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_5412_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29586" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule422@Layout@http://www.reactome.org/biopax/68322Pathway387@237@20</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29586</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Fumarate</bp:standardName>
@@ -1067,12 +1067,12 @@
 </bp:ChemicalStructure>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule64">
- <bp:entityReference rdf:resource="urn:miriam:chebi:16467" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:16467" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2-Amino-5-guanidinovaleric acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_374064" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_15639_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 374064</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule64@Layout@http://www.reactome.org/biopax/68322Pathway387@396@252</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Arginine</bp:standardName>
@@ -1129,7 +1129,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:16027">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:16027">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_16027" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H14N5O7P</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADENOSINE MONOPHOSPHATE</bp:name>
@@ -1163,7 +1163,7 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A purine ribonucleoside 5&apos;-monophosphate having adenine as the nucleobase.</bp:comment>
 </bp:SmallMoleculeReference>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:6249820">
+<bp:PublicationXref rdf:about="pubmed:6249820">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">6249820</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pierson, DL</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Brien, JM</bp:author>
@@ -1181,7 +1181,7 @@
 </bp:UnificationXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule73">
- <bp:entityReference rdf:resource="urn:miriam:chebi:16015" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:16015" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Glutaminic acid</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Glutamic acid</bp:name>
@@ -1189,7 +1189,7 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Glutamate</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_4423_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113552" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113552</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule73@Layout@http://www.reactome.org/biopax/68322Pathway387@309@251</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Glu</bp:standardName>
@@ -1277,7 +1277,7 @@
  <bp:pathwayOrder rdf:resource="http://www.reactome.org/biopax/68322PathwayStep921" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Urea cycle</bp:displayName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">This event has been computationally inferred from an event that has been demonstrated in another species.&lt;p&gt;The inference is based on the homology mapping in Ensembl Compara. Briefly, reactions for which all involved PhysicalEntities (in input, output and catalyst) have a mapped orthologue/paralogue (for complexes at least 75% of components must have a mapping) are inferred to the other species. High level events are also inferred for these events to allow for easier navigation.&lt;p&gt;&lt;a href=&apos;/electronic_inference_compara.html&apos; target = &apos;NEW&apos;&gt;More details and caveats of the event inference in Reactome.&lt;/a&gt; For details on the Ensembl Compara system see also: &lt;a href=&apos;http://www.ensembl.org/info/docs/compara/homology_method.html&apos; target=&apos;NEW&apos;&gt;Gene orthology/paralogy prediction method.&lt;/a&gt;</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:4932" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:4932" />
 </bp:Pathway>
 
 <bp:RelationshipXref rdf:about="http://biopax.org/generated/fixer/copySimplePointers/urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256093">
@@ -1324,7 +1324,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubChem</bp:db>
 </bp:UnificationXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:16141327">
+<bp:PublicationXref rdf:about="pubmed:16141327">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">16141327</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Centeno, F</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mora, A</bp:author>
@@ -1347,7 +1347,7 @@
 <bp:RelationshipTypeVocabulary rdf:about="urn:biopax:RelationshipTypeVocabulary:IS_TAUTOMER_OF">
 </bp:RelationshipTypeVocabulary>
 
-<bp:RelationshipTypeVocabulary rdf:about="urn:miriam:obo.mi:MI%3A0355">
+<bp:RelationshipTypeVocabulary rdf:about="http://bioregistry.io/mi:MI%3A0355">
  <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">gene ontology term for cellular function</bp:term>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:MOLECULAR+INTERACTIONS+ONTOLOGY_MI%3A0355" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
@@ -1359,7 +1359,7 @@
  <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:IS_CONJUGATE_ACID_OF" />
 </bp:RelationshipXref>
 
-<bp:RelationshipTypeVocabulary rdf:about="urn:miriam:obo.mi:MI%3A0359">
+<bp:RelationshipTypeVocabulary rdf:about="http://bioregistry.io/mi:MI%3A0359">
  <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">gene ontology term for cellular process</bp:term>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:MOLECULAR+INTERACTIONS+ONTOLOGY_MI%3A0359" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
@@ -1623,7 +1623,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:db>
 </bp:UnificationXref>
 
-<bp:ProteinReference rdf:about="urn:miriam:uniprot:P40360">
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P40360">
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">N-acetylglutamate synthase</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NAGS</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.3.1.1</bp:name>
@@ -1638,7 +1638,7 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NAGS_YEAST</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Amino-acid acetyltransferase, mitochondrial</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: N-acetylglutamate synthase involved in arginine biosynthesis. CATALYTIC ACTIVITY: Acetyl-CoA + L-glutamate = CoA + N-acetyl-L- glutamate. ENZYME REGULATION: Feedback inhibition by L-arginine. PATHWAY: Amino-acid biosynthesis; L-arginine biosynthesis; N(2)- acetyl-L-ornithine from L-glutamate: step 1/4. SUBUNIT: Interacts with the acetylglutamate kinase chain of AGR5,6. SUBCELLULAR LOCATION: Mitochondrion. MISCELLANEOUS: Present with 112 molecules/cell in log phase SD medium. SIMILARITY: Belongs to the acetyltransferase family. SIMILARITY: Contains 1 N-acetyltransferase domain. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:559292" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:559292" />
 </bp:ProteinReference>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:CHEBI_CHEBI%3A40510">
@@ -1658,7 +1658,7 @@
  <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:IS_CONJUGATE_ACID_OF" />
 </bp:RelationshipXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:15422">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:15422">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_15422" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H16N5O13P3</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine triphosphate</bp:name>
@@ -1712,7 +1712,7 @@
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:GENE+ONTOLOGY_GO%3A0004585">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0004585</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
- <bp:relationshipType rdf:resource="urn:miriam:obo.mi:MI%3A0355" />
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:MI%3A0355" />
 </bp:RelationshipXref>
 
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:REACTOME+DATABASE+ID_2256078">
@@ -1844,7 +1844,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
 </bp:RelationshipXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:18323623">
+<bp:PublicationXref rdf:about="pubmed:18323623">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">18323623</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H&#195;&#182;gbom, M</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">van den Berg, S</bp:author>
@@ -1910,7 +1910,7 @@
  <bp:componentStoichiometry rdf:resource="http://www.reactome.org/biopax/68322Stoichiometry472" />
  <bp:component rdf:resource="http://www.reactome.org/biopax/68322Protein253" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256518" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PPA1 dimer (name copied from entity in Homo sapiens)</bp:displayName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256518</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PPA1 dimer (name copied from entity in Homo sapiens)</bp:standardName>
@@ -1922,7 +1922,7 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=2256092</bp:comment>
 </bp:UnificationXref>
 
-<bp:ProteinReference rdf:about="urn:miriam:uniprot:P28239">
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P28239">
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3.6.1.1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pyrophosphate phospho-hydrolase</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PPase</bp:name>
@@ -1934,7 +1934,7 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IPYR2_YEAST</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Inorganic pyrophosphatase, mitochondrial</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">FUNCTION: Involved in energy production. Its activity is stimulated by uncouplers of ATP synthesis. CATALYTIC ACTIVITY: Diphosphate + H(2)O = 2 phosphate. COFACTOR: Binds 4 magnesium ions per subunit. Other metal ions can support activity, but at a lower rate. Two magnesium ions are required for the activation of the enzyme and are present before substrate binds, two additional magnesium ions form complexes with substrate and product (By similarity). SUBUNIT: Homodimer that binds non-covalently to a protein complex in the inner mitochondrial membrane (By similarity). SUBCELLULAR LOCATION: Mitochondrion. MISCELLANEOUS: Present with 195 molecules/cell in log phase SD medium. SIMILARITY: Belongs to the PPase family. GENE SYNONYMS: IPP2. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:559292" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:559292" />
 </bp:ProteinReference>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:PUBCHEM_11533755">
@@ -1964,7 +1964,7 @@
  <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:IS_CONJUGATE_ACID_OF" />
 </bp:RelationshipXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:15050968">
+<bp:PublicationXref rdf:about="pubmed:15050968">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">15050968</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Shi, D</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Caldovic, L</bp:author>
@@ -2087,8 +2087,8 @@
  <bp:xref rdf:resource="http://biopax.org/generated/fixer/copySimplePointers/urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256517" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homologues of PPA1</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homologues of PPA1</bp:standardName>
- <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:P28239" />
- <bp:memberEntityReference rdf:resource="urn:miriam:uniprot:P00817" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/uniprot:P28239" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/uniprot:P00817" />
 </bp:ProteinReference>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P00812">
@@ -2102,7 +2102,7 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Database identifier. Use this URL to connect to the web page of this instance in Reactome: http://www.reactome.org/cgi-bin/eventbrowser?DB=gk_current&amp;ID=29896</bp:comment>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:15682">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:15682">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_15682" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H18N4O6</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2-(N(omega)-L-arginino)butanedioic acid</bp:name>
@@ -2118,7 +2118,7 @@
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(N(omega)-L-arginino)succinic acid</bp:standardName>
 </bp:SmallMoleculeReference>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:16161">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:16161">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_16161" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C42H70N14O32P6S2</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(CoA)2</bp:name>
@@ -2172,7 +2172,7 @@
  <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SEQUENCE</bp:term>
 </bp:RelationshipTypeVocabulary>
 
-<bp:CellularLocationVocabulary rdf:about="urn:miriam:obo.go:GO%3A0005829">
+<bp:CellularLocationVocabulary rdf:about="http://bioregistry.io/go:GO%3A0005829">
  <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cytosol</bp:term>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
@@ -2195,7 +2195,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:RelationshipXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:12459178">
+<bp:PublicationXref rdf:about="pubmed:12459178">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">12459178</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Yu, X</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Malamy, MH</bp:author>
@@ -2217,7 +2217,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:16199">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:16199">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_16199" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CH4N2O</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uree</bp:name>
@@ -2238,7 +2238,7 @@
  <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">60.0553</bp:molecularWeight>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">urea</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">urea</bp:standardName>
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:32285" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:32285" />
 </bp:SmallMoleculeReference>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:INCHI_YAISMNQCMHVVLO-ODFVJXNFSA-N">
@@ -2292,7 +2292,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:29375">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:29375">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_29375" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2O</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">((1)H2)water</bp:name>
@@ -2304,7 +2304,7 @@
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">diprotium oxide</bp:standardName>
 </bp:SmallMoleculeReference>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:29374">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:29374">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_29374" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O2T</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">superheavy water</bp:name>
@@ -2359,7 +2359,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:2263616">
+<bp:PublicationXref rdf:about="pubmed:2263616">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2263616</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Simard, LR</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Walker, DC</bp:author>
@@ -2376,7 +2376,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubChem</bp:db>
 </bp:RelationshipXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:17053">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:17053">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_17053" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C4H7NO4</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2-aminosuccinic acid</bp:name>
@@ -2462,7 +2462,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
 </bp:RelationshipXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:18420">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:18420">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_18420" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mg</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">magnesium, ion (Mg(2+))</bp:name>
@@ -2486,7 +2486,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:16761">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:16761">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_16761" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H15N5O10P2</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">5&apos;-adenylphosphoric acid</bp:name>
@@ -2505,7 +2505,7 @@
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A purine ribonucleoside 5&apos;-diphosphate having adenine as the nucleobase.</bp:comment>
 </bp:SmallMoleculeReference>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:7649538">
+<bp:PublicationXref rdf:about="pubmed:7649538">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">7649538</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Sansaricq, C</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Jakobs, C</bp:author>
@@ -2580,7 +2580,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:RelationshipXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:11237854">
+<bp:PublicationXref rdf:about="pubmed:11237854">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">11237854</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Yu, X</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Shi, D</bp:author>
@@ -2615,7 +2615,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:28938">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:28938">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_28938" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H4N</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">[NH4](+)</bp:name>
@@ -2770,7 +2770,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:15729">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:15729">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_15729" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C5H12N2O2</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-ornithine</bp:name>
@@ -2799,7 +2799,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:RelationshipXref>
 
-<bp:ProteinReference rdf:about="urn:miriam:uniprot:P00812">
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P00812">
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3.5.3.1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CAR1</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:UNIPROT_D6W3Q6" />
@@ -2809,7 +2809,7 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARGI_YEAST</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Arginase</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CATALYTIC ACTIVITY: L-arginine + H(2)O = L-ornithine + urea. COFACTOR: Binds 2 manganese ions per subunit (By similarity). PATHWAY: Nitrogen metabolism; urea cycle; L-ornithine and urea from L-arginine: step 1/1. SUBUNIT: Homotrimer. INDUCTION: By arginine or homoarginine. MISCELLANEOUS: Present with 42800 molecules/cell in log phase SD medium. SIMILARITY: Belongs to the arginase family. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:559292" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:559292" />
 </bp:ProteinReference>
 
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:ENTREZ+GENE_852296">
@@ -2823,7 +2823,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:RelationshipXref>
 
-<bp:ProteinReference rdf:about="urn:miriam:uniprot:P00817">
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P00817">
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3.6.1.1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IPP1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pyrophosphate phospho-hydrolase</bp:name>
@@ -2835,7 +2835,7 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">IPYR_YEAST</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Inorganic pyrophosphatase</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CATALYTIC ACTIVITY: Diphosphate + H(2)O = 2 phosphate. COFACTOR: Binds 4 magnesium ions per subunit. Other metal ions can support activity, but at a lower rate. Two magnesium ions are required for the activation of the enzyme and are present before substrate binds, two additional magnesium ions form complexes with substrate and product (By similarity). SUBUNIT: Homodimer. SUBCELLULAR LOCATION: Cytoplasm. MISCELLANEOUS: Present with 68400 molecules/cell in log phase SD medium. SIMILARITY: Belongs to the PPase family. GENE SYNONYMS: PPA PPA1. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:559292" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:559292" />
 </bp:ProteinReference>
 
 <bp:RelationshipXref rdf:about="http://biopax.org/generated/fixer/copySimplePointers/urn:biopax:UnificationXref:CHEBI_CHEBI%3A13740">
@@ -2871,15 +2871,15 @@
 
 <bp:Evidence rdf:about="http://www.reactome.org/biopax/68322Evidence941">
  <bp:evidenceCode rdf:resource="http://www.reactome.org/biopax/68322EvidenceCodeVocabulary1" />
- <bp:xref rdf:resource="urn:miriam:pubmed:2263616" />
- <bp:xref rdf:resource="urn:miriam:pubmed:9256435" />
+ <bp:xref rdf:resource="pubmed:2263616" />
+ <bp:xref rdf:resource="pubmed:9256435" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cytosolic argininosuccinate lyase (ASL) catalyzes the reversible reaction of argininosuccinate to form fumarate and arginine. The enzyme is a homotetramer (Turner et al. 1997). The function of the human enzyme in vivo is inferred from the defective argininosuccinate lyase enzyme activity observed in patients with mutant forms of the ASL gene (e.g., Walker et al. 1990).</bp:comment>
 </bp:Evidence>
 
 <bp:Evidence rdf:about="http://www.reactome.org/biopax/68322Evidence942">
  <bp:evidenceCode rdf:resource="http://www.reactome.org/biopax/68322EvidenceCodeVocabulary1" />
- <bp:xref rdf:resource="urn:miriam:pubmed:7649538" />
- <bp:xref rdf:resource="urn:miriam:pubmed:16141327" />
+ <bp:xref rdf:resource="pubmed:7649538" />
+ <bp:xref rdf:resource="pubmed:16141327" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cytosolic Arginase 1 (ARG1) trimer catalyzes the hydrolysis of arginine to yield ornithine and urea (DiCostanzo et al. 2005). Patients expressing mutated forms of the enzyme with diminished in vitro arginase activity can accumulate arginine to pathogenic levels in the blood (e.g., Uchino et al. 1995).</bp:comment>
 </bp:Evidence>
 
@@ -2890,13 +2890,13 @@
 
 <bp:Evidence rdf:about="http://www.reactome.org/biopax/68322Evidence940">
  <bp:evidenceCode rdf:resource="http://www.reactome.org/biopax/68322EvidenceCodeVocabulary1" />
- <bp:xref rdf:resource="urn:miriam:pubmed:518841" />
- <bp:xref rdf:resource="urn:miriam:pubmed:18323623" />
- <bp:xref rdf:resource="urn:miriam:pubmed:19006241" />
+ <bp:xref rdf:resource="pubmed:518841" />
+ <bp:xref rdf:resource="pubmed:18323623" />
+ <bp:xref rdf:resource="pubmed:19006241" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cytosolic argininosuccinate synthase catalyzes the reaction of aspartate, citrulline, and ATP to form argininosuccinate, AMP, and pyrophosphate. The function of the human enzyme in vivo is inferred from the hypercitrullinemia observed in patients with defective forms of the enzyme (e.g., Engel et al. 2009). The enzyme is active as a homotetramer (O&#226;??Brien 1980; Karlberg et al. 2008).</bp:comment>
 </bp:Evidence>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:16349">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:16349">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_16349" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C6H13N3O3</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">N(delta)-carbamylornithine</bp:name>
@@ -2968,12 +2968,12 @@
 </bp:RelationshipXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule4">
- <bp:entityReference rdf:resource="urn:miriam:chebi:15422" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:15422" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-triphosphate</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2812_1" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113592" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113592</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule4http://www.reactome.org/biopax/68322BiochemicalReaction556@Layout@http://www.reactome.org/biopax/68322Pathway387@63@111</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP</bp:standardName>
@@ -2985,7 +2985,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:18291">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:18291">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_18291" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mn</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">manganeso</bp:name>
@@ -3013,14 +3013,14 @@
 </bp:UnificationXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule3">
- <bp:entityReference rdf:resource="urn:miriam:chebi:18367" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:18367" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phosphate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Orthophosphate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Inorganic Phosphate</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2728_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29372" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29372</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pi</bp:standardName>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Pi</bp:displayName>
@@ -3097,7 +3097,7 @@
  <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:structureFormat>
 </bp:ChemicalStructure>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:4130389">
+<bp:PublicationXref rdf:about="pubmed:4130389">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">4130389</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Dorkin, HL</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Fisher, RA</bp:author>
@@ -3238,19 +3238,19 @@
 
 <bp:Evidence rdf:about="http://www.reactome.org/biopax/68322Evidence229">
  <bp:evidenceCode rdf:resource="http://www.reactome.org/biopax/68322EvidenceCodeVocabulary1" />
- <bp:xref rdf:resource="urn:miriam:pubmed:656444" />
- <bp:xref rdf:resource="urn:miriam:pubmed:4130389" />
- <bp:xref rdf:resource="urn:miriam:pubmed:6022858" />
+ <bp:xref rdf:resource="pubmed:656444" />
+ <bp:xref rdf:resource="pubmed:4130389" />
+ <bp:xref rdf:resource="pubmed:6022858" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Cytosolic PPA1 (pyrophosphatase (inorganic) 1) catalyzes the hydrolysis of pyrophosphate to yield two molecules of orthophosphate. The enzyme, a homodimer, requires Mg++ for activity (Fisher et al. 1974; Pynes and Younathan 1967; Thuiller et al. 1978).</bp:comment>
 </bp:Evidence>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule529">
- <bp:entityReference rdf:resource="urn:miriam:chebi:17533" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:17533" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">N-Acetyl-L-glutamic acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_30471" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_5708_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule529@Layout@http://www.reactome.org/biopax/68322Pathway387@312@349</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 30471</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">N-Acetyl-L-glutamate</bp:standardName>
@@ -3401,7 +3401,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:RelationshipXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:19006241">
+<bp:PublicationXref rdf:about="pubmed:19006241">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">19006241</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H&#195;&#164;berle, J</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H&#195;&#182;hne, W</bp:author>
@@ -3439,7 +3439,7 @@
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:GENE+ONTOLOGY_GO%3A0000050">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0000050</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
- <bp:relationshipType rdf:resource="urn:miriam:obo.mi:MI%3A0359" />
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:MI%3A0359" />
 </bp:RelationshipXref>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:PUBCHEM_8144973">
@@ -3452,7 +3452,7 @@
  <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:structureFormat>
 </bp:ChemicalStructure>
 
-<bp:BioSource rdf:about="urn:miriam:taxonomy:559292">
+<bp:BioSource rdf:about="http://bioregistry.io/ncbitaxon:559292">
  <bp:xref rdf:resource="urn:biopax:UnificationXref:TAXONOMY_559292" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Saccharomyces cerevisiae</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Saccharomyces cerevisiae</bp:standardName>
@@ -3490,7 +3490,7 @@
  <bp:stepProcess rdf:resource="http://www.reactome.org/biopax/68322Catalysis403" />
 </bp:PathwayStep>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:17672">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:17672">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_17672" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CH4NO5P</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Carbamyl phosphate</bp:name>
@@ -3529,21 +3529,21 @@
 
 <bp:Evidence rdf:about="http://www.reactome.org/biopax/68322Evidence939">
  <bp:evidenceCode rdf:resource="http://www.reactome.org/biopax/68322EvidenceCodeVocabulary1" />
- <bp:xref rdf:resource="urn:miriam:pubmed:6372096" />
- <bp:xref rdf:resource="urn:miriam:pubmed:11237854" />
+ <bp:xref rdf:resource="pubmed:6372096" />
+ <bp:xref rdf:resource="pubmed:11237854" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mitochondrial ornithine transcarbamoylase (OTC) catalyzes the reaction of ornithine and carbamoyl phosphate to form citrulline (Horwich et al. 1984). The enzyme is a homotrimer (Shi et al. 2001).</bp:comment>
 </bp:Evidence>
 
 <bp:Evidence rdf:about="http://www.reactome.org/biopax/68322Evidence938">
  <bp:evidenceCode rdf:resource="http://www.reactome.org/biopax/68322EvidenceCodeVocabulary1" />
- <bp:xref rdf:resource="urn:miriam:pubmed:6249820" />
+ <bp:xref rdf:resource="pubmed:6249820" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">At the beginning of this reaction, 1 molecule of &apos;NH4+&apos;, 1 molecule of &apos;HCO3-&apos;, and 1 molecule of &apos;ATP&apos; are present. At the end of this reaction, 1 molecule of &apos;Carbamoyl phosphate&apos;, 1 molecule of &apos;ADP&apos;, and 1 molecule of &apos;Orthophosphate&apos; are present.&lt;br&gt;&lt;br&gt; This reaction takes place in the &apos;mitochondrial matrix&apos; and is mediated by the &apos;carbamoyl-phosphate synthase (ammonia) activity&apos; of &apos;carbamoyl-phosphate synthetase I dimer&apos;.&lt;br&gt;</bp:comment>
 </bp:Evidence>
 
 <bp:Evidence rdf:about="http://www.reactome.org/biopax/68322Evidence937">
  <bp:evidenceCode rdf:resource="http://www.reactome.org/biopax/68322EvidenceCodeVocabulary1" />
- <bp:xref rdf:resource="urn:miriam:pubmed:12459178" />
- <bp:xref rdf:resource="urn:miriam:pubmed:15050968" />
+ <bp:xref rdf:resource="pubmed:12459178" />
+ <bp:xref rdf:resource="pubmed:15050968" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mitochondrial N acetylglutamate synthetase (NAGS) catalyzes the reaction of glutamate and acetyl-CoA to form N-acetylglutamate and CoA. NAGS is activated by arginine and the N-acetylglutamate produced in the reaction in turn is required to activate carbamoyl synthetase I. Consistent with this regulatory role in urea synthesis, NAGS mutations in humans are associated with hyperammonemia (Caldovic et al. 2002; Morizono et al. 2004).</bp:comment>
 </bp:Evidence>
 
@@ -3561,7 +3561,7 @@
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:GENE+ONTOLOGY_GO%3A0004042">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0004042</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
- <bp:relationshipType rdf:resource="urn:miriam:obo.mi:MI%3A0355" />
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:MI%3A0355" />
 </bp:RelationshipXref>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:MOLECULAR+INTERACTIONS+ONTOLOGY_MI%3A0359">
@@ -3703,12 +3703,12 @@
 </bp:UnificationXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule538">
- <bp:entityReference rdf:resource="urn:miriam:chebi:16199" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:16199" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Carbamide</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2669_1" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29514" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule538@Layout@http://www.reactome.org/biopax/68322Pathway387@198@157</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29514</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Urea</bp:standardName>
@@ -3716,14 +3716,14 @@
 </bp:SmallMolecule>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule537">
- <bp:entityReference rdf:resource="urn:miriam:chebi:15729" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:15729" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2,5-Diaminopentanoate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2,5-Diaminopentanoic acid</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2,5-diaminovaleric acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_5017_1" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29498" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29498</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule537@Layout@http://www.reactome.org/biopax/68322Pathway387@146@98</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Ornithine</bp:standardName>
@@ -3731,7 +3731,7 @@
 </bp:SmallMolecule>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule536">
- <bp:entityReference rdf:resource="urn:miriam:chebi:15682" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:15682" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">N(omega)-(L-Arginino)succinate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Argininosuccinic acid</bp:name>
@@ -3739,7 +3739,7 @@
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Arginosuccinic acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_5577_1" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_34575" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule536@Layout@http://www.reactome.org/biopax/68322Pathway387@129@50</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 34575</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Argininosuccinate</bp:standardName>
@@ -3757,12 +3757,12 @@
 </bp:ChemicalStructure>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule535">
- <bp:entityReference rdf:resource="urn:miriam:chebi:16349" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:16349" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2-Amino-5-ureidovaleric acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_3861_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29968" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29968</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule535@Layout@http://www.reactome.org/biopax/68322Pathway387@27@158</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Citrulline</bp:standardName>
@@ -3770,12 +3770,12 @@
 </bp:SmallMolecule>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule534">
- <bp:entityReference rdf:resource="urn:miriam:chebi:16349" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:16349" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2-Amino-5-ureidovaleric acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113567" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2266_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule534@Layout@http://www.reactome.org/biopax/68322Pathway387@485@254</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113567</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Citrulline</bp:standardName>
@@ -3783,11 +3783,11 @@
 </bp:SmallMolecule>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule533">
- <bp:entityReference rdf:resource="urn:miriam:chebi:17672" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:17672" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29676" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_5535_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule533@Layout@http://www.reactome.org/biopax/68322Pathway387@562@333</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29676</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Carbamoyl phosphate</bp:standardName>
@@ -3795,14 +3795,14 @@
 </bp:SmallMolecule>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule532">
- <bp:entityReference rdf:resource="urn:miriam:chebi:17544" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:17544" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Hydrogencarbonate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Bicarbonate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Acid carbonate</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29896" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2670_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29896</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule532@Layout@http://www.reactome.org/biopax/68322Pathway387@480@310</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HCO3-</bp:standardName>
@@ -3829,12 +3829,12 @@
 </bp:RelationshipXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule530">
- <bp:entityReference rdf:resource="urn:miriam:chebi:16467" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:16467" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2-Amino-5-guanidinovaleric acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29468" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2911_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29468</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule530@Layout@http://www.reactome.org/biopax/68322Pathway387@237@122</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Arginine</bp:standardName>
@@ -3842,11 +3842,11 @@
 </bp:SmallMolecule>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule531">
- <bp:entityReference rdf:resource="urn:miriam:chebi:28938" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:28938" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113561" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_3412_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule531@Layout@http://www.reactome.org/biopax/68322Pathway387@403@392</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113561</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">NH4+</bp:standardName>
@@ -3985,7 +3985,7 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">&apos;L-Arginine [cytosol]&apos; positively regulates &apos;acetyl-CoA:L-glutamate N-acetyltransferase activity of P40360 [mitochondrial matrix]&apos;</bp:displayName>
 </bp:Modulation>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:15346">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:15346">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_15346" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C21H36N7O16P3S</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HSCoA</bp:name>
@@ -4011,8 +4011,8 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">coenzyme A</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">coenzyme A</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A thiol comprising a panthothenate unit in phosphoric anhydride linkage with a 3&apos;,5&apos;-adenosine diphosphate unit; and an aminoethanethiol unit.</bp:comment>
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:16161" />
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:15510" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:16161" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:15510" />
 </bp:SmallMoleculeReference>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:CHEBI_CHEBI%3A15682">
@@ -4020,7 +4020,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:656444">
+<bp:PublicationXref rdf:about="pubmed:656444">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">656444</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Thuillier, L</bp:author>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
@@ -4069,7 +4069,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:RelationshipXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:33806">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:33806">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_33806" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">DHO</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">water-d1</bp:name>
@@ -4125,7 +4125,7 @@
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:GENE+ONTOLOGY_GO%3A0004087">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0004087</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
- <bp:relationshipType rdf:resource="urn:miriam:obo.mi:MI%3A0355" />
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:MI%3A0355" />
 </bp:RelationshipXref>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P40360">
@@ -4187,7 +4187,7 @@
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:GENE+ONTOLOGY_GO%3A0004053">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0004053</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
- <bp:relationshipType rdf:resource="urn:miriam:obo.mi:MI%3A0355" />
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:MI%3A0355" />
 </bp:RelationshipXref>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:UNIPROT_P28239">
@@ -4206,7 +4206,7 @@
  <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
 </bp:RelationshipXref>
 
-<bp:CellularLocationVocabulary rdf:about="urn:miriam:obo.go:GO%3A0005759">
+<bp:CellularLocationVocabulary rdf:about="http://bioregistry.io/go:GO%3A0005759">
  <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mitochondrial matrix</bp:term>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:GENE+ONTOLOGY_GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cPath2-generated</bp:comment>
@@ -4225,13 +4225,13 @@
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:GENE+ONTOLOGY_GO%3A0004056">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0004056</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
- <bp:relationshipType rdf:resource="urn:miriam:obo.mi:MI%3A0355" />
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:MI%3A0355" />
 </bp:RelationshipXref>
 
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:GENE+ONTOLOGY_GO%3A0004055">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0004055</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
- <bp:relationshipType rdf:resource="urn:miriam:obo.mi:MI%3A0355" />
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:MI%3A0355" />
 </bp:RelationshipXref>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:PUBCHEM_8144060">
@@ -4240,14 +4240,14 @@
 </bp:UnificationXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule261">
- <bp:entityReference rdf:resource="urn:miriam:chebi:18291" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:18291" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mn(III)</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mn(II)</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Manganese</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_4937_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29418" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29418</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule261http://www.reactome.org/biopax/68322Complex460@Layout@http://www.reactome.org/biopax/68322Pathway387@78@221</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Mn2+</bp:standardName>
@@ -4264,7 +4264,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:db>
 </bp:UnificationXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:518841">
+<bp:PublicationXref rdf:about="pubmed:518841">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">518841</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O&apos;Brien, WE</bp:author>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubMed</bp:db>
@@ -4331,21 +4331,21 @@
 </bp:UnificationXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule252">
- <bp:entityReference rdf:resource="urn:miriam:chebi:17053" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:17053" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2-aminosuccinic acid</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Aspartate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Aspartic acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_4653_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29448" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule252@Layout@http://www.reactome.org/biopax/68322Pathway387@82@55</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29448</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Asp</bp:standardName>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Asp</bp:displayName>
 </bp:SmallMolecule>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:15510">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:15510">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_15510" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C26H38N7O19P3S</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3&apos;-phosphoadenosine 5&apos;-{3-[(3R)3-hydroxy-4-{[3-({2-[(5-hydroxyfuran-2-carbonyl)sulfanyl]ethyl}amino)-3-oxopropyl]amino}-2,2-dimethyl-4-oxobutyl] dihydrogen diphosphate}</bp:name>
@@ -4369,7 +4369,7 @@
  <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:GENE" />
 </bp:RelationshipXref>
 
-<bp:PublicationXref rdf:about="urn:miriam:pubmed:6372096">
+<bp:PublicationXref rdf:about="pubmed:6372096">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">6372096</bp:id>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Horwich, AL</bp:author>
  <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Doolittle, RF</bp:author>
@@ -4391,12 +4391,12 @@
 </bp:RelationshipXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule249">
- <bp:entityReference rdf:resource="urn:miriam:chebi:15351" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:15351" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Acetyl coenzyme A</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_3839_1" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113559" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule249@Layout@http://www.reactome.org/biopax/68322Pathway387@273@307</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113559</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Acetyl-CoA</bp:standardName>
@@ -4409,13 +4409,13 @@
 </bp:UnificationXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule245">
- <bp:entityReference rdf:resource="urn:miriam:chebi:18367" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:18367" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Phosphate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Orthophosphate</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_5781_2" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113548" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule245http://www.reactome.org/biopax/68322BiochemicalReaction555@Layout@http://www.reactome.org/biopax/68322Pathway387@545@307</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule245http://www.reactome.org/biopax/68322BiochemicalReaction554@Layout@http://www.reactome.org/biopax/68322Pathway387@442@306</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113548</bp:comment>
@@ -4424,12 +4424,12 @@
 </bp:SmallMolecule>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule244">
- <bp:entityReference rdf:resource="urn:miriam:chebi:16761" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:16761" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-diphosphate</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_4478_1" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113581" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule244http://www.reactome.org/biopax/68322BiochemicalReaction554@Layout@http://www.reactome.org/biopax/68322Pathway387@464@410</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113581</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:standardName>
@@ -4515,7 +4515,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubChem</bp:db>
 </bp:UnificationXref>
 
-<bp:ProteinReference rdf:about="urn:miriam:uniprot:P04076">
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P04076">
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARG4</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ASAL</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Arginosuccinase</bp:name>
@@ -4527,10 +4527,10 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARLY_YEAST</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Argininosuccinate lyase</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CATALYTIC ACTIVITY: 2-(N(omega)-L-arginino)succinate = fumarate + L-arginine. PATHWAY: Amino-acid biosynthesis; L-arginine biosynthesis; L- arginine from L-ornithine and carbamoyl phosphate: step 3/3. SUBUNIT: Homotetramer. MISCELLANEOUS: Present with 10200 molecules/cell in log phase SD medium. SIMILARITY: Belongs to the lyase 1 family. Argininosuccinate lyase subfamily. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:559292" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:559292" />
 </bp:ProteinReference>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:33813">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:33813">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_33813" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2O</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">water-(18)O</bp:name>
@@ -4551,7 +4551,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:33811">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:33811">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_33811" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">HOT</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">water-t1</bp:name>
@@ -4618,7 +4618,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubChem</bp:db>
 </bp:UnificationXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:37154">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:37154">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_37154" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C4H3O4</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(2E)-3-carboxyacrylate</bp:name>
@@ -4650,14 +4650,14 @@
 </bp:UnificationXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule496">
- <bp:entityReference rdf:resource="urn:miriam:chebi:15729" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:15729" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2,5-Diaminopentanoate</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2,5-Diaminopentanoic acid</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2,5-diaminovaleric acid</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_113585" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_2690_1" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule496@Layout@http://www.reactome.org/biopax/68322Pathway387@626@277</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 113585</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Ornithine</bp:standardName>
@@ -4675,20 +4675,20 @@
 </bp:RelationshipXref>
 
 <bp:Protein rdf:about="http://www.reactome.org/biopax/68322Protein255">
- <bp:entityReference rdf:resource="urn:miriam:uniprot:P28239" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P28239" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256516" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256516</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P28239</bp:standardName>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P28239</bp:displayName>
 </bp:Protein>
 
 <bp:Protein rdf:about="http://www.reactome.org/biopax/68322Protein254">
- <bp:entityReference rdf:resource="urn:miriam:uniprot:P00817" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P00817" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256512" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256512</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P00817</bp:standardName>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P00817</bp:displayName>
@@ -4700,7 +4700,7 @@
  <bp:memberPhysicalEntity rdf:resource="http://www.reactome.org/biopax/68322Protein255" />
  <bp:memberPhysicalEntity rdf:resource="http://www.reactome.org/biopax/68322Protein254" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256517" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Converted from EntitySet in Reactome</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256517</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homologues of PPA1</bp:standardName>
@@ -4917,7 +4917,7 @@
  <bp:component rdf:resource="http://www.reactome.org/biopax/68322SmallMolecule261" />
  <bp:component rdf:resource="http://www.reactome.org/biopax/68322Protein1105" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_2256093" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005829" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005829" />
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARG1 trimer (name copied from entity in Homo sapiens)</bp:displayName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 2256093</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ARG1 trimer (name copied from entity in Homo sapiens)</bp:standardName>
@@ -4965,7 +4965,7 @@
  <bp:relationshipType rdf:resource="urn:biopax:RelationshipTypeVocabulary:IS_CONJUGATE_ACID_OF" />
 </bp:RelationshipXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:32285">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:32285">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_32285" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CH4N2O</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Urea C13</bp:name>
@@ -5097,7 +5097,7 @@
 <bp:RelationshipXref rdf:about="urn:biopax:RelationshipXref:GENE+ONTOLOGY_GO%3A0004427">
  <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0004427</bp:id>
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Gene Ontology</bp:db>
- <bp:relationshipType rdf:resource="urn:miriam:obo.mi:MI%3A0355" />
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:MI%3A0355" />
 </bp:RelationshipXref>
 
 <bp:UnificationXref rdf:about="urn:biopax:UnificationXref:CHEBI_CHEBI%3A41567">
@@ -5115,7 +5115,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
 </bp:RelationshipXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:15377">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:15377">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_15377" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2O</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">acqua</bp:name>
@@ -5149,12 +5149,12 @@
  <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">18.0153</bp:molecularWeight>
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">water</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">water</bp:standardName>
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:33813" />
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:29375" />
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:41981" />
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:29374" />
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:33811" />
- <bp:memberEntityReference rdf:resource="urn:miriam:chebi:33806" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:33813" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:29375" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:41981" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:29374" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:33811" />
+ <bp:memberEntityReference rdf:resource="http://bioregistry.io/chebi:33806" />
 </bp:SmallMoleculeReference>
 
 <bp:RelationshipXref rdf:about="http://biopax.org/generated/fixer/copySimplePointers/urn:biopax:UnificationXref:UNIPROT_P00817">
@@ -5237,13 +5237,13 @@
 </bp:RelationshipXref>
 
 <bp:SmallMolecule rdf:about="http://www.reactome.org/biopax/68322SmallMolecule296">
- <bp:entityReference rdf:resource="urn:miriam:chebi:15346" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:15346" />
  <bp:dataSource rdf:resource="urn:miriam:reactome" />
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Coenzyme A</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CoA-SH</bp:name>
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME+DATABASE+ID_29374" />
  <bp:xref rdf:resource="urn:biopax:UnificationXref:REACTOME_REACT_3654_2" />
- <bp:cellularLocation rdf:resource="urn:miriam:obo.go:GO%3A0005759" />
+ <bp:cellularLocation rdf:resource="http://bioregistry.io/go:GO%3A0005759" />
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">http://www.reactome.org/biopax/68322SmallMolecule296@Layout@http://www.reactome.org/biopax/68322Pathway387@390@307</bp:comment>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 29374</bp:comment>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CoA</bp:standardName>
@@ -5280,7 +5280,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubChem</bp:db>
 </bp:RelationshipXref>
 
-<bp:SmallMoleculeReference rdf:about="urn:miriam:chebi:15351">
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:15351">
  <bp:structure rdf:resource="urn:biopax:ChemicalStructure:chebi_15351" />
  <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C23H38N7O17P3S</bp:chemicalFormula>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">S-acetyl-coenzyme A</bp:name>
@@ -5311,7 +5311,7 @@
  <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PubChem</bp:db>
 </bp:RelationshipXref>
 
-<bp:ProteinReference rdf:about="urn:miriam:uniprot:P07258">
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P07258">
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Arginine-specific carbamoyl-phosphate synthetase, glutamine chain</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CPA1</bp:name>
  <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">6.3.5.5</bp:name>
@@ -5323,7 +5323,7 @@
  <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CARA_YEAST</bp:displayName>
  <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Carbamoyl-phosphate synthase arginine-specific small chain</bp:standardName>
  <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CATALYTIC ACTIVITY: 2 ATP + L-glutamine + HCO(3)(-) + H(2)O = 2 ADP + phosphate + L-glutamate + carbamoyl phosphate. PATHWAY: Amino-acid biosynthesis; L-arginine biosynthesis; carbamoyl phosphate from bicarbonate: step 1/1. SUBUNIT: Composed of two chains; the small (or glutamine) chain promotes the hydrolysis of glutamine to ammonia, which is used by the large (or ammonia) chain to synthesize carbamoyl phosphate. SUBCELLULAR LOCATION: Cytoplasm. MISCELLANEOUS: In eukaryotes this enzyme is synthesized by two pathway-specific (arginine and pyrimidine) under separate control. MISCELLANEOUS: Present with 2580 molecules/cell in log phase SD medium. SIMILARITY: Belongs to the CarA family. SIMILARITY: Contains 1 glutamine amidotransferase type-1 domain. COPYRIGHT: Protein annotation is derived from the UniProt Consortium (http://www.uniprot.org/). Distributed under the Creative Commons Attribution-NoDerivs License.</bp:comment>
- <bp:organism rdf:resource="urn:miriam:taxonomy:559292" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:559292" />
 </bp:ProteinReference>
 
 <bp:RelationshipXref rdf:about="http://biopax.org/generated/fixer/copySimplePointers/urn:biopax:UnificationXref:CHEBI_CHEBI%3A41979">

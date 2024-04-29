@@ -37,9 +37,10 @@ Paxtools provides, beyond the core and converters API, a console application tha
 
 ### JVM options
 
-Paxtools can be build and run with JDK-17 or newer, e.g. Temurin-20. Add these JVM options or set
+Paxtools can be build and run with JDK-17 or newer, e.g. Temurin-21. Add these JVM options or set
 `JDK_JAVA_OPTIONS="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED"`
 
+ - `-Dpaxtools.CollectionProvider=org.biopax.paxtools.trove.TProvider` to use a high-performance collections provider for BioPAX elements Map or Set (recommended).
  - `-Dpaxtools.normalizer.use-latest-registry=true` (if using Normalizer/Resolver) to use the latest registry.json from bioregistry.io.
  - `-Dpaxtools.core.use-latest-genenames=true` for the HGNC utility class use id mapping data from genenames.org instead of built-in older file.
 

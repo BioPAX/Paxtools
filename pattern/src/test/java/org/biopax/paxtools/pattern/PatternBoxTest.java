@@ -55,7 +55,7 @@ public class PatternBoxTest
 		Assertions.assertTrue(size > 0);
 
 		Blacklist b = new Blacklist();
-		b.addEntry("urn:miriam:chebi:29888", 0, null);
+		b.addEntry("http://bioregistry.io/chebi:29888", 0, null);
 
 		p.insertPointConstraint(new NonUbique(b), p.indexOf("linker PE"));
 

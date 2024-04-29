@@ -1,5 +1,6 @@
 package org.biopax.paxtools.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.model.BioPAXElement;
 import org.biopax.paxtools.model.level3.*;
 import org.biopax.paxtools.util.ClassFilterSet;
@@ -69,7 +70,7 @@ public class IdFetcher
 	/**
 	 * Set the flag to use the entity reference's names
 	 * when no desired ID type can be found (none of xref.db
-	 * matched before, or there're no xrefs at all).
+	 * matched before, or there are no xrefs at all).
 	 *
 	 * @param useNameWhenNoDbMatch true/false (default is 'true' - when this method's never been called)
 	 * @return this id-fetcher instance
@@ -82,7 +83,6 @@ public class IdFetcher
 	public Set<String> fetchID(BioPAXElement ele)
 	{
 		Set<String> set = new HashSet<>();
-
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
 			List<String> dbStartsWithOrEquals =
@@ -91,12 +91,12 @@ public class IdFetcher
 
 			for (String dbStartsWith : dbStartsWithOrEquals) {
 				//a shortcut for normalized URIs; prevents collecting lots of secondary IDs of the same type
-				if(ele.getUri().startsWith("(?i)identifiers.org/"+dbStartsWith)
-						|| ele.getUri().startsWith("(?i)bioregistry.io/"+dbStartsWith)) {
+				if(StringUtils.containsIgnoreCase(ele.getUri(),"identifiers.org/"+dbStartsWith)
+						|| StringUtils.containsIgnoreCase(ele.getUri(),"bioregistry.io/"+dbStartsWith)) {
 					set.add(ele.getUri().substring(ele.getUri().lastIndexOf("/") + 1));
-				} else {
-					for (UnificationXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(),
-							UnificationXref.class)) {
+				}
+				else {
+					for (UnificationXref x : new ClassFilterSet<>(((XReferrable) ele).getXref(), UnificationXref.class)) {
 						collectXrefIdIfDbLike(x, dbStartsWith, set);
 					}
 					//if none was found in unif. xrefs, try rel, xrefs
@@ -107,10 +107,10 @@ public class IdFetcher
 						}
 					}
 				}
-
 				//once we've found some ID, no need to try another id type
-				if (!set.isEmpty())
+				if (!set.isEmpty()) {
 					break;
+				}
 			}
 		}
 
