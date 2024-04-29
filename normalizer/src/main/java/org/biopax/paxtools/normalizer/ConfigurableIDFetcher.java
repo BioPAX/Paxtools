@@ -86,9 +86,6 @@ public class ConfigurableIDFetcher implements IDFetcher
 	public Set<String> fetchID(BioPAXElement ele)
 	{
 		Set<String> set = new HashSet<>();
-		if(ele instanceof EntityReference) {
-			System.out.println("fetchID(ER): " + ele.getUri());
-		}
 		if(ele instanceof XReferrable) {
 			//Iterate the db priority list, match/filter all xrefs to collect the IDs of given type, until 'set' is not empty.
 			List<String> dbStartsWithOrEquals =
