@@ -56,7 +56,13 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 
 	private boolean absoluteUris;
 
+	private static final boolean DEFAULT_USE_XML_ENTITY_FOR_XSDS = Boolean.parseBoolean(System.getProperty("org.biopax.paxtools.io.SimpleIOHandler.useEntitiesForXSDTypes"));
+	private final boolean useEntitiesForXSDTypes;
 
+	private static final boolean DEFAULT_USE_RDF1_1 = Boolean.parseBoolean(System.getProperty("org.biopax.paxtools.io.SimpleIOHandler.useRDF1_1"));
+	private boolean useRDF1_1;
+	
+	
 	// --------------------------- CONSTRUCTORS ---------------------------
 
 	/**
@@ -86,7 +92,29 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		super(factory, level);
 		normalizeNameSpaces = true;
 		mergeDuplicates = false;
+		useEntitiesForXSDTypes = DEFAULT_USE_XML_ENTITY_FOR_XSDS;
 	}
+	
+	/**
+	 * Full constructor
+	 * @param factory to create BioPAX objects
+	 * @param level BioPAX level to handle.
+	 * @param if xsd datatypes should be abbreviated by using an entity.
+	 */
+	public SimpleIOHandler(BioPAXFactory factory, BioPAXLevel level, boolean useEntitiesForXSDTypes)
+	{
+		this(factory, level, useEntitiesForXSDTypes, DEFAULT_USE_RDF1_1 );
+	}
+	
+	public SimpleIOHandler(BioPAXFactory factory, BioPAXLevel level, boolean useEntitiesForXSDTypes, boolean useRDF1_1)
+	{
+		super(factory, level);
+		normalizeNameSpaces = true;
+		mergeDuplicates = false;
+		this.useEntitiesForXSDTypes = useEntitiesForXSDTypes;
+		this.useRDF1_1 = useRDF1_1;
+	}
+
 
 	/**
 	 * If set to true, the reader will try to merge duplicate (same URI) individuals
@@ -201,6 +229,16 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 				r.next();
 			}
 
+			if (r.getEventType() == DTD)
+			{
+				r.next();
+			}
+			
+			if (r.getEventType() == ENTITY_DECLARATION)
+			{
+				r.next();
+			}
+			
 			if (r.getEventType() != START_ELEMENT)
 			{
 				throw new BioPaxIOException("Unexpected element at start: " + r.getEventType());
@@ -666,8 +704,14 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			String type = findLiteralType(editor);
 			String valString = escapeXml(value.toString());
-			out.write(" rdf:datatype = \"xsd:"  + type + "\">" + valString +
-			          "</" + prop + ">");
+			if(type == null) 
+			{
+				out.write(">" + valString +
+						"</" + prop + ">");
+			} else {
+				out.write(" rdf:datatype=\""  + type + "\">" + valString +
+						"</" + prop + ">");
+			}
 		}
 	}
 
@@ -676,7 +720,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	{
 		Class range = editor.getRange();
 		String type = null;
-		if (range.isEnum() || range.equals(String.class))
+		if (!useRDF1_1 && (range.isEnum() || range.equals(String.class)))
 		{
 			type = "string";
 		} else if (range.equals(double.class) || range.equals(Double.class))
@@ -695,7 +739,21 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			type = "long";
 		}
-		return type;
+		if (type !=null)
+		{
+			if (useEntitiesForXSDTypes)
+			{
+				return "&xsd;"+type;
+			}
+			else
+			{
+				return "xsd:"+type;
+			}
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 
@@ -784,6 +842,13 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 	{
 		//Header
 		out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		if (useEntitiesForXSDTypes)
+		{
+			out.write(newline);
+			out.write("<!DOCTYPE rdf ["+newline
+					+ "<!ENTITY xsd \"http://www.w3.org/2001/XMLSchema#\">"+newline
+					+ "]>"+newline);
+		}
 		out.write(newline + "<rdf:RDF");
 		String bpns = this.editorMap.getLevel().getNameSpace();
 		for (String pre : namespaces.keySet())

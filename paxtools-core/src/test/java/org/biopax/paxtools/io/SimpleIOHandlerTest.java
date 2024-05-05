@@ -64,6 +64,26 @@ public class SimpleIOHandlerTest {
         .getFile() + File.separator + "simpleReadWrite.owl");
     io.convertToOWL(model, out);
   }
+  
+  @Test
+  public void readWriteL3WithDifferentSettings() throws IOException {
+    BioPAXIOHandler io = new SimpleIOHandler(BioPAXLevel.L3.getDefaultFactory(), BioPAXLevel.L3, true, true);
+    Model model = getL3Model(io);
+    assertNotNull(model);
+    assertFalse(model.getObjects().isEmpty());
+    System.out.println("Model has " + model.getObjects().size() + " objects)");
+    String path = getClass().getResource("")
+        .getFile() + File.separator + "simpleReadWrite.owl";
+	try (FileOutputStream out = new FileOutputStream(path)){	
+		io.convertToOWL(model, out);
+	}
+	Model model2 ;
+    try (FileInputStream in = new FileInputStream(new File(path))){
+    	model2 = io.convertFromOWL(in);
+    }
+    assertEquals(model.getName(), model2.getName());
+    assertEquals(model.getNameSpacePrefixMap(), model2.getNameSpacePrefixMap());
+  }
 
   public static Model getL3Model(BioPAXIOHandler io) {
     String s = "L3" + File.separator + "biopax3-short-metabolic-pathway.owl";
