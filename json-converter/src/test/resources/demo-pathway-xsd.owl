@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#"
+ xml:base="test:">
+<owl:Ontology rdf:about="">
+ <owl:imports rdf:resource="http://www.biopax.org/release/biopax-level3.owl#" />
+</owl:Ontology>
+
+<bp:UnificationXref rdf:about="ncbitaxon:562">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">562</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ncbitaxon</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="chebi:20">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:20</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_16651_see-also">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:16651</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://bioregistry.io/mi:0361">
+ <bp:xref rdf:resource="mi:0361" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">see-also</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:CellularLocationVocabulary rdf:ID="LV_go_GO_0005737">
+ <bp:xref rdf:resource="go:0005737" />
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:comment>
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">cytoplasm</bp:term>
+</bp:CellularLocationVocabulary>
+
+<bp:SmallMolecule rdf:about="merge:alpha-D-glucose_6-phosphate">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">a-D-glu-6-p</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">beta-D-glucose 6-phosphate</bp:displayName>
+ <bp:cellularLocation rdf:resource="#LV_go_GO_0005737" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:422" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">b-D-glucose-6-phoshate</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">D-glucose-6-P</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">beeta-D-glucose-6-p</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">glucose-6-P</bp:name>
+ <bp:dataSource rdf:resource="#test" />
+</bp:SmallMolecule>
+
+<bp:BiochemicalPathwayStep rdf:about="merge:BiochemicalPathwayStep_2_0df6b96644e86de3cf36f07317133663">
+ <bp:stepConversion rdf:resource="merge:glucokinase" />
+ <bp:nextStep rdf:resource="merge:BiochemicalPathwayStep_3_ff22ace809d9deaf2816e7945ca1201f" />
+ <bp:stepDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:stepDirection>
+ <bp:stepProcess rdf:resource="merge:glucokinase_converts_alpha-D-glu_to_alpha-D-glu-6-p_fea6680c01440fbe33b44f4ae4c6f684" />
+</bp:BiochemicalPathwayStep>
+
+<bp:UnificationXref rdf:about="kegg.reaction:R01786">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PMID: 9847135</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R01786</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">kegg.reaction</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_98_see-also">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:98</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:Protein rdf:about="merge:Protein6003">
+ <bp:xref rdf:resource="#UX_reactome_REACT_3939" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2a/x</bp:displayName>
+ <bp:cellularLocation rdf:resource="#LV_go_GO_0005737" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:P16104" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Histone H2A.x</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome DB_ID: 56151</bp:comment>
+ <bp:dataSource rdf:resource="#test" />
+</bp:Protein>
+
+<bp:BiochemicalReaction rdf:about="merge:glucokinase">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">b-D-glu =&gt; b-D-glu-6-p</bp:standardName>
+ <bp:xref rdf:resource="kegg.reaction:R01786" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">beta-D-glu + ATP =&gt; beta-D-glu-6-p + ADP</bp:displayName>
+ <bp:right rdf:resource="merge:alpha-D-glucose_6-phosphate" />
+ <bp:right rdf:resource="merge:ADP_5283176e642992705619348bb624e754" />
+ <bp:spontaneous rdf:datatype = "http://www.w3.org/2001/XMLSchema#boolean">true</bp:spontaneous>
+ <bp:eCNumber rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.7.1.2</bp:eCNumber>
+ <bp:eCNumber rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2.7.1.1</bp:eCNumber>
+ <bp:left rdf:resource="merge:ATP" />
+ <bp:left rdf:resource="merge:alpha-D-glucose" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP:D-glucose 6-phosphotransferase</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">glucose ATP phosphotransferase</bp:name>
+ <bp:dataSource rdf:resource="#test" />
+ <bp:conversionDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REVERSIBLE</bp:conversionDirection>
+</bp:BiochemicalReaction>
+
+<bp:PublicationXref rdf:about="pubmed:2549346">
+ <bp:author rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Müller (utf-8 issue #298)</bp:author>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">2549346</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubmed</bp:db>
+</bp:PublicationXref>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://bioregistry.io/mi:0356">
+ <bp:xref rdf:resource="mi:0356" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">identity</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:UnificationXref rdf:about="mi:0356">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0356</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mi</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_20_see-also">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:20</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_89_see-also">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:89</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:RelationshipTypeVocabulary rdf:about="http://bioregistry.io/mi:0829">
+ <bp:xref rdf:resource="mi:0829" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">multiple parent reference</bp:term>
+</bp:RelationshipTypeVocabulary>
+
+<bp:SmallMolecule rdf:about="merge:ATP">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ATP</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-triphosphate</bp:displayName>
+ <bp:cellularLocation rdf:resource="#LV_go_GO_0005737" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:28" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">adenosine triphosphate</bp:name>
+ <bp:dataSource rdf:resource="#test" />
+</bp:SmallMolecule>
+
+<bp:UnificationXref rdf:about="mi:0829">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0829</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mi</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RX_hgnc_symbol_H2AX_identity">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0356" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2AX</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hgnc.symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:ChemicalStructure rdf:about="TEST_CHEBI:cs_26d67131a0608673ae6a683d1dad18f7">
+ <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:structureFormat>
+ <bp:structureData rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI=1S/C10H18O/c1-5-10(4,11)8-6-7-9(2)3/h5,7,11H,1,6,8H2,2-4H3/t10-/m0/s1</bp:structureData>
+</bp:ChemicalStructure>
+
+<bp:RelationshipXref rdf:ID="RX_ncbigene_10203_identity">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0356" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">10203</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ncbigene</bp:db>
+</bp:RelationshipXref>
+
+<bp:ChemicalStructure rdf:about="TEST_CHEBI:cs_d763940a9c24185a3d1806945a0beb4a">
+ <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:structureFormat>
+ <bp:structureData rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI=1S/C10H16/c1-7-8-4-5-9(6-8)10(7,2)3/h8-9H,1,4-6H2,2-3H3/t8-,9+/m0/s1</bp:structureData>
+</bp:ChemicalStructure>
+
+<bp:SmallMolecule rdf:about="merge:alpha-D-glucose">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">b-D-glu</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">beta-D-glucose</bp:displayName>
+ <bp:cellularLocation rdf:resource="#LV_go_GO_0005737" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:28" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">&lt;FONT FACE=&quot;Symbol&quot;&gt;a&lt;/FONT&gt;-D-glucose</bp:name>
+ <bp:dataSource rdf:resource="#test" />
+</bp:SmallMolecule>
+
+<bp:Provenance rdf:ID="test">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Reactome</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">test</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Source type: BIOPAX, Foo</bp:comment>
+</bp:Provenance>
+
+<bp:DeltaG rdf:about="merge:DeltaG_12">
+ <bp:deltaGPrime0 rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">0.4</bp:deltaGPrime0>
+</bp:DeltaG>
+
+<bp:UnificationXref rdf:about="mi:0361">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MI:0361</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">mi</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="uniprot:Q16602">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Q16602</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="uniprot:P16104">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">P16104</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">uniprot</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_28_multiple_parent_reference">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0829" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:28</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:P16104">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Histone H2AX</bp:standardName>
+ <bp:xref rdf:resource="uniprot:P16104" />
+ <bp:xref rdf:resource="#RX_ncbigene_3014_identity" />
+ <bp:xref rdf:resource="#RX_hgnc_symbol_H2AX_identity" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2AX_HUMAN</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2AFX</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Histone H2A.X</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2a/x</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2AX</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">H2AX_HUMAN Reviewed; 143 AA.</bp:comment>
+</bp:ProteinReference>
+
+<bp:Catalysis rdf:about="merge:phosphoglucose_isomerase_converts_alpha-D-gluc-6-p_to_beta-D-fruc-6-p">
+ <bp:controller rdf:resource="merge:phosphoglucose_isomerase_c4cb91e24e0fdbea2b0699bc648cf07e" />
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PGI -&gt; (b-d-glu-6-p &lt;=&gt; b-D-fru-6p)</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">catalysis of (beta-D-glu-6-p &lt;=&gt; beta-D-fruc-6-p)</bp:displayName>
+ <bp:controlled rdf:resource="merge:phosphoglucoisomerase" />
+ <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+ <bp:catalysisDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:catalysisDirection>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">The source of this data did not store catalyses of reactions as separate objects, so there are no unification x-refs pointing to the source of these BioPAX instances.</bp:comment>
+ <bp:dataSource rdf:resource="#test" />
+</bp:Catalysis>
+
+<bp:Pathway rdf:about="merge:Pathway50">
+ <bp:pathwayOrder rdf:resource="merge:BiochemicalPathwayStep_3_ff22ace809d9deaf2816e7945ca1201f" />
+ <bp:pathwayOrder rdf:resource="merge:BiochemicalPathwayStep_2_0df6b96644e86de3cf36f07317133663" />
+ <bp:pathwayComponent rdf:resource="merge:glucokinase_converts_alpha-D-glu_to_alpha-D-glu-6-p_fea6680c01440fbe33b44f4ae4c6f684" />
+ <bp:pathwayComponent rdf:resource="merge:glucokinase" />
+ <bp:pathwayComponent rdf:resource="merge:phosphoglucose_isomerase_converts_alpha-D-gluc-6-p_to_beta-D-fruc-6-p" />
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">glycolysis</bp:standardName>
+ <bp:xref rdf:resource="pubmed:2549346" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:562" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Glycolysis Pathway</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">glucose degradation</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Embden-Meyerhof pathway</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">This example is meant to provide an illustration of how various BioPAX slots should be filled; it is not intended to provide useful (or even accurate) biological information</bp:comment>
+ <bp:availability rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">see http://www.amaze.ulb.ac.be/</bp:availability>
+ <bp:availability rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">All data within the pathway has the same availability</bp:availability>
+ <bp:dataSource rdf:resource="#test" />
+</bp:Pathway>
+
+<bp:BioSource rdf:about="http://bioregistry.io/ncbitaxon:562">
+ <bp:xref rdf:resource="ncbitaxon:562" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Escherichia coliü</bp:displayName>
+</bp:BioSource>
+
+<bp:UnificationXref rdf:about="kegg.reaction:R02740">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PMID: 9847135</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">R02740</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">kegg.reaction</bp:db>
+</bp:UnificationXref>
+
+<bp:Protein rdf:about="merge:phosphoglucose_isomerase_c4cb91e24e0fdbea2b0699bc648cf07e">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PGI</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">phosphoglucose isomerase</bp:displayName>
+ <bp:cellularLocation rdf:resource="#LV_go_GO_0005737" />
+ <bp:feature rdf:resource="merge:O_phospho_L_serine_at_5" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/uniprot:Q16602" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PHI</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GPI</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">glucose-6-phosphate isomerase</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">phosphohexose isomerase</bp:name>
+ <bp:dataSource rdf:resource="#test" />
+</bp:Protein>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_422_see-also">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:422</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/pubchem.compound:14438">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:standardName>
+ <bp:xref rdf:resource="pubchem.compound:14438" />
+ <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H15N5O10P2</bp:chemicalFormula>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-diphosphate</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">adenosine diphosphate</bp:name>
+ <bp:molecularWeight rdf:datatype = "http://www.w3.org/2001/XMLSchema#float">427.2</bp:molecularWeight>
+ <bp:structure rdf:resource="merge:ChemicalStructure_6" />
+</bp:SmallMoleculeReference>
+
+<bp:UnificationXref rdf:about="go:0005737">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PMID: 11483584</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GO:0005737</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">go</bp:db>
+</bp:UnificationXref>
+
+<bp:ProteinReference rdf:about="http://bioregistry.io/uniprot:Q16602">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Calcitonin gene-related peptide type 1 receptor</bp:standardName>
+ <bp:xref rdf:resource="uniprot:Q16602" />
+ <bp:xref rdf:resource="#RX_ncbigene_10203_identity" />
+ <bp:xref rdf:resource="#RX_hgnc_symbol_CALCRL_identity" />
+ <bp:organism rdf:resource="http://bioregistry.io/ncbitaxon:9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CALRL_HUMAN</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CGRPR</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Calcitonin receptor-like receptor</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CGRP type 1 receptor</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CALCRL</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CALRL_HUMAN Reviewed; 461 AA.</bp:comment>
+</bp:ProteinReference>
+
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:422">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(2S)-2-hydroxypropanoic acid</bp:standardName>
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_42111_see-also" />
+ <bp:xref rdf:resource="chebi:422" />
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_16651_see-also" />
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_28_multiple_parent_reference" />
+ <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C3H6O3</bp:chemicalFormula>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-lactic acid</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(+)-lactic acid</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-(+)-lactic acid</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-(+)-alpha-hydroxypropionic acid</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C3H6O3</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Lactic acid</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:422</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-(+)-lactic acid</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">L-Milchsaeure</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2-hydroxypropanoic acid</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C[C@H](O)C(O)=O</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(S)-2-hydroxypropionic acid</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">is_enantiomer_of 42111</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">is_conjugate_acid_of 16651</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">An optically active form of lactic acid having (S)-configuration.</bp:comment>
+ <bp:structure rdf:resource="TEST_CHEBI:cs_ff64eaa2b41ab38c45d24102c3957de7" />
+</bp:SmallMoleculeReference>
+
+<bp:Catalysis rdf:about="merge:glucokinase_converts_alpha-D-glu_to_alpha-D-glu-6-p_fea6680c01440fbe33b44f4ae4c6f684">
+ <bp:controller rdf:resource="merge:Protein6003" />
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">GLK -&gt; (a-D-glu &lt;=&gt; a-D-glu-6-p)</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">catalysis of (alpha-D-glu &lt;=&gt; alpha-D-glu-6-p)</bp:displayName>
+ <bp:controlled rdf:resource="merge:glucokinase" />
+ <bp:controlType rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ACTIVATION</bp:controlType>
+ <bp:catalysisDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:catalysisDirection>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">The source of this data did not store catalyses of reactions as separate objects, so there are no unification x-refs pointing to the source of these BioPAX instances.</bp:comment>
+ <bp:dataSource rdf:resource="#test" />
+</bp:Catalysis>
+
+<bp:RelationshipXref rdf:ID="RX_hgnc_symbol_CALCRL_identity">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0356" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CALCRL</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">hgnc.symbol</bp:db>
+</bp:RelationshipXref>
+
+<bp:SmallMolecule rdf:about="merge:beta-D-fructose_6-phosphate">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">b-D-fru-6-p</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">beta-D-fructose-6-phosphate</bp:displayName>
+ <bp:cellularLocation rdf:resource="#LV_go_GO_0005737" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/chebi:20" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">&lt;FONT FACE=&quot;Symbol&quot;&gt;b&lt;/FONT&gt;-D-fructose-6-phosphate</bp:name>
+ <bp:dataSource rdf:resource="#test" />
+</bp:SmallMolecule>
+
+<bp:BioSource rdf:about="http://bioregistry.io/ncbitaxon:9606">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:standardName>
+ <bp:xref rdf:resource="ncbitaxon:9606" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Homo sapiens</bp:displayName>
+</bp:BioSource>
+
+<bp:ModificationFeature rdf:about="merge:O_phospho_L_serine_at_5">
+ <bp:modificationType rdf:resource="#SMV_protein_modification_ontology_MOD_00046" />
+</bp:ModificationFeature>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_42111_see-also">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0361" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:42111</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="chebi:422">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:422</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:UnificationXref>
+
+<bp:UnificationXref rdf:about="pubchem.compound:14438">
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">PMID: 9847135</bp:comment>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">14438</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">pubchem.compound</bp:db>
+</bp:UnificationXref>
+
+<bp:ChemicalStructure rdf:about="merge:ChemicalStructure_6">
+ <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">SMILES</bp:structureFormat>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:comment>
+ <bp:structureData rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">c12(n(cnc(c(N)ncn1)2)[CH]3(O[CH]([CH](O)[CH](O)3)COP(=O)(O)OP(O)(=O)O))</bp:structureData>
+</bp:ChemicalStructure>
+
+<bp:UnificationXref rdf:ID="UX_reactome_REACT_3939">
+ <bp:idVersion rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">1</bp:idVersion>
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REACT_3939</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">reactome</bp:db>
+</bp:UnificationXref>
+
+<bp:BiochemicalPathwayStep rdf:about="merge:BiochemicalPathwayStep_3_ff22ace809d9deaf2816e7945ca1201f">
+ <bp:stepConversion rdf:resource="merge:phosphoglucoisomerase" />
+ <bp:stepDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">LEFT_TO_RIGHT</bp:stepDirection>
+ <bp:stepProcess rdf:resource="merge:phosphoglucose_isomerase_converts_alpha-D-gluc-6-p_to_beta-D-fruc-6-p" />
+</bp:BiochemicalPathwayStep>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_422_multiple_parent_reference">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0829" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:422</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:SmallMolecule rdf:about="merge:ADP_5283176e642992705619348bb624e754">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ADP</bp:standardName>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">Adenosine 5&apos;-diphosphate</bp:displayName>
+ <bp:cellularLocation rdf:resource="#LV_go_GO_0005737" />
+ <bp:entityReference rdf:resource="http://bioregistry.io/pubchem.compound:14438" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">adenosine diphosphate</bp:name>
+ <bp:dataSource rdf:resource="#test" />
+</bp:SmallMolecule>
+
+<bp:BiochemicalReaction rdf:about="merge:phosphoglucoisomerase">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">b-D-glu-6-p &lt;=&gt; b-D-fru-6-p</bp:standardName>
+ <bp:xref rdf:resource="kegg.reaction:R02740" />
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">beta-D-glu-6-p &lt;=&gt; beta-D-fru-6-p</bp:displayName>
+ <bp:deltaG rdf:resource="merge:DeltaG_12" />
+ <bp:right rdf:resource="merge:beta-D-fructose_6-phosphate" />
+ <bp:eCNumber rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">5.3.1.9</bp:eCNumber>
+ <bp:left rdf:resource="merge:alpha-D-glucose_6-phosphate" />
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">beta-D-Glucose 6-phosphate =&gt; beta-D-Fructose 6-phosphate</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">beta-D-Glucose 6-phosphate ketol-isomerase</bp:name>
+ <bp:dataSource rdf:resource="#test" />
+ <bp:conversionDirection rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">REVERSIBLE</bp:conversionDirection>
+</bp:BiochemicalReaction>
+
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:28">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(3R)-3,7-dimethylocta-1,6-dien-3-ol</bp:standardName>
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_17580_multiple_parent_reference" />
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_422_see-also" />
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_98_see-also" />
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_20_see-also" />
+ <bp:xref rdf:resource="chebi:28" />
+ <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H18O</bp:chemicalFormula>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(R)-linalool</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H18O</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(-)-Linalool</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(-)-3,7-dimethyl-1,6-octadien-3-ol</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CC(C)=CCC[C@@](C)(O)C=C</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(R)-(-)-Linalool</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(3R)-3,7-dimethyl-1,6-octadien-3-ol</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(R)-3,7-dimethyl-1,6-octadien-3-ol</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">has_part 20</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A linalool that has formula C10H18O.</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">is_conjugate_acid_of 422</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">is_enantiomer_of 98</bp:comment>
+ <bp:structure rdf:resource="TEST_CHEBI:cs_26d67131a0608673ae6a683d1dad18f7" />
+</bp:SmallMoleculeReference>
+
+<bp:RelationshipXref rdf:ID="RX_chebi_CHEBI_17580_multiple_parent_reference">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0829" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:17580</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:RelationshipXref>
+
+<bp:UnificationXref rdf:about="ncbitaxon:9606">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">9606</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ncbitaxon</bp:db>
+</bp:UnificationXref>
+
+<bp:RelationshipXref rdf:ID="RX_ncbigene_3014_identity">
+ <bp:relationshipType rdf:resource="http://bioregistry.io/mi:0356" />
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">3014</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">ncbigene</bp:db>
+</bp:RelationshipXref>
+
+<bp:SmallMoleculeReference rdf:about="http://bioregistry.io/chebi:20">
+ <bp:standardName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(1R,4S)-2,2-dimethyl-3-methylidenebicyclo[2.2.1]heptane</bp:standardName>
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_89_see-also" />
+ <bp:xref rdf:resource="#RX_chebi_CHEBI_422_multiple_parent_reference" />
+ <bp:xref rdf:resource="chebi:20" />
+ <bp:chemicalFormula rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H16</bp:chemicalFormula>
+ <bp:displayName rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(+)-camphene</bp:displayName>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(1R,4S)-camphene</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(1R)-2,2-dimethyl-3-methylenebicyclo[2.2.1]heptane</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">C10H16</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(+)-Comphene</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">d-camphene</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(1R,4S)-(+)-camphene</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(1R,4S)-2,2-dimethyl-3-methylenebicyclo[2.2.1]heptane</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">(+)-Camphene</bp:name>
+ <bp:name rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CC1(C)[C@@H]2CC[C@@H](C2)C1=C</bp:name>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">is_enantiomer_of 89</bp:comment>
+ <bp:comment rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">A camphene that has formula C10H16.</bp:comment>
+ <bp:structure rdf:resource="TEST_CHEBI:cs_d763940a9c24185a3d1806945a0beb4a" />
+</bp:SmallMoleculeReference>
+
+<bp:UnificationXref rdf:ID="UX_protein_modification_ontology_MOD_00046">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">MOD:00046</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">protein modification ontology</bp:db>
+</bp:UnificationXref>
+
+<bp:SequenceModificationVocabulary rdf:ID="SMV_protein_modification_ontology_MOD_00046">
+ <bp:xref rdf:resource="#UX_protein_modification_ontology_MOD_00046" />
+ <bp:term rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">O-phospho-L-serine</bp:term>
+</bp:SequenceModificationVocabulary>
+
+<bp:UnificationXref rdf:about="chebi:28">
+ <bp:id rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">CHEBI:28</bp:id>
+ <bp:db rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">chebi</bp:db>
+</bp:UnificationXref>
+
+<bp:ChemicalStructure rdf:about="TEST_CHEBI:cs_ff64eaa2b41ab38c45d24102c3957de7">
+ <bp:structureFormat rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI</bp:structureFormat>
+ <bp:structureData rdf:datatype = "http://www.w3.org/2001/XMLSchema#string">InChI=1S/C3H6O3/c1-2(4)3(5)6/h2,4H,1H3,(H,5,6)/t2-/m0/s1</bp:structureData>
+</bp:ChemicalStructure>
+</rdf:RDF>
