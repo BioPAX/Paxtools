@@ -158,7 +158,7 @@
  <bp:db>ncbigene</bp:db>
 </bp:RelationshipXref>
 
-<bp:ChemicalStructure rdf:about="TEST_CHEBI:cs_d763940a9c24185a3d1806945a0beb4a">
+<bp:ChemicalStructure rdf:about="TESTCHEBI:cs_d763940a9c24185a3d1806945a0beb4a">
  <bp:structureFormat>InChI</bp:structureFormat>
  <bp:structureData>InChI=1S/C10H16/c1-7-8-4-5-9(6-8)10(7,2)3/h8-9H,1,4-6H2,2-3H3/t8-,9+/m0/s1</bp:structureData>
 </bp:ChemicalStructure>
@@ -329,7 +329,7 @@
  <bp:comment>is_enantiomer_of 42111</bp:comment>
  <bp:comment>is_conjugate_acid_of 16651</bp:comment>
  <bp:comment>An optically active form of lactic acid having (S)-configuration.</bp:comment>
- <bp:structure rdf:resource="TEST_CHEBI:cs_ff64eaa2b41ab38c45d24102c3957de7" />
+ <bp:structure rdf:resource="TESTCHEBI:cs_ff64eaa2b41ab38c45d24102c3957de7" />
 </bp:SmallMoleculeReference>
 
 <bp:Catalysis rdf:about="merge:glucokinase_converts_alpha-D-glu_to_alpha-D-glu-6-p_fea6680c01440fbe33b44f4ae4c6f684">
@@ -490,7 +490,7 @@
  <bp:name>CC1(C)[C@@H]2CC[C@@H](C2)C1=C</bp:name>
  <bp:comment>is_enantiomer_of 89</bp:comment>
  <bp:comment>A camphene that has formula C10H16.</bp:comment>
- <bp:structure rdf:resource="TEST_CHEBI:cs_d763940a9c24185a3d1806945a0beb4a" />
+ <bp:structure rdf:resource="TESTCHEBI:cs_d763940a9c24185a3d1806945a0beb4a" />
 </bp:SmallMoleculeReference>
 
 <bp:UnificationXref rdf:ID="UX_protein_modification_ontology_MOD_00046">
@@ -508,7 +508,7 @@
  <bp:db>chebi</bp:db>
 </bp:UnificationXref>
 
-<bp:ChemicalStructure rdf:about="TEST_CHEBI:cs_ff64eaa2b41ab38c45d24102c3957de7">
+<bp:ChemicalStructure rdf:about="TESTCHEBI:cs_ff64eaa2b41ab38c45d24102c3957de7">
  <bp:structureFormat>InChI</bp:structureFormat>
  <bp:structureData>InChI=1S/C3H6O3/c1-2(4)3(5)6/h2,4H,1H3,(H,5,6)/t2-/m0/s1</bp:structureData>
 </bp:ChemicalStructure>
