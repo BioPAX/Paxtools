@@ -666,8 +666,10 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			String type = findLiteralType(editor);
 			String valString = escapeXml(value.toString());
-			out.write(" rdf:datatype = \""  + xsd + type + "\">" + valString +
-			          "</" + prop + ">");
+			if(StringUtils.isNotBlank(type)) {
+				out.write(" rdf:datatype = \"" + xsd + type + "\"");
+			}
+			out.write(">" + valString + "</" + prop + ">");
 		}
 	}
 
