@@ -25,4 +25,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven and JDK-21
-        run: mvn --batch-mode --update-snapshots package
+        run: mvn --batch-mode --update-snapshots verify
