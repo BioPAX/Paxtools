@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.biopax.paxtools.io.jsonld","l":"JsonldBiopaxConverter"},{"p":"org.biopax.paxtools.io.jsonld","l":"JsonldConverter"}];updateSearchResults();

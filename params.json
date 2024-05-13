@@ -1,1 +1,7 @@
-{"name":"Paxtools","tagline":"The BioPAX Object Model, API and Utilities Implemented in Java","body":"# Paxtools\r\n[![Build Status](https://travis-ci.org/BioPAX/Paxtools.svg?branch=master)](https://travis-ci.org/BioPAX/Paxtools)\r\n\r\nThe BioPAX Object Model, API and utilities implemented in Java.\r\n\r\nMaven-generated docs: \r\n* [Paxtools 4.3.1-SNAPSHOT](http://biopax.github.io/Paxtools/4.3.1-SNAPSHOT/)\r\n\r\n","google":"UA-43341809-4","note":"Don't delete this file! It's used internally to help with page regeneration."}
+{
+  "name": "Paxtools",
+  "tagline": "The BioPAX Object Model, API and Utilities Implemented in Java",
+  "body": "# Paxtools\r\n[![Java CI with Maven](https://github.com/BioPAX/Paxtools/actions/workflows/maven.yml/badge.svg)](https://github.com/BioPAX/Paxtools/actions/workflows/maven.yml)\r\n\r\nThe BioPAX Object Model, API and utilities implemented in Java.\r\n\r\nMaven-generated docs: \r\n* [Paxtools 5.2.1](http://biopax.github.io/Paxtools/5.2.1/)\r\n\r\n",
+  "google": "UA-43341809-4",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
