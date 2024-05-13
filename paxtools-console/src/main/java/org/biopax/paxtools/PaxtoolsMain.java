@@ -341,7 +341,7 @@ public final class PaxtoolsMain {
 			}
 		}
 
-		Collection<File> files = new HashSet<File>();
+		Collection<File> files = new HashSet<>();
 		File fileOrDir = new File(input);
 		if (!fileOrDir.canRead()) {
 			System.out.println("Cannot read " + input);
@@ -373,8 +373,7 @@ public final class PaxtoolsMain {
 			}
 		} catch (Exception ex) {
 			// fall-back: not using the remote validator; trying to read files
-			String msg = "Unable to check with the biopax-validator web service: \n " +
-				ex.toString() +
+			String msg = "Unable to check with the biopax-validator web service: \n " + ex +
 				"\n Fall-back: trying to parse the file(s) with paxtools " +
 				"(up to the first syntax error in each file)...\n";
 			log.error(msg, ex);

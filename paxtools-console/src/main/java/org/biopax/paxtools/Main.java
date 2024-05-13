@@ -105,12 +105,12 @@ public final class Main {
 				"\t'--uri-ids' - URI,type,name(s) and standard identifiers (in JSON format) for each physical entity;\n " +
 				"\tthe options' order defines the results output order.")
 		        {public void run(String[] argv) throws IOException{summarize(argv);} },
-		blacklist("<input> <output>\n" +
+				blacklist("<input> <output>\n" +
 		        "\t- creates a blacklist of ubiquitous small molecules, like ATP, \n"
 		        + "\tfrom the BioPAX model and writes it to the output file. The blacklist can be used with\n "
 		        + "\tpaxtools graph queries or when converting from the SAME BioPAX data to the SIF formats.")
 				{public void run(String[] argv) throws IOException{blacklist(argv);} },
-		pattern("\n\t- BioPAX pattern search tool (opens a new dialog window)")
+				pattern("\n\t- BioPAX pattern search tool (opens a new dialog window)")
 				{public void run(String[] argv){pattern(argv);} },
         help("\n\t- prints this screen and exits\n")
 				{public void run(String[] argv){ help();} };
