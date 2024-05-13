@@ -1,6 +1,7 @@
 package org.biopax.paxtools.io;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.controller.AbstractPropertyEditor;
 import org.biopax.paxtools.controller.PropertyEditor;
 import org.biopax.paxtools.controller.SimpleEditorMap;
@@ -660,11 +661,12 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		{
 			String type = findLiteralType(editor);
 			String valString = StringEscapeUtils.escapeXml(value.toString());
-			out.write(" rdf:datatype = \"xsd:"  + type + "\">" + valString +
-			          "</" + prop + ">");
+			if(StringUtils.isNotBlank(type)) {
+				out.write(" rdf:datatype = \"" + xsd + type + "\"");
+			}
+			out.write(">" + valString + "</" + prop + ">");
 		}
 	}
-
 
 	private String findLiteralType(PropertyEditor editor)
 	{
