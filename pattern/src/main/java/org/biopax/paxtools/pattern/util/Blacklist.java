@@ -380,7 +380,7 @@ public class Blacklist
 	 */
 	public Collection<SmallMolecule> getUbiques(Set<PhysicalEntity> entities, RelType context)
 	{
-		Map<String, SmallMolecule> ubiques = new HashMap<String, SmallMolecule>();
+		Map<String, SmallMolecule> ubiques = new HashMap<>();
 		boolean allUbiques = true;
 
 		for (PhysicalEntity pe : entities)

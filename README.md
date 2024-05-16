@@ -43,6 +43,7 @@ Paxtools can be build and run with JDK-17 or newer, e.g. Temurin-21. Add these J
  - `-Dpaxtools.CollectionProvider=org.biopax.paxtools.trove.TProvider` to use a high-performance collections provider for BioPAX elements Map or Set (recommended).
  - `-Dpaxtools.normalizer.use-latest-registry=true` (if using Normalizer/Resolver) to use the latest registry.json from bioregistry.io.
  - `-Dpaxtools.core.use-latest-genenames=true` for the HGNC utility class use id mapping data from genenames.org instead of built-in older file.
+ - `-Dpaxtools.pattern.blacklist=<path>` path to "ubique molecules blacklist" file to use with SIF searcher.
 
 If you have [homebrew](http://brew.sh/) installed on your system (Mac OS X), you can install the latest release of Paxtools via the following brew command (could be old version):
 

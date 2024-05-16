@@ -347,7 +347,8 @@ final class Commands {
 		SIFSearcher searcher = new SIFSearcher(idFetcher, sifTypes.toArray(new SIFEnum[]{}));
 		log.info("toSIF: using SIFTypes: " + sifTypes);
 		//load and set blacklist.txt file if exists
-		File blacklistFile = new File("blacklist.txt");
+		String blacklistPath = System.getProperty("paxtools.pattern.blacklist", "blacklist.txt");
+		File blacklistFile = new File(blacklistPath);
 		if(blacklistFile.exists()) {
 			log.info("toSIF: using blacklist.txt from current directory");
 			searcher.setBlacklist(new Blacklist(new FileInputStream(blacklistFile)));
