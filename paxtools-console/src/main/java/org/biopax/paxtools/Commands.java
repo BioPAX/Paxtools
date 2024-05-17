@@ -527,8 +527,6 @@ final class Commands {
 		Set<XReferrable> children = fetcher.fetch(entity, XReferrable.class);
 		children.add(entity); //include itself
 
-
-
 		for(XReferrable child : children) {//ignore some classes, such as controlled vocabularies, interactions, etc.
 			if (child instanceof PhysicalEntity || child instanceof EntityReference || child instanceof Gene)
 				for (Xref x : child.getXref()) {
