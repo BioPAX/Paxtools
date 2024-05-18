@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
-		<version>5.2.2-SNAPSHOT</version>
+		<version>5.2.2</version>
 	</parent>
 	<artifactId>json-converter</artifactId>
 	<name>BioPAX to/from JSON Converter</name>
@@ -12,7 +12,7 @@
 	<url>https://biopax.github.io/Paxtools</url>
 
 	<scm><url>https://github.com/BioPAX/Paxtools</url>
-		<tag>HEAD</tag>
+		<tag>v5.2.2</tag>
 	</scm>
 
 	<build>
