@@ -46,7 +46,9 @@ $ paxtools help
 * Older BioPAX [snapshots](http://www.biopax.org/m2repo/snapshots/) and [releases](http://www.biopax.org/m2repo/releases/) Maven2 repository
 * [Downloads](http://www.biopax.org/downloads/paxtools/)
 
-More information about Paxtools can be found in [the publication](http://dx.plos.org/10.1371/journal.pcbi.1003194),  [wiki archive](http://www.biopax.org/mediawiki/index.php/Paxtools), and [BioPAX forum](https://groups.google.com/d/msg/biopax-discuss/zwtwDG23T1E/Vu1OK7iXBQAJ).
+More information about Paxtools can be found in [the publication](http://dx.plos.org/10.1371/journal.pcbi.1003194),  
+[wiki archive](http://www.biopax.org/mediawiki/index.php/Paxtools), and 
+[BioPAX forum](https://groups.google.com/d/msg/biopax-discuss/zwtwDG23T1E/Vu1OK7iXBQAJ).
 
 (_TODO_: move the Paxtools description here and deprecate that wiki soon.)
 
@@ -54,7 +56,7 @@ More information about Paxtools can be found in [the publication](http://dx.plos
 
 To build or use with a modern JDK (>11), e.g., OpenJDK-19, additional java options are required:
 ```bash
-export _JAVA_OPTIONS="--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
+export JDK_JAVA_OPTIONS="--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
 ```
 (can also add to the java command args)
 
