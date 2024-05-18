@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>paxtools</artifactId>
 		<groupId>org.biopax.paxtools</groupId>
-		<version>5.2.2</version>
+		<version>5.2.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>paxtools-search</artifactId>
@@ -15,7 +15,7 @@
 	<url>https://biopax.github.io/Paxtools</url>
 
 	<scm><url>https://github.com/BioPAX/Paxtools</url>
-		<tag>v5.2.2</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<properties>

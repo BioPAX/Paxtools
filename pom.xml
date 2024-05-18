@@ -6,7 +6,7 @@
 
   <groupId>org.biopax.paxtools</groupId>
   <artifactId>paxtools</artifactId>
-  <version>5.2.2</version>
+  <version>5.2.3-SNAPSHOT</version>
 
   <name>Paxtools</name>
 
@@ -187,7 +187,7 @@
     <connection>scm:git:git://github.com/BioPAX/Paxtools.git</connection>
     <developerConnection>scm:git:git@github.com:BioPAX/Paxtools.git</developerConnection>
     <url>https://github.com/BioPAX/Paxtools</url>
-    <tag>v5.2.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
