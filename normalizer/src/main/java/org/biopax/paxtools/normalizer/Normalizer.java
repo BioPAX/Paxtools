@@ -301,7 +301,7 @@ public final class Normalizer {
 		{
 			//for xrefs, always use the simple URI strategy (human-readable)
 			//replace unsafe symbols with underscore
-			localPart = localPart.replaceAll("[^-\\w]", "_");
+			localPart = localPart.replaceAll("[^-\\w]", "_");//todo: e.g. "foo bar" and "foo&bar" result in the same value - can mess things up...
 		} else {
 			//replace the local part with its md5 hash string (32-byte)
 			localPart = ModelUtils.md5hex(localPart);

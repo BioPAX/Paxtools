@@ -311,7 +311,7 @@ public class PatternBox
 	 * Pattern for a Protein controlling a reaction whose participant is a small molecule.
 	 *
 	 * @param blacklist a skip-list of ubiquitous molecules
-	 * @param consumption true/false (TODO explain)
+	 * @param consumption true/false
 	 * @return the pattern
 	 */
 	public static Pattern controlsMetabolicCatalysis(Blacklist blacklist, boolean consumption)

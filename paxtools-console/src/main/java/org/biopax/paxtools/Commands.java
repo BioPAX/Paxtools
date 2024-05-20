@@ -399,17 +399,6 @@ final class Commands {
 		writer.close();
 	}
 
-	static void integrate(String[] argv) throws IOException {
-		Model model1 = getModel(io, argv[1]);
-		Model model2 = getModel(io, argv[2]);
-
-		Integrator integrator = new Integrator(SimpleEditorMap.get(model1.getLevel()), model1, model2);
-		integrator.integrate();
-
-		io.setFactory(model1.getLevel().getDefaultFactory());
-		io.convertToOWL(model1, new FileOutputStream(argv[3]));
-	}
-
 	static void merge(String[] argv) throws IOException {
 		Model model1 = getModel(io, argv[1]);
 		Model model2 = getModel(io, argv[2]);

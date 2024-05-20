@@ -57,9 +57,6 @@ public final class Main {
 		toSBGN("<biopax.owl> <output.sbgn> [-nolayout]\n" +
 				"\t- converts model to the SBGN format and applies COSE layout unless optional -nolayout flag is set.")
 				{public void run(String[] argv) throws IOException { toSbgn(argv); } },
-		integrate("<file1> <file2> <output>\n" +
-				"\t- integrates file2 into file1 and writes it into output (experimental)")
-				{public void run(String[] argv) throws IOException{integrate(argv);} },
 		toLevel3("<input> <output> [-psimiToComplexes]\n" +
 				"\t- converts BioPAX level 1 or 2, PSI-MI 2.5 and PSI-MITAB to the level 3 file;\n" +
 				"\t-psimiToComplexes forces PSI-MI Interactions become BioPAX Complexes instead MolecularInteractions.")

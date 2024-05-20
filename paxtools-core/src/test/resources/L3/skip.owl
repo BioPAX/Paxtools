@@ -27,7 +27,7 @@ test data inspired by several humancyc v24 data issues -->
                     <!-- Entity is non-instantiable; also term property value must be a string value,
                     preferably from MI ontology, e.g. "gene product" MI:0251 or "see-also", etc.
                     Right now (after latest code fix to prevent exception here), Entity is not entirely ignored, -
-                    FIXME: its URI "http://biopax.org/tmp#Gene" becomes the value the term property value;
+                    FIXME: its URI "http://biopax.org/tmp#Gene" becomes the term property value;
                     i.e. this is equivalent to <term>http://biopax.org/tmp#Gene</term> ... -->
                     <Entity rdf:ID="Gene">
                         <comment>comment1</comment>

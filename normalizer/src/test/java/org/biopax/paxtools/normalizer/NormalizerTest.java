@@ -66,7 +66,7 @@ public class NormalizerTest {
 				arguments("http://bioregistry.io/pubchem.substance:12345", "", "pubchem-substance", "12345", SmallMoleculeReference.class),
 				//special symbols or spaces in the 'id' part get replaced with underscore in the URI
 				arguments("UX_Foo_Bar", null, null, "Foo Bar", UnificationXref.class),
-				arguments("UX_Foo_Bar", null, null, "Foo&Bar", UnificationXref.class), //todo: no good - makes the same URI, can mess things up...
+				arguments("UX_Foo_Bar", null, null, "Foo&Bar", UnificationXref.class), //todo: the same expected URI as above can be wrong/bug...
 				arguments("uniprot:W0C7J9", "", "UniProt", "W0C7J9", UnificationXref.class),
 				arguments("http://bioregistry.io/ncbitaxon:9606", null, "taxonomy", "9606", BioSource.class),
 				arguments("http://bioregistry.io/ncbitaxon:9606", null, "NCBI Taxonomy", "9606", BioSource.class),

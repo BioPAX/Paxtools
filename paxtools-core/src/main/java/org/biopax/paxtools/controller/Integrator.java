@@ -24,7 +24,13 @@ import java.util.*;
  * into the <em>target</em>.
  *
  * Please note that this class is in its beta state.
+ *
+ * @author Ozgun Babur
+ * @author Emek Demir
+ *
+ * @deprecated it's experimetal, only for Level2, and seems not tested/maintained
  */
+@Deprecated
 public class Integrator {
 
     private static final Logger log = LoggerFactory.getLogger(Integrator.class);
@@ -48,10 +54,7 @@ public class Integrator {
      * C    |       |       |       |
      * ------------------------------
      */
-    private Map<physicalEntityParticipant,
-                Map<physicalEntityParticipant, Double>> pepScoreMatrix
-                    = new HashMap<physicalEntityParticipant,
-                        Map<physicalEntityParticipant, Double>>();
+    private Map<physicalEntityParticipant, Map<physicalEntityParticipant, Double>> pepScoreMatrix = new HashMap<>();
 
     /**
      * This is the pool where the scores and relevant conversions
@@ -114,8 +117,6 @@ public class Integrator {
         log.info("Merging finished.");
 
         if( isNormalizeModels() ) {
-            log.info("Normalizing models.");
-
             log.info("Normaling XREFs.");
             normalizeXrefs(target);
             normalizeXrefs(mergedSources);
@@ -123,8 +124,6 @@ public class Integrator {
             normalizeOpenControlledVocabulary(mergedSources);
             log.info("Normaling cellular locations.");
             normalizeCellularLocations(mergedSources);
-
-            log.info("Normalization completed.");
         }
     }
 
@@ -296,21 +295,18 @@ public class Integrator {
          * Instead, we are going to copy them, and modify their copies.
          */
         log.info("Creating a copy of the PEP scores.");
-        Map<physicalEntityParticipant,
-            Map<physicalEntityParticipant, Double>> copyMatrix
-                            = new HashMap<physicalEntityParticipant, Map<physicalEntityParticipant, Double>>();
+        Map<physicalEntityParticipant, Map<physicalEntityParticipant, Double>> copyMatrix = new HashMap<>();
             // Copy the contents of the matrix
         for(physicalEntityParticipant pepKey: pepScoreMatrix.keySet()) {
-            copyMatrix.put(pepKey,
-                    new HashMap<physicalEntityParticipant, Double>(pepScoreMatrix.get(pepKey)));
+            copyMatrix.put(pepKey, new HashMap<>(pepScoreMatrix.get(pepKey)));
         }
         // We want to use the copy now
         pepScoreMatrix = copyMatrix;
         log.info("PEP scores copied.");
 
         similarConversions = (alternativeScores == null)
-                                ? new ArrayList<>(this.similarConversions)
-                                : alternativeScores;
+            ? new ArrayList<>(this.similarConversions)
+            : alternativeScores;
 
         log.info("Conversion scores copied.");
         /* End of copies */
@@ -347,7 +343,7 @@ public class Integrator {
 
         for(ConversionScore convScore: similarConversions) {
             // Since we sorted the list, we are safe to break
-            // But a continue will also do the trick, mostly
+            // But a "continue;" would also do the trick, mostly
             // requiring little more time
             if( convScore.getScore() < getThreshold() )
                 break;
@@ -420,25 +416,8 @@ public class Integrator {
         }
     }
 
-    /**
-     * @deprecated setRDFId/setUri is not available anymore
-     */
-    @Deprecated
     private void equalize(BioPAXElement e1, BioPAXElement e2) {
-        // Operation below is enough for the time being
-    	// TODO re-factoring: setRDFId/setUri is not available anymore! (changing URIs directly is dangerous)
-        //e2.setUri(e1.getUri());
-
-    	throw new UnsupportedOperationException("This needs re-factoring: bpe.setUri is not available anymore!");
-
-    	//TODO ? use some alternative way to store that a1 equals e2, e.g., Set<String> matched,
-    	//matched.add(e1.getUri()+e2.getUri()); matched.add(e2.getUri()+e1.getUri());
-    }
-
-    private boolean equals(BioPAXElement a, BioPAXElement b) {
-    	throw new UnsupportedOperationException("not implemented yet.");
-    	// TODO ? implement equals(BioPAXElement a, BioPAXElement b): can be smth. like the following... and use below
-    	//return (a == null) ? b == null : a.equals(b) || matched.contains(a.getUri()+b.getUri());
+        ModelUtils.updateUri(null, e2, e1.getUri());
     }
 
     private void equalizePEP(physicalEntityParticipant controller1, physicalEntityParticipant controller2) {
