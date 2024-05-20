@@ -4,10 +4,6 @@ http://biopax.github.io/Paxtools/
 This is a special GitHub branch (gh-pages), 
 for Paxtools project; see: [GitHub pages](http://pages.github.com). 
 
-Here, we auto-deploy Maven-generated docs sites, such as   
-[Paxtools 5.2.1](http://biopax.github.io/Paxtools/5.2.1/)
-, etc.
-
 ## Notes
 No regular source code should be here. 
 Do not ever merge this branch with master and others.
