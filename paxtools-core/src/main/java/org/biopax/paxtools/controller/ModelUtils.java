@@ -1,5 +1,6 @@
 package org.biopax.paxtools.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.impl.BioPAXElementImpl;
 import org.biopax.paxtools.io.BioPAXIOHandler;
 import org.biopax.paxtools.io.SimpleIOHandler;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -1290,7 +1292,6 @@ public final class ModelUtils
 			m.setAccessible(true);
 			m.invoke(el, newUri);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 
@@ -1341,5 +1342,18 @@ public final class ModelUtils
 			|| (e instanceof SimplePhysicalEntity && isGeneric(((SimplePhysicalEntity) e).getEntityReference()))
 		);
 		//false when e==null
+	}
+
+	public static void fixInvalidUris(Model model) {
+		String prefix = StringUtils.isBlank(model.getXmlBase()) ? "" : model.getXmlBase();
+		for(BioPAXElement bpe : new HashSet<>(model.getObjects())) {
+			try {
+				URI.create(bpe.getUri());
+			} catch (IllegalArgumentException e) {
+				String uri = prefix + md5hex(bpe.getUri());
+				LOG.info("Replaced invalid URI: '{}' with generated: '{}'", bpe.getUri(), uri);
+				updateUri(model, bpe, uri);
+			}
+		}
 	}
 }

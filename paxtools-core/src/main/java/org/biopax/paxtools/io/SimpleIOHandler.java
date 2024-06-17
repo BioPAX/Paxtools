@@ -20,6 +20,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -363,6 +364,11 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 			throw new BioPaxIOException(
 					String.format("Error processing %s%s (rdf:ID/rdf:about not found)", r.getNamespaceURI(), getXmlStreamInfo()));
 		}
+		try {
+			URI.create(id);
+		} catch (IllegalArgumentException e) {
+			log.error("Invalid URI '{}' at {}{}", id, r.getNamespaceURI(), getXmlStreamInfo());
+		}
 
 		Class<? extends BioPAXElement> type;
 		try {
@@ -387,7 +393,7 @@ public final class SimpleIOHandler extends BioPAXIOHandlerAdapter
 		} else
 		{
 			//abstract BioPAX types, e.g. Entity, UtilityClass, cannot be used directly in RDF+XML model/file!
-			log.error(String.format("Ignoring abstract %s, id: %s", (r.hasText()?r.getText():getXmlStreamInfo()), id));
+			log.error("Ignoring abstract {}, id: {}", (r.hasText()?r.getText():getXmlStreamInfo()), id);
 			//id = null; //todo: uncomment/test (currently, ignored object's uri can become parent's property value, e.g. CV term)
 			//skip(); //was a bug - throws a misleading exception at the next element in some cases
 			//todo: shall we instead throw an exception when e.g. <term><Entity rdf:ID="Gene"></Entity></term>?

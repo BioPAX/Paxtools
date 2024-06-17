@@ -99,10 +99,10 @@ public class ModelUtilsTest {
 		assertEquals(8, m.getObjects().size()); // + pr3
 		assertTrue(m.contains(pr3)); // added!
 		
-		assertTrue(m.contains(pr2)); // not deleted (may be dangling now)!
-		assertTrue(m.contains(x2)); // not deleted (may be dangling now)!
-		assertTrue(m.contains(pr1)); // not deleted (may be dangling now)!
-		assertTrue(m.contains(x1)); // not deleted (may be dangling now)!
+		assertTrue(m.contains(pr2)); // not deleted (maybe dangling now)!
+		assertTrue(m.contains(x2)); // not deleted (maybe dangling now)!
+		assertTrue(m.contains(pr1)); // not deleted (maybe dangling now)!
+		assertTrue(m.contains(x1)); // not deleted (maybe dangling now)!
 		
 		// delete dangling
 		ModelUtils.removeObjectsIfDangling(m, ProteinReference.class);

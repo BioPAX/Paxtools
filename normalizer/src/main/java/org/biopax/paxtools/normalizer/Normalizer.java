@@ -484,13 +484,15 @@ public final class Normalizer {
 	 */
 	public void normalize(Model model, boolean usePrefixAsDbName) {
 		
-		if(model.getLevel() != BioPAXLevel.L3)
+		if(model.getLevel() != BioPAXLevel.L3) {
 			throw new IllegalArgumentException("Not Level3 model. " +
-				"Consider converting it first (e.g., with the PaxTools).");
+					"Consider converting it first (e.g., with the PaxTools).");
+		}
 		
 		//if set, update the xml:base
-		if(xmlBase != null && !xmlBase.isEmpty())
+		if(xmlBase != null && !xmlBase.isEmpty()) {
 			model.setXmlBase(xmlBase);
+		}
 
 		// Normalize/merge xrefs first and then - CVs
 		// (xrefs could have URIs that should be instead used for CV, PR, SMR or BS biopax types)
@@ -518,15 +520,15 @@ public final class Normalizer {
 
 		log.info("Normalizing entity references..." + description);
 		normalizeERs(model);
+
+		log.info("Fixing invalid URIs if any...");
+		ModelUtils.fixInvalidUris(model);
 		
 		// find/add lost (in replace) children
 		log.info("Repairing..." + description);
 		model.repair(); // it does not remove dangling utility class objects (can be done separately, later, if needed)
-		
-		log.info("Optional tasks (reasoning)..." + description);
 	}
 
-	
 	private void normalizeCVs(Model model) {
 		
 		NormalizerMap map = new NormalizerMap(model);

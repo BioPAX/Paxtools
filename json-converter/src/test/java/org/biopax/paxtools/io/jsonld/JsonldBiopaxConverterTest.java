@@ -31,10 +31,10 @@ public class JsonldBiopaxConverterTest {
 
 		// convert owl test file in resource directory to jsonld format
 		InputStream in = getClass().getResourceAsStream("/demo-pathway.owl");
-		//- there is no rdf:datatype=... anymore; should be fine as the datatypes are defined in the biopax-level3.owl spec!
-		//todo: for some reason, Jena libs v4 or v5 fail at e.g. rdf:about="TEST_CHEBI:cs_26d67131a0608673ae6a683d1dad18f7",
+		//there is no rdf:datatype=... anymore; should be fine as the datatypes are defined in the biopax-level3.owl spec;
+		//Jena libs v4, v5 fail at e.g. rdf:about="TEST_CHEBI:cs_26d67131a0608673ae6a683d1dad18f7" (not a valid URI due to '_' in the prefix),
 		//but jena v3 just prints warnings, e.g.: org.apache.jena.riot - [line: 155, col: 82] {W107} Bad URI: <TEST_CHEBI:cs_26d67131a0608673ae6a683d1dad18f7> Code: 0/ILLEGAL_CHARACTER in SCHEME: The character violates the grammar rules for URIs/IRIs.
-		//howver, removing the underscore from TEST_CHEBI - makes those warning/errors go away...
+		//however, removing the underscore (or replacing with '.') from TEST_CHEBI - makes those warning/errors go away - so I did in demo-pathway.owl
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		converter.convertToJsonld(in, baos);

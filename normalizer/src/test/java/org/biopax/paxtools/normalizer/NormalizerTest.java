@@ -1,6 +1,5 @@
 package org.biopax.paxtools.normalizer;
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXElement;
@@ -365,24 +364,5 @@ public class NormalizerTest {
 		//A PR with two different UniProt unif. xrefs - human, rat - won't be normalized!
 		e = model.getByID(model.getXmlBase() + "IMR_0100366_G_alpha_s_Canonical");
 		assertTrue(e instanceof ProteinReference);
-	}
-
-	private void print(XReferrable xr, Model m) {
-		System.out.println();
-		System.out.println("model=" + m.contains(xr) + ":\t"
-				+ xr.getUri() +
-				" is " + xr.getModelInterface().getSimpleName()
-				+ " and has xrefs: ");
-		for(Xref x : xr.getXref()) {
-			System.out.println("model=" + m.contains(x) + ":\t"
-					+"  " + x + " is "
-					+ x.getModelInterface().getSimpleName()
-					+ " - " + x.getUri() + ", db=" + x.getDb()
-					+ ", id=" + x.getId() + ", idVer=" + x.getIdVersion());
-			for(XReferrable rx : x.getXrefOf()) {
-				System.out.println("model=" + m.contains(rx) + ":\t"
-						+ "    xrefOf: " + rx);
-			}
-		}
 	}
 }
