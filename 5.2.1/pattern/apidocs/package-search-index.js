@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.biopax.paxtools.pattern"},{"l":"org.biopax.paxtools.pattern.constraint"},{"l":"org.biopax.paxtools.pattern.example"},{"l":"org.biopax.paxtools.pattern.miner"},{"l":"org.biopax.paxtools.pattern.util"}];updateSearchResults();

@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.biopax.paxtools.query"},{"l":"org.biopax.paxtools.query.algorithm"},{"l":"org.biopax.paxtools.query.model"},{"l":"org.biopax.paxtools.query.wrapperL3"},{"l":"org.biopax.paxtools.query.wrapperL3undirected"}];updateSearchResults();

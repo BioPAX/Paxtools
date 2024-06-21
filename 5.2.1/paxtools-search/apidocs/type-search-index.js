@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.biopax.paxtools.search","l":"SearchEngine.HitAnnotation"},{"p":"org.biopax.paxtools.search","l":"Indexer"},{"p":"org.biopax.paxtools.search","l":"SearchEngine"},{"p":"org.biopax.paxtools.search","l":"Searcher"},{"p":"org.biopax.paxtools.search","l":"SearchResult"}];updateSearchResults();
