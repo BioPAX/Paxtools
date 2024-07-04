@@ -7,7 +7,9 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.biopax.paxtools.pattern.util.Blacklist;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sbgn.GlyphClazz;
 import org.sbgn.SbgnUtil;
@@ -20,6 +22,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -383,4 +387,24 @@ public class SBGNConverterTest
   private Collection<Arc> filterArcsByClazz(Collection<Arc> collection, String clazz) {
 		return collection.stream().filter(g -> g.getClazz().equals(clazz)).collect(Collectors.toUnmodifiableSet());
   }
+
+	@Disabled
+	@Test
+	public void convertPc14NearestNeighborhoodOfANK1_PTEN() throws Exception
+	{
+		Model level3 = handler.convertFromOWL(Files.newInputStream(Paths.get("/home/igor/Downloads/cpath2-issue-321-pc14-nhood-ank1-pten-data.owl")));
+		String out = "target/cpath2-321.sbgn";
+
+		UbiqueDetector bl = new ListUbiqueDetector(new Blacklist("/home/igor/Workspace/pc-stack/work/downloads/blacklist.txt").getListed());
+		L3ToSBGNPDConverter conv = new L3ToSBGNPDConverter(bl,null, false);
+		conv.writeSBGN(level3, out);
+
+		File outFile = new File(out);
+		SbgnUtil.isValid(outFile); //ignore CName warning
+		// Now read the SBGN model back
+		Sbgn result = (Sbgn) unmarshaller.unmarshal (outFile);
+		// Assert that the sbgn result contains glyphs
+		List<Glyph> glyphList = result.getMap().getGlyph();
+		assertFalse(glyphList.isEmpty());
+	}
 }

@@ -314,7 +314,9 @@ public class L3ToSBGNPDConverter {
 				//a Control without controlled process but with controller and is controlledOf
 				if(control.getControlled().isEmpty()) {
 					Glyph g = createControlStructure(control);
-					processControllers(control.getControlledOf(), g);
+					if(g != null) {
+						processControllers(control.getControlledOf(), g);
+					}
 				}//else - do nothing - as it's converted anyway when the controlled interactions are processed
 			}
 
@@ -1280,8 +1282,8 @@ public class L3ToSBGNPDConverter {
 	 * Creates an arc from the source to the target, and sets its class to the specified clazz.
 	 * Puts the new arc in the sullied arcMap.
 	 *
-	 * @param source source of the arc -- either Glyph or Port
-	 * @param target target of the arc -- either Glyph or Port
+	 * @param source - source of the arc -- either Glyph or Port
+	 * @param target - target of the arc -- either Glyph or Port
 	 * @param clazz class of the arc
 	 */
 	private void createArc(Object source, Object target, String clazz, Stoichiometry stoic)
